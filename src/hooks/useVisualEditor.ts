@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { BindingMapByBlockId, BoundData } from "../types";
 
 export const useVisualEditor = () => {
-  const [tree, setTree] = useState({});
-  const [boundVariables, setBoundVariables] = useState<Record<string, any>>({});
+	const [tree, setTree] = useState({});
+  const [binding, setBinding] = useState<BindingMapByBlockId>({});
+  const [boundData, setBoundData] = useState<BoundData>({});
   
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -26,15 +28,23 @@ export const useVisualEditor = () => {
           const { payload } = eventData;
   
           switch (eventData.eventType) {
-            case 'componentDropped':
+            case 'componentDropped': {
               console.log('component dropped', payload);
               break;
-            case 'componentTreeUpdated':
-              setTree(payload);
+            }
+            case 'componentTreeUpdated': {
+              const { tree, binding = {} } = payload;
+              setTree(tree);
+              setBinding(binding);
               break;
-            case 'valueChanged':
-              setBoundVariables(payload)
+            }
+            case 'valueChanged': {
+              const { boundData = {}, binding = {} } = payload;
+              setBinding(binding);
+              console.log('setting stuff', boundData);
+              setBoundData(boundData);
               break;
+            }
             default:
           }
         }
@@ -49,6 +59,7 @@ export const useVisualEditor = () => {
 
   return {
     tree,
-    boundVariables,
+		binding,
+    boundData,
   }
 };

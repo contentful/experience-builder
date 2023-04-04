@@ -7,33 +7,23 @@ export type RegisteredComponentData = {
 
 let registeredComponents: RegisteredComponentData[] = [];
 
-export class RegisterComponent {
-
-	public register = (component: any, parameters: RegisteredComponentParameters) => {
-		registeredComponents.push({ component, ... parameters });
-		sendMessage('registeredComponents', parameters);
-	}
-
-	public getAll = ({ withComponents }: { withComponents: boolean }) => {
-    if (withComponents) {
-      return registeredComponents;
-    }
-
-    return registeredComponents.map((config) => {
-      const { component, ...configWithoutComponent } = config;
-      return configWithoutComponent;
-    });
+export function registerComponent() {
+  const register = (component: any, parameters: RegisteredComponentParameters) => {
+    registeredComponents.push({ component, ...parameters });
+    sendMessage('registeredComponents', parameters);
   };
 
-	public getJson = () => {
-    return JSON.stringify(registeredComponents);
-  };
-
-  public getRegistration = (id: string) => {
+  const getRegistration = (id: string) => {
     return registeredComponents.find((registration) => registration.id === id);
   };
 
-  public reset = () => {
+  const reset = () => {
     registeredComponents = [];
   };
+
+	return {
+		register,
+		getRegistration,
+		reset,
+	}
 }

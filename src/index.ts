@@ -1,3 +1,3 @@
-export { RegisterComponent } from './registerComponent';
-export { VisualEditorRenderer } from './render/VisualEditorRenderer';
+export { registerComponent } from './registerComponent';
+export { VisualEditorRenderer, renderVisualEditor } from './VisualEditorRenderer';
 export { sendMessage } from  './sendMessage'
