@@ -92,5 +92,8 @@
       "@semantic-release/npm",
       "@semantic-release/github"
     ]
+  },
+  "peerDependencies": {
+    "contentful-management": ">= 9.0.0"
   }
 }
