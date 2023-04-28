@@ -1,2 +1,3 @@
 testing-library.js
 .eslintrc.cjs
+commitlint.config.js
