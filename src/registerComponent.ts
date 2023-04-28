@@ -1,29 +1,29 @@
-import { sendMessage } from "./sendMessage";
-import { RegisteredComponentParameters } from "./types";
+import { sendMessage } from './sendMessage'
+import { RegisteredComponentParameters } from './types'
 
 export type RegisteredComponentData = {
-  component: any,
+  component: any
 } & RegisteredComponentParameters
 
-let registeredComponents: RegisteredComponentData[] = [];
+let registeredComponents: RegisteredComponentData[] = []
 
 export function registerComponent() {
   const register = (component: any, parameters: RegisteredComponentParameters) => {
-    registeredComponents.push({ component, ...parameters });
-    sendMessage('registeredComponents', parameters);
-  };
+    registeredComponents.push({ component, ...parameters })
+    sendMessage('registeredComponents', parameters)
+  }
 
   const getRegistration = (id: string) => {
-    return registeredComponents.find((registration) => registration.id === id);
-  };
+    return registeredComponents.find((registration) => registration.id === id)
+  }
 
   const reset = () => {
-    registeredComponents = [];
-  };
+    registeredComponents = []
+  }
 
-	return {
-		register,
-		getRegistration,
-		reset,
-	}
+  return {
+    register,
+    getRegistration,
+    reset,
+  }
 }

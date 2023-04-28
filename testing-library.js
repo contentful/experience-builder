@@ -1,4 +1,4 @@
-require('@testing-library/jest-dom/extend-expect');
-const { configure } = require('@testing-library/react');
+require('@testing-library/jest-dom/extend-expect')
+const { configure } = require('@testing-library/react')
 
-configure({ testIdAttribute: 'data-test-id' });
+configure({ testIdAttribute: 'data-test-id' })

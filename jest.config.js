@@ -5,4 +5,4 @@ export default {
   testEnvironment: 'jsdom',
   coverageDirectory: './reports',
   setupFilesAfterEnv: ['./testing-library.js'],
-};
+}

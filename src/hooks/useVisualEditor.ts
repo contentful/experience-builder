@@ -1,93 +1,93 @@
-import { ElementType, useCallback, useEffect, useState } from "react";
-import throttle from 'lodash.throttle';
-import { BindingMapByBlockId, BoundData } from "../types";
-import { useCommunication } from "./useCommunication";
+import { ElementType, useCallback, useEffect, useState } from 'react'
+import throttle from 'lodash.throttle'
+import { BindingMapByBlockId, BoundData } from '../types'
+import { useCommunication } from './useCommunication'
 
 type VisualEditorMessagePayload = {
-  source: string;
-  eventType: string;
-  payload: any;
+  source: string
+  eventType: string
+  payload: any
 }
 
 type RegisteredComponentVariable = {
-  name: string;
-  dataType: string;
-  defaultValue?: string | boolean;
-  options?: string[],
-  required?: boolean,
-  childNode?: boolean;
+  name: string
+  dataType: string
+  defaultValue?: string | boolean
+  options?: string[]
+  required?: boolean
+  childNode?: boolean
 }
 
 type RegisteredComponentParameters = {
-  id: string;
-  container: boolean;
-  category: string;
+  id: string
+  container: boolean
+  category: string
   variables: RegisteredComponentVariable[]
 }
 
 export type RegisteredComponentData = {
-  component: ElementType,
+  component: ElementType
 } & RegisteredComponentParameters
 
-let registeredComponents: RegisteredComponentData[] = [];
+let registeredComponents: RegisteredComponentData[] = []
 
 export const useVisualEditor = () => {
-  const [tree, setTree] = useState({});
-  const [binding, setBinding] = useState<BindingMapByBlockId>({});
-  const [boundData, setBoundData] = useState<BoundData>({});
+  const [tree, setTree] = useState({})
+  const [binding, setBinding] = useState<BindingMapByBlockId>({})
+  const [boundData, setBoundData] = useState<BoundData>({})
 
-  const { sendMessage } = useCommunication();
-  
+  const { sendMessage } = useCommunication()
+
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       // where the app is contentful hosted when run locally
       if (event.origin !== 'http://localhost:3001') {
-        return;
+        return
       }
 
       // @ts-expect-error not typed
-      let eventData: VisualEditorMessagePayload = {};
-        try {
-          if (event.data && typeof event.data === 'string') {
-            eventData = JSON.parse(event.data);
-          }
-        } catch (e) {
-          console.log('event data caused error', event.data)
+      let eventData: VisualEditorMessagePayload = {}
+      try {
+        if (event.data && typeof event.data === 'string') {
+          eventData = JSON.parse(event.data)
         }
-        console.log("customer app received message", eventData);
+      } catch (e) {
+        console.log('event data caused error', event.data)
+      }
+      console.log('customer app received message', eventData)
 
-        if (eventData.source === "composability-app") {
-          const { payload } = eventData;
-  
-          switch (eventData.eventType) {
-            case 'componentDropped': {
-              console.log('component dropped', payload);
-              break;
-            }
-            case 'componentTreeUpdated': {
-              const { tree, binding = {} } = payload;
-              setTree(tree);
-              setBinding(binding);
-              break;
-            }
-            case 'valueChanged': {
-              const { boundData = {}, binding = {} } = payload;
-              setBinding(binding);
-              console.log('setting stuff', boundData);
-              setBoundData(boundData);
-              break;
-            }
-            default:
+      if (eventData.source === 'composability-app') {
+        const { payload } = eventData
+
+        switch (eventData.eventType) {
+          case 'componentDropped': {
+            console.log('component dropped', payload)
+            break
           }
+          case 'componentTreeUpdated': {
+            const { tree, binding = {} } = payload
+            setTree(tree)
+            setBinding(binding)
+            break
+          }
+          case 'valueChanged': {
+            const { boundData = {}, binding = {} } = payload
+            setBinding(binding)
+            console.log('setting stuff', boundData)
+            setBoundData(boundData)
+            break
+          }
+          default:
         }
-    };
+      }
+    }
 
-    window.addEventListener('message', onMessage);
+    window.addEventListener('message', onMessage)
 
     return () => {
-      window.removeEventListener('message', onMessage);
+      window.removeEventListener('message', onMessage)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     const onMouseMove = throttle((e: MouseEvent) => {
@@ -96,28 +96,31 @@ export const useVisualEditor = () => {
         pageY: e.pageY,
         clientX: e.clientX,
         clientY: e.clientY,
-      });
-    }, 20);
+      })
+    }, 20)
 
-    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mousemove', onMouseMove)
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mousemove', onMouseMove)
     }
-  }, [sendMessage]);
+  }, [sendMessage])
 
-  const registerComponent = useCallback((component: ElementType, parameters: RegisteredComponentParameters) => {
-    registeredComponents.push({ component, ...parameters });
-    sendMessage('registeredComponents', parameters);
-  }, [sendMessage]);
+  const registerComponent = useCallback(
+    (component: ElementType, parameters: RegisteredComponentParameters) => {
+      registeredComponents.push({ component, ...parameters })
+      sendMessage('registeredComponents', parameters)
+    },
+    [sendMessage]
+  )
 
   const getRegistration = useCallback((id: string) => {
-    return registeredComponents.find((registration) => registration.id === id);
-  }, []);
+    return registeredComponents.find((registration) => registration.id === id)
+  }, [])
 
   const reset = useCallback(() => {
-    registeredComponents = [];
-  }, []);
+    registeredComponents = []
+  }, [])
 
   return {
     tree,
@@ -126,6 +129,6 @@ export const useVisualEditor = () => {
     components: registeredComponents,
     registerComponent,
     getRegistration,
-    reset
+    reset,
   }
-};
+}
