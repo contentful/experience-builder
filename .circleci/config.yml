@@ -105,3 +105,4 @@ workflows:
                 - main
                 - master
                 - next
+                - next-major

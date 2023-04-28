@@ -13,8 +13,10 @@
     "build": "tsc && vite build",
     "test": "NODE_ENV=test jest .",
     "test:coverage": "NODE_ENV=test jest . --coverage",
-    "check-types": "",
-    "lint": "",
+    "check-types": "tsc",
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx'",
+    "presemantic-release": "yarn build",
+    "semantic-release": "semantic-release",
     "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx}'",
     "prettier": "prettier --write '**/*.{jsx,js,ts,tsx}'",
     "preview": "vite preview"
@@ -26,14 +28,19 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/node": "^18.14.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
     "@vitejs/plugin-react": "^3.1.0",
     "@vitejs/plugin-react-swc": "^3.0.0",
+    "eslint": "^8.39.0",
+    "eslint-plugin-react": "^7.32.2",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
     "jsdom": "^21.1.0",
@@ -42,5 +49,31 @@
     "vite": "^4.1.0",
     "vite-plugin-dts": "^2.0.1"
   },
-  "packageManager": "yarn@3.5.0"
+  "packageManager": "yarn@3.5.0",
+  "release": {
+    "branches": [
+      "master",
+      "main",
+      "next",
+      "next-major"
+    ],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "releaseRules": [
+            {
+              "type": "build",
+              "scope": "deps",
+              "release": "patch"
+            }
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
+  }
 }
