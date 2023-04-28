@@ -1,10 +1,42 @@
-import { useEffect, useState } from "react";
+import { ElementType, useCallback, useEffect, useState } from "react";
+import throttle from 'lodash.throttle';
 import { BindingMapByBlockId, BoundData } from "../types";
+import { useCommunication } from "./useCommunication";
+
+type VisualEditorMessagePayload = {
+  source: string;
+  eventType: string;
+  payload: any;
+}
+
+type RegisteredComponentVariable = {
+  name: string;
+  dataType: string;
+  defaultValue?: string | boolean;
+  options?: string[],
+  required?: boolean,
+  childNode?: boolean;
+}
+
+type RegisteredComponentParameters = {
+  id: string;
+  container: boolean;
+  category: string;
+  variables: RegisteredComponentVariable[]
+}
+
+export type RegisteredComponentData = {
+  component: ElementType,
+} & RegisteredComponentParameters
+
+let registeredComponents: RegisteredComponentData[] = [];
 
 export const useVisualEditor = () => {
-	const [tree, setTree] = useState({});
+  const [tree, setTree] = useState({});
   const [binding, setBinding] = useState<BindingMapByBlockId>({});
   const [boundData, setBoundData] = useState<BoundData>({});
+
+  const { sendMessage } = useCommunication();
   
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -13,7 +45,7 @@ export const useVisualEditor = () => {
         return;
       }
 
-      // @ts-expect-error
+      // @ts-expect-error not typed
       let eventData: VisualEditorMessagePayload = {};
         try {
           if (event.data && typeof event.data === 'string') {
@@ -57,9 +89,43 @@ export const useVisualEditor = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const onMouseMove = throttle((e: MouseEvent) => {
+      sendMessage('mouseMove', {
+        pageX: e.pageX,
+        pageY: e.pageY,
+        clientX: e.clientX,
+        clientY: e.clientY,
+      });
+    }, 20);
+
+    window.addEventListener('mousemove', onMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+    }
+  }, [sendMessage]);
+
+  const registerComponent = useCallback((component: ElementType, parameters: RegisteredComponentParameters) => {
+    registeredComponents.push({ component, ...parameters });
+    sendMessage('registeredComponents', parameters);
+  }, [sendMessage]);
+
+  const getRegistration = useCallback((id: string) => {
+    return registeredComponents.find((registration) => registration.id === id);
+  }, []);
+
+  const reset = useCallback(() => {
+    registeredComponents = [];
+  }, []);
+
   return {
     tree,
-		binding,
+    binding,
     boundData,
+    components: registeredComponents,
+    registerComponent,
+    getRegistration,
+    reset
   }
 };

@@ -1,9 +1,10 @@
 import tokens from "@contentful/f36-tokens";
-import { css } from "@emotion/css";
-import React, { useMemo } from "react";
+import { css, cx } from "@emotion/css";
+import React, { useMemo, useRef } from "react";
 import { BindingMapByBlockId, BoundData } from "../types";
-import { sendMessage } from "../sendMessage";
-import { registerComponent } from "../registerComponent";
+import { useCommunication } from "../hooks/useCommunication";
+import { useInteraction } from "../hooks/useInteraction";
+import { useVisualEditor } from "../hooks/useVisualEditor";
 import { VisualEditorTemplate } from "./VisualEditorTemplate";
 
 const styles = {
@@ -12,6 +13,16 @@ const styles = {
       border: `3px solid ${tokens.blue500}`,
     },
   }),
+  emptyContainer: css({
+    padding: tokens.spacing4Xl
+  }),
+  container: css({
+    backgroundColor: '#ffffff',
+    opacity: 0.8,
+    backgroundImage: 'repeating-linear-gradient(45deg, #f6f6f6 25%, transparent 25%, transparent 75%, #f6f6f6 75%, #f6f6f6), repeating-linear-gradient(45deg, #f6f6f6 25%, #ffffff 25%, #ffffff 75%, #f6f6f6 75%, #f6f6f6)',
+    backgroundPosition: '0 0, 10px 10px',
+    backgroundSize: '20px 20px'
+  })
 };
 
 type VisualEditorBlockProps = {
@@ -27,7 +38,10 @@ export const VisualEditorBlock = ({
   binding,
   boundData,
 }: VisualEditorBlockProps) => {
-  const { getRegistration } = registerComponent();
+  const { sendMessage } = useCommunication();
+  const { getRegistration } = useVisualEditor();
+  const { onComponentDropped } = useInteraction();
+  const wasMousePressed = useRef(false);
 
   const blockType = node.data.blockId.split(":")[0];
 
@@ -73,6 +87,11 @@ export const VisualEditorBlock = ({
         : undefined,
     };
   }, [template, binding, node, boundData]);
+  // console.log("for node", node);
+  // console.log("data", boundData);
+  // console.log("template", template);
+  // console.log("nodeBinding", nodeBinding);
+  // console.log("nodeBoundProps", nodeBoundProps);
 
   const props = useMemo(() => {
     if (!blockConfiguration) {
@@ -84,7 +103,6 @@ export const VisualEditorBlock = ({
         ? nodeBoundProps[variable.name]?.value
         : undefined;
 
-      console.log('variable', variable.name, boundValue || node.data.props[variable.name] || variable.defaultValue);
       return {
         ...acc,
         [variable.name]:
@@ -119,11 +137,23 @@ export const VisualEditorBlock = ({
       );
     }
 
+    // if childnode's binding is present in the template, then pass the template on
+    // if not, then template should be undefined as we consider it the end of the template's scope
+    // there can be child nodes in the template that are dropped separtely and hence are unrelated to the current template
+		const parentTemplateBoundData = template && boundData[template.data.blockId];
+		const parentTemplateBoundDataSourceData = parentTemplateBoundData
+			? parentTemplateBoundData[template.data.dataSource?.sys.id]
+			: undefined;
+
+    const childNodeTemplate = parentTemplateBoundDataSourceData?.[childNode.data.blockId]
+      ? template
+      : undefined;
+
     return (
       <VisualEditorBlock
         node={childNode}
         key={childNode.data.id}
-        template={template}
+        template={childNodeTemplate}
         binding={binding}
         boundData={boundData}
       />
@@ -133,15 +163,22 @@ export const VisualEditorBlock = ({
   return React.createElement(
     component,
     {
-      onClick: (e: MouseEvent) => {
+      onMouseUp: () => {
+        onComponentDropped({ node, template });
+        wasMousePressed.current = false;
+      },
+      onMouseDown: (e: MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
+        wasMousePressed.current = true;
         sendMessage("componentSelected", {
           node,
           template,
         });
       },
-      className: styles.hover,
+      className: cx(styles.hover,
+        blockConfigurationWithoutComponent.container && !children?.length ? styles.emptyContainer : undefined,
+        blockConfigurationWithoutComponent.container ? styles.container : undefined),
       ...props,
     },
     children
