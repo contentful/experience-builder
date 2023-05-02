@@ -15,6 +15,7 @@ build
 dist-ssr
 *.local
 .yarnrc.yml
+vite.config.ts.timestamp-*
 
 # Editor directories and files
 .vscode/*

@@ -1,2 +1,2 @@
 export { VisualEditorRoot } from './blocks'
-export { useExperienceBuilder, useComponents } from './hooks'
+export { useExperienceBuilder, useComponents as useExperienceBuilderComponents } from './hooks'
