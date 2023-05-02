@@ -1,6 +1,5 @@
 {
   "name": "@contentful/experience-builder",
-  "private": "true",
   "version": "0.0.1-alpha-1",
   "source": "./src/index.tsx",
   "main": "./dist/index.cjs",
