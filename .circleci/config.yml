@@ -106,3 +106,5 @@ workflows:
                 - master
                 - next
                 - next-major
+                - alpha
+                - beta
