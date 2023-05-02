@@ -1,7 +1,6 @@
 import tokens from '@contentful/f36-tokens'
 import { css, cx } from '@emotion/css'
 import React from 'react'
-import type { PlainClientAPI } from 'contentful-management'
 import { BindingMapByBlockId, BoundData } from '../types'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
@@ -19,14 +18,12 @@ const styles = {
 }
 
 type VisualEditorRootProps = {
-  cma: PlainClientAPI
   visualEditorData?: Record<string, any>
   binding: BindingMapByBlockId
   boundData: BoundData
 }
 
 export const VisualEditorRoot = ({
-  cma,
   visualEditorData = {},
   binding,
   boundData,

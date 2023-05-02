@@ -1,4 +1,4 @@
-export type RegisteredComponentVariable = {
+export type ComponentDefinitionVariables = {
   name: string
   dataType: string
   defaultValue?: string | boolean
@@ -7,17 +7,11 @@ export type RegisteredComponentVariable = {
   childNode?: boolean
 }
 
-export type RegisteredComponentParameters = {
+export type ComponentDefinition = {
   id: string
   container: boolean
   category: string
-  variables: RegisteredComponentVariable[]
-}
-
-type VisualEditorMessagePayload = {
-  source: string
-  eventType: string
-  payload: any
+  variables: ComponentDefinitionVariables[]
 }
 
 export type Binding = {

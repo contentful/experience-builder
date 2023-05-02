@@ -1,5 +1,6 @@
 import { ElementType, useCallback, useEffect, useState } from 'react'
 import throttle from 'lodash.throttle'
+import type { PlainClientAPI } from 'contentful-management'
 import { BindingMapByBlockId, BoundData } from '../types'
 import { useCommunication } from './useCommunication'
 
@@ -25,13 +26,11 @@ type RegisteredComponentParameters = {
   variables: RegisteredComponentVariable[]
 }
 
-export type RegisteredComponentData = {
-  component: ElementType
-} & RegisteredComponentParameters
+type UseExperienceBuilderProps = {
+  cma: PlainClientAPI
+}
 
-let registeredComponents: RegisteredComponentData[] = []
-
-export const useVisualEditor = () => {
+export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
   const [tree, setTree] = useState({})
   const [binding, setBinding] = useState<BindingMapByBlockId>({})
   const [boundData, setBoundData] = useState<BoundData>({})
@@ -106,29 +105,9 @@ export const useVisualEditor = () => {
     }
   }, [sendMessage])
 
-  const registerComponent = useCallback(
-    (component: ElementType, parameters: RegisteredComponentParameters) => {
-      registeredComponents.push({ component, ...parameters })
-      sendMessage('registeredComponents', parameters)
-    },
-    [sendMessage]
-  )
-
-  const getRegistration = useCallback((id: string) => {
-    return registeredComponents.find((registration) => registration.id === id)
-  }, [])
-
-  const reset = useCallback(() => {
-    registeredComponents = []
-  }, [])
-
   return {
     tree,
     binding,
     boundData,
-    components: registeredComponents,
-    registerComponent,
-    getRegistration,
-    reset,
   }
 }

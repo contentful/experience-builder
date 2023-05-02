@@ -1,5 +1,5 @@
 import tokens from '@contentful/f36-tokens'
-import { css, cx } from '@emotion/css'
+import { css } from '@emotion/css'
 import React, { useRef } from 'react'
 import { BindingMapByBlockId, BoundData } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
