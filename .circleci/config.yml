@@ -1,0 +1,108 @@
+version: 2.1
+orbs:
+  vault: contentful/vault@1
+
+executors:
+  docker-with-node:
+    docker:
+      - image: cimg/node:16.19.0
+    working_directory: ~/build-and-test
+
+commands:
+  install-dependencies:
+    steps:
+      - restore_cache:
+          key: dependency-cache-primary-{{ arch }}-yarn-packages-{{ checksum ".nvmrc"}}-{{ checksum "yarn.lock" }}-{{ .Branch }}
+      - run: yarn install --prefer-offline --pure-lockfile
+      - save_cache:
+          key: dependency-cache-primary-{{ arch }}-yarn-packages-{{ checksum ".nvmrc"}}-{{ checksum "yarn.lock" }}-{{ .Branch }}
+          paths:
+            - ~/.cache/yarn
+
+  persist-workspace:
+    steps:
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  with-workspace:
+    steps:
+      - attach_workspace:
+          at: ~/build-and-test
+
+  use-vault:
+    steps:
+      - vault/get-secrets:
+          template-preset: 'semantic-release-ecosystem'
+
+jobs:
+  prepare:
+    executor: docker-with-node
+    steps:
+      - checkout
+      - run: node --version
+      - install-dependencies
+      - persist-workspace
+
+  build:
+    executor: docker-with-node
+    steps:
+      - with-workspace
+      - run: yarn build
+
+  lint:
+    executor: docker-with-node
+    steps:
+      - with-workspace
+      - run: yarn prettier:check
+      - run: yarn lint
+      - run: yarn check-types
+
+  unit-tests:
+    executor: docker-with-node
+    steps:
+      - with-workspace
+      - run: yarn test:coverage
+      - store_test_results:
+          path: reports
+      - store_artifacts:
+          path: ./reports/clover.xml
+
+  # Do not use the workspace for the release step
+  release:
+    executor: docker-with-node
+    steps:
+      - checkout
+      - use-vault
+      - install-dependencies
+      - run: yarn semantic-release
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - prepare
+      - build:
+          requires:
+            - prepare
+      - lint:
+          requires:
+            - prepare
+      - unit-tests:
+          requires:
+            - prepare
+      - release:
+          context: vault
+          requires:
+            - prepare
+            - build
+            - unit-tests
+            - lint
+          filters:
+            branches:
+              only:
+                - main
+                - master
+                - next
+                - next-major

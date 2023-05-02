@@ -1,3 +1,2 @@
-export { registerComponent } from './registerComponent';
-export { VisualEditorRenderer, renderVisualEditor } from './VisualEditorRenderer';
-export { sendMessage } from  './sendMessage'
+export { VisualEditorRoot } from './blocks'
+export { useExperienceBuilder, useComponents as useExperienceBuilderComponents } from './hooks'
