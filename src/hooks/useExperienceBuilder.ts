@@ -1,4 +1,4 @@
-import { ElementType, useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import throttle from 'lodash.throttle'
 import type { PlainClientAPI } from 'contentful-management'
 import { BindingMapByBlockId, BoundData } from '../types'
@@ -8,22 +8,6 @@ type VisualEditorMessagePayload = {
   source: string
   eventType: string
   payload: any
-}
-
-type RegisteredComponentVariable = {
-  name: string
-  dataType: string
-  defaultValue?: string | boolean
-  options?: string[]
-  required?: boolean
-  childNode?: boolean
-}
-
-type RegisteredComponentParameters = {
-  id: string
-  container: boolean
-  category: string
-  variables: RegisteredComponentVariable[]
 }
 
 type UseExperienceBuilderProps = {
