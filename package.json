@@ -64,7 +64,9 @@
       "master",
       "main",
       "next",
-      "next-major"
+      "next-major",
+      { "name": "beta", "prerelease": true },
+      { "name": "alpha", "prerelease": true }
     ],
     "plugins": [
       [
