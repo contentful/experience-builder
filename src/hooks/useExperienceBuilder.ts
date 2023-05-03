@@ -3,6 +3,7 @@ import throttle from 'lodash.throttle'
 import type { PlainClientAPI } from 'contentful-management'
 import { BindingMapByBlockId, BoundData } from '../types'
 import { useCommunication } from './useCommunication'
+import { CONTENTFUL_WEB_APP_ORIGIN } from '../constants'
 
 type VisualEditorMessagePayload = {
   source: string
@@ -12,6 +13,13 @@ type VisualEditorMessagePayload = {
 
 type UseExperienceBuilderProps = {
   cma: PlainClientAPI
+}
+
+const getAppOrigins = () => {
+  if (process?.env?.REACT_APP_EXPERIENCE_BUILDER_ORIGIN) {
+    return [process.env.REACT_APP_EXPERIENCE_BUILDER_ORIGIN]
+  }
+  return [CONTENTFUL_WEB_APP_ORIGIN]
 }
 
 export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
@@ -24,7 +32,7 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       // where the app is contentful hosted when run locally
-      if (event.origin !== 'http://localhost:3001') {
+      if (!getAppOrigins().includes(event.origin)) {
         return
       }
 
