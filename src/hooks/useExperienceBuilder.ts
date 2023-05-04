@@ -16,8 +16,10 @@ type UseExperienceBuilderProps = {
 }
 
 const getAppOrigins = () => {
-  if (process?.env?.REACT_APP_EXPERIENCE_BUILDER_ORIGIN) {
-    return [process.env.REACT_APP_EXPERIENCE_BUILDER_ORIGIN]
+  if (typeof process.env !== 'undefined') {
+    if (process.env?.REACT_APP_EXPERIENCE_BUILDER_ORIGIN) {
+      return [process.env.REACT_APP_EXPERIENCE_BUILDER_ORIGIN]
+    }
   }
   return [CONTENTFUL_WEB_APP_ORIGIN]
 }

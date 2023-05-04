@@ -40,16 +40,13 @@ export const VisualEditorBlock = ({
   boundData,
 }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
-  const { getComponentDefinition } = useComponents()
+  const { getComponent } = useComponents()
   const { onComponentDropped } = useInteraction()
   const wasMousePressed = useRef(false)
 
   const blockType = node.data.blockId.split(':')[0]
 
-  const blockConfiguration = useMemo(
-    () => getComponentDefinition(blockType),
-    [blockType, getComponentDefinition]
-  )
+  const definedComponent = useMemo(() => getComponent(blockType), [blockType, getComponent])
 
   const { nodeBinding = {}, nodeBoundProps = {} } = useMemo(() => {
     // plain node, not a child of a template
@@ -88,19 +85,23 @@ export const VisualEditorBlock = ({
   }, [template, binding, node, boundData])
 
   const props = useMemo(() => {
-    if (!blockConfiguration) {
+    if (!definedComponent) {
       return {}
     }
 
-    return blockConfiguration.componentDefinition.variables.reduce((acc, variable) => {
-      const boundValue = nodeBoundProps ? nodeBoundProps[variable.name]?.value : undefined
+    return Object.entries(definedComponent.componentDefinition.variables).reduce(
+      (acc, [variableName, variableDefinition]) => {
+        const boundValue = nodeBoundProps ? nodeBoundProps[variableName]?.value : undefined
 
-      return {
-        ...acc,
-        [variable.name]: boundValue || node.data.props[variable.name] || variable.defaultValue,
-      }
-    }, {})
-  }, [blockConfiguration, node.data.props, nodeBoundProps])
+        return {
+          ...acc,
+          [variableName]:
+            boundValue || node.data.props[variableName] || variableDefinition.defaultValue,
+        }
+      },
+      {}
+    )
+  }, [definedComponent, node.data.props, nodeBoundProps])
 
   if (node.type === 'template') {
     return (
@@ -113,11 +114,11 @@ export const VisualEditorBlock = ({
     )
   }
 
-  if (!blockConfiguration) {
+  if (!definedComponent) {
     return null
   }
 
-  const { component, componentDefinition } = blockConfiguration
+  const { component, componentDefinition } = definedComponent
 
   const children = node.children.map((childNode: any) => {
     if (childNode.type === 'string') {
@@ -168,8 +169,8 @@ export const VisualEditorBlock = ({
       },
       className: cx(
         styles.hover,
-        componentDefinition.container && !children?.length ? styles.emptyContainer : undefined,
-        componentDefinition.container ? styles.container : undefined
+        componentDefinition.children && !children?.length ? styles.emptyContainer : undefined,
+        componentDefinition.children ? styles.container : undefined
       ),
       ...props,
     },
