@@ -1,13 +1,13 @@
 import React from 'react'
 import { useComponents } from './hooks'
-import { ComponentDefinitionVariableArrayItemType, ComponentDefinitionVariableType } from './types';
+import { ComponentDefinitionVariableArrayItemType, ComponentDefinitionVariableType } from './types'
 
 const Com = () => {
-  return null;
+  return null
 }
 
 export const Test = () => {
-  const { defineComponent } = useComponents();
+  const { defineComponent } = useComponents()
 
   defineComponent(Com, {
     id: 'Com',
@@ -24,22 +24,22 @@ export const Test = () => {
         type: ComponentDefinitionVariableType.ARRAY,
         items: {
           linkType: 'Entry',
-          type: ComponentDefinitionVariableArrayItemType.LINK
-        }
+          type: ComponentDefinitionVariableArrayItemType.LINK,
+        },
       },
       elementsSymbol: {
         type: ComponentDefinitionVariableType.ARRAY,
         items: {
-          type: ComponentDefinitionVariableArrayItemType.SYMBOL
-        }
+          type: ComponentDefinitionVariableArrayItemType.SYMBOL,
+        },
       },
       elementsComponent: {
         type: ComponentDefinitionVariableType.ARRAY,
         items: {
-          type: ComponentDefinitionVariableArrayItemType.COMPONENT
-        }
-      }
-    }
+          type: ComponentDefinitionVariableArrayItemType.COMPONENT,
+        },
+      },
+    },
   })
   return <div data-test-id="test">Test</div>
 }
