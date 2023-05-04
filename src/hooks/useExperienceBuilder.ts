@@ -52,7 +52,6 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
 
         switch (eventData.eventType) {
           case 'componentDropped': {
-            console.log('component dropped', payload)
             break
           }
           case 'componentTreeUpdated': {
@@ -64,7 +63,6 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
           case 'valueChanged': {
             const { boundData = {}, binding = {} } = payload
             setBinding(binding)
-            console.log('setting stuff', boundData)
             setBoundData(boundData)
             break
           }
