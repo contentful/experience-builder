@@ -33,7 +33,7 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
-      // where the app is contentful hosted when run locally
+      // makes sure that the message originates from contentful web app
       if (!getAppOrigins().includes(event.origin)) {
         return
       }

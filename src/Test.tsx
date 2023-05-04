@@ -18,7 +18,7 @@ export const Test = () => {
         linkType: 'Asset',
       },
       isChecked: {
-        type: ComponentDefinitionVariableType.TEXT,
+        type: ComponentDefinitionVariableType.BOOLEAN,
       },
       elements: {
         type: ComponentDefinitionVariableType.ARRAY,
