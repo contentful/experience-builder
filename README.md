@@ -26,3 +26,9 @@ const App = () => {
   );
 }
 ```
+
+In case you expect the message to arrive from a different origin, define this environment variable with your desired value
+
+```sh
+REACT_APP_EXPERIENCE_BUILDER_ORIGIN=https://localhost:3001 # https://app.contentful.com by default
+```

@@ -20,7 +20,7 @@ export const useComponents = () => {
     [sendMessage]
   )
 
-  const getComponentDefinition = useCallback((id: string) => {
+  const getComponent = useCallback((id: string) => {
     return registeredComponentDefinitions.find(
       (definition) => definition.componentDefinition.id === id
     )
@@ -28,6 +28,6 @@ export const useComponents = () => {
 
   return {
     defineComponent,
-    getComponentDefinition,
+    getComponent,
   }
 }

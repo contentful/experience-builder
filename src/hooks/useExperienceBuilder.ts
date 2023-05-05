@@ -3,6 +3,7 @@ import throttle from 'lodash.throttle'
 import type { PlainClientAPI } from 'contentful-management'
 import { BindingMapByBlockId, BoundData } from '../types'
 import { useCommunication } from './useCommunication'
+import { CONTENTFUL_WEB_APP_ORIGIN } from '../constants'
 
 type VisualEditorMessagePayload = {
   source: string
@@ -14,6 +15,15 @@ type UseExperienceBuilderProps = {
   cma: PlainClientAPI
 }
 
+const getAppOrigins = () => {
+  if (typeof process.env !== 'undefined') {
+    if (process.env?.REACT_APP_EXPERIENCE_BUILDER_ORIGIN) {
+      return [process.env.REACT_APP_EXPERIENCE_BUILDER_ORIGIN]
+    }
+  }
+  return [CONTENTFUL_WEB_APP_ORIGIN]
+}
+
 export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
   const [tree, setTree] = useState({})
   const [binding, setBinding] = useState<BindingMapByBlockId>({})
@@ -23,8 +33,8 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
-      // where the app is contentful hosted when run locally
-      if (event.origin !== 'http://localhost:3001') {
+      // makes sure that the message originates from contentful web app
+      if (!getAppOrigins().includes(event.origin)) {
         return
       }
 
@@ -44,7 +54,6 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
 
         switch (eventData.eventType) {
           case 'componentDropped': {
-            console.log('component dropped', payload)
             break
           }
           case 'componentTreeUpdated': {
@@ -56,7 +65,6 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
           case 'valueChanged': {
             const { boundData = {}, binding = {} } = payload
             setBinding(binding)
-            console.log('setting stuff', boundData)
             setBoundData(boundData)
             break
           }
