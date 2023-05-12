@@ -8,7 +8,7 @@ import { VisualEditorBlock } from './VisualEditorBlock'
 const styles = {
   root: css({
     height: '45vh',
-    paddingBottom: '30%',
+    paddingBottom: '355.05px',
     overflow: 'scroll',
   }),
   hover: css({
