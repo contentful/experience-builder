@@ -1,4 +1,4 @@
-export enum ComponentDefinitionVariableType {
+export const enum ComponentDefinitionVariableType {
   TEXT = 'Text',
   NUMBER = 'Number',
   DATE = 'Date',
@@ -8,7 +8,7 @@ export enum ComponentDefinitionVariableType {
   ARRAY = 'Array',
 }
 
-export enum ComponentDefinitionVariableArrayItemType {
+export const enum ComponentDefinitionVariableArrayItemType {
   LINK = 'Link',
   SYMBOL = 'Symbol',
   COMPONENT = 'Component',
