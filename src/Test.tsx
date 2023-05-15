@@ -2,16 +2,16 @@ import React from 'react'
 import { useComponents } from './hooks'
 import { ComponentDefinitionVariableArrayItemType, ComponentDefinitionVariableType } from './types'
 
-const Com = () => {
+const TestComponent = () => {
   return null
 }
 
 export const Test = () => {
   const { defineComponent } = useComponents()
 
-  defineComponent(Com, {
-    id: 'Com',
-    name: 'Com',
+  defineComponent(TestComponent, {
+    id: 'TestComponent',
+    name: 'TestComponent',
     variables: {
       name: {
         type: ComponentDefinitionVariableType.LINK,

@@ -7,6 +7,24 @@ export type ComponentDefinitionWithComponentType = {
   componentDefinition: ComponentDefinition
 }
 
+const cloneObject = <T>(targetObject: T): T => {
+  if (typeof structuredClone !== 'undefined') {
+    return structuredClone(targetObject)
+  }
+
+  return JSON.parse(JSON.stringify(targetObject))
+}
+
+const applyFallbacks = (componentDefinition: ComponentDefinition) => {
+  const clone = cloneObject(componentDefinition)
+  for (const variable of Object.values(clone.variables)) {
+    if (!variable.group) {
+      variable.group = 'content'
+    }
+  }
+  return clone
+}
+
 const registeredComponentDefinitions: ComponentDefinitionWithComponentType[] = []
 
 export const useComponents = () => {
@@ -14,7 +32,11 @@ export const useComponents = () => {
 
   const defineComponent = useCallback(
     (component: ElementType, parameters: ComponentDefinition) => {
-      registeredComponentDefinitions.push({ component, componentDefinition: parameters })
+      const definitionWithFallbacks = applyFallbacks(parameters)
+      registeredComponentDefinitions.push({
+        component,
+        componentDefinition: definitionWithFallbacks,
+      })
       sendMessage('registeredComponents', parameters)
     },
     [sendMessage]
