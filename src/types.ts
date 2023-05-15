@@ -21,7 +21,7 @@ export type ComponentDefinitionVariableValidation = {
 export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVariableType> {
   type: T
   validations?: ComponentDefinitionVariableValidation
-  isStyle?: boolean
+  group?: 'style' | 'content'
   description?: string
   defaultValue?: string | boolean | number
 }
