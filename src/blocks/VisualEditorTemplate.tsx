@@ -1,7 +1,7 @@
 import tokens from '@contentful/f36-tokens'
 import { css } from '@emotion/css'
 import React, { useRef } from 'react'
-import { BindingMapByBlockId, BoundData } from '../types'
+import { BindingMapByBlockId, BoundData, OutcomingExperienceBuilderEvent } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
@@ -50,7 +50,7 @@ export const VisualEditorTemplate = ({ node, binding, boundData }: VisualEditorT
       onMouseDown: (e: MouseEvent) => {
         e.preventDefault()
         wasMousePressed.current = true
-        sendMessage('componentSelected', { node, template: node })
+        sendMessage(OutcomingExperienceBuilderEvent.COMPONENT_SELECTED, { node, template: node })
       },
       className: styles.hover,
     },

@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react'
 import throttle from 'lodash.throttle'
 import type { PlainClientAPI } from 'contentful-management'
-import { BindingMapByBlockId, BoundData } from '../types'
+import {
+  BindingMapByBlockId,
+  BoundData,
+  IncomingExperienceBuilderEvent,
+  OutcomingExperienceBuilderEvent,
+} from '../types'
 import { useCommunication } from './useCommunication'
 import { CONTENTFUL_WEB_APP_ORIGIN } from '../constants'
 
 type VisualEditorMessagePayload = {
   source: string
-  eventType: string
+  eventType: IncomingExperienceBuilderEvent
   payload: any
 }
 
@@ -53,16 +58,13 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
         const { payload } = eventData
 
         switch (eventData.eventType) {
-          case 'componentDropped': {
-            break
-          }
-          case 'componentTreeUpdated': {
+          case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
             const { tree, binding = {} } = payload
             setTree(tree)
             setBinding(binding)
             break
           }
-          case 'valueChanged': {
+          case IncomingExperienceBuilderEvent.COMPONENT_VALUE_CHANGED: {
             const { boundData = {}, binding = {} } = payload
             setBinding(binding)
             setBoundData(boundData)
@@ -82,7 +84,7 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
 
   useEffect(() => {
     const onMouseMove = throttle((e: MouseEvent) => {
-      sendMessage('mouseMove', {
+      sendMessage(OutcomingExperienceBuilderEvent.MOUSE_MOVE, {
         pageX: e.pageX,
         pageY: e.pageY,
         clientX: e.clientX,

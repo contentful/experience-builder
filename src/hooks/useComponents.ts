@@ -1,6 +1,6 @@
 import { ElementType, useCallback } from 'react'
 import { useCommunication } from './useCommunication'
-import { ComponentDefinition } from '../types'
+import { ComponentDefinition, OutcomingExperienceBuilderEvent } from '../types'
 
 export type ComponentDefinitionWithComponentType = {
   component: ElementType
@@ -37,7 +37,7 @@ export const useComponents = () => {
         component,
         componentDefinition: definitionWithFallbacks,
       })
-      sendMessage('registeredComponents', parameters)
+      sendMessage(OutcomingExperienceBuilderEvent.REGISTERED_COMPONENTS, parameters)
     },
     [sendMessage]
   )

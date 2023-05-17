@@ -1,7 +1,7 @@
 import tokens from '@contentful/f36-tokens'
 import { css, cx } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
-import { BindingMapByBlockId, BoundData } from '../types'
+import { BindingMapByBlockId, BoundData, OutcomingExperienceBuilderEvent } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorTemplate } from './VisualEditorTemplate'
@@ -162,7 +162,7 @@ export const VisualEditorBlock = ({
         e.stopPropagation()
         e.preventDefault()
         wasMousePressed.current = true
-        sendMessage('componentSelected', {
+        sendMessage(OutcomingExperienceBuilderEvent.COMPONENT_SELECTED, {
           node,
           template,
         })

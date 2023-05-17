@@ -1,3 +1,15 @@
+export enum OutcomingExperienceBuilderEvent {
+  REGISTERED_COMPONENTS = 'registeredComponents',
+  MOUSE_MOVE = 'mouseMove',
+  COMPONENT_SELECTED = 'componentSelected',
+  COMPONENT_DROPPED = 'componentDropped',
+}
+
+export enum IncomingExperienceBuilderEvent {
+  COMPOSITION_UPDATED = 'componentTreeUpdated',
+  COMPONENT_VALUE_CHANGED = 'valueChanged',
+}
+
 export enum ComponentDefinitionVariableType {
   TEXT = 'Text',
   NUMBER = 'Number',
