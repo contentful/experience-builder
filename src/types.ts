@@ -1,3 +1,5 @@
+import { Link } from 'contentful-management'
+
 export enum OutcomingExperienceBuilderEvent {
   REGISTERED_COMPONENTS = 'registeredComponents',
   MOUSE_MOVE = 'mouseMove',
@@ -101,7 +103,34 @@ export type ComponentBinding = Record<string, Binding>
 export type BindingMap = Record<string, ComponentBinding>
 export type BindingMapByBlockId = Record<string, BindingMap>
 
-type BoundVariable = Record<string, { value?: any }>
-export type BoundDataMap = Record<string, BoundVariable>
-export type BoundDataByEntityId = Record<string, BoundDataMap>
-export type BoundData = Record<string, BoundDataByEntityId>
+type DataSourceEntry = Record<
+  string,
+  Link<'Entry'> | Link<'Asset'> | { value: string | number | boolean | undefined }
+>
+export type LocalizedDataSource = Record<string, Record<string, DataSourceEntry>>
+
+// TODO: add conditional typing magic to reduce the number of optionals
+export type TreeNode = {
+  type: 'block' | 'root'
+  data: {
+    id: string
+    blockId?: string // will be undefined in case string node or if root component
+    propKey?: string // will have the key of variable that block configuration marked as "childNode"
+    props: Record<string, { path: string; type: 'BoundValue' | 'UnboundValue' }>
+    dataSource: Record<
+      string,
+      Record<
+        string,
+        Link<'Entry'> | Link<'Asset'> | { value: string | boolean | number | undefined }
+      >
+    >
+  }
+  children: TreeNode[]
+  parentId?: string
+}
+
+export type Tree = {
+  root: TreeNode
+}
+
+export type Experience = { tree?: Tree; dataSource: LocalizedDataSource }
