@@ -13,18 +13,14 @@ type VisualEditorMessagePayload = {
 
 type UseExperienceBuilderProps = {
   cma: PlainClientAPI
+  origin?: string
 }
 
-const getAppOrigins = () => {
-  if (typeof process.env !== 'undefined') {
-    if (process.env?.REACT_APP_EXPERIENCE_BUILDER_ORIGIN) {
-      return [process.env.REACT_APP_EXPERIENCE_BUILDER_ORIGIN]
-    }
-  }
-  return [CONTENTFUL_WEB_APP_ORIGIN]
+const getAppOrigins = (origin: string | undefined) => {
+  return [origin || CONTENTFUL_WEB_APP_ORIGIN]
 }
 
-export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
+export const useExperienceBuilder = ({ origin }: UseExperienceBuilderProps) => {
   const [tree, setTree] = useState({})
   const [binding, setBinding] = useState<BindingMapByBlockId>({})
   const [boundData, setBoundData] = useState<BoundData>({})
@@ -34,7 +30,7 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       // makes sure that the message originates from contentful web app
-      if (!getAppOrigins().includes(event.origin)) {
+      if (!getAppOrigins(origin).includes(event.origin)) {
         return
       }
 
