@@ -10,7 +10,7 @@ export const useInteraction = () => {
     setMouseOver(true)
   }, [])
 
-  const onMouseLeave = useCallback((e: MouseEvent) => {
+  const onMouseLeave = useCallback(() => {
     setMouseOver(false)
   }, [])
 
