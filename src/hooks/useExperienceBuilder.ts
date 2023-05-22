@@ -4,7 +4,7 @@ import type { PlainClientAPI } from 'contentful-management'
 import {
   LocalizedDataSource,
   IncomingExperienceBuilderEvent,
-  OutcomingExperienceBuilderEvent,
+  OutgoingExperienceBuilderEvent,
   Experience,
   Tree,
 } from '../types'
@@ -96,7 +96,7 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
 
   useEffect(() => {
     const onMouseMove = throttle((e: MouseEvent) => {
-      sendMessage(OutcomingExperienceBuilderEvent.MOUSE_MOVE, {
+      sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
         pageX: e.pageX,
         pageY: e.pageY,
         clientX: e.clientX,

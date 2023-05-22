@@ -1,6 +1,6 @@
 import { Link } from 'contentful-management'
 
-export enum OutcomingExperienceBuilderEvent {
+export enum OutgoingExperienceBuilderEvent {
   REGISTERED_COMPONENTS = 'registeredComponents',
   MOUSE_MOVE = 'mouseMove',
   COMPONENT_SELECTED = 'componentSelected',

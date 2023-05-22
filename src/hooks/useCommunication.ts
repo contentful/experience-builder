@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import { OutcomingExperienceBuilderEvent } from '../types'
+import { OutgoingExperienceBuilderEvent } from '../types'
 
 export const useCommunication = () => {
-  const sendMessage = useCallback((eventType: OutcomingExperienceBuilderEvent, data: any) => {
+  const sendMessage = useCallback((eventType: OutgoingExperienceBuilderEvent, data: any) => {
     console.log('data sent', {
       source: 'customer-app',
       eventType,

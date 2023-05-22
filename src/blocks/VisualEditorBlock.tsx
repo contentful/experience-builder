@@ -5,7 +5,7 @@ import get from 'lodash.get'
 import {
   BindingMapByBlockId,
   LocalizedDataSource,
-  OutcomingExperienceBuilderEvent,
+  OutgoingExperienceBuilderEvent,
   TreeNode,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
@@ -111,7 +111,7 @@ export const VisualEditorBlock = ({ node, locale, dataSource }: VisualEditorBloc
         e.stopPropagation()
         e.preventDefault()
         wasMousePressed.current = true
-        sendMessage(OutcomingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
+        sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
       },
       className: cx(
         styles.hover,
