@@ -1,10 +1,15 @@
 import tokens from '@contentful/f36-tokens'
 import { css, cx } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
-import { BindingMapByBlockId, BoundData } from '../types'
+import get from 'lodash.get'
+import {
+  BindingMapByBlockId,
+  LocalizedDataSource,
+  OutgoingExperienceBuilderEvent,
+  TreeNode,
+} from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
-import { VisualEditorTemplate } from './VisualEditorTemplate'
 import { useComponents } from '../hooks'
 
 const styles = {
@@ -27,92 +32,56 @@ const styles = {
 }
 
 type VisualEditorBlockProps = {
-  node: any
-  template?: any
-  binding: BindingMapByBlockId
-  boundData: BoundData
+  node: TreeNode
+  locale: string
+  dataSource: LocalizedDataSource
 }
 
-export const VisualEditorBlock = ({
-  node,
-  template,
-  binding,
-  boundData,
-}: VisualEditorBlockProps) => {
+export const VisualEditorBlock = ({ node, locale, dataSource }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
   const { onComponentDropped } = useInteraction()
   const wasMousePressed = useRef(false)
 
-  const blockType = node.data.blockId.split(':')[0]
-
-  const definedComponent = useMemo(() => getComponent(blockType), [blockType, getComponent])
-
-  const { nodeBinding = {}, nodeBoundProps = {} } = useMemo(() => {
-    // plain node, not a child of a template
-    if (!template) {
-      return {
-        nodeBinding: binding[node.data.blockId],
-        nodeBoundProps: boundData[node.data.blockId],
-      }
-    }
-
-    // child of a template, but not template root node
-    if (node.type !== 'template') {
-      const parentTemplateBoundData = boundData[template.data.blockId]
-      const parentTemplateBinding = binding[template.data.blockId]
-
-      const parentTemplateBoundDataSourceData = parentTemplateBoundData
-        ? parentTemplateBoundData[template.data.dataSource?.sys.id]
-        : undefined
-
-      return {
-        nodeBinding: parentTemplateBinding ? parentTemplateBinding[node.data.blockId] : undefined,
-        nodeBoundProps: parentTemplateBoundDataSourceData
-          ? parentTemplateBoundDataSourceData[node.data.blockId]
-          : undefined,
-      }
-    }
-
-    // template root node
-    const templateBoundData = boundData[node.data.blockId]
-    return {
-      nodeBinding: binding[node.data.blockId],
-      nodeBoundProps: templateBoundData
-        ? templateBoundData[template.data.dataSource.sys.id]
-        : undefined,
-    }
-  }, [template, binding, node, boundData])
+  const definedComponent = useMemo(
+    () => getComponent(node.data.blockId as string),
+    [node, getComponent]
+  )
 
   const props = useMemo(() => {
     if (!definedComponent) {
       return {}
     }
 
+    const dataSourceForCurrentLocale = dataSource[locale]
+
+    const getValueFromDataSource = ({ path, fallback }: { path: string; fallback: any }) => {
+      const pathWithoutFirstSlash = path.slice(1)
+      const lodashPath = pathWithoutFirstSlash.split('/').join('.')
+      return get(dataSourceForCurrentLocale, lodashPath, fallback)
+    }
+
     return Object.entries(definedComponent.componentDefinition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
-        const boundValue = nodeBoundProps ? nodeBoundProps[variableName]?.value : undefined
-
-        return {
-          ...acc,
-          [variableName]:
-            boundValue || node.data.props[variableName] || variableDefinition.defaultValue,
+        const variableMapping = node.data.props[variableName]
+        if (variableMapping.type === 'UnboundValue') {
+          const value = getValueFromDataSource({
+            path: variableMapping.path,
+            fallback: variableDefinition.defaultValue,
+          })
+          return {
+            ...acc,
+            [variableName]: value,
+          }
+        } else {
+          // TODO: do the same stuff, but for the fetched entity (do we pass the fetched entity or does fetching)
+          // happen on the sdk side?
+          return acc
         }
       },
       {}
     )
-  }, [definedComponent, node.data.props, nodeBoundProps])
-
-  if (node.type === 'template') {
-    return (
-      <VisualEditorTemplate
-        key={node.data.id}
-        node={node}
-        binding={binding}
-        boundData={boundData}
-      />
-    )
-  }
+  }, [definedComponent, node.data.props, dataSource, locale])
 
   if (!definedComponent) {
     return null
@@ -121,32 +90,12 @@ export const VisualEditorBlock = ({
   const { component, componentDefinition } = definedComponent
 
   const children = node.children.map((childNode: any) => {
-    if (childNode.type === 'string') {
-      return (
-        nodeBoundProps[childNode.data.propKey]?.value ||
-        childNode.data.props[childNode.data.propKey]
-      )
-    }
-
-    // if childnode's binding is present in the template, then pass the template on
-    // if not, then template should be undefined as we consider it the end of the template's scope
-    // there can be child nodes in the template that are dropped separtely and hence are unrelated to the current template
-    const parentTemplateBoundData = template && boundData[template.data.blockId]
-    const parentTemplateBoundDataSourceData = parentTemplateBoundData
-      ? parentTemplateBoundData[template.data.dataSource?.sys.id]
-      : undefined
-
-    const childNodeTemplate = parentTemplateBoundDataSourceData?.[childNode.data.blockId]
-      ? template
-      : undefined
-
     return (
       <VisualEditorBlock
         node={childNode}
         key={childNode.data.id}
-        template={childNodeTemplate}
-        binding={binding}
-        boundData={boundData}
+        locale={locale}
+        dataSource={dataSource}
       />
     )
   })
@@ -155,17 +104,14 @@ export const VisualEditorBlock = ({
     component,
     {
       onMouseUp: () => {
-        onComponentDropped({ node, template })
+        onComponentDropped({ node })
         wasMousePressed.current = false
       },
       onMouseDown: (e: MouseEvent) => {
         e.stopPropagation()
         e.preventDefault()
         wasMousePressed.current = true
-        sendMessage('componentSelected', {
-          node,
-          template,
-        })
+        sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
       },
       className: cx(
         styles.hover,

@@ -1,13 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import throttle from 'lodash.throttle'
 import type { PlainClientAPI } from 'contentful-management'
-import { BindingMapByBlockId, BoundData } from '../types'
+import {
+  LocalizedDataSource,
+  IncomingExperienceBuilderEvent,
+  OutgoingExperienceBuilderEvent,
+  Experience,
+  Tree,
+} from '../types'
 import { useCommunication } from './useCommunication'
 import { CONTENTFUL_WEB_APP_ORIGIN } from '../constants'
+import { getDataSourceFromTree } from '../utils'
 
 type VisualEditorMessagePayload = {
   source: string
-  eventType: string
+  eventType: IncomingExperienceBuilderEvent
   payload: any
 }
 
@@ -25,9 +32,9 @@ const getAppOrigins = () => {
 }
 
 export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
-  const [tree, setTree] = useState({})
-  const [binding, setBinding] = useState<BindingMapByBlockId>({})
-  const [boundData, setBoundData] = useState<BoundData>({})
+  const [tree, setTree] = useState<Tree>()
+  const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
+  const [locale, setLocale] = useState<string>()
 
   const { sendMessage } = useCommunication()
 
@@ -53,19 +60,26 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
         const { payload } = eventData
 
         switch (eventData.eventType) {
-          case 'componentDropped': {
-            break
-          }
-          case 'componentTreeUpdated': {
-            const { tree, binding = {} } = payload
+          case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
+            const { tree, locale } = payload
             setTree(tree)
-            setBinding(binding)
+            setLocale(locale)
+            setDataSource(getDataSourceFromTree(tree))
             break
           }
-          case 'valueChanged': {
-            const { boundData = {}, binding = {} } = payload
-            setBinding(binding)
-            setBoundData(boundData)
+          case IncomingExperienceBuilderEvent.COMPONENT_VALUE_CHANGED: {
+            /** TODO: at the moment, not sure how to best handle this case.
+             * we need to know the variable name, component id, locale
+             * should experience builder update the tree and send the updated tree?
+             * should we update it here instead of going over the whole tree again?
+             * getDataSourceFromTree(tree)
+             *
+             * Currently experience builder (user_interface) puts default value into dataSource
+             * and marks it with `type: UnboundValue`
+             *
+             * If there has been no defaultValue, then there will be no entry with uuid in dataSource
+             *
+             */
             break
           }
           default:
@@ -82,7 +96,7 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
 
   useEffect(() => {
     const onMouseMove = throttle((e: MouseEvent) => {
-      sendMessage('mouseMove', {
+      sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
         pageX: e.pageX,
         pageY: e.pageY,
         clientX: e.clientX,
@@ -97,9 +111,16 @@ export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
     }
   }, [sendMessage])
 
+  const experience: Experience = useMemo(
+    () => ({
+      tree,
+      dataSource,
+    }),
+    [tree, dataSource]
+  )
+
   return {
-    tree,
-    binding,
-    boundData,
+    experience,
+    locale,
   }
 }

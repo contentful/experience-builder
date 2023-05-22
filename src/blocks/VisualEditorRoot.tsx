@@ -1,7 +1,7 @@
 import tokens from '@contentful/f36-tokens'
 import { css, cx } from '@emotion/css'
 import React from 'react'
-import { BindingMapByBlockId, BoundData } from '../types'
+import { Experience } from '../types'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
 
@@ -20,19 +20,16 @@ const styles = {
 }
 
 type VisualEditorRootProps = {
-  visualEditorData?: Record<string, any>
-  binding: BindingMapByBlockId
-  boundData: BoundData
+  experience: Experience
+  locale: string
 }
 
-export const VisualEditorRoot = ({
-  visualEditorData = {},
-  binding,
-  boundData,
-}: VisualEditorRootProps) => {
+export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
   const { onComponentDropped } = useInteraction()
 
-  if (!visualEditorData.root) {
+  const { tree, dataSource } = experience
+
+  if (!tree) {
     return React.createElement(
       'div',
       {
@@ -50,11 +47,11 @@ export const VisualEditorRoot = ({
     {
       className: styles.root,
       onMouseUp: () => {
-        onComponentDropped({ node: visualEditorData.root })
+        onComponentDropped({ node: tree.root })
       },
     },
-    visualEditorData.root.children.map((node: any) => (
-      <VisualEditorBlock key={node.data.id} node={node} binding={binding} boundData={boundData} />
+    tree.root.children.map((node: any) => (
+      <VisualEditorBlock key={node.data.id} node={node} locale={locale} dataSource={dataSource} />
     ))
   )
 }
