@@ -6,7 +6,7 @@ import {
   CompositionVariableValueType,
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
-  TreeNode,
+  CompositionComponentNode,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
@@ -33,7 +33,7 @@ const styles = {
 }
 
 type VisualEditorBlockProps = {
-  node: TreeNode
+  node: CompositionComponentNode
   locale: string
   dataSource: LocalizedDataSource
 }
@@ -74,6 +74,13 @@ export const VisualEditorBlock = ({ node, locale, dataSource }: VisualEditorBloc
     return Object.entries(definedComponent.componentDefinition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variableMapping = node.data.props[variableName]
+        if (!variableMapping) {
+          return {
+            ...acc,
+            [variableName]: variableDefinition.defaultValue,
+          }
+        }
+
         if (variableMapping.type === 'UnboundValue') {
           const value = getValueFromDataSource({
             path: variableMapping.path,

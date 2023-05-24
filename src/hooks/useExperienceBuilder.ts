@@ -5,7 +5,7 @@ import {
   IncomingExperienceBuilderEvent,
   OutgoingExperienceBuilderEvent,
   Experience,
-  Tree,
+  CompositionTree,
 } from '../types'
 import { useCommunication } from './useCommunication'
 import { CONTENTFUL_WEB_APP_ORIGIN } from '../constants'
@@ -27,7 +27,7 @@ const getAppOrigins = () => {
 }
 
 export const useExperienceBuilder = () => {
-  const [tree, setTree] = useState<Tree>()
+  const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
   const [locale, setLocale] = useState<string>()
 

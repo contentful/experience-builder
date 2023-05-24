@@ -1,6 +1,6 @@
-import { LocalizedDataSource, Tree } from './types'
+import { LocalizedDataSource, CompositionTree } from './types'
 
-export const getDataSourceFromTree = (tree: Tree): LocalizedDataSource => {
+export const getDataSourceFromTree = (tree: CompositionTree): LocalizedDataSource => {
   const dataSource: LocalizedDataSource = {}
   const queue = [tree.root]
 

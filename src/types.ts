@@ -110,20 +110,22 @@ export type LocalizedDataSource = Record<
 >
 
 export type CompositionVariableValueType = string | boolean | number | undefined
-type TreeNodePropType = 'BoundValue' | 'UnboundValue' | 'DesignValue'
+type CompositionComponentPropType = 'BoundValue' | 'UnboundValue' | 'DesignValue'
 
-type TreeNodePropValue<T extends TreeNodePropType = TreeNodePropType> = T extends 'DesignValue'
+export type CompositionComponentPropValue<
+  T extends CompositionComponentPropType = CompositionComponentPropType
+> = T extends 'DesignValue'
   ? { type: T; value: CompositionVariableValueType }
   : { type: T; path: string }
 
 // TODO: add conditional typing magic to reduce the number of optionals
-export type TreeNode = {
+export type CompositionComponentNode = {
   type: 'block' | 'root'
   data: {
     id: string
     blockId?: string // will be undefined in case string node or if root component
     propKey?: string // will have the key of variable that block configuration marked as "childNode"
-    props: Record<string, TreeNodePropValue<TreeNodePropType>>
+    props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>
     dataSource: Record<
       string, // locale
       Record<
@@ -132,12 +134,12 @@ export type TreeNode = {
       >
     >
   }
-  children: TreeNode[]
+  children: CompositionComponentNode[]
   parentId?: string
 }
 
-export type Tree = {
-  root: TreeNode
+export type CompositionTree = {
+  root: CompositionComponentNode
 }
 
-export type Experience = { tree?: Tree; dataSource: LocalizedDataSource }
+export type Experience = { tree?: CompositionTree; dataSource: LocalizedDataSource }
