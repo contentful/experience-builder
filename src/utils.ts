@@ -12,11 +12,9 @@ export const getDataSourceFromTree = (tree: Tree): LocalizedDataSource => {
 
     for (const [locale, data] of Object.entries(node.data.dataSource)) {
       if (!dataSource[locale]) {
-        // @ts-expect-error some type mismatches
         dataSource[locale] = { ...data }
       }
 
-      // @ts-expect-error some type mismatches
       dataSource[locale] = {
         ...dataSource[locale],
         ...data,
