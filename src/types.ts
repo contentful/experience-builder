@@ -28,13 +28,14 @@ export enum ComponentDefinitionVariableArrayItemType {
   COMPONENT = 'Component',
 }
 
-export type ComponentDefinitionVariableValidation = {
+export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionVariableType> = {
   required?: boolean
+  in?: (T extends 'string' ? string : T extends 'number' ? number : never)[]
 }
 
 export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVariableType> {
   type: T
-  validations?: ComponentDefinitionVariableValidation
+  validations?: ComponentDefinitionVariableValidation<T>
   group?: 'style' | 'content'
   description?: string
   defaultValue?: string | boolean | number
