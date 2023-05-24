@@ -5,29 +5,18 @@ import {
   useComponents,
   VisualEditorRoot,
 } from '@contentful/experience-builder'
-import { createClient } from 'contentful-management'
-
-// 1. Create cma client
-const cma = createClient(
-  {
-    accessToken: CMA_MANAGEMENT_TOKEN,
-  },
-  {
-    type: 'plain',
-  }
-)
 
 const App = () => {
   const { defineComponent } = useComponents()
 
-  // 2. define components
+  // 1. define components
   useEffect(() => {
     defineComponent('Button', componentDefinition)
   }, [defineComponent])
 
-  const { experience, locale } = useExperienceBuilder({ cma })
+  const { experience, locale } = useExperienceBuilder()
 
-  // 3. Render your app
+  // 2. Render your app
   return <VisualEditorRoot experience={experience} locale={locale} />
 }
 ```

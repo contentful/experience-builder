@@ -12,16 +12,6 @@ export enum IncomingExperienceBuilderEvent {
   COMPONENT_VALUE_CHANGED = 'valueChanged',
 }
 
-// export enum ComponentDefinitionVariableType {
-//   TEXT = 'Text',
-//   NUMBER = 'Number',
-//   DATE = 'Date',
-//   BOOLEAN = 'Boolean',
-//   LOCATION = 'Location',
-//   LINK = 'Link',
-//   ARRAY = 'Array',
-// }
-
 export type ComponentDefinitionVariableType =
   | 'Text'
   | 'Number'
@@ -31,12 +21,6 @@ export type ComponentDefinitionVariableType =
   | 'Link'
   | 'Array'
 export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
-
-// export enum ComponentDefinitionVariableArrayItemType {
-//   LINK = 'Link',
-//   SYMBOL = 'Symbol',
-//   COMPONENT = 'Component',
-// }
 
 export type ComponentDefinitionVariableValidation = {
   required?: boolean
