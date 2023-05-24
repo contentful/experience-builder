@@ -2,6 +2,7 @@ import react from '@vitejs/plugin-react-swc'
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
+import svgr from 'vite-plugin-svgr'
 
 export default defineConfig({
   build: {
@@ -22,5 +23,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [react(), dts()],
+  plugins: [svgr(), react(), dts()],
 })
