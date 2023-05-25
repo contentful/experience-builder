@@ -1,6 +1,6 @@
-import { LocalizedDataSource, Tree } from './types'
+import { LocalizedDataSource, CompositionTree } from './types'
 
-export const getDataSourceFromTree = (tree: Tree): LocalizedDataSource => {
+export const getDataSourceFromTree = (tree: CompositionTree): LocalizedDataSource => {
   const dataSource: LocalizedDataSource = {}
   const queue = [tree.root]
 
@@ -12,11 +12,9 @@ export const getDataSourceFromTree = (tree: Tree): LocalizedDataSource => {
 
     for (const [locale, data] of Object.entries(node.data.dataSource)) {
       if (!dataSource[locale]) {
-        // @ts-expect-error some type mismatches
         dataSource[locale] = { ...data }
       }
 
-      // @ts-expect-error some type mismatches
       dataSource[locale] = {
         ...dataSource[locale],
         ...data,

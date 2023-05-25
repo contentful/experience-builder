@@ -1,6 +1,5 @@
 import React from 'react'
 import { useComponents } from './hooks'
-import { ComponentDefinitionVariableArrayItemType, ComponentDefinitionVariableType } from './types'
 
 const TestComponent = () => {
   return null
@@ -14,29 +13,29 @@ export const Test = () => {
     name: 'TestComponent',
     variables: {
       name: {
-        type: ComponentDefinitionVariableType.LINK,
+        type: 'Link',
         linkType: 'Asset',
       },
       isChecked: {
-        type: ComponentDefinitionVariableType.BOOLEAN,
+        type: 'Boolean',
       },
       elements: {
-        type: ComponentDefinitionVariableType.ARRAY,
+        type: 'Array',
         items: {
           linkType: 'Entry',
-          type: ComponentDefinitionVariableArrayItemType.LINK,
+          type: 'Link',
         },
       },
       elementsSymbol: {
-        type: ComponentDefinitionVariableType.ARRAY,
+        type: 'Array',
         items: {
-          type: ComponentDefinitionVariableArrayItemType.SYMBOL,
+          type: 'Symbol',
         },
       },
       elementsComponent: {
-        type: ComponentDefinitionVariableType.ARRAY,
+        type: 'Array',
         items: {
-          type: ComponentDefinitionVariableArrayItemType.COMPONENT,
+          type: 'Component',
         },
       },
     },
