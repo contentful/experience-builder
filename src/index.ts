@@ -6,4 +6,5 @@ export type {
   ComponentDefinitionVariable,
   CompositionVariableValueType,
   CompositionComponentPropValue,
+  ValidationOption,
 } from './types'
