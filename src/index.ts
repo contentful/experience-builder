@@ -5,4 +5,5 @@ export type {
   Experience,
   ComponentDefinitionVariable,
   CompositionVariableValueType,
+  CompositionComponentPropValue,
 } from './types'
