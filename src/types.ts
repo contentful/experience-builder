@@ -12,21 +12,15 @@ export enum IncomingExperienceBuilderEvent {
   COMPONENT_VALUE_CHANGED = 'valueChanged',
 }
 
-export enum ComponentDefinitionVariableType {
-  TEXT = 'Text',
-  NUMBER = 'Number',
-  DATE = 'Date',
-  BOOLEAN = 'Boolean',
-  LOCATION = 'Location',
-  LINK = 'Link',
-  ARRAY = 'Array',
-}
-
-export enum ComponentDefinitionVariableArrayItemType {
-  LINK = 'Link',
-  SYMBOL = 'Symbol',
-  COMPONENT = 'Component',
-}
+export type ComponentDefinitionVariableType =
+  | 'Text'
+  | 'Number'
+  | 'Date'
+  | 'Boolean'
+  | 'Location'
+  | 'Link'
+  | 'Array'
+export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
 
 export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionVariableType> = {
   required?: boolean
@@ -41,43 +35,42 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
   defaultValue?: string | boolean | number
 }
 
-export interface ComponentDefinitionVariableLink
-  extends ComponentDefinitionVariableBase<ComponentDefinitionVariableType.LINK> {
+export interface ComponentDefinitionVariableLink extends ComponentDefinitionVariableBase<'Link'> {
   linkType: 'Entry' | 'Asset'
 }
 
 export interface ComponentDefinitionVariableArrayOfEntityLinks
-  extends ComponentDefinitionVariableBase<ComponentDefinitionVariableType.ARRAY> {
+  extends ComponentDefinitionVariableBase<'Array'> {
   items: {
-    type: ComponentDefinitionVariableArrayItemType.LINK
+    type: 'Link'
     linkType: 'Entry' | 'Asset'
   }
 }
 
 export interface ComponentDefinitionVariableArrayOfPrimitives
-  extends ComponentDefinitionVariableBase<ComponentDefinitionVariableType.ARRAY> {
-  type: ComponentDefinitionVariableType.ARRAY
+  extends ComponentDefinitionVariableBase<'Array'> {
+  type: 'Array'
 }
 
 export interface ComponentDefinitionVariableArrayOfComponents {
-  type: ComponentDefinitionVariableType.ARRAY
+  type: 'Array'
   items: {
-    type: ComponentDefinitionVariableArrayItemType.COMPONENT
+    type: 'Component'
   }
 }
 
 export type ComponentDefinitionVariableArray<
   K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
-> = K extends ComponentDefinitionVariableArrayItemType.LINK
+> = K extends 'Link'
   ? ComponentDefinitionVariableArrayOfEntityLinks
   : ComponentDefinitionVariableArrayOfPrimitives
 
 export type ComponentDefinitionVariable<
   T extends ComponentDefinitionVariableType,
   K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
-> = T extends ComponentDefinitionVariableType.LINK
+> = T extends 'Link'
   ? ComponentDefinitionVariableLink
-  : T extends ComponentDefinitionVariableType.ARRAY
+  : T extends 'Array'
   ? { items: { type: K } } & ComponentDefinitionVariableArray<K>
   : ComponentDefinitionVariableBase<T>
 
@@ -104,34 +97,50 @@ export type ComponentBinding = Record<string, Binding>
 export type BindingMap = Record<string, ComponentBinding>
 export type BindingMapByBlockId = Record<string, BindingMap>
 
-type DataSourceEntry = Record<
-  string,
-  Link<'Entry'> | Link<'Asset'> | { value: string | number | boolean | undefined }
+type DataSourceEntryValueType =
+  | Link<'Entry'>
+  | Link<'Asset'>
+  | { value: CompositionVariableValueType }
+
+export type LocalizedDataSource = Record<
+  string, // locale
+  Record<
+    string, // uuid
+    DataSourceEntryValueType
+  >
 >
-export type LocalizedDataSource = Record<string, Record<string, DataSourceEntry>>
+
+export type CompositionVariableValueType = string | boolean | number | undefined
+type CompositionComponentPropType = 'BoundValue' | 'UnboundValue' | 'DesignValue'
+
+export type CompositionComponentPropValue<
+  T extends CompositionComponentPropType = CompositionComponentPropType
+> = T extends 'DesignValue'
+  ? { type: T; value: CompositionVariableValueType }
+  : { type: T; path: string }
 
 // TODO: add conditional typing magic to reduce the number of optionals
-export type TreeNode = {
+export type CompositionComponentNode = {
   type: 'block' | 'root'
   data: {
     id: string
     blockId?: string // will be undefined in case string node or if root component
     propKey?: string // will have the key of variable that block configuration marked as "childNode"
-    props: Record<string, { path: string; type: 'BoundValue' | 'UnboundValue' }>
+    props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>
     dataSource: Record<
-      string,
+      string, // locale
       Record<
-        string,
-        Link<'Entry'> | Link<'Asset'> | { value: string | boolean | number | undefined }
+        string, // uuid
+        DataSourceEntryValueType
       >
     >
   }
-  children: TreeNode[]
+  children: CompositionComponentNode[]
   parentId?: string
 }
 
-export type Tree = {
-  root: TreeNode
+export type CompositionTree = {
+  root: CompositionComponentNode
 }
 
-export type Experience = { tree?: Tree; dataSource: LocalizedDataSource }
+export type Experience = { tree?: CompositionTree; dataSource: LocalizedDataSource }

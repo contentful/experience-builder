@@ -3,14 +3,15 @@ import { css, cx } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
 import get from 'lodash.get'
 import {
-  BindingMapByBlockId,
+  CompositionVariableValueType,
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
-  TreeNode,
+  CompositionComponentNode,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
 import { useComponents } from '../hooks'
+import { Link } from 'contentful-management'
 
 const styles = {
   hover: css({
@@ -32,7 +33,7 @@ const styles = {
 }
 
 type VisualEditorBlockProps = {
-  node: TreeNode
+  node: CompositionComponentNode
   locale: string
   dataSource: LocalizedDataSource
 }
@@ -53,17 +54,33 @@ export const VisualEditorBlock = ({ node, locale, dataSource }: VisualEditorBloc
       return {}
     }
 
-    const dataSourceForCurrentLocale = dataSource[locale]
+    const dataSourceForCurrentLocale = dataSource[locale] || {}
 
-    const getValueFromDataSource = ({ path, fallback }: { path: string; fallback: any }) => {
+    const getValueFromDataSource = ({
+      path,
+      fallback,
+    }: {
+      path: string
+      fallback: CompositionVariableValueType
+    }): Link<'Entry'> | Link<'Asset'> | CompositionVariableValueType => {
       const pathWithoutFirstSlash = path.slice(1)
       const lodashPath = pathWithoutFirstSlash.split('/').join('.')
-      return get(dataSourceForCurrentLocale, lodashPath, fallback)
+      return get(dataSourceForCurrentLocale, lodashPath, fallback) as
+        | Link<'Entry'>
+        | Link<'Asset'>
+        | CompositionVariableValueType
     }
 
     return Object.entries(definedComponent.componentDefinition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variableMapping = node.data.props[variableName]
+        if (!variableMapping) {
+          return {
+            ...acc,
+            [variableName]: variableDefinition.defaultValue,
+          }
+        }
+
         if (variableMapping.type === 'UnboundValue') {
           const value = getValueFromDataSource({
             path: variableMapping.path,
@@ -72,6 +89,11 @@ export const VisualEditorBlock = ({ node, locale, dataSource }: VisualEditorBloc
           return {
             ...acc,
             [variableName]: value,
+          }
+        } else if (variableMapping.type === 'DesignValue') {
+          return {
+            ...acc,
+            [variableName]: variableMapping.value,
           }
         } else {
           // TODO: do the same stuff, but for the fetched entity (do we pass the fetched entity or does fetching)

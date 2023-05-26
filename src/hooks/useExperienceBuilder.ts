@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import throttle from 'lodash.throttle'
-import type { PlainClientAPI } from 'contentful-management'
 import {
   LocalizedDataSource,
   IncomingExperienceBuilderEvent,
   OutgoingExperienceBuilderEvent,
   Experience,
-  Tree,
+  CompositionTree,
 } from '../types'
 import { useCommunication } from './useCommunication'
 import { CONTENTFUL_WEB_APP_ORIGIN } from '../constants'
@@ -18,10 +17,6 @@ type VisualEditorMessagePayload = {
   payload: any
 }
 
-type UseExperienceBuilderProps = {
-  cma: PlainClientAPI
-}
-
 const getAppOrigins = () => {
   if (typeof process.env !== 'undefined') {
     if (process.env?.REACT_APP_EXPERIENCE_BUILDER_ORIGIN) {
@@ -31,8 +26,8 @@ const getAppOrigins = () => {
   return [CONTENTFUL_WEB_APP_ORIGIN]
 }
 
-export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
-  const [tree, setTree] = useState<Tree>()
+export const useExperienceBuilder = () => {
+  const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
   const [locale, setLocale] = useState<string>()
 

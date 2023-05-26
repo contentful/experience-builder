@@ -2,8 +2,6 @@ import React from 'react'
 import { renderHook } from '@testing-library/react'
 import { useComponents } from './useComponents'
 
-import { ComponentDefinitionVariableArrayItemType, ComponentDefinitionVariableType } from '../types'
-
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>
 }
@@ -19,29 +17,29 @@ describe('ComponentDefinitions', () => {
       name: 'TestComponent',
       variables: {
         name: {
-          type: ComponentDefinitionVariableType.LINK,
+          type: 'Link',
           linkType: 'Asset',
         },
         isChecked: {
-          type: ComponentDefinitionVariableType.BOOLEAN,
+          type: 'Boolean',
         },
         elements: {
-          type: ComponentDefinitionVariableType.ARRAY,
+          type: 'Array',
           items: {
             linkType: 'Entry',
-            type: ComponentDefinitionVariableArrayItemType.LINK,
+            type: 'Link',
           },
         },
         elementsSymbol: {
-          type: ComponentDefinitionVariableType.ARRAY,
+          type: 'Array',
           items: {
-            type: ComponentDefinitionVariableArrayItemType.SYMBOL,
+            type: 'Symbol',
           },
         },
         elementsComponent: {
-          type: ComponentDefinitionVariableType.ARRAY,
+          type: 'Array',
           items: {
-            type: ComponentDefinitionVariableArrayItemType.COMPONENT,
+            type: 'Component',
           },
         },
       },

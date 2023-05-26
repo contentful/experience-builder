@@ -1,14 +1,15 @@
 import tokens from '@contentful/f36-tokens'
-import { css, cx } from '@emotion/css'
+import { css } from '@emotion/css'
 import React from 'react'
 import { Experience } from '../types'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
+import { EmptyContainer } from './EmptyContainer'
 
 const styles = {
   root: css({
-    height: '45vh',
-    paddingBottom: '355.05px',
+    minHeight: '45vh',
+    paddingBottom: '100px',
     overflow: 'scroll',
   }),
   hover: css({
@@ -29,17 +30,8 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
 
   const { tree, dataSource } = experience
 
-  if (!tree) {
-    return React.createElement(
-      'div',
-      {
-        className: cx(styles.root, styles.hover),
-        onMouseUp: () => {
-          onComponentDropped({ node: { data: { id: 'root' } } })
-        },
-      },
-      []
-    )
+  if (!tree?.root.children.length) {
+    return React.createElement(EmptyContainer, { onComponentDropped }, [])
   }
 
   return React.createElement(
