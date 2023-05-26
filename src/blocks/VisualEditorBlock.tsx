@@ -22,14 +22,6 @@ const styles = {
   emptyContainer: css({
     padding: tokens.spacing4Xl,
   }),
-  container: css({
-    backgroundColor: '#ffffff',
-    opacity: 0.8,
-    backgroundImage:
-      'repeating-linear-gradient(45deg, #f6f6f6 25%, transparent 25%, transparent 75%, #f6f6f6 75%, #f6f6f6), repeating-linear-gradient(45deg, #f6f6f6 25%, #ffffff 25%, #ffffff 75%, #f6f6f6 75%, #f6f6f6)',
-    backgroundPosition: '0 0, 10px 10px',
-    backgroundSize: '20px 20px',
-  }),
 }
 
 type VisualEditorBlockProps = {
@@ -138,7 +130,6 @@ export const VisualEditorBlock = ({ node, locale, dataSource }: VisualEditorBloc
       className: cx(
         styles.hover,
         componentDefinition.children && !children?.length ? styles.emptyContainer : undefined,
-        componentDefinition.children ? styles.container : undefined
       ),
       ...props,
     },

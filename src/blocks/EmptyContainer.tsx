@@ -24,15 +24,19 @@ const styles = {
   }),
 }
 
-export const EmptyContainer = ({ onComponentDropped }: any) => {
+export const EmptyContainer = ({ onComponentDropped, isFirst = true }: any) => {
   return (
     <div
       className={styles.emptyContainer}
       onMouseUp={() => {
         onComponentDropped({ node: { data: { id: 'root' } } })
       }}>
+        {isFirst ?
+          <>
       <EmptyStateIcon />
       <span className={styles.icon}>Add components to begin</span>
+        </>
+        : null }
     </div>
   )
 }
