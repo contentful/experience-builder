@@ -30,6 +30,7 @@ export const useExperienceBuilder = () => {
   const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
   const [locale, setLocale] = useState<string>()
+  const [isDragging, setIsDragging] = useState(false)
 
   const { sendMessage } = useCommunication()
 
@@ -77,6 +78,11 @@ export const useExperienceBuilder = () => {
              */
             break
           }
+          case IncomingExperienceBuilderEvent.COMPONENT_DRAGGING_CHANGED: {
+            const { isDragging } = payload
+            setIsDragging(isDragging)
+            break
+          }
           default:
         }
       }
@@ -110,8 +116,9 @@ export const useExperienceBuilder = () => {
     () => ({
       tree,
       dataSource,
+      isDragging,
     }),
-    [tree, dataSource]
+    [tree, dataSource, isDragging]
   )
 
   return {

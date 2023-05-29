@@ -11,19 +11,19 @@ export const useContentfulSection = () => {
                 type: "Text",
                 group: "style",
                 description: "The margin of the section",
-                defaultValue: "0 30px 0 30px",
+                defaultValue: "0",
             },
             padding: {
                 type: "Text",
                 group: "style",
                 description: "The padding of the section",
-                defaultValue: "0 30px 0 30px",
+                defaultValue: "0",
             },
             backgroundColor: {
                 type: "Text",
                 group: "style",
                 description: "The background color of the section",
-                defaultValue: "none",
+                defaultValue: "transparent",
             },
             width: {
                 type: "Text",

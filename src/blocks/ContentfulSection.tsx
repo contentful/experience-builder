@@ -8,7 +8,6 @@ const styles = {
         overflow: "scroll",
         flexWrap: "wrap",
         justifyContent: "center",
-        alignItems: "center",
     }),
 };
 interface ContentfulSectionProps {
@@ -19,13 +18,14 @@ interface ContentfulSectionProps {
     height: string;
     orientation: string;
     border: string;
+    spacing: string;
     onClick: () => void;
     children: React.ReactNode;
     className?: string;
 }
-export const ContentfulSection = ({ onClick, orientation, margin, padding, backgroundColor, width, height, border, ...props }: ContentfulSectionProps) => {
+export const ContentfulSection = ({ onClick, orientation, margin, padding, backgroundColor, width, height, border, spacing, ...props }: ContentfulSectionProps) => {
     const flexDirection = orientation === "horizontal" ? "row" : "column";
-    const styleOverrides = css({ margin, padding, backgroundColor, width, height, border });
+    const styleOverrides = css({ margin, padding, backgroundColor, width, height, border, gap: spacing });
     return <Flex flexDirection={flexDirection} {...props} className={cx(styles.defaultStyles, styleOverrides, props.className)} />;
 };
 

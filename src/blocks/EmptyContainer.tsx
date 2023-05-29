@@ -1,7 +1,8 @@
-import { css } from '@emotion/css'
+import { css, cx } from '@emotion/css'
 import { ReactComponent as EmptyStateIcon } from './emptyState.svg'
-import React from 'react'
+import React, { useState } from 'react'
 import tokens from '@contentful/f36-tokens'
+import { useInteraction } from '../hooks'
 
 const styles = {
   emptyContainer: css({
@@ -14,29 +15,41 @@ const styles = {
     fontSize: tokens.fontSizeM,
     fontFamily: tokens.fontStackPrimary,
     border: `1px dashed ${tokens.gray500}`,
-    '&:hover': {
-      border: `1px dashed ${tokens.blue500}`,
-      backgroundColor: tokens.blue100,
-    },
+  }),
+  activeState: css({
+    border: `1px dashed ${tokens.blue500}`,
+    backgroundColor: tokens.blue100,
   }),
   icon: css({
     marginLeft: tokens.spacingS,
   }),
 }
 
-export const EmptyContainer = ({ onComponentDropped, isFirst = true }: any) => {
+export interface EmptyContainerProps {
+  isFirst?: boolean;
+  isDragging?: boolean;
+}
+
+export const EmptyContainer = ({ isFirst = true, isDragging = false }: EmptyContainerProps) => {
+  const { onComponentDropped } = useInteraction()
+  const [isHovering, setIsHovering] = useState(false)
+
+  const showContent = isFirst ? (!isDragging || isDragging && !isHovering) : false
+
   return (
     <div
-      className={styles.emptyContainer}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      className={isDragging && isHovering ? cx(styles.emptyContainer, styles.activeState) : styles.emptyContainer}
       onMouseUp={() => {
-        onComponentDropped({ node: { data: { id: 'root' } } })
+        onComponentDropped({ node: { type: 'root', data: { id: 'root' } } })
       }}>
-        {isFirst ?
-          <>
-      <EmptyStateIcon />
-      <span className={styles.icon}>Add components to begin</span>
+      {showContent ?
+        <>
+          <EmptyStateIcon />
+          <span className={styles.icon}>Add components to begin</span>
         </>
-        : null }
+        : null}
     </div>
   )
 }
