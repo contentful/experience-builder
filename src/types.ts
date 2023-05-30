@@ -23,15 +23,22 @@ export type ComponentDefinitionVariableType =
   | 'Array'
 export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
 
-export type ComponentDefinitionVariableValidation = {
+export type ValidationOption<T extends ComponentDefinitionVariableType> = {
+  value: T extends 'Text' ? string : T extends 'Number' ? number : never
+  displayName?: string
+}
+
+export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionVariableType> = {
   required?: boolean
+  in?: ValidationOption<T>[]
 }
 
 export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVariableType> {
   type: T
-  validations?: ComponentDefinitionVariableValidation
+  validations?: ComponentDefinitionVariableValidation<T>
   group?: 'style' | 'content'
   description?: string
+  displayName?: string
   defaultValue?: string | boolean | number
 }
 

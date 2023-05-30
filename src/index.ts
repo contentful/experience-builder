@@ -6,5 +6,6 @@ export type {
   ComponentDefinitionVariable,
   CompositionVariableValueType,
   CompositionComponentPropValue,
+  ValidationOption,
 } from './types'
 export { CONTENTFUL_SECTION_ID } from './constants'
