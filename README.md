@@ -9,7 +9,7 @@ import {
 const App = () => {
   const { defineComponent } = useComponents()
 
-  // 1. define components
+  // 1. Define components
   useEffect(() => {
     defineComponent('Button', componentDefinition)
   }, [defineComponent])
