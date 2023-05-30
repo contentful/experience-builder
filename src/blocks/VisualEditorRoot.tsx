@@ -38,7 +38,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
     if (!(e.currentTarget instanceof HTMLElement)) {
       return
     }
-    if(['root', 'empty-container'].includes(e.currentTarget.dataset.type || '')) {
+    if (['root', 'empty-container'].includes(e.currentTarget.dataset.type || '')) {
       setIsHoveringOnRoot(true)
     }
   }
@@ -47,9 +47,15 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
     return React.createElement(EmptyContainer, { isDragging }, [])
   }
 
-  const sectionOutline = isDragging && isHoveringOnRoot
-    ? <EmptyContainer key='section-outline' isFirst={false} isDragging={isDragging} isHoveringOnRoot={isHoveringOnRoot} />
-    : null
+  const sectionOutline =
+    isDragging && isHoveringOnRoot ? (
+      <EmptyContainer
+        key="section-outline"
+        isFirst={false}
+        isDragging={isDragging}
+        isHoveringOnRoot={isHoveringOnRoot}
+      />
+    ) : null
 
   return React.createElement(
     'div',
@@ -60,10 +66,19 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
       },
       onMouseOver,
       onMouseOut: () => setIsHoveringOnRoot(false),
-      'data-type': 'root'
+      'data-type': 'root',
     },
-    [tree.root.children.map((node: any) => (
-      <VisualEditorBlock key={node.data.id} node={node} locale={locale} dataSource={dataSource} isDragging={isDragging} />
-    )), sectionOutline]
+    [
+      tree.root.children.map((node: any) => (
+        <VisualEditorBlock
+          key={node.data.id}
+          node={node}
+          locale={locale}
+          dataSource={dataSource}
+          isDragging={isDragging}
+        />
+      )),
+      sectionOutline,
+    ]
   )
 }

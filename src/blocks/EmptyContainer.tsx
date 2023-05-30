@@ -26,33 +26,37 @@ const styles = {
 }
 
 export interface EmptyContainerProps {
-  isFirst?: boolean;
-  isDragging?: boolean;
-  isHoveringOnRoot?: boolean;
+  isFirst?: boolean
+  isDragging?: boolean
+  isHoveringOnRoot?: boolean
 }
 
-export const EmptyContainer = ({ isFirst = true, isDragging = false, isHoveringOnRoot = false}: EmptyContainerProps) => {
+export const EmptyContainer = ({
+  isFirst = true,
+  isDragging = false,
+  isHoveringOnRoot = false,
+}: EmptyContainerProps) => {
   const { onComponentDropped, isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
 
-  const showContent = isFirst ? (!isDragging || isDragging && !isMouseOver) : false
+  const showContent = isFirst ? !isDragging || (isDragging && !isMouseOver) : false
 
   const isHighlighted = isDragging && (isHoveringOnRoot || isMouseOver)
 
   return (
     <div
-      data-type='empty-container'
+      data-type="empty-container"
       onMouseOver={onMouseOver}
       onMouseLeave={onMouseLeave}
       className={isHighlighted ? cx(styles.container, styles.highlight) : styles.container}
       onMouseUp={() => {
         onComponentDropped({ node: { type: 'root', data: { id: 'root' } } })
       }}>
-      {showContent ?
+      {showContent ? (
         <>
           <EmptyStateIcon />
           <span className={styles.icon}>Add components to begin</span>
         </>
-        : null}
+      ) : null}
     </div>
   )
 }

@@ -7,6 +7,4 @@ export type {
   CompositionVariableValueType,
   CompositionComponentPropValue,
 } from './types'
-export {
-  CONTENTFUL_SECTION_ID
-} from './constants'
+export { CONTENTFUL_SECTION_ID } from './constants'

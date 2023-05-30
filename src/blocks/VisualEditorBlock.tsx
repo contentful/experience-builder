@@ -18,7 +18,7 @@ const styles = {
     ':hover': {
       border: `1px solid ${tokens.blue500}`,
     },
-  })
+  }),
 }
 
 type VisualEditorBlockProps = {
@@ -28,7 +28,12 @@ type VisualEditorBlockProps = {
   isDragging: boolean
 }
 
-export const VisualEditorBlock = ({ node, locale, dataSource, isDragging }: VisualEditorBlockProps) => {
+export const VisualEditorBlock = ({
+  node,
+  locale,
+  dataSource,
+  isDragging,
+}: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
   const { onComponentDropped } = useInteraction()

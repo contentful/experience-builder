@@ -143,4 +143,8 @@ export type CompositionTree = {
   root: CompositionComponentNode
 }
 
-export type Experience = { tree?: CompositionTree; dataSource: LocalizedDataSource; isDragging: boolean }
+export type Experience = {
+  tree?: CompositionTree
+  dataSource: LocalizedDataSource
+  isDragging: boolean
+}
