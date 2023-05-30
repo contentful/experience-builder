@@ -5,7 +5,7 @@ import tokens from '@contentful/f36-tokens'
 import { useInteraction } from '../hooks'
 
 const styles = {
-  emptyContainer: css({
+  container: css({
     height: '200px',
     display: 'flex',
     alignItems: 'center',
@@ -16,7 +16,7 @@ const styles = {
     fontFamily: tokens.fontStackPrimary,
     border: `1px dashed ${tokens.gray500}`,
   }),
-  activeState: css({
+  highlight: css({
     border: `1px dashed ${tokens.blue500}`,
     backgroundColor: tokens.blue100,
   }),
@@ -28,19 +28,22 @@ const styles = {
 export interface EmptyContainerProps {
   isFirst?: boolean;
   isDragging?: boolean;
+  isHoveringOnRoot?: boolean;
 }
 
-export const EmptyContainer = ({ isFirst = true, isDragging = false }: EmptyContainerProps) => {
-  const { onComponentDropped } = useInteraction()
-  const [isHovering, setIsHovering] = useState(false)
+export const EmptyContainer = ({ isFirst = true, isDragging = false, isHoveringOnRoot = false}: EmptyContainerProps) => {
+  const { onComponentDropped, isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
 
-  const showContent = isFirst ? (!isDragging || isDragging && !isHovering) : false
+  const showContent = isFirst ? (!isDragging || isDragging && !isMouseOver) : false
+
+  const isHighlighted = isDragging && (isHoveringOnRoot || isMouseOver)
 
   return (
     <div
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-      className={isDragging && isHovering ? cx(styles.emptyContainer, styles.activeState) : styles.emptyContainer}
+      data-type='empty-container'
+      onMouseOver={onMouseOver}
+      onMouseLeave={onMouseLeave}
+      className={isHighlighted ? cx(styles.container, styles.highlight) : styles.container}
       onMouseUp={() => {
         onComponentDropped({ node: { type: 'root', data: { id: 'root' } } })
       }}>
