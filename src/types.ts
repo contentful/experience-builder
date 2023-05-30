@@ -10,6 +10,7 @@ export enum OutgoingExperienceBuilderEvent {
 export enum IncomingExperienceBuilderEvent {
   COMPOSITION_UPDATED = 'componentTreeUpdated',
   COMPONENT_VALUE_CHANGED = 'valueChanged',
+  COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
 }
 
 export type ComponentDefinitionVariableType =
@@ -142,4 +143,8 @@ export type CompositionTree = {
   root: CompositionComponentNode
 }
 
-export type Experience = { tree?: CompositionTree; dataSource: LocalizedDataSource }
+export type Experience = {
+  tree?: CompositionTree
+  dataSource: LocalizedDataSource
+  isDragging: boolean
+}

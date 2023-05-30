@@ -1,10 +1,11 @@
-import { css } from '@emotion/css'
+import { css, cx } from '@emotion/css'
 import { ReactComponent as EmptyStateIcon } from './emptyState.svg'
-import React from 'react'
+import React, { useState } from 'react'
 import tokens from '@contentful/f36-tokens'
+import { useInteraction } from '../hooks'
 
 const styles = {
-  emptyContainer: css({
+  container: css({
     height: '200px',
     display: 'flex',
     alignItems: 'center',
@@ -14,25 +15,48 @@ const styles = {
     fontSize: tokens.fontSizeM,
     fontFamily: tokens.fontStackPrimary,
     border: `1px dashed ${tokens.gray500}`,
-    '&:hover': {
-      border: `1px dashed ${tokens.blue500}`,
-      backgroundColor: tokens.blue100,
-    },
+  }),
+  highlight: css({
+    border: `1px dashed ${tokens.blue500}`,
+    backgroundColor: tokens.blue100,
   }),
   icon: css({
     marginLeft: tokens.spacingS,
   }),
 }
 
-export const EmptyContainer = ({ onComponentDropped }: any) => {
+export interface EmptyContainerProps {
+  isFirst?: boolean
+  isDragging?: boolean
+  isHoveringOnRoot?: boolean
+}
+
+export const EmptyContainer = ({
+  isFirst = true,
+  isDragging = false,
+  isHoveringOnRoot = false,
+}: EmptyContainerProps) => {
+  const { onComponentDropped, isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
+
+  const showContent = isFirst ? !isDragging || (isDragging && !isMouseOver) : false
+
+  const isHighlighted = isDragging && (isHoveringOnRoot || isMouseOver)
+
   return (
     <div
-      className={styles.emptyContainer}
+      data-type="empty-container"
+      onMouseOver={onMouseOver}
+      onMouseLeave={onMouseLeave}
+      className={isHighlighted ? cx(styles.container, styles.highlight) : styles.container}
       onMouseUp={() => {
-        onComponentDropped({ node: { data: { id: 'root' } } })
+        onComponentDropped({ node: { type: 'root', data: { id: 'root' } } })
       }}>
-      <EmptyStateIcon />
-      <span className={styles.icon}>Add components to begin</span>
+      {showContent ? (
+        <>
+          <EmptyStateIcon />
+          <span className={styles.icon}>Add components to begin</span>
+        </>
+      ) : null}
     </div>
   )
 }

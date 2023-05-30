@@ -1,5 +1,5 @@
 import tokens from '@contentful/f36-tokens'
-import { css, cx } from '@emotion/css'
+import { css } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
 import get from 'lodash.get'
 import {
@@ -16,19 +16,8 @@ import { Link } from 'contentful-management'
 const styles = {
   hover: css({
     ':hover': {
-      border: `3px solid ${tokens.blue500}`,
+      border: `1px solid ${tokens.blue500}`,
     },
-  }),
-  emptyContainer: css({
-    padding: tokens.spacing4Xl,
-  }),
-  container: css({
-    backgroundColor: '#ffffff',
-    opacity: 0.8,
-    backgroundImage:
-      'repeating-linear-gradient(45deg, #f6f6f6 25%, transparent 25%, transparent 75%, #f6f6f6 75%, #f6f6f6), repeating-linear-gradient(45deg, #f6f6f6 25%, #ffffff 25%, #ffffff 75%, #f6f6f6 75%, #f6f6f6)',
-    backgroundPosition: '0 0, 10px 10px',
-    backgroundSize: '20px 20px',
   }),
 }
 
@@ -36,9 +25,15 @@ type VisualEditorBlockProps = {
   node: CompositionComponentNode
   locale: string
   dataSource: LocalizedDataSource
+  isDragging: boolean
 }
 
-export const VisualEditorBlock = ({ node, locale, dataSource }: VisualEditorBlockProps) => {
+export const VisualEditorBlock = ({
+  node,
+  locale,
+  dataSource,
+  isDragging,
+}: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
   const { onComponentDropped } = useInteraction()
@@ -118,6 +113,7 @@ export const VisualEditorBlock = ({ node, locale, dataSource }: VisualEditorBloc
         key={childNode.data.id}
         locale={locale}
         dataSource={dataSource}
+        isDragging={isDragging}
       />
     )
   })
@@ -135,11 +131,8 @@ export const VisualEditorBlock = ({ node, locale, dataSource }: VisualEditorBloc
         wasMousePressed.current = true
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
       },
-      className: cx(
-        styles.hover,
-        componentDefinition.children && !children?.length ? styles.emptyContainer : undefined,
-        componentDefinition.children ? styles.container : undefined
-      ),
+      className: styles.hover,
+      isDragging,
       ...props,
     },
     children
