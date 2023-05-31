@@ -21,9 +21,9 @@ export const getDataSourceFromTree = (tree: CompositionTree): LocalizedDataSourc
       }
     }
 
-		if(node.children.length) {
-			queue.push(...node.children)
-		}
+    if (node.children.length) {
+      queue.push(...node.children)
+    }
   }
 
   return dataSource

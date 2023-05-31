@@ -77,14 +77,14 @@ export const VisualEditorBlock = ({
           }
         }
 
-				if (variableMapping.type === 'DesignValue') {
+        if (variableMapping.type === 'DesignValue') {
           return {
             ...acc,
             [variableName]: variableMapping.value,
           }
         } else {
-					// take value from the datasource for both bound and unbound value types
-					const value = getValueFromDataSource({
+          // take value from the datasource for both bound and unbound value types
+          const value = getValueFromDataSource({
             path: variableMapping.path,
             fallback: variableDefinition.defaultValue,
           })
