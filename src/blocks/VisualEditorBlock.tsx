@@ -59,7 +59,8 @@ export const VisualEditorBlock = ({
       fallback: CompositionVariableValueType
     }): Link<'Entry'> | Link<'Asset'> | CompositionVariableValueType => {
       const pathWithoutFirstSlash = path.slice(1)
-      const lodashPath = pathWithoutFirstSlash.split('/').join('.')
+      const lodashPath = `${pathWithoutFirstSlash.split('/')[0]}.value`
+
       return get(dataSourceForCurrentLocale, lodashPath, fallback) as
         | Link<'Entry'>
         | Link<'Asset'>
@@ -76,24 +77,22 @@ export const VisualEditorBlock = ({
           }
         }
 
-        if (variableMapping.type === 'UnboundValue') {
-          const value = getValueFromDataSource({
-            path: variableMapping.path,
-            fallback: variableDefinition.defaultValue,
-          })
-          return {
-            ...acc,
-            [variableName]: value,
-          }
-        } else if (variableMapping.type === 'DesignValue') {
+				if (variableMapping.type === 'DesignValue') {
           return {
             ...acc,
             [variableName]: variableMapping.value,
           }
         } else {
-          // TODO: do the same stuff, but for the fetched entity (do we pass the fetched entity or does fetching)
-          // happen on the sdk side?
-          return acc
+					// take value from the datasource for both bound and unbound value types
+					const value = getValueFromDataSource({
+            path: variableMapping.path,
+            fallback: variableDefinition.defaultValue,
+          })
+
+          return {
+            ...acc,
+            [variableName]: value,
+          }
         }
       },
       {}

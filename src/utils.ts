@@ -2,7 +2,7 @@ import { LocalizedDataSource, CompositionTree } from './types'
 
 export const getDataSourceFromTree = (tree: CompositionTree): LocalizedDataSource => {
   const dataSource: LocalizedDataSource = {}
-  const queue = [tree.root]
+  const queue = [...tree.root.children]
 
   while (queue.length) {
     const node = queue.shift()
@@ -20,6 +20,10 @@ export const getDataSourceFromTree = (tree: CompositionTree): LocalizedDataSourc
         ...data,
       }
     }
+
+		if(node.children.length) {
+			queue.push(...node.children)
+		}
   }
 
   return dataSource
