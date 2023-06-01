@@ -30,7 +30,6 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   const { onComponentDropped } = useInteraction()
   useContentfulSection()
   const [isHoveringOnRoot, setIsHoveringOnRoot] = useState(false)
-  console.log('isHoveringOnRoot', isHoveringOnRoot)
 
   const { tree, dataSource, isDragging, selectedNodeId } = experience
 
