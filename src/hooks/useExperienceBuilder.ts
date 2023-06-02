@@ -31,6 +31,7 @@ export const useExperienceBuilder = () => {
   const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
   const [locale, setLocale] = useState<string>()
   const [isDragging, setIsDragging] = useState(false)
+  const [selectedNodeId, setSelectedNodeId] = useState<string>('')
 
   const { sendMessage } = useCommunication()
 
@@ -57,7 +58,8 @@ export const useExperienceBuilder = () => {
 
         switch (eventData.eventType) {
           case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
-            const { tree, locale } = payload
+            const { tree, locale, selectedNodeId } = payload
+            setSelectedNodeId(selectedNodeId)
             setTree(tree)
             setLocale(locale)
             setDataSource(getDataSourceFromTree(tree))
@@ -117,8 +119,9 @@ export const useExperienceBuilder = () => {
       tree,
       dataSource,
       isDragging,
+      selectedNodeId,
     }),
-    [tree, dataSource, isDragging]
+    [tree, dataSource, isDragging, selectedNodeId]
   )
 
   return {

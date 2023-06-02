@@ -32,7 +32,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   const [isHoveringOnRoot, setIsHoveringOnRoot] = useState(false)
   console.log('isHoveringOnRoot', isHoveringOnRoot)
 
-  const { tree, dataSource, isDragging } = experience
+  const { tree, dataSource, isDragging, selectedNodeId } = experience
 
   const onMouseOver = (e: React.MouseEvent) => {
     if (!(e.currentTarget instanceof HTMLElement)) {
@@ -69,15 +69,24 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
       'data-type': 'root',
     },
     [
-      tree.root.children.map((node: any) => (
-        <VisualEditorBlock
-          key={node.data.id}
-          node={node}
-          locale={locale}
-          dataSource={dataSource}
-          isDragging={isDragging}
-        />
-      )),
+      tree.root.children.map((node: any) => {
+        console.log(
+          `Selected node: ${selectedNodeId}, current node: ${node.data.id}, isSelected: ${
+            selectedNodeId === node.data.id
+          }`
+        )
+
+        return (
+          <VisualEditorBlock
+            key={node.data.id}
+            node={node}
+            locale={locale}
+            dataSource={dataSource}
+            isDragging={isDragging}
+            isSelected={selectedNodeId === node.data.id}
+          />
+        )
+      }),
       sectionOutline,
     ]
   )

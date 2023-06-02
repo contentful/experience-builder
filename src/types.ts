@@ -5,6 +5,7 @@ export enum OutgoingExperienceBuilderEvent {
   MOUSE_MOVE = 'mouseMove',
   COMPONENT_SELECTED = 'componentSelected',
   COMPONENT_DROPPED = 'componentDropped',
+  COMPONENT_REMOVED = 'componentRemoved',
 }
 
 export enum IncomingExperienceBuilderEvent {
@@ -154,4 +155,5 @@ export type Experience = {
   tree?: CompositionTree
   dataSource: LocalizedDataSource
   isDragging: boolean
+  selectedNodeId: string
 }

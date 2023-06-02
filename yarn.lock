@@ -615,6 +615,28 @@
   dependencies:
     chalk "^4.1.0"
 
+"@contentful/f36-button@^4.41.1":
+  version "4.41.1"
+  resolved "https://registry.yarnpkg.com/@contentful/f36-button/-/f36-button-4.41.1.tgz#4631fa27cd6af4cf2e9b4f49a0ceb182823d9e41"
+  integrity sha512-9pJnkd7/KP19jR/tc1YRZaRmS9U3z13sRDYxgGRIxJYOSfMBqmk+L3QyGQvDr2lSFU+wgb4VTA1iOB6lE5CDqw==
+  dependencies:
+    "@contentful/f36-core" "^4.41.1"
+    "@contentful/f36-spinner" "^4.41.1"
+    "@contentful/f36-tokens" "^4.0.1"
+    "@contentful/f36-utils" "^4.24.1"
+    emotion "^10.0.17"
+
+"@contentful/f36-core@^4.23.2", "@contentful/f36-core@^4.41.1":
+  version "4.41.1"
+  resolved "https://registry.yarnpkg.com/@contentful/f36-core/-/f36-core-4.41.1.tgz#283cf078c26ee4344fac0d1700440bbebda6d1d3"
+  integrity sha512-SQNFTNqlnazjuSE3jJNNzYqnL07tJOSXsQZewlj+v3YfAg4nmKYnNG1CouraLW/qZFYgHNrGKdHkjBCBZh7rlw==
+  dependencies:
+    "@contentful/f36-tokens" "^4.0.1"
+    "@emotion/core" "^10.1.1"
+    "@emotion/is-prop-valid" "^1.2.0"
+    csstype "^3.1.1"
+    emotion "^10.0.17"
+
 "@contentful/f36-core@^4.40.6":
   version "4.40.6"
   resolved "https://registry.yarnpkg.com/@contentful/f36-core/-/f36-core-4.40.6.tgz#4266f5620be809fe2ad979bb3595b5bb83f77f47"
@@ -626,10 +648,45 @@
     csstype "^3.1.1"
     emotion "^10.0.17"
 
+"@contentful/f36-icon@^4.23.2":
+  version "4.41.1"
+  resolved "https://registry.yarnpkg.com/@contentful/f36-icon/-/f36-icon-4.41.1.tgz#c5ff5f250379978c50daebfaef92b9cfee688886"
+  integrity sha512-h0RDAzEqUMVe+HIakho2/ZNIJtRgxn3pYvyUirVldJk9cA37MOkykDH+nYqSoVR7KioyqfTfOy1Fy5rjPy/SWw==
+  dependencies:
+    "@contentful/f36-core" "^4.41.1"
+    "@contentful/f36-tokens" "^4.0.1"
+    emotion "^10.0.17"
+
+"@contentful/f36-icons@^4.25.0":
+  version "4.25.0"
+  resolved "https://registry.yarnpkg.com/@contentful/f36-icons/-/f36-icons-4.25.0.tgz#b162899b04add58263466c957a1ceefe50ba1554"
+  integrity sha512-PDEvCtoAfP3FF7K+slhOb+LP2MxlUSKQXmRUmtBPXIFz+usZC4FOGQAMWKF9kdnDEq9C/kaYiCzPkZ6BJC4hmg==
+  dependencies:
+    "@contentful/f36-core" "^4.23.2"
+    "@contentful/f36-icon" "^4.23.2"
+    "@contentful/f36-tokens" "^4.0.1"
+    emotion "^10.0.17"
+
+"@contentful/f36-spinner@^4.41.1":
+  version "4.41.1"
+  resolved "https://registry.yarnpkg.com/@contentful/f36-spinner/-/f36-spinner-4.41.1.tgz#730fd49afd8089605a1e97debb14fa33084a5b85"
+  integrity sha512-PcbbZHHHNQ7GaRa15rk8DnC2MFdTME61XNsMa+RC40ba7jx5kLcYN8rkAZWcZGnK0Fe2+nyKM483OtqootmKMg==
+  dependencies:
+    "@contentful/f36-core" "^4.41.1"
+    "@contentful/f36-tokens" "^4.0.1"
+    emotion "^10.0.17"
+
 "@contentful/f36-tokens@^4.0.1":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@contentful/f36-tokens/-/f36-tokens-4.0.1.tgz#1b6a2e3fce11a61b84a855dbeed660989259ba54"
   integrity sha512-NTyMAQcfvhPP8kJgOK5mtjKpErg799iglEb9B45ii4N7aMdph2GNqgv7KBgpogfbTEGBrlKIoH8MUDSV9YNREg==
+
+"@contentful/f36-utils@^4.24.1":
+  version "4.24.1"
+  resolved "https://registry.yarnpkg.com/@contentful/f36-utils/-/f36-utils-4.24.1.tgz#731e9fc025f11aff2d28b84e8d24abe88f60e22c"
+  integrity sha512-jr+61KiKn7oA38WXgAJoqVNdr6gXzmJSA+MCl7Djapxxf+jsC1vsi8j8okISCm4a/ZcPncKekDYzzWu+kkI7VQ==
+  dependencies:
+    emotion "^10.0.17"
 
 "@contentful/rich-text-types@^16.0.3":
   version "16.1.0"

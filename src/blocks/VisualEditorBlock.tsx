@@ -1,5 +1,5 @@
 import tokens from '@contentful/f36-tokens'
-import { css } from '@emotion/css'
+import { css, cx } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
 import get from 'lodash.get'
 import {
@@ -17,6 +17,7 @@ const styles = {
   hover: css({
     ':hover': {
       border: `1px solid ${tokens.blue500}`,
+      boxSizing: 'border-box',
     },
   }),
 }
@@ -26,6 +27,7 @@ type VisualEditorBlockProps = {
   locale: string
   dataSource: LocalizedDataSource
   isDragging: boolean
+  isSelected?: boolean
 }
 
 export const VisualEditorBlock = ({
@@ -33,10 +35,11 @@ export const VisualEditorBlock = ({
   locale,
   dataSource,
   isDragging,
+  isSelected,
 }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
-  const { onComponentDropped } = useInteraction()
+  const { onComponentDropped, onComponentRemoved } = useInteraction()
   const wasMousePressed = useRef(false)
 
   const definedComponent = useMemo(
@@ -104,7 +107,7 @@ export const VisualEditorBlock = ({
     return null
   }
 
-  const { component, componentDefinition } = definedComponent
+  const { component } = definedComponent
 
   const children = node.children.map((childNode: any) => {
     return (
@@ -131,8 +134,16 @@ export const VisualEditorBlock = ({
         wasMousePressed.current = true
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
       },
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        e.preventDefault()
+      },
+      onComponentRemoved: () => {
+        onComponentRemoved(node)
+      },
       className: styles.hover,
       isDragging,
+      isSelected: !!isSelected,
       ...props,
     },
     children
