@@ -58,11 +58,15 @@ export const useExperienceBuilder = () => {
 
         switch (eventData.eventType) {
           case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
-            const { tree, locale, selectedNodeId } = payload
-            setSelectedNodeId(selectedNodeId)
+            const { tree, locale } = payload
             setTree(tree)
             setLocale(locale)
             setDataSource(getDataSourceFromTree(tree))
+            break
+          }
+          case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANEGD: {
+            const { selectedNodeId } = payload
+            setSelectedNodeId(selectedNodeId)
             break
           }
           case IncomingExperienceBuilderEvent.COMPONENT_VALUE_CHANGED: {

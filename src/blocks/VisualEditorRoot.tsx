@@ -69,24 +69,16 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
       'data-type': 'root',
     },
     [
-      tree.root.children.map((node: any) => {
-        console.log(
-          `Selected node: ${selectedNodeId}, current node: ${node.data.id}, isSelected: ${
-            selectedNodeId === node.data.id
-          }`
-        )
-
-        return (
-          <VisualEditorBlock
-            key={node.data.id}
-            node={node}
-            locale={locale}
-            dataSource={dataSource}
-            isDragging={isDragging}
-            isSelected={selectedNodeId === node.data.id}
-          />
-        )
-      }),
+      tree.root.children.map((node: any) => (
+        <VisualEditorBlock
+          key={node.data.id}
+          node={node}
+          locale={locale}
+          dataSource={dataSource}
+          isDragging={isDragging}
+          isSelected={selectedNodeId === node.data.id}
+        />
+      )),
       sectionOutline,
     ]
   )

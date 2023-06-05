@@ -12,6 +12,7 @@ export enum IncomingExperienceBuilderEvent {
   COMPOSITION_UPDATED = 'componentTreeUpdated',
   COMPONENT_VALUE_CHANGED = 'valueChanged',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
+  SELECTED_COMPONENT_CHANEGD = 'selectedComponentChanged',
 }
 
 export type ComponentDefinitionVariableType =
