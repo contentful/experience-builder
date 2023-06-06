@@ -3,8 +3,7 @@ import tokens from '@contentful/f36-tokens'
 import { css, cx } from '@emotion/css'
 import React from 'react'
 import { useInteraction } from '../hooks'
-import { Button, ButtonGroup } from '@contentful/f36-button'
-import { DeleteIcon, CopyIcon } from '@contentful/f36-icons'
+import { SectionTooltip } from './SectionTooltip'
 
 const styles = {
   defaultStyles: css({
@@ -56,26 +55,6 @@ interface ContentfulSectionProps extends StyleProps {
   children: React.ReactNode
   className?: string
   isSelected: boolean
-}
-
-const SectionTooltip = ({ onComponentRemoved }: { onComponentRemoved: () => void }) => {
-  return (
-    <Flex className={styles.tooltip}>
-      <ButtonGroup variant="merged">
-        <Button variant="primary" size="small">
-          <CopyIcon variant="white" />
-        </Button>
-        <Button
-          variant="primary"
-          size="small"
-          onClick={() => {
-            onComponentRemoved()
-          }}>
-          <DeleteIcon variant="white" />
-        </Button>
-      </ButtonGroup>
-    </Flex>
-  )
 }
 
 export const ContentfulSection = ({

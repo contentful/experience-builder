@@ -64,7 +64,7 @@ export const useExperienceBuilder = () => {
             setDataSource(getDataSourceFromTree(tree))
             break
           }
-          case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANEGD: {
+          case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
             const { selectedNodeId } = payload
             setSelectedNodeId(selectedNodeId)
             break
