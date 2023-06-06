@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useCommunication } from './useCommunication'
-import { OutgoingExperienceBuilderEvent } from '../types'
+import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from '../types'
 
 export const useInteraction = () => {
   const { sendMessage } = useCommunication()
@@ -24,10 +24,20 @@ export const useInteraction = () => {
     [sendMessage]
   )
 
+  const onComponentRemoved = useCallback(
+    (node: CompositionComponentNode) => {
+      sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_REMOVED, {
+        node,
+      })
+    },
+    [sendMessage]
+  )
+
   return {
     isMouseOver,
     onMouseOver,
     onMouseLeave,
     onComponentDropped,
+    onComponentRemoved,
   }
 }
