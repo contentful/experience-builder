@@ -21,8 +21,4 @@ const App = () => {
 }
 ```
 
-In case you expect the message to arrive from a different origin, define this environment variable with your desired value
-
-```sh
-REACT_APP_EXPERIENCE_BUILDER_ORIGIN=http://localhost:3001 # https://app.contentful.com by default
-```
+We used to restrict origin of the messages (`postMessage() API`), but currently removed this limitation. Messages are filtered by their schema.

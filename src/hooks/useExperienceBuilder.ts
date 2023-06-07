@@ -16,31 +16,29 @@ type VisualEditorMessagePayload = {
   payload: any
 }
 
-const doesMismatchComposabilityAppMessageSchema = (event: MessageEvent) : (false|string) => {
-
-  const isValidJson = (s:string)=>{
-    try{
-      JSON.parse(s);
-      return true;
-    }
-    catch(e){
-      return false;
+const doesMismatchComposabilityAppMessageSchema = (event: MessageEvent): false | string => {
+  const isValidJson = (s: string) => {
+    try {
+      JSON.parse(s)
+      return true
+    } catch (e) {
+      return false
     }
   }
 
-  if ( !event.data ){
-    return 'Field event.data is missing'; 
+  if (!event.data) {
+    return 'Field event.data is missing'
   }
-  if ( 'string' !== typeof event.data){
-    return `Field event.data must be string, instead '${typeof event.data}'`;
-  }
-
-  if ( !isValidJson(event.data) ){
-    return 'Field event.data must be valid JSON serialized representation of data';
+  if ('string' !== typeof event.data) {
+    return `Field event.data must be string, instead '${typeof event.data}'`
   }
 
-  return false;
-};
+  if (!isValidJson(event.data)) {
+    return 'Field event.data must be valid JSON serialized representation of data'
+  }
+
+  return false
+}
 
 export const useExperienceBuilder = () => {
   const [tree, setTree] = useState<CompositionTree>()
@@ -53,9 +51,12 @@ export const useExperienceBuilder = () => {
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
-      let reason;
-      if ( reason = doesMismatchComposabilityAppMessageSchema(event) ){
-        console.warn(`[eb.sdk] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`, event);
+      let reason
+      if ((reason = doesMismatchComposabilityAppMessageSchema(event))) {
+        console.warn(
+          `[eb.sdk] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
+          event
+        )
         return
       }
 
