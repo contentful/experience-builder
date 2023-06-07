@@ -8,7 +8,6 @@ import {
   CompositionTree,
 } from '../types'
 import { useCommunication } from './useCommunication'
-import { CONTENTFUL_WEB_APP_ORIGIN } from '../constants'
 import { getDataSourceFromTree } from '../utils'
 
 type VisualEditorMessagePayload = {
@@ -17,14 +16,31 @@ type VisualEditorMessagePayload = {
   payload: any
 }
 
-const getAppOrigins = () => {
-  if (typeof process.env !== 'undefined') {
-    if (process.env?.REACT_APP_EXPERIENCE_BUILDER_ORIGIN) {
-      return [process.env.REACT_APP_EXPERIENCE_BUILDER_ORIGIN]
+const doesMismatchComposabilityAppMessageSchema = (event: MessageEvent) : (false|string) => {
+
+  const isValidJson = (s:string)=>{
+    try{
+      JSON.parse(s);
+      return true;
+    }
+    catch(e){
+      return false;
     }
   }
-  return [CONTENTFUL_WEB_APP_ORIGIN]
-}
+
+  if ( !event.data ){
+    return 'Field event.data is missing'; 
+  }
+  if ( 'string' !== typeof event.data){
+    return `Field event.data must be string, instead '${typeof event.data}'`;
+  }
+
+  if ( !isValidJson(event.data) ){
+    return 'Field event.data must be valid JSON serialized representation of data';
+  }
+
+  return false;
+};
 
 export const useExperienceBuilder = () => {
   const [tree, setTree] = useState<CompositionTree>()
@@ -37,8 +53,9 @@ export const useExperienceBuilder = () => {
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
-      // makes sure that the message originates from contentful web app
-      if (!getAppOrigins().includes(event.origin)) {
+      let reason;
+      if ( reason = doesMismatchComposabilityAppMessageSchema(event) ){
+        console.warn(`[eb.sdk] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`, event);
         return
       }
 
