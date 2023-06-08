@@ -51,7 +51,7 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
   const eventData = JSON.parse(event.data)
 
   if (!eventData.source) {
-    throw new ParseError(`Field eventData.source must be set and equal 'composability-app'`)
+    throw new ParseError(`Field eventData.source must be equal to 'composability-app'`)
   }
 
   if ('composability-app' !== eventData.source) {
