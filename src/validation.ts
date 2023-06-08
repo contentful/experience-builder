@@ -62,7 +62,6 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
 
   // check eventData.eventType
   const supportedEventTypes = Object.values(IncomingExperienceBuilderEvent)
-  console.log(`supportedEventTypes:`, supportedEventTypes)
   if (!supportedEventTypes.includes(eventData.eventType)) {
     throw new ParseError(
       `Field eventData.eventType must be one of the supported values: [${supportedEventTypes.join(
