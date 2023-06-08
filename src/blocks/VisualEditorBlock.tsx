@@ -123,8 +123,19 @@ export const VisualEditorBlock = ({
   return React.createElement(
     component,
     {
-      onMouseUp: () => {
-        onComponentDropped({ node })
+      onMouseUp: (append: boolean) => {
+        if (typeof append !== 'boolean') {
+          // When this event is called by the ContentfulSection it is a boolean, otherwise it is a MouseEvent
+          // object which we don't want to process
+          append = true
+        }
+        console.log(
+          'DROPPER: In VisualEditorBlock - ' +
+            node.data.blockId +
+            ' append = ' +
+            JSON.stringify(append)
+        )
+        onComponentDropped({ node, append })
         wasMousePressed.current = false
       },
       onMouseDown: (e: MouseEvent) => {

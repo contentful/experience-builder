@@ -62,6 +62,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
     {
       className: styles.root,
       onMouseUp: () => {
+        console.log('DROPPER: In VisualEditorRoot')
         onComponentDropped({ node: tree.root })
       },
       onMouseOver,
