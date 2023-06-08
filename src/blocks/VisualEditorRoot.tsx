@@ -1,4 +1,3 @@
-import tokens from '@contentful/f36-tokens'
 import { css } from '@emotion/css'
 import React, { useState } from 'react'
 import { Experience } from '../types'
@@ -13,12 +12,6 @@ const styles = {
     paddingBottom: '100px',
     overflow: 'scroll',
   }),
-  hover: css({
-    border: `1px solid transparent`,
-    '&:hover': {
-      border: `1px solid ${tokens.blue500}`,
-    },
-  }),
 }
 
 type VisualEditorRootProps = {
@@ -29,47 +22,24 @@ type VisualEditorRootProps = {
 export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
   const { onComponentDropped } = useInteraction()
   useContentfulSection()
-  const [isHoveringOnRoot, setIsHoveringOnRoot] = useState(false)
-  console.log('isHoveringOnRoot', isHoveringOnRoot)
 
   const { tree, dataSource, isDragging, selectedNodeId } = experience
-
-  const onMouseOver = (e: React.MouseEvent) => {
-    if (!(e.currentTarget instanceof HTMLElement)) {
-      return
-    }
-    if (['root', 'empty-container'].includes(e.currentTarget.dataset.type || '')) {
-      setIsHoveringOnRoot(true)
-    }
-  }
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyContainer, { isDragging }, [])
   }
-
-  const sectionOutline =
-    isDragging && isHoveringOnRoot ? (
-      <EmptyContainer
-        key="section-outline"
-        isFirst={false}
-        isDragging={isDragging}
-        isHoveringOnRoot={isHoveringOnRoot}
-      />
-    ) : null
 
   return React.createElement(
     'div',
     {
       className: styles.root,
       onMouseUp: () => {
-        onComponentDropped({ node: tree.root })
+        onComponentDropped({ node: tree.root, index: 0 })
       },
-      onMouseOver,
-      onMouseOut: () => setIsHoveringOnRoot(false),
       'data-type': 'root',
     },
     [
-      tree.root.children.map((node: any) => (
+      tree.root.children.map((node: any, index) => (
         <VisualEditorBlock
           key={node.data.id}
           node={node}
@@ -77,9 +47,10 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           dataSource={dataSource}
           isDragging={isDragging}
           isSelected={selectedNodeId === node.data.id}
+          rootNode={tree.root}
+          index={index}
         />
       )),
-      sectionOutline,
     ]
   )
 }

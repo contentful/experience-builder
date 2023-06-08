@@ -1,4 +1,5 @@
 import { Link } from 'contentful-management'
+import { CONTENTFUL_SECTION_ID } from './constants'
 
 export enum OutgoingExperienceBuilderEvent {
   REGISTERED_COMPONENTS = 'registeredComponents',
@@ -13,6 +14,13 @@ export enum IncomingExperienceBuilderEvent {
   COMPONENT_VALUE_CHANGED = 'valueChanged',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
+}
+
+export enum NodeInsertType {
+  APPEND = 'append',
+  PREPEND = 'prepend',
+  APPEND_ADJACENT = 'appendAdjacent',
+  PREPEND_ADJACENT = 'prependAdjacent',
 }
 
 export type ComponentDefinitionVariableType =
@@ -157,4 +165,22 @@ export type Experience = {
   dataSource: LocalizedDataSource
   isDragging: boolean
   selectedNodeId: string
+}
+
+export type SECTION_STYLE_ATTRIBUTE_KEY =
+  | 'horizontalAlignment'
+  | 'verticalAlignment'
+  | 'margin'
+  | 'padding'
+  | 'backgroundColor'
+  | 'width'
+  | 'height'
+  | 'flexDirection'
+  | 'border'
+  | 'gap'
+
+export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
+  id: typeof CONTENTFUL_SECTION_ID
+  name: 'Contentful Section'
+  variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>>
 }

@@ -1,6 +1,6 @@
 import { css, cx } from '@emotion/css'
 import { ReactComponent as EmptyStateIcon } from './emptyState.svg'
-import React, { useState } from 'react'
+import React from 'react'
 import tokens from '@contentful/f36-tokens'
 import { useInteraction } from '../hooks'
 
@@ -49,7 +49,7 @@ export const EmptyContainer = ({
       onMouseLeave={onMouseLeave}
       className={isHighlighted ? cx(styles.container, styles.highlight) : styles.container}
       onMouseUp={() => {
-        onComponentDropped({ node: { type: 'root', data: { id: 'root' } } })
+        onComponentDropped({ node: { type: 'root', data: { id: 'root' } }, index: 0 })
       }}>
       {showContent ? (
         <>

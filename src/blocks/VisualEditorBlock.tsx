@@ -1,5 +1,5 @@
 import tokens from '@contentful/f36-tokens'
-import { css, cx } from '@emotion/css'
+import { css } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
 import get from 'lodash.get'
 import {
@@ -7,6 +7,7 @@ import {
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
+  NodeInsertType,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
@@ -28,6 +29,8 @@ type VisualEditorBlockProps = {
   dataSource: LocalizedDataSource
   isDragging: boolean
   isSelected?: boolean
+  rootNode: CompositionComponentNode
+  index: number
 }
 
 export const VisualEditorBlock = ({
@@ -36,6 +39,8 @@ export const VisualEditorBlock = ({
   dataSource,
   isDragging,
   isSelected,
+  rootNode,
+  index,
 }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
@@ -108,7 +113,7 @@ export const VisualEditorBlock = ({
 
   const { component } = definedComponent
 
-  const children = node.children.map((childNode: any) => {
+  const children = node.children.map((childNode: any, index) => {
     return (
       <VisualEditorBlock
         node={childNode}
@@ -116,6 +121,8 @@ export const VisualEditorBlock = ({
         locale={locale}
         dataSource={dataSource}
         isDragging={isDragging}
+        rootNode={rootNode}
+        index={index}
       />
     )
   })
@@ -123,8 +130,17 @@ export const VisualEditorBlock = ({
   return React.createElement(
     component,
     {
-      onMouseUp: () => {
-        onComponentDropped({ node })
+      onMouseUp: (insertType: NodeInsertType, nodeOverride?: CompositionComponentNode) => {
+        if (typeof insertType !== 'string') {
+          // When this event is called by the ContentfulSection it is a boolean, otherwise it is a MouseEvent
+          // object which we don't want to process
+          insertType = NodeInsertType.APPEND
+        }
+        let dropNode = node
+        if (nodeOverride && nodeOverride.type) {
+          dropNode = nodeOverride
+        }
+        onComponentDropped({ node: dropNode, index, insertType })
         wasMousePressed.current = false
       },
       onMouseDown: (e: MouseEvent) => {
@@ -143,6 +159,7 @@ export const VisualEditorBlock = ({
       className: styles.hover,
       isDragging,
       isSelected: !!isSelected,
+      rootNode,
       ...props,
     },
     children

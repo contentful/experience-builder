@@ -103,7 +103,6 @@ workflows:
             branches:
               only:
                 - main
-                - master
                 - next
                 - next-major
                 - alpha
