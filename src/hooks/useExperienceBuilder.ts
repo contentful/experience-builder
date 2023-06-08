@@ -9,7 +9,7 @@ import {
 } from '../types'
 import { useCommunication } from './useCommunication'
 import { getDataSourceFromTree } from '../utils'
-import { doesMismatchMessageSchema, tryParseMessage } from '../composabilityApp'
+import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 
 export const useExperienceBuilder = () => {
   const [tree, setTree] = useState<CompositionTree>()
@@ -31,7 +31,7 @@ export const useExperienceBuilder = () => {
         return
       }
 
-      let eventData = tryParseMessage(event)
+      const eventData = tryParseMessage(event)
 
       console.log(`[eb.sdk::onMessage] Received message [${eventData.eventType}]`, eventData)
 
