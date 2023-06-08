@@ -25,7 +25,7 @@ export const useExperienceBuilder = () => {
       let reason
       if ((reason = doesMismatchMessageSchema(event))) {
         console.warn(
-          `[eb.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
+          `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
           event
         )
         return
@@ -33,7 +33,10 @@ export const useExperienceBuilder = () => {
 
       const eventData = tryParseMessage(event)
 
-      console.log(`[eb.sdk::onMessage] Received message [${eventData.eventType}]`, eventData)
+      console.log(
+        `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
+        eventData
+      )
 
       const { payload } = eventData
 
@@ -72,7 +75,7 @@ export const useExperienceBuilder = () => {
         }
         default:
           console.error(
-            `[eb.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`
+            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`
           )
       }
     }
