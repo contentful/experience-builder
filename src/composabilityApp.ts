@@ -41,7 +41,7 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
     throw new ParseError('Field event.data is missing')
   }
   if ('string' !== typeof event.data) {
-    throw new ParseError(`Field event.data must be string, instead '${typeof event.data}'`)
+    throw new ParseError(`Field event.data must be a string, instead of '${typeof event.data}'`)
   }
 
   if (!isValidJsonObject(event.data)) {
