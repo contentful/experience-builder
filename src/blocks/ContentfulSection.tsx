@@ -38,6 +38,8 @@ const styles = {
 }
 
 interface StyleProps {
+  horizontalAlignment: 'start' | 'end' | 'center'
+  verticalAlignment: 'start' | 'end' | 'center'
   margin: string
   padding: string
   backgroundColor: string
@@ -58,6 +60,8 @@ interface ContentfulSectionProps extends StyleProps {
 }
 
 export const ContentfulSection = ({
+  horizontalAlignment,
+  verticalAlignment,
   flexDirection,
   margin,
   padding,
@@ -74,7 +78,17 @@ export const ContentfulSection = ({
 }: ContentfulSectionProps) => {
   const { isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
 
-  console.log({ margin, padding, backgroundColor, width, height, border, gap })
+  // when direction is 'column' the axis are reversed
+  const alignment =
+    flexDirection === 'row'
+      ? css({
+          alignItems: `${horizontalAlignment}`,
+          justifyContent: `${verticalAlignment}`,
+        })
+      : css({
+          alignItems: `${verticalAlignment}`,
+          justifyContent: `${horizontalAlignment}`,
+        })
 
   const styleOverrides = css({ margin, padding, backgroundColor, width, height, border, gap })
 
@@ -86,7 +100,7 @@ export const ContentfulSection = ({
         flexDirection={flexDirection}
         onMouseOver={onMouseOver}
         onMouseLeave={onMouseLeave}
-        className={cx(styles.defaultStyles, className, styleOverrides)}
+        className={cx(styles.defaultStyles, className, styleOverrides, alignment)}
         {...props}>
         {props.children}
         {isDragging && isMouseOver && <div key="lineIndicator" className={lineStyles}></div>}
