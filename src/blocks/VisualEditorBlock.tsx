@@ -129,12 +129,6 @@ export const VisualEditorBlock = ({
           // object which we don't want to process
           append = true
         }
-        console.log(
-          'DROPPER: In VisualEditorBlock - ' +
-            node.data.blockId +
-            ' append = ' +
-            JSON.stringify(append)
-        )
         onComponentDropped({ node, append })
         wasMousePressed.current = false
       },

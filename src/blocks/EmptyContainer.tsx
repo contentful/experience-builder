@@ -49,7 +49,6 @@ export const EmptyContainer = ({
       onMouseLeave={onMouseLeave}
       className={isHighlighted ? cx(styles.container, styles.highlight) : styles.container}
       onMouseUp={() => {
-        console.log("DROPPER: In empty container")
         onComponentDropped({ node: { type: 'root', data: { id: 'root' } } })
       }}>
       {showContent ? (

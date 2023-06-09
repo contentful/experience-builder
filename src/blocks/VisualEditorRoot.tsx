@@ -6,18 +6,13 @@ import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyContainer } from './EmptyContainer'
 import { useContentfulSection } from '../hooks/useContentfulSection'
+import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
 
 const styles = {
   root: css({
     minHeight: '45vh',
     paddingBottom: '100px',
     overflow: 'scroll',
-  }),
-  hover: css({
-    border: `1px solid transparent`,
-    '&:hover': {
-      border: `1px solid ${tokens.blue500}`,
-    },
   }),
 }
 
@@ -30,7 +25,6 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   const { onComponentDropped } = useInteraction()
   useContentfulSection()
   const [isHoveringOnRoot, setIsHoveringOnRoot] = useState(false)
-  console.log('isHoveringOnRoot', isHoveringOnRoot)
 
   const { tree, dataSource, isDragging, selectedNodeId } = experience
 
@@ -47,22 +41,11 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
     return React.createElement(EmptyContainer, { isDragging }, [])
   }
 
-  const sectionOutline =
-    isDragging && isHoveringOnRoot ? (
-      <EmptyContainer
-        key="section-outline"
-        isFirst={false}
-        isDragging={isDragging}
-        isHoveringOnRoot={isHoveringOnRoot}
-      />
-    ) : null
-
   return React.createElement(
     'div',
     {
       className: styles.root,
       onMouseUp: () => {
-        console.log('DROPPER: In VisualEditorRoot')
         onComponentDropped({ node: tree.root })
       },
       onMouseOver,
@@ -80,7 +63,6 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           isSelected={selectedNodeId === node.data.id}
         />
       )),
-      sectionOutline,
     ]
   )
 }
