@@ -72,7 +72,7 @@ export const useContentfulSection = () => {
         defaultValue: '0',
       },
       backgroundColor: {
-        displayName: 'Background Color',
+        displayName: 'Background',
         type: 'Text',
         group: 'style',
         description: 'The background color of the section',
