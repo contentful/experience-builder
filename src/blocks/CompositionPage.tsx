@@ -3,6 +3,7 @@ import { VisualEditorRoot } from "./VisualEditorRoot"
 import react, { useEffect, useState } from 'react'
 import { CompositionBlock } from "./CompositionBlock"
 import contentful from 'contentful'
+import { ChevronDownIcon } from "@contentful/f36-icons"
 
 type CompositionPageProps = {
   locale: string,
@@ -17,6 +18,7 @@ export const CompositionPage = ({ locale, accessToken, spaceId, environmentId, s
   const client = contentful.createClient({
     space: spaceId,
     environment: environmentId,
+    host: 'cdn.flinkly.com',
     accessToken
   })
   useEffect(() => {

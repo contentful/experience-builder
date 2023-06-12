@@ -15,10 +15,9 @@ type CompositionRootProps = {
 
 export const CompositionRoot = ({ experience, locale, isProduction, accessToken, spaceId, environmentId, slug}: CompositionRootProps) => {
   if (isProduction) {
-    <CompositionPage locale={locale} accessToken={accessToken} spaceId={spaceId} environmentId={environmentId} slug={slug}/>
-
+    return <CompositionPage locale={locale} accessToken={accessToken} spaceId={spaceId} environmentId={environmentId} slug={slug}/>
   } else if (experience) {
-    <VisualEditorRoot experience={experience} locale={locale} />
+    return <VisualEditorRoot experience={experience} locale={locale} />
   } else {
     return null
   }
