@@ -1,7 +1,5 @@
 import React from 'react'
-import { Button, ButtonGroup } from '@contentful/f36-button'
-import { Flex } from '@contentful/f36-core'
-import { CopyIcon, DeleteIcon } from '@contentful/f36-icons'
+import { Flex, ButtonGroup, Button, CopyIcon, DeleteIcon } from '../coreLayouts'
 import { css } from '@emotion/css'
 
 const styles = {

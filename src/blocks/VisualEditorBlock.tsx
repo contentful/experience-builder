@@ -1,5 +1,5 @@
-import tokens from '@contentful/f36-tokens'
-import { css, cx } from '@emotion/css'
+import { tokens } from '../coreLayouts'
+import { css } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
 import get from 'lodash.get'
 import {

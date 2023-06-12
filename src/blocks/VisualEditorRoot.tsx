@@ -1,4 +1,4 @@
-import tokens from '@contentful/f36-tokens'
+import { tokens } from '../coreLayouts'
 import { css } from '@emotion/css'
 import React, { useState } from 'react'
 import { Experience } from '../types'

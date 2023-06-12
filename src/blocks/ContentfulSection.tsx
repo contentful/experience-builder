@@ -1,5 +1,4 @@
-import { Flex } from '@contentful/f36-core'
-import tokens from '@contentful/f36-tokens'
+import { Flex, tokens } from '../coreLayouts'
 import { css, cx } from '@emotion/css'
 import React from 'react'
 import { useInteraction } from '../hooks'
