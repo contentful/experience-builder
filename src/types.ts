@@ -178,3 +178,14 @@ export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   name: 'Contentful Section'
   variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>>
 }
+
+export type CompositionNode = {
+  definitionId: string,
+  children: Array<CompositionNode>
+  variables: Record<string, object>
+}
+
+export type Composition = {
+  children: Array<CompositionNode>,
+  dataSource: Record<string, object>
+}
