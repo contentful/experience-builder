@@ -39,6 +39,8 @@ const styles = {
 }
 
 interface StyleProps {
+  horizontalAlignment: 'start' | 'end' | 'center'
+  verticalAlignment: 'start' | 'end' | 'center'
   margin: string
   padding: string
   backgroundColor: string
@@ -60,6 +62,8 @@ interface ContentfulSectionProps extends StyleProps {
 }
 
 export const ContentfulSection = ({
+  horizontalAlignment,
+  verticalAlignment,
   flexDirection,
   margin,
   padding,
@@ -83,12 +87,21 @@ export const ContentfulSection = ({
   const [mouseInUpperHalf, setMouseInUpperHalf] = useState<boolean>(false)
   const [mouseAtTopBorder, setMouseAtTopBorder] = useState<boolean>(false)
   const [mouseAtBottomBorder, setMouseAtBottomBorder] = useState<boolean>(false)
+  // when direction is 'column' the axis are reversed
+  const alignment =
+    flexDirection === 'row'
+      ? css({
+          alignItems: `${horizontalAlignment}`,
+          justifyContent: `${verticalAlignment}`,
+        })
+      : css({
+          alignItems: `${verticalAlignment}`,
+          justifyContent: `${horizontalAlignment}`,
+        })
 
   const styleOverrides = css({ margin, padding, backgroundColor, width, height, border, gap })
 
   const lineStyles = flexDirection === 'row' ? styles.lineHorizontal : styles.lineVertical
-
-  const sectionOutline = isDragging ? <ContentfulSectionIndicator /> : null
 
   useEffect(() => {
     // This code ensures that we can keep track of the real size of the section in the DOM
@@ -137,20 +150,18 @@ export const ContentfulSection = ({
 
   return (
     <div>
-      {isDragging && mouseAtTopBorder && isMouseOver && sectionOutline}
+      {isDragging && mouseAtTopBorder && isMouseOver && <ContentfulSectionIndicator />}
       <div className={cx(isSelected ? cx(styles.containerBorder) : '')}>
         <Flex
           ref={componentRef}
           flexDirection={flexDirection}
-          onMouseOver={(e: React.MouseEvent<HTMLDivElement>) => {
-            onMouseOver()
-          }}
+          onMouseOver={onMouseOver}
           onMouseUp={() => {
             // Passing this to the function to notify the experience builder about where to drop new components
             onMouseUp(!mouseInUpperHalf)
           }}
           onMouseLeave={onMouseLeave}
-          className={cx(styles.defaultStyles, styleOverrides, className)}
+          className={cx(styles.defaultStyles, styleOverrides, className, alignment)}
           {...props}>
           {mouseInUpperHalf &&
             !mouseAtBottomBorder &&
@@ -166,7 +177,7 @@ export const ContentfulSection = ({
           {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
         </Flex>
       </div>
-      {isDragging && mouseAtBottomBorder && isMouseOver && sectionOutline}
+      {isDragging && mouseAtBottomBorder && isMouseOver && <ContentfulSectionIndicator />}
     </div>
   )
 }
