@@ -13,14 +13,17 @@ const styles = {
     flexWrap: 'wrap',
     justifyContent: 'center',
     position: 'relative',
+    display: 'flex',
   }),
   lineHorizontal: css({
-    width: '3px',
+    height: '3px',
+    width: '200px',
     background: tokens.blue500,
     margin: '10px',
   }),
   lineVertical: css({
-    height: '3px',
+    height: '200px',
+    width: '3px',
     background: tokens.blue500,
     margin: '10px',
   }),
@@ -101,7 +104,7 @@ export const ContentfulSection = ({
 
   const styleOverrides = css({ margin, padding, backgroundColor, width, height, border, gap })
 
-  const lineStyles = flexDirection === 'row' ? styles.lineHorizontal : styles.lineVertical
+  const lineStyles = flexDirection === 'row' ? styles.lineVertical : styles.lineHorizontal
 
   useEffect(() => {
     // This code ensures that we can keep track of the real size of the section in the DOM
@@ -167,13 +170,13 @@ export const ContentfulSection = ({
             !mouseAtBottomBorder &&
             !mouseAtTopBorder &&
             isDragging &&
-            isMouseOver && <div key="lineIndicator" className={lineStyles}></div>}
+            isMouseOver && <div key="lineIndicator_top" className={lineStyles}></div>}
           {props.children}
           {!mouseInUpperHalf &&
             !mouseAtBottomBorder &&
             !mouseAtTopBorder &&
             isDragging &&
-            isMouseOver && <div key="lineIndicator" className={lineStyles}></div>}
+            isMouseOver && <div key="lineIndicator_bottom" className={lineStyles}></div>}
           {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
         </Flex>
       </div>
