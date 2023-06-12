@@ -1,6 +1,7 @@
-import { CompositionDataSource, CompositionNode, Experience } from '../types'
-import { VisualEditorRoot } from './VisualEditorRoot'
-import react, { useEffect, useMemo, useState } from 'react'
+import { CompositionBoundSource, CompositionDataSource, CompositionNode, CompositionUnboundSource } from '../types'
+import get from 'lodash.get'
+
+import react, { useMemo } from 'react'
 import { useComponents } from '../hooks'
 import React from 'react'
 import { Asset, Entry } from 'contentful'
@@ -35,10 +36,36 @@ export const CompositionBlock = ({
     if (!definedComponent) {
       return {}
     }
-    return {}
 
-    //const dataSourceForCurrentLocale = dataSource[locale] || {}
-  }, [definedComponent])
+    const propMap: Record<string, string> = {}
+
+    return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
+      let _empty: string, uuid: string, path: string[]
+      switch (variable.type) {
+        case 'DesignValue':
+          acc[variableName] = variable.value as string
+          break
+        case 'BoundValue':
+          [_empty, uuid, ...path] = variable.path.split('/')
+          const binding = dataSource[uuid] as CompositionBoundSource
+          const entity = (binding.sys.linkType === 'Entry')
+            ? entries.find(({ sys: { id } }) => id === binding.sys.id)
+            : assets.find(({ sys: { id } }) => id === binding.sys.id)
+
+          if (entity) {
+            acc[variableName] = get(entity, path.slice(0,-1))
+          }
+          break
+        case 'UnboundValue':
+          [_empty, uuid, ...path] = variable.path.split('/')
+          acc[variableName] = (dataSource[uuid] as CompositionUnboundSource).value
+          break
+        default:
+          break
+      }
+      return acc
+    }, propMap)
+  }, [definedComponent, dataSource, entries, assets, node])
 
   const { component } = definedComponent
 

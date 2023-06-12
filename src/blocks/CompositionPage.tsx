@@ -1,4 +1,4 @@
-import type { Composition, CompositionNode } from '../types'
+import type { Composition, CompositionDataSource, CompositionNode } from '../types'
 import react, { useEffect, useMemo, useState } from 'react'
 import { CompositionBlock } from './CompositionBlock'
 import contentful, { Asset, Entry, Link } from 'contentful'
@@ -17,15 +17,15 @@ export const CompositionPage = ({
   environmentId,
   slug,
 }: CompositionPageProps) => {
-  const [composition, setComposition] = useState({} as Composition)
-  const [children, setChildren] = useState([] as CompositionNode[])
-  const [dataSource, setDataSource] = useState({} as typeof composition.dataSource)
-  const [entries, setEntries] = useState([] as Entry[])
-  const [assets, setAssets] = useState([] as Asset[])
+  const [composition, setComposition] = useState<Composition | undefined>()
+  const [children, setChildren] = useState<CompositionNode[]>([])
+  const [dataSource, setDataSource] = useState<CompositionDataSource>({})
+  const [entries, setEntries] = useState<Entry[]>([])
+  const [assets, setAssets] = useState<Asset[]>([])
 
   useEffect(() => {
-    setChildren(composition.children || [])
-    setDataSource(composition.dataSource || {})
+    setChildren(composition?.children || [])
+    setDataSource(composition?.dataSource || {})
   }, [composition, setChildren, setDataSource])
 
   const client = contentful.createClient({
@@ -61,19 +61,23 @@ export const CompositionPage = ({
       if (!sys) {
         continue
       }
-      if (sys.type === 'Entry') {
+      if (sys.linkType === 'Entry') {
         entryIds.push(sys.id)
       }
-      if (sys.type === 'Asset') {
+      if (sys.linkType === 'Asset') {
         assetIds.push(sys.id)
       }
+    }
 
+    if (entryIds) {
       client
         .getEntries({ 'sys.id[in]': entryIds })
         .then((response) => {
           setEntries(response.items ? response.items : [])
         })
         .catch(console.error)
+    }
+    if (assetIds) {
       client
         .getAssets({ 'sys.id[in]': assetIds })
         .then((response) => {
@@ -85,7 +89,7 @@ export const CompositionPage = ({
 
   return (
     <>
-      {children.map((childNode, index) => (
+      {composition && children.map((childNode, index) => (
         <CompositionBlock
           key={index}
           node={childNode}

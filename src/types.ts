@@ -1,5 +1,5 @@
-import { Link } from 'contentful-management'
 import { CONTENTFUL_SECTION_ID } from './constants'
+import { Link } from "contentful-management"
 
 export enum OutgoingExperienceBuilderEvent {
   REGISTERED_COMPONENTS = 'registeredComponents',
@@ -135,7 +135,6 @@ export type CompositionComponentNode = {
   data: {
     id: string
     blockId?: string // will be undefined in case string node or if root component
-    propKey?: string // will have the key of variable that block configuration marked as "childNode"
     props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>
     dataSource: Record<
       string, // locale
@@ -182,21 +181,10 @@ export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
 export type CompositionNode = {
   definitionId: string
   children: Array<CompositionNode>
-  variables: Record<string, object>
+  variables: Record<string, CompositionComponentPropValue>
 }
-
-export type CompositionBoundSource = {
-  sys: Link<'Entry' | 'Asset'>
-}
-export type CompositionUnboundSource = {
-  value: string
-}
-export type CompositionDataSource = Record<
-  string,
-  CompositionBoundSource | CompositionUnboundSource
->
 
 export type Composition = {
   children: Array<CompositionNode>
-  dataSource: CompositionDataSource
+  dataSource: Record<string, DataSourceEntryValueType>
 }

@@ -8,16 +8,23 @@ type CompositionRootProps = {
   experience?: Experience
   locale: string
   accessToken: string
-  isProduction: boolean
   spaceId: string
   environmentId: string
   slug: string
 }
 
+function isInsideIframe(): boolean {
+  try {
+    return window.top?.location.href !== window.location.href;
+  } catch (err) {
+    // window.top.location.href is not accessable for non same origin iframes
+    return true;
+  }
+}
+
 export const CompositionRoot = ({
   experience,
   locale,
-  isProduction,
   accessToken,
   spaceId,
   environmentId,
@@ -25,19 +32,19 @@ export const CompositionRoot = ({
 }: CompositionRootProps) => {
   useContentfulSection()
 
-  if (isProduction) {
-    return (
-      <CompositionPage
-        locale={locale}
-        accessToken={accessToken}
-        spaceId={spaceId}
-        environmentId={environmentId}
-        slug={slug}
-      />
-    )
-  } else if (experience) {
-    return <VisualEditorRoot experience={experience} locale={locale} />
-  } else {
-    return null
-  }
+  const insideIframe = isInsideIframe()
+
+  return (
+    <>
+      {!insideIframe &&
+        <CompositionPage
+          locale={locale}
+          accessToken={accessToken}
+          spaceId={spaceId}
+          environmentId={environmentId}
+          slug={slug}
+        />
+      } {insideIframe && experience && <VisualEditorRoot experience={experience} locale={locale} />}
+    </>
+  )
 }
