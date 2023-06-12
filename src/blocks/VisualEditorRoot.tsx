@@ -4,7 +4,6 @@ import { Experience } from '../types'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyContainer } from './EmptyContainer'
-import { useContentfulSection } from '../hooks/useContentfulSection'
 
 const styles = {
   root: css({
@@ -21,7 +20,6 @@ type VisualEditorRootProps = {
 
 export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
   const { onComponentDropped } = useInteraction()
-  useContentfulSection()
 
   const { tree, dataSource, isDragging, selectedNodeId } = experience
 

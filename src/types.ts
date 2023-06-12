@@ -180,12 +180,23 @@ export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
 }
 
 export type CompositionNode = {
-  definitionId: string,
+  definitionId: string
   children: Array<CompositionNode>
   variables: Record<string, object>
 }
 
+export type CompositionBoundSource = {
+  sys: Link<'Entry' | 'Asset'>
+}
+export type CompositionUnboundSource = {
+  value: string
+}
+export type CompositionDataSource = Record<
+  string,
+  CompositionBoundSource | CompositionUnboundSource
+>
+
 export type Composition = {
-  children: Array<CompositionNode>,
-  dataSource: Record<string, object>
+  children: Array<CompositionNode>
+  dataSource: CompositionDataSource
 }

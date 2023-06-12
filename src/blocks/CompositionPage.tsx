@@ -1,41 +1,100 @@
-import { Composition, Experience } from "../types"
-import { VisualEditorRoot } from "./VisualEditorRoot"
-import react, { useEffect, useState } from 'react'
-import { CompositionBlock } from "./CompositionBlock"
-import contentful from 'contentful'
-import { ChevronDownIcon } from "@contentful/f36-icons"
+import type { Composition, CompositionNode } from '../types'
+import react, { useEffect, useMemo, useState } from 'react'
+import { CompositionBlock } from './CompositionBlock'
+import contentful, { Asset, Entry, Link } from 'contentful'
 
 type CompositionPageProps = {
-  locale: string,
-  accessToken: string,
-  spaceId: string,
-  environmentId: string,
+  locale: string
+  accessToken: string
+  spaceId: string
+  environmentId: string
   slug: string
 }
-
-export const CompositionPage = ({ locale, accessToken, spaceId, environmentId, slug }: CompositionPageProps) => {
+export const CompositionPage = ({
+  locale,
+  accessToken,
+  spaceId,
+  environmentId,
+  slug,
+}: CompositionPageProps) => {
   const [composition, setComposition] = useState({} as Composition)
+  const [children, setChildren] = useState([] as CompositionNode[])
+  const [dataSource, setDataSource] = useState({} as typeof composition.dataSource)
+  const [entries, setEntries] = useState([] as Entry[])
+  const [assets, setAssets] = useState([] as Asset[])
+
+  useEffect(() => {
+    setChildren(composition.children || [])
+    setDataSource(composition.dataSource || {})
+  }, [composition, setChildren, setDataSource])
+
   const client = contentful.createClient({
     space: spaceId,
     environment: environmentId,
     host: 'cdn.flinkly.com',
-    accessToken
+    accessToken,
   })
+
   useEffect(() => {
     // fetch composition by slug
-    client.getEntries({content_type: 'Layout', 'fields.slug': slug})
-      .then((response) => console.log(response.items))
+    client
+      .getEntries({ content_type: 'layout', 'fields.slug': slug })
+      .then((response) => {
+        if (response.items.length === 0) {
+          throw new Error(`No composition with slug: ${slug} exists`)
+        }
+        if (response.items.length > 1) {
+          throw new Error(`More than one composition with slug: ${slug} was found`)
+        }
+        setComposition(response.items[0].fields as Composition)
+      })
       .catch(console.error)
-  }, [slug, client])
+  }, [slug])
 
   useEffect(() => {
-    // fetch entries
-  }, [composition])
+    // fetch bound entries
+    let entryIds = [],
+      assetIds = []
+    for (const dataBinding of Object.values(dataSource)) {
+      // @ts-expect-error
+      const sys = dataBinding.sys
+      if (!sys) {
+        continue
+      }
+      if (sys.type === 'Entry') {
+        entryIds.push(sys.id)
+      }
+      if (sys.type === 'Asset') {
+        assetIds.push(sys.id)
+      }
 
+      client
+        .getEntries({ 'sys.id[in]': entryIds })
+        .then((response) => {
+          setEntries(response.items ? response.items : [])
+        })
+        .catch(console.error)
+      client
+        .getAssets({ 'sys.id[in]': assetIds })
+        .then((response) => {
+          setAssets(response.items ? response.items : [])
+        })
+        .catch(console.error)
+    }
+  }, [dataSource])
 
   return (
     <>
-    {composition.children.map((childNode) => (<CompositionBlock node={childNode} locale={locale} />))}
+      {children.map((childNode, index) => (
+        <CompositionBlock
+          key={index}
+          node={childNode}
+          locale={locale}
+          entries={entries}
+          assets={assets}
+          dataSource={dataSource}
+        />
+      ))}
     </>
   )
 }
