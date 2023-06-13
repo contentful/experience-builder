@@ -19,12 +19,14 @@ export function useDynamicStyles({ classNames }: { classNames: string[] }): UseD
   }
 
   const styleRules = Object.entries(emotions)
-    .filter(([k, v]) => classNames.includes(k))
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .filter(([k, _]) => classNames.includes(k))
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .map(([_, rule]) => rule)
 
   useEffect(() => {
     const mountedStyleElements: HTMLStyleElement[] = []
-    for (let rule of styleRules) {
+    for (const rule of styleRules) {
       const styleElement = document.createElement('style')
       styleElement.innerHTML = rule
       styleElement.setAttribute('data-style', 'fake-emotion')

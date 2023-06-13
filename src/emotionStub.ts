@@ -23,7 +23,7 @@ ${styleLines.join('\n')}
 
 function toStyles(camelCaseStyles: Record<string, any>): Record<string, any> {
   const styles: Record<string, any> = {}
-  for (let [k, v] of Object.entries(camelCaseStyles)) {
+  for (const [k, v] of Object.entries(camelCaseStyles)) {
     styles[kebabCase(k)] = v
   }
   return styles
@@ -40,6 +40,8 @@ function randInt() {
 function createStyleRuleTag(styleRule: string, id: string) {
   console.log(`Creating tag (${Object.keys(emotions).length}): <style>\n${styleRule}</style>`)
   emotions[id] = styleRule
+
+  // The stuff below breaks SSR builds (eg. Gatsby) as it accesses `document` global
   // const styleElement = document.createElement('style');
   // styleElement.id =
   // styleElement.innerHTML = styleRule;
@@ -49,13 +51,10 @@ function createStyleRuleTag(styleRule: string, id: string) {
 /**
  * Just concatenate the options
  */
-// export function cx(opt: any, className?: string, ...styleOverrides: any): string {
 export function cx(className?: string, ...styleOverrides: any): string {
   // console.log(`cx(${JSON.stringify(opt)}) arguments:`, arguments);
-  console.log(`cx() arguments:`, arguments)
+  // console.log(`cx() arguments:`, arguments)
   const result = [className, ...styleOverrides].join(' ')
   console.log(`cx(${JSON.stringify({ className, styleOverrides })}) = '${result}'`)
   return result
-  // let _ = styleOverrides
-  // return 'emotion-stub'
 }

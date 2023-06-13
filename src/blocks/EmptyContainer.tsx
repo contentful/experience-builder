@@ -1,3 +1,4 @@
+import React from 'react'
 import { tokens } from '../coreLayouts'
 import { css, cx } from '../emotionStub'
 import { ReactComponent as EmptyStateIcon } from './emptyState.svg'
