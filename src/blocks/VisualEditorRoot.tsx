@@ -1,4 +1,3 @@
-import tokens from '@contentful/f36-tokens'
 import { css } from '@emotion/css'
 import React, { useState } from 'react'
 import { Experience } from '../types'
@@ -6,7 +5,6 @@ import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyContainer } from './EmptyContainer'
 import { useContentfulSection } from '../hooks/useContentfulSection'
-import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
 
 const styles = {
   root: css({
@@ -24,18 +22,8 @@ type VisualEditorRootProps = {
 export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
   const { onComponentDropped } = useInteraction()
   useContentfulSection()
-  const [isHoveringOnRoot, setIsHoveringOnRoot] = useState(false)
 
   const { tree, dataSource, isDragging, selectedNodeId } = experience
-
-  const onMouseOver = (e: React.MouseEvent) => {
-    if (!(e.currentTarget instanceof HTMLElement)) {
-      return
-    }
-    if (['root', 'empty-container'].includes(e.currentTarget.dataset.type || '')) {
-      setIsHoveringOnRoot(true)
-    }
-  }
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyContainer, { isDragging }, [])
@@ -48,8 +36,6 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
       onMouseUp: () => {
         onComponentDropped({ node: tree.root })
       },
-      onMouseOver,
-      onMouseOut: () => setIsHoveringOnRoot(false),
       'data-type': 'root',
     },
     [
@@ -61,6 +47,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           dataSource={dataSource}
           isDragging={isDragging}
           isSelected={selectedNodeId === node.data.id}
+          rootNode={tree.root}
         />
       )),
     ]
