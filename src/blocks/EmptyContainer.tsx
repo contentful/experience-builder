@@ -1,7 +1,8 @@
 import { tokens } from '../coreLayouts'
-import { css, cx } from '@emotion/css'
+import { css, cx } from '../emotionStub'
 import { ReactComponent as EmptyStateIcon } from './emptyState.svg'
 import { useInteraction } from '../hooks'
+import { useDynamicStyles } from '../hooks/useDynamicStyle'
 
 const styles = {
   container: css({
@@ -36,6 +37,13 @@ export const EmptyContainer = ({
   isHoveringOnRoot = false,
 }: EmptyContainerProps) => {
   const { onComponentDropped, isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
+
+  const { isStyleReady } = useDynamicStyles({
+    classNames: [styles.container, styles.highlight, styles.icon],
+  })
+  if (!isStyleReady) {
+    return null
+  }
 
   const showContent = isFirst ? !isDragging || (isDragging && !isMouseOver) : false
 

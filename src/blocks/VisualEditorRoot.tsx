@@ -1,11 +1,12 @@
 import { tokens } from '../coreLayouts'
-import { css } from '@emotion/css'
+import { css } from '../emotionStub'
 import React, { useState } from 'react'
 import { Experience } from '../types'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyContainer } from './EmptyContainer'
 import { useContentfulSection } from '../hooks/useContentfulSection'
+import useDynamicStyle from '../hooks/useDynamicStyle'
 
 const styles = {
   root: css({
@@ -13,12 +14,12 @@ const styles = {
     paddingBottom: '100px',
     overflow: 'scroll',
   }),
-  hover: css({
-    border: `1px solid transparent`,
-    '&:hover': {
-      border: `1px solid ${tokens.blue500}`,
-    },
-  }),
+  // hover: css({
+  //   border: `1px solid transparent`,
+  //   '&:hover': {
+  //     border: `1px solid ${tokens.blue500}`,
+  //   },
+  // }),
 }
 
 type VisualEditorRootProps = {
@@ -33,6 +34,11 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   console.log('isHoveringOnRoot', isHoveringOnRoot)
 
   const { tree, dataSource, isDragging, selectedNodeId } = experience
+
+  const { isStyleReady } = useDynamicStyle({ className: styles.root })
+  if (!isStyleReady) {
+    return null
+  }
 
   const onMouseOver = (e: React.MouseEvent) => {
     if (!(e.currentTarget instanceof HTMLElement)) {

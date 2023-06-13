@@ -1,6 +1,7 @@
 import React from 'react'
 import { Flex, ButtonGroup, Button, CopyIcon, DeleteIcon } from '../coreLayouts'
-import { css } from '@emotion/css'
+import { css } from '../emotionStub'
+import useDynamicStyle from '../hooks/useDynamicStyle'
 
 const styles = {
   tooltip: css({
@@ -14,6 +15,10 @@ const styles = {
 }
 
 export const SectionTooltip = ({ onComponentRemoved }: { onComponentRemoved: () => void }) => {
+  const { isStyleReady } = useDynamicStyle({ className: styles.tooltip })
+  if (!isStyleReady) {
+    return null
+  }
   return (
     <Flex className={styles.tooltip}>
       <ButtonGroup variant="merged">

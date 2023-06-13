@@ -1,5 +1,5 @@
 import { tokens } from '../coreLayouts'
-import { css } from '@emotion/css'
+import { css } from '../emotionStub'
 import React, { useMemo, useRef } from 'react'
 import get from 'lodash.get'
 import {
@@ -12,14 +12,16 @@ import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
 import { useComponents } from '../hooks'
 import { Link } from 'contentful-management'
+import useDynamicStyle from '../hooks/useDynamicStyle'
 
 const styles = {
-  hover: css({
-    ':hover': {
+  hover: css(
+    {
       border: `1px solid ${tokens.blue500}`,
       boxSizing: 'border-box',
     },
-  }),
+    ':hover'
+  ),
 }
 
 type VisualEditorBlockProps = {
@@ -101,6 +103,11 @@ export const VisualEditorBlock = ({
       {}
     )
   }, [definedComponent, node.data.props, dataSource, locale])
+
+  const { isStyleReady } = useDynamicStyle({ className: styles.hover })
+  if (!isStyleReady) {
+    return null
+  }
 
   if (!definedComponent) {
     return null

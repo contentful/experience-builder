@@ -1,8 +1,9 @@
 import { Flex, tokens } from '../coreLayouts'
-import { css, cx } from '@emotion/css'
+import { css, cx } from '../emotionStub'
 import React from 'react'
 import { useInteraction } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
+import { useDynamicStyles } from '../hooks/useDynamicStyle'
 
 const styles = {
   defaultStyles: css({
@@ -78,6 +79,19 @@ export const ContentfulSection = ({
   const styleOverrides = css({ margin, padding, backgroundColor, width, height, border, gap })
 
   const lineStyles = flexDirection === 'row' ? styles.lineVertical : styles.lineHorizontal
+
+  const { isStyleReady } = useDynamicStyles({
+    classNames: [
+      styles.defaultStyles,
+      styles.lineHorizontal,
+      styles.lineVertical,
+      styles.tooltip,
+      styles.containerBorder,
+    ],
+  })
+  if (!isStyleReady) {
+    return null
+  }
 
   return (
     <div className={isSelected ? cx(styles.containerBorder) : ''}>

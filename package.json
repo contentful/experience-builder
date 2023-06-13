@@ -21,13 +21,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@contentful/f36-button": "^4.41.1",
-    "@contentful/f36-core": "^4.40.6",
-    "@contentful/f36-icons": "^4.25.0",
-    "@contentful/f36-tokens": "^4.0.1",
-    "@emotion/css": "^11.10.6",
     "contentful-management": "^10.35.4",
+    "jshashes": "^1.0.8",
     "lodash.get": "^4.4.2",
+    "lodash.kebabcase": "^4.1.1",
     "lodash.throttle": "^4.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -41,6 +38,7 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/lodash.get": "^4.4.7",
+    "@types/lodash.kebabcase": "^4.1.7",
     "@types/lodash.throttle": "^4.1.7",
     "@types/node": "^18.14.0",
     "@types/react": "^18.0.28",
