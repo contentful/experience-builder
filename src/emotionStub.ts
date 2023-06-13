@@ -1,4 +1,4 @@
-import kebabCase from 'lodash.kebabCase'
+import kebabCase from 'lodash.kebabcase'
 import { hashMD5 } from './hash'
 
 export const emotions: Record<string, any> = {}
