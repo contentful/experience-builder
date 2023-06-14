@@ -83,14 +83,20 @@ export const useContentfulSection = () => {
         type: 'Text',
         group: 'style',
         description: 'The width of the section',
-        defaultValue: '100%',
+        defaultValue: 'fill',
       },
       height: {
         displayName: 'Height',
         type: 'Text',
         group: 'style',
         description: 'The height of the section',
-        defaultValue: 'auto',
+        defaultValue: 'fill',
+        },
+        maxWidth: {
+          type: 'Text',
+          group: 'style',
+          description: 'The max width of the section',
+          defaultValue: 'fill',
       },
       flexDirection: {
         displayName: 'Flex Direction',
