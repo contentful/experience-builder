@@ -170,6 +170,7 @@ export type SECTION_STYLE_ATTRIBUTE_KEY =
   | 'height'
   | 'flexDirection'
   | 'border'
+  | 'maxWidth'
   | 'gap'
 
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {

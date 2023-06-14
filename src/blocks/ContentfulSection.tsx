@@ -69,7 +69,7 @@ interface ContentfulSectionProps extends StyleProps {
   rootNode: CompositionComponentNode
 }
 
-const transformFill = (value: string) => value === 'fill' ? '100%' : value
+const transformFill = (value: string) => (value === 'fill' ? '100%' : value)
 export const ContentfulSection = ({
   horizontalAlignment,
   verticalAlignment,
@@ -112,7 +112,7 @@ export const ContentfulSection = ({
     width: transformFill(width),
     height: transformFill(height),
     border,
-    gap
+    gap,
   })
 
   const lineStyles = flexDirection === 'row' ? styles.lineVertical : styles.lineHorizontal

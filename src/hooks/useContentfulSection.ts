@@ -91,12 +91,12 @@ export const useContentfulSection = () => {
         group: 'style',
         description: 'The height of the section',
         defaultValue: 'fill',
-        },
-        maxWidth: {
-          type: 'Text',
-          group: 'style',
-          description: 'The max width of the section',
-          defaultValue: 'fill',
+      },
+      maxWidth: {
+        type: 'Text',
+        group: 'style',
+        description: 'The max width of the section',
+        defaultValue: 'fill',
       },
       flexDirection: {
         displayName: 'Flex Direction',
