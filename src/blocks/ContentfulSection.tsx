@@ -1,9 +1,14 @@
+import React from 'react'
 import { Flex } from '@contentful/f36-core'
 import tokens from '@contentful/f36-tokens'
 import { css, cx } from '@emotion/css'
-import React from 'react'
-import { useInteraction } from '../hooks'
+import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
+import {
+  ContentfulSectionIndicator,
+  ContentfulSectionIndicatorPlaceholder,
+} from './ContentfulSectionIndicator'
+import { CompositionComponentNode } from '../types'
 
 const styles = {
   defaultStyles: css({
@@ -12,16 +17,19 @@ const styles = {
     flexWrap: 'wrap',
     justifyContent: 'center',
     position: 'relative',
+    display: 'flex',
   }),
   lineHorizontal: css({
+    height: '3px',
+    width: '200px',
+    background: tokens.blue500,
     margin: '10px',
-    height: '0px',
-    borderTop: `3px solid ${tokens.blue500}`,
   }),
   lineVertical: css({
-    width: '0px',
+    height: '190px',
+    width: '3px',
+    background: tokens.blue500,
     margin: '10px',
-    borderLeft: `3px solid ${tokens.blue500}`,
   }),
   tooltip: css({
     display: 'flex',
@@ -53,10 +61,12 @@ interface StyleProps {
 interface ContentfulSectionProps extends StyleProps {
   onClick: () => void
   onComponentRemoved: () => void
+  onMouseUp: (append: boolean, nodeOverride?: CompositionComponentNode) => void
   isDragging: boolean
   children: React.ReactNode
   className?: string
   isSelected: boolean
+  rootNode: CompositionComponentNode
 }
 
 export const ContentfulSection = ({
@@ -73,10 +83,14 @@ export const ContentfulSection = ({
   isDragging,
   className,
   isSelected,
+  rootNode,
   onComponentRemoved,
+  onMouseUp,
   ...props
 }: ContentfulSectionProps) => {
   const { isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
+  const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
+    useMousePosition()
 
   // when direction is 'column' the axis are reversed
   const alignment =
@@ -94,18 +108,79 @@ export const ContentfulSection = ({
 
   const lineStyles = flexDirection === 'row' ? styles.lineVertical : styles.lineHorizontal
 
+  const showPrependLine = () => {
+    if (flexDirection === 'row') {
+      return (
+        mouseInLeftHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
+      )
+    } else {
+      return (
+        mouseInUpperHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
+      )
+    }
+  }
+  const showAppendLine = () => {
+    if (flexDirection === 'row') {
+      return (
+        !mouseInLeftHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
+      )
+    } else {
+      return (
+        !mouseInUpperHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
+      )
+    }
+  }
+
+  // This function determines if a dragged component should be appended or prepended when dropping it on the section
+  const shouldAppend = () => {
+    if (mouseAtTopBorder || mouseAtBottomBorder) {
+      return mouseAtBottomBorder
+    }
+
+    if (flexDirection === 'row') {
+      return !mouseInLeftHalf
+    } else {
+      return !mouseInUpperHalf
+    }
+  }
+
   return (
-    <div className={isSelected ? cx(styles.containerBorder) : ''}>
-      <Flex
-        flexDirection={flexDirection}
-        onMouseOver={onMouseOver}
-        onMouseLeave={onMouseLeave}
-        className={cx(styles.defaultStyles, className, styleOverrides, alignment)}
-        {...props}>
-        {props.children}
-        {isDragging && isMouseOver && <div key="lineIndicator" className={lineStyles}></div>}
-        {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
-      </Flex>
+    <div ref={componentRef}>
+      {isDragging && isMouseOver ? (
+        mouseAtTopBorder ? (
+          <ContentfulSectionIndicator />
+        ) : (
+          <ContentfulSectionIndicatorPlaceholder />
+        )
+      ) : null}
+      <div className={cx(isSelected ? cx(styles.containerBorder) : '')}>
+        <Flex
+          flexDirection={flexDirection}
+          onMouseOver={onMouseOver}
+          onMouseUp={() => {
+            // Passing this to the function to notify the experience builder about where to drop new components
+            onMouseUp(
+              shouldAppend(),
+              // when the mouse is around the border we want to drop the new component as a new section onto the root node
+              mouseAtTopBorder || mouseAtBottomBorder ? rootNode : undefined
+            )
+          }}
+          onMouseLeave={onMouseLeave}
+          className={cx(styles.defaultStyles, styleOverrides, className, alignment)}
+          {...props}>
+          {showPrependLine() && <div key="lineIndicator_top" className={lineStyles}></div>}
+          {props.children}
+          {showAppendLine() && <div key="lineIndicator_bottom" className={lineStyles}></div>}
+          {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
+        </Flex>
+      </div>
+      {isDragging && isMouseOver ? (
+        mouseAtBottomBorder ? (
+          <ContentfulSectionIndicator />
+        ) : (
+          <ContentfulSectionIndicatorPlaceholder />
+        )
+      ) : null}
     </div>
   )
 }

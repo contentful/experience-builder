@@ -1,5 +1,5 @@
 import tokens from '@contentful/f36-tokens'
-import { css, cx } from '@emotion/css'
+import { css } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
 import get from 'lodash.get'
 import {
@@ -28,6 +28,7 @@ type VisualEditorBlockProps = {
   dataSource: LocalizedDataSource
   isDragging: boolean
   isSelected?: boolean
+  rootNode: CompositionComponentNode
 }
 
 export const VisualEditorBlock = ({
@@ -36,6 +37,7 @@ export const VisualEditorBlock = ({
   dataSource,
   isDragging,
   isSelected,
+  rootNode,
 }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
@@ -116,6 +118,7 @@ export const VisualEditorBlock = ({
         locale={locale}
         dataSource={dataSource}
         isDragging={isDragging}
+        rootNode={rootNode}
       />
     )
   })
@@ -123,8 +126,17 @@ export const VisualEditorBlock = ({
   return React.createElement(
     component,
     {
-      onMouseUp: () => {
-        onComponentDropped({ node })
+      onMouseUp: (append: boolean, nodeOverride?: CompositionComponentNode) => {
+        if (typeof append !== 'boolean') {
+          // When this event is called by the ContentfulSection it is a boolean, otherwise it is a MouseEvent
+          // object which we don't want to process
+          append = true
+        }
+        let dropNode = node
+        if (nodeOverride && nodeOverride.type) {
+          dropNode = nodeOverride
+        }
+        onComponentDropped({ node: dropNode, append })
         wasMousePressed.current = false
       },
       onMouseDown: (e: MouseEvent) => {
@@ -143,6 +155,7 @@ export const VisualEditorBlock = ({
       className: styles.hover,
       isDragging,
       isSelected: !!isSelected,
+      rootNode,
       ...props,
     },
     children

@@ -1,4 +1,3 @@
-import tokens from '@contentful/f36-tokens'
 import { css } from '@emotion/css'
 import React, { useState } from 'react'
 import { Experience } from '../types'
@@ -13,12 +12,6 @@ const styles = {
     paddingBottom: '100px',
     overflow: 'scroll',
   }),
-  hover: css({
-    border: `1px solid transparent`,
-    '&:hover': {
-      border: `1px solid ${tokens.blue500}`,
-    },
-  }),
 }
 
 type VisualEditorRootProps = {
@@ -29,32 +22,12 @@ type VisualEditorRootProps = {
 export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
   const { onComponentDropped } = useInteraction()
   useContentfulSection()
-  const [isHoveringOnRoot, setIsHoveringOnRoot] = useState(false)
 
   const { tree, dataSource, isDragging, selectedNodeId } = experience
-
-  const onMouseOver = (e: React.MouseEvent) => {
-    if (!(e.currentTarget instanceof HTMLElement)) {
-      return
-    }
-    if (['root', 'empty-container'].includes(e.currentTarget.dataset.type || '')) {
-      setIsHoveringOnRoot(true)
-    }
-  }
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyContainer, { isDragging }, [])
   }
-
-  const sectionOutline =
-    isDragging && isHoveringOnRoot ? (
-      <EmptyContainer
-        key="section-outline"
-        isFirst={false}
-        isDragging={isDragging}
-        isHoveringOnRoot={isHoveringOnRoot}
-      />
-    ) : null
 
   return React.createElement(
     'div',
@@ -63,8 +36,6 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
       onMouseUp: () => {
         onComponentDropped({ node: tree.root })
       },
-      onMouseOver,
-      onMouseOut: () => setIsHoveringOnRoot(false),
       'data-type': 'root',
     },
     [
@@ -76,9 +47,9 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           dataSource={dataSource}
           isDragging={isDragging}
           isSelected={selectedNodeId === node.data.id}
+          rootNode={tree.root}
         />
       )),
-      sectionOutline,
     ]
   )
 }

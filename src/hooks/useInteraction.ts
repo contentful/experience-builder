@@ -15,10 +15,11 @@ export const useInteraction = () => {
   }, [])
 
   const onComponentDropped = useCallback(
-    ({ node, template }: { node: any; template?: any }) => {
+    ({ node, template, append = true }: { node: any; template?: any; append?: boolean }) => {
       sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_DROPPED, {
         node,
         template,
+        append,
       })
     },
     [sendMessage]
