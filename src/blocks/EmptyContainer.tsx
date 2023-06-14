@@ -29,7 +29,7 @@ export const EmptyContainer = ({
       onMouseLeave={onMouseLeave}
       className={`container ${isHighlighted ? 'highlight' : ''}`}
       onMouseUp={() => {
-        onComponentDropped({ node: { type: 'root', data: { id: 'root' } } })
+        onComponentDropped({ node: { type: 'root', data: { id: 'root' } }, index: 0 })
       }}>
       {showContent ? (
         <>

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useCommunication } from './useCommunication'
-import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from '../types'
+import { CompositionComponentNode, NodeInsertType, OutgoingExperienceBuilderEvent } from '../types'
 
 export const useInteraction = () => {
   const { sendMessage } = useCommunication()
@@ -15,11 +15,22 @@ export const useInteraction = () => {
   }, [])
 
   const onComponentDropped = useCallback(
-    ({ node, template, append = true }: { node: any; template?: any; append?: boolean }) => {
+    ({
+      node,
+      template,
+      index,
+      insertType,
+    }: {
+      node: any
+      template?: any
+      index: number
+      insertType?: NodeInsertType
+    }) => {
       sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_DROPPED, {
         node,
         template,
-        append,
+        index,
+        insertType,
       })
     },
     [sendMessage]

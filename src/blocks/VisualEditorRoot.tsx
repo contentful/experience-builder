@@ -28,12 +28,12 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
       id: 'VisualEditorRoot',
       className: 'root',
       onMouseUp: () => {
-        onComponentDropped({ node: tree.root })
+        onComponentDropped({ node: tree.root, index: 0 })
       },
       'data-type': 'root',
     },
     [
-      tree.root.children.map((node: any) => (
+      tree.root.children.map((node: any, index) => (
         <VisualEditorBlock
           key={node.data.id}
           node={node}
@@ -42,6 +42,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           isDragging={isDragging}
           isSelected={selectedNodeId === node.data.id}
           rootNode={tree.root}
+          index={index}
         />
       )),
     ]

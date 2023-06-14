@@ -6,7 +6,7 @@ import {
   ContentfulSectionIndicator,
   ContentfulSectionIndicatorPlaceholder,
 } from './ContentfulSectionIndicator'
-import { CompositionComponentNode } from '../types'
+import { CompositionComponentNode, NodeInsertType } from '../types'
 import { transformBorderStyle, transformFill } from './transformers'
 
 import './ContentfulSection.css'
@@ -30,7 +30,7 @@ interface StyleProps {
 interface ContentfulSectionProps extends StyleProps {
   onClick: () => void
   onComponentRemoved: () => void
-  onMouseUp: (append: boolean, nodeOverride?: CompositionComponentNode) => void
+  onMouseUp: (insertType: NodeInsertType, nodeOverride?: CompositionComponentNode) => void
   isDragging: boolean
   children: React.ReactNode
   className?: string
@@ -112,15 +112,15 @@ export const ContentfulSection = ({
   }
 
   // This function determines if a dragged component should be appended or prepended when dropping it on the section
-  const shouldAppend = () => {
+  const getInsertType = () => {
     if (mouseAtTopBorder || mouseAtBottomBorder) {
-      return mouseAtBottomBorder
+      return mouseAtBottomBorder ? NodeInsertType.APPEND_ADJACENT : NodeInsertType.PREPEND_ADJACENT
     }
 
     if (flexDirection === 'row') {
-      return !mouseInLeftHalf
+      return mouseInLeftHalf ? NodeInsertType.PREPEND : NodeInsertType.APPEND
     } else {
-      return !mouseInUpperHalf
+      return mouseInUpperHalf ? NodeInsertType.PREPEND : NodeInsertType.APPEND
     }
   }
 
@@ -128,9 +128,9 @@ export const ContentfulSection = ({
     <div ref={componentRef} id="ContentfulSection">
       {isDragging && isMouseOver ? (
         mouseAtTopBorder ? (
-          <ContentfulSectionIndicator />
+          <ContentfulSectionIndicator key={'new_section_indicator_top'} />
         ) : (
-          <ContentfulSectionIndicatorPlaceholder />
+          <ContentfulSectionIndicatorPlaceholder key={'placeholder_section_indicator_bottom'} />
         )
       ) : null}
       <div className={isSelected ? 'containerBorder' : ''}>
@@ -145,7 +145,7 @@ export const ContentfulSection = ({
           onMouseUp={() => {
             // Passing this to the function to notify the experience builder about where to drop new components
             onMouseUp(
-              shouldAppend(),
+              getInsertType(),
               // when the mouse is around the border we want to drop the new component as a new section onto the root node
               mouseAtTopBorder || mouseAtBottomBorder ? rootNode : undefined
             )
@@ -161,11 +161,12 @@ export const ContentfulSection = ({
       </div>
       {isDragging && isMouseOver ? (
         mouseAtBottomBorder ? (
-          <ContentfulSectionIndicator />
+          <ContentfulSectionIndicator key={'new_section_indicator_bottom'} />
         ) : (
-          <ContentfulSectionIndicatorPlaceholder />
+          <ContentfulSectionIndicatorPlaceholder key={'placeholder_section_indicator_bottom'} />
         )
       ) : null}
     </div>
+    // </div>
   )
 }

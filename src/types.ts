@@ -17,6 +17,13 @@ export enum IncomingExperienceBuilderEvent {
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
 }
 
+export enum NodeInsertType {
+  APPEND = 'append',
+  PREPEND = 'prepend',
+  APPEND_ADJACENT = 'appendAdjacent',
+  PREPEND_ADJACENT = 'prependAdjacent',
+}
+
 export type ComponentDefinitionVariableType =
   | 'Text'
   | 'Number'

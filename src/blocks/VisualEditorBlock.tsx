@@ -5,6 +5,7 @@ import {
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
+  NodeInsertType,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
@@ -20,6 +21,7 @@ type VisualEditorBlockProps = {
   isDragging: boolean
   isSelected?: boolean
   rootNode: CompositionComponentNode
+  index: number
 }
 
 export const VisualEditorBlock = ({
@@ -29,6 +31,7 @@ export const VisualEditorBlock = ({
   isDragging,
   isSelected,
   rootNode,
+  index,
 }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
@@ -101,7 +104,7 @@ export const VisualEditorBlock = ({
 
   const { component } = definedComponent
 
-  const children = node.children.map((childNode: any) => {
+  const children = node.children.map((childNode: any, index) => {
     return (
       <VisualEditorBlock
         node={childNode}
@@ -110,6 +113,7 @@ export const VisualEditorBlock = ({
         dataSource={dataSource}
         isDragging={isDragging}
         rootNode={rootNode}
+        index={index}
       />
     )
   })
@@ -117,17 +121,17 @@ export const VisualEditorBlock = ({
   return React.createElement(
     component,
     {
-      onMouseUp: (append: boolean, nodeOverride?: CompositionComponentNode) => {
-        if (typeof append !== 'boolean') {
+      onMouseUp: (insertType: NodeInsertType, nodeOverride?: CompositionComponentNode) => {
+        if (typeof insertType !== 'string') {
           // When this event is called by the ContentfulSection it is a boolean, otherwise it is a MouseEvent
           // object which we don't want to process
-          append = true
+          insertType = NodeInsertType.APPEND
         }
         let dropNode = node
         if (nodeOverride && nodeOverride.type) {
           dropNode = nodeOverride
         }
-        onComponentDropped({ node: dropNode, append })
+        onComponentDropped({ node: dropNode, index, insertType })
         wasMousePressed.current = false
       },
       onMouseDown: (e: MouseEvent) => {
