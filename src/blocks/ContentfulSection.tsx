@@ -1,6 +1,5 @@
 import React from 'react'
-import { Flex } from '@contentful/f36-core'
-import tokens from '@contentful/f36-tokens'
+import { Flex, color } from '../core'
 import { css, cx } from '@emotion/css'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
@@ -22,13 +21,13 @@ const styles = {
   lineHorizontal: css({
     height: '3px',
     width: '200px',
-    background: tokens.blue500,
+    background: color.blue500,
     margin: '10px',
   }),
   lineVertical: css({
     height: '190px',
     width: '3px',
-    background: tokens.blue500,
+    background: color.blue500,
     margin: '10px',
   }),
   tooltip: css({
@@ -40,7 +39,7 @@ const styles = {
     right: '1px',
   }),
   containerBorder: css({
-    border: `1px solid ${tokens.blue500}`,
+    border: `1px solid ${color.blue500}`,
     boxSizing: 'border-box',
   }),
 }

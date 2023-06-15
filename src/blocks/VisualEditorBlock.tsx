@@ -1,4 +1,4 @@
-import tokens from '@contentful/f36-tokens'
+import { color } from '../core'
 import { css } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
 import get from 'lodash.get'
@@ -16,7 +16,7 @@ import { Link } from 'contentful-management'
 const styles = {
   hover: css({
     ':hover': {
-      border: `1px solid ${tokens.blue500}`,
+      border: `1px solid ${color.blue500}`,
       boxSizing: 'border-box',
     },
   }),

@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css'
 import { ReactComponent as EmptyStateIcon } from './emptyState.svg'
 import React from 'react'
-import tokens from '@contentful/f36-tokens'
+import { color, typography, spacing } from '../core'
 import { useInteraction } from '../hooks'
 
 const styles = {
@@ -11,17 +11,17 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    color: tokens.gray500,
-    fontSize: tokens.fontSizeM,
-    fontFamily: tokens.fontStackPrimary,
-    border: `1px dashed ${tokens.gray500}`,
+    color: color.gray500,
+    fontSize: typography.fontSizeM,
+    fontFamily: typography.fontStackPrimary,
+    border: `1px dashed ${color.gray500}`,
   }),
   highlight: css({
-    border: `1px dashed ${tokens.blue500}`,
-    backgroundColor: tokens.blue100,
+    border: `1px dashed ${color.blue500}`,
+    backgroundColor: color.blue100,
   }),
   icon: css({
-    marginLeft: tokens.spacingS,
+    marginLeft: spacing.spacingS,
   }),
 }
 
