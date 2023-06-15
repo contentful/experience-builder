@@ -1,5 +1,5 @@
 export const color = {
-	blue100: '#E8F5FF',
+  blue100: '#E8F5FF',
   blue200: '#CEECFF',
   blue300: '#98CBFF',
   blue400: '#40A0FF',
@@ -8,7 +8,7 @@ export const color = {
   blue700: '#0041AB',
   blue800: '#003298',
   blue900: '#002A8E',
-	gray100: '#F7F9FA',
+  gray100: '#F7F9FA',
   gray200: '#E7EBEE',
   gray300: '#CFD9E0',
   gray400: '#AEC1CC',
@@ -17,6 +17,6 @@ export const color = {
   gray700: '#414D63',
   gray800: '#1B273A',
   gray900: '#111B2B',
-	colorWhite: '#ffffff',
-	glowPrimary: '0px 0px 0px 3px #E8F5FF'
+  colorWhite: '#ffffff',
+  glowPrimary: '0px 0px 0px 3px #E8F5FF',
 }
