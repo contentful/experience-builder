@@ -52,6 +52,7 @@ interface StyleProps {
   padding: string
   backgroundColor: string
   width: string
+  maxWidth: string
   height: string
   flexDirection: 'row' | 'column'
   border: string
@@ -79,6 +80,7 @@ export const ContentfulSection = ({
   backgroundColor,
   width,
   height,
+  maxWidth,
   border,
   gap,
   isDragging,
@@ -111,6 +113,7 @@ export const ContentfulSection = ({
     backgroundColor,
     width: transformFill(width),
     height: transformFill(height),
+    maxWidth,
     border,
     gap,
   })
