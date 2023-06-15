@@ -93,6 +93,7 @@ export const useContentfulSection = () => {
         defaultValue: 'fill',
       },
       maxWidth: {
+        displayName: 'Max Width',
         type: 'Text',
         group: 'style',
         description: 'The max width of the section',
