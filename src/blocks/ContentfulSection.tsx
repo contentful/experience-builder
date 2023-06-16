@@ -48,6 +48,7 @@ const styles = {
 interface StyleProps {
   horizontalAlignment: 'start' | 'end' | 'center'
   verticalAlignment: 'start' | 'end' | 'center'
+  distribution: 'stacked' | 'absolute'
   margin: string
   padding: string
   backgroundColor: string
@@ -55,6 +56,7 @@ interface StyleProps {
   maxWidth: string
   height: string
   flexDirection: 'row' | 'column'
+  flexWrap: 'nowrap' | 'wrap'
   border: string
   gap: string
 }
@@ -75,6 +77,7 @@ export const ContentfulSection = ({
   horizontalAlignment,
   verticalAlignment,
   flexDirection,
+  flexWrap,
   margin,
   padding,
   backgroundColor,
@@ -168,6 +171,7 @@ export const ContentfulSection = ({
       <div className={cx(isSelected ? cx(styles.containerBorder) : '')}>
         <Flex
           flexDirection={flexDirection}
+          flexWrap={flexWrap}
           onMouseOver={onMouseOver}
           onMouseUp={() => {
             // Passing this to the function to notify the experience builder about where to drop new components
