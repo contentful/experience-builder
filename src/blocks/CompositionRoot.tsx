@@ -11,27 +11,23 @@ type CompositionRootProps = {
 
 function isInsideIframe(): boolean {
   try {
-    return window.top?.location.href !== window.location.href;
+    return window.top?.location.href !== window.location.href
   } catch (err) {
     // window.top.location.href is not accessable for non same origin iframes
-    return true;
+    return true
   }
 }
 
-export const CompositionRoot = ({
-  isPreview,
-  slug,
-}: CompositionRootProps) => {
-  debugger;
+export const CompositionRoot = ({ isPreview, slug }: CompositionRootProps) => {
   const { locale, accessToken, spaceId, environmentId } = useContext(ContentfulCompositionContext)
   console.log(locale, accessToken, spaceId, environmentId, isPreview, isInsideIframe())
 
-  if(!locale) {
+  useContentfulSection()
+
+  if (!locale) {
     console.error('[exp-builder.sdk] SDK requires a locale property to be defined')
     return null
   }
-
-  useContentfulSection()
 
   const insideIframe = isInsideIframe()
   if (insideIframe && isPreview) {
@@ -40,7 +36,9 @@ export const CompositionRoot = ({
 
   if (isPreview) {
     if (!accessToken || !spaceId || !environmentId) {
-      console.error('[exp-builder.sdk] SDK requires access token, space ID, and enviromentId to be defined')
+      console.error(
+        '[exp-builder.sdk] SDK requires access token, space ID, and enviromentId to be defined'
+      )
       return null
     }
     return (

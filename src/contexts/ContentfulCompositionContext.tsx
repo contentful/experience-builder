@@ -1,10 +1,10 @@
-import { createContext, ReactElement, useMemo } from "react";
+import { createContext, ReactElement, useMemo } from 'react'
 
 export type ContentfulCompositionContextProps = {
-  locale: string | undefined;
-  accessToken: string | undefined;
-  spaceId: string | undefined;
-  environmentId?: string;
+  locale: string | undefined
+  accessToken: string | undefined
+  spaceId: string | undefined
+  environmentId?: string
 }
 
 const initialProps = {
@@ -14,7 +14,8 @@ const initialProps = {
   environmentId: 'master',
 }
 
-export const ContentfulCompositionContext = createContext<ContentfulCompositionContextProps>(initialProps)
+export const ContentfulCompositionContext =
+  createContext<ContentfulCompositionContextProps>(initialProps)
 
 export function ContentfulCompositionContextProvider({
   children,
@@ -26,11 +27,11 @@ export function ContentfulCompositionContextProvider({
   const props = useMemo(
     () => ({ locale, accessToken, spaceId, environmentId }),
     [locale, accessToken, spaceId, environmentId]
-  );
+  )
 
   return (
     <ContentfulCompositionContext.Provider value={props}>
       {children}
     </ContentfulCompositionContext.Provider>
-  );
+  )
 }

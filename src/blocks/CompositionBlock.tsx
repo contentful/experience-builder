@@ -43,24 +43,25 @@ export const CompositionBlock = ({
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
       let _empty: string, uuid: string, path: string[]
       switch (variable.type) {
-        case "DesignValue":
+        case 'DesignValue':
           acc[variableName] = variable.value as string
           break
-        case "BoundValue":
-          [_empty, uuid, ...path] = variable.path.split('/')
+        case 'BoundValue':
+          ;[_empty, uuid, ...path] = variable.path.split('/')
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>
-          const entity = (binding.sys?.linkType === 'Entry')
-            ? entries.find(({ sys: { id } }) => id === binding.sys?.id)
-            : assets.find(({ sys: { id } }) => id === binding.sys?.id)
+          const entity =
+            binding.sys?.linkType === 'Entry'
+              ? entries.find(({ sys: { id } }) => id === binding.sys?.id)
+              : assets.find(({ sys: { id } }) => id === binding.sys?.id)
 
           if (entity) {
-            acc[variableName] = get(entity, path.slice(0,-1))
+            acc[variableName] = get(entity, path.slice(0, -1))
           }
           break
-        case "UnboundValue":
-          [_empty, uuid, ...path] = variable.path.split('/')
+        case 'UnboundValue':
+          ;[_empty, uuid, ...path] = variable.path.split('/')
           // @ts-expect-error value may not exist
-          acc[variableName] = (dataSource[uuid]).value
+          acc[variableName] = dataSource[uuid].value
           break
         default:
           break

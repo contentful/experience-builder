@@ -1,5 +1,5 @@
 import { CONTENTFUL_SECTION_ID } from './constants'
-import { Link } from "contentful-management"
+import { Link } from 'contentful-management'
 
 export enum OutgoingExperienceBuilderEvent {
   REGISTERED_COMPONENTS = 'registeredComponents',

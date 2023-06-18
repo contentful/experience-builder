@@ -9,6 +9,7 @@ import {
   ContentfulSectionIndicatorPlaceholder,
 } from './ContentfulSectionIndicator'
 import { CompositionComponentNode } from '../types'
+import { isInsideIframe } from '../utils'
 
 const styles = {
   defaultStyles: css({
@@ -94,6 +95,7 @@ export const ContentfulSection = ({
   const { isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
+  const insideIframe = isInsideIframe()
 
   // when direction is 'column' the axis are reversed
   const alignment =
@@ -121,6 +123,9 @@ export const ContentfulSection = ({
   const lineStyles = flexDirection === 'row' ? styles.lineVertical : styles.lineHorizontal
 
   const showPrependLine = () => {
+    if (!insideIframe) {
+      return false
+    }
     if (flexDirection === 'row') {
       return (
         mouseInLeftHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
@@ -132,6 +137,9 @@ export const ContentfulSection = ({
     }
   }
   const showAppendLine = () => {
+    if (!insideIframe) {
+      return false
+    }
     if (flexDirection === 'row') {
       return (
         !mouseInLeftHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
@@ -145,6 +153,9 @@ export const ContentfulSection = ({
 
   // This function determines if a dragged component should be appended or prepended when dropping it on the section
   const shouldAppend = () => {
+    if (!insideIframe) {
+      return false
+    }
     if (mouseAtTopBorder || mouseAtBottomBorder) {
       return mouseAtBottomBorder
     }
@@ -155,6 +166,20 @@ export const ContentfulSection = ({
       return !mouseInUpperHalf
     }
   }
+  const visualEditorProps = insideIframe
+    ? {
+        onMouseOver,
+        onMouseLeave,
+        onMouseUp: () => {
+          // Passing this to the function to notify the experience builder about where to drop new components
+          onMouseUp(
+            shouldAppend(),
+            // when the mouse is around the border we want to drop the new component as a new section onto the root node
+            mouseAtTopBorder || mouseAtBottomBorder ? rootNode : undefined
+          )
+        },
+      }
+    : {}
 
   return (
     <div ref={componentRef}>
@@ -168,22 +193,13 @@ export const ContentfulSection = ({
       <div className={cx(isSelected ? cx(styles.containerBorder) : '')}>
         <Flex
           flexDirection={flexDirection}
-          onMouseOver={onMouseOver}
-          onMouseUp={() => {
-            // Passing this to the function to notify the experience builder about where to drop new components
-            onMouseUp(
-              shouldAppend(),
-              // when the mouse is around the border we want to drop the new component as a new section onto the root node
-              mouseAtTopBorder || mouseAtBottomBorder ? rootNode : undefined
-            )
-          }}
-          onMouseLeave={onMouseLeave}
           className={cx(styles.defaultStyles, styleOverrides, className, alignment)}
+          {...visualEditorProps}
           {...props}>
           {showPrependLine() && <div key="lineIndicator_top" className={lineStyles}></div>}
           {props.children}
           {showAppendLine() && <div key="lineIndicator_bottom" className={lineStyles}></div>}
-          {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
+          {isSelected && insideIframe && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
         </Flex>
       </div>
       {isDragging && isMouseOver ? (

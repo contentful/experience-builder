@@ -18,7 +18,6 @@ type VisualEditorRootProps = {
 }
 
 export const VisualEditorRoot = ({ locale }: VisualEditorRootProps) => {
-  debugger
   const { experience } = useExperienceBuilder()
   const { onComponentDropped } = useInteraction()
 

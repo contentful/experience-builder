@@ -1,1 +1,4 @@
-export { ContentfulCompositionContext, ContentfulCompositionContextProvider } from "./ContentfulCompositionContext";
+export {
+  ContentfulCompositionContext,
+  ContentfulCompositionContextProvider,
+} from './ContentfulCompositionContext'
