@@ -1,5 +1,5 @@
 import type { Composition, CompositionDataSource, CompositionNode } from '../types'
-import react, { useEffect, useMemo, useState } from 'react'
+import react, { useEffect, useState } from 'react'
 import { CompositionBlock } from './CompositionBlock'
 import contentful, { Asset, Entry, Link } from 'contentful'
 
@@ -87,9 +87,13 @@ export const CompositionPage = ({
     }
   }, [dataSource])
 
+  if (!composition) {
+    return null
+  }
+
   return (
     <>
-      {composition && children.map((childNode, index) => (
+      {children.map((childNode, index) => (
         <CompositionBlock
           key={index}
           node={childNode}

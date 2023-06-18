@@ -1,10 +1,11 @@
-import { CompositionBoundSource, CompositionDataSource, CompositionNode, CompositionUnboundSource } from '../types'
+import { CompositionDataSource, CompositionNode } from '../types'
 import get from 'lodash.get'
 
 import react, { useMemo } from 'react'
 import { useComponents } from '../hooks'
 import React from 'react'
 import { Asset, Entry } from 'contentful'
+import { Link } from 'contentful-management'
 
 type CompositionPageProps = {
   node: CompositionNode
@@ -42,23 +43,24 @@ export const CompositionBlock = ({
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
       let _empty: string, uuid: string, path: string[]
       switch (variable.type) {
-        case 'DesignValue':
+        case "DesignValue":
           acc[variableName] = variable.value as string
           break
-        case 'BoundValue':
+        case "BoundValue":
           [_empty, uuid, ...path] = variable.path.split('/')
-          const binding = dataSource[uuid] as CompositionBoundSource
-          const entity = (binding.sys.linkType === 'Entry')
-            ? entries.find(({ sys: { id } }) => id === binding.sys.id)
-            : assets.find(({ sys: { id } }) => id === binding.sys.id)
+          const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>
+          const entity = (binding.sys?.linkType === 'Entry')
+            ? entries.find(({ sys: { id } }) => id === binding.sys?.id)
+            : assets.find(({ sys: { id } }) => id === binding.sys?.id)
 
           if (entity) {
             acc[variableName] = get(entity, path.slice(0,-1))
           }
           break
-        case 'UnboundValue':
+        case "UnboundValue":
           [_empty, uuid, ...path] = variable.path.split('/')
-          acc[variableName] = (dataSource[uuid] as CompositionUnboundSource).value
+          // @ts-expect-error value may not exist
+          acc[variableName] = (dataSource[uuid]).value
           break
         default:
           break

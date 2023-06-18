@@ -1,9 +1,9 @@
 import { css } from '@emotion/css'
 import React, { useState } from 'react'
-import { Experience } from '../types'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyContainer } from './EmptyContainer'
+import { useExperienceBuilder } from '../hooks'
 
 const styles = {
   root: css({
@@ -14,11 +14,12 @@ const styles = {
 }
 
 type VisualEditorRootProps = {
-  experience: Experience
   locale: string
 }
 
-export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
+export const VisualEditorRoot = ({ locale }: VisualEditorRootProps) => {
+  debugger
+  const { experience } = useExperienceBuilder()
   const { onComponentDropped } = useInteraction()
 
   const { tree, dataSource, isDragging, selectedNodeId } = experience

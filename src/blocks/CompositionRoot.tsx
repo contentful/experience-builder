@@ -1,16 +1,12 @@
-import { Experience } from '../types'
 import { VisualEditorRoot } from './VisualEditorRoot'
-import react from 'react'
+import react, { useContext } from 'react'
 import { CompositionPage } from './CompositionPage'
 import { useContentfulSection } from '../hooks/useContentfulSection'
+import { ContentfulCompositionContext } from '../contexts/ContentfulCompositionContext'
 
 type CompositionRootProps = {
-  experience?: Experience
-  locale: string
-  accessToken: string
-  spaceId: string
-  environmentId: string
   slug: string
+  isPreview: boolean
 }
 
 function isInsideIframe(): boolean {
@@ -23,28 +19,40 @@ function isInsideIframe(): boolean {
 }
 
 export const CompositionRoot = ({
-  experience,
-  locale,
-  accessToken,
-  spaceId,
-  environmentId,
+  isPreview,
   slug,
 }: CompositionRootProps) => {
+  debugger;
+  const { locale, accessToken, spaceId, environmentId } = useContext(ContentfulCompositionContext)
+  console.log(locale, accessToken, spaceId, environmentId, isPreview, isInsideIframe())
+
+  if(!locale) {
+    console.error('[exp-builder.sdk] SDK requires a locale property to be defined')
+    return null
+  }
+
   useContentfulSection()
 
   const insideIframe = isInsideIframe()
+  if (insideIframe && isPreview) {
+    return <VisualEditorRoot locale={locale} />
+  }
 
-  return (
-    <>
-      {!insideIframe &&
-        <CompositionPage
-          locale={locale}
-          accessToken={accessToken}
-          spaceId={spaceId}
-          environmentId={environmentId}
-          slug={slug}
-        />
-      } {insideIframe && experience && <VisualEditorRoot experience={experience} locale={locale} />}
-    </>
-  )
+  if (isPreview) {
+    if (!accessToken || !spaceId || !environmentId) {
+      console.error('[exp-builder.sdk] SDK requires access token, space ID, and enviromentId to be defined')
+      return null
+    }
+    return (
+      <CompositionPage
+        locale={locale}
+        accessToken={accessToken}
+        spaceId={spaceId}
+        environmentId={environmentId}
+        slug={slug}
+      />
+    )
+  }
+
+  return null
 }

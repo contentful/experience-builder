@@ -178,13 +178,16 @@ export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>>
 }
 
+// cda types
 export type CompositionNode = {
   definitionId: string
   children: Array<CompositionNode>
   variables: Record<string, CompositionComponentPropValue>
 }
 
+export type CompositionDataSource = Record<string, DataSourceEntryValueType>
+
 export type Composition = {
   children: Array<CompositionNode>
-  dataSource: Record<string, DataSourceEntryValueType>
+  dataSource: CompositionDataSource
 }

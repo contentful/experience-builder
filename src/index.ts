@@ -1,5 +1,6 @@
 export { VisualEditorRoot, CompositionRoot } from './blocks'
 export { useExperienceBuilder, useComponents as useExperienceBuilderComponents } from './hooks'
+export { ContentfulCompositionContext, ContentfulCompositionContextProvider } from './contexts'
 export type {
   ComponentDefinition,
   Experience,
