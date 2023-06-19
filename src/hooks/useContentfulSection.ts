@@ -57,6 +57,25 @@ export const useContentfulSection = () => {
         defaultValue: 'center',
         displayName: 'Horizontal alignment',
       },
+      distribution: {
+        type: 'Text',
+        validations: {
+          in: [
+            {
+              value: 'stacked',
+              displayName: 'Stacked',
+            },
+            {
+              value: 'absolute',
+              displayName: 'Absolute',
+            },
+          ],
+        },
+        group: 'style',
+        description: 'Layout distribution',
+        defaultValue: 'stacked',
+        displayName: 'Distribution',
+      },
       margin: {
         displayName: 'Margin',
         type: 'Text',
@@ -83,21 +102,35 @@ export const useContentfulSection = () => {
         type: 'Text',
         group: 'style',
         description: 'The width of the section',
-        defaultValue: '100%',
+        defaultValue: 'fill',
       },
       height: {
         displayName: 'Height',
         type: 'Text',
         group: 'style',
         description: 'The height of the section',
-        defaultValue: 'auto',
+        defaultValue: 'fill',
+      },
+      maxWidth: {
+        displayName: 'Max Width',
+        type: 'Text',
+        group: 'style',
+        description: 'The max-width of the section',
+        defaultValue: 'fill',
       },
       flexDirection: {
-        displayName: 'Flex Direction',
+        displayName: 'Direction',
         type: 'Text',
         group: 'style',
         description: 'The orientation of the section',
         defaultValue: 'row',
+      },
+      flexWrap: {
+        displayName: 'Wrap objects',
+        type: 'Text',
+        group: 'style',
+        description: 'Wrap objects',
+        defaultValue: 'nowrap',
       },
       border: {
         displayName: 'Border',

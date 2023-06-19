@@ -163,13 +163,16 @@ export type Experience = {
 export type SECTION_STYLE_ATTRIBUTE_KEY =
   | 'horizontalAlignment'
   | 'verticalAlignment'
+  | 'distribution'
   | 'margin'
   | 'padding'
   | 'backgroundColor'
   | 'width'
   | 'height'
   | 'flexDirection'
+  | 'flexWrap'
   | 'border'
+  | 'maxWidth'
   | 'gap'
 
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {

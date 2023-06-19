@@ -13,12 +13,15 @@ import './ContentfulSection.css'
 interface StyleProps {
   horizontalAlignment: 'start' | 'end' | 'center'
   verticalAlignment: 'start' | 'end' | 'center'
+  distribution: 'stacked' | 'absolute'
   margin: string
   padding: string
   backgroundColor: string
   width: string
+  maxWidth: string
   height: string
   flexDirection: 'row' | 'column'
+  flexWrap: 'nowrap' | 'wrap'
   border: string
   gap: string
 }
@@ -34,15 +37,18 @@ interface ContentfulSectionProps extends StyleProps {
   rootNode: CompositionComponentNode
 }
 
+const transformFill = (value: string) => (value === 'fill' ? '100%' : value)
 export const ContentfulSection = ({
   horizontalAlignment,
   verticalAlignment,
   flexDirection,
+  flexWrap,
   margin,
   padding,
   backgroundColor,
   width,
   height,
+  maxWidth,
   border,
   gap,
   isDragging,
@@ -69,7 +75,16 @@ export const ContentfulSection = ({
           justifyContent: `${horizontalAlignment}`,
         }
 
-  const styleOverrides = { margin, padding, backgroundColor, width, height, border, gap }
+  const styleOverrides = {
+    margin,
+    padding,
+    backgroundColor,
+    width: transformFill(width),
+    height: transformFill(height),
+    maxWidth,
+    border,
+    gap,
+  }
 
   const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal';
 
@@ -125,6 +140,7 @@ export const ContentfulSection = ({
 						...alignment
 					}}
           flexDirection={flexDirection}
+          flexWrap={flexWrap}
           onMouseOver={onMouseOver}
           onMouseUp={() => {
             // Passing this to the function to notify the experience builder about where to drop new components
