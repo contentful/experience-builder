@@ -1,6 +1,6 @@
 @import "src/variables.css";
 
-.tooltip {
+#SectionTooltip.tooltip {
 	display: flex;
 	justify-content: flex-end;
 	align-items: flex-start;
@@ -9,7 +9,7 @@
 	right: 1px;
 }
 
-.button {
+#SectionTooltip .button {
 	color: var(--color-white);
 	background-color: var(--blue500);
 	border: 1px solid var(--blue500);
@@ -24,13 +24,13 @@
 	padding: 0.25rem 0.75rem;
 }
 
-.button:hover {
+#SectionTooltip .button:hover {
 	background-color: var(--blue600);
 	border-color: var(--blue600);
 	color: var(--color-white),
 }
 
-.button:active {
+#SectionTooltip .button:active {
 	background-color: var(--blue700);
 	border-color: var(--blue700);
 	font-size: var(--font-size-m);
@@ -39,32 +39,32 @@
 	min-height: '32px';
 }
 
-.button:focus {
+#SectionTooltip .button:focus {
 	border-color: var(--blue600);
 	box-shadow: var(--glow-primary);
 }
 
-.button:focus:not(:focus-visible) {
+#SectionTooltip .button:focus:not(:focus-visible) {
 	border-color: var(--blue500);
 	box-shadow: unset;
 }
 
-.button:focus-visible {
+#SectionTooltip .button:focus-visible {
 	border-color:var(--blue600);
 	box-shadow: var(--glow-primary);
 }
 
-.wrapper {
+#SectionTooltip .wrapper {
 	display: inline-flex;
 	position: relative;
 }
 
-.wrapper .button:first-child {
+#SectionTooltip .wrapper .button:first-child {
 	border-bottom-left-radius: 6px;
 	border-top-left-radius: 6px;
 }
 
-.wrapper .button:last-child {
+#SectionTooltip .wrapper .button:last-child {
 	border-bottom-right-radius: 6px;
 	border-top-right-radius: 6px;
 }

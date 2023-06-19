@@ -58,10 +58,12 @@ export interface FlexProps {
   onMouseUp?: MouseEventHandler<HTMLDivElement>
   onClick?: MouseEventHandler<HTMLDivElement>
   className?: string;
-	cssStyles?: Record<string, string>
+	cssStyles?: Record<string, string>;
+	id?: string;
 }
 
 export function Flex({
+	id,
   children,
   onMouseOver,
   onMouseUp,
@@ -87,6 +89,7 @@ export function Flex({
 }: FlexProps) {
   return (
     <div
+			id={id}
 			style={{
 				display: 'flex',
 				flex,

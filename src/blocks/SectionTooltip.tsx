@@ -5,7 +5,7 @@ import './SectionTooltip.css'
 
 export const SectionTooltip = ({ onComponentRemoved }: { onComponentRemoved: () => void }) => {
   return (
-    <Flex className= "tooltip">
+    <Flex id="SectionTooltip" className="tooltip">
       <div className="wrapper">
         <button className="button">
           <CopyIcon />
