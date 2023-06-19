@@ -77,7 +77,11 @@
       {
         "name": "alpha",
         "prerelease": true
-      }
+      },
+      {
+        "name": "lite",
+        "prerelease": true
+      }      
     ],
     "plugins": [
       [
