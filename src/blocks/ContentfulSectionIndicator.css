@@ -1,4 +1,4 @@
-@import "src/variables.css";
+@import "../variables.css";
 
 #ContentfulSectionIndicator.lineHorizontal {
 	height: 3px;

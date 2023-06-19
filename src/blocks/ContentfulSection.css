@@ -1,4 +1,4 @@
-@import "src/variables.css";
+@import "../variables.css";
 
 #ContentfulSection .defaultStyles {
 	min-height: 200px;
