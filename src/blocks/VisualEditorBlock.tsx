@@ -1,5 +1,3 @@
-import { color } from '../core'
-import { css } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
 import get from 'lodash.get'
 import {
@@ -13,14 +11,6 @@ import { useInteraction } from '../hooks/useInteraction'
 import { useComponents } from '../hooks'
 import { Link } from 'contentful-management'
 
-const styles = {
-  hover: css({
-    ':hover': {
-      border: `1px solid ${color.blue500}`,
-      boxSizing: 'border-box',
-    },
-  }),
-}
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
@@ -152,7 +142,8 @@ export const VisualEditorBlock = ({
       onComponentRemoved: () => {
         onComponentRemoved(node)
       },
-      className: styles.hover,
+			id: "VisualEditorBlock",
+      className: "hover",
       isDragging,
       isSelected: !!isSelected,
       rootNode,

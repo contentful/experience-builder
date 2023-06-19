@@ -1,18 +1,11 @@
-import { css } from '@emotion/css'
-import React, { useState } from 'react'
+import React from 'react'
 import { Experience } from '../types'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyContainer } from './EmptyContainer'
 import { useContentfulSection } from '../hooks/useContentfulSection'
 
-const styles = {
-  root: css({
-    minHeight: '45vh',
-    paddingBottom: '100px',
-    overflow: 'scroll',
-  }),
-}
+import './VisualEditorRoot.css';
 
 type VisualEditorRootProps = {
   experience: Experience
@@ -32,7 +25,8 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   return React.createElement(
     'div',
     {
-      className: styles.root,
+			id: "VisualEditorRoot",
+      className: "root",
       onMouseUp: () => {
         onComponentDropped({ node: tree.root })
       },

@@ -1,6 +1,5 @@
 import React, { MouseEventHandler } from 'react'
 import type * as CSS from 'csstype'
-import { css, cx } from '@emotion/css'
 
 export interface FlexProps {
   /**
@@ -58,7 +57,8 @@ export interface FlexProps {
   onMouseLeave?: MouseEventHandler<HTMLDivElement>
   onMouseUp?: MouseEventHandler<HTMLDivElement>
   onClick?: MouseEventHandler<HTMLDivElement>
-  className?: string
+  className?: string;
+	cssStyles?: Record<string, string>
 }
 
 export function Flex({
@@ -82,30 +82,30 @@ export function Flex({
   flexWrap,
   flexGrow,
   className,
+	cssStyles,
   ...props
 }: FlexProps) {
   return (
     <div
-      className={cx(
-        className,
-        css({
-          display: 'flex',
-          flex,
-          flexBasis,
-          flexShrink,
-          flexDirection,
-          gap,
-          justifyContent,
-          justifyItems,
-          justifySelf,
-          alignItems,
-          alignSelf,
-          alignContent,
-          order,
-          flexWrap,
-          flexGrow,
-        })
-      )}
+			style={{
+				display: 'flex',
+				flex,
+				flexBasis,
+				flexShrink,
+				flexDirection,
+				gap,
+				justifyContent,
+				justifyItems,
+				justifySelf,
+				alignItems,
+				alignSelf,
+				alignContent,
+				order,
+				flexWrap,
+				flexGrow,
+				...cssStyles
+			}}
+      className={className}
       onMouseOver={onMouseOver}
       onMouseUp={onMouseUp}
       onMouseLeave={onMouseLeave}

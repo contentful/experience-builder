@@ -1,6 +1,5 @@
 import React from 'react'
-import { Flex, color } from '../core'
-import { css, cx } from '@emotion/css'
+import { Flex } from '../core'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import {
@@ -9,40 +8,7 @@ import {
 } from './ContentfulSectionIndicator'
 import { CompositionComponentNode } from '../types'
 
-const styles = {
-  defaultStyles: css({
-    minHeight: '200px',
-    overflow: 'scroll',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    position: 'relative',
-    display: 'flex',
-  }),
-  lineHorizontal: css({
-    height: '3px',
-    width: '200px',
-    background: color.blue500,
-    margin: '10px',
-  }),
-  lineVertical: css({
-    height: '190px',
-    width: '3px',
-    background: color.blue500,
-    margin: '10px',
-  }),
-  tooltip: css({
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-    position: 'absolute',
-    top: '1px',
-    right: '1px',
-  }),
-  containerBorder: css({
-    border: `1px solid ${color.blue500}`,
-    boxSizing: 'border-box',
-  }),
-}
+import './ContentfulSection.css'
 
 interface StyleProps {
   horizontalAlignment: 'start' | 'end' | 'center'
@@ -94,18 +60,18 @@ export const ContentfulSection = ({
   // when direction is 'column' the axis are reversed
   const alignment =
     flexDirection === 'row'
-      ? css({
+      ? {
           alignItems: `${horizontalAlignment}`,
           justifyContent: `${verticalAlignment}`,
-        })
-      : css({
+        }
+      : {
           alignItems: `${verticalAlignment}`,
           justifyContent: `${horizontalAlignment}`,
-        })
+        }
 
-  const styleOverrides = css({ margin, padding, backgroundColor, width, height, border, gap })
+  const styleOverrides = { margin, padding, backgroundColor, width, height, border, gap }
 
-  const lineStyles = flexDirection === 'row' ? styles.lineVertical : styles.lineHorizontal
+  const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal';
 
   const showPrependLine = () => {
     if (flexDirection === 'row') {
@@ -144,7 +110,7 @@ export const ContentfulSection = ({
   }
 
   return (
-    <div ref={componentRef}>
+    <div ref={componentRef} id="ContentfulSection">
       {isDragging && isMouseOver ? (
         mouseAtTopBorder ? (
           <ContentfulSectionIndicator />
@@ -152,8 +118,12 @@ export const ContentfulSection = ({
           <ContentfulSectionIndicatorPlaceholder />
         )
       ) : null}
-      <div className={cx(isSelected ? cx(styles.containerBorder) : '')}>
+      <div className={isSelected ? 'containerBorder' : ''}>
         <Flex
+					cssStyles={{
+						...styleOverrides,
+						...alignment
+					}}
           flexDirection={flexDirection}
           onMouseOver={onMouseOver}
           onMouseUp={() => {
@@ -165,7 +135,7 @@ export const ContentfulSection = ({
             )
           }}
           onMouseLeave={onMouseLeave}
-          className={cx(styles.defaultStyles, styleOverrides, className, alignment)}
+          className={`defaultStyles ${className}`}
           {...props}>
           {showPrependLine() && <div key="lineIndicator_top" className={lineStyles}></div>}
           {props.children}

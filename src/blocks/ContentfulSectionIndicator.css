@@ -1,0 +1,37 @@
+@import "src/variables.css";
+
+#ContentfulSectionIndicator.lineHorizontal {
+	height: 3px;
+	background: var(--blue500);
+	margin: 10px;
+	position: relative;
+}
+
+#ContentfulSectionIndicatorPlaceholder.lineHorizontalTransparent {
+	height: 3px;
+	margin: 10px;
+	position: relative;
+}
+
+#ContentfulSectionIndicator .text {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background:  var(--blue200);
+	border: 1px dotted var(--blue500);
+	border-radius: 5px;
+	padding: 5px;
+	color:  var(--blue500);
+}
+
+#ContentfulSectionIndicatorPlaceholder .textTransparent {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border: 1px dotted transparent;
+	border-radius: 5px;
+	padding: 5px;
+	color: transparent;
+}

@@ -1,0 +1,8 @@
+@import "src/variables.css";
+
+#VisualEditorBlock.hover {
+	:hover {
+		border: 1px solid var(--blue500);
+		box-sizing: border-box;
+	}
+}

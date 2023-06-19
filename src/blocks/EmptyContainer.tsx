@@ -1,29 +1,9 @@
-import { css, cx } from '@emotion/css'
 import { ReactComponent as EmptyStateIcon } from './emptyState.svg'
 import React from 'react'
-import { color, typography, spacing } from '../core'
 import { useInteraction } from '../hooks'
 
-const styles = {
-  container: css({
-    height: '200px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    color: color.gray500,
-    fontSize: typography.fontSizeM,
-    fontFamily: typography.fontStackPrimary,
-    border: `1px dashed ${color.gray500}`,
-  }),
-  highlight: css({
-    border: `1px dashed ${color.blue500}`,
-    backgroundColor: color.blue100,
-  }),
-  icon: css({
-    marginLeft: spacing.spacingS,
-  }),
-}
+import './EmptyContainer.css'
+
 
 export interface EmptyContainerProps {
   isFirst?: boolean
@@ -44,17 +24,18 @@ export const EmptyContainer = ({
 
   return (
     <div
+			id='EmptyContainer'
       data-type="empty-container"
       onMouseOver={onMouseOver}
       onMouseLeave={onMouseLeave}
-      className={isHighlighted ? cx(styles.container, styles.highlight) : styles.container}
+      className={`container ${isHighlighted ?  "highlight" : "" }`}
       onMouseUp={() => {
         onComponentDropped({ node: { type: 'root', data: { id: 'root' } } })
       }}>
       {showContent ? (
         <>
           <EmptyStateIcon />
-          <span className={styles.icon}>Add components to begin</span>
+          <span className="icon">Add components to begin</span>
         </>
       ) : null}
     </div>
