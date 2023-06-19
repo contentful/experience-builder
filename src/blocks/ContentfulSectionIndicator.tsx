@@ -11,7 +11,10 @@ export const ContentfulSectionIndicator = () => {
 
 export const ContentfulSectionIndicatorPlaceholder = () => {
   return (
-    <div id="ContentfulSectionIndicatorPlaceholder" key="lineIndicator_new_section_placeholder" className="lineHorizontalTransparent">
+    <div
+      id="ContentfulSectionIndicatorPlaceholder"
+      key="lineIndicator_new_section_placeholder"
+      className="lineHorizontalTransparent">
       <div className="textTransparent">New section</div>
     </div>
   )

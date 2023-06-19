@@ -4,7 +4,6 @@ import { useInteraction } from '../hooks'
 
 import './EmptyContainer.css'
 
-
 export interface EmptyContainerProps {
   isFirst?: boolean
   isDragging?: boolean
@@ -24,11 +23,11 @@ export const EmptyContainer = ({
 
   return (
     <div
-			id='EmptyContainer'
+      id="EmptyContainer"
       data-type="empty-container"
       onMouseOver={onMouseOver}
       onMouseLeave={onMouseLeave}
-      className={`container ${isHighlighted ?  "highlight" : "" }`}
+      className={`container ${isHighlighted ? 'highlight' : ''}`}
       onMouseUp={() => {
         onComponentDropped({ node: { type: 'root', data: { id: 'root' } } })
       }}>

@@ -5,7 +5,7 @@ import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyContainer } from './EmptyContainer'
 import { useContentfulSection } from '../hooks/useContentfulSection'
 
-import './VisualEditorRoot.css';
+import './VisualEditorRoot.css'
 
 type VisualEditorRootProps = {
   experience: Experience
@@ -25,8 +25,8 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   return React.createElement(
     'div',
     {
-			id: "VisualEditorRoot",
-      className: "root",
+      id: 'VisualEditorRoot',
+      className: 'root',
       onMouseUp: () => {
         onComponentDropped({ node: tree.root })
       },

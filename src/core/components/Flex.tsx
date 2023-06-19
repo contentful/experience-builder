@@ -57,13 +57,13 @@ export interface FlexProps {
   onMouseLeave?: MouseEventHandler<HTMLDivElement>
   onMouseUp?: MouseEventHandler<HTMLDivElement>
   onClick?: MouseEventHandler<HTMLDivElement>
-  className?: string;
-	cssStyles?: Record<string, string>;
-	id?: string;
+  className?: string
+  cssStyles?: Record<string, string>
+  id?: string
 }
 
 export function Flex({
-	id,
+  id,
   children,
   onMouseOver,
   onMouseUp,
@@ -84,30 +84,30 @@ export function Flex({
   flexWrap,
   flexGrow,
   className,
-	cssStyles,
+  cssStyles,
   ...props
 }: FlexProps) {
   return (
     <div
-			id={id}
-			style={{
-				display: 'flex',
-				flex,
-				flexBasis,
-				flexShrink,
-				flexDirection,
-				gap,
-				justifyContent,
-				justifyItems,
-				justifySelf,
-				alignItems,
-				alignSelf,
-				alignContent,
-				order,
-				flexWrap,
-				flexGrow,
-				...cssStyles
-			}}
+      id={id}
+      style={{
+        display: 'flex',
+        flex,
+        flexBasis,
+        flexShrink,
+        flexDirection,
+        gap,
+        justifyContent,
+        justifyItems,
+        justifySelf,
+        alignItems,
+        alignSelf,
+        alignContent,
+        order,
+        flexWrap,
+        flexGrow,
+        ...cssStyles,
+      }}
       className={className}
       onMouseOver={onMouseOver}
       onMouseUp={onMouseUp}

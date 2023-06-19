@@ -86,7 +86,7 @@ export const ContentfulSection = ({
     gap,
   }
 
-  const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal';
+  const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
 
   const showPrependLine = () => {
     if (flexDirection === 'row') {
@@ -135,10 +135,10 @@ export const ContentfulSection = ({
       ) : null}
       <div className={isSelected ? 'containerBorder' : ''}>
         <Flex
-					cssStyles={{
-						...styleOverrides,
-						...alignment
-					}}
+          cssStyles={{
+            ...styleOverrides,
+            ...alignment,
+          }}
           flexDirection={flexDirection}
           flexWrap={flexWrap}
           onMouseOver={onMouseOver}

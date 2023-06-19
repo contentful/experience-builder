@@ -11,7 +11,6 @@ import { useInteraction } from '../hooks/useInteraction'
 import { useComponents } from '../hooks'
 import { Link } from 'contentful-management'
 
-
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
   locale: string
@@ -142,8 +141,8 @@ export const VisualEditorBlock = ({
       onComponentRemoved: () => {
         onComponentRemoved(node)
       },
-			id: "VisualEditorBlock",
-      className: "hover",
+      id: 'VisualEditorBlock',
+      className: 'hover',
       isDragging,
       isSelected: !!isSelected,
       rootNode,
