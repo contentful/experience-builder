@@ -16,7 +16,7 @@ import { Link } from 'contentful-management'
 const styles = {
   hover: css({
     ':hover': {
-      border: `1px solid ${tokens.blue500}`,
+      boxShadow: `inset 0px 0px 0px 1px ${tokens.blue500}`,
       boxSizing: 'border-box',
     },
   }),
