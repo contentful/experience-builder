@@ -1,5 +1,6 @@
+// TODO: Clean this up since it's not used anymore
 export const sendMessage = (eventType: string, data: any) => {
-  console.log('data sent', {
+  console.debug('data sent', {
     source: 'customer-app',
     eventType,
     payload: data,
