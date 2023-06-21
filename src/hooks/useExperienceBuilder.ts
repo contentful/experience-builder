@@ -6,17 +6,21 @@ import {
   OutgoingExperienceBuilderEvent,
   Experience,
   CompositionTree,
+  CompositionMode,
 } from '../types'
 import { useCommunication } from './useCommunication'
 import { getDataSourceFromTree } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 
-export const useExperienceBuilder = () => {
+type UseExperienceBuilderProps = { initialMode?: CompositionMode }
+
+export const useExperienceBuilder = ({ initialMode }: UseExperienceBuilderProps) => {
   const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
   const [locale, setLocale] = useState<string>()
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
+  const [mode, setMode] = useState<CompositionMode | undefined>(initialMode)
 
   const { sendMessage } = useCommunication()
 
@@ -30,6 +34,8 @@ export const useExperienceBuilder = () => {
   }
 
   useEffect(() => {
+    // We only care about this communication when in editor mode
+    if (mode !== 'editor') return
     const onMessage = (event: MessageEvent) => {
       let reason
       if ((reason = doesMismatchMessageSchema(event))) {
@@ -101,9 +107,11 @@ export const useExperienceBuilder = () => {
     return () => {
       window.removeEventListener('message', onMessage)
     }
-  }, [])
+  }, [mode])
 
   useEffect(() => {
+    // We only care about this communication when in editor mode
+    if (mode !== 'editor') return
     const onMouseMove = throttle((e: MouseEvent) => {
       sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
         clientX: e.clientX,
@@ -124,6 +132,7 @@ export const useExperienceBuilder = () => {
       dataSource,
       isDragging,
       selectedNodeId,
+      mode,
     }),
     [tree, dataSource, isDragging, selectedNodeId]
   )

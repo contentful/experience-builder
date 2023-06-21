@@ -159,11 +159,14 @@ export type CompositionTree = {
   root: CompositionComponentNode
 }
 
+export type CompositionMode = 'editor' | 'preview' | 'delivery'
+
 export type Experience = {
   tree?: CompositionTree
   dataSource: LocalizedDataSource
   isDragging: boolean
   selectedNodeId: string
+  mode: CompositionMode | undefined
 }
 
 export interface StyleProps {
