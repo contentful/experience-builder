@@ -9,7 +9,7 @@ import {
   CompositionMode,
 } from '../types'
 import { useCommunication } from './useCommunication'
-import { getDataSourceFromTree } from '../utils'
+import { getDataSourceFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 
 type UseExperienceBuilderProps = { initialMode?: CompositionMode }
@@ -21,6 +21,18 @@ export const useExperienceBuilder = ({ initialMode }: UseExperienceBuilderProps)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
   const [mode, setMode] = useState<CompositionMode | undefined>(initialMode)
+
+  useEffect(() => {
+    // if already defined don't identify automatically
+    if (mode) return
+    if (isInsideIframe()) {
+      setMode('editor')
+    } else {
+      const urlParams = new URLSearchParams(window.location.search)
+      const myParam = urlParams.get('isPreview')
+      setMode(myParam ? 'preview' : 'delivery')
+    }
+  }, [mode])
 
   const { sendMessage } = useCommunication()
 
