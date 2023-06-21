@@ -155,9 +155,17 @@ export type CompositionTree = {
 
 export type CompositionMode = 'editor' | 'preview' | 'delivery'
 
+export type ExperienceConfig = {
+  token?: string
+  spaceId?: string
+  environmentId?: string
+  locale?: string
+}
+
 export type Experience = {
   tree?: CompositionTree
   dataSource: LocalizedDataSource
+  config: ExperienceConfig
   isDragging: boolean
   selectedNodeId: string
   mode: CompositionMode | undefined

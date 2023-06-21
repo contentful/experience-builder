@@ -12,12 +12,33 @@ import { useCommunication } from './useCommunication'
 import { getDataSourceFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 
-type UseExperienceBuilderProps = { initialMode?: CompositionMode }
+interface UseExperienceBuilderProps {
+  /** The mode is automatically set, use this value to manually override this **/
+  initialMode?: CompositionMode
+  /** Use CDA token for delivery mode and CPA for preview mode
+   * When rendered in the editor a token is not needed **/
+  token?: string
+  /** The defined locale,
+   *  when rendered in the editor, the locale is set from the editor, but you can use this to overwrite this **/
+  initialLocale?: string
+  /** The source spaceId,
+   *  when rendered in the editor, the id is set from the editor **/
+  spaceId?: string
+  /** The source environmentId,
+   *  when rendered in the editor, the id is set from the editor **/
+  environmentId?: string
+}
 
-export const useExperienceBuilder = ({ initialMode }: UseExperienceBuilderProps) => {
+export const useExperienceBuilder = ({
+  initialMode,
+  token,
+  initialLocale,
+  environmentId,
+  spaceId,
+}: UseExperienceBuilderProps) => {
   const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
-  const [locale, setLocale] = useState<string>()
+  const [locale, setLocale] = useState<string | undefined>(initialLocale)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
   const [mode, setMode] = useState<CompositionMode | undefined>(initialMode)
@@ -130,9 +151,10 @@ export const useExperienceBuilder = ({ initialMode }: UseExperienceBuilderProps)
       dataSource,
       isDragging,
       selectedNodeId,
+      config: { token, locale, environmentId, spaceId },
       mode,
     }),
-    [tree, dataSource, isDragging, selectedNodeId]
+    [tree, dataSource, isDragging, selectedNodeId, mode]
   )
 
   return {
