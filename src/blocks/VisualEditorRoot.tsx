@@ -27,11 +27,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   const { tree, dataSource, isDragging, selectedNodeId, mode } = experience
 
   if (!tree?.root.children.length) {
-    if (mode === 'editor') {
-      return React.createElement(EmptyEditorContainer, { isDragging }, [])
-    } else {
-      return React.createElement(EmptyDeliveryContainer)
-    }
+    return React.createElement(EmptyEditorContainer, { isDragging }, [])
   }
 
   return React.createElement(
@@ -39,9 +35,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
     {
       className: styles.root,
       onMouseUp: () => {
-        if (mode === 'editor') {
-          onComponentDropped({ node: tree.root })
-        }
+        onComponentDropped({ node: tree.root })
       },
       'data-type': 'root',
     },
