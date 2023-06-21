@@ -17,7 +17,6 @@ const styles = {
   hover: css({
     ':hover': {
       boxShadow: `inset 0px 0px 0px 1px ${tokens.blue500}`,
-      boxSizing: 'border-box',
     },
   }),
 }
