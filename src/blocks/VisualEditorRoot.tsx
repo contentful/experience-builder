@@ -33,7 +33,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
       'data-type': 'root',
     },
     [
-      tree.root.children.map((node: any, index) => (
+      tree.root.children.map((node: any) => (
         <VisualEditorBlock
           key={node.data.id}
           node={node}
@@ -41,8 +41,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           dataSource={dataSource}
           isDragging={isDragging}
           isSelected={selectedNodeId === node.data.id}
-          rootNode={tree.root}
-          index={index}
+          parentNode={tree.root}
         />
       )),
     ]

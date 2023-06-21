@@ -168,6 +168,22 @@ export type Experience = {
   selectedNodeId: string
 }
 
+export interface StyleProps {
+  horizontalAlignment: 'start' | 'end' | 'center'
+  verticalAlignment: 'start' | 'end' | 'center'
+  distribution: 'stacked' | 'absolute'
+  margin: string
+  padding: string
+  backgroundColor: string
+  width: string
+  maxWidth: string
+  height: string
+  flexDirection: 'row' | 'column'
+  flexWrap: 'nowrap' | 'wrap'
+  border: string
+  gap: string
+}
+
 export type SECTION_STYLE_ATTRIBUTE_KEY =
   | 'horizontalAlignment'
   | 'verticalAlignment'

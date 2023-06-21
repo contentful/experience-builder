@@ -1,16 +1,18 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useMemo } from 'react'
 import get from 'lodash.get'
 import {
   CompositionVariableValueType,
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
-  NodeInsertType,
+  StyleProps,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
 import { useComponents } from '../hooks'
 import { Link } from 'contentful-management'
+import { CONTENTFUL_SECTION_ID } from '../constants'
+import { ContentfulSection } from './ContentfulSection'
 
 import './VisualEditorBlock.css'
 
@@ -20,8 +22,7 @@ type VisualEditorBlockProps = {
   dataSource: LocalizedDataSource
   isDragging: boolean
   isSelected?: boolean
-  rootNode: CompositionComponentNode
-  index: number
+  parentNode: CompositionComponentNode
 }
 
 export const VisualEditorBlock = ({
@@ -30,13 +31,11 @@ export const VisualEditorBlock = ({
   dataSource,
   isDragging,
   isSelected,
-  rootNode,
-  index,
+  parentNode,
 }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
   const { onComponentDropped, onComponentRemoved } = useInteraction()
-  const wasMousePressed = useRef(false)
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),
@@ -102,42 +101,59 @@ export const VisualEditorBlock = ({
     return null
   }
 
-  const { component } = definedComponent
+  const { component, componentDefinition } = definedComponent
 
-  const children = node.children.map((childNode: any, index) => {
+  const children = node.children.map((childNode: any) => {
     return (
       <VisualEditorBlock
         node={childNode}
+        parentNode={parentNode}
         key={childNode.data.id}
         locale={locale}
         dataSource={dataSource}
         isDragging={isDragging}
-        rootNode={rootNode}
-        index={index}
       />
     )
   })
 
+  // contentful section
+  if (componentDefinition.id === CONTENTFUL_SECTION_ID) {
+    return (
+      <ContentfulSection
+        key={node.data.id}
+        handleComponentDrop={({ index, node }) => {
+          onComponentDropped({ node, index })
+        }}
+        node={node}
+        onMouseDown={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
+        }}
+        onClick={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+        }}
+        onComponentRemoved={() => {
+          onComponentRemoved(node)
+        }}
+        className='visualEditorBlockHover'
+        isDragging={isDragging}
+        isSelected={!!isSelected}
+        parentNode={parentNode}
+        {...(props as StyleProps)}>
+        {children}
+      </ContentfulSection>
+    )
+  }
+
+  // imported component
   return React.createElement(
     component,
     {
-      onMouseUp: (insertType: NodeInsertType, nodeOverride?: CompositionComponentNode) => {
-        if (typeof insertType !== 'string') {
-          // When this event is called by the ContentfulSection it is a boolean, otherwise it is a MouseEvent
-          // object which we don't want to process
-          insertType = NodeInsertType.APPEND
-        }
-        let dropNode = node
-        if (nodeOverride && nodeOverride.type) {
-          dropNode = nodeOverride
-        }
-        onComponentDropped({ node: dropNode, index, insertType })
-        wasMousePressed.current = false
-      },
       onMouseDown: (e: MouseEvent) => {
         e.stopPropagation()
         e.preventDefault()
-        wasMousePressed.current = true
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
       },
       onClick: (e: MouseEvent) => {
@@ -150,7 +166,6 @@ export const VisualEditorBlock = ({
       className: 'visualEditorBlockHover',
       isDragging,
       isSelected: !!isSelected,
-      rootNode,
       ...props,
     },
     children

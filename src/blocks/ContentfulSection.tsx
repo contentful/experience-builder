@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 import { Flex } from '../core'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
@@ -6,36 +6,22 @@ import {
   ContentfulSectionIndicator,
   ContentfulSectionIndicatorPlaceholder,
 } from './ContentfulSectionIndicator'
-import { CompositionComponentNode, NodeInsertType } from '../types'
+import { CompositionComponentNode, StyleProps } from '../types'
 import { transformBorderStyle, transformFill } from './transformers'
 
 import './ContentfulSection.css'
 
-interface StyleProps {
-  horizontalAlignment: 'start' | 'end' | 'center'
-  verticalAlignment: 'start' | 'end' | 'center'
-  distribution: 'stacked' | 'absolute'
-  margin: string
-  padding: string
-  backgroundColor: string
-  width: string
-  maxWidth: string
-  height: string
-  flexDirection: 'row' | 'column'
-  flexWrap: 'nowrap' | 'wrap'
-  border: string
-  gap: string
-}
-
 interface ContentfulSectionProps extends StyleProps {
-  onClick: () => void
+  onClick: MouseEventHandler<HTMLDivElement>
   onComponentRemoved: () => void
-  onMouseUp: (insertType: NodeInsertType, nodeOverride?: CompositionComponentNode) => void
+  handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
+  onMouseDown: MouseEventHandler<HTMLDivElement>
   isDragging: boolean
   children: React.ReactNode
   className?: string
   isSelected: boolean
-  rootNode: CompositionComponentNode
+  node: CompositionComponentNode
+  parentNode: CompositionComponentNode
 }
 
 export const ContentfulSection = ({
@@ -54,10 +40,13 @@ export const ContentfulSection = ({
   isDragging,
   className,
   isSelected,
-  rootNode,
+  parentNode,
+  node,
+  children,
   onComponentRemoved,
-  onMouseUp,
-  ...props
+  handleComponentDrop,
+  onMouseDown,
+  onClick,
 }: ContentfulSectionProps) => {
   const { isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
@@ -112,15 +101,34 @@ export const ContentfulSection = ({
   }
 
   // This function determines if a dragged component should be appended or prepended when dropping it on the section
-  const getInsertType = () => {
+  const getInsertionData = (): { node: CompositionComponentNode; index: number } => {
+    const APPEND_INSIDE = parentNode.children.length
+    const PREPEND_INSIDE = 0
+
     if (mouseAtTopBorder || mouseAtBottomBorder) {
-      return mouseAtBottomBorder ? NodeInsertType.APPEND_ADJACENT : NodeInsertType.PREPEND_ADJACENT
+      const indexOfSectionInParentChildren = parentNode.children.findIndex(
+        (n) => n.data.id === node.data.id
+      )
+      const APPEND_OUTSIDE = indexOfSectionInParentChildren + 1
+      const PREPEND_OUTSIDE = indexOfSectionInParentChildren
+
+      return {
+        // when the mouse is around the border we want to drop the new component as a new section onto the root node
+        node: parentNode,
+        index: mouseAtBottomBorder ? APPEND_OUTSIDE : PREPEND_OUTSIDE,
+      }
     }
 
-    if (flexDirection === 'row') {
-      return mouseInLeftHalf ? NodeInsertType.PREPEND : NodeInsertType.APPEND
+    if (flexDirection === undefined || flexDirection === 'row') {
+      return {
+        node,
+        index: mouseInLeftHalf ? PREPEND_INSIDE : APPEND_INSIDE,
+      }
     } else {
-      return mouseInUpperHalf ? NodeInsertType.PREPEND : NodeInsertType.APPEND
+      return {
+        node,
+        index: mouseInUpperHalf ? PREPEND_INSIDE : APPEND_INSIDE,
+      }
     }
   }
 
@@ -144,17 +152,13 @@ export const ContentfulSection = ({
           onMouseOver={onMouseOver}
           onMouseUp={() => {
             // Passing this to the function to notify the experience builder about where to drop new components
-            onMouseUp(
-              getInsertType(),
-              // when the mouse is around the border we want to drop the new component as a new section onto the root node
-              mouseAtTopBorder || mouseAtBottomBorder ? rootNode : undefined
-            )
+            handleComponentDrop(getInsertionData())
           }}
           onMouseLeave={onMouseLeave}
           className={`defaultStyles ${className}`}
-          {...props}>
+        >
           {showPrependLine() && <div key="lineIndicator_top" className={lineStyles}></div>}
-          {props.children}
+          {children}
           {showAppendLine() && <div key="lineIndicator_bottom" className={lineStyles}></div>}
           {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
         </Flex>
@@ -167,6 +171,5 @@ export const ContentfulSection = ({
         )
       ) : null}
     </div>
-    // </div>
   )
 }
