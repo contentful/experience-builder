@@ -41,8 +41,14 @@ type GetInsertionDataParams = {
   isOverBottomIndicator: boolean
 }
 
+type InsertionData = {
+  node: CompositionComponentNode
+  index: number
+}
+
 /**
  * Gets calculates the index to drop the dragged component based on the mouse position
+ * @returns {InsertionData} a object containing a node that will become a parent for dragged component and index at which it must be inserted
  */
 export const getInsertionData = ({
   dropReceiverParentNode,
@@ -54,8 +60,8 @@ export const getInsertionData = ({
   isMouseInUpperHalf,
   isOverTopIndicator,
   isOverBottomIndicator,
-}: GetInsertionDataParams) => {
-  const APPEND_INSIDE = dropReceiverParentNode.children.length
+}: GetInsertionDataParams): InsertionData => {
+  const APPEND_INSIDE = dropReceiverNode.children.length
   const PREPEND_INSIDE = 0
 
   if (isMouseAtTopBorder || isMouseAtBottomBorder) {
