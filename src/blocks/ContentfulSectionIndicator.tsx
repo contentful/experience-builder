@@ -1,24 +1,49 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 import './ContentfulSectionIndicator.css'
 
-export const ContentfulSectionIndicator = () => {
+type ContentfulSectionIndicatorProps = {
+  onMouseEnter: MouseEventHandler<HTMLDivElement>
+  onMouseLeave: MouseEventHandler<HTMLDivElement>
+  onMouseUp: MouseEventHandler<HTMLDivElement>
+  isShown: boolean
+}
+
+export const ContentfulSectionIndicator = ({
+  isShown,
+  onMouseLeave,
+  onMouseEnter,
+  onMouseUp,
+}: ContentfulSectionIndicatorProps) => {
+  if (!isShown) {
+    return null
+  }
+
   return (
     <div
       id="ContentfulSectionIndicator"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onMouseUp={onMouseUp}
       key="lineIndicator_new_section"
-      className="indicatorLineHorizontal">
+    >
+      <div className="indicatorLineHorizontal" />
       <div className="text">New section</div>
     </div>
   )
 }
 
-export const ContentfulSectionIndicatorPlaceholder = () => {
+export const ContentfulSectionIndicatorPlaceholder = ({ isShown }: { isShown: boolean }) => {
+  if (!isShown) {
+    return null
+  }
+
   return (
     <div
       id="ContentfulSectionIndicatorPlaceholder"
       key="lineIndicator_new_section_placeholder"
-      className="indicatorLineHorizontalTransparent">
-      <div className="textTransparent">New section</div>
+    >
+      <div className="indicatorLineHorizontalTransparent"></div>
+      <div className="text">New section</div>
     </div>
   )
 }

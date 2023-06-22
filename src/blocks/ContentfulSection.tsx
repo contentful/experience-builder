@@ -4,7 +4,6 @@ import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import {
   ContentfulSectionIndicator,
-  ContentfulSectionIndicatorPlaceholder,
 } from './ContentfulSectionIndicator'
 import { CompositionComponentNode, StyleProps } from '../types'
 import { transformBorderStyle, transformFill } from './transformers'
@@ -12,7 +11,6 @@ import { transformBorderStyle, transformFill } from './transformers'
 import './ContentfulSection.css'
 
 interface ContentfulSectionProps extends StyleProps {
-  onClick: MouseEventHandler<HTMLDivElement>
   onComponentRemoved: () => void
   handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
   onMouseDown: MouseEventHandler<HTMLDivElement>
@@ -45,12 +43,14 @@ export const ContentfulSection = ({
   children,
   onComponentRemoved,
   handleComponentDrop,
-  onMouseDown,
-  onClick,
+  onMouseDown
 }: ContentfulSectionProps) => {
-  const { isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
+
+  const sectionInteraction = useInteraction()
+  const sectionIndicatorTopInteraction = useInteraction()
+  const sectionIndicatorBottomInteraction = useInteraction()
 
   // when direction is 'column' the axis are reversed
   const alignment =
@@ -77,28 +77,30 @@ export const ContentfulSection = ({
 
   const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
 
-  const showPrependLine = () => {
-    if (flexDirection === 'row') {
-      return (
-        mouseInLeftHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
-      )
-    } else {
-      return (
-        mouseInUpperHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
-      )
-    }
-  }
-  const showAppendLine = () => {
-    if (flexDirection === 'row') {
-      return (
-        !mouseInLeftHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
-      )
-    } else {
-      return (
-        !mouseInUpperHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
-      )
-    }
-  }
+  const showPrependLine =
+    flexDirection === 'row'
+      ? mouseInLeftHalf &&
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
+      : mouseInUpperHalf &&
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
+  const showAppendLine =
+    flexDirection === 'row'
+      ? !mouseInLeftHalf &&
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
+      : !mouseInUpperHalf &&
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
 
   // This function determines if a dragged component should be appended or prepended when dropping it on the section
   const getInsertionData = (): { node: CompositionComponentNode; index: number } => {
@@ -119,6 +121,24 @@ export const ContentfulSection = ({
       }
     }
 
+    // if over one of the section indicators
+    if (
+      sectionIndicatorTopInteraction.isMouseOver ||
+      sectionIndicatorBottomInteraction.isMouseOver
+    ) {
+      const indexOfSectionInParentChildren = parentNode.children.findIndex(
+        (n) => n.data.id === node.data.id
+      )
+      const APPEND_OUTSIDE = indexOfSectionInParentChildren + 1
+      const PREPEND_OUTSIDE = indexOfSectionInParentChildren
+
+      return {
+        // when the mouse is around the border we want to drop the new component as a new section onto the root node
+        node: parentNode,
+        index: sectionIndicatorBottomInteraction.isMouseOver ? APPEND_OUTSIDE : PREPEND_OUTSIDE,
+      }
+    }
+
     if (flexDirection === undefined || flexDirection === 'row') {
       return {
         node,
@@ -132,44 +152,65 @@ export const ContentfulSection = ({
     }
   }
 
+  // if isDragging something and over the section's top border, or over the top indicator (which already appeared by that time)
+  const showTopSectionIndicator =
+    isDragging &&
+    ((sectionInteraction.isMouseOver && mouseAtTopBorder) ||
+      sectionIndicatorTopInteraction.isMouseOver)
+
+  // if isDragging something and over the section's bottom border, or over the bottom indicator (which already appeared by that time)
+  const showBottomSectionIndicator =
+    isDragging &&
+    ((sectionInteraction.isMouseOver && mouseAtBottomBorder) ||
+      sectionIndicatorBottomInteraction.isMouseOver)
+
   return (
-    <div ref={componentRef} id="ContentfulSection">
-      {isDragging && isMouseOver ? (
-        mouseAtTopBorder ? (
-          <ContentfulSectionIndicator key={'new_section_indicator_top'} />
-        ) : (
-          <ContentfulSectionIndicatorPlaceholder key={'placeholder_section_indicator_bottom'} />
-        )
-      ) : null}
-      <div className={isSelected ? 'containerBorder' : ''}>
-        <Flex
-          cssStyles={{
-            ...styleOverrides,
-            ...alignment,
-          }}
-          flexDirection={flexDirection}
-          flexWrap={flexWrap}
-          onMouseOver={onMouseOver}
-          onMouseUp={() => {
-            // Passing this to the function to notify the experience builder about where to drop new components
-            handleComponentDrop(getInsertionData())
-          }}
-          onMouseLeave={onMouseLeave}
-          className={`defaultStyles ${className}`}
-        >
-          {showPrependLine() && <div key="lineIndicator_top" className={lineStyles}></div>}
-          {children}
-          {showAppendLine() && <div key="lineIndicator_bottom" className={lineStyles}></div>}
-          {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
-        </Flex>
+    <>
+      <ContentfulSectionIndicator
+        onMouseEnter={sectionIndicatorTopInteraction.onMouseEnter}
+        onMouseLeave={sectionIndicatorTopInteraction.onMouseLeave}
+        onMouseUp={() => {
+          // Passing this to the function to notify the experience builder about where to drop new components
+          handleComponentDrop(getInsertionData())
+        }}
+        isShown={showTopSectionIndicator}
+        key="new_section_indicator_top"
+      />
+      <div ref={componentRef} id="ContentfulSection">
+        <div className={isSelected ? 'containerBorder' : ''}>
+          <Flex
+            cssStyles={{
+              ...styleOverrides,
+              ...alignment,
+            }}
+            flexDirection={flexDirection}
+            flexWrap={flexWrap}
+            onMouseEnter={sectionInteraction.onMouseEnter}
+            onMouseUp={() => {
+              // Passing this to the function to notify the experience builder about where to drop new components
+              handleComponentDrop(getInsertionData())
+            }}
+            onMouseLeave={sectionInteraction.onMouseLeave}
+            className={`defaultStyles ${className}`}
+            onMouseDown={onMouseDown}
+          >
+            {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
+            {children}
+            {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}
+            {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
+          </Flex>
+        </div>
       </div>
-      {isDragging && isMouseOver ? (
-        mouseAtBottomBorder ? (
-          <ContentfulSectionIndicator key={'new_section_indicator_bottom'} />
-        ) : (
-          <ContentfulSectionIndicatorPlaceholder key={'placeholder_section_indicator_bottom'} />
-        )
-      ) : null}
-    </div>
+      <ContentfulSectionIndicator
+        onMouseEnter={sectionIndicatorBottomInteraction.onMouseEnter}
+        onMouseLeave={sectionIndicatorBottomInteraction.onMouseLeave}
+        onMouseUp={() => {
+          // Passing this to the function to notify the experience builder about where to drop new components
+          handleComponentDrop(getInsertionData())
+        }}
+        isShown={showBottomSectionIndicator}
+        key="new_section_indicator_bottom"
+      />
+    </>
   )
 }

@@ -1,36 +1,28 @@
 import { useCallback, useState } from 'react'
 import { useCommunication } from './useCommunication'
-import { CompositionComponentNode, NodeInsertType, OutgoingExperienceBuilderEvent } from '../types'
+import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from '../types'
 
 export const useInteraction = () => {
   const { sendMessage } = useCommunication()
   const [isMouseOver, setMouseOver] = useState(false)
 
-  const onMouseOver = useCallback(() => {
+  const onMouseEnter = useCallback(() => {
     setMouseOver(true)
   }, [])
+
+  // const onMouseOver = useCallback(() => {
+  //   setMouseOver(true)
+  // }, [])
 
   const onMouseLeave = useCallback(() => {
     setMouseOver(false)
   }, [])
 
   const onComponentDropped = useCallback(
-    ({
-      node,
-      template,
-      index,
-      insertType,
-    }: {
-      node: any
-      template?: any
-      index: number
-      insertType?: NodeInsertType
-    }) => {
+    ({ node, index }: { node: CompositionComponentNode; index: number }) => {
       sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_DROPPED, {
         node,
-        template,
         index,
-        insertType,
       })
     },
     [sendMessage]
@@ -47,7 +39,8 @@ export const useInteraction = () => {
 
   return {
     isMouseOver,
-    onMouseOver,
+    onMouseEnter,
+    // onMouseOver,
     onMouseLeave,
     onComponentDropped,
     onComponentRemoved,
