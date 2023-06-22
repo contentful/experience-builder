@@ -1,0 +1,5 @@
+#VisualEditorRoot.root {
+  min-height: 45vh;
+  padding-bottom: 100px;
+  overflow: scroll;
+}

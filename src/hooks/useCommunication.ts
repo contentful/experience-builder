@@ -3,7 +3,7 @@ import { OutgoingExperienceBuilderEvent } from '../types'
 
 export const useCommunication = () => {
   const sendMessage = useCallback((eventType: OutgoingExperienceBuilderEvent, data: any) => {
-    console.log('data sent', {
+    console.debug('data sent', {
       source: 'customer-app',
       eventType,
       payload: data,
