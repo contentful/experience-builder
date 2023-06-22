@@ -11,6 +11,8 @@ import { useInteraction } from '../hooks/useInteraction'
 import { useComponents } from '../hooks'
 import { Link } from 'contentful-management'
 
+import './VisualEditorBlock.css'
+
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
   locale: string
