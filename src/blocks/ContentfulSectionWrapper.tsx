@@ -4,7 +4,10 @@ import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import { CompositionComponentNode } from '../types'
 import './ContentfulSection.css'
-import { ContentfulSectionIndicator, ContentfulSectionIndicatorPlaceholder } from './ContentfulSectionIndicator'
+import {
+  ContentfulSectionIndicator,
+  ContentfulSectionIndicatorPlaceholder,
+} from './ContentfulSectionIndicator'
 
 interface StyleProps {
   horizontalAlignment: 'start' | 'end' | 'center'
