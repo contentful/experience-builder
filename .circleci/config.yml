@@ -107,4 +107,3 @@ workflows:
                 - next-major
                 - alpha
                 - beta
-                - lite
