@@ -56,13 +56,13 @@ export const ContentfulSection = ({
   const alignment =
     flexDirection === 'row'
       ? {
-        alignItems: `${horizontalAlignment}`,
-        justifyContent: `${verticalAlignment}`,
-      }
+          alignItems: `${horizontalAlignment}`,
+          justifyContent: `${verticalAlignment}`,
+        }
       : {
-        alignItems: `${verticalAlignment}`,
-        justifyContent: `${horizontalAlignment}`,
-      }
+          alignItems: `${verticalAlignment}`,
+          justifyContent: `${horizontalAlignment}`,
+        }
 
   const styleOverrides = {
     margin,
@@ -83,38 +83,40 @@ export const ContentfulSection = ({
   const showPrependLine =
     flexDirection === 'row'
       ? mouseInLeftHalf &&
-      !mouseAtBottomBorder &&
-      !mouseAtTopBorder &&
-      isDragging &&
-      sectionInteraction.isMouseOver
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
       : mouseInUpperHalf &&
-      !mouseAtBottomBorder &&
-      !mouseAtTopBorder &&
-      isDragging &&
-      sectionInteraction.isMouseOver
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
 
   const showAppendLine =
     flexDirection === 'row'
       ? !mouseInLeftHalf &&
-      !mouseAtBottomBorder &&
-      !mouseAtTopBorder &&
-      isDragging &&
-      sectionInteraction.isMouseOver
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
       : !mouseInUpperHalf &&
-      !mouseAtBottomBorder &&
-      !mouseAtTopBorder &&
-      isDragging &&
-      sectionInteraction.isMouseOver
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
 
   // if isDragging something and over the section's top border, or over the top indicator (which already appeared by that time)
   const showTopSectionIndicator =
-    !isContainer && isDragging &&
+    !isContainer &&
+    isDragging &&
     ((sectionInteraction.isMouseOver && mouseAtTopBorder) ||
       sectionIndicatorTopInteraction.isMouseOver)
 
   // if isDragging something and over the section's bottom border, or over the bottom indicator (which already appeared by that time)
   const showBottomSectionIndicator =
-    !isContainer && isDragging &&
+    !isContainer &&
+    isDragging &&
     ((sectionInteraction.isMouseOver && mouseAtBottomBorder) ||
       sectionIndicatorBottomInteraction.isMouseOver)
 
