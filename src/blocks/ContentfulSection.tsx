@@ -7,6 +7,7 @@ import {
   ContentfulSectionIndicatorPlaceholder,
 } from './ContentfulSectionIndicator'
 import { CompositionComponentNode } from '../types'
+import { transformBorderStyle, transformFill } from './transformers'
 
 import './ContentfulSection.css'
 
@@ -37,7 +38,6 @@ interface ContentfulSectionProps extends StyleProps {
   rootNode: CompositionComponentNode
 }
 
-const transformFill = (value: string) => (value === 'fill' ? '100%' : value)
 export const ContentfulSection = ({
   horizontalAlignment,
   verticalAlignment,
@@ -82,7 +82,7 @@ export const ContentfulSection = ({
     width: transformFill(width),
     height: transformFill(height),
     maxWidth,
-    border,
+    ...transformBorderStyle(border),
     gap,
   }
 
