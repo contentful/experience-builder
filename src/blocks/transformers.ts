@@ -1,7 +1,5 @@
-import { CSSObject } from '@emotion/css'
-
 export const transformFill = (value: string) => (value === 'fill' ? '100%' : value)
-export const transformBorderStyle = (value?: string): CSSObject => {
+export const transformBorderStyle = (value?: string): Record<string, string> => {
   if (!value) return {}
   const parts = value.split(' ')
   // Just accept the passed value
