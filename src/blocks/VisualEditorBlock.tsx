@@ -143,8 +143,7 @@ export const VisualEditorBlock = ({
       onComponentRemoved: () => {
         onComponentRemoved(node)
       },
-      id: 'VisualEditorBlock',
-      className: 'hover',
+      className: 'visualEditorBlockHover',
       isDragging,
       isSelected: !!isSelected,
       rootNode,
