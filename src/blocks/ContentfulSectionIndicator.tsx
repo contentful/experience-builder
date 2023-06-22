@@ -24,8 +24,7 @@ export const ContentfulSectionIndicator = ({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onMouseUp={onMouseUp}
-      key="lineIndicator_new_section"
-    >
+      key="lineIndicator_new_section">
       <div className="indicatorLineHorizontal" />
       <div className="text">New section</div>
     </div>
@@ -38,10 +37,7 @@ export const ContentfulSectionIndicatorPlaceholder = ({ isShown }: { isShown: bo
   }
 
   return (
-    <div
-      id="ContentfulSectionIndicatorPlaceholder"
-      key="lineIndicator_new_section_placeholder"
-    >
+    <div id="ContentfulSectionIndicatorPlaceholder" key="lineIndicator_new_section_placeholder">
       <div className="indicatorLineHorizontalTransparent"></div>
       <div className="text">New section</div>
     </div>

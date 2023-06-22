@@ -2,9 +2,7 @@ import React, { MouseEventHandler } from 'react'
 import { Flex } from '../core'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
-import {
-  ContentfulSectionIndicator,
-} from './ContentfulSectionIndicator'
+import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
 import { CompositionComponentNode, StyleProps } from '../types'
 import { transformBorderStyle, transformFill } from './transformers'
 import { getInsertionData } from '../utils'
@@ -44,7 +42,7 @@ export const ContentfulSection = ({
   children,
   onComponentRemoved,
   handleComponentDrop,
-  onMouseDown
+  onMouseDown,
 }: ContentfulSectionProps) => {
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
@@ -155,8 +153,7 @@ export const ContentfulSection = ({
             onMouseUp={onMouseUp}
             onMouseLeave={sectionInteraction.onMouseLeave}
             className={`defaultStyles ${className}`}
-            onMouseDown={onMouseDown}
-          >
+            onMouseDown={onMouseDown}>
             {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
             {children}
             {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}

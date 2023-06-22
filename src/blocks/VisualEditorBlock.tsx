@@ -130,14 +130,10 @@ export const VisualEditorBlock = ({
           e.preventDefault()
           sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
         }}
-        onClick={(e) => {
-          e.stopPropagation()
-          e.preventDefault()
-        }}
         onComponentRemoved={() => {
           onComponentRemoved(node)
         }}
-        className='visualEditorBlockHover'
+        className="visualEditorBlockHover"
         isDragging={isDragging}
         isSelected={!!isSelected}
         parentNode={parentNode}
