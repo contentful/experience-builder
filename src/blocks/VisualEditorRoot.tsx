@@ -40,7 +40,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           locale={locale}
           dataSource={dataSource}
           isDragging={isDragging}
-          isSelected={selectedNodeId === node.data.id}
+          selectedNodeId={selectedNodeId}
           parentNode={tree.root}
         />
       )),

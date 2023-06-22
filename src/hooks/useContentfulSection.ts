@@ -1,8 +1,16 @@
 import { useComponents } from './useComponents'
 import { ContentfulContainer, ContentfulSection } from '../blocks/ContentfulSection'
-import { CONTENTFUL_COMPONENT_CATEGORY, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import {
+  CONTENTFUL_COMPONENT_CATEGORY,
+  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_SECTION_ID,
+} from '../constants'
 import { useEffect } from 'react'
-import { ComponentDefinitionVariable, ContentfulSectionType, SECTION_STYLE_ATTRIBUTE_KEY } from '../types'
+import {
+  ComponentDefinitionVariable,
+  ContentfulSectionType,
+  SECTION_STYLE_ATTRIBUTE_KEY,
+} from '../types'
 
 export const useContentfulSection = () => {
   const { defineComponent } = useComponents()
@@ -150,7 +158,7 @@ export const useContentfulSection = () => {
     name: 'Section',
     category: CONTENTFUL_COMPONENT_CATEGORY,
     children: true,
-    variables
+    variables,
   }
 
   const containerDefinition: ContentfulSectionType = {
@@ -158,7 +166,7 @@ export const useContentfulSection = () => {
     name: 'Container',
     category: CONTENTFUL_COMPONENT_CATEGORY,
     children: true,
-    variables
+    variables,
   }
   useEffect(() => {
     defineComponent(ContentfulSection, sectionDefinition)

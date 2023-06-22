@@ -11,7 +11,7 @@ import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
 import { useComponents } from '../hooks'
 import { Link } from 'contentful-management'
-import { CONTENTFUL_SECTION_ID } from '../constants'
+import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
 import './VisualEditorBlock.css'
@@ -22,6 +22,7 @@ type VisualEditorBlockProps = {
   dataSource: LocalizedDataSource
   isDragging: boolean
   isSelected?: boolean
+  selectedNodeId?: string
   parentNode: CompositionComponentNode
 }
 
@@ -32,6 +33,7 @@ export const VisualEditorBlock = ({
   isDragging,
   isSelected,
   parentNode,
+  selectedNodeId,
 }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
@@ -112,12 +114,14 @@ export const VisualEditorBlock = ({
         locale={locale}
         dataSource={dataSource}
         isDragging={isDragging}
+        selectedNodeId={selectedNodeId}
       />
     )
   })
 
+  const isContainer = componentDefinition.id === CONTENTFUL_CONTAINER_ID
   // contentful section
-  if (componentDefinition.id === CONTENTFUL_SECTION_ID) {
+  if (componentDefinition.id === CONTENTFUL_SECTION_ID || isContainer) {
     return (
       <ContentfulSection
         key={node.data.id}
@@ -135,8 +139,9 @@ export const VisualEditorBlock = ({
         }}
         className="visualEditorBlockHover"
         isDragging={isDragging}
-        isSelected={!!isSelected}
+        isSelected={selectedNodeId === node.data.id}
         parentNode={parentNode}
+        isContainer={isContainer}
         {...(props as StyleProps)}>
         {children}
       </ContentfulSection>
@@ -167,7 +172,6 @@ export const VisualEditorBlock = ({
       },
       className: 'visualEditorBlockHover',
       isDragging,
-      isSelected: !!isSelected,
       ...props,
     },
     children
