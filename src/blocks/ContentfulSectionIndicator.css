@@ -1,13 +1,13 @@
 @import '../variables.css';
 
-#ContentfulSectionIndicator.lineHorizontal {
+#ContentfulSectionIndicator.indicatorLineHorizontal {
   height: 3px;
   background: var(--blue500);
   margin: 10px;
   position: relative;
 }
 
-#ContentfulSectionIndicatorPlaceholder.lineHorizontalTransparent {
+#ContentfulSectionIndicatorPlaceholder.indicatorLineHorizontalTransparent {
   height: 3px;
   margin: 10px;
   position: relative;
