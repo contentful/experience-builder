@@ -1,33 +1,33 @@
 :root {
-	/* color */
-	--blue100: #E8F5FF;
-  --blue200: #CEECFF;
-  --blue300: #98CBFF;
-  --blue400: #40A0FF;
-  --blue500: #036FE3;
-  --blue600: #0059C8;
-  --blue700: #0041AB;
+  /* color */
+  --blue100: #e8f5ff;
+  --blue200: #ceecff;
+  --blue300: #98cbff;
+  --blue400: #40a0ff;
+  --blue500: #036fe3;
+  --blue600: #0059c8;
+  --blue700: #0041ab;
   --blue800: #003298;
-  --blue900: #002A8E;
-  --gray100: #F7F9FA;
-  --gray200: #E7EBEE;
-  --gray300: #CFD9E0;
-  --gray400: #AEC1CC;
-  --gray500: #67728A;
-  --gray600: #5A657C;
-  --gray700: #414D63;
-  --gray800: #1B273A;
-  --gray900: #111B2B;
+  --blue900: #002a8e;
+  --gray100: #f7f9fa;
+  --gray200: #e7ebee;
+  --gray300: #cfd9e0;
+  --gray400: #aec1cc;
+  --gray500: #67728a;
+  --gray600: #5a657c;
+  --gray700: #414d63;
+  --gray800: #1b273a;
+  --gray900: #111b2b;
   --color-white: #ffffff;
-  --glow-primary: 0px 0px 0px 3px #E8F5FF;
+  --glow-primary: 0px 0px 0px 3px #e8f5ff;
 
-	/* spacing */
-	--spacing-s: 0.75rem;
+  /* spacing */
+  --spacing-s: 0.75rem;
   --spacing-2xs: 0.25rem;
 
-	/* typography */
-	--font-size-m: 0.875rem;
-  --font-stack-primary:
-    -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  /* typography */
+  --font-size-m: 0.875rem;
+  --font-stack-primary: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
   --line-height-condensed: 1.25;
 }

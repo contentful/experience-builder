@@ -16,8 +16,8 @@
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx'",
     "presemantic-release": "yarn build",
     "semantic-release": "semantic-release",
-    "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx}'",
-    "prettier": "prettier --write '**/*.{jsx,js,ts,tsx}'",
+    "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx,css}'",
+    "prettier": "prettier --write '**/*.{jsx,js,ts,tsx,css}'",
     "preview": "vite preview"
   },
   "dependencies": {

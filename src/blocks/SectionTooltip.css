@@ -1,70 +1,70 @@
-@import "../variables.css";
+@import '../variables.css';
 
 #SectionTooltip.tooltip {
-	display: flex;
-	justify-content: flex-end;
-	align-items: flex-start;
-	position: absolute;
-	top: 1px;
-	right: 1px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  position: absolute;
+  top: 1px;
+  right: 1px;
 }
 
 #SectionTooltip .button {
-	color: var(--color-white);
-	background-color: var(--blue500);
-	border: 1px solid var(--blue500);
-	cursor: pointer;
-	box-shadow: 0px 1px 0px rgb(25,37,50,0.08);
-	font-weight: 500;
-	outline: none;
-	opacity: 1;
-	min-width: auto;
-	max-width: 240px;
-	min-height: 32px;
-	padding: 0.25rem 0.75rem;
+  color: var(--color-white);
+  background-color: var(--blue500);
+  border: 1px solid var(--blue500);
+  cursor: pointer;
+  box-shadow: 0px 1px 0px rgb(25, 37, 50, 0.08);
+  font-weight: 500;
+  outline: none;
+  opacity: 1;
+  min-width: auto;
+  max-width: 240px;
+  min-height: 32px;
+  padding: 0.25rem 0.75rem;
 }
 
 #SectionTooltip .button:hover {
-	background-color: var(--blue600);
-	border-color: var(--blue600);
-	color: var(--color-white),
+  background-color: var(--blue600);
+  border-color: var(--blue600);
+  color: var(--color-white);
 }
 
 #SectionTooltip .button:active {
-	background-color: var(--blue700);
-	border-color: var(--blue700);
-	font-size: var(--font-size-m);
-	line-height: var(--line-height-condensed);
-	padding: var(--spacing-2xs) var(--spacing-s);
-	min-height: '32px';
+  background-color: var(--blue700);
+  border-color: var(--blue700);
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-condensed);
+  padding: var(--spacing-2xs) var(--spacing-s);
+  min-height: '32px';
 }
 
 #SectionTooltip .button:focus {
-	border-color: var(--blue600);
-	box-shadow: var(--glow-primary);
+  border-color: var(--blue600);
+  box-shadow: var(--glow-primary);
 }
 
 #SectionTooltip .button:focus:not(:focus-visible) {
-	border-color: var(--blue500);
-	box-shadow: unset;
+  border-color: var(--blue500);
+  box-shadow: unset;
 }
 
 #SectionTooltip .button:focus-visible {
-	border-color:var(--blue600);
-	box-shadow: var(--glow-primary);
+  border-color: var(--blue600);
+  box-shadow: var(--glow-primary);
 }
 
 #SectionTooltip .wrapper {
-	display: inline-flex;
-	position: relative;
+  display: inline-flex;
+  position: relative;
 }
 
 #SectionTooltip .wrapper .button:first-child {
-	border-bottom-left-radius: 6px;
-	border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
 }
 
 #SectionTooltip .wrapper .button:last-child {
-	border-bottom-right-radius: 6px;
-	border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-top-right-radius: 6px;
 }
