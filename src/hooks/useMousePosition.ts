@@ -53,6 +53,8 @@ export const useMousePosition = () => {
 
     const onMouseMove = (e: MouseEvent) => {
       checkMousePosition(e.clientX, e.clientY)
+      // e.stopPropagation()
+      // e.preventDefault()
     }
 
     if (componentRef.current) {

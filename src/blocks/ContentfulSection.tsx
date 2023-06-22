@@ -19,6 +19,7 @@ interface ContentfulSectionProps extends StyleProps {
   isSelected: boolean
   node: CompositionComponentNode
   parentNode: CompositionComponentNode
+  isContainer?: boolean
 }
 
 export const ContentfulSection = ({
@@ -43,6 +44,7 @@ export const ContentfulSection = ({
   onComponentRemoved,
   handleComponentDrop,
   onMouseDown,
+  isContainer = false,
 }: ContentfulSectionProps) => {
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
@@ -72,6 +74,7 @@ export const ContentfulSection = ({
     maxWidth,
     ...transformBorderStyle(border),
     gap,
+    ...alignment,
   }
 
   const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
@@ -104,13 +107,13 @@ export const ContentfulSection = ({
 
   // if isDragging something and over the section's top border, or over the top indicator (which already appeared by that time)
   const showTopSectionIndicator =
-    isDragging &&
+    !isContainer && isDragging &&
     ((sectionInteraction.isMouseOver && mouseAtTopBorder) ||
       sectionIndicatorTopInteraction.isMouseOver)
 
   // if isDragging something and over the section's bottom border, or over the bottom indicator (which already appeared by that time)
   const showBottomSectionIndicator =
-    isDragging &&
+    !isContainer && isDragging &&
     ((sectionInteraction.isMouseOver && mouseAtBottomBorder) ||
       sectionIndicatorBottomInteraction.isMouseOver)
 
@@ -143,10 +146,7 @@ export const ContentfulSection = ({
       <div ref={componentRef} id="ContentfulSection">
         <div className={isSelected ? 'containerBorder' : ''}>
           <Flex
-            cssStyles={{
-              ...styleOverrides,
-              ...alignment,
-            }}
+            cssStyles={{ ...styleOverrides }}
             flexDirection={flexDirection}
             flexWrap={flexWrap}
             onMouseEnter={sectionInteraction.onMouseEnter}
@@ -171,3 +171,7 @@ export const ContentfulSection = ({
     </>
   )
 }
+
+export const ContentfulContainer = (props: ContentfulSectionProps) => (
+  <ContentfulSection {...props} isContainer={true}></ContentfulSection>
+)

@@ -8,4 +8,4 @@ export type {
   CompositionComponentPropValue,
   ValidationOption,
 } from './types'
-export { CONTENTFUL_SECTION_ID } from './constants'
+export { CONTENTFUL_SECTION_ID, CONTENTFUL_COMPONENT_CATEGORY } from './constants'
