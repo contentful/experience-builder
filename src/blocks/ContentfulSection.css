@@ -33,6 +33,6 @@
 }
 
 #ContentfulSection .containerBorder {
-	border: 1px solid var(--blue500);
+	box-shadow: inset 0px 0px 0px 1px var(--blue500);
 	box-sizing: border-box;
 }
