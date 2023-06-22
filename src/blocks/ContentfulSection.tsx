@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex } from '@contentful/f36-core'
 import tokens from '@contentful/f36-tokens'
-import { CSSObject, css, cx } from '@emotion/css'
+import { css, cx } from '@emotion/css'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import {
@@ -9,6 +9,7 @@ import {
   ContentfulSectionIndicatorPlaceholder,
 } from './ContentfulSectionIndicator'
 import { CompositionComponentNode } from '../types'
+import { transformBorderStyle, transformFill } from './transformers'
 
 const styles = {
   defaultStyles: css({
@@ -70,21 +71,6 @@ interface ContentfulSectionProps extends StyleProps {
   className?: string
   isSelected: boolean
   rootNode: CompositionComponentNode
-}
-
-const transformFill = (value: string) => (value === 'fill' ? '100%' : value)
-const transformBorderStyle = (value?: string): CSSObject => {
-  if (!value) return {}
-  const parts = value.split(' ')
-  // Just accept the passed value
-  if (parts.length < 3) return { border: value }
-  // Replace the second part always with `solid` and set the box sizing accordingly
-  const [borderSize, borderPlacement, ...borderColorParts] = parts
-  const borderColor = borderColorParts.join(' ')
-  return {
-    border: `${borderSize} solid ${borderColor}`,
-    boxSizing: borderPlacement === 'inside' ? 'border-box' : 'content-box',
-  }
 }
 
 export const ContentfulSection = ({
