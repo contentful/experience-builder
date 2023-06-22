@@ -1,5 +1,3 @@
-import tokens from '@contentful/f36-tokens'
-import { css } from '@emotion/css'
 import React, { useMemo, useRef } from 'react'
 import get from 'lodash.get'
 import {
@@ -13,14 +11,7 @@ import { useInteraction } from '../hooks/useInteraction'
 import { useComponents } from '../hooks'
 import { Link } from 'contentful-management'
 
-const styles = {
-  hover: css({
-    ':hover': {
-      boxShadow: `inset 0px 0px 0px 1px ${tokens.blue500}`,
-      boxSizing: 'border-box',
-    },
-  }),
-}
+import './VisualEditorBlock.css'
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
@@ -152,7 +143,8 @@ export const VisualEditorBlock = ({
       onComponentRemoved: () => {
         onComponentRemoved(node)
       },
-      className: styles.hover,
+      id: 'VisualEditorBlock',
+      className: 'hover',
       isDragging,
       isSelected: !!isSelected,
       rootNode,

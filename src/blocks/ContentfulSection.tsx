@@ -1,7 +1,5 @@
 import React from 'react'
-import { Flex } from '@contentful/f36-core'
-import tokens from '@contentful/f36-tokens'
-import { css, cx } from '@emotion/css'
+import { Flex } from '../core'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import {
@@ -10,40 +8,7 @@ import {
 } from './ContentfulSectionIndicator'
 import { CompositionComponentNode } from '../types'
 
-const styles = {
-  defaultStyles: css({
-    minHeight: '200px',
-    overflow: 'scroll',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    position: 'relative',
-    display: 'flex',
-  }),
-  lineHorizontal: css({
-    height: '3px',
-    width: '200px',
-    background: tokens.blue500,
-    margin: '10px',
-  }),
-  lineVertical: css({
-    height: '190px',
-    width: '3px',
-    background: tokens.blue500,
-    margin: '10px',
-  }),
-  tooltip: css({
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-    position: 'absolute',
-    top: '1px',
-    right: '1px',
-  }),
-  containerBorder: css({
-    boxShadow: `inset 0px 0px 0px 1px ${tokens.blue500}`,
-    boxSizing: 'border-box',
-  }),
-}
+import './ContentfulSection.css'
 
 interface StyleProps {
   horizontalAlignment: 'start' | 'end' | 'center'
@@ -101,16 +66,16 @@ export const ContentfulSection = ({
   // when direction is 'column' the axis are reversed
   const alignment =
     flexDirection === 'row'
-      ? css({
+      ? {
           alignItems: `${horizontalAlignment}`,
           justifyContent: `${verticalAlignment}`,
-        })
-      : css({
+        }
+      : {
           alignItems: `${verticalAlignment}`,
           justifyContent: `${horizontalAlignment}`,
-        })
+        }
 
-  const styleOverrides = css({
+  const styleOverrides = {
     margin,
     padding,
     backgroundColor,
@@ -119,9 +84,9 @@ export const ContentfulSection = ({
     maxWidth,
     border,
     gap,
-  })
+  }
 
-  const lineStyles = flexDirection === 'row' ? styles.lineVertical : styles.lineHorizontal
+  const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
 
   const showPrependLine = () => {
     if (flexDirection === 'row') {
@@ -160,7 +125,7 @@ export const ContentfulSection = ({
   }
 
   return (
-    <div ref={componentRef}>
+    <div ref={componentRef} id="ContentfulSection">
       {isDragging && isMouseOver ? (
         mouseAtTopBorder ? (
           <ContentfulSectionIndicator />
@@ -168,8 +133,12 @@ export const ContentfulSection = ({
           <ContentfulSectionIndicatorPlaceholder />
         )
       ) : null}
-      <div className={cx(isSelected ? cx(styles.containerBorder) : '')}>
+      <div className={isSelected ? 'containerBorder' : ''}>
         <Flex
+          cssStyles={{
+            ...styleOverrides,
+            ...alignment,
+          }}
           flexDirection={flexDirection}
           flexWrap={flexWrap}
           onMouseOver={onMouseOver}
@@ -182,7 +151,7 @@ export const ContentfulSection = ({
             )
           }}
           onMouseLeave={onMouseLeave}
-          className={cx(styles.defaultStyles, styleOverrides, className, alignment)}
+          className={`defaultStyles ${className}`}
           {...props}>
           {showPrependLine() && <div key="lineIndicator_top" className={lineStyles}></div>}
           {props.children}
