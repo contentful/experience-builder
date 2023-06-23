@@ -7,6 +7,13 @@
   justify-content: center;
   position: relative;
   display: flex;
+
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#ContentfulSection .defaultStyles::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 #ContentfulSection .lineHorizontal {

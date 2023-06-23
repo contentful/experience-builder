@@ -30,16 +30,3 @@ export const ContentfulSectionIndicator = ({
     </div>
   )
 }
-
-export const ContentfulSectionIndicatorPlaceholder = ({ isShown }: { isShown: boolean }) => {
-  if (!isShown) {
-    return null
-  }
-
-  return (
-    <div id="ContentfulSectionIndicatorPlaceholder" key="lineIndicator_new_section_placeholder">
-      <div className="indicatorLineHorizontalTransparent"></div>
-      <div className="text">New section</div>
-    </div>
-  )
-}

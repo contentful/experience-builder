@@ -152,6 +152,12 @@ export const VisualEditorBlock = ({
         e.preventDefault()
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
       },
+      onMouseUp: () => {
+        if (definedComponent.componentDefinition.children) {
+          // TODO: follow the logic from the section and based on mouse position and node.children.length, define the new index
+          onComponentDropped({ node, index: 0 })
+        }
+      },
       onClick: (e: MouseEvent) => {
         e.stopPropagation()
         e.preventDefault()
