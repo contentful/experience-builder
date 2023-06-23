@@ -158,8 +158,7 @@ export const ContentfulSection = ({
         onMouseUp={onMouseUp}
         onMouseLeave={sectionInteraction.onMouseLeave}
         className={`defaultStyles ${className} ${borderStyles}`}
-        onMouseDown={onMouseDown}
-      >
+        onMouseDown={onMouseDown}>
         {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
         {children}
         {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}

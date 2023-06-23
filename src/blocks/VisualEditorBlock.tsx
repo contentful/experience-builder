@@ -21,7 +21,6 @@ type VisualEditorBlockProps = {
   locale: string
   dataSource: LocalizedDataSource
   isDragging: boolean
-  isSelected?: boolean
   selectedNodeId?: string
   parentNode: CompositionComponentNode
 }
@@ -31,7 +30,6 @@ export const VisualEditorBlock = ({
   locale,
   dataSource,
   isDragging,
-  isSelected,
   parentNode,
   selectedNodeId,
 }: VisualEditorBlockProps) => {
