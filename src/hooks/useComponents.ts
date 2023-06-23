@@ -30,17 +30,20 @@ const registeredComponentDefinitions: ComponentDefinitionWithComponentType[] = [
 export const useComponents = () => {
   const { sendMessage } = useCommunication()
 
-  const defineComponent = useCallback(
-    (component: ElementType, parameters: ComponentDefinition) => {
-      const definitionWithFallbacks = applyFallbacks(parameters)
-      registeredComponentDefinitions.push({
-        component,
-        componentDefinition: definitionWithFallbacks,
-      })
-      sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, parameters)
-    },
-    [sendMessage]
-  )
+  const defineComponent = useCallback((component: ElementType, parameters: ComponentDefinition) => {
+    const definitionWithFallbacks = applyFallbacks(parameters)
+    if (
+      registeredComponentDefinitions.find((def) => def.componentDefinition.id === parameters.id)
+    ) {
+      return
+    }
+
+    registeredComponentDefinitions.push({
+      component,
+      componentDefinition: definitionWithFallbacks,
+    })
+    sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, parameters)
+  }, [])
 
   const getComponent = useCallback((id: string) => {
     return registeredComponentDefinitions.find(

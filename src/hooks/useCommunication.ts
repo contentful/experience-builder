@@ -1,21 +1,12 @@
 import { useCallback } from 'react'
 import { OutgoingExperienceBuilderEvent } from '../types'
+import { useCompositionBuilderContext } from '../connection/CompositionProvider'
 
 export const useCommunication = () => {
+  const { channel } = useCompositionBuilderContext()
   const sendMessage = useCallback((eventType: OutgoingExperienceBuilderEvent, data: any) => {
-    console.log('data sent', {
-      source: 'customer-app',
-      eventType,
-      payload: data,
-    })
-    window.parent?.postMessage(
-      {
-        source: 'customer-app',
-        eventType,
-        payload: data,
-      },
-      '*'
-    )
+    console.log('SEND MESSAGE', eventType, data)
+    channel?.send(eventType, data)
   }, [])
 
   return {

@@ -11,6 +11,8 @@ import {
 import { useCommunication } from './useCommunication'
 import { getDataSourceFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
+import { set } from 'husky'
+import { useCompositionBuilderContext } from '../connection/CompositionProvider'
 
 interface UseExperienceBuilderProps {
   /** The mode is automatically set, use this value to manually override this **/
@@ -41,25 +43,13 @@ export const useExperienceBuilder = ({
   const [locale, setLocale] = useState<string | undefined>(initialLocale)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
-  const [mode, setMode] = useState<CompositionMode | undefined>(initialMode)
-
-  useEffect(() => {
-    // if already defined don't identify automatically
-    if (mode) return
-    if (isInsideIframe()) {
-      setMode('editor')
-    } else {
-      const urlParams = new URLSearchParams(window.location.search)
-      const myParam = urlParams.get('isPreview')
-      setMode(myParam ? 'preview' : 'delivery')
-    }
-  }, [mode])
+  const { mode } = useCompositionBuilderContext()
+  const [initialized, setInitialized] = useState(false)
 
   const { sendMessage } = useCommunication()
 
   useEffect(() => {
     // We only care about this communication when in editor mode
-    if (mode !== 'editor') return
     const onMessage = (event: MessageEvent) => {
       let reason
       if ((reason = doesMismatchMessageSchema(event))) {
@@ -80,6 +70,15 @@ export const useExperienceBuilder = ({
       const { payload } = eventData
 
       switch (eventData.eventType) {
+        case IncomingExperienceBuilderEvent.INIT_SUCCESS: {
+          const { tree, locale } = payload
+          setTree(tree)
+          setLocale(locale)
+          setDataSource(getDataSourceFromTree(tree))
+          setInitialized(true)
+
+          break
+        }
         case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
           const { tree, locale } = payload
           setTree(tree)
@@ -124,26 +123,7 @@ export const useExperienceBuilder = ({
     return () => {
       window.removeEventListener('message', onMessage)
     }
-  }, [mode])
-
-  useEffect(() => {
-    // We only care about this communication when in editor mode
-    if (mode !== 'editor') return
-    const onMouseMove = throttle((e: MouseEvent) => {
-      sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
-        pageX: e.pageX,
-        pageY: e.pageY,
-        clientX: e.clientX,
-        clientY: e.clientY,
-      })
-    }, 20)
-
-    window.addEventListener('mousemove', onMouseMove)
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove)
-    }
-  }, [sendMessage])
+  }, [])
 
   const experience: Experience = useMemo(
     () => ({
@@ -152,7 +132,7 @@ export const useExperienceBuilder = ({
       isDragging,
       selectedNodeId,
       config: { token, locale, environmentId, spaceId },
-      mode,
+      mode: mode as CompositionMode,
     }),
     [tree, dataSource, isDragging, selectedNodeId, mode]
   )

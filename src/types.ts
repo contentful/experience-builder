@@ -7,9 +7,11 @@ export enum OutgoingExperienceBuilderEvent {
   COMPONENT_SELECTED = 'componentSelected',
   COMPONENT_DROPPED = 'componentDropped',
   COMPONENT_REMOVED = 'componentRemoved',
+  INIT = 'init',
 }
 
 export enum IncomingExperienceBuilderEvent {
+  INIT_SUCCESS = 'initSuccess',
   COMPOSITION_UPDATED = 'componentTreeUpdated',
   COMPONENT_VALUE_CHANGED = 'valueChanged',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',

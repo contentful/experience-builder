@@ -9,3 +9,4 @@ export type {
   ValidationOption,
 } from './types'
 export { CONTENTFUL_SECTION_ID } from './constants'
+export { CompositionProvider, useCompositionBuilderContext } from './connection/CompositionProvider'
