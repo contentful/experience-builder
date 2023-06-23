@@ -1,5 +1,5 @@
 import { useComponents } from './useComponents'
-import { ContentfulContainer, ContentfulSection } from '../blocks/ContentfulSection'
+import { ContentfulSection } from '../blocks/ContentfulSection'
 import {
   CONTENTFUL_COMPONENT_CATEGORY,
   CONTENTFUL_CONTAINER_ID,
@@ -170,6 +170,6 @@ export const useContentfulSection = () => {
   }
   useEffect(() => {
     defineComponent(ContentfulSection, sectionDefinition)
-    defineComponent(ContentfulContainer, containerDefinition)
+    defineComponent(ContentfulSection, containerDefinition)
   }, [])
 }

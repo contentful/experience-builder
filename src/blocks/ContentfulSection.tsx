@@ -108,14 +108,14 @@ export const ContentfulSection = ({
 
   // if isDragging something and over the section's top border, or over the top indicator (which already appeared by that time)
   const showTopSectionIndicator =
-    !isTopLevel &&
+    isTopLevel &&
     isDragging &&
     ((sectionInteraction.isMouseOver && mouseAtTopBorder) ||
       sectionIndicatorTopInteraction.isMouseOver)
 
   // if isDragging something and over the section's bottom border, or over the bottom indicator (which already appeared by that time)
   const showBottomSectionIndicator =
-    !isTopLevel &&
+    isTopLevel &&
     isDragging &&
     ((sectionInteraction.isMouseOver && mouseAtBottomBorder) ||
       sectionIndicatorBottomInteraction.isMouseOver)
@@ -174,7 +174,3 @@ export const ContentfulSection = ({
     </>
   )
 }
-
-export const ContentfulContainer = (props: ContentfulSectionProps) => (
-  <ContentfulSection {...props} isContainer={true}></ContentfulSection>
-)
