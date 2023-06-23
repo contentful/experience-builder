@@ -119,9 +119,8 @@ export const VisualEditorBlock = ({
     )
   })
 
-  const isContainer = componentDefinition.id === CONTENTFUL_CONTAINER_ID
   // contentful section
-  if (componentDefinition.id === CONTENTFUL_SECTION_ID || isContainer) {
+  if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
     return (
       <ContentfulSection
         key={node.data.id}
@@ -141,7 +140,7 @@ export const VisualEditorBlock = ({
         isDragging={isDragging}
         isSelected={selectedNodeId === node.data.id}
         parentNode={parentNode}
-        isContainer={isContainer}
+        isTopLevel={componentDefinition.id === CONTENTFUL_SECTION_ID}
         {...(props as StyleProps)}>
         {children}
       </ContentfulSection>

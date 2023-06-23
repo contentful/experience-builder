@@ -18,7 +18,7 @@ interface ContentfulSectionProps extends StyleProps {
   isSelected: boolean
   node: CompositionComponentNode
   parentNode: CompositionComponentNode
-  isContainer?: boolean
+  isTopLevel?: boolean
 }
 
 export const ContentfulSection = ({
@@ -43,7 +43,7 @@ export const ContentfulSection = ({
   onComponentRemoved,
   handleComponentDrop,
   onMouseDown,
-  isContainer = false,
+  isTopLevel = true,
 }: ContentfulSectionProps) => {
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
@@ -108,14 +108,14 @@ export const ContentfulSection = ({
 
   // if isDragging something and over the section's top border, or over the top indicator (which already appeared by that time)
   const showTopSectionIndicator =
-    !isContainer &&
+    !isTopLevel &&
     isDragging &&
     ((sectionInteraction.isMouseOver && mouseAtTopBorder) ||
       sectionIndicatorTopInteraction.isMouseOver)
 
   // if isDragging something and over the section's bottom border, or over the bottom indicator (which already appeared by that time)
   const showBottomSectionIndicator =
-    !isContainer &&
+    !isTopLevel &&
     isDragging &&
     ((sectionInteraction.isMouseOver && mouseAtBottomBorder) ||
       sectionIndicatorBottomInteraction.isMouseOver)
@@ -158,7 +158,8 @@ export const ContentfulSection = ({
         onMouseUp={onMouseUp}
         onMouseLeave={sectionInteraction.onMouseLeave}
         className={`defaultStyles ${className} ${borderStyles}`}
-        onMouseDown={onMouseDown}>
+        onMouseDown={onMouseDown}
+      >
         {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
         {children}
         {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}
