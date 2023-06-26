@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react'
+import React, { MouseEventHandler, forwardRef } from 'react'
 import type * as CSS from 'csstype'
 
 export interface FlexProps {
@@ -63,61 +63,68 @@ export interface FlexProps {
   id?: string
 }
 
-export function Flex({
-  id,
-  children,
-  onMouseEnter,
-  onMouseUp,
-  onMouseLeave,
-  onMouseDown,
-  onClick,
-  flex,
-  flexBasis,
-  flexShrink,
-  flexDirection,
-  gap,
-  justifyContent,
-  justifyItems,
-  justifySelf,
-  alignItems,
-  alignSelf,
-  alignContent,
-  order,
-  flexWrap,
-  flexGrow,
-  className,
-  cssStyles,
-  ...props
-}: FlexProps) {
-  return (
-    <div
-      id={id}
-      style={{
-        display: 'flex',
-        flex,
-        flexBasis,
-        flexShrink,
-        flexDirection,
-        gap,
-        justifyContent,
-        justifyItems,
-        justifySelf,
-        alignItems,
-        alignSelf,
-        alignContent,
-        order,
-        flexWrap,
-        flexGrow,
-        ...cssStyles,
-      }}
-      className={className}
-      onMouseEnter={onMouseEnter}
-      onMouseUp={onMouseUp}
-      onMouseDown={onMouseDown}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
-      {...props}>
-      {children}
-    </div>
-  )
-}
+export const Flex = forwardRef<HTMLDivElement, FlexProps>(
+  (
+    {
+      id,
+      children,
+      onMouseEnter,
+      onMouseUp,
+      onMouseLeave,
+      onMouseDown,
+      onClick,
+      flex,
+      flexBasis,
+      flexShrink,
+      flexDirection,
+      gap,
+      justifyContent,
+      justifyItems,
+      justifySelf,
+      alignItems,
+      alignSelf,
+      alignContent,
+      order,
+      flexWrap,
+      flexGrow,
+      className,
+      cssStyles,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <div
+        id={id}
+        ref={ref}
+        style={{
+          display: 'flex',
+          flex,
+          flexBasis,
+          flexShrink,
+          flexDirection,
+          gap,
+          justifyContent,
+          justifyItems,
+          justifySelf,
+          alignItems,
+          alignSelf,
+          alignContent,
+          order,
+          flexWrap,
+          flexGrow,
+          ...cssStyles,
+        }}
+        className={className}
+        onMouseEnter={onMouseEnter}
+        onMouseUp={onMouseUp}
+        onMouseDown={onMouseDown}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+        {...props}>
+        {children}
+      </div>
+    )
+  }
+)
+Flex.displayName = 'Flex'
