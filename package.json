@@ -22,6 +22,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "classnames": "^2.3.2",
     "contentful-management": "^10.35.4",
     "csstype": "^3.1.2",
     "lodash.get": "^4.4.2",
@@ -78,7 +79,7 @@
       {
         "name": "alpha",
         "prerelease": true
-      }     
+      }
     ],
     "plugins": [
       [

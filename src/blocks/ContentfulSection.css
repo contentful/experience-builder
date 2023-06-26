@@ -1,6 +1,6 @@
 @import '../variables.css';
 
-#ContentfulSection .defaultStyles {
+#ContentfulSection.defaultStyles {
   min-height: 200px;
   overflow: scroll;
   flex-wrap: wrap;
@@ -12,7 +12,7 @@
   scrollbar-width: none; /* Firefox */
 }
 
-#ContentfulSection .defaultStyles::-webkit-scrollbar {
+#ContentfulSection.defaultStyles::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
 
