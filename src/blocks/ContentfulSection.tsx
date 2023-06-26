@@ -9,6 +9,7 @@ import { getInsertionData } from '../utils'
 import './ContentfulSection.css'
 import { CONTENTFUL_SECTION_ID } from '../constants'
 import classNames from 'classnames'
+import { Flex } from '../core'
 
 interface ContentfulSectionProps extends StyleProps {
   onComponentRemoved: () => void
@@ -148,12 +149,9 @@ export const ContentfulSection = ({
         isShown={showTopSectionIndicator}
         key="new_section_indicator_top"
       />
-      <div
+      <Flex
         ref={componentRef}
-        style={{
-          display: 'flex',
-          ...styleOverrides,
-        }}
+        cssStyles={styleOverrides}
         id="ContentfulSection"
         onMouseEnter={sectionInteraction.onMouseEnter}
         onMouseUp={onMouseUp}
@@ -164,7 +162,7 @@ export const ContentfulSection = ({
         {children}
         {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}
         {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
-      </div>
+      </Flex>
       <ContentfulSectionIndicator
         onMouseEnter={sectionIndicatorBottomInteraction.onMouseEnter}
         onMouseLeave={sectionIndicatorBottomInteraction.onMouseLeave}
