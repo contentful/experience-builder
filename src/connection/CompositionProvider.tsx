@@ -57,20 +57,6 @@ export const CompositionProvider = ({ children }: PropsWithChildren) => {
           const { selectedNodeId } = payload
           setSelectedNodeId(selectedNodeId)
         },
-        [IncomingExperienceBuilderEvent.COMPONENT_VALUE_CHANGED]: () => {
-          /** TODO: at the moment, not sure how to best handle this case.
-           * we need to know the variable name, component id, locale
-           * should experience builder update the tree and send the updated tree?
-           * should we update it here instead of going over the whole tree again?
-           * getDataSourceFromTree(tree)
-           *
-           * Currently experience builder (user_interface) puts default value into dataSource
-           * and marks it with `type: UnboundValue`
-           *
-           * If there has been no defaultValue, then there will be no entry with uuid in dataSource
-           *
-           */
-        },
         [IncomingExperienceBuilderEvent.COMPONENT_DRAGGING_CHANGED]: (payload: any) => {
           const { isDragging } = payload
           setIsDragging(isDragging)

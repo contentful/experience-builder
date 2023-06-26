@@ -14,7 +14,6 @@ export enum OutgoingExperienceBuilderEvent {
 export enum IncomingExperienceBuilderEvent {
   INIT_SUCCESS = 'initSuccess',
   COMPOSITION_UPDATED = 'componentTreeUpdated',
-  COMPONENT_VALUE_CHANGED = 'valueChanged',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
 }
