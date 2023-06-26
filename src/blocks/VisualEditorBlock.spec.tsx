@@ -6,9 +6,7 @@ import * as useComponents from '../hooks/useComponents'
 import * as useInteractionHook from '../hooks/useInteraction'
 
 const TestComponent = ({ ...props }) => {
-  return (
-    <div data-test-id="test-component" {...props} />
-  )
+  return <div data-test-id="test-component" {...props} />
 }
 
 jest.mock('../hooks/useCommunication.ts', () => {
@@ -98,9 +96,9 @@ describe('Visual Editor Block', () => {
 
     jest.spyOn(useInteractionHook, 'useInteraction').mockImplementation(() => mock)
 
-    const { getAllByTestId } = await renderComponent();
+    const { getAllByTestId } = await renderComponent()
 
-		expect(getAllByTestId('test-component')).toHaveLength(2);
+    expect(getAllByTestId('test-component')).toHaveLength(2)
     fireEvent.mouseUp(getAllByTestId('test-component')[0])
 
     expect(mock.onComponentDropped).toHaveBeenCalled()
@@ -140,7 +138,7 @@ describe('Visual Editor Block', () => {
 
     const { getAllByTestId } = await renderComponent()
 
-		expect(getAllByTestId('test-component')).toHaveLength(1);
+    expect(getAllByTestId('test-component')).toHaveLength(1)
 
     fireEvent.mouseUp(getAllByTestId('test-component')[0])
 

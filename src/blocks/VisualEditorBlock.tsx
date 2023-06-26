@@ -103,19 +103,21 @@ export const VisualEditorBlock = ({
 
   const { component, componentDefinition } = definedComponent
 
-  const children = definedComponent.componentDefinition.children && node.children.map((childNode: any) => {
-    return (
-      <VisualEditorBlock
-        node={childNode}
-        parentNode={parentNode}
-        key={childNode.data.id}
-        locale={locale}
-        dataSource={dataSource}
-        isDragging={isDragging}
-        selectedNodeId={selectedNodeId}
-      />
-    )
-  })
+  const children =
+    definedComponent.componentDefinition.children &&
+    node.children.map((childNode: any) => {
+      return (
+        <VisualEditorBlock
+          node={childNode}
+          parentNode={parentNode}
+          key={childNode.data.id}
+          locale={locale}
+          dataSource={dataSource}
+          isDragging={isDragging}
+          selectedNodeId={selectedNodeId}
+        />
+      )
+    })
 
   // contentful section
   if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
