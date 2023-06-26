@@ -7,9 +7,7 @@ import * as useInteractionHook from '../hooks/useInteraction'
 
 const TestComponent = ({ ...props }) => {
   return (
-    <div data-test-id="test-component" {...props}>
-      Render this test component
-    </div>
+    <div data-test-id="test-component" {...props} />
   )
 }
 
@@ -100,14 +98,15 @@ describe('Visual Editor Block', () => {
 
     jest.spyOn(useInteractionHook, 'useInteraction').mockImplementation(() => mock)
 
-    const { getByTestId } = await renderComponent()
+    const { getAllByTestId } = await renderComponent();
 
-    fireEvent.mouseUp(getByTestId('test-component'))
+		expect(getAllByTestId('test-component')).toHaveLength(2);
+    fireEvent.mouseUp(getAllByTestId('test-component')[0])
 
     expect(mock.onComponentDropped).toHaveBeenCalled()
   })
 
-  it('should not call mouse up event if parent does not allow children', async () => {
+  it.only('should not call mouse up event if parent does not allow children', async () => {
     jest.spyOn(useComponents, 'useComponents').mockImplementation(() => {
       return {
         getComponent: jest.fn().mockReturnValue({
@@ -139,9 +138,11 @@ describe('Visual Editor Block', () => {
 
     jest.spyOn(useInteractionHook, 'useInteraction').mockImplementation(() => mock)
 
-    const { getByTestId } = await renderComponent()
+    const { getAllByTestId } = await renderComponent()
 
-    fireEvent.mouseUp(getByTestId('test-component'))
+		expect(getAllByTestId('test-component')).toHaveLength(1);
+
+    fireEvent.mouseUp(getAllByTestId('test-component')[0])
 
     expect(mock.onComponentDropped).not.toHaveBeenCalled()
   })

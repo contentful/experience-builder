@@ -103,7 +103,7 @@ export const VisualEditorBlock = ({
 
   const { component, componentDefinition } = definedComponent
 
-  const children = node.children.map((childNode: any) => {
+  const children = definedComponent.componentDefinition.children && node.children.map((childNode: any) => {
     return (
       <VisualEditorBlock
         node={childNode}
