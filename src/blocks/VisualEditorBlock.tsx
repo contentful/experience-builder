@@ -103,28 +103,18 @@ export const VisualEditorBlock = ({
 
   const { component, componentDefinition } = definedComponent
 
-  const children = useMemo(() => {
-		const shouldAllowChildren = definedComponent.componentDefinition.children 
-		return shouldAllowChildren ? node.children.map((childNode: any) => {
-			return (
-				<VisualEditorBlock
-					node={childNode}
-					parentNode={parentNode}
-					key={childNode.data.id}
-					locale={locale}
-					dataSource={dataSource}
-					isDragging={isDragging}
-				/>
-			)
-		}) : [];
-	}, [
-		definedComponent.componentDefinition.children,
-		node.children,
-		locale,
-		dataSource,
-		isDragging,
-		parentNode
-	])
+  const children = node.children.map((childNode: any) => {
+		return (
+			<VisualEditorBlock
+				node={childNode}
+				parentNode={parentNode}
+				key={childNode.data.id}
+				locale={locale}
+				dataSource={dataSource}
+				isDragging={isDragging}
+		/>
+	)
+})
 
   // contentful section
   if (componentDefinition.id === CONTENTFUL_SECTION_ID) {
