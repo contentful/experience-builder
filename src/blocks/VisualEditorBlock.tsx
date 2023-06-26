@@ -89,7 +89,7 @@ export const VisualEditorBlock = ({
 
           return {
             ...acc,
-						[variableName]: value,
+            [variableName]: value,
           }
         }
       },
