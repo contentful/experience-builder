@@ -155,7 +155,7 @@ export const VisualEditorBlock = ({
       onMouseUp: () => {
         if (definedComponent.componentDefinition.children) {
           // TODO: follow the logic from the section and based on mouse position and node.children.length, define the new index
-          onComponentDropped({ node, index: 0 })
+          onComponentDropped({ node })
         }
       },
       onClick: (e: MouseEvent) => {

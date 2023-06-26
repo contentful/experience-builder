@@ -31,7 +31,6 @@ export const EmptyContainer = ({
       onMouseUp={() => {
         onComponentDropped({
           node: { type: 'root', data: { id: 'root', props: {}, dataSource: {} }, children: [] },
-          index: 0,
         })
       }}>
       {showContent ? (

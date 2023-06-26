@@ -15,7 +15,7 @@ export const useInteraction = () => {
   }, [])
 
   const onComponentDropped = useCallback(
-    ({ node, index }: { node: CompositionComponentNode; index: number }) => {
+    ({ node, index = 0 }: { node: CompositionComponentNode; index?: number }) => {
       sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_DROPPED, {
         node,
         index,
