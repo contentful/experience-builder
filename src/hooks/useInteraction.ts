@@ -6,7 +6,7 @@ export const useInteraction = () => {
   const { sendMessage } = useCommunication()
   const [isMouseOver, setMouseOver] = useState(false)
 
-  const onMouseOver = useCallback(() => {
+  const onMouseEnter = useCallback(() => {
     setMouseOver(true)
   }, [])
 
@@ -15,11 +15,10 @@ export const useInteraction = () => {
   }, [])
 
   const onComponentDropped = useCallback(
-    ({ node, template, append = true }: { node: any; template?: any; append?: boolean }) => {
+    ({ node, index = 0 }: { node: CompositionComponentNode; index?: number }) => {
       sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_DROPPED, {
         node,
-        template,
-        append,
+        index,
       })
     },
     [sendMessage]
@@ -36,7 +35,7 @@ export const useInteraction = () => {
 
   return {
     isMouseOver,
-    onMouseOver,
+    onMouseEnter,
     onMouseLeave,
     onComponentDropped,
     onComponentRemoved,

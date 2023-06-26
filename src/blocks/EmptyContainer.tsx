@@ -15,7 +15,7 @@ export const EmptyContainer = ({
   isDragging = false,
   isHoveringOnRoot = false,
 }: EmptyContainerProps) => {
-  const { onComponentDropped, isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
+  const { onComponentDropped, isMouseOver, onMouseEnter, onMouseLeave } = useInteraction()
 
   const showContent = isFirst ? !isDragging || (isDragging && !isMouseOver) : false
 
@@ -25,11 +25,13 @@ export const EmptyContainer = ({
     <div
       id="EmptyContainer"
       data-type="empty-container"
-      onMouseOver={onMouseOver}
+      onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       className={`container ${isHighlighted ? 'highlight' : ''}`}
       onMouseUp={() => {
-        onComponentDropped({ node: { type: 'root', data: { id: 'root' } } })
+        onComponentDropped({
+          node: { type: 'root', data: { id: 'root', props: {}, dataSource: {} }, children: [] },
+        })
       }}>
       {showContent ? (
         <>

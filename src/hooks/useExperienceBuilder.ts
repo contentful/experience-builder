@@ -106,8 +106,6 @@ export const useExperienceBuilder = () => {
   useEffect(() => {
     const onMouseMove = throttle((e: MouseEvent) => {
       sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
-        pageX: e.pageX,
-        pageY: e.pageY,
         clientX: e.clientX,
         clientY: e.clientY,
       })

@@ -1,15 +1,18 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useMemo } from 'react'
 import get from 'lodash.get'
 import {
   CompositionVariableValueType,
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
+  StyleProps,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
 import { useComponents } from '../hooks'
 import { Link } from 'contentful-management'
+import { CONTENTFUL_SECTION_ID } from '../constants'
+import { ContentfulSection } from './ContentfulSection'
 
 import './VisualEditorBlock.css'
 
@@ -19,7 +22,7 @@ type VisualEditorBlockProps = {
   dataSource: LocalizedDataSource
   isDragging: boolean
   isSelected?: boolean
-  rootNode: CompositionComponentNode
+  parentNode: CompositionComponentNode
 }
 
 export const VisualEditorBlock = ({
@@ -28,12 +31,11 @@ export const VisualEditorBlock = ({
   dataSource,
   isDragging,
   isSelected,
-  rootNode,
+  parentNode,
 }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
   const { onComponentDropped, onComponentRemoved } = useInteraction()
-  const wasMousePressed = useRef(false)
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),
@@ -99,7 +101,7 @@ export const VisualEditorBlock = ({
     return null
   }
 
-  const { component } = definedComponent
+  const { component, componentDefinition } = definedComponent
 
   const children = useMemo(() => {
 		const shouldAllowChildren = definedComponent.componentDefinition.children 
@@ -107,11 +109,11 @@ export const VisualEditorBlock = ({
 			return (
 				<VisualEditorBlock
 					node={childNode}
+					parentNode={parentNode}
 					key={childNode.data.id}
 					locale={locale}
 					dataSource={dataSource}
 					isDragging={isDragging}
-					rootNode={rootNode}
 				/>
 			)
 		}) : [];
@@ -121,30 +123,50 @@ export const VisualEditorBlock = ({
 		locale,
 		dataSource,
 		isDragging,
-		rootNode
+		parentNode
 	])
 
+  // contentful section
+  if (componentDefinition.id === CONTENTFUL_SECTION_ID) {
+    return (
+      <ContentfulSection
+        key={node.data.id}
+        handleComponentDrop={({ index, node }) => {
+          onComponentDropped({ node, index })
+        }}
+        node={node}
+        onMouseDown={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
+        }}
+        onComponentRemoved={() => {
+          onComponentRemoved(node)
+        }}
+        className="visualEditorBlockHover"
+        isDragging={isDragging}
+        isSelected={!!isSelected}
+        parentNode={parentNode}
+        {...(props as StyleProps)}>
+        {children}
+      </ContentfulSection>
+    )
+  }
+
+  // imported component
   return React.createElement(
     component,
     {
-      onMouseUp: (append: boolean, nodeOverride?: CompositionComponentNode) => {
-        if (typeof append !== 'boolean') {
-          // When this event is called by the ContentfulSection it is a boolean, otherwise it is a MouseEvent
-          // object which we don't want to process
-          append = true
-        }
-        let dropNode = node
-        if (nodeOverride && nodeOverride.type) {
-          dropNode = nodeOverride
-        }
-        onComponentDropped({ node: dropNode, append })
-        wasMousePressed.current = false
-      },
       onMouseDown: (e: MouseEvent) => {
         e.stopPropagation()
         e.preventDefault()
-        wasMousePressed.current = true
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
+      },
+      onMouseUp: () => {
+        if (definedComponent.componentDefinition.children) {
+          // TODO: follow the logic from the section and based on mouse position and node.children.length, define the new index
+          onComponentDropped({ node })
+        }
       },
       onClick: (e: MouseEvent) => {
         e.stopPropagation()
@@ -156,7 +178,6 @@ export const VisualEditorBlock = ({
       className: 'visualEditorBlockHover',
       isDragging,
       isSelected: !!isSelected,
-      rootNode,
       ...props,
     },
     children

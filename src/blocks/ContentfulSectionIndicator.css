@@ -1,16 +1,17 @@
 @import '../variables.css';
 
-#ContentfulSectionIndicator.indicatorLineHorizontal {
-  height: 3px;
-  background: var(--blue500);
-  margin: 10px;
+#ContentfulSectionIndicator {
+  padding: 15px 10px;
   position: relative;
 }
 
-#ContentfulSectionIndicatorPlaceholder.indicatorLineHorizontalTransparent {
+#ContentfulSectionIndicator .indicatorLineHorizontal {
   height: 3px;
-  margin: 10px;
-  position: relative;
+  background: var(--blue500);
+}
+
+#ContentfulSectionIndicatorPlaceholder .indicatorLineHorizontalTransparent {
+  height: 3px;
 }
 
 #ContentfulSectionIndicator .text {
