@@ -1,54 +1,32 @@
-import React from 'react'
-import tokens from '@contentful/f36-tokens'
-import { css } from '@emotion/css'
+import React, { MouseEventHandler } from 'react'
+import './ContentfulSectionIndicator.css'
 
-const styles = {
-  lineHorizontal: css({
-    height: '3px',
-    background: tokens.blue500,
-    margin: '10px',
-    position: 'relative',
-  }),
-  lineHorizontalTransparent: css({
-    height: '3px',
-    margin: '10px',
-    position: 'relative',
-  }),
-  text: css({
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    background: tokens.blue200,
-    border: `1px dotted ${tokens.blue500}`,
-    borderRadius: '5px',
-    padding: '5px',
-    color: tokens.blue500,
-  }),
-  textTransparent: css({
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    border: `1px dotted transparent`,
-    borderRadius: '5px',
-    padding: '5px',
-    color: 'transparent',
-  }),
+type ContentfulSectionIndicatorProps = {
+  onMouseEnter: MouseEventHandler<HTMLDivElement>
+  onMouseLeave: MouseEventHandler<HTMLDivElement>
+  onMouseUp: MouseEventHandler<HTMLDivElement>
+  isShown: boolean
 }
 
-export const ContentfulSectionIndicator = () => {
-  return (
-    <div key="lineIndicator_new_section" className={styles.lineHorizontal}>
-      <div className={styles.text}>New section</div>
-    </div>
-  )
-}
+export const ContentfulSectionIndicator = ({
+  isShown,
+  onMouseLeave,
+  onMouseEnter,
+  onMouseUp,
+}: ContentfulSectionIndicatorProps) => {
+  if (!isShown) {
+    return null
+  }
 
-export const ContentfulSectionIndicatorPlaceholder = () => {
   return (
-    <div key="lineIndicator_new_section_placeholder" className={styles.lineHorizontalTransparent}>
-      <div className={styles.textTransparent}>New section</div>
+    <div
+      id="ContentfulSectionIndicator"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onMouseUp={onMouseUp}
+      key="lineIndicator_new_section">
+      <div className="indicatorLineHorizontal" />
+      <div className="text">New section</div>
     </div>
   )
 }

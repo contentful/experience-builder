@@ -1,0 +1,45 @@
+@import '../variables.css';
+
+#ContentfulSection .defaultStyles {
+  min-height: 200px;
+  overflow: scroll;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  display: flex;
+
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+#ContentfulSection .defaultStyles::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+#ContentfulSection .lineHorizontal {
+  height: 3px;
+  width: 200px;
+  background: var(--blue500);
+  margin: 10px;
+}
+
+#ContentfulSection .lineVertical {
+  height: 190px;
+  width: 3px;
+  background: var(--blue500);
+  margin: 10px;
+}
+
+#ContentfulSection .tooltip {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  position: absolute;
+  top: 1px;
+  right: 1px;
+}
+
+#ContentfulSection .containerBorder {
+  box-shadow: inset 0px 0px 0px 1px var(--blue500);
+  box-sizing: border-box;
+}

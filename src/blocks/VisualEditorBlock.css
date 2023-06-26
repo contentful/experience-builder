@@ -1,0 +1,5 @@
+@import '../variables.css';
+
+.visualEditorBlockHover:hover {
+  box-shadow: inset 0px 0px 0px 1px var(--blue500);
+}

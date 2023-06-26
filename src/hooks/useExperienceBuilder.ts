@@ -48,21 +48,37 @@ export const useExperienceBuilder = ({
 
   const { sendMessage } = useCommunication()
 
+  const reloadApp = () => {
+    sendMessage(OutgoingExperienceBuilderEvent.CANVAS_RELOAD, {})
+    // Wait a moment to ensure that the message was sent
+    setTimeout(() => {
+      // Received a hot reload message from webpack dev server -> reload the canvas
+      window.location.reload()
+    }, 50)
+  }
+
   useEffect(() => {
     // We only care about this communication when in editor mode
     const onMessage = (event: MessageEvent) => {
       let reason
       if ((reason = doesMismatchMessageSchema(event))) {
-        console.warn(
-          `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
-          event
-        )
+        if (
+          event.origin.startsWith('http://localhost') &&
+          `${event.data}`.includes('webpackHotUpdate')
+        ) {
+          reloadApp()
+        } else {
+          console.warn(
+            `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
+            event
+          )
+        }
         return
       }
 
       const eventData = tryParseMessage(event)
 
-      console.log(
+      console.debug(
         `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
         eventData
       )

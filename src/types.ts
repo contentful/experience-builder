@@ -8,6 +8,7 @@ export enum OutgoingExperienceBuilderEvent {
   COMPONENT_DROPPED = 'componentDropped',
   COMPONENT_REMOVED = 'componentRemoved',
   INIT = 'init',
+  CANVAS_RELOAD = 'canvasReload',
 }
 
 export enum IncomingExperienceBuilderEvent {
@@ -173,15 +174,33 @@ export type Experience = {
   mode: CompositionMode | undefined
 }
 
+export interface StyleProps {
+  horizontalAlignment: 'start' | 'end' | 'center'
+  verticalAlignment: 'start' | 'end' | 'center'
+  distribution: 'stacked' | 'absolute'
+  margin: string
+  padding: string
+  backgroundColor: string
+  width: string
+  maxWidth: string
+  height: string
+  flexDirection: 'row' | 'column'
+  flexWrap: 'nowrap' | 'wrap'
+  border: string
+  gap: string
+}
+
 export type SECTION_STYLE_ATTRIBUTE_KEY =
   | 'horizontalAlignment'
   | 'verticalAlignment'
+  | 'distribution'
   | 'margin'
   | 'padding'
   | 'backgroundColor'
   | 'width'
   | 'height'
   | 'flexDirection'
+  | 'flexWrap'
   | 'border'
   | 'maxWidth'
   | 'gap'

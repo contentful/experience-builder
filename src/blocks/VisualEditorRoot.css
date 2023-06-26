@@ -1,0 +1,11 @@
+#VisualEditorRoot.root {
+  min-height: 45vh;
+  padding-bottom: 100px;
+  overflow: scroll;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+#VisualEditorRoot.root::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}

@@ -1,80 +1,31 @@
-import React from 'react'
-import { Flex } from '@contentful/f36-core'
-import tokens from '@contentful/f36-tokens'
-import { css, cx } from '@emotion/css'
+import React, { MouseEventHandler } from 'react'
+import { Flex } from '../core'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
-import {
-  ContentfulSectionIndicator,
-  ContentfulSectionIndicatorPlaceholder,
-} from './ContentfulSectionIndicator'
-import { CompositionComponentNode } from '../types'
+import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
+import { CompositionComponentNode, StyleProps } from '../types'
+import { transformBorderStyle, transformFill } from './transformers'
+import { getInsertionData } from '../utils'
 
-const styles = {
-  defaultStyles: css({
-    minHeight: '200px',
-    overflow: 'scroll',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    position: 'relative',
-    display: 'flex',
-  }),
-  lineHorizontal: css({
-    height: '3px',
-    width: '200px',
-    background: tokens.blue500,
-    margin: '10px',
-  }),
-  lineVertical: css({
-    height: '190px',
-    width: '3px',
-    background: tokens.blue500,
-    margin: '10px',
-  }),
-  tooltip: css({
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-    position: 'absolute',
-    top: '1px',
-    right: '1px',
-  }),
-  containerBorder: css({
-    border: `1px solid ${tokens.blue500}`,
-    boxSizing: 'border-box',
-  }),
-}
-
-interface StyleProps {
-  horizontalAlignment: 'start' | 'end' | 'center'
-  verticalAlignment: 'start' | 'end' | 'center'
-  margin: string
-  padding: string
-  backgroundColor: string
-  width: string
-  maxWidth: string
-  height: string
-  flexDirection: 'row' | 'column'
-  border: string
-  gap: string
-}
+import './ContentfulSection.css'
 
 interface ContentfulSectionProps extends StyleProps {
-  onClick: () => void
   onComponentRemoved: () => void
-  onMouseUp: (append: boolean, nodeOverride?: CompositionComponentNode) => void
+  handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
+  onMouseDown: MouseEventHandler<HTMLDivElement>
   isDragging: boolean
   children: React.ReactNode
   className?: string
   isSelected: boolean
-  rootNode: CompositionComponentNode
+  node: CompositionComponentNode
+  parentNode: CompositionComponentNode
 }
 
-const transformFill = (value: string) => (value === 'fill' ? '100%' : value)
 export const ContentfulSection = ({
   horizontalAlignment,
   verticalAlignment,
   flexDirection,
+  flexWrap,
   margin,
   padding,
   backgroundColor,
@@ -86,113 +37,137 @@ export const ContentfulSection = ({
   isDragging,
   className,
   isSelected,
-  rootNode,
+  parentNode,
+  node,
+  children,
   onComponentRemoved,
-  onMouseUp,
-  ...props
+  handleComponentDrop,
+  onMouseDown,
 }: ContentfulSectionProps) => {
-  const { isMouseOver, onMouseOver, onMouseLeave } = useInteraction()
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
+
+  const sectionInteraction = useInteraction()
+  const sectionIndicatorTopInteraction = useInteraction()
+  const sectionIndicatorBottomInteraction = useInteraction()
 
   // when direction is 'column' the axis are reversed
   const alignment =
     flexDirection === 'row'
-      ? css({
+      ? {
           alignItems: `${horizontalAlignment}`,
           justifyContent: `${verticalAlignment}`,
-        })
-      : css({
+        }
+      : {
           alignItems: `${verticalAlignment}`,
           justifyContent: `${horizontalAlignment}`,
-        })
+        }
 
-  const styleOverrides = css({
+  const styleOverrides = {
     margin,
     padding,
     backgroundColor,
     width: transformFill(width),
     height: transformFill(height),
     maxWidth,
-    border,
+    ...transformBorderStyle(border),
     gap,
-  })
-
-  const lineStyles = flexDirection === 'row' ? styles.lineVertical : styles.lineHorizontal
-
-  const showPrependLine = () => {
-    if (flexDirection === 'row') {
-      return (
-        mouseInLeftHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
-      )
-    } else {
-      return (
-        mouseInUpperHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
-      )
-    }
-  }
-  const showAppendLine = () => {
-    if (flexDirection === 'row') {
-      return (
-        !mouseInLeftHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
-      )
-    } else {
-      return (
-        !mouseInUpperHalf && !mouseAtBottomBorder && !mouseAtTopBorder && isDragging && isMouseOver
-      )
-    }
   }
 
-  // This function determines if a dragged component should be appended or prepended when dropping it on the section
-  const shouldAppend = () => {
-    if (mouseAtTopBorder || mouseAtBottomBorder) {
-      return mouseAtBottomBorder
-    }
+  const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
 
-    if (flexDirection === 'row') {
-      return !mouseInLeftHalf
-    } else {
-      return !mouseInUpperHalf
-    }
+  const showPrependLine =
+    flexDirection === 'row'
+      ? mouseInLeftHalf &&
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
+      : mouseInUpperHalf &&
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
+
+  const showAppendLine =
+    flexDirection === 'row'
+      ? !mouseInLeftHalf &&
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
+      : !mouseInUpperHalf &&
+        !mouseAtBottomBorder &&
+        !mouseAtTopBorder &&
+        isDragging &&
+        sectionInteraction.isMouseOver
+
+  // if isDragging something and over the section's top border, or over the top indicator (which already appeared by that time)
+  const showTopSectionIndicator =
+    isDragging &&
+    ((sectionInteraction.isMouseOver && mouseAtTopBorder) ||
+      sectionIndicatorTopInteraction.isMouseOver)
+
+  // if isDragging something and over the section's bottom border, or over the bottom indicator (which already appeared by that time)
+  const showBottomSectionIndicator =
+    isDragging &&
+    ((sectionInteraction.isMouseOver && mouseAtBottomBorder) ||
+      sectionIndicatorBottomInteraction.isMouseOver)
+
+  const onMouseUp = () => {
+    // Passing this to the function to notify the experience builder about where to drop new components
+    handleComponentDrop(
+      getInsertionData({
+        dropReceiverNode: node,
+        dropReceiverParentNode: parentNode,
+        flexDirection,
+        isMouseAtTopBorder: mouseAtTopBorder,
+        isMouseAtBottomBorder: mouseAtBottomBorder,
+        isMouseInLeftHalf: mouseInLeftHalf,
+        isMouseInUpperHalf: mouseInUpperHalf,
+        isOverTopIndicator: sectionIndicatorTopInteraction.isMouseOver,
+        isOverBottomIndicator: sectionIndicatorBottomInteraction.isMouseOver,
+      })
+    )
   }
 
   return (
-    <div ref={componentRef}>
-      {isDragging && isMouseOver ? (
-        mouseAtTopBorder ? (
-          <ContentfulSectionIndicator />
-        ) : (
-          <ContentfulSectionIndicatorPlaceholder />
-        )
-      ) : null}
-      <div className={cx(isSelected ? cx(styles.containerBorder) : '')}>
-        <Flex
-          flexDirection={flexDirection}
-          onMouseOver={onMouseOver}
-          onMouseUp={() => {
-            // Passing this to the function to notify the experience builder about where to drop new components
-            onMouseUp(
-              shouldAppend(),
-              // when the mouse is around the border we want to drop the new component as a new section onto the root node
-              mouseAtTopBorder || mouseAtBottomBorder ? rootNode : undefined
-            )
-          }}
-          onMouseLeave={onMouseLeave}
-          className={cx(styles.defaultStyles, styleOverrides, className, alignment)}
-          {...props}>
-          {showPrependLine() && <div key="lineIndicator_top" className={lineStyles}></div>}
-          {props.children}
-          {showAppendLine() && <div key="lineIndicator_bottom" className={lineStyles}></div>}
-          {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
-        </Flex>
+    <>
+      <ContentfulSectionIndicator
+        onMouseEnter={sectionIndicatorTopInteraction.onMouseEnter}
+        onMouseLeave={sectionIndicatorTopInteraction.onMouseLeave}
+        onMouseUp={onMouseUp}
+        isShown={showTopSectionIndicator}
+        key="new_section_indicator_top"
+      />
+      <div ref={componentRef} id="ContentfulSection">
+        <div className={isSelected ? 'containerBorder' : ''}>
+          <Flex
+            cssStyles={{
+              ...styleOverrides,
+              ...alignment,
+            }}
+            flexDirection={flexDirection}
+            flexWrap={flexWrap}
+            onMouseEnter={sectionInteraction.onMouseEnter}
+            onMouseUp={onMouseUp}
+            onMouseLeave={sectionInteraction.onMouseLeave}
+            className={`defaultStyles ${className}`}
+            onMouseDown={onMouseDown}>
+            {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
+            {children}
+            {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}
+            {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
+          </Flex>
+        </div>
       </div>
-      {isDragging && isMouseOver ? (
-        mouseAtBottomBorder ? (
-          <ContentfulSectionIndicator />
-        ) : (
-          <ContentfulSectionIndicatorPlaceholder />
-        )
-      ) : null}
-    </div>
+      <ContentfulSectionIndicator
+        onMouseEnter={sectionIndicatorBottomInteraction.onMouseEnter}
+        onMouseLeave={sectionIndicatorBottomInteraction.onMouseLeave}
+        onMouseUp={onMouseUp}
+        isShown={showBottomSectionIndicator}
+        key="new_section_indicator_bottom"
+      />
+    </>
   )
 }
