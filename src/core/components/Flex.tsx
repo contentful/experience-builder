@@ -53,9 +53,10 @@ export interface FlexProps {
    * Defines the order of a flexbox item
    */
   order?: CSS.Property.Order
-  onMouseOver?: MouseEventHandler<HTMLDivElement>
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>
   onMouseLeave?: MouseEventHandler<HTMLDivElement>
   onMouseUp?: MouseEventHandler<HTMLDivElement>
+  onMouseDown?: MouseEventHandler<HTMLDivElement>
   onClick?: MouseEventHandler<HTMLDivElement>
   className?: string
   cssStyles?: Record<string, string>
@@ -65,9 +66,10 @@ export interface FlexProps {
 export function Flex({
   id,
   children,
-  onMouseOver,
+  onMouseEnter,
   onMouseUp,
   onMouseLeave,
+  onMouseDown,
   onClick,
   flex,
   flexBasis,
@@ -109,8 +111,9 @@ export function Flex({
         ...cssStyles,
       }}
       className={className}
-      onMouseOver={onMouseOver}
+      onMouseEnter={onMouseEnter}
       onMouseUp={onMouseUp}
+      onMouseDown={onMouseDown}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
       {...props}>
