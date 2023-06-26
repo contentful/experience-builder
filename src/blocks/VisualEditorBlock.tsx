@@ -138,7 +138,6 @@ export const VisualEditorBlock = ({
         isDragging={isDragging}
         isSelected={selectedNodeId === node.data.id}
         parentNode={parentNode}
-        isTopLevel={componentDefinition.id === CONTENTFUL_SECTION_ID}
         {...(props as StyleProps)}>
         {children}
       </ContentfulSection>

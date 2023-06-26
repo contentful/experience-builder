@@ -7,6 +7,8 @@ import { transformBorderStyle, transformFill } from './transformers'
 import { getInsertionData } from '../utils'
 
 import './ContentfulSection.css'
+import { CONTENTFUL_SECTION_ID } from '../constants'
+import classNames from 'classnames'
 
 interface ContentfulSectionProps extends StyleProps {
   onComponentRemoved: () => void
@@ -18,7 +20,6 @@ interface ContentfulSectionProps extends StyleProps {
   isSelected: boolean
   node: CompositionComponentNode
   parentNode: CompositionComponentNode
-  isTopLevel?: boolean
 }
 
 export const ContentfulSection = ({
@@ -43,10 +44,11 @@ export const ContentfulSection = ({
   onComponentRemoved,
   handleComponentDrop,
   onMouseDown,
-  isTopLevel = true,
 }: ContentfulSectionProps) => {
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
+
+  const isTopLevel = node.data.blockId === CONTENTFUL_SECTION_ID
 
   const sectionInteraction = useInteraction()
   const sectionIndicatorTopInteraction = useInteraction()
@@ -136,7 +138,6 @@ export const ContentfulSection = ({
       })
     )
   }
-  const borderStyles = isSelected ? 'containerBorder' : ''
 
   return (
     <>
@@ -157,7 +158,7 @@ export const ContentfulSection = ({
         onMouseEnter={sectionInteraction.onMouseEnter}
         onMouseUp={onMouseUp}
         onMouseLeave={sectionInteraction.onMouseLeave}
-        className={`defaultStyles ${className} ${borderStyles}`}
+        className={classNames('defaultStyles', className, { containerBorder: isSelected })}
         onMouseDown={onMouseDown}>
         {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
         {children}
