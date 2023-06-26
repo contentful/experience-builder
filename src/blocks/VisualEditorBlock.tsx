@@ -87,7 +87,7 @@ export const VisualEditorBlock = ({
 
           return {
             ...acc,
-            [variableName]: value,
+						[variableName]: value,
           }
         }
       },
@@ -101,18 +101,28 @@ export const VisualEditorBlock = ({
 
   const { component } = definedComponent
 
-  const children = node.children.map((childNode: any) => {
-    return (
-      <VisualEditorBlock
-        node={childNode}
-        key={childNode.data.id}
-        locale={locale}
-        dataSource={dataSource}
-        isDragging={isDragging}
-        rootNode={rootNode}
-      />
-    )
-  })
+  const children = useMemo(() => {
+		const shouldAllowChildren = definedComponent.componentDefinition.children 
+		return shouldAllowChildren ? node.children.map((childNode: any) => {
+			return (
+				<VisualEditorBlock
+					node={childNode}
+					key={childNode.data.id}
+					locale={locale}
+					dataSource={dataSource}
+					isDragging={isDragging}
+					rootNode={rootNode}
+				/>
+			)
+		}) : [];
+	}, [
+		definedComponent.componentDefinition.children,
+		node.children,
+		locale,
+		dataSource,
+		isDragging,
+		rootNode
+	])
 
   return React.createElement(
     component,
