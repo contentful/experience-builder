@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "classnames": "^2.3.2",
+    "contentful": "^10.3.0",
     "contentful-management": "^10.35.4",
     "csstype": "^3.1.2",
     "lodash.get": "^4.4.2",
@@ -99,6 +100,5 @@
       "@semantic-release/npm",
       "@semantic-release/github"
     ]
-  },
-  "peerDependencies": {}
+  }
 }

@@ -17,7 +17,7 @@ interface UseExperienceBuilderProps {
   initialMode?: CompositionMode
   /** Use CDA token for delivery mode and CPA for preview mode
    * When rendered in the editor a token is not needed **/
-  token?: string
+  accessToken?: string
   /** The defined locale,
    *  when rendered in the editor, the locale is set from the editor, but you can use this to overwrite this **/
   initialLocale?: string
@@ -31,7 +31,7 @@ interface UseExperienceBuilderProps {
 
 export const useExperienceBuilder = ({
   initialMode,
-  token,
+  accessToken,
   initialLocale,
   environmentId,
   spaceId,
@@ -165,8 +165,8 @@ export const useExperienceBuilder = ({
       dataSource,
       isDragging,
       selectedNodeId,
-      config: { token, locale, environmentId, spaceId },
-      mode,
+      config: { accessToken, locale, environmentId, spaceId },
+      mode: mode as CompositionMode,
     }),
     [tree, dataSource, isDragging, selectedNodeId, mode]
   )
