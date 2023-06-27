@@ -5,6 +5,7 @@ const TestComponent = () => {
   return null
 }
 
+// TODO: Rewrite this to work with new way of storing definitions (passing via context)
 export const Test = () => {
   const { defineComponent } = useComponents()
 

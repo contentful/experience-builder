@@ -7,6 +7,7 @@ import React, {
   useState,
 } from 'react'
 import {
+  ComponentDefinitionWithComponentType,
   CompositionMode,
   CompositionTree,
   Experience,
@@ -17,7 +18,7 @@ import {
   OutgoingExperienceBuilderEvent,
 } from '../types'
 import { initChannel } from './createInitializer'
-import { getDataSourceFromTree, isInsideIframe } from '../utils'
+import { applyFallbacks, getDataSourceFromTree, isInsideIframe } from '../utils'
 import { Channel } from './channel'
 import throttle from 'lodash.throttle'
 import { useContentfulSection } from '../hooks/useContentfulSection'
@@ -25,19 +26,23 @@ import contentful, { ContentfulClientApi } from 'contentful'
 
 export type CompositionContextProps = {
   /** The mode is automatically set, use this value to manually override this **/
-  initialMode?: CompositionMode
+  mode?: CompositionMode
   /** Use CDA token for delivery mode and CPA for preview mode
    * When rendered in the editor a token is not needed **/
   accessToken?: string
   /** The defined locale,
    *  when rendered in the editor, the locale is set from the editor, but you can use this to overwrite this **/
-  initialLocale?: string
+  locale?: string
   /** The source spaceId,
    *  when rendered in the editor, the id is set from the editor **/
   spaceId?: string
   /** The source environmentId,
    *  when rendered in the editor, the id is set from the editor **/
   environmentId?: string
+  /** The domain to be used for the API client (e.g. flinkly.com)
+   */
+  contentfulDomain?: string
+  componentDefinitions: ComponentDefinitionWithComponentType[]
 }
 
 export type CompositionContextValues = {
@@ -54,11 +59,13 @@ export const CompositionContext = createContext<CompositionContextValues>({
 
 export const CompositionContextProvider = ({
   children,
-  initialMode,
+  mode: initialMode,
   accessToken,
-  initialLocale,
+  locale: initialLocale,
   spaceId,
   environmentId,
+  contentfulDomain,
+  componentDefinitions: customComponentDefinitions,
 }: PropsWithChildren<CompositionContextProps>) => {
   const [isInitialized, setInitialized] = useState(false)
   const [tree, setTree] = useState<CompositionTree>()
@@ -74,17 +81,20 @@ export const CompositionContextProvider = ({
   // Only initialize the message channel when being in editor mode or mode not pre-defined
   const shouldInitializeChannel = !shouldInitializeClient
 
-  useContentfulSection()
+  // Extend the list of registered component definitions with the native contentful section
+  const contentfulSectionDefinition = useContentfulSection()
+  const componentDefinitions = [...customComponentDefinitions, contentfulSectionDefinition]
 
   // Initialize the client for fetching the composition from CDA/ CPA
   useEffect(() => {
     if (shouldInitializeClient && !isInitialized) {
+      // TODO: validate config here instead of in useValidatedExperienceConfig
       if (!spaceId || !environmentId || !accessToken) {
         throw new Error(
           'Missing required props for non-editor mode: spaceId, environmentId, accessToken'
         )
       }
-      const domain = 'flinkly.com' // TODO: Change to contentful.com or make it configurable
+      const domain = contentfulDomain ?? 'flinkly.com'
       const host = mode === 'delivery' ? `cdn.${domain}` : `preview.${domain}`
       const client = contentful.createClient({
         space: spaceId,
@@ -93,6 +103,7 @@ export const CompositionContextProvider = ({
         accessToken,
       })
       setClient(client)
+      setInitialized(true)
     }
   }, [])
 
@@ -129,7 +140,8 @@ export const CompositionContextProvider = ({
           setIsDragging(isDragging)
         },
       }
-      initChannel(handlers, (connectedChannel) => {
+      console.log('INIT', componentDefinitions, contentfulSectionDefinition)
+      initChannel(handlers, componentDefinitions, (connectedChannel) => {
         setMode('editor')
         setInitialized(true)
         setChannel(connectedChannel)
@@ -156,24 +168,29 @@ export const CompositionContextProvider = ({
     }
   }, [channel])
 
+  const enrichedComponentDefinitions = componentDefinitions.map((definition) => ({
+    component: definition.component,
+    componentDefinition: applyFallbacks(definition.componentDefinition),
+  }))
+
   const experience: Experience = useMemo(
     () => ({
       tree,
       dataSource,
       isDragging,
       selectedNodeId,
-      config: {},
+      componentDefinitions: enrichedComponentDefinitions,
+      config: {
+        accessToken,
+        spaceId,
+        environmentId,
+        locale,
+        contentfulDomain,
+      },
       mode: mode as CompositionMode,
     }),
-    [tree, dataSource, isDragging, selectedNodeId, mode]
+    [tree, dataSource, isDragging, selectedNodeId, enrichedComponentDefinitions, mode]
   )
-
-  console.log('Render CompositionContext', {
-    shouldInitializeClient,
-    shouldInitializeChannel,
-    isInitialized,
-    experience,
-  })
 
   // Channel or client will be defined
   if (!isInitialized) return null

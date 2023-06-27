@@ -1,12 +1,10 @@
-import { useComponents } from './useComponents'
 import { ContentfulSection } from '../blocks/ContentfulSection'
 import { CONTENTFUL_SECTION_ID } from '../constants'
-import { useEffect } from 'react'
-import { ContentfulSectionType } from '../types'
+import { ComponentDefinitionWithComponentType, ContentfulSectionType } from '../types'
 
-export const useContentfulSection = () => {
-  const { defineComponent } = useComponents()
-
+// TODO: Revisit the way we merge custom with native component definitions.
+// Currently, this hook doesn't make much sense
+export const useContentfulSection = (): ComponentDefinitionWithComponentType => {
   const definition: ContentfulSectionType = {
     id: CONTENTFUL_SECTION_ID,
     name: 'Contentful Section',
@@ -149,7 +147,9 @@ export const useContentfulSection = () => {
     },
     children: true,
   }
-  useEffect(() => {
-    defineComponent(ContentfulSection, definition)
-  }, [])
+
+  return {
+    component: ContentfulSection,
+    componentDefinition: definition,
+  }
 }

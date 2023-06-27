@@ -4,7 +4,7 @@ export const useValidatedExperienceConfig = (experience?: Experience | null) => 
   if (!experience) {
     return
   }
-  if (!experience.config.token) {
+  if (!experience.config.accessToken) {
     throw new Error(
       'When outside the editor mode you must define either a Preview or Delivery Token in the experience initialization'
     )

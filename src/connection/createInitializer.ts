@@ -6,7 +6,11 @@
  */
 
 import { connect, Channel, sendInitMessage, ConnectCallbackParams } from './channel'
-import { IncomingExperienceBuilderEvent, IncomingMessageParams } from '../types'
+import {
+  ComponentDefinitionWithComponentType,
+  IncomingExperienceBuilderEvent,
+  IncomingMessageParams,
+} from '../types'
 
 interface Deferred<T> {
   promise: Promise<T>
@@ -53,6 +57,7 @@ export function createInitializer(currentGlobal: typeof globalThis) {
     handlers: Partial<
       Record<IncomingExperienceBuilderEvent, (params: IncomingMessageParams) => void>
     >,
+    componentDefinitions: ComponentDefinitionWithComponentType[],
     onConnected: (channel: Channel) => void
   ) {
     // Before triggering the connection, we setup the deferred handler logic
@@ -74,7 +79,7 @@ export function createInitializer(currentGlobal: typeof globalThis) {
 
     // Send first message to main frame which will respond to establish the connection
     if (!connectDeferred.isFulfilled) {
-      sendInitMessage(currentGlobal)
+      sendInitMessage(currentGlobal, componentDefinitions)
     }
   }
 }

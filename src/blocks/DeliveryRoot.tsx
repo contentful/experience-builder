@@ -7,7 +7,8 @@ import { Composition } from '../types'
 
 export const DeliveryRoot = ({ slug }: CompositionRootProps) => {
   const [composition, setComposition] = useState<Composition | undefined>()
-  const { experience, client } = useCompositionContext()
+  const { experience, client, mode } = useCompositionContext()
+  const isPreview = mode === 'preview'
 
   useValidatedExperienceConfig(experience)
 
@@ -32,7 +33,11 @@ export const DeliveryRoot = ({ slug }: CompositionRootProps) => {
     return React.createElement(EmptyDeliveryContainer)
   }
 
-  console.log('Render Delivery Composition', composition)
   // TODO: implement preview page
-  return <div>Delivery {slug}</div>
+  console.debug('Render Delivery Composition', mode, composition)
+  if (isPreview) {
+    return <div>Preview {slug}</div>
+  } else {
+    return <div>Delivery {slug}</div>
+  }
 }

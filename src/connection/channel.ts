@@ -1,4 +1,5 @@
 import {
+  ComponentDefinitionWithComponentType,
   IncomingExperienceBuilderEvent,
   IncomingExperienceBuilderMessage,
   IncomingMessageParams,
@@ -8,6 +9,7 @@ import {
   OutgoingExperienceBuilderMessage,
   OutgoingMessageParams,
 } from '../types'
+import { sendMessage } from './sendMessage'
 import { Signal } from './signal'
 
 export type ConnectCallbackParams = [
@@ -55,13 +57,11 @@ export class Channel {
           event.origin.startsWith('http://localhost') &&
           `${event.data}`.includes('webpackHotUpdate')
         ) {
-          // TODO: Maybe rename this to disconnect
-          this.send(OutgoingExperienceBuilderEvent.CANVAS_RELOAD)
-          // Wait a moment to ensure that the message was sent
+          // Wait for a short amount of time to ensure that the new update is ready/ loading
           setTimeout(() => {
             // Received a hot reload message from webpack dev server -> reload the canvas
             window.location.reload()
-          }, 50)
+          }, 100)
           return
         }
         this.handleIncomingMessage(event.data)
@@ -96,7 +96,7 @@ export class Channel {
         params,
       },
     }
-    this._targetWindow.postMessage(message, '*')
+    sendMessage(message, this._targetWindow)
   }
 
   addHandler(
@@ -115,17 +115,23 @@ let sentMessageCount = 0
 
 // This is sent upfront before the Channel is initialized since there is no source ID
 // yet available
-export function sendInitMessage(currentGlobal: typeof globalThis) {
+export function sendInitMessage(
+  currentGlobal: typeof globalThis,
+  params: ComponentDefinitionWithComponentType[]
+) {
   const messageId = `${sentMessageCount++}`
   const targetWindow = currentGlobal.parent
+  const componentDefinitions = params.map((definition) => definition.componentDefinition)
   const message: OutgoingExperienceBuilderMessage = {
     messageId,
     eventType: OutgoingExperienceBuilderEvent.COMPOSITION_INIT,
     payload: {
-      params: {} as InitMessageParams,
+      params: {
+        componentDefinitions,
+      } as InitMessageParams,
     },
   }
   // The canvas is not connected yet, send an init event (without a source ID) and
   // wait for an init_success response from the main frame
-  targetWindow.postMessage(message, '*')
+  sendMessage(message, targetWindow)
 }

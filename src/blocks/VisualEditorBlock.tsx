@@ -9,7 +9,7 @@ import {
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
-import { useComponents } from '../hooks'
+import { useComponentDefinition } from '../hooks'
 import { Link } from 'contentful-management'
 import { CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
@@ -34,13 +34,8 @@ export const VisualEditorBlock = ({
   parentNode,
 }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
-  const { getComponent } = useComponents()
   const { onComponentDropped, onComponentRemoved } = useInteraction()
-
-  const definedComponent = useMemo(
-    () => getComponent(node.data.blockId as string),
-    [node, getComponent]
-  )
+  const definedComponent = useComponentDefinition(node.data.blockId)
 
   const props = useMemo(() => {
     if (!definedComponent) {
@@ -162,12 +157,13 @@ export const VisualEditorBlock = ({
         e.stopPropagation()
         e.preventDefault()
       },
-      onComponentRemoved: () => {
-        onComponentRemoved(node)
-      },
       className: 'visualEditorBlockHover',
-      isDragging,
-      isSelected: !!isSelected,
+      // No native properties -> causes warnings in the console
+      // onComponentRemoved: () => {
+      //   onComponentRemoved(node)
+      // },
+      // isDragging,
+      // isSelected: !!isSelected,
       ...props,
     },
     children

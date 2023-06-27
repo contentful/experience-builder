@@ -1,14 +1,13 @@
 import { Link } from 'contentful-management'
 import { CONTENTFUL_SECTION_ID } from './constants'
+import { ElementType } from 'react'
 
 export enum OutgoingExperienceBuilderEvent {
-  REGISTERED_COMPONENTS = 'registeredComponents',
   MOUSE_MOVE = 'mouseMove',
   COMPONENT_SELECTED = 'componentSelected',
   COMPONENT_DROPPED = 'componentDropped',
   COMPONENT_REMOVED = 'componentRemoved',
   COMPOSITION_INIT = 'compositionInit',
-  CANVAS_RELOAD = 'canvasReload',
 }
 
 export enum IncomingExperienceBuilderEvent {
@@ -36,6 +35,7 @@ export type IncomingExperienceBuilderMessage = {
 }
 
 export type InitMessageParams = {
+  componentDefinitions: ComponentDefinition[]
   includeQueue?: boolean
 }
 
@@ -129,6 +129,11 @@ export type ComponentDefinition<
   children?: boolean
 }
 
+export type ComponentDefinitionWithComponentType = {
+  component: ElementType
+  componentDefinition: ComponentDefinition
+}
+
 export type Binding = {
   spaceId: string
   environmentId: string
@@ -190,10 +195,11 @@ export type CompositionTree = {
 export type CompositionMode = 'editor' | 'preview' | 'delivery'
 
 export type ExperienceConfig = {
-  token?: string
+  accessToken?: string
   spaceId?: string
   environmentId?: string
   locale?: string
+  contentfulDomain?: string
 }
 
 export type Experience = {
@@ -202,6 +208,7 @@ export type Experience = {
   config: ExperienceConfig
   isDragging: boolean
   selectedNodeId: string
+  componentDefinitions: ComponentDefinitionWithComponentType[]
   mode: CompositionMode | undefined
 }
 

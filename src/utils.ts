@@ -1,4 +1,10 @@
-import { LocalizedDataSource, CompositionTree, CompositionComponentNode, StyleProps } from './types'
+import {
+  LocalizedDataSource,
+  CompositionTree,
+  CompositionComponentNode,
+  StyleProps,
+  ComponentDefinition,
+} from './types'
 
 export const getDataSourceFromTree = (tree: CompositionTree): LocalizedDataSource => {
   const dataSource: LocalizedDataSource = {}
@@ -113,4 +119,22 @@ export const getInsertionData = ({
       index: isMouseInUpperHalf ? PREPEND_INSIDE : APPEND_INSIDE,
     }
   }
+}
+
+const cloneObject = <T>(targetObject: T): T => {
+  if (typeof structuredClone !== 'undefined') {
+    return structuredClone(targetObject)
+  }
+
+  return JSON.parse(JSON.stringify(targetObject))
+}
+
+export const applyFallbacks = (componentDefinition: ComponentDefinition) => {
+  const clone = cloneObject(componentDefinition)
+  for (const variable of Object.values(clone.variables)) {
+    if (!variable.group) {
+      variable.group = 'content'
+    }
+  }
+  return clone
 }
