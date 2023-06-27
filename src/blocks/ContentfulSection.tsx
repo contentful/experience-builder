@@ -2,8 +2,8 @@ import React, { MouseEventHandler } from 'react'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
-import { CompositionComponentNode, StyleProps } from '../types'
-import { transformBorderStyle, transformFill } from './transformers'
+import { CompositionComponentNode, CompositionMode, StyleProps } from '../types'
+import { transformAlignment, transformBorderStyle, transformFill } from './transformers'
 import { getInsertionData } from '../utils'
 
 import './ContentfulSection.css'
@@ -21,6 +21,7 @@ interface ContentfulSectionProps extends StyleProps {
   isSelected: boolean
   node: CompositionComponentNode
   parentNode: CompositionComponentNode
+  mode?: CompositionMode
 }
 
 export const ContentfulSection = ({
@@ -45,6 +46,7 @@ export const ContentfulSection = ({
   onComponentRemoved,
   handleComponentDrop,
   onMouseDown,
+  mode = 'editor',
 }: ContentfulSectionProps) => {
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
@@ -55,18 +57,6 @@ export const ContentfulSection = ({
   const sectionIndicatorTopInteraction = useInteraction()
   const sectionIndicatorBottomInteraction = useInteraction()
 
-  // when direction is 'column' the axis are reversed
-  const alignment =
-    flexDirection === 'row'
-      ? {
-          alignItems: `${horizontalAlignment}`,
-          justifyContent: `${verticalAlignment}`,
-        }
-      : {
-          alignItems: `${verticalAlignment}`,
-          justifyContent: `${horizontalAlignment}`,
-        }
-
   const styleOverrides = {
     margin,
     padding,
@@ -76,9 +66,20 @@ export const ContentfulSection = ({
     maxWidth,
     ...transformBorderStyle(border),
     gap,
-    ...alignment,
+    ...transformAlignment(horizontalAlignment, verticalAlignment, flexDirection),
     flexDirection,
     flexWrap,
+  }
+
+  if (['preview', 'delivery'].includes(mode)) {
+    return (
+      <Flex
+        cssStyles={styleOverrides}
+        id="ContentfulSection"
+        className={classNames('defaultStyles', className)}>
+        {children}
+      </Flex>
+    )
   }
 
   const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
