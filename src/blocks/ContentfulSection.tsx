@@ -1,5 +1,4 @@
 import React, { MouseEventHandler } from 'react'
-import { Flex } from '../core'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
@@ -8,6 +7,9 @@ import { transformBorderStyle, transformFill } from './transformers'
 import { getInsertionData } from '../utils'
 
 import './ContentfulSection.css'
+import { CONTENTFUL_SECTION_ID } from '../constants'
+import classNames from 'classnames'
+import { Flex } from '../core'
 
 interface ContentfulSectionProps extends StyleProps {
   onComponentRemoved: () => void
@@ -47,6 +49,8 @@ export const ContentfulSection = ({
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
 
+  const isTopLevel = node.data.blockId === CONTENTFUL_SECTION_ID
+
   const sectionInteraction = useInteraction()
   const sectionIndicatorTopInteraction = useInteraction()
   const sectionIndicatorBottomInteraction = useInteraction()
@@ -72,6 +76,9 @@ export const ContentfulSection = ({
     maxWidth,
     ...transformBorderStyle(border),
     gap,
+    ...alignment,
+    flexDirection,
+    flexWrap,
   }
 
   const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
@@ -104,12 +111,14 @@ export const ContentfulSection = ({
 
   // if isDragging something and over the section's top border, or over the top indicator (which already appeared by that time)
   const showTopSectionIndicator =
+    isTopLevel &&
     isDragging &&
     ((sectionInteraction.isMouseOver && mouseAtTopBorder) ||
       sectionIndicatorTopInteraction.isMouseOver)
 
   // if isDragging something and over the section's bottom border, or over the bottom indicator (which already appeared by that time)
   const showBottomSectionIndicator =
+    isTopLevel &&
     isDragging &&
     ((sectionInteraction.isMouseOver && mouseAtBottomBorder) ||
       sectionIndicatorBottomInteraction.isMouseOver)
@@ -140,27 +149,20 @@ export const ContentfulSection = ({
         isShown={showTopSectionIndicator}
         key="new_section_indicator_top"
       />
-      <div ref={componentRef} id="ContentfulSection">
-        <div className={isSelected ? 'containerBorder' : ''}>
-          <Flex
-            cssStyles={{
-              ...styleOverrides,
-              ...alignment,
-            }}
-            flexDirection={flexDirection}
-            flexWrap={flexWrap}
-            onMouseEnter={sectionInteraction.onMouseEnter}
-            onMouseUp={onMouseUp}
-            onMouseLeave={sectionInteraction.onMouseLeave}
-            className={`defaultStyles ${className}`}
-            onMouseDown={onMouseDown}>
-            {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
-            {children}
-            {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}
-            {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
-          </Flex>
-        </div>
-      </div>
+      <Flex
+        ref={componentRef}
+        cssStyles={styleOverrides}
+        id="ContentfulSection"
+        onMouseEnter={sectionInteraction.onMouseEnter}
+        onMouseUp={onMouseUp}
+        onMouseLeave={sectionInteraction.onMouseLeave}
+        className={classNames('defaultStyles', className, { containerBorder: isSelected })}
+        onMouseDown={onMouseDown}>
+        {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
+        {children}
+        {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}
+        {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
+      </Flex>
       <ContentfulSectionIndicator
         onMouseEnter={sectionIndicatorBottomInteraction.onMouseEnter}
         onMouseLeave={sectionIndicatorBottomInteraction.onMouseLeave}

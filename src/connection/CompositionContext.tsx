@@ -21,7 +21,7 @@ import { initChannel } from './createInitializer'
 import { applyFallbacks, getDataSourceFromTree, isInsideIframe } from '../utils'
 import { Channel } from './channel'
 import throttle from 'lodash.throttle'
-import { useContentfulSection } from '../hooks/useContentfulSection'
+import { useContentfulSections } from '../hooks/useContentfulSections'
 import contentful, { ContentfulClientApi } from 'contentful'
 
 export type CompositionContextProps = {
@@ -84,8 +84,8 @@ export const CompositionContextProvider = ({
   const shouldInitializeChannel = !shouldInitializeClient
 
   // Extend the list of registered component definitions with the native contentful section
-  const contentfulSectionDefinition = useContentfulSection()
-  const componentDefinitions = [...customComponentDefinitions, contentfulSectionDefinition]
+  const contentfulSectionDefinitions = useContentfulSections()
+  const componentDefinitions = [...customComponentDefinitions, ...contentfulSectionDefinitions]
 
   // Initialize the client for fetching the composition from CDA/ CPA
   useEffect(() => {

@@ -1,5 +1,10 @@
 import { Link } from 'contentful-management'
-import { CONTENTFUL_SECTION_ID } from './constants'
+import {
+  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_CONTAINER_NAME,
+  CONTENTFUL_SECTION_ID,
+  CONTENTFUL_SECTION_NAME,
+} from './constants'
 import { ElementType } from 'react'
 
 export enum OutgoingExperienceBuilderEvent {
@@ -244,8 +249,8 @@ export type SECTION_STYLE_ATTRIBUTE_KEY =
   | 'gap'
 
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
-  id: typeof CONTENTFUL_SECTION_ID
-  name: 'Contentful Section'
+  id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID
+  name: typeof CONTENTFUL_SECTION_NAME | typeof CONTENTFUL_CONTAINER_NAME
   variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>>
 }
 

@@ -11,7 +11,7 @@ import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
 import { useComponentDefinition } from '../hooks'
 import { Link } from 'contentful-management'
-import { CONTENTFUL_SECTION_ID } from '../constants'
+import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
 import './VisualEditorBlock.css'
@@ -21,7 +21,7 @@ type VisualEditorBlockProps = {
   locale: string
   dataSource: LocalizedDataSource
   isDragging: boolean
-  isSelected?: boolean
+  selectedNodeId?: string
   parentNode: CompositionComponentNode
 }
 
@@ -30,8 +30,8 @@ export const VisualEditorBlock = ({
   locale,
   dataSource,
   isDragging,
-  isSelected,
   parentNode,
+  selectedNodeId,
 }: VisualEditorBlockProps) => {
   const { sendMessage } = useCommunication()
   const { onComponentDropped, onComponentRemoved } = useInteraction()
@@ -98,21 +98,24 @@ export const VisualEditorBlock = ({
 
   const { component, componentDefinition } = definedComponent
 
-  const children = node.children.map((childNode: any) => {
-    return (
-      <VisualEditorBlock
-        node={childNode}
-        parentNode={parentNode}
-        key={childNode.data.id}
-        locale={locale}
-        dataSource={dataSource}
-        isDragging={isDragging}
-      />
-    )
-  })
+  const children =
+    definedComponent.componentDefinition.children &&
+    node.children.map((childNode: any) => {
+      return (
+        <VisualEditorBlock
+          node={childNode}
+          parentNode={parentNode}
+          key={childNode.data.id}
+          locale={locale}
+          dataSource={dataSource}
+          isDragging={isDragging}
+          selectedNodeId={selectedNodeId}
+        />
+      )
+    })
 
   // contentful section
-  if (componentDefinition.id === CONTENTFUL_SECTION_ID) {
+  if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
     return (
       <ContentfulSection
         key={node.data.id}
@@ -130,7 +133,7 @@ export const VisualEditorBlock = ({
         }}
         className="visualEditorBlockHover"
         isDragging={isDragging}
-        isSelected={!!isSelected}
+        isSelected={selectedNodeId === node.data.id}
         parentNode={parentNode}
         {...(props as StyleProps)}>
         {children}
