@@ -1,6 +1,9 @@
 import { Experience } from '../types'
 
-export const useCheckForExperienceConfig = (experience: Experience) => {
+export const useValidatedExperienceConfig = (experience?: Experience | null) => {
+  if (!experience) {
+    return
+  }
   if (!experience.config.token) {
     throw new Error(
       'When outside the editor mode you must define either a Preview or Delivery Token in the experience initialization'

@@ -1,23 +1,20 @@
 import React from 'react'
-import { Experience } from '../types'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyEditorContainer } from './EmptyEdtorContainer'
-import { useContentfulSection } from '../hooks/useContentfulSection'
-import { EmptyDeliveryContainer } from './EmptyDeliveryContainer'
 
 import './VisualEditorRoot.css'
+import { useCompositionContext } from '../connection/CompositionContext'
 
-type VisualEditorRootProps = {
-  experience: Experience
-  locale: string
-}
-
-export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
+export const VisualEditorRoot = () => {
+  const { experience, locale } = useCompositionContext()
   const { onComponentDropped } = useInteraction()
-  useContentfulSection()
 
-  const { tree, dataSource, isDragging, selectedNodeId, mode } = experience
+  if (!experience) {
+    return React.createElement(EmptyEditorContainer, {}, [])
+  }
+
+  const { tree, dataSource, isDragging, selectedNodeId } = experience
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
@@ -38,7 +35,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
         <VisualEditorBlock
           key={node.data.id}
           node={node}
-          locale={locale}
+          locale={locale ?? 'en-US'}
           dataSource={dataSource}
           isDragging={isDragging}
           isSelected={selectedNodeId === node.data.id}

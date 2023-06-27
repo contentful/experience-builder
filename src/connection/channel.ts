@@ -1,131 +1,131 @@
+import {
+  IncomingExperienceBuilderEvent,
+  IncomingExperienceBuilderMessage,
+  IncomingMessageParams,
+  InitMessageParams,
+  InitSuccessMessageParams,
+  OutgoingExperienceBuilderEvent,
+  OutgoingExperienceBuilderMessage,
+  OutgoingMessageParams,
+} from '../types'
 import { Signal } from './signal'
+
+export type ConnectCallbackParams = [
+  channel: Channel,
+  params: InitSuccessMessageParams,
+  messageQueue?: IncomingExperienceBuilderMessage[]
+]
 
 export function connect(
   currentGlobal: typeof globalThis,
-  onConnect: (channel: Channel, message: any, messageQueue: unknown[]) => void
+  onConnect: (...args: ConnectCallbackParams) => void
 ) {
-  waitForConnect(currentGlobal, (params: any, messageQueue: unknown[]) => {
-    const channel = new Channel(params.id, currentGlobal)
-    onConnect(channel, params, messageQueue)
-  })
-}
-
-function waitForConnect(currentGlobal: typeof globalThis, onConnect: any) {
   currentGlobal.addEventListener('message', listener)
-
-  function listener(event: MessageEvent) {
-    const message = JSON.parse(event.data).payload
-
-    if (message.method === 'connect') {
+  function listener(event: MessageEvent<IncomingExperienceBuilderMessage>) {
+    const message = event.data
+    if (message?.eventType === IncomingExperienceBuilderEvent.COMPOSITION_INIT_SUCCESS) {
+      const params = message.payload.params as InitSuccessMessageParams
+      const channel = new Channel(params.sourceId, currentGlobal)
       currentGlobal.removeEventListener('message', listener)
-      onConnect(...message.params)
+      onConnect(channel, params, message.payload.messageQueue)
     }
   }
 }
 
+/**
+ * This class is responsible for sending and receiving messages via the
+ * `postMessage` API. It will add a unique message ID and a source ID to each message.
+ */
 export class Channel {
-  private _messageHandlers: { [method: string]: Signal<any> } = {}
-  private _responseHandlers: {
-    [method: string]: {
-      resolve: (value: any) => void
-      reject: (reason?: any) => void
-    }
-  } = {}
-
-  private _send: ReturnType<typeof createSender>
+  private _sourceId: string
+  private _targetWindow: Window
+  private _messageHandlers: Partial<
+    Record<IncomingExperienceBuilderEvent, Signal<[IncomingMessageParams]>>
+  > = {}
 
   constructor(sourceId: string, currentGlobal: typeof globalThis) {
-    this._send = createSender(sourceId, currentGlobal.parent)
+    this._sourceId = sourceId
+    this._targetWindow = currentGlobal.parent
 
-    currentGlobal.addEventListener('message', (event: MessageEvent) => {
-      this._handleMessage(event.data)
-    })
+    currentGlobal.addEventListener(
+      'message',
+      (event: MessageEvent<IncomingExperienceBuilderMessage>) => {
+        // When in editor mode and we receive a hot reload message, reload the canvas and the page
+        if (
+          event.origin.startsWith('http://localhost') &&
+          `${event.data}`.includes('webpackHotUpdate')
+        ) {
+          // TODO: Maybe rename this to disconnect
+          this.send(OutgoingExperienceBuilderEvent.CANVAS_RELOAD)
+          // Wait a moment to ensure that the message was sent
+          setTimeout(() => {
+            // Received a hot reload message from webpack dev server -> reload the canvas
+            window.location.reload()
+          }, 50)
+          return
+        }
+        this.handleIncomingMessage(event.data)
+      }
+    )
   }
 
-  // call method with name `method` exposed by contentful web app `window`
-  call<T = unknown>(method: string, ...params: any[]): Promise<T> {
-    const messageId = this._send(method, params)
-    return new Promise((resolve, reject) => {
-      this._responseHandlers[messageId] = { resolve, reject }
-    })
+  handleIncomingMessage = (message: IncomingExperienceBuilderMessage | undefined) => {
+    if (message?.eventType) {
+      const handlers = this._messageHandlers[message.eventType]
+      if (handlers) {
+        console.debug(
+          `[exp-builder.sdk::onMessage] Received message [${message.eventType}]`,
+          message
+        )
+        handlers.dispatch(message.payload.params)
+      } else {
+        console.error(
+          `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${message.eventType}]`
+        )
+      }
+    }
   }
 
-  send(method: string, ...params: any[]) {
-    this._send(method, params)
+  send(eventType: OutgoingExperienceBuilderEvent, params: OutgoingMessageParams = undefined) {
+    const messageId = `${sentMessageCount++}`
+    const message: OutgoingExperienceBuilderMessage = {
+      sourceId: this._sourceId,
+      messageId,
+      eventType,
+      payload: {
+        params,
+      },
+    }
+    this._targetWindow.postMessage(message, '*')
   }
 
-  addHandler<T extends unknown[]>(method: string, handler: (...args: T) => void) {
+  addHandler(
+    method: IncomingExperienceBuilderEvent,
+    handler: (params: IncomingMessageParams) => void
+  ) {
     if (!(method in this._messageHandlers)) {
       this._messageHandlers[method] = new Signal()
     }
-    return this._messageHandlers[method].attach(handler)
-  }
-
-  private _handleMessage(rawMessage: any) {
-    let message = rawMessage
-    if (typeof message === 'string') {
-      message = JSON.parse(message)
-    }
-
-    if (message.method) {
-      const { method, params } = message
-      const handlers = this._messageHandlers[method]
-      if (handlers) {
-        handlers.dispatch(...params)
-      }
-    }
+    return (this._messageHandlers[method] as Signal<[IncomingMessageParams]>).attach(handler)
   }
 }
 
-const messageCounter = createMessageCounter()
-function createMessageCounter() {
-  let messageCount = 0
-  return {
-    getMessageId: () => messageCount++,
-  }
-}
+// Store the message count globally, so we have one singleton to create unique message IDs
+let sentMessageCount = 0
 
-function createSender(sourceId: string, targetWindow: Window) {
-  return function send(method: string, params: any) {
-    const messageId = messageCounter.getMessageId()
-
-    try {
-      targetWindow.postMessage(
-        {
-          source: sourceId,
-          id: messageId,
-          method,
-          params,
-        },
-        '*'
-      )
-    } catch (e) {
-      if (e instanceof DOMException && e.name === 'DataCloneError' && method === 'openDialog') {
-        console.error(
-          'Error: openCurrent[App] parameters could not be parsed. You likely tried to pass functions or DOM elements as a parameter. Tip: Use the App SDK directly within the dialog location.\n\nLearn more about the dialog location: https://ctfl.io/app-sdk-dialog'
-        )
-      }
-
-      throw e
-    }
-
-    return messageId
-  }
-}
-
-export function sendInitMessage(currentGlobal: typeof globalThis): number {
-  const messageId = messageCounter.getMessageId()
+// This is sent upfront before the Channel is initialized since there is no source ID
+// yet available
+export function sendInitMessage(currentGlobal: typeof globalThis) {
+  const messageId = `${sentMessageCount++}`
   const targetWindow = currentGlobal.parent
-
-  // The app is not connected yet so we can't provide a `source`
-  targetWindow.postMessage(
-    {
-      id: messageId,
-      method: 'init',
-      params: [],
+  const message: OutgoingExperienceBuilderMessage = {
+    messageId,
+    eventType: OutgoingExperienceBuilderEvent.COMPOSITION_INIT,
+    payload: {
+      params: {} as InitMessageParams,
     },
-    '*'
-  )
-
-  return messageId
+  }
+  // The canvas is not connected yet, send an init event (without a source ID) and
+  // wait for an init_success response from the main frame
+  targetWindow.postMessage(message, '*')
 }

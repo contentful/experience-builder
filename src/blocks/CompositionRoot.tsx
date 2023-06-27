@@ -1,24 +1,24 @@
 import React from 'react'
-import { Experience } from '../types'
 import { VisualEditorRoot } from './VisualEditorRoot'
 import { PreviewRoot } from './PreviewRoot'
 import { DeliveryRoot } from './DeliveryRoot'
+import { useCompositionContext } from '../connection/CompositionContext'
 
-type CompositionRootProps = {
-  experience: Experience
-  locale: string
+export type CompositionRootProps = {
+  slug?: string
 }
 
-const MODE_ROOT_MAP = {
-  editor: VisualEditorRoot,
-  preview: PreviewRoot,
-  delivery: DeliveryRoot,
-}
-
-export const CompositionRoot = (props: CompositionRootProps) => {
-  const { mode } = props.experience
+export const CompositionRoot = ({ slug }: CompositionRootProps) => {
+  const { mode } = useCompositionContext()
   if (!mode) return null
 
-  const Root = MODE_ROOT_MAP[mode]
-  return <Root {...props} />
+  if (mode === 'editor') {
+    return <VisualEditorRoot />
+  } else if (mode === 'delivery') {
+    return <DeliveryRoot slug={slug} />
+  } else if (mode === 'preview') {
+    return <PreviewRoot slug={slug} />
+  } else {
+    return <div>Unsupported mode {mode}</div>
+  }
 }

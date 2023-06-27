@@ -1,5 +1,9 @@
 type Listener<T extends unknown[]> = (...args: T) => void
 
+/**
+ * A signal is an event emitter that supports registering a listener and
+ * dispatching an event to each registered listener.
+ */
 export class Signal<T extends unknown[]> {
   private _id = 0
   private _listeners: { [key: string]: Listener<T> } = {}
@@ -18,40 +22,5 @@ export class Signal<T extends unknown[]> {
     this._listeners[id] = listener
     // return function that'll detach the listener
     return () => delete this._listeners[id]
-  }
-}
-
-export class MemoizedSignal<T extends unknown[]> extends Signal<T> {
-  private _memoizedArgs: T
-
-  constructor(...memoizedArgs: T) {
-    super()
-
-    if (!memoizedArgs.length) {
-      throw new Error('Initial value to be memoized expected')
-    }
-
-    this._memoizedArgs = memoizedArgs
-  }
-
-  dispatch(...args: T) {
-    this._memoizedArgs = args
-    super.dispatch(...args)
-  }
-
-  attach(listener: Listener<T>) {
-    /*
-     * attaching first so that we throw a sensible
-     * error if listener is not a function without
-     * duplication of is function check
-     */
-    const detachListener = super.attach(listener)
-
-    listener(...this._memoizedArgs)
-    return detachListener
-  }
-
-  getMemoizedArgs(): T {
-    return this._memoizedArgs
   }
 }

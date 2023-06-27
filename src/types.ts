@@ -7,15 +7,47 @@ export enum OutgoingExperienceBuilderEvent {
   COMPONENT_SELECTED = 'componentSelected',
   COMPONENT_DROPPED = 'componentDropped',
   COMPONENT_REMOVED = 'componentRemoved',
-  INIT = 'init',
+  COMPOSITION_INIT = 'compositionInit',
   CANVAS_RELOAD = 'canvasReload',
 }
 
 export enum IncomingExperienceBuilderEvent {
-  INIT_SUCCESS = 'initSuccess',
-  COMPOSITION_UPDATED = 'componentTreeUpdated',
+  COMPOSITION_INIT_SUCCESS = 'compositionInitSuccess',
+  COMPONENT_TREE_UPDATED = 'componentTreeUpdated',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
+}
+
+export type InitSuccessMessageParams = {
+  sourceId: string // randomly created identifier for this channel
+  locale: string
+  tree: CompositionTree
+}
+
+export type IncomingMessageParams = InitSuccessMessageParams | Record<string, unknown> | undefined
+
+export type IncomingExperienceBuilderMessage = {
+  source: string
+  eventType: IncomingExperienceBuilderEvent
+  payload: {
+    params: IncomingMessageParams
+    messageQueue?: IncomingExperienceBuilderMessage[]
+  }
+}
+
+export type InitMessageParams = {
+  includeQueue?: boolean
+}
+
+export type OutgoingMessageParams = InitMessageParams | Record<string, unknown> | undefined
+
+export type OutgoingExperienceBuilderMessage = {
+  sourceId?: string
+  messageId: string
+  eventType: OutgoingExperienceBuilderEvent
+  payload: {
+    params: OutgoingMessageParams
+  }
 }
 
 export type ComponentDefinitionVariableType =
@@ -208,4 +240,18 @@ export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   id: typeof CONTENTFUL_SECTION_ID
   name: 'Contentful Section'
   variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>>
+}
+
+// CDA/CPA types
+export type CompositionNode = {
+  definitionId: string
+  children: Array<CompositionNode>
+  variables: Record<string, CompositionComponentPropValue>
+}
+
+export type CompositionDataSource = Record<string, DataSourceEntryValueType>
+
+export type Composition = {
+  children: Array<CompositionNode>
+  dataSource: CompositionDataSource
 }

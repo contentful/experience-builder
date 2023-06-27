@@ -1,21 +1,17 @@
 import React from 'react'
-import { Experience } from '../types'
 import { EmptyDeliveryContainer } from './EmptyDeliveryContainer'
-import { useCheckForExperienceConfig } from '../hooks/useCheckForExperienceConfig'
+import { useValidatedExperienceConfig } from '../hooks/useValidatedExperienceConfig'
+import { useCompositionContext } from '../connection/CompositionContext'
+import { CompositionRootProps } from './CompositionRoot'
 
-type PreviewRootProps = {
-  experience: Experience
-  locale: string
-}
+export const PreviewRoot = ({ slug }: CompositionRootProps) => {
+  const { experience } = useCompositionContext()
+  useValidatedExperienceConfig(experience)
 
-export const PreviewRoot = ({ experience }: PreviewRootProps) => {
-  const { tree } = experience
-  useCheckForExperienceConfig(experience)
-
-  if (!tree?.root.children.length) {
+  if (!experience || !experience.tree?.root.children.length) {
     return React.createElement(EmptyDeliveryContainer)
   }
 
-  // Todo implement preview page
-  return <div>Preview</div>
+  // TODO: implement preview page
+  return <div>Preview {slug}</div>
 }
