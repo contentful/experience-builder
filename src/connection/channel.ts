@@ -22,16 +22,16 @@ export function connect(
   currentGlobal: typeof globalThis,
   onConnect: (...args: ConnectCallbackParams) => void
 ) {
-  currentGlobal.addEventListener('message', listener)
-  function listener(event: MessageEvent<IncomingExperienceBuilderMessage>) {
+  function handleInitSuccessMessage(event: MessageEvent<IncomingExperienceBuilderMessage>) {
     const message = event.data
     if (message?.eventType === IncomingExperienceBuilderEvent.COMPOSITION_INIT_SUCCESS) {
       const params = message.payload.params as InitSuccessMessageParams
       const channel = new Channel(params.sourceId, currentGlobal)
-      currentGlobal.removeEventListener('message', listener)
+      currentGlobal.removeEventListener('message', handleInitSuccessMessage)
       onConnect(channel, params, message.payload.messageQueue)
     }
   }
+  currentGlobal.addEventListener('message', handleInitSuccessMessage)
 }
 
 /**
@@ -69,7 +69,7 @@ export class Channel {
     )
   }
 
-  handleIncomingMessage = (message: IncomingExperienceBuilderMessage | undefined) => {
+  handleIncomingMessage(message: IncomingExperienceBuilderMessage | undefined) {
     if (message?.eventType) {
       const handlers = this._messageHandlers[message.eventType]
       if (handlers) {

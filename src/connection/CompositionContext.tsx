@@ -42,6 +42,8 @@ export type CompositionContextProps = {
   /** The domain to be used for the API client (e.g. flinkly.com)
    */
   contentfulDomain?: string
+  /** The definitions for rendering custom defined component
+   */
   componentDefinitions: ComponentDefinitionWithComponentType[]
 }
 

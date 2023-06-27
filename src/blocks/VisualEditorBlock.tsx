@@ -158,12 +158,6 @@ export const VisualEditorBlock = ({
         e.preventDefault()
       },
       className: 'visualEditorBlockHover',
-      // No native properties -> causes warnings in the console
-      // onComponentRemoved: () => {
-      //   onComponentRemoved(node)
-      // },
-      // isDragging,
-      // isSelected: !!isSelected,
       ...props,
     },
     children
