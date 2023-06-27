@@ -104,7 +104,7 @@ describe('Visual Editor Block', () => {
     expect(mock.onComponentDropped).toHaveBeenCalled()
   })
 
-  it.only('should not call mouse up event if parent does not allow children', async () => {
+  it('should not call mouse up event if parent does not allow children', async () => {
     jest.spyOn(useComponents, 'useComponents').mockImplementation(() => {
       return {
         getComponent: jest.fn().mockReturnValue({
