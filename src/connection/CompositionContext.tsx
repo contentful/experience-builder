@@ -142,7 +142,6 @@ export const CompositionContextProvider = ({
           setIsDragging(isDragging)
         },
       }
-      console.log('INIT', componentDefinitions, contentfulSectionDefinition)
       initChannel(handlers, componentDefinitions, (connectedChannel) => {
         setMode('editor')
         setInitialized(true)
