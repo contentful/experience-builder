@@ -1,20 +1,51 @@
 import React from 'react'
+import contentful from 'contentful'
 import { Experience } from '../types'
 import { useCheckForExperienceConfig } from '../hooks/useCheckForExperienceConfig'
+import { useFetchComposition } from '../hooks/useFetchComposition'
+import { CompositionBlock } from './CompositionBlock'
 
 type PreviewRootProps = {
   experience: Experience
   locale: string
+  slug: string
 }
 
-export const PreviewRoot = ({ experience }: PreviewRootProps) => {
-  const { tree } = experience
-  useCheckForExperienceConfig(experience)
+export const PreviewRoot = ({ experience, slug }: PreviewRootProps) => {
+  console.log('In preview!')
+  const { spaceId, environmentId, accessToken, locale } = useCheckForExperienceConfig(experience)
+  if (!slug) {
+    throw new Error('Preview mode requires a composition slug to be provided')
+  }
 
-  if (!tree?.root.children.length) {
+  const client = contentful.createClient({
+    space: spaceId as string,
+    environment: environmentId as string,
+    host: 'preview.flinkly.com',
+    accessToken: accessToken as string,
+  })
+
+  const { composition, children, dataSource, entityStore } = useFetchComposition({
+    client,
+    slug: slug,
+    locale: locale as string,
+  })
+
+  if (!composition) {
     return null
   }
 
-  // Todo implement preview page
-  return <div>Preview</div>
+  return (
+    <>
+      {children.map((childNode, index) => (
+        <CompositionBlock
+          key={index}
+          node={childNode}
+          locale={locale as string}
+          entityStore={entityStore}
+          dataSource={dataSource}
+        />
+      ))}
+    </>
+  )
 }

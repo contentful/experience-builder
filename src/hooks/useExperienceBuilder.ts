@@ -50,8 +50,8 @@ export const useExperienceBuilder = ({
       setMode('editor')
     } else {
       const urlParams = new URLSearchParams(window.location.search)
-      const myParam = urlParams.get('isPreview')
-      setMode(myParam ? 'preview' : 'delivery')
+      const isPreview = urlParams.get('isPreview')
+      setMode(isPreview ? 'preview' : 'delivery')
     }
   }, [mode])
 
