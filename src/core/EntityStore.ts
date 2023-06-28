@@ -18,12 +18,13 @@ export class EntityStore {
     path: string[]
   ): string | undefined {
     const entity = this.entitiesById[entityLink.sys.id]
+    console.log(entityLink, path, entity)
 
     if (!entity) {
       console.warn(`Composition references unresolved entity: ${entityLink}`)
       return
     }
 
-    return get(entity, path.slice(0, -1))
+    return get(entity, path)
   }
 }

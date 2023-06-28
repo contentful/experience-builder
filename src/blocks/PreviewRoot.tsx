@@ -1,6 +1,5 @@
 import React from 'react'
 import { Experience } from '../types'
-import { EmptyDeliveryContainer } from './EmptyDeliveryContainer'
 import { useCheckForExperienceConfig } from '../hooks/useCheckForExperienceConfig'
 
 type PreviewRootProps = {
@@ -13,7 +12,7 @@ export const PreviewRoot = ({ experience }: PreviewRootProps) => {
   useCheckForExperienceConfig(experience)
 
   if (!tree?.root.children.length) {
-    return React.createElement(EmptyDeliveryContainer)
+    return null
   }
 
   // Todo implement preview page

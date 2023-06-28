@@ -24,11 +24,6 @@ export const useCheckForExperienceConfig = (experience: Experience) => {
       'When outside the editor mode you must define a EnvironmentId in the experience initialization'
     )
   }
-  if (!experience.config.slug) {
-    throw new Error(
-      'When outside the editor mode you must define a slug in the experience initialization'
-    )
-  }
 
   return experience.config
 }

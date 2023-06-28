@@ -1,12 +1,14 @@
-import { CompositionDataSource, CompositionNode } from '../types'
+import { CompositionDataSource, CompositionNode, StyleProps } from '../types'
 
 import react, { useMemo } from 'react'
 import { useComponents } from '../hooks'
 import React from 'react'
 import { UnresolvedLink } from 'contentful'
 import { EntityStore } from '../core/EntityStore'
+import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { ContentfulSection } from './ContentfulSection'
 
-type CompositionPageProps = {
+type CompositionBlockProps = {
   node: CompositionNode
   locale: string
   dataSource: CompositionDataSource
@@ -18,7 +20,7 @@ export const CompositionBlock = ({
   locale,
   entityStore,
   dataSource,
-}: CompositionPageProps) => {
+}: CompositionBlockProps) => {
   const { getComponent } = useComponents()
 
   const definedComponent = useMemo(
@@ -73,6 +75,11 @@ export const CompositionBlock = ({
       />
     )
   })
+
+  if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
+    // @ts-expect-error
+    return <ContentfulSection editorMode={false} {...(props as unknown as StyleProps)}>{children}</ContentfulSection>
+  }
 
   return React.createElement(component, props, children)
 }

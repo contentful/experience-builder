@@ -11,7 +11,7 @@ import { CONTENTFUL_SECTION_ID } from '../constants'
 import classNames from 'classnames'
 import { Flex } from '../core'
 
-interface ContentfulSectionProps extends StyleProps {
+type ContentfulSectionProps<EditorMode = boolean> = EditorMode extends true ? {
   onComponentRemoved: () => void
   handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
   onMouseDown: MouseEventHandler<HTMLDivElement>
@@ -21,7 +21,18 @@ interface ContentfulSectionProps extends StyleProps {
   isSelected: boolean
   node: CompositionComponentNode
   parentNode: CompositionComponentNode
-  mode?: CompositionMode
+  editorMode?: EditorMode
+} : {
+  onComponentRemoved: () => void
+  handleComponentDrop: never
+  onMouseDown: never
+  isDragging: never
+  isSelected: never
+  node: never
+  parentNode: never
+  className?: string
+  children: React.ReactNode
+  editorMode?: EditorMode
 }
 
 export const ContentfulSection = ({
@@ -46,12 +57,11 @@ export const ContentfulSection = ({
   onComponentRemoved,
   handleComponentDrop,
   onMouseDown,
-  mode = 'editor',
-}: ContentfulSectionProps) => {
+  editorMode = true
+}: StyleProps & ContentfulSectionProps) => {
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
 
-  const isTopLevel = node.data.blockId === CONTENTFUL_SECTION_ID
 
   const sectionInteraction = useInteraction()
   const sectionIndicatorTopInteraction = useInteraction()
@@ -71,7 +81,7 @@ export const ContentfulSection = ({
     flexWrap,
   }
 
-  if (['preview', 'delivery'].includes(mode)) {
+  if (!editorMode) {
     return (
       <Flex
         cssStyles={styleOverrides}
@@ -81,6 +91,8 @@ export const ContentfulSection = ({
       </Flex>
     )
   }
+
+  const isTopLevel = node?.data.blockId === CONTENTFUL_SECTION_ID
 
   const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
 

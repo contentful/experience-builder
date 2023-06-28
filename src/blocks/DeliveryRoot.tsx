@@ -7,12 +7,17 @@ import { useFetchComposition } from '../hooks/useFetchComposition'
 
 type DeliveryRootProps = {
   experience: Experience
-  locale: string
+  locale: string,
+  slug?: string
 }
 
-export const DeliveryRoot = ({ experience }: DeliveryRootProps) => {
-  const { slug, spaceId, environmentId, accessToken, locale } =
+export const DeliveryRoot = ({ experience, slug }: DeliveryRootProps) => {
+  const { spaceId, environmentId, accessToken, locale } =
     useCheckForExperienceConfig(experience)
+
+  if (!slug) {
+    throw new Error('Delivery mode requires a composition slug to be provided')
+  }
 
   const client = contentful.createClient({
     space: spaceId as string,
@@ -23,7 +28,7 @@ export const DeliveryRoot = ({ experience }: DeliveryRootProps) => {
 
   const { composition, children, dataSource, entityStore } = useFetchComposition({
     client,
-    slug: slug as string,
+    slug: slug,
     locale: locale as string,
   })
 

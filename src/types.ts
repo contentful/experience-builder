@@ -166,7 +166,6 @@ export type ExperienceConfig = {
   spaceId?: string
   environmentId?: string
   locale?: string
-  slug?: string
 }
 
 export type Experience = {

@@ -34,7 +34,7 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
         setComposition(response.items[0].fields as Composition)
       })
       .catch(console.error)
-  }, [client, slug, locale])
+  }, [slug, locale])
 
   useEffect(() => {
     // fetch bound entries
