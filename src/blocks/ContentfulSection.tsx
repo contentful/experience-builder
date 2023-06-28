@@ -11,29 +11,31 @@ import { CONTENTFUL_SECTION_ID } from '../constants'
 import classNames from 'classnames'
 import { Flex } from '../core'
 
-type ContentfulSectionProps<EditorMode = boolean> = EditorMode extends true ? {
-  onComponentRemoved: () => void
-  handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
-  onMouseDown: MouseEventHandler<HTMLDivElement>
-  isDragging: boolean
-  children: React.ReactNode
-  className?: string
-  isSelected: boolean
-  node: CompositionComponentNode
-  parentNode: CompositionComponentNode
-  editorMode?: EditorMode
-} : {
-  onComponentRemoved: () => void
-  handleComponentDrop: never
-  onMouseDown: never
-  isDragging: never
-  isSelected: never
-  node: never
-  parentNode: never
-  className?: string
-  children: React.ReactNode
-  editorMode?: EditorMode
-}
+type ContentfulSectionProps<EditorMode = boolean> = EditorMode extends true
+  ? {
+      onComponentRemoved: () => void
+      handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
+      onMouseDown: MouseEventHandler<HTMLDivElement>
+      isDragging: boolean
+      children: React.ReactNode
+      className?: string
+      isSelected: boolean
+      node: CompositionComponentNode
+      parentNode: CompositionComponentNode
+      editorMode?: EditorMode
+    }
+  : {
+      onComponentRemoved: () => void
+      handleComponentDrop: never
+      onMouseDown: never
+      isDragging: never
+      isSelected: never
+      node: never
+      parentNode: never
+      className?: string
+      children: React.ReactNode
+      editorMode?: EditorMode
+    }
 
 export const ContentfulSection = ({
   horizontalAlignment,
@@ -57,11 +59,10 @@ export const ContentfulSection = ({
   onComponentRemoved,
   handleComponentDrop,
   onMouseDown,
-  editorMode = true
+  editorMode = true,
 }: StyleProps & ContentfulSectionProps) => {
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
-
 
   const sectionInteraction = useInteraction()
   const sectionIndicatorTopInteraction = useInteraction()

@@ -78,7 +78,11 @@ export const CompositionBlock = ({
 
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     // @ts-expect-error
-    return <ContentfulSection editorMode={false} {...(props as unknown as StyleProps)}>{children}</ContentfulSection>
+    return (
+      <ContentfulSection editorMode={false} {...(props as unknown as StyleProps)}>
+        {children}
+      </ContentfulSection>
+    )
   }
 
   return React.createElement(component, props, children)

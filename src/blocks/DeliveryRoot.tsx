@@ -7,13 +7,12 @@ import { useFetchComposition } from '../hooks/useFetchComposition'
 
 type DeliveryRootProps = {
   experience: Experience
-  locale: string,
+  locale: string
   slug?: string
 }
 
 export const DeliveryRoot = ({ experience, slug }: DeliveryRootProps) => {
-  const { spaceId, environmentId, accessToken, locale } =
-    useCheckForExperienceConfig(experience)
+  const { spaceId, environmentId, accessToken, locale } = useCheckForExperienceConfig(experience)
 
   if (!slug) {
     throw new Error('Delivery mode requires a composition slug to be provided')
