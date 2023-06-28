@@ -224,6 +224,8 @@ export type CompositionNode = {
 export type CompositionDataSource = Record<string, DataSourceEntryValueType>
 
 export type Composition = {
+  title: string
+  slug: string
   children: Array<CompositionNode>
   dataSource: CompositionDataSource
 }

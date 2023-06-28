@@ -2,8 +2,8 @@ import { Asset, Entry, Link, UnresolvedLink } from 'contentful'
 import get from 'lodash.get'
 
 export class EntityStore {
-  private entities: Array<Entry | Asset>
-  private entitiesById: Record<string, Entry | Asset>
+  public entities: Array<Entry | Asset>
+  public entitiesById: Record<string, Entry | Asset>
 
   constructor({ entities }: { entities: Array<Entry | Asset> }) {
     this.entities = entities
@@ -18,9 +18,8 @@ export class EntityStore {
     path: string[]
   ): string | undefined {
     const entity = this.entitiesById[entityLink.sys.id]
-    console.log(entityLink, path, entity)
 
-    if (!entity) {
+    if (!entity || entity.sys.type !== entityLink.sys.linkType) {
       console.warn(`Composition references unresolved entity: ${entityLink}`)
       return
     }

@@ -22,9 +22,13 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
 
   useEffect(() => {
     // fetch composition by slug
-    client
-      .getEntries({ content_type: 'layout', 'fields.slug': slug, locale })
-      .then((response) => {
+    const fetchComposition = async () => {
+      try {
+        const response = await client.getEntries({
+          content_type: 'layout',
+          'fields.slug': slug,
+          locale,
+        })
         if (response.items.length === 0) {
           throw new Error(`No composition with slug: ${slug} exists`)
         }
@@ -32,8 +36,12 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
           throw new Error(`More than one composition with slug: ${slug} was found`)
         }
         setComposition(response.items[0].fields as Composition)
-      })
-      .catch(console.error)
+      } catch (e: any) {
+        console.error(`Failed to fetch composition with error: ${e.message}`)
+      }
+    }
+
+    fetchComposition()
   }, [slug, locale])
 
   useEffect(() => {
