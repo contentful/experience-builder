@@ -12,7 +12,6 @@ type PreviewRootProps = {
 }
 
 export const PreviewRoot = ({ experience, slug }: PreviewRootProps) => {
-  console.log('In preview!')
   const { spaceId, environmentId, accessToken, locale } = useCheckForExperienceConfig(experience)
   if (!slug) {
     throw new Error('Preview mode requires a composition slug to be provided')
