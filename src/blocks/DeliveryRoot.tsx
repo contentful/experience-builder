@@ -12,7 +12,8 @@ type DeliveryRootProps = {
 }
 
 export const DeliveryRoot = ({ experience, slug }: DeliveryRootProps) => {
-  const { spaceId, environmentId, accessToken, locale } = useCheckForExperienceConfig(experience)
+  const { spaceId, environmentId, accessToken, locale, host } =
+    useCheckForExperienceConfig(experience)
 
   if (!slug) {
     throw new Error('Delivery mode requires a composition slug to be provided')
@@ -21,7 +22,7 @@ export const DeliveryRoot = ({ experience, slug }: DeliveryRootProps) => {
   const client = contentful.createClient({
     space: spaceId as string,
     environment: environmentId as string,
-    host: 'cdn.flinkly.com',
+    host: host || 'cdn.contentful.com',
     accessToken: accessToken as string,
   })
 

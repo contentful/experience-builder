@@ -12,7 +12,8 @@ type PreviewRootProps = {
 }
 
 export const PreviewRoot = ({ experience, slug }: PreviewRootProps) => {
-  const { spaceId, environmentId, accessToken, locale } = useCheckForExperienceConfig(experience)
+  const { spaceId, environmentId, accessToken, locale, host } =
+    useCheckForExperienceConfig(experience)
   if (!slug) {
     throw new Error('Preview mode requires a composition slug to be provided')
   }
@@ -20,7 +21,7 @@ export const PreviewRoot = ({ experience, slug }: PreviewRootProps) => {
   const client = contentful.createClient({
     space: spaceId as string,
     environment: environmentId as string,
-    host: 'preview.flinkly.com',
+    host: host || 'preview.contentful.com',
     accessToken: accessToken as string,
   })
 

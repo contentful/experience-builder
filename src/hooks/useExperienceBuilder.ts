@@ -27,6 +27,9 @@ interface UseExperienceBuilderProps {
   /** The source environmentId,
    *  when rendered in the editor, the id is set from the editor **/
   environmentId?: string
+  /** The contentful host to be used.
+   * Defaults to 'cdn.contentful.com' for delivery mode and 'preview.contentful.com' for preview mode **/
+  host?: string
 }
 
 export const useExperienceBuilder = ({
@@ -35,6 +38,7 @@ export const useExperienceBuilder = ({
   initialLocale,
   environmentId,
   spaceId,
+  host,
 }: UseExperienceBuilderProps) => {
   const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
@@ -165,7 +169,7 @@ export const useExperienceBuilder = ({
       dataSource,
       isDragging,
       selectedNodeId,
-      config: { accessToken, locale, environmentId, spaceId },
+      config: { accessToken, locale, environmentId, spaceId, host },
       mode: mode as CompositionMode,
     }),
     [tree, dataSource, isDragging, selectedNodeId, mode]
