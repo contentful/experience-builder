@@ -91,7 +91,7 @@ describe('useFetchComposition', () => {
     })
 
     it('should log an error if composition was not found', async () => {
-      const err = jest.spyOn(console, 'error').mockImplementation(() => {})
+      const err = jest.spyOn(console, 'error')
       client = {
         getEntries: jest.fn().mockReturnValue({ items: [] }),
         getAssets: jest.fn().mockResolvedValue({ items: assets }),
@@ -105,7 +105,7 @@ describe('useFetchComposition', () => {
     })
 
     it('should log an error if multiple compositions were found', async () => {
-      const err = jest.spyOn(console, 'error').mockImplementation(() => {})
+      const err = jest.spyOn(console, 'error')
       client = {
         getEntries: jest.fn().mockReturnValue({ items: [compositionEntry, compositionEntry] }),
         getAssets: jest.fn().mockResolvedValue({ items: assets }),

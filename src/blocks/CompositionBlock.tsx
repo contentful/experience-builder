@@ -1,8 +1,7 @@
 import { CompositionDataSource, CompositionNode, StyleProps } from '../types'
 
-import react, { useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useComponents } from '../hooks'
-import React from 'react'
 import { UnresolvedLink } from 'contentful'
 import { EntityStore } from '../core/EntityStore'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
@@ -45,12 +44,15 @@ export const CompositionBlock = ({
         case 'DesignValue':
           acc[variableName] = variable.value as string
           break
-        case 'BoundValue':
+        case 'BoundValue': {
+          // eslint-disable-next-line @typescript-eslint/no-extra-semi
           ;[_empty, uuid, ...path] = variable.path.split('/')
           const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>
           acc[variableName] = entityStore?.getValue(binding, path.slice(0, -1))
           break
+        }
         case 'UnboundValue':
+          // eslint-disable-next-line @typescript-eslint/no-extra-semi
           ;[_empty, uuid, ...path] = variable.path.split('/')
           // @ts-expect-error value may not exist
           acc[variableName] = dataSource[uuid].value
@@ -78,7 +80,7 @@ export const CompositionBlock = ({
 
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
-      // @ts-expect-error
+      // @ts-expect-error TODO: fix ContentfulSection typing
       <ContentfulSection editorMode={false} {...(props as unknown as StyleProps)}>
         {children}
       </ContentfulSection>

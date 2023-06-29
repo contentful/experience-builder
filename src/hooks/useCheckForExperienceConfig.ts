@@ -1,6 +1,6 @@
-import { Experience } from '../types'
+import { Experience, ExperienceConfig } from '../types'
 
-export const useCheckForExperienceConfig = (experience: Experience) => {
+export const useCheckForExperienceConfig = (experience: Experience): ExperienceConfig => {
   if (!experience.config.accessToken) {
     throw new Error(
       'When outside the editor mode you must define either a Preview or Delivery Token in the experience initialization'

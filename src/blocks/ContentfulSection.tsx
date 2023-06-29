@@ -2,7 +2,7 @@ import React, { MouseEventHandler } from 'react'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
-import { CompositionComponentNode, CompositionMode, StyleProps } from '../types'
+import { CompositionComponentNode, StyleProps } from '../types'
 import { transformAlignment, transformBorderStyle, transformFill } from './transformers'
 import { getInsertionData } from '../utils'
 

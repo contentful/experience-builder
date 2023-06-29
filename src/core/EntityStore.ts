@@ -1,4 +1,4 @@
-import { Asset, Entry, Link, UnresolvedLink } from 'contentful'
+import { Asset, Entry, UnresolvedLink } from 'contentful'
 import get from 'lodash.get'
 
 export class EntityStore {

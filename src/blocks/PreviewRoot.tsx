@@ -8,7 +8,7 @@ import { CompositionBlock } from './CompositionBlock'
 type PreviewRootProps = {
   experience: Experience
   locale: string
-  slug: string
+  slug?: string
 }
 
 export const PreviewRoot = ({ experience, slug }: PreviewRootProps) => {
