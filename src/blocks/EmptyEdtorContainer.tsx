@@ -10,7 +10,7 @@ export interface EmptyContainerProps {
   isHoveringOnRoot?: boolean
 }
 
-export const EmptyContainer = ({
+export const EmptyEditorContainer = ({
   isFirst = true,
   isDragging = false,
   isHoveringOnRoot = false,

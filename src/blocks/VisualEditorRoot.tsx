@@ -2,8 +2,9 @@ import React from 'react'
 import { Experience } from '../types'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
-import { EmptyContainer } from './EmptyContainer'
+import { EmptyEditorContainer } from './EmptyEdtorContainer'
 import { useContentfulSection } from '../hooks/useContentfulSection'
+import { EmptyDeliveryContainer } from './EmptyDeliveryContainer'
 
 import './VisualEditorRoot.css'
 
@@ -16,10 +17,10 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   const { onComponentDropped } = useInteraction()
   useContentfulSection()
 
-  const { tree, dataSource, isDragging, selectedNodeId } = experience
+  const { tree, dataSource, isDragging, selectedNodeId, mode } = experience
 
   if (!tree?.root.children.length) {
-    return React.createElement(EmptyContainer, { isDragging }, [])
+    return React.createElement(EmptyEditorContainer, { isDragging }, [])
   }
 
   return React.createElement(
