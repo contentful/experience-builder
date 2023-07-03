@@ -11,56 +11,43 @@ import { CONTENTFUL_SECTION_ID } from '../constants'
 import classNames from 'classnames'
 import { Flex } from '../core'
 
-type ContentfulSectionProps<EditorMode = boolean> = EditorMode extends true
-  ? {
-      onComponentRemoved: () => void
-      handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
-      onMouseDown: MouseEventHandler<HTMLDivElement>
-      isDragging: boolean
-      children: React.ReactNode
-      className?: string
-      isSelected: boolean
-      node: CompositionComponentNode
-      parentNode: CompositionComponentNode
-      editorMode?: EditorMode
-    }
-  : {
-      onComponentRemoved: () => void
-      handleComponentDrop: never
-      onMouseDown: never
-      isDragging: never
-      isSelected: never
-      node: never
-      parentNode: never
-      className?: string
-      children: React.ReactNode
-      editorMode?: EditorMode
-    }
+type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
+  (EditorMode extends true
+    ? {
+        onComponentRemoved: () => void
+        handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
+        onMouseDown: MouseEventHandler<HTMLDivElement>
+        isDragging: boolean
+        children: React.ReactNode
+        className?: string
+        isSelected: boolean
+        node: CompositionComponentNode
+        parentNode: CompositionComponentNode
+        editorMode?: true
+      }
+    : {
+        className?: string
+        children: React.ReactNode
+        editorMode: false
+      })
 
-export const ContentfulSection = ({
-  horizontalAlignment,
-  verticalAlignment,
-  flexDirection,
-  flexWrap,
-  margin,
-  padding,
-  backgroundColor,
-  width,
-  height,
-  maxWidth,
-  border,
-  gap,
-  isDragging,
-  className,
-  isSelected,
-  parentNode,
-  node,
-  children,
-  onComponentRemoved,
-  handleComponentDrop,
-  onMouseDown,
-  editorMode = true,
-}: StyleProps & ContentfulSectionProps) => {
+export const ContentfulSection = (props: ContentfulSectionProps) => {
+  const {
+    horizontalAlignment,
+    verticalAlignment,
+    flexDirection,
+    flexWrap,
+    margin,
+    padding,
+    backgroundColor,
+    width,
+    height,
+    maxWidth,
+    border,
+    gap,
+    className,
+    children,
+  } = props
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
 
@@ -82,7 +69,7 @@ export const ContentfulSection = ({
     flexWrap,
   }
 
-  if (!editorMode) {
+  if (props.editorMode === false) {
     return (
       <Flex
         cssStyles={styleOverrides}
@@ -92,6 +79,17 @@ export const ContentfulSection = ({
       </Flex>
     )
   }
+
+  // Extract properties that are only available in editor mode
+  const {
+    isDragging,
+    isSelected,
+    parentNode,
+    node,
+    onComponentRemoved,
+    handleComponentDrop,
+    onMouseDown,
+  } = props
 
   const isTopLevel = node?.data.blockId === CONTENTFUL_SECTION_ID
 
