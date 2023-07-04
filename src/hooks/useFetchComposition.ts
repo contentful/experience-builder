@@ -12,7 +12,7 @@ interface FetchCompositionProps {
 export const useFetchComposition = ({ client, slug, locale }: FetchCompositionProps) => {
   const [composition, setComposition] = useState<Composition | undefined>()
   const [entityStore, setEntityStore] = useState<EntityStore>()
-  
+
   const children = composition?.children ?? []
   const dataSource = composition?.dataSource ?? {}
 
@@ -60,8 +60,12 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
       if (entryIds || assetIds) {
         try {
           const [entriesResponse, assetsResponse] = await Promise.all([
-            entryIds ? client.getEntries({ 'sys.id[in]': entryIds, locale }) : { items: [] },
-            assetIds ? client.getAssets({ 'sys.id[in]': assetIds, locale }) : { items: [] },
+            entryIds.length > 0
+              ? client.getEntries({ 'sys.id[in]': entryIds, locale })
+              : { items: [] },
+            assetIds.length > 0
+              ? client.getAssets({ 'sys.id[in]': assetIds, locale })
+              : { items: [] },
           ])
           const entities = [...entriesResponse.items, ...assetsResponse.items]
           setEntityStore(new EntityStore({ entities }))
@@ -72,7 +76,7 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
     }
 
     fetchEntities()
-  }, [dataSource])
+  }, [composition, locale, setEntityStore])
 
   return {
     composition,

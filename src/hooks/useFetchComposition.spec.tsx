@@ -1,9 +1,10 @@
 import React from 'react'
 import { useFetchComposition } from './useFetchComposition'
 import { render, screen } from '@testing-library/react'
-import { Composition } from '../types'
 import { act } from 'react-dom/test-utils'
 import { EntityStore } from '../core/EntityStore'
+import { compositionEntry } from './__fixtures__/composition'
+import { entries, assets, entityIds } from './__fixtures__/entities'
 
 jest.mock('../core/EntityStore')
 
@@ -67,14 +68,14 @@ describe('useFetchComposition', () => {
 
     it('should fetch bound entries', async () => {
       expect(client.getEntries).toHaveBeenCalledWith({
-        'sys.id[in]': ['1', '2'],
+        'sys.id[in]': [entityIds.ENTRY1, entityIds.ENTRY2],
         locale: 'en-US',
       })
     })
 
     it('should fetch bound assets', () => {
       expect(client.getAssets).toHaveBeenCalledWith({
-        'sys.id[in]': ['3'],
+        'sys.id[in]': [entityIds.ASSET1],
         locale: 'en-US',
       })
     })
@@ -119,102 +120,3 @@ describe('useFetchComposition', () => {
     })
   })
 })
-
-const mockComposition: Composition = {
-  title: 'Test Composition',
-  slug: 'test',
-  children: [
-    {
-      definitionId: 'component-1',
-      variables: {},
-      children: [],
-    },
-    {
-      definitionId: 'component-2',
-      variables: {},
-      children: [],
-    },
-  ],
-  dataSource: {
-    uuid1: {
-      value: 'test',
-    },
-    uuid2: {
-      sys: {
-        id: '1',
-        type: 'Link',
-        linkType: 'Entry',
-      },
-    },
-    uuid3: {
-      sys: {
-        id: '2',
-        type: 'Link',
-        linkType: 'Entry',
-      },
-    },
-    uuid4: {
-      sys: {
-        id: '3',
-        type: 'Link',
-        linkType: 'Asset',
-      },
-    },
-  },
-}
-
-const compositionEntry = {
-  sys: {
-    id: 'composition-id',
-    type: 'Entry',
-    contentType: {
-      sys: {
-        id: 'layout',
-        type: 'Link',
-        linkType: 'ContentType',
-      },
-    },
-  },
-  fields: mockComposition,
-}
-
-const assets = [
-  {
-    sys: {
-      id: '3',
-      type: 'Asset',
-    },
-    fields: {},
-  },
-]
-
-const entries = [
-  {
-    sys: {
-      id: '1',
-      type: 'Entry',
-      contentType: {
-        sys: {
-          id: 'ContentType1',
-          type: 'Link',
-          linkType: 'ContentType',
-        },
-      },
-    },
-    fields: {},
-  },
-  {
-    sys: {
-      id: '2',
-      type: 'Entry',
-      contentType: {
-        sys: {
-          id: 'ContentType1',
-          type: 'Link',
-          linkType: 'ContentType',
-        },
-      },
-    },
-    fields: {},
-  },
-]

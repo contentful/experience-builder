@@ -1,73 +1,6 @@
 import { Asset, Entry } from 'contentful'
 import { EntityStore } from './EntityStore'
-
-const entities: Array<Entry | Asset> = [
-  {
-    sys: {
-      id: 'foo',
-      type: 'Entry',
-      contentType: {
-        sys: {
-          id: 'bar',
-          type: 'Link',
-          linkType: 'ContentType',
-        },
-      },
-      createdAt: '2020-01-01T00:00:00.000Z',
-      updatedAt: '2020-01-01T00:00:00.000Z',
-      revision: 10,
-      space: {
-        sys: {
-          type: 'Link',
-          linkType: 'Space',
-          id: 'cfexampleapi',
-        },
-      },
-      environment: {
-        sys: {
-          id: 'master',
-          type: 'Link',
-          linkType: 'Environment',
-        },
-      },
-      locale: 'en-US',
-    },
-    fields: {
-      title: 'Foo',
-    },
-    metadata: {
-      tags: [],
-    },
-  },
-  {
-    sys: {
-      id: 'bar',
-      type: 'Asset',
-      createdAt: '2020-01-01T00:00:00.000Z',
-      updatedAt: '2020-01-01T00:00:00.000Z',
-      revision: 10,
-      space: {
-        sys: {
-          type: 'Link',
-          linkType: 'Space',
-          id: 'cfexampleapi',
-        },
-      },
-      environment: {
-        sys: {
-          id: 'master',
-          type: 'Link',
-          linkType: 'Environment',
-        },
-      },
-      locale: 'en-US',
-    },
-    fields: { title: 'Bar' },
-    metadata: {
-      tags: [],
-    },
-  },
-]
+import { entities, entityIds } from '../hooks/__fixtures__/entities'
 
 describe('EntityStore', () => {
   it('should be defined', () => {
@@ -97,11 +30,17 @@ describe('EntityStore', () => {
       expect(store).toBeDefined()
 
       expect(
-        store.getValue({ sys: { id: 'foo', linkType: 'Entry', type: 'Link' } }, ['fields', 'title'])
-      ).toEqual('Foo')
+        store.getValue({ sys: { id: entityIds.ENTRY1, linkType: 'Entry', type: 'Link' } }, [
+          'fields',
+          'title',
+        ])
+      ).toEqual('Entry 1')
       expect(
-        store.getValue({ sys: { id: 'bar', linkType: 'Asset', type: 'Link' } }, ['fields', 'title'])
-      ).toEqual('Bar')
+        store.getValue({ sys: { id: entityIds.ASSET1, linkType: 'Asset', type: 'Link' } }, [
+          'fields',
+          'title',
+        ])
+      ).toEqual('Asset 1')
     })
 
     it('should return undefined if entity id does not exist', () => {
@@ -121,7 +60,7 @@ describe('EntityStore', () => {
       expect(store).toBeDefined()
 
       expect(
-        store.getValue({ sys: { id: 'foo', linkType: 'Entry', type: 'Link' } }, [
+        store.getValue({ sys: { id: entityIds.ENTRY1, linkType: 'Entry', type: 'Link' } }, [
           'fields',
           'description',
         ])
@@ -133,7 +72,10 @@ describe('EntityStore', () => {
       expect(store).toBeDefined()
 
       expect(
-        store.getValue({ sys: { id: 'foo', linkType: 'Asset', type: 'Link' } }, ['fields', 'title'])
+        store.getValue({ sys: { id: entityIds.ENTRY1, linkType: 'Asset', type: 'Link' } }, [
+          'fields',
+          'title',
+        ])
       ).toBeUndefined()
     })
   })
