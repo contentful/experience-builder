@@ -49,9 +49,7 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
     const entryIds: string[] = [],
       assetIds: string[] = []
     for (const dataBinding of Object.values(dataSource)) {
-      // @ts-expect-error TS thinks sys is undefined
-      const sys = dataBinding.sys
-      if (!sys) {
+      if (!('sys' in dataBinding)) {
         continue
       }
       if (sys.linkType === 'Entry') {
