@@ -12,6 +12,7 @@ interface FetchCompositionProps {
 export const useFetchComposition = ({ client, slug, locale }: FetchCompositionProps) => {
   const [composition, setComposition] = useState<Composition | undefined>()
   const [entityStore, setEntityStore] = useState<EntityStore>()
+  const [error, setError] = useState<string | undefined>()
 
   const children = composition?.children ?? []
   const dataSource = composition?.dataSource ?? {}
@@ -34,6 +35,7 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
         setComposition(response.items[0].fields as Composition)
       } catch (e: any) {
         console.error(`Failed to fetch composition with error: ${e.message}`)
+        setError(e.message)
       }
     }
 
@@ -57,21 +59,21 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
     }
 
     const fetchEntities = async () => {
-      if (entryIds || assetIds) {
-        try {
-          const [entriesResponse, assetsResponse] = await Promise.all([
-            entryIds.length > 0
-              ? client.getEntries({ 'sys.id[in]': entryIds, locale })
-              : { items: [] },
-            assetIds.length > 0
-              ? client.getAssets({ 'sys.id[in]': assetIds, locale })
-              : { items: [] },
-          ])
-          const entities = [...entriesResponse.items, ...assetsResponse.items]
-          setEntityStore(new EntityStore({ entities }))
-        } catch (e) {
-          console.error('Failed to fetch entities with error: ', e)
-        }
+      console.log(entryIds, assetIds)
+      try {
+        const [entriesResponse, assetsResponse] = await Promise.all([
+          entryIds.length > 0
+            ? client.getEntries({ 'sys.id[in]': entryIds, locale })
+            : { items: [] },
+          assetIds.length > 0
+            ? client.getAssets({ 'sys.id[in]': assetIds, locale })
+            : { items: [] },
+        ])
+        const entities = [...entriesResponse.items, ...assetsResponse.items]
+        setEntityStore(new EntityStore({ entities }))
+      } catch (e: any) {
+        console.error('Failed to fetch composition entities with error: ', e)
+        setError(e.message)
       }
     }
 
@@ -83,5 +85,6 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
     children,
     dataSource,
     entityStore,
+    error,
   }
 }
