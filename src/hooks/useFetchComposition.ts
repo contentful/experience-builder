@@ -11,14 +11,10 @@ interface FetchCompositionProps {
 
 export const useFetchComposition = ({ client, slug, locale }: FetchCompositionProps) => {
   const [composition, setComposition] = useState<Composition | undefined>()
-  const [children, setChildren] = useState<CompositionNode[]>([])
-  const [dataSource, setDataSource] = useState<CompositionDataSource>({})
   const [entityStore, setEntityStore] = useState<EntityStore>()
-
-  useEffect(() => {
-    setChildren(composition?.children || [])
-    setDataSource(composition?.dataSource || {})
-  }, [composition, setChildren, setDataSource])
+  
+  const children = composition?.children ?? []
+  const dataSource = composition?.dataSource ?? {}
 
   useEffect(() => {
     // fetch composition by slug
