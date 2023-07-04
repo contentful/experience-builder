@@ -1,7 +1,7 @@
 import { ContentfulClientApi } from 'contentful'
 import { useEffect, useState } from 'react'
 import { EntityStore } from '../core/EntityStore'
-import { Composition, CompositionDataSource, CompositionNode } from '../types'
+import { Composition } from '../types'
 
 interface FetchCompositionProps {
   client: ContentfulClientApi<undefined>

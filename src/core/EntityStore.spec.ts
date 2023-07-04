@@ -1,6 +1,6 @@
 import { Asset, Entry } from 'contentful'
 import { EntityStore } from './EntityStore'
-import { entities, entityIds } from '../hooks/__fixtures__/entities'
+import { entities, entityIds } from '../../test/__fixtures__/entities'
 
 describe('EntityStore', () => {
   it('should be defined', () => {

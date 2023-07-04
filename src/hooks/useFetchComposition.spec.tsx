@@ -1,11 +1,9 @@
 import React from 'react'
 import { useFetchComposition } from './useFetchComposition'
 import { render, screen, waitFor } from '@testing-library/react'
-import { act } from 'react-dom/test-utils'
 import { EntityStore } from '../core/EntityStore'
-import { compositionEntry } from './__fixtures__/composition'
-import { entries, assets, entityIds } from './__fixtures__/entities'
-import { debug } from 'console'
+import { compositionEntry } from '../../test/__fixtures__/composition'
+import { entries, assets, entityIds } from '../../test/__fixtures__/entities'
 
 jest.mock('../core/EntityStore')
 
@@ -34,7 +32,6 @@ const TestComponent = ({ client, slug, locale }: { client: any; slug: string; lo
 
 describe('useFetchComposition', () => {
   let client: any
-  let container: HTMLDivElement
 
   describe('success', () => {
     beforeEach(async () => {

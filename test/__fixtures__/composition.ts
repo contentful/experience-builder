@@ -1,4 +1,4 @@
-import { Composition } from '../../types'
+import { Composition } from '../../src/types'
 import { entityIds } from './entities'
 
 const compositionFields: Composition = {
