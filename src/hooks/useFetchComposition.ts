@@ -48,11 +48,11 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
       if (!('sys' in dataBinding)) {
         continue
       }
-      if (sys.linkType === 'Entry') {
-        entryIds.push(sys.id)
+      if (dataBinding.sys.linkType === 'Entry') {
+        entryIds.push(dataBinding.sys.id)
       }
-      if (sys.linkType === 'Asset') {
-        assetIds.push(sys.id)
+      if (dataBinding.sys.linkType === 'Asset') {
+        assetIds.push(dataBinding.sys.id)
       }
     }
 
@@ -60,8 +60,8 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
       if (entryIds || assetIds) {
         try {
           const [entriesResponse, assetsResponse] = await Promise.all([
-            client.getEntries({ 'sys.id[in]': entryIds, locale }),
-            client.getAssets({ 'sys.id[in]': assetIds, locale }),
+            entryIds ? client.getEntries({ 'sys.id[in]': entryIds, locale }) : { items: [] },
+            assetIds ? client.getAssets({ 'sys.id[in]': assetIds, locale }) : { items: [] },
           ])
           const entities = [...entriesResponse.items, ...assetsResponse.items]
           setEntityStore(new EntityStore({ entities }))
