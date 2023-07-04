@@ -39,24 +39,22 @@ export const CompositionBlock = ({
     const propMap: Record<string, string | number | boolean | undefined> = {}
 
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
-      let _empty: string, uuid: string, path: string[]
       switch (variable.type) {
         case 'DesignValue':
           acc[variableName] = variable.value as string
           break
         case 'BoundValue': {
-          // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;[_empty, uuid, ...path] = variable.path.split('/')
+          const [, uuid, ...path] = variable.path.split('/')
           const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>
           acc[variableName] = entityStore?.getValue(binding, path.slice(0, -1))
           break
         }
-        case 'UnboundValue':
-          // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;[_empty, uuid, ...path] = variable.path.split('/')
+        case 'UnboundValue': {
+          const [, uuid] = variable.path.split('/')
           // @ts-expect-error value may not exist
           acc[variableName] = dataSource[uuid].value
           break
+        }
         default:
           break
       }

@@ -2,26 +2,27 @@ import React from 'react'
 import contentful from 'contentful'
 import { Experience } from '../types'
 import { useCheckForExperienceConfig } from '../hooks/useCheckForExperienceConfig'
-import { useFetchComposition } from '../hooks/useFetchComposition'
 import { CompositionBlock } from './CompositionBlock'
+import { useFetchComposition } from '../hooks/useFetchComposition'
 
-type PreviewRootProps = {
+type DeliveryRootProps = {
   experience: Experience
   locale: string
   slug?: string
 }
 
-export const PreviewRoot = ({ experience, slug }: PreviewRootProps) => {
+export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => {
   const { spaceId, environmentId, accessToken, locale, host } =
     useCheckForExperienceConfig(experience)
+
   if (!slug) {
-    throw new Error('Preview mode requires a composition slug to be provided')
+    throw new Error('Preview and delivery mode requires a composition slug to be provided')
   }
 
   const client = contentful.createClient({
     space: spaceId as string,
     environment: environmentId as string,
-    host: host || 'preview.contentful.com',
+    host: host,
     accessToken: accessToken as string,
   })
 
