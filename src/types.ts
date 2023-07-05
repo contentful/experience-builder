@@ -168,10 +168,11 @@ export type CompositionTree = {
 export type CompositionMode = 'editor' | 'preview' | 'delivery'
 
 export type ExperienceConfig = {
-  token?: string
+  accessToken?: string
   spaceId?: string
   environmentId?: string
   locale?: string
+  host?: string
 }
 
 export type Experience = {
@@ -219,4 +220,20 @@ export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID
   name: typeof CONTENTFUL_SECTION_NAME | typeof CONTENTFUL_CONTAINER_NAME
   variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>>
+}
+
+// cda types
+export type CompositionNode = {
+  definitionId: string
+  children: Array<CompositionNode>
+  variables: Record<string, CompositionComponentPropValue>
+}
+
+export type CompositionDataSource = Record<string, DataSourceEntryValueType>
+
+export type Composition = {
+  title: string
+  slug: string
+  children: Array<CompositionNode>
+  dataSource: CompositionDataSource
 }
