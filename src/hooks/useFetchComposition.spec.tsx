@@ -61,13 +61,15 @@ describe('useFetchComposition', () => {
         'fields.slug': 'test',
         locale: 'en-US',
       })
-      await waitFor(() => {
-        expect(screen.findByText('Test Composition')).toBeTruthy()
+      await waitFor(async () => {
+        expect(await screen.findByText('Test Composition')).toBeInTheDocument()
       })
     })
 
     it('should fetch bound entries', async () => {
-      await screen.findByText('Entities fetched!!')
+      await waitFor(async () => {
+        expect(await screen.findByText('Entities fetched!!')).toBeInTheDocument()
+      })
 
       expect(client.getEntries).toHaveBeenCalledWith({
         'sys.id[in]': [entityIds.ENTRY1, entityIds.ENTRY2],
@@ -76,7 +78,9 @@ describe('useFetchComposition', () => {
     })
 
     it('should fetch bound assets', async () => {
-      await screen.findByText('Entities fetched!!')
+      await waitFor(async () => {
+        expect(await screen.findByText('Entities fetched!!')).toBeInTheDocument()
+      })
 
       expect(client.getAssets).toHaveBeenCalledWith({
         'sys.id[in]': [entityIds.ASSET1],
@@ -85,7 +89,9 @@ describe('useFetchComposition', () => {
     })
 
     it('should set entities in entityStore', async () => {
-      await screen.findByText('Entities fetched!!')
+      await waitFor(async () => {
+        expect(await screen.findByText('Entities fetched!!')).toBeInTheDocument()
+      })
 
       expect(EntityStore).toHaveBeenCalledWith({ entities: [...entries, ...assets] })
     })
@@ -103,7 +109,9 @@ describe('useFetchComposition', () => {
         getAssets: jest.fn().mockResolvedValue({ items: assets }),
       }
       render(<TestComponent client={client} slug="test" locale="en-US" />)
-      await screen.findByText('Error!!')
+      await waitFor(async () => {
+        expect(await screen.findByText('Error!!')).toBeInTheDocument()
+      })
 
       expect(err).toBeCalledWith(
         'Failed to fetch composition with error: No composition with slug: test exists'
@@ -118,7 +126,9 @@ describe('useFetchComposition', () => {
       }
       render(<TestComponent client={client} slug="test" locale="en-US" />)
 
-      await screen.findByText('Error!!')
+      await waitFor(async () => {
+        expect(await screen.findByText('Error!!')).toBeInTheDocument()
+      })
       expect(err).toBeCalledWith(
         'Failed to fetch composition with error: More than one composition with slug: test was found'
       )
