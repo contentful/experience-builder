@@ -24,6 +24,7 @@ export enum IncomingExperienceBuilderEvent {
 
 export type ComponentDefinitionVariableType =
   | 'Text'
+	| 'RichText'
   | 'Number'
   | 'Date'
   | 'Boolean'
@@ -48,7 +49,7 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
   group?: 'style' | 'content'
   description?: string
   displayName?: string
-  defaultValue?: string | boolean | number
+  defaultValue?: string | boolean | number | Record<any, any>
 }
 
 export interface ComponentDefinitionVariableLink extends ComponentDefinitionVariableBase<'Link'> {
@@ -113,10 +114,12 @@ export type ComponentBinding = Record<string, Binding>
 export type BindingMap = Record<string, ComponentBinding>
 export type BindingMapByBlockId = Record<string, BindingMap>
 
-type DataSourceEntryValueType =
+export type DataSourceEntryValueType =
   | Link<'Entry'>
   | Link<'Asset'>
   | { value: CompositionVariableValueType }
+
+export type LocalizedUnboundValues = Record<string, Record<string, { value: CompositionVariableValueType }>>
 
 export type LocalizedDataSource = Record<
   string, // locale
@@ -126,14 +129,16 @@ export type LocalizedDataSource = Record<
   >
 >
 
-export type CompositionVariableValueType = string | boolean | number | undefined
+export type CompositionVariableValueType = string | boolean | number | Record<any, any> | undefined
 type CompositionComponentPropType = 'BoundValue' | 'UnboundValue' | 'DesignValue'
 
 export type CompositionComponentPropValue<
   T extends CompositionComponentPropType = CompositionComponentPropType
 > = T extends 'DesignValue'
   ? { type: T; value: CompositionVariableValueType }
-  : { type: T; path: string }
+  : T extends 'BoundValue' 
+		? { type: T; path: string }
+		: { type: T; key: string }
 
 // TODO: add conditional typing magic to reduce the number of optionals
 export type CompositionComponentNode = {
@@ -150,6 +155,7 @@ export type CompositionComponentNode = {
         DataSourceEntryValueType
       >
     >
+		unboundValues: Record<string, Record<string, { value: CompositionVariableValueType }>>;
   }
   children: CompositionComponentNode[]
   parentId?: string
@@ -171,6 +177,7 @@ export type ExperienceConfig = {
 export type Experience = {
   tree?: CompositionTree
   dataSource: LocalizedDataSource
+	unboundValues: LocalizedUnboundValues
   config: ExperienceConfig
   isDragging: boolean
   selectedNodeId: string

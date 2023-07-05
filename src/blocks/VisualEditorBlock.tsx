@@ -1,25 +1,26 @@
 import React, { useMemo } from 'react'
-import get from 'lodash.get'
 import {
-  CompositionVariableValueType,
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
   StyleProps,
+	LocalizedUnboundValues,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
 import { useComponents } from '../hooks'
-import { Link } from 'contentful-management'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
 import './VisualEditorBlock.css'
+import { getValueFromDataSource } from '../core/getValueFromDataSource'
+import { getUnboundValues } from '../core/getUnboundValues'
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
   locale: string
   dataSource: LocalizedDataSource
+	unboundValues: LocalizedUnboundValues
   isDragging: boolean
   selectedNodeId?: string
   parentNode: CompositionComponentNode
@@ -29,6 +30,7 @@ export const VisualEditorBlock = ({
   node,
   locale,
   dataSource,
+	unboundValues,
   isDragging,
   parentNode,
   selectedNodeId,
@@ -47,24 +49,6 @@ export const VisualEditorBlock = ({
       return {}
     }
 
-    const dataSourceForCurrentLocale = dataSource[locale] || {}
-
-    const getValueFromDataSource = ({
-      path,
-      fallback,
-    }: {
-      path: string
-      fallback: CompositionVariableValueType
-    }): Link<'Entry'> | Link<'Asset'> | CompositionVariableValueType => {
-      const pathWithoutFirstSlash = path.slice(1)
-      const lodashPath = `${pathWithoutFirstSlash.split('/')[0]}.value`
-
-      return get(dataSourceForCurrentLocale, lodashPath, fallback) as
-        | Link<'Entry'>
-        | Link<'Asset'>
-        | CompositionVariableValueType
-    }
-
     return Object.entries(definedComponent.componentDefinition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variableMapping = node.data.props[variableName]
@@ -80,18 +64,30 @@ export const VisualEditorBlock = ({
             ...acc,
             [variableName]: variableMapping.value,
           }
-        } else {
+        } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
           const value = getValueFromDataSource({
             path: variableMapping.path,
             fallback: variableDefinition.defaultValue,
+						dataSourceForCurrentLocale: dataSource[locale] || {}
           })
 
           return {
             ...acc,
             [variableName]: value,
           }
-        }
+        } else {
+					const value = getUnboundValues({
+            key: variableMapping.key,
+            fallback: variableDefinition.defaultValue,
+						unboundValuesForCurrentLocale: unboundValues[locale] || {}
+          })
+
+					return {
+            ...acc,
+            [variableName]: value,
+          }
+				}
       },
       {}
     )
@@ -113,6 +109,7 @@ export const VisualEditorBlock = ({
           key={childNode.data.id}
           locale={locale}
           dataSource={dataSource}
+					unboundValues={unboundValues}
           isDragging={isDragging}
           selectedNodeId={selectedNodeId}
         />
