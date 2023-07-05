@@ -59,7 +59,6 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
     }
 
     const fetchEntities = async () => {
-      console.log(entryIds, assetIds)
       try {
         const [entriesResponse, assetsResponse] = await Promise.all([
           entryIds.length > 0
