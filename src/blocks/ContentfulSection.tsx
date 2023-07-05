@@ -3,7 +3,7 @@ import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
 import { CompositionComponentNode, StyleProps } from '../types'
-import { transformBorderStyle, transformFill } from './transformers'
+import { transformAlignment, transformBorderStyle, transformFill } from './transformers'
 import { getInsertionData } from '../utils'
 
 import './ContentfulSection.css'
@@ -11,61 +11,49 @@ import { CONTENTFUL_SECTION_ID } from '../constants'
 import classNames from 'classnames'
 import { Flex } from '../core'
 
-interface ContentfulSectionProps extends StyleProps {
-  onComponentRemoved: () => void
-  handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
-  onMouseDown: MouseEventHandler<HTMLDivElement>
-  isDragging: boolean
-  children: React.ReactNode
-  className?: string
-  isSelected: boolean
-  node: CompositionComponentNode
-  parentNode: CompositionComponentNode
-}
+type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
+  (EditorMode extends true
+    ? {
+        onComponentRemoved: () => void
+        handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
+        onMouseDown: MouseEventHandler<HTMLDivElement>
+        isDragging: boolean
+        children: React.ReactNode
+        className?: string
+        isSelected: boolean
+        node: CompositionComponentNode
+        parentNode: CompositionComponentNode
+        editorMode?: true
+      }
+    : {
+        className?: string
+        children: React.ReactNode
+        editorMode: false
+      })
 
-export const ContentfulSection = ({
-  horizontalAlignment,
-  verticalAlignment,
-  flexDirection,
-  flexWrap,
-  margin,
-  padding,
-  backgroundColor,
-  width,
-  height,
-  maxWidth,
-  border,
-  gap,
-  isDragging,
-  className,
-  isSelected,
-  parentNode,
-  node,
-  children,
-  onComponentRemoved,
-  handleComponentDrop,
-  onMouseDown,
-}: ContentfulSectionProps) => {
+export const ContentfulSection = (props: ContentfulSectionProps) => {
+  const {
+    horizontalAlignment,
+    verticalAlignment,
+    flexDirection,
+    flexWrap,
+    margin,
+    padding,
+    backgroundColor,
+    width,
+    height,
+    maxWidth,
+    border,
+    gap,
+    className,
+    children,
+  } = props
   const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
     useMousePosition()
-
-  const isTopLevel = node.data.blockId === CONTENTFUL_SECTION_ID
 
   const sectionInteraction = useInteraction()
   const sectionIndicatorTopInteraction = useInteraction()
   const sectionIndicatorBottomInteraction = useInteraction()
-
-  // when direction is 'column' the axis are reversed
-  const alignment =
-    flexDirection === 'row'
-      ? {
-          alignItems: `${horizontalAlignment}`,
-          justifyContent: `${verticalAlignment}`,
-        }
-      : {
-          alignItems: `${verticalAlignment}`,
-          justifyContent: `${horizontalAlignment}`,
-        }
 
   const styleOverrides = {
     margin,
@@ -76,10 +64,34 @@ export const ContentfulSection = ({
     maxWidth,
     ...transformBorderStyle(border),
     gap,
-    ...alignment,
+    ...transformAlignment(horizontalAlignment, verticalAlignment, flexDirection),
     flexDirection,
     flexWrap,
   }
+
+  if (props.editorMode === false) {
+    return (
+      <Flex
+        cssStyles={styleOverrides}
+        id="ContentfulSection"
+        className={classNames('defaultStyles', className)}>
+        {children}
+      </Flex>
+    )
+  }
+
+  // Extract properties that are only available in editor mode
+  const {
+    isDragging,
+    isSelected,
+    parentNode,
+    node,
+    onComponentRemoved,
+    handleComponentDrop,
+    onMouseDown,
+  } = props
+
+  const isTopLevel = node?.data.blockId === CONTENTFUL_SECTION_ID
 
   const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
 
