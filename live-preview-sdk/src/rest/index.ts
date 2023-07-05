@@ -1,0 +1,1 @@
+export { updateEntity } from './entities';
