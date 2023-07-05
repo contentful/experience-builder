@@ -24,7 +24,7 @@ export enum IncomingExperienceBuilderEvent {
 
 export type ComponentDefinitionVariableType =
   | 'Text'
-	| 'RichText'
+  | 'RichText'
   | 'Number'
   | 'Date'
   | 'Boolean'
@@ -119,7 +119,10 @@ export type DataSourceEntryValueType =
   | Link<'Asset'>
   | { value: CompositionVariableValueType }
 
-export type LocalizedUnboundValues = Record<string, Record<string, { value: CompositionVariableValueType }>>
+export type LocalizedUnboundValues = Record<
+  string,
+  Record<string, { value: CompositionVariableValueType }>
+>
 
 export type LocalizedDataSource = Record<
   string, // locale
@@ -136,9 +139,9 @@ export type CompositionComponentPropValue<
   T extends CompositionComponentPropType = CompositionComponentPropType
 > = T extends 'DesignValue'
   ? { type: T; value: CompositionVariableValueType }
-  : T extends 'BoundValue' 
-		? { type: T; path: string }
-		: { type: T; key: string }
+  : T extends 'BoundValue'
+  ? { type: T; path: string }
+  : { type: T; key: string }
 
 // TODO: add conditional typing magic to reduce the number of optionals
 export type CompositionComponentNode = {
@@ -155,7 +158,7 @@ export type CompositionComponentNode = {
         DataSourceEntryValueType
       >
     >
-		unboundValues: Record<string, Record<string, { value: CompositionVariableValueType }>>;
+    unboundValues: Record<string, Record<string, { value: CompositionVariableValueType }>>
   }
   children: CompositionComponentNode[]
   parentId?: string
@@ -178,7 +181,7 @@ export type ExperienceConfig = {
 export type Experience = {
   tree?: CompositionTree
   dataSource: LocalizedDataSource
-	unboundValues: LocalizedUnboundValues
+  unboundValues: LocalizedUnboundValues
   config: ExperienceConfig
   isDragging: boolean
   selectedNodeId: string

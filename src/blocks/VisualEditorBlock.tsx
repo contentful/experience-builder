@@ -4,7 +4,7 @@ import {
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
   StyleProps,
-	LocalizedUnboundValues,
+  LocalizedUnboundValues,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
@@ -20,7 +20,7 @@ type VisualEditorBlockProps = {
   node: CompositionComponentNode
   locale: string
   dataSource: LocalizedDataSource
-	unboundValues: LocalizedUnboundValues
+  unboundValues: LocalizedUnboundValues
   isDragging: boolean
   selectedNodeId?: string
   parentNode: CompositionComponentNode
@@ -30,7 +30,7 @@ export const VisualEditorBlock = ({
   node,
   locale,
   dataSource,
-	unboundValues,
+  unboundValues,
   isDragging,
   parentNode,
   selectedNodeId,
@@ -69,7 +69,7 @@ export const VisualEditorBlock = ({
           const value = getValueFromDataSource({
             path: variableMapping.path,
             fallback: variableDefinition.defaultValue,
-						dataSourceForCurrentLocale: dataSource[locale] || {}
+            dataSourceForCurrentLocale: dataSource[locale] || {},
           })
 
           return {
@@ -77,17 +77,17 @@ export const VisualEditorBlock = ({
             [variableName]: value,
           }
         } else {
-					const value = getUnboundValues({
+          const value = getUnboundValues({
             key: variableMapping.key,
             fallback: variableDefinition.defaultValue,
-						unboundValuesForCurrentLocale: unboundValues[locale] || {}
+            unboundValuesForCurrentLocale: unboundValues[locale] || {},
           })
 
-					return {
+          return {
             ...acc,
             [variableName]: value,
           }
-				}
+        }
       },
       {}
     )
@@ -109,7 +109,7 @@ export const VisualEditorBlock = ({
           key={childNode.data.id}
           locale={locale}
           dataSource={dataSource}
-					unboundValues={unboundValues}
+          unboundValues={unboundValues}
           isDragging={isDragging}
           selectedNodeId={selectedNodeId}
         />

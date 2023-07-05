@@ -30,7 +30,11 @@ export const EmptyEditorContainer = ({
       className={`container ${isHighlighted ? 'highlight' : ''}`}
       onMouseUp={() => {
         onComponentDropped({
-          node: { type: 'root', data: { id: 'root', props: {}, dataSource: {}, unboundValues: {} }, children: [] },
+          node: {
+            type: 'root',
+            data: { id: 'root', props: {}, dataSource: {}, unboundValues: {} },
+            children: [],
+          },
         })
       }}>
       {showContent ? (

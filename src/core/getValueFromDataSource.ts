@@ -1,21 +1,21 @@
 import get from 'lodash.get'
 import { Link } from 'contentful-management'
-import { CompositionVariableValueType, DataSourceEntryValueType } from "../types"
+import { CompositionVariableValueType, DataSourceEntryValueType } from '../types'
 
 export const getValueFromDataSource = ({
-	path,
-	fallback,
-	dataSourceForCurrentLocale,
+  path,
+  fallback,
+  dataSourceForCurrentLocale,
 }: {
-	path: string
-	fallback: CompositionVariableValueType,
-	dataSourceForCurrentLocale: Record<string, DataSourceEntryValueType>
+  path: string
+  fallback: CompositionVariableValueType
+  dataSourceForCurrentLocale: Record<string, DataSourceEntryValueType>
 }): Link<'Entry'> | Link<'Asset'> | CompositionVariableValueType => {
-	const pathWithoutFirstSlash = path.slice(1)
-	const lodashPath = `${pathWithoutFirstSlash.split('/')[0]}.value`
+  const pathWithoutFirstSlash = path.slice(1)
+  const lodashPath = `${pathWithoutFirstSlash.split('/')[0]}.value`
 
-	return get(dataSourceForCurrentLocale, lodashPath, fallback) as
-		| Link<'Entry'>
-		| Link<'Asset'>
-		| CompositionVariableValueType
+  return get(dataSourceForCurrentLocale, lodashPath, fallback) as
+    | Link<'Entry'>
+    | Link<'Asset'>
+    | CompositionVariableValueType
 }
