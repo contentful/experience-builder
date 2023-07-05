@@ -24,7 +24,7 @@ const childNode: CompositionComponentNode = {
     blockId: 'test-component',
     props: {},
     dataSource: {},
-		unboundValues: {},
+    unboundValues: {},
   },
   children: [],
 }
@@ -36,7 +36,7 @@ const parentNode: CompositionComponentNode = {
     blockId: 'test-component',
     props: {},
     dataSource: {},
-		unboundValues: {},
+    unboundValues: {},
   },
   children: [childNode],
 }
@@ -47,7 +47,7 @@ const rootNode: CompositionComponentNode = {
     id: 'tree-root',
     props: {},
     dataSource: {},
-		unboundValues: {},
+    unboundValues: {},
   },
   children: [parentNode],
 }
@@ -57,7 +57,7 @@ const renderComponent = async (props = {}) => {
     node: parentNode,
     locale: 'en-US',
     dataSource: {},
-		unboundValues: {},
+    unboundValues: {},
     isDragging: false,
     isSelected: false,
     parentNode: rootNode,
