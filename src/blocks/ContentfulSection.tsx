@@ -46,8 +46,14 @@ export const ContentfulSection = ({
   handleComponentDrop,
   onMouseDown,
 }: ContentfulSectionProps) => {
-  const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
-    useMousePosition()
+  const {
+    mouseInUpperHalf,
+    mouseInLeftHalf,
+    mouseAtBottomBorder,
+    mouseAtTopBorder,
+    componentRef,
+    targetIsComponent,
+  } = useMousePosition()
 
   const isTopLevel = node.data.blockId === CONTENTFUL_SECTION_ID
 
@@ -85,7 +91,8 @@ export const ContentfulSection = ({
 
   const showPrependLine =
     flexDirection === 'row'
-      ? mouseInLeftHalf &&
+      ? targetIsComponent &&
+        mouseInLeftHalf &&
         !mouseAtBottomBorder &&
         !mouseAtTopBorder &&
         isDragging &&
@@ -98,7 +105,8 @@ export const ContentfulSection = ({
 
   const showAppendLine =
     flexDirection === 'row'
-      ? !mouseInLeftHalf &&
+      ? targetIsComponent &&
+        !mouseInLeftHalf &&
         !mouseAtBottomBorder &&
         !mouseAtTopBorder &&
         isDragging &&
