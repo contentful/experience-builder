@@ -12,3 +12,18 @@ export const transformBorderStyle = (value?: string): Record<string, string> => 
     boxSizing: borderPlacement === 'inside' ? 'border-box' : 'content-box',
   }
 }
+
+export const transformAlignment = (
+  horizontalAlignment: string,
+  verticalAlignment: string,
+  flexDirection = 'row'
+) =>
+  flexDirection === 'row'
+    ? {
+        alignItems: `${horizontalAlignment}`,
+        justifyContent: `${verticalAlignment}`,
+      }
+    : {
+        alignItems: `${verticalAlignment}`,
+        justifyContent: `${horizontalAlignment}`,
+      }

@@ -17,7 +17,7 @@ interface UseExperienceBuilderProps {
   initialMode?: CompositionMode
   /** Use CDA token for delivery mode and CPA for preview mode
    * When rendered in the editor a token is not needed **/
-  token?: string
+  accessToken?: string
   /** The defined locale,
    *  when rendered in the editor, the locale is set from the editor, but you can use this to overwrite this **/
   initialLocale?: string
@@ -27,14 +27,18 @@ interface UseExperienceBuilderProps {
   /** The source environmentId,
    *  when rendered in the editor, the id is set from the editor **/
   environmentId?: string
+  /** The contentful host to be used.
+   * Defaults to 'cdn.contentful.com' for delivery mode and 'preview.contentful.com' for preview mode **/
+  host?: string
 }
 
 export const useExperienceBuilder = ({
   initialMode,
-  token,
+  accessToken,
   initialLocale,
   environmentId,
   spaceId,
+  host,
 }: UseExperienceBuilderProps) => {
   const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
@@ -43,6 +47,8 @@ export const useExperienceBuilder = ({
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
   const [mode, setMode] = useState<CompositionMode | undefined>(initialMode)
 
+  const defaultHost = mode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
+
   useEffect(() => {
     // if already defined don't identify automatically
     if (mode) return
@@ -50,8 +56,8 @@ export const useExperienceBuilder = ({
       setMode('editor')
     } else {
       const urlParams = new URLSearchParams(window.location.search)
-      const myParam = urlParams.get('isPreview')
-      setMode(myParam ? 'preview' : 'delivery')
+      const isPreview = urlParams.get('isPreview')
+      setMode(isPreview ? 'preview' : 'delivery')
     }
   }, [mode])
 
@@ -165,8 +171,8 @@ export const useExperienceBuilder = ({
       dataSource,
       isDragging,
       selectedNodeId,
-      config: { token, locale, environmentId, spaceId },
-      mode,
+      config: { accessToken, locale, environmentId, spaceId, host: host || defaultHost },
+      mode: mode as CompositionMode,
     }),
     [tree, dataSource, isDragging, selectedNodeId, mode]
   )
