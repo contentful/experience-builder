@@ -1,4 +1,9 @@
-import { CompositionDataSource, CompositionNode, CompositionUnboundValues, StyleProps } from '../types'
+import {
+  CompositionDataSource,
+  CompositionNode,
+  CompositionUnboundValues,
+  StyleProps,
+} from '../types'
 
 import React, { useMemo } from 'react'
 import { useComponents } from '../hooks'
@@ -11,7 +16,7 @@ type CompositionBlockProps = {
   node: CompositionNode
   locale: string
   dataSource: CompositionDataSource
-	unboundValues: CompositionUnboundValues
+  unboundValues: CompositionUnboundValues
   entityStore?: EntityStore
 }
 
@@ -20,7 +25,7 @@ export const CompositionBlock = ({
   locale,
   entityStore,
   dataSource,
-	unboundValues
+  unboundValues,
 }: CompositionBlockProps) => {
   const { getComponent } = useComponents()
 
@@ -72,7 +77,7 @@ export const CompositionBlock = ({
         key={index}
         locale={locale}
         dataSource={dataSource}
-				unboundValues={unboundValues}
+        unboundValues={unboundValues}
         entityStore={entityStore}
       />
     )

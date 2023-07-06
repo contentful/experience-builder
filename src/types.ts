@@ -233,12 +233,12 @@ export type CompositionNode = {
 }
 
 export type CompositionDataSource = Record<string, DataSourceEntryValueType>
-export type CompositionUnboundValues= Record<string, Record<string, { value: CompositionVariableValueType }>>
+export type CompositionUnboundValues = Record<string, { value: CompositionVariableValueType }>
 
 export type Composition = {
   title: string
   slug: string
   children: Array<CompositionNode>
   dataSource: CompositionDataSource
-	unboundValues: CompositionUnboundValues
+  unboundValues: CompositionUnboundValues
 }

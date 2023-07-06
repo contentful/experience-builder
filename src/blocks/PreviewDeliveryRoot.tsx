@@ -45,7 +45,7 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
           locale={locale as string}
           entityStore={entityStore}
           dataSource={dataSource}
-					unboundValues={unboundValues}
+          unboundValues={unboundValues}
         />
       ))}
     </>
