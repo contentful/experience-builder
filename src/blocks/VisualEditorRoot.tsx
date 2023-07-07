@@ -14,7 +14,7 @@ type VisualEditorRootProps = {
 export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
   const { onComponentDropped } = useInteraction()
 
-  const { tree, dataSource, isDragging, selectedNodeId } = experience
+  const { tree, dataSource, isDragging, selectedNodeId, unboundValues } = experience
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
@@ -37,6 +37,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           node={node}
           locale={locale}
           dataSource={dataSource}
+          unboundValues={unboundValues}
           isDragging={isDragging}
           selectedNodeId={selectedNodeId}
           parentNode={tree.root}

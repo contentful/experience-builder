@@ -1,4 +1,5 @@
-import { Asset, Entry, UnresolvedLink } from 'contentful'
+import { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful'
+import { isObject } from 'lodash'
 import get from 'lodash.get'
 
 export class EntityStore {
@@ -24,6 +25,14 @@ export class EntityStore {
       return
     }
 
-    return get(entity, path)
+    const fieldValue = get(entity, path)
+
+    // walk around to render asset files
+    const value =
+      isObject(fieldValue) && (fieldValue as AssetFile).url
+        ? (fieldValue as AssetFile).url
+        : fieldValue
+
+    return value
   }
 }

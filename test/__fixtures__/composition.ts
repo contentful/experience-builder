@@ -17,9 +17,6 @@ const compositionFields: Composition = {
     },
   ],
   dataSource: {
-    uuid1: {
-      value: 'test',
-    },
     uuid2: {
       sys: {
         id: entityIds.ENTRY1,
@@ -40,6 +37,11 @@ const compositionFields: Composition = {
         type: 'Link',
         linkType: 'Asset',
       },
+    },
+  },
+  unboundValues: {
+    uuid1: {
+      value: 'test',
     },
   },
 }

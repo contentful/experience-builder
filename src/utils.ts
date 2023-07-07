@@ -1,7 +1,19 @@
-import { LocalizedDataSource, CompositionTree, CompositionComponentNode, StyleProps } from './types'
+import {
+  LocalizedDataSource,
+  CompositionTree,
+  CompositionComponentNode,
+  StyleProps,
+  LocalizedUnboundValues,
+} from './types'
 
-export const getDataSourceFromTree = (tree: CompositionTree): LocalizedDataSource => {
+export const getDataFromTree = (
+  tree: CompositionTree
+): {
+  dataSource: LocalizedDataSource
+  unboundValues: LocalizedUnboundValues
+} => {
   const dataSource: LocalizedDataSource = {}
+  const unboundValues: LocalizedUnboundValues = {}
   const queue = [...tree.root.children]
 
   while (queue.length) {
@@ -21,12 +33,26 @@ export const getDataSourceFromTree = (tree: CompositionTree): LocalizedDataSourc
       }
     }
 
+    for (const [locale, data] of Object.entries(node.data.unboundValues)) {
+      if (!unboundValues[locale]) {
+        unboundValues[locale] = { ...data }
+      }
+
+      unboundValues[locale] = {
+        ...unboundValues[locale],
+        ...data,
+      }
+    }
+
     if (node.children.length) {
       queue.push(...node.children)
     }
   }
 
-  return dataSource
+  return {
+    dataSource,
+    unboundValues,
+  }
 }
 
 type GetInsertionDataParams = {

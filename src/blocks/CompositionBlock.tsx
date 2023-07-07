@@ -1,4 +1,9 @@
-import { CompositionDataSource, CompositionNode, StyleProps } from '../types'
+import {
+  CompositionDataSource,
+  CompositionNode,
+  CompositionUnboundValues,
+  StyleProps,
+} from '../types'
 
 import React, { useMemo } from 'react'
 import { useComponents } from '../hooks'
@@ -11,6 +16,7 @@ type CompositionBlockProps = {
   node: CompositionNode
   locale: string
   dataSource: CompositionDataSource
+  unboundValues: CompositionUnboundValues
   entityStore?: EntityStore
 }
 
@@ -19,6 +25,7 @@ export const CompositionBlock = ({
   locale,
   entityStore,
   dataSource,
+  unboundValues,
 }: CompositionBlockProps) => {
   const { getComponent } = useComponents()
 
@@ -36,7 +43,7 @@ export const CompositionBlock = ({
       return {}
     }
 
-    const propMap: Record<string, string | number | boolean | undefined> = {}
+    const propMap: Record<string, string | number | boolean | Record<any, any> | undefined> = {}
 
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
       switch (variable.type) {
@@ -50,9 +57,8 @@ export const CompositionBlock = ({
           break
         }
         case 'UnboundValue': {
-          const [, uuid] = variable.path.split('/')
-          // @ts-expect-error value may not exist
-          acc[variableName] = dataSource[uuid].value
+          const uuid = variable.key
+          acc[variableName] = unboundValues[uuid].value
           break
         }
         default:
@@ -71,6 +77,7 @@ export const CompositionBlock = ({
         key={index}
         locale={locale}
         dataSource={dataSource}
+        unboundValues={unboundValues}
         entityStore={entityStore}
       />
     )

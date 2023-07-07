@@ -7,9 +7,10 @@ import {
   Experience,
   CompositionTree,
   CompositionMode,
+  LocalizedUnboundValues,
 } from '../types'
 import { useCommunication } from './useCommunication'
-import { getDataSourceFromTree, isInsideIframe } from '../utils'
+import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 
 interface UseExperienceBuilderProps {
@@ -42,6 +43,7 @@ export const useExperienceBuilder = ({
 }: UseExperienceBuilderProps) => {
   const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
+  const [unboundValues, setUnboundValues] = useState<LocalizedUnboundValues>({})
   const [locale, setLocale] = useState<string | undefined>(initialLocale)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
@@ -104,9 +106,12 @@ export const useExperienceBuilder = ({
       switch (eventData.eventType) {
         case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
           const { tree, locale } = payload
+          const { dataSource, unboundValues } = getDataFromTree(tree)
+
           setTree(tree)
           setLocale(locale)
-          setDataSource(getDataSourceFromTree(tree))
+          setDataSource(dataSource)
+          setUnboundValues(unboundValues)
           break
         }
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
@@ -169,6 +174,7 @@ export const useExperienceBuilder = ({
     () => ({
       tree,
       dataSource,
+      unboundValues,
       isDragging,
       selectedNodeId,
       config: { accessToken, locale, environmentId, spaceId, host: host || defaultHost },

@@ -7,6 +7,7 @@ const dropReceiverChildNode: CompositionComponentNode = {
     id: 'drop-receiver-node-child',
     props: {},
     dataSource: {},
+    unboundValues: {},
   },
   children: [],
 }
@@ -17,6 +18,7 @@ const dropReceiverNode: CompositionComponentNode = {
     id: 'drop-receiver-node',
     props: {},
     dataSource: {},
+    unboundValues: {},
   },
   children: [dropReceiverChildNode],
 }
@@ -27,6 +29,7 @@ const childFillerNode1: CompositionComponentNode = {
     id: 'random-child-node-1',
     props: {},
     dataSource: {},
+    unboundValues: {},
   },
   children: [],
 }
@@ -37,6 +40,7 @@ const childFillerNode2: CompositionComponentNode = {
     id: 'random-child-node-1',
     props: {},
     dataSource: {},
+    unboundValues: {},
   },
   children: [],
 }
@@ -47,6 +51,7 @@ const dropReceiverParentNode: CompositionComponentNode = {
     id: 'tree-root',
     props: {},
     dataSource: {},
+    unboundValues: {},
   },
   children: [childFillerNode1, dropReceiverNode, childFillerNode2],
 }

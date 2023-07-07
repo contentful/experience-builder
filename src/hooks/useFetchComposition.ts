@@ -16,6 +16,7 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
 
   const children = composition?.children ?? []
   const dataSource = composition?.dataSource ?? {}
+  const unboundValues = composition?.unboundValues ?? {}
 
   useEffect(() => {
     // fetch composition by slug
@@ -44,6 +45,10 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
 
   useEffect(() => {
     // fetch bound entries
+    if (!composition || !locale) {
+      return
+    }
+
     const entryIds: string[] = [],
       assetIds: string[] = []
     for (const dataBinding of Object.values(dataSource)) {
@@ -60,6 +65,7 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
 
     const fetchEntities = async () => {
       try {
+        // TODO: investigate why this is being fetched multiple twice
         const [entriesResponse, assetsResponse] = await Promise.all([
           entryIds.length > 0
             ? client.getEntries({ 'sys.id[in]': entryIds, locale })
@@ -77,12 +83,13 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
     }
 
     fetchEntities()
-  }, [composition, locale, setEntityStore])
+  }, [composition, locale])
 
   return {
     composition,
     children,
     dataSource,
+    unboundValues,
     entityStore,
     error,
   }

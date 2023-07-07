@@ -26,7 +26,7 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
     accessToken: accessToken as string,
   })
 
-  const { composition, children, dataSource, entityStore } = useFetchComposition({
+  const { composition, children, dataSource, entityStore, unboundValues } = useFetchComposition({
     client,
     slug: slug,
     locale: locale as string,
@@ -45,6 +45,7 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
           locale={locale as string}
           entityStore={entityStore}
           dataSource={dataSource}
+          unboundValues={unboundValues}
         />
       ))}
     </>
