@@ -168,7 +168,7 @@ export const useExperienceBuilder = ({
     return () => {
       window.removeEventListener('mousemove', onMouseMove)
     }
-  }, [sendMessage])
+  }, [mode, sendMessage])
 
   const experience: Experience = useMemo(
     () => ({
