@@ -48,8 +48,14 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     className,
     children,
   } = props
-  const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
-    useMousePosition()
+  const {
+    mouseInUpperHalf,
+    mouseInLeftHalf,
+    mouseAtBottomBorder,
+    mouseAtTopBorder,
+    componentRef,
+    targetIsComponent,
+  } = useMousePosition()
 
   const sectionInteraction = useInteraction()
   const sectionIndicatorTopInteraction = useInteraction()
@@ -97,7 +103,8 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
 
   const showPrependLine =
     flexDirection === 'row'
-      ? mouseInLeftHalf &&
+      ? targetIsComponent &&
+        mouseInLeftHalf &&
         !mouseAtBottomBorder &&
         !mouseAtTopBorder &&
         isDragging &&
@@ -110,7 +117,8 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
 
   const showAppendLine =
     flexDirection === 'row'
-      ? !mouseInLeftHalf &&
+      ? targetIsComponent &&
+        !mouseInLeftHalf &&
         !mouseAtBottomBorder &&
         !mouseAtTopBorder &&
         isDragging &&
