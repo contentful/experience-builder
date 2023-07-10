@@ -34,10 +34,6 @@ export const CompositionBlock = ({
     [node, getComponent]
   )
 
-  if (!definedComponent) {
-    return null
-  }
-
   const props = useMemo(() => {
     if (!definedComponent) {
       return {}
@@ -66,7 +62,11 @@ export const CompositionBlock = ({
       }
       return acc
     }, propMap)
-  }, [definedComponent, dataSource, entityStore, node])
+  }, [definedComponent, node.variables, dataSource, entityStore, unboundValues])
+
+	if (!definedComponent) {
+    return null
+  }
 
   const { component } = definedComponent
 
