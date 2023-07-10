@@ -91,7 +91,7 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [definedComponent, node.data.props, dataSource, locale])
+  }, [definedComponent, node.data.props, dataSource, locale, unboundValues])
 
   if (!definedComponent) {
     return null
