@@ -51,7 +51,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     children,
   } = props
   const [currentHoveredElement, setCurrentHoveredElement] = useState<HTMLElement | null>(null)
-
+  const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
   const removeSiblings = () => {
     // Remove the previously added sibling div (if any)
     const previousSiblingDiv = document.getElementById('hover-indicator')
@@ -80,11 +80,14 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
 
     removeSiblings()
 
-    const { left, width } = hoveredElement.getBoundingClientRect()
+    const { left, width, top, height } = hoveredElement.getBoundingClientRect()
     const offsetX = e.clientX - left
+    const offsetY = e.clientY - top
     const isHoveredOnLeft = offsetX < EDGE_SIZE
     const isHoveredOnRight = offsetX > width - EDGE_SIZE
-    if (!isHoveredOnLeft && !isHoveredOnRight) {
+    const isHoveredOnTheTop = offsetY < EDGE_SIZE
+    const isHoveredOnTheBottom = offsetY > height - EDGE_SIZE
+    if (!isHoveredOnLeft && !isHoveredOnRight && !isHoveredOnTheTop && !isHoveredOnTheBottom) {
       setCurrentHoveredElement(null)
       removeSiblings()
       return
@@ -94,9 +97,17 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     const siblingDiv = document.createElement('div')
     siblingDiv.id = 'hover-indicator'
     siblingDiv.classList.add('hovered-sibling')
-    siblingDiv.classList.add('lineVertical')
 
-    hoveredElement.insertAdjacentElement(isHoveredOnLeft ? 'beforebegin' : 'afterend', siblingDiv)
+    siblingDiv.classList.add(lineStyles)
+
+    if (flexDirection === 'column') {
+      hoveredElement.insertAdjacentElement(
+        isHoveredOnTheTop ? 'beforebegin' : 'afterend',
+        siblingDiv
+      )
+    } else {
+      hoveredElement.insertAdjacentElement(isHoveredOnLeft ? 'beforebegin' : 'afterend', siblingDiv)
+    }
 
     // Update the currently hovered element state
     setCurrentHoveredElement(hoveredElement)
@@ -152,8 +163,6 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
   } = props
 
   const isTopLevel = node?.data.blockId === CONTENTFUL_SECTION_ID
-
-  const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
 
   const showPrependLine =
     flexDirection === 'row'
