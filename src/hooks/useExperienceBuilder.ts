@@ -180,7 +180,7 @@ export const useExperienceBuilder = ({
       config: { accessToken, locale, environmentId, spaceId, host: host || defaultHost },
       mode: mode as CompositionMode,
     }),
-    [tree, dataSource, isDragging, selectedNodeId, mode]
+    [tree, dataSource, isDragging, selectedNodeId, mode, unboundValues]
   )
 
   return {
