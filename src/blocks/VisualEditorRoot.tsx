@@ -25,6 +25,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
     {
       id: 'VisualEditorRoot',
       className: 'root',
+
       onMouseUp: () => {
         onComponentDropped({ node: tree.root })
       },

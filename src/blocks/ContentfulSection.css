@@ -17,17 +17,41 @@
 }
 
 #ContentfulSection .lineHorizontal {
-  height: 3px;
-  width: 200px;
-  background: var(--blue500);
+  position: relative;
+  width: 3px;
+  height: 23px;
   margin: 10px;
+  background: transparent;
+}
+
+#ContentfulSection .lineHorizontal::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 3px;
+  background: var(--blue500);
 }
 
 #ContentfulSection .lineVertical {
+  position: relative;
+  width: 23px;
   height: 190px;
-  width: 3px;
-  background: var(--blue500);
   margin: 10px;
+  background: transparent;
+}
+
+#ContentfulSection .lineVertical::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 100%;
+  background: var(--blue500);
 }
 
 #ContentfulSection .tooltip {

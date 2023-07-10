@@ -4,7 +4,7 @@ const BORDER_DETECTION_SPACE = 45
 
 // This hook keeps track of the mouse position on an element
 // To use it simply attach the provided componentRef onto an element
-export const useMousePosition = () => {
+export const useMousePosition = (onExternalMouseMove?: (e: MouseEvent) => void) => {
   const componentRef = useRef<HTMLDivElement>(null)
   const [componentHeight, setComponentHeight] = useState<number>(0)
   const [componentWidth, setComponentWidth] = useState<number>(0)
@@ -53,6 +53,10 @@ export const useMousePosition = () => {
     }
 
     const onMouseMove = (e: MouseEvent) => {
+      console.log('mouse interaction move')
+      if (onExternalMouseMove) {
+        onExternalMouseMove(e)
+      }
       setTargetIsComponent(e.target === componentRef.current)
       checkMousePosition(e.clientX, e.clientY)
     }

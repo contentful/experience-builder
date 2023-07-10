@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react'
+import React, { MouseEventHandler, useState } from 'react'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
@@ -10,6 +10,8 @@ import './ContentfulSection.css'
 import { CONTENTFUL_SECTION_ID } from '../constants'
 import classNames from 'classnames'
 import { Flex } from '../core'
+
+const EDGE_SIZE = 10
 
 type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
   (EditorMode extends true
@@ -48,6 +50,58 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     className,
     children,
   } = props
+  const [currentHoveredElement, setCurrentHoveredElement] = useState<HTMLElement | null>(null)
+
+  const removeSiblings = () => {
+    // Remove the previously added sibling div (if any)
+    const previousSiblingDiv = document.getElementById('hover-indicator')
+    if (previousSiblingDiv) {
+      previousSiblingDiv.remove()
+    }
+  }
+  const onMouseMove = (e: MouseEvent) => {
+    if (!isTopLevel || !componentRef.current) return
+
+    const hoveredElement = e.target as HTMLElement
+
+    // if it is the root section don't add a sibling as this is already handled
+    if (hoveredElement === componentRef.current) {
+      setCurrentHoveredElement(null)
+      removeSiblings()
+      return
+    }
+
+    const hoverIndicator = document.getElementById('hover-indicator')
+
+    if (currentHoveredElement === hoveredElement || hoveredElement === hoverIndicator) {
+      // Already hovering over the element or its sibling, no action needed
+      return
+    }
+
+    removeSiblings()
+
+    const { left, width } = hoveredElement.getBoundingClientRect()
+    const offsetX = e.clientX - left
+    const isHoveredOnLeft = offsetX < EDGE_SIZE
+    const isHoveredOnRight = offsetX > width - EDGE_SIZE
+    if (!isHoveredOnLeft && !isHoveredOnRight) {
+      setCurrentHoveredElement(null)
+      removeSiblings()
+      return
+    }
+
+    // Add a new sibling div to the hovered element
+    const siblingDiv = document.createElement('div')
+    siblingDiv.id = 'hover-indicator'
+    siblingDiv.classList.add('hovered-sibling')
+    siblingDiv.classList.add('lineVertical')
+
+    hoveredElement.insertAdjacentElement(isHoveredOnLeft ? 'beforebegin' : 'afterend', siblingDiv)
+
+    // Update the currently hovered element state
+    setCurrentHoveredElement(hoveredElement)
+  }
+
   const {
     mouseInUpperHalf,
     mouseInLeftHalf,
@@ -55,7 +109,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     mouseAtTopBorder,
     componentRef,
     targetIsComponent,
-  } = useMousePosition()
+  } = useMousePosition(onMouseMove)
 
   const sectionInteraction = useInteraction()
   const sectionIndicatorTopInteraction = useInteraction()
@@ -175,7 +229,12 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         id="ContentfulSection"
         onMouseEnter={sectionInteraction.onMouseEnter}
         onMouseUp={onMouseUp}
-        onMouseLeave={sectionInteraction.onMouseLeave}
+        onMouseLeave={(e) => {
+          if (isTopLevel) {
+            removeSiblings()
+          }
+          sectionInteraction.onMouseLeave()
+        }}
         className={classNames('defaultStyles', className, { containerBorder: isSelected })}
         onMouseDown={onMouseDown}>
         {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
