@@ -64,7 +64,7 @@ export const CompositionBlock = ({
     }, propMap)
   }, [definedComponent, node.variables, dataSource, entityStore, unboundValues])
 
-	if (!definedComponent) {
+  if (!definedComponent) {
     return null
   }
 

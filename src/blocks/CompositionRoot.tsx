@@ -18,8 +18,8 @@ const MODE_ROOT_MAP = {
 
 export const CompositionRoot = (props: CompositionRootProps) => {
   const { mode } = props.experience
-	
-	useContentfulSection()
+
+  useContentfulSection()
 
   if (!mode) return null
 
