@@ -121,8 +121,8 @@ export const VisualEditorBlock = ({
     return (
       <ContentfulSection
         key={node.data.id}
-        handleComponentDrop={({ index, node }) => {
-          onComponentDropped({ node, index })
+        handleComponentDrop={({ index, parent }) => {
+          onComponentDropped({ parent, index })
         }}
         node={node}
         onMouseDown={(e) => {
@@ -155,7 +155,9 @@ export const VisualEditorBlock = ({
       onMouseUp: () => {
         if (definedComponent.componentDefinition.children) {
           // TODO: follow the logic from the section and based on mouse position and node.children.length, define the new index
-          onComponentDropped({ node })
+          onComponentDropped({
+            parent: { blockType: node.type, blockId: node.data.blockId, nodeId: node.data.id },
+          })
         }
       },
       onClick: (e: MouseEvent) => {

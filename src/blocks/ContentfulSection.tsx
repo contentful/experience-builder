@@ -2,7 +2,7 @@ import React, { MouseEventHandler, useMemo, useState } from 'react'
 import { useInteraction, useMousePosition } from '../hooks'
 import { SectionTooltip } from './SectionTooltip'
 import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
-import { CompositionComponentNode, StyleProps } from '../types'
+import { CompositionComponentNode, DroppedNodeParent, StyleProps } from '../types'
 import { transformAlignment, transformBorderStyle, transformFill } from './transformers'
 import { getInsertionData } from '../utils'
 
@@ -16,7 +16,7 @@ const EDGE_SIZE = 10
 
 type ContentfulEditorSectionProps = {
   onComponentRemoved: () => void
-  handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
+  handleComponentDrop: (data: { index: number; parent: DroppedNodeParent }) => void
   onMouseDown: MouseEventHandler<HTMLDivElement>
   isDragging: boolean
   children: React.ReactNode
@@ -194,7 +194,11 @@ export const ContentfulEditorSection = (props: ContentfulEditorSectionProps & St
   const onMouseUp = () => {
     if (hoveredInsertIndex !== -1 && hoveredParentId) {
       handleComponentDrop({
-        node: { type: 'block', data: { id: hoveredParentId, blockId: hoveredParentBlockId } },
+        parent: {
+          nodeId: hoveredParentId,
+          blockId: hoveredParentBlockId!,
+          blockType: 'block',
+        },
         index: hoveredInsertIndex,
       })
       removeHoverIndicator()
@@ -204,8 +208,6 @@ export const ContentfulEditorSection = (props: ContentfulEditorSectionProps & St
         getInsertionData({
           dropReceiverNode: node,
           dropReceiverParentNode: parentNode,
-          hoveredInsertIndex,
-          hoveredParentId,
           flexDirection,
           isMouseAtTopBorder: mouseAtTopBorder,
           isMouseAtBottomBorder: mouseAtBottomBorder,

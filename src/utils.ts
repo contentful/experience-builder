@@ -4,6 +4,7 @@ import {
   CompositionComponentNode,
   StyleProps,
   LocalizedUnboundValues,
+  DroppedNodeParent,
 } from './types'
 
 export const getDataFromTree = (
@@ -57,8 +58,7 @@ export const getDataFromTree = (
 
 type GetInsertionDataParams = {
   dropReceiverNode: CompositionComponentNode
-  hoveredParentId: string | undefined
-  hoveredInsertIndex: number
+
   dropReceiverParentNode: CompositionComponentNode
   flexDirection?: StyleProps['flexDirection']
   isMouseAtTopBorder: boolean
@@ -70,7 +70,7 @@ type GetInsertionDataParams = {
 }
 
 type InsertionData = {
-  node: CompositionComponentNode
+  parent: DroppedNodeParent
   index: number
 }
 
@@ -88,8 +88,6 @@ export const getInsertionData = ({
   isMouseInUpperHalf,
   isOverTopIndicator,
   isOverBottomIndicator,
-  hoveredParentId,
-  hoveredInsertIndex,
 }: GetInsertionDataParams): InsertionData => {
   const APPEND_INSIDE = dropReceiverNode.children.length
   const PREPEND_INSIDE = 0
@@ -103,7 +101,13 @@ export const getInsertionData = ({
 
     return {
       // when the mouse is around the border we want to drop the new component as a new section onto the root node
-      node: dropReceiverParentNode,
+
+      parent: {
+        nodeId: dropReceiverParentNode.data.id,
+        blockId: dropReceiverParentNode.data.blockId,
+        blockType: dropReceiverParentNode.type,
+      },
+
       index: isMouseAtBottomBorder ? APPEND_OUTSIDE : PREPEND_OUTSIDE,
     }
   }
@@ -118,19 +122,32 @@ export const getInsertionData = ({
 
     return {
       // when the mouse is around the border we want to drop the new component as a new section onto the root node
-      node: dropReceiverParentNode,
+      parent: {
+        nodeId: dropReceiverParentNode.data.id,
+        blockId: dropReceiverParentNode.data.blockId,
+        blockType: dropReceiverParentNode.type,
+      },
       index: isOverBottomIndicator ? APPEND_OUTSIDE : PREPEND_OUTSIDE,
     }
   }
 
   if (flexDirection === undefined || flexDirection === 'row') {
     return {
-      node: dropReceiverNode,
+      parent: {
+        nodeId: dropReceiverNode.data.id,
+        blockId: dropReceiverNode.data.blockId,
+        blockType: dropReceiverNode.type,
+      },
+
       index: isMouseInLeftHalf ? PREPEND_INSIDE : APPEND_INSIDE,
     }
   } else {
     return {
-      node: dropReceiverNode,
+      parent: {
+        nodeId: dropReceiverNode.data.id,
+        blockId: dropReceiverNode.data.blockId,
+        blockType: dropReceiverNode.type,
+      },
       index: isMouseInUpperHalf ? PREPEND_INSIDE : APPEND_INSIDE,
     }
   }

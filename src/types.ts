@@ -135,6 +135,12 @@ export type LocalizedDataSource = Record<
 export type CompositionVariableValueType = string | boolean | number | Record<any, any> | undefined
 type CompositionComponentPropType = 'BoundValue' | 'UnboundValue' | 'DesignValue'
 
+export type DroppedNodeParent = {
+  nodeId: string
+  blockId: string | undefined
+  blockType?: string
+}
+
 export type CompositionComponentPropValue<
   T extends CompositionComponentPropType = CompositionComponentPropType
 > = T extends 'DesignValue'
