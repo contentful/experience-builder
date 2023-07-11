@@ -59,19 +59,31 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
       previousSiblingDiv.remove()
     }
   }
+
+  const [hoveredParentId, setHoveredParentId] = useState<undefined | string>(undefined)
+  const [hoveredParentBlockId, setHoveredParentBlockId] = useState<undefined | string>(undefined)
+  const [hoveredInsertIndex, setHoveredInsertIndex] = useState<number>(-1)
+
   const onMouseMove = (e: MouseEvent) => {
     if (!isTopLevel || !componentRef.current) return
 
     const hoveredElement = e.target as HTMLElement
 
     // if it is the root section don't add a sibling as this is already handled
-    if (hoveredElement === componentRef.current) {
+    if (hoveredElement === componentRef.current || !isDragging) {
       setCurrentHoveredElement(null)
       removeSiblings()
       return
     }
 
     const hoverIndicator = document.getElementById('hover-indicator')
+    const parentId = hoveredElement.parentElement?.dataset.cfNodeId
+    const isEditorTool = hoveredElement.dataset.cfEditorTool
+
+    if (!parentId || isEditorTool) {
+      // if the parent is not a section we don't want to allow to drop for now
+      return
+    }
 
     if (currentHoveredElement === hoveredElement || hoveredElement === hoverIndicator) {
       // Already hovering over the element or its sibling, no action needed
@@ -99,6 +111,29 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     siblingDiv.classList.add('hovered-sibling')
 
     siblingDiv.classList.add(lineStyles)
+
+    let childIndex = -1
+
+    if (hoveredElement.parentElement?.children && hoveredElement !== hoverIndicator) {
+      const childArr = Array.from(hoveredElement.parentElement.children)
+      childIndex = childArr.findIndex((child) => child === hoveredElement)
+      if (hoveredElement !== hoverIndicator && parentId && childIndex !== -1) {
+        console.log(hoveredElement.parentElement, 'parent')
+        const parentBlockId = hoveredElement.parentElement?.dataset.cfNodeBlockId
+        console.log({ parentBlockId })
+        setHoveredParentId(parentId)
+        setHoveredParentBlockId(parentBlockId)
+        setHoveredInsertIndex(
+          flexDirection === 'column'
+            ? isHoveredOnTheTop
+              ? childIndex
+              : childIndex + 1
+            : isHoveredOnLeft
+            ? childIndex
+            : childIndex + 1
+        )
+      }
+    }
 
     if (flexDirection === 'column') {
       hoveredElement.insertAdjacentElement(
@@ -207,20 +242,34 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
       sectionIndicatorBottomInteraction.isMouseOver)
 
   const onMouseUp = () => {
-    // Passing this to the function to notify the experience builder about where to drop new components
-    handleComponentDrop(
-      getInsertionData({
-        dropReceiverNode: node,
-        dropReceiverParentNode: parentNode,
-        flexDirection,
-        isMouseAtTopBorder: mouseAtTopBorder,
-        isMouseAtBottomBorder: mouseAtBottomBorder,
-        isMouseInLeftHalf: mouseInLeftHalf,
-        isMouseInUpperHalf: mouseInUpperHalf,
-        isOverTopIndicator: sectionIndicatorTopInteraction.isMouseOver,
-        isOverBottomIndicator: sectionIndicatorBottomInteraction.isMouseOver,
+    console.log({ hoveredInsertIndex, hoveredParentId })
+    if (hoveredInsertIndex !== -1 && hoveredParentId) {
+      console.log({
+        node: { type: 'block', data: { id: hoveredParentId, blockId: hoveredParentBlockId } },
+        index: hoveredInsertIndex,
       })
-    )
+      handleComponentDrop({
+        node: { type: 'block', data: { id: hoveredParentId, blockId: hoveredParentBlockId } },
+        index: hoveredInsertIndex,
+      })
+    } else {
+      // Passing this to the function to notify the experience builder about where to drop new components
+      handleComponentDrop(
+        getInsertionData({
+          dropReceiverNode: node,
+          dropReceiverParentNode: parentNode,
+          hoveredInsertIndex,
+          hoveredParentId,
+          flexDirection,
+          isMouseAtTopBorder: mouseAtTopBorder,
+          isMouseAtBottomBorder: mouseAtBottomBorder,
+          isMouseInLeftHalf: mouseInLeftHalf,
+          isMouseInUpperHalf: mouseInUpperHalf,
+          isOverTopIndicator: sectionIndicatorTopInteraction.isMouseOver,
+          isOverBottomIndicator: sectionIndicatorBottomInteraction.isMouseOver,
+        })
+      )
+    }
   }
 
   return (
@@ -236,6 +285,8 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         ref={componentRef}
         cssStyles={styleOverrides}
         id="ContentfulSection"
+        data-cf-node-id={node.data.id}
+        data-cf-node-block-id={node.data.blockId}
         onMouseEnter={sectionInteraction.onMouseEnter}
         onMouseUp={onMouseUp}
         onMouseLeave={(e) => {

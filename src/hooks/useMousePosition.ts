@@ -53,7 +53,6 @@ export const useMousePosition = (onExternalMouseMove?: (e: MouseEvent) => void) 
     }
 
     const onMouseMove = (e: MouseEvent) => {
-      console.log('mouse interaction move')
       if (onExternalMouseMove) {
         onExternalMouseMove(e)
       }

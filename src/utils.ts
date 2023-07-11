@@ -57,6 +57,8 @@ export const getDataFromTree = (
 
 type GetInsertionDataParams = {
   dropReceiverNode: CompositionComponentNode
+  hoveredParentId: string | undefined
+  hoveredInsertIndex: number
   dropReceiverParentNode: CompositionComponentNode
   flexDirection?: StyleProps['flexDirection']
   isMouseAtTopBorder: boolean
@@ -86,6 +88,8 @@ export const getInsertionData = ({
   isMouseInUpperHalf,
   isOverTopIndicator,
   isOverBottomIndicator,
+  hoveredParentId,
+  hoveredInsertIndex,
 }: GetInsertionDataParams): InsertionData => {
   const APPEND_INSIDE = dropReceiverNode.children.length
   const PREPEND_INSIDE = 0
