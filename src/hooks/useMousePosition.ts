@@ -71,7 +71,7 @@ export const useMousePosition = (onExternalMouseMove?: (e: MouseEvent) => void) 
       }
       observer.disconnect()
     }
-  }, [componentHeight])
+  }, [componentHeight, onExternalMouseMove])
 
   return {
     mouseInUpperHalf,
