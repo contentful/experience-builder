@@ -26,13 +26,14 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
     accessToken: accessToken as string,
   })
 
-  const { composition, children, dataSource, entityStore, unboundValues } = useFetchComposition({
-    client,
-    slug: slug,
-    locale: locale as string,
-  })
+  const { composition, children, dataSource, entityStore, unboundValues, isLoadingData } =
+    useFetchComposition({
+      client,
+      slug: slug,
+      locale: locale as string,
+    })
 
-  if (!composition) {
+  if (!composition || isLoadingData) {
     return null
   }
 

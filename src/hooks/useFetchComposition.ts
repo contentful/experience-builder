@@ -13,6 +13,7 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
   const [composition, setComposition] = useState<Composition | undefined>()
   const [entityStore, setEntityStore] = useState<EntityStore>()
   const [error, setError] = useState<string | undefined>()
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const children = composition?.children ?? []
   const dataSource = composition?.dataSource ?? {}
@@ -37,6 +38,7 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
       } catch (e: any) {
         console.error(`Failed to fetch composition with error: ${e.message}`)
         setError(e.message)
+        setIsLoading(false)
       }
     }
 
@@ -76,9 +78,11 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
         ])
         const entities = [...entriesResponse.items, ...assetsResponse.items]
         setEntityStore(new EntityStore({ entities }))
+        setIsLoading(false)
       } catch (e: any) {
         console.error('Failed to fetch composition entities with error: ', e)
         setError(e.message)
+        setIsLoading(false)
       }
     }
 
@@ -92,5 +96,6 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
     unboundValues,
     entityStore,
     error,
+    isLoadingData: isLoading,
   }
 }
