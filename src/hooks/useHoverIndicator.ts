@@ -8,6 +8,7 @@ interface Coordinates {
   top: number
   width: number
   height: number
+  mousePosInTarget: { x: number; y: number }
 }
 
 export const useHoverIndicator = () => {
@@ -27,9 +28,13 @@ export const useHoverIndicator = () => {
           const { left, top, width, height } = target.getBoundingClientRect()
           const { pageXOffset, pageYOffset } = window
 
+          const mouseX = event.clientX - left
+          const mouseY = event.clientY - top
+
           const coordinates: Coordinates = {
             left: left + pageXOffset,
             top: top + pageYOffset,
+            mousePosInTarget: { x: mouseX, y: mouseY },
             width,
             height,
           }
