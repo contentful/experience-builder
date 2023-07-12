@@ -8,6 +8,7 @@ import {
 
 export enum OutgoingExperienceBuilderEvent {
   REGISTERED_COMPONENTS = 'registeredComponents',
+  HOVERED_SECTION = 'hoveredSection',
   MOUSE_MOVE = 'mouseMove',
   COMPONENT_SELECTED = 'componentSelected',
   COMPONENT_DROPPED = 'componentDropped',

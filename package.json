@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder",
-  "version": "0.0.1-alpha-1",
+  "version": "0.0.1-alpha-6",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "typings": "./dist/index.d.ts",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node bump-alpha.cjs && vite build",
     "test": "NODE_ENV=test jest .",
     "test:watch": "NODE_ENV=test jest . --watch",
     "test:coverage": "NODE_ENV=test jest . --coverage",
