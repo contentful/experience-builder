@@ -18,7 +18,12 @@ export const useHoverIndicator = () => {
       let target = event.target as HTMLElement | null
 
       while (target) {
-        if (target.dataset.cfNodeId) {
+        if (
+          // is itself a section?
+          target.dataset.cfNodeId ||
+          // Or a direct child of a section
+          (target.parentElement && target.parentElement.dataset.cfNodeId)
+        ) {
           const { left, top, width, height } = target.getBoundingClientRect()
           const { pageXOffset, pageYOffset } = window
 
