@@ -8,8 +8,7 @@ export const useMousePosition = (onExternalMouseMove?: (e: MouseEvent) => void) 
   const componentRef = useRef<HTMLDivElement>(null)
   const [componentHeight, setComponentHeight] = useState<number>(0)
   const [componentWidth, setComponentWidth] = useState<number>(0)
-  const [mouseInUpperHalf, setMouseInUpperHalf] = useState<boolean>(false)
-  const [mouseInLeftHalf, setMouseInLeftHalf] = useState<boolean>(false)
+
   const [mouseAtTopBorder, setMouseAtTopBorder] = useState<boolean>(false)
   const [mouseAtBottomBorder, setMouseAtBottomBorder] = useState<boolean>(false)
   const [targetIsComponent, setTargetIsComponent] = useState<boolean>(false)
@@ -29,7 +28,7 @@ export const useMousePosition = (onExternalMouseMove?: (e: MouseEvent) => void) 
 
     const checkMousePosition = (mouseX: number, mouseY: number) => {
       if (componentRef.current) {
-        const { top, height, width } = componentRef.current.getBoundingClientRect()
+        const { top, height } = componentRef.current.getBoundingClientRect()
         // The offset is used to calculate the offset when the element is scrolled
         const offset = mouseY - top
 
@@ -38,17 +37,6 @@ export const useMousePosition = (onExternalMouseMove?: (e: MouseEvent) => void) 
 
         const isMouseAtBottomBorder = offset > height - BORDER_DETECTION_SPACE
         setMouseAtBottomBorder(isMouseAtBottomBorder)
-
-        if (!isMouseAtTopBorder && !isMouseAtBottomBorder) {
-          const isMouseInLeftHalf = mouseX < width / 2
-          setMouseInLeftHalf(isMouseInLeftHalf)
-
-          const isMouseInUpperHalf = offset < height / 2
-          setMouseInUpperHalf(isMouseInUpperHalf)
-        } else {
-          setMouseInLeftHalf(false)
-          setMouseInUpperHalf(false)
-        }
       }
     }
 
@@ -74,8 +62,6 @@ export const useMousePosition = (onExternalMouseMove?: (e: MouseEvent) => void) 
   }, [componentHeight, onExternalMouseMove])
 
   return {
-    mouseInUpperHalf,
-    mouseInLeftHalf,
     mouseAtBottomBorder,
     mouseAtTopBorder,
     targetIsComponent,

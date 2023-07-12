@@ -107,8 +107,6 @@ export const ContentfulEditorSection = (props: ContentfulEditorSectionProps & St
 
   const isTopLevel = useMemo(() => node?.data.blockId === CONTENTFUL_SECTION_ID, [node])
 
-  const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
-
   const {
     onMouseMove,
     removeHoverIndicator,
@@ -122,14 +120,7 @@ export const ContentfulEditorSection = (props: ContentfulEditorSectionProps & St
     isTopLevel,
   })
 
-  const {
-    mouseInUpperHalf,
-    mouseInLeftHalf,
-    mouseAtBottomBorder,
-    mouseAtTopBorder,
-    componentRef,
-    targetIsComponent,
-  } = useMousePosition(onMouseMove)
+  const { mouseAtBottomBorder, mouseAtTopBorder, componentRef } = useMousePosition(onMouseMove)
 
   const sectionInteraction = useInteraction()
   const sectionIndicatorTopInteraction = useInteraction()
@@ -149,34 +140,6 @@ export const ContentfulEditorSection = (props: ContentfulEditorSectionProps & St
     flexWrap,
   }
 
-  const showPrependLine =
-    flexDirection === 'row'
-      ? targetIsComponent &&
-        mouseInLeftHalf &&
-        !mouseAtBottomBorder &&
-        !mouseAtTopBorder &&
-        isDragging &&
-        sectionInteraction.isMouseOver
-      : mouseInUpperHalf &&
-        !mouseAtBottomBorder &&
-        !mouseAtTopBorder &&
-        isDragging &&
-        sectionInteraction.isMouseOver
-
-  const showAppendLine =
-    flexDirection === 'row'
-      ? targetIsComponent &&
-        !mouseInLeftHalf &&
-        !mouseAtBottomBorder &&
-        !mouseAtTopBorder &&
-        isDragging &&
-        sectionInteraction.isMouseOver
-      : !mouseInUpperHalf &&
-        !mouseAtBottomBorder &&
-        !mouseAtTopBorder &&
-        isDragging &&
-        sectionInteraction.isMouseOver
-
   // if isDragging something and over the section's top border, or over the top indicator (which already appeared by that time)
   const showTopSectionIndicator =
     isTopLevel &&
@@ -192,6 +155,44 @@ export const ContentfulEditorSection = (props: ContentfulEditorSectionProps & St
       sectionIndicatorBottomInteraction.isMouseOver)
 
   const onMouseUp = () => {
+    if (mouseAtTopBorder || mouseAtBottomBorder) {
+      const insertData = getInsertionData({
+        dropReceiverNode: node,
+        dropReceiverParentNode: parentNode,
+        flexDirection,
+        isMouseAtTopBorder: mouseAtTopBorder,
+        isMouseAtBottomBorder: mouseAtBottomBorder,
+        isOverTopIndicator: sectionIndicatorTopInteraction.isMouseOver,
+        isOverBottomIndicator: sectionIndicatorBottomInteraction.isMouseOver,
+      })
+      if (insertData) {
+        handleComponentDrop(insertData)
+      }
+    } else {
+      const hoverIndicatorElement = document.getElementById('hover-indicator')
+      if (hoverIndicatorElement) {
+        const hoveredParent = hoverIndicatorElement.parentElement
+        if (hoveredParent) {
+          const childArr = Array.from(hoveredParent.children)
+          const insertIndex = childArr.findIndex((child) => child === hoverIndicatorElement)
+          const parentNodeId = hoveredParent.dataset.cfNodeId
+          const parentBlockId = hoveredParent.dataset.cfNodeBlockId
+          if (!parentNodeId || !parentBlockId || insertIndex === -1) {
+            return
+          }
+          handleComponentDrop({
+            parent: {
+              nodeId: parentNodeId,
+              blockId: parentBlockId!,
+              blockType: 'block',
+            },
+            index: insertIndex,
+          })
+          return
+        }
+      }
+    }
+
     if (hoveredInsertIndex !== -1 && hoveredParentId) {
       handleComponentDrop({
         parent: {
@@ -204,19 +205,6 @@ export const ContentfulEditorSection = (props: ContentfulEditorSectionProps & St
       removeHoverIndicator()
     } else {
       // Passing this to the function to notify the experience builder about where to drop new components
-      handleComponentDrop(
-        getInsertionData({
-          dropReceiverNode: node,
-          dropReceiverParentNode: parentNode,
-          flexDirection,
-          isMouseAtTopBorder: mouseAtTopBorder,
-          isMouseAtBottomBorder: mouseAtBottomBorder,
-          isMouseInLeftHalf: mouseInLeftHalf,
-          isMouseInUpperHalf: mouseInUpperHalf,
-          isOverTopIndicator: sectionIndicatorTopInteraction.isMouseOver,
-          isOverBottomIndicator: sectionIndicatorBottomInteraction.isMouseOver,
-        })
-      )
     }
   }
 
@@ -245,9 +233,7 @@ export const ContentfulEditorSection = (props: ContentfulEditorSectionProps & St
         }}
         className={classNames('defaultStyles', className, { containerBorder: isSelected })}
         onMouseDown={onMouseDown}>
-        {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
         {children}
-        {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}
         {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
       </Flex>
       <ContentfulSectionIndicator

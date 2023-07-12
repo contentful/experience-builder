@@ -58,18 +58,15 @@ export const getDataFromTree = (
 
 type GetInsertionDataParams = {
   dropReceiverNode: CompositionComponentNode
-
   dropReceiverParentNode: CompositionComponentNode
   flexDirection?: StyleProps['flexDirection']
   isMouseAtTopBorder: boolean
   isMouseAtBottomBorder: boolean
-  isMouseInLeftHalf: boolean
-  isMouseInUpperHalf: boolean
   isOverTopIndicator: boolean
   isOverBottomIndicator: boolean
 }
 
-type InsertionData = {
+export type InsertionData = {
   parent: DroppedNodeParent
   index: number
 }
@@ -81,17 +78,11 @@ type InsertionData = {
 export const getInsertionData = ({
   dropReceiverParentNode,
   dropReceiverNode,
-  flexDirection,
   isMouseAtTopBorder,
   isMouseAtBottomBorder,
-  isMouseInLeftHalf,
-  isMouseInUpperHalf,
   isOverTopIndicator,
   isOverBottomIndicator,
-}: GetInsertionDataParams): InsertionData => {
-  const APPEND_INSIDE = dropReceiverNode.children.length
-  const PREPEND_INSIDE = 0
-
+}: GetInsertionDataParams): InsertionData | null => {
   if (isMouseAtTopBorder || isMouseAtBottomBorder) {
     const indexOfSectionInParentChildren = dropReceiverParentNode.children.findIndex(
       (n) => n.data.id === dropReceiverNode.data.id
@@ -130,27 +121,7 @@ export const getInsertionData = ({
       index: isOverBottomIndicator ? APPEND_OUTSIDE : PREPEND_OUTSIDE,
     }
   }
-
-  if (flexDirection === undefined || flexDirection === 'row') {
-    return {
-      parent: {
-        nodeId: dropReceiverNode.data.id,
-        blockId: dropReceiverNode.data.blockId,
-        blockType: dropReceiverNode.type,
-      },
-
-      index: isMouseInLeftHalf ? PREPEND_INSIDE : APPEND_INSIDE,
-    }
-  } else {
-    return {
-      parent: {
-        nodeId: dropReceiverNode.data.id,
-        blockId: dropReceiverNode.data.blockId,
-        blockType: dropReceiverNode.type,
-      },
-      index: isMouseInUpperHalf ? PREPEND_INSIDE : APPEND_INSIDE,
-    }
-  }
+  return null
 }
 export const isInsideIframe = (): boolean => {
   try {
