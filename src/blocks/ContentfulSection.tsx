@@ -178,11 +178,11 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         onMouseEnter={sectionInteraction.onMouseEnter}
         onMouseUp={onMouseUp}
         onMouseLeave={sectionInteraction.onMouseLeave}
-        className={classNames('defaultStyles', className)}
+        className={classNames('defaultStyles', className, { containerBorder: isSelected })}
         onMouseDown={onMouseDown}>
-        {/*{showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}*/}
+        {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
         {children}
-        {/*{showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}*/}
+        {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}
         {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
       </Flex>
       <ContentfulSectionIndicator
