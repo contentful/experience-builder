@@ -3,6 +3,7 @@ import { ExperienceBuilderEditorEntityStore } from './ExperienceBuilderEditorEnt
 
 describe('ExperienceBuilderEditorEntityStore', () => {
   const locale = 'en-US'
+
   it('should be defined', () => {
     expect(ExperienceBuilderEditorEntityStore).toBeDefined()
   })

@@ -1,53 +1,52 @@
-import React from 'react'
 import { useFetchComposition } from './useFetchComposition'
-import { render, renderHook, screen, waitFor } from '@testing-library/react'
-import { EntityStore } from '../core/EntityStore'
+import { renderHook, waitFor } from '@testing-library/react'
 import { compositionEntry } from '../../test/__fixtures__/composition'
 import { entries, assets, entityIds } from '../../test/__fixtures__/entities'
+import { ContentfulClientEntityStore } from '../core/ContentfulClientEntityStore'
 
-jest.mock('../core/EntityStore')
+jest.mock('../core/ContentfulClientEntityStore')
 
-const experienceTypeId = 'layout'
+const sharedProps = {
+  accessToken: 'SECRET_TOKEN',
+  environmentId: 'master',
+  spaceId: 'SPACE_ID',
+  experienceTypeId: 'layout',
+}
 
-const TestComponent = ({ client, slug, locale }: { client: any; slug: string; locale: string }) => {
-  const { composition, children, entityStore, error } = useFetchComposition({
-    experienceTypeId,
-    client,
-    slug,
-    locale,
+const render = async (props: { slug: string; locale: string; experienceTypeId?: string }) => {
+  const { result } = renderHook(() =>
+    useFetchComposition({
+      ...sharedProps,
+      ...props,
+      experienceTypeId: props.experienceTypeId ?? sharedProps.experienceTypeId,
+    })
+  )
+
+  await waitFor(async () => {
+    expect(result.current.isLoadingData).toBeFalsy()
   })
 
-  return (
-    <div>
-      <h1>{composition?.title}</h1>
-      <div>
-        {children.map((child) => (
-          <div key={child.definitionId}>{child.definitionId}</div>
-        ))}
-      </div>
-      <div>
-        {entityStore && <span>Entities fetched!!</span>}
-        {error && <span>Error!!</span>}
-      </div>
-    </div>
-  )
+  return result
 }
 
 describe('useFetchComposition', () => {
-  let client: any
+  const locale = 'en-US'
+  const composition = compositionEntry.fields
+
+  const fetchEntries = jest.fn()
+  const fetchAssets = jest.fn()
+  const fetchComposition = jest.fn()
 
   describe('success', () => {
     beforeEach(async () => {
-      client = {
-        getEntries: jest
-          .fn()
-          .mockReturnValueOnce({ items: [compositionEntry] })
-          .mockReturnValue({ items: entries }),
-
-        getAssets: jest.fn().mockResolvedValue({ items: assets }),
-      }
-
-      render(<TestComponent client={client} slug="test" locale="en-US" />)
+      fetchEntries.mockResolvedValue(entries)
+      fetchAssets.mockResolvedValue(assets)
+      fetchComposition.mockResolvedValue(composition)
+      ;(ContentfulClientEntityStore as jest.Mock).mockReturnValue({
+        fetchEntries,
+        fetchAssets,
+        fetchComposition,
+      })
     })
 
     afterEach(() => {
@@ -59,44 +58,50 @@ describe('useFetchComposition', () => {
     })
 
     it('should fetch composition by slug', async () => {
-      expect(client.getEntries).toHaveBeenCalledWith({
-        content_type: experienceTypeId,
-        'fields.slug': 'test',
-        locale: 'en-US',
+      const result = await render({ slug: 'test', locale })
+
+      expect(ContentfulClientEntityStore).toHaveBeenCalledWith({
+        spaceId: 'SPACE_ID',
+        environmentId: 'master',
+        accessToken: 'SECRET_TOKEN',
+        experienceTypeId: 'layout',
+        entities: [],
+        locale,
+
       })
-      await waitFor(async () => {
-        expect(await screen.findByText('Test Composition')).toBeInTheDocument()
-      })
+      expect(fetchComposition).toHaveBeenCalledWith('test')
+
+      expect(result.current.composition).toEqual(composition)
     })
 
     it('should fetch bound entries', async () => {
-      await waitFor(async () => {
-        expect(await screen.findByText('Entities fetched!!')).toBeInTheDocument()
-      })
+      await render({ slug: 'test', locale })
 
-      expect(client.getEntries).toHaveBeenCalledWith({
-        'sys.id[in]': [entityIds.ENTRY1, entityIds.ENTRY2],
-        locale: 'en-US',
-      })
+      expect(fetchEntries).toHaveBeenCalledWith([entityIds.ENTRY1, entityIds.ENTRY2])
     })
 
     it('should fetch bound assets', async () => {
-      await waitFor(async () => {
-        expect(await screen.findByText('Entities fetched!!')).toBeInTheDocument()
-      })
+      await render({ slug: 'test', locale })
 
-      expect(client.getAssets).toHaveBeenCalledWith({
-        'sys.id[in]': [entityIds.ASSET1],
-        locale: 'en-US',
-      })
+      expect(fetchAssets).toHaveBeenCalledWith([entityIds.ASSET1])
     })
 
-    it('should set entities in entityStore', async () => {
-      await waitFor(async () => {
-        expect(await screen.findByText('Entities fetched!!')).toBeInTheDocument()
+    it('should setup entity store with respect to the given experienceTypeId', async () => {
+      const slug = 'hello-world'
+      const locale = 'en-US'
+
+      renderHook((props) => useFetchComposition({ ...sharedProps, ...props }), {
+        initialProps: { slug, experienceTypeId: 'custom-exp-type', locale },
       })
 
-      expect(EntityStore).toHaveBeenCalledWith({ entities: [...entries, ...assets] })
+      expect(ContentfulClientEntityStore).toHaveBeenCalledWith({
+        accessToken: 'SECRET_TOKEN',
+        entities: [],
+        environmentId: 'master',
+        experienceTypeId: 'custom-exp-type',
+        locale: 'en-US',
+        spaceId: 'SPACE_ID',
+      })
     })
   })
 
@@ -107,73 +112,20 @@ describe('useFetchComposition', () => {
 
     it('should log an error if composition was not found', async () => {
       const err = jest.spyOn(console, 'error')
-      client = {
-        getEntries: jest.fn().mockReturnValue({ items: [] }),
-        getAssets: jest.fn().mockResolvedValue({ items: assets }),
-      }
-      render(<TestComponent client={client} slug="test" locale="en-US" />)
-      await waitFor(async () => {
-        expect(await screen.findByText('Error!!')).toBeInTheDocument()
+      fetchComposition.mockRejectedValue(new Error('No composition with slug: "test" exists'))
+      ;(ContentfulClientEntityStore as jest.Mock).mockReturnValue({
+        fetchEntries,
+        fetchAssets,
+        fetchComposition,
       })
 
+      const result = await render({ slug: 'test', locale })
+
+      expect(result.current.error).toBe('No composition with slug: "test" exists')
+
       expect(err).toBeCalledWith(
-        'Failed to fetch composition with error: No composition with slug: test exists'
+        'Failed to fetch composition with error: No composition with slug: "test" exists'
       )
-    })
-
-    it('should log an error if multiple compositions were found', async () => {
-      const err = jest.spyOn(console, 'error')
-      client = {
-        getEntries: jest.fn().mockReturnValue({ items: [compositionEntry, compositionEntry] }),
-        getAssets: jest.fn().mockResolvedValue({ items: assets }),
-      }
-      render(<TestComponent client={client} slug="test" locale="en-US" />)
-
-      await waitFor(async () => {
-        expect(await screen.findByText('Error!!')).toBeInTheDocument()
-      })
-      expect(err).toBeCalledWith(
-        'Failed to fetch composition with error: More than one composition with slug: test was found'
-      )
-    })
-  })
-})
-
-describe('hook', () => {
-  let client: any
-
-  beforeEach(async () => {
-    client = {
-      getEntries: jest.fn().mockResolvedValue({ items: [compositionEntry] }),
-      getAssets: jest.fn().mockResolvedValue({ items: assets }),
-    }
-  })
-
-  it.only('should fetch composition with respect to the given experienceTypeId', async () => {
-    const slug = 'hello-world'
-    const locale = 'en-US'
-
-    const res = renderHook((props) => useFetchComposition(props), {
-      initialProps: { client, slug, experienceTypeId: 'layout', locale },
-    })
-
-    expect(client.getEntries).toHaveBeenCalledWith({
-      content_type: 'layout',
-      'fields.slug': slug,
-      locale,
-    })
-
-    res.rerender({
-      client,
-      slug,
-      experienceTypeId: 'custom-exp-type',
-      locale,
-    })
-
-    expect(client.getEntries).toHaveBeenCalledWith({
-      content_type: 'custom-exp-type',
-      'fields.slug': slug,
-      locale,
     })
   })
 })
