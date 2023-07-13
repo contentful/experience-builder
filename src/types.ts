@@ -243,3 +243,15 @@ export type Composition = {
   dataSource: CompositionDataSource
   unboundValues: CompositionUnboundValues
 }
+
+export interface RawCoordinates {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
+export interface Coordinates extends RawCoordinates {
+  mousePosInTarget: { x: number; y: number }
+  childrenCoordinates: RawCoordinates[]
+}

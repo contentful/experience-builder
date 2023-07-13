@@ -174,14 +174,15 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         cssStyles={styleOverrides}
         id="ContentfulSection"
         data-cf-node-id={node.data.id}
+        data-cf-node-block-id={node.data.blockId}
         onMouseEnter={sectionInteraction.onMouseEnter}
         onMouseUp={onMouseUp}
         onMouseLeave={sectionInteraction.onMouseLeave}
-        className={classNames('defaultStyles', className, { containerBorder: isSelected })}
+        className={classNames('defaultStyles', className)}
         onMouseDown={onMouseDown}>
-        {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
+        {/*{showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}*/}
         {children}
-        {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}
+        {/*{showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}*/}
         {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
       </Flex>
       <ContentfulSectionIndicator
