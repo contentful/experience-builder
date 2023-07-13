@@ -241,12 +241,16 @@ export type Breakpoint = {
   displayName: string
   previewSize: string
 }
+
+export type SCHEMA_VERSIONS = '2023-06-27' // | '2024-06-27' | ...
+
 export type Composition = {
   title: string
   slug: string
   componentTree: {
     breakpoints: Array<Breakpoint>
     children: Array<CompositionNode>
+    schemaVersion: SCHEMA_VERSIONS
   }
   dataSource: CompositionDataSource
   unboundValues: CompositionUnboundValues

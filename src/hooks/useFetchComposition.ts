@@ -18,6 +18,7 @@ interface FetchedCompositionData {
   breakpoints: Composition['componentTree']['breakpoints']
   dataSource: Composition['dataSource']
   unboundValues: Composition['unboundValues']
+  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined
 }
 
 export const useFetchComposition = ({
@@ -32,6 +33,7 @@ export const useFetchComposition = ({
 
   const children = composition?.componentTree?.children ?? []
   const breakpoints = composition?.componentTree?.breakpoints ?? []
+  const schemaVersion = composition?.componentTree?.schemaVersion
   const dataSource = composition?.dataSource ?? {}
   const unboundValues = composition?.unboundValues ?? {}
 
@@ -109,6 +111,7 @@ export const useFetchComposition = ({
     composition,
     children,
     breakpoints,
+    schemaVersion,
     dataSource,
     unboundValues,
     entityStore,

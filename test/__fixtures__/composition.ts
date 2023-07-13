@@ -18,6 +18,7 @@ const compositionFields: Composition = {
       },
     ],
     breakpoints: [],
+    schemaVersion: '2023-06-27',
   },
   dataSource: {
     uuid2: {
