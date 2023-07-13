@@ -235,10 +235,23 @@ export type CompositionNode = {
 export type CompositionDataSource = Record<string, DataSourceEntryValueType>
 export type CompositionUnboundValues = Record<string, { value: CompositionVariableValueType }>
 
+export type Breakpoint = {
+  id: string
+  query: string
+  displayName: string
+  previewSize: string
+}
+
+export type SCHEMA_VERSIONS = '2023-06-27' // | '2024-06-27' | ...
+
 export type Composition = {
   title: string
   slug: string
-  children: Array<CompositionNode>
+  componentTree: {
+    breakpoints: Array<Breakpoint>
+    children: Array<CompositionNode>
+    schemaVersion: SCHEMA_VERSIONS
+  }
   dataSource: CompositionDataSource
   unboundValues: CompositionUnboundValues
 }
