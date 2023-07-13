@@ -4,18 +4,21 @@ import { entityIds } from './entities'
 const compositionFields: Composition = {
   title: 'Test Composition',
   slug: 'test',
-  children: [
-    {
-      definitionId: 'component-1',
-      variables: {},
-      children: [],
-    },
-    {
-      definitionId: 'component-2',
-      variables: {},
-      children: [],
-    },
-  ],
+  componentTree: {
+    children: [
+      {
+        definitionId: 'component-1',
+        variables: {},
+        children: [],
+      },
+      {
+        definitionId: 'component-2',
+        variables: {},
+        children: [],
+      },
+    ],
+    breakpoints: [],
+  },
   dataSource: {
     uuid2: {
       sys: {
