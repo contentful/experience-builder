@@ -1,7 +1,6 @@
 @import '../variables.css';
 
 #ContentfulSection.defaultStyles {
-  min-height: 200px;
   overflow: scroll;
   flex-wrap: wrap;
   justify-content: center;
@@ -42,4 +41,8 @@
 #ContentfulSection .containerBorder {
   box-shadow: inset 0px 0px 0px 1px var(--blue500);
   box-sizing: border-box;
+}
+
+#ContentfulSection .empty {
+  min-height: 200px;
 }
