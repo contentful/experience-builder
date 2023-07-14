@@ -9,12 +9,31 @@ interface FetchCompositionProps {
   locale: string
 }
 
-export const useFetchComposition = ({ client, slug, locale }: FetchCompositionProps) => {
+interface FetchedCompositionData {
+  composition: Composition | undefined
+  entityStore: EntityStore | undefined
+  error: string | undefined
+  isLoadingData: boolean
+  children: Composition['componentTree']['children']
+  breakpoints: Composition['componentTree']['breakpoints']
+  dataSource: Composition['dataSource']
+  unboundValues: Composition['unboundValues']
+  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined
+}
+
+export const useFetchComposition = ({
+  client,
+  slug,
+  locale,
+}: FetchCompositionProps): FetchedCompositionData => {
   const [composition, setComposition] = useState<Composition | undefined>()
   const [entityStore, setEntityStore] = useState<EntityStore>()
   const [error, setError] = useState<string | undefined>()
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
-  const children = composition?.children ?? []
+  const children = composition?.componentTree?.children ?? []
+  const breakpoints = composition?.componentTree?.breakpoints ?? []
+  const schemaVersion = composition?.componentTree?.schemaVersion
   const dataSource = composition?.dataSource ?? {}
   const unboundValues = composition?.unboundValues ?? {}
 
@@ -37,6 +56,7 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
       } catch (e: any) {
         console.error(`Failed to fetch composition with error: ${e.message}`)
         setError(e.message)
+        setIsLoading(false)
       }
     }
 
@@ -76,9 +96,11 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
         ])
         const entities = [...entriesResponse.items, ...assetsResponse.items]
         setEntityStore(new EntityStore({ entities }))
+        setIsLoading(false)
       } catch (e: any) {
         console.error('Failed to fetch composition entities with error: ', e)
         setError(e.message)
+        setIsLoading(false)
       }
     }
 
@@ -88,9 +110,12 @@ export const useFetchComposition = ({ client, slug, locale }: FetchCompositionPr
   return {
     composition,
     children,
+    breakpoints,
+    schemaVersion,
     dataSource,
     unboundValues,
     entityStore,
     error,
+    isLoadingData: isLoading,
   }
 }

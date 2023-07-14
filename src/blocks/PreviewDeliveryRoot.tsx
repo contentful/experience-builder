@@ -4,6 +4,7 @@ import { Experience } from '../types'
 import { useCheckForExperienceConfig } from '../hooks/useCheckForExperienceConfig'
 import { CompositionBlock } from './CompositionBlock'
 import { useFetchComposition } from '../hooks/useFetchComposition'
+import { LATEST_SCHEMA_VERSION } from '../constants'
 
 type DeliveryRootProps = {
   experience: Experience
@@ -26,13 +27,28 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
     accessToken: accessToken as string,
   })
 
-  const { composition, children, dataSource, entityStore, unboundValues } = useFetchComposition({
+  const {
+    composition,
+    children,
+    dataSource,
+    entityStore,
+    unboundValues,
+    isLoadingData,
+    schemaVersion,
+  } = useFetchComposition({
     client,
     slug: slug,
     locale: locale as string,
   })
 
-  if (!composition) {
+  if (!composition || isLoadingData) {
+    return null
+  }
+
+  if (schemaVersion !== LATEST_SCHEMA_VERSION) {
+    console.warn(
+      `[exp-builder.sdk] Contenful composition schema version: ${schemaVersion} does not match the latest schema version: ${LATEST_SCHEMA_VERSION}. Aborting.`
+    )
     return null
   }
 

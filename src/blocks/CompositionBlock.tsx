@@ -54,7 +54,7 @@ export const CompositionBlock = ({
         }
         case 'UnboundValue': {
           const uuid = variable.key
-          acc[variableName] = unboundValues[uuid].value
+          acc[variableName] = unboundValues[uuid]?.value
           break
         }
         default:
