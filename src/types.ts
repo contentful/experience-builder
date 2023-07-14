@@ -13,6 +13,7 @@ export enum OutgoingExperienceBuilderEvent {
   COMPONENT_DROPPED = 'componentDropped',
   COMPONENT_REMOVED = 'componentRemoved',
   CANVAS_RELOAD = 'canvasReload',
+	UPDATE_ON_CANVAS_RESIZE = 'updateOnCanvasResize'
 }
 
 export enum IncomingExperienceBuilderEvent {
@@ -20,6 +21,7 @@ export enum IncomingExperienceBuilderEvent {
   COMPONENT_VALUE_CHANGED = 'valueChanged',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
+	CANVAS_RESIZED = 'canvasResized'
 }
 
 export type ComponentDefinitionVariableType =

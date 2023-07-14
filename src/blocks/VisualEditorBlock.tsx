@@ -169,6 +169,8 @@ export const VisualEditorBlock = ({
         onComponentRemoved(node)
       },
       className: 'visualEditorBlockHover',
+			'data-cf-node-id': node.data.id,
+      'data-cf-node-block-id': node.data.blockId,
       isDragging,
       ...props,
     },

@@ -12,6 +12,7 @@ import {
 import { useCommunication } from './useCommunication'
 import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
+import { getAllElementsBoundingBox } from '../core/dom-values'
 
 interface UseExperienceBuilderProps {
   /** The mode is automatically set, use this value to manually override this **/
@@ -117,6 +118,17 @@ export const useExperienceBuilder = ({
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
           const { selectedNodeId } = payload
           setSelectedNodeId(selectedNodeId)
+          break
+        }
+				case IncomingExperienceBuilderEvent.CANVAS_RESIZED: {
+          const { selectedNodeId } = payload
+          const selectedElement = document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)
+
+					if(selectedElement) {
+						sendMessage(OutgoingExperienceBuilderEvent.UPDATE_ON_CANVAS_RESIZE, {
+							selectedNodeDomRect: getAllElementsBoundingBox(selectedElement),
+						})
+					}
           break
         }
         case IncomingExperienceBuilderEvent.COMPONENT_VALUE_CHANGED: {
