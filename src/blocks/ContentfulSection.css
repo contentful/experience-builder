@@ -29,17 +29,3 @@
   background: var(--blue500);
   margin: 10px;
 }
-
-#ContentfulSection .tooltip {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  position: absolute;
-  top: 1px;
-  right: 1px;
-}
-
-#ContentfulSection .containerBorder {
-  box-shadow: inset 0px 0px 0px 1px var(--blue500);
-  box-sizing: border-box;
-}
