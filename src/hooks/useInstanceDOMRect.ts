@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { getAllElementsBoundingBox } from "../core/dom-values"
+import { getElementCoordinates } from "../core/dom-values"
 import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from "../types"
 import { useCommunication } from "./useCommunication"
 
@@ -17,7 +17,7 @@ export const useInstanceDOMRect = ({ instanceId, node }: {
 	useEffect(() => {
 		if(selectedElement) {
 			sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_RECT, {
-				selectedNodeDomRect: getAllElementsBoundingBox(selectedElement)
+				selectedNodeDomRect: getElementCoordinates(selectedElement)
 			})
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps

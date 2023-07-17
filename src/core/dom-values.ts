@@ -14,7 +14,7 @@ const sumRects = (first: Rect, second: Rect) => {
   };
 };
 
-export const getAllElementsBoundingBox = (element: Element): DOMRect => {
+export const getElementCoordinates = (element: Element): DOMRect => {
   const rect = element.getBoundingClientRect();
   if (element.children.length === 0) {
     return rect;
@@ -26,7 +26,7 @@ export const getAllElementsBoundingBox = (element: Element): DOMRect => {
   const rects: Rect[] = [];
 
   for (const child of element.children) {
-    const childRect = getAllElementsBoundingBox(child);
+    const childRect = getElementCoordinates(child);
     if (childRect.width !== 0 || childRect.height !== 0) {
       const { top, right, bottom, left } = childRect;
       rects.push({ top, right, bottom, left });

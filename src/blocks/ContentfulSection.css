@@ -28,3 +28,7 @@
   background: var(--blue500);
   margin: 10px;
 }
+
+#ContentfulSection .empty {
+  min-height: 200px;
+}
