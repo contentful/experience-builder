@@ -5,6 +5,7 @@ import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
 import './VisualEditorRoot.css'
+import { useHoverIndicator } from '../hooks/useHoverIndicator'
 
 type VisualEditorRootProps = {
   experience: Experience
@@ -13,6 +14,7 @@ type VisualEditorRootProps = {
 
 export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
   const { onComponentDropped } = useInteraction()
+  useHoverIndicator()
 
   const { tree, dataSource, isDragging, selectedNodeId, unboundValues } = experience
 

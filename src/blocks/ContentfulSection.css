@@ -1,7 +1,6 @@
 @import '../variables.css';
 
 #ContentfulSection.defaultStyles {
-  min-height: 200px;
   overflow: scroll;
   flex-wrap: wrap;
   justify-content: center;
