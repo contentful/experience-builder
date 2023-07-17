@@ -19,7 +19,7 @@ export const useSelectedInstanceCoordinates = ({
 
   useEffect(() => {
     if (selectedElement) {
-      sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_RECT, {
+      sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_COORDINATES, {
         selectedNodeCoordinates: getElementCoordinates(selectedElement),
       })
     }

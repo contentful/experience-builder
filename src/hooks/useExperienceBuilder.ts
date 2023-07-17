@@ -82,7 +82,7 @@ export const useExperienceBuilder = ({
 
       if (selectedElement) {
         const selectedNodeCoordinates = getElementCoordinates(selectedElement)
-        sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_RECT, {
+        sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_COORDINATES, {
           selectedNodeCoordinates,
         })
       }

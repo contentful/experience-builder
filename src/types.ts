@@ -20,7 +20,7 @@ export enum OutgoingExperienceBuilderEvent {
   COMPONENT_DROPPED = 'componentDropped',
   COMPONENT_REMOVED = 'componentRemoved',
   CANVAS_RELOAD = 'canvasReload',
-  UPDATE_SELECTED_COMPONENT_RECT = 'updateSelectedComponentRect',
+  UPDATE_SELECTED_COMPONENT_COORDINATES = 'updateSelectedComponentCoordinates',
   CANVAS_SCROLL = 'canvasScrolling',
 }
 
