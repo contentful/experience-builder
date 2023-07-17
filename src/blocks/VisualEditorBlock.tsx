@@ -15,7 +15,7 @@ import { ContentfulSection } from './ContentfulSection'
 import './VisualEditorBlock.css'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
-import { getAllElementsBoundingBox } from '../core/dom-values'
+import { useInstanceDOMRect } from '../hooks/useInstanceDOMRect'
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
@@ -36,6 +36,9 @@ export const VisualEditorBlock = ({
   parentNode,
   selectedNodeId,
 }: VisualEditorBlockProps) => {
+
+	useInstanceDOMRect({ instanceId: selectedNodeId, node })
+
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
   const { onComponentDropped, onComponentRemoved } = useInteraction()
@@ -131,7 +134,6 @@ export const VisualEditorBlock = ({
           e.preventDefault()
           sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
 						node,
-						rect: e.target && getAllElementsBoundingBox(e.target as HTMLElement)
 					})
         }}
         className="visualEditorBlockHover"
@@ -152,7 +154,6 @@ export const VisualEditorBlock = ({
         e.preventDefault()
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
 					node,
-					rect: e.target && getAllElementsBoundingBox(e.target as HTMLElement)
 				})
       },
       onMouseUp: () => {

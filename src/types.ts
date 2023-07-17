@@ -13,7 +13,7 @@ export enum OutgoingExperienceBuilderEvent {
   COMPONENT_DROPPED = 'componentDropped',
   COMPONENT_REMOVED = 'componentRemoved',
   CANVAS_RELOAD = 'canvasReload',
-	UPDATE_ON_CANVAS_RESIZE = 'updateOnCanvasResize'
+  UPDATE_SELECTED_COMPONENT_RECT = 'updateSelectedComponentRect',
 }
 
 export enum IncomingExperienceBuilderEvent {

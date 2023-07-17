@@ -117,7 +117,8 @@ export const useExperienceBuilder = ({
         }
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
           const { selectedNodeId } = payload
-          setSelectedNodeId(selectedNodeId)
+
+          setSelectedNodeId(selectedNodeId);
           break
         }
 				case IncomingExperienceBuilderEvent.CANVAS_RESIZED: {
@@ -125,8 +126,9 @@ export const useExperienceBuilder = ({
           const selectedElement = document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)
 
 					if(selectedElement) {
-						sendMessage(OutgoingExperienceBuilderEvent.UPDATE_ON_CANVAS_RESIZE, {
-							selectedNodeDomRect: getAllElementsBoundingBox(selectedElement),
+						const selectedNodeDomRect = getAllElementsBoundingBox(selectedElement)
+						sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_RECT, {
+							selectedNodeDomRect,
 						})
 					}
           break
@@ -192,7 +194,7 @@ export const useExperienceBuilder = ({
       config: { accessToken, locale, environmentId, spaceId, host: host || defaultHost },
       mode: mode as CompositionMode,
     }),
-    [tree, dataSource, isDragging, selectedNodeId, mode, unboundValues]
+    [tree, dataSource, unboundValues, isDragging, selectedNodeId, accessToken, locale, environmentId, spaceId, host, defaultHost, mode]
   )
 
   return {
