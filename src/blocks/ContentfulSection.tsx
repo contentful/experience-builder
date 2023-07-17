@@ -173,6 +173,8 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         ref={componentRef}
         cssStyles={styleOverrides}
         id="ContentfulSection"
+        data-cf-node-id={node.data.id}
+        data-cf-node-block-id={node.data.blockId}
         onMouseEnter={sectionInteraction.onMouseEnter}
         onMouseUp={onMouseUp}
         onMouseLeave={sectionInteraction.onMouseLeave}
