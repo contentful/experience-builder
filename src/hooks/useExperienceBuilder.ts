@@ -8,7 +8,7 @@ import {
   CompositionTree,
   CompositionMode,
   LocalizedUnboundValues,
-	ScrollStates,
+  ScrollStates,
 } from '../types'
 import { useCommunication } from './useCommunication'
 import { getDataFromTree, isInsideIframe } from '../utils'
@@ -76,16 +76,19 @@ export const useExperienceBuilder = ({
     }, 50)
   }
 
-	const updateSelectedComponentCoordinates = useCallback((selectedNodeId: string) => {
-		const selectedElement = document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)
+  const updateSelectedComponentCoordinates = useCallback(
+    (selectedNodeId: string) => {
+      const selectedElement = document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)
 
-		if(selectedElement) {
-			const selectedNodeCoordinates = getElementCoordinates(selectedElement)
-			sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_RECT, {
-				selectedNodeCoordinates,
-			})
-		}
-	}, [sendMessage])
+      if (selectedElement) {
+        const selectedNodeCoordinates = getElementCoordinates(selectedElement)
+        sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_RECT, {
+          selectedNodeCoordinates,
+        })
+      }
+    },
+    [sendMessage]
+  )
 
   useEffect(() => {
     // We only care about this communication when in editor mode
@@ -130,10 +133,10 @@ export const useExperienceBuilder = ({
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
           const { selectedNodeId } = payload
 
-          setSelectedNodeId(selectedNodeId);
+          setSelectedNodeId(selectedNodeId)
           break
         }
-				case IncomingExperienceBuilderEvent.CANVAS_RESIZED: {
+        case IncomingExperienceBuilderEvent.CANVAS_RESIZED: {
           const { selectedNodeId } = payload
           updateSelectedComponentCoordinates(selectedNodeId)
           break
@@ -172,9 +175,9 @@ export const useExperienceBuilder = ({
     }
   }, [mode])
 
-	/*
-	 * Handles mouse move business
-	 */
+  /*
+   * Handles mouse move business
+   */
   useEffect(() => {
     // We only care about this communication when in editor mode
     if (mode !== 'editor') return
@@ -192,38 +195,38 @@ export const useExperienceBuilder = ({
     }
   }, [mode, sendMessage])
 
-	/*
-	 * Handles on scroll business
-	 */
-	useEffect(() => {
+  /*
+   * Handles on scroll business
+   */
+  useEffect(() => {
     // We only care about this communication when in editor mode
     if (mode !== 'editor') return
-		let timeoutId = 0;
-		let isScrolling = false;
+    let timeoutId = 0
+    let isScrolling = false
 
-    const onScroll =() => {
-			if (isScrolling === false) {
-				sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_START)
+    const onScroll = () => {
+      if (isScrolling === false) {
+        sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_START)
       }
 
-			sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.IS_SCROLLING)
-      isScrolling = true;
+      sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.IS_SCROLLING)
+      isScrolling = true
 
-      clearTimeout(timeoutId);
-			
+      clearTimeout(timeoutId)
+
       timeoutId = window.setTimeout(() => {
         if (isScrolling === false) {
-          return;
+          return
         }
 
-        isScrolling = false;
-				sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_END)
+        isScrolling = false
+        sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_END)
 
-				/**
-				 * On scroll end, send new co-ordinates of selected node
-				 */
-				updateSelectedComponentCoordinates(selectedNodeId)
-      }, 150);
+        /**
+         * On scroll end, send new co-ordinates of selected node
+         */
+        updateSelectedComponentCoordinates(selectedNodeId)
+      }, 150)
     }
 
     window.addEventListener('scroll', onScroll)
@@ -243,7 +246,20 @@ export const useExperienceBuilder = ({
       config: { accessToken, locale, environmentId, spaceId, host: host || defaultHost },
       mode: mode as CompositionMode,
     }),
-    [tree, dataSource, unboundValues, isDragging, selectedNodeId, accessToken, locale, environmentId, spaceId, host, defaultHost, mode]
+    [
+      tree,
+      dataSource,
+      unboundValues,
+      isDragging,
+      selectedNodeId,
+      accessToken,
+      locale,
+      environmentId,
+      spaceId,
+      host,
+      defaultHost,
+      mode,
+    ]
   )
 
   return {

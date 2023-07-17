@@ -84,13 +84,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
   }
 
   // Extract properties that are only available in editor mode
-  const {
-    isDragging,
-    parentNode,
-    node,
-    handleComponentDrop,
-    onMouseDown,
-  } = props
+  const { isDragging, parentNode, node, handleComponentDrop, onMouseDown } = props
 
   const isTopLevel = node?.data.blockId === CONTENTFUL_SECTION_ID
 
@@ -154,7 +148,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
       })
     )
   }
-	
+
   return (
     <>
       <ContentfulSectionIndicator
@@ -168,7 +162,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         ref={componentRef}
         cssStyles={styleOverrides}
         id="ContentfulSection"
-				data-cf-node-id={node.data.id}
+        data-cf-node-id={node.data.id}
         data-cf-node-block-id={node.data.blockId}
         onMouseEnter={sectionInteraction.onMouseEnter}
         onMouseUp={onMouseUp}

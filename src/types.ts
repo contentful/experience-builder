@@ -8,8 +8,8 @@ import {
 
 export enum ScrollStates {
   SCROLL_START = 'scrollStart',
-	IS_SCROLLING = 'isScrolling',
-	SCROLL_END = 'scrollEnd'
+  IS_SCROLLING = 'isScrolling',
+  SCROLL_END = 'scrollEnd',
 }
 
 export enum OutgoingExperienceBuilderEvent {
@@ -21,7 +21,7 @@ export enum OutgoingExperienceBuilderEvent {
   COMPONENT_REMOVED = 'componentRemoved',
   CANVAS_RELOAD = 'canvasReload',
   UPDATE_SELECTED_COMPONENT_RECT = 'updateSelectedComponentRect',
-	CANVAS_SCROLL = 'canvasScrolling'
+  CANVAS_SCROLL = 'canvasScrolling',
 }
 
 export enum IncomingExperienceBuilderEvent {
@@ -29,7 +29,7 @@ export enum IncomingExperienceBuilderEvent {
   COMPONENT_VALUE_CHANGED = 'valueChanged',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
-	CANVAS_RESIZED = 'canvasResized'
+  CANVAS_RESIZED = 'canvasResized',
 }
 
 export type ComponentDefinitionVariableType =

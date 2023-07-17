@@ -36,7 +36,7 @@ export const VisualEditorBlock = ({
   parentNode,
   selectedNodeId,
 }: VisualEditorBlockProps) => {
-	useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
+  useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
@@ -132,8 +132,8 @@ export const VisualEditorBlock = ({
           e.stopPropagation()
           e.preventDefault()
           sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
-						node,
-					})
+            node,
+          })
         }}
         className="visualEditorBlockHover"
         isDragging={isDragging}
@@ -152,8 +152,8 @@ export const VisualEditorBlock = ({
         e.stopPropagation()
         e.preventDefault()
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
-					node,
-				})
+          node,
+        })
       },
       onMouseUp: () => {
         if (definedComponent.componentDefinition.children) {
@@ -169,7 +169,7 @@ export const VisualEditorBlock = ({
         onComponentRemoved(node)
       },
       className: 'visualEditorBlockHover',
-			'data-cf-node-id': node.data.id,
+      'data-cf-node-id': node.data.id,
       'data-cf-node-block-id': node.data.blockId,
       isDragging,
       ...props,
