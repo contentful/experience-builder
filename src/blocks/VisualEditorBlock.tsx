@@ -15,7 +15,7 @@ import { ContentfulSection } from './ContentfulSection'
 import './VisualEditorBlock.css'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
-import { useInstanceDOMRect } from '../hooks/useInstanceDOMRect'
+import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
@@ -36,8 +36,7 @@ export const VisualEditorBlock = ({
   parentNode,
   selectedNodeId,
 }: VisualEditorBlockProps) => {
-
-	useInstanceDOMRect({ instanceId: selectedNodeId, node })
+	useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()

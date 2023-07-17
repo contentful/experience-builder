@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import throttle from 'lodash.throttle'
 import {
   LocalizedDataSource,
@@ -8,6 +8,7 @@ import {
   CompositionTree,
   CompositionMode,
   LocalizedUnboundValues,
+	ScrollStates,
 } from '../types'
 import { useCommunication } from './useCommunication'
 import { getDataFromTree, isInsideIframe } from '../utils'
@@ -75,6 +76,17 @@ export const useExperienceBuilder = ({
     }, 50)
   }
 
+	const updateSelectedComponentCoordinates = useCallback((selectedNodeId: string) => {
+		const selectedElement = document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)
+
+		if(selectedElement) {
+			const selectedNodeCoordinates = getElementCoordinates(selectedElement)
+			sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_RECT, {
+				selectedNodeCoordinates,
+			})
+		}
+	}, [sendMessage])
+
   useEffect(() => {
     // We only care about this communication when in editor mode
     if (mode !== 'editor') return
@@ -123,14 +135,7 @@ export const useExperienceBuilder = ({
         }
 				case IncomingExperienceBuilderEvent.CANVAS_RESIZED: {
           const { selectedNodeId } = payload
-          const selectedElement = document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)
-
-					if(selectedElement) {
-						const selectedNodeDomRect = getElementCoordinates(selectedElement)
-						sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_RECT, {
-							selectedNodeDomRect,
-						})
-					}
+          updateSelectedComponentCoordinates(selectedNodeId)
           break
         }
         case IncomingExperienceBuilderEvent.COMPONENT_VALUE_CHANGED: {
@@ -167,6 +172,9 @@ export const useExperienceBuilder = ({
     }
   }, [mode])
 
+	/*
+	 * Handles mouse move business
+	 */
   useEffect(() => {
     // We only care about this communication when in editor mode
     if (mode !== 'editor') return
@@ -183,6 +191,47 @@ export const useExperienceBuilder = ({
       window.removeEventListener('mousemove', onMouseMove)
     }
   }, [mode, sendMessage])
+
+	/*
+	 * Handles on scroll business
+	 */
+	useEffect(() => {
+    // We only care about this communication when in editor mode
+    if (mode !== 'editor') return
+		let timeoutId = 0;
+		let isScrolling = false;
+
+    const onScroll =() => {
+			if (isScrolling === false) {
+				sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_START)
+      }
+
+			sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.IS_SCROLLING)
+      isScrolling = true;
+
+      clearTimeout(timeoutId);
+			
+      timeoutId = window.setTimeout(() => {
+        if (isScrolling === false) {
+          return;
+        }
+
+        isScrolling = false;
+				sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_END)
+
+				/**
+				 * On scroll end, send new co-ordinates of selected node
+				 */
+				updateSelectedComponentCoordinates(selectedNodeId)
+      }, 150);
+    }
+
+    window.addEventListener('scroll', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [mode, selectedNodeId, sendMessage, updateSelectedComponentCoordinates])
 
   const experience: Experience = useMemo(
     () => ({
