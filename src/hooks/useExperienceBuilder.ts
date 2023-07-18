@@ -233,6 +233,7 @@ export const useExperienceBuilder = ({
 
     return () => {
       window.removeEventListener('scroll', onScroll)
+      clearTimeout(timeoutId)
     }
   }, [mode, selectedNodeId, sendMessage, updateSelectedComponentCoordinates])
 
