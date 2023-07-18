@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { getElementCoordinates } from '../core/dom-values'
+import { getElementCoordinates } from '../core/domValues'
 import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from '../types'
 import { useCommunication } from './useCommunication'
 

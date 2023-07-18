@@ -13,7 +13,7 @@ import {
 import { useCommunication } from './useCommunication'
 import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
-import { getElementCoordinates } from '../core/dom-values'
+import { getElementCoordinates } from '../core/domValues'
 
 interface UseExperienceBuilderProps {
   /** The mode is automatically set, use this value to manually override this **/
