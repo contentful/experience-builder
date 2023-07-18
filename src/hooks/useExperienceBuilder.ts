@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import throttle from 'lodash.throttle'
 import {
   LocalizedDataSource,
@@ -8,10 +8,12 @@ import {
   CompositionTree,
   CompositionMode,
   LocalizedUnboundValues,
+  ScrollStates,
 } from '../types'
 import { useCommunication } from './useCommunication'
 import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
+import { getElementCoordinates } from '../core/domValues'
 
 interface UseExperienceBuilderProps {
   /** The mode is automatically set, use this value to manually override this **/
@@ -74,6 +76,20 @@ export const useExperienceBuilder = ({
     }, 50)
   }
 
+  const updateSelectedComponentCoordinates = useCallback(
+    (selectedNodeId: string) => {
+      const selectedElement = document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)
+
+      if (selectedElement) {
+        const selectedNodeCoordinates = getElementCoordinates(selectedElement)
+        sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_COORDINATES, {
+          selectedNodeCoordinates,
+        })
+      }
+    },
+    [sendMessage]
+  )
+
   useEffect(() => {
     // We only care about this communication when in editor mode
     if (mode !== 'editor') return
@@ -116,7 +132,13 @@ export const useExperienceBuilder = ({
         }
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
           const { selectedNodeId } = payload
+
           setSelectedNodeId(selectedNodeId)
+          break
+        }
+        case IncomingExperienceBuilderEvent.CANVAS_RESIZED: {
+          const { selectedNodeId } = payload
+          updateSelectedComponentCoordinates(selectedNodeId)
           break
         }
         case IncomingExperienceBuilderEvent.COMPONENT_VALUE_CHANGED: {
@@ -153,6 +175,9 @@ export const useExperienceBuilder = ({
     }
   }, [mode])
 
+  /*
+   * Handles mouse move business
+   */
   useEffect(() => {
     // We only care about this communication when in editor mode
     if (mode !== 'editor') return
@@ -170,6 +195,48 @@ export const useExperienceBuilder = ({
     }
   }, [mode, sendMessage])
 
+  /*
+   * Handles on scroll business
+   */
+  useEffect(() => {
+    // We only care about this communication when in editor mode
+    if (mode !== 'editor') return
+    let timeoutId = 0
+    let isScrolling = false
+
+    const onScroll = () => {
+      if (isScrolling === false) {
+        sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_START)
+      }
+
+      sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.IS_SCROLLING)
+      isScrolling = true
+
+      clearTimeout(timeoutId)
+
+      timeoutId = window.setTimeout(() => {
+        if (isScrolling === false) {
+          return
+        }
+
+        isScrolling = false
+        sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_END)
+
+        /**
+         * On scroll end, send new co-ordinates of selected node
+         */
+        updateSelectedComponentCoordinates(selectedNodeId)
+      }, 150)
+    }
+
+    window.addEventListener('scroll', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      clearTimeout(timeoutId)
+    }
+  }, [mode, selectedNodeId, sendMessage, updateSelectedComponentCoordinates])
+
   const experience: Experience = useMemo(
     () => ({
       tree,
@@ -180,7 +247,20 @@ export const useExperienceBuilder = ({
       config: { accessToken, locale, environmentId, spaceId, host: host || defaultHost },
       mode: mode as CompositionMode,
     }),
-    [tree, dataSource, isDragging, selectedNodeId, mode, unboundValues]
+    [
+      tree,
+      dataSource,
+      unboundValues,
+      isDragging,
+      selectedNodeId,
+      accessToken,
+      locale,
+      environmentId,
+      spaceId,
+      host,
+      defaultHost,
+      mode,
+    ]
   )
 
   return {

@@ -1,6 +1,5 @@
 import React, { MouseEventHandler } from 'react'
 import { useInteraction, useMousePosition } from '../hooks'
-import { SectionTooltip } from './SectionTooltip'
 import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
 import { CompositionComponentNode, StyleProps } from '../types'
 import { transformAlignment, transformBorderStyle, transformFill } from './transformers'
@@ -14,13 +13,11 @@ import { Flex } from '../core'
 type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
   (EditorMode extends true
     ? {
-        onComponentRemoved: () => void
         handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
         onMouseDown: MouseEventHandler<HTMLDivElement>
         isDragging: boolean
         children: React.ReactNode
         className?: string
-        isSelected: boolean
         node: CompositionComponentNode
         parentNode: CompositionComponentNode
         editorMode?: true
@@ -87,15 +84,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
   }
 
   // Extract properties that are only available in editor mode
-  const {
-    isDragging,
-    isSelected,
-    parentNode,
-    node,
-    onComponentRemoved,
-    handleComponentDrop,
-    onMouseDown,
-  } = props
+  const { isDragging, parentNode, node, handleComponentDrop, onMouseDown } = props
 
   const isTopLevel = node?.data.blockId === CONTENTFUL_SECTION_ID
 
@@ -179,14 +168,12 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         onMouseUp={onMouseUp}
         onMouseLeave={sectionInteraction.onMouseLeave}
         className={classNames('defaultStyles', className, {
-          containerBorder: isSelected,
           empty: !children || (Array.isArray(children) && children.length === 0),
         })}
         onMouseDown={onMouseDown}>
         {showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}
         {children}
         {showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}
-        {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
       </Flex>
       <ContentfulSectionIndicator
         onMouseEnter={sectionIndicatorBottomInteraction.onMouseEnter}
