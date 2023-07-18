@@ -36,7 +36,7 @@ interface UseExperienceBuilderProps {
 }
 
 export const useExperienceBuilder = ({
-  initialMode,
+  initialMode, // danv: do we need this? Is there a scenario when this will ever be set?
   accessToken,
   initialLocale,
   environmentId,
@@ -49,21 +49,19 @@ export const useExperienceBuilder = ({
   const [locale, setLocale] = useState<string | undefined>(initialLocale)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
-  const [mode, setMode] = useState<CompositionMode | undefined>(initialMode)
+  const [mode, setMode] = useState<CompositionMode | undefined>(() => {
+    if (initialMode) return initialMode
 
-  const defaultHost = mode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
-
-  useEffect(() => {
-    // if already defined don't identify automatically
-    if (mode) return
     if (isInsideIframe()) {
-      setMode('editor')
+      return 'editor'
     } else {
       const urlParams = new URLSearchParams(window.location.search)
       const isPreview = urlParams.get('isPreview')
-      setMode(isPreview ? 'preview' : 'delivery')
+      return isPreview ? 'preview' : 'delivery'
     }
-  }, [mode])
+  })
+
+  const defaultHost = mode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
 
   const { sendMessage } = useCommunication()
 
