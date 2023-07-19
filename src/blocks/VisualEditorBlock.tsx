@@ -40,7 +40,7 @@ export const VisualEditorBlock = ({
 
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
-  const { onComponentDropped, onComponentRemoved } = useInteraction()
+  const { onComponentDropped } = useInteraction()
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),
@@ -164,9 +164,6 @@ export const VisualEditorBlock = ({
       onClick: (e: MouseEvent) => {
         e.stopPropagation()
         e.preventDefault()
-      },
-      onComponentRemoved: () => {
-        onComponentRemoved(node)
       },
       className: 'visualEditorBlockHover',
       'data-cf-node-id': node.data.id,
