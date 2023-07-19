@@ -1,4 +1,9 @@
-import { Coordinates, OutgoingExperienceBuilderEvent, RawCoordinates } from '../types'
+import {
+  Coordinates,
+  HoveredElement,
+  OutgoingExperienceBuilderEvent,
+  RawCoordinates,
+} from '../types'
 
 export class HoverIndicatorHandler {
   private sendMessage: (event: OutgoingExperienceBuilderEvent, payload: any) => void
@@ -47,10 +52,35 @@ export class HoverIndicatorHandler {
 
         const sectionId = target.dataset.cfNodeId
         const sectionBlockId = target.dataset.cfNodeBlockId
+        const sectionBlockType = target.dataset.cfNodeBlockType
+
+        let parentElement: HoveredElement | null = null
+
+        let parentSectionIndex = -1
+
+        if (target.parentElement) {
+          const parentChildrenElements = target.parentElement.children
+          parentSectionIndex = Array.from(parentChildrenElements).findIndex(
+            (child) => child === target
+          )
+
+          parentElement = {
+            nodeId: target.parentElement.dataset.cfNodeId,
+            blockType: target.parentElement.dataset.cfNodeBlockType,
+            blockId: target.parentElement.dataset.cfNodeBlockId,
+          }
+        }
+
+        const hoveredElement: HoveredElement = {
+          nodeId: sectionId,
+          blockId: sectionBlockId,
+          blockType: sectionBlockId,
+        }
 
         this.sendMessage(OutgoingExperienceBuilderEvent.HOVERED_SECTION, {
-          sectionId,
-          sectionBlockId,
+          hoveredElement,
+          parentElement,
+          parentSectionIndex,
           coordinates,
         })
 
