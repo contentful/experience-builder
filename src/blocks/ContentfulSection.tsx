@@ -48,14 +48,8 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     className,
     children,
   } = props
-  const {
-    mouseInUpperHalf,
-    mouseInLeftHalf,
-    mouseAtBottomBorder,
-    mouseAtTopBorder,
-    componentRef,
-    targetIsComponent,
-  } = useMousePosition()
+  const { mouseInUpperHalf, mouseInLeftHalf, mouseAtBottomBorder, mouseAtTopBorder, componentRef } =
+    useMousePosition()
 
   const sectionInteraction = useInteraction()
   const sectionIndicatorTopInteraction = useInteraction()
@@ -98,36 +92,6 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
   } = props
 
   const isTopLevel = node?.data.blockId === CONTENTFUL_SECTION_ID
-
-  const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
-
-  const showPrependLine =
-    flexDirection === 'row'
-      ? targetIsComponent &&
-        mouseInLeftHalf &&
-        !mouseAtBottomBorder &&
-        !mouseAtTopBorder &&
-        isDragging &&
-        sectionInteraction.isMouseOver
-      : mouseInUpperHalf &&
-        !mouseAtBottomBorder &&
-        !mouseAtTopBorder &&
-        isDragging &&
-        sectionInteraction.isMouseOver
-
-  const showAppendLine =
-    flexDirection === 'row'
-      ? targetIsComponent &&
-        !mouseInLeftHalf &&
-        !mouseAtBottomBorder &&
-        !mouseAtTopBorder &&
-        isDragging &&
-        sectionInteraction.isMouseOver
-      : !mouseInUpperHalf &&
-        !mouseAtBottomBorder &&
-        !mouseAtTopBorder &&
-        isDragging &&
-        sectionInteraction.isMouseOver
 
   // if isDragging something and over the section's top border, or over the top indicator (which already appeared by that time)
   const showTopSectionIndicator =
@@ -176,16 +140,13 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         data-cf-node-id={node.data.id}
         data-cf-node-block-id={node.data.blockId}
         data-cf-node-block-type={node.type}
-        onMouseEnter={sectionInteraction.onMouseEnter}
-        onMouseLeave={sectionInteraction.onMouseLeave}
         className={classNames('defaultStyles', className, {
           containerBorder: isSelected,
           empty: !children || (Array.isArray(children) && children.length === 0),
         })}
         onMouseDown={onMouseDown}>
-        {/*{showPrependLine && <div key="lineIndicator_top" className={lineStyles}></div>}*/}
         {children}
-        {/*{showAppendLine && <div key="lineIndicator_bottom" className={lineStyles}></div>}*/}
+
         {isSelected && <SectionTooltip onComponentRemoved={onComponentRemoved} />}
       </Flex>
       <ContentfulSectionIndicator

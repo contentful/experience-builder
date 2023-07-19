@@ -107,7 +107,6 @@ export const useExperienceBuilder = ({
         case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
           const { tree, locale } = payload
           const { dataSource, unboundValues } = getDataFromTree(tree)
-          console.log({ tree }, '[COMPOSITION_UPDATED], experience builder')
 
           setTree(tree)
           setLocale(locale)
