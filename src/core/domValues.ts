@@ -5,7 +5,7 @@ type Rect = {
   left: number
 }
 
-const findOutermostCoordinates = (first: Rect, second: Rect) => {
+export const findOutermostCoordinates = (first: Rect, second: Rect) => {
   return {
     top: Math.min(first.top, second.top),
     right: Math.max(first.right, second.right),
