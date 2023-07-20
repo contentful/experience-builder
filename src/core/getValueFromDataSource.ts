@@ -1,6 +1,5 @@
 import get from 'lodash.get'
-import { Link } from 'contentful-management'
-import { CompositionVariableValueType, DataSourceEntryValueType } from '../types'
+import { CompositionVariableValueType, DataSourceEntryValueType, Link } from '../types'
 
 export const getValueFromDataSource = ({
   path,
