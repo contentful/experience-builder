@@ -90,10 +90,7 @@ export const CompositionBlock = ({
 
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
-      <ContentfulSection
-        editorMode={false}
-        breakpoints={breakpoints}
-        {...(props as unknown as StyleProps)}>
+      <ContentfulSection editorMode={false} {...(props as unknown as StyleProps)}>
         {children}
       </ContentfulSection>
     )

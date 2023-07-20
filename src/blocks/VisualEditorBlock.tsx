@@ -6,7 +6,6 @@ import {
   StyleProps,
   LocalizedUnboundValues,
   Breakpoint,
-  CompositionVariableValueType,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
@@ -18,6 +17,7 @@ import './VisualEditorBlock.css'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
+import { useBreakpoints } from '../hooks/useBreakpoints'
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
@@ -44,7 +44,9 @@ export const VisualEditorBlock = ({
 
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
-  const { onComponentDropped, onComponentRemoved } = useInteraction()
+  const { onComponentDropped } = useInteraction()
+
+  const { resolveDesignValue } = useBreakpoints(breakpoints)
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),
@@ -69,8 +71,7 @@ export const VisualEditorBlock = ({
         if (variableMapping.type === 'DesignValue') {
           return {
             ...acc,
-            // TODO: Remove old value access as soon as this PR is ready
-            [variableName]: (variableMapping as any).value ?? variableMapping.valuesPerBreakpoint,
+            [variableName]: resolveDesignValue(variableMapping.valuesPerBreakpoint),
           }
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
@@ -99,7 +100,7 @@ export const VisualEditorBlock = ({
       },
       {} as StyleProps
     )
-  }, [definedComponent, node.data.props, dataSource, locale, unboundValues])
+  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues])
 
   if (!definedComponent) {
     return null
@@ -144,7 +145,6 @@ export const VisualEditorBlock = ({
         className="visualEditorBlockHover"
         isDragging={isDragging}
         parentNode={parentNode}
-        breakpoints={breakpoints}
         {...(props as StyleProps)}>
         {children}
       </ContentfulSection>

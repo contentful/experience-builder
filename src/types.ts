@@ -201,16 +201,13 @@ export type Experience = {
   breakpoints: Breakpoint[]
 }
 
-type WithBreakpoints<T> = Record<string, T>
-
 export interface StyleProps {
   horizontalAlignment: 'start' | 'end' | 'center'
   verticalAlignment: 'start' | 'end' | 'center'
   distribution: 'stacked' | 'absolute'
   margin: string
   padding: string
-  // TODO: Apply this to all styles - testing now with background color only
-  backgroundColor: WithBreakpoints<string>
+  backgroundColor: string
   width: string
   maxWidth: string
   height: string
