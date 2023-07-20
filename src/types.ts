@@ -6,14 +6,21 @@ import {
   CONTENTFUL_SECTION_NAME,
 } from './constants'
 
+export enum ScrollStates {
+  SCROLL_START = 'scrollStart',
+  IS_SCROLLING = 'isScrolling',
+  SCROLL_END = 'scrollEnd',
+}
+
 export enum OutgoingExperienceBuilderEvent {
   REGISTERED_COMPONENTS = 'registeredComponents',
   HOVERED_SECTION = 'hoveredSection',
   MOUSE_MOVE = 'mouseMove',
   COMPONENT_SELECTED = 'componentSelected',
   COMPONENT_DROPPED = 'componentDropped',
-  COMPONENT_REMOVED = 'componentRemoved',
   CANVAS_RELOAD = 'canvasReload',
+  UPDATE_SELECTED_COMPONENT_COORDINATES = 'updateSelectedComponentCoordinates',
+  CANVAS_SCROLL = 'canvasScrolling',
 }
 
 export enum IncomingExperienceBuilderEvent {
@@ -21,6 +28,7 @@ export enum IncomingExperienceBuilderEvent {
   COMPONENT_VALUE_CHANGED = 'valueChanged',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
+  CANVAS_RESIZED = 'canvasResized',
 }
 
 export type ComponentDefinitionVariableType =

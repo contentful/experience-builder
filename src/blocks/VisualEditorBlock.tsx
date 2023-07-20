@@ -15,6 +15,7 @@ import { ContentfulSection } from './ContentfulSection'
 import './VisualEditorBlock.css'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
+import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
@@ -35,9 +36,11 @@ export const VisualEditorBlock = ({
   parentNode,
   selectedNodeId,
 }: VisualEditorBlockProps) => {
+  useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
+
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
-  const { onComponentDropped, onComponentRemoved } = useInteraction()
+  const { onComponentDropped } = useInteraction()
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),
@@ -128,14 +131,12 @@ export const VisualEditorBlock = ({
         onMouseDown={(e) => {
           e.stopPropagation()
           e.preventDefault()
-          sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
-        }}
-        onComponentRemoved={() => {
-          onComponentRemoved(node)
+          sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
+            node,
+          })
         }}
         className="visualEditorBlockHover"
         isDragging={isDragging}
-        isSelected={selectedNodeId === node.data.id}
         parentNode={parentNode}
         {...(props as StyleProps)}>
         {children}
@@ -150,7 +151,9 @@ export const VisualEditorBlock = ({
       onMouseDown: (e: MouseEvent) => {
         e.stopPropagation()
         e.preventDefault()
-        sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, { node })
+        sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
+          node,
+        })
       },
       onMouseUp: () => {
         if (definedComponent.componentDefinition.children) {
@@ -162,10 +165,9 @@ export const VisualEditorBlock = ({
         e.stopPropagation()
         e.preventDefault()
       },
-      onComponentRemoved: () => {
-        onComponentRemoved(node)
-      },
       className: 'visualEditorBlockHover',
+      'data-cf-node-id': node.data.id,
+      'data-cf-node-block-id': node.data.blockId,
       isDragging,
       ...props,
     },
