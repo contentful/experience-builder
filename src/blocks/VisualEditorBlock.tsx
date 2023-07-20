@@ -45,7 +45,6 @@ export const VisualEditorBlock = ({
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
   const { onComponentDropped } = useInteraction()
-
   const { resolveDesignValue } = useBreakpoints(breakpoints)
 
   const definedComponent = useMemo(

@@ -24,20 +24,10 @@ export const useInteraction = () => {
     [sendMessage]
   )
 
-  const onComponentRemoved = useCallback(
-    (node: CompositionComponentNode) => {
-      sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_REMOVED, {
-        node,
-      })
-    },
-    [sendMessage]
-  )
-
   return {
     isMouseOver,
     onMouseEnter,
     onMouseLeave,
     onComponentDropped,
-    onComponentRemoved,
   }
 }

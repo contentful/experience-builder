@@ -95,7 +95,6 @@ describe('Visual Editor Block', () => {
       onMouseEnter: jest.fn(),
       onMouseLeave: jest.fn(),
       onComponentDropped: jest.fn(),
-      onComponentRemoved: jest.fn(),
     }
 
     jest.spyOn(useInteractionHook, 'useInteraction').mockImplementation(() => mock)
@@ -135,7 +134,6 @@ describe('Visual Editor Block', () => {
       onMouseEnter: jest.fn(),
       onMouseLeave: jest.fn(),
       onComponentDropped: jest.fn(),
-      onComponentRemoved: jest.fn(),
     }
 
     jest.spyOn(useInteractionHook, 'useInteraction').mockImplementation(() => mock)
