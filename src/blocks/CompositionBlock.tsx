@@ -47,8 +47,7 @@ export const CompositionBlock = ({
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
       switch (variable.type) {
         case 'DesignValue':
-          // TODO: Remove old value access as soon as this PR is ready
-          acc[variableName] = (variable as any).value ?? variable.valuesPerBreakpoint
+          acc[variableName] = variable.valuesPerBreakpoint
           break
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/')

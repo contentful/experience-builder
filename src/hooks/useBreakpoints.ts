@@ -60,19 +60,20 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
     }
   }, [mediaQueryMatchers])
 
-  const activeBreakpointId = useMemo(() => {
+  const activeBreakpointIndex = useMemo(() => {
     if (Object.values(breakpointMatches).length === 0) return fallbackBreakpointIndex
     // Find the first breakpoint in the list that is not active
     const firstNotMatchingIndex = mediaQueryMatchers.findIndex(
       ([breakpointId]) => breakpointMatches[breakpointId] !== true
     )
     // If all are applying, we take the last one (desktop-first: the smallest one)
-    if (firstNotMatchingIndex === -1) return breakpoints[breakpoints.length - 1].id
+    if (firstNotMatchingIndex === -1) return breakpoints.length - 1
     // If no media query is matching, we take the fallback breakpoint (desktop-first: desktop)
-    if (firstNotMatchingIndex === 0) return breakpoints[fallbackBreakpointIndex].id
+    if (firstNotMatchingIndex === 0) return fallbackBreakpointIndex
     // The last active one is the one before the first not matching one
-    return mediaQueryMatchers[firstNotMatchingIndex - 1][0]
-  }, [breakpointMatches, fallbackBreakpointIndex])
+    const activeBreakpointId = mediaQueryMatchers[firstNotMatchingIndex - 1][0]
+    return breakpoints.findIndex(({ id }) => id === activeBreakpointId)
+  }, [breakpoints, breakpointMatches, fallbackBreakpointIndex])
 
   const resolveDesignValue = useCallback(
     (
@@ -81,17 +82,21 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
         | CompositionVariableValueType
     ): CompositionVariableValueType => {
       if (valuesPerBreakpoint instanceof Object) {
-        return (
-          valuesPerBreakpoint[activeBreakpointId] ??
-          valuesPerBreakpoint[fallbackBreakpointId] ??
-          valuesPerBreakpoint
-        )
+        // Assume that the values are sorted by media query to apply the cascading CSS logic
+        for (let index = activeBreakpointIndex; index >= 0; index--) {
+          const breakpointId = breakpoints[index].id
+          if (valuesPerBreakpoint[breakpointId]) {
+            // If the value is defined, we use it and stop the breakpoints cascade
+            return valuesPerBreakpoint[breakpointId]
+          }
+        }
+        return valuesPerBreakpoint[fallbackBreakpointId]
       } else {
         console.warn('Facing a non-object value for a design value', valuesPerBreakpoint)
         return valuesPerBreakpoint
       }
     },
-    [activeBreakpointId, fallbackBreakpointId]
+    [activeBreakpointIndex, fallbackBreakpointId]
   )
 
   return { resolveDesignValue }

@@ -1,7 +1,7 @@
-import React, { MouseEventHandler, useEffect, useMemo, useState } from 'react'
+import React, { MouseEventHandler } from 'react'
 import { useInteraction, useMousePosition } from '../hooks'
 import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
-import { Breakpoint, CompositionComponentNode, StyleProps } from '../types'
+import { CompositionComponentNode, StyleProps } from '../types'
 import { transformAlignment, transformBorderStyle, transformFill } from './transformers'
 import { getInsertionData } from '../utils'
 
@@ -61,10 +61,10 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
   const styleOverrides = {
     margin,
     padding,
+    backgroundColor,
     width: transformFill(width),
     height: transformFill(height),
     maxWidth,
-    backgroundColor,
     ...transformBorderStyle(border),
     gap,
     ...transformAlignment(horizontalAlignment, verticalAlignment, flexDirection),
@@ -88,8 +88,6 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
 
   const isTopLevel = node?.data.blockId === CONTENTFUL_SECTION_ID
 
-  // TODO: Use media queries in JS with a hook like shown in this post:
-  // https://blog.tomaszgil.me/how-to-use-css-media-queries-in-react-components
   const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
 
   const showPrependLine =
