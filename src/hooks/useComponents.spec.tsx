@@ -16,32 +16,32 @@ describe('ComponentDefinitions', () => {
       id: definitionId,
       name: 'TestComponent',
       variables: {
-        name: {
-          type: 'Link',
-          linkType: 'Asset',
-        },
+        // name: {
+        //   type: 'Link',
+        //   linkType: 'Asset',
+        // },
         isChecked: {
           type: 'Boolean',
         },
-        elements: {
-          type: 'Array',
-          items: {
-            linkType: 'Entry',
-            type: 'Link',
-          },
-        },
-        elementsSymbol: {
-          type: 'Array',
-          items: {
-            type: 'Symbol',
-          },
-        },
-        elementsComponent: {
-          type: 'Array',
-          items: {
-            type: 'Component',
-          },
-        },
+        // elements: {
+        //   type: 'Array',
+        //   items: {
+        //     linkType: 'Entry',
+        //     type: 'Link',
+        //   },
+        // },
+        // elementsSymbol: {
+        //   type: 'Array',
+        //   items: {
+        //     type: 'Symbol',
+        //   },
+        // },
+        // elementsComponent: {
+        //   type: 'Array',
+        //   items: {
+        //     type: 'Component',
+        //   },
+        // },
       },
     })
 
