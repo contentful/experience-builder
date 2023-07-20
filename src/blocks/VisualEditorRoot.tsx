@@ -16,7 +16,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   const { onComponentDropped } = useInteraction()
   useHoverIndicator()
 
-  const { tree, dataSource, isDragging, selectedNodeId, unboundValues } = experience
+  const { tree, dataSource, isDragging, selectedNodeId, unboundValues, breakpoints } = experience
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
@@ -43,6 +43,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           isDragging={isDragging}
           selectedNodeId={selectedNodeId}
           parentNode={tree.root}
+          breakpoints={breakpoints}
         />
       )),
     ]

@@ -5,6 +5,8 @@ import {
   CompositionComponentNode,
   StyleProps,
   LocalizedUnboundValues,
+  Breakpoint,
+  CompositionVariableValueType,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
@@ -25,6 +27,7 @@ type VisualEditorBlockProps = {
   isDragging: boolean
   selectedNodeId?: string
   parentNode: CompositionComponentNode
+  breakpoints: Breakpoint[]
 }
 
 export const VisualEditorBlock = ({
@@ -35,6 +38,7 @@ export const VisualEditorBlock = ({
   isDragging,
   parentNode,
   selectedNodeId,
+  breakpoints,
 }: VisualEditorBlockProps) => {
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
@@ -47,9 +51,9 @@ export const VisualEditorBlock = ({
     [node, getComponent]
   )
 
-  const props = useMemo(() => {
+  const props: StyleProps = useMemo(() => {
     if (!definedComponent) {
-      return {}
+      return {} as StyleProps
     }
 
     return Object.entries(definedComponent.componentDefinition.variables).reduce(
@@ -65,7 +69,8 @@ export const VisualEditorBlock = ({
         if (variableMapping.type === 'DesignValue') {
           return {
             ...acc,
-            [variableName]: variableMapping.value,
+            // TODO: Remove old value access as soon as this PR is ready
+            [variableName]: (variableMapping as any).value ?? variableMapping.valuesPerBreakpoint,
           }
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
@@ -92,7 +97,7 @@ export const VisualEditorBlock = ({
           }
         }
       },
-      {}
+      {} as StyleProps
     )
   }, [definedComponent, node.data.props, dataSource, locale, unboundValues])
 
@@ -115,6 +120,7 @@ export const VisualEditorBlock = ({
           unboundValues={unboundValues}
           isDragging={isDragging}
           selectedNodeId={selectedNodeId}
+          breakpoints={breakpoints}
         />
       )
     })
@@ -138,6 +144,7 @@ export const VisualEditorBlock = ({
         className="visualEditorBlockHover"
         isDragging={isDragging}
         parentNode={parentNode}
+        breakpoints={breakpoints}
         {...(props as StyleProps)}>
         {children}
       </ContentfulSection>
@@ -165,13 +172,9 @@ export const VisualEditorBlock = ({
         e.stopPropagation()
         e.preventDefault()
       },
-      onComponentRemoved: () => {
-        onComponentRemoved(node)
-      },
       className: 'visualEditorBlockHover',
       'data-cf-node-id': node.data.id,
       'data-cf-node-block-id': node.data.blockId,
-      isDragging,
       ...props,
     },
     children

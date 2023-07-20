@@ -1,7 +1,7 @@
-import React, { MouseEventHandler } from 'react'
+import React, { MouseEventHandler, useEffect, useMemo, useState } from 'react'
 import { useInteraction, useMousePosition } from '../hooks'
 import { ContentfulSectionIndicator } from './ContentfulSectionIndicator'
-import { CompositionComponentNode, StyleProps } from '../types'
+import { Breakpoint, CompositionComponentNode, StyleProps } from '../types'
 import { transformAlignment, transformBorderStyle, transformFill } from './transformers'
 import { getInsertionData } from '../utils'
 
@@ -21,11 +21,13 @@ type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
         node: CompositionComponentNode
         parentNode: CompositionComponentNode
         editorMode?: true
+        breakpoints: Breakpoint[]
       }
     : {
         className?: string
         children: React.ReactNode
         editorMode: false
+        breakpoints: Breakpoint[]
       })
 
 export const ContentfulSection = (props: ContentfulSectionProps) => {
@@ -44,6 +46,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     gap,
     className,
     children,
+    breakpoints,
   } = props
   const {
     mouseInUpperHalf,
@@ -58,13 +61,73 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
   const sectionIndicatorTopInteraction = useInteraction()
   const sectionIndicatorBottomInteraction = useInteraction()
 
+  // TODO: move this to a separate hook
+  // We assume that the first breakpoint is the default one with query being "*"
+  const [mediaQueryMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({})
+  const fallbackBreakpointIndex =
+    breakpoints.findIndex((breakpoint) => breakpoint.query === '*') ?? 0
+  const mediaQuerySignals = useMemo(() => {
+    const mediaQueries = breakpoints
+      .map((breakpoint) => {
+        if (breakpoint.query === '*') return undefined
+        const maxScreenWidth = breakpoint.query.match(/<(\w+)/)?.[1]
+        if (!maxScreenWidth) return undefined
+        return [breakpoint.id, `(max-width: ${maxScreenWidth})`]
+      })
+      .filter((query): query is [string, string] => !!query)
+    return mediaQueries.map(
+      ([breakpointId, query]) => [breakpointId, window.matchMedia(query)] as const
+    )
+  }, [breakpoints])
+  useEffect(() => {
+    console.log(mediaQuerySignals)
+    const listeners = mediaQuerySignals.map(([breakpointId, signal]) => {
+      const onChange = () => {
+        setMediaQueryMatches((prev) => ({
+          ...prev,
+          [breakpointId]: signal.matches,
+        }))
+      }
+      // initialise with match value
+      setMediaQueryMatches((prev) => ({
+        ...prev,
+        [breakpointId]: signal.matches,
+      }))
+      signal.addEventListener('change', onChange)
+      return onChange
+    })
+
+    return () => {
+      listeners.forEach((eventListener, index) => {
+        mediaQuerySignals[index][1].removeEventListener('change', eventListener)
+      })
+    }
+  }, [mediaQuerySignals])
+
+  const activeBreakpointIndex = useMemo(() => {
+    if (Object.values(mediaQueryMatches).length === 0) return fallbackBreakpointIndex
+    const firstNotMatchingIndex = mediaQuerySignals.findIndex(
+      ([breakpointId]) => mediaQueryMatches[breakpointId] !== true
+    )
+    if (firstNotMatchingIndex === -1) return breakpoints.length - 1
+    if (firstNotMatchingIndex === 0) return fallbackBreakpointIndex
+    return firstNotMatchingIndex
+  }, [mediaQueryMatches, fallbackBreakpointIndex])
+
+  const activeBreakpointId = breakpoints[activeBreakpointIndex].id
+  const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id
+
+  // TODO: Write media queries
   const styleOverrides = {
     margin,
     padding,
-    backgroundColor,
     width: transformFill(width),
     height: transformFill(height),
     maxWidth,
+    backgroundColor:
+      backgroundColor[activeBreakpointId] ??
+      backgroundColor[fallbackBreakpointId] ??
+      backgroundColor,
     ...transformBorderStyle(border),
     gap,
     ...transformAlignment(horizontalAlignment, verticalAlignment, flexDirection),
@@ -88,6 +151,8 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
 
   const isTopLevel = node?.data.blockId === CONTENTFUL_SECTION_ID
 
+  // TODO: Use media queries in JS with a hook like shown in this post:
+  // https://blog.tomaszgil.me/how-to-use-css-media-queries-in-react-components
   const lineStyles = flexDirection === 'row' ? 'lineVertical' : 'lineHorizontal'
 
   const showPrependLine =

@@ -1,4 +1,5 @@
 import {
+  Breakpoint,
   CompositionDataSource,
   CompositionNode,
   CompositionUnboundValues,
@@ -18,6 +19,7 @@ type CompositionBlockProps = {
   dataSource: CompositionDataSource
   unboundValues: CompositionUnboundValues
   entityStore?: EntityStore
+  breakpoints: Breakpoint[]
 }
 
 export const CompositionBlock = ({
@@ -26,6 +28,7 @@ export const CompositionBlock = ({
   entityStore,
   dataSource,
   unboundValues,
+  breakpoints,
 }: CompositionBlockProps) => {
   const { getComponent } = useComponents()
 
@@ -44,7 +47,8 @@ export const CompositionBlock = ({
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
       switch (variable.type) {
         case 'DesignValue':
-          acc[variableName] = variable.value as string
+          // TODO: Remove old value access as soon as this PR is ready
+          acc[variableName] = (variable as any).value ?? variable.valuesPerBreakpoint
           break
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/')
@@ -79,13 +83,17 @@ export const CompositionBlock = ({
         dataSource={dataSource}
         unboundValues={unboundValues}
         entityStore={entityStore}
+        breakpoints={breakpoints}
       />
     )
   })
 
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
-      <ContentfulSection editorMode={false} {...(props as unknown as StyleProps)}>
+      <ContentfulSection
+        editorMode={false}
+        breakpoints={breakpoints}
+        {...(props as unknown as StyleProps)}>
         {children}
       </ContentfulSection>
     )

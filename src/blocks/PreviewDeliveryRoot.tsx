@@ -35,6 +35,7 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
     unboundValues,
     isLoadingData,
     schemaVersion,
+    breakpoints,
   } = useFetchComposition({
     client,
     slug: slug,
@@ -62,6 +63,7 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
           entityStore={entityStore}
           dataSource={dataSource}
           unboundValues={unboundValues}
+          breakpoints={breakpoints}
         />
       ))}
     </>
