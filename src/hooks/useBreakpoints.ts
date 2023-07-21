@@ -75,19 +75,19 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
             ...prev,
             [breakpoint.id]: mediaQueryMatcher.matches,
           }))
-          return [breakpoint.id, mediaQueryMatcher] as const
+          return { id: breakpoint.id, signal: mediaQueryMatcher }
         })
-        .filter((query): query is [string, MediaQueryList] => !!query),
+        .filter((matcher): matcher is { id: string; signal: MediaQueryList } => !!matcher),
     [breakpoints]
   )
 
   // Register event listeners to update the media query states
   useEffect(() => {
-    const eventListeners = mediaQueryMatchers.map(([breakpointId, signal]) => {
+    const eventListeners = mediaQueryMatchers.map(({ id, signal }) => {
       const onChange = () =>
         setMediaQueryMatches((prev) => ({
           ...prev,
-          [breakpointId]: signal.matches,
+          [id]: signal.matches,
         }))
       signal.addEventListener('change', onChange)
       return onChange
@@ -95,7 +95,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
 
     return () => {
       eventListeners.forEach((eventListener, index) => {
-        mediaQueryMatchers[index][1].removeEventListener('change', eventListener)
+        mediaQueryMatchers[index].signal.removeEventListener('change', eventListener)
       })
     }
   }, [mediaQueryMatchers])
