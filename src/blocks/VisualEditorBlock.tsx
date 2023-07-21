@@ -5,7 +5,6 @@ import {
   CompositionComponentNode,
   StyleProps,
   LocalizedUnboundValues,
-  Breakpoint,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
@@ -17,7 +16,7 @@ import './VisualEditorBlock.css'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
-import { useBreakpoints } from '../hooks/useBreakpoints'
+import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
@@ -27,7 +26,7 @@ type VisualEditorBlockProps = {
   isDragging: boolean
   selectedNodeId?: string
   parentNode: CompositionComponentNode
-  breakpoints: Breakpoint[]
+  resolveDesignValue: ResolveDesignValueType
 }
 
 export const VisualEditorBlock = ({
@@ -38,14 +37,13 @@ export const VisualEditorBlock = ({
   isDragging,
   parentNode,
   selectedNodeId,
-  breakpoints,
+  resolveDesignValue,
 }: VisualEditorBlockProps) => {
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
   const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
   const { onComponentDropped } = useInteraction()
-  const { resolveDesignValue } = useBreakpoints(breakpoints)
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),
@@ -120,7 +118,7 @@ export const VisualEditorBlock = ({
           unboundValues={unboundValues}
           isDragging={isDragging}
           selectedNodeId={selectedNodeId}
-          breakpoints={breakpoints}
+          resolveDesignValue={resolveDesignValue}
         />
       )
     })

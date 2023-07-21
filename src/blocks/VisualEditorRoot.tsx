@@ -6,6 +6,7 @@ import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
 import './VisualEditorRoot.css'
 import { useHoverIndicator } from '../hooks/useHoverIndicator'
+import { useBreakpoints } from '../hooks/useBreakpoints'
 
 type VisualEditorRootProps = {
   experience: Experience
@@ -13,10 +14,12 @@ type VisualEditorRootProps = {
 }
 
 export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
-  const { onComponentDropped } = useInteraction()
-  useHoverIndicator()
-
   const { tree, dataSource, isDragging, selectedNodeId, unboundValues, breakpoints } = experience
+
+  const { onComponentDropped } = useInteraction()
+  // We call it here instead of on block-level to avoid registering too many even listeners for media queries
+  const { resolveDesignValue } = useBreakpoints(breakpoints)
+  useHoverIndicator()
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
@@ -44,6 +47,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           selectedNodeId={selectedNodeId}
           parentNode={tree.root}
           breakpoints={breakpoints}
+          resolveDesignValue={resolveDesignValue}
         />
       )),
     ]
