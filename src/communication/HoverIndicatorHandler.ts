@@ -32,7 +32,7 @@ export class HoverIndicatorHandler {
         // is itself a section?
         target.dataset.cfNodeId ||
         // Or a direct child of a section
-        (target.parentElement && target.parentElement.dataset.cfNodeId)
+        (target.parentElement && target.parentElement.dataset.cfNodeBlockType === 'block')
       ) {
         const rawCoordinates = this.getCoordinatesOfElement(target)
         const { left, top } = target.getBoundingClientRect()
@@ -55,26 +55,30 @@ export class HoverIndicatorHandler {
         const sectionBlockType = target.dataset.cfNodeBlockType
 
         let parentElement: HoveredElement | null = null
+        let parentHTMLElement: HTMLElement | null = target.parentElement
 
         let parentSectionIndex = -1
 
-        if (target.parentElement) {
-          const parentChildrenElements = target.parentElement.children
-          parentSectionIndex = Array.from(parentChildrenElements).findIndex(
-            (child) => child === target
-          )
-
-          parentElement = {
-            nodeId: target.parentElement.dataset.cfNodeId,
-            blockType: target.parentElement.dataset.cfNodeBlockType,
-            blockId: target.parentElement.dataset.cfNodeBlockId,
+        while (parentHTMLElement) {
+          if (parentHTMLElement.dataset.cfNodeId) {
+            parentElement = {
+              nodeId: parentHTMLElement.dataset.cfNodeId,
+              blockType: parentHTMLElement.dataset.cfNodeBlockType,
+              blockId: parentHTMLElement.dataset.cfNodeBlockId,
+            }
+            const parentChildrenElements = parentHTMLElement.children
+            parentSectionIndex = Array.from(parentChildrenElements).findIndex(
+              (child) => child === target
+            )
+            break
           }
+          parentHTMLElement = parentHTMLElement.parentElement
         }
 
         const hoveredElement: HoveredElement = {
           nodeId: sectionId,
           blockId: sectionBlockId,
-          blockType: sectionBlockId,
+          blockType: sectionBlockType,
         }
 
         this.sendMessage(OutgoingExperienceBuilderEvent.HOVERED_SECTION, {
