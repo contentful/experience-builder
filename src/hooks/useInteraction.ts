@@ -1,18 +1,9 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useCommunication } from './useCommunication'
 import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from '../types'
 
 export const useInteraction = () => {
   const { sendMessage } = useCommunication()
-  const [isMouseOver, setMouseOver] = useState(false)
-
-  const onMouseEnter = useCallback(() => {
-    setMouseOver(true)
-  }, [])
-
-  const onMouseLeave = useCallback(() => {
-    setMouseOver(false)
-  }, [])
 
   const onComponentDropped = useCallback(
     ({ node, index }: { node: CompositionComponentNode; index?: number }) => {
@@ -25,9 +16,6 @@ export const useInteraction = () => {
   )
 
   return {
-    isMouseOver,
-    onMouseEnter,
-    onMouseLeave,
     onComponentDropped,
   }
 }

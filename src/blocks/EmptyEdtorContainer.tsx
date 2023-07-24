@@ -15,19 +15,15 @@ export const EmptyEditorContainer = ({
   isDragging = false,
   isHoveringOnRoot = false,
 }: EmptyContainerProps) => {
-  const { onComponentDropped, isMouseOver, onMouseEnter, onMouseLeave } = useInteraction()
+  const { onComponentDropped } = useInteraction()
 
-  const showContent = isFirst ? !isDragging || (isDragging && !isMouseOver) : false
-
-  const isHighlighted = isDragging && (isHoveringOnRoot || isMouseOver)
+  const showContent = isFirst ? !isDragging || isDragging : false
 
   return (
     <div
       id="EmptyContainer"
       data-type="empty-container"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      className={`container ${isHighlighted ? 'highlight' : ''}`}
+      className={`container`}
       onMouseUp={() => {
         onComponentDropped({
           node: {

@@ -154,7 +154,7 @@ export type CompositionComponentPropValue<
 
 // TODO: add conditional typing magic to reduce the number of optionals
 export type CompositionComponentNode = {
-  type: 'block' | 'root'
+  type: 'block' | 'root' | 'editorRoot'
   data: {
     id: string
     blockId?: string // will be undefined in case string node or if root component
@@ -277,7 +277,7 @@ export interface Coordinates extends RawCoordinates {
   childrenCoordinates: RawCoordinates[]
 }
 export interface HoveredElement {
-  blockType: string | undefined\
+  blockType: string | undefined
   nodeId: string | undefined
   blockId: string | undefined
 }
