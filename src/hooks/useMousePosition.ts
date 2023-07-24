@@ -12,7 +12,6 @@ export const useMousePosition = () => {
   const [mouseInLeftHalf, setMouseInLeftHalf] = useState<boolean>(false)
   const [mouseAtTopBorder, setMouseAtTopBorder] = useState<boolean>(false)
   const [mouseAtBottomBorder, setMouseAtBottomBorder] = useState<boolean>(false)
-  const [targetIsComponent, setTargetIsComponent] = useState<boolean>(false)
 
   useEffect(() => {
     // This code ensures that we can keep track of the real size of the element in the DOM
@@ -53,7 +52,6 @@ export const useMousePosition = () => {
     }
 
     const onMouseMove = (e: MouseEvent) => {
-      setTargetIsComponent(e.target === componentRef.current)
       checkMousePosition(e.clientX, e.clientY)
     }
 
@@ -75,7 +73,6 @@ export const useMousePosition = () => {
     mouseInLeftHalf,
     mouseAtBottomBorder,
     mouseAtTopBorder,
-    targetIsComponent,
     componentRef,
   }
 }
