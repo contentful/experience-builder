@@ -3,12 +3,12 @@ import { Breakpoint, CompositionVariableValueType } from '../types'
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/
 
-export type ValuesPerBreakpoint =
+export type valueByBreakpoint =
   | Record<string, CompositionVariableValueType>
   | CompositionVariableValueType
 
 export type ResolveDesignValueType = (
-  valuesPerBreakpoint: ValuesPerBreakpoint
+  valueByBreakpoint: valueByBreakpoint
 ) => CompositionVariableValueType
 
 const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
@@ -27,25 +27,25 @@ const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
 }
 
 export const getValueForBreakpoint = (
-  valuesPerBreakpoint: ValuesPerBreakpoint,
+  valueByBreakpoint: valueByBreakpoint,
   breakpoints: Breakpoint[],
   activeBreakpointIndex: number
 ) => {
   const fallbackBreakpointIndex = breakpoints.findIndex(({ query }) => query === '*') ?? 0
   const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id
-  if (valuesPerBreakpoint instanceof Object) {
+  if (valueByBreakpoint instanceof Object) {
     // Assume that the values are sorted by media query to apply the cascading CSS logic
     for (let index = activeBreakpointIndex; index >= 0; index--) {
       const breakpointId = breakpoints[index].id
-      if (valuesPerBreakpoint[breakpointId]) {
+      if (valueByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade
-        return valuesPerBreakpoint[breakpointId]
+        return valueByBreakpoint[breakpointId]
       }
     }
-    return valuesPerBreakpoint[fallbackBreakpointId]
+    return valueByBreakpoint[fallbackBreakpointId]
   } else {
-    console.warn('Facing a non-object value for a design value', valuesPerBreakpoint)
-    return valuesPerBreakpoint
+    console.warn('Facing a non-object value for a design value', valueByBreakpoint)
+    return valueByBreakpoint
   }
 }
 
@@ -117,8 +117,8 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   }, [breakpoints, breakpointMatches, fallbackBreakpointIndex])
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
-    (valuesPerBreakpoint: ValuesPerBreakpoint): CompositionVariableValueType => {
-      return getValueForBreakpoint(valuesPerBreakpoint, breakpoints, activeBreakpointIndex)
+    (valueByBreakpoint: valueByBreakpoint): CompositionVariableValueType => {
+      return getValueForBreakpoint(valueByBreakpoint, breakpoints, activeBreakpointIndex)
     },
     [activeBreakpointIndex, fallbackBreakpointId]
   )

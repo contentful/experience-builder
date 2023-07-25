@@ -68,7 +68,7 @@ export const VisualEditorBlock = ({
         if (variableMapping.type === 'DesignValue') {
           return {
             ...acc,
-            [variableName]: resolveDesignValue(variableMapping.valuesPerBreakpoint),
+            [variableName]: resolveDesignValue(variableMapping.valueByBreakpoint),
           }
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
