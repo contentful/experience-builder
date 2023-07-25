@@ -26,8 +26,7 @@ const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
   return undefined
 }
 
-// TODO: export this from the SDK
-export const getBreakpointValue = (
+export const getValueForBreakpoint = (
   valuesPerBreakpoint: ValuesPerBreakpoint,
   breakpoints: Breakpoint[],
   activeBreakpointIndex: number
@@ -117,7 +116,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
     (valuesPerBreakpoint: ValuesPerBreakpoint): CompositionVariableValueType => {
-      return getBreakpointValue(valuesPerBreakpoint, breakpoints, activeBreakpointIndex)
+      return getValueForBreakpoint(valuesPerBreakpoint, breakpoints, activeBreakpointIndex)
     },
     [activeBreakpointIndex, fallbackBreakpointId]
   )

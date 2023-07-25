@@ -1,5 +1,9 @@
 export { VisualEditorRoot, CompositionRoot } from './blocks'
-export { useExperienceBuilder, useComponents as useExperienceBuilderComponents } from './hooks'
+export {
+  useExperienceBuilder,
+  useComponents as useExperienceBuilderComponents,
+  getValueForBreakpoint,
+} from './hooks'
 export type {
   ComponentDefinition,
   Experience,
