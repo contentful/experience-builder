@@ -49,8 +49,8 @@ export const getValueForBreakpoint = (
   }
 }
 
-// TODO: In order to become framework-agnostic soon, we should extract this heavy logic into simple
-// functions that we can reuse in other cases.
+// TODO: In order to support integrations without React, we should extract this heavy logic into simple
+// functions that we can reuse in other frameworks.
 /*
  * Registers media query change listeners for each breakpoint (except for "*").
  * It will always assume the last matching media query in the list. It therefore,
@@ -58,7 +58,7 @@ export const getValueForBreakpoint = (
  * and then decending by screen width. For mobile-first designs, the order would be ascending
  */
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
-  const [breakpointMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({})
+  const [mediaQueryMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({})
 
   const fallbackBreakpointIndex = breakpoints.findIndex(({ query }) => query === '*') ?? 0
   const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id
@@ -102,10 +102,10 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   }, [mediaQueryMatchers])
 
   const activeBreakpointIndex = useMemo(() => {
-    if (Object.values(breakpointMatches).length === 0) return fallbackBreakpointIndex
+    if (Object.values(mediaQueryMatches).length === 0) return fallbackBreakpointIndex
     // Find the first breakpoint in the list that is not active
     const firstNotMatchingIndex = mediaQueryMatchers.findIndex(
-      ({ id }) => breakpointMatches[id] !== true
+      ({ id }) => mediaQueryMatches[id] !== true
     )
     // If all are applying, we take the last one (desktop-first: the smallest one)
     if (firstNotMatchingIndex === -1) return breakpoints.length - 1
@@ -114,7 +114,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
     // The last active one is the one before the first not matching one
     const { id: activeBreakpointId } = mediaQueryMatchers[firstNotMatchingIndex - 1]
     return breakpoints.findIndex(({ id }) => id === activeBreakpointId)
-  }, [breakpoints, breakpointMatches, fallbackBreakpointIndex])
+  }, [breakpoints, mediaQueryMatches, fallbackBreakpointIndex])
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
     (valueByBreakpoint: valueByBreakpoint): CompositionVariableValueType => {
