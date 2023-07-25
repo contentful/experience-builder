@@ -608,7 +608,7 @@
   dependencies:
     chalk "^4.1.0"
 
-"@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.0.3":
+"@contentful/rich-text-types@^16.0.2":
   version "16.1.0"
   resolved "https://registry.npmjs.org/@contentful/rich-text-types/-/rich-text-types-16.1.0.tgz"
   integrity sha512-Pucb68FK0j9cHJ96FAewXv+bvH4XizC4KBbVqyHhPLkDIVfasj0AWU5rI1lnvysdVKu66NQkFe8xZdeFTkaLWQ==
@@ -1902,11 +1902,6 @@
     "@types/tough-cookie" "*"
     parse5 "^7.0.0"
 
-"@types/json-patch@0.0.30":
-  version "0.0.30"
-  resolved "https://registry.npmjs.org/@types/json-patch/-/json-patch-0.0.30.tgz"
-  integrity sha512-MhCUjojzDhVLnZnxwPwa+rETFRDQ0ffjxYdrqOP6TBO2O0/Z64PV5tNeYApo4bc4y4frbWOrRwv/eEkXlI13Rw==
-
 "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.11.tgz"
@@ -2405,14 +2400,6 @@ axios@^0.26.1:
   dependencies:
     follow-redirects "^1.14.8"
 
-axios@^0.27.1:
-  version "0.27.2"
-  resolved "https://registry.npmjs.org/axios/-/axios-0.27.2.tgz"
-  integrity sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==
-  dependencies:
-    follow-redirects "^1.14.9"
-    form-data "^4.0.0"
-
 babel-jest@^29.5.0:
   version "29.5.0"
   resolved "https://registry.npmjs.org/babel-jest/-/babel-jest-29.5.0.tgz"
@@ -2897,19 +2884,6 @@ console-control-strings@^1.1.0:
   resolved "https://registry.npmjs.org/console-control-strings/-/console-control-strings-1.1.0.tgz"
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
-contentful-management@^10.35.4:
-  version "10.35.4"
-  resolved "https://registry.npmjs.org/contentful-management/-/contentful-management-10.35.4.tgz"
-  integrity sha512-yAgnwzyyT3kqvxKkM6iky9UiWs8n1EQH5n52rcBrjHM44Ext+Kjagzz1gRQC3maYSgp5UR3FwyUj8gX9Kd7uDQ==
-  dependencies:
-    "@contentful/rich-text-types" "^16.0.3"
-    "@types/json-patch" "0.0.30"
-    axios "^0.27.1"
-    contentful-sdk-core "^7.0.1"
-    fast-copy "^3.0.0"
-    lodash.isplainobject "^4.0.6"
-    type-fest "^3.0.0"
-
 contentful-resolve-response@^1.3.6:
   version "1.7.0"
   resolved "https://registry.npmjs.org/contentful-resolve-response/-/contentful-resolve-response-1.7.0.tgz"
@@ -2917,7 +2891,7 @@ contentful-resolve-response@^1.3.6:
   dependencies:
     fast-copy "^2.1.7"
 
-contentful-sdk-core@^7.0.1, contentful-sdk-core@^7.0.2:
+contentful-sdk-core@^7.0.2:
   version "7.1.0"
   resolved "https://registry.npmjs.org/contentful-sdk-core/-/contentful-sdk-core-7.1.0.tgz"
   integrity sha512-RzTPnRsbCdVAhyka3wa9sDsAu9YsxoerNgaMqd63Ljb7qpG2zkdHcP7NTfyIbuHDJNJdAQdifyafxfEEwP+q/w==
@@ -3716,11 +3690,6 @@ fast-copy@^2.1.7:
   resolved "https://registry.npmjs.org/fast-copy/-/fast-copy-2.1.7.tgz"
   integrity sha512-ozrGwyuCTAy7YgFCua8rmqmytECYk/JYAMXcswOcm0qvGoE3tPb7ivBeIHTOK2DiapBhDZgacIhzhQIKU5TCfA==
 
-fast-copy@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.npmjs.org/fast-copy/-/fast-copy-3.0.1.tgz"
-  integrity sha512-Knr7NOtK3HWRYGtHoJrjkaWepqT8thIVGAwt0p0aUs1zqkAzXZV4vo9fFNwyb5fcqK1GKYFYxldQdIDVKhUAfA==
-
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz"
@@ -3837,7 +3806,7 @@ flatted@^3.1.0:
   resolved "https://registry.npmjs.org/flatted/-/flatted-3.2.7.tgz"
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
 
-follow-redirects@^1.14.8, follow-redirects@^1.14.9:
+follow-redirects@^1.14.8:
   version "1.15.2"
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.2.tgz"
   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
@@ -7882,11 +7851,6 @@ type-fest@^1.0.2:
   resolved "https://registry.npmjs.org/type-fest/-/type-fest-1.4.0.tgz"
   integrity sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==
 
-type-fest@^3.0.0:
-  version "3.11.0"
-  resolved "https://registry.npmjs.org/type-fest/-/type-fest-3.11.0.tgz"
-  integrity sha512-JaPw5U9ixP0XcpUbQoVSbxSDcK/K4nww20C3kjm9yE6cDRRhptU28AH60VWf9ltXmCrIfIbtt9J+2OUk2Uqiaw==
-
 type-fest@^3.1.0:
   version "3.12.0"
   resolved "https://registry.npmjs.org/type-fest/-/type-fest-3.12.0.tgz"
@@ -8214,9 +8178,9 @@ wide-align@^1.1.5:
     string-width "^1.0.2 || 2 || 3 || 4"
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
-  version "1.2.3"
-  resolved "https://registry.npmjs.org/word-wrap/-/word-wrap-1.2.3.tgz"
-  integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.4.tgz#cb4b50ec9aca570abd1f52f33cd45b6c61739a9f"
+  integrity sha512-2V81OA4ugVo5pRo46hAoD2ivUJx8jXmWXfUkY4KFNw0hEptvN0QfH3K4nHiwzGeKl5rFKedV48QVoqYavy4YpA==
 
 wordwrap@^1.0.0:
   version "1.0.0"
