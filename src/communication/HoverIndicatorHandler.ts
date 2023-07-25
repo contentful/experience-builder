@@ -25,77 +25,94 @@ export class HoverIndicatorHandler {
     }
   }
 
+  private getFullCoordinates = (element: HTMLElement, event: MouseEvent) => {
+    const rawCoordinates = this.getCoordinatesOfElement(element)
+    const { left, top } = element.getBoundingClientRect()
+
+    const childrenCoordinates: RawCoordinates[] = Array.from(element.children)
+      .filter((child) => child.id !== 'SectionTooltip')
+      .map((child) => this.getCoordinatesOfElement(child))
+
+    return {
+      ...rawCoordinates,
+      childrenCoordinates,
+    }
+  }
+
   handleMouseMove = (event: MouseEvent): void => {
+    let coordinates: Coordinates | null = null
+    let parentElement: HoveredElement | null = null
+    let hoveredElement: HoveredElement | null = null
+    let parentSectionIndex: number = -1
+    let mousePosInTarget: { x: number; y: number } = { x: 0, y: 0 }
+
     let target = event.target as HTMLElement | null
 
-    while (target) {
-      if (
-        // is itself a section?
-        target.dataset.cfNodeId ||
-        // Or a direct child of a section
-        (target.parentElement && target.parentElement.dataset.cfNodeBlockType === 'block')
-      ) {
-        const rawCoordinates = this.getCoordinatesOfElement(target)
-        const { left, top } = target.getBoundingClientRect()
-
-        const mouseX = event.clientX - left
-        const mouseY = event.clientY - top
-
-        const childrenCoordinates: RawCoordinates[] = Array.from(target.children)
-          .filter((child) => child.id !== 'SectionTooltip')
-          .map((child) => this.getCoordinatesOfElement(child))
-
-        const coordinates: Coordinates = {
-          ...rawCoordinates,
-          childrenCoordinates,
-          mousePosInTarget: { x: mouseX, y: mouseY },
-        }
-
-        const sectionId = target.dataset.cfNodeId
-        const sectionBlockId = target.dataset.cfNodeBlockId
-        const sectionBlockType = target.dataset.cfNodeBlockType
-
-        let parentElement: HoveredElement | null = null
-        let parentHTMLElement: HTMLElement | null = target.parentElement
-
-        let parentSectionIndex = -1
-
-        while (parentHTMLElement) {
-          if (parentHTMLElement.dataset.cfNodeId) {
-            parentElement = {
-              nodeId: parentHTMLElement.dataset.cfNodeId,
-              blockType: parentHTMLElement.dataset.cfNodeBlockType,
-              blockId: parentHTMLElement.dataset.cfNodeBlockId,
-            }
-            const parentChildrenElements = parentHTMLElement.children
-            parentSectionIndex = Array.from(parentChildrenElements).findIndex(
-              (child) => child === target
-            )
-            break
-          }
-          parentHTMLElement = parentHTMLElement.parentElement
-        }
-
-        const hoveredElement: HoveredElement = {
-          nodeId: sectionId,
-          blockId: sectionBlockId,
-          blockType: sectionBlockType,
-        }
-
-        this.sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
-          hoveredElement,
-          parentElement,
-          parentSectionIndex,
-          coordinates,
-          clientX: event.clientX,
-          clientY: event.clientY,
-        })
-
-        break
+    if (target?.id === 'VisualEditorRoot') {
+      hoveredElement = {
+        nodeId: 'root',
+        blockType: 'root',
+        blockId: 'root',
       }
+      coordinates = this.getFullCoordinates(target, event)
+    } else {
+      // Find the closest section or direct parent that is a section
+      while (target) {
+        if (
+          // is itself a section?
+          target.dataset.cfNodeId ||
+          // Or a direct child of a section
+          (target.parentElement && target.parentElement.dataset.cfNodeBlockType === 'block')
+        ) {
+          coordinates = this.getFullCoordinates(target, event)
+          mousePosInTarget.x = event.clientX - coordinates.left
+          mousePosInTarget.y = event.clientY - coordinates.top
 
-      target = target.parentElement
+          const sectionId = target.dataset.cfNodeId
+          const sectionBlockId = target.dataset.cfNodeBlockId
+          const sectionBlockType = target.dataset.cfNodeBlockType
+
+          let parentHTMLElement: HTMLElement | null = target.parentElement
+
+          // find the next parent that is a section
+          while (parentHTMLElement) {
+            if (parentHTMLElement.dataset.cfNodeId) {
+              parentElement = {
+                nodeId: parentHTMLElement.dataset.cfNodeId,
+                blockType: parentHTMLElement.dataset.cfNodeBlockType,
+                blockId: parentHTMLElement.dataset.cfNodeBlockId,
+              }
+              const parentChildrenElements = parentHTMLElement.children
+              parentSectionIndex = Array.from(parentChildrenElements).findIndex(
+                (child) => child === target
+              )
+              break
+            }
+            parentHTMLElement = parentHTMLElement.parentElement
+          }
+
+          hoveredElement = {
+            nodeId: sectionId,
+            blockId: sectionBlockId,
+            blockType: sectionBlockType,
+          }
+
+          break
+        }
+
+        target = target.parentElement
+      }
     }
+
+    this.sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
+      hoveredElement,
+      parentElement,
+      parentSectionIndex,
+      mousePosInTarget,
+      coordinates,
+      clientX: event.clientX,
+      clientY: event.clientY,
+    })
   }
 
   throttledMouseMove = (e: MouseEvent) => {}

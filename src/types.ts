@@ -286,7 +286,6 @@ export interface RawCoordinates {
 }
 
 export interface Coordinates extends RawCoordinates {
-  mousePosInTarget: { x: number; y: number }
   childrenCoordinates: RawCoordinates[]
 }
 export interface HoveredElement {
