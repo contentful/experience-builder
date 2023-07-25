@@ -104,14 +104,14 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
     if (Object.values(breakpointMatches).length === 0) return fallbackBreakpointIndex
     // Find the first breakpoint in the list that is not active
     const firstNotMatchingIndex = mediaQueryMatchers.findIndex(
-      ([breakpointId]) => breakpointMatches[breakpointId] !== true
+      ({ id }) => breakpointMatches[id] !== true
     )
     // If all are applying, we take the last one (desktop-first: the smallest one)
     if (firstNotMatchingIndex === -1) return breakpoints.length - 1
     // If no media query is matching, we take the fallback breakpoint (desktop-first: desktop)
     if (firstNotMatchingIndex === 0) return fallbackBreakpointIndex
     // The last active one is the one before the first not matching one
-    const activeBreakpointId = mediaQueryMatchers[firstNotMatchingIndex - 1][0]
+    const { id: activeBreakpointId } = mediaQueryMatchers[firstNotMatchingIndex - 1]
     return breakpoints.findIndex(({ id }) => id === activeBreakpointId)
   }, [breakpoints, breakpointMatches, fallbackBreakpointIndex])
 
