@@ -4,6 +4,7 @@ import {
   OutgoingExperienceBuilderEvent,
   RawCoordinates,
 } from '../types'
+import throttle from 'lodash.throttle'
 
 export class HoverIndicatorHandler {
   private sendMessage: (event: OutgoingExperienceBuilderEvent, payload: any) => void
@@ -81,11 +82,13 @@ export class HoverIndicatorHandler {
           blockType: sectionBlockType,
         }
 
-        this.sendMessage(OutgoingExperienceBuilderEvent.HOVERED_SECTION, {
+        this.sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
           hoveredElement,
           parentElement,
           parentSectionIndex,
           coordinates,
+          clientX: event.clientX,
+          clientY: event.clientY,
         })
 
         break
@@ -94,6 +97,8 @@ export class HoverIndicatorHandler {
       target = target.parentElement
     }
   }
+
+  throttledMouseMove = (e: MouseEvent) => {}
 
   attachEvent(): void {
     document.addEventListener('mousemove', this.handleMouseMove)

@@ -174,26 +174,6 @@ export const useExperienceBuilder = ({
   }, [mode])
 
   /*
-   * Handles mouse move business
-   */
-  useEffect(() => {
-    // We only care about this communication when in editor mode
-    if (mode !== 'editor') return
-    const onMouseMove = throttle((e: MouseEvent) => {
-      sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
-        clientX: e.clientX,
-        clientY: e.clientY,
-      })
-    }, 20)
-
-    window.addEventListener('mousemove', onMouseMove)
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove)
-    }
-  }, [mode, sendMessage])
-
-  /*
    * Handles on scroll business
    */
   useEffect(() => {
