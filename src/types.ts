@@ -1,4 +1,9 @@
-import { Link } from 'contentful-management'
+/**
+ * danv:
+ * NOTE!! The code commented here will be used in future. We commented it out to remove not yet fully unsupported
+ * parts to prepare this library for EAP
+ */
+
 import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_CONTAINER_NAME,
@@ -31,6 +36,14 @@ export enum IncomingExperienceBuilderEvent {
   CANVAS_RESIZED = 'canvasResized',
 }
 
+export interface Link<T extends string> {
+  sys: {
+    type: 'Link'
+    linkType: T
+    id: string
+  }
+}
+
 export type ComponentDefinitionVariableType =
   | 'Text'
   | 'RichText'
@@ -38,9 +51,9 @@ export type ComponentDefinitionVariableType =
   | 'Date'
   | 'Boolean'
   | 'Location'
-  | 'Link'
-  | 'Array'
-export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
+// | 'Link'
+// | 'Array'
+// export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
 
 export type ValidationOption<T extends ComponentDefinitionVariableType> = {
   value: T extends 'Text' ? string : T extends 'Number' ? number : never
@@ -61,44 +74,45 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
   defaultValue?: string | boolean | number | Record<any, any>
 }
 
-export interface ComponentDefinitionVariableLink extends ComponentDefinitionVariableBase<'Link'> {
-  linkType: 'Entry' | 'Asset'
-}
+// export interface ComponentDefinitionVariableLink extends ComponentDefinitionVariableBase<'Link'> {
+//   linkType: 'Entry' | 'Asset'
+// }
 
-export interface ComponentDefinitionVariableArrayOfEntityLinks
-  extends ComponentDefinitionVariableBase<'Array'> {
-  items: {
-    type: 'Link'
-    linkType: 'Entry' | 'Asset'
-  }
-}
+// export interface ComponentDefinitionVariableArrayOfEntityLinks
+//   extends ComponentDefinitionVariableBase<'Array'> {
+//   items: {
+//     type: 'Link'
+//     linkType: 'Entry' | 'Asset'
+//   }
+// }
 
-export interface ComponentDefinitionVariableArrayOfPrimitives
-  extends ComponentDefinitionVariableBase<'Array'> {
-  type: 'Array'
-}
+// export interface ComponentDefinitionVariableArrayOfPrimitives
+//   extends ComponentDefinitionVariableBase<'Array'> {
+//   type: 'Array'
+// }
 
-export interface ComponentDefinitionVariableArrayOfComponents {
-  type: 'Array'
-  items: {
-    type: 'Component'
-  }
-}
+// export interface ComponentDefinitionVariableArrayOfComponents {
+//   type: 'Array'
+//   items: {
+//     type: 'Component'
+//   }
+// }
 
-export type ComponentDefinitionVariableArray<
-  K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
-> = K extends 'Link'
-  ? ComponentDefinitionVariableArrayOfEntityLinks
-  : ComponentDefinitionVariableArrayOfPrimitives
+// export type ComponentDefinitionVariableArray<
+//   K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
+// > = K extends 'Link'
+//   ? ComponentDefinitionVariableArrayOfEntityLinks
+//   : ComponentDefinitionVariableArrayOfPrimitives
 
 export type ComponentDefinitionVariable<
-  T extends ComponentDefinitionVariableType,
-  K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
-> = T extends 'Link'
-  ? ComponentDefinitionVariableLink
-  : T extends 'Array'
-  ? { items: { type: K } } & ComponentDefinitionVariableArray<K>
-  : ComponentDefinitionVariableBase<T>
+  T extends ComponentDefinitionVariableType
+  // K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
+> =
+  // T extends 'Link'
+  // ? ComponentDefinitionVariableLink
+  // : T extends 'Array'
+  // ? { items: { type: K } } & ComponentDefinitionVariableArray<K>
+  /*:*/ ComponentDefinitionVariableBase<T>
 
 export type ComponentDefinition<
   T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType
@@ -155,11 +169,10 @@ export type CompositionComponentPropValue<
 
 // TODO: add conditional typing magic to reduce the number of optionals
 export type CompositionComponentNode = {
-  type: 'block' | 'root'
+  type: 'block' | 'root' | 'editorRoot'
   data: {
     id: string
     blockId?: string // will be undefined in case string node or if root component
-    propKey?: string // will have the key of variable that block configuration marked as "childNode"
     props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>
     dataSource: Record<
       string, // locale
@@ -278,4 +291,9 @@ export interface RawCoordinates {
 export interface Coordinates extends RawCoordinates {
   mousePosInTarget: { x: number; y: number }
   childrenCoordinates: RawCoordinates[]
+}
+export interface HoveredElement {
+  blockType: string | undefined
+  nodeId: string | undefined
+  blockId: string | undefined
 }
