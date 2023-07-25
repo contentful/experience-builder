@@ -49,6 +49,8 @@ export const getValueForBreakpoint = (
   }
 }
 
+// TODO: In order to become framework-agnostic soon, we should extract this heavy logic into simple
+// functions that we can reuse in other cases.
 /*
  * Registers media query change listeners for each breakpoint (except for "*").
  * It will always assume the last matching media query in the list. It therefore,
