@@ -126,12 +126,6 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
       isMatch: mediaQueryMatches[id] ?? true,
     }))
 
-    // If all are matching, we take the last one (desktop-first: the narrowest one)
-    const isEveryBreakpointMatching = breakpointsWithMatches.every((match) => match.isMatch)
-    if (isEveryBreakpointMatching) {
-      return breakpointsWithMatches.length - 1
-    }
-
     // Find the last breakpoint in the list that matches (desktop-first: the narrowest one)
     const mostSpecificIndex = findLast(breakpointsWithMatches, ({ isMatch }) => isMatch)?.index
     return mostSpecificIndex ?? fallbackBreakpointIndex
