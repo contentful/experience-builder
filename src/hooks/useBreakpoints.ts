@@ -102,18 +102,22 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   }, [mediaQueryMatchers])
 
   const activeBreakpointIndex = useMemo(() => {
-    if (Object.values(mediaQueryMatches).length === 0) return fallbackBreakpointIndex
-    // Find the first breakpoint in the list that is not active
-    const firstNotMatchingIndex = mediaQueryMatchers.findIndex(
-      ({ id }) => mediaQueryMatches[id] !== true
-    )
-    // If all are applying, we take the last one (desktop-first: the smallest one)
-    if (firstNotMatchingIndex === -1) return breakpoints.length - 1
-    // If no media query is matching, we take the fallback breakpoint (desktop-first: desktop)
-    if (firstNotMatchingIndex === 0) return fallbackBreakpointIndex
-    // The last active one is the one before the first not matching one
-    const { id: activeBreakpointId } = mediaQueryMatchers[firstNotMatchingIndex - 1]
-    return breakpoints.findIndex(({ id }) => id === activeBreakpointId)
+    // The breakpoints are ordered (desktop-first: descending by screen width) and
+    const breakpointsWithMatches = breakpoints.map(({ id }, index) => ({
+      id,
+      index,
+      isMatch: id === fallbackBreakpointId ? true : mediaQueryMatches[id],
+    }))
+
+    // If all are matching, we take the last one (desktop-first: the narrowest one)
+    const isEveryBreakpointMatching = breakpointsWithMatches.every((match) => match.isMatch)
+    if (isEveryBreakpointMatching) {
+      return breakpointsWithMatches.length - 1
+    }
+
+    // Find the last breakpoint in the list that matches (desktop-first: the narrowest one)
+    const mostSpecificIndex = breakpointsWithMatches.findLast(({ isMatch }) => isMatch)?.index
+    return mostSpecificIndex ?? fallbackBreakpointIndex
   }, [breakpoints, mediaQueryMatches, fallbackBreakpointIndex])
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
