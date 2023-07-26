@@ -63,8 +63,6 @@ export class HoverIndicatorHandler {
           (target.parentElement && target.parentElement.dataset.cfNodeBlockType === 'block')
         ) {
           coordinates = this.getFullCoordinates(target, event)
-          mousePosInTarget.x = event.clientX - coordinates.left
-          mousePosInTarget.y = event.clientY - coordinates.top
 
           const sectionId = target.dataset.cfNodeId
           const sectionBlockId = target.dataset.cfNodeBlockId
@@ -101,6 +99,11 @@ export class HoverIndicatorHandler {
 
         target = target.parentElement
       }
+    }
+
+    if (coordinates) {
+      mousePosInTarget.x = event.clientX - coordinates.left
+      mousePosInTarget.y = event.clientY - coordinates.top
     }
 
     sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
