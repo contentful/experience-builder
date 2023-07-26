@@ -3,12 +3,12 @@ import { Breakpoint, CompositionVariableValueType } from '../types'
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/
 
-export type valueByBreakpoint =
+export type ValuesByBreakpoint =
   | Record<string, CompositionVariableValueType>
   | CompositionVariableValueType
 
 export type ResolveDesignValueType = (
-  valueByBreakpoint: valueByBreakpoint
+  valuesByBreakpoint: ValuesByBreakpoint
 ) => CompositionVariableValueType
 
 const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
@@ -26,26 +26,34 @@ const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
   return undefined
 }
 
+// Remove this helper when upgrading to TypeScript 5.0 - https://github.com/microsoft/TypeScript/issues/48829
+const findLast = <T>(
+  array: Array<T>,
+  predicate: Parameters<Array<T>['find']>[0]
+): T | undefined => {
+  return array.reverse().find(predicate)
+}
+
 export const getValueForBreakpoint = (
-  valueByBreakpoint: valueByBreakpoint,
+  valuesByBreakpoint: ValuesByBreakpoint,
   breakpoints: Breakpoint[],
   activeBreakpointIndex: number
 ) => {
   const fallbackBreakpointIndex = breakpoints.findIndex(({ query }) => query === '*') ?? 0
   const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id
-  if (valueByBreakpoint instanceof Object) {
+  if (valuesByBreakpoint instanceof Object) {
     // Assume that the values are sorted by media query to apply the cascading CSS logic
     for (let index = activeBreakpointIndex; index >= 0; index--) {
       const breakpointId = breakpoints[index].id
-      if (valueByBreakpoint[breakpointId]) {
+      if (valuesByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade
-        return valueByBreakpoint[breakpointId]
+        return valuesByBreakpoint[breakpointId]
       }
     }
-    return valueByBreakpoint[fallbackBreakpointId]
+    return valuesByBreakpoint[fallbackBreakpointId]
   } else {
-    console.warn('Facing a non-object value for a design value', valueByBreakpoint)
-    return valueByBreakpoint
+    console.warn('Facing a non-object value for a design value', valuesByBreakpoint)
+    return valuesByBreakpoint
   }
 }
 
@@ -116,15 +124,15 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
     }
 
     // Find the last breakpoint in the list that matches (desktop-first: the narrowest one)
-    const mostSpecificIndex = breakpointsWithMatches.findLast(({ isMatch }) => isMatch)?.index
+    const mostSpecificIndex = findLast(breakpointsWithMatches, ({ isMatch }) => isMatch)?.index
     return mostSpecificIndex ?? fallbackBreakpointIndex
-  }, [breakpoints, mediaQueryMatches, fallbackBreakpointIndex])
+  }, [breakpoints, fallbackBreakpointIndex, fallbackBreakpointId, mediaQueryMatches])
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
-    (valueByBreakpoint: valueByBreakpoint): CompositionVariableValueType => {
-      return getValueForBreakpoint(valueByBreakpoint, breakpoints, activeBreakpointIndex)
+    (valuesByBreakpoint: ValuesByBreakpoint): CompositionVariableValueType => {
+      return getValueForBreakpoint(valuesByBreakpoint, breakpoints, activeBreakpointIndex)
     },
-    [activeBreakpointIndex, fallbackBreakpointId]
+    [activeBreakpointIndex, breakpoints]
   )
 
   return { resolveDesignValue }
