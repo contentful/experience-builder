@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Experience } from '../types'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyEditorContainer } from './EmptyEdtorContainer'
@@ -17,6 +17,15 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
 
   const { tree, dataSource, isDragging, selectedNodeId, unboundValues } = experience
 
+  useEffect(() => {
+    if (!tree) return
+    const onMouseUp = () => {
+      onComponentDropped({ node: tree.root })
+    }
+    document.addEventListener('mouseup', onMouseUp)
+    return () => document.removeEventListener('mouseup', onMouseUp)
+  }, [tree])
+
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
   }
@@ -26,9 +35,6 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
     {
       id: 'VisualEditorRoot',
       className: 'root',
-      onMouseUp: () => {
-        onComponentDropped({ node: tree.root })
-      },
       'data-type': 'root',
     },
     [
