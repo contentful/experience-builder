@@ -6,8 +6,7 @@ import {
   StyleProps,
   LocalizedUnboundValues,
 } from '../types'
-import { useCommunication } from '../hooks/useCommunication'
-import { useInteraction } from '../hooks/useInteraction'
+
 import { useComponents } from '../hooks'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
@@ -16,6 +15,8 @@ import './VisualEditorBlock.css'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
+import { onComponentDropped } from '../communication/onComponentDrop'
+import { sendMessage } from '../sendMessage'
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
@@ -38,9 +39,7 @@ export const VisualEditorBlock = ({
 }: VisualEditorBlockProps) => {
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
-  const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
-  const { onComponentDropped } = useInteraction()
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),

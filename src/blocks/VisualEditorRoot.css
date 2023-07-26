@@ -1,5 +1,12 @@
+body, html {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
+
 #VisualEditorRoot.root {
-  min-height: 45vh;
+  height: 100%;
   padding-bottom: 100px;
   overflow: scroll;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
@@ -9,3 +16,4 @@
 #VisualEditorRoot.root::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
+

@@ -1,11 +1,11 @@
 import React from 'react'
 import { Experience } from '../types'
-import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
 import './VisualEditorRoot.css'
 import { useHoverIndicator } from '../hooks/useHoverIndicator'
+import { onComponentDropped } from '../communication/onComponentDrop'
 
 type VisualEditorRootProps = {
   experience: Experience
@@ -13,7 +13,6 @@ type VisualEditorRootProps = {
 }
 
 export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
-  const { onComponentDropped } = useInteraction()
   useHoverIndicator()
 
   const { tree, dataSource, isDragging, selectedNodeId, unboundValues } = experience
@@ -28,7 +27,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
       id: 'VisualEditorRoot',
       className: 'root',
       onMouseUp: () => {
-        onComponentDropped({ node: { ...tree.root, type: 'editorRoot' } })
+        onComponentDropped({ node: tree.root })
       },
       'data-type': 'root',
     },

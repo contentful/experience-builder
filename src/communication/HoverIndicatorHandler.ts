@@ -5,14 +5,9 @@ import {
   RawCoordinates,
 } from '../types'
 import throttle from 'lodash.throttle'
+import { sendMessage } from './sendMessage'
 
 export class HoverIndicatorHandler {
-  private sendMessage: (event: OutgoingExperienceBuilderEvent, payload: any) => void
-
-  constructor(sendMessage: (event: OutgoingExperienceBuilderEvent, payload: any) => void) {
-    this.sendMessage = sendMessage
-  }
-
   private getCoordinatesOfElement(element: HTMLElement | Element): RawCoordinates {
     const { left, top, width, height } = element.getBoundingClientRect()
     const { pageXOffset, pageYOffset } = window
@@ -48,15 +43,18 @@ export class HoverIndicatorHandler {
 
     let target = event.target as HTMLElement | null
 
-    if (target?.id === 'VisualEditorRoot') {
+    if (target?.id === 'VisualEditorRoot' || target?.tagName === 'BODY') {
+      const rootElement = document.getElementById('VisualEditorRoot')
       hoveredElement = {
         nodeId: 'root',
         blockType: 'root',
         blockId: 'root',
       }
-      coordinates = this.getFullCoordinates(target, event)
+      if (rootElement) {
+        coordinates = this.getFullCoordinates(rootElement, event)
+      }
     } else {
-      // Find the closest section or direct parent that is a section
+      // Find the closest contentful container or direct parent that is a contentful container
       while (target) {
         if (
           // is itself a section?
@@ -76,9 +74,10 @@ export class HoverIndicatorHandler {
 
           // find the next parent that is a section
           while (parentHTMLElement) {
-            if (parentHTMLElement.dataset.cfNodeId) {
+            const parentIsRoot = parentHTMLElement.id === 'VisualEditorRoot'
+            if (parentHTMLElement.dataset.cfNodeId || parentIsRoot) {
               parentElement = {
-                nodeId: parentHTMLElement.dataset.cfNodeId,
+                nodeId: parentIsRoot ? 'root' : parentHTMLElement.dataset.cfNodeId,
                 blockType: parentHTMLElement.dataset.cfNodeBlockType,
                 blockId: parentHTMLElement.dataset.cfNodeBlockId,
               }
@@ -104,7 +103,7 @@ export class HoverIndicatorHandler {
       }
     }
 
-    this.sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
+    sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
       hoveredElement,
       parentElement,
       parentSectionIndex,

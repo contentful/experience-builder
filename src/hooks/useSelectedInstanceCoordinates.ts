@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { getElementCoordinates } from '../core/domValues'
 import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from '../types'
-import { useCommunication } from './useCommunication'
+import { useCommunication } from '../communication/useCommunication'
 
 /**
  * This hook gets the element co-ordinates of a specified element in the DOM

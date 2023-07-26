@@ -3,13 +3,13 @@ import { VisualEditorBlock } from './VisualEditorBlock'
 import { render, fireEvent } from '@testing-library/react'
 import { CompositionComponentNode } from '../types'
 import * as useComponents from '../hooks/useComponents'
-import * as useInteractionHook from '../hooks/useInteraction'
+import * as onComponentDropFunction from '../communication/onComponentDrop'
 
 const TestComponent = ({ ...props }) => {
   return <div data-test-id="test-component" {...props} />
 }
 
-jest.mock('../hooks/useCommunication.ts', () => {
+jest.mock('../hooks/sendMessage.ts', () => {
   return {
     useCommunication: () => {
       return { sendMessage: jest.fn() }
@@ -97,7 +97,7 @@ describe('Visual Editor Block', () => {
       onComponentDropped: jest.fn(),
     }
 
-    jest.spyOn(useInteractionHook, 'useInteraction').mockImplementation(() => mock)
+    jest.spyOn(onComponentDropFunction, 'onComponentDropped').mockImplementation(() => mock)
 
     const { getAllByTestId } = await renderComponent()
 
@@ -136,7 +136,7 @@ describe('Visual Editor Block', () => {
       onComponentDropped: jest.fn(),
     }
 
-    jest.spyOn(useInteractionHook, 'useInteraction').mockImplementation(() => mock)
+    jest.spyOn(onComponentDropFunction, 'onComponentDropped').mockImplementation(() => mock)
 
     const { getAllByTestId } = await renderComponent()
 

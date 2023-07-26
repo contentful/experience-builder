@@ -1,8 +1,8 @@
 import { ReactComponent as EmptyStateIcon } from './emptyState.svg'
 import React from 'react'
-import { useInteraction } from '../hooks'
 
 import './EmptyContainer.css'
+import { onComponentDropped } from '../communication/onComponentDrop'
 
 export interface EmptyContainerProps {
   isFirst?: boolean
@@ -15,8 +15,6 @@ export const EmptyEditorContainer = ({
   isDragging = false,
   isHoveringOnRoot = false,
 }: EmptyContainerProps) => {
-  const { onComponentDropped } = useInteraction()
-
   const showContent = isFirst ? !isDragging || isDragging : false
 
   return (
