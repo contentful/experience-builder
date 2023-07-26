@@ -34,12 +34,21 @@ const findLast = <T>(
   return array.reverse().find(predicate)
 }
 
+const getFallbackBreakpointIndex = (breakpoints: Breakpoint[]) => {
+  // We assume that there will be a single breakpoint which uses the wildcard query.
+  // If there is none, we just take the first one in the list.
+  return Math.max(
+    breakpoints.findIndex(({ query }) => query === '*'),
+    0
+  )
+}
+
 export const getValueForBreakpoint = (
   valuesByBreakpoint: ValuesByBreakpoint,
   breakpoints: Breakpoint[],
   activeBreakpointIndex: number
 ) => {
-  const fallbackBreakpointIndex = breakpoints.findIndex(({ query }) => query === '*') ?? 0
+  const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints)
   const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id
   if (valuesByBreakpoint instanceof Object) {
     // Assume that the values are sorted by media query to apply the cascading CSS logic
@@ -68,10 +77,7 @@ export const getValueForBreakpoint = (
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   const [mediaQueryMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({})
 
-  const fallbackBreakpointIndex = Math.max(
-    breakpoints.findIndex(({ query }) => query === '*'),
-    0
-  )
+  const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints)
 
   // Initialise media query matchers. This won't include the always matching fallback breakpoint.
   const mediaQueryMatchers = useMemo(
