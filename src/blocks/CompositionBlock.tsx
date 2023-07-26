@@ -12,6 +12,7 @@ import { UnresolvedLink } from 'contentful'
 import { EntityStore } from '../core/EntityStore'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
+import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 
 type CompositionBlockProps = {
   node: CompositionNode
@@ -20,6 +21,7 @@ type CompositionBlockProps = {
   unboundValues: CompositionUnboundValues
   entityStore?: EntityStore
   breakpoints: Breakpoint[]
+  resolveDesignValue: ResolveDesignValueType
 }
 
 export const CompositionBlock = ({
@@ -29,6 +31,7 @@ export const CompositionBlock = ({
   dataSource,
   unboundValues,
   breakpoints,
+  resolveDesignValue,
 }: CompositionBlockProps) => {
   const { getComponent } = useComponents()
 
@@ -47,7 +50,7 @@ export const CompositionBlock = ({
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
       switch (variable.type) {
         case 'DesignValue':
-          acc[variableName] = variable.valuesByBreakpoint
+          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint)
           break
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/')
@@ -65,7 +68,7 @@ export const CompositionBlock = ({
       }
       return acc
     }, propMap)
-  }, [definedComponent, node.variables, dataSource, entityStore, unboundValues])
+  }, [definedComponent, node.variables, resolveDesignValue, dataSource, entityStore, unboundValues])
 
   if (!definedComponent) {
     return null
@@ -83,6 +86,7 @@ export const CompositionBlock = ({
         unboundValues={unboundValues}
         entityStore={entityStore}
         breakpoints={breakpoints}
+        resolveDesignValue={resolveDesignValue}
       />
     )
   })
