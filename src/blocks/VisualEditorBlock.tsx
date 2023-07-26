@@ -5,6 +5,8 @@ import {
   CompositionComponentNode,
   StyleProps,
   LocalizedUnboundValues,
+  Link,
+  CompositionVariableValueType,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
@@ -17,6 +19,10 @@ import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
+
+type PropsType =
+  | StyleProps
+  | Record<string, CompositionVariableValueType | Link<'Entry'> | Link<'Asset'>>
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
@@ -50,9 +56,9 @@ export const VisualEditorBlock = ({
     [node, getComponent]
   )
 
-  const props: StyleProps = useMemo(() => {
+  const props: PropsType = useMemo(() => {
     if (!definedComponent) {
-      return {} as StyleProps
+      return {}
     }
 
     return Object.entries(definedComponent.componentDefinition.variables).reduce(
@@ -95,7 +101,7 @@ export const VisualEditorBlock = ({
           }
         }
       },
-      {} as StyleProps
+      {}
     )
   }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues])
 
@@ -107,7 +113,7 @@ export const VisualEditorBlock = ({
 
   const children =
     definedComponent.componentDefinition.children &&
-    node.children.map((childNode: any) => {
+    node.children.map((childNode) => {
       return (
         <VisualEditorBlock
           node={childNode}
@@ -142,7 +148,7 @@ export const VisualEditorBlock = ({
         className="visualEditorBlockHover"
         isDragging={isDragging}
         parentNode={parentNode}
-        {...(props as StyleProps)}>
+        {...(props as unknown as StyleProps)}>
         {children}
       </ContentfulSection>
     )
