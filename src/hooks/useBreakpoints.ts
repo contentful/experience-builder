@@ -68,10 +68,12 @@ export const getValueForBreakpoint = (
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   const [mediaQueryMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({})
 
-  const fallbackBreakpointIndex = breakpoints.findIndex(({ query }) => query === '*') ?? 0
-  const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id
+  const fallbackBreakpointIndex = Math.max(
+    breakpoints.findIndex(({ query }) => query === '*'),
+    0
+  )
 
-  // Initialise media query matchers
+  // Initialise media query matchers. This won't include the always matching fallback breakpoint.
   const mediaQueryMatchers = useMemo(
     () =>
       breakpoints
@@ -110,11 +112,12 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   }, [mediaQueryMatchers])
 
   const activeBreakpointIndex = useMemo(() => {
-    // The breakpoints are ordered (desktop-first: descending by screen width) and
+    // The breakpoints are ordered (desktop-first: descending by screen width)
     const breakpointsWithMatches = breakpoints.map(({ id }, index) => ({
       id,
       index,
-      isMatch: id === fallbackBreakpointId ? true : mediaQueryMatches[id],
+      // The fallback breakpoint with wildcard query will always match
+      isMatch: mediaQueryMatches[id] ?? true,
     }))
 
     // If all are matching, we take the last one (desktop-first: the narrowest one)
@@ -126,7 +129,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
     // Find the last breakpoint in the list that matches (desktop-first: the narrowest one)
     const mostSpecificIndex = findLast(breakpointsWithMatches, ({ isMatch }) => isMatch)?.index
     return mostSpecificIndex ?? fallbackBreakpointIndex
-  }, [breakpoints, fallbackBreakpointIndex, fallbackBreakpointId, mediaQueryMatches])
+  }, [breakpoints, fallbackBreakpointIndex, mediaQueryMatches])
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
     (valuesByBreakpoint: ValuesByBreakpoint): CompositionVariableValueType => {
