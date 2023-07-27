@@ -37,7 +37,7 @@ export class HoverIndicatorHandler {
     let coordinates: Coordinates | null = null
     let parentElement: HoveredElement | null = null
     let hoveredElement: HoveredElement | null = null
-    let parentSectionIndex: number = -1
+    let parentSectionIndex = -1
     let target = event.target as HTMLElement | null
 
     // If the target is outside on the root or anywhere else on the iframes body
@@ -102,7 +102,7 @@ export class HoverIndicatorHandler {
   }
 
   handleMouseMove = (event: MouseEvent): void => {
-    let mousePosInTarget: { x: number; y: number } = { x: 0, y: 0 }
+    const mousePosInTarget: { x: number; y: number } = { x: 0, y: 0 }
 
     const { coordinates, hoveredElement, parentElement, parentSectionIndex } =
       this.getHoveredElement(event)
