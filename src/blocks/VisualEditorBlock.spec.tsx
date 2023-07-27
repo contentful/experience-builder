@@ -25,6 +25,7 @@ const childNode: CompositionComponentNode = {
     props: {},
     dataSource: {},
     unboundValues: {},
+    breakpoints: [],
   },
   children: [],
 }
@@ -37,6 +38,7 @@ const parentNode: CompositionComponentNode = {
     props: {},
     dataSource: {},
     unboundValues: {},
+    breakpoints: [],
   },
   children: [childNode],
 }
@@ -48,6 +50,7 @@ const rootNode: CompositionComponentNode = {
     props: {},
     dataSource: {},
     unboundValues: {},
+    breakpoints: [],
   },
   children: [parentNode],
 }
@@ -61,6 +64,7 @@ const renderComponent = async (props = {}) => {
     isDragging: false,
     isSelected: false,
     parentNode: rootNode,
+    resolveDesignValue: jest.fn(),
   }
 
   return render(<VisualEditorBlock {...defaultProps} {...props} />)

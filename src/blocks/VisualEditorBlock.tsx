@@ -5,6 +5,8 @@ import {
   CompositionComponentNode,
   StyleProps,
   LocalizedUnboundValues,
+  Link,
+  CompositionVariableValueType,
 } from '../types'
 import { useCommunication } from '../hooks/useCommunication'
 import { useInteraction } from '../hooks/useInteraction'
@@ -16,6 +18,11 @@ import './VisualEditorBlock.css'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
+import { ResolveDesignValueType } from '../hooks/useBreakpoints'
+
+type PropsType =
+  | StyleProps
+  | Record<string, CompositionVariableValueType | Link<'Entry'> | Link<'Asset'>>
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
@@ -25,6 +32,7 @@ type VisualEditorBlockProps = {
   isDragging: boolean
   selectedNodeId?: string
   parentNode: CompositionComponentNode
+  resolveDesignValue: ResolveDesignValueType
 }
 
 export const VisualEditorBlock = ({
@@ -35,6 +43,7 @@ export const VisualEditorBlock = ({
   isDragging,
   parentNode,
   selectedNodeId,
+  resolveDesignValue,
 }: VisualEditorBlockProps) => {
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
@@ -47,7 +56,7 @@ export const VisualEditorBlock = ({
     [node, getComponent]
   )
 
-  const props = useMemo(() => {
+  const props: PropsType = useMemo(() => {
     if (!definedComponent) {
       return {}
     }
@@ -65,7 +74,7 @@ export const VisualEditorBlock = ({
         if (variableMapping.type === 'DesignValue') {
           return {
             ...acc,
-            [variableName]: variableMapping.value,
+            [variableName]: resolveDesignValue(variableMapping.valuesByBreakpoint),
           }
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
@@ -94,7 +103,7 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [definedComponent, node.data.props, dataSource, locale, unboundValues])
+  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues])
 
   if (!definedComponent) {
     return null
@@ -104,7 +113,7 @@ export const VisualEditorBlock = ({
 
   const children =
     definedComponent.componentDefinition.children &&
-    node.children.map((childNode: any) => {
+    node.children.map((childNode) => {
       return (
         <VisualEditorBlock
           node={childNode}
@@ -115,6 +124,7 @@ export const VisualEditorBlock = ({
           unboundValues={unboundValues}
           isDragging={isDragging}
           selectedNodeId={selectedNodeId}
+          resolveDesignValue={resolveDesignValue}
         />
       )
     })
@@ -138,7 +148,7 @@ export const VisualEditorBlock = ({
         className="visualEditorBlockHover"
         isDragging={isDragging}
         parentNode={parentNode}
-        {...(props as StyleProps)}>
+        {...(props as unknown as StyleProps)}>
         {children}
       </ContentfulSection>
     )
@@ -168,7 +178,6 @@ export const VisualEditorBlock = ({
       className: 'visualEditorBlockHover',
       'data-cf-node-id': node.data.id,
       'data-cf-node-block-id': node.data.blockId,
-      isDragging,
       ...props,
     },
     children

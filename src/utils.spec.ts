@@ -8,6 +8,7 @@ const dropReceiverChildNode: CompositionComponentNode = {
     props: {},
     dataSource: {},
     unboundValues: {},
+    breakpoints: [],
   },
   children: [],
 }
@@ -19,6 +20,7 @@ const dropReceiverNode: CompositionComponentNode = {
     props: {},
     dataSource: {},
     unboundValues: {},
+    breakpoints: [],
   },
   children: [dropReceiverChildNode],
 }
@@ -30,6 +32,7 @@ const childFillerNode1: CompositionComponentNode = {
     props: {},
     dataSource: {},
     unboundValues: {},
+    breakpoints: [],
   },
   children: [],
 }
@@ -41,6 +44,7 @@ const childFillerNode2: CompositionComponentNode = {
     props: {},
     dataSource: {},
     unboundValues: {},
+    breakpoints: [],
   },
   children: [],
 }
@@ -52,6 +56,7 @@ const dropReceiverParentNode: CompositionComponentNode = {
     props: {},
     dataSource: {},
     unboundValues: {},
+    breakpoints: [],
   },
   children: [childFillerNode1, dropReceiverNode, childFillerNode2],
 }

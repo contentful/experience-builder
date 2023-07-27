@@ -244,6 +244,7 @@ export const useExperienceBuilder = ({
       selectedNodeId,
       config: { accessToken, locale, environmentId, spaceId, host: host || defaultHost },
       mode: mode as CompositionMode,
+      breakpoints: tree?.root.data.breakpoints ?? [],
     }),
     [
       tree,
