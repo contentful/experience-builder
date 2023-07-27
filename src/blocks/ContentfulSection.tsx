@@ -11,7 +11,6 @@ import { Flex } from '../core'
 type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
   (EditorMode extends true
     ? {
-        handleComponentDrop: (data: { index: number; node: CompositionComponentNode }) => void
         onMouseDown: MouseEventHandler<HTMLDivElement>
         isDragging: boolean
         children: React.ReactNode

@@ -4,7 +4,6 @@ import {
   OutgoingExperienceBuilderEvent,
   RawCoordinates,
 } from '../types'
-import throttle from 'lodash.throttle'
 import { sendMessage } from './sendMessage'
 
 export class HoverIndicatorHandler {
@@ -34,15 +33,14 @@ export class HoverIndicatorHandler {
     }
   }
 
-  handleMouseMove = (event: MouseEvent): void => {
+  private getHoveredElement = (event: MouseEvent) => {
     let coordinates: Coordinates | null = null
     let parentElement: HoveredElement | null = null
     let hoveredElement: HoveredElement | null = null
     let parentSectionIndex: number = -1
-    let mousePosInTarget: { x: number; y: number } = { x: 0, y: 0 }
-
     let target = event.target as HTMLElement | null
 
+    // If the target is outside on the root or anywhere else on the iframes body
     if (target?.id === 'VisualEditorRoot' || target?.tagName === 'BODY') {
       const rootElement = document.getElementById('VisualEditorRoot')
       hoveredElement = {
@@ -100,6 +98,14 @@ export class HoverIndicatorHandler {
         target = target.parentElement
       }
     }
+    return { coordinates, hoveredElement, parentElement, parentSectionIndex }
+  }
+
+  handleMouseMove = (event: MouseEvent): void => {
+    let mousePosInTarget: { x: number; y: number } = { x: 0, y: 0 }
+
+    const { coordinates, hoveredElement, parentElement, parentSectionIndex } =
+      this.getHoveredElement(event)
 
     if (coordinates) {
       mousePosInTarget.x = event.clientX - coordinates.left
@@ -116,8 +122,6 @@ export class HoverIndicatorHandler {
       clientY: event.clientY,
     })
   }
-
-  throttledMouseMove = (e: MouseEvent) => {}
 
   attachEvent(): void {
     document.addEventListener('mousemove', this.handleMouseMove)

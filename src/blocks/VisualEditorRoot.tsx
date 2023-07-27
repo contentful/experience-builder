@@ -18,7 +18,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   const { tree, dataSource, isDragging, selectedNodeId, unboundValues } = experience
 
   useEffect(() => {
-    if (!tree) return
+    if (!tree || !tree?.root.children.length) return
     const onMouseUp = () => {
       onComponentDropped({ node: tree.root })
     }
