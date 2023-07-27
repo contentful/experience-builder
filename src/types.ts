@@ -161,7 +161,8 @@ type CompositionComponentPropType = 'BoundValue' | 'UnboundValue' | 'DesignValue
 export type CompositionComponentPropValue<
   T extends CompositionComponentPropType = CompositionComponentPropType
 > = T extends 'DesignValue'
-  ? { type: T; value: CompositionVariableValueType }
+  ? // The keys in valuesByBreakpoint are the breakpoint ids
+    { type: T; valuesByBreakpoint: Record<string, CompositionVariableValueType> }
   : T extends 'BoundValue'
   ? { type: T; path: string }
   : { type: T; key: string }
@@ -181,6 +182,7 @@ export type CompositionComponentNode = {
       >
     >
     unboundValues: Record<string, Record<string, { value: CompositionVariableValueType }>>
+    breakpoints: Breakpoint[]
   }
   children: CompositionComponentNode[]
   parentId?: string
@@ -208,6 +210,7 @@ export type Experience = {
   isDragging: boolean
   selectedNodeId: string
   mode: CompositionMode | undefined
+  breakpoints: Breakpoint[]
 }
 
 export interface StyleProps {

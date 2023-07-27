@@ -5,6 +5,7 @@ import { useCheckForExperienceConfig } from '../hooks/useCheckForExperienceConfi
 import { CompositionBlock } from './CompositionBlock'
 import { useFetchComposition } from '../hooks/useFetchComposition'
 import { LATEST_SCHEMA_VERSION } from '../constants'
+import { useBreakpoints } from '../hooks'
 
 type DeliveryRootProps = {
   experience: Experience
@@ -15,6 +16,7 @@ type DeliveryRootProps = {
 export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => {
   const { spaceId, environmentId, accessToken, locale, host } =
     useCheckForExperienceConfig(experience)
+  const { resolveDesignValue } = useBreakpoints(experience.breakpoints)
 
   if (!slug) {
     throw new Error('Preview and delivery mode requires a composition slug to be provided')
@@ -35,6 +37,7 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
     unboundValues,
     isLoadingData,
     schemaVersion,
+    breakpoints,
   } = useFetchComposition({
     client,
     slug: slug,
@@ -62,6 +65,8 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
           entityStore={entityStore}
           dataSource={dataSource}
           unboundValues={unboundValues}
+          breakpoints={breakpoints}
+          resolveDesignValue={resolveDesignValue}
         />
       ))}
     </>
