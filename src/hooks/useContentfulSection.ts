@@ -151,6 +151,70 @@ export const useContentfulSection = () => {
       description: 'The spacing between the elements of the section',
       defaultValue: '0px',
     },
+
+    backgroundImageUrl: {
+      displayName: 'Background Image',
+      type: 'Text',
+      // group: 'style',
+      description: 'Background image for section or container',
+
+      // this value will be applied even if it is not coming from the tree.node.data[backgroundImageUrl]
+      // Note: we should NOT set the default value for section as this will force all sections and containers
+      //       to have this default background image
+      // defaultValue: 'https://picsum.photos/222/333',
+    },
+
+    backgroundImageScaling: {
+      displayName: 'Background Image Scaling',
+      type: 'Text',
+      group: 'style',
+      description: 'Adjust background image to fit, fill or tile the container',
+      defaultValue: 'fit',
+      validations: {
+        in: [
+          {
+            value: 'fill',
+            displayName: 'Fill container',
+          },
+          {
+            value: 'fit',
+            displayName: 'Fit container',
+          },
+          {
+            value: 'tile',
+            displayName: 'Tile in container',
+          },
+        ],
+      },      
+      
+    },
+    backgroundImageAlignment: {
+      displayName: 'Background Image Alignment',
+      type: 'Text',
+      group: 'style',
+      description: 'Align background image to the edges of the container',
+      defaultValue: 'left',
+      validations: {
+        in: [
+          {
+            value: 'left',
+            displayName: 'Align left',
+          },
+          {
+            value: 'right',
+            displayName: 'Align right',
+          },
+          {
+            value: 'top',
+            displayName: 'Align top',
+          },
+          {
+            value: 'bottom',
+            displayName: 'Align bottom',
+          },
+        ],
+      },         
+    },
   }
 
   const sectionDefinition: ContentfulSectionType = {

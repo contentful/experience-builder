@@ -39,11 +39,27 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     maxWidth,
     border,
     gap,
+    backgroundImageUrl,
+    backgroundImageAlignment,
+    backgroundImageScaling,
     className,
     children,
   } = props
 
-  const styleOverrides = {
+  console.warn(
+    `[exp-builder.sdk::ContentfulSection] backgroundImageXXX prop`,
+    { 
+      backgroundImageUrl,
+      backgroundImageAlignment,
+      backgroundImageScaling,
+    }
+  );
+
+  const cssBackgroundLine = `url(${backgroundImageUrl})`;
+
+
+  // const styleOverrides : Partial<StyleProps> = {
+  const styleOverrides  = {
     margin,
     padding,
     backgroundColor,
@@ -56,6 +72,26 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     flexDirection,
     flexWrap,
   }
+
+  if ( backgroundImageUrl ) {
+    // @ts-expect-error
+    styleOverrides.backgroundImage = `url(${backgroundImageUrl})`;
+    
+    // @ts-expect-error
+    styleOverrides.backgroundRepeat = backgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat'; 
+    // @ts-expect-error
+    styleOverrides.backgroundPosition = backgroundImageAlignment || undefined;
+    if ( 'fill' === backgroundImageScaling ) {
+      // @ts-expect-error
+      styleOverrides.backgroundSize = 'cover';
+    }
+    if ( 'fit' === backgroundImageScaling) {
+      // @ts-expect-error
+      styleOverrides.backgroundSize = 'contain';
+    }
+    
+  }
+
 
   if (props.editorMode === false) {
     return (
@@ -70,6 +106,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
 
   // Extract properties that are only available in editor mode
   const { node, onMouseDown } = props
+
 
   return (
     <Flex

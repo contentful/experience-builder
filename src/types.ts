@@ -229,6 +229,9 @@ export interface StyleProps {
   flexWrap: 'nowrap' | 'wrap'
   border: string
   gap: string
+  backgroundImageUrl: string
+  backgroundImageScaling: string
+  backgroundImageAlignment: string
 }
 
 export type SECTION_STYLE_ATTRIBUTE_KEY =
@@ -245,6 +248,9 @@ export type SECTION_STYLE_ATTRIBUTE_KEY =
   | 'border'
   | 'maxWidth'
   | 'gap'
+  | 'backgroundImageUrl'
+  | 'backgroundImageScaling'
+  | 'backgroundImageAlignment'
 
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID
