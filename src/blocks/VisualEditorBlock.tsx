@@ -13,7 +13,6 @@ import { useComponents } from '../hooks'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
-import './VisualEditorBlock.css'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
@@ -149,7 +148,6 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        className="visualEditorBlockHover"
         isDragging={isDragging}
         parentNode={parentNode}
         {...(props as unknown as StyleProps)}>
@@ -173,7 +171,6 @@ export const VisualEditorBlock = ({
         e.stopPropagation()
         e.preventDefault()
       },
-      className: 'visualEditorBlockHover',
       'data-cf-node-id': node.data.id,
       'data-cf-node-block-id': node.data.blockId,
       ...props,
