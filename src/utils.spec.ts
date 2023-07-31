@@ -9,6 +9,7 @@ const dropReceiverChildNode: CompositionComponentNode = {
     dataSource: {},
     unboundValues: {},
     breakpoints: [],
+    pathOverrides: {},
   },
   children: [],
 }
@@ -21,6 +22,7 @@ const dropReceiverNode: CompositionComponentNode = {
     dataSource: {},
     unboundValues: {},
     breakpoints: [],
+    pathOverrides: {},
   },
   children: [dropReceiverChildNode],
 }
@@ -33,6 +35,7 @@ const childFillerNode1: CompositionComponentNode = {
     dataSource: {},
     unboundValues: {},
     breakpoints: [],
+    pathOverrides: {},
   },
   children: [],
 }
@@ -45,6 +48,7 @@ const childFillerNode2: CompositionComponentNode = {
     dataSource: {},
     unboundValues: {},
     breakpoints: [],
+    pathOverrides: {},
   },
   children: [],
 }
@@ -57,6 +61,7 @@ const dropReceiverParentNode: CompositionComponentNode = {
     dataSource: {},
     unboundValues: {},
     breakpoints: [],
+    pathOverrides: {},
   },
   children: [childFillerNode1, dropReceiverNode, childFillerNode2],
 }
