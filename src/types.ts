@@ -164,7 +164,7 @@ export type CompositionComponentPropValue<
   ? // The keys in valuesByBreakpoint are the breakpoint ids
     { type: T; valuesByBreakpoint: Record<string, CompositionVariableValueType> }
   : T extends 'BoundValue'
-  ? { type: T; path: string }
+  ? { type: T; path: string; pathOverrideKey?: string }
   : { type: T; key: string }
 
 // TODO: add conditional typing magic to reduce the number of optionals
@@ -183,6 +183,7 @@ export type CompositionComponentNode = {
     >
     unboundValues: Record<string, Record<string, { value: CompositionVariableValueType }>>
     breakpoints: Breakpoint[]
+    pathOverrides: Record<string, Record<string, string>>
   }
   children: CompositionComponentNode[]
   parentId?: string
