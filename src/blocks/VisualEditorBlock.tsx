@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import {
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
@@ -15,8 +15,8 @@ import { ContentfulSection } from './ContentfulSection'
 
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
-import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 import { sendMessage } from '../sendMessage'
+import { updateSelectedComponentCoordinates } from '../communication/updateSelectedComponentCoordinates'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 
 type PropsType =
@@ -44,14 +44,16 @@ export const VisualEditorBlock = ({
   selectedNodeId,
   resolveDesignValue,
 }: VisualEditorBlockProps) => {
-  useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
-
   const { getComponent } = useComponents()
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),
     [node, getComponent]
   )
+
+  useEffect(() => {
+    updateSelectedComponentCoordinates({ instanceId: selectedNodeId })
+  }, [selectedNodeId])
 
   const props: PropsType = useMemo(() => {
     if (!definedComponent) {

@@ -12,8 +12,8 @@ import {
 } from '../types'
 import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
-import { getElementCoordinates } from '../core/domValues'
 import { sendMessage } from '../sendMessage'
+import { updateSelectedComponentCoordinates } from '../communication/updateSelectedComponentCoordinates'
 
 interface UseExperienceBuilderProps {
   /** The mode is automatically set, use this value to manually override this **/
@@ -72,17 +72,6 @@ export const useExperienceBuilder = ({
     }, 50)
   }
 
-  const updateSelectedComponentCoordinates = useCallback((selectedNodeId: string) => {
-    const selectedElement = document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)
-
-    if (selectedElement) {
-      const selectedNodeCoordinates = getElementCoordinates(selectedElement)
-      sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_COORDINATES, {
-        selectedNodeCoordinates,
-      })
-    }
-  }, [])
-
   useEffect(() => {
     // We only care about this communication when in editor mode
     if (mode !== 'editor') return
@@ -132,7 +121,7 @@ export const useExperienceBuilder = ({
         case IncomingExperienceBuilderEvent.CANVAS_RESIZED:
         case IncomingExperienceBuilderEvent.SELECT_COMPONENT: {
           const { selectedNodeId } = payload
-          updateSelectedComponentCoordinates(selectedNodeId)
+          updateSelectedComponentCoordinates({ instanceId: selectedNodeId })
           break
         }
 
@@ -200,7 +189,7 @@ export const useExperienceBuilder = ({
         /**
          * On scroll end, send new co-ordinates of selected node
          */
-        updateSelectedComponentCoordinates(selectedNodeId)
+        updateSelectedComponentCoordinates({ instanceId: selectedNodeId })
       }, 150)
     }
 
