@@ -108,9 +108,6 @@ export class HoverIndicatorHandler {
     const { coordinates, hoveredElement, parentElement, parentSectionIndex } =
       this.getHoveredElement(target)
 
-    console.log(window.scrollX)
-    console.log(window.scrollY)
-
     if (coordinates) {
       mousePosInTarget.x = x - coordinates.left
       mousePosInTarget.y = y - coordinates.top

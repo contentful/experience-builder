@@ -13,10 +13,7 @@ export interface EmptyContainerProps {
 export const EmptyEditorContainer = ({
   isFirst = true,
   isDragging = false,
-  isHoveringOnRoot = false,
 }: EmptyContainerProps) => {
-  const showContent = isFirst ? !isDragging || isDragging : false
-
   return (
     <div
       id="EmptyContainer"
@@ -38,7 +35,7 @@ export const EmptyEditorContainer = ({
           },
         })
       }}>
-      {showContent ? (
+      {isFirst && isDragging ? (
         <>
           <EmptyStateIcon />
           <span className="icon">Add components to begin</span>
