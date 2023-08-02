@@ -26,7 +26,6 @@ const childNode: CompositionComponentNode = {
     dataSource: {},
     unboundValues: {},
     breakpoints: [],
-    pathOverrides: {},
   },
   children: [],
 }
@@ -40,7 +39,6 @@ const parentNode: CompositionComponentNode = {
     dataSource: {},
     unboundValues: {},
     breakpoints: [],
-    pathOverrides: {},
   },
   children: [childNode],
 }
@@ -53,7 +51,6 @@ const rootNode: CompositionComponentNode = {
     dataSource: {},
     unboundValues: {},
     breakpoints: [],
-    pathOverrides: {},
   },
   children: [parentNode],
 }
