@@ -35,7 +35,7 @@ export const EmptyEditorContainer = ({
           },
         })
       }}>
-      {isFirst && isDragging ? (
+      {isFirst || isDragging ? (
         <>
           <EmptyStateIcon />
           <span className="icon">Add components to begin</span>
