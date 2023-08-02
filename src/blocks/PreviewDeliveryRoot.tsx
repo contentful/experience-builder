@@ -9,7 +9,8 @@ import { useBreakpoints } from '../hooks'
 
 type DeliveryRootProps = {
   experience: Experience
-  locale: string
+  selectedLocale: string
+  defaultLocaleCode: string
   slug?: string
 }
 

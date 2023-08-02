@@ -26,7 +26,8 @@ type PropsType =
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
-  locale: string
+  selectedLocaleCode: string
+  defaultLocaleCode: string
   dataSource: LocalizedDataSource
   unboundValues: LocalizedUnboundValues
   isDragging: boolean
@@ -37,7 +38,8 @@ type VisualEditorBlockProps = {
 
 export const VisualEditorBlock = ({
   node,
-  locale,
+  selectedLocaleCode,
+  defaultLocaleCode,
   dataSource,
   unboundValues,
   isDragging,
@@ -81,7 +83,7 @@ export const VisualEditorBlock = ({
           const value = getValueFromDataSource({
             path: variableMapping.path,
             fallback: variableDefinition.defaultValue,
-            dataSourceForCurrentLocale: dataSource[locale] || {},
+            dataSourceForCurrentLocale: dataSource[selectedLocaleCode] || {},
           })
 
           return {
@@ -92,7 +94,7 @@ export const VisualEditorBlock = ({
           const value = getUnboundValues({
             key: variableMapping.key,
             fallback: variableDefinition.defaultValue,
-            unboundValuesForCurrentLocale: unboundValues[locale] || {},
+            unboundValuesForCurrentLocale: unboundValues[defaultLocaleCode] || {},
           })
 
           return {
@@ -103,7 +105,15 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues])
+  }, [
+    resolveDesignValue,
+    definedComponent,
+    node.data.props,
+    dataSource,
+    selectedLocaleCode,
+    defaultLocaleCode,
+    unboundValues,
+  ])
 
   if (!definedComponent) {
     return null
@@ -119,7 +129,8 @@ export const VisualEditorBlock = ({
           node={childNode}
           parentNode={parentNode}
           key={childNode.data.id}
-          locale={locale}
+          selectedLocaleCode={selectedLocaleCode}
+          defaultLocaleCode={defaultLocaleCode}
           dataSource={dataSource}
           unboundValues={unboundValues}
           isDragging={isDragging}
