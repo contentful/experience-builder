@@ -165,7 +165,7 @@ export const useContentfulSection = () => {
     },
 
     backgroundImageScaling: {
-      displayName: 'Background Image Scaling',
+      displayName: 'Image Scaling',
       type: 'Text',
       group: 'style',
       description: 'Adjust background image to fit, fill or tile the container',
@@ -174,22 +174,21 @@ export const useContentfulSection = () => {
         in: [
           {
             value: 'fill',
-            displayName: 'Fill container',
+            displayName: 'Fill',
           },
           {
             value: 'fit',
-            displayName: 'Fit container',
+            displayName: 'Fit',
           },
           {
             value: 'tile',
-            displayName: 'Tile in container',
+            displayName: 'Tile',
           },
         ],
-      },      
-      
+      },
     },
     backgroundImageAlignment: {
-      displayName: 'Background Image Alignment',
+      displayName: 'Alignment',
       type: 'Text',
       group: 'style',
       description: 'Align background image to the edges of the container',
@@ -198,22 +197,22 @@ export const useContentfulSection = () => {
         in: [
           {
             value: 'left',
-            displayName: 'Align left',
+            displayName: 'Left',
           },
           {
             value: 'right',
-            displayName: 'Align right',
+            displayName: 'Right',
           },
           {
             value: 'top',
-            displayName: 'Align top',
+            displayName: 'Top',
           },
           {
             value: 'bottom',
-            displayName: 'Align bottom',
+            displayName: 'Bottom',
           },
         ],
-      },         
+      },
     },
   }
 
