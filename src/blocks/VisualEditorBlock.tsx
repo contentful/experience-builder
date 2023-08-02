@@ -45,7 +45,7 @@ export const VisualEditorBlock = ({
   selectedNodeId,
   resolveDesignValue,
 }: VisualEditorBlockProps) => {
-  useSelectedInstanceCoordinates({ instanceId: selectedNodeId })
+  useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
   const { getComponent } = useComponents()
 
