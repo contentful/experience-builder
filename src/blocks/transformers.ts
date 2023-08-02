@@ -40,7 +40,7 @@ type CssPropertiesForBackground =
   | undefined
 
 export const transformBackgroundImage = (
-  backgroundImageUrl: string,
+  backgroundImageUrl: string | null | undefined,
   backgroundImageScaling: StyleProps['backgroundImageScaling'],
   backgroundImageAlignment: StyleProps['backgroundImageAlignment']
 ): CssPropertiesForBackground => {

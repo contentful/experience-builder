@@ -1,4 +1,4 @@
-import { transformBorderStyle, transformFill } from './transformers'
+import { transformBackgroundImage, transformBorderStyle, transformFill } from './transformers'
 
 describe('transformFill', () => {
   it('returns "100%" when passed "fill"', () => {
@@ -33,6 +33,36 @@ describe('transformBorderStyle', () => {
     expect(transformBorderStyle('1px outside red')).toEqual({
       border: '1px solid red',
       boxSizing: 'content-box',
+    })
+  })
+})
+
+describe('transformBackgroundImage', () => {
+  it(`returns empty {} upon undefined or empty (falsy) backgroundImageUrl`, () => {
+    expect(transformBackgroundImage('', 'fill', 'left')).toEqual(undefined)
+    expect(transformBackgroundImage(null, 'fill', 'left')).toEqual(undefined)
+    expect(transformBackgroundImage(undefined, 'fill', 'left')).toEqual(undefined)
+  })
+  it(`Specifying 'backgroundImageScaling.tile' adds 'backgroundRepeat: repeat'`, () => {
+    expect(transformBackgroundImage('https://picsum.photos/200/300', 'tile', 'left')).toEqual({
+      backgroundImage: 'url(https://picsum.photos/200/300)',
+      backgroundPosition: 'left',
+      backgroundRepeat: 'repeat',
+      backgroundSize: undefined,
+    })
+  })
+  it(`Specifying 'backgroundImageScaling.not(tile)' adds 'backgroundRepeat: no-repeat'`, () => {
+    expect(
+      transformBackgroundImage(
+        'https://picsum.photos/200/300',
+        'fill', // not 'tile'
+        'left'
+      )
+    ).toEqual({
+      backgroundImage: 'url(https://picsum.photos/200/300)',
+      backgroundPosition: 'left',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
     })
   })
 })
