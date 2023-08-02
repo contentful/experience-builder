@@ -61,7 +61,8 @@ const rootNode: CompositionComponentNode = {
 const renderComponent = async (props = {}) => {
   const defaultProps = {
     node: parentNode,
-    locale: 'en-US',
+    selectedLocaleCode: 'en-US',
+    defaultLocaleCode: 'en-US',
     dataSource: {},
     unboundValues: {},
     isDragging: false,
