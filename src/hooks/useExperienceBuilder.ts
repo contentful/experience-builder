@@ -134,11 +134,13 @@ export const useExperienceBuilder = ({
           setSelectedNodeId(selectedNodeId)
           break
         }
-        case IncomingExperienceBuilderEvent.CANVAS_RESIZED: {
+        case IncomingExperienceBuilderEvent.CANVAS_RESIZED:
+        case IncomingExperienceBuilderEvent.SELECT_COMPONENT: {
           const { selectedNodeId } = payload
           updateSelectedComponentCoordinates(selectedNodeId)
           break
         }
+
         case IncomingExperienceBuilderEvent.COMPONENT_VALUE_CHANGED: {
           /** TODO: at the moment, not sure how to best handle this case.
            * we need to know the variable name, component id, locale
