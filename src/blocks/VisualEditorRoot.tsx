@@ -10,16 +10,14 @@ import { useBreakpoints } from '../hooks/useBreakpoints'
 
 type VisualEditorRootProps = {
   experience: Experience
-  selectedLocale: string
   defaultLocaleCode: string
 }
 
-export const VisualEditorRoot = ({
-  experience,
-  selectedLocale,
-  defaultLocaleCode,
-}: VisualEditorRootProps) => {
-  const { tree, dataSource, isDragging, selectedNodeId, unboundValues, breakpoints } = experience
+export const VisualEditorRoot = ({ experience, defaultLocaleCode }: VisualEditorRootProps) => {
+  const { tree, dataSource, isDragging, selectedNodeId, unboundValues, breakpoints, config } =
+    experience
+
+  const { locale } = config
 
   const { onComponentDropped } = useInteraction()
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
@@ -45,7 +43,7 @@ export const VisualEditorRoot = ({
         <VisualEditorBlock
           key={node.data.id}
           node={node}
-          selectedLocaleCode={selectedLocale}
+          selectedLocaleCode={locale || defaultLocaleCode}
           defaultLocaleCode={defaultLocaleCode}
           dataSource={dataSource}
           unboundValues={unboundValues}

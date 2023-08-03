@@ -6,7 +6,6 @@ import { useContentfulSection } from '../hooks/useContentfulSection'
 
 type CompositionRootProps = {
   experience: Experience
-  selectedLocale: string
   defaultLocaleCode: string
   slug?: string
 }
