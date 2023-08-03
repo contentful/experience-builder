@@ -34,3 +34,5 @@ tmp/
 # Local script for cache invalidation with temporary version bumps
 bump-alpha.cjs
 
+# Necessary for pushing to alternative npm registry
+.npmrc
