@@ -46,6 +46,7 @@ export const VisualEditorBlock = ({
   resolveDesignValue,
 }: VisualEditorBlockProps) => {
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
+  const defaultLocaleCode = 'en-US'
 
   const { getComponent } = useComponents()
 
@@ -90,7 +91,7 @@ export const VisualEditorBlock = ({
           const value = getUnboundValues({
             key: variableMapping.key,
             fallback: variableDefinition.defaultValue,
-            unboundValuesForCurrentLocale: unboundValues[locale] || {},
+            unboundValuesForCurrentLocale: unboundValues[defaultLocaleCode] || {},
           })
 
           return {
@@ -101,7 +102,15 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues])
+  }, [
+    resolveDesignValue,
+    definedComponent,
+    node.data.props,
+    dataSource,
+    locale,
+    defaultLocaleCode,
+    unboundValues,
+  ])
 
   if (!definedComponent) {
     return null
