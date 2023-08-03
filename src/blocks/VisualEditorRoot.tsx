@@ -2,7 +2,7 @@ import React from 'react'
 import { Experience } from '../types'
 import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
-import { EmptyEditorContainer } from './EmptyEditorContainer'
+import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
 import './VisualEditorRoot.css'
 import { useHoverIndicator } from '../hooks/useHoverIndicator'
