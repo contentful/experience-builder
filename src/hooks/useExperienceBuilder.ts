@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import throttle from 'lodash.throttle'
+
 import {
   LocalizedDataSource,
   IncomingExperienceBuilderEvent,
@@ -10,10 +10,10 @@ import {
   LocalizedUnboundValues,
   ScrollStates,
 } from '../types'
-import { useCommunication } from './useCommunication'
 import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 import { getElementCoordinates } from '../core/domValues'
+import { sendMessage } from '../sendMessage'
 
 interface UseExperienceBuilderProps {
   /** The mode is automatically set, use this value to manually override this **/
@@ -63,8 +63,6 @@ export const useExperienceBuilder = ({
 
   const defaultHost = mode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
 
-  const { sendMessage } = useCommunication()
-
   const reloadApp = () => {
     sendMessage(OutgoingExperienceBuilderEvent.CANVAS_RELOAD, {})
     // Wait a moment to ensure that the message was sent
@@ -74,19 +72,16 @@ export const useExperienceBuilder = ({
     }, 50)
   }
 
-  const updateSelectedComponentCoordinates = useCallback(
-    (selectedNodeId: string) => {
-      const selectedElement = document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)
+  const updateSelectedComponentCoordinates = useCallback((selectedNodeId: string) => {
+    const selectedElement = document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)
 
-      if (selectedElement) {
-        const selectedNodeCoordinates = getElementCoordinates(selectedElement)
-        sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_COORDINATES, {
-          selectedNodeCoordinates,
-        })
-      }
-    },
-    [sendMessage]
-  )
+    if (selectedElement) {
+      const selectedNodeCoordinates = getElementCoordinates(selectedElement)
+      sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_COORDINATES, {
+        selectedNodeCoordinates,
+      })
+    }
+  }, [])
 
   useEffect(() => {
     // We only care about this communication when in editor mode
@@ -174,26 +169,6 @@ export const useExperienceBuilder = ({
       window.removeEventListener('message', onMessage)
     }
   }, [mode])
-
-  /*
-   * Handles mouse move business
-   */
-  useEffect(() => {
-    // We only care about this communication when in editor mode
-    if (mode !== 'editor') return
-    const onMouseMove = throttle((e: MouseEvent) => {
-      sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
-        clientX: e.clientX,
-        clientY: e.clientY,
-      })
-    }, 20)
-
-    window.addEventListener('mousemove', onMouseMove)
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove)
-    }
-  }, [mode, sendMessage])
 
   /*
    * Handles on scroll business

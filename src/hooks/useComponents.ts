@@ -1,6 +1,7 @@
 import { ElementType, useCallback } from 'react'
-import { useCommunication } from './useCommunication'
+
 import { ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
+import { sendMessage } from '../sendMessage'
 
 export type ComponentDefinitionWithComponentType = {
   component: ElementType
@@ -28,19 +29,14 @@ const applyFallbacks = (componentDefinition: ComponentDefinition) => {
 const registeredComponentDefinitions: ComponentDefinitionWithComponentType[] = []
 
 export const useComponents = () => {
-  const { sendMessage } = useCommunication()
-
-  const defineComponent = useCallback(
-    (component: ElementType, parameters: ComponentDefinition) => {
-      const definitionWithFallbacks = applyFallbacks(parameters)
-      registeredComponentDefinitions.push({
-        component,
-        componentDefinition: definitionWithFallbacks,
-      })
-      sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, parameters)
-    },
-    [sendMessage]
-  )
+  const defineComponent = useCallback((component: ElementType, parameters: ComponentDefinition) => {
+    const definitionWithFallbacks = applyFallbacks(parameters)
+    registeredComponentDefinitions.push({
+      component,
+      componentDefinition: definitionWithFallbacks,
+    })
+    sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, parameters)
+  }, [])
 
   const getComponent = useCallback((id: string) => {
     return registeredComponentDefinitions.find(

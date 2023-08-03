@@ -1,8 +1,8 @@
 import { ReactComponent as EmptyStateIcon } from './emptyState.svg'
 import React from 'react'
-import { useInteraction } from '../hooks'
 
 import './EmptyContainer.css'
+import { onComponentDropped } from '../communication/onComponentDrop'
 
 export interface EmptyContainerProps {
   isFirst?: boolean
@@ -13,21 +13,12 @@ export interface EmptyContainerProps {
 export const EmptyEditorContainer = ({
   isFirst = true,
   isDragging = false,
-  isHoveringOnRoot = false,
 }: EmptyContainerProps) => {
-  const { onComponentDropped, isMouseOver, onMouseEnter, onMouseLeave } = useInteraction()
-
-  const showContent = isFirst ? !isDragging || (isDragging && !isMouseOver) : false
-
-  const isHighlighted = isDragging && (isHoveringOnRoot || isMouseOver)
-
   return (
     <div
       id="EmptyContainer"
       data-type="empty-container"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      className={`container ${isHighlighted ? 'highlight' : ''}`}
+      className={`container`}
       onMouseUp={() => {
         onComponentDropped({
           node: {
@@ -37,7 +28,7 @@ export const EmptyEditorContainer = ({
           },
         })
       }}>
-      {showContent ? (
+      {isFirst || isDragging ? (
         <>
           <EmptyStateIcon />
           <span className="icon">Add components to begin</span>

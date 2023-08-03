@@ -8,8 +8,7 @@ import {
   Link,
   CompositionVariableValueType,
 } from '../types'
-import { useCommunication } from '../hooks/useCommunication'
-import { useInteraction } from '../hooks/useInteraction'
+
 import { useComponents } from '../hooks'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
@@ -18,6 +17,7 @@ import './VisualEditorBlock.css'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
+import { sendMessage } from '../sendMessage'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 
 type PropsType =
@@ -47,9 +47,7 @@ export const VisualEditorBlock = ({
 }: VisualEditorBlockProps) => {
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
-  const { sendMessage } = useCommunication()
   const { getComponent } = useComponents()
-  const { onComponentDropped } = useInteraction()
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),
@@ -134,9 +132,6 @@ export const VisualEditorBlock = ({
     return (
       <ContentfulSection
         key={node.data.id}
-        handleComponentDrop={({ index, node }) => {
-          onComponentDropped({ node, index })
-        }}
         node={node}
         onMouseDown={(e) => {
           e.stopPropagation()
@@ -164,12 +159,6 @@ export const VisualEditorBlock = ({
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
           node,
         })
-      },
-      onMouseUp: () => {
-        if (definedComponent.componentDefinition.children) {
-          // TODO: follow the logic from the section and based on mouse position and node.children.length, define the new index
-          onComponentDropped({ node })
-        }
       },
       onClick: (e: MouseEvent) => {
         e.stopPropagation()

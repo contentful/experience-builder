@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { getElementCoordinates } from '../core/domValues'
 import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from '../types'
-import { useCommunication } from './useCommunication'
+import { sendMessage } from '../sendMessage'
 
 /**
  * This hook gets the element co-ordinates of a specified element in the DOM
@@ -14,7 +14,6 @@ export const useSelectedInstanceCoordinates = ({
   instanceId?: string
   node: CompositionComponentNode
 }) => {
-  const { sendMessage } = useCommunication()
   const selectedElement = instanceId && document.querySelector(`[data-cf-node-id="${instanceId}"]`)
 
   useEffect(() => {
@@ -23,6 +22,6 @@ export const useSelectedInstanceCoordinates = ({
         selectedNodeCoordinates: getElementCoordinates(selectedElement),
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // we need to update on changes on node, that's we add this to the dep array
   }, [selectedElement, node])
 }

@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Experience } from '../types'
-import { useInteraction } from '../hooks/useInteraction'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
 import './VisualEditorRoot.css'
 import { useHoverIndicator } from '../hooks/useHoverIndicator'
+import { onComponentDropped } from '../communication/onComponentDrop'
 import { useBreakpoints } from '../hooks/useBreakpoints'
 
 type VisualEditorRootProps = {
@@ -16,10 +16,18 @@ type VisualEditorRootProps = {
 export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
   const { tree, dataSource, isDragging, selectedNodeId, unboundValues, breakpoints } = experience
 
-  const { onComponentDropped } = useInteraction()
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
   const { resolveDesignValue } = useBreakpoints(breakpoints)
   useHoverIndicator()
+
+  useEffect(() => {
+    if (!tree || !tree?.root.children.length) return
+    const onMouseUp = () => {
+      onComponentDropped({ node: tree.root })
+    }
+    document.addEventListener('mouseup', onMouseUp)
+    return () => document.removeEventListener('mouseup', onMouseUp)
+  }, [tree])
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
@@ -30,9 +38,6 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
     {
       id: 'VisualEditorRoot',
       className: 'root',
-      onMouseUp: () => {
-        onComponentDropped({ node: { ...tree.root, type: 'editorRoot' } })
-      },
       'data-type': 'root',
     },
     [

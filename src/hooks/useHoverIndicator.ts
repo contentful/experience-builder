@@ -1,13 +1,9 @@
 import { useEffect, useRef } from 'react'
 
-import { useCommunication } from './useCommunication'
 import { HoverIndicatorHandler } from '../communication/HoverIndicatorHandler'
 
 export const useHoverIndicator = (): void => {
-  const { sendMessage } = useCommunication()
-  const hoverIndicatorHandler = useRef<HoverIndicatorHandler>(
-    new HoverIndicatorHandler(sendMessage)
-  )
+  const hoverIndicatorHandler = useRef<HoverIndicatorHandler>(new HoverIndicatorHandler())
 
   useEffect(() => {
     hoverIndicatorHandler.current.attachEvent()
