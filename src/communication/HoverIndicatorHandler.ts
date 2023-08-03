@@ -10,8 +10,6 @@ export class HoverIndicatorHandler {
   private getCoordinatesOfElement(element: HTMLElement | Element): RawCoordinates {
     const { left, top, width, height } = element.getBoundingClientRect()
     const { pageXOffset, pageYOffset, scrollX, scrollY } = window
-    console.log(window.scrollX)
-    console.log(window.scrollY)
 
     return {
       left: left + pageXOffset - scrollX,
