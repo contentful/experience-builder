@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Experience } from '../types'
 import { VisualEditorBlock } from './VisualEditorBlock'
-import { EmptyEditorContainer } from './EmptyEditorContainer'
+import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
 import './VisualEditorRoot.css'
 import { useHoverIndicator } from '../hooks/useHoverIndicator'

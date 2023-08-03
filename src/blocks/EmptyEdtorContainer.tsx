@@ -23,14 +23,7 @@ export const EmptyEditorContainer = ({
         onComponentDropped({
           node: {
             type: 'root',
-            data: {
-              id: 'root',
-              props: {},
-              dataSource: {},
-              unboundValues: {},
-              breakpoints: [],
-              pathOverrides: {},
-            },
+            data: { id: 'root', props: {}, dataSource: {}, unboundValues: {}, breakpoints: [] },
             children: [],
           },
         })
