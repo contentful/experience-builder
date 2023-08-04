@@ -1,7 +1,12 @@
 import React, { MouseEventHandler } from 'react'
 
 import { CompositionComponentNode, StyleProps } from '../types'
-import { transformAlignment, transformBorderStyle, transformFill } from './transformers'
+import {
+  transformAlignment,
+  transformBackgroundImage,
+  transformBorderStyle,
+  transformFill,
+} from './transformers'
 
 import './ContentfulSection.css'
 
@@ -46,20 +51,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     children,
   } = props
 
-  console.warn(
-    `[exp-builder.sdk::ContentfulSection] backgroundImageXXX prop`,
-    { 
-      backgroundImageUrl,
-      backgroundImageAlignment,
-      backgroundImageScaling,
-    }
-  );
-
-  const cssBackgroundLine = `url(${backgroundImageUrl})`;
-
-
-  // const styleOverrides : Partial<StyleProps> = {
-  const styleOverrides  = {
+  const styleOverrides: Partial<StyleProps> = {
     margin,
     padding,
     backgroundColor,
@@ -71,27 +63,12 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     ...transformAlignment(horizontalAlignment, verticalAlignment, flexDirection),
     flexDirection,
     flexWrap,
+    ...transformBackgroundImage(
+      backgroundImageUrl,
+      backgroundImageScaling,
+      backgroundImageAlignment
+    ),
   }
-
-  if ( backgroundImageUrl ) {
-    // @ts-expect-error
-    styleOverrides.backgroundImage = `url(${backgroundImageUrl})`;
-    
-    // @ts-expect-error
-    styleOverrides.backgroundRepeat = backgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat'; 
-    // @ts-expect-error
-    styleOverrides.backgroundPosition = backgroundImageAlignment || undefined;
-    if ( 'fill' === backgroundImageScaling ) {
-      // @ts-expect-error
-      styleOverrides.backgroundSize = 'cover';
-    }
-    if ( 'fit' === backgroundImageScaling) {
-      // @ts-expect-error
-      styleOverrides.backgroundSize = 'contain';
-    }
-    
-  }
-
 
   if (props.editorMode === false) {
     return (
@@ -106,7 +83,6 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
 
   // Extract properties that are only available in editor mode
   const { node, onMouseDown } = props
-
 
   return (
     <Flex

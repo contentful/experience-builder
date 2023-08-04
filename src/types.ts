@@ -230,8 +230,8 @@ export interface StyleProps {
   border: string
   gap: string
   backgroundImageUrl: string
-  backgroundImageScaling: string
-  backgroundImageAlignment: string
+  backgroundImageScaling: 'fit' | 'fill' | 'tile'
+  backgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
 }
 
 export type SECTION_STYLE_ATTRIBUTE_KEY =
