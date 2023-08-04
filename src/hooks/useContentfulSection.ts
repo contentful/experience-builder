@@ -151,6 +151,63 @@ export const useContentfulSection = () => {
       description: 'The spacing between the elements of the section',
       defaultValue: '0px',
     },
+
+    backgroundImageUrl: {
+      displayName: 'Background Image',
+      type: 'Text',
+      description: 'Background image for section or container',
+    },
+
+    backgroundImageScaling: {
+      displayName: 'Image Scaling',
+      type: 'Text',
+      group: 'style',
+      description: 'Adjust background image to fit, fill or tile the container',
+      defaultValue: 'fit',
+      validations: {
+        in: [
+          {
+            value: 'fill',
+            displayName: 'Fill',
+          },
+          {
+            value: 'fit',
+            displayName: 'Fit',
+          },
+          {
+            value: 'tile',
+            displayName: 'Tile',
+          },
+        ],
+      },
+    },
+    backgroundImageAlignment: {
+      displayName: 'Alignment',
+      type: 'Text',
+      group: 'style',
+      description: 'Align background image to the edges of the container',
+      defaultValue: 'left',
+      validations: {
+        in: [
+          {
+            value: 'left',
+            displayName: 'Left',
+          },
+          {
+            value: 'right',
+            displayName: 'Right',
+          },
+          {
+            value: 'top',
+            displayName: 'Top',
+          },
+          {
+            value: 'bottom',
+            displayName: 'Bottom',
+          },
+        ],
+      },
+    },
   }
 
   const sectionDefinition: ContentfulSectionType = {

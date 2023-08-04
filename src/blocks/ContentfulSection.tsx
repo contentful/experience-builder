@@ -1,7 +1,12 @@
 import React, { MouseEventHandler } from 'react'
 
 import { CompositionComponentNode, StyleProps } from '../types'
-import { transformAlignment, transformBorderStyle, transformFill } from './transformers'
+import {
+  transformAlignment,
+  transformBackgroundImage,
+  transformBorderStyle,
+  transformFill,
+} from './transformers'
 
 import './ContentfulSection.css'
 
@@ -39,11 +44,14 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     maxWidth,
     border,
     gap,
+    backgroundImageUrl,
+    backgroundImageAlignment,
+    backgroundImageScaling,
     className,
     children,
   } = props
 
-  const styleOverrides = {
+  const styleOverrides: Partial<StyleProps> = {
     margin,
     padding,
     backgroundColor,
@@ -55,6 +63,11 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     ...transformAlignment(horizontalAlignment, verticalAlignment, flexDirection),
     flexDirection,
     flexWrap,
+    ...transformBackgroundImage(
+      backgroundImageUrl,
+      backgroundImageScaling,
+      backgroundImageAlignment
+    ),
   }
 
   if (props.editorMode === false) {
