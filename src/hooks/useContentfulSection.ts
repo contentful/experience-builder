@@ -155,13 +155,7 @@ export const useContentfulSection = () => {
     backgroundImageUrl: {
       displayName: 'Background Image',
       type: 'Text',
-      // group: 'style',
       description: 'Background image for section or container',
-
-      // this value will be applied even if it is not coming from the tree.node.data[backgroundImageUrl]
-      // Note: we should NOT set the default value for section as this will force all sections and containers
-      //       to have this default background image
-      // defaultValue: 'https://picsum.photos/222/333',
     },
 
     backgroundImageScaling: {
