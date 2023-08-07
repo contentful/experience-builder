@@ -20,6 +20,10 @@ export const EmptyEditorContainer = ({
       data-type="empty-container"
       className={`container`}
       onMouseUp={() => {
+        if (!isDragging) {
+          return
+        }
+
         onComponentDropped({
           node: {
             type: 'root',

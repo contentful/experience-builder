@@ -23,11 +23,13 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   useEffect(() => {
     if (!tree || !tree?.root.children.length) return
     const onMouseUp = () => {
-      onComponentDropped({ node: tree.root })
+      if (isDragging) {
+        onComponentDropped({ node: tree.root })
+      }
     }
     document.addEventListener('mouseup', onMouseUp)
     return () => document.removeEventListener('mouseup', onMouseUp)
-  }, [tree])
+  }, [tree, isDragging])
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
