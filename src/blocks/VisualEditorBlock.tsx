@@ -16,7 +16,7 @@ import { ContentfulSection } from './ContentfulSection'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { sendMessage } from '../sendMessage'
-import { updateSelectedComponentCoordinates } from '../communication/updateSelectedComponentCoordinates'
+import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 
 type PropsType =
@@ -52,7 +52,7 @@ export const VisualEditorBlock = ({
   )
 
   useEffect(() => {
-    updateSelectedComponentCoordinates({ instanceId: selectedNodeId })
+    sendSelectedComponentCoordinates(selectedNodeId)
   }, [selectedNodeId])
 
   const props: PropsType = useMemo(() => {

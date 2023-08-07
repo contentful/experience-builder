@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import {
   LocalizedDataSource,
@@ -13,7 +13,7 @@ import {
 import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 import { sendMessage } from '../sendMessage'
-import { updateSelectedComponentCoordinates } from '../communication/updateSelectedComponentCoordinates'
+import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
 
 interface UseExperienceBuilderProps {
   /** The mode is automatically set, use this value to manually override this **/
@@ -121,23 +121,7 @@ export const useExperienceBuilder = ({
         case IncomingExperienceBuilderEvent.CANVAS_RESIZED:
         case IncomingExperienceBuilderEvent.SELECT_COMPONENT: {
           const { selectedNodeId } = payload
-          updateSelectedComponentCoordinates({ instanceId: selectedNodeId })
-          break
-        }
-
-        case IncomingExperienceBuilderEvent.COMPONENT_VALUE_CHANGED: {
-          /** TODO: at the moment, not sure how to best handle this case.
-           * we need to know the variable name, component id, locale
-           * should experience builder update the tree and send the updated tree?
-           * should we update it here instead of going over the whole tree again?
-           * getDataSourceFromTree(tree)
-           *
-           * Currently experience builder (user_interface) puts default value into dataSource
-           * and marks it with `type: UnboundValue`
-           *
-           * If there has been no defaultValue, then there will be no entry with uuid in dataSource
-           *
-           */
+          sendSelectedComponentCoordinates(selectedNodeId)
           break
         }
         case IncomingExperienceBuilderEvent.COMPONENT_DRAGGING_CHANGED: {
@@ -189,7 +173,7 @@ export const useExperienceBuilder = ({
         /**
          * On scroll end, send new co-ordinates of selected node
          */
-        updateSelectedComponentCoordinates({ instanceId: selectedNodeId })
+        sendSelectedComponentCoordinates(selectedNodeId)
       }, 150)
     }
 
@@ -199,7 +183,7 @@ export const useExperienceBuilder = ({
       window.removeEventListener('scroll', onScroll)
       clearTimeout(timeoutId)
     }
-  }, [mode, selectedNodeId, sendMessage, updateSelectedComponentCoordinates])
+  }, [mode, selectedNodeId])
 
   const experience: Experience = useMemo(
     () => ({

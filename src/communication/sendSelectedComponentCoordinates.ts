@@ -6,7 +6,7 @@ import { OutgoingExperienceBuilderEvent } from '../types'
  * This function gets the element co-ordinates of a specified component in the DOM and its parent
  * and sends the DOM Rect to the client app
  */
-export const updateSelectedComponentCoordinates = ({ instanceId }: { instanceId?: string }) => {
+export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   const selectedElement = instanceId
     ? document.querySelector(`[data-cf-node-id="${instanceId}"]`)
     : undefined
