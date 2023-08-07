@@ -46,7 +46,6 @@ export const VisualEditorBlock = ({
   resolveDesignValue,
 }: VisualEditorBlockProps) => {
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
-  const defaultLocaleCode = 'en-US'
 
   const { getComponent } = useComponents()
 
@@ -88,10 +87,19 @@ export const VisualEditorBlock = ({
             [variableName]: value,
           }
         } else {
+          /**
+           * Extracting default locale code from unboundValues Object.
+           * As unboundValues is non-localized and will always have values against
+           * default locale code.
+           * TODO: This is a temp solution and will be fixed in upcoming tickets.
+           */
+          const keys = Object.keys(unboundValues)
+          const unboundValuesLocale = keys[0]
+
           const value = getUnboundValues({
             key: variableMapping.key,
             fallback: variableDefinition.defaultValue,
-            unboundValuesForCurrentLocale: unboundValues[defaultLocaleCode] || {},
+            unboundValuesForCurrentLocale: unboundValues[unboundValuesLocale] || {},
           })
 
           return {
@@ -102,15 +110,7 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [
-    resolveDesignValue,
-    definedComponent,
-    node.data.props,
-    dataSource,
-    locale,
-    defaultLocaleCode,
-    unboundValues,
-  ])
+  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues])
 
   if (!definedComponent) {
     return null
