@@ -9,11 +9,10 @@ import { sendMessage } from './sendMessage'
 export class HoverIndicatorHandler {
   private getCoordinatesOfElement(element: HTMLElement | Element): RawCoordinates {
     const { left, top, width, height } = element.getBoundingClientRect()
-    const { pageXOffset, pageYOffset, scrollX, scrollY } = window
 
     return {
-      left: left + pageXOffset - scrollX,
-      top: top + pageYOffset - scrollY,
+      left,
+      top,
       width,
       height,
     }
