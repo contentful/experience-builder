@@ -218,7 +218,6 @@ export type Experience = {
 export interface StyleProps {
   horizontalAlignment: 'start' | 'end' | 'center'
   verticalAlignment: 'start' | 'end' | 'center'
-  distribution: 'stacked' | 'absolute'
   margin: string
   padding: string
   backgroundColor: string
@@ -237,7 +236,6 @@ export interface StyleProps {
 export type SECTION_STYLE_ATTRIBUTE_KEY =
   | 'horizontalAlignment'
   | 'verticalAlignment'
-  | 'distribution'
   | 'margin'
   | 'padding'
   | 'backgroundColor'
