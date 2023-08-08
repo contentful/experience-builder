@@ -17,7 +17,6 @@ type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
   (EditorMode extends true
     ? {
         onMouseDown: MouseEventHandler<HTMLDivElement>
-        isDragging: boolean
         children: React.ReactNode
         className?: string
         node: CompositionComponentNode

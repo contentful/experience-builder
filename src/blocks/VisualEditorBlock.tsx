@@ -28,7 +28,6 @@ type VisualEditorBlockProps = {
   locale: string
   dataSource: LocalizedDataSource
   unboundValues: LocalizedUnboundValues
-  isDragging: boolean
   selectedNodeId?: string
   parentNode: CompositionComponentNode
   resolveDesignValue: ResolveDesignValueType
@@ -39,7 +38,6 @@ export const VisualEditorBlock = ({
   locale,
   dataSource,
   unboundValues,
-  isDragging,
   parentNode,
   selectedNodeId,
   resolveDesignValue,
@@ -128,7 +126,6 @@ export const VisualEditorBlock = ({
           locale={locale}
           dataSource={dataSource}
           unboundValues={unboundValues}
-          isDragging={isDragging}
           selectedNodeId={selectedNodeId}
           resolveDesignValue={resolveDesignValue}
         />
@@ -148,7 +145,6 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        isDragging={isDragging}
         parentNode={parentNode}
         {...(props as unknown as StyleProps)}>
         {children}

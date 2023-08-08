@@ -48,7 +48,6 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           locale={locale}
           dataSource={dataSource}
           unboundValues={unboundValues}
-          isDragging={isDragging}
           selectedNodeId={selectedNodeId}
           parentNode={tree.root}
           resolveDesignValue={resolveDesignValue}
