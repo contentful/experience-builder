@@ -62,25 +62,6 @@ export const useContentfulSection = () => {
       defaultValue: 'center',
       displayName: 'Horizontal alignment',
     },
-    distribution: {
-      type: 'Text',
-      validations: {
-        in: [
-          {
-            value: 'stacked',
-            displayName: 'Stacked',
-          },
-          {
-            value: 'absolute',
-            displayName: 'Absolute',
-          },
-        ],
-      },
-      group: 'style',
-      description: 'Layout distribution',
-      defaultValue: 'stacked',
-      displayName: 'Distribution',
-    },
     margin: {
       displayName: 'Margin',
       type: 'Text',
