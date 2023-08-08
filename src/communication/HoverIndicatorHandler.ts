@@ -6,16 +6,61 @@ import {
 } from '../types'
 import { sendMessage } from './sendMessage'
 
+const CACHE_TTL = 1500
+
 export class HoverIndicatorHandler {
+  private DOMRectCache: Record<string, { data: RawCoordinates; at: number }>
+  private interval: NodeJS.Timer | undefined
+
+  constructor() {
+    this.DOMRectCache = {}
+  }
+
+  private startInterval() {
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
+
+    this.interval = setInterval(() => {
+      for (const key of Object.keys(this.DOMRectCache)) {
+        const value = this.DOMRectCache[key]
+        const isStale = !value || Date.now() - value.at <= CACHE_TTL
+        if (isStale) {
+          delete this.DOMRectCache[key]
+        }
+      }
+    }, 2500)
+  }
+
   private getCoordinatesOfElement(element: HTMLElement | Element): RawCoordinates {
+    const id = (element as HTMLElement).dataset.cfNodeId || element.id
+    const key = `${id}-${window.scrollX}-${window.scrollY}`
+
+    let cachedEntry = this.DOMRectCache[key]
+
+    const isStale = !cachedEntry || Date.now() - cachedEntry.at <= CACHE_TTL
+
+    if (!isStale) {
+      return cachedEntry.data
+    }
+
     const { left, top, width, height } = element.getBoundingClientRect()
 
-    return {
-      left,
-      top,
-      width,
-      height,
+    cachedEntry = {
+      data: {
+        left,
+        top,
+        width,
+        height,
+      },
+      at: Date.now(),
     }
+
+    if (id) {
+      this.DOMRectCache[key] = cachedEntry
+    }
+
+    return cachedEntry.data
   }
 
   private getFullCoordinates = (element: HTMLElement) => {
@@ -129,9 +174,12 @@ export class HoverIndicatorHandler {
 
   attachEvent(): void {
     document.addEventListener('mousemove', this.onMouseMove)
+    this.startInterval()
   }
 
   detachEvent(): void {
     document.removeEventListener('mousemove', this.onMouseMove)
+    this.DOMRectCache = {}
+    clearInterval(this.interval)
   }
 }
