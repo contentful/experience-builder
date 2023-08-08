@@ -21,11 +21,9 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   useHoverIndicator()
 
   useEffect(() => {
-    if (!tree || !tree?.root.children.length) return
+    if (!tree || !tree?.root.children.length || !isDragging) return
     const onMouseUp = () => {
-      if (isDragging) {
-        onComponentDropped({ node: tree.root })
-      }
+      onComponentDropped({ node: tree.root })
     }
     document.addEventListener('mouseup', onMouseUp)
     return () => document.removeEventListener('mouseup', onMouseUp)

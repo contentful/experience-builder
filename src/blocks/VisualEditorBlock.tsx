@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import {
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
@@ -16,8 +16,8 @@ import { ContentfulSection } from './ContentfulSection'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { sendMessage } from '../sendMessage'
-import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
+import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 
 type PropsType =
   | StyleProps
@@ -51,9 +51,7 @@ export const VisualEditorBlock = ({
     [node, getComponent]
   )
 
-  useEffect(() => {
-    sendSelectedComponentCoordinates(selectedNodeId)
-  }, [selectedNodeId])
+  useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
   const props: PropsType = useMemo(() => {
     if (!definedComponent) {
