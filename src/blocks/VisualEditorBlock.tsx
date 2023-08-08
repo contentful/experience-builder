@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import {
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
@@ -13,11 +13,10 @@ import { useComponents } from '../hooks'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
-import './VisualEditorBlock.css'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
-import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 import { sendMessage } from '../sendMessage'
+import { updateSelectedComponentCoordinates } from '../communication/updateSelectedComponentCoordinates'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 
 type PropsType =
@@ -45,14 +44,16 @@ export const VisualEditorBlock = ({
   selectedNodeId,
   resolveDesignValue,
 }: VisualEditorBlockProps) => {
-  useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
-
   const { getComponent } = useComponents()
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),
     [node, getComponent]
   )
+
+  useEffect(() => {
+    updateSelectedComponentCoordinates({ instanceId: selectedNodeId })
+  }, [selectedNodeId])
 
   const props: PropsType = useMemo(() => {
     if (!definedComponent) {
@@ -149,7 +150,6 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        className="visualEditorBlockHover"
         isDragging={isDragging}
         parentNode={parentNode}
         {...(props as unknown as StyleProps)}>
@@ -173,7 +173,6 @@ export const VisualEditorBlock = ({
         e.stopPropagation()
         e.preventDefault()
       },
-      className: 'visualEditorBlockHover',
       'data-cf-node-id': node.data.id,
       'data-cf-node-block-id': node.data.blockId,
       ...props,
