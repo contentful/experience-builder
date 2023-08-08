@@ -10,7 +10,7 @@ const CACHE_TTL = 1500
 
 export class HoverIndicatorHandler {
   private DOMRectCache: Record<string, { data: RawCoordinates; at: number }>
-  private interval: NodeJS.Timer | undefined
+  private interval: ReturnType<typeof setInterval> | undefined
 
   constructor() {
     this.DOMRectCache = {}
@@ -38,7 +38,7 @@ export class HoverIndicatorHandler {
 
     let cachedEntry = this.DOMRectCache[key]
 
-    const isStale = !cachedEntry || Date.now() - cachedEntry.at <= CACHE_TTL
+    const isStale = !cachedEntry || Date.now() - cachedEntry.at >= CACHE_TTL
 
     if (!isStale) {
       return cachedEntry.data
