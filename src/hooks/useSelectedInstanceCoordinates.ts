@@ -18,7 +18,7 @@ export const useSelectedInstanceCoordinates = ({
       return
     }
 
-    sendSelectedComponentCoordinates(instanceId);
+    sendSelectedComponentCoordinates(instanceId)
     // we need to update on changes on node, that's we add this to the dep array
   }, [instanceId, node])
 }
