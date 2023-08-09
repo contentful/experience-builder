@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
@@ -8,16 +8,17 @@ import {
   Link,
   CompositionVariableValueType,
 } from '../types'
+import get from 'lodash.get'
 
 import { useComponents } from '../hooks'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
-import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { sendMessage } from '../sendMessage'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
+import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
 
 type PropsType =
   | StyleProps
@@ -29,8 +30,8 @@ type VisualEditorBlockProps = {
   dataSource: LocalizedDataSource
   unboundValues: LocalizedUnboundValues
   selectedNodeId?: string
-  parentNode: CompositionComponentNode
   resolveDesignValue: ResolveDesignValueType
+  entityStore: ExperienceBuilderEditorEntityStore
 }
 
 export const VisualEditorBlock = ({
@@ -38,10 +39,11 @@ export const VisualEditorBlock = ({
   locale,
   dataSource,
   unboundValues,
-  parentNode,
   selectedNodeId,
   resolveDesignValue,
+  entityStore,
 }: VisualEditorBlockProps) => {
+  const [entitiesFetched, setEntitiesFetched] = useState(false)
   const { getComponent } = useComponents()
 
   const definedComponent = useMemo(
@@ -50,6 +52,16 @@ export const VisualEditorBlock = ({
   )
 
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
+
+  useEffect(() => {
+    const resolveEntities = async () => {
+      const entityLinks = Object.values(dataSource)
+      await entityStore?.fetchEntities(entityLinks)
+      setEntitiesFetched(true)
+    }
+
+    resolveEntities()
+  }, [dataSource, locale])
 
   const props: PropsType = useMemo(() => {
     if (!definedComponent) {
@@ -73,11 +85,9 @@ export const VisualEditorBlock = ({
           }
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
-          const value = getValueFromDataSource({
-            path: variableMapping.path,
-            fallback: variableDefinition.defaultValue,
-            dataSourceForCurrentLocale: dataSource[locale] || {},
-          })
+          const [, uuid, ...path] = variableMapping.path.split('/')
+          const binding = dataSource[locale][uuid] as Link<'Entry' | 'Asset'>
+          const value = entityStore?.getValue(binding, path.slice(0, -1)) || variableDefinition.defaultValue
 
           return {
             ...acc,
@@ -107,7 +117,7 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues])
+  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues, entitiesFetched])
 
   if (!definedComponent) {
     return null
@@ -121,13 +131,13 @@ export const VisualEditorBlock = ({
       return (
         <VisualEditorBlock
           node={childNode}
-          parentNode={parentNode}
           key={childNode.data.id}
           locale={locale}
           dataSource={dataSource}
           unboundValues={unboundValues}
           selectedNodeId={selectedNodeId}
           resolveDesignValue={resolveDesignValue}
+          entityStore={entityStore}
         />
       )
     })
@@ -145,7 +155,6 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        parentNode={parentNode}
         {...(props as unknown as StyleProps)}>
         {children}
       </ContentfulSection>
