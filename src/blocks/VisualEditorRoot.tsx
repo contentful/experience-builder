@@ -48,7 +48,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   useEffect(() => {
     const resolveEntities = async () => {
       setEntitiesFetched(false)
-      const entityLinks = Object.values(dataSource[locale] || {})
+      const entityLinks = Object.values(dataSource || {})
       await entityStore.current.fetchEntities(entityLinks)
       setEntitiesFetched(true)
     }

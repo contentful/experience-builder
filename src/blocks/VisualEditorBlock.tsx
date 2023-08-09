@@ -7,6 +7,8 @@ import {
   LocalizedUnboundValues,
   Link,
   CompositionVariableValueType,
+  CompositionDataSource,
+  CompositionUnboundValues,
 } from '../types'
 
 import { useComponents } from '../hooks'
@@ -26,8 +28,8 @@ type PropsType =
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
   locale: string
-  dataSource: LocalizedDataSource
-  unboundValues: LocalizedUnboundValues
+  dataSource: CompositionDataSource
+  unboundValues: CompositionUnboundValues
   selectedNodeId?: string
   resolveDesignValue: ResolveDesignValueType
   entityStore: React.RefObject<ExperienceBuilderEditorEntityStore>
@@ -76,7 +78,7 @@ export const VisualEditorBlock = ({
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/')
-          const binding = dataSource[locale]?.[uuid] as Link<'Entry' | 'Asset'>
+          const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>
           const value =
             entityStore.current?.getValue(binding, path.slice(0, -1)) ||
             variableDefinition.defaultValue
@@ -86,19 +88,10 @@ export const VisualEditorBlock = ({
             [variableName]: value,
           }
         } else {
-          /**
-           * Extracting default locale code from unboundValues Object.
-           * As unboundValues is non-localized and will always have values against
-           * default locale code.
-           * TODO: This is a temp solution and will be fixed in upcoming tickets.
-           */
-          const keys = Object.keys(unboundValues)
-          const unboundValuesLocale = keys[0]
-
           const value = getUnboundValues({
             key: variableMapping.key,
             fallback: variableDefinition.defaultValue,
-            unboundValuesForCurrentLocale: unboundValues[unboundValuesLocale] || {},
+            unboundValues: unboundValues || {},
           })
 
           return {

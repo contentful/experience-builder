@@ -172,14 +172,8 @@ export type CompositionComponentNode = {
     id: string
     blockId?: string // will be undefined in case string node or if root component
     props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>
-    dataSource: Record<
-      string, // locale
-      Record<
-        string, // uuid
-        DataSourceEntryValueType
-      >
-    >
-    unboundValues: Record<string, Record<string, { value: CompositionVariableValueType }>>
+    dataSource: CompositionDataSource
+    unboundValues: CompositionUnboundValues
     breakpoints: Breakpoint[]
   }
   children: CompositionComponentNode[]
@@ -202,8 +196,8 @@ export type ExperienceConfig = {
 
 export type Experience = {
   tree?: CompositionTree
-  dataSource: LocalizedDataSource
-  unboundValues: LocalizedUnboundValues
+  dataSource: CompositionDataSource
+  unboundValues: CompositionUnboundValues
   config: ExperienceConfig
   isDragging: boolean
   selectedNodeId: string

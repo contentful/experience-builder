@@ -9,6 +9,8 @@ import {
   CompositionMode,
   LocalizedUnboundValues,
   ScrollStates,
+  CompositionDataSource,
+  CompositionUnboundValues,
 } from '../types'
 import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
@@ -44,8 +46,8 @@ export const useExperienceBuilder = ({
   host,
 }: UseExperienceBuilderProps) => {
   const [tree, setTree] = useState<CompositionTree>()
-  const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
-  const [unboundValues, setUnboundValues] = useState<LocalizedUnboundValues>({})
+  const [dataSource, setDataSource] = useState<CompositionDataSource>({})
+  const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({})
   const [locale, setLocale] = useState<string | undefined>(initialLocale)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
