@@ -9,11 +9,11 @@ import { sendMessage } from './sendMessage'
 const CACHE_TTL = 2000
 
 export class HoverIndicatorHandler {
-  private DOMRectCache: Record<string, { data: RawCoordinates; at: number }>
+  private domRectCache: Record<string, { data: RawCoordinates; at: number }>
   private interval: ReturnType<typeof setInterval> | undefined
 
   constructor() {
-    this.DOMRectCache = {}
+    this.domRectCache = {}
   }
 
   private startInterval() {
@@ -22,11 +22,11 @@ export class HoverIndicatorHandler {
     }
 
     this.interval = setInterval(() => {
-      for (const key of Object.keys(this.DOMRectCache)) {
-        const value = this.DOMRectCache[key]
+      for (const key of Object.keys(this.domRectCache)) {
+        const value = this.domRectCache[key]
         const isStale = !value || Date.now() - value.at >= CACHE_TTL
         if (isStale) {
-          delete this.DOMRectCache[key]
+          delete this.domRectCache[key]
         }
       }
     }, 2500)
@@ -36,7 +36,7 @@ export class HoverIndicatorHandler {
     const id = (element as HTMLElement).dataset.cfNodeId || element.id
     const key = `${id}-${window.scrollX}-${window.scrollY}`
 
-    let cachedEntry = this.DOMRectCache[key]
+    let cachedEntry = this.domRectCache[key]
 
     const isStale = !cachedEntry || Date.now() - cachedEntry.at >= CACHE_TTL
 
@@ -57,7 +57,7 @@ export class HoverIndicatorHandler {
     }
 
     if (id) {
-      this.DOMRectCache[key] = cachedEntry
+      this.domRectCache[key] = cachedEntry
     }
 
     return cachedEntry.data
@@ -180,7 +180,7 @@ export class HoverIndicatorHandler {
 
   detachEvent(): void {
     document.removeEventListener('mousemove', this.onMouseMove)
-    this.DOMRectCache = {}
+    this.domRectCache = {}
     clearInterval(this.interval)
   }
 }
