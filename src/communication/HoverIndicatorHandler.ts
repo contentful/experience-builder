@@ -6,7 +6,7 @@ import {
 } from '../types'
 import { sendMessage } from './sendMessage'
 
-const CACHE_TTL = 1500
+const CACHE_TTL = 2000
 
 export class HoverIndicatorHandler {
   private DOMRectCache: Record<string, { data: RawCoordinates; at: number }>
@@ -24,7 +24,7 @@ export class HoverIndicatorHandler {
     this.interval = setInterval(() => {
       for (const key of Object.keys(this.DOMRectCache)) {
         const value = this.DOMRectCache[key]
-        const isStale = !value || Date.now() - value.at <= CACHE_TTL
+        const isStale = !value || Date.now() - value.at >= CACHE_TTL
         if (isStale) {
           delete this.DOMRectCache[key]
         }
@@ -101,7 +101,8 @@ export class HoverIndicatorHandler {
           // is itself a section?
           target.dataset.cfNodeId ||
           // Or a direct child of a section
-          (target.parentElement && target.parentElement.dataset.cfNodeBlockType === 'block')
+          (target.parentElement &&
+            target.parentElement.dataset.cfNodeBlockId === 'ContentfulSection')
         ) {
           coordinates = this.getFullCoordinates(target)
 

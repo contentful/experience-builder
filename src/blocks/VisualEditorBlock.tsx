@@ -169,6 +169,7 @@ export const VisualEditorBlock = ({
       },
       'data-cf-node-id': node.data.id,
       'data-cf-node-block-id': node.data.blockId,
+      'data-cf-node-block-type': node.type,
       ...props,
     },
     children
