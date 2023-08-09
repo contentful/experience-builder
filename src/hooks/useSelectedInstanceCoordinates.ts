@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
-import { getElementCoordinates } from '../core/domValues'
-import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from '../types'
-import { sendMessage } from '../sendMessage'
+import { CompositionComponentNode } from '../types'
+import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
 
 /**
  * This hook gets the element co-ordinates of a specified element in the DOM
@@ -14,26 +13,12 @@ export const useSelectedInstanceCoordinates = ({
   instanceId?: string
   node: CompositionComponentNode
 }) => {
-  const selectedElement = instanceId
-    ? document.querySelector(`[data-cf-node-id="${instanceId}"]`)
-    : undefined
-
-  // Finds the first parent that is a VisualEditorBlock
-  let parent = selectedElement?.parentElement
-  while (parent) {
-    if (parent?.dataset?.cfNodeId) {
-      break
-    }
-    parent = parent?.parentElement
-  }
-
   useEffect(() => {
-    if (selectedElement) {
-      sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_COORDINATES, {
-        selectedNodeCoordinates: getElementCoordinates(selectedElement),
-        parentCoordinates: parent ? getElementCoordinates(parent) : null,
-      })
+    if (instanceId !== node.data.id) {
+      return
     }
+
+    sendSelectedComponentCoordinates(instanceId)
     // we need to update on changes on node, that's we add this to the dep array
-  }, [selectedElement, node])
+  }, [instanceId, node])
 }

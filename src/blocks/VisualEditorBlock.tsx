@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import {
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
@@ -16,8 +16,8 @@ import { ContentfulSection } from './ContentfulSection'
 import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { sendMessage } from '../sendMessage'
-import { updateSelectedComponentCoordinates } from '../communication/updateSelectedComponentCoordinates'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
+import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 
 type PropsType =
   | StyleProps
@@ -28,7 +28,6 @@ type VisualEditorBlockProps = {
   locale: string
   dataSource: LocalizedDataSource
   unboundValues: LocalizedUnboundValues
-  isDragging: boolean
   selectedNodeId?: string
   parentNode: CompositionComponentNode
   resolveDesignValue: ResolveDesignValueType
@@ -39,7 +38,6 @@ export const VisualEditorBlock = ({
   locale,
   dataSource,
   unboundValues,
-  isDragging,
   parentNode,
   selectedNodeId,
   resolveDesignValue,
@@ -51,9 +49,7 @@ export const VisualEditorBlock = ({
     [node, getComponent]
   )
 
-  useEffect(() => {
-    updateSelectedComponentCoordinates({ instanceId: selectedNodeId })
-  }, [selectedNodeId])
+  useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
   const props: PropsType = useMemo(() => {
     if (!definedComponent) {
@@ -130,7 +126,6 @@ export const VisualEditorBlock = ({
           locale={locale}
           dataSource={dataSource}
           unboundValues={unboundValues}
-          isDragging={isDragging}
           selectedNodeId={selectedNodeId}
           resolveDesignValue={resolveDesignValue}
         />
@@ -150,7 +145,6 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        isDragging={isDragging}
         parentNode={parentNode}
         {...(props as unknown as StyleProps)}>
         {children}
@@ -175,6 +169,7 @@ export const VisualEditorBlock = ({
       },
       'data-cf-node-id': node.data.id,
       'data-cf-node-block-id': node.data.blockId,
+      'data-cf-node-block-type': node.type,
       ...props,
     },
     children

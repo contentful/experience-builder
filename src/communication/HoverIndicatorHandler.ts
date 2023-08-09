@@ -6,17 +6,61 @@ import {
 } from '../types'
 import { sendMessage } from './sendMessage'
 
-export class HoverIndicatorHandler {
-  private getCoordinatesOfElement(element: HTMLElement | Element): RawCoordinates {
-    const { left, top, width, height } = element.getBoundingClientRect()
-    const { pageXOffset, pageYOffset, scrollX, scrollY } = window
+const CACHE_TTL = 2000
 
-    return {
-      left: left + pageXOffset - scrollX,
-      top: top + pageYOffset - scrollY,
-      width,
-      height,
+export class HoverIndicatorHandler {
+  private domRectCache: Record<string, { data: RawCoordinates; at: number }>
+  private interval: ReturnType<typeof setInterval> | undefined
+
+  constructor() {
+    this.domRectCache = {}
+  }
+
+  private startInterval() {
+    if (this.interval) {
+      clearInterval(this.interval)
     }
+
+    this.interval = setInterval(() => {
+      for (const key of Object.keys(this.domRectCache)) {
+        const value = this.domRectCache[key]
+        const isStale = !value || Date.now() - value.at >= CACHE_TTL
+        if (isStale) {
+          delete this.domRectCache[key]
+        }
+      }
+    }, 2500)
+  }
+
+  private getCoordinatesOfElement(element: HTMLElement | Element): RawCoordinates {
+    const id = (element as HTMLElement).dataset.cfNodeId || element.id
+    const key = `${id}-${window.scrollX}-${window.scrollY}`
+
+    let cachedEntry = this.domRectCache[key]
+
+    const isStale = !cachedEntry || Date.now() - cachedEntry.at >= CACHE_TTL
+
+    if (!isStale) {
+      return cachedEntry.data
+    }
+
+    const { left, top, width, height } = element.getBoundingClientRect()
+
+    cachedEntry = {
+      data: {
+        left,
+        top,
+        width,
+        height,
+      },
+      at: Date.now(),
+    }
+
+    if (id) {
+      this.domRectCache[key] = cachedEntry
+    }
+
+    return cachedEntry.data
   }
 
   private getFullCoordinates = (element: HTMLElement) => {
@@ -57,7 +101,8 @@ export class HoverIndicatorHandler {
           // is itself a section?
           target.dataset.cfNodeId ||
           // Or a direct child of a section
-          (target.parentElement && target.parentElement.dataset.cfNodeBlockType === 'block')
+          (target.parentElement &&
+            target.parentElement.dataset.cfNodeBlockId === 'ContentfulSection')
         ) {
           coordinates = this.getFullCoordinates(target)
 
@@ -130,9 +175,12 @@ export class HoverIndicatorHandler {
 
   attachEvent(): void {
     document.addEventListener('mousemove', this.onMouseMove)
+    this.startInterval()
   }
 
   detachEvent(): void {
     document.removeEventListener('mousemove', this.onMouseMove)
+    this.domRectCache = {}
+    clearInterval(this.interval)
   }
 }

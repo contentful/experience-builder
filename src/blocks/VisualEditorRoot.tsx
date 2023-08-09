@@ -21,13 +21,13 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
   useHoverIndicator()
 
   useEffect(() => {
-    if (!tree || !tree?.root.children.length) return
+    if (!tree || !tree?.root.children.length || !isDragging) return
     const onMouseUp = () => {
       onComponentDropped({ node: tree.root })
     }
     document.addEventListener('mouseup', onMouseUp)
     return () => document.removeEventListener('mouseup', onMouseUp)
-  }, [tree])
+  }, [tree, isDragging])
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
@@ -48,7 +48,6 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
           locale={locale}
           dataSource={dataSource}
           unboundValues={unboundValues}
-          isDragging={isDragging}
           selectedNodeId={selectedNodeId}
           parentNode={tree.root}
           resolveDesignValue={resolveDesignValue}
