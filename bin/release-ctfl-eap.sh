@@ -18,4 +18,4 @@ echo "//npm.pkg.github.com/:_authToken=$CTFL_EAP_GITBUB_WRITE_TOKEN" >> ~/.npmrc
 
 cat ~/.npmrc
 
-npm publish --dry-run
+npm publish

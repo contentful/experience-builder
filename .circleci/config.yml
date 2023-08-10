@@ -69,14 +69,6 @@ jobs:
       - store_artifacts:
           path: ./reports/clover.xml
 
-  release-test:
-    executor: docker-with-node
-    steps:
-      - checkout
-      - install-dependencies
-      - run: chmod +x bin/release-ctfl-eap.sh
-      - run: yarn release-ctfl-eap
-
   # Do not use the workspace for the release step
   release:
     executor: docker-with-node
@@ -117,6 +109,3 @@ workflows:
                 - next-major
                 - alpha
                 - beta
-      - release-test:
-          requires:
-            - prepare
