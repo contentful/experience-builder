@@ -1,4 +1,16 @@
 #!/bin/bash
+
+#!/bin/bash
+
+if [ -n "$CI" ]; then
+    echo "CI environment variable is detected from presence of CI env variable"
+else
+    echo "*** No CI environment detected***"
+    echo "This Build script is only meant to be run within CI environment"
+    exit 1
+fi
+
+
 git fetch -p
 
 # get the lates tag that will be the version which will be used
