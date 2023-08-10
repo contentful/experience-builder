@@ -19,7 +19,8 @@
     "semantic-release": "semantic-release",
     "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx,css}'",
     "prettier": "prettier --write '**/*.{jsx,js,ts,tsx,css}'",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release-ctfl-eap": "./bin/release-ctfl-eap.sh"
   },
   "dependencies": {
     "classnames": "^2.3.2",
