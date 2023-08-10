@@ -16,6 +16,4 @@ yarn build
 ## appending the new registry info to the global .npmrc
 echo "//npm.pkg.github.com/:_authToken=$CTFL_EAP_GITBUB_WRITE_TOKEN" >> ~/.npmrc
 
-cat ~/.npmrc
-
 npm publish
