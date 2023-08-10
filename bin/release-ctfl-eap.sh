@@ -17,4 +17,5 @@ yarn build
 echo "//npm.pkg.github.com/:_authToken=$CTFL_EAP_GITBUB_WRITE_TOKEN" >> ~/.npmrc
 
 cat ~/.npmrc
-# npm publish
+
+npm publish --dry-run
