@@ -1,15 +1,23 @@
 #!/bin/bash
 
-#!/bin/bash
-
 if [ -n "$CI" ]; then
-    echo "CI environment detected (from presence of CI env variable)"
+    echo "✅ CI environment detected (from presence of CI env variable)"
 else
-    echo "*** No CI environment detected***"
+    echo "❌ No CI environment detected"
     echo "This Build script is only meant to be run within CI environment"
     exit 1
 fi
 
+
+if [ -n "$CTFL_EAP_GITHUB_WRITE_TOKEN" ]; then
+    echo "✅ CTFL_EAP_GITHUB_WRITE_TOKEN env variable detected with length (${#CTFL_EAP_GITHUB_WRITE_TOKEN}) bytes"
+else
+    echo "❌ No CTFL_EAP_GITHUB_WRITE_TOKEN environment variable detected"
+    echo "In order to publish to the custom NPM repository, github token must be set within CI settings or as your env variable"
+    exit 1
+fi
+
+exit 1
 
 git fetch -p
 
@@ -26,6 +34,6 @@ jq --arg latestVersion "$latestVersion" '.name="@ctfl-eap/experience-builder" | 
 yarn build
 
 ## appending the new registry info to the global .npmrc
-echo "//npm.pkg.github.com/:_authToken=$CTFL_EAP_GITBUB_WRITE_TOKEN" >> ~/.npmrc
+echo "//npm.pkg.github.com/:_authToken=$CTFL_EAP_GITHUB_WRITE_TOKEN" >> ~/.npmrc
 
 npm publish
