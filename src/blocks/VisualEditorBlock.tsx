@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import {
   LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
@@ -8,7 +8,6 @@ import {
   Link,
   CompositionVariableValueType,
 } from '../types'
-import get from 'lodash.get'
 
 import { useComponents } from '../hooks'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
@@ -32,6 +31,7 @@ type VisualEditorBlockProps = {
   selectedNodeId?: string
   resolveDesignValue: ResolveDesignValueType
   entityStore: ExperienceBuilderEditorEntityStore
+  entitiesFetched: boolean
 }
 
 export const VisualEditorBlock = ({
@@ -42,8 +42,8 @@ export const VisualEditorBlock = ({
   selectedNodeId,
   resolveDesignValue,
   entityStore,
+  entitiesFetched,
 }: VisualEditorBlockProps) => {
-  const [entitiesFetched, setEntitiesFetched] = useState(false)
   const { getComponent } = useComponents()
 
   const definedComponent = useMemo(
@@ -52,16 +52,6 @@ export const VisualEditorBlock = ({
   )
 
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
-
-  useEffect(() => {
-    const resolveEntities = async () => {
-      const entityLinks = Object.values(dataSource)
-      await entityStore?.fetchEntities(entityLinks)
-      setEntitiesFetched(true)
-    }
-
-    resolveEntities()
-  }, [dataSource, locale])
 
   const props: PropsType = useMemo(() => {
     if (!definedComponent) {
@@ -86,7 +76,7 @@ export const VisualEditorBlock = ({
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/')
-          const binding = dataSource[locale][uuid] as Link<'Entry' | 'Asset'>
+          const binding = dataSource[locale]?.[uuid] as Link<'Entry' | 'Asset'>
           const value = entityStore?.getValue(binding, path.slice(0, -1)) || variableDefinition.defaultValue
 
           return {
@@ -117,7 +107,7 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues, entitiesFetched])
+  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues, entitiesFetched, entityStore])
 
   if (!definedComponent) {
     return null
@@ -138,6 +128,7 @@ export const VisualEditorBlock = ({
           selectedNodeId={selectedNodeId}
           resolveDesignValue={resolveDesignValue}
           entityStore={entityStore}
+          entitiesFetched={entitiesFetched}
         />
       )
     })

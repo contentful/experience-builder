@@ -41,14 +41,7 @@ export class ExperienceBuilderEditorEntityStore extends EditorEntityStore {
   }
 
   getValue(entityLink: UnresolvedLink<'Entry' | 'Asset'>, path: string[]): string | undefined {
-    const entity = this.entitiesMap.get(entityLink.sys.id)
-
-    if (!entity || entity.sys.type !== entityLink.sys.linkType) {
-      console.warn(`Composition references unresolved entity: ${entityLink}`)
-      return
-    }
-
-    const fieldValue = get(entity, path)
+    const fieldValue = super.getValue(entityLink, path)
 
     // walk around to render asset files
     const value =
