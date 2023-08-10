@@ -3,7 +3,7 @@ git fetch -p
 
 # get the lates tag that will be the version which will be used
 latestTag=$(git describe --tags) # is in format of v{version}
-latestVersion=$(latestTag:1) # drops the v and stores the {version}
+latestVersion="${latestTag:1}" # drops the v and stores the {version}
 
 # writing this line into a newly ceated local .npmrc
 echo "@ctfl-eap:registry=https://npm.pkg.github.com/ctfl-eap" > .npmrc
