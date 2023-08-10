@@ -72,7 +72,9 @@ jobs:
   release-test:
     executor: docker-with-node
     steps:
-      - run: chmod +x ./bin/release-ctfl-eap.sh
+      - checkout
+      - install-dependencies
+      - run: chmod +x bin/release-ctfl-eap.sh
       - run: yarn release-ctfl-eap
 
   # Do not use the workspace for the release step
@@ -83,7 +85,7 @@ jobs:
       - use-vault
       - install-dependencies
       - run: yarn semantic-release
-      - run: chmod +x ./bin/release-ctfl-eap.sh
+      - run: chmod +x bin/release-ctfl-eap.sh
       - run: yarn release-ctfl-eap
 
 workflows:
