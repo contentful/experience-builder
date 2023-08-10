@@ -35,6 +35,7 @@ jq --arg latestVersion "$latestVersion" '.name="@ctfl-eap/experience-builder" | 
 yarn build
 
 ## appending the new registry info to the global .npmrc
+echo "" >> ~/.npmrc
 echo "//npm.pkg.github.com/:_authToken=$CTFL_EAP_GITHUB_WRITE_TOKEN" >> ~/.npmrc
 
 npm publish
