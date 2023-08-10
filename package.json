@@ -19,8 +19,7 @@
     "semantic-release": "semantic-release",
     "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx,css}'",
     "prettier": "prettier --write '**/*.{jsx,js,ts,tsx,css}'",
-    "preview": "vite preview",
-    "release-ctfl-eap": "bin/release-ctfl-eap.sh"
+    "preview": "vite preview"
   },
   "dependencies": {
     "classnames": "^2.3.2",
@@ -37,6 +36,7 @@
     "@commitlint/cli": "^17.6.1",
     "@commitlint/config-conventional": "^17.6.1",
     "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^6.0.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
@@ -99,10 +99,10 @@
       "@semantic-release/release-notes-generator",
       "@semantic-release/changelog",
       "@semantic-release/npm",
-      [
-        "@semantic-release/github",
+      "@semantic-release/github",
+      ["@semantic-release/exec",
         {
-          "successCmd": "yarn release-ctfl-eap"
+          "successCmd": "./bin/release-ctfl-eap.sh"
         }
       ]
     ]
