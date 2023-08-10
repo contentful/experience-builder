@@ -17,13 +17,14 @@ else
     exit 1
 fi
 
-exit 1
-
 git fetch -p
 
 # get the lates tag that will be the version which will be used
 latestTag=$(git describe --tags) # is in format of v{version}
 latestVersion=$(cut -c 2- <<< $latestTag) # drops the v and stores the {version}
+
+echo "Found latest tag:      [$latestTag]"
+echo "Found latest version:  [$latestVersion]"
 
 # writing this line into a newly created local .npmrc
 echo "@ctfl-eap:registry=https://npm.pkg.github.com/ctfl-eap" > .npmrc
