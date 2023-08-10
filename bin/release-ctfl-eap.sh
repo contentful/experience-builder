@@ -3,7 +3,7 @@
 #!/bin/bash
 
 if [ -n "$CI" ]; then
-    echo "CI environment variable is detected from presence of CI env variable"
+    echo "CI environment detected (from presence of CI env variable)"
 else
     echo "*** No CI environment detected***"
     echo "This Build script is only meant to be run within CI environment"
