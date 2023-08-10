@@ -257,7 +257,6 @@ export type CompositionNode = {
   definitionId: string
   children: Array<CompositionNode>
   variables: Record<string, CompositionComponentPropValue>
-  id: string
 }
 
 export type CompositionDataSource = Record<string, DataSourceEntryValueType>

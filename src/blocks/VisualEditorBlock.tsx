@@ -77,7 +77,8 @@ export const VisualEditorBlock = ({
           // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/')
           const binding = dataSource[locale]?.[uuid] as Link<'Entry' | 'Asset'>
-          const value = entityStore?.getValue(binding, path.slice(0, -1)) || variableDefinition.defaultValue
+          const value =
+            entityStore?.getValue(binding, path.slice(0, -1)) || variableDefinition.defaultValue
 
           return {
             ...acc,
@@ -107,7 +108,16 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues, entitiesFetched, entityStore])
+  }, [
+    resolveDesignValue,
+    definedComponent,
+    node.data.props,
+    dataSource,
+    locale,
+    unboundValues,
+    entitiesFetched,
+    entityStore,
+  ])
 
   if (!definedComponent) {
     return null

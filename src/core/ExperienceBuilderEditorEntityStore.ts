@@ -2,11 +2,9 @@ import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-
 import { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful'
 import { sendMessage } from '../sendMessage'
 import { isObject } from 'lodash'
-import get from 'lodash.get'
 
 export class ExperienceBuilderEditorEntityStore extends EditorEntityStore {
-  constructor({ entities, locale }: { entities: Array<Entry | Asset>, locale: string }) {
-
+  constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
     const subscribe = (method: any, cb: any) => {
       const listeners = (event: MessageEvent) => {
         const data: {
