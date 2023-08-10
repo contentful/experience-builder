@@ -3,8 +3,10 @@ import { useEffect, useMemo } from 'react'
 import {
   useExperienceBuilder,
   useComponents,
-  VisualEditorRoot,
+  CompositionRoot,
 } from '@contentful/experience-builder'
+
+const configs = { ... };
 
 const App = () => {
   const { defineComponent } = useComponents()
@@ -14,10 +16,10 @@ const App = () => {
     defineComponent('Button', componentDefinition)
   }, [defineComponent])
 
-  const { experience, locale } = useExperienceBuilder()
+  const { experience, locale } = useExperienceBuilder(configs)
 
   // 2. Render your app
-  return <VisualEditorRoot experience={experience} locale={locale} />
+  return <CompositionRoot experience={experience} locale={locale} />
 }
 ```
 
