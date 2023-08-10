@@ -77,7 +77,6 @@ jobs:
       - use-vault
       - install-dependencies
       - run: yarn semantic-release
-      - run: yarn release-ctfl-eap
 
 workflows:
   version: 2
