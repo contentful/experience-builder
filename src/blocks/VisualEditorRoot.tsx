@@ -57,7 +57,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
     }
 
     resolveEntities()
-  }, [dataSource, entityStore])
+  }, [dataSource, locale, entityStore])
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
