@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 git fetch -p
 
 # get the lates tag that will be the version which will be used
