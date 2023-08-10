@@ -5,7 +5,7 @@ git fetch -p
 latestTag=$(git describe --tags) # is in format of v{version}
 latestVersion=$(cut -c 2- <<< $latestTag) # drops the v and stores the {version}
 
-# writing this line into a newly ceated local .npmrc
+# writing this line into a newly created local .npmrc
 echo "@ctfl-eap:registry=https://npm.pkg.github.com/ctfl-eap" > .npmrc
 
 # replacing package.version with latest tag and changing package name
