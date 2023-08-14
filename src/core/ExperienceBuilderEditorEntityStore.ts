@@ -32,13 +32,18 @@ export class ExperienceBuilderEditorEntityStore extends EditorEntityStore {
     const entryLinks = entityLinks.filter((link) => link?.sys?.linkType === 'Entry')
     const assetLinks = entityLinks.filter((link) => link?.sys?.linkType === 'Asset')
 
-    const entries = await this.fetchEntries(entryLinks.map((link) => link.sys.id))
-    const assets = await this.fetchAssets(assetLinks.map((link) => link.sys.id))
+    const uniqueEntryLinks = new Set(entryLinks.map((link) => link.sys.id))
+    const uniqueAssetLinks = new Set(assetLinks.map((link) => link.sys.id))
 
-    return [...entries, ...assets]
+    return await Promise.allSettled([
+      this.fetchEntries([...uniqueEntryLinks]),
+      this.fetchAssets([...uniqueAssetLinks]),
+    ])
   }
 
   getValue(entityLink: UnresolvedLink<'Entry' | 'Asset'>, path: string[]): string | undefined {
+    if (!entityLink) return
+
     const fieldValue = super.getValue(entityLink, path)
 
     // walk around to render asset files

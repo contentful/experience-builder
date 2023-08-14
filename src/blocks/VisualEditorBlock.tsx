@@ -30,7 +30,7 @@ type VisualEditorBlockProps = {
   unboundValues: LocalizedUnboundValues
   selectedNodeId?: string
   resolveDesignValue: ResolveDesignValueType
-  entityStore: ExperienceBuilderEditorEntityStore
+  entityStore: React.RefObject<ExperienceBuilderEditorEntityStore>
   entitiesFetched: boolean
 }
 
@@ -78,7 +78,8 @@ export const VisualEditorBlock = ({
           const [, uuid, ...path] = variableMapping.path.split('/')
           const binding = dataSource[locale]?.[uuid] as Link<'Entry' | 'Asset'>
           const value =
-            entityStore?.getValue(binding, path.slice(0, -1)) || variableDefinition.defaultValue
+            entityStore.current?.getValue(binding, path.slice(0, -1)) ||
+            variableDefinition.defaultValue
 
           return {
             ...acc,
@@ -116,7 +117,6 @@ export const VisualEditorBlock = ({
     locale,
     unboundValues,
     entitiesFetched,
-    entityStore,
   ])
 
   if (!definedComponent) {
