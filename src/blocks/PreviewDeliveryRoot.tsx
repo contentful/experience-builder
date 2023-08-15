@@ -16,7 +16,6 @@ type DeliveryRootProps = {
 export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => {
   const { spaceId, environmentId, accessToken, locale, host } =
     useCheckForExperienceConfig(experience)
-  const { resolveDesignValue } = useBreakpoints(experience.breakpoints)
 
   if (!slug) {
     throw new Error('Preview and delivery mode requires a composition slug to be provided')
@@ -43,6 +42,8 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
     slug: slug,
     locale: locale as string,
   })
+
+  const { resolveDesignValue } = useBreakpoints(breakpoints)
 
   if (!composition || isLoadingData) {
     return null
