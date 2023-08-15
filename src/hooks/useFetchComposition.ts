@@ -52,7 +52,7 @@ export const useFetchComposition = ({
         if (response.items.length > 1) {
           throw new Error(`More than one composition with slug: ${slug} was found`)
         }
-        setComposition(response.items[0].fields as Composition)
+        setComposition(response.items[0].fields as unknown as Composition)
       } catch (e: any) {
         console.error(`Failed to fetch composition with error: ${e.message}`)
         setError(e.message)

@@ -13,11 +13,11 @@ import { useComponents } from '../hooks'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
-import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { sendMessage } from '../sendMessage'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
+import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
 
 type PropsType =
   | StyleProps
@@ -29,8 +29,9 @@ type VisualEditorBlockProps = {
   dataSource: LocalizedDataSource
   unboundValues: LocalizedUnboundValues
   selectedNodeId?: string
-  parentNode: CompositionComponentNode
   resolveDesignValue: ResolveDesignValueType
+  entityStore: React.RefObject<ExperienceBuilderEditorEntityStore>
+  areEntitiesFetched: boolean
 }
 
 export const VisualEditorBlock = ({
@@ -38,9 +39,10 @@ export const VisualEditorBlock = ({
   locale,
   dataSource,
   unboundValues,
-  parentNode,
   selectedNodeId,
   resolveDesignValue,
+  entityStore,
+  areEntitiesFetched,
 }: VisualEditorBlockProps) => {
   const { getComponent } = useComponents()
 
@@ -73,11 +75,11 @@ export const VisualEditorBlock = ({
           }
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
-          const value = getValueFromDataSource({
-            path: variableMapping.path,
-            fallback: variableDefinition.defaultValue,
-            dataSourceForCurrentLocale: dataSource[locale] || {},
-          })
+          const [, uuid, ...path] = variableMapping.path.split('/')
+          const binding = dataSource[locale]?.[uuid] as Link<'Entry' | 'Asset'>
+          const value =
+            entityStore.current?.getValue(binding, path.slice(0, -1)) ||
+            variableDefinition.defaultValue
 
           return {
             ...acc,
@@ -107,7 +109,15 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues])
+  }, [
+    resolveDesignValue,
+    definedComponent,
+    node.data.props,
+    dataSource,
+    locale,
+    unboundValues,
+    areEntitiesFetched,
+  ])
 
   if (!definedComponent) {
     return null
@@ -121,13 +131,14 @@ export const VisualEditorBlock = ({
       return (
         <VisualEditorBlock
           node={childNode}
-          parentNode={parentNode}
           key={childNode.data.id}
           locale={locale}
           dataSource={dataSource}
           unboundValues={unboundValues}
           selectedNodeId={selectedNodeId}
           resolveDesignValue={resolveDesignValue}
+          entityStore={entityStore}
+          areEntitiesFetched={areEntitiesFetched}
         />
       )
     })
@@ -145,7 +156,6 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        parentNode={parentNode}
         {...(props as unknown as StyleProps)}>
         {children}
       </ContentfulSection>

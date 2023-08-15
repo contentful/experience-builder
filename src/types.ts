@@ -138,10 +138,7 @@ export type ComponentBinding = Record<string, Binding>
 export type BindingMap = Record<string, ComponentBinding>
 export type BindingMapByBlockId = Record<string, BindingMap>
 
-export type DataSourceEntryValueType =
-  | Link<'Entry'>
-  | Link<'Asset'>
-  | { value: CompositionVariableValueType }
+export type DataSourceEntryValueType = Link<'Entry'> | Link<'Asset'>
 
 export type LocalizedUnboundValues = Record<
   string,
