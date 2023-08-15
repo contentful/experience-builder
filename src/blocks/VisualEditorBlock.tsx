@@ -31,7 +31,7 @@ type VisualEditorBlockProps = {
   selectedNodeId?: string
   resolveDesignValue: ResolveDesignValueType
   entityStore: React.RefObject<ExperienceBuilderEditorEntityStore>
-  entitiesFetched: boolean
+  areEntitiesFetched: boolean
 }
 
 export const VisualEditorBlock = ({
@@ -42,7 +42,7 @@ export const VisualEditorBlock = ({
   selectedNodeId,
   resolveDesignValue,
   entityStore,
-  entitiesFetched,
+  areEntitiesFetched,
 }: VisualEditorBlockProps) => {
   const { getComponent } = useComponents()
 
@@ -116,7 +116,7 @@ export const VisualEditorBlock = ({
     dataSource,
     locale,
     unboundValues,
-    entitiesFetched,
+    areEntitiesFetched,
   ])
 
   if (!definedComponent) {
@@ -138,7 +138,7 @@ export const VisualEditorBlock = ({
           selectedNodeId={selectedNodeId}
           resolveDesignValue={resolveDesignValue}
           entityStore={entityStore}
-          entitiesFetched={entitiesFetched}
+          areEntitiesFetched={areEntitiesFetched}
         />
       )
     })
