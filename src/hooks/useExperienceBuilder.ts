@@ -18,6 +18,7 @@ import { sendMessage } from '../sendMessage'
 import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
 
 interface UseExperienceBuilderProps {
+  experienceTypeId: string
   /** The mode is automatically set, use this value to manually override this **/
   initialMode?: CompositionMode
   /** Use CDA token for delivery mode and CPA for preview mode
@@ -38,6 +39,7 @@ interface UseExperienceBuilderProps {
 }
 
 export const useExperienceBuilder = ({
+  experienceTypeId,
   initialMode, // danv: do we need this? Is there a scenario when this will ever be set?
   accessToken,
   initialLocale,
@@ -189,6 +191,7 @@ export const useExperienceBuilder = ({
 
   const experience: Experience = useMemo(
     () => ({
+      experienceTypeId,
       tree,
       dataSource,
       unboundValues,
@@ -211,6 +214,7 @@ export const useExperienceBuilder = ({
       host,
       defaultHost,
       mode,
+      experienceTypeId,
     ]
   )
 

@@ -1,4 +1,4 @@
-export { VisualEditorRoot, CompositionRoot } from './blocks'
+export { CompositionRoot } from './blocks'
 export {
   useExperienceBuilder,
   useComponents as useExperienceBuilderComponents,
