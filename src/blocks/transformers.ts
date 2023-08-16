@@ -23,11 +23,11 @@ export const transformAlignment = (
   flexDirection === 'row'
     ? {
         alignItems: `${horizontalAlignment}`,
-        justifyContent: `${verticalAlignment}`,
+        justifyContent: `safe ${verticalAlignment}`,
       }
     : {
         alignItems: `${verticalAlignment}`,
-        justifyContent: `${horizontalAlignment}`,
+        justifyContent: `safe ${horizontalAlignment}`,
       }
 
 type CssPropertiesForBackground =
