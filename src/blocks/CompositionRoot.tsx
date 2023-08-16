@@ -17,7 +17,7 @@ export const CompositionRoot = (props: CompositionRootProps) => {
 
   useContentfulSection()
 
-  if (!supportedModes.includes(mode as any)) return null
+  if (!mode || !supportedModes.includes(mode)) return null
 
   if (mode === 'editor') {
     return <VisualEditorRoot experience={props.experience} locale={props.locale} />
