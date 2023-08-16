@@ -144,9 +144,7 @@ describe('hook', () => {
 
   beforeEach(async () => {
     client = {
-      getEntries: jest
-        .fn()
-        .mockResolvedValue({ items: [compositionEntry] }),
+      getEntries: jest.fn().mockResolvedValue({ items: [compositionEntry] }),
       getAssets: jest.fn().mockResolvedValue({ items: assets }),
     }
   })
@@ -156,7 +154,7 @@ describe('hook', () => {
     const locale = 'en-US'
 
     const res = renderHook((props) => useFetchComposition(props), {
-      initialProps: { client, slug, experienceTypeId: 'layout', locale }
+      initialProps: { client, slug, experienceTypeId: 'layout', locale },
     })
 
     expect(client.getEntries).toHaveBeenCalledWith({
@@ -169,7 +167,7 @@ describe('hook', () => {
       client,
       slug,
       experienceTypeId: 'custom-exp-type',
-      locale
+      locale,
     })
 
     expect(client.getEntries).toHaveBeenCalledWith({

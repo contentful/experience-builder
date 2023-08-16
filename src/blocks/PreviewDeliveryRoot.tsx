@@ -21,12 +21,16 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
     throw new Error('Preview and delivery mode requires a composition slug to be provided')
   }
 
-  const client = useMemo(() => contentful.createClient({
-    space: spaceId as string,
-    environment: environmentId as string,
-    host: host,
-    accessToken: accessToken as string,
-  }), [spaceId, environmentId, host, accessToken])
+  const client = useMemo(
+    () =>
+      contentful.createClient({
+        space: spaceId as string,
+        environment: environmentId as string,
+        host: host,
+        accessToken: accessToken as string,
+      }),
+    [spaceId, environmentId, host, accessToken]
+  )
 
   const {
     composition,

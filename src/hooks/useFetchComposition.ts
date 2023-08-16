@@ -4,7 +4,7 @@ import { EntityStore } from '../core/EntityStore'
 import { Composition } from '../types'
 
 interface FetchCompositionProps {
-  experienceTypeId: string;
+  experienceTypeId: string
   client: ContentfulClientApi<undefined>
   slug: string
   locale: string
@@ -42,7 +42,7 @@ export const useFetchComposition = ({
   useEffect(() => {
     // fetch composition by slug
     const fetchComposition = async () => {
-      console.log('experienceTypeId', experienceTypeId);
+      console.log('experienceTypeId', experienceTypeId)
       try {
         const response = await client.getEntries({
           content_type: experienceTypeId,

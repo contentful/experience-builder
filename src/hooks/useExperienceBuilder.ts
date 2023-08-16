@@ -18,7 +18,7 @@ import { sendMessage } from '../sendMessage'
 import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
 
 interface UseExperienceBuilderProps {
-  experienceTypeId: string;
+  experienceTypeId: string
   /** The mode is automatically set, use this value to manually override this **/
   initialMode?: CompositionMode
   /** Use CDA token for delivery mode and CPA for preview mode
@@ -214,7 +214,7 @@ export const useExperienceBuilder = ({
       host,
       defaultHost,
       mode,
-      experienceTypeId
+      experienceTypeId,
     ]
   )
 

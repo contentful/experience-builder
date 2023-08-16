@@ -196,7 +196,7 @@ export type ExperienceConfig = {
 
 export type Experience = {
   tree?: CompositionTree
-  experienceTypeId: string;
+  experienceTypeId: string
   dataSource: CompositionDataSource
   unboundValues: CompositionUnboundValues
   config: ExperienceConfig

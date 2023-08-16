@@ -10,7 +10,7 @@ type CompositionRootProps = {
   slug?: string
 }
 
-const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor'];
+const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor']
 
 export const CompositionRoot = (props: CompositionRootProps) => {
   const { mode } = props.experience
@@ -20,14 +20,10 @@ export const CompositionRoot = (props: CompositionRootProps) => {
   if (!supportedModes.includes(mode as any)) return null
 
   if (mode === 'editor') {
-    return (
-      <VisualEditorRoot experience={props.experience} locale={props.locale} />
-    )
-
+    return <VisualEditorRoot experience={props.experience} locale={props.locale} />
   }
-  
-  return (
-    <PreviewDeliveryRoot experience={props.experience} locale={props.locale} slug={props.slug}  />
-  )
 
+  return (
+    <PreviewDeliveryRoot experience={props.experience} locale={props.locale} slug={props.slug} />
+  )
 }
