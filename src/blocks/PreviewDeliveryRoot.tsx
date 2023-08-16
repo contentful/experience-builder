@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import contentful from 'contentful'
 import { Experience } from '../types'
 import { useCheckForExperienceConfig } from '../hooks/useCheckForExperienceConfig'
@@ -21,12 +21,12 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
     throw new Error('Preview and delivery mode requires a composition slug to be provided')
   }
 
-  const client = contentful.createClient({
+  const client = useMemo(() => contentful.createClient({
     space: spaceId as string,
     environment: environmentId as string,
     host: host,
     accessToken: accessToken as string,
-  })
+  }), [spaceId, environmentId, host, accessToken])
 
   const {
     composition,
@@ -38,6 +38,7 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
     schemaVersion,
     breakpoints,
   } = useFetchComposition({
+    experienceTypeId: experience.experienceTypeId,
     client,
     slug: slug,
     locale: locale as string,

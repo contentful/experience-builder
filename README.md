@@ -6,7 +6,10 @@ import {
   CompositionRoot,
 } from '@contentful/experience-builder'
 
-const configs = { ... };
+const configs = {
+  experienceTypeId: 'marketing-website', // id of the experience type
+  ...otherConfigs
+};
 
 const App = () => {
   const { defineComponent } = useComponents()
