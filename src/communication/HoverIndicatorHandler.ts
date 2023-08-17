@@ -67,7 +67,7 @@ export class HoverIndicatorHandler {
     const rawCoordinates = this.getCoordinatesOfElement(element)
 
     const childrenCoordinates: RawCoordinates[] = Array.from(element.children)
-      .filter((child) => child.id !== 'SectionTooltip')
+      .filter((child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block')
       .map((child) => this.getCoordinatesOfElement(child))
 
     return {
