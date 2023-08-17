@@ -68,12 +68,8 @@ export const useExperienceBuilder = ({
   const defaultHost = mode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
 
   const reloadApp = () => {
+    // Triggers the host application to reload the iframe
     sendMessage(OutgoingExperienceBuilderEvent.CANVAS_RELOAD, {})
-    // Wait a moment to ensure that the message was sent
-    setTimeout(() => {
-      // Received a hot reload message from webpack dev server -> reload the canvas
-      window.location.reload()
-    }, 50)
   }
 
   useEffect(() => {
