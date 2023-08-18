@@ -1,4 +1,4 @@
-import { IncomingExperienceBuilderEvent } from './types'
+import { CompositionMode, ExperienceBuilderConfig, IncomingExperienceBuilderEvent } from './types'
 
 export type VisualEditorMessagePayload = {
   source: string
@@ -72,3 +72,45 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
 
   return eventData
 }
+
+export const validateExperienceBuilderConfig = ({
+  accessToken,
+  spaceId,
+  defaultLocale,
+  environmentId,
+  mode,
+  slug
+}: ExperienceBuilderConfig & { slug?: string; mode: CompositionMode }) => {
+  if (mode === 'editor') {
+    return
+  }
+
+  if (!accessToken) {
+    throw new Error(
+      'When outside the editor mode you must define either a Preview or Delivery Token in the experience initialization'
+    )
+  }
+
+  if (!spaceId) {
+    throw new Error(
+      'When outside the editor mode you must define a SpaceId in the experience initialization'
+    )
+  }
+
+  if (!defaultLocale) {
+    throw new Error(
+      'When outside the editor mode you must define a locale in the experience initialization'
+    )
+  }
+
+  if (!environmentId) {
+    throw new Error(
+      'When outside the editor mode you must define a EnvironmentId in the experience initialization'
+    )
+  }
+
+  if (!slug) {
+    throw new Error('Preview and delivery mode requires a composition slug to be provided')
+  }
+}
+
