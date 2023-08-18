@@ -1,5 +1,5 @@
 import React from 'react'
-import { useFetchComposition } from './useFetchComposition'
+import { useFetchComposition } from './useExperienceStore'
 import { render, renderHook, screen, waitFor } from '@testing-library/react'
 import { EntityStore } from '../core/EntityStore'
 import { compositionEntry } from '../../test/__fixtures__/composition'

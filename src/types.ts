@@ -4,12 +4,14 @@
  * parts to prepare this library for EAP
  */
 
+import { createClient } from 'contentful'
 import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_CONTAINER_NAME,
   CONTENTFUL_SECTION_ID,
   CONTENTFUL_SECTION_NAME,
 } from './constants'
+import { EntityStore } from './core/EntityStore'
 
 export enum ScrollStates {
   SCROLL_START = 'scrollStart',
@@ -180,24 +182,31 @@ export type CompositionTree = {
 
 export type CompositionMode = 'editor' | 'preview' | 'delivery'
 
-export type ExperienceConfig = {
-  accessToken?: string
-  spaceId?: string
-  environmentId?: string
-  locale?: string
+export type ExperienceBuilderConfig = {
+  /** Use CDA token for delivery mode and CPA for preview mode
+   * When rendered in the editor a token is not needed **/
+  accessToken: string
+  /** The source spaceId,
+   *  when rendered in the editor, the id is set from the editor **/
+  spaceId: string
+  /** The source environmentId,
+   *  when rendered in the editor, the id is set from the editor **/
+  environmentId: string
+  /** The defined locale,
+   *  when rendered in the editor, the locale is set from the editor, but you can use this to overwrite this **/
+  defaultLocale: string
+  /** The contentful host to be used.
+   * Defaults to 'cdn.contentful.com' for delivery mode and 'preview.contentful.com' for preview mode **/
   host?: string
 }
 
-export type Experience = {
-  tree?: CompositionTree
-  experienceTypeId: string
-  dataSource: CompositionDataSource
-  unboundValues: CompositionUnboundValues
-  config: ExperienceConfig
-  isDragging: boolean
-  selectedNodeId: string
-  mode: CompositionMode | undefined
-  breakpoints: Breakpoint[]
+export type ExperienceBuilderSettings = {
+  experienceTypeId: string;
+  slug?: string;
+  locale: string;
+  mode: CompositionMode;
+  client: ReturnType<typeof createClient>;
+  setLocale: (localeCode: string) => void;
 }
 
 /**
@@ -280,4 +289,17 @@ export interface HoveredElement {
   blockType: string | undefined
   nodeId: string | undefined
   blockId: string | undefined
+}
+
+export interface Experience {
+  composition: Composition | undefined
+  entityStore: EntityStore | undefined
+  error: string | undefined
+  isLoading: boolean
+  children: Composition['componentTree']['children']
+  breakpoints: Composition['componentTree']['breakpoints']
+  dataSource: Composition['dataSource']
+  unboundValues: Composition['unboundValues']
+  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined
+  fetchExperienceBySlug: ({ experienceTypeId, slug }: { experienceTypeId: string; slug: string }) => Promise<void>
 }

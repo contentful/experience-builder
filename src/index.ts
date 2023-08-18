@@ -6,7 +6,7 @@ export {
 } from './hooks'
 export type {
   ComponentDefinition,
-  Experience,
+  ExperienceBuilderSettings,
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,
   CompositionVariableValueType,

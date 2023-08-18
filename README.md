@@ -6,23 +6,32 @@ import {
   CompositionRoot,
 } from '@contentful/experience-builder'
 
-const configs = {
-  experienceTypeId: 'marketing-website', // id of the experience type
-  ...otherConfigs
+// 1. Define the configuration
+const config = {
+  experienceTypeId: 'marketingWebsitePage', // id of the experience type
+  slug: 'landing-page',
+  accessToken: '*******',
+  defaultLocale: 'en-US',
+  environmentId: 'master',
+  spaceId: 'sna0qik32a1',
 };
 
 const App = () => {
   const { defineComponent } = useComponents()
 
-  // 1. Define components
+  // 2. Define components
   useEffect(() => {
     defineComponent('Button', componentDefinition)
   }, [defineComponent])
 
-  const { experience, locale } = useExperienceBuilder(configs)
+  const { settings, experience } = useExperienceBuilder(config)
 
-  // 2. Render your app
-  return <CompositionRoot experience={experience} locale={locale} />
+  useEffect(() => {
+    settings.setLocale('de-DE'); // change locale when needed
+  }, [settings]);
+
+  // 3. Render your experience
+  return <CompositionRoot settings={settings} experience={experience} />
 }
 ```
 
