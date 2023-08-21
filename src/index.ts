@@ -8,6 +8,7 @@ export type {
   ComponentDefinition,
   Experience,
   ComponentDefinitionVariable,
+  ComponentDefinitionVariableType,
   CompositionVariableValueType,
   CompositionComponentPropValue,
   ValidationOption,
