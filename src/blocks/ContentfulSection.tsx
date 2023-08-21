@@ -11,6 +11,7 @@ import {
 import './ContentfulSection.css'
 
 import classNames from 'classnames'
+import { ContentfulSectionHyperLink } from './ContentfulSectionHyperLink'
 import { Flex } from '../core'
 
 type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
@@ -45,11 +46,13 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     backgroundImageUrl,
     backgroundImageAlignment,
     backgroundImageScaling,
+    hyperlink,
+    openInNewTab,
     className,
     children,
   } = props
 
-  const styleOverrides: Partial<StyleProps> = {
+  const styleOverrides: Omit<Partial<StyleProps>, 'openInNewTab' | 'hyperlink'> = {
     margin,
     padding,
     backgroundColor,
@@ -68,13 +71,27 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     ),
   }
 
+  let childrenHyperLinkWrapper = children
+
+  // If hyperlink for ContentfulSection is bounded
+  if (hyperlink) {
+    childrenHyperLinkWrapper = (
+      <ContentfulSectionHyperLink
+        isEditorMode={props.editorMode === true}
+        hyperlink={hyperlink}
+        openInNewTab={openInNewTab}>
+        {children}
+      </ContentfulSectionHyperLink>
+    )
+  }
+
   if (props.editorMode === false) {
     return (
       <Flex
         cssStyles={styleOverrides}
         id="ContentfulSection"
         className={classNames('defaultStyles', className)}>
-        {children}
+        {childrenHyperLinkWrapper}
       </Flex>
     )
   }
@@ -93,7 +110,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         empty: !children || (Array.isArray(children) && children.length === 0),
       })}
       onMouseDown={onMouseDown}>
-      {children}
+      {childrenHyperLinkWrapper}
     </Flex>
   )
 }

@@ -31,8 +31,7 @@ export const ContentfulSectionHyperLink = (props: ContentfulSectionHyperLinkProp
       href={hyperlink}
       {...anchorTagProps}
       style={{ width: '100%', height: '100%' }}
-      onClick={stopPropagationInEditorMode}
-      onMouseDown={stopPropagationInEditorMode}>
+      onClick={stopPropagationInEditorMode}>
       {children}
     </a>
   )
