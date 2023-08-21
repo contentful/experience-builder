@@ -52,6 +52,7 @@ export type ComponentDefinitionVariableType =
   | 'Date'
   | 'Boolean'
   | 'Location'
+  | 'Object'
 // | 'Link'
 // | 'Array'
 // export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
