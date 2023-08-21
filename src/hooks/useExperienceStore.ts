@@ -39,7 +39,11 @@ export const useExperienceStore = ({ locale, client }: UseExperienceStoreProps):
    * @param {string} slug - slug of the experience (defined in entry settings)
    * @param {string} [localeCode] - optional locale code to fetch the experience. Falls back to the currently active locale in the state
    */
-  const fetchExperienceBySlug = useCallback(async ({ experienceTypeId, slug, localeCode }: FetchCompositionProps) => {
+  const fetchBySlug = useCallback(async ({ experienceTypeId, slug, localeCode }: FetchCompositionProps) => {
+    if (!slug) {
+      throw new Error('Preview and delivery mode requires a composition slug to be provided')
+    }
+
     try {
       const response = await client.getEntries({
         content_type: experienceTypeId,
@@ -109,7 +113,7 @@ export const useExperienceStore = ({ locale, client }: UseExperienceStoreProps):
       dataSource,
       unboundValues,
       entityStore,
-      fetchExperienceBySlug,
+      fetchBySlug,
       error,
       isLoading,
     }),
@@ -123,7 +127,7 @@ export const useExperienceStore = ({ locale, client }: UseExperienceStoreProps):
       entityStore,
       error,
       isLoading,
-      fetchExperienceBySlug
+      fetchBySlug
     ]
   )
 }
