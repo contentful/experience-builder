@@ -294,7 +294,7 @@ export interface RawCoordinates {
 }
 
 export interface Coordinates extends RawCoordinates {
-  childrenCoordinates: RawCoordinates[]
+  childrenCoordinates?: RawCoordinates[]
 }
 export interface HoveredElement {
   blockType: string | undefined

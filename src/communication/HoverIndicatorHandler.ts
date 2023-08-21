@@ -6,72 +6,74 @@ import {
 } from '../types'
 import { sendMessage } from './sendMessage'
 
-const CACHE_TTL = 2000
-
 export class HoverIndicatorHandler {
-  private domRectCache: Record<string, { data: RawCoordinates; at: number }>
-  private interval: ReturnType<typeof setInterval> | undefined
+	private elementRectCache: Record<string, Coordinates>;
+	private elementOffsetCache: Record<string, RawCoordinates>
 
   constructor() {
-    this.domRectCache = {}
-  }
-
-  private startInterval() {
-    if (this.interval) {
-      clearInterval(this.interval)
-    }
-
-    this.interval = setInterval(() => {
-      for (const key of Object.keys(this.domRectCache)) {
-        const value = this.domRectCache[key]
-        const isStale = !value || Date.now() - value.at >= CACHE_TTL
-        if (isStale) {
-          delete this.domRectCache[key]
-        }
-      }
-    }, 2500)
-  }
-
-  private getCoordinatesOfElement(element: HTMLElement | Element): RawCoordinates {
-    const id = (element as HTMLElement).dataset.cfNodeId || element.id
-    const key = `${id}-${window.scrollX}-${window.scrollY}`
-
-    let cachedEntry = this.domRectCache[key]
-
-    const isStale = !cachedEntry || Date.now() - cachedEntry.at >= CACHE_TTL
-
-    if (!isStale) {
-      return cachedEntry.data
-    }
-
-    const { left, top, width, height } = element.getBoundingClientRect()
-
-    cachedEntry = {
-      data: {
-        left,
-        top,
-        width,
-        height,
-      },
-      at: Date.now(),
-    }
-
-    if (id) {
-      this.domRectCache[key] = cachedEntry
-    }
-
-    return cachedEntry.data
+		this.elementRectCache = {}
+		this.elementOffsetCache = {}
   }
 
   private getFullCoordinates = (element: HTMLElement) => {
-    const rawCoordinates = this.getCoordinatesOfElement(element)
+		const parentId = (element as HTMLElement).dataset.cfNodeId || element.id
 
-    const childrenCoordinates: RawCoordinates[] = Array.from(element.children)
-      .filter((child) => child.id !== 'SectionTooltip')
-      .map((child) => this.getCoordinatesOfElement(child))
+		const elementOffset = {
+			left: element.offsetLeft,
+			top: element.offsetTop,
+			width: element.offsetWidth,
+			height: element.offsetHeight
+		}
 
-    return {
-      ...rawCoordinates,
+		const currentElementOffsetCache = this.elementOffsetCache[parentId]
+
+		const isSameOffset = currentElementOffsetCache && (
+			currentElementOffsetCache.height === elementOffset.height
+			&& currentElementOffsetCache.left === elementOffset.left
+			&& currentElementOffsetCache.top === elementOffset.top
+			&& currentElementOffsetCache.width === elementOffset.width
+		)
+		const isSameChildrenLength = this.elementRectCache[parentId] && element.children?.length === this.elementRectCache[parentId].childrenCoordinates?.length
+
+		if(this.elementOffsetCache[parentId] && isSameOffset && isSameChildrenLength){
+			return this.elementRectCache[parentId]
+		}
+
+		const { left, top, width, height } = element.getBoundingClientRect();
+	
+		const childrenCoordinates = Array.from(element.children)
+		.filter((child) => child.id !== 'SectionTooltip')
+		.map((child) => {
+			const childId = (child as HTMLElement).dataset.cfNodeId || child.id
+			const { left, top, width, height } = child.getBoundingClientRect();
+
+			const childOffset = {
+				left: (child as HTMLElement).offsetLeft,
+				top: (child as HTMLElement).offsetTop,
+				width: (child as HTMLElement).offsetWidth,
+				height: (child as HTMLElement).offsetHeight
+			}
+			
+			this.elementRectCache[childId] = { left, top, width, height, childrenCoordinates: [] } 
+			this.elementOffsetCache[childId] = childOffset
+
+			return { left, top, width, height };
+		})
+
+		this.elementOffsetCache[parentId] = elementOffset
+		this.elementRectCache[parentId] = {
+			left,
+			top,
+			width,
+			height,
+			childrenCoordinates
+		}
+
+		return {
+      left,
+			top,
+			width,
+			height,
       childrenCoordinates,
     }
   }
@@ -173,14 +175,19 @@ export class HoverIndicatorHandler {
     this.handleMouseMove(target, x, y)
   }
 
+	resetCache = () => {
+		this.elementRectCache = {}
+		this.elementOffsetCache = {}
+	}
+
   attachEvent(): void {
     document.addEventListener('mousemove', this.onMouseMove)
-    this.startInterval()
+		document.addEventListener('scroll', this.resetCache)
   }
 
   detachEvent(): void {
     document.removeEventListener('mousemove', this.onMouseMove)
-    this.domRectCache = {}
-    clearInterval(this.interval)
+		document.removeEventListener('scroll', this.resetCache)
+		this.resetCache();
   }
 }
