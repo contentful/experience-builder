@@ -10,12 +10,16 @@ import {
   ComponentDefinitionVariable,
   ContentfulSectionType,
   SECTION_STYLE_ATTRIBUTE_KEY,
+  VariableFormats,
 } from '../types'
 
 export const useContentfulSection = () => {
   const { defineComponent } = useComponents()
 
-  const variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>> = {
+  const variables: Record<
+    SECTION_STYLE_ATTRIBUTE_KEY,
+    ComponentDefinitionVariable<'Text' | 'Boolean'>
+  > = {
     verticalAlignment: {
       validations: {
         in: [
@@ -188,6 +192,21 @@ export const useContentfulSection = () => {
           },
         ],
       },
+    },
+    hyperlink: {
+      displayName: 'Hyperlink',
+      type: 'Text',
+      defaultValue: '',
+      validations: {
+        format: VariableFormats.URL,
+      },
+      description: 'hyperlink for section or container',
+    },
+    openInNewTab: {
+      displayName: 'Open in new tab',
+      type: 'Boolean',
+      defaultValue: false,
+      description: 'To open hyperlink in new Tab or not',
     },
   }
 

@@ -56,6 +56,14 @@ export type ComponentDefinitionVariableType =
 // | 'Array'
 // export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
 
+export enum VariableFormats {
+  URL = 'URL',
+  // alphaNum
+  // base64
+  // email
+  // ip address
+}
+
 export type ValidationOption<T extends ComponentDefinitionVariableType> = {
   value: T extends 'Text' ? string : T extends 'Number' ? number : never
   displayName?: string
@@ -64,6 +72,7 @@ export type ValidationOption<T extends ComponentDefinitionVariableType> = {
 export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionVariableType> = {
   required?: boolean
   in?: ValidationOption<T>[]
+  format?: VariableFormats
 }
 
 export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVariableType> {
@@ -220,6 +229,8 @@ export interface StyleProps {
   border: string
   gap: string
   backgroundImageUrl: string
+  hyperlink: string
+  openInNewTab: boolean
   backgroundImageScaling: 'fit' | 'fill' | 'tile'
   backgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
 }
@@ -240,11 +251,13 @@ export type SECTION_STYLE_ATTRIBUTE_KEY =
   | 'backgroundImageUrl'
   | 'backgroundImageScaling'
   | 'backgroundImageAlignment'
+  | 'hyperlink'
+  | 'openInNewTab'
 
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID
   name: typeof CONTENTFUL_SECTION_NAME | typeof CONTENTFUL_CONTAINER_NAME
-  variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>>
+  variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 }
 
 // cda types
