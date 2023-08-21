@@ -6,18 +6,23 @@ import { useBreakpoints } from '../hooks'
 
 type DeliveryRootProps = {
   settings: ExperienceBuilderSettings
-  experience: Experience
+  experience: Experience;
+  slug: string;
 }
 
-export const PreviewDeliveryRoot = ({ settings, experience }: DeliveryRootProps) => {
+export const PreviewDeliveryRoot = ({ settings, slug, experience }: DeliveryRootProps) => {
   useEffect(() => {
-    if (!experience.composition && settings.slug) {
-      experience.fetchCompositionBySlug({
+    if (!slug) {
+      throw new Error('Preview and delivery mode requires a composition slug to be provided')
+    }
+
+    if (!experience.composition && slug) {
+      experience.fetchBySlug({
         experienceTypeId: settings.experienceTypeId,
-        slug: settings.slug
+        slug
       });
     }
-  }, [experience, settings.experienceTypeId, settings.slug])
+  }, [experience, settings.experienceTypeId, slug])
 
   const { resolveDesignValue } = useBreakpoints(experience.breakpoints)
 

@@ -14,10 +14,6 @@ type UseExperienceBuilderProps = {
    * Id of the content type of the target experience
    */
   experienceTypeId: string
-  /**
-   * Slug of the target experience
-   */
-  slug: string;
   /** The mode is automatically set, use this value to manually override this **/
   initialMode?: CompositionMode
 
@@ -25,7 +21,6 @@ type UseExperienceBuilderProps = {
 
 export const useExperienceBuilder = ({
   experienceTypeId,
-  slug,
   initialMode,
   accessToken,
   defaultLocale,
@@ -57,8 +52,7 @@ export const useExperienceBuilder = ({
     defaultLocale,
     environmentId,
     mode,
-    host: ctflApi,
-    slug,
+    host: ctflApi
   });
 
   const client = useMemo(

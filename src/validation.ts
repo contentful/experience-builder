@@ -79,8 +79,7 @@ export const validateExperienceBuilderConfig = ({
   defaultLocale,
   environmentId,
   mode,
-  slug
-}: ExperienceBuilderConfig & { slug?: string; mode: CompositionMode }) => {
+}: ExperienceBuilderConfig & { mode: CompositionMode }) => {
   if (mode === 'editor') {
     return
   }
@@ -107,10 +106,6 @@ export const validateExperienceBuilderConfig = ({
     throw new Error(
       'When outside the editor mode you must define a EnvironmentId in the experience initialization'
     )
-  }
-
-  if (!slug) {
-    throw new Error('Preview and delivery mode requires a composition slug to be provided')
   }
 }
 

@@ -207,7 +207,6 @@ export type ExperienceBuilderConfig = {
 
 export type ExperienceBuilderSettings = {
   experienceTypeId: string;
-  slug?: string;
   locale: string;
   mode: CompositionMode;
   client: ReturnType<typeof createClient>;
@@ -306,5 +305,5 @@ export interface Experience {
   dataSource: Composition['dataSource']
   unboundValues: Composition['unboundValues']
   schemaVersion: Composition['componentTree']['schemaVersion'] | undefined
-  fetchExperienceBySlug: ({ experienceTypeId, slug }: { experienceTypeId: string; slug: string }) => Promise<void>
+  fetchBySlug: ({ experienceTypeId, slug, localeCode }: { experienceTypeId: string; slug: string; localeCode?: string }) => Promise<void>
 }
