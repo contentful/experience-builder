@@ -18,15 +18,16 @@ export class HoverIndicatorHandler {
   private getFullCoordinates = (element: HTMLElement) => {
     const elementId = (element as HTMLElement).dataset.cfNodeId || element.id
 
-		const validChildren = Array.from(element.children)
-		.filter((child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block')
+    const validChildren = Array.from(element.children).filter(
+      (child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block'
+    )
 
-		// We cache the element offset and instead of calling getBoundingClientRect function on every mouse move,
-		// we check if there's an offset change for the element which could arise from width change, adding margin/padding/border to the element etc.. 
-		// Basically if anything causes the offset of the element to change, we recalculate the bounding rect of the element and cache the result, 
-		// else we return the cached rect for the element id. 
-		// We also check if there was increase or decrease in the number of children. If there's a change in the number of children,
-		// we need to recalculate the children coordinates (and we throw in a calculation of the element rect as a bonus too). 
+    // We cache the element offset and instead of calling getBoundingClientRect function on every mouse move,
+    // we check if there's an offset change for the element which could arise from width change, adding margin/padding/border to the element etc..
+    // Basically if anything causes the offset of the element to change, we recalculate the bounding rect of the element and cache the result,
+    // else we return the cached rect for the element id.
+    // We also check if there was increase or decrease in the number of children. If there's a change in the number of children,
+    // we need to recalculate the children coordinates (and we throw in a calculation of the element rect as a bonus too).
 
     const elementOffset = {
       left: element.offsetLeft,
@@ -54,28 +55,27 @@ export class HoverIndicatorHandler {
 
     const { left, top, width, height } = element.getBoundingClientRect()
 
-    const childrenCoordinates = validChildren
-      .map((child) => {
-        const childId = (child as HTMLElement).dataset.cfNodeId || child.id
-        const { left, top, width, height } = child.getBoundingClientRect()
+    const childrenCoordinates = validChildren.map((child) => {
+      const childId = (child as HTMLElement).dataset.cfNodeId || child.id
+      const { left, top, width, height } = child.getBoundingClientRect()
 
-				// You know what they say: A child is their own person (nobody says this 😃)
-				// Because a child is an element of their own and can be hovered on, we don't waste this loop calculation.
-				// Hence, we store the rect calculation for the id.
-				// The benefit: E.g We have a card in a section. When we hover on the section first, we would also calculate the
-				// rect for the card in this loop and cache the result. So when you hover on the card,
-				// if it passes the offset cache + same children check in line 51, we just return the cached value.
-				// Saves us the need to call the getBoundingClientRect one more unnecessary time 😉. 
-        this.elementRectCache[childId] = { left, top, width, height, childrenCoordinates: [] }
-        this.elementOffsetCache[childId] = {
-          left: (child as HTMLElement).offsetLeft,
-          top: (child as HTMLElement).offsetTop,
-          width: (child as HTMLElement).offsetWidth,
-          height: (child as HTMLElement).offsetHeight,
-        }
+      // You know what they say: A child is their own person (nobody says this 😃)
+      // Because a child is an element of their own and can be hovered on, we don't waste this loop calculation.
+      // Hence, we store the rect calculation for the id.
+      // The benefit: E.g We have a card in a section. When we hover on the section first, we would also calculate the
+      // rect for the card in this loop and cache the result. So when you hover on the card,
+      // if it passes the offset cache + same children check in line 51, we just return the cached value.
+      // Saves us the need to call the getBoundingClientRect one more unnecessary time 😉.
+      this.elementRectCache[childId] = { left, top, width, height, childrenCoordinates: [] }
+      this.elementOffsetCache[childId] = {
+        left: (child as HTMLElement).offsetLeft,
+        top: (child as HTMLElement).offsetTop,
+        width: (child as HTMLElement).offsetWidth,
+        height: (child as HTMLElement).offsetHeight,
+      }
 
-        return { left, top, width, height }
-      })
+      return { left, top, width, height }
+    })
 
     this.elementOffsetCache[elementId] = elementOffset
     this.elementRectCache[elementId] = {
@@ -199,8 +199,8 @@ export class HoverIndicatorHandler {
 
   attachEvent(): void {
     document.addEventListener('mousemove', this.onMouseMove)
-		// On scroll, we reset our cache because the elements rect change and we don't want mismatched lines on scroll.
-		// So we don't show any hover lines on scroll.
+    // On scroll, we reset our cache because the elements rect change and we don't want mismatched lines on scroll.
+    // So we don't show any hover lines on scroll.
     document.addEventListener('scroll', this.resetCache)
   }
 
