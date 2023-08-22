@@ -4,6 +4,7 @@ import { EntityStore } from '../core/EntityStore'
 import { Composition } from '../types'
 
 interface FetchCompositionProps {
+  experienceTypeId: string
   client: ContentfulClientApi<undefined>
   slug: string
   locale: string
@@ -22,6 +23,7 @@ interface FetchedCompositionData {
 }
 
 export const useFetchComposition = ({
+  experienceTypeId,
   client,
   slug,
   locale,
@@ -40,9 +42,10 @@ export const useFetchComposition = ({
   useEffect(() => {
     // fetch composition by slug
     const fetchComposition = async () => {
+      console.log('experienceTypeId', experienceTypeId)
       try {
         const response = await client.getEntries({
-          content_type: 'layout',
+          content_type: experienceTypeId,
           'fields.slug': slug,
           locale,
         })
@@ -52,7 +55,7 @@ export const useFetchComposition = ({
         if (response.items.length > 1) {
           throw new Error(`More than one composition with slug: ${slug} was found`)
         }
-        setComposition(response.items[0].fields as Composition)
+        setComposition(response.items[0].fields as unknown as Composition)
       } catch (e: any) {
         console.error(`Failed to fetch composition with error: ${e.message}`)
         setError(e.message)
@@ -61,7 +64,7 @@ export const useFetchComposition = ({
     }
 
     fetchComposition()
-  }, [slug, locale])
+  }, [slug, locale, experienceTypeId, client])
 
   useEffect(() => {
     // fetch bound entries

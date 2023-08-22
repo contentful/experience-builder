@@ -1,4 +1,4 @@
-import { Asset, Entry } from 'contentful'
+import { Asset, AssetFile, Entry } from 'contentful'
 
 export const entityIds = {
   ENTRY1: 'entry1',
@@ -105,7 +105,14 @@ export const assets: Asset[] = [
       },
       locale: 'en-US',
     },
-    fields: { title: 'Asset 1' },
+    fields: {
+      title: 'Asset 1',
+      file: {
+        url: 'https://test.com/test.jpg',
+        fileName: 'example.jpg',
+        contentType: '',
+      } as AssetFile,
+    },
     metadata: {
       tags: [],
     },

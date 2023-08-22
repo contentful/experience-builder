@@ -1,4 +1,4 @@
-export { VisualEditorRoot, CompositionRoot } from './blocks'
+export { CompositionRoot } from './blocks'
 export {
   useExperienceBuilder,
   useComponents as useExperienceBuilderComponents,
@@ -8,6 +8,7 @@ export type {
   ComponentDefinition,
   Experience,
   ComponentDefinitionVariable,
+  ComponentDefinitionVariableType,
   CompositionVariableValueType,
   CompositionComponentPropValue,
   ValidationOption,

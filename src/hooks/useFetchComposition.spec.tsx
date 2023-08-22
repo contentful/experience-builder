@@ -1,14 +1,17 @@
 import React from 'react'
 import { useFetchComposition } from './useFetchComposition'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, renderHook, screen, waitFor } from '@testing-library/react'
 import { EntityStore } from '../core/EntityStore'
 import { compositionEntry } from '../../test/__fixtures__/composition'
 import { entries, assets, entityIds } from '../../test/__fixtures__/entities'
 
 jest.mock('../core/EntityStore')
 
+const experienceTypeId = 'layout'
+
 const TestComponent = ({ client, slug, locale }: { client: any; slug: string; locale: string }) => {
   const { composition, children, entityStore, error } = useFetchComposition({
+    experienceTypeId,
     client,
     slug,
     locale,
@@ -57,7 +60,7 @@ describe('useFetchComposition', () => {
 
     it('should fetch composition by slug', async () => {
       expect(client.getEntries).toHaveBeenCalledWith({
-        content_type: 'layout',
+        content_type: experienceTypeId,
         'fields.slug': 'test',
         locale: 'en-US',
       })
@@ -132,6 +135,45 @@ describe('useFetchComposition', () => {
       expect(err).toBeCalledWith(
         'Failed to fetch composition with error: More than one composition with slug: test was found'
       )
+    })
+  })
+})
+
+describe('hook', () => {
+  let client: any
+
+  beforeEach(async () => {
+    client = {
+      getEntries: jest.fn().mockResolvedValue({ items: [compositionEntry] }),
+      getAssets: jest.fn().mockResolvedValue({ items: assets }),
+    }
+  })
+
+  it.only('should fetch composition with respect to the given experienceTypeId', async () => {
+    const slug = 'hello-world'
+    const locale = 'en-US'
+
+    const res = renderHook((props) => useFetchComposition(props), {
+      initialProps: { client, slug, experienceTypeId: 'layout', locale },
+    })
+
+    expect(client.getEntries).toHaveBeenCalledWith({
+      content_type: 'layout',
+      'fields.slug': slug,
+      locale,
+    })
+
+    res.rerender({
+      client,
+      slug,
+      experienceTypeId: 'custom-exp-type',
+      locale,
+    })
+
+    expect(client.getEntries).toHaveBeenCalledWith({
+      content_type: 'custom-exp-type',
+      'fields.slug': slug,
+      locale,
     })
   })
 })

@@ -52,6 +52,7 @@ export type ComponentDefinitionVariableType =
   | 'Date'
   | 'Boolean'
   | 'Location'
+  | 'Object'
 // | 'Link'
 // | 'Array'
 // export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
@@ -138,10 +139,7 @@ export type ComponentBinding = Record<string, Binding>
 export type BindingMap = Record<string, ComponentBinding>
 export type BindingMapByBlockId = Record<string, BindingMap>
 
-export type DataSourceEntryValueType =
-  | Link<'Entry'>
-  | Link<'Asset'>
-  | { value: CompositionVariableValueType }
+export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>
 
 export type LocalizedUnboundValues = Record<
   string,
@@ -175,14 +173,8 @@ export type CompositionComponentNode = {
     id: string
     blockId?: string // will be undefined in case string node or if root component
     props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>
-    dataSource: Record<
-      string, // locale
-      Record<
-        string, // uuid
-        DataSourceEntryValueType
-      >
-    >
-    unboundValues: Record<string, Record<string, { value: CompositionVariableValueType }>>
+    dataSource: CompositionDataSource
+    unboundValues: CompositionUnboundValues
     breakpoints: Breakpoint[]
   }
   children: CompositionComponentNode[]
@@ -205,8 +197,9 @@ export type ExperienceConfig = {
 
 export type Experience = {
   tree?: CompositionTree
-  dataSource: LocalizedDataSource
-  unboundValues: LocalizedUnboundValues
+  experienceTypeId: string
+  dataSource: CompositionDataSource
+  unboundValues: CompositionUnboundValues
   config: ExperienceConfig
   isDragging: boolean
   selectedNodeId: string

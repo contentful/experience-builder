@@ -42,7 +42,7 @@ export class HoverIndicatorHandler {
 		const { left, top, width, height } = element.getBoundingClientRect();
 	
 		const childrenCoordinates = Array.from(element.children)
-		.filter((child) => child.id !== 'SectionTooltip')
+		.filter((child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block')
 		.map((child) => {
 			const childId = (child as HTMLElement).dataset.cfNodeId || child.id
 			const { left, top, width, height } = child.getBoundingClientRect();

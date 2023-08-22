@@ -1,5 +1,5 @@
 import React from 'react'
-import { Experience } from '../types'
+import { CompositionMode, Experience } from '../types'
 import { VisualEditorRoot } from './VisualEditorRoot'
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
 import { useContentfulSection } from '../hooks/useContentfulSection'
@@ -10,19 +10,20 @@ type CompositionRootProps = {
   slug?: string
 }
 
-const MODE_ROOT_MAP = {
-  editor: VisualEditorRoot,
-  preview: PreviewDeliveryRoot,
-  delivery: PreviewDeliveryRoot,
-}
+const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor']
 
 export const CompositionRoot = (props: CompositionRootProps) => {
   const { mode } = props.experience
 
   useContentfulSection()
 
-  if (!mode) return null
+  if (!mode || !supportedModes.includes(mode)) return null
 
-  const Root = MODE_ROOT_MAP[mode]
-  return <Root {...props} />
+  if (mode === 'editor') {
+    return <VisualEditorRoot experience={props.experience} locale={props.locale} />
+  }
+
+  return (
+    <PreviewDeliveryRoot experience={props.experience} locale={props.locale} slug={props.slug} />
+  )
 }

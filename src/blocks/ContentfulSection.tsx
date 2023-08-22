@@ -20,7 +20,6 @@ type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
         children: React.ReactNode
         className?: string
         node: CompositionComponentNode
-        parentNode: CompositionComponentNode
         editorMode?: true
       }
     : {

@@ -7,17 +7,19 @@ import {
   LocalizedUnboundValues,
   Link,
   CompositionVariableValueType,
+  CompositionDataSource,
+  CompositionUnboundValues,
 } from '../types'
 
 import { useComponents } from '../hooks'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
-import { getValueFromDataSource } from '../core/getValueFromDataSource'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { sendMessage } from '../sendMessage'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
+import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
 
 type PropsType =
   | StyleProps
@@ -26,11 +28,12 @@ type PropsType =
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
   locale: string
-  dataSource: LocalizedDataSource
-  unboundValues: LocalizedUnboundValues
+  dataSource: CompositionDataSource
+  unboundValues: CompositionUnboundValues
   selectedNodeId?: string
-  parentNode: CompositionComponentNode
   resolveDesignValue: ResolveDesignValueType
+  entityStore: React.RefObject<ExperienceBuilderEditorEntityStore>
+  areEntitiesFetched: boolean
 }
 
 export const VisualEditorBlock = ({
@@ -38,9 +41,10 @@ export const VisualEditorBlock = ({
   locale,
   dataSource,
   unboundValues,
-  parentNode,
   selectedNodeId,
   resolveDesignValue,
+  entityStore,
+  areEntitiesFetched,
 }: VisualEditorBlockProps) => {
   const { getComponent } = useComponents()
 
@@ -73,30 +77,21 @@ export const VisualEditorBlock = ({
           }
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
-          const value = getValueFromDataSource({
-            path: variableMapping.path,
-            fallback: variableDefinition.defaultValue,
-            dataSourceForCurrentLocale: dataSource[locale] || {},
-          })
+          const [, uuid, ...path] = variableMapping.path.split('/')
+          const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>
+          const value =
+            entityStore.current?.getValue(binding, path.slice(0, -1)) ||
+            variableDefinition.defaultValue
 
           return {
             ...acc,
             [variableName]: value,
           }
         } else {
-          /**
-           * Extracting default locale code from unboundValues Object.
-           * As unboundValues is non-localized and will always have values against
-           * default locale code.
-           * TODO: This is a temp solution and will be fixed in upcoming tickets.
-           */
-          const keys = Object.keys(unboundValues)
-          const unboundValuesLocale = keys[0]
-
           const value = getUnboundValues({
             key: variableMapping.key,
             fallback: variableDefinition.defaultValue,
-            unboundValuesForCurrentLocale: unboundValues[unboundValuesLocale] || {},
+            unboundValues: unboundValues || {},
           })
 
           return {
@@ -107,7 +102,15 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [resolveDesignValue, definedComponent, node.data.props, dataSource, locale, unboundValues])
+  }, [
+    resolveDesignValue,
+    definedComponent,
+    node.data.props,
+    dataSource,
+    locale,
+    unboundValues,
+    areEntitiesFetched,
+  ])
 
   if (!definedComponent) {
     return null
@@ -121,13 +124,14 @@ export const VisualEditorBlock = ({
       return (
         <VisualEditorBlock
           node={childNode}
-          parentNode={parentNode}
           key={childNode.data.id}
           locale={locale}
           dataSource={dataSource}
           unboundValues={unboundValues}
           selectedNodeId={selectedNodeId}
           resolveDesignValue={resolveDesignValue}
+          entityStore={entityStore}
+          areEntitiesFetched={areEntitiesFetched}
         />
       )
     })
@@ -145,7 +149,6 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        parentNode={parentNode}
         {...(props as unknown as StyleProps)}>
         {children}
       </ContentfulSection>

@@ -4,16 +4,18 @@ import {
   CompositionComponentNode,
   StyleProps,
   LocalizedUnboundValues,
+  CompositionDataSource,
+  CompositionUnboundValues,
 } from './types'
 
 export const getDataFromTree = (
   tree: CompositionTree
 ): {
-  dataSource: LocalizedDataSource
-  unboundValues: LocalizedUnboundValues
+  dataSource: CompositionDataSource
+  unboundValues: CompositionUnboundValues
 } => {
-  const dataSource: LocalizedDataSource = {}
-  const unboundValues: LocalizedUnboundValues = {}
+  let dataSource: CompositionDataSource = {}
+  let unboundValues: CompositionUnboundValues = {}
   const queue = [...tree.root.children]
 
   while (queue.length) {
@@ -22,27 +24,8 @@ export const getDataFromTree = (
       continue
     }
 
-    for (const [locale, data] of Object.entries(node.data.dataSource)) {
-      if (!dataSource[locale]) {
-        dataSource[locale] = { ...data }
-      }
-
-      dataSource[locale] = {
-        ...dataSource[locale],
-        ...data,
-      }
-    }
-
-    for (const [locale, data] of Object.entries(node.data.unboundValues)) {
-      if (!unboundValues[locale]) {
-        unboundValues[locale] = { ...data }
-      }
-
-      unboundValues[locale] = {
-        ...unboundValues[locale],
-        ...data,
-      }
-    }
+    dataSource = { ...dataSource, ...node.data.dataSource }
+    unboundValues = { ...unboundValues, ...node.data.unboundValues }
 
     if (node.children.length) {
       queue.push(...node.children)
