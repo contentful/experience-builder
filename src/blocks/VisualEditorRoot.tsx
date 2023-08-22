@@ -19,7 +19,7 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
 
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
   const { resolveDesignValue } = useBreakpoints(breakpoints)
-  useHoverIndicator()
+  useHoverIndicator(isDragging)
   const [areEntitiesFetched, setEntitiesFetched] = React.useState(false)
 
   const entityStore = useRef(
