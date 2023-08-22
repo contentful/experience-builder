@@ -2,7 +2,7 @@
 
 #ContentfulSection.defaultStyles {
   overflow: scroll;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
   justify-content: safe center;
   position: relative;

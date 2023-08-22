@@ -15,6 +15,7 @@ describe('ComponentDefinitions', () => {
     result.current.defineComponent(TestComponent, {
       id: definitionId,
       name: 'TestComponent',
+      builtInStyles: [],
       variables: {
         // name: {
         //   type: 'Link',
@@ -51,5 +52,55 @@ describe('ComponentDefinitions', () => {
     for (const variable of Object.values(definition!.componentDefinition.variables)) {
       expect(variable.group).toBe('content')
     }
+  })
+
+  it('should add default built-in style variables', () => {
+    const { result } = renderHook(() => useComponents())
+
+    const definitionId = 'TestComponent-1'
+
+    result.current.defineComponent(TestComponent, {
+      id: definitionId,
+      name: 'TestComponent',
+      variables: {
+        isChecked: {
+          type: 'Boolean',
+        },
+      },
+    })
+
+    const definition = result.current.getComponent(definitionId)
+    expect(definition).toBeDefined()
+
+    const variableKeys = Object.keys(definition!.componentDefinition.variables)
+    expect(variableKeys).toContain('cfMargin')
+    expect(variableKeys).toContain('cfWidth')
+    expect(variableKeys).toContain('cfHeight')
+    expect(variableKeys).toContain('cfMaxWidth')
+  })
+
+  it('should add specified built-in style variables', () => {
+    const { result } = renderHook(() => useComponents())
+
+    const definitionId = 'TestComponent-2'
+
+    result.current.defineComponent(TestComponent, {
+      id: definitionId,
+      name: 'TestComponent',
+      builtInStyles: ['cfPadding', 'cfBorder'],
+      variables: {
+        isChecked: {
+          type: 'Boolean',
+        },
+      },
+    })
+
+    const definition = result.current.getComponent(definitionId)
+    expect(definition).toBeDefined()
+
+    const variableKeys = Object.keys(definition!.componentDefinition.variables)
+    expect(variableKeys).toContain('cfPadding')
+    expect(variableKeys).toContain('cfBorder')
+    expect(variableKeys).not.toContain('cfMargin')
   })
 })

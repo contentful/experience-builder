@@ -11,10 +11,13 @@ import React, { useMemo } from 'react'
 import { useComponents } from '../hooks'
 import { UnresolvedLink } from 'contentful'
 import { EntityStore } from '../core/EntityStore'
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { transformContentValue } from './transformers'
+import { buildCfStyles } from '../core/stylesUtils'
+import { useStyleTag } from '../hooks/useStyleTag'
+import omit from 'lodash.omit'
 
 type CompositionBlockProps = {
   node: CompositionNode
@@ -74,6 +77,9 @@ export const CompositionBlock = ({
     }, propMap)
   }, [definedComponent, node.variables, resolveDesignValue, dataSource, entityStore, unboundValues])
 
+  const cfStyles = buildCfStyles(props)
+  const { className } = useStyleTag({ styles: cfStyles })
+
   if (!definedComponent) {
     return null
   }
@@ -97,11 +103,19 @@ export const CompositionBlock = ({
 
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
-      <ContentfulSection editorMode={false} {...(props as unknown as StyleProps)}>
+      <ContentfulSection
+        editorMode={false}
+        cfStyles={cfStyles}
+        {...(omit(props, CF_STYLE_ATTRIBUTES) as unknown as StyleProps)}
+        className={className}>
         {children}
       </ContentfulSection>
     )
   }
 
-  return React.createElement(component, props, children)
+  return React.createElement(
+    component,
+    { ...omit(props, CF_STYLE_ATTRIBUTES), className },
+    children
+  )
 }

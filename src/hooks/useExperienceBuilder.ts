@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import {
-  LocalizedDataSource,
   IncomingExperienceBuilderEvent,
   OutgoingExperienceBuilderEvent,
   Experience,
   CompositionTree,
   CompositionMode,
-  LocalizedUnboundValues,
   ScrollStates,
   CompositionDataSource,
   CompositionUnboundValues,

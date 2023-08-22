@@ -6,7 +6,7 @@ import {
 } from '../types'
 import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types'
 
-export const transformFill = (value: string) => (value === 'fill' ? '100%' : value)
+export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value)
 export const transformBorderStyle = (value?: string): CSSProperties => {
   if (!value) return {}
   const parts = value.split(' ')
@@ -22,34 +22,34 @@ export const transformBorderStyle = (value?: string): CSSProperties => {
 }
 
 export const transformAlignment = (
-  cfHorizontalAlignment: string,
-  cfVerticalAlignment: string,
+  cfHorizontalAlignment?: string,
+  cfVerticalAlignment?: string,
   cfFlexDirection = 'row'
 ): CSSProperties =>
   cfFlexDirection === 'row'
     ? {
-        alignItems: `${cfHorizontalAlignment}`,
-        justifyContent: `safe ${cfVerticalAlignment}`,
+        alignItems: cfHorizontalAlignment,
+        justifyContent: cfVerticalAlignment,
       }
     : {
-        alignItems: `${cfVerticalAlignment}`,
-        justifyContent: `safe ${cfHorizontalAlignment}`,
+        alignItems: cfVerticalAlignment,
+        justifyContent: cfHorizontalAlignment,
       }
 
 interface CSSPropertiesForBackground extends CSSProperties {
   backgroundImage: string
   backgroundRepeat: 'repeat' | 'no-repeat'
-  backgroundPosition: 'left' | 'right' | 'top' | 'bottom'
+  backgroundPosition?: 'left' | 'right' | 'top' | 'bottom'
   backgroundSize?: 'cover' | 'contain'
 }
 
 export const transformBackgroundImage = (
   cfBackgroundImageUrl: string | null | undefined,
-  cfBackgroundImageScaling: StyleProps['cfBackgroundImageScaling'],
-  cfBackgroundImageAlignment: StyleProps['cfBackgroundImageAlignment']
+  cfBackgroundImageScaling?: StyleProps['cfBackgroundImageScaling'],
+  cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment']
 ): CSSPropertiesForBackground | undefined => {
   const matchBackgroundSize = (
-    backgroundImageScaling: StyleProps['cfBackgroundImageScaling']
+    backgroundImageScaling?: StyleProps['cfBackgroundImageScaling']
   ): 'cover' | 'contain' | undefined => {
     if ('fill' === backgroundImageScaling) return 'cover'
     if ('fit' === backgroundImageScaling) return 'contain'

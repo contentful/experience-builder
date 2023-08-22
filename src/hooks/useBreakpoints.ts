@@ -61,7 +61,7 @@ export const getValueForBreakpoint = (
     }
     return valuesByBreakpoint[fallbackBreakpointId]
   } else {
-    console.warn('Facing a non-object value for a design value', valuesByBreakpoint)
+    //console.warn('Facing a non-object value for a design value', valuesByBreakpoint)
     return valuesByBreakpoint
   }
 }

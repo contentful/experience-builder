@@ -10,7 +10,7 @@ import {
 } from '../types'
 
 import { useComponents } from '../hooks'
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
 import { getUnboundValues } from '../core/getUnboundValues'
@@ -19,6 +19,10 @@ import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
 import { transformContentValue } from './transformers'
+
+import { useStyleTag } from '../hooks/useStyleTag'
+import { buildCfStyles } from '../core/stylesUtils'
+import omit from 'lodash.omit'
 
 type PropsType =
   | StyleProps
@@ -111,6 +115,9 @@ export const VisualEditorBlock = ({
     unboundValues,
   ])
 
+  const cfStyles = buildCfStyles(props)
+  const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id })
+
   if (!definedComponent) {
     return null
   }
@@ -139,6 +146,7 @@ export const VisualEditorBlock = ({
   if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
     return (
       <ContentfulSection
+        className={className}
         editorMode={true}
         key={node.data.id}
         node={node}
@@ -149,7 +157,8 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        {...(props as unknown as StyleProps)}>
+        cfStyles={cfStyles}
+        {...(omit(props, CF_STYLE_ATTRIBUTES) as unknown as StyleProps)}>
         {children}
       </ContentfulSection>
     )
@@ -173,7 +182,8 @@ export const VisualEditorBlock = ({
       'data-cf-node-id': node.data.id,
       'data-cf-node-block-id': node.data.blockId,
       'data-cf-node-block-type': node.type,
-      ...props,
+      className,
+      ...omit(props, CF_STYLE_ATTRIBUTES),
     },
     children
   )
