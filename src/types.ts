@@ -257,7 +257,7 @@ export type Breakpoint = {
   previewSize: string
 }
 
-export type SCHEMA_VERSIONS = '2023-06-27' | '2023-07-26' // | '2024-06-27' | ...
+export type SchemaVersions = '2023-06-27' | '2023-07-26' | '2023-08-23'
 
 export type Composition = {
   title: string
@@ -265,7 +265,7 @@ export type Composition = {
   componentTree: {
     breakpoints: Array<Breakpoint>
     children: Array<CompositionNode>
-    schemaVersion: SCHEMA_VERSIONS
+    schemaVersion: SchemaVersions
   }
   dataSource: CompositionDataSource
   unboundValues: CompositionUnboundValues
