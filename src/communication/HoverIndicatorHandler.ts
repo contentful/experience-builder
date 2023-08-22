@@ -7,73 +7,75 @@ import {
 import { sendMessage } from './sendMessage'
 
 export class HoverIndicatorHandler {
-	private elementRectCache: Record<string, Coordinates>;
-	private elementOffsetCache: Record<string, RawCoordinates>
+  private elementRectCache: Record<string, Coordinates>
+  private elementOffsetCache: Record<string, RawCoordinates>
 
   constructor() {
-		this.elementRectCache = {}
-		this.elementOffsetCache = {}
+    this.elementRectCache = {}
+    this.elementOffsetCache = {}
   }
 
   private getFullCoordinates = (element: HTMLElement) => {
-		const parentId = (element as HTMLElement).dataset.cfNodeId || element.id
+    const parentId = (element as HTMLElement).dataset.cfNodeId || element.id
 
-		const elementOffset = {
-			left: element.offsetLeft,
-			top: element.offsetTop,
-			width: element.offsetWidth,
-			height: element.offsetHeight
-		}
+    const elementOffset = {
+      left: element.offsetLeft,
+      top: element.offsetTop,
+      width: element.offsetWidth,
+      height: element.offsetHeight,
+    }
 
-		const currentElementOffsetCache = this.elementOffsetCache[parentId]
+    const currentElementOffsetCache = this.elementOffsetCache[parentId]
 
-		const isSameOffset = currentElementOffsetCache && (
-			currentElementOffsetCache.height === elementOffset.height
-			&& currentElementOffsetCache.left === elementOffset.left
-			&& currentElementOffsetCache.top === elementOffset.top
-			&& currentElementOffsetCache.width === elementOffset.width
-		)
-		const isSameChildrenLength = this.elementRectCache[parentId] && element.children?.length === this.elementRectCache[parentId].childrenCoordinates?.length
+    const isSameOffset =
+      currentElementOffsetCache &&
+      currentElementOffsetCache.height === elementOffset.height &&
+      currentElementOffsetCache.left === elementOffset.left &&
+      currentElementOffsetCache.top === elementOffset.top &&
+      currentElementOffsetCache.width === elementOffset.width
+    const isSameChildrenLength =
+      this.elementRectCache[parentId] &&
+      element.children?.length === this.elementRectCache[parentId].childrenCoordinates?.length
 
-		if(this.elementOffsetCache[parentId] && isSameOffset && isSameChildrenLength){
-			return this.elementRectCache[parentId]
-		}
+    if (this.elementOffsetCache[parentId] && isSameOffset && isSameChildrenLength) {
+      return this.elementRectCache[parentId]
+    }
 
-		const { left, top, width, height } = element.getBoundingClientRect();
-	
-		const childrenCoordinates = Array.from(element.children)
-		.filter((child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block')
-		.map((child) => {
-			const childId = (child as HTMLElement).dataset.cfNodeId || child.id
-			const { left, top, width, height } = child.getBoundingClientRect();
+    const { left, top, width, height } = element.getBoundingClientRect()
 
-			const childOffset = {
-				left: (child as HTMLElement).offsetLeft,
-				top: (child as HTMLElement).offsetTop,
-				width: (child as HTMLElement).offsetWidth,
-				height: (child as HTMLElement).offsetHeight
-			}
-			
-			this.elementRectCache[childId] = { left, top, width, height, childrenCoordinates: [] } 
-			this.elementOffsetCache[childId] = childOffset
+    const childrenCoordinates = Array.from(element.children)
+      .filter((child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block')
+      .map((child) => {
+        const childId = (child as HTMLElement).dataset.cfNodeId || child.id
+        const { left, top, width, height } = child.getBoundingClientRect()
 
-			return { left, top, width, height };
-		})
+        const childOffset = {
+          left: (child as HTMLElement).offsetLeft,
+          top: (child as HTMLElement).offsetTop,
+          width: (child as HTMLElement).offsetWidth,
+          height: (child as HTMLElement).offsetHeight,
+        }
 
-		this.elementOffsetCache[parentId] = elementOffset
-		this.elementRectCache[parentId] = {
-			left,
-			top,
-			width,
-			height,
-			childrenCoordinates
-		}
+        this.elementRectCache[childId] = { left, top, width, height, childrenCoordinates: [] }
+        this.elementOffsetCache[childId] = childOffset
 
-		return {
+        return { left, top, width, height }
+      })
+
+    this.elementOffsetCache[parentId] = elementOffset
+    this.elementRectCache[parentId] = {
       left,
-			top,
-			width,
-			height,
+      top,
+      width,
+      height,
+      childrenCoordinates,
+    }
+
+    return {
+      left,
+      top,
+      width,
+      height,
       childrenCoordinates,
     }
   }
@@ -175,19 +177,19 @@ export class HoverIndicatorHandler {
     this.handleMouseMove(target, x, y)
   }
 
-	resetCache = () => {
-		this.elementRectCache = {}
-		this.elementOffsetCache = {}
-	}
+  resetCache = () => {
+    this.elementRectCache = {}
+    this.elementOffsetCache = {}
+  }
 
   attachEvent(): void {
     document.addEventListener('mousemove', this.onMouseMove)
-		document.addEventListener('scroll', this.resetCache)
+    document.addEventListener('scroll', this.resetCache)
   }
 
   detachEvent(): void {
     document.removeEventListener('mousemove', this.onMouseMove)
-		document.removeEventListener('scroll', this.resetCache)
-		this.resetCache();
+    document.removeEventListener('scroll', this.resetCache)
+    this.resetCache()
   }
 }
