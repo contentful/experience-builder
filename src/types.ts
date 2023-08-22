@@ -207,23 +207,30 @@ export type Experience = {
   breakpoints: Breakpoint[]
 }
 
+/**
+ * Internally defined style variables are prefix with `cf` to avoid
+ * collisions with user defined variables.
+ */
 export type StyleProps = {
-  horizontalAlignment: 'start' | 'end' | 'center'
-  verticalAlignment: 'start' | 'end' | 'center'
-  margin: string
-  padding: string
-  backgroundColor: string
-  width: string
-  maxWidth: string
-  height: string
-  flexDirection: 'row' | 'column'
-  flexWrap: 'nowrap' | 'wrap'
-  border: string
-  gap: string
-  backgroundImageUrl: string
-  backgroundImageScaling: 'fit' | 'fill' | 'tile'
-  backgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
+  cfHorizontalAlignment: 'start' | 'end' | 'center'
+  cfVerticalAlignment: 'start' | 'end' | 'center'
+  cfMargin: string
+  cfPadding: string
+  cfBackgroundColor: string
+  cfWidth: string
+  cfMaxWidth: string
+  cfHeight: string
+  cfFlexDirection: 'row' | 'column'
+  cfFlexWrap: 'nowrap' | 'wrap'
+  cfBorder: string
+  cfGap: string
+  cfBackgroundImageUrl: string
+  cfBackgroundImageScaling: 'fit' | 'fill' | 'tile'
+  cfBackgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
 }
+
+// We might need to replace this with Record<string, string | number> when we want to be React-agnostic
+export type CSSProperties = React.CSSProperties
 
 export type SectionStyleVariableName = keyof StyleProps
 

@@ -16,7 +16,7 @@ export const useContentfulSection = () => {
   const { defineComponent } = useComponents()
 
   const variables: Record<SectionStyleVariableName, ComponentDefinitionVariable<'Text'>> = {
-    verticalAlignment: {
+    cfVerticalAlignment: {
       validations: {
         in: [
           {
@@ -39,7 +39,7 @@ export const useContentfulSection = () => {
       defaultValue: 'center',
       displayName: 'Vertical alignment',
     },
-    horizontalAlignment: {
+    cfHorizontalAlignment: {
       validations: {
         in: [
           {
@@ -62,84 +62,82 @@ export const useContentfulSection = () => {
       defaultValue: 'center',
       displayName: 'Horizontal alignment',
     },
-    margin: {
+    cfMargin: {
       displayName: 'Margin',
       type: 'Text',
       group: 'style',
       description: 'The margin of the section',
       defaultValue: 0,
     },
-    padding: {
+    cfPadding: {
       displayName: 'Padding',
       type: 'Text',
       group: 'style',
       description: 'The padding of the section',
       defaultValue: 0,
     },
-    backgroundColor: {
+    cfBackgroundColor: {
       displayName: 'Background',
       type: 'Text',
       group: 'style',
       description: 'The background color of the section',
       defaultValue: 'rgba(255, 255, 255, 1)',
     },
-    width: {
+    cfWidth: {
       displayName: 'Width',
       type: 'Text',
       group: 'style',
       description: 'The width of the section',
       defaultValue: 'fill',
     },
-    height: {
+    cfHeight: {
       displayName: 'Height',
       type: 'Text',
       group: 'style',
       description: 'The height of the section',
       defaultValue: 'fill',
     },
-    maxWidth: {
+    cfMaxWidth: {
       displayName: 'Max Width',
       type: 'Text',
       group: 'style',
       description: 'The max-width of the section',
       defaultValue: 'fill',
     },
-    flexDirection: {
+    cfFlexDirection: {
       displayName: 'Direction',
       type: 'Text',
       group: 'style',
       description: 'The orientation of the section',
       defaultValue: 'row',
     },
-    flexWrap: {
+    cfFlexWrap: {
       displayName: 'Wrap objects',
       type: 'Text',
       group: 'style',
       description: 'Wrap objects',
       defaultValue: 'nowrap',
     },
-    border: {
+    cfBorder: {
       displayName: 'Border',
       type: 'Text',
       group: 'style',
       description: 'The border of the section',
       defaultValue: '0',
     },
-    gap: {
+    cfGap: {
       displayName: 'Gap',
       type: 'Text',
       group: 'style',
       description: 'The spacing between the elements of the section',
       defaultValue: '0px',
     },
-
-    backgroundImageUrl: {
+    cfBackgroundImageUrl: {
       displayName: 'Background Image',
       type: 'Text',
       description: 'Background image for section or container',
     },
-
-    backgroundImageScaling: {
+    cfBackgroundImageScaling: {
       displayName: 'Image Scaling',
       type: 'Text',
       group: 'style',
@@ -162,7 +160,7 @@ export const useContentfulSection = () => {
         ],
       },
     },
-    backgroundImageAlignment: {
+    cfBackgroundImageAlignment: {
       displayName: 'Alignment',
       type: 'Text',
       group: 'style',
@@ -209,5 +207,6 @@ export const useContentfulSection = () => {
   useEffect(() => {
     defineComponent(ContentfulSection, sectionDefinition)
     defineComponent(ContentfulSection, containerDefinition)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }
