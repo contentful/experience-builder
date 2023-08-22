@@ -9,13 +9,13 @@ import { useEffect } from 'react'
 import {
   ComponentDefinitionVariable,
   ContentfulSectionType,
-  SECTION_STYLE_ATTRIBUTE_KEY,
+  SectionStyleVariableName,
 } from '../types'
 
 export const useContentfulSection = () => {
   const { defineComponent } = useComponents()
 
-  const variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>> = {
+  const variables: Record<SectionStyleVariableName, ComponentDefinitionVariable<'Text'>> = {
     verticalAlignment: {
       validations: {
         in: [
