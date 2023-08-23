@@ -11,7 +11,7 @@ import {
 import './ContentfulSection.css'
 
 import classNames from 'classnames'
-import { ContentfulSectionHyperLink } from './ContentfulSectionHyperLink'
+import { ContentfulSectionHyperlinkWrapper } from './ContentfulSectionHyperlinkWrapper'
 import { Flex } from '../core'
 
 type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
@@ -46,13 +46,13 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     backgroundImageUrl,
     backgroundImageAlignment,
     backgroundImageScaling,
-    hyperlink,
-    openInNewTab,
+    cfHyperlink,
+    cfOpenInNewTab,
     className,
     children,
   } = props
 
-  const styleOverrides: Omit<Partial<StyleProps>, 'openInNewTab' | 'hyperlink'> = {
+  const styleOverrides: Omit<Partial<StyleProps>, 'cfOpenInNewTab' | 'cfHyperlink'> = {
     margin,
     padding,
     backgroundColor,
@@ -71,17 +71,17 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     ),
   }
 
-  let childrenHyperLinkWrapper = children
+  let childrenHyperlinkWrapper = children
 
   // If hyperlink for ContentfulSection is bounded
-  if (hyperlink) {
-    childrenHyperLinkWrapper = (
-      <ContentfulSectionHyperLink
-        isEditorMode={props.editorMode === true}
-        hyperlink={hyperlink}
-        openInNewTab={openInNewTab}>
+  if (cfHyperlink) {
+    childrenHyperlinkWrapper = (
+      <ContentfulSectionHyperlinkWrapper
+        editorMode={props.editorMode === true}
+        cfHyperlink={cfHyperlink}
+        cfOpenInNewTab={cfOpenInNewTab}>
         {children}
-      </ContentfulSectionHyperLink>
+      </ContentfulSectionHyperlinkWrapper>
     )
   }
 
@@ -91,7 +91,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         cssStyles={styleOverrides}
         id="ContentfulSection"
         className={classNames('defaultStyles', className)}>
-        {childrenHyperLinkWrapper}
+        {childrenHyperlinkWrapper}
       </Flex>
     )
   }
@@ -110,7 +110,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         empty: !children || (Array.isArray(children) && children.length === 0),
       })}
       onMouseDown={onMouseDown}>
-      {childrenHyperLinkWrapper}
+      {childrenHyperlinkWrapper}
     </Flex>
   )
 }

@@ -193,7 +193,7 @@ export const useContentfulSection = () => {
         ],
       },
     },
-    hyperlink: {
+    cfHyperlink: {
       displayName: 'Hyperlink',
       type: 'Text',
       defaultValue: '',
@@ -202,8 +202,8 @@ export const useContentfulSection = () => {
       },
       description: 'hyperlink for section or container',
     },
-    openInNewTab: {
-      displayName: 'Open in new tab',
+    cfOpenInNewTab: {
+      displayName: 'Hyperlink behaviour',
       type: 'Boolean',
       defaultValue: false,
       description: 'To open hyperlink in new Tab or not',

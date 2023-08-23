@@ -56,13 +56,7 @@ export type ComponentDefinitionVariableType =
 // | 'Array'
 // export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
 
-export enum VariableFormats {
-  URL = 'URL',
-  // alphaNum
-  // base64
-  // email
-  // ip address
-}
+export type VariableFormats = 'URL' // | alphaNum | base64 | email | ipAddress
 
 export type ValidationOption<T extends ComponentDefinitionVariableType> = {
   value: T extends 'Text' ? string : T extends 'Number' ? number : never
@@ -229,8 +223,8 @@ export interface StyleProps {
   border: string
   gap: string
   backgroundImageUrl: string
-  hyperlink: string
-  openInNewTab: boolean
+  cfHyperlink: string
+  cfOpenInNewTab: boolean
   backgroundImageScaling: 'fit' | 'fill' | 'tile'
   backgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
 }
@@ -251,8 +245,8 @@ export type SECTION_STYLE_ATTRIBUTE_KEY =
   | 'backgroundImageUrl'
   | 'backgroundImageScaling'
   | 'backgroundImageAlignment'
-  | 'hyperlink'
-  | 'openInNewTab'
+  | 'cfHyperlink'
+  | 'cfOpenInNewTab'
 
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID

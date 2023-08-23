@@ -1,17 +1,19 @@
 import React from 'react'
 
-type ContentfulSectionHyperLinkProps = {
-  hyperlink: string
-  openInNewTab: boolean
-  isEditorMode: boolean
+type ContentfulSectionHyperlinkWrapperProps = {
+  cfHyperlink: string
+  cfOpenInNewTab: boolean
+  editorMode: boolean
   children: React.ReactNode
 }
 
-export const ContentfulSectionHyperLink = (props: ContentfulSectionHyperLinkProps) => {
-  const { hyperlink, openInNewTab, children, isEditorMode } = props
+export const ContentfulSectionHyperlinkWrapper = (
+  props: ContentfulSectionHyperlinkWrapperProps
+) => {
+  const { cfHyperlink, cfOpenInNewTab, children, editorMode } = props
 
   let anchorTagProps = {}
-  if (openInNewTab) {
+  if (cfOpenInNewTab) {
     anchorTagProps = {
       target: '_blank',
       rel: 'noopener noreferrer',
@@ -19,7 +21,7 @@ export const ContentfulSectionHyperLink = (props: ContentfulSectionHyperLinkProp
   }
 
   const stopPropagationInEditorMode = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (isEditorMode === false) {
+    if (editorMode === false) {
       return
     }
     e.stopPropagation()
@@ -28,7 +30,7 @@ export const ContentfulSectionHyperLink = (props: ContentfulSectionHyperLinkProp
 
   return (
     <a
-      href={hyperlink}
+      href={cfHyperlink}
       {...anchorTagProps}
       style={{ width: '100%', height: '100%' }}
       onClick={stopPropagationInEditorMode}>
