@@ -198,7 +198,7 @@ export const useContentfulSection = () => {
       type: 'Text',
       defaultValue: '',
       validations: {
-        format: VariableFormats.URL,
+        format: 'URL',
       },
       description: 'hyperlink for section or container',
     },
