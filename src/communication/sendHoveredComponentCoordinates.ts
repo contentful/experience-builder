@@ -7,8 +7,8 @@ import { OutgoingExperienceBuilderEvent } from '../types'
  * and sends the DOM Rect to the client app
  */
 export const sendHoveredComponentCoordinates = (instanceId?: string) => {
-  const selectedElement = instanceId
-    ? document.querySelector(`[data-cf-node-id="${instanceId}"]`)
+  const selectedElement: HTMLElement | null | undefined = instanceId
+    ? (document.querySelector(`[data-cf-node-id="${instanceId}"]`) as HTMLElement)
     : undefined
 
   // Finds the first parent that is a VisualEditorBlock
@@ -20,8 +20,17 @@ export const sendHoveredComponentCoordinates = (instanceId?: string) => {
     parent = parent?.parentElement
   }
 
+  const componentData = selectedElement?.dataset
+
   if (selectedElement) {
     sendMessage(OutgoingExperienceBuilderEvent.UPDATE_HOVERED_COMPONENT_COORDINATES, {
+      component: componentData
+        ? {
+            nodeId: componentData.cfNodeId,
+            blockId: componentData.cfNodeBlockId,
+            blockType: componentData.cfNodeBlockType,
+          }
+        : null,
       hoveredNodeCoordinates: getElementCoordinates(selectedElement),
       parentCoordinates: parent ? getElementCoordinates(parent) : null,
     })
