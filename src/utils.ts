@@ -1,9 +1,7 @@
 import {
-  LocalizedDataSource,
   CompositionTree,
   CompositionComponentNode,
   StyleProps,
-  LocalizedUnboundValues,
   CompositionDataSource,
   CompositionUnboundValues,
 } from './types'
@@ -41,7 +39,7 @@ export const getDataFromTree = (
 type GetInsertionDataParams = {
   dropReceiverNode: CompositionComponentNode
   dropReceiverParentNode: CompositionComponentNode
-  flexDirection?: StyleProps['flexDirection']
+  flexDirection?: StyleProps['cfFlexDirection']
   isMouseAtTopBorder: boolean
   isMouseAtBottomBorder: boolean
   isMouseInLeftHalf: boolean

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react'
+import React, { CSSProperties, MouseEventHandler } from 'react'
 
 import { CompositionComponentNode, StyleProps } from '../types'
 import {
@@ -30,48 +30,48 @@ type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
 
 export const ContentfulSection = (props: ContentfulSectionProps) => {
   const {
-    horizontalAlignment,
-    verticalAlignment,
-    flexDirection,
-    flexWrap,
-    margin,
-    padding,
-    backgroundColor,
-    width,
-    height,
-    maxWidth,
-    border,
-    gap,
-    backgroundImageUrl,
-    backgroundImageAlignment,
-    backgroundImageScaling,
+    cfHorizontalAlignment,
+    cfVerticalAlignment,
+    cfFlexDirection,
+    cfFlexWrap,
+    cfMargin,
+    cfPadding,
+    cfBackgroundColor,
+    cfWidth,
+    cfHeight,
+    cfMaxWidth,
+    cfBorder,
+    cfGap,
+    cfBackgroundImageUrl,
+    cfBackgroundImageAlignment,
+    cfBackgroundImageScaling,
     className,
     children,
   } = props
 
-  const styleOverrides: Partial<StyleProps> = {
-    margin,
-    padding,
-    backgroundColor,
-    width: transformFill(width),
-    height: transformFill(height),
-    maxWidth,
-    ...transformBorderStyle(border),
-    gap,
-    ...transformAlignment(horizontalAlignment, verticalAlignment, flexDirection),
-    flexDirection,
-    flexWrap,
+  const styleOverrides: CSSProperties = {
+    margin: cfMargin,
+    padding: cfPadding,
+    backgroundColor: cfBackgroundColor,
+    width: transformFill(cfWidth),
+    height: transformFill(cfHeight),
+    maxWidth: cfMaxWidth,
+    ...transformBorderStyle(cfBorder),
+    gap: cfGap,
+    ...transformAlignment(cfHorizontalAlignment, cfVerticalAlignment, cfFlexDirection),
+    flexDirection: cfFlexDirection,
+    flexWrap: cfFlexWrap,
     ...transformBackgroundImage(
-      backgroundImageUrl,
-      backgroundImageScaling,
-      backgroundImageAlignment
+      cfBackgroundImageUrl,
+      cfBackgroundImageScaling,
+      cfBackgroundImageAlignment
     ),
   }
 
   if (props.editorMode === false) {
     return (
       <Flex
-        cssStyles={styleOverrides}
+        cssStyles={styleOverrides as Record<string, string>}
         id="ContentfulSection"
         className={classNames('defaultStyles', className)}>
         {children}
@@ -84,7 +84,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
 
   return (
     <Flex
-      cssStyles={styleOverrides}
+      cssStyles={styleOverrides as Record<string, string>}
       id="ContentfulSection"
       data-cf-node-id={node.data.id}
       data-cf-node-block-id={node.data.blockId}

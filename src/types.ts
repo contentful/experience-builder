@@ -207,45 +207,37 @@ export type Experience = {
   breakpoints: Breakpoint[]
 }
 
-export interface StyleProps {
-  horizontalAlignment: 'start' | 'end' | 'center'
-  verticalAlignment: 'start' | 'end' | 'center'
-  margin: string
-  padding: string
-  backgroundColor: string
-  width: string
-  maxWidth: string
-  height: string
-  flexDirection: 'row' | 'column'
-  flexWrap: 'nowrap' | 'wrap'
-  border: string
-  gap: string
-  backgroundImageUrl: string
-  backgroundImageScaling: 'fit' | 'fill' | 'tile'
-  backgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
+/**
+ * Internally defined style variables are prefix with `cf` to avoid
+ * collisions with user defined variables.
+ */
+export type StyleProps = {
+  cfHorizontalAlignment: 'start' | 'end' | 'center'
+  cfVerticalAlignment: 'start' | 'end' | 'center'
+  cfMargin: string
+  cfPadding: string
+  cfBackgroundColor: string
+  cfWidth: string
+  cfMaxWidth: string
+  cfHeight: string
+  cfFlexDirection: 'row' | 'column'
+  cfFlexWrap: 'nowrap' | 'wrap'
+  cfBorder: string
+  cfGap: string
+  cfBackgroundImageUrl: string
+  cfBackgroundImageScaling: 'fit' | 'fill' | 'tile'
+  cfBackgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
 }
 
-export type SECTION_STYLE_ATTRIBUTE_KEY =
-  | 'horizontalAlignment'
-  | 'verticalAlignment'
-  | 'margin'
-  | 'padding'
-  | 'backgroundColor'
-  | 'width'
-  | 'height'
-  | 'flexDirection'
-  | 'flexWrap'
-  | 'border'
-  | 'maxWidth'
-  | 'gap'
-  | 'backgroundImageUrl'
-  | 'backgroundImageScaling'
-  | 'backgroundImageAlignment'
+// We might need to replace this with Record<string, string | number> when we want to be React-agnostic
+export type CSSProperties = React.CSSProperties
+
+export type SectionStyleVariableName = keyof StyleProps
 
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID
   name: typeof CONTENTFUL_SECTION_NAME | typeof CONTENTFUL_CONTAINER_NAME
-  variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>>
+  variables: Record<SectionStyleVariableName, ComponentDefinitionVariable<'Text'>>
 }
 
 // cda types
@@ -265,7 +257,7 @@ export type Breakpoint = {
   previewSize: string
 }
 
-export type SCHEMA_VERSIONS = '2023-06-27' | '2023-07-26' // | '2024-06-27' | ...
+export type SchemaVersions = '2023-06-27' | '2023-07-26' | '2023-08-23'
 
 export type Composition = {
   title: string
@@ -273,7 +265,7 @@ export type Composition = {
   componentTree: {
     breakpoints: Array<Breakpoint>
     children: Array<CompositionNode>
-    schemaVersion: SCHEMA_VERSIONS
+    schemaVersion: SchemaVersions
   }
   dataSource: CompositionDataSource
   unboundValues: CompositionUnboundValues
