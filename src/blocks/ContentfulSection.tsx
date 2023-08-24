@@ -1,6 +1,6 @@
 import React, { CSSProperties, MouseEventHandler } from 'react'
 
-import { CompositionComponentNode, StyleProps, ContentProps } from '../types'
+import { CompositionComponentNode, StyleProps } from '../types'
 import {
   transformAlignment,
   transformBackgroundImage,
@@ -15,7 +15,6 @@ import { ContentfulSectionHyperlinkWrapper } from './ContentfulSectionHyperlinkW
 import { Flex } from '../core'
 
 type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
-  ContentProps &
   (EditorMode extends true
     ? {
         onMouseDown: MouseEventHandler<HTMLDivElement>

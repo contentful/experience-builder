@@ -230,9 +230,6 @@ export type StyleProps = {
   cfBackgroundImageUrl: string
   cfBackgroundImageScaling: 'fit' | 'fill' | 'tile'
   cfBackgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
-}
-
-export type ContentProps = {
   cfHyperlink: string
   cfOpenInNewTab: boolean
 }
@@ -240,7 +237,7 @@ export type ContentProps = {
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic
 export type CSSProperties = React.CSSProperties
 
-export type SectionStyleVariableName = keyof StyleProps & ContentProps
+export type SectionStyleVariableName = keyof StyleProps
 
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID
