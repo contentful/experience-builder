@@ -6,14 +6,16 @@ body {
   margin: 0;
 }
 
-#VisualEditorRoot.root {
-  height: 100%;
-  padding-bottom: 100px;
-  overflow: scroll;
+html {
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
 }
 
-#VisualEditorRoot.root::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+html::-webkit-scrollbar {
+  display: none;
+}
+
+#VisualEditorRoot.root {
+  height: 100%;
+  padding-bottom: 100px;
 }

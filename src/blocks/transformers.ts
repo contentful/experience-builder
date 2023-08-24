@@ -1,7 +1,7 @@
-import { StyleProps } from '../types'
+import { StyleProps, CSSProperties } from '../types'
 
 export const transformFill = (value: string) => (value === 'fill' ? '100%' : value)
-export const transformBorderStyle = (value?: string): Record<string, string> => {
+export const transformBorderStyle = (value?: string): CSSProperties => {
   if (!value) return {}
   const parts = value.split(' ')
   // Just accept the passed value
@@ -16,50 +16,48 @@ export const transformBorderStyle = (value?: string): Record<string, string> => 
 }
 
 export const transformAlignment = (
-  horizontalAlignment: string,
-  verticalAlignment: string,
-  flexDirection = 'row'
-) =>
-  flexDirection === 'row'
+  cfHorizontalAlignment: string,
+  cfVerticalAlignment: string,
+  cfFlexDirection = 'row'
+): CSSProperties =>
+  cfFlexDirection === 'row'
     ? {
-        alignItems: `${horizontalAlignment}`,
-        justifyContent: `safe ${verticalAlignment}`,
+        alignItems: `${cfHorizontalAlignment}`,
+        justifyContent: `safe ${cfVerticalAlignment}`,
       }
     : {
-        alignItems: `${verticalAlignment}`,
-        justifyContent: `safe ${horizontalAlignment}`,
+        alignItems: `${cfVerticalAlignment}`,
+        justifyContent: `safe ${cfHorizontalAlignment}`,
       }
 
-type CssPropertiesForBackground =
-  | {
-      backgroundImage: string
-      backgroundRepeat: 'repeat' | 'no-repeat'
-      backgroundPosition: 'left' | 'right' | 'top' | 'bottom'
-      backgroundSize?: 'cover' | 'contain'
-    }
-  | undefined
+interface CSSPropertiesForBackground extends CSSProperties {
+  backgroundImage: string
+  backgroundRepeat: 'repeat' | 'no-repeat'
+  backgroundPosition: 'left' | 'right' | 'top' | 'bottom'
+  backgroundSize?: 'cover' | 'contain'
+}
 
 export const transformBackgroundImage = (
-  backgroundImageUrl: string | null | undefined,
-  backgroundImageScaling: StyleProps['backgroundImageScaling'],
-  backgroundImageAlignment: StyleProps['backgroundImageAlignment']
-): CssPropertiesForBackground => {
+  cfBackgroundImageUrl: string | null | undefined,
+  cfBackgroundImageScaling: StyleProps['cfBackgroundImageScaling'],
+  cfBackgroundImageAlignment: StyleProps['cfBackgroundImageAlignment']
+): CSSPropertiesForBackground | undefined => {
   const matchBackgroundSize = (
-    backgroundImageScaling: StyleProps['backgroundImageScaling']
+    backgroundImageScaling: StyleProps['cfBackgroundImageScaling']
   ): 'cover' | 'contain' | undefined => {
     if ('fill' === backgroundImageScaling) return 'cover'
     if ('fit' === backgroundImageScaling) return 'contain'
     return undefined
   }
 
-  if (!backgroundImageUrl) {
+  if (!cfBackgroundImageUrl) {
     return undefined
   }
 
   return {
-    backgroundImage: `url(${backgroundImageUrl})`,
-    backgroundRepeat: backgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat',
-    backgroundPosition: backgroundImageAlignment,
-    backgroundSize: matchBackgroundSize(backgroundImageScaling),
+    backgroundImage: `url(${cfBackgroundImageUrl})`,
+    backgroundRepeat: cfBackgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat',
+    backgroundPosition: cfBackgroundImageAlignment,
+    backgroundSize: matchBackgroundSize(cfBackgroundImageScaling),
   }
 }
