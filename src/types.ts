@@ -242,7 +242,7 @@ export type SectionStyleVariableName = keyof StyleProps
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID
   name: typeof CONTENTFUL_SECTION_NAME | typeof CONTENTFUL_CONTAINER_NAME
-  variables: Record<SectionStyleVariableName, ComponentDefinitionVariable<'Text'>>
+  variables: Record<SectionStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 }
 
 // cda types
