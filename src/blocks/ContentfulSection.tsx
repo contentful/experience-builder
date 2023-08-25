@@ -11,6 +11,7 @@ import {
 import './ContentfulSection.css'
 
 import classNames from 'classnames'
+import { ContentfulSectionHyperlinkWrapper } from './ContentfulSectionHyperlinkWrapper'
 import { Flex } from '../core'
 
 type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
@@ -47,6 +48,8 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     cfBackgroundImageScaling,
     className,
     children,
+    cfHyperlink,
+    cfOpenInNewTab,
   } = props
 
   const styleOverrides: CSSProperties = {
@@ -68,13 +71,27 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     ),
   }
 
+  let childrenHyperlinkWrapper = children
+
+  // If hyperlink for ContentfulSection is bounded
+  if (cfHyperlink) {
+    childrenHyperlinkWrapper = (
+      <ContentfulSectionHyperlinkWrapper
+        editorMode={props.editorMode === true}
+        cfHyperlink={cfHyperlink}
+        cfOpenInNewTab={cfOpenInNewTab}>
+        {children}
+      </ContentfulSectionHyperlinkWrapper>
+    )
+  }
+
   if (props.editorMode === false) {
     return (
       <Flex
         cssStyles={styleOverrides as Record<string, string>}
         id="ContentfulSection"
         className={classNames('defaultStyles', className)}>
-        {children}
+        {childrenHyperlinkWrapper}
       </Flex>
     )
   }
@@ -93,7 +110,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
         empty: !children || (Array.isArray(children) && children.length === 0),
       })}
       onMouseDown={onMouseDown}>
-      {children}
+      {childrenHyperlinkWrapper}
     </Flex>
   )
 }

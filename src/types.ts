@@ -57,6 +57,8 @@ export type ComponentDefinitionVariableType =
 // | 'Array'
 // export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
 
+export type VariableFormats = 'URL' // | alphaNum | base64 | email | ipAddress
+
 export type ValidationOption<T extends ComponentDefinitionVariableType> = {
   value: T extends 'Text' ? string : T extends 'Number' ? number : never
   displayName?: string
@@ -65,6 +67,7 @@ export type ValidationOption<T extends ComponentDefinitionVariableType> = {
 export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionVariableType> = {
   required?: boolean
   in?: ValidationOption<T>[]
+  format?: VariableFormats
 }
 
 export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVariableType> {
@@ -227,6 +230,8 @@ export type StyleProps = {
   cfBackgroundImageUrl: string
   cfBackgroundImageScaling: 'fit' | 'fill' | 'tile'
   cfBackgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
+  cfHyperlink: string
+  cfOpenInNewTab: boolean
 }
 
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic
@@ -237,7 +242,7 @@ export type SectionStyleVariableName = keyof StyleProps
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID
   name: typeof CONTENTFUL_SECTION_NAME | typeof CONTENTFUL_CONTAINER_NAME
-  variables: Record<SectionStyleVariableName, ComponentDefinitionVariable<'Text'>>
+  variables: Record<SectionStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 }
 
 // cda types

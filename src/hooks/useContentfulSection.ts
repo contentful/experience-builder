@@ -15,7 +15,10 @@ import {
 export const useContentfulSection = () => {
   const { defineComponent } = useComponents()
 
-  const variables: Record<SectionStyleVariableName, ComponentDefinitionVariable<'Text'>> = {
+  const variables: Record<
+    SectionStyleVariableName,
+    ComponentDefinitionVariable<'Text' | 'Boolean'>
+  > = {
     cfVerticalAlignment: {
       validations: {
         in: [
@@ -186,6 +189,21 @@ export const useContentfulSection = () => {
           },
         ],
       },
+    },
+    cfHyperlink: {
+      displayName: 'Hyperlink',
+      type: 'Text',
+      defaultValue: '',
+      validations: {
+        format: 'URL',
+      },
+      description: 'hyperlink for section or container',
+    },
+    cfOpenInNewTab: {
+      displayName: 'Hyperlink behaviour',
+      type: 'Boolean',
+      defaultValue: false,
+      description: 'To open hyperlink in new Tab or not',
     },
   }
 

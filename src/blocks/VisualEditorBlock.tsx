@@ -140,6 +140,7 @@ export const VisualEditorBlock = ({
   if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
     return (
       <ContentfulSection
+        editorMode={true}
         key={node.data.id}
         node={node}
         onMouseDown={(e) => {
