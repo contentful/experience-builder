@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import contentful from 'contentful'
 import { Experience } from '../types'
 import { useCheckForExperienceConfig } from '../hooks/useCheckForExperienceConfig'
@@ -16,18 +16,21 @@ type DeliveryRootProps = {
 export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => {
   const { spaceId, environmentId, accessToken, locale, host } =
     useCheckForExperienceConfig(experience)
-  const { resolveDesignValue } = useBreakpoints(experience.breakpoints)
 
   if (!slug) {
     throw new Error('Preview and delivery mode requires a composition slug to be provided')
   }
 
-  const client = contentful.createClient({
-    space: spaceId as string,
-    environment: environmentId as string,
-    host: host,
-    accessToken: accessToken as string,
-  })
+  const client = useMemo(
+    () =>
+      contentful.createClient({
+        space: spaceId as string,
+        environment: environmentId as string,
+        host: host,
+        accessToken: accessToken as string,
+      }),
+    [spaceId, environmentId, host, accessToken]
+  )
 
   const {
     composition,
@@ -39,10 +42,13 @@ export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => 
     schemaVersion,
     breakpoints,
   } = useFetchComposition({
+    experienceTypeId: experience.experienceTypeId,
     client,
     slug: slug,
     locale: locale as string,
   })
+
+  const { resolveDesignValue } = useBreakpoints(breakpoints)
 
   if (!composition || isLoadingData) {
     return null

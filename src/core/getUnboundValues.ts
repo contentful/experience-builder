@@ -1,16 +1,16 @@
 import get from 'lodash.get'
-import { CompositionVariableValueType } from '../types'
+import { CompositionUnboundValues, CompositionVariableValueType } from '../types'
 
 export const getUnboundValues = ({
   key,
   fallback,
-  unboundValuesForCurrentLocale,
+  unboundValues,
 }: {
   key: string
   fallback: CompositionVariableValueType
-  unboundValuesForCurrentLocale: Record<string, { value: CompositionVariableValueType }>
+  unboundValues: CompositionUnboundValues
 }): CompositionVariableValueType => {
   const lodashPath = `${key}.value`
 
-  return get(unboundValuesForCurrentLocale, lodashPath, fallback) as CompositionVariableValueType
+  return get(unboundValues, lodashPath, fallback) as CompositionVariableValueType
 }

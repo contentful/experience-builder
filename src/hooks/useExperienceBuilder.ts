@@ -9,6 +9,8 @@ import {
   CompositionMode,
   LocalizedUnboundValues,
   ScrollStates,
+  CompositionDataSource,
+  CompositionUnboundValues,
 } from '../types'
 import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
@@ -17,6 +19,7 @@ import { sendSelectedComponentCoordinates } from '../communication/sendSelectedC
 import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
 
 interface UseExperienceBuilderProps {
+  experienceTypeId: string
   /** The mode is automatically set, use this value to manually override this **/
   initialMode?: CompositionMode
   /** Use CDA token for delivery mode and CPA for preview mode
@@ -37,6 +40,7 @@ interface UseExperienceBuilderProps {
 }
 
 export const useExperienceBuilder = ({
+  experienceTypeId,
   initialMode, // danv: do we need this? Is there a scenario when this will ever be set?
   accessToken,
   initialLocale,
@@ -45,8 +49,8 @@ export const useExperienceBuilder = ({
   host,
 }: UseExperienceBuilderProps) => {
   const [tree, setTree] = useState<CompositionTree>()
-  const [dataSource, setDataSource] = useState<LocalizedDataSource>({})
-  const [unboundValues, setUnboundValues] = useState<LocalizedUnboundValues>({})
+  const [dataSource, setDataSource] = useState<CompositionDataSource>({})
+  const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({})
   const [locale, setLocale] = useState<string | undefined>(initialLocale)
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
@@ -65,12 +69,8 @@ export const useExperienceBuilder = ({
   const defaultHost = mode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
 
   const reloadApp = () => {
+    // Triggers the host application to reload the iframe
     sendMessage(OutgoingExperienceBuilderEvent.CANVAS_RELOAD, {})
-    // Wait a moment to ensure that the message was sent
-    setTimeout(() => {
-      // Received a hot reload message from webpack dev server -> reload the canvas
-      window.location.reload()
-    }, 50)
   }
 
   useEffect(() => {
@@ -193,6 +193,7 @@ export const useExperienceBuilder = ({
 
   const experience: Experience = useMemo(
     () => ({
+      experienceTypeId,
       tree,
       dataSource,
       unboundValues,
@@ -215,6 +216,7 @@ export const useExperienceBuilder = ({
       host,
       defaultHost,
       mode,
+      experienceTypeId,
     ]
   )
 

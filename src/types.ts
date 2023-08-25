@@ -54,9 +54,12 @@ export type ComponentDefinitionVariableType =
   | 'Date'
   | 'Boolean'
   | 'Location'
+  | 'Object'
 // | 'Link'
 // | 'Array'
 // export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
+
+export type VariableFormats = 'URL' // | alphaNum | base64 | email | ipAddress
 
 export type ValidationOption<T extends ComponentDefinitionVariableType> = {
   value: T extends 'Text' ? string : T extends 'Number' ? number : never
@@ -66,6 +69,7 @@ export type ValidationOption<T extends ComponentDefinitionVariableType> = {
 export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionVariableType> = {
   required?: boolean
   in?: ValidationOption<T>[]
+  format?: VariableFormats
 }
 
 export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVariableType> {
@@ -140,10 +144,7 @@ export type ComponentBinding = Record<string, Binding>
 export type BindingMap = Record<string, ComponentBinding>
 export type BindingMapByBlockId = Record<string, BindingMap>
 
-export type DataSourceEntryValueType =
-  | Link<'Entry'>
-  | Link<'Asset'>
-  | { value: CompositionVariableValueType }
+export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>
 
 export type LocalizedUnboundValues = Record<
   string,
@@ -177,14 +178,8 @@ export type CompositionComponentNode = {
     id: string
     blockId?: string // will be undefined in case string node or if root component
     props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>
-    dataSource: Record<
-      string, // locale
-      Record<
-        string, // uuid
-        DataSourceEntryValueType
-      >
-    >
-    unboundValues: Record<string, Record<string, { value: CompositionVariableValueType }>>
+    dataSource: CompositionDataSource
+    unboundValues: CompositionUnboundValues
     breakpoints: Breakpoint[]
   }
   children: CompositionComponentNode[]
@@ -207,8 +202,9 @@ export type ExperienceConfig = {
 
 export type Experience = {
   tree?: CompositionTree
-  dataSource: LocalizedDataSource
-  unboundValues: LocalizedUnboundValues
+  experienceTypeId: string
+  dataSource: CompositionDataSource
+  unboundValues: CompositionUnboundValues
   config: ExperienceConfig
   isDragging: boolean
   selectedNodeId: string
@@ -216,45 +212,39 @@ export type Experience = {
   breakpoints: Breakpoint[]
 }
 
-export interface StyleProps {
-  horizontalAlignment: 'start' | 'end' | 'center'
-  verticalAlignment: 'start' | 'end' | 'center'
-  margin: string
-  padding: string
-  backgroundColor: string
-  width: string
-  maxWidth: string
-  height: string
-  flexDirection: 'row' | 'column'
-  flexWrap: 'nowrap' | 'wrap'
-  border: string
-  gap: string
-  backgroundImageUrl: string
-  backgroundImageScaling: 'fit' | 'fill' | 'tile'
-  backgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
+/**
+ * Internally defined style variables are prefix with `cf` to avoid
+ * collisions with user defined variables.
+ */
+export type StyleProps = {
+  cfHorizontalAlignment: 'start' | 'end' | 'center'
+  cfVerticalAlignment: 'start' | 'end' | 'center'
+  cfMargin: string
+  cfPadding: string
+  cfBackgroundColor: string
+  cfWidth: string
+  cfMaxWidth: string
+  cfHeight: string
+  cfFlexDirection: 'row' | 'column'
+  cfFlexWrap: 'nowrap' | 'wrap'
+  cfBorder: string
+  cfGap: string
+  cfBackgroundImageUrl: string
+  cfBackgroundImageScaling: 'fit' | 'fill' | 'tile'
+  cfBackgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
+  cfHyperlink: string
+  cfOpenInNewTab: boolean
 }
 
-export type SECTION_STYLE_ATTRIBUTE_KEY =
-  | 'horizontalAlignment'
-  | 'verticalAlignment'
-  | 'margin'
-  | 'padding'
-  | 'backgroundColor'
-  | 'width'
-  | 'height'
-  | 'flexDirection'
-  | 'flexWrap'
-  | 'border'
-  | 'maxWidth'
-  | 'gap'
-  | 'backgroundImageUrl'
-  | 'backgroundImageScaling'
-  | 'backgroundImageAlignment'
+// We might need to replace this with Record<string, string | number> when we want to be React-agnostic
+export type CSSProperties = React.CSSProperties
+
+export type SectionStyleVariableName = keyof StyleProps
 
 export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
   id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID
   name: typeof CONTENTFUL_SECTION_NAME | typeof CONTENTFUL_CONTAINER_NAME
-  variables: Record<SECTION_STYLE_ATTRIBUTE_KEY, ComponentDefinitionVariable<'Text'>>
+  variables: Record<SectionStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 }
 
 // cda types
@@ -274,7 +264,7 @@ export type Breakpoint = {
   previewSize: string
 }
 
-export type SCHEMA_VERSIONS = '2023-06-27' | '2023-07-26' // | '2024-06-27' | ...
+export type SchemaVersions = '2023-06-27' | '2023-07-26' | '2023-08-23'
 
 export type Composition = {
   title: string
@@ -282,7 +272,7 @@ export type Composition = {
   componentTree: {
     breakpoints: Array<Breakpoint>
     children: Array<CompositionNode>
-    schemaVersion: SCHEMA_VERSIONS
+    schemaVersion: SchemaVersions
   }
   dataSource: CompositionDataSource
   unboundValues: CompositionUnboundValues

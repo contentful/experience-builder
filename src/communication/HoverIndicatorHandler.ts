@@ -6,72 +6,91 @@ import {
 } from '../types'
 import { sendMessage } from './sendMessage'
 
-const CACHE_TTL = 2000
-
 export class HoverIndicatorHandler {
-  private domRectCache: Record<string, { data: RawCoordinates; at: number }>
-  private interval: ReturnType<typeof setInterval> | undefined
+  private elementRectCache: Record<string, Coordinates>
+  private elementOffsetCache: Record<string, RawCoordinates>
 
   constructor() {
-    this.domRectCache = {}
+    this.elementRectCache = {}
+    this.elementOffsetCache = {}
   }
 
-  private startInterval() {
-    if (this.interval) {
-      clearInterval(this.interval)
+  private getFullCoordinates = (element: HTMLElement) => {
+    const elementId = (element as HTMLElement).dataset.cfNodeId || element.id
+
+    const validChildren = Array.from(element.children).filter(
+      (child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block'
+    )
+
+    // We cache the element offset and instead of calling getBoundingClientRect function on every mouse move,
+    // we check if there's an offset change for the element which could arise from width change, adding margin/padding/border to the element etc..
+    // Basically if anything causes the offset of the element to change, we recalculate the bounding rect of the element and cache the result,
+    // else we return the cached rect for the element id.
+    // We also check if there was increase or decrease in the number of children. If there's a change in the number of children,
+    // we need to recalculate the children coordinates (and we throw in a calculation of the element rect as a bonus too).
+
+    const elementOffset = {
+      left: element.offsetLeft,
+      top: element.offsetTop,
+      width: element.offsetWidth,
+      height: element.offsetHeight,
     }
 
-    this.interval = setInterval(() => {
-      for (const key of Object.keys(this.domRectCache)) {
-        const value = this.domRectCache[key]
-        const isStale = !value || Date.now() - value.at >= CACHE_TTL
-        if (isStale) {
-          delete this.domRectCache[key]
-        }
-      }
-    }, 2500)
-  }
+    const currentElementOffsetCache = this.elementOffsetCache[elementId]
 
-  private getCoordinatesOfElement(element: HTMLElement | Element): RawCoordinates {
-    const id = (element as HTMLElement).dataset.cfNodeId || element.id
-    const key = `${id}-${window.scrollX}-${window.scrollY}`
+    const isSameOffset =
+      currentElementOffsetCache &&
+      currentElementOffsetCache.height === elementOffset.height &&
+      currentElementOffsetCache.left === elementOffset.left &&
+      currentElementOffsetCache.top === elementOffset.top &&
+      currentElementOffsetCache.width === elementOffset.width
 
-    let cachedEntry = this.domRectCache[key]
+    const isSameChildrenLength =
+      this.elementRectCache[elementId] &&
+      validChildren?.length === this.elementRectCache[elementId].childrenCoordinates?.length
 
-    const isStale = !cachedEntry || Date.now() - cachedEntry.at >= CACHE_TTL
-
-    if (!isStale) {
-      return cachedEntry.data
+    if (this.elementOffsetCache[elementId] && isSameOffset && isSameChildrenLength) {
+      return this.elementRectCache[elementId]
     }
 
     const { left, top, width, height } = element.getBoundingClientRect()
 
-    cachedEntry = {
-      data: {
-        left,
-        top,
-        width,
-        height,
-      },
-      at: Date.now(),
+    const childrenCoordinates = validChildren.map((child) => {
+      const childId = (child as HTMLElement).dataset.cfNodeId || child.id
+      const { left, top, width, height } = child.getBoundingClientRect()
+
+      // You know what they say: A child is their own person (nobody says this 😃)
+      // Because a child is an element of their own and can be hovered on, we don't waste this loop calculation.
+      // Hence, we store the rect calculation for the id.
+      // The benefit: E.g We have a card in a section. When we hover on the section first, we would also calculate the
+      // rect for the card in this loop and cache the result. So when you hover on the card,
+      // if it passes the offset cache + same children check in line 51, we just return the cached value.
+      // Saves us the need to call the getBoundingClientRect one more unnecessary time 😉.
+      this.elementRectCache[childId] = { left, top, width, height, childrenCoordinates: [] }
+      this.elementOffsetCache[childId] = {
+        left: (child as HTMLElement).offsetLeft,
+        top: (child as HTMLElement).offsetTop,
+        width: (child as HTMLElement).offsetWidth,
+        height: (child as HTMLElement).offsetHeight,
+      }
+
+      return { left, top, width, height }
+    })
+
+    this.elementOffsetCache[elementId] = elementOffset
+    this.elementRectCache[elementId] = {
+      left,
+      top,
+      width,
+      height,
+      childrenCoordinates,
     }
-
-    if (id) {
-      this.domRectCache[key] = cachedEntry
-    }
-
-    return cachedEntry.data
-  }
-
-  private getFullCoordinates = (element: HTMLElement) => {
-    const rawCoordinates = this.getCoordinatesOfElement(element)
-
-    const childrenCoordinates: RawCoordinates[] = Array.from(element.children)
-      .filter((child) => child.id !== 'SectionTooltip')
-      .map((child) => this.getCoordinatesOfElement(child))
 
     return {
-      ...rawCoordinates,
+      left,
+      top,
+      width,
+      height,
       childrenCoordinates,
     }
   }
@@ -173,14 +192,21 @@ export class HoverIndicatorHandler {
     this.handleMouseMove(target, x, y)
   }
 
+  resetCache = () => {
+    this.elementRectCache = {}
+    this.elementOffsetCache = {}
+  }
+
   attachEvent(): void {
     document.addEventListener('mousemove', this.onMouseMove)
-    this.startInterval()
+    // On scroll, we reset our cache because the elements rect change and we don't want mismatched lines on scroll.
+    // So we don't show any hover lines on scroll.
+    document.addEventListener('scroll', this.resetCache)
   }
 
   detachEvent(): void {
     document.removeEventListener('mousemove', this.onMouseMove)
-    this.domRectCache = {}
-    clearInterval(this.interval)
+    document.removeEventListener('scroll', this.resetCache)
+    this.resetCache()
   }
 }
