@@ -14,6 +14,8 @@ import classNames from 'classnames'
 import { ContentfulSectionHyperlinkWrapper } from './ContentfulSectionHyperlinkWrapper'
 import { Flex } from '../core'
 
+const DEFAULT_HEIGHT = '100%';
+
 type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
   (EditorMode extends true
     ? {
@@ -85,12 +87,17 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     )
   }
 
+  const hasNoChildren = !children || (Array.isArray(children) && children.length === 0);
+  const userDidNotOverrideHeight = styleOverrides.height === DEFAULT_HEIGHT;
+
   if (props.editorMode === false) {
     return (
       <Flex
         cssStyles={styleOverrides as Record<string, string>}
         id="ContentfulSection"
-        className={classNames('defaultStyles', className)}>
+        className={classNames('defaultStyles', className, {
+          empty: userDidNotOverrideHeight && hasNoChildren,
+        })}>
         {childrenHyperlinkWrapper}
       </Flex>
     )
@@ -107,7 +114,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
       data-cf-node-block-id={node.data.blockId}
       data-cf-node-block-type={node.type}
       className={classNames('defaultStyles', className, {
-        empty: !children || (Array.isArray(children) && children.length === 0),
+        empty: userDidNotOverrideHeight && hasNoChildren,
       })}
       onMouseDown={onMouseDown}>
       {childrenHyperlinkWrapper}
