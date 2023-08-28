@@ -14,7 +14,7 @@ import classNames from 'classnames'
 import { ContentfulSectionHyperlinkWrapper } from './ContentfulSectionHyperlinkWrapper'
 import { Flex } from '../core'
 
-const DEFAULT_HEIGHT = '100%';
+const DEFAULT_HEIGHT = '100%'
 
 type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
   (EditorMode extends true
@@ -87,8 +87,8 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     )
   }
 
-  const hasNoChildren = !children || (Array.isArray(children) && children.length === 0);
-  const userDidNotOverrideHeight = styleOverrides.height === DEFAULT_HEIGHT;
+  const hasNoChildren = !children || (Array.isArray(children) && children.length === 0)
+  const userDidNotOverrideHeight = styleOverrides.height === DEFAULT_HEIGHT
 
   if (props.editorMode === false) {
     return (
