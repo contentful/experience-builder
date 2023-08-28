@@ -110,7 +110,7 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
 //   : ComponentDefinitionVariableArrayOfPrimitives
 
 export type ComponentDefinitionVariable<
-  T extends ComponentDefinitionVariableType
+  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType
   // K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
 > =
   // T extends 'Link'
@@ -126,7 +126,7 @@ export type ComponentDefinition<
   name: string
   category?: string
   thumbnailUrl?: string
-  variables: Record<string, { type: T } & ComponentDefinitionVariable<T>>
+  variables: Record<string, ComponentDefinitionVariable<T>>
   children?: boolean
 }
 

@@ -39,6 +39,13 @@ export const useFetchComposition = ({
   const dataSource = composition?.dataSource ?? {}
   const unboundValues = composition?.unboundValues ?? {}
 
+  const handleError = (generalMessage: string, error: unknown) => {
+    const message = error instanceof Error ? error.message : `Unknown error: ${error}`
+    console.error(`${generalMessage} with error: ${message}`)
+    setError(message)
+    setIsLoading(false)
+  }
+
   useEffect(() => {
     // fetch composition by slug
     const fetchComposition = async () => {
@@ -56,10 +63,8 @@ export const useFetchComposition = ({
           throw new Error(`More than one composition with slug: ${slug} was found`)
         }
         setComposition(response.items[0].fields as unknown as Composition)
-      } catch (e: any) {
-        console.error(`Failed to fetch composition with error: ${e.message}`)
-        setError(e.message)
-        setIsLoading(false)
+      } catch (error: unknown) {
+        handleError('Failed to fetch composition', error)
       }
     }
 
@@ -88,7 +93,7 @@ export const useFetchComposition = ({
 
     const fetchEntities = async () => {
       try {
-        // TODO: investigate why this is being fetched multiple twice
+        // TODO: investigate why this is being fetched twice
         const [entriesResponse, assetsResponse] = await Promise.all([
           entryIds.length > 0
             ? client.getEntries({ 'sys.id[in]': entryIds, locale })
@@ -100,10 +105,8 @@ export const useFetchComposition = ({
         const entities = [...entriesResponse.items, ...assetsResponse.items]
         setEntityStore(new EntityStore({ entities }))
         setIsLoading(false)
-      } catch (e: any) {
-        console.error('Failed to fetch composition entities with error: ', e)
-        setError(e.message)
-        setIsLoading(false)
+      } catch (error: unknown) {
+        handleError('Failed to fetch composition entities', error)
       }
     }
 

@@ -3,6 +3,7 @@ import {
   CompositionDataSource,
   CompositionNode,
   CompositionUnboundValues,
+  CompositionVariableValueType,
   StyleProps,
 } from '../types'
 
@@ -13,6 +14,7 @@ import { EntityStore } from '../core/EntityStore'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
+import { transformContentValue } from './transformers'
 
 type CompositionBlockProps = {
   node: CompositionNode
@@ -45,7 +47,7 @@ export const CompositionBlock = ({
       return {}
     }
 
-    const propMap: Record<string, string | number | boolean | Record<any, any> | undefined> = {}
+    const propMap: Record<string, CompositionVariableValueType> = {}
 
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
       switch (variable.type) {
@@ -55,7 +57,9 @@ export const CompositionBlock = ({
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/')
           const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>
-          acc[variableName] = entityStore?.getValue(binding, path.slice(0, -1))
+          const value = entityStore?.getValue(binding, path.slice(0, -1))
+          const variableDefinition = definedComponent.componentDefinition.variables[variableName]
+          acc[variableName] = transformContentValue(value, variableDefinition)
           break
         }
         case 'UnboundValue': {
@@ -76,7 +80,7 @@ export const CompositionBlock = ({
 
   const { component } = definedComponent
 
-  const children = node.children.map((childNode: any, index) => {
+  const children = node.children.map((childNode: CompositionNode, index) => {
     return (
       <CompositionBlock
         node={childNode}
