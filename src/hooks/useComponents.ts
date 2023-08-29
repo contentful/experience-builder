@@ -68,14 +68,13 @@ export const useComponents = ({ mode }: UseComponentsProps) => {
     }
   }, [mode])
 
-  const getComponent = useCallback((id: string) => {
-    return registeredComponentDefinitions.find(
-      (definition) => definition.componentDefinition.id === id
-    )
-  }, [])
-
   return {
-    defineComponent,
-    getComponent,
+    defineComponent
   }
 }
+
+export const getDefinedComponent = (id: string) => {
+  return registeredComponentDefinitions.find(
+    (definition) => definition.componentDefinition.id === id
+  )
+};

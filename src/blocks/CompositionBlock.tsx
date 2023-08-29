@@ -8,7 +8,6 @@ import {
 } from '../types'
 
 import React, { useMemo } from 'react'
-import { useComponents } from '../hooks'
 import { UnresolvedLink } from 'contentful'
 import { EntityStore } from '../core/EntityStore'
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
@@ -18,6 +17,7 @@ import { transformContentValue } from './transformers'
 import { buildCfStyles } from '../core/stylesUtils'
 import { useStyleTag } from '../hooks/useStyleTag'
 import omit from 'lodash.omit'
+import { getDefinedComponent } from '../hooks/useComponents'
 
 type CompositionBlockProps = {
   node: CompositionNode
@@ -38,11 +38,9 @@ export const CompositionBlock = ({
   breakpoints,
   resolveDesignValue,
 }: CompositionBlockProps) => {
-  const { getComponent } = useComponents()
-
   const definedComponent = useMemo(
-    () => getComponent(node.definitionId as string),
-    [node, getComponent]
+    () => getDefinedComponent(node.definitionId as string),
+    [node]
   )
 
   const props = useMemo(() => {

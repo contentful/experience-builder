@@ -1,6 +1,6 @@
 import React from 'react'
 import { renderHook } from '@testing-library/react'
-import { useComponents } from './useComponents'
+import { getDefinedComponent, useComponents } from './useComponents'
 
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>
@@ -46,7 +46,7 @@ describe('ComponentDefinitions', () => {
       },
     })
 
-    const definition = result.current.getComponent(definitionId)
+    const definition = getDefinedComponent(definitionId)
     expect(definition).toBeDefined()
 
     for (const variable of Object.values(definition!.componentDefinition.variables)) {

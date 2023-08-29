@@ -23,6 +23,7 @@ import { useStyleTag } from '../hooks/useStyleTag'
 import { buildCfStyles } from '../core/stylesUtils'
 import omit from 'lodash.omit'
 import { sendMessage } from '../communication/sendMessage'
+import { getDefinedComponent } from '../hooks/useComponents'
 
 type PropsType =
   | StyleProps
@@ -49,11 +50,10 @@ export const VisualEditorBlock = ({
   entityStore,
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
-  const { getComponent } = useComponents({ mode: 'editor' })
 
   const definedComponent = useMemo(
-    () => getComponent(node.data.blockId as string),
-    [node, getComponent]
+    () => getDefinedComponent(node.data.blockId as string),
+    [node]
   )
 
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
