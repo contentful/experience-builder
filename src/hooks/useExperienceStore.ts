@@ -23,7 +23,7 @@ export const useExperienceStore = ({ locale, client }: UseExperienceStoreProps):
   const [composition, setComposition] = useState<Composition | undefined>()
   const [entityStore, setEntityStore] = useState<EntityStore>()
   const [error, setError] = useState<string | undefined>()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const children = composition?.componentTree?.children ?? []
   const breakpoints = composition?.componentTree?.breakpoints ?? []
@@ -104,20 +104,20 @@ export const useExperienceStore = ({ locale, client }: UseExperienceStoreProps):
         if (response.items.length === 0) {
           return handleError(
             errorMessagesWhileFetching.experience,
-            new Error(`No composition with slug: ${slug} exists`)
+            new Error(`No experience with slug: ${slug} exists`)
           )
         }
         if (response.items.length > 1) {
           return handleError(
             errorMessagesWhileFetching.experience,
-            new Error(`More than one composition with slug: ${slug} was found`)
+            new Error(`More than one experience with slug: ${slug} was found`)
           )
         }
         const experience = response.items[0].fields as unknown as Composition
         setComposition(experience)
         await fetchReferencedEntities(experience)
       } catch (e: any) {
-        handleError('Failed to fetch composition', e)
+        handleError(errorMessagesWhileFetching.experience, e)
       } finally {
         setIsLoading(false)
       }
