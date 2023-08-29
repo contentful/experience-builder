@@ -58,12 +58,12 @@ export const useExperienceBuilder = ({
 
     if (isInsideIframe()) {
       return 'editor'
-    } else if (typeof window !== "undefined") {
+    } else if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search)
       const isPreview = urlParams.get('isPreview')
       return isPreview ? 'preview' : 'delivery'
     } else {
-      return 'delivery';
+      return 'delivery'
     }
   })
 

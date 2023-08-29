@@ -114,7 +114,7 @@ export const getInsertionData = ({
 }
 export const isInsideIframe = (): boolean => {
   if (typeof window === 'undefined') {
-    return false;
+    return false
   }
 
   try {
