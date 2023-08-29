@@ -85,6 +85,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
         .map((breakpoint) => {
           const cssMediaQuery = toCSSMediaQuery(breakpoint)
           if (!cssMediaQuery) return undefined
+          if (typeof window === 'undefined') return undefined;
           const mediaQueryMatcher = window.matchMedia(cssMediaQuery)
           // Initialise state with current match value
           setMediaQueryMatches((prev) => ({

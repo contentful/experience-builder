@@ -8,11 +8,11 @@ import {
   OutgoingExperienceBuilderEvent,
   ScrollStates,
 } from '../types'
-import { sendMessage } from '../sendMessage'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
 import { getDataFromTree } from '../utils'
 import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
+import { sendMessage } from '../communication/sendMessage'
 
 export const useEditorMode = (settings: ExperienceBuilderSettings) => {
   const [tree, setTree] = useState<CompositionTree>()
