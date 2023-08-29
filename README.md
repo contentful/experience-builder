@@ -9,7 +9,7 @@ import {
 // 1. Define the configuration
 const config = {
   experienceTypeId: 'marketingWebsitePage', // id of the experience type
-  slug: 'landing-page',
+  mode: 'delivery',
   accessToken: '*******',
   defaultLocale: 'en-US',
   environmentId: 'master',
@@ -17,21 +17,19 @@ const config = {
 };
 
 const App = () => {
-  const { defineComponent } = useComponents()
+  const { settings, experience, defineComponent } = useExperienceBuilder(config)
 
   // 2. Define components
   useEffect(() => {
     defineComponent('Button', componentDefinition)
   }, [defineComponent])
 
-  const { settings, experience } = useExperienceBuilder(config)
-
   useEffect(() => {
     settings.setLocale('de-DE'); // change locale when needed
   }, [settings]);
 
   // 3. Render your experience
-  return <CompositionRoot settings={settings} experience={experience} />
+  return <CompositionRoot settings={settings} experience={experience} slug='/landing-page' />
 }
 ```
 
