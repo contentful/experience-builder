@@ -1,9 +1,9 @@
 import { ElementType, useCallback } from 'react'
 
 import { ComponentDefinition, CompositionMode, OutgoingExperienceBuilderEvent } from '../types'
-import { sendMessage } from '../sendMessage'
 import { builtInStyles as builtInStyleDefinitions } from '../core/definitions/variables'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { sendMessage } from '../communication/sendMessage'
 
 export type ComponentDefinitionWithComponentType = {
   component: ElementType
