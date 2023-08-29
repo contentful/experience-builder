@@ -7,7 +7,6 @@ import { useContentfulSection } from '../hooks/useContentfulSection'
 type CompositionRootProps = {
   settings: ExperienceBuilderSettings;
   experience: Experience;
-  slug: string;
 }
 
 const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor']
@@ -24,6 +23,6 @@ export const CompositionRoot = (props: CompositionRootProps) => {
   }
 
   return (
-    <PreviewDeliveryRoot settings={props.settings} experience={props.experience} slug={props.slug} />
+    <PreviewDeliveryRoot settings={props.settings} experience={props.experience} />
   )
 }

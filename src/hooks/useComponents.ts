@@ -48,33 +48,38 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
   return clone
 }
 
-const registeredComponentDefinitions: ComponentDefinitionWithComponentType[] = []
+const registeredComponentDefinitions: Map<string, ComponentDefinitionWithComponentType> = new Map()
 
 type UseComponentsProps = {
-  mode: CompositionMode;
+  mode: CompositionMode
 }
 
 export const useComponents = ({ mode }: UseComponentsProps) => {
-  const defineComponent = useCallback((component: ElementType, parameters: ComponentDefinition) => {
-    const definitionWithFallbacks = applyFallbacks(parameters)
-    const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks)
+  const defineComponent = useCallback(
+    (component: ElementType, parameters: ComponentDefinition) => {
+      const definitionWithFallbacks = applyFallbacks(parameters)
+      const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks)
 
-    registeredComponentDefinitions.push({
-      component,
-      componentDefinition: definitionWithBuiltInStyles,
-    })
-    if (mode === 'editor') {
-      sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, definitionWithBuiltInStyles)
-    }
-  }, [mode])
+      registeredComponentDefinitions.set(definitionWithFallbacks.id, {
+        component,
+        componentDefinition: definitionWithBuiltInStyles,
+      })
+
+      if (mode === 'editor') {
+        sendMessage(
+          OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS,
+          definitionWithBuiltInStyles
+        )
+      }
+    },
+    [mode]
+  )
 
   return {
-    defineComponent
+    defineComponent,
   }
 }
 
 export const getDefinedComponent = (id: string) => {
-  return registeredComponentDefinitions.find(
-    (definition) => definition.componentDefinition.id === id
-  )
-};
+  return registeredComponentDefinitions.get(id)
+}
