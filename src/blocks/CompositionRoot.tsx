@@ -15,7 +15,7 @@ const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor']
 export const CompositionRoot = (props: CompositionRootProps) => {
   const { mode } = props.settings
 
-  useContentfulSection()
+  useContentfulSection({ mode });
 
   if (!mode || !supportedModes.includes(mode)) return null
 

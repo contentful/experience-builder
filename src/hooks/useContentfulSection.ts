@@ -2,9 +2,10 @@ import { useComponents } from './useComponents'
 import { ContentfulSection } from '../blocks/ContentfulSection'
 import { useEffect } from 'react'
 import { sectionDefinition, containerDefinition } from '../core/definitions/components'
+import { CompositionMode } from '../types'
 
-export const useContentfulSection = () => {
-  const { defineComponent } = useComponents()
+export const useContentfulSection = ({ mode }: { mode: CompositionMode }) => {
+  const { defineComponent } = useComponents({ mode })
 
   useEffect(() => {
     defineComponent(ContentfulSection, sectionDefinition)
