@@ -1,10 +1,8 @@
 import React, { useMemo } from 'react'
 import {
-  LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
   StyleProps,
-  LocalizedUnboundValues,
   Link,
   CompositionVariableValueType,
   CompositionDataSource,
@@ -16,10 +14,10 @@ import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
 import { getUnboundValues } from '../core/getUnboundValues'
-import { sendMessage } from '../sendMessage'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
+import { sendMessage } from '../communication/sendMessage'
 
 type PropsType =
   | StyleProps

@@ -1,21 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import {
-  LocalizedDataSource,
   IncomingExperienceBuilderEvent,
   OutgoingExperienceBuilderEvent,
   Experience,
   CompositionTree,
   CompositionMode,
-  LocalizedUnboundValues,
   ScrollStates,
   CompositionDataSource,
   CompositionUnboundValues,
 } from '../types'
 import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
-import { sendMessage } from '../sendMessage'
 import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
+import { sendMessage } from '../communication/sendMessage'
 
 interface UseExperienceBuilderProps {
   experienceTypeId: string

@@ -1,6 +1,6 @@
 import { getElementCoordinates } from '../core/domValues'
-import { sendMessage } from '../sendMessage'
 import { OutgoingExperienceBuilderEvent } from '../types'
+import { sendMessage } from './sendMessage'
 
 /**
  * This function gets the element co-ordinates of a specified component in the DOM and its parent

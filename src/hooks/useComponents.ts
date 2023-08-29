@@ -1,7 +1,7 @@
 import { ElementType, useCallback } from 'react'
 
 import { ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
-import { sendMessage } from '../sendMessage'
+import { sendMessage } from '../communication/sendMessage'
 
 export type ComponentDefinitionWithComponentType = {
   component: ElementType
