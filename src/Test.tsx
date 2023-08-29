@@ -6,7 +6,7 @@ const TestComponent = () => {
 }
 
 export const Test = () => {
-  const { defineComponent } = useComponents()
+  const { defineComponent } = useComponents({ mode: 'editor' })
 
   defineComponent(TestComponent, {
     id: 'TestComponent',
