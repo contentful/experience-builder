@@ -8,7 +8,7 @@ const TestComponent = () => {
 
 describe('ComponentDefinitions', () => {
   it('should apply fallback to group: content for variables that have it undefined', () => {
-    const { result } = renderHook(() => useComponents())
+    const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
     const definitionId = 'TestComponent'
 

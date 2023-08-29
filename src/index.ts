@@ -1,7 +1,6 @@
 export { CompositionRoot } from './blocks'
 export {
   useExperienceBuilder,
-  useComponents as useExperienceBuilderComponents,
   getValueForBreakpoint,
 } from './hooks'
 export type {

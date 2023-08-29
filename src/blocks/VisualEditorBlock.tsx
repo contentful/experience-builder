@@ -49,7 +49,7 @@ export const VisualEditorBlock = ({
   entityStore,
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
-  const { getComponent } = useComponents()
+  const { getComponent } = useComponents({ mode: 'editor' })
 
   const definedComponent = useMemo(
     () => getComponent(node.data.blockId as string),

@@ -1,6 +1,6 @@
 import { ElementType, useCallback } from 'react'
 
-import { ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
+import { ComponentDefinition, CompositionMode, OutgoingExperienceBuilderEvent } from '../types'
 import { sendMessage } from '../sendMessage'
 import { builtInStyles as builtInStyleDefinitions } from '../core/definitions/variables'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
@@ -50,7 +50,11 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
 
 const registeredComponentDefinitions: ComponentDefinitionWithComponentType[] = []
 
-export const useComponents = () => {
+type UseComponentsProps = {
+  mode: CompositionMode;
+}
+
+export const useComponents = ({ mode }: UseComponentsProps) => {
   const defineComponent = useCallback((component: ElementType, parameters: ComponentDefinition) => {
     const definitionWithFallbacks = applyFallbacks(parameters)
     const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks)
@@ -59,8 +63,10 @@ export const useComponents = () => {
       component,
       componentDefinition: definitionWithBuiltInStyles,
     })
-    sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, definitionWithBuiltInStyles)
-  }, [])
+    if (mode === 'editor') {
+      sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, definitionWithBuiltInStyles)
+    }
+  }, [mode])
 
   const getComponent = useCallback((id: string) => {
     return registeredComponentDefinitions.find(
