@@ -14,6 +14,7 @@ type UseExperienceBuilderProps = {
    * Id of the content type of the target experience
    */
   experienceTypeId: string
+  slug: string;
   /**
    *  Mode defines the behaviour of the sdk.
    * `editor` - active messaging with the web app.
@@ -29,6 +30,7 @@ export const useExperienceBuilder = ({
   defaultLocale,
   environmentId,
   spaceId,
+  slug,
   host,
   mode = 'delivery',
 }: UseExperienceBuilderProps) => {
@@ -62,10 +64,8 @@ export const useExperienceBuilder = ({
     [spaceId, environmentId, ctflApi, accessToken]
   )
 
-  const experience = useExperienceStore({
-    client,
-    locale,
-  })
+  const experience = useExperienceStore({ client })
+  const { fetchBySlug } = experience;
 
   const { defineComponent } = useComponents({ mode: activeMode });
 
@@ -73,14 +73,29 @@ export const useExperienceBuilder = ({
     () => ({
       experienceTypeId,
       locale,
+      slug,
       mode: activeMode,
       client,
-      setLocale: (localeCode: string) => setLocale(localeCode)
+      setLocale: async (localeCode: string) => {
+        // if nothing changed
+        if (locale === localeCode) {
+          return;
+        }
+
+        setLocale(localeCode)
+        if (activeMode !== 'editor') {
+          // refetching everything for the new locale if locale changes dynamically
+          // TODO: caching potential
+          await fetchBySlug({ experienceTypeId, slug, localeCode });
+        }
+      }
     }),
     [
       locale,
       activeMode,
       experienceTypeId,
+      fetchBySlug,
+      slug,
       client
     ]
   )

@@ -97,7 +97,7 @@ const debouncedExecuteBatch = debounce(() => {
 }, 50)
 
 type UseComponentsProps = {
-  mode: CompositionMode;
+  mode: CompositionMode
 }
 
 export const useComponents = ({ mode }: UseComponentsProps) => {

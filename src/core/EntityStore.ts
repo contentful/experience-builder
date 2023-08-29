@@ -7,7 +7,7 @@ export class EntityStore {
   public entitiesById: Record<string, Entry | Asset>
 
   constructor({ entities }: { entities: Array<Entry | Asset> }) {
-    this.entities = entities
+    this.entities = entities;
     this.entitiesById = entities.reduce((acc: Record<string, Entry | Asset>, entity) => {
       acc[entity.sys.id] = entity
       return acc
@@ -21,7 +21,7 @@ export class EntityStore {
     const entity = this.entitiesById[entityLink.sys.id]
 
     if (!entity || entity.sys.type !== entityLink.sys.linkType) {
-      console.warn(`Composition references unresolved entity: ${entityLink}`)
+      console.warn(`Composition references unresolved entity: ${JSON.stringify(entityLink)}`)
       return
     }
 

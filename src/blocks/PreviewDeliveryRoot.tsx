@@ -7,23 +7,20 @@ import { useBreakpoints } from '../hooks'
 type DeliveryRootProps = {
   settings: ExperienceBuilderSettings
   experience: Experience;
-  slug: string;
 }
 
-export const PreviewDeliveryRoot = ({ settings, slug, experience }: DeliveryRootProps) => {
+export const PreviewDeliveryRoot = ({ settings, experience }: DeliveryRootProps) => {
   useEffect(() => {
-    if (!slug) {
-      throw new Error('Preview and delivery mode requires a composition slug to be provided')
-    }
-
+    // this useEffect is meant to trigger fetching for the first time if it hasn't been done earlier
     // if not yet fetched and not fetchin at the moment
-    if (!experience.composition && !experience.isLoading && slug) {
+    if (!experience.composition && !experience.isLoading && settings.slug) {
       experience.fetchBySlug({
         experienceTypeId: settings.experienceTypeId,
-        slug
+        localeCode: settings.locale,
+        slug: settings.slug
       });
     }
-  }, [experience, settings.experienceTypeId, slug])
+  }, [experience, settings.experienceTypeId, settings.slug, settings.locale])
 
   const { resolveDesignValue } = useBreakpoints(experience.breakpoints)
 

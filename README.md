@@ -14,6 +14,7 @@ const config = {
   defaultLocale: 'en-US',
   environmentId: 'master',
   spaceId: 'sna0qik32a1',
+  slug: 'landing-page'
 };
 
 const App = () => {
@@ -29,7 +30,7 @@ const App = () => {
   }, [settings]);
 
   // 3. Render your experience
-  return <CompositionRoot settings={settings} experience={experience} slug='/landing-page' />
+  return <CompositionRoot settings={settings} experience={experience} />
 }
 ```
 
