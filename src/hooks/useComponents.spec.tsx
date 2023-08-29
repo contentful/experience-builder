@@ -1,6 +1,6 @@
 import React from 'react'
 import { renderHook, waitFor } from '@testing-library/react'
-import { resetComponentRegistry, useComponents } from './useComponents'
+import { resetComponentRegistry, useComponents, getComponentRegistration } from './useComponents'
 import { ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 
@@ -41,7 +41,7 @@ describe('ComponentDefinitions', () => {
         },
       ])
 
-      const componentRegistration = result.current.getComponentRegistration(definitionId)
+      const componentRegistration = getComponentRegistration(definitionId)
       expect(componentRegistration).toBeDefined()
 
       expect(postMessageSpy).toBeCalledTimes(1)
@@ -77,7 +77,7 @@ describe('ComponentDefinitions', () => {
         },
       ])
 
-      const componentRegistration = result.current.getComponentRegistration(definitionId)
+      const componentRegistration = getComponentRegistration(definitionId)
       expect(componentRegistration).toBeDefined()
 
       for (const variable of Object.values(componentRegistration!.definition.variables)) {
@@ -105,7 +105,7 @@ describe('ComponentDefinitions', () => {
         },
       ])
 
-      const componentRegistration = result.current.getComponentRegistration(definitionId)
+      const componentRegistration = getComponentRegistration(definitionId)
       expect(componentRegistration).toBeDefined()
 
       const variableKeys = Object.keys(componentRegistration!.definition.variables)
@@ -133,7 +133,7 @@ describe('ComponentDefinitions', () => {
         },
       ])
 
-      const componentRegistration = result.current.getComponentRegistration(definitionId)
+      const componentRegistration = getComponentRegistration(definitionId)
       expect(componentRegistration).toBeDefined()
 
       const variableKeys = Object.keys(componentRegistration!.definition.variables)
@@ -163,7 +163,7 @@ describe('ComponentDefinitions', () => {
         },
       ])
 
-      const definition = result.current.getComponentRegistration(definitionId)
+      const definition = getComponentRegistration(definitionId)
       expect(definition).toBeDefined()
 
       for (const variable of Object.values(definition!.definition.variables)) {
@@ -203,8 +203,8 @@ describe('ComponentDefinitions', () => {
       })
       expect(postMessageSpy).not.toHaveBeenCalled()
 
-      expect(result.current.getComponentRegistration(definitionId)).toBeDefined()
-      expect(result.current.getComponentRegistration('test-div-component')).toBeDefined()
+      expect(getComponentRegistration(definitionId)).toBeDefined()
+      expect(getComponentRegistration('test-div-component')).toBeDefined()
 
       // waiting cause it is a debounced call
       await waitFor(() => expect(postMessageSpy).toHaveBeenCalled())
@@ -240,7 +240,7 @@ describe('ComponentDefinitions', () => {
         },
       })
 
-      const definition = result.current.getComponentRegistration(definitionId)
+      const definition = getComponentRegistration(definitionId)
       expect(definition).toBeDefined()
 
       for (const variable of Object.values(definition!.definition.variables)) {
@@ -263,7 +263,7 @@ describe('ComponentDefinitions', () => {
         },
       })
 
-      const definition = result.current.getComponentRegistration(definitionId)
+      const definition = getComponentRegistration(definitionId)
       expect(definition).toBeDefined()
 
       const variableKeys = Object.keys(definition!.definition.variables)
@@ -286,7 +286,7 @@ describe('ComponentDefinitions', () => {
         },
       })
 
-      const definition = result.current.getComponentRegistration(definitionId)
+      const definition = getComponentRegistration(definitionId)
       expect(definition).toBeDefined()
 
       const variableKeys = Object.keys(definition!.definition.variables)
@@ -311,7 +311,7 @@ describe('ComponentDefinitions', () => {
         },
       })
 
-      const definition = result.current.getComponentRegistration(definitionId)
+      const definition = getComponentRegistration(definitionId)
       expect(definition).toBeDefined()
 
       for (const variable of Object.values(definition!.definition.variables)) {

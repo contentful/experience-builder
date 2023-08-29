@@ -9,7 +9,6 @@ import {
   CompositionUnboundValues,
 } from '../types'
 
-import { useComponents } from '../hooks'
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
@@ -23,6 +22,7 @@ import { useStyleTag } from '../hooks/useStyleTag'
 import { buildCfStyles } from '../core/stylesUtils'
 import omit from 'lodash.omit'
 import { sendMessage } from '../communication/sendMessage'
+import { getComponentRegistration } from '../hooks/useComponents'
 
 type PropsType =
   | StyleProps
@@ -49,21 +49,19 @@ export const VisualEditorBlock = ({
   entityStore,
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
-  const { getComponentRegistration } = useComponents({ mode: 'editor' })
-
-  const registeredComponentConfig = useMemo(
+  const componentRegistration = useMemo(
     () => getComponentRegistration(node.data.blockId as string),
-    [node, getComponentRegistration]
+    [node]
   )
 
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
   const props: PropsType = useMemo(() => {
-    if (!registeredComponentConfig) {
+    if (!componentRegistration) {
       return {}
     }
 
-    return Object.entries(registeredComponentConfig.definition.variables).reduce(
+    return Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variableMapping = node.data.props[variableName]
         if (!variableMapping) {
@@ -106,7 +104,7 @@ export const VisualEditorBlock = ({
       {}
     )
   }, [
-    registeredComponentConfig,
+    componentRegistration,
     node.data.props,
     resolveDesignValue,
     dataSource,
@@ -118,11 +116,11 @@ export const VisualEditorBlock = ({
   const cfStyles = buildCfStyles(props)
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id })
 
-  if (!registeredComponentConfig) {
+  if (!componentRegistration) {
     return null
   }
 
-  const { component, definition } = registeredComponentConfig
+  const { component, definition } = componentRegistration
 
   const children =
     definition.children &&

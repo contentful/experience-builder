@@ -128,10 +128,6 @@ export const useComponents = ({ mode }: UseComponentsProps) => {
     }
   }, [mode])
 
-  const getComponentRegistration = useCallback((id: string) => {
-    return componentRegistry.get(id)
-  }, [])
-
   return {
     /**
      * @deprecated please use `defineComponents` function
@@ -142,7 +138,6 @@ export const useComponents = ({ mode }: UseComponentsProps) => {
      * the previously registered components.
      */
     defineComponents,
-    getComponentRegistration,
   }
 }
 
@@ -155,3 +150,7 @@ export const resetComponentRegistry = () => {
     componentRegistry.set(registration.definition.id, registration)
   }
 }
+
+export const getComponentRegistration = (id: string) => {
+  return componentRegistry.get(id);
+};
