@@ -14,7 +14,6 @@ import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } f
 import { ContentfulSection } from './ContentfulSection'
 
 import { getUnboundValues } from '../core/getUnboundValues'
-import { sendMessage } from '../sendMessage'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
@@ -23,6 +22,7 @@ import { transformContentValue } from './transformers'
 import { useStyleTag } from '../hooks/useStyleTag'
 import { buildCfStyles } from '../core/stylesUtils'
 import omit from 'lodash.omit'
+import { sendMessage } from '../communication/sendMessage'
 
 type PropsType =
   | StyleProps
@@ -49,7 +49,7 @@ export const VisualEditorBlock = ({
   entityStore,
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
-  const { getComponentRegistration } = useComponents()
+  const { getComponentRegistration } = useComponents({ mode: 'editor' })
 
   const registeredComponentConfig = useMemo(
     () => getComponentRegistration(node.data.blockId as string),

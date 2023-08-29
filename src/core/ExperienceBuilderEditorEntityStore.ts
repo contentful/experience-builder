@@ -1,7 +1,7 @@
 import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-sdk'
 import { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful'
-import { sendMessage } from '../sendMessage'
 import { isObject } from 'lodash'
+import { sendMessage } from '../communication/sendMessage';
 
 export class ExperienceBuilderEditorEntityStore extends EditorEntityStore {
   constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {

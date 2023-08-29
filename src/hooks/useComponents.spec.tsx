@@ -19,7 +19,7 @@ describe('ComponentDefinitions', () => {
 
   describe('defineComponents (many at once)', () => {
     it('should send the component definition via postMessage', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const postMessageSpy = jest.spyOn(window.parent, 'postMessage')
 
@@ -57,7 +57,7 @@ describe('ComponentDefinitions', () => {
     })
 
     it('should apply fallback to group: content for variables that have it undefined', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent'
 
@@ -86,7 +86,7 @@ describe('ComponentDefinitions', () => {
     })
 
     it('should add default built-in style variables', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent-1'
 
@@ -113,7 +113,7 @@ describe('ComponentDefinitions', () => {
     })
 
     it('should add specified built-in style variables', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent-2'
 
@@ -141,10 +141,39 @@ describe('ComponentDefinitions', () => {
       expect(variableKeys).toContain('cfBorder')
       expect(variableKeys).not.toContain('cfMargin')
     })
+
+    it('should apply fallback to group: content for variables that have it undefined', () => {
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
+
+      const definitionId = 'TestComponent'
+
+      result.current.defineComponents([
+        {
+          component: TestComponent,
+          definition: {
+            id: definitionId,
+            name: 'TestComponent',
+            builtInStyles: [],
+            variables: {
+              isChecked: {
+                type: 'Boolean',
+              },
+            },
+          },
+        },
+      ])
+
+      const definition = result.current.getComponentRegistration(definitionId)
+      expect(definition).toBeDefined()
+
+      for (const variable of Object.values(definition!.definition.variables)) {
+        expect(variable.group).toBe('content')
+      }
+    })
   })
   describe('defineComponent (one at a time - batched)', () => {
     it('should send the component definition via postMessage', async () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const postMessageSpy = jest.spyOn(window.parent, 'postMessage')
 
@@ -196,7 +225,7 @@ describe('ComponentDefinitions', () => {
     })
 
     it('should apply fallback to group: content for variables that have it undefined', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent'
 
@@ -220,7 +249,7 @@ describe('ComponentDefinitions', () => {
     })
 
     it('should add default built-in style variables', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent-1'
 
@@ -242,7 +271,7 @@ describe('ComponentDefinitions', () => {
     })
 
     it('should add specified built-in style variables', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent-2'
 
@@ -264,6 +293,30 @@ describe('ComponentDefinitions', () => {
       expect(variableKeys).toContain('cfPadding')
       expect(variableKeys).toContain('cfBorder')
       expect(variableKeys).not.toContain('cfMargin')
+    })
+
+    it('should apply fallback to group: content for variables that have it undefined', () => {
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
+
+      const definitionId = 'TestComponent'
+
+      result.current.defineComponent(TestComponent, {
+        id: definitionId,
+        name: 'TestComponent',
+        builtInStyles: [],
+        variables: {
+          isChecked: {
+            type: 'Boolean',
+          },
+        },
+      })
+
+      const definition = result.current.getComponentRegistration(definitionId)
+      expect(definition).toBeDefined()
+
+      for (const variable of Object.values(definition!.definition.variables)) {
+        expect(variable.group).toBe('content')
+      }
     })
   })
 })

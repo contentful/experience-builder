@@ -1,49 +1,45 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import contentful from 'contentful'
 import {
   CompositionMode,
   ExperienceBuilderConfig,
   ExperienceBuilderSettings,
 } from '../types'
-import { isInsideIframe } from '../utils'
 import { useExperienceStore } from './useExperienceStore'
 import { validateExperienceBuilderConfig } from '../validation'
+import { useComponents } from './useComponents'
 
 type UseExperienceBuilderProps = {
   /**
    * Id of the content type of the target experience
    */
   experienceTypeId: string
-  /** The mode is automatically set, use this value to manually override this **/
-  initialMode?: CompositionMode
+  /**
+   *  Mode defines the behaviour of the sdk.
+   * `editor` - active messaging with the web app.
+   * `preview` - fetching and rendering draft data.
+   * `delivery` - fetching and rendering of published data. */
+  mode?: CompositionMode
 
 } & ExperienceBuilderConfig
 
 export const useExperienceBuilder = ({
   experienceTypeId,
-  initialMode,
   accessToken,
   defaultLocale,
   environmentId,
   spaceId,
   host,
+  mode = 'delivery',
 }: UseExperienceBuilderProps) => {
   const [locale, setLocale] = useState<string>(defaultLocale)
-  const [mode, setMode] = useState<CompositionMode>(() => {
-    if (initialMode) return initialMode
+  const [activeMode, setMode] = useState<CompositionMode>(mode)
 
-    if (isInsideIframe()) {
-      return 'editor'
-    } else if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search)
-      const isPreview = urlParams.get('isPreview')
-      return isPreview ? 'preview' : 'delivery'
-    } else {
-      return 'delivery'
-    }
-  })
+  useEffect(() => {
+    setMode(mode);
+  }, [mode])
 
-  const defaultHost = mode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
+  const defaultHost = activeMode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
   const ctflApi = host || defaultHost
 
   validateExperienceBuilderConfig({
@@ -51,7 +47,7 @@ export const useExperienceBuilder = ({
     spaceId,
     defaultLocale,
     environmentId,
-    mode,
+    mode: activeMode,
     host: ctflApi
   });
 
@@ -71,17 +67,19 @@ export const useExperienceBuilder = ({
     locale,
   })
 
+  const { defineComponent } = useComponents({ mode: activeMode });
+
   const settings = useMemo<ExperienceBuilderSettings>(
     () => ({
       experienceTypeId,
       locale,
-      mode,
+      mode: activeMode,
       client,
       setLocale: (localeCode: string) => setLocale(localeCode)
     }),
     [
       locale,
-      mode,
+      activeMode,
       experienceTypeId,
       client
     ]
@@ -89,6 +87,7 @@ export const useExperienceBuilder = ({
 
   return {
     experience,
-    settings
+    settings,
+    defineComponent
   }
 }

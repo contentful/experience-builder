@@ -4,14 +4,15 @@ import {
   ComponentRegistration,
   ComponentDefinition,
   OutgoingExperienceBuilderEvent,
+  CompositionMode,
 } from '../types'
-import { sendMessage } from '../sendMessage'
 import { builtInStyles as builtInStyleDefinitions } from '../core/definitions/variables'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from '../blocks/ContentfulSection'
 import { containerDefinition, sectionDefinition } from '../core/definitions/components'
 import { SDK_VERSION } from '../core/constants'
 import debounce from 'lodash.debounce'
+import { sendMessage } from '../communication/sendMessage'
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -95,7 +96,11 @@ const debouncedExecuteBatch = debounce(() => {
   sendConnectedMessage(registeredDefinitions)
 }, 50)
 
-export const useComponents = () => {
+type UseComponentsProps = {
+  mode: CompositionMode;
+}
+
+export const useComponents = ({ mode }: UseComponentsProps) => {
   const defineComponents = useCallback((componentRegistrations: Array<ComponentRegistration>) => {
     for (const registration of componentRegistrations) {
       // Fill definitions with fallbacks values
@@ -109,14 +114,19 @@ export const useComponents = () => {
     const registeredDefinitions = Array.from(componentRegistry.values()).map(
       ({ definition }) => definition
     )
-    sendConnectedMessage(registeredDefinitions)
-  }, [])
+
+    if (mode === 'editor') {
+      sendConnectedMessage(registeredDefinitions)
+    }
+  }, [mode])
 
   const defineComponent = useCallback((component: ElementType, definition: ComponentDefinition) => {
     const enrichedComponentConfig = enrichComponentDefinition({ component, definition })
     componentRegistry.set(enrichedComponentConfig.definition.id, enrichedComponentConfig)
-    debouncedExecuteBatch()
-  }, [])
+    if (mode === 'editor') {
+      debouncedExecuteBatch()
+    }
+  }, [mode])
 
   const getComponentRegistration = useCallback((id: string) => {
     return componentRegistry.get(id)
