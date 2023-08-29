@@ -16,7 +16,8 @@ export const PreviewDeliveryRoot = ({ settings, slug, experience }: DeliveryRoot
       throw new Error('Preview and delivery mode requires a composition slug to be provided')
     }
 
-    if (!experience.composition && slug) {
+    // if not yet fetched and not fetchin at the moment
+    if (!experience.composition && !experience.isLoading && slug) {
       experience.fetchBySlug({
         experienceTypeId: settings.experienceTypeId,
         slug

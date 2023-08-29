@@ -1,7 +1,7 @@
 import { ContentfulClientApi } from 'contentful'
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { EntityStore } from '../core/EntityStore'
-import { Composition, Experience, } from '../types'
+import { Composition, Experience } from '../types'
 
 interface FetchCompositionProps {
   experienceTypeId: string
@@ -10,9 +10,14 @@ interface FetchCompositionProps {
 }
 
 type UseExperienceStoreProps = {
-  locale: string;
-  client: ContentfulClientApi<undefined>;
-};
+  locale: string
+  client: ContentfulClientApi<undefined>
+}
+
+const errorMessagesWhileFetching = {
+  experience: 'Failed to fetch experience',
+  experienceReferences: 'Failed to fetch entities, referenced in experience',
+}
 
 export const useExperienceStore = ({ locale, client }: UseExperienceStoreProps): Experience => {
   const [composition, setComposition] = useState<Composition | undefined>()
@@ -30,59 +35,28 @@ export const useExperienceStore = ({ locale, client }: UseExperienceStoreProps):
     const message = error instanceof Error ? error.message : `Unknown error: ${error}`
     console.error(`${generalMessage} with error: ${message}`)
     setError(message)
-    setIsLoading(false)
-  }, []);
+  }, [])
 
-  /**
-   * Fetch experience entry using slug as the identifier
-   * @param {string} experienceTypeId - id of the content type associated with the experience
-   * @param {string} slug - slug of the experience (defined in entry settings)
-   * @param {string} [localeCode] - optional locale code to fetch the experience. Falls back to the currently active locale in the state
-   */
-  const fetchBySlug = useCallback(async ({ experienceTypeId, slug, localeCode }: FetchCompositionProps) => {
-    if (!slug) {
-      throw new Error('Preview and delivery mode requires a composition slug to be provided')
-    }
+  const fetchReferencedEntities = useCallback(
+    async (composition: Composition) => {
+      if (!composition || !locale) {
+        return
+      }
 
-    try {
-      const response = await client.getEntries({
-        content_type: experienceTypeId,
-        'fields.slug': slug,
-        locale: localeCode || locale,
-      })
-      if (response.items.length === 0) {
-        throw new Error(`No composition with slug: ${slug} exists`)
+      const entryIds: string[] = [],
+        assetIds: string[] = []
+      for (const dataBinding of Object.values(composition.dataSource)) {
+        if (!('sys' in dataBinding)) {
+          continue
+        }
+        if (dataBinding.sys.linkType === 'Entry') {
+          entryIds.push(dataBinding.sys.id)
+        }
+        if (dataBinding.sys.linkType === 'Asset') {
+          assetIds.push(dataBinding.sys.id)
+        }
       }
-      if (response.items.length > 1) {
-        throw new Error(`More than one composition with slug: ${slug} was found`)
-      }
-      setComposition(response.items[0].fields as unknown as Composition)
-    } catch (e: any) {
-      handleError('Failed to fetch composition', e)
-    }
-  }, [locale, client, handleError]);
 
-  useEffect(() => {
-    // fetch bound entries
-    if (!composition || !locale) {
-      return
-    }
-
-    const entryIds: string[] = [],
-      assetIds: string[] = []
-    for (const dataBinding of Object.values(composition.dataSource)) {
-      if (!('sys' in dataBinding)) {
-        continue
-      }
-      if (dataBinding.sys.linkType === 'Entry') {
-        entryIds.push(dataBinding.sys.id)
-      }
-      if (dataBinding.sys.linkType === 'Asset') {
-        assetIds.push(dataBinding.sys.id)
-      }
-    }
-
-    const fetchEntities = async () => {
       try {
         // TODO: investigate why this is being fetched multiple twice
         const [entriesResponse, assetsResponse] = await Promise.all([
@@ -95,14 +69,61 @@ export const useExperienceStore = ({ locale, client }: UseExperienceStoreProps):
         ])
         const entities = [...entriesResponse.items, ...assetsResponse.items]
         setEntityStore(new EntityStore({ entities }))
-        setIsLoading(false)
       } catch (e: any) {
-        handleError('Failed to fetch composition entities', e)
+        handleError(errorMessagesWhileFetching.experienceReferences, e)
+      } finally {
+        setIsLoading(false)
       }
-    }
+    },
+    [client, locale, handleError]
+  )
 
-    fetchEntities()
-  }, [composition, client, locale, handleError])
+  /**
+   * Fetch experience entry using slug as the identifier
+   * @param {string} experienceTypeId - id of the content type associated with the experience
+   * @param {string} slug - slug of the experience (defined in entry settings)
+   * @param {string} [localeCode] - optional locale code to fetch the experience. Falls back to the currently active locale in the state
+   */
+  const fetchBySlug = useCallback(
+    async ({ experienceTypeId, slug, localeCode }: FetchCompositionProps) => {
+      setError(undefined)
+
+      if (!slug) {
+        handleError(
+          errorMessagesWhileFetching.experience,
+          new Error('Preview and delivery mode requires a composition slug to be provided')
+        )
+      }
+
+      try {
+        const response = await client.getEntries({
+          content_type: experienceTypeId,
+          'fields.slug': slug,
+          locale: localeCode || locale,
+        })
+        if (response.items.length === 0) {
+          return handleError(
+            errorMessagesWhileFetching.experience,
+            new Error(`No composition with slug: ${slug} exists`)
+          )
+        }
+        if (response.items.length > 1) {
+          return handleError(
+            errorMessagesWhileFetching.experience,
+            new Error(`More than one composition with slug: ${slug} was found`)
+          )
+        }
+        const experience = response.items[0].fields as unknown as Composition
+        setComposition(experience)
+        await fetchReferencedEntities(experience)
+      } catch (e: any) {
+        handleError('Failed to fetch composition', e)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [locale, client, handleError, fetchReferencedEntities]
+  )
 
   return useMemo<Experience>(
     () => ({
@@ -127,7 +148,7 @@ export const useExperienceStore = ({ locale, client }: UseExperienceStoreProps):
       entityStore,
       error,
       isLoading,
-      fetchBySlug
+      fetchBySlug,
     ]
   )
 }
