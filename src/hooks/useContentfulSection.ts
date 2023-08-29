@@ -84,7 +84,7 @@ export const useContentfulSection = () => {
       type: 'Text',
       group: 'style',
       description: 'The background color of the section',
-      defaultValue: 'rgba(255, 255, 255, 1)',
+      defaultValue: 'rgba(255, 255, 255, 0)',
     },
     cfWidth: {
       displayName: 'Width',
