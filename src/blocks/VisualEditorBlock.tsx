@@ -9,7 +9,6 @@ import {
   CompositionUnboundValues,
 } from '../types'
 
-import { useComponents } from '../hooks'
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
