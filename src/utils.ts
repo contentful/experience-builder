@@ -113,6 +113,10 @@ export const getInsertionData = ({
   }
 }
 export const isInsideIframe = (): boolean => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
   try {
     return window.top?.location.href !== window.location.href
   } catch (err) {
