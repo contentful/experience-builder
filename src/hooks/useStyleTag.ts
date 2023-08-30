@@ -39,7 +39,7 @@ export const useStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?
     styleTag.dataset['cfStyles'] = className
 
     document.head.appendChild(styleTag).innerHTML = styleRule
-  }, [styles])
+  }, [styles, nodeId])
 
   return { className }
 }

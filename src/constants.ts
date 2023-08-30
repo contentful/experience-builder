@@ -20,6 +20,4 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageUrl',
   'cfBackgroundImageScaling',
   'cfBackgroundImageAlignment',
-  'cfHyperlink',
-  'cfOpenInNewTab',
 ]
