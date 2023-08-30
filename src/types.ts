@@ -127,6 +127,7 @@ export type ComponentDefinition<
   category?: string
   thumbnailUrl?: string
   variables: Record<string, ComponentDefinitionVariable<T>>
+  builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>
   children?: boolean
 }
 
@@ -143,19 +144,6 @@ export type BindingMap = Record<string, ComponentBinding>
 export type BindingMapByBlockId = Record<string, BindingMap>
 
 export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>
-
-export type LocalizedUnboundValues = Record<
-  string,
-  Record<string, { value: CompositionVariableValueType }>
->
-
-export type LocalizedDataSource = Record<
-  string, // locale
-  Record<
-    string, // uuid
-    DataSourceEntryValueType
-  >
->
 
 export type CompositionVariableValueType = string | boolean | number | Record<any, any> | undefined
 type CompositionComponentPropType = 'BoundValue' | 'UnboundValue' | 'DesignValue'
