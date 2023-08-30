@@ -1,15 +1,14 @@
 import React from 'react'
-import { CompositionMode, Experience, ExperienceBuilderSettings } from '../types'
+import { Experience, ExperienceBuilderSettings } from '../types'
 import { VisualEditorRoot } from './VisualEditorRoot'
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
 import { useContentfulSection } from '../hooks/useContentfulSection'
+import { supportedModes } from '../constants'
 
 type CompositionRootProps = {
   settings: ExperienceBuilderSettings;
   experience: Experience;
 }
-
-const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor']
 
 export const CompositionRoot = (props: CompositionRootProps) => {
   const { mode } = props.settings
