@@ -22,7 +22,7 @@ const cloneObject = <T>(targetObject: T): T => {
   return JSON.parse(JSON.stringify(targetObject))
 }
 
-const applyFallbacks = (componentDefinition: ComponentDefinition) => {
+const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinition) => {
   const clone = cloneObject(componentDefinition)
   for (const variable of Object.values(clone.variables)) {
     variable.group = variable.group ?? 'content'
@@ -50,11 +50,11 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
   return clone
 }
 
-const enrichComponentDefinition = ({
+export const enrichComponentDefinition = ({
   component,
   definition,
 }: ComponentRegistration): ComponentRegistration => {
-  const definitionWithFallbacks = applyFallbacks(definition)
+  const definitionWithFallbacks = applyComponentDefinitionFallbacks(definition)
   const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks)
   return {
     component,
@@ -89,7 +89,7 @@ const componentRegistry = new Map<string, ComponentRegistration>([
   ],
 ])
 
-const debouncedExecuteBatch = debounce(() => {
+const debouncedBatchSendPostMessage = debounce(() => {
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
     ({ definition }) => definition
   )
@@ -124,7 +124,7 @@ export const useComponents = ({ mode }: UseComponentsProps) => {
     const enrichedComponentConfig = enrichComponentDefinition({ component, definition })
     componentRegistry.set(enrichedComponentConfig.definition.id, enrichedComponentConfig)
     if (mode === 'editor') {
-      debouncedExecuteBatch()
+      debouncedBatchSendPostMessage()
     }
   }, [mode])
 
