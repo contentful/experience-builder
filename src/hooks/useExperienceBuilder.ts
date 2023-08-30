@@ -8,6 +8,7 @@ import {
 import { useExperienceStore } from './useExperienceStore'
 import { validateExperienceBuilderConfig } from '../validation'
 import { useComponents } from './useComponents'
+import { supportedHosts, supportedModes } from '../constants'
 
 type UseExperienceBuilderProps = {
   /**
@@ -24,12 +25,6 @@ type UseExperienceBuilderProps = {
 
 } & ExperienceBuilderConfig
 
-
-const supportedHosts = [
-  'preview.contentful.com',
-  'cdn.contentful.com'
-]
-
 export const useExperienceBuilder = ({
   experienceTypeId,
   accessToken,
@@ -41,22 +36,34 @@ export const useExperienceBuilder = ({
   mode = 'delivery',
 }: UseExperienceBuilderProps) => {
   const [locale, setLocale] = useState<string>(defaultLocale)
-  const [activeMode, setMode] = useState<CompositionMode>(mode)
+  const [activeMode, setMode] = useState<CompositionMode>(() => {
+    if (supportedModes.includes(mode)) {
+      return mode
+    }
+
+    throw new Error(`Unsupported mode provided: ${mode}. Supported values: ${supportedModes}`);
+  });
 
   useEffect(() => {
-    setMode(mode);
+    if (supportedModes.includes(mode)) {
+      setMode(mode);
+    }
   }, [mode])
 
   const defaultHost = activeMode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
-  const ctflApi = host && supportedHosts.includes(host) ? host : defaultHost
+
+  if (host && !supportedHosts.includes(host)) {
+    throw new Error(`Unsupported host provided: ${host}. Supported values: ${supportedHosts}`);
+  }
+
+  const ctflApi = host || defaultHost
 
   validateExperienceBuilderConfig({
     accessToken,
     spaceId,
     defaultLocale,
     environmentId,
-    mode: activeMode,
-    host: ctflApi
+    mode: activeMode
   });
 
   const client = useMemo(
@@ -90,6 +97,7 @@ export const useExperienceBuilder = ({
 
         setLocale(localeCode)
         if (activeMode !== 'editor') {
+          console.log('fetching', { experienceTypeId, slug, localeCode })
           // refetching everything for the new locale if locale changes dynamically
           // TODO: caching potential
           await fetchBySlug({ experienceTypeId, slug, localeCode });

@@ -1,3 +1,5 @@
+import { CompositionMode } from "./types"
+
 export const CONTENTFUL_SECTION_ID = 'contentful-section'
 export const CONTENTFUL_CONTAINER_ID = 'contentful-container'
 export const CONTENTFUL_SECTION_NAME = 'Section'
@@ -20,4 +22,10 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageUrl',
   'cfBackgroundImageScaling',
   'cfBackgroundImageAlignment',
+];
+
+export const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor']
+export const supportedHosts = [
+  'preview.contentful.com',
+  'cdn.contentful.com'
 ]

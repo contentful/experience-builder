@@ -79,7 +79,7 @@ export const validateExperienceBuilderConfig = ({
   defaultLocale,
   environmentId,
   mode,
-}: ExperienceBuilderConfig & { mode: CompositionMode }) => {
+}: Omit<ExperienceBuilderConfig, 'host'> & { mode: CompositionMode }) => {
   if (mode === 'editor') {
     return
   }
