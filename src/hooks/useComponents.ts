@@ -1,10 +1,6 @@
 import { ElementType, useCallback } from 'react'
 
-import {
-  ComponentDefinition,
-  ComponentDefinitionVariable,
-  OutgoingExperienceBuilderEvent,
-} from '../types'
+import { ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
 import { sendMessage } from '../sendMessage'
 import { builtInStyles as builtInStyleDefinitions } from '../core/definitions/variables'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
@@ -39,9 +35,9 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
 
   const clone = cloneObject(componentDefinition)
 
-  // set margin and size built-in styles by default
+  // set margin built-in style by default
   if (!clone.builtInStyles) {
-    clone.builtInStyles = ['cfMargin', 'cfWidth', 'cfHeight', 'cfMaxWidth']
+    clone.builtInStyles = ['cfMargin']
   }
 
   for (const style of Object.values(clone.builtInStyles || [])) {

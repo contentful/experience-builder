@@ -74,9 +74,6 @@ describe('ComponentDefinitions', () => {
 
     const variableKeys = Object.keys(definition!.componentDefinition.variables)
     expect(variableKeys).toContain('cfMargin')
-    expect(variableKeys).toContain('cfWidth')
-    expect(variableKeys).toContain('cfHeight')
-    expect(variableKeys).toContain('cfMaxWidth')
   })
 
   it('should add specified built-in style variables', () => {
