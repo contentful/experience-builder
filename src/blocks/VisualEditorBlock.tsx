@@ -1,10 +1,8 @@
 import React, { useMemo } from 'react'
 import {
-  LocalizedDataSource,
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
   StyleProps,
-  LocalizedUnboundValues,
   Link,
   CompositionVariableValueType,
   CompositionDataSource,
@@ -20,6 +18,7 @@ import { sendMessage } from '../sendMessage'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
 import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
+import { transformContentValue } from './transformers'
 
 type PropsType =
   | StyleProps
@@ -79,13 +78,13 @@ export const VisualEditorBlock = ({
           // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/')
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>
-          const value =
-            entityStore.current?.getValue(binding, path.slice(0, -1)) ||
-            variableDefinition.defaultValue
-
+          const boundValue = areEntitiesFetched
+            ? entityStore.current?.getValue(binding, path.slice(0, -1))
+            : undefined
+          const value = boundValue || variableDefinition.defaultValue
           return {
             ...acc,
-            [variableName]: value,
+            [variableName]: transformContentValue(value, variableDefinition),
           }
         } else {
           const value = getUnboundValues({
@@ -103,13 +102,13 @@ export const VisualEditorBlock = ({
       {}
     )
   }, [
-    resolveDesignValue,
     definedComponent,
     node.data.props,
+    resolveDesignValue,
     dataSource,
-    locale,
-    unboundValues,
     areEntitiesFetched,
+    entityStore,
+    unboundValues,
   ])
 
   if (!definedComponent) {

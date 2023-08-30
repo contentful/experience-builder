@@ -1,4 +1,10 @@
-import { StyleProps, CSSProperties } from '../types'
+import {
+  StyleProps,
+  CSSProperties,
+  ComponentDefinitionVariable,
+  CompositionVariableValueType,
+} from '../types'
+import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types'
 
 export const transformFill = (value: string) => (value === 'fill' ? '100%' : value)
 export const transformBorderStyle = (value?: string): CSSProperties => {
@@ -60,4 +66,43 @@ export const transformBackgroundImage = (
     backgroundPosition: cfBackgroundImageAlignment,
     backgroundSize: matchBackgroundSize(cfBackgroundImageScaling),
   }
+}
+
+export const transformContentValue = (
+  value: CompositionVariableValueType,
+  variableDefinition: ComponentDefinitionVariable
+) => {
+  if (variableDefinition.type === 'RichText') {
+    return transformRichText(value)
+  }
+  return value
+}
+
+export const transformRichText = (
+  value: CompositionVariableValueType
+): RichTextDocument | undefined => {
+  if (typeof value === 'string') {
+    return {
+      data: {},
+      content: [
+        {
+          nodeType: BLOCKS.PARAGRAPH,
+          data: {},
+          content: [
+            {
+              data: {},
+              nodeType: 'text',
+              value: value,
+              marks: [],
+            },
+          ],
+        },
+      ],
+      nodeType: BLOCKS.DOCUMENT,
+    }
+  }
+  if (typeof value === 'object' && value.nodeType === BLOCKS.DOCUMENT) {
+    return value as RichTextDocument
+  }
+  return undefined
 }
