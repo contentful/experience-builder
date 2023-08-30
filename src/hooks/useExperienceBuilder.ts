@@ -24,6 +24,12 @@ type UseExperienceBuilderProps = {
 
 } & ExperienceBuilderConfig
 
+
+const supportedHosts = [
+  'preview.contentful.com',
+  'cdn.contentful.com'
+]
+
 export const useExperienceBuilder = ({
   experienceTypeId,
   accessToken,
@@ -42,7 +48,7 @@ export const useExperienceBuilder = ({
   }, [mode])
 
   const defaultHost = activeMode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
-  const ctflApi = host || defaultHost
+  const ctflApi = host && supportedHosts.includes(host) ? host : defaultHost
 
   validateExperienceBuilderConfig({
     accessToken,

@@ -18,7 +18,7 @@ const cloneObject = <T>(targetObject: T): T => {
   return JSON.parse(JSON.stringify(targetObject))
 }
 
-const applyFallbacks = (componentDefinition: ComponentDefinition) => {
+export const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinition) => {
   const clone = cloneObject(componentDefinition)
   for (const variable of Object.values(clone.variables)) {
     if (!variable.group) {
@@ -28,7 +28,7 @@ const applyFallbacks = (componentDefinition: ComponentDefinition) => {
   return clone
 }
 
-const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
+export const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
   if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
     return componentDefinition
   }
@@ -57,7 +57,7 @@ type UseComponentsProps = {
 export const useComponents = ({ mode }: UseComponentsProps) => {
   const defineComponent = useCallback(
     (component: ElementType, parameters: ComponentDefinition) => {
-      const definitionWithFallbacks = applyFallbacks(parameters)
+      const definitionWithFallbacks = applyComponentDefinitionFallbacks(parameters)
       const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks)
 
       registeredComponentDefinitions.set(definitionWithFallbacks.id, {
@@ -82,4 +82,9 @@ export const useComponents = ({ mode }: UseComponentsProps) => {
 
 export const getDefinedComponent = (id: string) => {
   return registeredComponentDefinitions.get(id)
+}
+
+// Use it for tests only
+export const resetDefinedComponentsMap = () => {
+  registeredComponentDefinitions.clear();
 }
