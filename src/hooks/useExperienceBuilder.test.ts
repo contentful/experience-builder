@@ -5,11 +5,36 @@ import { CompositionMode } from '../types'
 import { supportedHosts, supportedModes } from '../constants'
 
 jest.mock('contentful', () => {
+  const createClient = jest.fn().mockImplementation(() => ({
+    getEntries: jest.fn(),
+    getAssets: jest.fn(),
+  }));
+
   return {
-    createClient: jest.fn().mockReturnValue({
-      getEntries: jest.fn(),
-      getAssets: jest.fn(),
-    }),
+    __esModule: true,
+    default: { createClient },
+    createClient,
+  }
+})
+
+jest.mock('./useExperienceStore', () => {
+  return {
+    useExperienceStore: () => {
+      return {
+        composition: undefined,
+        children: [],
+        breakpoints: [],
+        schemaVersion: undefined,
+        dataSource: {},
+        unboundValues: {},
+        entityStore: undefined,
+        error: undefined,
+        isLoading: false,
+        fetchBySlug: jest.fn().mockImplementation(() => {
+          return Promise.resolve();
+        }),
+      }
+    },
   }
 })
 
@@ -235,7 +260,7 @@ describe('useExperienceBuilder', () => {
     expect(res.result.current.settings.mode).toBe('delivery')
   })
 
-  it.only('changes the locale and DOES NOT trigger fetch of entity for the new locale in editor mode', async () => {
+  it('changes the locale and DOES NOT trigger fetch of entity for the new locale in editor mode', async () => {
     const res = renderHook((props) => useExperienceBuilder(props), {
       initialProps: {
         experienceTypeId,
@@ -248,18 +273,17 @@ describe('useExperienceBuilder', () => {
       },
     })
 
-    const fetchSpy = jest.spyOn(res.result.current.experience, 'fetchBySlug');
+    const fetchSpy = jest.spyOn(res.result.current.experience, 'fetchBySlug')
 
-    expect(res.result.current.settings.locale).toBe(defaultLocale);
+    expect(res.result.current.settings.locale).toBe(defaultLocale)
 
     await act(() => res.result.current.settings.setLocale('de'))
 
-    expect(res.result.current.settings.locale).toBe('de');
-    expect(fetchSpy).not.toHaveBeenCalled();
-  });
-
-  (['preview', 'delivery'] as CompositionMode[]).forEach((mode) => {
-    it.only(`changes the locale and triggers fetch of entity for the new locale in ${mode} mode`, async () => {
+    expect(res.result.current.settings.locale).toBe('de')
+    expect(fetchSpy).not.toHaveBeenCalled()
+  })
+  ;(['preview', 'delivery'] as CompositionMode[]).map((mode) => {
+    it(`changes the locale and triggers fetch of entity for the new locale in ${mode} mode`, async () => {
       const res = renderHook((props) => useExperienceBuilder(props), {
         initialProps: {
           experienceTypeId,
@@ -268,19 +292,45 @@ describe('useExperienceBuilder', () => {
           environmentId,
           spaceId,
           slug,
-          mode
+          mode,
+        },
+      })
+
+      const output = res.result.current
+
+      expect(output.settings.locale).toBe(defaultLocale)
+
+      await act(() => output.settings.setLocale('de'))
+
+      expect(res.result.current.settings.locale).toBe('de')
+      expect(output.experience.fetchBySlug).toHaveBeenCalledWith({
+        experienceTypeId,
+        slug,
+        localeCode: 'de',
+      })
+    })
+
+    it(`doesnt trigger fetch of entity for locale value that is not different from the current state in ${mode} mode`, async () => {
+      const res = renderHook((props) => useExperienceBuilder(props), {
+        initialProps: {
+          experienceTypeId,
+          accessToken: accessToken,
+          defaultLocale,
+          environmentId,
+          spaceId,
+          slug,
+          mode,
         },
       })
   
-      const fetchSpy = jest.spyOn(res.result.current.experience, 'fetchBySlug');
-      fetchSpy.mockResolvedValue(undefined);
+      const output = res.result.current
   
-      expect(res.result.current.settings.locale).toBe(defaultLocale);
+      expect(output.settings.locale).toBe(defaultLocale)
   
-      await act(() => res.result.current.settings.setLocale('de'))
+      await act(() => output.settings.setLocale(defaultLocale))
   
-      expect(res.result.current.settings.locale).toBe('de');
-      expect(fetchSpy).toHaveBeenCalledWith({ experienceTypeId, slug, localeCode: 'de' });
-    });
+      expect(res.result.current.settings.locale).toBe(defaultLocale)
+      expect(output.experience.fetchBySlug).not.toHaveBeenCalled()
+    })
   })
 })
