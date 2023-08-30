@@ -97,7 +97,6 @@ export const useExperienceBuilder = ({
 
         setLocale(localeCode)
         if (activeMode !== 'editor') {
-          console.log('fetching', { experienceTypeId, slug, localeCode })
           // refetching everything for the new locale if locale changes dynamically
           // TODO: caching potential
           await fetchBySlug({ experienceTypeId, slug, localeCode });
