@@ -51,7 +51,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     return (
       <Flex
         id="ContentfulSection"
-        className={classNames('defaultStyles', className, {
+        className={classNames(className, 'defaultStyles', {
           empty: userDidNotOverrideHeight && hasNoChildren,
         })}>
         {childrenHyperlinkWrapper}

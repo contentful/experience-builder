@@ -32,7 +32,7 @@ const applyFallbacks = (componentDefinition: ComponentDefinition) => {
   return clone
 }
 
-const applyBuildInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
+const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
   if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
     return componentDefinition
   }
@@ -57,7 +57,7 @@ const registeredComponentDefinitions: ComponentDefinitionWithComponentType[] = [
 export const useComponents = () => {
   const defineComponent = useCallback((component: ElementType, parameters: ComponentDefinition) => {
     const definitionWithFallbacks = applyFallbacks(parameters)
-    const definitionWithBuiltInStyles = applyBuildInStyleDefinitions(definitionWithFallbacks)
+    const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks)
 
     registeredComponentDefinitions.push({
       component,

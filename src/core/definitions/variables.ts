@@ -69,7 +69,7 @@ export const builtInStyles: Record<
     type: 'Text',
     group: 'style',
     description: 'The background color of the section',
-    defaultValue: 'transparent',
+    defaultValue: 'rgba(255, 255, 255, 0)',
   },
   cfWidth: {
     displayName: 'Width',

@@ -29,11 +29,15 @@ export const transformAlignment = (
   cfFlexDirection === 'row'
     ? {
         alignItems: cfHorizontalAlignment,
-        justifyContent: cfVerticalAlignment,
+        justifyContent:
+          cfVerticalAlignment === 'center' ? `safe ${cfVerticalAlignment}` : cfVerticalAlignment,
       }
     : {
         alignItems: cfVerticalAlignment,
-        justifyContent: cfHorizontalAlignment,
+        justifyContent:
+          cfHorizontalAlignment === 'center'
+            ? `safe ${cfHorizontalAlignment}`
+            : cfHorizontalAlignment,
       }
 
 interface CSSPropertiesForBackground extends CSSProperties {
