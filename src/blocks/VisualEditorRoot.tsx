@@ -31,11 +31,10 @@ export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
   )
 
   useEffect(() => {
-    entityStore.current = 
-      new ExperienceBuilderEditorEntityStore({
-        entities: [],
-        locale: settings.locale,
-      })
+    entityStore.current = new ExperienceBuilderEditorEntityStore({
+      entities: [],
+      locale: settings.locale,
+    })
   }, [settings.locale])
 
   useEffect(() => {

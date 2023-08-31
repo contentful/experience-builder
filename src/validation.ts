@@ -84,7 +84,9 @@ export const validateExperienceBuilderConfig = ({
   }
 
   if (!supportedModes.includes(mode)) {
-    throw new Error(`Parameter "mode" contains unsupported value. Supported modes: ${supportedModes.join(',')}`)
+    throw new Error(
+      `Parameter "mode" contains unsupported value. Supported modes: ${supportedModes.join(',')}`
+    )
   }
 
   if (!defaultLocale) {
