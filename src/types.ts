@@ -18,7 +18,7 @@ export enum ScrollStates {
 }
 
 export enum OutgoingExperienceBuilderEvent {
-  REGISTERED_COMPONENTS = 'registeredComponents',
+  CONNECTED = 'connected',
   HOVERED_SECTION = 'hoveredSection',
   MOUSE_MOVE = 'mouseMove',
   COMPONENT_SELECTED = 'componentSelected',
