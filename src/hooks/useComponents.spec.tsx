@@ -12,44 +12,26 @@ describe('ComponentDefinitions', () => {
 
     const definitionId = 'TestComponent'
 
-    result.current.defineComponent(TestComponent, {
-      id: definitionId,
-      name: 'TestComponent',
-      builtInStyles: [],
-      variables: {
-        // name: {
-        //   type: 'Link',
-        //   linkType: 'Asset',
-        // },
-        isChecked: {
-          type: 'Boolean',
+    result.current.registerComponents([
+      {
+        component: TestComponent,
+        definition: {
+          id: definitionId,
+          name: 'TestComponent',
+          builtInStyles: [],
+          variables: {
+            isChecked: {
+              type: 'Boolean',
+            },
+          },
         },
-        // elements: {
-        //   type: 'Array',
-        //   items: {
-        //     linkType: 'Entry',
-        //     type: 'Link',
-        //   },
-        // },
-        // elementsSymbol: {
-        //   type: 'Array',
-        //   items: {
-        //     type: 'Symbol',
-        //   },
-        // },
-        // elementsComponent: {
-        //   type: 'Array',
-        //   items: {
-        //     type: 'Component',
-        //   },
-        // },
       },
-    })
+    ])
 
-    const definition = result.current.getComponent(definitionId)
-    expect(definition).toBeDefined()
+    const componentConfig = result.current.getComponentConfig(definitionId)
+    expect(componentConfig).toBeDefined()
 
-    for (const variable of Object.values(definition!.componentDefinition.variables)) {
+    for (const variable of Object.values(componentConfig!.definition.variables)) {
       expect(variable.group).toBe('content')
     }
   })
@@ -59,20 +41,25 @@ describe('ComponentDefinitions', () => {
 
     const definitionId = 'TestComponent-1'
 
-    result.current.defineComponent(TestComponent, {
-      id: definitionId,
-      name: 'TestComponent',
-      variables: {
-        isChecked: {
-          type: 'Boolean',
+    result.current.registerComponents([
+      {
+        component: TestComponent,
+        definition: {
+          id: definitionId,
+          name: 'TestComponent',
+          variables: {
+            isChecked: {
+              type: 'Boolean',
+            },
+          },
         },
       },
-    })
+    ])
 
-    const definition = result.current.getComponent(definitionId)
-    expect(definition).toBeDefined()
+    const componentConfig = result.current.getComponentConfig(definitionId)
+    expect(componentConfig).toBeDefined()
 
-    const variableKeys = Object.keys(definition!.componentDefinition.variables)
+    const variableKeys = Object.keys(componentConfig!.definition.variables)
     expect(variableKeys).toContain('cfMargin')
   })
 
@@ -81,21 +68,26 @@ describe('ComponentDefinitions', () => {
 
     const definitionId = 'TestComponent-2'
 
-    result.current.defineComponent(TestComponent, {
-      id: definitionId,
-      name: 'TestComponent',
-      builtInStyles: ['cfPadding', 'cfBorder'],
-      variables: {
-        isChecked: {
-          type: 'Boolean',
+    result.current.registerComponents([
+      {
+        component: TestComponent,
+        definition: {
+          id: definitionId,
+          name: 'TestComponent',
+          builtInStyles: ['cfPadding', 'cfBorder'],
+          variables: {
+            isChecked: {
+              type: 'Boolean',
+            },
+          },
         },
       },
-    })
+    ])
 
-    const definition = result.current.getComponent(definitionId)
-    expect(definition).toBeDefined()
+    const componentConfig = result.current.getComponentConfig(definitionId)
+    expect(componentConfig).toBeDefined()
 
-    const variableKeys = Object.keys(definition!.componentDefinition.variables)
+    const variableKeys = Object.keys(componentConfig!.definition.variables)
     expect(variableKeys).toContain('cfPadding')
     expect(variableKeys).toContain('cfBorder')
     expect(variableKeys).not.toContain('cfMargin')

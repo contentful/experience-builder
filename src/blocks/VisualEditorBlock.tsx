@@ -49,21 +49,21 @@ export const VisualEditorBlock = ({
   entityStore,
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
-  const { getComponent } = useComponents()
+  const { getComponentConfig } = useComponents()
 
-  const definedComponent = useMemo(
-    () => getComponent(node.data.blockId as string),
-    [node, getComponent]
+  const registeredComponentConfig = useMemo(
+    () => getComponentConfig(node.data.blockId as string),
+    [node, getComponentConfig]
   )
 
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
   const props: PropsType = useMemo(() => {
-    if (!definedComponent) {
+    if (!registeredComponentConfig) {
       return {}
     }
 
-    return Object.entries(definedComponent.componentDefinition.variables).reduce(
+    return Object.entries(registeredComponentConfig.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variableMapping = node.data.props[variableName]
         if (!variableMapping) {
@@ -106,7 +106,7 @@ export const VisualEditorBlock = ({
       {}
     )
   }, [
-    definedComponent,
+    registeredComponentConfig,
     node.data.props,
     resolveDesignValue,
     dataSource,
@@ -118,14 +118,14 @@ export const VisualEditorBlock = ({
   const cfStyles = buildCfStyles(props)
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id })
 
-  if (!definedComponent) {
+  if (!registeredComponentConfig) {
     return null
   }
 
-  const { component, componentDefinition } = definedComponent
+  const { component, definition } = registeredComponentConfig
 
   const children =
-    definedComponent.componentDefinition.children &&
+    definition.children &&
     node.children.map((childNode) => {
       return (
         <VisualEditorBlock
@@ -143,7 +143,7 @@ export const VisualEditorBlock = ({
     })
 
   // contentful section
-  if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
+  if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(definition.id)) {
     return (
       <ContentfulSection
         className={className}

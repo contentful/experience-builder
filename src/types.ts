@@ -131,6 +131,11 @@ export type ComponentDefinition<
   children?: boolean
 }
 
+export type ComponentConfig = {
+  component: React.ElementType
+  definition: ComponentDefinition
+}
+
 export type Binding = {
   spaceId: string
   environmentId: string

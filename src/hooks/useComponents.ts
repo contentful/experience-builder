@@ -1,14 +1,11 @@
-import { ElementType, useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 
-import { ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
+import { ComponentConfig, ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
 import { sendMessage } from '../sendMessage'
 import { builtInStyles as builtInStyleDefinitions } from '../core/definitions/variables'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
-
-export type ComponentDefinitionWithComponentType = {
-  component: ElementType
-  componentDefinition: ComponentDefinition
-}
+import { ContentfulSection } from '../blocks/ContentfulSection'
+import { containerDefinition, sectionDefinition } from '../core/definitions/components'
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -21,9 +18,7 @@ const cloneObject = <T>(targetObject: T): T => {
 const applyFallbacks = (componentDefinition: ComponentDefinition) => {
   const clone = cloneObject(componentDefinition)
   for (const variable of Object.values(clone.variables)) {
-    if (!variable.group) {
-      variable.group = 'content'
-    }
+    variable.group = variable.group ?? 'content'
   }
   return clone
 }
@@ -48,28 +43,56 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
   return clone
 }
 
-const registeredComponentDefinitions: ComponentDefinitionWithComponentType[] = []
+const enrichComponentDefinition = ({ component, definition }: ComponentConfig): ComponentConfig => {
+  const definitionWithFallbacks = applyFallbacks(definition)
+  const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks)
+  return {
+    component,
+    definition: definitionWithBuiltInStyles,
+  }
+}
+
+const sendConnectedMessage = (registeredDefinitions: Array<ComponentDefinition>) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore -- this is replaced statically by vite with the env variable (becomes undefined if missing)
+  const sdkVersion = import.meta.env.VITE_SDK_VERSION
+  sendMessage(OutgoingExperienceBuilderEvent.CONNECTED, {
+    definitions: registeredDefinitions,
+    sdkVersion,
+  })
+}
+
+const DEFAULT_COMPONENT_DEFINITIONS = [
+  {
+    component: ContentfulSection,
+    definition: sectionDefinition,
+  },
+  {
+    component: ContentfulSection,
+    definition: containerDefinition,
+  },
+] satisfies Array<ComponentConfig>
 
 export const useComponents = () => {
-  const defineComponent = useCallback((component: ElementType, parameters: ComponentDefinition) => {
-    const definitionWithFallbacks = applyFallbacks(parameters)
-    const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks)
+  const registeredComponentConfigs = useRef<Array<ComponentConfig>>([])
 
-    registeredComponentDefinitions.push({
-      component,
-      componentDefinition: definitionWithBuiltInStyles,
-    })
-    sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, definitionWithBuiltInStyles)
+  const registerComponents = useCallback((componentConfigs: Array<ComponentConfig>) => {
+    // Fill definitions with fallbacks values
+    const enrichedComponentConfigs = componentConfigs.map(enrichComponentDefinition)
+    // Add default components section and container
+    enrichedComponentConfigs.push(...DEFAULT_COMPONENT_DEFINITIONS)
+    registeredComponentConfigs.current = enrichedComponentConfigs
+    // Send the definitions (without components) via the connection message to the experience builder
+    const registeredDefinitions = enrichedComponentConfigs.map(({ definition }) => definition)
+    sendConnectedMessage(registeredDefinitions)
   }, [])
 
-  const getComponent = useCallback((id: string) => {
-    return registeredComponentDefinitions.find(
-      (definition) => definition.componentDefinition.id === id
-    )
+  const getComponentConfig = useCallback((id: string) => {
+    return registeredComponentConfigs.current.find(({ definition }) => definition.id === id)
   }, [])
 
   return {
-    defineComponent,
-    getComponent,
+    registerComponents,
+    getComponentConfig,
   }
 }

@@ -38,15 +38,15 @@ export const CompositionBlock = ({
   breakpoints,
   resolveDesignValue,
 }: CompositionBlockProps) => {
-  const { getComponent } = useComponents()
+  const { getComponentConfig } = useComponents()
 
-  const definedComponent = useMemo(
-    () => getComponent(node.definitionId as string),
-    [node, getComponent]
+  const registeredComponentConfig = useMemo(
+    () => getComponentConfig(node.definitionId as string),
+    [node, getComponentConfig]
   )
 
   const props = useMemo(() => {
-    if (!definedComponent) {
+    if (!registeredComponentConfig) {
       return {}
     }
 
@@ -61,7 +61,7 @@ export const CompositionBlock = ({
           const [, uuid, ...path] = variable.path.split('/')
           const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>
           const value = entityStore?.getValue(binding, path.slice(0, -1))
-          const variableDefinition = definedComponent.componentDefinition.variables[variableName]
+          const variableDefinition = registeredComponentConfig.definition.variables[variableName]
           acc[variableName] = transformContentValue(value, variableDefinition)
           break
         }
@@ -75,16 +75,23 @@ export const CompositionBlock = ({
       }
       return acc
     }, propMap)
-  }, [definedComponent, node.variables, resolveDesignValue, dataSource, entityStore, unboundValues])
+  }, [
+    registeredComponentConfig,
+    node.variables,
+    resolveDesignValue,
+    dataSource,
+    entityStore,
+    unboundValues,
+  ])
 
   const cfStyles = buildCfStyles(props)
   const { className } = useStyleTag({ styles: cfStyles })
 
-  if (!definedComponent) {
+  if (!registeredComponentConfig) {
     return null
   }
 
-  const { component } = definedComponent
+  const { component } = registeredComponentConfig
 
   const children = node.children.map((childNode: CompositionNode, index) => {
     return (
