@@ -23,7 +23,7 @@ export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
   useHoverIndicator(isDragging)
   const [areEntitiesFetched, setEntitiesFetched] = useState(false)
 
-  const [entityStore, setEntityStore] = useState<ExperienceBuilderEditorEntityStore>(
+  const entityStore = useRef<ExperienceBuilderEditorEntityStore>(
     new ExperienceBuilderEditorEntityStore({
       entities: [],
       locale: settings.locale,
@@ -31,10 +31,11 @@ export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
   )
 
   useEffect(() => {
-    setEntityStore(new ExperienceBuilderEditorEntityStore({
-      entities: [],
-      locale: settings.locale,
-    }));
+    entityStore.current = 
+      new ExperienceBuilderEditorEntityStore({
+        entities: [],
+        locale: settings.locale,
+      })
   }, [settings.locale])
 
   useEffect(() => {
@@ -50,12 +51,11 @@ export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
     const resolveEntities = async () => {
       setEntitiesFetched(false)
       const entityLinks = Object.values(dataSource || {})
-      await entityStore.fetchEntities(entityLinks)
+      await entityStore.current.fetchEntities(entityLinks)
       setEntitiesFetched(true)
     }
-
     resolveEntities()
-  }, [dataSource, entityStore])
+  }, [dataSource, settings.locale])
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])

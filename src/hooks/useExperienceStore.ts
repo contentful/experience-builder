@@ -29,6 +29,7 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps): Experie
     console.error(`${generalMessage} with error: ${message}`)
     setError(message)
   }, [])
+
   const fetchReferencedEntities = useCallback(
     async ({ composition, locale }: { composition: Composition; locale: string }) => {
       if (!composition || !locale) {
@@ -50,7 +51,6 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps): Experie
       }
 
       try {
-        // TODO: investigate why this is being fetched multiple twice
         const [entriesResponse, assetsResponse] = await Promise.all([
           entryIds.length > 0
             ? client.getEntries({ 'sys.id[in]': entryIds, locale })

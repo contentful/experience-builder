@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { RefObject, useMemo } from 'react'
 import {
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
@@ -35,7 +35,7 @@ type VisualEditorBlockProps = {
   unboundValues: CompositionUnboundValues
   selectedNodeId?: string
   resolveDesignValue: ResolveDesignValueType
-  entityStore: ExperienceBuilderEditorEntityStore
+  entityStore: RefObject<ExperienceBuilderEditorEntityStore>
   areEntitiesFetched: boolean
 }
 
@@ -82,7 +82,7 @@ export const VisualEditorBlock = ({
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>
 
           const boundValue = areEntitiesFetched
-            ? entityStore.getValue(binding, path.slice(0, -1))
+            ? entityStore.current?.getValue(binding, path.slice(0, -1))
             : undefined
           const value = boundValue || variableDefinition.defaultValue
 

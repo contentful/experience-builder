@@ -6,7 +6,7 @@ import { useBreakpoints } from '../hooks'
 
 type DeliveryRootProps = {
   settings: ExperienceBuilderSettings
-  experience: Experience;
+  experience: Experience
 }
 
 export const PreviewDeliveryRoot = ({ settings, experience }: DeliveryRootProps) => {
@@ -17,8 +17,8 @@ export const PreviewDeliveryRoot = ({ settings, experience }: DeliveryRootProps)
       experience.fetchBySlug({
         experienceTypeId: settings.experienceTypeId,
         localeCode: settings.locale,
-        slug: settings.slug
-      });
+        slug: settings.slug,
+      })
     }
   }, [experience, settings.experienceTypeId, settings.slug, settings.locale])
 

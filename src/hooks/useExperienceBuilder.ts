@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import contentful from 'contentful'
-import {
-  CompositionMode,
-  ExperienceBuilderConfig,
-  ExperienceBuilderSettings,
-} from '../types'
+import { CompositionMode, ExperienceBuilderConfig, ExperienceBuilderSettings } from '../types'
 import { useExperienceStore } from './useExperienceStore'
 import { validateExperienceBuilderConfig } from '../validation'
 import { useComponents } from './useComponents'
@@ -15,14 +11,13 @@ type UseExperienceBuilderProps = {
    * Id of the content type of the target experience
    */
   experienceTypeId: string
-  slug: string;
+  slug: string
   /**
    *  Mode defines the behaviour of the sdk.
    * `editor` - active messaging with the web app.
    * `preview` - fetching and rendering draft data.
    * `delivery` - fetching and rendering of published data. */
   mode?: CompositionMode
-
 } & ExperienceBuilderConfig
 
 export const useExperienceBuilder = ({
@@ -41,19 +36,19 @@ export const useExperienceBuilder = ({
       return mode
     }
 
-    throw new Error(`Unsupported mode provided: ${mode}. Supported values: ${supportedModes}`);
-  });
+    throw new Error(`Unsupported mode provided: ${mode}. Supported values: ${supportedModes}`)
+  })
 
   useEffect(() => {
     if (supportedModes.includes(mode)) {
-      setMode(mode);
+      setMode(mode)
     }
   }, [mode])
 
   const defaultHost = activeMode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
 
   if (host && !supportedHosts.includes(host)) {
-    throw new Error(`Unsupported host provided: ${host}. Supported values: ${supportedHosts}`);
+    throw new Error(`Unsupported host provided: ${host}. Supported values: ${supportedHosts}`)
   }
 
   const ctflApi = host || defaultHost
@@ -63,8 +58,8 @@ export const useExperienceBuilder = ({
     spaceId,
     defaultLocale,
     environmentId,
-    mode: activeMode
-  });
+    mode: activeMode,
+  })
 
   const client = useMemo(
     () =>
@@ -78,9 +73,9 @@ export const useExperienceBuilder = ({
   )
 
   const experience = useExperienceStore({ client })
-  const { fetchBySlug } = experience;
+  const { fetchBySlug } = experience
 
-  const { defineComponent } = useComponents({ mode: activeMode });
+  const { defineComponent } = useComponents({ mode: activeMode })
 
   const settings = useMemo<ExperienceBuilderSettings>(
     () => ({
@@ -92,30 +87,23 @@ export const useExperienceBuilder = ({
       setLocale: async (localeCode: string) => {
         // if nothing changed
         if (locale === localeCode) {
-          return;
+          return
         }
 
         setLocale(localeCode)
         if (activeMode !== 'editor') {
           // refetching everything for the new locale if locale changes dynamically
           // TODO: caching potential
-          await fetchBySlug({ experienceTypeId, slug, localeCode });
+          await fetchBySlug({ experienceTypeId, slug, localeCode })
         }
-      }
+      },
     }),
-    [
-      locale,
-      activeMode,
-      experienceTypeId,
-      fetchBySlug,
-      slug,
-      client
-    ]
+    [locale, activeMode, experienceTypeId, fetchBySlug, slug, client]
   )
 
   return {
     experience,
     settings,
-    defineComponent
+    defineComponent,
   }
 }

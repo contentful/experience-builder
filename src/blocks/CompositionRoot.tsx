@@ -5,8 +5,8 @@ import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
 import { supportedModes } from '../constants'
 
 type CompositionRootProps = {
-  settings: ExperienceBuilderSettings;
-  experience: Experience;
+  settings: ExperienceBuilderSettings
+  experience: Experience
 }
 
 export const CompositionRoot = (props: CompositionRootProps) => {
@@ -18,7 +18,5 @@ export const CompositionRoot = (props: CompositionRootProps) => {
     return <VisualEditorRoot settings={props.settings} />
   }
 
-  return (
-    <PreviewDeliveryRoot settings={props.settings} experience={props.experience} />
-  )
+  return <PreviewDeliveryRoot settings={props.settings} experience={props.experience} />
 }

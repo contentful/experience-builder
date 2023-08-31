@@ -8,7 +8,7 @@ jest.mock('contentful', () => {
   const createClient = jest.fn().mockImplementation(() => ({
     getEntries: jest.fn(),
     getAssets: jest.fn(),
-  }));
+  }))
 
   return {
     __esModule: true,
@@ -31,7 +31,7 @@ jest.mock('./useExperienceStore', () => {
         error: undefined,
         isLoading: false,
         fetchBySlug: jest.fn().mockImplementation(() => {
-          return Promise.resolve();
+          return Promise.resolve()
         }),
       }
     },
@@ -322,13 +322,13 @@ describe('useExperienceBuilder', () => {
           mode,
         },
       })
-  
+
       const output = res.result.current
-  
+
       expect(output.settings.locale).toBe(defaultLocale)
-  
+
       await act(() => output.settings.setLocale(defaultLocale))
-  
+
       expect(res.result.current.settings.locale).toBe(defaultLocale)
       expect(output.experience.fetchBySlug).not.toHaveBeenCalled()
     })
