@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ExperienceBuilderSettings } from '../types'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyEditorContainer } from './EmptyEdtorContainer'
@@ -21,9 +21,9 @@ export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
   const { resolveDesignValue } = useBreakpoints(breakpoints)
   useHoverIndicator(isDragging)
-  const [areEntitiesFetched, setEntitiesFetched] = React.useState(false)
+  const [areEntitiesFetched, setEntitiesFetched] = useState(false)
 
-  const entityStore = useRef(
+  const [entityStore, setEntityStore] = useState<ExperienceBuilderEditorEntityStore>(
     new ExperienceBuilderEditorEntityStore({
       entities: [],
       locale: settings.locale,
@@ -31,10 +31,10 @@ export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
   )
 
   useEffect(() => {
-    entityStore.current = new ExperienceBuilderEditorEntityStore({
+    setEntityStore(new ExperienceBuilderEditorEntityStore({
       entities: [],
       locale: settings.locale,
-    })
+    }));
   }, [settings.locale])
 
   useEffect(() => {
@@ -50,12 +50,12 @@ export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
     const resolveEntities = async () => {
       setEntitiesFetched(false)
       const entityLinks = Object.values(dataSource || {})
-      await entityStore.current.fetchEntities(entityLinks)
+      await entityStore.fetchEntities(entityLinks)
       setEntitiesFetched(true)
     }
 
     resolveEntities()
-  }, [dataSource, settings.locale, setEntitiesFetched])
+  }, [dataSource, entityStore])
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
