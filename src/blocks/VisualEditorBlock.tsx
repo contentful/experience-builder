@@ -35,7 +35,7 @@ type VisualEditorBlockProps = {
   unboundValues: CompositionUnboundValues
   selectedNodeId?: string
   resolveDesignValue: ResolveDesignValueType
-  entityStore: React.RefObject<ExperienceBuilderEditorEntityStore>
+  entityStore: ExperienceBuilderEditorEntityStore
   areEntitiesFetched: boolean
 }
 
@@ -81,10 +81,12 @@ export const VisualEditorBlock = ({
           // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/')
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>
+
           const boundValue = areEntitiesFetched
-            ? entityStore.current?.getValue(binding, path.slice(0, -1))
+            ? entityStore.getValue(binding, path.slice(0, -1))
             : undefined
           const value = boundValue || variableDefinition.defaultValue
+
           return {
             ...acc,
             [variableName]: transformContentValue(value, variableDefinition),
