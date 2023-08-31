@@ -2,12 +2,12 @@ import { act, renderHook } from '@testing-library/react'
 import { useExperienceBuilder } from './useExperienceBuilder'
 import { CompositionMode } from '../types'
 import { supportedModes } from '../constants'
-import type { ContentfulClientApi } from 'contentful';
+import type { ContentfulClientApi } from 'contentful'
 
 const clientMock = {
   getEntries: jest.fn(),
   getAssets: jest.fn(),
-} as unknown as ContentfulClientApi<undefined>;
+} as unknown as ContentfulClientApi<undefined>
 
 jest.mock('./useExperienceStore', () => {
   return {
@@ -155,7 +155,6 @@ describe('useExperienceBuilder', () => {
     expect(fetchSpy).not.toHaveBeenCalled()
   })
   ;(['preview', 'delivery'] as CompositionMode[]).map((mode) => {
-
     it(`should allow to set the ${mode} mode`, () => {
       const res = renderHook((props) => useExperienceBuilder(props), {
         initialProps: {
@@ -166,9 +165,9 @@ describe('useExperienceBuilder', () => {
           mode: mode,
         },
       })
-  
+
       const output = res.result.current
-  
+
       expect(output.settings.mode).toBe(mode)
     })
 
