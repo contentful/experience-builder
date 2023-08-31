@@ -1,4 +1,4 @@
-import { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful'
+import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful'
 import { isObject } from 'lodash'
 import get from 'lodash.get'
 

@@ -25,4 +25,3 @@ export const CF_STYLE_ATTRIBUTES = [
 ];
 
 export const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor']
-export const supportedHosts = ['preview.contentful.com', 'cdn.contentful.com']

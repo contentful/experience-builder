@@ -8,7 +8,7 @@ import {
 } from '../types'
 
 import React, { useMemo } from 'react'
-import { UnresolvedLink } from 'contentful'
+import type { UnresolvedLink } from 'contentful'
 import { EntityStore } from '../core/EntityStore'
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'

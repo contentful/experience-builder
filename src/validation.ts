@@ -1,3 +1,4 @@
+import { supportedModes } from './constants'
 import { CompositionMode, ExperienceBuilderConfig, IncomingExperienceBuilderEvent } from './types'
 
 export type VisualEditorMessagePayload = {
@@ -74,37 +75,27 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
 }
 
 export const validateExperienceBuilderConfig = ({
-  accessToken,
-  spaceId,
+  client,
   defaultLocale,
-  environmentId,
   mode,
-}: Omit<ExperienceBuilderConfig, 'host'> & { mode: CompositionMode }) => {
+}: ExperienceBuilderConfig & { mode: CompositionMode }) => {
   if (mode === 'editor') {
     return
   }
 
-  if (!accessToken) {
-    throw new Error(
-      'When outside the editor mode you must define either a Preview or Delivery Token in the experience initialization'
-    )
-  }
-
-  if (!spaceId) {
-    throw new Error(
-      'When outside the editor mode you must define a SpaceId in the experience initialization'
-    )
+  if (!supportedModes.includes(mode)) {
+    throw new Error(`Parameter "mode" contains unsupported value. Supported modes: ${supportedModes.join(',')}`)
   }
 
   if (!defaultLocale) {
     throw new Error(
-      'When outside the editor mode you must define a locale in the experience initialization'
+      'Parameter "defaultLocale" is required for expereince builder initialization outside of editor mode'
     )
   }
 
-  if (!environmentId) {
+  if (!client) {
     throw new Error(
-      'When outside the editor mode you must define a EnvironmentId in the experience initialization'
+      'Parameter "client" is required for expereince builder initialization outside of editor mode'
     )
   }
 }
