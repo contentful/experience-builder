@@ -6,14 +6,14 @@ import { useContentfulSection } from '../hooks/useContentfulSection'
 import { supportedModes } from '../constants'
 
 type CompositionRootProps = {
-  settings: ExperienceBuilderSettings;
-  experience: Experience;
+  settings: ExperienceBuilderSettings
+  experience: Experience
 }
 
 export const CompositionRoot = (props: CompositionRootProps) => {
   const { mode } = props.settings
 
-  useContentfulSection({ mode });
+  useContentfulSection({ mode })
 
   if (!mode || !supportedModes.includes(mode)) return null
 
@@ -21,7 +21,5 @@ export const CompositionRoot = (props: CompositionRootProps) => {
     return <VisualEditorRoot settings={props.settings} />
   }
 
-  return (
-    <PreviewDeliveryRoot settings={props.settings} experience={props.experience} />
-  )
+  return <PreviewDeliveryRoot settings={props.settings} experience={props.experience} />
 }

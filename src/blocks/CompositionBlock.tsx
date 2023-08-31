@@ -38,10 +38,7 @@ export const CompositionBlock = ({
   breakpoints,
   resolveDesignValue,
 }: CompositionBlockProps) => {
-  const definedComponent = useMemo(
-    () => getDefinedComponent(node.definitionId as string),
-    [node]
-  )
+  const definedComponent = useMemo(() => getDefinedComponent(node.definitionId as string), [node])
 
   const props = useMemo(() => {
     if (!definedComponent) {
