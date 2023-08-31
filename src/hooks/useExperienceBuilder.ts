@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import contentful from 'contentful'
 import { CompositionMode, ExperienceBuilderConfig, ExperienceBuilderSettings } from '../types'
 import { useExperienceStore } from './useExperienceStore'
 import { validateExperienceBuilderConfig } from '../validation'
 import { useComponents } from './useComponents'
-import { supportedHosts, supportedModes } from '../constants'
+import { supportedModes } from '../constants'
 
 type UseExperienceBuilderProps = {
   /**
@@ -22,12 +21,9 @@ type UseExperienceBuilderProps = {
 
 export const useExperienceBuilder = ({
   experienceTypeId,
-  accessToken,
+  client,
   defaultLocale,
-  environmentId,
-  spaceId,
   slug,
-  host,
   mode = 'delivery',
 }: UseExperienceBuilderProps) => {
   const [locale, setLocale] = useState<string>(defaultLocale)
@@ -45,32 +41,11 @@ export const useExperienceBuilder = ({
     }
   }, [mode])
 
-  const defaultHost = activeMode === 'preview' ? 'preview.contentful.com' : 'cdn.contentful.com'
-
-  if (host && !supportedHosts.includes(host)) {
-    throw new Error(`Unsupported host provided: ${host}. Supported values: ${supportedHosts}`)
-  }
-
-  const ctflApi = host || defaultHost
-
   validateExperienceBuilderConfig({
-    accessToken,
-    spaceId,
+    client,
     defaultLocale,
-    environmentId,
     mode: activeMode,
   })
-
-  const client = useMemo(
-    () =>
-      contentful.createClient({
-        space: spaceId as string,
-        environment: environmentId as string,
-        host: ctflApi,
-        accessToken: accessToken as string,
-      }),
-    [spaceId, environmentId, ctflApi, accessToken]
-  )
 
   const experience = useExperienceStore({ client })
   const { fetchBySlug } = experience

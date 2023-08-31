@@ -1,21 +1,13 @@
 import { act, renderHook } from '@testing-library/react'
 import { useExperienceBuilder } from './useExperienceBuilder'
-import { createClient } from 'contentful'
 import { CompositionMode } from '../types'
-import { supportedHosts, supportedModes } from '../constants'
+import { supportedModes } from '../constants'
+import type { ContentfulClientApi } from 'contentful';
 
-jest.mock('contentful', () => {
-  const createClient = jest.fn().mockImplementation(() => ({
-    getEntries: jest.fn(),
-    getAssets: jest.fn(),
-  }))
-
-  return {
-    __esModule: true,
-    default: { createClient },
-    createClient,
-  }
-})
+const clientMock = {
+  getEntries: jest.fn(),
+  getAssets: jest.fn(),
+} as unknown as ContentfulClientApi<undefined>;
 
 jest.mock('./useExperienceStore', () => {
   return {
@@ -38,9 +30,6 @@ jest.mock('./useExperienceStore', () => {
   }
 })
 
-const spaceId = 'space-id'
-const environmentId = 'master'
-const accessToken = 'CFFakeToken'
 const experienceTypeId = 'books'
 const defaultLocale = 'en-US'
 const slug = 'hello-world'
@@ -50,19 +39,10 @@ describe('useExperienceBuilder', () => {
     const res = renderHook((props) => useExperienceBuilder(props), {
       initialProps: {
         experienceTypeId,
-        accessToken: accessToken,
+        client: clientMock,
         defaultLocale,
-        environmentId,
-        spaceId,
         slug,
       },
-    })
-
-    expect(createClient).toHaveBeenCalledWith({
-      space: spaceId,
-      environment: environmentId,
-      host: 'cdn.contentful.com',
-      accessToken,
     })
 
     const output = res.result.current
@@ -91,94 +71,12 @@ describe('useExperienceBuilder', () => {
     expect(output.defineComponent).toBeDefined()
   })
 
-  it('should throw an error if unsupported host was provided', () => {
-    try {
-      renderHook((props) => useExperienceBuilder(props), {
-        initialProps: {
-          experienceTypeId,
-          accessToken: accessToken,
-          defaultLocale,
-          environmentId,
-          spaceId,
-          slug,
-          host: 'random-string',
-        },
-      })
-    } catch (error) {
-      expect((error as Error).message).toBe(
-        `Unsupported host provided: random-string. Supported values: ${supportedHosts}`
-      )
-    }
-  })
-
-  it('should allow to set production host', () => {
-    renderHook((props) => useExperienceBuilder(props), {
-      initialProps: {
-        experienceTypeId,
-        accessToken: accessToken,
-        defaultLocale,
-        environmentId,
-        spaceId,
-        slug,
-        host: 'cdn.contentful.com',
-      },
-    })
-
-    expect(createClient).toHaveBeenCalledWith({
-      space: spaceId,
-      environment: environmentId,
-      host: 'cdn.contentful.com',
-      accessToken,
-    })
-  })
-
-  it('should allow to set preview host', () => {
-    renderHook((props) => useExperienceBuilder(props), {
-      initialProps: {
-        experienceTypeId,
-        accessToken: accessToken,
-        defaultLocale,
-        environmentId,
-        spaceId,
-        slug,
-        host: 'preview.contentful.com',
-      },
-    })
-
-    expect(createClient).toHaveBeenCalledWith({
-      space: spaceId,
-      environment: environmentId,
-      host: 'preview.contentful.com',
-      accessToken,
-    })
-  })
-
-  it('should allow to set the preview mode', () => {
-    const res = renderHook((props) => useExperienceBuilder(props), {
-      initialProps: {
-        experienceTypeId,
-        accessToken: accessToken,
-        defaultLocale,
-        environmentId,
-        spaceId,
-        slug,
-        mode: 'preview' as CompositionMode,
-      },
-    })
-
-    const output = res.result.current
-
-    expect(output.settings.mode).toBe('preview')
-  })
-
   it('should allow to set the editor mode', () => {
     const res = renderHook((props) => useExperienceBuilder(props), {
       initialProps: {
         experienceTypeId,
-        accessToken: accessToken,
+        client: clientMock,
         defaultLocale,
-        environmentId,
-        spaceId,
         slug,
         mode: 'editor' as CompositionMode,
       },
@@ -189,33 +87,13 @@ describe('useExperienceBuilder', () => {
     expect(output.settings.mode).toBe('editor')
   })
 
-  it('should allow to set the delivery mode', () => {
-    const res = renderHook((props) => useExperienceBuilder(props), {
-      initialProps: {
-        experienceTypeId,
-        accessToken: accessToken,
-        defaultLocale,
-        environmentId,
-        spaceId,
-        slug,
-        mode: 'delivery' as CompositionMode,
-      },
-    })
-
-    const output = res.result.current
-
-    expect(output.settings.mode).toBe('delivery')
-  })
-
   it('should throw an error if passed incorrect mode', () => {
     try {
       renderHook((props) => useExperienceBuilder(props), {
         initialProps: {
           experienceTypeId,
-          accessToken: accessToken,
+          client: clientMock,
           defaultLocale,
-          environmentId,
-          spaceId,
           slug,
           mode: 'random' as CompositionMode,
         },
@@ -231,10 +109,8 @@ describe('useExperienceBuilder', () => {
     const res = renderHook((props) => useExperienceBuilder(props), {
       initialProps: {
         experienceTypeId,
-        accessToken: accessToken,
+        client: clientMock,
         defaultLocale,
-        environmentId,
-        spaceId,
         slug,
         mode: 'editor' as CompositionMode,
       },
@@ -244,10 +120,8 @@ describe('useExperienceBuilder', () => {
 
     res.rerender({
       experienceTypeId,
-      accessToken: accessToken,
+      client: clientMock,
       defaultLocale,
-      environmentId,
-      spaceId,
       slug,
       mode: 'delivery' as CompositionMode,
     })
@@ -259,10 +133,8 @@ describe('useExperienceBuilder', () => {
     const res = renderHook((props) => useExperienceBuilder(props), {
       initialProps: {
         experienceTypeId,
-        accessToken: accessToken,
+        client: clientMock,
         defaultLocale,
-        environmentId,
-        spaceId,
         slug,
         mode: 'editor' as CompositionMode,
       },
@@ -278,14 +150,29 @@ describe('useExperienceBuilder', () => {
     expect(fetchSpy).not.toHaveBeenCalled()
   })
   ;(['preview', 'delivery'] as CompositionMode[]).map((mode) => {
+
+    it(`should allow to set the ${mode} mode`, () => {
+      const res = renderHook((props) => useExperienceBuilder(props), {
+        initialProps: {
+          experienceTypeId,
+          client: clientMock,
+          defaultLocale,
+          slug,
+          mode: mode,
+        },
+      })
+  
+      const output = res.result.current
+  
+      expect(output.settings.mode).toBe(mode)
+    })
+
     it(`changes the locale and triggers fetch of entity for the new locale in ${mode} mode`, async () => {
       const res = renderHook((props) => useExperienceBuilder(props), {
         initialProps: {
           experienceTypeId,
-          accessToken: accessToken,
+          client: clientMock,
           defaultLocale,
-          environmentId,
-          spaceId,
           slug,
           mode,
         },
@@ -309,10 +196,8 @@ describe('useExperienceBuilder', () => {
       const res = renderHook((props) => useExperienceBuilder(props), {
         initialProps: {
           experienceTypeId,
-          accessToken: accessToken,
+          client: clientMock,
           defaultLocale,
-          environmentId,
-          spaceId,
           slug,
           mode,
         },

@@ -4,7 +4,7 @@
  * parts to prepare this library for EAP
  */
 
-import { createClient } from 'contentful'
+import type { ContentfulClientApi } from 'contentful'
 import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_CONTAINER_NAME,
@@ -183,21 +183,11 @@ export type CompositionTree = {
 export type CompositionMode = 'editor' | 'preview' | 'delivery'
 
 export type ExperienceBuilderConfig = {
-  /** Use CDA token for delivery mode and CPA for preview mode
-   * When rendered in the editor a token is not needed **/
-  accessToken: string
-  /** The source spaceId,
-   *  when rendered in the editor, the id is set from the editor **/
-  spaceId: string
-  /** The source environmentId,
-   *  when rendered in the editor, the id is set from the editor **/
-  environmentId: string
+  /** Instance of a Delivery or Preview client from "contentful" package **/
+  client: ContentfulClientApi<undefined>
   /** The defined locale,
    *  when rendered in the editor, the locale is set from the editor, but you can use this to overwrite this **/
   defaultLocale: string
-  /** The contentful host to be used.
-   * Defaults to 'cdn.contentful.com' for delivery mode and 'preview.contentful.com' for preview mode **/
-  host?: string
 }
 
 export type ExperienceBuilderSettings = {
@@ -205,7 +195,7 @@ export type ExperienceBuilderSettings = {
   locale: string
   slug: string
   mode: CompositionMode
-  client: ReturnType<typeof createClient>
+  client: ContentfulClientApi<undefined>
   setLocale: (localeCode: string) => void
 }
 
