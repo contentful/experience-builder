@@ -58,7 +58,6 @@ export const useExperienceBuilder = ({
       locale,
       slug,
       mode: activeMode,
-      client,
       setLocale: async (localeCode: string) => {
         // if nothing changed
         if (locale === localeCode) {
@@ -73,7 +72,7 @@ export const useExperienceBuilder = ({
         }
       },
     }),
-    [locale, activeMode, experienceTypeId, fetchBySlug, slug, client]
+    [locale, activeMode, experienceTypeId, fetchBySlug, slug]
   )
 
   return {

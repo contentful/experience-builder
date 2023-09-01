@@ -57,7 +57,6 @@ describe('useExperienceBuilder', () => {
       locale: defaultLocale,
       slug,
       mode: 'delivery',
-      client: output.settings.client,
       setLocale: output.settings.setLocale,
     })
     expect(output.experience).toEqual({
