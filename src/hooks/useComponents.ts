@@ -86,5 +86,5 @@ export const getDefinedComponent = (id: string) => {
 
 // Use it for tests only
 export const resetDefinedComponentsMap = () => {
-  registeredComponentDefinitions.clear();
+  registeredComponentDefinitions.clear()
 }
