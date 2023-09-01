@@ -195,7 +195,6 @@ export type ExperienceBuilderSettings = {
   locale: string
   slug: string
   mode: CompositionMode
-  client: ContentfulClientApi<undefined>
   setLocale: (localeCode: string) => void
 }
 
