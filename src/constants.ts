@@ -22,6 +22,6 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageUrl',
   'cfBackgroundImageScaling',
   'cfBackgroundImageAlignment',
-];
+]
 
 export const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor']
