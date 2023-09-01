@@ -62,10 +62,7 @@ describe('ComponentDefinitions', () => {
 
     const definition = getDefinedComponent(definitionId)
     expect(definition).toBeDefined()
-
-    for (const variable of Object.values(definition!.componentDefinition.variables)) {
-      expect(variable.group).toBe('content')
-    }
+    expect(definition!.componentDefinition.variables.isChecked.group).toBe('content')
   })
 
   it('should add default built-in style variables', () => {
@@ -131,57 +128,57 @@ describe('ComponentDefinitions', () => {
       group: 'content',
       defaultValue: true,
     })
+  })
 
-    it('should add specified built-in style variables', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
+  it('should add specified built-in style variables', () => {
+    const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
-      const definitionId = 'TestComponent-2'
+    const definitionId = 'TestComponent-2'
 
-      result.current.defineComponent(TestComponent, {
-        id: definitionId,
-        name: 'TestComponent',
-        builtInStyles: ['cfPadding', 'cfBorder'],
-        variables: {
-          isChecked: {
-            type: 'Boolean',
-          },
+    result.current.defineComponent(TestComponent, {
+      id: definitionId,
+      name: 'TestComponent',
+      builtInStyles: ['cfPadding', 'cfBorder'],
+      variables: {
+        isChecked: {
+          type: 'Boolean',
         },
-      })
-
-      const definition = getDefinedComponent(definitionId)
-      expect(definition).toBeDefined()
-
-      const variableKeys = Object.keys(definition!.componentDefinition.variables)
-      expect(variableKeys).toContain('cfPadding')
-      expect(variableKeys).toContain('cfBorder')
-      expect(variableKeys).not.toContain('cfMargin')
+      },
     })
 
-    it('should call sendMessage in editor mode', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
+    const definition = getDefinedComponent(definitionId)
+    expect(definition).toBeDefined()
 
-      result.current.defineComponent(TestComponent, testComponentDefinition)
+    const variableKeys = Object.keys(definition!.componentDefinition.variables)
+    expect(variableKeys).toContain('cfPadding')
+    expect(variableKeys).toContain('cfBorder')
+    expect(variableKeys).not.toContain('cfMargin')
+  })
 
-      expect(sendMessage).toHaveBeenCalledWith(
-        OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS,
-        applyComponentDefinitionFallbacks(testComponentDefinition)
-      )
-    })
+  it('should call sendMessage in editor mode', () => {
+    const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
-    it('should not call sendMessage in preview mode', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
+    result.current.defineComponent(TestComponent, testComponentDefinition)
 
-      result.current.defineComponent(TestComponent, testComponentDefinition)
+    expect(sendMessage).toHaveBeenCalledWith(
+      OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS,
+      applyBuiltInStyleDefinitions(applyComponentDefinitionFallbacks(testComponentDefinition))
+    )
+  })
 
-      expect(sendMessage).not.toHaveBeenCalled()
-    })
+  it('should not call sendMessage in preview mode', () => {
+    const { result } = renderHook(() => useComponents({ mode: 'preview' }))
 
-    it('should not call sendMessage in delivery mode', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'delivery' }))
+    result.current.defineComponent(TestComponent, testComponentDefinition)
 
-      result.current.defineComponent(TestComponent, testComponentDefinition)
+    expect(sendMessage).not.toHaveBeenCalled()
+  })
 
-      expect(sendMessage).not.toHaveBeenCalled()
-    })
+  it('should not call sendMessage in delivery mode', () => {
+    const { result } = renderHook(() => useComponents({ mode: 'delivery' }))
+
+    result.current.defineComponent(TestComponent, testComponentDefinition)
+
+    expect(sendMessage).not.toHaveBeenCalled()
   })
 })
