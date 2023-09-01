@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import { ComponentConfig, ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
 import { sendMessage } from '../sendMessage'
@@ -73,22 +73,26 @@ const DEFAULT_COMPONENT_DEFINITIONS = [
   },
 ] satisfies Array<ComponentConfig>
 
-export const useComponents = () => {
-  const registeredComponentConfigs = useRef<Array<ComponentConfig>>([])
+let registeredComponentConfigs: Array<ComponentConfig> = []
 
+export const useComponents = () => {
   const registerComponents = useCallback((componentConfigs: Array<ComponentConfig>) => {
     // Fill definitions with fallbacks values
     const enrichedComponentConfigs = componentConfigs.map(enrichComponentDefinition)
     // Add default components section and container
     enrichedComponentConfigs.push(...DEFAULT_COMPONENT_DEFINITIONS)
-    registeredComponentConfigs.current = enrichedComponentConfigs
+    registeredComponentConfigs = enrichedComponentConfigs
     // Send the definitions (without components) via the connection message to the experience builder
     const registeredDefinitions = enrichedComponentConfigs.map(({ definition }) => definition)
     sendConnectedMessage(registeredDefinitions)
   }, [])
 
+  // Warning: We don't use React state but a global variable. This will only work if `registerComponents`
+  // is guaranteed to be executed before `getComponentConfig` as this hook will never re-render if
+  // the list of saved configs changes. Ideally, this would be a context that shares a proper state accross
+  // all hook instances.
   const getComponentConfig = useCallback((id: string) => {
-    return registeredComponentConfigs.current.find(({ definition }) => definition.id === id)
+    return registeredComponentConfigs.find(({ definition }) => definition.id === id)
   }, [])
 
   return {
