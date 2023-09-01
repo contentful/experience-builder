@@ -6,6 +6,7 @@ import { builtInStyles as builtInStyleDefinitions } from '../core/definitions/va
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from '../blocks/ContentfulSection'
 import { containerDefinition, sectionDefinition } from '../core/definitions/components'
+import { SDK_VERSION } from '../core/constants'
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -53,12 +54,9 @@ const enrichComponentDefinition = ({ component, definition }: ComponentConfig): 
 }
 
 const sendConnectedMessage = (registeredDefinitions: Array<ComponentDefinition>) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore -- this is replaced statically by vite with the env variable (becomes undefined if missing)
-  const sdkVersion = import.meta.env.VITE_SDK_VERSION
   sendMessage(OutgoingExperienceBuilderEvent.CONNECTED, {
     definitions: registeredDefinitions,
-    sdkVersion,
+    sdkVersion: SDK_VERSION,
   })
 }
 

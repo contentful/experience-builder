@@ -2,6 +2,10 @@ import React from 'react'
 import { renderHook } from '@testing-library/react'
 import { useComponents } from './useComponents'
 
+jest.mock('../core/constants', () => ({
+  VITE_SDK_VERSION: '0.0.0-test',
+}))
+
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>
 }
