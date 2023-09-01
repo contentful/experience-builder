@@ -67,7 +67,6 @@ describe('useFetchComposition', () => {
         experienceTypeId: 'layout',
         entities: [],
         locale,
-
       })
       expect(fetchComposition).toHaveBeenCalledWith('test')
 

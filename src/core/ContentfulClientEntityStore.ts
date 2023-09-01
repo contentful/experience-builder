@@ -34,7 +34,7 @@ export class ContentfulClientEntityStore extends EntityStore {
   }: ContentfulEntityStoreProps) {
     super({ entities, locale })
 
-    this.experienceTypeId = experienceTypeId;
+    this.experienceTypeId = experienceTypeId
     this.client = createClient({
       space: spaceId,
       environment: environmentId,
