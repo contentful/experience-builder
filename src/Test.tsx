@@ -6,39 +6,21 @@ const TestComponent = () => {
 }
 
 export const Test = () => {
-  const { defineComponent } = useComponents()
+  const { registerComponents } = useComponents()
 
-  defineComponent(TestComponent, {
-    id: 'TestComponent',
-    name: 'TestComponent',
-    variables: {
-      // name: {
-      //   type: 'Link',
-      //   linkType: 'Asset',
-      // },
-      isChecked: {
-        type: 'Boolean',
+  registerComponents([
+    {
+      component: TestComponent,
+      definition: {
+        id: 'TestComponent',
+        name: 'TestComponent',
+        variables: {
+          isChecked: {
+            type: 'Boolean',
+          },
+        },
       },
-      // elements: {
-      //   type: 'Array',
-      //   items: {
-      //     linkType: 'Entry',
-      //     type: 'Link',
-      //   },
-      // },
-      // elementsSymbol: {
-      //   type: 'Array',
-      //   items: {
-      //     type: 'Symbol',
-      //   },
-      // },
-      // elementsComponent: {
-      //   type: 'Array',
-      //   items: {
-      //     type: 'Component',
-      //   },
-      // },
     },
-  })
+  ])
   return <div data-test-id="test">Test</div>
 }
