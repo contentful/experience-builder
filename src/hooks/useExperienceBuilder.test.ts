@@ -70,7 +70,7 @@ describe('useExperienceBuilder', () => {
     try {
       // without it a big shabang bong log will be printed to the console and the world will expload
       // jk: you will just have to scroll a lot to find which test file has failed
-      jest.spyOn(console, 'error').mockReturnValue();
+      jest.spyOn(console, 'error').mockReturnValue()
 
       renderHook((props) => useExperienceBuilder(props), {
         initialProps: {
@@ -107,7 +107,6 @@ describe('useExperienceBuilder', () => {
 
     expect(res.result.current.experience.mode).toBe('delivery')
   })
-
   ;(['editor', 'preview', 'delivery'] as CompositionMode[]).map((mode) => {
     it(`should allow to set the ${mode} mode`, () => {
       const res = renderHook((props) => useExperienceBuilder(props), {

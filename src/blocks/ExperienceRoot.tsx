@@ -8,8 +8,8 @@ import { validateExperienceBuilderConfig } from '../validation'
 
 type ExperienceRootProps = {
   experience: Experience
-  locale: string;
-  slug: string;
+  locale: string
+  slug: string
 }
 
 export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {

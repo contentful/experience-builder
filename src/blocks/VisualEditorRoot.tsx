@@ -11,7 +11,7 @@ import { useEditorMode } from '../hooks/useEditorMode'
 import { CompositionMode } from '../types'
 
 type VisualEditorRootProps = {
-  initialLocale: string;
+  initialLocale: string
   mode: CompositionMode
 }
 

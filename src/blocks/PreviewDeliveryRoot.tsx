@@ -6,18 +6,17 @@ import { useBreakpoints } from '../hooks'
 import { usePrevious } from '../hooks/usePrevious'
 
 type DeliveryRootProps = {
-  experience: Experience;
-  locale: string;
-  slug: string;
+  experience: Experience
+  locale: string
+  slug: string
 }
 
 export const PreviewDeliveryRoot = ({ locale, slug, experience }: DeliveryRootProps) => {
+  const previousLocale = usePrevious(locale)
 
-  const previousLocale = usePrevious(locale);
-  
   useEffect(() => {
     // TODO: Test it, it is crucial
-    const shouldFetch = (!experience.store.composition || previousLocale !== locale)
+    const shouldFetch = !experience.store.composition || previousLocale !== locale
     // this useEffect is meant to trigger fetching for the first time if it hasn't been done earlier
     // if not yet fetched and not fetchin at the moment
     if (shouldFetch && !experience.store.isLoading && slug) {

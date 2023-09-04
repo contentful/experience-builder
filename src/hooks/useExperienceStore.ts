@@ -4,7 +4,7 @@ import { EntityStore } from '../core/EntityStore'
 import { Composition, ExperienceStore } from '../types'
 
 type UseExperienceStoreProps = {
-  client: ContentfulClientApi<undefined>;
+  client: ContentfulClientApi<undefined>
 }
 
 const errorMessagesWhileFetching = {

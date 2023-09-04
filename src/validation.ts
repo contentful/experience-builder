@@ -79,7 +79,11 @@ export const validateExperienceBuilderConfig = ({
   client,
   locale,
   mode,
-}: { client: ContentfulClientApi<undefined>; locale: string; mode: CompositionMode }) => {
+}: {
+  client: ContentfulClientApi<undefined>
+  locale: string
+  mode: CompositionMode
+}) => {
   if (mode === 'editor') {
     return
   }
