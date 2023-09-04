@@ -94,6 +94,10 @@ export const useComponents = () => {
   }, [])
 
   return {
+    /**
+     * Call this method only once to register all components. Any subsequent calls will override
+     * the previously registered components.
+     */
     registerComponents,
     getComponentConfig,
   }
