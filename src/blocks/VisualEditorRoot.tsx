@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ExperienceBuilderSettings } from '../types'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
@@ -9,14 +8,17 @@ import { onComponentDropped } from '../communication/onComponentDrop'
 import { useBreakpoints } from '../hooks/useBreakpoints'
 import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
 import { useEditorMode } from '../hooks/useEditorMode'
+import { CompositionMode } from '../types'
 
 type VisualEditorRootProps = {
-  settings: ExperienceBuilderSettings
+  initialLocale: string;
+  mode: CompositionMode
 }
 
-export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
-  const { tree, dataSource, isDragging, selectedNodeId, unboundValues, breakpoints } =
-    useEditorMode(settings)
+export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
+  // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
+  const { tree, dataSource, isDragging, locale, selectedNodeId, unboundValues, breakpoints } =
+    useEditorMode({ initialLocale, mode })
 
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
   const { resolveDesignValue } = useBreakpoints(breakpoints)
@@ -26,16 +28,16 @@ export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
   const entityStore = useRef<ExperienceBuilderEditorEntityStore>(
     new ExperienceBuilderEditorEntityStore({
       entities: [],
-      locale: settings.locale,
+      locale: locale,
     })
   )
 
   useEffect(() => {
     entityStore.current = new ExperienceBuilderEditorEntityStore({
       entities: [],
-      locale: settings.locale,
+      locale: locale,
     })
-  }, [settings.locale])
+  }, [locale])
 
   useEffect(() => {
     if (!tree || !tree?.root.children.length || !isDragging) return
@@ -54,7 +56,7 @@ export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
       setEntitiesFetched(true)
     }
     resolveEntities()
-  }, [dataSource, settings.locale])
+  }, [dataSource, locale])
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
@@ -72,7 +74,7 @@ export const VisualEditorRoot = ({ settings }: VisualEditorRootProps) => {
         <VisualEditorBlock
           key={node.data.id}
           node={node}
-          locale={settings.locale}
+          locale={locale}
           dataSource={dataSource}
           unboundValues={unboundValues}
           selectedNodeId={selectedNodeId}

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
   CompositionDataSource,
+  CompositionMode,
   CompositionTree,
   CompositionUnboundValues,
-  ExperienceBuilderSettings,
   IncomingExperienceBuilderEvent,
   OutgoingExperienceBuilderEvent,
   ScrollStates,
@@ -14,12 +14,18 @@ import { getDataFromTree } from '../utils'
 import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
 import { sendMessage } from '../communication/sendMessage'
 
-export const useEditorMode = (settings: ExperienceBuilderSettings) => {
+type UseEditorModeProps = {
+  initialLocale: string;
+  mode: CompositionMode;
+}
+
+export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
   const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<CompositionDataSource>({})
   const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({})
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
+  const [locale, setLocale] = useState<string>(initialLocale)
 
   const reloadApp = () => {
     sendMessage(OutgoingExperienceBuilderEvent.CANVAS_RELOAD, {})
@@ -31,8 +37,12 @@ export const useEditorMode = (settings: ExperienceBuilderSettings) => {
   }
 
   useEffect(() => {
+    setLocale(initialLocale)
+  }, [initialLocale])
+
+  useEffect(() => {
     // We only care about this communication when in editor mode
-    if (settings.mode !== 'editor') return
+    if (mode !== 'editor') return
     const onMessage = (event: MessageEvent) => {
       let reason
       if ((reason = doesMismatchMessageSchema(event))) {
@@ -65,7 +75,7 @@ export const useEditorMode = (settings: ExperienceBuilderSettings) => {
           const { dataSource, unboundValues } = getDataFromTree(tree)
 
           setTree(tree)
-          settings.setLocale(locale)
+          setLocale(locale)
           setDataSource(dataSource)
           setUnboundValues(unboundValues)
           break
@@ -104,14 +114,14 @@ export const useEditorMode = (settings: ExperienceBuilderSettings) => {
     return () => {
       window.removeEventListener('message', onMessage)
     }
-  }, [settings])
+  }, [mode])
 
   /*
    * Handles on scroll business
    */
   useEffect(() => {
     // We only care about this communication when in editor mode
-    if (settings.mode !== 'editor') return
+    if (mode !== 'editor') return
     let timeoutId = 0
     let isScrolling = false
 
@@ -146,7 +156,7 @@ export const useEditorMode = (settings: ExperienceBuilderSettings) => {
       window.removeEventListener('scroll', onScroll)
       clearTimeout(timeoutId)
     }
-  }, [settings.mode, selectedNodeId])
+  }, [mode, selectedNodeId])
 
   return useMemo(
     () => ({
@@ -155,8 +165,9 @@ export const useEditorMode = (settings: ExperienceBuilderSettings) => {
       unboundValues,
       isDragging,
       selectedNodeId,
+      locale,
       breakpoints: tree?.root.data.breakpoints ?? [],
     }),
-    [tree, dataSource, unboundValues, isDragging, selectedNodeId]
+    [tree, dataSource, unboundValues, isDragging, selectedNodeId, locale]
   )
 }

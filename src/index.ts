@@ -2,7 +2,6 @@ export { ExperienceRoot } from './blocks'
 export { useExperienceBuilder, getValueForBreakpoint } from './hooks'
 export type {
   ComponentDefinition,
-  ExperienceBuilderSettings,
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,
   CompositionVariableValueType,
