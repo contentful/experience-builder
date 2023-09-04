@@ -1,11 +1,10 @@
-import React from 'react'
 import { useExperienceStore } from './useExperienceStore'
-import { act, renderHook, screen, waitFor } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 import { EntityStore } from '../core/EntityStore'
 import { compositionEntry } from '../../test/__fixtures__/composition'
-import { entries, assets, entityIds } from '../../test/__fixtures__/entities'
+import { entries, assets } from '../../test/__fixtures__/entities'
 import type { ContentfulClientApi } from 'contentful'
-import { Experience } from '../types'
+import { ExperienceStore } from '../types'
 
 jest.mock('../core/EntityStore')
 
@@ -34,9 +33,9 @@ describe('useFetchComposition', () => {
       initialProps: { client: clientMock },
     })
 
-    const experience = res.result.current
+    const store = res.result.current
 
-    expect(experience).toEqual({
+    expect(store).toEqual({
       composition: undefined,
       children: [],
       breakpoints: [],
@@ -46,8 +45,8 @@ describe('useFetchComposition', () => {
       entityStore: undefined,
       error: undefined,
       isLoading: false,
-      fetchBySlug: experience.fetchBySlug,
-    } as Experience)
+      fetchBySlug: store.fetchBySlug,
+    } as ExperienceStore)
   })
 
   it('should fetch the experience by slug with bound entities', async () => {
@@ -55,9 +54,9 @@ describe('useFetchComposition', () => {
       initialProps: { client: clientMock },
     })
 
-    const experience = res.result.current
+    const store = res.result.current
 
-    expect(experience).toEqual({
+    expect(store).toEqual({
       composition: undefined,
       children: [],
       breakpoints: [],
@@ -67,10 +66,10 @@ describe('useFetchComposition', () => {
       entityStore: undefined,
       error: undefined,
       isLoading: false,
-      fetchBySlug: experience.fetchBySlug,
-    } as Experience)
+      fetchBySlug: store.fetchBySlug,
+    } as ExperienceStore)
 
-    await act(() => experience.fetchBySlug({ experienceTypeId, localeCode, slug }))
+    await act(() => store.fetchBySlug({ experienceTypeId, localeCode, slug }))
 
     expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
       content_type: experienceTypeId,
@@ -100,8 +99,8 @@ describe('useFetchComposition', () => {
       entityStore: res.result.current.entityStore,
       error: undefined,
       isLoading: false,
-      fetchBySlug: experience.fetchBySlug,
-    } as Experience)
+      fetchBySlug: store.fetchBySlug,
+    } as ExperienceStore)
   })
 
   it('should throw an error if composition was not found', async () => {
