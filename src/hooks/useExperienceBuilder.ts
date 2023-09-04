@@ -14,6 +14,7 @@ import { getDataFromTree, isInsideIframe } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 import { sendMessage } from '../sendMessage'
 import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
+import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
 
 interface UseExperienceBuilderProps {
   experienceTypeId: string
@@ -122,6 +123,11 @@ export const useExperienceBuilder = ({
         case IncomingExperienceBuilderEvent.SELECT_COMPONENT: {
           const { selectedNodeId } = payload
           sendSelectedComponentCoordinates(selectedNodeId)
+          break
+        }
+        case IncomingExperienceBuilderEvent.HOVER_COMPONENT: {
+          const { hoveredNodeId } = payload
+          sendHoveredComponentCoordinates(hoveredNodeId)
           break
         }
         case IncomingExperienceBuilderEvent.COMPONENT_DRAGGING_CHANGED: {

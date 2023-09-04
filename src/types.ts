@@ -26,6 +26,7 @@ export enum OutgoingExperienceBuilderEvent {
   COMPONENT_DROPPED = 'componentDropped',
   CANVAS_RELOAD = 'canvasReload',
   UPDATE_SELECTED_COMPONENT_COORDINATES = 'updateSelectedComponentCoordinates',
+  UPDATE_HOVERED_COMPONENT_COORDINATES = 'updateHoveredComponentCoordinates',
   CANVAS_SCROLL = 'canvasScrolling',
 }
 
@@ -35,6 +36,7 @@ export enum IncomingExperienceBuilderEvent {
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
   CANVAS_RESIZED = 'canvasResized',
   SELECT_COMPONENT = 'selectComponent',
+  HOVER_COMPONENT = 'hoverComponent',
 }
 
 export interface Link<T extends string> {
