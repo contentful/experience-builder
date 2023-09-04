@@ -4,12 +4,12 @@ import { VisualEditorRoot } from './VisualEditorRoot'
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
 import { supportedModes } from '../constants'
 
-type CompositionRootProps = {
+type ExperienceRootProps = {
   settings: ExperienceBuilderSettings
   experience: Experience
 }
 
-export const CompositionRoot = (props: CompositionRootProps) => {
+export const ExperienceRoot = (props: ExperienceRootProps) => {
   const { mode } = props.settings
 
   if (!mode || !supportedModes.includes(mode)) return null
