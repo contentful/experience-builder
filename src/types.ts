@@ -291,8 +291,8 @@ export interface ExperienceStore {
 }
 
 export interface Experience {
-  store: ExperienceStore;
-  client: ContentfulClientApi<undefined>;
-  experienceTypeId: string;
+  store: ExperienceStore
+  client: ContentfulClientApi<undefined>
+  experienceTypeId: string
   mode: CompositionMode
 }

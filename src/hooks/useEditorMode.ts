@@ -15,8 +15,8 @@ import { sendHoveredComponentCoordinates } from '../communication/sendHoveredCom
 import { sendMessage } from '../communication/sendMessage'
 
 type UseEditorModeProps = {
-  initialLocale: string;
-  mode: CompositionMode;
+  initialLocale: string
+  mode: CompositionMode
 }
 
 export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
