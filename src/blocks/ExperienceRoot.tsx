@@ -5,12 +5,12 @@ import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
 import { useContentfulSection } from '../hooks/useContentfulSection'
 import { supportedModes } from '../constants'
 
-type CompositionRootProps = {
+type ExperienceRootProps = {
   settings: ExperienceBuilderSettings
   experience: Experience
 }
 
-export const CompositionRoot = (props: CompositionRootProps) => {
+export const ExperienceRoot = (props: ExperienceRootProps) => {
   const { mode } = props.settings
 
   useContentfulSection({ mode })
