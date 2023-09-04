@@ -4,7 +4,6 @@ export type {
   ComponentDefinition,
   ComponentRegistration,
   Experience,
-  ExperienceBuilderSettings,
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,
   CompositionVariableValueType,

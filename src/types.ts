@@ -187,22 +187,6 @@ export type CompositionTree = {
 
 export type CompositionMode = 'editor' | 'preview' | 'delivery'
 
-export type ExperienceBuilderConfig = {
-  /** Instance of a Delivery or Preview client from "contentful" package **/
-  client: ContentfulClientApi<undefined>
-  /** The defined locale,
-   *  when rendered in the editor, the locale is set from the editor, but you can use this to overwrite this **/
-  defaultLocale: string
-}
-
-export type ExperienceBuilderSettings = {
-  experienceTypeId: string
-  locale: string
-  slug: string
-  mode: CompositionMode
-  setLocale: (localeCode: string) => void
-}
-
 /**
  * Internally defined style variables are prefix with `cf` to avoid
  * collisions with user defined variables.
@@ -285,7 +269,7 @@ export interface HoveredElement {
   blockId: string | undefined
 }
 
-export interface Experience {
+export interface ExperienceStore {
   composition: Composition | undefined
   entityStore: EntityStore | undefined
   error: string | undefined
@@ -304,4 +288,11 @@ export interface Experience {
     slug: string
     localeCode: string
   }) => Promise<void>
+}
+
+export interface Experience {
+  store: ExperienceStore;
+  client: ContentfulClientApi<undefined>;
+  experienceTypeId: string;
+  mode: CompositionMode
 }

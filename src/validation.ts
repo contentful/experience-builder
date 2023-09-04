@@ -1,5 +1,6 @@
+import type { ContentfulClientApi } from 'contentful'
 import { supportedModes } from './constants'
-import { CompositionMode, ExperienceBuilderConfig, IncomingExperienceBuilderEvent } from './types'
+import { CompositionMode, IncomingExperienceBuilderEvent } from './types'
 
 export type VisualEditorMessagePayload = {
   source: string
@@ -76,9 +77,9 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
 
 export const validateExperienceBuilderConfig = ({
   client,
-  defaultLocale,
+  locale,
   mode,
-}: ExperienceBuilderConfig & { mode: CompositionMode }) => {
+}: { client: ContentfulClientApi<undefined>; locale: string; mode: CompositionMode }) => {
   if (mode === 'editor') {
     return
   }
@@ -89,9 +90,9 @@ export const validateExperienceBuilderConfig = ({
     )
   }
 
-  if (!defaultLocale) {
+  if (!locale) {
     throw new Error(
-      'Parameter "defaultLocale" is required for expereince builder initialization outside of editor mode'
+      'Parameter "locale" is required for expereince builder initialization outside of editor mode'
     )
   }
 

@@ -1,10 +1,10 @@
 import type { ContentfulClientApi } from 'contentful'
 import { useState, useMemo, useCallback } from 'react'
 import { EntityStore } from '../core/EntityStore'
-import { Composition, Experience } from '../types'
+import { Composition, ExperienceStore } from '../types'
 
 type UseExperienceStoreProps = {
-  client: ContentfulClientApi<undefined>
+  client: ContentfulClientApi<undefined>;
 }
 
 const errorMessagesWhileFetching = {
@@ -12,7 +12,7 @@ const errorMessagesWhileFetching = {
   experienceReferences: 'Failed to fetch entities, referenced in experience',
 }
 
-export const useExperienceStore = ({ client }: UseExperienceStoreProps): Experience => {
+export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
   const [composition, setComposition] = useState<Composition | undefined>()
   const [entityStore, setEntityStore] = useState<EntityStore>()
   const [error, setError] = useState<string | undefined>()
@@ -76,7 +76,7 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps): Experie
    * @param {string} slug - slug of the experience (defined in entry settings)
    * @param {string} localeCode - locale code to fetch the experience. Falls back to the currently active locale in the state
    */
-  const fetchBySlug: Experience['fetchBySlug'] = useCallback(
+  const fetchBySlug: ExperienceStore['fetchBySlug'] = useCallback(
     async ({ experienceTypeId, slug, localeCode }) => {
       setError(undefined)
 
@@ -126,7 +126,7 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps): Experie
     [client, handleError, fetchReferencedEntities]
   )
 
-  return useMemo<Experience>(
+  return useMemo<ExperienceStore>(
     () => ({
       composition,
       children,

@@ -1,22 +1,30 @@
 import React from 'react'
-import { Experience, ExperienceBuilderSettings } from '../types'
+import { Experience } from '../types'
 import { VisualEditorRoot } from './VisualEditorRoot'
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
 import { supportedModes } from '../constants'
+import { validateExperienceBuilderConfig } from '../validation'
 
 type ExperienceRootProps = {
-  settings: ExperienceBuilderSettings
   experience: Experience
+  locale: string;
+  slug: string;
 }
 
-export const ExperienceRoot = (props: ExperienceRootProps) => {
-  const { mode } = props.settings
+export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
+  const { mode } = experience
+
+  validateExperienceBuilderConfig({
+    client: experience.client,
+    locale,
+    mode,
+  })
 
   if (!mode || !supportedModes.includes(mode)) return null
 
   if (mode === 'editor') {
-    return <VisualEditorRoot settings={props.settings} />
+    return <VisualEditorRoot initialLocale={locale} mode={mode} />
   }
 
-  return <PreviewDeliveryRoot settings={props.settings} experience={props.experience} />
+  return <PreviewDeliveryRoot locale={locale} slug={slug} experience={experience} />
 }
