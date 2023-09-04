@@ -5,7 +5,7 @@
 import { useEffect, useMemo } from 'react'
 import {
   useExperienceBuilder,
-  CompositionRoot,
+  ExperienceRoot,
 } from '@contentful/experience-builder'
 import { createClient } from 'contentful'
 
@@ -44,7 +44,7 @@ const App = () => {
   }, [settings]);
 
   // 3. Render your experience
-  return <CompositionRoot settings={settings} experience={experience} />
+  return <ExperienceRoot settings={settings} experience={experience} />
 }
 ```
 
@@ -56,7 +56,7 @@ SSR data pre-fetching is currently not possible. Stay tuned.
 import { useEffect, useMemo } from 'react'
 import {
   useExperienceBuilder,
-  CompositionRoot,
+  ExperienceRoot,
 } from '@contentful/experience-builder'
 import { createClient } from 'contentful'
 import { useRouter } from 'next/router'
@@ -97,7 +97,7 @@ const Home = () => {
   }, [settings]);
 
   // 3. Render your experience
-  return <CompositionRoot settings={settings} experience={experience} />
+  return <ExperienceRoot settings={settings} experience={experience} />
 }
 ```
 
@@ -109,7 +109,7 @@ SSR data pre-fetching is currently not possible. Stay tuned.
 import { useEffect, useMemo } from 'react'
 import {
   useExperienceBuilder,
-  CompositionRoot,
+  ExperienceRoot,
 } from '@contentful/experience-builder'
 import { createClient } from 'contentful'
 
@@ -149,6 +149,6 @@ const ExperienceBuilderPage = ({ pageContext }) => {
   }, [settings]);
 
   // 3. Render your experience
-  return <CompositionRoot settings={settings} experience={experience} />
+  return <ExperienceRoot settings={settings} experience={experience} />
 }
 ```
