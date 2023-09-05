@@ -267,7 +267,6 @@ export interface HoveredElement {
 export interface ExperienceStore {
   composition: Composition | undefined
   entityStore: EntityStore | undefined
-  error: string | undefined
   isLoading: boolean
   children: Composition['componentTree']['children']
   breakpoints: Composition['componentTree']['breakpoints']
@@ -282,7 +281,7 @@ export interface ExperienceStore {
     experienceTypeId: string
     slug: string
     localeCode: string
-  }) => Promise<void>
+  }) => Promise<{ success: boolean, error?: Error }>
 }
 
 export interface Experience {

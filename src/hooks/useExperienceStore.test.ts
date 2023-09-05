@@ -43,7 +43,6 @@ describe('useFetchComposition', () => {
       dataSource: {},
       unboundValues: {},
       entityStore: undefined,
-      error: undefined,
       isLoading: false,
       fetchBySlug: store.fetchBySlug,
     } as ExperienceStore)
@@ -64,7 +63,6 @@ describe('useFetchComposition', () => {
       dataSource: {},
       unboundValues: {},
       entityStore: undefined,
-      error: undefined,
       isLoading: false,
       fetchBySlug: store.fetchBySlug,
     } as ExperienceStore)
@@ -97,7 +95,6 @@ describe('useFetchComposition', () => {
       dataSource: compositionEntry.fields.dataSource,
       unboundValues: compositionEntry.fields.unboundValues,
       entityStore: res.result.current.entityStore,
-      error: undefined,
       isLoading: false,
       fetchBySlug: store.fetchBySlug,
     } as ExperienceStore)

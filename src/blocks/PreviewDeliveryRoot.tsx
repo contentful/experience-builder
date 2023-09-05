@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Experience } from '../types'
 import { CompositionBlock } from './CompositionBlock'
 import { LATEST_SCHEMA_VERSION } from '../constants'
@@ -12,21 +12,26 @@ type DeliveryRootProps = {
 }
 
 export const PreviewDeliveryRoot = ({ locale, slug, experience }: DeliveryRootProps) => {
+  const attemptedToFetch = useRef<boolean>(false);
   const previousLocale = usePrevious(locale)
+
+  const { composition, isLoading, fetchBySlug } = experience.store;
 
   useEffect(() => {
     // TODO: Test it, it is crucial
-    const shouldFetch = !experience.store.composition || previousLocale !== locale
+    // will make it fetch on each locale change as well as if composition hasn't been fetched yet at least once
+    const shouldFetch = (!composition && !attemptedToFetch.current) || previousLocale !== locale
     // this useEffect is meant to trigger fetching for the first time if it hasn't been done earlier
     // if not yet fetched and not fetchin at the moment
-    if (shouldFetch && !experience.store.isLoading && slug) {
-      experience.store.fetchBySlug({
+    if (shouldFetch && !isLoading && slug) {
+      attemptedToFetch.current = true;
+      fetchBySlug({
         experienceTypeId: experience.experienceTypeId,
         localeCode: locale,
         slug,
       })
     }
-  }, [experience, slug, locale, previousLocale])
+  }, [experience.experienceTypeId, composition, isLoading, fetchBySlug, slug, locale, previousLocale])
 
   const { resolveDesignValue } = useBreakpoints(experience.store.breakpoints)
 

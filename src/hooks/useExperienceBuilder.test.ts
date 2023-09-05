@@ -20,7 +20,6 @@ jest.mock('./useExperienceStore', () => {
         dataSource: {},
         unboundValues: {},
         entityStore: undefined,
-        error: undefined,
         isLoading: false,
         fetchBySlug: jest.fn().mockImplementation(() => {
           return Promise.resolve()
@@ -54,7 +53,6 @@ describe('useExperienceBuilder', () => {
         dataSource: {},
         unboundValues: {},
         entityStore: undefined,
-        error: undefined,
         isLoading: false,
         fetchBySlug: output.experience.store.fetchBySlug,
       },
