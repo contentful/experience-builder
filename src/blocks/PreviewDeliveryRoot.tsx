@@ -12,10 +12,10 @@ type DeliveryRootProps = {
 }
 
 export const PreviewDeliveryRoot = ({ locale, slug, experience }: DeliveryRootProps) => {
-  const attemptedToFetch = useRef<boolean>(false);
+  const attemptedToFetch = useRef<boolean>(false)
   const previousLocale = usePrevious(locale)
 
-  const { composition, isLoading, fetchBySlug } = experience.store;
+  const { composition, isLoading, fetchBySlug } = experience.store
 
   useEffect(() => {
     // TODO: Test it, it is crucial
@@ -24,14 +24,22 @@ export const PreviewDeliveryRoot = ({ locale, slug, experience }: DeliveryRootPr
     // this useEffect is meant to trigger fetching for the first time if it hasn't been done earlier
     // if not yet fetched and not fetchin at the moment
     if (shouldFetch && !isLoading && slug) {
-      attemptedToFetch.current = true;
+      attemptedToFetch.current = true
       fetchBySlug({
         experienceTypeId: experience.experienceTypeId,
         localeCode: locale,
         slug,
       })
     }
-  }, [experience.experienceTypeId, composition, isLoading, fetchBySlug, slug, locale, previousLocale])
+  }, [
+    experience.experienceTypeId,
+    composition,
+    isLoading,
+    fetchBySlug,
+    slug,
+    locale,
+    previousLocale,
+  ])
 
   const { resolveDesignValue } = useBreakpoints(experience.store.breakpoints)
 

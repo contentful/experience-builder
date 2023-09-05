@@ -77,27 +77,23 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
   const fetchBySlug: ExperienceStore['fetchBySlug'] = useCallback(
     async ({ experienceTypeId, slug, localeCode }) => {
       if (!slug) {
-        const error = new Error('Preview and delivery mode requires a composition slug to be provided');
-        handleError(
-          errorMessagesWhileFetching.experience,
-          error
+        const error = new Error(
+          'Preview and delivery mode requires a composition slug to be provided'
         )
+        handleError(errorMessagesWhileFetching.experience, error)
         return {
           success: false,
-          error
-        };
+          error,
+        }
       }
 
       if (!localeCode) {
-        const error = new Error('Preview and delivery mode requires a locale code to be provided');
-        handleError(
-          errorMessagesWhileFetching.experience,
-          error
-        )
+        const error = new Error('Preview and delivery mode requires a locale code to be provided')
+        handleError(errorMessagesWhileFetching.experience, error)
         return {
           success: false,
-          error
-        };
+          error,
+        }
       }
 
       setIsLoading(true)
@@ -110,39 +106,33 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
         })
         if (response.items.length === 0) {
           const error = new Error(`No experience with slug: ${slug} exists`)
-          handleError(
-            errorMessagesWhileFetching.experience,
-            error
-          )
+          handleError(errorMessagesWhileFetching.experience, error)
 
           return {
             success: false,
-            error
+            error,
           }
         }
         if (response.items.length > 1) {
-          const error = new Error(`More than one experience with slug: ${slug} was found`);
-          handleError(
-            errorMessagesWhileFetching.experience,
-            error
-          )
+          const error = new Error(`More than one experience with slug: ${slug} was found`)
+          handleError(errorMessagesWhileFetching.experience, error)
           return {
             success: false,
-            error
-          };
+            error,
+          }
         }
         const experience = response.items[0].fields as unknown as Composition
         setComposition(experience)
         await fetchReferencedEntities({ composition: experience, locale: localeCode })
         return {
-          success: true
+          success: true,
         }
       } catch (e: any) {
         handleError(errorMessagesWhileFetching.experience, e)
         return {
           success: false,
-          error: e
-        };
+          error: e,
+        }
       } finally {
         setIsLoading(false)
       }

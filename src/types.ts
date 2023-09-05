@@ -286,7 +286,7 @@ export interface ExperienceStore {
     experienceTypeId: string
     slug: string
     localeCode: string
-  }) => Promise<{ success: boolean, error?: Error }>
+  }) => Promise<{ success: boolean; error?: Error }>
 }
 
 export interface Experience {
