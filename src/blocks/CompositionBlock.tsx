@@ -38,11 +38,11 @@ export const CompositionBlock = ({
   breakpoints,
   resolveDesignValue,
 }: CompositionBlockProps) => {
-  const { getComponentConfig } = useComponents()
+  const { getComponentRegistration } = useComponents()
 
   const registeredComponentConfig = useMemo(
-    () => getComponentConfig(node.definitionId as string),
-    [node, getComponentConfig]
+    () => getComponentRegistration(node.definitionId as string),
+    [node, getComponentRegistration]
   )
 
   const props = useMemo(() => {

@@ -6,9 +6,9 @@ const TestComponent = () => {
 }
 
 export const Test = () => {
-  const { registerComponents } = useComponents()
+  const { defineComponents } = useComponents()
 
-  registerComponents([
+  defineComponents([
     {
       component: TestComponent,
       definition: {

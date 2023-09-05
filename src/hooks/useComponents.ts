@@ -1,12 +1,13 @@
-import { useCallback, useRef, useState } from 'react'
+import { ElementType, useCallback } from 'react'
 
-import { ComponentConfig, ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
+import { ComponentRegistration, ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
 import { sendMessage } from '../sendMessage'
 import { builtInStyles as builtInStyleDefinitions } from '../core/definitions/variables'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from '../blocks/ContentfulSection'
 import { containerDefinition, sectionDefinition } from '../core/definitions/components'
 import { SDK_VERSION } from '../core/constants'
+import debounce from 'lodash.debounce';
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -44,7 +45,7 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
   return clone
 }
 
-const enrichComponentDefinition = ({ component, definition }: ComponentConfig): ComponentConfig => {
+const enrichComponentDefinition = ({ component, definition }: ComponentRegistration): ComponentRegistration => {
   const definitionWithFallbacks = applyFallbacks(definition)
   const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks)
   return {
@@ -60,45 +61,68 @@ const sendConnectedMessage = (registeredDefinitions: Array<ComponentDefinition>)
   })
 }
 
-const DEFAULT_COMPONENT_DEFINITIONS = [
-  {
+const DEFAULT_COMPONENT_REGISTRATIONS = {
+  section: {
     component: ContentfulSection,
     definition: sectionDefinition,
   },
-  {
+  container: {
     component: ContentfulSection,
     definition: containerDefinition,
-  },
-] satisfies Array<ComponentConfig>
+  }
+} satisfies Record<string, ComponentRegistration>
 
-let registeredComponentConfigs: Array<ComponentConfig> = []
+// pre-filling with the default component registrations
+const componentRegistry = new Map<string, ComponentRegistration>([
+  [DEFAULT_COMPONENT_REGISTRATIONS.section.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.section],
+  [DEFAULT_COMPONENT_REGISTRATIONS.container.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.container],
+])
+
+const debouncedExecuteBatch = debounce(() => {
+  const registeredDefinitions = Array.from(componentRegistry.values()).map(({ definition }) => definition);
+  sendConnectedMessage(registeredDefinitions)
+}, 50);
 
 export const useComponents = () => {
-  const registerComponents = useCallback((componentConfigs: Array<ComponentConfig>) => {
-    // Fill definitions with fallbacks values
-    const enrichedComponentConfigs = componentConfigs.map(enrichComponentDefinition)
-    // Add default components section and container
-    enrichedComponentConfigs.push(...DEFAULT_COMPONENT_DEFINITIONS)
-    registeredComponentConfigs = enrichedComponentConfigs
+  const defineComponents = useCallback((componentRegistrations: Array<ComponentRegistration>) => {
+    
+    for (const registration of componentRegistrations) {
+      // Fill definitions with fallbacks values
+      const enrichedComponentRegistration = enrichComponentDefinition(registration);
+      componentRegistry.set(enrichedComponentRegistration.definition.id, enrichedComponentRegistration);
+    }
     // Send the definitions (without components) via the connection message to the experience builder
-    const registeredDefinitions = enrichedComponentConfigs.map(({ definition }) => definition)
+    const registeredDefinitions = Array.from(componentRegistry.values()).map(({ definition }) => definition);
     sendConnectedMessage(registeredDefinitions)
   }, [])
 
-  // Warning: We don't use React state but a global variable. This will only work if `registerComponents`
-  // is guaranteed to be executed before `getComponentConfig` as this hook will never re-render if
-  // the list of saved configs changes. Ideally, this would be a context that shares a proper state accross
-  // all hook instances.
-  const getComponentConfig = useCallback((id: string) => {
-    return registeredComponentConfigs.find(({ definition }) => definition.id === id)
+  const defineComponent = useCallback((component: ElementType, definition: ComponentDefinition) => {
+    const enrichedComponentConfig = enrichComponentDefinition({ component, definition });
+    componentRegistry.set(enrichedComponentConfig.definition.id, enrichedComponentConfig);
+    debouncedExecuteBatch();
+  }, [])
+
+  const getComponentRegistration = useCallback((id: string) => {
+    return componentRegistry.get(id);
   }, [])
 
   return {
+    defineComponent,
     /**
      * Call this method only once to register all components. Any subsequent calls will override
      * the previously registered components.
      */
-    registerComponents,
-    getComponentConfig,
+    defineComponents,
+    getComponentRegistration,
+  }
+}
+
+/**
+ * use this function only in tests
+ */
+export const resetComponentRegistry = () => {
+  componentRegistry.clear();
+  for (const registration of Object.values(DEFAULT_COMPONENT_REGISTRATIONS)) {
+    componentRegistry.set(registration.definition.id, registration)
   }
 }

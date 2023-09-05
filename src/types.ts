@@ -131,7 +131,7 @@ export type ComponentDefinition<
   children?: boolean
 }
 
-export type ComponentConfig = {
+export type ComponentRegistration = {
   component: React.ElementType
   definition: ComponentDefinition
 }

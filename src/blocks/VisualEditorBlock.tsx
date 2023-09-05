@@ -49,11 +49,11 @@ export const VisualEditorBlock = ({
   entityStore,
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
-  const { getComponentConfig } = useComponents()
+  const { getComponentRegistration } = useComponents()
 
   const registeredComponentConfig = useMemo(
-    () => getComponentConfig(node.data.blockId as string),
-    [node, getComponentConfig]
+    () => getComponentRegistration(node.data.blockId as string),
+    [node, getComponentRegistration]
   )
 
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
