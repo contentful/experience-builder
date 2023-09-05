@@ -1,20 +1,32 @@
 import { useEffect, useRef } from 'react'
 
-import { HoverIndicatorHandler } from '../communication/HoverIndicatorHandler'
+import { MouseMoveHandler } from '../communication/MouseMoveHandler'
+import { MouseOverHandler } from '../communication/MouseOverHandler'
 
 export const useHoverIndicator = (isDragging: boolean): void => {
-  const hoverIndicatorHandler = useRef<HoverIndicatorHandler>(new HoverIndicatorHandler())
+  const mouseMoveIndicator = useRef<MouseMoveHandler>(new MouseMoveHandler())
+  const mouseOverHandler = useRef<MouseOverHandler>(new MouseOverHandler())
 
   useEffect(() => {
-    hoverIndicatorHandler.current.attachEvent()
+    mouseOverHandler.current.attachEvent()
 
     return () => {
-      hoverIndicatorHandler.current.detachEvent()
+      mouseOverHandler.current.detachEvent()
     }
   }, [])
 
   useEffect(() => {
-    // Reset cache on drag so we can ensure accuracy of element co-ordinates for the drag and drop indicator
-    hoverIndicatorHandler.current.resetCache()
+    if (isDragging) {
+      mouseMoveIndicator.current.attachEvent()
+    }
+
+    return () => {
+      mouseMoveIndicator.current.detachEvent()
+    }
   }, [isDragging])
+
+  // useEffect(() => {
+  //   // Reset cache on drag so we can ensure accuracy of element co-ordinates for the drag and drop indicator
+  //   hoverIndicatorHandler.current.resetCache()
+  // }, [isDragging])
 }
