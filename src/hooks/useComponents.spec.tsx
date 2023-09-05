@@ -160,7 +160,7 @@ describe('ComponentDefinitions', () => {
           },
         },
       })
-      expect(postMessageSpy).not.toHaveBeenCalled();
+      expect(postMessageSpy).not.toHaveBeenCalled()
 
       result.current.defineComponent(() => <div></div>, {
         id: 'test-div-component',
@@ -172,13 +172,13 @@ describe('ComponentDefinitions', () => {
           },
         },
       })
-      expect(postMessageSpy).not.toHaveBeenCalled();
+      expect(postMessageSpy).not.toHaveBeenCalled()
 
-      expect(result.current.getComponentRegistration(definitionId)).toBeDefined();
+      expect(result.current.getComponentRegistration(definitionId)).toBeDefined()
       expect(result.current.getComponentRegistration('test-div-component')).toBeDefined()
 
       // waiting cause it is a debounced call
-      await waitFor(() => expect(postMessageSpy).toHaveBeenCalled());
+      await waitFor(() => expect(postMessageSpy).toHaveBeenCalled())
 
       expect(postMessageSpy).toHaveBeenCalledTimes(1)
       const eventData = postMessageSpy.mock.calls[0][0]
@@ -186,10 +186,13 @@ describe('ComponentDefinitions', () => {
       expect(eventData.eventType).toBe(OutgoingExperienceBuilderEvent.CONNECTED)
       expect(eventData.payload.definitions).toHaveLength(4) // 2 default components (Section, Container) + 2 new ones
       expect(
-        eventData.payload.definitions.map(
-          (definition: ComponentDefinition) => definition.id
-        )
-      ).toEqual([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID, definitionId, 'test-div-component']);
+        eventData.payload.definitions.map((definition: ComponentDefinition) => definition.id)
+      ).toEqual([
+        CONTENTFUL_SECTION_ID,
+        CONTENTFUL_CONTAINER_ID,
+        definitionId,
+        'test-div-component',
+      ])
     })
 
     it('should apply fallback to group: content for variables that have it undefined', () => {
