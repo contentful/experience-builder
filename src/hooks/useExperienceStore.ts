@@ -15,7 +15,6 @@ const errorMessagesWhileFetching = {
 export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
   const [composition, setComposition] = useState<Composition | undefined>()
   const [entityStore, setEntityStore] = useState<EntityStore>()
-  const [error, setError] = useState<string | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const children = composition?.componentTree?.children ?? []
@@ -27,7 +26,6 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
   const handleError = useCallback((generalMessage: string, error: unknown) => {
     const message = error instanceof Error ? error.message : `Unknown error: ${error}`
     console.error(`${generalMessage} with error: ${message}`)
-    setError(message)
   }, [])
 
   const fetchReferencedEntities = useCallback(
@@ -78,20 +76,28 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
    */
   const fetchBySlug: ExperienceStore['fetchBySlug'] = useCallback(
     async ({ experienceTypeId, slug, localeCode }) => {
-      setError(undefined)
-
       if (!slug) {
+        const error = new Error('Preview and delivery mode requires a composition slug to be provided');
         handleError(
           errorMessagesWhileFetching.experience,
-          new Error('Preview and delivery mode requires a composition slug to be provided')
+          error
         )
+        return {
+          success: false,
+          error
+        };
       }
 
       if (!localeCode) {
+        const error = new Error('Preview and delivery mode requires a locale code to be provided');
         handleError(
           errorMessagesWhileFetching.experience,
-          new Error('Preview and delivery mode requires a locale code to be provided')
+          error
         )
+        return {
+          success: false,
+          error
+        };
       }
 
       setIsLoading(true)
@@ -103,22 +109,40 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
           locale: localeCode,
         })
         if (response.items.length === 0) {
-          return handleError(
+          const error = new Error(`No experience with slug: ${slug} exists`)
+          handleError(
             errorMessagesWhileFetching.experience,
-            new Error(`No experience with slug: ${slug} exists`)
+            error
           )
+
+          return {
+            success: false,
+            error
+          }
         }
         if (response.items.length > 1) {
-          return handleError(
+          const error = new Error(`More than one experience with slug: ${slug} was found`);
+          handleError(
             errorMessagesWhileFetching.experience,
-            new Error(`More than one experience with slug: ${slug} was found`)
+            error
           )
+          return {
+            success: false,
+            error
+          };
         }
         const experience = response.items[0].fields as unknown as Composition
         setComposition(experience)
         await fetchReferencedEntities({ composition: experience, locale: localeCode })
+        return {
+          success: true
+        }
       } catch (e: any) {
         handleError(errorMessagesWhileFetching.experience, e)
+        return {
+          success: false,
+          error: e
+        };
       } finally {
         setIsLoading(false)
       }
@@ -136,7 +160,6 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
       unboundValues,
       entityStore,
       fetchBySlug,
-      error,
       isLoading,
     }),
     [
@@ -147,7 +170,6 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
       dataSource,
       unboundValues,
       entityStore,
-      error,
       isLoading,
       fetchBySlug,
     ]
