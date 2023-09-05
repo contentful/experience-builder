@@ -76,6 +76,16 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
    */
   const fetchBySlug: ExperienceStore['fetchBySlug'] = useCallback(
     async ({ experienceTypeId, slug, localeCode }) => {
+      if (!experienceTypeId) {
+        const error = new Error(
+          'Preview and delivery mode requires experienceTypeId to be provided'
+        )
+        handleError(errorMessagesWhileFetching.experience, error)
+        return {
+          success: false,
+          error,
+        }
+      }
       if (!slug) {
         const error = new Error(
           'Preview and delivery mode requires a composition slug to be provided'
