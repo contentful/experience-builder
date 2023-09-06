@@ -2,26 +2,28 @@
 
 ## Dynamic website
 
+You can use this as a reference example or even paste this into `App.js` of the create-react-app generated app.
+
 ```tsx
-import { useEffect, useMemo } from 'react'
-import {
-  useExperienceBuilder,
-  ExperienceRoot,
-} from '@contentful/experience-builder'
+// Remember to add dependency on 'contentful' package
+// > npm add contentful
+
+import { useEffect } from 'react'
+import { useExperienceBuilder, ExperienceRoot } from '@contentful/experience-builder'
 import { createClient } from 'contentful'
 
 const client = createClient({
-  space: process.env.CTFL_SPACE_ID,
-  environment: process.env.CTFL_ENV_ID,
-  host: process.env.CTFL_API_HOST // Supported values: 'preview.contentful.com' or 'cdn.contentful.com',
-  accessToken: process.env.CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
-});
+  space: process.env.REACT_APP_CTFL_SPACE_ID,
+  environment: process.env.REACT_APP_CTFL_ENV_ID,
+  host: process.env.REACT_APP_CTFL_API_HOST, // Supported values: 'preview.contentful.com' or 'cdn.contentful.com',
+  accessToken: process.env.REACT_APP_CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
+})
 
 const App = () => {
   // 1. Define the configuration and initialize the sdk
   const { experience, defineComponent } = useExperienceBuilder({
     client, // preview or delivery client
-    experienceTypeId: process.env.CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
+    experienceTypeId: process.env.REACT_APP_CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
     /**
      * Supported values 'editor' or 'preview' or 'delivery'
      * 'editor' is required when opening the website from Contentful's web app (app.contentful.com)
@@ -30,17 +32,48 @@ const App = () => {
      *
      * you have the flexibility to define your own logic to determine the mode in which you want to run your website (for example: depending on the query parameter / hardcoded for a specific deployed instance of the website / env variable)
      */
-    mode: 'delivery'
+    mode: 'delivery',
   })
+
+  function MyButton({ buttonTitle, buttonUrl, ...props }) {
+    // WARNING:
+    //  - you must spread the props as last argument to enable EDITOR mode and proper rendering
+    //  - be sure to ensure that onClick handlers are above the {...props} spreading so that they are stubbed
+    //    during EDITOR mode
+    return (
+      <button onClick={() => (window.location.href = buttonUrl)} {...props}>
+        {buttonTitle}
+      </button>
+    )
+  }
 
   // 2. Define components
   useEffect(() => {
-    defineComponent('Button', componentDefinition)
+    defineComponents([
+      {
+        component: MyButton,
+        definition: {
+          id: 'my-button',
+          name: 'MyButton',
+          variables: {
+            buttonTitle: { type: 'Text', defaultValue: 'Click me' },
+            buttonUrl: {
+              type: 'Text',
+              defaultValue: 'https://www.google.com?q=button+was+clicked',
+            },
+          },
+        },
+      },
+    ])
   }, [defineComponent])
 
   useEffect(() => {
     // You could also fetch it early if needed
-    expereince.fetchBySlug({ slug: 'landing-page', localeCode: 'en-US', experienceTypeId: process.env.CTFL_EXPERIENCE_TYPE_ID })
+    expereince.fetchBySlug({
+      slug: 'landing-page',
+      localeCode: 'en-US',
+      experienceTypeId: process.env.CTFL_EXPERIENCE_TYPE_ID,
+    })
   }, [experience])
 
   // 3. Render your experience
@@ -50,12 +83,14 @@ const App = () => {
       // The locale that will appear on the website first
       // You could nicely tie it to the useParam() from router or intenral state or locale manager
       // this value - en-US here is provided as an example reference
-      locale='en-US'
+      locale="en-US"
       // slug of the entry. Will be used for fetching it using the client
-      slug='landing-page'
+      slug="landing-page"
     />
-  );
+  )
 }
+
+export default App;
 ```
 
 ## Next.js website

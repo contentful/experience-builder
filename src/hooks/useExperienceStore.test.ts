@@ -130,6 +130,23 @@ describe('useFetchComposition', () => {
     }
   })
 
+  it('should throw an error if experienceTypeId is not defined', async () => {
+    const res = renderHook((props) => useExperienceStore(props), {
+      initialProps: { client: clientMock },
+    })
+
+    try {
+      await act(() =>
+        // @ts-expect-error undefined is not alloed through types, but it can still happen if invoked from a plain js
+        res.result.current.fetchBySlug({ experienceTypeId: undefined, slug, localeCode })
+      )
+    } catch (e) {
+      expect((e as Error).message).toBe(
+        'Preview and delivery mode requires a composition experienceTypeId to be provided'
+      )
+    }
+  })
+
   it('should throw an error if slug is not defined', async () => {
     const res = renderHook((props) => useExperienceStore(props), {
       initialProps: { client: clientMock },
