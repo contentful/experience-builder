@@ -41,7 +41,7 @@ const App = () => {
   function MyButton({ buttonTitle, buttonUrl, ...props }){
     // WARNING:
     //  - you must spread the props as last argument to enable EDITOR mode and proper rendering
-    //  - be sure to ensure that onClick handlers are above the {...props} spreading so that they 
+    //  - be sure to ensure that onClick handlers are above the {...props} spreading so that they are stubbed
     //    during EDITOR mode
     return <button
             onClick={()=>window.location.href=buttonUrl}
