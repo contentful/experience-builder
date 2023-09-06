@@ -43,7 +43,7 @@ export const useExperienceBuilder = ({
 
   const store = useExperienceStore({ client })
 
-  const { defineComponent } = useComponents({ mode: activeMode })
+  const { defineComponent, defineComponents } = useComponents({ mode: activeMode })
 
   const experience = useMemo<Experience>(
     () => ({
@@ -58,5 +58,6 @@ export const useExperienceBuilder = ({
   return {
     experience,
     defineComponent,
+    defineComponents,
   }
 }

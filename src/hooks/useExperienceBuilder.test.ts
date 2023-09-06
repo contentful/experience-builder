@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react'
+import { renderHook } from '@testing-library/react'
 import { useExperienceBuilder } from './useExperienceBuilder'
 import { CompositionMode } from '../types'
 import { supportedModes } from '../constants'
@@ -35,7 +35,7 @@ const slug = 'hello-world'
 
 jest.mock('../core/constants', () => ({
   SDK_VERSION: '0.0.0-test',
-  __esModule: true
+  __esModule: true,
 }))
 
 describe('useExperienceBuilder', () => {

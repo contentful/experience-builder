@@ -195,7 +195,9 @@ describe('component registration', () => {
     it('should call sendMessage in editor mode', async () => {
       const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
-      result.current.defineComponents([{ component: TestComponent, definition: testComponentDefinition }])
+      result.current.defineComponents([
+        { component: TestComponent, definition: testComponentDefinition },
+      ])
 
       const enrichedTestComponentDefinition = enrichComponentDefinition({
         component: TestComponent,
@@ -215,7 +217,9 @@ describe('component registration', () => {
     it('should not call sendMessage in preview mode', async () => {
       const { result } = renderHook(() => useComponents({ mode: 'preview' }))
 
-      result.current.defineComponents([{ component: TestComponent, definition: testComponentDefinition }])
+      result.current.defineComponents([
+        { component: TestComponent, definition: testComponentDefinition },
+      ])
 
       expect(sendMessage).not.toHaveBeenCalled()
     })
@@ -223,7 +227,9 @@ describe('component registration', () => {
     it('should not call sendMessage in delivery mode', async () => {
       const { result } = renderHook(() => useComponents({ mode: 'delivery' }))
 
-      result.current.defineComponents([{ component: TestComponent, definition: testComponentDefinition }])
+      result.current.defineComponents([
+        { component: TestComponent, definition: testComponentDefinition },
+      ])
 
       expect(sendMessage).not.toHaveBeenCalled()
     })
@@ -397,21 +403,21 @@ describe('component registration', () => {
     result.current.defineComponent(TestComponent, testComponentDefinition)
 
     const enrichedTestComponentDefinition = enrichComponentDefinition({
-        component: TestComponent,
-        definition: testComponentDefinition,
-      }).definition
+      component: TestComponent,
+      definition: testComponentDefinition,
+    }).definition
 
-      // async cause sendMessage in this case is debounced
-      await waitFor(() => expect(sendMessage).toHaveBeenCalled())
+    // async cause sendMessage in this case is debounced
+    await waitFor(() => expect(sendMessage).toHaveBeenCalled())
 
-      expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED, {
-        definitions: [
-          getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition,
-          getComponentRegistration(CONTENTFUL_CONTAINER_ID)?.definition,
-          enrichedTestComponentDefinition,
-        ],
-        sdkVersion: '0.0.0-test',
-      })
+    expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED, {
+      definitions: [
+        getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition,
+        getComponentRegistration(CONTENTFUL_CONTAINER_ID)?.definition,
+        enrichedTestComponentDefinition,
+      ],
+      sdkVersion: '0.0.0-test',
+    })
   })
 
   it('should not call sendMessage in preview mode', async () => {
@@ -420,12 +426,12 @@ describe('component registration', () => {
     result.current.defineComponent(TestComponent, testComponentDefinition)
 
     try {
-        // async cause sendMessage in this case is debounced
-        await waitFor(() => expect(sendMessage).toHaveBeenCalled())
-      } catch (e) {
-        // noop
-      }
-      expect(sendMessage).not.toHaveBeenCalled()
+      // async cause sendMessage in this case is debounced
+      await waitFor(() => expect(sendMessage).toHaveBeenCalled())
+    } catch (e) {
+      // noop
+    }
+    expect(sendMessage).not.toHaveBeenCalled()
   })
 
   it('should not call sendMessage in delivery mode', async () => {
@@ -434,11 +440,11 @@ describe('component registration', () => {
     result.current.defineComponent(TestComponent, testComponentDefinition)
 
     try {
-        // async cause sendMessage in this case is debounced
-        await waitFor(() => expect(sendMessage).toHaveBeenCalled())
-      } catch (e) {
-        // noop
-      }
-      expect(sendMessage).not.toHaveBeenCalled()
+      // async cause sendMessage in this case is debounced
+      await waitFor(() => expect(sendMessage).toHaveBeenCalled())
+    } catch (e) {
+      // noop
+    }
+    expect(sendMessage).not.toHaveBeenCalled()
   })
 })

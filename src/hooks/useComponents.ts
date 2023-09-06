@@ -101,32 +101,38 @@ type UseComponentsProps = {
 }
 
 export const useComponents = ({ mode }: UseComponentsProps) => {
-  const defineComponents = useCallback((componentRegistrations: Array<ComponentRegistration>) => {
-    for (const registration of componentRegistrations) {
-      // Fill definitions with fallbacks values
-      const enrichedComponentRegistration = enrichComponentDefinition(registration)
-      componentRegistry.set(
-        enrichedComponentRegistration.definition.id,
-        enrichedComponentRegistration
+  const defineComponents = useCallback(
+    (componentRegistrations: Array<ComponentRegistration>) => {
+      for (const registration of componentRegistrations) {
+        // Fill definitions with fallbacks values
+        const enrichedComponentRegistration = enrichComponentDefinition(registration)
+        componentRegistry.set(
+          enrichedComponentRegistration.definition.id,
+          enrichedComponentRegistration
+        )
+      }
+      // Send the definitions (without components) via the connection message to the experience builder
+      const registeredDefinitions = Array.from(componentRegistry.values()).map(
+        ({ definition }) => definition
       )
-    }
-    // Send the definitions (without components) via the connection message to the experience builder
-    const registeredDefinitions = Array.from(componentRegistry.values()).map(
-      ({ definition }) => definition
-    )
 
-    if (mode === 'editor') {
-      sendConnectedMessage(registeredDefinitions)
-    }
-  }, [mode])
+      if (mode === 'editor') {
+        sendConnectedMessage(registeredDefinitions)
+      }
+    },
+    [mode]
+  )
 
-  const defineComponent = useCallback((component: ElementType, definition: ComponentDefinition) => {
-    const enrichedComponentConfig = enrichComponentDefinition({ component, definition })
-    componentRegistry.set(enrichedComponentConfig.definition.id, enrichedComponentConfig)
-    if (mode === 'editor') {
-      debouncedBatchSendPostMessage()
-    }
-  }, [mode])
+  const defineComponent = useCallback(
+    (component: ElementType, definition: ComponentDefinition) => {
+      const enrichedComponentConfig = enrichComponentDefinition({ component, definition })
+      componentRegistry.set(enrichedComponentConfig.definition.id, enrichedComponentConfig)
+      if (mode === 'editor') {
+        debouncedBatchSendPostMessage()
+      }
+    },
+    [mode]
+  )
 
   return {
     /**
@@ -152,5 +158,5 @@ export const resetComponentRegistry = () => {
 }
 
 export const getComponentRegistration = (id: string) => {
-  return componentRegistry.get(id);
-};
+  return componentRegistry.get(id)
+}
