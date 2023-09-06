@@ -57,6 +57,9 @@ export const useExperienceBuilder = ({
 
   return {
     experience,
+    /**
+     * @deprecated pleae use `defineComponents` function instead
+     */
     defineComponent,
     defineComponents,
   }
