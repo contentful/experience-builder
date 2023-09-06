@@ -139,10 +139,6 @@ export const useComponents = ({ mode }: UseComponentsProps) => {
      * @deprecated please use `defineComponents` function
      */
     defineComponent,
-    /**
-     * Call this method only once to register all components. Any subsequent calls will override
-     * the previously registered components.
-     */
     defineComponents,
   }
 }
