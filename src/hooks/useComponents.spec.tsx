@@ -1,27 +1,51 @@
 import React from 'react'
 import { renderHook, waitFor } from '@testing-library/react'
-import { resetComponentRegistry, useComponents } from './useComponents'
+import {
+  resetComponentRegistry,
+  useComponents,
+  getComponentRegistration,
+  enrichComponentDefinition,
+} from './useComponents'
 import { ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { sendMessage } from '../communication/sendMessage'
 
 jest.mock('../core/constants', () => ({
-  VITE_SDK_VERSION: '0.0.0-test',
+  SDK_VERSION: '0.0.0-test',
+  __esModule: true,
 }))
+
+jest.mock('../communication/sendMessage')
 
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>
 }
 
-describe('ComponentDefinitions', () => {
+const definitionId = 'TestComponent'
+const testComponentDefinition: ComponentDefinition = {
+  id: definitionId,
+  name: 'TestComponent',
+  variables: {
+    isChecked: {
+      type: 'Boolean',
+    },
+  },
+}
+
+describe('component registration', () => {
   afterEach(() => {
     resetComponentRegistry()
   })
 
+  describe('getComponentRegistration', () => {
+    it('should return undefined if requested id is not registered', () => {
+      expect(getComponentRegistration('random-str')).toBe(undefined)
+    })
+  })
+
   describe('defineComponents (many at once)', () => {
     it('should send the component definition via postMessage', () => {
-      const { result } = renderHook(() => useComponents())
-
-      const postMessageSpy = jest.spyOn(window.parent, 'postMessage')
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent'
 
@@ -41,23 +65,23 @@ describe('ComponentDefinitions', () => {
         },
       ])
 
-      const componentRegistration = result.current.getComponentRegistration(definitionId)
+      const componentRegistration = getComponentRegistration(definitionId)
       expect(componentRegistration).toBeDefined()
 
-      expect(postMessageSpy).toBeCalledTimes(1)
-      const eventData = postMessageSpy.mock.calls[0][0]
+      expect(sendMessage).toBeCalledTimes(1)
+      const sendMessageArgs = (sendMessage as jest.Mock).mock.calls[0]
 
-      expect(eventData.eventType).toBe(OutgoingExperienceBuilderEvent.CONNECTED)
-      expect(eventData.payload.definitions).toHaveLength(3) // 2 default components (Section, Container) + this new one
+      expect(sendMessageArgs[0]).toBe(OutgoingExperienceBuilderEvent.CONNECTED)
+      expect(sendMessageArgs[1].definitions).toHaveLength(3) // 2 default components (Section, Container) + this new one
       expect(
-        eventData.payload.definitions.find(
+        sendMessageArgs[1].definitions.find(
           (definition: ComponentDefinition) => definition.id == definitionId
         )
       ).toBeDefined()
     })
 
     it('should apply fallback to group: content for variables that have it undefined', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent'
 
@@ -77,16 +101,13 @@ describe('ComponentDefinitions', () => {
         },
       ])
 
-      const componentRegistration = result.current.getComponentRegistration(definitionId)
+      const componentRegistration = getComponentRegistration(definitionId)
       expect(componentRegistration).toBeDefined()
-
-      for (const variable of Object.values(componentRegistration!.definition.variables)) {
-        expect(variable.group).toBe('content')
-      }
+      expect(componentRegistration!.definition.variables.isChecked.group).toBe('content')
     })
 
     it('should add default built-in style variables', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent-1'
 
@@ -105,7 +126,7 @@ describe('ComponentDefinitions', () => {
         },
       ])
 
-      const componentRegistration = result.current.getComponentRegistration(definitionId)
+      const componentRegistration = getComponentRegistration(definitionId)
       expect(componentRegistration).toBeDefined()
 
       const variableKeys = Object.keys(componentRegistration!.definition.variables)
@@ -113,7 +134,7 @@ describe('ComponentDefinitions', () => {
     })
 
     it('should add specified built-in style variables', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent-2'
 
@@ -133,7 +154,7 @@ describe('ComponentDefinitions', () => {
         },
       ])
 
-      const componentRegistration = result.current.getComponentRegistration(definitionId)
+      const componentRegistration = getComponentRegistration(definitionId)
       expect(componentRegistration).toBeDefined()
 
       const variableKeys = Object.keys(componentRegistration!.definition.variables)
@@ -141,12 +162,81 @@ describe('ComponentDefinitions', () => {
       expect(variableKeys).toContain('cfBorder')
       expect(variableKeys).not.toContain('cfMargin')
     })
-  })
-  describe('defineComponent (one at a time - batched)', () => {
-    it('should send the component definition via postMessage', async () => {
-      const { result } = renderHook(() => useComponents())
 
-      const postMessageSpy = jest.spyOn(window.parent, 'postMessage')
+    it('should apply fallback to group: content for variables that have it undefined', () => {
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
+
+      const definitionId = 'TestComponent'
+
+      result.current.defineComponents([
+        {
+          component: TestComponent,
+          definition: {
+            id: definitionId,
+            name: 'TestComponent',
+            builtInStyles: [],
+            variables: {
+              isChecked: {
+                type: 'Boolean',
+              },
+            },
+          },
+        },
+      ])
+
+      const definition = getComponentRegistration(definitionId)
+      expect(definition).toBeDefined()
+
+      for (const variable of Object.values(definition!.definition.variables)) {
+        expect(variable.group).toBe('content')
+      }
+    })
+
+    it('should call sendMessage in editor mode', async () => {
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
+
+      result.current.defineComponents([
+        { component: TestComponent, definition: testComponentDefinition },
+      ])
+
+      const enrichedTestComponentDefinition = enrichComponentDefinition({
+        component: TestComponent,
+        definition: testComponentDefinition,
+      }).definition
+
+      expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED, {
+        definitions: [
+          getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition,
+          getComponentRegistration(CONTENTFUL_CONTAINER_ID)?.definition,
+          enrichedTestComponentDefinition,
+        ],
+        sdkVersion: '0.0.0-test',
+      })
+    })
+
+    it('should not call sendMessage in preview mode', async () => {
+      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
+
+      result.current.defineComponents([
+        { component: TestComponent, definition: testComponentDefinition },
+      ])
+
+      expect(sendMessage).not.toHaveBeenCalled()
+    })
+
+    it('should not call sendMessage in delivery mode', async () => {
+      const { result } = renderHook(() => useComponents({ mode: 'delivery' }))
+
+      result.current.defineComponents([
+        { component: TestComponent, definition: testComponentDefinition },
+      ])
+
+      expect(sendMessage).not.toHaveBeenCalled()
+    })
+  })
+  describe('defineComponent (one at a time - batched via debounce)', () => {
+    it('should send the component definition via postMessage', async () => {
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent'
 
@@ -160,7 +250,8 @@ describe('ComponentDefinitions', () => {
           },
         },
       })
-      expect(postMessageSpy).not.toHaveBeenCalled()
+      // not called cause it's debounced
+      expect(sendMessage).not.toHaveBeenCalled()
 
       result.current.defineComponent(() => <div></div>, {
         id: 'test-div-component',
@@ -172,21 +263,23 @@ describe('ComponentDefinitions', () => {
           },
         },
       })
-      expect(postMessageSpy).not.toHaveBeenCalled()
+      // not  called cause it's debounced
+      expect(sendMessage).not.toHaveBeenCalled()
 
-      expect(result.current.getComponentRegistration(definitionId)).toBeDefined()
-      expect(result.current.getComponentRegistration('test-div-component')).toBeDefined()
+      expect(getComponentRegistration(definitionId)).toBeDefined()
+      expect(getComponentRegistration('test-div-component')).toBeDefined()
 
-      // waiting cause it is a debounced call
-      await waitFor(() => expect(postMessageSpy).toHaveBeenCalled())
+      // waiting for 50ms until the debounced call gets triggered
+      await waitFor(() => expect(sendMessage).toHaveBeenCalled())
 
-      expect(postMessageSpy).toHaveBeenCalledTimes(1)
-      const eventData = postMessageSpy.mock.calls[0][0]
+      expect(sendMessage).toHaveBeenCalledTimes(1)
+      const sendMessageArgs = (sendMessage as jest.Mock).mock.calls[0]
 
-      expect(eventData.eventType).toBe(OutgoingExperienceBuilderEvent.CONNECTED)
-      expect(eventData.payload.definitions).toHaveLength(4) // 2 default components (Section, Container) + 2 new ones
+      expect(sendMessageArgs[0]).toBe(OutgoingExperienceBuilderEvent.CONNECTED)
+      expect(sendMessageArgs[1].definitions).toHaveLength(4) // 2 default components (Section, Container) + 2 new ones
+      expect(sendMessageArgs[1].sdkVersion).toBe('0.0.0-test')
       expect(
-        eventData.payload.definitions.map((definition: ComponentDefinition) => definition.id)
+        sendMessageArgs[1].definitions.map((definition: ComponentDefinition) => definition.id)
       ).toEqual([
         CONTENTFUL_SECTION_ID,
         CONTENTFUL_CONTAINER_ID,
@@ -195,8 +288,45 @@ describe('ComponentDefinitions', () => {
       ])
     })
 
+    it('should overwrite existing definitions if registered a component with the existing id', async () => {
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
+
+      result.current.defineComponent(TestComponent, testComponentDefinition)
+
+      expect(getComponentRegistration(testComponentDefinition.id)).toEqual(
+        enrichComponentDefinition({
+          component: TestComponent,
+          definition: testComponentDefinition,
+        })
+      )
+
+      result.current.defineComponent(TestComponent, {
+        ...testComponentDefinition,
+        variables: {
+          ...testComponentDefinition.variables,
+          newVariable: {
+            displayName: 'New Variable',
+            type: 'Boolean',
+            defaultValue: true,
+          },
+        },
+      })
+
+      const newComponentRegistration = getComponentRegistration(testComponentDefinition.id)
+      expect(newComponentRegistration).not.toEqual(
+        enrichComponentDefinition({ component: TestComponent, definition: testComponentDefinition })
+      )
+      expect(newComponentRegistration?.definition.variables).toHaveProperty('newVariable')
+      expect(newComponentRegistration?.definition.variables.newVariable).toEqual({
+        displayName: 'New Variable',
+        type: 'Boolean',
+        group: 'content',
+        defaultValue: true,
+      })
+    })
+
     it('should apply fallback to group: content for variables that have it undefined', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent'
 
@@ -211,7 +341,7 @@ describe('ComponentDefinitions', () => {
         },
       })
 
-      const definition = result.current.getComponentRegistration(definitionId)
+      const definition = getComponentRegistration(definitionId)
       expect(definition).toBeDefined()
 
       for (const variable of Object.values(definition!.definition.variables)) {
@@ -220,7 +350,7 @@ describe('ComponentDefinitions', () => {
     })
 
     it('should add default built-in style variables', () => {
-      const { result } = renderHook(() => useComponents())
+      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       const definitionId = 'TestComponent-1'
 
@@ -234,36 +364,87 @@ describe('ComponentDefinitions', () => {
         },
       })
 
-      const definition = result.current.getComponentRegistration(definitionId)
+      const definition = getComponentRegistration(definitionId)
       expect(definition).toBeDefined()
 
       const variableKeys = Object.keys(definition!.definition.variables)
       expect(variableKeys).toContain('cfMargin')
     })
+  })
 
-    it('should add specified built-in style variables', () => {
-      const { result } = renderHook(() => useComponents())
+  it('should add specified built-in style variables', () => {
+    const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
-      const definitionId = 'TestComponent-2'
+    const definitionId = 'TestComponent-2'
 
-      result.current.defineComponent(TestComponent, {
-        id: definitionId,
-        name: 'TestComponent',
-        builtInStyles: ['cfPadding', 'cfBorder'],
-        variables: {
-          isChecked: {
-            type: 'Boolean',
-          },
+    result.current.defineComponent(TestComponent, {
+      id: definitionId,
+      name: 'TestComponent',
+      builtInStyles: ['cfPadding', 'cfBorder'],
+      variables: {
+        isChecked: {
+          type: 'Boolean',
         },
-      })
-
-      const definition = result.current.getComponentRegistration(definitionId)
-      expect(definition).toBeDefined()
-
-      const variableKeys = Object.keys(definition!.definition.variables)
-      expect(variableKeys).toContain('cfPadding')
-      expect(variableKeys).toContain('cfBorder')
-      expect(variableKeys).not.toContain('cfMargin')
+      },
     })
+
+    const definition = getComponentRegistration(definitionId)
+    expect(definition).toBeDefined()
+
+    const variableKeys = Object.keys(definition!.definition.variables)
+    expect(variableKeys).toContain('cfPadding')
+    expect(variableKeys).toContain('cfBorder')
+    expect(variableKeys).not.toContain('cfMargin')
+  })
+
+  it('should call sendMessage in editor mode', async () => {
+    const { result } = renderHook(() => useComponents({ mode: 'editor' }))
+
+    result.current.defineComponent(TestComponent, testComponentDefinition)
+
+    const enrichedTestComponentDefinition = enrichComponentDefinition({
+      component: TestComponent,
+      definition: testComponentDefinition,
+    }).definition
+
+    // async cause sendMessage in this case is debounced
+    await waitFor(() => expect(sendMessage).toHaveBeenCalled())
+
+    expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED, {
+      definitions: [
+        getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition,
+        getComponentRegistration(CONTENTFUL_CONTAINER_ID)?.definition,
+        enrichedTestComponentDefinition,
+      ],
+      sdkVersion: '0.0.0-test',
+    })
+  })
+
+  it('should not call sendMessage in preview mode', async () => {
+    const { result } = renderHook(() => useComponents({ mode: 'preview' }))
+
+    result.current.defineComponent(TestComponent, testComponentDefinition)
+
+    try {
+      // async cause sendMessage in this case is debounced
+      await waitFor(() => expect(sendMessage).toHaveBeenCalled())
+    } catch (e) {
+      // noop
+    }
+    expect(sendMessage).not.toHaveBeenCalled()
+  })
+
+  it('should not call sendMessage in delivery mode', async () => {
+    const { result } = renderHook(() => useComponents({ mode: 'delivery' }))
+
+    result.current.defineComponent(TestComponent, testComponentDefinition)
+
+    try {
+      // async cause sendMessage in this case is debounced
+      await waitFor(() => expect(sendMessage).toHaveBeenCalled())
+    } catch (e) {
+      // noop
+    }
+    expect(sendMessage).not.toHaveBeenCalled()
   })
 })

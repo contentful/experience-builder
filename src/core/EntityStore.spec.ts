@@ -1,4 +1,4 @@
-import { Asset, Entry } from 'contentful'
+import type { Asset, Entry } from 'contentful'
 import { EntityStore } from './EntityStore'
 import { entities, entityIds } from '../../test/__fixtures__/entities'
 

@@ -1,4 +1,4 @@
-import { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful'
+import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful'
 import { isObject } from 'lodash'
 import get from 'lodash.get'
 
@@ -21,7 +21,7 @@ export class EntityStore {
     const entity = this.entitiesById[entityLink.sys.id]
 
     if (!entity || entity.sys.type !== entityLink.sys.linkType) {
-      console.warn(`Composition references unresolved entity: ${entityLink}`)
+      console.warn(`Composition references unresolved entity: ${JSON.stringify(entityLink)}`)
       return
     }
 

@@ -4,12 +4,14 @@
  * parts to prepare this library for EAP
  */
 
+import type { ContentfulClientApi } from 'contentful'
 import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_CONTAINER_NAME,
   CONTENTFUL_SECTION_ID,
   CONTENTFUL_SECTION_NAME,
 } from './constants'
+import { EntityStore } from './core/EntityStore'
 
 export enum ScrollStates {
   SCROLL_START = 'scrollStart',
@@ -185,26 +187,6 @@ export type CompositionTree = {
 
 export type CompositionMode = 'editor' | 'preview' | 'delivery'
 
-export type ExperienceConfig = {
-  accessToken?: string
-  spaceId?: string
-  environmentId?: string
-  locale?: string
-  host?: string
-}
-
-export type Experience = {
-  tree?: CompositionTree
-  experienceTypeId: string
-  dataSource: CompositionDataSource
-  unboundValues: CompositionUnboundValues
-  config: ExperienceConfig
-  isDragging: boolean
-  selectedNodeId: string
-  mode: CompositionMode | undefined
-  breakpoints: Breakpoint[]
-}
-
 /**
  * Internally defined style variables are prefix with `cf` to avoid
  * collisions with user defined variables.
@@ -285,4 +267,31 @@ export interface HoveredElement {
   blockType: string | undefined
   nodeId: string | undefined
   blockId: string | undefined
+}
+
+export interface ExperienceStore {
+  composition: Composition | undefined
+  entityStore: EntityStore | undefined
+  isLoading: boolean
+  children: Composition['componentTree']['children']
+  breakpoints: Composition['componentTree']['breakpoints']
+  dataSource: Composition['dataSource']
+  unboundValues: Composition['unboundValues']
+  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined
+  fetchBySlug: ({
+    experienceTypeId,
+    slug,
+    localeCode,
+  }: {
+    experienceTypeId: string
+    slug: string
+    localeCode: string
+  }) => Promise<{ success: boolean; error?: Error }>
+}
+
+export interface Experience {
+  store: ExperienceStore
+  client: ContentfulClientApi<undefined>
+  experienceTypeId: string
+  mode: CompositionMode
 }

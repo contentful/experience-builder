@@ -8,8 +8,7 @@ import {
 } from '../types'
 
 import React, { useMemo } from 'react'
-import { useComponents } from '../hooks'
-import { UnresolvedLink } from 'contentful'
+import type { UnresolvedLink } from 'contentful'
 import { EntityStore } from '../core/EntityStore'
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
@@ -18,6 +17,7 @@ import { transformContentValue } from './transformers'
 import { buildCfStyles } from '../core/stylesUtils'
 import { useStyleTag } from '../hooks/useStyleTag'
 import omit from 'lodash.omit'
+import { getComponentRegistration } from '../hooks/useComponents'
 
 type CompositionBlockProps = {
   node: CompositionNode
@@ -38,15 +38,13 @@ export const CompositionBlock = ({
   breakpoints,
   resolveDesignValue,
 }: CompositionBlockProps) => {
-  const { getComponentRegistration } = useComponents()
-
-  const registeredComponentConfig = useMemo(
+  const componentRegistration = useMemo(
     () => getComponentRegistration(node.definitionId as string),
-    [node, getComponentRegistration]
+    [node]
   )
 
   const props = useMemo(() => {
-    if (!registeredComponentConfig) {
+    if (!componentRegistration) {
       return {}
     }
 
@@ -61,7 +59,7 @@ export const CompositionBlock = ({
           const [, uuid, ...path] = variable.path.split('/')
           const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>
           const value = entityStore?.getValue(binding, path.slice(0, -1))
-          const variableDefinition = registeredComponentConfig.definition.variables[variableName]
+          const variableDefinition = componentRegistration.definition.variables[variableName]
           acc[variableName] = transformContentValue(value, variableDefinition)
           break
         }
@@ -76,7 +74,7 @@ export const CompositionBlock = ({
       return acc
     }, propMap)
   }, [
-    registeredComponentConfig,
+    componentRegistration,
     node.variables,
     resolveDesignValue,
     dataSource,
@@ -87,11 +85,11 @@ export const CompositionBlock = ({
   const cfStyles = buildCfStyles(props)
   const { className } = useStyleTag({ styles: cfStyles })
 
-  if (!registeredComponentConfig) {
+  if (!componentRegistration) {
     return null
   }
 
-  const { component } = registeredComponentConfig
+  const { component } = componentRegistration
 
   const children = node.children.map((childNode: CompositionNode, index) => {
     return (

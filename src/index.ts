@@ -1,9 +1,5 @@
-export { CompositionRoot } from './blocks'
-export {
-  useExperienceBuilder,
-  useComponents as useExperienceBuilderComponents,
-  getValueForBreakpoint,
-} from './hooks'
+export { ExperienceRoot } from './blocks'
+export { useExperienceBuilder, getValueForBreakpoint } from './hooks'
 export type {
   ComponentDefinition,
   ComponentRegistration,

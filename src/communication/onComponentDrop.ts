@@ -1,5 +1,5 @@
 import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from '../types'
-import { sendMessage } from '../sendMessage'
+import { sendMessage } from './sendMessage'
 
 export const onComponentDropped = ({
   node,

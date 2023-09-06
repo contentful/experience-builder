@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from 'react'
-import { Experience } from '../types'
+import React, { useEffect, useRef, useState } from 'react'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
@@ -8,31 +7,35 @@ import { useHoverIndicator } from '../hooks/useHoverIndicator'
 import { onComponentDropped } from '../communication/onComponentDrop'
 import { useBreakpoints } from '../hooks/useBreakpoints'
 import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
+import { useEditorMode } from '../hooks/useEditorMode'
+import { CompositionMode } from '../types'
 
 type VisualEditorRootProps = {
-  experience: Experience
-  locale: string
+  initialLocale: string
+  mode: CompositionMode
 }
 
-export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) => {
-  const { tree, dataSource, isDragging, selectedNodeId, unboundValues, breakpoints } = experience
+export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
+  // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
+  const { tree, dataSource, isDragging, locale, selectedNodeId, unboundValues, breakpoints } =
+    useEditorMode({ initialLocale, mode })
 
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
   const { resolveDesignValue } = useBreakpoints(breakpoints)
   useHoverIndicator(isDragging)
-  const [areEntitiesFetched, setEntitiesFetched] = React.useState(false)
+  const [areEntitiesFetched, setEntitiesFetched] = useState(false)
 
-  const entityStore = useRef(
+  const entityStore = useRef<ExperienceBuilderEditorEntityStore>(
     new ExperienceBuilderEditorEntityStore({
       entities: [],
-      locale,
+      locale: locale,
     })
   )
 
   useEffect(() => {
     entityStore.current = new ExperienceBuilderEditorEntityStore({
       entities: [],
-      locale,
+      locale: locale,
     })
   }, [locale])
 
@@ -52,9 +55,8 @@ export const VisualEditorRoot = ({ experience, locale }: VisualEditorRootProps) 
       await entityStore.current.fetchEntities(entityLinks)
       setEntitiesFetched(true)
     }
-
     resolveEntities()
-  }, [dataSource, locale, setEntitiesFetched])
+  }, [dataSource, locale])
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
