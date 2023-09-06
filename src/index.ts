@@ -6,6 +6,7 @@ export {
 } from './hooks'
 export type {
   ComponentDefinition,
+  ComponentRegistration,
   Experience,
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,

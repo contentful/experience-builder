@@ -18,7 +18,7 @@ export enum ScrollStates {
 }
 
 export enum OutgoingExperienceBuilderEvent {
-  REGISTERED_COMPONENTS = 'registeredComponents',
+  CONNECTED = 'connected',
   HOVERED_SECTION = 'hoveredSection',
   MOUSE_MOVE = 'mouseMove',
   COMPONENT_SELECTED = 'componentSelected',
@@ -131,6 +131,11 @@ export type ComponentDefinition<
   variables: Record<string, ComponentDefinitionVariable<T>>
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>
   children?: boolean
+}
+
+export type ComponentRegistration = {
+  component: React.ElementType
+  definition: ComponentDefinition
 }
 
 export type Binding = {
