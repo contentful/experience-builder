@@ -2,7 +2,7 @@
 
 ## Dynamic website
 
-You can this as a reference example or even paste this into `App.js` of the create-react-app generated app.
+You can use this as a reference example or even paste this into `App.js` of the create-react-app generated app.
 
 ```tsx
 // Remember to add dependency on 'contentful' package
