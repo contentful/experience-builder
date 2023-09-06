@@ -1,5 +1,21 @@
 # Setup Examples
 
+## Example Component:
+
+```tsx
+function MyButton({ buttonTitle, buttonUrl, ...props }) {
+  // WARNING:
+  //  - you must spread the props as last argument to enable EDITOR mode and proper rendering
+  //  - be sure to ensure that onClick handlers are above the {...props} spreading so that they are stubbed
+  //    during EDITOR mode
+  return (
+    <button onClick={() => (window.location.href = buttonUrl)} {...props}>
+      {buttonTitle}
+    </button>
+  )
+}
+```
+
 ## Dynamic website
 
 You can use this as a reference example or even paste this into `App.js` of the create-react-app generated app.
@@ -21,7 +37,7 @@ const client = createClient({
 
 const App = () => {
   // 1. Define the configuration and initialize the sdk
-  const { experience, defineComponent } = useExperienceBuilder({
+  const { experience, defineComponents } = useExperienceBuilder({
     client, // preview or delivery client
     experienceTypeId: process.env.REACT_APP_CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
     /**
@@ -34,18 +50,6 @@ const App = () => {
      */
     mode: 'delivery',
   })
-
-  function MyButton({ buttonTitle, buttonUrl, ...props }) {
-    // WARNING:
-    //  - you must spread the props as last argument to enable EDITOR mode and proper rendering
-    //  - be sure to ensure that onClick handlers are above the {...props} spreading so that they are stubbed
-    //    during EDITOR mode
-    return (
-      <button onClick={() => (window.location.href = buttonUrl)} {...props}>
-        {buttonTitle}
-      </button>
-    )
-  }
 
   // 2. Define components
   useEffect(() => {
@@ -90,7 +94,7 @@ const App = () => {
   )
 }
 
-export default App;
+export default App
 ```
 
 ## Next.js website
@@ -116,7 +120,7 @@ const client = createClient({
 const Home = () => {
   const router = useRouter();
   // 1. Define the configuration and initialize the sdk
-  const { settings, experience, defineComponent } = useExperienceBuilder({
+  const { settings, experience, defineComponents } = useExperienceBuilder({
     client, // preview or delivery client
     experienceTypeId: process.env.CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
     /**
@@ -132,7 +136,22 @@ const Home = () => {
 
   // 2. Define components
   useEffect(() => {
-    defineComponent('Button', componentDefinition)
+    defineComponents([
+      {
+        component: MyButton,
+        definition: {
+          id: 'my-button',
+          name: 'MyButton',
+          variables: {
+            buttonTitle: { type: 'Text', defaultValue: 'Click me' },
+            buttonUrl: {
+              type: 'Text',
+              defaultValue: 'https://www.google.com?q=button+was+clicked',
+            },
+          },
+        }
+      }
+    ])
   }, [defineComponent])
 
   return (
@@ -171,7 +190,7 @@ const client = createClient({
 const ExperienceBuilderPage = ({ pageContext }) => {
   const router = useRouter();
   // 1. Define the configuration and initialize the sdk
-  const { settings, experience, defineComponent } = useExperienceBuilder({
+  const { settings, experience, defineComponents } = useExperienceBuilder({
     client, // preview or delivery client
     experienceTypeId: pageContext.expereinceTypeId, // id of the experience type (content type)
     /**
@@ -187,7 +206,22 @@ const ExperienceBuilderPage = ({ pageContext }) => {
 
   // 2. Define components
   useEffect(() => {
-    defineComponent('Button', componentDefinition)
+    defineComponents([
+      {
+        component: MyButton,
+        definition: {
+          id: 'my-button',
+          name: 'MyButton',
+          variables: {
+            buttonTitle: { type: 'Text', defaultValue: 'Click me' },
+            buttonUrl: {
+              type: 'Text',
+              defaultValue: 'https://www.google.com?q=button+was+clicked',
+            },
+          },
+        }
+      }
+    ])
   }, [defineComponent])
 
   // 3. Render your experience
