@@ -85,7 +85,7 @@ describe('useFetchComposition', () => {
       locale: localeCode,
     })
 
-    expect(EntityStore).toHaveBeenCalledWith({ entities: [...entries, ...assets] })
+    expect(EntityStore).toHaveBeenCalledWith({ entities: [...entries, ...assets], locale: localeCode })
 
     expect(res.result.current).toEqual({
       composition: compositionEntry.fields,
