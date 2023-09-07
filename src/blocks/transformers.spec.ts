@@ -76,7 +76,6 @@ describe('transformBackgroundImage', () => {
       backgroundSize: 'cover',
     })
   })
-
   ;(['left', 'right', 'center'] as Array<HAlignment>).forEach((hAlignment) => {
     it(`Specifying 'backgroundImageAlignmentHorizontal(${hAlignment}) goes to CSS property backgroundPositionX`, () => {
       expect(
@@ -95,7 +94,6 @@ describe('transformBackgroundImage', () => {
       })
     })
   })
-
   ;(['top', 'bottom', 'center'] as Array<VAlignment>).forEach((vAlignment) => {
     it(`Specifying 'backgroundImageAlignmentHorizontal(${vAlignment}) goes to CSS property backgroundPositionX`, () => {
       expect(
