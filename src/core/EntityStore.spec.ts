@@ -1,7 +1,7 @@
 import { EntityStore } from './EntityStore'
 import { entities, entityIds } from '../../test/__fixtures__/entities'
 
-const locale = 'en-US';
+const locale = 'en-US'
 
 describe('EntityStore', () => {
   it('should be defined', () => {

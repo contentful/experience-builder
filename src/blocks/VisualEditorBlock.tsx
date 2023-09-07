@@ -15,7 +15,7 @@ import { ContentfulSection } from './ContentfulSection'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
-import type { EntityStore } from '@contentful/visual-sdk';
+import type { EntityStore } from '@contentful/visual-sdk'
 import { transformContentValue } from './transformers'
 
 import { useStyleTag } from '../hooks/useStyleTag'
