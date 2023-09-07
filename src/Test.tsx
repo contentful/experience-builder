@@ -6,39 +6,21 @@ const TestComponent = () => {
 }
 
 export const Test = () => {
-  const { defineComponent } = useComponents()
+  const { defineComponents } = useComponents({ mode: 'editor' })
 
-  defineComponent(TestComponent, {
-    id: 'TestComponent',
-    name: 'TestComponent',
-    variables: {
-      // name: {
-      //   type: 'Link',
-      //   linkType: 'Asset',
-      // },
-      isChecked: {
-        type: 'Boolean',
+  defineComponents([
+    {
+      component: TestComponent,
+      definition: {
+        id: 'TestComponent',
+        name: 'TestComponent',
+        variables: {
+          isChecked: {
+            type: 'Boolean',
+          },
+        },
       },
-      // elements: {
-      //   type: 'Array',
-      //   items: {
-      //     linkType: 'Entry',
-      //     type: 'Link',
-      //   },
-      // },
-      // elementsSymbol: {
-      //   type: 'Array',
-      //   items: {
-      //     type: 'Symbol',
-      //   },
-      // },
-      // elementsComponent: {
-      //   type: 'Array',
-      //   items: {
-      //     type: 'Component',
-      //   },
-      // },
     },
-  })
+  ])
   return <div data-test-id="test">Test</div>
 }

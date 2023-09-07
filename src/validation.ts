@@ -1,4 +1,6 @@
-import { IncomingExperienceBuilderEvent } from './types'
+import type { ContentfulClientApi } from 'contentful'
+import { supportedModes } from './constants'
+import { CompositionMode, IncomingExperienceBuilderEvent } from './types'
 
 export type VisualEditorMessagePayload = {
   source: string
@@ -71,4 +73,36 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
   }
 
   return eventData
+}
+
+export const validateExperienceBuilderConfig = ({
+  client,
+  locale,
+  mode,
+}: {
+  client: ContentfulClientApi<undefined>
+  locale: string
+  mode: CompositionMode
+}) => {
+  if (mode === 'editor') {
+    return
+  }
+
+  if (!supportedModes.includes(mode)) {
+    throw new Error(
+      `Parameter "mode" contains unsupported value. Supported modes: ${supportedModes.join(',')}`
+    )
+  }
+
+  if (!locale) {
+    throw new Error(
+      'Parameter "locale" is required for expereince builder initialization outside of editor mode'
+    )
+  }
+
+  if (!client) {
+    throw new Error(
+      'Parameter "client" is required for expereince builder initialization outside of editor mode'
+    )
+  }
 }

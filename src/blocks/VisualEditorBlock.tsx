@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { RefObject, useMemo } from 'react'
 import {
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
@@ -9,20 +9,20 @@ import {
   CompositionUnboundValues,
 } from '../types'
 
-import { useComponents } from '../hooks'
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from './ContentfulSection'
 
 import { getUnboundValues } from '../core/getUnboundValues'
-import { sendMessage } from '../sendMessage'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
-import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
+import type { EntityStore } from '@contentful/visual-sdk';
 import { transformContentValue } from './transformers'
 
 import { useStyleTag } from '../hooks/useStyleTag'
 import { buildCfStyles } from '../core/stylesUtils'
 import omit from 'lodash.omit'
+import { sendMessage } from '../communication/sendMessage'
+import { getComponentRegistration } from '../hooks/useComponents'
 
 type PropsType =
   | StyleProps
@@ -35,7 +35,7 @@ type VisualEditorBlockProps = {
   unboundValues: CompositionUnboundValues
   selectedNodeId?: string
   resolveDesignValue: ResolveDesignValueType
-  entityStore: React.RefObject<ExperienceBuilderEditorEntityStore>
+  entityStore: RefObject<EntityStore>
   areEntitiesFetched: boolean
 }
 
@@ -49,21 +49,19 @@ export const VisualEditorBlock = ({
   entityStore,
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
-  const { getComponent } = useComponents()
-
-  const definedComponent = useMemo(
-    () => getComponent(node.data.blockId as string),
-    [node, getComponent]
+  const componentRegistration = useMemo(
+    () => getComponentRegistration(node.data.blockId as string),
+    [node]
   )
 
   useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
 
   const props: PropsType = useMemo(() => {
-    if (!definedComponent) {
+    if (!componentRegistration) {
       return {}
     }
 
-    return Object.entries(definedComponent.componentDefinition.variables).reduce(
+    return Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variableMapping = node.data.props[variableName]
         if (!variableMapping) {
@@ -82,10 +80,12 @@ export const VisualEditorBlock = ({
           // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/')
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>
+
           const boundValue = areEntitiesFetched
             ? entityStore.current?.getValue(binding, path.slice(0, -1))
             : undefined
           const value = boundValue || variableDefinition.defaultValue
+
           return {
             ...acc,
             [variableName]: transformContentValue(value, variableDefinition),
@@ -106,7 +106,7 @@ export const VisualEditorBlock = ({
       {}
     )
   }, [
-    definedComponent,
+    componentRegistration,
     node.data.props,
     resolveDesignValue,
     dataSource,
@@ -118,14 +118,14 @@ export const VisualEditorBlock = ({
   const cfStyles = buildCfStyles(props)
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id })
 
-  if (!definedComponent) {
+  if (!componentRegistration) {
     return null
   }
 
-  const { component, componentDefinition } = definedComponent
+  const { component, definition } = componentRegistration
 
   const children =
-    definedComponent.componentDefinition.children &&
+    definition.children &&
     node.children.map((childNode) => {
       return (
         <VisualEditorBlock
@@ -143,7 +143,7 @@ export const VisualEditorBlock = ({
     })
 
   // contentful section
-  if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
+  if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(definition.id)) {
     return (
       <ContentfulSection
         className={className}

@@ -4,12 +4,14 @@
  * parts to prepare this library for EAP
  */
 
+import type { ContentfulClientApi } from 'contentful'
 import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_CONTAINER_NAME,
   CONTENTFUL_SECTION_ID,
   CONTENTFUL_SECTION_NAME,
 } from './constants'
+import { EntityStore } from './core/EntityStore'
 
 export enum ScrollStates {
   SCROLL_START = 'scrollStart',
@@ -18,7 +20,7 @@ export enum ScrollStates {
 }
 
 export enum OutgoingExperienceBuilderEvent {
-  REGISTERED_COMPONENTS = 'registeredComponents',
+  CONNECTED = 'connected',
   HOVERED_SECTION = 'hoveredSection',
   MOUSE_MOVE = 'mouseMove',
   COMPONENT_SELECTED = 'componentSelected',
@@ -26,6 +28,7 @@ export enum OutgoingExperienceBuilderEvent {
   COMPONENT_DROPPED = 'componentDropped',
   CANVAS_RELOAD = 'canvasReload',
   UPDATE_SELECTED_COMPONENT_COORDINATES = 'updateSelectedComponentCoordinates',
+  UPDATE_HOVERED_COMPONENT_COORDINATES = 'updateHoveredComponentCoordinates',
   CANVAS_SCROLL = 'canvasScrolling',
 }
 
@@ -35,6 +38,7 @@ export enum IncomingExperienceBuilderEvent {
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
   CANVAS_RESIZED = 'canvasResized',
   SELECT_COMPONENT = 'selectComponent',
+  HOVER_COMPONENT = 'hoverComponent',
 }
 
 export interface Link<T extends string> {
@@ -131,6 +135,11 @@ export type ComponentDefinition<
   children?: boolean
 }
 
+export type ComponentRegistration = {
+  component: React.ElementType
+  definition: ComponentDefinition
+}
+
 export type Binding = {
   spaceId: string
   environmentId: string
@@ -177,26 +186,6 @@ export type CompositionTree = {
 }
 
 export type CompositionMode = 'editor' | 'preview' | 'delivery'
-
-export type ExperienceConfig = {
-  accessToken?: string
-  spaceId?: string
-  environmentId?: string
-  locale?: string
-  host?: string
-}
-
-export type Experience = {
-  tree?: CompositionTree
-  experienceTypeId: string
-  dataSource: CompositionDataSource
-  unboundValues: CompositionUnboundValues
-  config: ExperienceConfig
-  isDragging: boolean
-  selectedNodeId: string
-  mode: CompositionMode | undefined
-  breakpoints: Breakpoint[]
-}
 
 /**
  * Internally defined style variables are prefix with `cf` to avoid
@@ -278,4 +267,31 @@ export interface HoveredElement {
   blockType: string | undefined
   nodeId: string | undefined
   blockId: string | undefined
+}
+
+export interface ExperienceStore {
+  composition: Composition | undefined
+  entityStore: EntityStore | undefined
+  isLoading: boolean
+  children: Composition['componentTree']['children']
+  breakpoints: Composition['componentTree']['breakpoints']
+  dataSource: Composition['dataSource']
+  unboundValues: Composition['unboundValues']
+  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined
+  fetchBySlug: ({
+    experienceTypeId,
+    slug,
+    localeCode,
+  }: {
+    experienceTypeId: string
+    slug: string
+    localeCode: string
+  }) => Promise<{ success: boolean; error?: Error }>
+}
+
+export interface Experience {
+  store: ExperienceStore
+  client: ContentfulClientApi<undefined>
+  experienceTypeId: string
+  mode: CompositionMode
 }

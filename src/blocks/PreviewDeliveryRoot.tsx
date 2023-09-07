@@ -1,68 +1,70 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Experience } from '../types'
-import { useCheckForExperienceConfig } from '../hooks/useCheckForExperienceConfig'
 import { CompositionBlock } from './CompositionBlock'
-import { useFetchComposition } from '../hooks/useFetchComposition'
 import { LATEST_SCHEMA_VERSION } from '../constants'
 import { useBreakpoints } from '../hooks'
+import { usePrevious } from '../hooks/usePrevious'
 
 type DeliveryRootProps = {
   experience: Experience
   locale: string
-  slug?: string
+  slug: string
 }
 
-export const PreviewDeliveryRoot = ({ experience, slug }: DeliveryRootProps) => {
-  const { spaceId, environmentId, accessToken, locale, host } =
-    useCheckForExperienceConfig(experience)
+export const PreviewDeliveryRoot = ({ locale, slug, experience }: DeliveryRootProps) => {
+  const attemptedToFetch = useRef<boolean>(false)
+  const previousLocale = usePrevious(locale)
 
-  if (!slug) {
-    throw new Error('Preview and delivery mode requires a composition slug to be provided')
-  }
+  const { composition, isLoading, fetchBySlug } = experience.store
 
-  const {
+  useEffect(() => {
+    // TODO: Test it, it is crucial
+    // will make it fetch on each locale change as well as if composition hasn't been fetched yet at least once
+    const shouldFetch = (!composition && !attemptedToFetch.current) || previousLocale !== locale
+    // this useEffect is meant to trigger fetching for the first time if it hasn't been done earlier
+    // if not yet fetched and not fetchin at the moment
+    if (shouldFetch && !isLoading && slug) {
+      attemptedToFetch.current = true
+      fetchBySlug({
+        experienceTypeId: experience.experienceTypeId,
+        localeCode: locale,
+        slug,
+      })
+    }
+  }, [
+    experience.experienceTypeId,
     composition,
-    children,
-    dataSource,
-    entityStore,
-    unboundValues,
-    isLoadingData,
-    schemaVersion,
-    breakpoints,
-  } = useFetchComposition({
-    accessToken: accessToken as string,
-    environmentId: environmentId as string,
-    experienceTypeId: experience.experienceTypeId,
-    host: host,
-    locale: locale as string,
-    slug: slug,
-    spaceId: spaceId as string,
-  })
+    isLoading,
+    fetchBySlug,
+    slug,
+    locale,
+    previousLocale,
+  ])
 
-  const { resolveDesignValue } = useBreakpoints(breakpoints)
+  const { resolveDesignValue } = useBreakpoints(experience.store.breakpoints)
 
-  if (!composition || isLoadingData) {
+  if (!experience.store.composition) {
     return null
   }
 
-  if (schemaVersion !== LATEST_SCHEMA_VERSION) {
+  if (experience.store.schemaVersion !== LATEST_SCHEMA_VERSION) {
     console.warn(
-      `[exp-builder.sdk] Contenful composition schema version: ${schemaVersion} does not match the latest schema version: ${LATEST_SCHEMA_VERSION}. Aborting.`
+      `[exp-builder.sdk] Contenful composition schema version: ${experience.store.schemaVersion} does not match the latest schema version: ${LATEST_SCHEMA_VERSION}. Aborting.`
     )
     return null
   }
 
   return (
     <>
-      {children.map((childNode, index) => (
+      {experience.store.children.map((childNode, index) => (
         <CompositionBlock
           key={index}
           node={childNode}
-          locale={locale as string}
-          entityStore={entityStore}
-          dataSource={dataSource}
-          unboundValues={unboundValues}
-          breakpoints={breakpoints}
+          locale={locale}
+          entityStore={experience.store.entityStore}
+          dataSource={experience.store.dataSource}
+          unboundValues={experience.store.unboundValues}
+          breakpoints={experience.store.breakpoints}
           resolveDesignValue={resolveDesignValue}
         />
       ))}
