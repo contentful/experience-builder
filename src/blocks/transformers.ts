@@ -50,7 +50,8 @@ interface CSSPropertiesForBackground extends CSSProperties {
 export const transformBackgroundImage = (
   cfBackgroundImageUrl: string | null | undefined,
   cfBackgroundImageScaling?: StyleProps['cfBackgroundImageScaling'],
-  cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment']
+  cfBackgroundImageAlignmentHorizontal?: StyleProps['cfBackgroundImageAlignmentHorizontal'],
+  cfBackgroundImageAlignmentVertical?: StyleProps['cfBackgroundImageAlignmentVertical']
 ): CSSPropertiesForBackground | undefined => {
   const matchBackgroundSize = (
     backgroundImageScaling?: StyleProps['cfBackgroundImageScaling']
@@ -67,7 +68,8 @@ export const transformBackgroundImage = (
   return {
     backgroundImage: `url(${cfBackgroundImageUrl})`,
     backgroundRepeat: cfBackgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat',
-    backgroundPosition: cfBackgroundImageAlignment,
+    backgroundPositionX: cfBackgroundImageAlignmentHorizontal,
+    backgroundPositionY: cfBackgroundImageAlignmentVertical,
     backgroundSize: matchBackgroundSize(cfBackgroundImageScaling),
   }
 }

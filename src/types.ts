@@ -208,7 +208,8 @@ export type StyleProps = {
   cfGap: string
   cfBackgroundImageUrl: string
   cfBackgroundImageScaling: 'fit' | 'fill' | 'tile'
-  cfBackgroundImageAlignment: 'left' | 'right' | 'top' | 'bottom'
+  cfBackgroundImageAlignmentVertical: 'center' | 'top' | 'bottom'
+  cfBackgroundImageAlignmentHorizontal: 'center' | 'left' | 'right'
   cfHyperlink: string
   cfOpenInNewTab: boolean
 }

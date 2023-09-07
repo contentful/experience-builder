@@ -21,7 +21,8 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfGap',
   'cfBackgroundImageUrl',
   'cfBackgroundImageScaling',
-  'cfBackgroundImageAlignment',
+  'cfBackgroundImageAlignmentVertical',
+  'cfBackgroundImageAlignmentHorizontal',
 ]
 
 export const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor']

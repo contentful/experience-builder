@@ -1,4 +1,8 @@
+import { StyleProps } from '../types'
 import { transformBackgroundImage, transformBorderStyle, transformFill } from './transformers'
+
+type HAlignment = StyleProps['cfBackgroundImageAlignmentHorizontal']
+type VAlignment = StyleProps['cfBackgroundImageAlignmentVertical']
 
 describe('transformFill', () => {
   it('returns "100%" when passed "fill"', () => {
@@ -39,30 +43,75 @@ describe('transformBorderStyle', () => {
 
 describe('transformBackgroundImage', () => {
   it(`returns empty {} upon undefined or empty (falsy) backgroundImageUrl`, () => {
-    expect(transformBackgroundImage('', 'fill', 'left')).toEqual(undefined)
-    expect(transformBackgroundImage(null, 'fill', 'left')).toEqual(undefined)
-    expect(transformBackgroundImage(undefined, 'fill', 'left')).toEqual(undefined)
+    expect(transformBackgroundImage('', 'fill', 'left', 'top')).toEqual(undefined)
+    expect(transformBackgroundImage(null, 'fill', 'left', 'top')).toEqual(undefined)
+    expect(transformBackgroundImage(undefined, 'fill', 'left', 'top')).toEqual(undefined)
   })
+
   it(`Specifying 'backgroundImageScaling.tile' adds 'backgroundRepeat: repeat'`, () => {
-    expect(transformBackgroundImage('https://picsum.photos/200/300', 'tile', 'left')).toEqual({
+    expect(
+      transformBackgroundImage('https://picsum.photos/200/300', 'tile', 'left', 'bottom')
+    ).toEqual({
       backgroundImage: 'url(https://picsum.photos/200/300)',
-      backgroundPosition: 'left',
+      backgroundPositionX: 'left',
+      backgroundPositionY: 'bottom',
       backgroundRepeat: 'repeat',
       backgroundSize: undefined,
     })
   })
+
   it(`Specifying 'backgroundImageScaling.not(tile)' adds 'backgroundRepeat: no-repeat'`, () => {
     expect(
       transformBackgroundImage(
         'https://picsum.photos/200/300',
         'fill', // not 'tile'
-        'left'
+        'left',
+        'bottom'
       )
     ).toEqual({
       backgroundImage: 'url(https://picsum.photos/200/300)',
-      backgroundPosition: 'left',
+      backgroundPositionX: 'left',
+      backgroundPositionY: 'bottom',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
+    })
+  })
+
+  ;(['left', 'right', 'center'] as Array<HAlignment>).forEach((hAlignment) => {
+    it(`Specifying 'backgroundImageAlignmentHorizontal(${hAlignment}) goes to CSS property backgroundPositionX`, () => {
+      expect(
+        transformBackgroundImage(
+          'https://picsum.photos/200/300',
+          'fill', // not 'tile'
+          hAlignment,
+          'bottom'
+        )
+      ).toEqual({
+        backgroundImage: 'url(https://picsum.photos/200/300)',
+        backgroundPositionX: hAlignment,
+        backgroundPositionY: 'bottom',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      })
+    })
+  })
+
+  ;(['top', 'bottom', 'center'] as Array<VAlignment>).forEach((vAlignment) => {
+    it(`Specifying 'backgroundImageAlignmentHorizontal(${vAlignment}) goes to CSS property backgroundPositionX`, () => {
+      expect(
+        transformBackgroundImage(
+          'https://picsum.photos/200/300',
+          'fill', // not 'tile'
+          'left',
+          vAlignment
+        )
+      ).toEqual({
+        backgroundImage: 'url(https://picsum.photos/200/300)',
+        backgroundPositionX: 'left',
+        backgroundPositionY: vAlignment,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      })
     })
   })
 })

@@ -148,21 +148,17 @@ export const builtInStyles: Record<
       ],
     },
   },
-  cfBackgroundImageAlignment: {
-    displayName: 'Alignment',
+  cfBackgroundImageAlignmentVertical: {
+    displayName: 'Image V alignment',
     type: 'Text',
     group: 'style',
-    description: 'Align background image to the edges of the container',
-    defaultValue: 'left',
+    description: 'Align background image vertically to the edges of the container',
+    defaultValue: 'top',
     validations: {
       in: [
         {
-          value: 'left',
-          displayName: 'Left',
-        },
-        {
-          value: 'right',
-          displayName: 'Right',
+          value: 'center',
+          displayName: 'Center',
         },
         {
           value: 'top',
@@ -171,6 +167,29 @@ export const builtInStyles: Record<
         {
           value: 'bottom',
           displayName: 'Bottom',
+        },
+      ],
+    },
+  },
+  cfBackgroundImageAlignmentHorizontal: {
+    displayName: 'Image H alignment',
+    type: 'Text',
+    group: 'style',
+    description: 'Align background image horizontally to the edges of the container',
+    defaultValue: 'left',
+    validations: {
+      in: [
+        {
+          value: 'center',
+          displayName: 'Center',
+        },
+        {
+          value: 'left',
+          displayName: 'Left',
+        },
+        {
+          value: 'right',
+          displayName: 'Right',
         },
       ],
     },
