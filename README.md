@@ -71,15 +71,6 @@ const App = () => {
     ])
   }, [defineComponent])
 
-  useEffect(() => {
-    // You could also fetch it early if needed
-    expereince.fetchBySlug({
-      slug: 'landing-page',
-      localeCode: 'en-US',
-      experienceTypeId: process.env.CTFL_EXPERIENCE_TYPE_ID,
-    })
-  }, [experience])
-
   // 3. Render your experience
   return (
     <ExperienceRoot

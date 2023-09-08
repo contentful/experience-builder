@@ -1,4 +1,4 @@
-import {
+import type {
   Breakpoint,
   CompositionDataSource,
   CompositionNode,
@@ -9,8 +9,8 @@ import {
 
 import React, { useMemo } from 'react'
 import type { UnresolvedLink } from 'contentful'
-import { EntityStore } from '../core/EntityStore'
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { EntityStore } from '@contentful/visual-sdk'
 import { ContentfulSection } from './ContentfulSection'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { transformContentValue } from './transformers'
