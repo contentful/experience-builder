@@ -43,8 +43,14 @@ export const transformAlignment = (
 interface CSSPropertiesForBackground extends CSSProperties {
   backgroundImage: string
   backgroundRepeat: 'repeat' | 'no-repeat'
-  backgroundPosition?: 'left' | 'right' | 'top' | 'bottom'
   backgroundSize?: 'cover' | 'contain'
+
+  // Note, that these are NOT the only allowed values as per spec
+  // FYI spec also accepts percentages and other keywords
+  //  @see https://developer.mozilla.org/en-US/docs/Web/CSS/background-position-y
+  //  @see https://developer.mozilla.org/en-US/docs/Web/CSS/background-position-x
+  backgroundPositionX?: 'left' | 'center' | 'right'
+  backgroundPositionY?: 'top' | 'center' | 'bottom'
 }
 
 export const transformBackgroundImage = (
