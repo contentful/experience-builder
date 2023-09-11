@@ -60,8 +60,8 @@ export const buildCfStyles = ({
     ...transformBackgroundImage(
       cfBackgroundImageUrl,
       cfBackgroundImageScaling,
-      cfBackgroundImageAlignmentVertical,
-      cfBackgroundImageAlignmentHorizontal
+      cfBackgroundImageAlignmentHorizontal,
+      cfBackgroundImageAlignmentVertical
     ),
   }
 }
