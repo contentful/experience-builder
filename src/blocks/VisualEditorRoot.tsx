@@ -17,7 +17,7 @@ type VisualEditorRootProps = {
 
 export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
   // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
-  const { tree, dataSource, isDragging, locale, selectedNodeId, unboundValues, breakpoints } =
+  const { tree, dataSource, isDragging, locale, selectedNodeId, unboundValues, breakpoints, entityStore } =
     useEditorMode({ initialLocale, mode })
 
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
@@ -25,18 +25,12 @@ export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps)
   useHoverIndicator(isDragging)
   const [areEntitiesFetched, setEntitiesFetched] = useState(false)
 
-  const entityStore = useRef<ExperienceBuilderEditorEntityStore>(
-    new ExperienceBuilderEditorEntityStore({
-      entities: [],
-      locale: locale,
-    })
-  )
-
   useEffect(() => {
     entityStore.current = new ExperienceBuilderEditorEntityStore({
       entities: [],
       locale: locale,
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [locale])
 
   useEffect(() => {
@@ -56,7 +50,8 @@ export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps)
       setEntitiesFetched(true)
     }
     resolveEntities()
-  }, [dataSource, locale])
+
+  }, [dataSource, entityStore, locale])
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])

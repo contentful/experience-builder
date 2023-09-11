@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
+	CompositionComponentNode,
   CompositionDataSource,
   CompositionMode,
   CompositionTree,
@@ -13,6 +14,7 @@ import { sendSelectedComponentCoordinates } from '../communication/sendSelectedC
 import { getDataFromTree } from '../utils'
 import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
 import { sendMessage } from '../communication/sendMessage'
+import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
 
 type UseEditorModeProps = {
   initialLocale: string
@@ -26,6 +28,13 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
   const [locale, setLocale] = useState<string>(initialLocale)
+
+	const entityStore = useRef<ExperienceBuilderEditorEntityStore>(
+    new ExperienceBuilderEditorEntityStore({
+      entities: [],
+      locale: locale,
+    })
+  )
 
   const reloadApp = () => {
     sendMessage(OutgoingExperienceBuilderEvent.CANVAS_RELOAD, {})
@@ -102,6 +111,29 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
           setIsDragging(isDragging)
           break
         }
+				case IncomingExperienceBuilderEvent.UPDATED_ENTITY: {
+          const { entity } = payload
+          entity && entityStore.current.updateEntity(entity)
+          break
+        }
+				/**
+				 * With this message, we want to skip the process of getting the data (datasource and unbound values)
+				 * from tree. Since we know the updated node, we can skip that recursion everytime the tree updates and
+				 * just update the relevant data we need from the relevant node.
+				 * 
+				 * We still update the tree here so we don't have a stale "tree"
+				 */
+				case IncomingExperienceBuilderEvent.COMPONENT_NODE_UPDATED: {
+          const { tree, node }: {
+						tree: CompositionTree
+						node: CompositionComponentNode,
+					} = payload
+
+					setTree(tree)
+					setDataSource((dataSource) => ({...dataSource, ...node.data.dataSource}))
+					setUnboundValues((unboundValues) => ({...unboundValues, ...node.data.unboundValues}))
+          break
+        }
         default:
           console.error(
             `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`
@@ -167,6 +199,7 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
       selectedNodeId,
       locale,
       breakpoints: tree?.root.data.breakpoints ?? [],
+			entityStore
     }),
     [tree, dataSource, unboundValues, isDragging, selectedNodeId, locale]
   )
