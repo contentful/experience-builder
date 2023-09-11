@@ -114,7 +114,6 @@ export class MouseOverHandler {
     const hoveredElementInfo = this.getHoveredElement(target)
 
     if (!hoveredElementInfo) {
-      // this.currentHoveredElementId = null
       return
     }
 

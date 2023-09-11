@@ -24,9 +24,4 @@ export const useHoverIndicator = (isDragging: boolean): void => {
       mouseMoveIndicator.current.detachEvent()
     }
   }, [isDragging])
-
-  // useEffect(() => {
-  //   // Reset cache on drag so we can ensure accuracy of element co-ordinates for the drag and drop indicator
-  //   hoverIndicatorHandler.current.resetCache()
-  // }, [isDragging])
 }
