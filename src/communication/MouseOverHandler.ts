@@ -107,12 +107,10 @@ export class MouseOverHandler {
 
     const coordinates = this.getFullCoordinates(hoveredElement)
 
-    console.log({ parentElement })
-
     return { coordinates, hoveredElement: hoveredInfo, parentElement, parentSectionIndex }
   }
 
-  handleMouseMove = (target: HTMLElement | null, x: number, y: number): void => {
+  handleMouseMove = (target: HTMLElement | null): void => {
     const hoveredElementInfo = this.getHoveredElement(target)
 
     if (!hoveredElementInfo) {
@@ -128,15 +126,12 @@ export class MouseOverHandler {
       parentElement,
       parentSectionIndex,
       coordinates,
-      clientX: x,
-      clientY: y,
     })
   }
 
   onMouseMove = (event: MouseEvent) => {
     const target: HTMLElement | null = event.target as HTMLElement
-    const [x, y] = [event.clientX, event.clientY]
-    this.handleMouseMove(target, x, y)
+    this.handleMouseMove(target)
   }
 
   attachEvent(): void {

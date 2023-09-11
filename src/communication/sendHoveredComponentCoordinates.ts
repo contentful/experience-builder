@@ -1,6 +1,4 @@
-import { getElementCoordinates } from '../core/domValues'
-import { sendMessage } from '../sendMessage'
-import { OutgoingExperienceBuilderEvent } from '../types'
+import { MouseOverHandler } from './MouseOverHandler'
 
 /**
  * This function gets the element co-ordinates of a specified component in the DOM and its parent
@@ -20,19 +18,6 @@ export const sendHoveredComponentCoordinates = (instanceId?: string) => {
     parent = parent?.parentElement
   }
 
-  const componentData = selectedElement?.dataset
-
-  if (selectedElement) {
-    sendMessage(OutgoingExperienceBuilderEvent.UPDATE_HOVERED_COMPONENT_COORDINATES, {
-      component: componentData
-        ? {
-            nodeId: componentData.cfNodeId,
-            blockId: componentData.cfNodeBlockId,
-            blockType: componentData.cfNodeBlockType,
-          }
-        : null,
-      hoveredNodeCoordinates: getElementCoordinates(selectedElement),
-      parentCoordinates: parent ? getElementCoordinates(parent) : null,
-    })
-  }
+  const mouseOverHandler = new MouseOverHandler()
+  mouseOverHandler.handleMouseMove(selectedElement || null)
 }
