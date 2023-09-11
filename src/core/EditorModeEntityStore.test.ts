@@ -1,25 +1,26 @@
 import { entities, entityIds } from '../../test/__fixtures__/entities'
-import { ExperienceBuilderEditorEntityStore } from './ExperienceBuilderEditorEntityStore'
+import { EditorModeEntityStore } from './EditorModeEntityStore'
 
 describe('ExperienceBuilderEditorEntityStore', () => {
   const locale = 'en-US'
+
   it('should be defined', () => {
-    expect(ExperienceBuilderEditorEntityStore).toBeDefined()
+    expect(EditorModeEntityStore).toBeDefined()
   })
 
   it('should create a new instance', () => {
-    const store = new ExperienceBuilderEditorEntityStore({ entities: [], locale })
+    const store = new EditorModeEntityStore({ entities: [], locale })
     expect(store).toBeDefined()
   })
 
   it('should create a new instance with initial state', () => {
-    const store = new ExperienceBuilderEditorEntityStore({ entities, locale })
+    const store = new EditorModeEntityStore({ entities, locale })
     expect(store.entities).toEqual(entities)
   })
 
   describe('getValue', () => {
     it('should return the value based on entityId and path', () => {
-      const store = new ExperienceBuilderEditorEntityStore({ entities, locale })
+      const store = new EditorModeEntityStore({ entities, locale })
 
       expect(
         store.getValue({ sys: { id: entityIds.ENTRY1, linkType: 'Entry', type: 'Link' } }, [
@@ -36,7 +37,7 @@ describe('ExperienceBuilderEditorEntityStore', () => {
     })
 
     it('should return undefined if entity id does not exist', () => {
-      const store = new ExperienceBuilderEditorEntityStore({ entities, locale })
+      const store = new EditorModeEntityStore({ entities, locale })
       expect(store).toBeDefined()
 
       expect(
@@ -48,7 +49,7 @@ describe('ExperienceBuilderEditorEntityStore', () => {
     })
 
     it('should return the url if entityType=Asset and field=file', () => {
-      const store = new ExperienceBuilderEditorEntityStore({ entities, locale })
+      const store = new EditorModeEntityStore({ entities, locale })
       expect(store).toBeDefined()
 
       expect(

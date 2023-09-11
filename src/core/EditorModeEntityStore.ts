@@ -1,9 +1,9 @@
 import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-sdk'
-import { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful'
-import { sendMessage } from '../sendMessage'
+import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful'
 import { isObject } from 'lodash'
+import { sendMessage } from '../communication/sendMessage'
 
-export class ExperienceBuilderEditorEntityStore extends EditorEntityStore {
+export class EditorModeEntityStore extends EditorEntityStore {
   constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
     const subscribe = (method: unknown, cb: (payload: RequestedEntitiesMessage) => void) => {
       const listeners = (event: MessageEvent) => {
@@ -20,9 +20,15 @@ export class ExperienceBuilderEditorEntityStore extends EditorEntityStore {
         }
       }
 
-      window.addEventListener('message', listeners)
+      if (typeof window !== 'undefined') {
+        window.addEventListener('message', listeners)
+      }
 
-      return () => window.removeEventListener('message', listeners)
+      return () => {
+        if (typeof window !== 'undefined') {
+          window.removeEventListener('message', listeners)
+        }
+      }
     }
 
     super({ entities, sendMessage, subscribe, locale })
@@ -50,11 +56,8 @@ export class ExperienceBuilderEditorEntityStore extends EditorEntityStore {
     const fieldValue = super.getValue(entityLink, path)
 
     // walk around to render asset files
-    const value =
-      isObject(fieldValue) && (fieldValue as AssetFile).url
-        ? (fieldValue as AssetFile).url
-        : fieldValue
-
-    return value
+    return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
+      ? (fieldValue as AssetFile).url
+      : fieldValue
   }
 }
