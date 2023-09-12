@@ -5,8 +5,6 @@ export class MouseOverHandler {
   private currentHoveredElementId: string | null = null
 
   private getFullCoordinates = (element: HTMLElement) => {
-    // const elementId = (element as HTMLElement).dataset.cfNodeId || element.id
-
     const validChildren = Array.from(element.children).filter(
       (child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block'
     )
@@ -70,7 +68,7 @@ export class MouseOverHandler {
     }
   }
 
-  private getHoveredElement = (element: HTMLElement | null) => {
+  private getNewlyHoveredElement = (element: HTMLElement | null) => {
     let parentElement: HoveredElement | null = null
 
     let parentSectionIndex = -1
@@ -111,7 +109,7 @@ export class MouseOverHandler {
   }
 
   handleMouseMove = (target: HTMLElement | null): void => {
-    const hoveredElementInfo = this.getHoveredElement(target)
+    const hoveredElementInfo = this.getNewlyHoveredElement(target)
 
     if (!hoveredElementInfo) {
       return
