@@ -6,7 +6,7 @@ import './VisualEditorRoot.css'
 import { useHoverIndicator } from '../hooks/useHoverIndicator'
 import { onComponentDropped } from '../communication/onComponentDrop'
 import { useBreakpoints } from '../hooks/useBreakpoints'
-import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
+import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
 import { useEditorMode } from '../hooks/useEditorMode'
 import { CompositionMode } from '../types'
 
@@ -26,7 +26,7 @@ export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps)
   const [areEntitiesFetched, setEntitiesFetched] = useState(false)
 
   useEffect(() => {
-    entityStore.current = new ExperienceBuilderEditorEntityStore({
+    entityStore.current = new EditorModeEntityStore({
       entities: [],
       locale: locale,
     })

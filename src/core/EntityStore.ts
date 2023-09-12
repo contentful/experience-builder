@@ -1,38 +1,29 @@
 import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful'
-import { isObject } from 'lodash'
-import get from 'lodash.get'
+import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk'
 
-export class EntityStore {
-  public entities: Array<Entry | Asset>
-  public entitiesById: Record<string, Entry | Asset>
+type EntityStoreArgs = { entities: Array<Entry | Asset>; locale: string }
 
-  constructor({ entities }: { entities: Array<Entry | Asset> }) {
-    this.entities = entities
-    this.entitiesById = entities.reduce((acc: Record<string, Entry | Asset>, entity) => {
-      acc[entity.sys.id] = entity
-      return acc
-    }, {})
+export class EntityStore extends VisualSdkEntityStore {
+  constructor({ entities, locale }: EntityStoreArgs) {
+    super({ entities, locale })
   }
 
   public getValue(
     entityLink: UnresolvedLink<'Entry' | 'Asset'>,
     path: string[]
   ): string | undefined {
-    const entity = this.entitiesById[entityLink.sys.id]
+    const entity = this.entitiesMap.get(entityLink.sys.id)
 
     if (!entity || entity.sys.type !== entityLink.sys.linkType) {
-      console.warn(`Composition references unresolved entity: ${JSON.stringify(entityLink)}`)
+      console.warn(`Experience references unresolved entity: ${JSON.stringify(entityLink)}`)
       return
     }
 
-    const fieldValue = get(entity, path)
+    const fieldValue = super.getValue(entityLink, path)
 
     // walk around to render asset files
-    const value =
-      isObject(fieldValue) && (fieldValue as AssetFile).url
-        ? (fieldValue as AssetFile).url
-        : fieldValue
-
-    return value
+    return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
+      ? (fieldValue as AssetFile).url
+      : fieldValue
   }
 }

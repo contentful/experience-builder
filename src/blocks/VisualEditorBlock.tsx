@@ -15,7 +15,7 @@ import { ContentfulSection } from './ContentfulSection'
 import { getUnboundValues } from '../core/getUnboundValues'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
-import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
+import type { EntityStore } from '@contentful/visual-sdk'
 import { transformContentValue } from './transformers'
 
 import { useStyleTag } from '../hooks/useStyleTag'
@@ -35,7 +35,7 @@ type VisualEditorBlockProps = {
   unboundValues: CompositionUnboundValues
   selectedNodeId?: string
   resolveDesignValue: ResolveDesignValueType
-  entityStore: RefObject<ExperienceBuilderEditorEntityStore>
+  entityStore: RefObject<EntityStore>
   areEntitiesFetched: boolean
 }
 

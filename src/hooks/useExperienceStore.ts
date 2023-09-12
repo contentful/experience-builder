@@ -58,7 +58,7 @@ export const useExperienceStore = ({ client }: UseExperienceStoreProps) => {
             : { items: [] },
         ])
         const entities = [...entriesResponse.items, ...assetsResponse.items]
-        setEntityStore(new EntityStore({ entities }))
+        setEntityStore(new EntityStore({ entities, locale }))
       } catch (e: any) {
         handleError(errorMessagesWhileFetching.experienceReferences, e)
       } finally {
