@@ -34,7 +34,6 @@ export enum OutgoingExperienceBuilderEvent {
 
 export enum IncomingExperienceBuilderEvent {
   COMPOSITION_UPDATED = 'componentTreeUpdated',
-  COMPONENT_NODE_UPDATED = 'componentNodeUpdated',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
   CANVAS_RESIZED = 'canvasResized',

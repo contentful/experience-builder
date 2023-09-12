@@ -80,13 +80,26 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
 
       switch (eventData.eventType) {
         case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
-          const { tree, locale } = payload
-          const { dataSource, unboundValues } = getDataFromTree(tree)
+          const { tree, locale, changedNode } = payload
 
-          setTree(tree)
-          setLocale(locale)
-          setDataSource(dataSource)
-          setUnboundValues(unboundValues)
+					setTree(tree);
+					setLocale(locale);
+
+					if(changedNode) {
+						/**
+						 * On single node updates, we want to skip the process of getting the data (datasource and unbound values)
+						 * from tree. Since we know the updated node, we can skip that recursion everytime the tree updates and
+						 * just update the relevant data we need from the relevant node.
+						 *
+						 * We still update the tree here so we don't have a stale "tree"
+						 */
+						setDataSource((dataSource) => ({ ...dataSource, ...changedNode.data.dataSource }))
+						setUnboundValues((unboundValues) => ({ ...unboundValues, ...changedNode.data.unboundValues }))
+					} else {
+						const { dataSource, unboundValues } = getDataFromTree(tree)
+						setDataSource(dataSource)
+						setUnboundValues(unboundValues)
+					}
           break
         }
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
@@ -114,27 +127,6 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
         case IncomingExperienceBuilderEvent.UPDATED_ENTITY: {
           const { entity } = payload
           entity && entityStore.current.updateEntity(entity)
-          break
-        }
-        /**
-         * With this message, we want to skip the process of getting the data (datasource and unbound values)
-         * from tree. Since we know the updated node, we can skip that recursion everytime the tree updates and
-         * just update the relevant data we need from the relevant node.
-         *
-         * We still update the tree here so we don't have a stale "tree"
-         */
-        case IncomingExperienceBuilderEvent.COMPONENT_NODE_UPDATED: {
-          const {
-            tree,
-            node,
-          }: {
-            tree: CompositionTree
-            node: CompositionComponentNode
-          } = payload
-
-          setTree(tree)
-          setDataSource((dataSource) => ({ ...dataSource, ...node.data.dataSource }))
-          setUnboundValues((unboundValues) => ({ ...unboundValues, ...node.data.unboundValues }))
           break
         }
         default:
