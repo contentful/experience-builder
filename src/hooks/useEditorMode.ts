@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-	CompositionComponentNode,
+  CompositionComponentNode,
   CompositionDataSource,
   CompositionMode,
   CompositionTree,
@@ -29,7 +29,7 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
   const [locale, setLocale] = useState<string>(initialLocale)
 
-	const entityStore = useRef<EditorModeEntityStore>(
+  const entityStore = useRef<EditorModeEntityStore>(
     new EditorModeEntityStore({
       entities: [],
       locale: locale,
@@ -111,27 +111,30 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
           setIsDragging(isDragging)
           break
         }
-				case IncomingExperienceBuilderEvent.UPDATED_ENTITY: {
+        case IncomingExperienceBuilderEvent.UPDATED_ENTITY: {
           const { entity } = payload
           entity && entityStore.current.updateEntity(entity)
           break
         }
-				/**
-				 * With this message, we want to skip the process of getting the data (datasource and unbound values)
-				 * from tree. Since we know the updated node, we can skip that recursion everytime the tree updates and
-				 * just update the relevant data we need from the relevant node.
-				 * 
-				 * We still update the tree here so we don't have a stale "tree"
-				 */
-				case IncomingExperienceBuilderEvent.COMPONENT_NODE_UPDATED: {
-          const { tree, node }: {
-						tree: CompositionTree
-						node: CompositionComponentNode,
-					} = payload
+        /**
+         * With this message, we want to skip the process of getting the data (datasource and unbound values)
+         * from tree. Since we know the updated node, we can skip that recursion everytime the tree updates and
+         * just update the relevant data we need from the relevant node.
+         *
+         * We still update the tree here so we don't have a stale "tree"
+         */
+        case IncomingExperienceBuilderEvent.COMPONENT_NODE_UPDATED: {
+          const {
+            tree,
+            node,
+          }: {
+            tree: CompositionTree
+            node: CompositionComponentNode
+          } = payload
 
-					setTree(tree)
-					setDataSource((dataSource) => ({...dataSource, ...node.data.dataSource}))
-					setUnboundValues((unboundValues) => ({...unboundValues, ...node.data.unboundValues}))
+          setTree(tree)
+          setDataSource((dataSource) => ({ ...dataSource, ...node.data.dataSource }))
+          setUnboundValues((unboundValues) => ({ ...unboundValues, ...node.data.unboundValues }))
           break
         }
         default:
@@ -199,7 +202,7 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
       selectedNodeId,
       locale,
       breakpoints: tree?.root.data.breakpoints ?? [],
-			entityStore
+      entityStore,
     }),
     [tree, dataSource, unboundValues, isDragging, selectedNodeId, locale]
   )

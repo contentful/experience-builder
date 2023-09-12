@@ -34,13 +34,13 @@ export enum OutgoingExperienceBuilderEvent {
 
 export enum IncomingExperienceBuilderEvent {
   COMPOSITION_UPDATED = 'componentTreeUpdated',
-	COMPONENT_NODE_UPDATED = 'componentNodeUpdated',
+  COMPONENT_NODE_UPDATED = 'componentNodeUpdated',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
   CANVAS_RESIZED = 'canvasResized',
   SELECT_COMPONENT = 'selectComponent',
   HOVER_COMPONENT = 'hoverComponent',
-	UPDATED_ENTITY = 'updatedEntity'
+  UPDATED_ENTITY = 'updatedEntity',
 }
 
 export interface Link<T extends string> {
