@@ -61,7 +61,7 @@ export class MouseOverHandler {
           blockType: sectionBlockType,
         }
 
-        return [element, hoveredElement]
+        return [target, hoveredElement]
 
         break
       }
