@@ -14,7 +14,7 @@ import { sendSelectedComponentCoordinates } from '../communication/sendSelectedC
 import { getDataFromTree } from '../utils'
 import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
 import { sendMessage } from '../communication/sendMessage'
-import { ExperienceBuilderEditorEntityStore } from '../core/ExperienceBuilderEditorEntityStore'
+import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
 
 type UseEditorModeProps = {
   initialLocale: string
@@ -29,8 +29,8 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
   const [locale, setLocale] = useState<string>(initialLocale)
 
-	const entityStore = useRef<ExperienceBuilderEditorEntityStore>(
-    new ExperienceBuilderEditorEntityStore({
+	const entityStore = useRef<EditorModeEntityStore>(
+    new EditorModeEntityStore({
       entities: [],
       locale: locale,
     })
