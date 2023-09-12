@@ -82,24 +82,27 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
         case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
           const { tree, locale, changedNode } = payload
 
-					setTree(tree);
-					setLocale(locale);
+          setTree(tree)
+          setLocale(locale)
 
-					if(changedNode) {
-						/**
-						 * On single node updates, we want to skip the process of getting the data (datasource and unbound values)
-						 * from tree. Since we know the updated node, we can skip that recursion everytime the tree updates and
-						 * just update the relevant data we need from the relevant node.
-						 *
-						 * We still update the tree here so we don't have a stale "tree"
-						 */
-						setDataSource((dataSource) => ({ ...dataSource, ...changedNode.data.dataSource }))
-						setUnboundValues((unboundValues) => ({ ...unboundValues, ...changedNode.data.unboundValues }))
-					} else {
-						const { dataSource, unboundValues } = getDataFromTree(tree)
-						setDataSource(dataSource)
-						setUnboundValues(unboundValues)
-					}
+          if (changedNode) {
+            /**
+             * On single node updates, we want to skip the process of getting the data (datasource and unbound values)
+             * from tree. Since we know the updated node, we can skip that recursion everytime the tree updates and
+             * just update the relevant data we need from the relevant node.
+             *
+             * We still update the tree here so we don't have a stale "tree"
+             */
+            setDataSource((dataSource) => ({ ...dataSource, ...changedNode.data.dataSource }))
+            setUnboundValues((unboundValues) => ({
+              ...unboundValues,
+              ...changedNode.data.unboundValues,
+            }))
+          } else {
+            const { dataSource, unboundValues } = getDataFromTree(tree)
+            setDataSource(dataSource)
+            setUnboundValues(unboundValues)
+          }
           break
         }
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
