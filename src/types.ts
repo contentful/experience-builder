@@ -23,6 +23,7 @@ export enum OutgoingExperienceBuilderEvent {
   CONNECTED = 'connected',
   HOVERED_SECTION = 'hoveredSection',
   MOUSE_MOVE = 'mouseMove',
+  NEW_HOVERED_COMPONENT = 'newHoveredElement',
   COMPONENT_SELECTED = 'componentSelected',
 
   COMPONENT_DROPPED = 'componentDropped',
