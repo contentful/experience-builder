@@ -23,7 +23,9 @@ jobs:
         with:
           name: build-folders
           if-no-files-found: error
-          path: dist
+          path: |
+            packages/components/dist
+            packages/test-app/dist 
   component-tests:
     runs-on: ubuntu-latest
     needs: install
