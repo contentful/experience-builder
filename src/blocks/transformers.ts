@@ -74,8 +74,9 @@ export const transformBackgroundImage = (
   return {
     backgroundImage: `url(${cfBackgroundImageUrl})`,
     backgroundRepeat: cfBackgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat',
-    backgroundPositionX: cfBackgroundImageAlignmentHorizontal,
-    backgroundPositionY: cfBackgroundImageAlignmentVertical,
+    backgroundPosition:`${cfBackgroundImageAlignmentHorizontal} ${cfBackgroundImageAlignmentVertical}`,
+    // backgroundPositionX: cfBackgroundImageAlignmentHorizontal,
+    // backgroundPositionY: cfBackgroundImageAlignmentVertical,
     backgroundSize: matchBackgroundSize(cfBackgroundImageScaling),
   }
 }

@@ -53,8 +53,7 @@ describe('transformBackgroundImage', () => {
       transformBackgroundImage('https://picsum.photos/200/300', 'tile', 'left', 'bottom')
     ).toEqual({
       backgroundImage: 'url(https://picsum.photos/200/300)',
-      backgroundPositionX: 'left',
-      backgroundPositionY: 'bottom',
+      backgroundPosition: 'left bottom',
       backgroundRepeat: 'repeat',
       backgroundSize: undefined,
     })
@@ -70,8 +69,7 @@ describe('transformBackgroundImage', () => {
       )
     ).toEqual({
       backgroundImage: 'url(https://picsum.photos/200/300)',
-      backgroundPositionX: 'left',
-      backgroundPositionY: 'bottom',
+      backgroundPosition: 'left bottom',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
     })
@@ -87,8 +85,7 @@ describe('transformBackgroundImage', () => {
         )
       ).toEqual({
         backgroundImage: 'url(https://picsum.photos/200/300)',
-        backgroundPositionX: hAlignment,
-        backgroundPositionY: 'bottom',
+        backgroundPosition: `${hAlignment} bottom`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       })
@@ -105,8 +102,7 @@ describe('transformBackgroundImage', () => {
         )
       ).toEqual({
         backgroundImage: 'url(https://picsum.photos/200/300)',
-        backgroundPositionX: 'left',
-        backgroundPositionY: vAlignment,
+        backgroundPosition: `left ${vAlignment}`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       })
