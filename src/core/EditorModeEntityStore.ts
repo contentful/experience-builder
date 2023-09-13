@@ -1,6 +1,5 @@
 import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-sdk'
 import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful'
-import { isObject } from 'lodash'
 import { sendMessage } from '../communication/sendMessage'
 
 export class EditorModeEntityStore extends EditorEntityStore {

@@ -40,6 +40,7 @@ export enum IncomingExperienceBuilderEvent {
   CANVAS_RESIZED = 'canvasResized',
   SELECT_COMPONENT = 'selectComponent',
   HOVER_COMPONENT = 'hoverComponent',
+  UPDATED_ENTITY = 'updatedEntity',
 }
 
 export interface Link<T extends string> {

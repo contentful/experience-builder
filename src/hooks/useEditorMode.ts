@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
+  CompositionComponentNode,
+  CompositionComponentPropValue,
   CompositionDataSource,
   CompositionMode,
   CompositionTree,
@@ -13,6 +15,7 @@ import { sendSelectedComponentCoordinates } from '../communication/sendSelectedC
 import { getDataFromTree } from '../utils'
 import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
 import { sendMessage } from '../communication/sendMessage'
+import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
 
 type UseEditorModeProps = {
   initialLocale: string
@@ -26,6 +29,13 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
   const [isDragging, setIsDragging] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string>('')
   const [locale, setLocale] = useState<string>(initialLocale)
+
+  const entityStore = useRef<EditorModeEntityStore>(
+    new EditorModeEntityStore({
+      entities: [],
+      locale: locale,
+    })
+  )
 
   const reloadApp = () => {
     sendMessage(OutgoingExperienceBuilderEvent.CANVAS_RELOAD, {})
@@ -71,13 +81,41 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
 
       switch (eventData.eventType) {
         case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
-          const { tree, locale } = payload
-          const { dataSource, unboundValues } = getDataFromTree(tree)
+          const {
+            tree,
+            locale,
+            changedNode,
+            changedValueType,
+          }: {
+            tree: CompositionTree
+            locale: string
+            changedNode?: CompositionComponentNode
+            changedValueType?: CompositionComponentPropValue['type']
+          } = payload
 
           setTree(tree)
           setLocale(locale)
-          setDataSource(dataSource)
-          setUnboundValues(unboundValues)
+
+          if (changedNode) {
+            /**
+             * On single node updates, we want to skip the process of getting the data (datasource and unbound values)
+             * from tree. Since we know the updated node, we can skip that recursion everytime the tree updates and
+             * just update the relevant data we need from the relevant node.
+             *
+             * We still update the tree here so we don't have a stale "tree"
+             */
+            changedValueType === 'BoundValue' &&
+              setDataSource((dataSource) => ({ ...dataSource, ...changedNode.data.dataSource }))
+            changedValueType === 'UnboundValue' &&
+              setUnboundValues((unboundValues) => ({
+                ...unboundValues,
+                ...changedNode.data.unboundValues,
+              }))
+          } else {
+            const { dataSource, unboundValues } = getDataFromTree(tree)
+            setDataSource(dataSource)
+            setUnboundValues(unboundValues)
+          }
           break
         }
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
@@ -100,6 +138,11 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
         case IncomingExperienceBuilderEvent.COMPONENT_DRAGGING_CHANGED: {
           const { isDragging } = payload
           setIsDragging(isDragging)
+          break
+        }
+        case IncomingExperienceBuilderEvent.UPDATED_ENTITY: {
+          const { entity } = payload
+          entity && entityStore.current.updateEntity(entity)
           break
         }
         default:
@@ -167,6 +210,7 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
       selectedNodeId,
       locale,
       breakpoints: tree?.root.data.breakpoints ?? [],
+      entityStore,
     }),
     [tree, dataSource, unboundValues, isDragging, selectedNodeId, locale]
   )
