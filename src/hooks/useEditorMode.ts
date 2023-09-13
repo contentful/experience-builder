@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   CompositionComponentNode,
+  CompositionComponentPropValue,
   CompositionDataSource,
   CompositionMode,
   CompositionTree,
@@ -80,7 +81,12 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
 
       switch (eventData.eventType) {
         case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
-          const { tree, locale, changedNode } = payload
+          const { tree, locale, changedNode, changedValueType }: {
+						tree: CompositionTree;
+						locale: string;
+						changedNode?: CompositionComponentNode;
+						changedValueType?: CompositionComponentPropValue['type']
+					} = payload
 
           setTree(tree)
           setLocale(locale)
@@ -93,16 +99,18 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
              *
              * We still update the tree here so we don't have a stale "tree"
              */
-            setDataSource((dataSource) => ({ ...dataSource, ...changedNode.data.dataSource }))
-            setUnboundValues((unboundValues) => ({
-              ...unboundValues,
-              ...changedNode.data.unboundValues,
-            }))
+						changedValueType === 'BoundValue' && setDataSource((dataSource) => ({ ...dataSource, ...changedNode.data.dataSource }))
+						changedValueType === 'UnboundValue' && (
+							setUnboundValues((unboundValues) => ({
+								...unboundValues,
+								...changedNode.data.unboundValues,
+							}))
+						)
           } else {
-            const { dataSource, unboundValues } = getDataFromTree(tree)
-            setDataSource(dataSource)
-            setUnboundValues(unboundValues)
-          }
+						const { dataSource, unboundValues } = getDataFromTree(tree)
+						setDataSource(dataSource)
+						setUnboundValues(unboundValues)
+					}
           break
         }
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
