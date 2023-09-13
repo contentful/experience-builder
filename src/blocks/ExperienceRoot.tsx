@@ -4,6 +4,7 @@ import { VisualEditorRoot } from './VisualEditorRoot'
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
 import { supportedModes } from '../constants'
 import { validateExperienceBuilderConfig } from '../validation'
+import { ErrorBoundary } from './ErrorBoundary'
 
 type ExperienceRootProps = {
   experience: Experience
@@ -23,7 +24,11 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
   if (!mode || !supportedModes.includes(mode)) return null
 
   if (mode === 'editor') {
-    return <VisualEditorRoot initialLocale={locale} mode={mode} />
+    return (
+      <ErrorBoundary>
+        <VisualEditorRoot initialLocale={locale} mode={mode} />
+      </ErrorBoundary>
+    )
   }
 
   return <PreviewDeliveryRoot locale={locale} slug={slug} experience={experience} />

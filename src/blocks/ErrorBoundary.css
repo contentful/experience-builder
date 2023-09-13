@@ -1,0 +1,13 @@
+.error-message {
+    margin: 24px;
+    font-size: var(--font-size-m);
+    font-family: var(--font-stack-primary);
+    color: var(--red-800);
+    padding: 16px;
+    background-color: var(--red-200);
+}
+
+.error-message .title {
+    margin-top: 0;
+    font-size: var(--font-size-l);
+}
