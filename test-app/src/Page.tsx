@@ -12,8 +12,9 @@ const Page: React.FC = () => {
   const [qs] = useSearchParams();
 
   const isPreview = qs.get('isPreview') === 'true';
+  const isEditor = qs.get('isEditor') === 'true';
 
-  const mode: CompositionMode = isPreview ? 'preview' : import.meta.env.VITE_EB_MODE || 'delivery';
+  const mode: CompositionMode = isEditor ? 'editor' : isPreview ? 'preview' : 'delivery';
 
   const client = useMemo(() => {
     const space = import.meta.env.VITE_SPACE_ID || '';
