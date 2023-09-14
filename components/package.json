@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "rollup -c rollup.config.mjs",
-    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx'",
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0",
     "lint.fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test": "npx cypress run --component",
     "storybook": "storybook dev -p 6006",
@@ -53,5 +53,8 @@
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "@contentful/experience-builder": "^1.1.0-alpha.66"
   }
 }
