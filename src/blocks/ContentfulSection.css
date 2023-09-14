@@ -27,6 +27,6 @@
   margin: 10px;
 }
 
-#ContentfulSection .empty {
+#ContentfulSection.empty {
   height: 200px !important;
 }
