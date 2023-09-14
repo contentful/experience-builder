@@ -1943,6 +1943,13 @@
   dependencies:
     "@types/lodash" "*"
 
+"@types/lodash.isstring@^4.0.7":
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/@types/lodash.isstring/-/lodash.isstring-4.0.7.tgz#91e64dc4fa48e2b2ad0b5fa62b529b850a4fe4b3"
+  integrity sha512-gt4q4n1Who4JxLeFR/kduS2Tia+biQk/zdbIkOfMvAldXHJdcC5SsvZREchkwa4CwKK+DqhIm3wfigFYzNKS8Q==
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/lodash.omit@^4.5.7":
   version "4.5.7"
   resolved "https://registry.yarnpkg.com/@types/lodash.omit/-/lodash.omit-4.5.7.tgz#2357ed2412b4164344e8ee41f85bb0b2920304ba"
@@ -5565,7 +5572,7 @@ lodash.isplainobject@^4.0.6:
 
 lodash.isstring@^4.0.1:
   version "4.0.1"
-  resolved "https://registry.npmjs.org/lodash.isstring/-/lodash.isstring-4.0.1.tgz"
+  resolved "https://registry.yarnpkg.com/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
   integrity sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==
 
 lodash.kebabcase@^4.1.1:

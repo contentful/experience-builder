@@ -1,8 +1,7 @@
 import { StyleProps } from '../types'
 import { transformBackgroundImage, transformBorderStyle, transformFill } from './transformers'
 
-type HAlignment = StyleProps['cfBackgroundImageAlignmentHorizontal']
-type VAlignment = StyleProps['cfBackgroundImageAlignmentVertical']
+type CompositeAlignment = StyleProps['cfBackgroundImageAlignment']
 
 describe('transformFill', () => {
   it('returns "100%" when passed "fill"', () => {
@@ -42,15 +41,15 @@ describe('transformBorderStyle', () => {
 })
 
 describe('transformBackgroundImage', () => {
-  it(`returns empty {} upon undefined or empty (falsy) backgroundImageUrl`, () => {
-    expect(transformBackgroundImage('', 'fill', 'left', 'top')).toEqual(undefined)
-    expect(transformBackgroundImage(null, 'fill', 'left', 'top')).toEqual(undefined)
-    expect(transformBackgroundImage(undefined, 'fill', 'left', 'top')).toEqual(undefined)
+  it(`returns undefined upon supplying undefined or empty (falsy) backgroundImageUrl`, () => {
+    expect(transformBackgroundImage('', 'fill', 'left top')).toEqual(undefined)
+    expect(transformBackgroundImage(null, 'fill', 'left top')).toEqual(undefined)
+    expect(transformBackgroundImage(undefined, 'fill', 'left top')).toEqual(undefined)
   })
 
   it(`Specifying 'backgroundImageScaling.tile' adds 'backgroundRepeat: repeat'`, () => {
     expect(
-      transformBackgroundImage('https://picsum.photos/200/300', 'tile', 'left', 'bottom')
+      transformBackgroundImage('https://picsum.photos/200/300', 'tile', 'left bottom')
     ).toEqual({
       backgroundImage: 'url(https://picsum.photos/200/300)',
       backgroundPosition: 'left bottom',
@@ -64,8 +63,7 @@ describe('transformBackgroundImage', () => {
       transformBackgroundImage(
         'https://picsum.photos/200/300',
         'fill', // not 'tile'
-        'left',
-        'bottom'
+        'left bottom'
       )
     ).toEqual({
       backgroundImage: 'url(https://picsum.photos/200/300)',
@@ -74,35 +72,50 @@ describe('transformBackgroundImage', () => {
       backgroundSize: 'cover',
     })
   })
-  ;(['left', 'right', 'center'] as Array<HAlignment>).forEach((hAlignment) => {
-    it(`Specifying 'backgroundImageAlignmentHorizontal(${hAlignment}) goes to CSS property backgroundPositionX`, () => {
+  ;(
+    [
+      'left bottom',
+      'right bottom',
+      'center bottom',
+      'left top',
+      'left bottom',
+      'left center',
+    ] as Array<CompositeAlignment>
+  ).forEach((compositeAlignment) => {
+    it(`Specifying 'backgroundImageAlignment(${compositeAlignment}) goes to CSS property backgroundPosition`, () => {
       expect(
         transformBackgroundImage(
           'https://picsum.photos/200/300',
           'fill', // not 'tile'
-          hAlignment,
-          'bottom'
+          compositeAlignment
         )
       ).toEqual({
         backgroundImage: 'url(https://picsum.photos/200/300)',
-        backgroundPosition: `${hAlignment} bottom`,
+        backgroundPosition: compositeAlignment,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       })
     })
   })
-  ;(['top', 'bottom', 'center'] as Array<VAlignment>).forEach((vAlignment) => {
-    it(`Specifying 'backgroundImageAlignmentHorizontal(${vAlignment}) goes to CSS property backgroundPositionX`, () => {
+  ;(
+    [
+      ['left', 'left center'],
+      ['right', 'right center'],
+      ['center', 'center center'],
+      ['top', 'center top'],
+      ['bottom', 'center bottom'],
+    ] as Array<[CompositeAlignment, string]>
+  ).forEach(([nonCompositeAlignment, expectedCSS]) => {
+    it(`Specifying non-composite value of 'cfBackgroundImageAlignment(${nonCompositeAlignment}) is expanded to composite CSS value backgroundPosition: '${expectedCSS}'`, () => {
       expect(
         transformBackgroundImage(
           'https://picsum.photos/200/300',
           'fill', // not 'tile'
-          'left',
-          vAlignment
+          nonCompositeAlignment
         )
       ).toEqual({
         backgroundImage: 'url(https://picsum.photos/200/300)',
-        backgroundPosition: `left ${vAlignment}`,
+        backgroundPosition: expectedCSS,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       })

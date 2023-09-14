@@ -1,3 +1,4 @@
+import isString from 'lodash.isstring'
 import {
   StyleProps,
   CSSProperties,
@@ -45,19 +46,22 @@ interface CSSPropertiesForBackground extends CSSProperties {
   backgroundRepeat: 'repeat' | 'no-repeat'
   backgroundSize?: 'cover' | 'contain'
 
-  // Note, that these are NOT the only allowed values as per spec
-  // FYI spec also accepts percentages and other keywords
-  //  @see https://developer.mozilla.org/en-US/docs/Web/CSS/background-position-y
-  //  @see https://developer.mozilla.org/en-US/docs/Web/CSS/background-position-x
-  backgroundPositionX?: 'left' | 'center' | 'right'
-  backgroundPositionY?: 'top' | 'center' | 'bottom'
+  backgroundPosition?:
+    | 'left top'
+    | 'left center'
+    | 'left bottom'
+    | 'right top'
+    | 'right center'
+    | 'right bottom'
+    | 'center top'
+    | 'center center'
+    | 'center bottom'
 }
 
 export const transformBackgroundImage = (
   cfBackgroundImageUrl: string | null | undefined,
   cfBackgroundImageScaling?: StyleProps['cfBackgroundImageScaling'],
-  cfBackgroundImageAlignmentHorizontal?: StyleProps['cfBackgroundImageAlignmentHorizontal'],
-  cfBackgroundImageAlignmentVertical?: StyleProps['cfBackgroundImageAlignmentVertical']
+  cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment']
 ): CSSPropertiesForBackground | undefined => {
   const matchBackgroundSize = (
     backgroundImageScaling?: StyleProps['cfBackgroundImageScaling']
@@ -67,6 +71,56 @@ export const transformBackgroundImage = (
     return undefined
   }
 
+  const matchBackgroundPosition = (
+    cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment']
+  ): CSSPropertiesForBackground['backgroundPosition'] | undefined => {
+    if (!cfBackgroundImageAlignment) {
+      return undefined
+    }
+    if (!isString(cfBackgroundImageAlignment)) {
+      return undefined
+    }
+    let [horiz, vert] = cfBackgroundImageAlignment.trim().split(/\s+/, 2)
+
+    // Special case for handling single values
+    // for backwards compatibility with single values 'right','left', 'center', 'top','bottom'
+    if (horiz && !vert) {
+      const singleValue = horiz
+      switch (singleValue) {
+        case 'left':
+          horiz = 'left'
+          vert = 'center'
+          break
+        case 'right':
+          horiz = 'right'
+          vert = 'center'
+          break
+        case 'center':
+          horiz = 'center'
+          vert = 'center'
+          break
+        case 'top':
+          horiz = 'center'
+          vert = 'top'
+          break
+        case 'bottom':
+          horiz = 'center'
+          vert = 'bottom'
+          break
+        default:
+        // just fall down to the normal validation logic for horiz and vert
+      }
+    }
+
+    const isHorizValid = ['left', 'right', 'center'].includes(horiz)
+    const isVertValid = ['top', 'bottom', 'center'].includes(vert)
+
+    horiz = isHorizValid ? horiz : 'left'
+    vert = isVertValid ? vert : 'top'
+
+    return `${horiz} ${vert}` as CSSPropertiesForBackground['backgroundPosition']
+  }
+
   if (!cfBackgroundImageUrl) {
     return undefined
   }
@@ -74,9 +128,7 @@ export const transformBackgroundImage = (
   return {
     backgroundImage: `url(${cfBackgroundImageUrl})`,
     backgroundRepeat: cfBackgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat',
-    backgroundPosition: `${cfBackgroundImageAlignmentHorizontal} ${cfBackgroundImageAlignmentVertical}`,
-    // backgroundPositionX: cfBackgroundImageAlignmentHorizontal,
-    // backgroundPositionY: cfBackgroundImageAlignmentVertical,
+    backgroundPosition: matchBackgroundPosition(cfBackgroundImageAlignment),
     backgroundSize: matchBackgroundSize(cfBackgroundImageScaling),
   }
 }

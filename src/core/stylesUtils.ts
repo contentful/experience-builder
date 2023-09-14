@@ -41,8 +41,7 @@ export const buildCfStyles = ({
   cfBorder,
   cfGap,
   cfBackgroundImageUrl,
-  cfBackgroundImageAlignmentVertical,
-  cfBackgroundImageAlignmentHorizontal,
+  cfBackgroundImageAlignment,
   cfBackgroundImageScaling,
 }: Partial<StyleProps>): CSSProperties => {
   return {
@@ -60,8 +59,7 @@ export const buildCfStyles = ({
     ...transformBackgroundImage(
       cfBackgroundImageUrl,
       cfBackgroundImageScaling,
-      cfBackgroundImageAlignmentHorizontal,
-      cfBackgroundImageAlignmentVertical
+      cfBackgroundImageAlignment
     ),
   }
 }

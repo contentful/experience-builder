@@ -148,51 +148,12 @@ export const builtInStyles: Record<
       ],
     },
   },
-  cfBackgroundImageAlignmentVertical: {
-    displayName: 'Image V alignment',
+  cfBackgroundImageAlignment: {
+    displayName: 'Image {direction} alignment',
     type: 'Text',
     group: 'style',
-    description: 'Align background image vertically to the edges of the container',
-    defaultValue: 'top',
-    validations: {
-      in: [
-        {
-          value: 'center',
-          displayName: 'Center',
-        },
-        {
-          value: 'top',
-          displayName: 'Top',
-        },
-        {
-          value: 'bottom',
-          displayName: 'Bottom',
-        },
-      ],
-    },
-  },
-  cfBackgroundImageAlignmentHorizontal: {
-    displayName: 'Image H alignment',
-    type: 'Text',
-    group: 'style',
-    description: 'Align background image horizontally to the edges of the container',
-    defaultValue: 'left',
-    validations: {
-      in: [
-        {
-          value: 'center',
-          displayName: 'Center',
-        },
-        {
-          value: 'left',
-          displayName: 'Left',
-        },
-        {
-          value: 'right',
-          displayName: 'Right',
-        },
-      ],
-    },
+    description: 'Align background image to the edges of the container',
+    defaultValue: 'left top',
   },
   cfHyperlink: {
     displayName: 'Hyperlink',
