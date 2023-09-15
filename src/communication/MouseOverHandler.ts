@@ -131,11 +131,17 @@ export class MouseOverHandler {
     this.handleMouseMove(target)
   }
 
+  onMouseLeave = () => {
+    this.currentHoveredElementId = null
+  }
+
   attachEvent(): void {
     document.addEventListener('mousemove', this.onMouseMove)
+    document.addEventListener('mouseout', this.onMouseLeave)
   }
 
   detachEvent(): void {
     document.removeEventListener('mousemove', this.onMouseMove)
+    document.removeEventListener('mouseout', this.onMouseLeave)
   }
 }
