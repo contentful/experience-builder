@@ -149,7 +149,7 @@ export const builtInStyles: Record<
     },
   },
   cfBackgroundImageAlignment: {
-    displayName: 'Image {direction} alignment',
+    displayName: 'Image Alignment',
     type: 'Text',
     group: 'style',
     description: 'Align background image to the edges of the container',

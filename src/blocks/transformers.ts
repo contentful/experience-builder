@@ -1,4 +1,3 @@
-import isString from 'lodash.isstring'
 import {
   StyleProps,
   CSSProperties,
@@ -77,48 +76,48 @@ export const transformBackgroundImage = (
     if (!cfBackgroundImageAlignment) {
       return undefined
     }
-    if (!isString(cfBackgroundImageAlignment)) {
+    if ('string' !== typeof cfBackgroundImageAlignment) {
       return undefined
     }
-    let [horiz, vert] = cfBackgroundImageAlignment.trim().split(/\s+/, 2)
+    let [horizontalAlignment, verticalAlignment] = cfBackgroundImageAlignment.trim().split(/\s+/, 2)
 
     // Special case for handling single values
     // for backwards compatibility with single values 'right','left', 'center', 'top','bottom'
-    if (horiz && !vert) {
-      const singleValue = horiz
+    if (horizontalAlignment && !verticalAlignment) {
+      const singleValue = horizontalAlignment
       switch (singleValue) {
         case 'left':
-          horiz = 'left'
-          vert = 'center'
+          horizontalAlignment = 'left'
+          verticalAlignment = 'center'
           break
         case 'right':
-          horiz = 'right'
-          vert = 'center'
+          horizontalAlignment = 'right'
+          verticalAlignment = 'center'
           break
         case 'center':
-          horiz = 'center'
-          vert = 'center'
+          horizontalAlignment = 'center'
+          verticalAlignment = 'center'
           break
         case 'top':
-          horiz = 'center'
-          vert = 'top'
+          horizontalAlignment = 'center'
+          verticalAlignment = 'top'
           break
         case 'bottom':
-          horiz = 'center'
-          vert = 'bottom'
+          horizontalAlignment = 'center'
+          verticalAlignment = 'bottom'
           break
         default:
         // just fall down to the normal validation logic for horiz and vert
       }
     }
 
-    const isHorizValid = ['left', 'right', 'center'].includes(horiz)
-    const isVertValid = ['top', 'bottom', 'center'].includes(vert)
+    const isHorizontalValid = ['left', 'right', 'center'].includes(horizontalAlignment)
+    const isVerticalValid = ['top', 'bottom', 'center'].includes(verticalAlignment)
 
-    horiz = isHorizValid ? horiz : 'left'
-    vert = isVertValid ? vert : 'top'
+    horizontalAlignment = isHorizontalValid ? horizontalAlignment : 'left'
+    verticalAlignment = isVerticalValid ? verticalAlignment : 'top'
 
-    return `${horiz} ${vert}` as CSSPropertiesForBackground['backgroundPosition']
+    return `${horizontalAlignment} ${verticalAlignment}` as CSSPropertiesForBackground['backgroundPosition']
   }
 
   if (!cfBackgroundImageUrl) {
