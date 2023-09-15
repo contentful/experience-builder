@@ -131,8 +131,7 @@ export class MouseOverHandler {
     this.handleMouseMove(target)
   }
 
-  onMouseLeave = (event: MouseEvent) => {
-    const target: HTMLElement | null = event.target as HTMLElement
+  onMouseLeave = () => {
     this.currentHoveredElementId = null
   }
 
