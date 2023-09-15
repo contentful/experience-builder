@@ -43,8 +43,18 @@ export const transformAlignment = (
 interface CSSPropertiesForBackground extends CSSProperties {
   backgroundImage: string
   backgroundRepeat: 'repeat' | 'no-repeat'
-  backgroundPosition?: 'left' | 'right' | 'top' | 'bottom'
   backgroundSize?: 'cover' | 'contain'
+
+  backgroundPosition?:
+    | 'left top'
+    | 'left center'
+    | 'left bottom'
+    | 'right top'
+    | 'right center'
+    | 'right bottom'
+    | 'center top'
+    | 'center center'
+    | 'center bottom'
 }
 
 export const transformBackgroundImage = (
@@ -60,6 +70,56 @@ export const transformBackgroundImage = (
     return undefined
   }
 
+  const matchBackgroundPosition = (
+    cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment']
+  ): CSSPropertiesForBackground['backgroundPosition'] | undefined => {
+    if (!cfBackgroundImageAlignment) {
+      return undefined
+    }
+    if ('string' !== typeof cfBackgroundImageAlignment) {
+      return undefined
+    }
+    let [horizontalAlignment, verticalAlignment] = cfBackgroundImageAlignment.trim().split(/\s+/, 2)
+
+    // Special case for handling single values
+    // for backwards compatibility with single values 'right','left', 'center', 'top','bottom'
+    if (horizontalAlignment && !verticalAlignment) {
+      const singleValue = horizontalAlignment
+      switch (singleValue) {
+        case 'left':
+          horizontalAlignment = 'left'
+          verticalAlignment = 'center'
+          break
+        case 'right':
+          horizontalAlignment = 'right'
+          verticalAlignment = 'center'
+          break
+        case 'center':
+          horizontalAlignment = 'center'
+          verticalAlignment = 'center'
+          break
+        case 'top':
+          horizontalAlignment = 'center'
+          verticalAlignment = 'top'
+          break
+        case 'bottom':
+          horizontalAlignment = 'center'
+          verticalAlignment = 'bottom'
+          break
+        default:
+        // just fall down to the normal validation logic for horiz and vert
+      }
+    }
+
+    const isHorizontalValid = ['left', 'right', 'center'].includes(horizontalAlignment)
+    const isVerticalValid = ['top', 'bottom', 'center'].includes(verticalAlignment)
+
+    horizontalAlignment = isHorizontalValid ? horizontalAlignment : 'left'
+    verticalAlignment = isVerticalValid ? verticalAlignment : 'top'
+
+    return `${horizontalAlignment} ${verticalAlignment}` as CSSPropertiesForBackground['backgroundPosition']
+  }
+
   if (!cfBackgroundImageUrl) {
     return undefined
   }
@@ -67,7 +127,7 @@ export const transformBackgroundImage = (
   return {
     backgroundImage: `url(${cfBackgroundImageUrl})`,
     backgroundRepeat: cfBackgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat',
-    backgroundPosition: cfBackgroundImageAlignment,
+    backgroundPosition: matchBackgroundPosition(cfBackgroundImageAlignment),
     backgroundSize: matchBackgroundSize(cfBackgroundImageScaling),
   }
 }

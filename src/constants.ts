@@ -22,6 +22,12 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageUrl',
   'cfBackgroundImageScaling',
   'cfBackgroundImageAlignment',
+  // For backwards compatibility
+  // we need to keep those in this constant array
+  // so that omit() in <VisualEditorBlock> and <CompositionBlock>
+  // can filter them out and not pass as props
+  'cfBackgroundImageAlignmentVertical',
+  'cfBackgroundImageAlignmentHorizontal',
 ]
 
 export const supportedModes: CompositionMode[] = ['delivery', 'preview', 'editor']

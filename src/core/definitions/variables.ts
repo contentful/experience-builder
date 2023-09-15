@@ -149,31 +149,11 @@ export const builtInStyles: Record<
     },
   },
   cfBackgroundImageAlignment: {
-    displayName: 'Alignment',
+    displayName: 'Image Alignment',
     type: 'Text',
     group: 'style',
     description: 'Align background image to the edges of the container',
-    defaultValue: 'left',
-    validations: {
-      in: [
-        {
-          value: 'left',
-          displayName: 'Left',
-        },
-        {
-          value: 'right',
-          displayName: 'Right',
-        },
-        {
-          value: 'top',
-          displayName: 'Top',
-        },
-        {
-          value: 'bottom',
-          displayName: 'Bottom',
-        },
-      ],
-    },
+    defaultValue: 'left top',
   },
   cfHyperlink: {
     displayName: 'Hyperlink',
