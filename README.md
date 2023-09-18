@@ -42,7 +42,7 @@ const App = () => {
     experienceTypeId: process.env.REACT_APP_CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
     /**
      * Supported values 'preview' or 'delivery'
-     * 'preview' mode will fetch and render unpublished data from Contentful's preview api
+     * 'preview' mode will fetch and render unpublished data from Contentful's preview api. Automatically supports canvas interactions if opened on canvas from Contentful's web app
      * 'delivery' mode will fetch and render published data from Contentful's delivery api
      *
      * you have the flexibility to define your own logic to determine the mode in which you want to run your website (for example: depending on the query parameter / hardcoded for a specific deployed instance of the website / env variable)
@@ -115,7 +115,7 @@ const Home = () => {
     experienceTypeId: process.env.CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
     /**
      * Supported values 'preview' or 'delivery'
-     * 'preview' mode will fetch and render unpublished data from Contentful's preview api
+     * 'preview' mode will fetch and render unpublished data from Contentful's preview api. Automatically supports canvas interactions if opened on canvas from Contentful's web app
      * 'delivery' mode will fetch and render published data from Contentful's delivery api
      *
      * you have the flexibility to define your own logic to determine the mode in which you want to run your website (for example: depending on the query parameter / hardcoded for a specific deployed instance of the website / env variable)
@@ -184,7 +184,7 @@ const ExperienceBuilderPage = ({ pageContext }) => {
     experienceTypeId: pageContext.expereinceTypeId, // id of the experience type (content type)
     /**
      * Supported values 'preview' or 'delivery'
-     * 'preview' mode will fetch and render unpublished data from Contentful's preview api
+     * 'preview' mode will fetch and render unpublished data from Contentful's preview api. Automatically supports canvas interactions if opened on canvas from Contentful's web app
      * 'delivery' mode will fetch and render published data from Contentful's delivery api
      *
      * you have the flexibility to define your own logic to determine the mode in which you want to run your website (for example: depending on the query parameter / hardcoded for a specific deployed instance of the website / env variable)
