@@ -61,7 +61,7 @@ describe('useExperienceBuilder', () => {
         isLoading: false,
         fetchBySlug: output.experience.store.fetchBySlug,
       },
-      switchToEditorMode: output.experience.switchToEditorMode, 
+      switchToEditorMode: output.experience.switchToEditorMode,
       client: clientMock,
       experienceTypeId,
       mode: 'delivery',

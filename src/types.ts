@@ -189,7 +189,7 @@ export type CompositionTree = {
 }
 
 export type InternalExperienceSDKMode = 'editor' | 'preview' | 'delivery'
-export type ExternalExperienceSDKMode = 'preview' | 'delivery';
+export type ExternalExperienceSDKMode = 'preview' | 'delivery'
 
 /**
  * Internally defined style variables are prefix with `cf` to avoid
@@ -311,5 +311,5 @@ export interface Experience {
   client: ContentfulClientApi<undefined>
   experienceTypeId: string
   mode: InternalExperienceSDKMode
-  switchToEditorMode: () => void;
+  switchToEditorMode: () => void
 }

@@ -237,11 +237,11 @@ describe('component registration', () => {
 
   describe('defineComponent (one at a time - batched via debounce)', () => {
     beforeAll(() => {
-      jest.useFakeTimers();
+      jest.useFakeTimers()
     })
 
     afterEach(() => {
-      jest.runOnlyPendingTimers();
+      jest.runOnlyPendingTimers()
     })
 
     it('should send the component definition via postMessage', async () => {
@@ -382,9 +382,9 @@ describe('component registration', () => {
 
     it('should add specified built-in style variables', async () => {
       const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-  
+
       const definitionId = 'TestComponent-2'
-  
+
       result.current.defineComponent(TestComponent, {
         id: definitionId,
         name: 'TestComponent',
@@ -395,21 +395,21 @@ describe('component registration', () => {
           },
         },
       })
-  
+
       const definition = getComponentRegistration(definitionId)
       expect(definition).toBeDefined()
-  
+
       const variableKeys = Object.keys(definition!.definition.variables)
       expect(variableKeys).toContain('cfPadding')
       expect(variableKeys).toContain('cfBorder')
       expect(variableKeys).not.toContain('cfMargin')
     })
-  
+
     it('should not call sendMessage in editor mode', async () => {
       const { result } = renderHook(() => useComponents({ mode: 'editor' }))
-  
+
       result.current.defineComponent(TestComponent, testComponentDefinition)
-  
+
       try {
         // async cause sendMessage in this case is debounced
         await waitFor(() => expect(sendMessage).toHaveBeenCalled())
@@ -418,20 +418,20 @@ describe('component registration', () => {
       }
       expect(sendMessage).not.toHaveBeenCalled()
     })
-  
+
     it('should call sendMessage in preview mode', async () => {
       const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-  
+
       result.current.defineComponent(TestComponent, testComponentDefinition)
-  
+
       const enrichedTestComponentDefinition = enrichComponentDefinition({
         component: TestComponent,
         definition: testComponentDefinition,
       }).definition
-  
+
       // async cause sendMessage in this case is debounced
       await waitFor(() => expect(sendMessage).toHaveBeenCalled())
-  
+
       expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED, {
         definitions: [
           getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition,
@@ -441,12 +441,12 @@ describe('component registration', () => {
         sdkVersion: '0.0.0-test',
       })
     })
-  
+
     it('should not call sendMessage in delivery mode', async () => {
       const { result } = renderHook(() => useComponents({ mode: 'delivery' }))
-  
+
       result.current.defineComponent(TestComponent, testComponentDefinition)
-  
+
       try {
         // async cause sendMessage in this case is debounced
         await waitFor(() => expect(sendMessage).toHaveBeenCalled())

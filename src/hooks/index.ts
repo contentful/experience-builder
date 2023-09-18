@@ -2,4 +2,4 @@
 export { useExperienceBuilder } from './useExperienceBuilder'
 export { useComponents } from './useComponents'
 export { useBreakpoints, getValueForBreakpoint } from './useBreakpoints'
-export { useEditorModeSwitch } from './useEditorModeSwitch';
+export { useEditorModeSwitch } from './useEditorModeSwitch'

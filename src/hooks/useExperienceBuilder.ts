@@ -45,8 +45,8 @@ export const useExperienceBuilder = ({
   const { defineComponent, defineComponents } = useComponents({ mode: activeMode })
 
   const switchToEditorMode = useCallback(() => {
-    setMode('editor');
-  }, []);
+    setMode('editor')
+  }, [])
 
   const experience = useMemo<Experience>(
     () => ({
@@ -54,7 +54,7 @@ export const useExperienceBuilder = ({
       client,
       experienceTypeId,
       mode: activeMode,
-      switchToEditorMode
+      switchToEditorMode,
     }),
     [activeMode, client, experienceTypeId, store, switchToEditorMode]
   )

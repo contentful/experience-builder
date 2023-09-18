@@ -15,12 +15,12 @@ export const PreviewDeliveryRoot = ({ locale, slug, experience }: DeliveryRootPr
   const attemptedToFetch = useRef<boolean>(false)
   const previousLocale = usePrevious(locale)
 
-  const { mode, switchToEditorMode } = experience;
-  const { composition, isLoading, fetchBySlug, entityStore } = experience.store;
+  const { mode, switchToEditorMode } = experience
+  const { composition, isLoading, fetchBySlug, entityStore } = experience.store
 
   useEditorModeSwitch({
     mode,
-    switchToEditorMode
+    switchToEditorMode,
   })
 
   useEffect(() => {
