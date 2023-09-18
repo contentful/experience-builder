@@ -16,10 +16,15 @@ export const ExperienceBuilderButton = withExperienceBuilder(Button, {
       type: 'Text',
       defaultValue: 'Lorem ipsum',
     },
-    targetUrl: {
-      displayName: 'Target URL',
+    url: {
+      displayName: 'URL',
       type: 'Text',
       defaultValue: '/',
+    },
+    target: {
+      displayName: 'URL',
+      type: 'Text',
+      defaultValue: '',
     },
     classes: {
       displayName: 'Classes',
