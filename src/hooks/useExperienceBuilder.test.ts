@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react'
 import { useExperienceBuilder } from './useExperienceBuilder'
-import { CompositionMode } from '../types'
+import { ExternalExperienceSDKMode } from '../types'
 import { supportedModes } from '../constants'
 import type { ContentfulClientApi } from 'contentful'
 
@@ -61,6 +61,7 @@ describe('useExperienceBuilder', () => {
         isLoading: false,
         fetchBySlug: output.experience.store.fetchBySlug,
       },
+      switchToEditorMode: output.experience.switchToEditorMode, 
       client: clientMock,
       experienceTypeId,
       mode: 'delivery',
@@ -81,7 +82,29 @@ describe('useExperienceBuilder', () => {
           client: clientMock,
           defaultLocale,
           slug,
-          mode: 'random' as CompositionMode,
+          mode: 'random' as ExternalExperienceSDKMode,
+        },
+      })
+    } catch (error) {
+      expect((error as Error).message).toBe(
+        `Unsupported mode provided: random. Supported values: ${supportedModes}`
+      )
+    }
+  })
+
+  it(`should not allow to set the 'editor' mode`, () => {
+    try {
+      // without it a big shabang bong log will be printed to the console and the world will expload
+      // jk: you will just have to scroll a lot to find which test file has failed
+      jest.spyOn(console, 'error').mockReturnValue()
+
+      renderHook((props) => useExperienceBuilder(props), {
+        initialProps: {
+          experienceTypeId,
+          client: clientMock,
+          defaultLocale,
+          slug,
+          mode: 'editor' as ExternalExperienceSDKMode,
         },
       })
     } catch (error) {
@@ -96,7 +119,7 @@ describe('useExperienceBuilder', () => {
       initialProps: {
         experienceTypeId,
         client: clientMock,
-        mode: 'editor' as CompositionMode,
+        mode: 'editor' as ExternalExperienceSDKMode,
       },
     })
 
@@ -105,12 +128,12 @@ describe('useExperienceBuilder', () => {
     res.rerender({
       experienceTypeId,
       client: clientMock,
-      mode: 'delivery' as CompositionMode,
+      mode: 'delivery' as ExternalExperienceSDKMode,
     })
 
     expect(res.result.current.experience.mode).toBe('delivery')
   })
-  ;(['editor', 'preview', 'delivery'] as CompositionMode[]).map((mode) => {
+  ;(['preview', 'delivery'] as ExternalExperienceSDKMode[]).map((mode) => {
     it(`should allow to set the ${mode} mode`, () => {
       const res = renderHook((props) => useExperienceBuilder(props), {
         initialProps: {
