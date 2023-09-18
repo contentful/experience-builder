@@ -192,7 +192,7 @@ describe('component registration', () => {
       }
     })
 
-    it('should not call sendMessage in editor mode', async () => {
+    it('should not call sendMessage in editor mode', () => {
       const { result } = renderHook(() => useComponents({ mode: 'editor' }))
 
       result.current.defineComponents([
@@ -202,7 +202,7 @@ describe('component registration', () => {
       expect(sendMessage).not.toHaveBeenCalled()
     })
 
-    it('should call sendMessage in preview mode', async () => {
+    it('should call sendMessage in preview mode', () => {
       const { result } = renderHook(() => useComponents({ mode: 'preview' }))
 
       result.current.defineComponents([
@@ -224,7 +224,7 @@ describe('component registration', () => {
       })
     })
 
-    it('should not call sendMessage in delivery mode', async () => {
+    it('should not call sendMessage in delivery mode', () => {
       const { result } = renderHook(() => useComponents({ mode: 'delivery' }))
 
       result.current.defineComponents([
@@ -297,7 +297,7 @@ describe('component registration', () => {
       ])
     })
 
-    it('should overwrite existing definitions if registered a component with the existing id', async () => {
+    it('should overwrite existing definitions if registered a component with the existing id', () => {
       const { result } = renderHook(() => useComponents({ mode: 'preview' }))
 
       result.current.defineComponent(TestComponent, testComponentDefinition)
@@ -334,7 +334,7 @@ describe('component registration', () => {
       })
     })
 
-    it('should apply fallback to group: content for variables that have it undefined', async () => {
+    it('should apply fallback to group: content for variables that have it undefined', () => {
       const { result } = renderHook(() => useComponents({ mode: 'preview' }))
 
       const definitionId = 'TestComponent'
@@ -358,7 +358,7 @@ describe('component registration', () => {
       }
     })
 
-    it('should add default built-in style variables', async () => {
+    it('should add default built-in style variables', () => {
       const { result } = renderHook(() => useComponents({ mode: 'preview' }))
 
       const definitionId = 'TestComponent-1'
@@ -380,7 +380,7 @@ describe('component registration', () => {
       expect(variableKeys).toContain('cfMargin')
     })
 
-    it('should add specified built-in style variables', async () => {
+    it('should add specified built-in style variables', () => {
       const { result } = renderHook(() => useComponents({ mode: 'preview' }))
 
       const definitionId = 'TestComponent-2'
