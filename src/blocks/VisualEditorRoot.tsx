@@ -8,11 +8,11 @@ import { onComponentDropped } from '../communication/onComponentDrop'
 import { useBreakpoints } from '../hooks/useBreakpoints'
 import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
 import { useEditorMode } from '../hooks/useEditorMode'
-import { CompositionMode } from '../types'
+import { InternalExperienceSDKMode } from '../types'
 
 type VisualEditorRootProps = {
   initialLocale: string
-  mode: CompositionMode
+  mode: InternalExperienceSDKMode
 }
 
 export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
