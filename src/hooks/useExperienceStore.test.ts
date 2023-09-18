@@ -14,7 +14,7 @@ const slug = 'hello-world'
 
 let clientMock: ContentfulClientApi<undefined>
 
-describe('useFetchComposition', () => {
+describe('useExperienceStore', () => {
   beforeEach(() => {
     clientMock = {
       getEntries: jest.fn().mockImplementation((data) => {

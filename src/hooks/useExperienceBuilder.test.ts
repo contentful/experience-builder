@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 import { useExperienceBuilder } from './useExperienceBuilder'
 import { ExternalExperienceSDKMode } from '../types'
 import { supportedModes } from '../constants'
@@ -67,7 +67,27 @@ describe('useExperienceBuilder', () => {
       mode: 'delivery',
     })
 
+    expect(output.defineComponents).toBeDefined()
     expect(output.defineComponent).toBeDefined()
+  })
+
+  it('should switch the mode to editor via switchToEditorMode fn', () => {
+    const res = renderHook((props) => useExperienceBuilder(props), {
+      initialProps: {
+        experienceTypeId,
+        client: clientMock,
+      },
+    })
+
+    const output = res.result.current
+
+    expect(output.experience.mode).toBe('delivery')
+
+    act(() => {
+      output.experience.switchToEditorMode()
+    })
+
+    expect(res.result.current.experience.mode).toBe('editor')
   })
 
   it('should throw an error if passed incorrect mode', () => {
