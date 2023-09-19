@@ -47,7 +47,6 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/lodash.debounce": "^4.0.7",
     "@types/lodash.get": "^4.4.7",
-    "@types/lodash.isstring": "^4.0.7",
     "@types/lodash.omit": "^4.5.7",
     "@types/lodash.throttle": "^4.1.7",
     "@types/node": "^18.14.0",

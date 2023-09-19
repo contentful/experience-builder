@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { Experience } from '../types'
 import { CompositionBlock } from './CompositionBlock'
 import { LATEST_SCHEMA_VERSION } from '../constants'
-import { useBreakpoints } from '../hooks'
+import { useBreakpoints, useEditorModeSwitch } from '../hooks'
 import { usePrevious } from '../hooks/usePrevious'
 
 type DeliveryRootProps = {
@@ -15,7 +15,13 @@ export const PreviewDeliveryRoot = ({ locale, slug, experience }: DeliveryRootPr
   const attemptedToFetch = useRef<boolean>(false)
   const previousLocale = usePrevious(locale)
 
-  const { composition, isLoading, fetchBySlug } = experience.store
+  const { mode, switchToEditorMode } = experience
+  const { composition, isLoading, fetchBySlug, entityStore } = experience.store
+
+  useEditorModeSwitch({
+    mode,
+    switchToEditorMode,
+  })
 
   useEffect(() => {
     // TODO: Test it, it is crucial
@@ -61,7 +67,7 @@ export const PreviewDeliveryRoot = ({ locale, slug, experience }: DeliveryRootPr
           key={index}
           node={childNode}
           locale={locale}
-          entityStore={experience.store.entityStore}
+          entityStore={entityStore}
           dataSource={experience.store.dataSource}
           unboundValues={experience.store.unboundValues}
           breakpoints={experience.store.breakpoints}

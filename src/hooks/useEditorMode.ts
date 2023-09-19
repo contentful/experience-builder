@@ -3,7 +3,7 @@ import {
   CompositionComponentNode,
   CompositionComponentPropValue,
   CompositionDataSource,
-  CompositionMode,
+  InternalSDKMode,
   CompositionTree,
   CompositionUnboundValues,
   IncomingExperienceBuilderEvent,
@@ -19,7 +19,7 @@ import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
 
 type UseEditorModeProps = {
   initialLocale: string
-  mode: CompositionMode
+  mode: InternalSDKMode
 }
 
 export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {

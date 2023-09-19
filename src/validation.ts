@@ -1,6 +1,6 @@
 import type { ContentfulClientApi } from 'contentful'
 import { supportedModes } from './constants'
-import { CompositionMode, IncomingExperienceBuilderEvent } from './types'
+import { InternalSDKMode, IncomingExperienceBuilderEvent } from './types'
 
 export type VisualEditorMessagePayload = {
   source: string
@@ -82,7 +82,7 @@ export const validateExperienceBuilderConfig = ({
 }: {
   client: ContentfulClientApi<undefined>
   locale: string
-  mode: CompositionMode
+  mode: InternalSDKMode
 }) => {
   if (mode === 'editor') {
     return

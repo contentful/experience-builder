@@ -5,7 +5,7 @@
 ```tsx
 function MyButton({ buttonTitle, buttonUrl, ...props }) {
   // WARNING:
-  //  - you must spread the props as last argument to enable EDITOR mode and proper rendering
+  //  - you must spread the props as last argument to enable canvas interactions and proper rendering on canvas
   //  - be sure to ensure that onClick handlers are above the {...props} spreading so that they are stubbed
   //    during EDITOR mode
   return (
@@ -41,9 +41,8 @@ const App = () => {
     client, // preview or delivery client
     experienceTypeId: process.env.REACT_APP_CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
     /**
-     * Supported values 'editor' or 'preview' or 'delivery'
-     * 'editor' is required when opening the website from Contentful's web app (app.contentful.com)
-     * 'preview' mode will fetch and render unpublished data from Contentful's preview api
+     * Supported values 'preview' or 'delivery'
+     * 'preview' mode will fetch and render unpublished data from Contentful's preview api. Automatically supports canvas interactions if opened on canvas from Contentful's web app
      * 'delivery' mode will fetch and render published data from Contentful's delivery api
      *
      * you have the flexibility to define your own logic to determine the mode in which you want to run your website (for example: depending on the query parameter / hardcoded for a specific deployed instance of the website / env variable)
@@ -115,9 +114,8 @@ const Home = () => {
     client, // preview or delivery client
     experienceTypeId: process.env.CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
     /**
-     * Supported values 'editor' or 'preview' or 'delivery'
-     * 'editor' is required when opening the website from Contentful's web app (app.contentful.com)
-     * 'preview' mode will fetch and render unpublished data from Contentful's preview api
+     * Supported values 'preview' or 'delivery'
+     * 'preview' mode will fetch and render unpublished data from Contentful's preview api. Automatically supports canvas interactions if opened on canvas from Contentful's web app
      * 'delivery' mode will fetch and render published data from Contentful's delivery api
      *
      * you have the flexibility to define your own logic to determine the mode in which you want to run your website (for example: depending on the query parameter / hardcoded for a specific deployed instance of the website / env variable)
@@ -185,9 +183,8 @@ const ExperienceBuilderPage = ({ pageContext }) => {
     client, // preview or delivery client
     experienceTypeId: pageContext.expereinceTypeId, // id of the experience type (content type)
     /**
-     * Supported values 'editor' or 'preview' or 'delivery'
-     * 'editor' is required when opening the website from Contentful's web app (app.contentful.com)
-     * 'preview' mode will fetch and render unpublished data from Contentful's preview api
+     * Supported values 'preview' or 'delivery'
+     * 'preview' mode will fetch and render unpublished data from Contentful's preview api. Automatically supports canvas interactions if opened on canvas from Contentful's web app
      * 'delivery' mode will fetch and render published data from Contentful's delivery api
      *
      * you have the flexibility to define your own logic to determine the mode in which you want to run your website (for example: depending on the query parameter / hardcoded for a specific deployed instance of the website / env variable)

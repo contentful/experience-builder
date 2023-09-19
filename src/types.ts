@@ -34,6 +34,7 @@ export enum OutgoingExperienceBuilderEvent {
 }
 
 export enum IncomingExperienceBuilderEvent {
+  REQUEST_EDITOR_MODE = 'requestEditorMode',
   COMPOSITION_UPDATED = 'componentTreeUpdated',
   COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
   SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
@@ -187,7 +188,8 @@ export type CompositionTree = {
   root: CompositionComponentNode
 }
 
-export type CompositionMode = 'editor' | 'preview' | 'delivery'
+export type ExternalSDKMode = 'preview' | 'delivery'
+export type InternalSDKMode = ExternalSDKMode | 'editor'
 
 /**
  * Internally defined style variables are prefix with `cf` to avoid
@@ -308,5 +310,6 @@ export interface Experience {
   store: ExperienceStore
   client: ContentfulClientApi<undefined>
   experienceTypeId: string
-  mode: CompositionMode
+  mode: InternalSDKMode
+  switchToEditorMode: () => void
 }

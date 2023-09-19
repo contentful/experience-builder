@@ -4,7 +4,7 @@ import {
   ComponentRegistration,
   ComponentDefinition,
   OutgoingExperienceBuilderEvent,
-  CompositionMode,
+  InternalSDKMode,
 } from '../types'
 import { builtInStyles as builtInStyleDefinitions } from '../core/definitions/variables'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
@@ -97,7 +97,7 @@ const debouncedBatchSendPostMessage = debounce(() => {
 }, 50)
 
 type UseComponentsProps = {
-  mode: CompositionMode
+  mode: InternalSDKMode
 }
 
 export const useComponents = ({ mode }: UseComponentsProps) => {
@@ -116,7 +116,7 @@ export const useComponents = ({ mode }: UseComponentsProps) => {
         ({ definition }) => definition
       )
 
-      if (mode === 'editor') {
+      if (mode === 'preview') {
         sendConnectedMessage(registeredDefinitions)
       }
     },
@@ -127,7 +127,8 @@ export const useComponents = ({ mode }: UseComponentsProps) => {
     (component: ElementType, definition: ComponentDefinition) => {
       const enrichedComponentConfig = enrichComponentDefinition({ component, definition })
       componentRegistry.set(enrichedComponentConfig.definition.id, enrichedComponentConfig)
-      if (mode === 'editor') {
+
+      if (mode === 'preview') {
         debouncedBatchSendPostMessage()
       }
     },
