@@ -65,10 +65,13 @@ describe('useEditorModeSwitch', () => {
 
   it('should send CONNECTED event with all registered components in preview mode', () => {
     const Component = () => <div>Test</div>
-    
-    const customComponentRegistration = { component: Component, definition: { id: 'test', name: 'test', variables: {} } };
 
-    defineComponents([customComponentRegistration]);
+    const customComponentRegistration = {
+      component: Component,
+      definition: { id: 'test', name: 'test', variables: {} },
+    }
+
+    defineComponents([customComponentRegistration])
 
     renderHook((props) => useEditorModeSwitch(props), {
       initialProps: {
@@ -83,7 +86,7 @@ describe('useEditorModeSwitch', () => {
       definitions: [
         getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition,
         getComponentRegistration(CONTENTFUL_CONTAINER_ID)?.definition,
-        enrichComponentDefinition(customComponentRegistration).definition
+        enrichComponentDefinition(customComponentRegistration).definition,
       ],
       sdkVersion: SDK_VERSION,
     })

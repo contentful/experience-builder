@@ -29,7 +29,7 @@ export const useEditorModeSwitch = ({
       }
     }
 
-    sendConnectedMessage();
+    sendConnectedMessage()
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', onMessage)

@@ -41,7 +41,6 @@ describe('component registration', () => {
 
   describe('defineComponents (many at once)', () => {
     it('should not send the component definition via postMessage', () => {
-
       const definitionId = 'TestComponent'
 
       defineComponents([
@@ -65,7 +64,6 @@ describe('component registration', () => {
     })
 
     it('should apply fallback to group: content for variables that have it undefined', () => {
-
       const definitionId = 'TestComponent'
 
       defineComponents([
