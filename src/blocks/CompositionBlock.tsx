@@ -110,7 +110,6 @@ export const CompositionBlock = ({
     return (
       <ContentfulSection
         editorMode={false}
-        cfStyles={cfStyles}
         {...(omit(props, CF_STYLE_ATTRIBUTES) as unknown as StyleProps)}
         className={className}>
         {children}

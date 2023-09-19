@@ -19,7 +19,7 @@ import type { EntityStore } from '@contentful/visual-sdk'
 import { transformContentValue } from './transformers'
 
 import { useStyleTag } from '../hooks/useStyleTag'
-import { buildCfStyles } from '../core/stylesUtils'
+import { buildCfStyles, updateNodeDefaultHeight } from '../core/stylesUtils'
 import omit from 'lodash.omit'
 import { sendMessage } from '../communication/sendMessage'
 import { getComponentRegistration } from '../hooks/useComponents'
@@ -72,9 +72,18 @@ export const VisualEditorBlock = ({
         }
 
         if (variableMapping.type === 'DesignValue') {
+					const persistedValue = resolveDesignValue(variableMapping.valuesByBreakpoint)
+					const defaultValue = !persistedValue && variableName === 'cfHeight'? updateNodeDefaultHeight({
+						nodeId: node.data.id,
+						blockId: node.data.blockId,
+						parentId: node.parentId,
+						children: node.children,
+						defaultValue: variableMapping.defaultValue
+					}) : variableMapping.defaultValue
+
           return {
             ...acc,
-            [variableName]: resolveDesignValue(variableMapping.valuesByBreakpoint),
+            [variableName]: persistedValue || defaultValue,
           }
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
@@ -105,15 +114,7 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [
-    componentRegistration,
-    node.data.props,
-    resolveDesignValue,
-    dataSource,
-    areEntitiesFetched,
-    entityStore,
-    unboundValues,
-  ])
+  }, [componentRegistration, node.data.props, node.data.id, node.data.blockId, node.parentId, node.children, resolveDesignValue, dataSource, areEntitiesFetched, entityStore, unboundValues])
 
   const cfStyles = buildCfStyles(props)
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id })
@@ -157,7 +158,6 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        cfStyles={cfStyles}
         {...(omit(props, CF_STYLE_ATTRIBUTES) as unknown as StyleProps)}>
         {children}
       </ContentfulSection>
