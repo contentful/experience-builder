@@ -1,6 +1,6 @@
 export { ExperienceRoot } from './blocks'
 export { useExperienceBuilder, getValueForBreakpoint } from './hooks'
-export { defineComponent, defineComponents } from './core/componentRegistry';
+export { defineComponents } from './core/componentRegistry';
 export type {
   ComponentDefinition,
   ComponentRegistration,
