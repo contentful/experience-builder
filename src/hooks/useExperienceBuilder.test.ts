@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { useExperienceBuilder } from './useExperienceBuilder'
-import { ExternalExperienceSDKMode } from '../types'
+import { ExternalSDKMode } from '../types'
 import { supportedModes } from '../constants'
 import type { ContentfulClientApi } from 'contentful'
 
@@ -102,7 +102,7 @@ describe('useExperienceBuilder', () => {
           client: clientMock,
           defaultLocale,
           slug,
-          mode: 'random' as ExternalExperienceSDKMode,
+          mode: 'random' as ExternalSDKMode,
         },
       })
     } catch (error) {
@@ -124,7 +124,7 @@ describe('useExperienceBuilder', () => {
           client: clientMock,
           defaultLocale,
           slug,
-          mode: 'editor' as ExternalExperienceSDKMode,
+          mode: 'editor' as ExternalSDKMode,
         },
       })
     } catch (error) {
@@ -139,7 +139,7 @@ describe('useExperienceBuilder', () => {
       initialProps: {
         experienceTypeId,
         client: clientMock,
-        mode: 'editor' as ExternalExperienceSDKMode,
+        mode: 'editor' as ExternalSDKMode,
       },
     })
 
@@ -148,12 +148,12 @@ describe('useExperienceBuilder', () => {
     res.rerender({
       experienceTypeId,
       client: clientMock,
-      mode: 'delivery' as ExternalExperienceSDKMode,
+      mode: 'delivery' as ExternalSDKMode,
     })
 
     expect(res.result.current.experience.mode).toBe('delivery')
   })
-  ;(['preview', 'delivery'] as ExternalExperienceSDKMode[]).map((mode) => {
+  ;(['preview', 'delivery'] as ExternalSDKMode[]).map((mode) => {
     it(`should allow to set the ${mode} mode`, () => {
       const res = renderHook((props) => useExperienceBuilder(props), {
         initialProps: {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Experience, ExternalExperienceSDKMode, InternalExperienceSDKMode } from '../types'
+import { Experience, ExternalSDKMode, InternalSDKMode } from '../types'
 import { useExperienceStore } from './useExperienceStore'
 import { useComponents } from './useComponents'
 import { supportedModes } from '../constants'
@@ -18,7 +18,7 @@ type UseExperienceBuilderProps = {
    *  Mode defines the behaviour of the sdk.
    * - `preview` - fetching and rendering draft data. Will automatically switch to `editor` mode if open from contentful web app.
    * - `delivery` - fetching and rendering of published data. Can not be switched to `editor` mode. */
-  mode?: ExternalExperienceSDKMode
+  mode?: ExternalSDKMode
 }
 
 export const useExperienceBuilder = ({
@@ -26,7 +26,7 @@ export const useExperienceBuilder = ({
   client,
   mode = 'delivery',
 }: UseExperienceBuilderProps) => {
-  const [activeMode, setMode] = useState<InternalExperienceSDKMode>(() => {
+  const [activeMode, setMode] = useState<InternalSDKMode>(() => {
     if (supportedModes.includes(mode)) {
       return mode
     }

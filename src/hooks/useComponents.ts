@@ -4,7 +4,7 @@ import {
   ComponentRegistration,
   ComponentDefinition,
   OutgoingExperienceBuilderEvent,
-  InternalExperienceSDKMode,
+  InternalSDKMode,
 } from '../types'
 import { builtInStyles as builtInStyleDefinitions } from '../core/definitions/variables'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
@@ -97,7 +97,7 @@ const debouncedBatchSendPostMessage = debounce(() => {
 }, 50)
 
 type UseComponentsProps = {
-  mode: InternalExperienceSDKMode
+  mode: InternalSDKMode
 }
 
 export const useComponents = ({ mode }: UseComponentsProps) => {
