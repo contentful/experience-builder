@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Experience, IncomingExperienceBuilderEvent } from '../types'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
+import { sendConnectedMessage } from '../core/componentRegistry'
 
 export const useEditorModeSwitch = ({
   mode,
@@ -27,6 +28,8 @@ export const useEditorModeSwitch = ({
         switchToEditorMode()
       }
     }
+
+    sendConnectedMessage();
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', onMessage)
