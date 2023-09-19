@@ -11,4 +11,8 @@ describe('Image', () => {
     cy.mount(<Image url={''} />);
     cy.get('img').should('not.exist');
   });
+  it('renders at the proper width', () => {
+    cy.mount(<Image url={constants.placeholderImage} width={300} />);
+    cy.get('img').invoke('attr', 'width').should('eq', '300');
+  });
 });
