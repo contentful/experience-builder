@@ -2,10 +2,11 @@ import React from 'react'
 import { renderHook, waitFor } from '@testing-library/react'
 import {
   resetComponentRegistry,
-  useComponents,
+  defineComponents,
+  defineComponent,
   getComponentRegistration,
   enrichComponentDefinition,
-} from './useComponents'
+} from './componentRegistry'
 import { ComponentDefinition, OutgoingExperienceBuilderEvent } from '../types'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { sendMessage } from '../communication/sendMessage'
@@ -45,11 +46,10 @@ describe('component registration', () => {
 
   describe('defineComponents (many at once)', () => {
     it('should send the component definition via postMessage', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
 
       const definitionId = 'TestComponent'
 
-      result.current.defineComponents([
+      defineComponents([
         {
           component: TestComponent,
           definition: {
@@ -81,11 +81,10 @@ describe('component registration', () => {
     })
 
     it('should apply fallback to group: content for variables that have it undefined', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
 
       const definitionId = 'TestComponent'
 
-      result.current.defineComponents([
+      defineComponents([
         {
           component: TestComponent,
           definition: {
@@ -107,11 +106,9 @@ describe('component registration', () => {
     })
 
     it('should add default built-in style variables', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-
       const definitionId = 'TestComponent-1'
 
-      result.current.defineComponents([
+      defineComponents([
         {
           component: TestComponent,
           definition: {
@@ -134,11 +131,9 @@ describe('component registration', () => {
     })
 
     it('should add specified built-in style variables', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-
       const definitionId = 'TestComponent-2'
 
-      result.current.defineComponents([
+      defineComponents([
         {
           component: TestComponent,
           definition: {
@@ -164,11 +159,9 @@ describe('component registration', () => {
     })
 
     it('should apply fallback to group: content for variables that have it undefined', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-
       const definitionId = 'TestComponent'
 
-      result.current.defineComponents([
+      defineComponents([
         {
           component: TestComponent,
           definition: {
@@ -193,9 +186,7 @@ describe('component registration', () => {
     })
 
     it('should not call sendMessage in editor mode', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
-
-      result.current.defineComponents([
+      defineComponents([
         { component: TestComponent, definition: testComponentDefinition },
       ])
 
@@ -203,9 +194,7 @@ describe('component registration', () => {
     })
 
     it('should call sendMessage in preview mode', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-
-      result.current.defineComponents([
+      defineComponents([
         { component: TestComponent, definition: testComponentDefinition },
       ])
 
@@ -225,9 +214,7 @@ describe('component registration', () => {
     })
 
     it('should not call sendMessage in delivery mode', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'delivery' }))
-
-      result.current.defineComponents([
+      defineComponents([
         { component: TestComponent, definition: testComponentDefinition },
       ])
 
@@ -245,11 +232,9 @@ describe('component registration', () => {
     })
 
     it('should send the component definition via postMessage', async () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-
       const definitionId = 'TestComponent'
 
-      result.current.defineComponent(TestComponent, {
+      defineComponent(TestComponent, {
         id: definitionId,
         name: 'TestComponent',
         builtInStyles: [],
@@ -262,7 +247,7 @@ describe('component registration', () => {
       // not called cause it's debounced
       expect(sendMessage).not.toHaveBeenCalled()
 
-      result.current.defineComponent(() => <div></div>, {
+      defineComponent(() => <div></div>, {
         id: 'test-div-component',
         name: 'TestDivComponent',
         builtInStyles: [],
@@ -298,9 +283,7 @@ describe('component registration', () => {
     })
 
     it('should overwrite existing definitions if registered a component with the existing id', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-
-      result.current.defineComponent(TestComponent, testComponentDefinition)
+      defineComponent(TestComponent, testComponentDefinition)
 
       expect(getComponentRegistration(testComponentDefinition.id)).toEqual(
         enrichComponentDefinition({
@@ -309,7 +292,7 @@ describe('component registration', () => {
         })
       )
 
-      result.current.defineComponent(TestComponent, {
+      defineComponent(TestComponent, {
         ...testComponentDefinition,
         variables: {
           ...testComponentDefinition.variables,
@@ -335,11 +318,9 @@ describe('component registration', () => {
     })
 
     it('should apply fallback to group: content for variables that have it undefined', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-
       const definitionId = 'TestComponent'
 
-      result.current.defineComponent(TestComponent, {
+      defineComponent(TestComponent, {
         id: definitionId,
         name: 'TestComponent',
         builtInStyles: [],
@@ -359,11 +340,9 @@ describe('component registration', () => {
     })
 
     it('should add default built-in style variables', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-
       const definitionId = 'TestComponent-1'
 
-      result.current.defineComponent(TestComponent, {
+      defineComponent(TestComponent, {
         id: definitionId,
         name: 'TestComponent',
         variables: {
@@ -381,11 +360,9 @@ describe('component registration', () => {
     })
 
     it('should add specified built-in style variables', () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-
       const definitionId = 'TestComponent-2'
 
-      result.current.defineComponent(TestComponent, {
+      defineComponent(TestComponent, {
         id: definitionId,
         name: 'TestComponent',
         builtInStyles: ['cfPadding', 'cfBorder'],
@@ -406,9 +383,7 @@ describe('component registration', () => {
     })
 
     it('should not call sendMessage in editor mode', async () => {
-      const { result } = renderHook(() => useComponents({ mode: 'editor' }))
-
-      result.current.defineComponent(TestComponent, testComponentDefinition)
+      defineComponent(TestComponent, testComponentDefinition)
 
       try {
         // async cause sendMessage in this case is debounced
@@ -420,9 +395,7 @@ describe('component registration', () => {
     })
 
     it('should call sendMessage in preview mode', async () => {
-      const { result } = renderHook(() => useComponents({ mode: 'preview' }))
-
-      result.current.defineComponent(TestComponent, testComponentDefinition)
+      defineComponent(TestComponent, testComponentDefinition)
 
       const enrichedTestComponentDefinition = enrichComponentDefinition({
         component: TestComponent,
@@ -443,9 +416,7 @@ describe('component registration', () => {
     })
 
     it('should not call sendMessage in delivery mode', async () => {
-      const { result } = renderHook(() => useComponents({ mode: 'delivery' }))
-
-      result.current.defineComponent(TestComponent, testComponentDefinition)
+      defineComponent(TestComponent, testComponentDefinition)
 
       try {
         // async cause sendMessage in this case is debounced
