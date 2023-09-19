@@ -84,7 +84,7 @@ export const sendConnectedMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
     ({ definition }) => definition
-  )
+  );
 
   sendMessage(OutgoingExperienceBuilderEvent.CONNECTED, {
     definitions: registeredDefinitions,
