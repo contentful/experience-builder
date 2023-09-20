@@ -42,9 +42,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
 
   if (props.editorMode === false) {
     return (
-      <Flex
-        id="ContentfulSection"
-        className={classNames(className, 'defaultStyles')}>
+      <Flex id="ContentfulSection" className={classNames(className, 'defaultStyles')}>
         {childrenHyperlinkWrapper}
       </Flex>
     )

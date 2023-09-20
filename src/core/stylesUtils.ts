@@ -1,4 +1,10 @@
-import { CSSProperties, CompositionComponentNode, CompositionVariableValueType, OutgoingExperienceBuilderEvent, StyleProps } from '../types'
+import {
+  CSSProperties,
+  CompositionComponentNode,
+  CompositionVariableValueType,
+  OutgoingExperienceBuilderEvent,
+  StyleProps,
+} from '../types'
 //@ts-expect-error no types available
 import md5 from 'md5'
 import {
@@ -71,52 +77,61 @@ export const buildCfStyles = ({
  * If the container is nested in another container => height: 'fill'
  * If a non-container component is nested in a container => height: 'fit-content'
  */
-export const updateNodeDefaultHeight = ({ blockId, nodeId, children, parentId, defaultValue }: {
-	blockId?: string;
-	nodeId: string;
-	children: CompositionComponentNode['children'];
-	parentId?: string;
-	defaultValue: CompositionVariableValueType;
+export const updateNodeDefaultHeight = ({
+  blockId,
+  nodeId,
+  children,
+  parentId,
+  defaultValue,
+}: {
+  blockId?: string
+  nodeId: string
+  children: CompositionComponentNode['children']
+  parentId?: string
+  defaultValue: CompositionVariableValueType
 }) => {
-	if(!blockId || ![CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(blockId)){
-		return defaultValue;
-	}
+  if (!blockId || ![CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(blockId)) {
+    return defaultValue
+  }
 
-	const defaultFixedValue = '200px';
-	const defaultFitContent = 'fit-content'
+  const defaultFixedValue = '200px'
+  const defaultFitContent = 'fit-content'
 
-	if(!children.length && parentId === 'root') {
-		defaultValue !== defaultFixedValue && sendMessage(OutgoingExperienceBuilderEvent.UPDATE_NODE_PROP_VALUE, {
-			nodeId,
-			propType: 'DesignValue',
-      propName: 'cfHeight',
-			defaultValue: defaultFixedValue
-    })
+  if (!children.length && parentId === 'root') {
+    defaultValue !== defaultFixedValue &&
+      sendMessage(OutgoingExperienceBuilderEvent.UPDATE_NODE_PROP_VALUE, {
+        nodeId,
+        propType: 'DesignValue',
+        propName: 'cfHeight',
+        defaultValue: defaultFixedValue,
+      })
 
-		return defaultFixedValue;
-	}
+    return defaultFixedValue
+  }
 
-	if(!children.every((child) => child.data.blockId === CONTENTFUL_CONTAINER_ID)){
-		defaultValue !== defaultFitContent && sendMessage(OutgoingExperienceBuilderEvent.UPDATE_NODE_PROP_VALUE, {
-			nodeId,
-			propType: 'DesignValue',
-      propName: 'cfHeight',
-			defaultValue: defaultFitContent
-    })
+  if (!children.every((child) => child.data.blockId === CONTENTFUL_CONTAINER_ID)) {
+    defaultValue !== defaultFitContent &&
+      sendMessage(OutgoingExperienceBuilderEvent.UPDATE_NODE_PROP_VALUE, {
+        nodeId,
+        propType: 'DesignValue',
+        propName: 'cfHeight',
+        defaultValue: defaultFitContent,
+      })
 
-		return defaultFitContent
-	}
+    return defaultFitContent
+  }
 
-	if(parentId !== 'root') {
-		defaultValue !== 'fill' && sendMessage(OutgoingExperienceBuilderEvent.UPDATE_NODE_PROP_VALUE, {
-			nodeId,
-			propType: 'DesignValue',
-      propName: 'cfHeight',
-			defaultValue: 'fill'
-    })
+  if (parentId !== 'root') {
+    defaultValue !== 'fill' &&
+      sendMessage(OutgoingExperienceBuilderEvent.UPDATE_NODE_PROP_VALUE, {
+        nodeId,
+        propType: 'DesignValue',
+        propName: 'cfHeight',
+        defaultValue: 'fill',
+      })
 
-		return 'fill';
-	}
+    return 'fill'
+  }
 
-	return defaultValue
+  return defaultValue
 }

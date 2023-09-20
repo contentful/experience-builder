@@ -72,14 +72,17 @@ export const VisualEditorBlock = ({
         }
 
         if (variableMapping.type === 'DesignValue') {
-					const persistedValue = resolveDesignValue(variableMapping.valuesByBreakpoint)
-					const defaultValue = !persistedValue && variableName === 'cfHeight'? updateNodeDefaultHeight({
-						nodeId: node.data.id,
-						blockId: node.data.blockId,
-						parentId: node.parentId,
-						children: node.children,
-						defaultValue: variableMapping.defaultValue
-					}) : variableMapping.defaultValue
+          const persistedValue = resolveDesignValue(variableMapping.valuesByBreakpoint)
+          const defaultValue =
+            !persistedValue && variableName === 'cfHeight'
+              ? updateNodeDefaultHeight({
+                  nodeId: node.data.id,
+                  blockId: node.data.blockId,
+                  parentId: node.parentId,
+                  children: node.children,
+                  defaultValue: variableMapping.defaultValue,
+                })
+              : variableMapping.defaultValue
 
           return {
             ...acc,
@@ -114,7 +117,19 @@ export const VisualEditorBlock = ({
       },
       {}
     )
-  }, [componentRegistration, node.data.props, node.data.id, node.data.blockId, node.parentId, node.children, resolveDesignValue, dataSource, areEntitiesFetched, entityStore, unboundValues])
+  }, [
+    componentRegistration,
+    node.data.props,
+    node.data.id,
+    node.data.blockId,
+    node.parentId,
+    node.children,
+    resolveDesignValue,
+    dataSource,
+    areEntitiesFetched,
+    entityStore,
+    unboundValues,
+  ])
 
   const cfStyles = buildCfStyles(props)
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id })

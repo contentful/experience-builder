@@ -7,11 +7,11 @@ import { ComponentDefinitionVariable, ContentfulSectionType } from '../../types'
 import { builtInStyles } from './variables'
 
 const containerDefaultHeight: ComponentDefinitionVariable<'Text'> = {
-	displayName: 'Height',
-	type: 'Text' ,
-	group: 'style',
-	description: 'The height of the section',
-	defaultValue: '200px',
+  displayName: 'Height',
+  type: 'Text',
+  group: 'style',
+  description: 'The height of the section',
+  defaultValue: '200px',
 }
 
 export const sectionDefinition: ContentfulSectionType = {
@@ -20,9 +20,9 @@ export const sectionDefinition: ContentfulSectionType = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: {
-		...builtInStyles,
-		cfHeight: containerDefaultHeight
-	},
+    ...builtInStyles,
+    cfHeight: containerDefaultHeight,
+  },
 }
 
 export const containerDefinition: ContentfulSectionType = {

@@ -30,7 +30,7 @@ export enum OutgoingExperienceBuilderEvent {
   CANVAS_RELOAD = 'canvasReload',
   UPDATE_SELECTED_COMPONENT_COORDINATES = 'updateSelectedComponentCoordinates',
   UPDATE_HOVERED_COMPONENT_COORDINATES = 'updateHoveredComponentCoordinates',
-	UPDATE_NODE_PROP_VALUE = 'updateNodePropValue',
+  UPDATE_NODE_PROP_VALUE = 'updateNodePropValue',
   CANVAS_SCROLL = 'canvasScrolling',
 }
 
@@ -164,7 +164,11 @@ export type CompositionComponentPropValue<
   T extends CompositionComponentPropType = CompositionComponentPropType
 > = T extends 'DesignValue'
   ? // The keys in valuesByBreakpoint are the breakpoint ids
-    { type: T; valuesByBreakpoint: Record<string, CompositionVariableValueType>, defaultValue?: CompositionVariableValueType }
+    {
+      type: T
+      valuesByBreakpoint: Record<string, CompositionVariableValueType>
+      defaultValue?: CompositionVariableValueType
+    }
   : T extends 'BoundValue'
   ? { type: T; path: string }
   : { type: T; key: string }
