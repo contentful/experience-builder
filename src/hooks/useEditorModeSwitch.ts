@@ -16,12 +16,7 @@ export const useEditorModeSwitch = ({
     }
 
     const onMessage = (event: MessageEvent) => {
-      let reason
-      if ((reason = doesMismatchMessageSchema(event))) {
-        console.warn(
-          `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
-          event
-        )
+      if ((doesMismatchMessageSchema(event))) {
         return
       }
       const eventData = tryParseMessage(event)
