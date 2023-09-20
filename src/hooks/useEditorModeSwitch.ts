@@ -16,7 +16,7 @@ export const useEditorModeSwitch = ({
     }
 
     const onMessage = (event: MessageEvent) => {
-      if ((doesMismatchMessageSchema(event))) {
+      if (doesMismatchMessageSchema(event)) {
         return
       }
       const eventData = tryParseMessage(event)
