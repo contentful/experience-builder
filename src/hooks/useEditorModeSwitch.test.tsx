@@ -25,17 +25,20 @@ jest.mock('../core/constants', () => {
 describe('useEditorModeSwitch', () => {
   beforeEach(() => {
     resetComponentRegistry()
+    ;(sendMessage as jest.Mock).mockReset()
   })
 
-  it('should send CONNECTED event with default components by default in preview mode', () => {
-    renderHook((props) => useEditorModeSwitch(props), {
+  it('should send CONNECTED event with default components by default in preview mode on 2nd render', () => {
+    const { rerender } = renderHook((props) => useEditorModeSwitch(props), {
       initialProps: {
         mode: 'preview' as ExternalSDKMode,
         switchToEditorMode: jest.fn() as Experience['switchToEditorMode'],
       },
     })
 
-    waitFor(() => expect(sendMessage).toHaveBeenCalled)
+    expect(sendMessage).not.toHaveBeenCalled()
+
+    rerender({ mode: 'preview', switchToEditorMode: jest.fn() as Experience['switchToEditorMode'] })
 
     expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED, {
       definitions: [
@@ -55,7 +58,7 @@ describe('useEditorModeSwitch', () => {
     })
 
     try {
-      waitFor(() => expect(sendMessage).toHaveBeenCalled, { timeout: 50 })
+      waitFor(() => expect(sendMessage).toHaveBeenCalled(), { timeout: 50 })
     } catch (e) {
       // noop
     }
@@ -63,7 +66,7 @@ describe('useEditorModeSwitch', () => {
     expect(sendMessage).not.toHaveBeenCalled()
   })
 
-  it('should send CONNECTED event with all registered components in preview mode', () => {
+  it('should send CONNECTED event with all registered components in preview mode on 2nd render', () => {
     const Component = () => <div>Test</div>
 
     const customComponentRegistration = {
@@ -73,14 +76,14 @@ describe('useEditorModeSwitch', () => {
 
     defineComponents([customComponentRegistration])
 
-    renderHook((props) => useEditorModeSwitch(props), {
+    const { rerender } = renderHook((props) => useEditorModeSwitch(props), {
       initialProps: {
         mode: 'preview' as ExternalSDKMode,
         switchToEditorMode: jest.fn() as Experience['switchToEditorMode'],
       },
     })
 
-    waitFor(() => expect(sendMessage).toHaveBeenCalled)
+    rerender({ mode: 'preview', switchToEditorMode: jest.fn() as Experience['switchToEditorMode'] })
 
     expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED, {
       definitions: [
