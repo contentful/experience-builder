@@ -1,16 +1,8 @@
-import React from 'react'
-import {
-  defineComponents,
-  enrichComponentDefinition,
-  getComponentRegistration,
-  resetComponentRegistry,
-} from '../core/componentRegistry'
+import { resetComponentRegistry } from '../core/componentRegistry'
 import { sendMessage } from '../communication/sendMessage'
 import { renderHook, waitFor } from '@testing-library/react'
 import { useEditorModeSwitch } from './useEditorModeSwitch'
 import { Experience, ExternalSDKMode, OutgoingExperienceBuilderEvent } from '../types'
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
-import { SDK_VERSION } from '../core/constants'
 
 jest.mock('../communication/sendMessage')
 jest.mock('../core/constants', () => {
@@ -28,25 +20,15 @@ describe('useEditorModeSwitch', () => {
     ;(sendMessage as jest.Mock).mockReset()
   })
 
-  it('should send CONNECTED event with default components by default in preview mode on 2nd render', () => {
-    const { rerender } = renderHook((props) => useEditorModeSwitch(props), {
+  it('should send CONNECTED event without payload in preview mode', () => {
+    renderHook((props) => useEditorModeSwitch(props), {
       initialProps: {
         mode: 'preview' as ExternalSDKMode,
         switchToEditorMode: jest.fn() as Experience['switchToEditorMode'],
       },
     })
 
-    expect(sendMessage).not.toHaveBeenCalled()
-
-    rerender({ mode: 'preview', switchToEditorMode: jest.fn() as Experience['switchToEditorMode'] })
-
-    expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED, {
-      definitions: [
-        getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition,
-        getComponentRegistration(CONTENTFUL_CONTAINER_ID)?.definition,
-      ],
-      sdkVersion: SDK_VERSION,
-    })
+    expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED)
   })
 
   it('should not send CONNECTED event in delivery mode', () => {
@@ -64,35 +46,6 @@ describe('useEditorModeSwitch', () => {
     }
 
     expect(sendMessage).not.toHaveBeenCalled()
-  })
-
-  it('should send CONNECTED event with all registered components in preview mode on 2nd render', () => {
-    const Component = () => <div>Test</div>
-
-    const customComponentRegistration = {
-      component: Component,
-      definition: { id: 'test', name: 'test', variables: {} },
-    }
-
-    defineComponents([customComponentRegistration])
-
-    const { rerender } = renderHook((props) => useEditorModeSwitch(props), {
-      initialProps: {
-        mode: 'preview' as ExternalSDKMode,
-        switchToEditorMode: jest.fn() as Experience['switchToEditorMode'],
-      },
-    })
-
-    rerender({ mode: 'preview', switchToEditorMode: jest.fn() as Experience['switchToEditorMode'] })
-
-    expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED, {
-      definitions: [
-        getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition,
-        getComponentRegistration(CONTENTFUL_CONTAINER_ID)?.definition,
-        enrichComponentDefinition(customComponentRegistration).definition,
-      ],
-      sdkVersion: SDK_VERSION,
-    })
   })
 
   it('should switch the mode to editor when it receives a REQUEST_EDITOR_MODE message', () => {

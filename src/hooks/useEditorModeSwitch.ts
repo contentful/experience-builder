@@ -1,13 +1,17 @@
 import { useEffect, useRef } from 'react'
-import { Experience, IncomingExperienceBuilderEvent } from '../types'
+import {
+  Experience,
+  IncomingExperienceBuilderEvent,
+  OutgoingExperienceBuilderEvent,
+} from '../types'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
-import { sendConnectedMessage } from '../core/componentRegistry'
+import { sendMessage } from '../communication/sendMessage'
 
 export const useEditorModeSwitch = ({
   mode,
   switchToEditorMode,
 }: Pick<Experience, 'mode' | 'switchToEditorMode'>) => {
-  const hasRenderedAtLeastOnce = useRef(false)
+  const hasConnectEventBeenSent = useRef(false)
 
   // switch from preview mode to editor mode
   useEffect(() => {
@@ -28,15 +32,12 @@ export const useEditorModeSwitch = ({
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', onMessage)
-    }
 
-    // we wait for one more render to support cases when devs would register components in useEffect
-    // without it we will send an array with our default components
-    if (hasRenderedAtLeastOnce.current) {
-      sendConnectedMessage()
+      if (!hasConnectEventBeenSent.current) {
+        sendMessage(OutgoingExperienceBuilderEvent.CONNECTED)
+        hasConnectEventBeenSent.current = true
+      }
     }
-
-    hasRenderedAtLeastOnce.current = true
 
     return () => {
       if (typeof window !== 'undefined') {
