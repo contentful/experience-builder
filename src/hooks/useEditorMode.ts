@@ -175,6 +175,10 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
           entity && entityStore.current.updateEntity(entity)
           break
         }
+        case IncomingExperienceBuilderEvent.REQUEST_EDITOR_MODE: {
+          // do nothing cause we are already in editor mode
+          break;
+        }
         default:
           console.error(
             `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`
