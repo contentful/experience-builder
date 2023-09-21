@@ -4,13 +4,14 @@ import {
   ComponentRegistration,
   ComponentDefinition,
   OutgoingExperienceBuilderEvent,
+  InternalEvents,
 } from '../types'
 import { builtInStyles as builtInStyleDefinitions } from './definitions/variables'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulSection } from '../blocks/ContentfulSection'
 import { containerDefinition, sectionDefinition } from './definitions/components'
-import { SDK_VERSION } from './constants'
 import { sendMessage } from '../communication/sendMessage'
+import { SDK_VERSION } from './constants'
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -80,15 +81,26 @@ export const enrichComponentDefinition = ({
   }
 }
 
-export const sendConnectedMessage = () => {
+export const sendRegisteredComponentsMessage = () => {
+  // Send the definitions (without components) via the connection message to the experience builder
+  const registeredDefinitions = Array.from(componentRegistry.values()).map(
+    ({ definition }) => definition
+  )
+
+  sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, {
+    definitions: registeredDefinitions,
+  })
+}
+
+export const sendConnectedEventWithRegisteredComponents = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
     ({ definition }) => definition
   )
 
   sendMessage(OutgoingExperienceBuilderEvent.CONNECTED, {
-    definitions: registeredDefinitions,
     sdkVersion: SDK_VERSION,
+    definitions: registeredDefinitions,
   })
 }
 
@@ -106,6 +118,10 @@ export const defineComponents = (componentRegistrations: Array<ComponentRegistra
       enrichedComponentRegistration
     )
   }
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(InternalEvents.COMPONENTS_REGISTERED))
+  }
 }
 
 /**
@@ -117,6 +133,10 @@ export const defineComponents = (componentRegistrations: Array<ComponentRegistra
 export const defineComponent = (component: ElementType, definition: ComponentDefinition) => {
   const enrichedComponentConfig = enrichComponentDefinition({ component, definition })
   componentRegistry.set(enrichedComponentConfig.definition.id, enrichedComponentConfig)
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(InternalEvents.COMPONENTS_REGISTERED))
+  }
 }
 
 /**

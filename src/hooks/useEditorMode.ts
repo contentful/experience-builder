@@ -9,6 +9,7 @@ import {
   IncomingExperienceBuilderEvent,
   OutgoingExperienceBuilderEvent,
   ScrollStates,
+  InternalEvents,
 } from '../types'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
@@ -16,6 +17,10 @@ import { getDataFromTree } from '../utils'
 import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
 import { sendMessage } from '../communication/sendMessage'
 import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
+import {
+  sendConnectedEventWithRegisteredComponents,
+  sendRegisteredComponentsMessage,
+} from '../core/componentRegistry'
 
 type UseEditorModeProps = {
   initialLocale: string
@@ -23,6 +28,7 @@ type UseEditorModeProps = {
 }
 
 export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
+  const hasConnectEventBeenSent = useRef(false)
   const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<CompositionDataSource>({})
   const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({})
@@ -45,6 +51,30 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
       window.location.reload()
     }, 50)
   }
+
+  // sends component definitions to the web app
+  // InternalEvents.COMPONENTS_REGISTERED is triggered by defineComponents function
+  useEffect(() => {
+    if (!hasConnectEventBeenSent.current) {
+      // sending CONNECT but with the registered components now
+      sendConnectedEventWithRegisteredComponents()
+      hasConnectEventBeenSent.current = true
+    }
+
+    const onComponentsRegistered = () => {
+      sendRegisteredComponentsMessage()
+    }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener(InternalEvents.COMPONENTS_REGISTERED, onComponentsRegistered)
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener(InternalEvents.COMPONENTS_REGISTERED, onComponentsRegistered)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     setLocale(initialLocale)

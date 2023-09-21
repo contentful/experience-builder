@@ -63,9 +63,6 @@ export const useExperienceBuilder = ({
      * @deprecated please use `defineComponents` function instead
      */
     defineComponent,
-    /**
-     * @deprecated please import the function directly from the library
-     */
     defineComponents,
   }
 }

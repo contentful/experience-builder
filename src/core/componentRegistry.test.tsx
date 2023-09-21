@@ -6,7 +6,7 @@ import {
   getComponentRegistration,
   enrichComponentDefinition,
 } from './componentRegistry'
-import { ComponentDefinition } from '../types'
+import { ComponentDefinition, InternalEvents } from '../types'
 
 jest.mock('../core/constants', () => ({
   SDK_VERSION: '0.0.0-test',
@@ -40,7 +40,9 @@ describe('component registration', () => {
   })
 
   describe('defineComponents (many at once)', () => {
-    it('should not send the component definition via postMessage', () => {
+    it('should emit the registered components event', () => {
+      jest.spyOn(window, 'dispatchEvent')
+
       const definitionId = 'TestComponent'
 
       defineComponents([
@@ -61,6 +63,9 @@ describe('component registration', () => {
 
       const componentRegistration = getComponentRegistration(definitionId)
       expect(componentRegistration).toBeDefined()
+      expect(window.dispatchEvent).toHaveBeenCalledWith(
+        new CustomEvent(InternalEvents.COMPONENTS_REGISTERED)
+      )
     })
 
     it('should apply fallback to group: content for variables that have it undefined', () => {
@@ -169,7 +174,7 @@ describe('component registration', () => {
   })
 
   describe('defineComponent (one at a time - batched via debounce)', () => {
-    it('should send the component definition via postMessage', async () => {
+    it('should emit registered components event', async () => {
       const definitionId = 'TestComponent'
 
       defineComponent(TestComponent, {
@@ -196,6 +201,11 @@ describe('component registration', () => {
 
       expect(getComponentRegistration(definitionId)).toBeDefined()
       expect(getComponentRegistration('test-div-component')).toBeDefined()
+
+      expect(window.dispatchEvent).toHaveBeenCalledTimes(2)
+      expect(window.dispatchEvent).toHaveBeenCalledWith(
+        new CustomEvent(InternalEvents.COMPONENTS_REGISTERED)
+      )
     })
 
     it('should overwrite existing definitions if registered a component with the existing id', () => {
