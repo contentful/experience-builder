@@ -21,4 +21,13 @@ describe('Text', () => {
     cy.mount(<Text value="Text text">Children text</Text>);
     cy.get('p').contains('Text text');
   });
+
+  it('additional props should be passed to the text', () => {
+    cy.mount(
+      <Text value="My Text" data-foo="bar">
+        Children text
+      </Text>
+    );
+    cy.get('p').should('have.attr', 'data-foo', 'bar');
+  });
 });

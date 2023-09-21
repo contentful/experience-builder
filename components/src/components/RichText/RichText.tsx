@@ -3,7 +3,7 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { Document, BLOCKS } from '@contentful/rich-text-types';
 import { Text } from '../Text/Text';
 
-export interface RichTextProps {
+export interface RichTextProps extends Omit<React.HTMLAttributes<HTMLElement>, 'value'> {
   /**
    * The document to display
    * @example
@@ -24,11 +24,11 @@ export interface RichTextProps {
   value: Document;
 }
 
-export const RichText: React.FC<RichTextProps> = ({ value }) => {
+export const RichText: React.FC<RichTextProps> = ({ value, ...props }) => {
   return documentToReactComponents(value, {
     renderNode: {
       [BLOCKS.PARAGRAPH]: (_node, children) => {
-        return <Text>{children}</Text>;
+        return <Text {...props}>{children}</Text>;
       },
     },
   });

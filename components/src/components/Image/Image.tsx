@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface ImageProps {
+export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   /**
    * The URL of the image to display
    * @example
@@ -13,10 +13,10 @@ export interface ImageProps {
   alt?: string;
 }
 
-export const Image: React.FC<ImageProps> = ({ url, width, alt }) => {
+export const Image: React.FC<ImageProps> = ({ url, width, alt, ...props }) => {
   if (!url) {
     return null;
   }
 
-  return <img src={url} width={width ? width : undefined} alt={alt} />;
+  return <img src={url} width={width ? width : undefined} alt={alt} {...props} />;
 };

@@ -1,11 +1,14 @@
 import React from 'react';
-import { Button } from '@components/Button';
 import { withExperienceBuilder } from './withExperienceBuilder';
+
+const MyButton: React.FC<React.PropsWithChildren> = ({ children, ...props }) => (
+  <button {...props}>{children}</button>
+);
 
 describe('withExperienceBuilder', () => {
   describe('when component is wrapped', () => {
     const ExperienceBuilderButton = withExperienceBuilder(
-      Button,
+      MyButton,
       {
         id: 'button',
         name: 'Button',
@@ -14,11 +17,6 @@ describe('withExperienceBuilder', () => {
       },
       { wrapComponent: true }
     );
-
-    it('classes should be applied to the inner component', () => {
-      cy.mount(<ExperienceBuilderButton classes="test" label="Click me" />);
-      cy.get('button').should('have.class', 'test');
-    });
 
     it('events should be bound to the container div', () => {
       const onClickSpy = cy.spy().as('onClickSpy');
@@ -29,9 +27,10 @@ describe('withExperienceBuilder', () => {
           onClick={onClickSpy}
           onMouseDown={onMouseDownSpy}
           onMouseUp={onMouseUpSpy}
-          label="Click me"
           className="my-div" //so we can select it later
-        />
+        >
+          Click me
+        </ExperienceBuilderButton>
       );
       cy.get('div.my-div').click();
       cy.get('@onClickSpy').should('have.been.calledOnce');
@@ -42,12 +41,13 @@ describe('withExperienceBuilder', () => {
     it('extra props should be passed to the container div', () => {
       cy.mount(
         <ExperienceBuilderButton
-          label="Click me"
           data-cf-node-block-id="test1"
           data-cf-node-block-type="test2"
           data-cf-node-id="test3"
           className="my-div" //so we can select it later
-        />
+        >
+          Click me
+        </ExperienceBuilderButton>
       );
 
       cy.get('div.my-div').should('have.attr', 'data-cf-node-block-id', 'test1');
@@ -57,7 +57,7 @@ describe('withExperienceBuilder', () => {
 
     it('can wrap a component with a custom tag', () => {
       const ExperienceBuilderButtonSpan = withExperienceBuilder(
-        Button,
+        MyButton,
         {
           id: 'button',
           name: 'Button',
@@ -68,9 +68,10 @@ describe('withExperienceBuilder', () => {
       );
       cy.mount(
         <ExperienceBuilderButtonSpan
-          label="Click me"
           className="my-span" //so we can select it later
-        />
+        >
+          Click me
+        </ExperienceBuilderButtonSpan>
       );
       cy.get('span.my-span').should('exist').find('button').contains('Click me');
     });
@@ -78,22 +79,24 @@ describe('withExperienceBuilder', () => {
     it('classes get added to the correct elements', () => {
       cy.mount(
         <ExperienceBuilderButton
-          label="Click me"
           data-cf-node-block-id="test1"
           data-cf-node-block-type="test2"
           data-cf-node-id="test3"
-          className="my-div" //so we can select it later
+          className="my-wrapper" //so we can select it later
           classes="my-class"
-        />
+          data-caca="yep">
+          Click me
+        </ExperienceBuilderButton>
       );
-      cy.get('div.my-div').should('have.class', 'my-div');
+      cy.get('div.my-wrapper').should('have.class', 'my-wrapper');
       cy.get('button').should('have.class', 'my-class');
+      cy.get('button').should('have.attr', 'data-caca', 'yep');
     });
   });
 
   describe('when component is not wrapped', () => {
     const ExperienceBuilderButton = withExperienceBuilder(
-      Button,
+      MyButton,
       {
         id: 'button',
         name: 'Button',
@@ -104,7 +107,7 @@ describe('withExperienceBuilder', () => {
     );
 
     it('classes should be applied to the component itself', () => {
-      cy.mount(<ExperienceBuilderButton classes="test" label="Click me" />);
+      cy.mount(<ExperienceBuilderButton classes="test">Click me</ExperienceBuilderButton>);
       cy.get('button').should('have.class', 'test');
     });
 
@@ -116,9 +119,9 @@ describe('withExperienceBuilder', () => {
         <ExperienceBuilderButton
           onClick={onClickSpy}
           onMouseDown={onMouseDownSpy}
-          onMouseUp={onMouseUpSpy}
-          label="Click me"
-        />
+          onMouseUp={onMouseUpSpy}>
+          Click me
+        </ExperienceBuilderButton>
       );
       cy.get('button').first().click();
       cy.get('@onClickSpy').should('have.been.calledOnce');
@@ -129,11 +132,11 @@ describe('withExperienceBuilder', () => {
     it('extra props should be passed to the component', () => {
       cy.mount(
         <ExperienceBuilderButton
-          label="Click me"
           data-cf-node-block-id="test1"
           data-cf-node-block-type="test2"
-          data-cf-node-id="test3"
-        />
+          data-cf-node-id="test3">
+          Click me
+        </ExperienceBuilderButton>
       );
       cy.get('button').should('have.attr', 'data-cf-node-block-id', 'test1');
       cy.get('button').should('have.attr', 'data-cf-node-block-type', 'test2');
@@ -143,13 +146,13 @@ describe('withExperienceBuilder', () => {
     it('classes get added to the correct elements', () => {
       cy.mount(
         <ExperienceBuilderButton
-          label="Click me"
           data-cf-node-block-id="test1"
           data-cf-node-block-type="test2"
           data-cf-node-id="test3"
           className="my-button" //so we can select it later
-          classes="my-class"
-        />
+          classes="my-class">
+          Click me
+        </ExperienceBuilderButton>
       );
       cy.get('button').should('have.class', 'my-button');
       cy.get('button').should('have.class', 'my-class');

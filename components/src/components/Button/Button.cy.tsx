@@ -98,4 +98,9 @@ describe('<Button />', () => {
     cy.get('button').click();
     cy.get('@onClick').should('have.been.calledWith', 'https://www.contentful.com', '_blank');
   });
+
+  it('additional props should be passed to the button', () => {
+    cy.mount(<Button data-test-id="test-id">Click Me!</Button>);
+    cy.get('button').should('have.attr', 'data-test-id', 'test-id');
+  });
 });
