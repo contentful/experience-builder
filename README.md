@@ -39,7 +39,7 @@ const client = createClient({
   accessToken: process.env.REACT_APP_CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
 })
 
-// 1. Define components
+// 1. Define components outside of React (or within React - see 2.5)
 defineComponents([
   {
     component: MyButton,
@@ -59,7 +59,7 @@ defineComponents([
 
 const App = () => {
   // 2. Configure the sdk
-  const { experience } = useExperienceBuilder({
+  const { experience, defineComponents } = useExperienceBuilder({
     client, // preview or delivery client
     experienceTypeId: process.env.REACT_APP_CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
     /**
@@ -71,6 +71,26 @@ const App = () => {
      */
     mode: 'delivery',
   })
+
+  // 2.5 Optionally define components via useEffect
+  useEffect(() => {
+    defineComponents([
+      {
+        component: MyButton,
+        definition: {
+          id: 'my-button',
+          name: 'MyButton',
+          variables: {
+            buttonTitle: { type: 'Text', defaultValue: 'Click me' },
+            buttonUrl: {
+              type: 'Text',
+              defaultValue: 'https://www.google.com?q=button+was+clicked',
+            },
+          },
+        },
+      },
+    ])
+  }, [defineComponents]);
 
   // 3. Render your experience
   return (
@@ -110,7 +130,7 @@ const client = createClient({
   accessToken: process.env.CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
 });
 
-// 1. Define components
+// 1. Define components outside of React (or within React - see 2.5)
 defineComponents([
   {
     component: MyButton,
@@ -131,7 +151,7 @@ defineComponents([
 const Home = () => {
   const router = useRouter();
   // 2. Configure the sdk
-  const { settings, experience } = useExperienceBuilder({
+  const { settings, experience, defineComponents } = useExperienceBuilder({
     client, // preview or delivery client
     experienceTypeId: process.env.CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
     /**
@@ -143,6 +163,26 @@ const Home = () => {
      */
     mode: 'delivery'
   })
+
+  // 2.5 Optionally define components via useEffect
+  useEffect(() => {
+    defineComponents([
+      {
+        component: MyButton,
+        definition: {
+          id: 'my-button',
+          name: 'MyButton',
+          variables: {
+            buttonTitle: { type: 'Text', defaultValue: 'Click me' },
+            buttonUrl: {
+              type: 'Text',
+              defaultValue: 'https://www.google.com?q=button+was+clicked',
+            },
+          },
+        },
+      },
+    ])
+  }, [defineComponents]);
 
   return (
     <ExperienceRoot
@@ -178,7 +218,7 @@ const client = createClient({
   accessToken: process.env.CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
 });
 
-// 1. Define components
+// 1. Define components outside of React (or within React - see 2.5)
 defineComponents([
   {
     component: MyButton,
@@ -199,7 +239,7 @@ defineComponents([
 const ExperienceBuilderPage = ({ pageContext }) => {
   const router = useRouter();
   // 2. Configure the sdk
-  const { settings, experience } = useExperienceBuilder({
+  const { settings, experience, defineComponents } = useExperienceBuilder({
     client, // preview or delivery client
     experienceTypeId: pageContext.expereinceTypeId, // id of the experience type (content type)
     /**
@@ -211,6 +251,26 @@ const ExperienceBuilderPage = ({ pageContext }) => {
      */
     mode: 'delivery'
   })
+
+  // 2.5 Optionally define components via useEffect
+  useEffect(() => {
+    defineComponents([
+      {
+        component: MyButton,
+        definition: {
+          id: 'my-button',
+          name: 'MyButton',
+          variables: {
+            buttonTitle: { type: 'Text', defaultValue: 'Click me' },
+            buttonUrl: {
+              type: 'Text',
+              defaultValue: 'https://www.google.com?q=button+was+clicked',
+            },
+          },
+        },
+      },
+    ])
+  }, [defineComponents]);
 
   // 3. Render your experience
   return (
