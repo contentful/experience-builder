@@ -91,20 +91,22 @@ export const CompositionBlock = ({
 
   const { component } = componentRegistration
 
-  const children = node.children.map((childNode: CompositionNode, index) => {
-    return (
-      <CompositionBlock
-        node={childNode}
-        key={index}
-        locale={locale}
-        dataSource={dataSource}
-        unboundValues={unboundValues}
-        entityStore={entityStore}
-        breakpoints={breakpoints}
-        resolveDesignValue={resolveDesignValue}
-      />
-    )
-  })
+  const children = node.children.length
+    ? node.children.map((childNode: CompositionNode, index) => {
+        return (
+          <CompositionBlock
+            node={childNode}
+            key={index}
+            locale={locale}
+            dataSource={dataSource}
+            unboundValues={unboundValues}
+            entityStore={entityStore}
+            breakpoints={breakpoints}
+            resolveDesignValue={resolveDesignValue}
+          />
+        )
+      })
+    : null
 
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
