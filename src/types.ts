@@ -163,10 +163,7 @@ export type CompositionComponentPropValue<
   T extends CompositionComponentPropType = CompositionComponentPropType
 > = T extends 'DesignValue'
   ? // The keys in valuesByBreakpoint are the breakpoint ids
-    {
-      type: T
-      valuesByBreakpoint: Record<string, CompositionVariableValueType>
-    }
+    { type: T; valuesByBreakpoint: Record<string, CompositionVariableValueType> }
   : T extends 'BoundValue'
   ? { type: T; path: string }
   : { type: T; key: string }
