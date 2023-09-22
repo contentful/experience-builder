@@ -25,7 +25,7 @@ export enum OutgoingExperienceBuilderEvent {
   MOUSE_MOVE = 'mouseMove',
   NEW_HOVERED_COMPONENT = 'newHoveredElement',
   COMPONENT_SELECTED = 'componentSelected',
-
+  REQUEST_COMPONENT_TREE_UPDATE = 'requestComponentTreeUpdate',
   COMPONENT_DROPPED = 'componentDropped',
   CANVAS_RELOAD = 'canvasReload',
   UPDATE_SELECTED_COMPONENT_COORDINATES = 'updateSelectedComponentCoordinates',
