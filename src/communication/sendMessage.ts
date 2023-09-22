@@ -3,7 +3,7 @@ import { OutgoingExperienceBuilderEvent } from '../types'
 
 export const sendMessage = (
   eventType: OutgoingExperienceBuilderEvent | PostMessageMethods,
-  data: any
+  data?: any
 ) => {
   if (typeof window === 'undefined') {
     return
