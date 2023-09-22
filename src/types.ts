@@ -25,6 +25,7 @@ export enum OutgoingExperienceBuilderEvent {
   MOUSE_MOVE = 'mouseMove',
   NEW_HOVERED_COMPONENT = 'newHoveredElement',
   COMPONENT_SELECTED = 'componentSelected',
+  REGISTERED_COMPONENTS = 'registeredComponents',
   REQUEST_COMPONENT_TREE_UPDATE = 'requestComponentTreeUpdate',
   COMPONENT_DROPPED = 'componentDropped',
   CANVAS_RELOAD = 'canvasReload',
@@ -42,6 +43,10 @@ export enum IncomingExperienceBuilderEvent {
   SELECT_COMPONENT = 'selectComponent',
   HOVER_COMPONENT = 'hoverComponent',
   UPDATED_ENTITY = 'updatedEntity',
+}
+
+export enum InternalEvents {
+  COMPONENTS_REGISTERED = 'componentsRegistered',
 }
 
 export interface Link<T extends string> {

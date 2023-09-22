@@ -1,11 +1,18 @@
-import { useEffect } from 'react'
-import { Experience, IncomingExperienceBuilderEvent } from '../types'
+import { useEffect, useRef } from 'react'
+import {
+  Experience,
+  IncomingExperienceBuilderEvent,
+  OutgoingExperienceBuilderEvent,
+} from '../types'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
+import { sendMessage } from '../communication/sendMessage'
 
 export const useEditorModeSwitch = ({
   mode,
   switchToEditorMode,
 }: Pick<Experience, 'mode' | 'switchToEditorMode'>) => {
+  const hasConnectEventBeenSent = useRef(false)
+
   // switch from preview mode to editor mode
   useEffect(() => {
     if (mode !== 'preview') {
@@ -13,12 +20,7 @@ export const useEditorModeSwitch = ({
     }
 
     const onMessage = (event: MessageEvent) => {
-      let reason
-      if ((reason = doesMismatchMessageSchema(event))) {
-        console.warn(
-          `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
-          event
-        )
+      if (doesMismatchMessageSchema(event)) {
         return
       }
       const eventData = tryParseMessage(event)
@@ -30,6 +32,11 @@ export const useEditorModeSwitch = ({
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', onMessage)
+
+      if (!hasConnectEventBeenSent.current) {
+        sendMessage(OutgoingExperienceBuilderEvent.CONNECTED)
+        hasConnectEventBeenSent.current = true
+      }
     }
 
     return () => {

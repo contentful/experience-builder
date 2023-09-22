@@ -17,7 +17,7 @@ import { transformContentValue } from './transformers'
 import { buildCfStyles } from '../core/stylesUtils'
 import { useStyleTag } from '../hooks/useStyleTag'
 import omit from 'lodash.omit'
-import { getComponentRegistration } from '../hooks/useComponents'
+import { getComponentRegistration } from '../core/componentRegistry'
 
 type CompositionBlockProps = {
   node: CompositionNode

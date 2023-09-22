@@ -25,7 +25,11 @@ You can use this as a reference example or even paste this into `App.js` of the 
 // > npm add contentful
 
 import { useEffect } from 'react'
-import { useExperienceBuilder, ExperienceRoot } from '@contentful/experience-builder'
+import {
+  useExperienceBuilder,
+  ExperienceRoot,
+  defineComponents,
+} from '@contentful/experience-builder'
 import { createClient } from 'contentful'
 
 const client = createClient({
@@ -35,8 +39,26 @@ const client = createClient({
   accessToken: process.env.REACT_APP_CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
 })
 
+// 1. Define components outside of React (or within React - see 2.5)
+defineComponents([
+  {
+    component: MyButton,
+    definition: {
+      id: 'my-button',
+      name: 'MyButton',
+      variables: {
+        buttonTitle: { type: 'Text', defaultValue: 'Click me' },
+        buttonUrl: {
+          type: 'Text',
+          defaultValue: 'https://www.google.com?q=button+was+clicked',
+        },
+      },
+    },
+  },
+])
+
 const App = () => {
-  // 1. Define the configuration and initialize the sdk
+  // 2. Configure the sdk
   const { experience, defineComponents } = useExperienceBuilder({
     client, // preview or delivery client
     experienceTypeId: process.env.REACT_APP_CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
@@ -50,7 +72,7 @@ const App = () => {
     mode: 'delivery',
   })
 
-  // 2. Define components
+  // 2.5 Optionally define components via useEffect
   useEffect(() => {
     defineComponents([
       {
@@ -68,7 +90,7 @@ const App = () => {
         },
       },
     ])
-  }, [defineComponent])
+  }, [defineComponents]);
 
   // 3. Render your experience
   return (
@@ -96,6 +118,7 @@ import { useEffect, useMemo } from 'react'
 import {
   useExperienceBuilder,
   ExperienceRoot,
+  defineComponents
 } from '@contentful/experience-builder'
 import { createClient } from 'contentful'
 import { useRouter } from 'next/router'
@@ -107,9 +130,27 @@ const client = createClient({
   accessToken: process.env.CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
 });
 
+// 1. Define components outside of React (or within React - see 2.5)
+defineComponents([
+  {
+    component: MyButton,
+    definition: {
+      id: 'my-button',
+      name: 'MyButton',
+      variables: {
+        buttonTitle: { type: 'Text', defaultValue: 'Click me' },
+        buttonUrl: {
+          type: 'Text',
+          defaultValue: 'https://www.google.com?q=button+was+clicked',
+        },
+      },
+    },
+  },
+])
+
 const Home = () => {
   const router = useRouter();
-  // 1. Define the configuration and initialize the sdk
+  // 2. Configure the sdk
   const { settings, experience, defineComponents } = useExperienceBuilder({
     client, // preview or delivery client
     experienceTypeId: process.env.CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
@@ -123,7 +164,7 @@ const Home = () => {
     mode: 'delivery'
   })
 
-  // 2. Define components
+  // 2.5 Optionally define components via useEffect
   useEffect(() => {
     defineComponents([
       {
@@ -138,10 +179,10 @@ const Home = () => {
               defaultValue: 'https://www.google.com?q=button+was+clicked',
             },
           },
-        }
-      }
+        },
+      },
     ])
-  }, [defineComponent])
+  }, [defineComponents]);
 
   return (
     <ExperienceRoot
@@ -166,6 +207,7 @@ import { useEffect, useMemo } from 'react'
 import {
   useExperienceBuilder,
   ExperienceRoot,
+  defineComponents
 } from '@contentful/experience-builder'
 import { createClient } from 'contentful'
 
@@ -176,9 +218,27 @@ const client = createClient({
   accessToken: process.env.CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
 });
 
+// 1. Define components outside of React (or within React - see 2.5)
+defineComponents([
+  {
+    component: MyButton,
+    definition: {
+      id: 'my-button',
+      name: 'MyButton',
+      variables: {
+        buttonTitle: { type: 'Text', defaultValue: 'Click me' },
+        buttonUrl: {
+          type: 'Text',
+          defaultValue: 'https://www.google.com?q=button+was+clicked',
+        },
+      },
+    },
+  },
+])
+
 const ExperienceBuilderPage = ({ pageContext }) => {
   const router = useRouter();
-  // 1. Define the configuration and initialize the sdk
+  // 2. Configure the sdk
   const { settings, experience, defineComponents } = useExperienceBuilder({
     client, // preview or delivery client
     experienceTypeId: pageContext.expereinceTypeId, // id of the experience type (content type)
@@ -192,7 +252,7 @@ const ExperienceBuilderPage = ({ pageContext }) => {
     mode: 'delivery'
   })
 
-  // 2. Define components
+  // 2.5 Optionally define components via useEffect
   useEffect(() => {
     defineComponents([
       {
@@ -207,10 +267,10 @@ const ExperienceBuilderPage = ({ pageContext }) => {
               defaultValue: 'https://www.google.com?q=button+was+clicked',
             },
           },
-        }
-      }
+        },
+      },
     ])
-  }, [defineComponent])
+  }, [defineComponents]);
 
   // 3. Render your experience
   return (

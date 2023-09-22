@@ -1,13 +1,11 @@
 import React from 'react'
-import { useComponents } from './hooks'
+import { defineComponents } from './core/componentRegistry'
 
 const TestComponent = () => {
   return null
 }
 
 export const Test = () => {
-  const { defineComponents } = useComponents({ mode: 'editor' })
-
   defineComponents([
     {
       component: TestComponent,

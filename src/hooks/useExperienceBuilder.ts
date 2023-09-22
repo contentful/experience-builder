@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Experience, ExternalSDKMode, InternalSDKMode } from '../types'
 import { useExperienceStore } from './useExperienceStore'
-import { useComponents } from './useComponents'
 import { supportedModes } from '../constants'
 import type { ContentfulClientApi } from 'contentful'
+import { defineComponent, defineComponents } from '../core/componentRegistry'
 
 type UseExperienceBuilderProps = {
   /**
@@ -41,8 +41,6 @@ export const useExperienceBuilder = ({
   }, [mode])
 
   const store = useExperienceStore({ client })
-
-  const { defineComponent, defineComponents } = useComponents({ mode: activeMode })
 
   const switchToEditorMode = useCallback(() => {
     setMode('editor')
