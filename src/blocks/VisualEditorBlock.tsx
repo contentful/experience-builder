@@ -124,7 +124,7 @@ export const VisualEditorBlock = ({
 
   const { component, definition } = componentRegistration
 
-  const children = definition.children
+  const children = definition.children === true
     ? node.children.map((childNode) => {
         return (
           <VisualEditorBlock

@@ -91,7 +91,7 @@ export const CompositionBlock = ({
 
   const { component } = componentRegistration
 
-  const children = node.children.length
+  const children = componentRegistration.definition.children === true
     ? node.children.map((childNode: CompositionNode, index) => {
         return (
           <CompositionBlock
