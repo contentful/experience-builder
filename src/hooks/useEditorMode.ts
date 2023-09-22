@@ -48,12 +48,12 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
 
   useEffect(() => {
     if (mode !== 'editor') {
-      return;
+      return
     }
 
     // once switched to editor, we request the update from the web app to send the data to render on canvas
-    sendMessage(OutgoingExperienceBuilderEvent.REQUEST_COMPONENT_TREE_UPDATE);
-  }, [mode]);
+    sendMessage(OutgoingExperienceBuilderEvent.REQUEST_COMPONENT_TREE_UPDATE)
+  }, [mode])
 
   useEffect(() => {
     setLocale(initialLocale)
@@ -79,7 +79,7 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
         return
       }
 
-      const eventData = tryParseMessage(event);
+      const eventData = tryParseMessage(event)
 
       console.debug(
         `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
