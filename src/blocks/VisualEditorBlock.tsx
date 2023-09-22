@@ -19,7 +19,7 @@ import type { EntityStore } from '@contentful/visual-sdk'
 import { transformContentValue } from './transformers'
 
 import { useStyleTag } from '../hooks/useStyleTag'
-import { buildCfStyles, updateNodeDefaultHeight } from '../core/stylesUtils'
+import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils'
 import omit from 'lodash.omit'
 import { sendMessage } from '../communication/sendMessage'
 import { getComponentRegistration } from '../hooks/useComponents'
@@ -72,21 +72,19 @@ export const VisualEditorBlock = ({
         }
 
         if (variableMapping.type === 'DesignValue') {
-          const persistedValue = resolveDesignValue(variableMapping.valuesByBreakpoint)
-          const defaultValue =
-            !persistedValue && variableName === 'cfHeight'
-              ? updateNodeDefaultHeight({
-                  nodeId: node.data.id,
-                  blockId: node.data.blockId,
-                  parentId: node.parentId,
-                  children: node.children,
-                  defaultValue: variableMapping.defaultValue,
-                })
-              : variableMapping.defaultValue
+          const valueByBreakpoint = resolveDesignValue(variableMapping.valuesByBreakpoint)
+					const designValue = variableName === 'cfHeight'
+					? calculateNodeDefaultHeight({
+						blockId: node.data.blockId,
+						parentId: node.parentId,
+						children: node.children,
+						value: valueByBreakpoint
+					}) : valueByBreakpoint
 
+					variableName === 'cfHeight' && console.log(valueByBreakpoint, 'sdk?>>>>>>>>>>', designValue,  node.data.blockId)
           return {
             ...acc,
-            [variableName]: persistedValue || defaultValue,
+            [variableName]: designValue,
           }
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
@@ -120,7 +118,6 @@ export const VisualEditorBlock = ({
   }, [
     componentRegistration,
     node.data.props,
-    node.data.id,
     node.data.blockId,
     node.parentId,
     node.children,
