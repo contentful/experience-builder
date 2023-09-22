@@ -173,7 +173,7 @@ describe('component registration', () => {
     })
   })
 
-  describe('defineComponent (one at a time - batched via debounce)', () => {
+  describe('defineComponent (one at a time)', () => {
     it('should emit registered components event', async () => {
       const definitionId = 'TestComponent'
 
