@@ -124,23 +124,24 @@ export const VisualEditorBlock = ({
 
   const { component, definition } = componentRegistration
 
-  const children = definition.children === true
-    ? node.children.map((childNode) => {
-        return (
-          <VisualEditorBlock
-            node={childNode}
-            key={childNode.data.id}
-            locale={locale}
-            dataSource={dataSource}
-            unboundValues={unboundValues}
-            selectedNodeId={selectedNodeId}
-            resolveDesignValue={resolveDesignValue}
-            entityStore={entityStore}
-            areEntitiesFetched={areEntitiesFetched}
-          />
-        )
-      })
-    : null
+  const children =
+    definition.children === true
+      ? node.children.map((childNode) => {
+          return (
+            <VisualEditorBlock
+              node={childNode}
+              key={childNode.data.id}
+              locale={locale}
+              dataSource={dataSource}
+              unboundValues={unboundValues}
+              selectedNodeId={selectedNodeId}
+              resolveDesignValue={resolveDesignValue}
+              entityStore={entityStore}
+              areEntitiesFetched={areEntitiesFetched}
+            />
+          )
+        })
+      : null
 
   // contentful section
   if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(definition.id)) {
