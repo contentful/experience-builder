@@ -83,8 +83,6 @@ export const VisualEditorBlock = ({
                 })
               : valueByBreakpoint
 
-          variableName === 'cfHeight' &&
-            console.log(valueByBreakpoint, 'sdk?>>>>>>>>>>', designValue, node.data.blockId)
           return {
             ...acc,
             [variableName]: designValue,
