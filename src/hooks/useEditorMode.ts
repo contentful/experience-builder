@@ -177,7 +177,7 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
         }
         case IncomingExperienceBuilderEvent.REQUEST_EDITOR_MODE: {
           // do nothing cause we are already in editor mode
-          break;
+          break
         }
         default:
           console.error(
