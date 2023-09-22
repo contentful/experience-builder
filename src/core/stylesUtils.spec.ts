@@ -2,8 +2,6 @@ import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { CompositionComponentNode } from '../types'
 import { calculateNodeDefaultHeight } from './stylesUtils'
 
-jest.mock('../communication/sendMessage')
-
 describe('calculateNodeDefaultHeight', () => {
   it('should return value when blockId is undefined', () => {
     const result = calculateNodeDefaultHeight({
@@ -15,7 +13,7 @@ describe('calculateNodeDefaultHeight', () => {
     expect(result).toBe('400px')
   })
 
-	it('should return value when value is not "auto"', () => {
+  it('should return value when value is not "auto"', () => {
     const result = calculateNodeDefaultHeight({
       children: [],
       parentId: 'root',
@@ -25,9 +23,9 @@ describe('calculateNodeDefaultHeight', () => {
     expect(result).toBe('456px')
   })
 
-	it('should return value if block is not a container', () => {
+  it('should return value if block is not a container', () => {
     const result = calculateNodeDefaultHeight({
-			blockId: 'node-block-id',
+      blockId: 'node-block-id',
       children: [],
       parentId: 'root',
       value: '567px',
@@ -47,12 +45,12 @@ describe('calculateNodeDefaultHeight', () => {
     expect(result).toBe('200px')
   })
 
-	it('should return defaultValue of "200px" when container is on "root" and has only container children', () => {
-		const childNode: CompositionComponentNode = {
+  it('should return defaultValue of "200px" when container is on "root" and has only container children', () => {
+    const childNode: CompositionComponentNode = {
       type: 'block',
       data: {
         id: 'node-1',
-				blockId: CONTENTFUL_CONTAINER_ID,
+        blockId: CONTENTFUL_CONTAINER_ID,
         props: {},
         dataSource: {},
         unboundValues: {},

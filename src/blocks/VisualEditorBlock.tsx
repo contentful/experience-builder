@@ -73,15 +73,18 @@ export const VisualEditorBlock = ({
 
         if (variableMapping.type === 'DesignValue') {
           const valueByBreakpoint = resolveDesignValue(variableMapping.valuesByBreakpoint)
-					const designValue = variableName === 'cfHeight'
-					? calculateNodeDefaultHeight({
-						blockId: node.data.blockId,
-						parentId: node.parentId,
-						children: node.children,
-						value: valueByBreakpoint
-					}) : valueByBreakpoint
+          const designValue =
+            variableName === 'cfHeight'
+              ? calculateNodeDefaultHeight({
+                  blockId: node.data.blockId,
+                  parentId: node.parentId,
+                  children: node.children,
+                  value: valueByBreakpoint,
+                })
+              : valueByBreakpoint
 
-					variableName === 'cfHeight' && console.log(valueByBreakpoint, 'sdk?>>>>>>>>>>', designValue,  node.data.blockId)
+          variableName === 'cfHeight' &&
+            console.log(valueByBreakpoint, 'sdk?>>>>>>>>>>', designValue, node.data.blockId)
           return {
             ...acc,
             [variableName]: designValue,

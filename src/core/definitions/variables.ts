@@ -193,12 +193,12 @@ export const builtInStyles: Record<
 }
 
 export const containerBuiltInStyles = {
-	...builtInStyles,
-	cfHeight: {
-		displayName: 'Height',
-		type: 'Text',
-		group: 'style',
-		description: 'The height of the section',
-		defaultValue: 'auto',
-	} as ComponentDefinitionVariable<'Text'>,
+  ...builtInStyles,
+  cfHeight: {
+    displayName: 'Height',
+    type: 'Text',
+    group: 'style',
+    description: 'The height of the section',
+    defaultValue: 'auto',
+  } as ComponentDefinitionVariable<'Text'>,
 }

@@ -79,26 +79,28 @@ export const calculateNodeDefaultHeight = ({
   blockId,
   children,
   parentId,
-	value
+  value,
 }: {
   blockId?: string
   children: CompositionComponentNode['children']
   parentId?: string
   value: CompositionVariableValueType
 }) => {
-  if (!blockId
-		|| ![CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(blockId)
-		|| value !== 'auto') {
+  if (
+    !blockId ||
+    ![CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(blockId) ||
+    value !== 'auto'
+  ) {
     return value
   }
 
-	if (!children.every((child) => child.data.blockId === CONTENTFUL_CONTAINER_ID)) {
+  if (!children.every((child) => child.data.blockId === CONTENTFUL_CONTAINER_ID)) {
     return 'fit-content'
   }
-	
-	if (parentId !== 'root') {
+
+  if (parentId !== 'root') {
     return 'fill'
   }
 
-	return '200px'
+  return '200px'
 }
