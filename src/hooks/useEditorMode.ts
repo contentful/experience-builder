@@ -77,6 +77,15 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
   }, [])
 
   useEffect(() => {
+    if (mode !== 'editor') {
+      return
+    }
+
+    // once switched to editor, we request the update from the web app to send the data to render on canvas
+    sendMessage(OutgoingExperienceBuilderEvent.REQUEST_COMPONENT_TREE_UPDATE)
+  }, [mode])
+
+  useEffect(() => {
     setLocale(initialLocale)
   }, [initialLocale])
 
