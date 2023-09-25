@@ -30,4 +30,14 @@ describe('Text', () => {
     );
     cy.get('p').should('have.attr', 'data-foo', 'bar');
   });
+
+  it('when className is provided, it should be added to the text', () => {
+    cy.mount(<Text value="My Text" className="custom-class" />);
+    cy.get('p').should('have.class', 'custom-class');
+  });
+
+  it('has a default class of "cf-text"', () => {
+    cy.mount(<Text value="My Text" />);
+    cy.get('p').should('have.class', 'cf-text');
+  });
 });

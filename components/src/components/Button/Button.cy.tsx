@@ -103,4 +103,14 @@ describe('<Button />', () => {
     cy.mount(<Button data-test-id="test-id">Click Me!</Button>);
     cy.get('button').should('have.attr', 'data-test-id', 'test-id');
   });
+
+  it('when className is provided, it should be added to the button', () => {
+    cy.mount(<Button className="custom-class">Click Me!</Button>);
+    cy.get('button').should('have.class', 'custom-class');
+  });
+
+  it('has a default class of "cf-button"', () => {
+    cy.mount(<Button>Click Me!</Button>);
+    cy.get('button').should('have.class', 'cf-button');
+  });
 });

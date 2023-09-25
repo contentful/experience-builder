@@ -13,10 +13,18 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   alt?: string;
 }
 
-export const Image: React.FC<ImageProps> = ({ url, width, alt, ...props }) => {
+export const Image: React.FC<ImageProps> = ({
+  className = 'cf-image',
+  url,
+  width,
+  alt,
+  ...props
+}) => {
   if (!url) {
     return null;
   }
 
-  return <img src={url} width={width ? width : undefined} alt={alt} {...props} />;
+  return (
+    <img className={className} src={url} width={width ? width : undefined} alt={alt} {...props} />
+  );
 };

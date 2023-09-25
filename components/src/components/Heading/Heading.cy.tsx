@@ -34,4 +34,14 @@ describe('Heading', () => {
     );
     cy.get('h1').should('have.attr', 'data-foo', 'bar');
   });
+
+  it('when className is provided, it should be added to the heading', () => {
+    cy.mount(<Heading text="My Heading" className="custom-class" />);
+    cy.get('h1').should('have.class', 'custom-class');
+  });
+
+  it('has a default class of "cf-heading"', () => {
+    cy.mount(<Heading text="My Heading" />);
+    cy.get('h1').should('have.class', 'cf-heading');
+  });
 });

@@ -33,7 +33,17 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   as?: 'p' | 'span' | 'div' | 'label' | 'caption' | 'small' | 'strong' | 'em';
 }
 
-export const Text: React.FC<TextProps> = ({ as = 'p', children, value, ...props }) => {
+export const Text: React.FC<TextProps> = ({
+  as = 'p',
+  children,
+  className = 'cf-text',
+  value,
+  ...props
+}) => {
   const Tag = as;
-  return <Tag {...props}>{value ? value : children}</Tag>;
+  return (
+    <Tag className={className} {...props}>
+      {value ? value : children}
+    </Tag>
+  );
 };

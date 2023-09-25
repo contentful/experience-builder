@@ -3,7 +3,8 @@ import React, { useMemo } from 'react';
 import { createClient } from 'contentful';
 import { CompositionMode } from '@contentful/experience-builder/dist/types';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useExperienceBuilderComponents } from '@contentful/experience-builder-components';
+import { useExperienceBuilderComponents, Button } from '@contentful/experience-builder-components';
+import '@contentful/experience-builder-components/styles.css';
 
 const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
 
@@ -12,7 +13,7 @@ const Page: React.FC = () => {
   const [qs] = useSearchParams();
 
   const isPreview = qs.get('isPreview') === 'true';
-  const isEditor = true;// qs.get('isEditor') === 'true';
+  const isEditor = true; // qs.get('isEditor') === 'true';
 
   const mode: CompositionMode = isEditor ? 'editor' : isPreview ? 'preview' : 'delivery';
 
@@ -40,7 +41,12 @@ const Page: React.FC = () => {
 
   useExperienceBuilderComponents(defineComponents);
 
-  return <ExperienceRoot slug={slug || '/'} experience={experience} locale={'en-US'} />;
+  return (
+    <>
+      <Button>Hello</Button>
+      <ExperienceRoot slug={slug || '/'} experience={experience} locale={'en-US'} />
+    </>
+  );
 };
 
 export default Page;

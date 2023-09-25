@@ -62,6 +62,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 export const Button: React.FC<ButtonProps> = ({
   children,
+  className = 'cf-button',
   label,
   onClick,
   onNavigate,
@@ -78,7 +79,12 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   const button = (
-    <button data-url={url} data-target={target} onClick={handleClick} {...props}>
+    <button
+      className={className}
+      data-url={url}
+      data-target={target}
+      onClick={handleClick}
+      {...props}>
       {label ? label : children}
     </button>
   );

@@ -33,7 +33,17 @@ export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   type?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 }
 
-export const Heading: React.FC<HeadingProps> = ({ children, text, type = 'h1', ...props }) => {
+export const Heading: React.FC<HeadingProps> = ({
+  children,
+  className = 'cf-heading',
+  text,
+  type = 'h1',
+  ...props
+}) => {
   const Tag = type;
-  return <Tag {...props}>{text ? text : children}</Tag>;
+  return (
+    <Tag className={className} {...props}>
+      {text ? text : children}
+    </Tag>
+  );
 };

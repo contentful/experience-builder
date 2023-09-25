@@ -22,4 +22,14 @@ describe('Image', () => {
     cy.mount(<Image url={constants.placeholderImage} data-foo="bar" />);
     cy.get('img').should('have.attr', 'data-foo', 'bar');
   });
+
+  it('when className is provided, it should be added to the image', () => {
+    cy.mount(<Image url={constants.placeholderImage} className="custom-class" />);
+    cy.get('img').should('have.class', 'custom-class');
+  });
+
+  it('has a default class of "cf-image"', () => {
+    cy.mount(<Image url={constants.placeholderImage} />);
+    cy.get('img').should('have.class', 'cf-image');
+  });
 });
