@@ -4,14 +4,14 @@ import {
   CONTENTFUL_SECTION_ID,
 } from '../../constants'
 import { ContentfulSectionType } from '../../types'
-import { builtInStyles } from './variables'
+import { containerBuiltInStyles } from './variables'
 
 export const sectionDefinition: ContentfulSectionType = {
   id: CONTENTFUL_SECTION_ID,
   name: 'Section',
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
-  variables: builtInStyles,
+  variables: containerBuiltInStyles,
 }
 
 export const containerDefinition: ContentfulSectionType = {
@@ -19,5 +19,5 @@ export const containerDefinition: ContentfulSectionType = {
   name: 'Container',
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
-  variables: builtInStyles,
+  variables: containerBuiltInStyles,
 }

@@ -19,7 +19,7 @@ import type { EntityStore } from '@contentful/visual-sdk'
 import { transformContentValue } from './transformers'
 
 import { useStyleTag } from '../hooks/useStyleTag'
-import { buildCfStyles } from '../core/stylesUtils'
+import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils'
 import omit from 'lodash.omit'
 import { sendMessage } from '../communication/sendMessage'
 import { getComponentRegistration } from '../core/componentRegistry'
@@ -72,9 +72,20 @@ export const VisualEditorBlock = ({
         }
 
         if (variableMapping.type === 'DesignValue') {
+          const valueByBreakpoint = resolveDesignValue(variableMapping.valuesByBreakpoint)
+          const designValue =
+            variableName === 'cfHeight'
+              ? calculateNodeDefaultHeight({
+                  blockId: node.data.blockId,
+                  parentId: node.parentId,
+                  children: node.children,
+                  value: valueByBreakpoint,
+                })
+              : valueByBreakpoint
+
           return {
             ...acc,
-            [variableName]: resolveDesignValue(variableMapping.valuesByBreakpoint),
+            [variableName]: designValue,
           }
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
@@ -108,6 +119,9 @@ export const VisualEditorBlock = ({
   }, [
     componentRegistration,
     node.data.props,
+    node.data.blockId,
+    node.parentId,
+    node.children,
     resolveDesignValue,
     dataSource,
     areEntitiesFetched,
@@ -158,7 +172,6 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        cfStyles={cfStyles}
         {...(omit(props, CF_STYLE_ATTRIBUTES) as unknown as StyleProps)}>
         {children}
       </ContentfulSection>

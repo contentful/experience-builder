@@ -1,14 +1,12 @@
 import React, { MouseEventHandler } from 'react'
 
-import { CompositionComponentNode, CSSProperties, StyleProps } from '../types'
+import { CompositionComponentNode, StyleProps } from '../types'
 
 import './ContentfulSection.css'
 
 import classNames from 'classnames'
 import { ContentfulSectionHyperlinkWrapper } from './ContentfulSectionHyperlinkWrapper'
 import { Flex } from '../core'
-
-const DEFAULT_HEIGHT = '100%'
 
 type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
   (EditorMode extends true
@@ -18,17 +16,15 @@ type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
         className?: string
         node: CompositionComponentNode
         editorMode?: true
-        cfStyles: CSSProperties
       }
     : {
         className?: string
         children: React.ReactNode
         editorMode: false
-        cfStyles: CSSProperties
       })
 
 export const ContentfulSection = (props: ContentfulSectionProps) => {
-  const { children, className, cfHyperlink, cfOpenInNewTab, cfStyles } = props
+  const { children, className, cfHyperlink, cfOpenInNewTab } = props
 
   let childrenHyperlinkWrapper = children
 
@@ -44,16 +40,9 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     )
   }
 
-  const hasNoChildren = !children || (Array.isArray(children) && children.length === 0)
-  const userDidNotOverrideHeight = cfStyles.height === DEFAULT_HEIGHT
-
   if (props.editorMode === false) {
     return (
-      <Flex
-        id="ContentfulSection"
-        className={classNames(className, 'defaultStyles', {
-          empty: userDidNotOverrideHeight && hasNoChildren,
-        })}>
+      <Flex id="ContentfulSection" className={classNames(className, 'defaultStyles')}>
         {childrenHyperlinkWrapper}
       </Flex>
     )
@@ -68,9 +57,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
       data-cf-node-id={node.data.id}
       data-cf-node-block-id={node.data.blockId}
       data-cf-node-block-type={node.type}
-      className={classNames(className, 'defaultStyles', {
-        empty: userDidNotOverrideHeight && hasNoChildren,
-      })}
+      className={classNames(className, 'defaultStyles')}
       onMouseDown={onMouseDown}>
       {childrenHyperlinkWrapper}
     </Flex>

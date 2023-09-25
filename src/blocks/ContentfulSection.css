@@ -26,7 +26,3 @@
   background: var(--blue500);
   margin: 10px;
 }
-
-#ContentfulSection .empty {
-  height: 200px !important;
-}
