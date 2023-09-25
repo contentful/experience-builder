@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface HeadingProps {
+export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   /**
    * The text to display in the heading. If not provided, children will be used instead.
    * @default undefined
@@ -33,7 +33,7 @@ export interface HeadingProps {
   type?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 }
 
-export const Heading: React.FC<HeadingProps> = ({ children, text, type = 'h1' }) => {
+export const Heading: React.FC<HeadingProps> = ({ children, text, type = 'h1', ...props }) => {
   const Tag = type;
-  return <Tag>{text ? text : children}</Tag>;
+  return <Tag {...props}>{text ? text : children}</Tag>;
 };

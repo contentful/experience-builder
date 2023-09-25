@@ -5,10 +5,10 @@ import {
   ExperienceBuilderImage,
   ExperienceBuilderRichText,
   ExperienceBuilderText,
-} from '..';
+} from '../components';
 import { useEffect } from 'react';
 
-export default function useExperienceBuilderComponents(
+export function useExperienceBuilderComponents(
   defineComponents: (componentRegistrations: ComponentRegistration[]) => void
 ) {
   useEffect(() => {

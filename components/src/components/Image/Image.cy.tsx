@@ -7,12 +7,19 @@ describe('Image', () => {
     cy.mount(<Image url={constants.placeholderImage} />);
     cy.get('img').invoke('attr', 'src').should('eq', constants.placeholderImage);
   });
+
   it('renders null when no url specified', () => {
     cy.mount(<Image url={''} />);
     cy.get('img').should('not.exist');
   });
+
   it('renders at the proper width', () => {
     cy.mount(<Image url={constants.placeholderImage} width={300} />);
     cy.get('img').invoke('attr', 'width').should('eq', '300');
+  });
+
+  it('additional props should be passed to the image', () => {
+    cy.mount(<Image url={constants.placeholderImage} data-foo="bar" />);
+    cy.get('img').should('have.attr', 'data-foo', 'bar');
   });
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface TextProps {
+export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   /**
    * The text to display. If not provided, children will be used instead.
    * @default undefined
@@ -33,7 +33,7 @@ export interface TextProps {
   as?: 'p' | 'span' | 'div' | 'label' | 'caption' | 'small' | 'strong' | 'em';
 }
 
-export const Text: React.FC<TextProps> = ({ as = 'p', children, value }) => {
+export const Text: React.FC<TextProps> = ({ as = 'p', children, value, ...props }) => {
   const Tag = as;
-  return <Tag>{value ? value : children}</Tag>;
+  return <Tag {...props}>{value ? value : children}</Tag>;
 };

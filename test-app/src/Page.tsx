@@ -12,7 +12,7 @@ const Page: React.FC = () => {
   const [qs] = useSearchParams();
 
   const isPreview = qs.get('isPreview') === 'true';
-  const isEditor = qs.get('isEditor') === 'true';
+  const isEditor = true;// qs.get('isEditor') === 'true';
 
   const mode: CompositionMode = isEditor ? 'editor' : isPreview ? 'preview' : 'delivery';
 
