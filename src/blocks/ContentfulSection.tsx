@@ -1,49 +1,33 @@
-import React, { MouseEventHandler } from 'react'
-
-import { CompositionComponentNode, StyleProps } from '../types'
+import React from 'react'
 
 import './ContentfulSection.css'
 
 import classNames from 'classnames'
-import { ContentfulSectionHyperlinkWrapper } from './ContentfulSectionHyperlinkWrapper'
+import { ContentfulSectionAsHyperlink } from './ContentfulSectionAsHyperlink'
+import type { ContentfulSectionProps } from './ContentfulSectionAsHyperlink'
 import { Flex } from '../core'
-
-type ContentfulSectionProps<EditorMode = boolean> = StyleProps &
-  (EditorMode extends true
-    ? {
-        onMouseDown: MouseEventHandler<HTMLDivElement>
-        children: React.ReactNode
-        className?: string
-        node: CompositionComponentNode
-        editorMode?: true
-      }
-    : {
-        className?: string
-        children: React.ReactNode
-        editorMode: false
-      })
 
 export const ContentfulSection = (props: ContentfulSectionProps) => {
   const { children, className, cfHyperlink, cfOpenInNewTab } = props
 
-  let childrenHyperlinkWrapper = children
-
-  // If hyperlink for ContentfulSection is bounded
   if (cfHyperlink) {
-    childrenHyperlinkWrapper = (
-      <ContentfulSectionHyperlinkWrapper
-        editorMode={props.editorMode === true}
+    return (
+      <ContentfulSectionAsHyperlink
+        className={classNames(className, 'defaultStyles')}
+        editorMode={props.editorMode}
         cfHyperlink={cfHyperlink}
-        cfOpenInNewTab={cfOpenInNewTab}>
+        cfOpenInNewTab={cfOpenInNewTab}
+        onMouseDown={(props as ContentfulSectionProps<true>).onMouseDown}
+        node={(props as ContentfulSectionProps<true>).node}>
         {children}
-      </ContentfulSectionHyperlinkWrapper>
+      </ContentfulSectionAsHyperlink>
     )
   }
 
   if (props.editorMode === false) {
     return (
       <Flex id="ContentfulSection" className={classNames(className, 'defaultStyles')}>
-        {childrenHyperlinkWrapper}
+        {children}
       </Flex>
     )
   }
@@ -59,7 +43,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
       data-cf-node-block-type={node.type}
       className={classNames(className, 'defaultStyles')}
       onMouseDown={onMouseDown}>
-      {childrenHyperlinkWrapper}
+      {children}
     </Flex>
   )
 }
