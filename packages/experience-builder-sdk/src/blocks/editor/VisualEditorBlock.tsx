@@ -138,7 +138,6 @@ export const VisualEditorBlock = ({
 
           if (typeof boundValue === 'object' && boundValue.sys.linkType === 'Asset') {
             boundValue = entityStore.current?.getValue(boundValue, ['fields', 'file']);
-            console.log('HERE', boundValue);
           }
 
           const value = boundValue || variableDefinition.defaultValue;
