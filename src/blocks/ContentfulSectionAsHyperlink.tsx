@@ -9,14 +9,14 @@ export type ContentfulSectionProps<EditorMode = boolean> = EditorMode extends tr
       onMouseDown: MouseEventHandler<HTMLElement>
       children: React.ReactNode
       className?: string
-      cfHyperlink?: StyleProps['cfHyperlink']
+      cfHyperlink: StyleProps['cfHyperlink']
       cfOpenInNewTab?: StyleProps['cfOpenInNewTab']
       editorMode?: EditorMode
       node: CompositionComponentNode
     }
   : {
       className?: string
-      cfHyperlink?: StyleProps['cfHyperlink']
+      cfHyperlink: StyleProps['cfHyperlink']
       cfOpenInNewTab?: StyleProps['cfOpenInNewTab']
       children: React.ReactNode
       editorMode: EditorMode
@@ -33,23 +33,14 @@ export const ContentfulSectionAsHyperlink = (props: ContentfulSectionProps) => {
     }
   }
 
-  const stopPropagationInEditorMode = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (editorMode === false) {
-      return
-    }
-    e.stopPropagation()
-    e.preventDefault()
-  }
-
-  if (props.editorMode === false) {
+  if (editorMode === false) {
     return (
       <a
         id="ContentfulSection"
         className={classNames(className, 'defaultStyles', 'cf-section-link')}
         href={cfHyperlink}
         {...anchorTagProps}
-        // style={{ width: '100%', height: '100%' }}
-        onClick={stopPropagationInEditorMode}>
+      >
         {children}
       </a>
     )
@@ -58,13 +49,17 @@ export const ContentfulSectionAsHyperlink = (props: ContentfulSectionProps) => {
   // Extract properties that are only available in editor mode
   const { node, onMouseDown } = props
 
+  const stopPropagationInEditorMode = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.stopPropagation()
+    e.preventDefault()
+  }
+
   return (
     <a
       id="ContentfulSection"
       className={classNames(className, 'defaultStyles', 'cf-section-link')}
       href={cfHyperlink}
       {...anchorTagProps}
-      // style={{ width: '100%', height: '100%' }}
       onClick={stopPropagationInEditorMode}
       data-cf-node-id={node.data.id}
       data-cf-node-block-id={node.data.blockId}
