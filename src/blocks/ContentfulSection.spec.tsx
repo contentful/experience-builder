@@ -61,7 +61,7 @@ describe('ContentfulSection', () => {
         <ContentfulSection
           editorMode={true}
           node={node}
-          cfHyperlink='https://contentful.com'
+          cfHyperlink="https://contentful.com"
           onMouseDown={onMouseDown}></ContentfulSection>
       )
 
@@ -80,10 +80,7 @@ describe('ContentfulSection', () => {
       const onMouseDown = jest.fn()
 
       const { getByTestId } = render(
-        <ContentfulSection
-          editorMode={true}
-          node={node}
-          onMouseDown={onMouseDown}>
+        <ContentfulSection editorMode={true} node={node} onMouseDown={onMouseDown}>
           <h1 data-test-id="child1">Hello world!</h1>
           <button data-test-id="child2">Button</button>
         </ContentfulSection>
@@ -127,7 +124,7 @@ describe('ContentfulSection', () => {
       render(
         <ContentfulSection
           editorMode={false}
-          cfHyperlink='https://contentful.com'></ContentfulSection>
+          cfHyperlink="https://contentful.com"></ContentfulSection>
       )
 
       const section = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
@@ -140,9 +137,7 @@ describe('ContentfulSection', () => {
 
     it('supports child components', () => {
       const { getByTestId } = render(
-        <ContentfulSection
-          editorMode={false}
-        >
+        <ContentfulSection editorMode={false}>
           <h1 data-test-id="child1">Hello world!</h1>
           <button data-test-id="child2">Button</button>
         </ContentfulSection>

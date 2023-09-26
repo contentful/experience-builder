@@ -39,8 +39,7 @@ export const ContentfulSectionAsHyperlink = (props: ContentfulSectionProps) => {
         id="ContentfulSection"
         className={classNames(className, 'defaultStyles', 'cf-section-link')}
         href={cfHyperlink}
-        {...anchorTagProps}
-      >
+        {...anchorTagProps}>
         {children}
       </a>
     )
