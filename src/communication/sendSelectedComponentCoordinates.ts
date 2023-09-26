@@ -21,6 +21,15 @@ export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   }
 
   if (selectedElement) {
+    console.log(
+      'send uodate',
+      {
+        selectedNodeCoordinates: getElementCoordinates(selectedElement),
+        parentCoordinates: parent ? getElementCoordinates(parent) : null,
+      },
+      selectedElement
+    )
+
     sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_COORDINATES, {
       selectedNodeCoordinates: getElementCoordinates(selectedElement),
       parentCoordinates: parent ? getElementCoordinates(parent) : null,

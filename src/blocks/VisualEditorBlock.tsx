@@ -23,6 +23,7 @@ import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils'
 import omit from 'lodash.omit'
 import { sendMessage } from '../communication/sendMessage'
 import { getComponentRegistration } from '../core/componentRegistry'
+import { useEditorContext } from './VisualEditorContext'
 
 type PropsType =
   | StyleProps
@@ -30,10 +31,10 @@ type PropsType =
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
-  locale: string
+
   dataSource: CompositionDataSource
   unboundValues: CompositionUnboundValues
-  selectedNodeId?: string
+
   resolveDesignValue: ResolveDesignValueType
   entityStore: RefObject<EntityStore>
   areEntitiesFetched: boolean
@@ -41,10 +42,8 @@ type VisualEditorBlockProps = {
 
 export const VisualEditorBlock = ({
   node,
-  locale,
   dataSource,
   unboundValues,
-  selectedNodeId,
   resolveDesignValue,
   entityStore,
   areEntitiesFetched,
@@ -54,7 +53,9 @@ export const VisualEditorBlock = ({
     [node]
   )
 
-  useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
+  const { setSelectedNodeId } = useEditorContext()
+
+  useSelectedInstanceCoordinates({ node })
 
   const props: PropsType = useMemo(() => {
     if (!componentRegistration) {
@@ -145,10 +146,10 @@ export const VisualEditorBlock = ({
             <VisualEditorBlock
               node={childNode}
               key={childNode.data.id}
-              locale={locale}
+
               dataSource={dataSource}
               unboundValues={unboundValues}
-              selectedNodeId={selectedNodeId}
+
               resolveDesignValue={resolveDesignValue}
               entityStore={entityStore}
               areEntitiesFetched={areEntitiesFetched}
@@ -168,6 +169,7 @@ export const VisualEditorBlock = ({
         onMouseDown={(e) => {
           e.stopPropagation()
           e.preventDefault()
+          setSelectedNodeId(node.data.id)
           sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
             node,
           })
@@ -185,6 +187,7 @@ export const VisualEditorBlock = ({
       onMouseDown: (e: MouseEvent) => {
         e.stopPropagation()
         e.preventDefault()
+        setSelectedNodeId(node.data.id)
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
           node,
         })

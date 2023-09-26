@@ -7,8 +7,9 @@ import { useHoverIndicator } from '../hooks/useHoverIndicator'
 import { onComponentDropped } from '../communication/onComponentDrop'
 import { useBreakpoints } from '../hooks/useBreakpoints'
 import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
-import { useEditorMode } from '../hooks/useEditorMode'
+
 import { InternalSDKMode } from '../types'
+import { useEditorContext, VisualEditorContextProvider } from './VisualEditorContext'
 
 type VisualEditorRootProps = {
   initialLocale: string
@@ -17,16 +18,17 @@ type VisualEditorRootProps = {
 
 export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
   // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
-  const {
-    tree,
-    dataSource,
-    isDragging,
-    locale,
-    selectedNodeId,
-    unboundValues,
-    breakpoints,
-    entityStore,
-  } = useEditorMode({ initialLocale, mode })
+
+  return (
+    <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
+      <VisualEditorRootComponents />
+    </VisualEditorContextProvider>
+  )
+}
+
+const VisualEditorRootComponents = () => {
+  const { tree, dataSource, isDragging, locale, unboundValues, breakpoints, entityStore } =
+    useEditorContext()
 
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
   const { resolveDesignValue } = useBreakpoints(breakpoints)
@@ -34,6 +36,7 @@ export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps)
   const [areEntitiesFetched, setEntitiesFetched] = useState(false)
 
   useEffect(() => {
+    if (!locale) return
     entityStore.current = new EditorModeEntityStore({
       entities: [],
       locale: locale,
@@ -59,32 +62,22 @@ export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps)
     }
     resolveEntities()
   }, [dataSource, entityStore, locale])
-
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
   }
-
-  return React.createElement(
-    'div',
-    {
-      id: 'VisualEditorRoot',
-      className: 'root',
-      'data-type': 'root',
-    },
-    [
-      tree.root.children.map((node: any) => (
+  return (
+    <div id="VisualEditorRoot" className="root" data-type="root">
+      {tree.root.children.map((node: any) => (
         <VisualEditorBlock
           key={node.data.id}
           node={node}
-          locale={locale}
           dataSource={dataSource}
           unboundValues={unboundValues}
-          selectedNodeId={selectedNodeId}
           resolveDesignValue={resolveDesignValue}
           entityStore={entityStore}
           areEntitiesFetched={areEntitiesFetched}
         />
-      )),
-    ]
+      ))}
+    </div>
   )
 }

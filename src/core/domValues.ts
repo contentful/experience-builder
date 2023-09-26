@@ -17,6 +17,8 @@ export const findOutermostCoordinates = (first: Rect, second: Rect) => {
 export const getElementCoordinates = (element: Element): DOMRect => {
   const rect = element.getBoundingClientRect()
 
+  console.log({ rect }, element)
+
   /**
    * If element does not have children, or element has it's own width or height,
    * return the element's coordinates.

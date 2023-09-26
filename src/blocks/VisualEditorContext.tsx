@@ -1,19 +1,22 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import {
+  Breakpoint,
   CompositionComponentNode,
   CompositionComponentPropValue,
   CompositionDataSource,
-  InternalSDKMode,
   CompositionTree,
   CompositionUnboundValues,
   IncomingExperienceBuilderEvent,
+  InternalSDKMode,
   OutgoingExperienceBuilderEvent,
   ScrollStates,
   InternalEvents,
 } from '../types'
+import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
+import { sendMessage } from '../communication/sendMessage'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
-import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
 import { getDataFromTree } from '../utils'
+import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
 import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
 import { sendMessage } from '../communication/sendMessage'
 import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
@@ -22,19 +25,57 @@ import {
   sendRegisteredComponentsMessage,
 } from '../core/componentRegistry'
 
-type UseEditorModeProps = {
-  initialLocale: string
-  mode: InternalSDKMode
+type VisualEditorContextType = {
+  tree: CompositionTree | undefined
+  dataSource: CompositionDataSource
+  isDragging: boolean
+  locale: string | null
+  selectedNodeId: string | null
+  setSelectedNodeId: (id: string) => void
+  unboundValues: CompositionUnboundValues
+  breakpoints: Breakpoint[]
+  entityStore: React.MutableRefObject<EditorModeEntityStore>
 }
 
-export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
+const VisualEditorContext = React.createContext<VisualEditorContextType>({
+  tree: undefined,
+  dataSource: {},
+  unboundValues: {},
+  isDragging: false,
+  selectedNodeId: null,
+  setSelectedNodeId: () => {
+    /* noop */
+  },
+  locale: null,
+  breakpoints: [],
+  entityStore: {} as React.MutableRefObject<EditorModeEntityStore>,
+})
+
+type VisualEditorContextProviderProps = {
+  initialLocale: string
+  mode: InternalSDKMode
+  children: ReactElement
+}
+
+export const useEditorContext = () => React.useContext(VisualEditorContext)
+
+export function VisualEditorContextProvider({
+  initialLocale,
+  mode,
+  children,
+}: VisualEditorContextProviderProps) {
   const hasConnectEventBeenSent = useRef(false)
   const [tree, setTree] = useState<CompositionTree>()
   const [dataSource, setDataSource] = useState<CompositionDataSource>({})
   const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({})
   const [isDragging, setIsDragging] = useState(false)
-  const [selectedNodeId, setSelectedNodeId] = useState<string>('')
+  const [selectedNodeId, setSelectedNodeId2] = useState<string>('')
   const [locale, setLocale] = useState<string>(initialLocale)
+
+  const setSelectedNodeId = (id: any) => {
+    console.log({ id })
+    setSelectedNodeId2(id)
+  }
 
   const entityStore = useRef<EditorModeEntityStore>(
     new EditorModeEntityStore({
@@ -244,17 +285,20 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
     }
   }, [mode, selectedNodeId])
 
-  return useMemo(
-    () => ({
-      tree,
-      dataSource,
-      unboundValues,
-      isDragging,
-      selectedNodeId,
-      locale,
-      breakpoints: tree?.root.data.breakpoints ?? [],
-      entityStore,
-    }),
-    [tree, dataSource, unboundValues, isDragging, selectedNodeId, locale]
+  return (
+    <VisualEditorContext.Provider
+      value={{
+        tree,
+        dataSource,
+        unboundValues,
+        isDragging,
+        selectedNodeId,
+        setSelectedNodeId,
+        locale,
+        breakpoints: tree?.root.data.breakpoints ?? [],
+        entityStore,
+      }}>
+      {children}
+    </VisualEditorContext.Provider>
   )
 }
