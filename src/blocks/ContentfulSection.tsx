@@ -8,13 +8,13 @@ import type { ContentfulSectionProps } from './ContentfulSectionAsHyperlink'
 import { Flex } from '../core'
 
 export const ContentfulSection = (props: ContentfulSectionProps) => {
-  const { children, className, cfHyperlink, cfOpenInNewTab } = props
+  const { children, className, cfHyperlink, cfOpenInNewTab, editorMode } = props
 
   if (cfHyperlink) {
     return (
       <ContentfulSectionAsHyperlink
-        className={classNames(className, 'defaultStyles')}
-        editorMode={props.editorMode}
+        className={className}
+        editorMode={editorMode}
         cfHyperlink={cfHyperlink}
         cfOpenInNewTab={cfOpenInNewTab}
         onMouseDown={(props as ContentfulSectionProps<true>).onMouseDown}
@@ -24,7 +24,7 @@ export const ContentfulSection = (props: ContentfulSectionProps) => {
     )
   }
 
-  if (props.editorMode === false) {
+  if (editorMode === false) {
     return (
       <Flex id="ContentfulSection" className={classNames(className, 'defaultStyles')}>
         {children}

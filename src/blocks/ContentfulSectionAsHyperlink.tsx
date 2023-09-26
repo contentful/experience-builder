@@ -7,18 +7,18 @@ import classNames from 'classnames'
 export type ContentfulSectionProps<EditorMode = boolean> = EditorMode extends true
   ? {
       onMouseDown: MouseEventHandler<HTMLElement>
-      children: React.ReactNode
+      children?: React.ReactNode
       className?: string
-      cfHyperlink: StyleProps['cfHyperlink']
+      cfHyperlink?: StyleProps['cfHyperlink']
       cfOpenInNewTab?: StyleProps['cfOpenInNewTab']
       editorMode?: EditorMode
       node: CompositionComponentNode
     }
   : {
       className?: string
-      cfHyperlink: StyleProps['cfHyperlink']
+      cfHyperlink?: StyleProps['cfHyperlink']
       cfOpenInNewTab?: StyleProps['cfOpenInNewTab']
-      children: React.ReactNode
+      children?: React.ReactNode
       editorMode: EditorMode
     }
 
