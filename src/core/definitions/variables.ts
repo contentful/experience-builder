@@ -90,7 +90,7 @@ export const builtInStyles: Record<
     type: 'Text',
     group: 'style',
     description: 'The max-width of the section',
-    defaultValue: 'fill',
+    defaultValue: '100%',
   },
   cfFlexDirection: {
     displayName: 'Direction',
