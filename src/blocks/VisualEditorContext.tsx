@@ -18,8 +18,6 @@ import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 import { getDataFromTree } from '../utils'
 import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
 import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
-import { sendMessage } from '../communication/sendMessage'
-import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
 import {
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
@@ -69,13 +67,8 @@ export function VisualEditorContextProvider({
   const [dataSource, setDataSource] = useState<CompositionDataSource>({})
   const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({})
   const [isDragging, setIsDragging] = useState(false)
-  const [selectedNodeId, setSelectedNodeId2] = useState<string>('')
+  const [selectedNodeId, setSelectedNodeId] = useState<string>('')
   const [locale, setLocale] = useState<string>(initialLocale)
-
-  const setSelectedNodeId = (id: any) => {
-    console.log({ id })
-    setSelectedNodeId2(id)
-  }
 
   const entityStore = useRef<EditorModeEntityStore>(
     new EditorModeEntityStore({
