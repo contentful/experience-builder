@@ -172,7 +172,12 @@ export const VisualEditorBlock = ({
             node,
           })
         }}
-        {...(omit(props, CF_STYLE_ATTRIBUTES) as unknown as StyleProps)}>
+        // something is off with conditional types and eslint can't recognize it
+        // eslint-disable-next-line react/prop-types 
+        cfHyperlink={(props as StyleProps).cfHyperlink}
+        // eslint-disable-next-line react/prop-types 
+        cfOpenInNewTab={(props as StyleProps).cfOpenInNewTab}
+      >
         {children}
       </ContentfulSection>
     )
@@ -197,7 +202,8 @@ export const VisualEditorBlock = ({
       'data-cf-node-block-id': node.data.blockId,
       'data-cf-node-block-type': node.type,
       className,
-      ...omit(props, CF_STYLE_ATTRIBUTES),
+      // TODO: do we really need lodash just for this?
+      ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     },
     children
   )

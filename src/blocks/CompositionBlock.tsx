@@ -113,7 +113,11 @@ export const CompositionBlock = ({
     return (
       <ContentfulSection
         editorMode={false}
-        {...(omit(props, CF_STYLE_ATTRIBUTES) as unknown as StyleProps)}
+        // something is off with conditional types and eslint can't recognize it
+        // eslint-disable-next-line react/prop-types 
+        cfHyperlink={(props as StyleProps).cfHyperlink}
+        // eslint-disable-next-line react/prop-types 
+        cfOpenInNewTab={(props as StyleProps).cfOpenInNewTab}
         className={className}>
         {children}
       </ContentfulSection>
@@ -122,7 +126,7 @@ export const CompositionBlock = ({
 
   return React.createElement(
     component,
-    { ...omit(props, CF_STYLE_ATTRIBUTES), className },
+    { ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']), className },
     children
   )
 }
