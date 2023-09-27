@@ -1,4 +1,4 @@
-@import '../variables.css';
+@import './variables.css';
 
 #EmptyContainer.container {
   height: 200px;

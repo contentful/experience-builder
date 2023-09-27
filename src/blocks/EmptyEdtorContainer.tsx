@@ -1,7 +1,7 @@
 import { ReactComponent as EmptyStateIcon } from '../svg/emptyState.svg'
 import React from 'react'
 
-import './EmptyContainer.css'
+import '../styles/EmptyContainer.css'
 import { onComponentDropped } from '../communication/onComponentDrop'
 
 export interface EmptyContainerProps {

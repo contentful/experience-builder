@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './ContentfulSection.css'
+import '../styles/ContentfulSection.css'
 
 import classNames from 'classnames'
 import { ContentfulSectionAsHyperlink } from './ContentfulSectionAsHyperlink'
