@@ -173,11 +173,10 @@ export const VisualEditorBlock = ({
           })
         }}
         // something is off with conditional types and eslint can't recognize it
-        // eslint-disable-next-line react/prop-types 
+        // eslint-disable-next-line react/prop-types
         cfHyperlink={(props as StyleProps).cfHyperlink}
-        // eslint-disable-next-line react/prop-types 
-        cfOpenInNewTab={(props as StyleProps).cfOpenInNewTab}
-      >
+        // eslint-disable-next-line react/prop-types
+        cfOpenInNewTab={(props as StyleProps).cfOpenInNewTab}>
         {children}
       </ContentfulSection>
     )

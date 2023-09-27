@@ -114,9 +114,9 @@ export const CompositionBlock = ({
       <ContentfulSection
         editorMode={false}
         // something is off with conditional types and eslint can't recognize it
-        // eslint-disable-next-line react/prop-types 
+        // eslint-disable-next-line react/prop-types
         cfHyperlink={(props as StyleProps).cfHyperlink}
-        // eslint-disable-next-line react/prop-types 
+        // eslint-disable-next-line react/prop-types
         cfOpenInNewTab={(props as StyleProps).cfOpenInNewTab}
         className={className}>
         {children}
