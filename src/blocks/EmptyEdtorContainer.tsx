@@ -1,4 +1,4 @@
-import { ReactComponent as EmptyStateIcon } from './emptyState.svg'
+import { ReactComponent as EmptyStateIcon } from '../core/svg/emptyState.svg'
 import React from 'react'
 
 import './EmptyContainer.css'
