@@ -146,10 +146,8 @@ export const VisualEditorBlock = ({
             <VisualEditorBlock
               node={childNode}
               key={childNode.data.id}
-
               dataSource={dataSource}
               unboundValues={unboundValues}
-
               resolveDesignValue={resolveDesignValue}
               entityStore={entityStore}
               areEntitiesFetched={areEntitiesFetched}
