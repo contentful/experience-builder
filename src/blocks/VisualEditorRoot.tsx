@@ -9,7 +9,8 @@ import { useBreakpoints } from '../hooks/useBreakpoints'
 import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
 
 import { InternalSDKMode } from '../types'
-import { useEditorContext, VisualEditorContextProvider } from './VisualEditorContext'
+import { VisualEditorContextProvider } from './VisualEditorContext'
+import { useEditorContext } from './useEditorContext'
 
 type VisualEditorRootProps = {
   initialLocale: string
