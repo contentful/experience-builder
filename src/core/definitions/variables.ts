@@ -1,7 +1,7 @@
 import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../../types'
 
 export const builtInStyles: Record<
-ContainerStyleVariableName,
+  ContainerStyleVariableName,
   ComponentDefinitionVariable<'Text' | 'Boolean'>
 > = {
   cfVerticalAlignment: {

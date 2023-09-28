@@ -1,7 +1,4 @@
-import {
-  CONTENTFUL_COMPONENT_CATEGORY,
-  CONTENTFUL_CONTAINER_ID,
-} from '../../constants'
+import { CONTENTFUL_COMPONENT_CATEGORY, CONTENTFUL_CONTAINER_ID } from '../../constants'
 import { ComponentDefinition } from '../../types'
 import { containerBuiltInStyles } from './variables'
 

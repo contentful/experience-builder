@@ -86,11 +86,7 @@ export const calculateNodeDefaultHeight = ({
   parentId?: string
   value: CompositionVariableValueType
 }) => {
-  if (
-    !blockId ||
-    CONTENTFUL_CONTAINER_ID !== blockId ||
-    value !== 'auto'
-  ) {
+  if (!blockId || CONTENTFUL_CONTAINER_ID !== blockId || value !== 'auto') {
     return value
   }
 

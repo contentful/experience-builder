@@ -9,7 +9,7 @@ import { Flex } from '../core'
 
 export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
   const { children, className, editorMode } = sectionProps
-  
+
   if (sectionProps.cfHyperlink) {
     return (
       <ContentfulContainerAsHyperlink

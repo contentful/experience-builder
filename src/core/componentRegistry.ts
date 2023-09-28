@@ -146,7 +146,7 @@ export const resetComponentRegistry = () => {
 
 export const getComponentRegistration = (id: string) => {
   if (id === CONTENTFUL_SECTION_ID) {
-    return componentRegistry.get(CONTENTFUL_CONTAINER_ID);
+    return componentRegistry.get(CONTENTFUL_CONTAINER_ID)
   }
   return componentRegistry.get(id)
 }

@@ -41,7 +41,9 @@ describe('component registration', () => {
     })
 
     it('should return container when given a section id', () => {
-      expect(getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition).toEqual(containerDefinition)
+      expect(getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition).toEqual(
+        containerDefinition
+      )
     })
   })
 
