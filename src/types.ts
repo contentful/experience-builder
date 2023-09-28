@@ -249,7 +249,7 @@ export type Breakpoint = {
   previewSize: string
 }
 
-export type SchemaVersions = '2023-06-27' | '2023-07-26' | '2023-08-23'
+export type SchemaVersions = '2023-09-28' | '2023-06-27' | '2023-07-26' | '2023-08-23'
 
 export type Composition = {
   title: string
