@@ -1,10 +1,10 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
-import { ContentfulSection } from './ContentfulSection'
+import { ContentfulContainer } from './ContentfulContainer'
 import { CompositionComponentNode } from '../types'
 import { CONTENTFUL_SECTION_ID } from '../constants'
 
-describe('ContentfulSection', () => {
+describe('ContentfulContainer', () => {
   describe('when in editor mode', () => {
     const node = {
       type: 'block',
@@ -18,13 +18,13 @@ describe('ContentfulSection', () => {
       const onMouseDown = jest.fn()
 
       render(
-        <ContentfulSection
+        <ContentfulContainer
           editorMode={true}
           node={node}
-          onMouseDown={onMouseDown}></ContentfulSection>
+          onMouseDown={onMouseDown}></ContentfulContainer>
       )
 
-      const section = document.getElementById('ContentfulSection') as HTMLDivElement | null
+      const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null
 
       expect(section).toBeDefined()
       expect(section?.tagName).toBe('DIV')
@@ -41,14 +41,14 @@ describe('ContentfulSection', () => {
       const onMouseDown = jest.fn()
 
       render(
-        <ContentfulSection
+        <ContentfulContainer
           editorMode={true}
           node={node}
           className="custom-test-class-name"
-          onMouseDown={onMouseDown}></ContentfulSection>
+          onMouseDown={onMouseDown}></ContentfulContainer>
       )
 
-      const section = document.getElementById('ContentfulSection') as HTMLDivElement | null
+      const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null
 
       expect(section).toBeDefined()
       expect(section?.className).toBe('custom-test-class-name defaultStyles')
@@ -58,14 +58,14 @@ describe('ContentfulSection', () => {
       const onMouseDown = jest.fn()
 
       render(
-        <ContentfulSection
+        <ContentfulContainer
           editorMode={true}
           node={node}
           cfHyperlink="https://contentful.com"
-          onMouseDown={onMouseDown}></ContentfulSection>
+          onMouseDown={onMouseDown}></ContentfulContainer>
       )
 
-      const section = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const section = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(section?.tagName).toBe('A')
       expect(section).toBeDefined()
@@ -80,13 +80,13 @@ describe('ContentfulSection', () => {
       const onMouseDown = jest.fn()
 
       const { getByTestId } = render(
-        <ContentfulSection editorMode={true} node={node} onMouseDown={onMouseDown}>
+        <ContentfulContainer editorMode={true} node={node} onMouseDown={onMouseDown}>
           <h1 data-test-id="child1">Hello world!</h1>
           <button data-test-id="child2">Button</button>
-        </ContentfulSection>
+        </ContentfulContainer>
       )
 
-      const section = document.getElementById('ContentfulSection') as HTMLDivElement | null
+      const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null
 
       expect(section).toBeDefined()
       expect(getByTestId('child1')).toBeDefined()
@@ -98,9 +98,9 @@ describe('ContentfulSection', () => {
 
   describe('when NOT in editor mode', () => {
     it('should render a section', () => {
-      render(<ContentfulSection editorMode={false}></ContentfulSection>)
+      render(<ContentfulContainer editorMode={false}></ContentfulContainer>)
 
-      const section = document.getElementById('ContentfulSection') as HTMLDivElement | null
+      const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null
 
       expect(section).toBeDefined()
       expect(section?.tagName).toBe('DIV')
@@ -109,12 +109,12 @@ describe('ContentfulSection', () => {
 
     it('should allow to pass a custom class name', () => {
       render(
-        <ContentfulSection
+        <ContentfulContainer
           editorMode={false}
-          className="custom-test-class-name"></ContentfulSection>
+          className="custom-test-class-name"></ContentfulContainer>
       )
 
-      const section = document.getElementById('ContentfulSection') as HTMLDivElement | null
+      const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null
 
       expect(section).toBeDefined()
       expect(section?.className).toBe('custom-test-class-name defaultStyles')
@@ -122,12 +122,12 @@ describe('ContentfulSection', () => {
 
     it('should render an anchor if hyperlink prop is provided', () => {
       render(
-        <ContentfulSection
+        <ContentfulContainer
           editorMode={false}
-          cfHyperlink="https://contentful.com"></ContentfulSection>
+          cfHyperlink="https://contentful.com"></ContentfulContainer>
       )
 
-      const section = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const section = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(section?.tagName).toBe('A')
       expect(section).toBeDefined()
@@ -137,13 +137,13 @@ describe('ContentfulSection', () => {
 
     it('supports child components', () => {
       const { getByTestId } = render(
-        <ContentfulSection editorMode={false}>
+        <ContentfulContainer editorMode={false}>
           <h1 data-test-id="child1">Hello world!</h1>
           <button data-test-id="child2">Button</button>
-        </ContentfulSection>
+        </ContentfulContainer>
       )
 
-      const section = document.getElementById('ContentfulSection') as HTMLDivElement | null
+      const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null
 
       expect(section).toBeDefined()
       expect(getByTestId('child1')).toBeDefined()

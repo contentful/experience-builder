@@ -7,6 +7,8 @@ import {
   enrichComponentDefinition,
 } from './componentRegistry'
 import { ComponentDefinition, InternalEvents } from '../types'
+import { CONTENTFUL_SECTION_ID } from '../constants'
+import { containerDefinition } from './definitions/components'
 
 jest.mock('../core/constants', () => ({
   SDK_VERSION: '0.0.0-test',
@@ -36,6 +38,10 @@ describe('component registration', () => {
   describe('getComponentRegistration', () => {
     it('should return undefined if requested id is not registered', () => {
       expect(getComponentRegistration('random-str')).toBe(undefined)
+    })
+
+    it('should return container when given a section id', () => {
+      expect(getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition).toEqual(containerDefinition)
     })
   })
 

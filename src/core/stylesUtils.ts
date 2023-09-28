@@ -12,7 +12,7 @@ import {
   transformBorderStyle,
   transformFill,
 } from '../blocks/transformers'
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { CONTENTFUL_CONTAINER_ID } from '../constants'
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())
 
@@ -88,7 +88,7 @@ export const calculateNodeDefaultHeight = ({
 }) => {
   if (
     !blockId ||
-    ![CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(blockId) ||
+    CONTENTFUL_CONTAINER_ID !== blockId ||
     value !== 'auto'
   ) {
     return value

@@ -5,12 +5,6 @@
  */
 
 import type { ContentfulClientApi } from 'contentful'
-import {
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_CONTAINER_NAME,
-  CONTENTFUL_SECTION_ID,
-  CONTENTFUL_SECTION_NAME,
-} from './constants'
 import { EntityStore } from './core/EntityStore'
 
 export enum ScrollStates {
@@ -236,13 +230,7 @@ export type StyleProps = {
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic
 export type CSSProperties = React.CSSProperties
 
-export type SectionStyleVariableName = keyof StyleProps
-
-export type ContentfulSectionType = Omit<ComponentDefinition, 'variables'> & {
-  id: typeof CONTENTFUL_SECTION_ID | typeof CONTENTFUL_CONTAINER_ID
-  name: typeof CONTENTFUL_SECTION_NAME | typeof CONTENTFUL_CONTAINER_NAME
-  variables: Record<SectionStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
-}
+export type ContainerStyleVariableName = keyof StyleProps
 
 // cda types
 export type CompositionNode = {

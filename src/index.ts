@@ -12,6 +12,7 @@ export type {
   ValidationOption,
 } from './types'
 export {
+  /** @deprecated do not use */
   CONTENTFUL_SECTION_ID,
   CONTENTFUL_COMPONENT_CATEGORY,
   CONTENTFUL_CONTAINER_ID,
