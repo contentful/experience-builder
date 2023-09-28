@@ -35,7 +35,7 @@ type VisualEditorContextType = {
   entityStore: React.MutableRefObject<EditorModeEntityStore>
 }
 
-const VisualEditorContext = React.createContext<VisualEditorContextType>({
+export const VisualEditorContext = React.createContext<VisualEditorContextType>({
   tree: undefined,
   dataSource: {},
   unboundValues: {},
@@ -54,8 +54,6 @@ type VisualEditorContextProviderProps = {
   mode: InternalSDKMode
   children: ReactElement
 }
-
-export const useEditorContext = () => React.useContext(VisualEditorContext)
 
 export function VisualEditorContextProvider({
   initialLocale,

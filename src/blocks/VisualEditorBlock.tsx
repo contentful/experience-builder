@@ -23,7 +23,7 @@ import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils'
 import omit from 'lodash.omit'
 import { sendMessage } from '../communication/sendMessage'
 import { getComponentRegistration } from '../core/componentRegistry'
-import { useEditorContext } from './VisualEditorContext'
+import { useEditorContext } from './useEditorContext'
 
 type PropsType =
   | StyleProps
