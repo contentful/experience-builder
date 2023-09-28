@@ -1,6 +1,5 @@
 import React, { MouseEventHandler } from 'react'
-import './SectionHyperlink.css'
-import './ContentfulSection.css'
+import '../styles/ContentfulSection.css'
 import { CompositionComponentNode, StyleProps } from '../types'
 import classNames from 'classnames'
 

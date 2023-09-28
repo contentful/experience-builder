@@ -43,7 +43,7 @@ export const CompositionBlock = ({
     [node]
   )
 
-  const props = useMemo(() => {
+  const nodeProps = useMemo(() => {
     if (!componentRegistration) {
       return {}
     }
@@ -82,7 +82,7 @@ export const CompositionBlock = ({
     unboundValues,
   ])
 
-  const cfStyles = buildCfStyles(props)
+  const cfStyles = buildCfStyles(nodeProps)
   const { className } = useStyleTag({ styles: cfStyles })
 
   if (!componentRegistration) {
@@ -113,7 +113,8 @@ export const CompositionBlock = ({
     return (
       <ContentfulSection
         editorMode={false}
-        {...(omit(props, CF_STYLE_ATTRIBUTES) as unknown as StyleProps)}
+        cfHyperlink={(nodeProps as StyleProps).cfHyperlink}
+        cfOpenInNewTab={(nodeProps as StyleProps).cfOpenInNewTab}
         className={className}>
         {children}
       </ContentfulSection>
@@ -122,7 +123,10 @@ export const CompositionBlock = ({
 
   return React.createElement(
     component,
-    { ...omit(props, CF_STYLE_ATTRIBUTES), className },
+    {
+      ...omit(nodeProps, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+      className,
+    },
     children
   )
 }

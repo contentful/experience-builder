@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { VisualEditorBlock } from './VisualEditorBlock'
 import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
-import './VisualEditorRoot.css'
+import '../styles/VisualEditorRoot.css'
 import { useHoverIndicator } from '../hooks/useHoverIndicator'
 import { onComponentDropped } from '../communication/onComponentDrop'
 import { useBreakpoints } from '../hooks/useBreakpoints'
