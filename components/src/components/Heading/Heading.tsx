@@ -35,7 +35,7 @@ export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
 
 export const Heading: React.FC<HeadingProps> = ({
   children,
-  className = 'cf-heading',
+  className,
   text,
   type = 'h1',
   ...props

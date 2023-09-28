@@ -24,11 +24,7 @@ export interface RichTextProps extends Omit<React.HTMLAttributes<HTMLElement>, '
   value: Document;
 }
 
-export const RichText: React.FC<RichTextProps> = ({
-  className = 'cf-richtext',
-  value,
-  ...props
-}) => {
+export const RichText: React.FC<RichTextProps> = ({ className, value, ...props }) => {
   return documentToReactComponents(value, {
     renderNode: {
       [BLOCKS.PARAGRAPH]: (_node, children) => {

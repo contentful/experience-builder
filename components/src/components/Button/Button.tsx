@@ -62,7 +62,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 export const Button: React.FC<ButtonProps> = ({
   children,
-  className = 'cf-button',
+  className,
   label,
   onClick,
   onNavigate,
