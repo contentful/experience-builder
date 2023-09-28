@@ -7,26 +7,10 @@ import { ContentfulSectionAsHyperlink } from './ContentfulSectionAsHyperlink'
 import type { ContentfulSectionProps } from './ContentfulSectionAsHyperlink'
 import { Flex } from '../core'
 
-export const ContentfulSection = ({
-  children,
-  className,
-  cfHyperlink,
-  cfOpenInNewTab,
-  editorMode,
-  ...editorModeProps
-}: ContentfulSectionProps) => {
-  if (cfHyperlink) {
-    return (
-      <ContentfulSectionAsHyperlink
-        className={className}
-        editorMode={editorMode}
-        cfHyperlink={cfHyperlink}
-        cfOpenInNewTab={cfOpenInNewTab}
-        onMouseDown={(editorModeProps as ContentfulSectionProps<true>).onMouseDown}
-        node={(editorModeProps as ContentfulSectionProps<true>).node}>
-        {children}
-      </ContentfulSectionAsHyperlink>
-    )
+export const ContentfulSection = (sectionProps: ContentfulSectionProps) => {
+  const { children, className, editorMode } = sectionProps
+  if (sectionProps.cfHyperlink) {
+    return <ContentfulSectionAsHyperlink {...sectionProps}>{children}</ContentfulSectionAsHyperlink>
   }
 
   if (editorMode === false) {
@@ -38,7 +22,7 @@ export const ContentfulSection = ({
   }
 
   // Extract properties that are only available in editor mode
-  const { node, onMouseDown } = editorModeProps as ContentfulSectionProps<true>
+  const { node, onMouseDown } = sectionProps
 
   return (
     <Flex
