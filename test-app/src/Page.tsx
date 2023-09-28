@@ -43,7 +43,6 @@ const Page: React.FC = () => {
 
   return (
     <>
-      <Button>Hello</Button>
       <ExperienceRoot slug={slug || '/'} experience={experience} locale={'en-US'} />
     </>
   );
