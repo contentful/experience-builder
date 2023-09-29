@@ -59,7 +59,7 @@ describe('VisualEditorBlock', () => {
         props: {
           text: { type: 'UnboundValue', key: 'value1' },
         },
-    
+
         dataSource: {},
         unboundValues: {
           value1: { value: 'unboundValue1' },
@@ -124,7 +124,7 @@ describe('VisualEditorBlock', () => {
       />
     )
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+    expect(document.getElementById('ContentfulContainer')).toBeDefined()
   })
 
   it('renders container node', () => {
@@ -152,6 +152,6 @@ describe('VisualEditorBlock', () => {
       />
     )
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+    expect(document.getElementById('ContentfulContainer')).toBeDefined()
   })
 })

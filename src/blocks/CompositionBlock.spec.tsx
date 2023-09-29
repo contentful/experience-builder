@@ -42,7 +42,7 @@ describe('CompositionBlock', () => {
     const mockCompositionComponentNode: CompositionNode = {
       definitionId: 'custom-component',
       variables: {
-        text: { type: 'UnboundValue', key: 'value1' }
+        text: { type: 'UnboundValue', key: 'value1' },
       },
       children: [],
     }
@@ -52,7 +52,7 @@ describe('CompositionBlock', () => {
       <CompositionBlock
         node={mockCompositionComponentNode}
         dataSource={{}}
-        locale='en-US'
+        locale="en-US"
         breakpoints={[]}
         entityStore={undefined}
         unboundValues={{
@@ -69,13 +69,13 @@ describe('CompositionBlock', () => {
       definitionId: CONTENTFUL_SECTION_ID,
       variables: {},
       children: [],
-    };
+    }
 
     render(
       <CompositionBlock
         node={sectionNode}
         dataSource={{}}
-        locale='en-US'
+        locale="en-US"
         breakpoints={[]}
         entityStore={undefined}
         unboundValues={{}}
@@ -83,7 +83,7 @@ describe('CompositionBlock', () => {
       />
     )
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+    expect(document.getElementById('ContentfulContainer')).toBeDefined()
   })
 
   it('renders container node', () => {
@@ -95,16 +95,16 @@ describe('CompositionBlock', () => {
 
     render(
       <CompositionBlock
-      node={containerNode}
-      dataSource={{}}
-      locale='en-US'
-      breakpoints={[]}
-      entityStore={undefined}
-      unboundValues={{}}
-      resolveDesignValue={jest.fn()}
-    />
+        node={containerNode}
+        dataSource={{}}
+        locale="en-US"
+        breakpoints={[]}
+        entityStore={undefined}
+        unboundValues={{}}
+        resolveDesignValue={jest.fn()}
+      />
     )
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+    expect(document.getElementById('ContentfulContainer')).toBeDefined()
   })
 })
