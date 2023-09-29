@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { Experience } from '../types'
 import { CompositionBlock } from './CompositionBlock'
-import { LATEST_SCHEMA_VERSION } from '../constants'
+import { compatibleVersions } from '../constants'
 import { useBreakpoints, useEditorModeSwitch } from '../hooks'
 import { usePrevious } from '../hooks/usePrevious'
 
@@ -49,13 +49,13 @@ export const PreviewDeliveryRoot = ({ locale, slug, experience }: DeliveryRootPr
 
   const { resolveDesignValue } = useBreakpoints(experience.store.breakpoints)
 
-  if (!experience.store.composition) {
+  if (!experience.store.composition || !experience.store.schemaVersion) {
     return null
   }
 
-  if (experience.store.schemaVersion !== LATEST_SCHEMA_VERSION) {
+  if (!compatibleVersions.includes(experience.store.schemaVersion)) {
     console.warn(
-      `[exp-builder.sdk] Contenful composition schema version: ${experience.store.schemaVersion} does not match the latest schema version: ${LATEST_SCHEMA_VERSION}. Aborting.`
+      `[exp-builder.sdk] Contenful composition schema version: ${experience.store.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`
     )
     return null
   }

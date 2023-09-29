@@ -9,7 +9,7 @@ import type {
 
 import React, { useMemo } from 'react'
 import type { UnresolvedLink } from 'contentful'
-import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID } from '../constants'
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { EntityStore } from '@contentful/visual-sdk'
 import { ContentfulContainer } from './ContentfulContainer'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
@@ -109,7 +109,8 @@ export const CompositionBlock = ({
         })
       : null
 
-  if (CONTENTFUL_CONTAINER_ID === node.definitionId) {
+  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
+  if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
       <ContentfulContainer
         editorMode={false}

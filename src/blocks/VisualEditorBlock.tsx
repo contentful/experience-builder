@@ -9,7 +9,7 @@ import {
   CompositionUnboundValues,
 } from '../types'
 
-import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID } from '../constants'
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulContainer } from './ContentfulContainer'
 
 import { getUnboundValues } from '../core/getUnboundValues'
@@ -156,8 +156,8 @@ export const VisualEditorBlock = ({
         })
       : null
 
-  // contentful container
-  if (CONTENTFUL_CONTAINER_ID === definition.id) {
+  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
+  if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(definition.id)) {
     return (
       <ContentfulContainer
         className={className}
