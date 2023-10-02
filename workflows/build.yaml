@@ -1,0 +1,48 @@
+name: Build and Test
+
+on:
+  workflow_call:
+
+env:
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+jobs:
+  install-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Echo ref_name'
+        run: echo ${{ github.ref_name }}
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+      - name: 'Use NodeJS 18'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - name: Restore Cypress Binary
+        uses: actions/cache/restore@v3
+        id: restore-cypress
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
+      - name: Authenticate with private NPM package
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      - name: Install dependencies
+        run: npm ci
+      - name: Save Cypress Binary
+        if: steps.restore-cypress.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
+      - name: Build app
+        run: |
+          npm run build
+      - name: Save build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-folders
+          if-no-files-found: error
+          path: |
+            packages/**/dist
+            packages/**/build
