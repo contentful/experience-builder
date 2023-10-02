@@ -1,10 +1,10 @@
 import { useExperienceBuilder, ExperienceRoot } from '@contentful/experience-builder';
 import React, { useMemo } from 'react';
 import { createClient } from 'contentful';
-import { CompositionMode } from '@contentful/experience-builder/dist/types';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useExperienceBuilderComponents } from '@elylucas/experience-builder-components';
 import '@elylucas/experience-builder-components/styles.css';
+import { ExternalSDKMode } from '@contentful/experience-builder/dist/types';
 
 const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
 
@@ -15,7 +15,7 @@ const Page: React.FC = () => {
   const isPreview = qs.get('isPreview') === 'true';
   const isEditor = true; // qs.get('isEditor') === 'true';
 
-  const mode: CompositionMode = isEditor ? 'editor' : isPreview ? 'preview' : 'delivery';
+  const mode = isEditor ? 'editor' : isPreview ? 'preview' : 'delivery';
 
   const client = useMemo(() => {
     const space = import.meta.env.VITE_SPACE_ID || '';
@@ -36,7 +36,7 @@ const Page: React.FC = () => {
   const { experience, defineComponents } = useExperienceBuilder({
     experienceTypeId,
     client,
-    mode,
+    mode: mode as ExternalSDKMode,
   });
 
   useExperienceBuilderComponents(defineComponents);
