@@ -1,6 +1,10 @@
 name: 'Run Checks: Lint & Tests'
 
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      NPM_TOKEN:
+        required: true
 
 jobs:
   # this job relies on the install-build workflow to run first

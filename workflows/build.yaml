@@ -2,9 +2,9 @@ name: Build and Test
 
 on:
   workflow_call:
-
-env:
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    secrets:
+      NPM_TOKEN:
+        required: true
 
 jobs:
   install-build:
