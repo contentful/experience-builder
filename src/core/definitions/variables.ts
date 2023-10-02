@@ -123,6 +123,7 @@ export const builtInStyles: Record<
   cfBackgroundImageUrl: {
     displayName: 'Background Image',
     type: 'Text',
+    defaultValue: '',
     description: 'Background image for section or container',
   },
   cfBackgroundImageScaling: {
