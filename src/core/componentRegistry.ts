@@ -8,8 +8,8 @@ import {
 } from '../types'
 import { builtInStyles as builtInStyleDefinitions } from './definitions/variables'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
-import { ContentfulSection } from '../blocks/ContentfulSection'
-import { containerDefinition, sectionDefinition } from './definitions/components'
+import { ContentfulContainer } from '../blocks/ContentfulContainer'
+import { containerDefinition } from './definitions/components'
 import { sendMessage } from '../communication/sendMessage'
 import { SDK_VERSION } from './constants'
 
@@ -22,19 +22,14 @@ const cloneObject = <T>(targetObject: T): T => {
 }
 
 const DEFAULT_COMPONENT_REGISTRATIONS = {
-  section: {
-    component: ContentfulSection,
-    definition: sectionDefinition,
-  },
   container: {
-    component: ContentfulSection,
+    component: ContentfulContainer,
     definition: containerDefinition,
   },
 } satisfies Record<string, ComponentRegistration>
 
 // pre-filling with the default component registrations
 const componentRegistry = new Map<string, ComponentRegistration>([
-  [DEFAULT_COMPONENT_REGISTRATIONS.section.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.section],
   [
     DEFAULT_COMPONENT_REGISTRATIONS.container.definition.id,
     DEFAULT_COMPONENT_REGISTRATIONS.container,
@@ -50,7 +45,7 @@ const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinit
 }
 
 const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
-  if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
+  if ([CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
     return componentDefinition
   }
 
@@ -150,5 +145,8 @@ export const resetComponentRegistry = () => {
 }
 
 export const getComponentRegistration = (id: string) => {
+  if (id === CONTENTFUL_SECTION_ID) {
+    return componentRegistry.get(CONTENTFUL_CONTAINER_ID)
+  }
   return componentRegistry.get(id)
 }

@@ -11,7 +11,7 @@ import React, { useMemo } from 'react'
 import type { UnresolvedLink } from 'contentful'
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { EntityStore } from '@contentful/visual-sdk'
-import { ContentfulSection } from './ContentfulSection'
+import { ContentfulContainer } from './ContentfulContainer'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { transformContentValue } from './transformers'
 import { buildCfStyles } from '../core/stylesUtils'
@@ -109,15 +109,16 @@ export const CompositionBlock = ({
         })
       : null
 
+  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
-      <ContentfulSection
+      <ContentfulContainer
         editorMode={false}
         cfHyperlink={(nodeProps as StyleProps).cfHyperlink}
         cfOpenInNewTab={(nodeProps as StyleProps).cfOpenInNewTab}
         className={className}>
         {children}
-      </ContentfulSection>
+      </ContentfulContainer>
     )
   }
 

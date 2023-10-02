@@ -10,7 +10,7 @@ import {
 } from '../types'
 
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
-import { ContentfulSection } from './ContentfulSection'
+import { ContentfulContainer } from './ContentfulContainer'
 
 import { getUnboundValues } from '../core/getUnboundValues'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
@@ -156,10 +156,10 @@ export const VisualEditorBlock = ({
         })
       : null
 
-  // contentful section
-  if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(definition.id)) {
+  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
+  if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(definition.id)) {
     return (
-      <ContentfulSection
+      <ContentfulContainer
         className={className}
         editorMode={true}
         key={node.data.id}
@@ -178,7 +178,7 @@ export const VisualEditorBlock = ({
         // eslint-disable-next-line react/prop-types
         cfOpenInNewTab={(props as StyleProps).cfOpenInNewTab}>
         {children}
-      </ContentfulSection>
+      </ContentfulContainer>
     )
   }
 

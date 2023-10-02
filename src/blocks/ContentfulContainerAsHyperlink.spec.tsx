@@ -1,19 +1,19 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
-import { ContentfulSectionAsHyperlink } from './ContentfulSectionAsHyperlink'
+import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink'
 import { CONTENTFUL_SECTION_ID } from '../constants'
 import { CompositionComponentNode } from '../types'
 
-describe('ContentfulSectionAsHyperlink', () => {
+describe('ContentfulContainerAsHyperlink', () => {
   describe('when NOT in editor mode', () => {
     it('should render anchor tag without editor mode specific props', () => {
       render(
-        <ContentfulSectionAsHyperlink
+        <ContentfulContainerAsHyperlink
           cfHyperlink="https://contentful.com"
-          editorMode={false}></ContentfulSectionAsHyperlink>
+          editorMode={false}></ContentfulContainerAsHyperlink>
       )
 
-      const hyperlink = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(hyperlink).toBeDefined()
       expect(hyperlink?.tagName).toBe('A')
@@ -23,13 +23,13 @@ describe('ContentfulSectionAsHyperlink', () => {
 
     it('should support custom className', () => {
       render(
-        <ContentfulSectionAsHyperlink
+        <ContentfulContainerAsHyperlink
           cfHyperlink="https://contentful.com"
           className="test-class-name"
-          editorMode={false}></ContentfulSectionAsHyperlink>
+          editorMode={false}></ContentfulContainerAsHyperlink>
       )
 
-      const hyperlink = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(hyperlink).toBeDefined()
       expect(hyperlink?.className).toBe('test-class-name defaultStyles cf-section-link')
@@ -38,13 +38,13 @@ describe('ContentfulSectionAsHyperlink', () => {
 
     it('should support opening the url in a new tab', () => {
       render(
-        <ContentfulSectionAsHyperlink
+        <ContentfulContainerAsHyperlink
           cfHyperlink="https://contentful.com"
           cfOpenInNewTab={true}
-          editorMode={false}></ContentfulSectionAsHyperlink>
+          editorMode={false}></ContentfulContainerAsHyperlink>
       )
 
-      const hyperlink = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(hyperlink).toBeDefined()
       expect(hyperlink?.target).toBe('_blank')
@@ -53,16 +53,16 @@ describe('ContentfulSectionAsHyperlink', () => {
 
     it('supports child components', () => {
       const { getByTestId } = render(
-        <ContentfulSectionAsHyperlink
+        <ContentfulContainerAsHyperlink
           cfHyperlink="https://contentful.com"
           cfOpenInNewTab={true}
           editorMode={false}>
           <h1 data-test-id="child1">Hello world!</h1>
           <button data-test-id="child2">Button!</button>
-        </ContentfulSectionAsHyperlink>
+        </ContentfulContainerAsHyperlink>
       )
 
-      const hyperlink = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(hyperlink).toBeDefined()
       expect(getByTestId('child1')).toBeDefined()
@@ -85,14 +85,14 @@ describe('ContentfulSectionAsHyperlink', () => {
       const onMouseDown = jest.fn()
 
       render(
-        <ContentfulSectionAsHyperlink
+        <ContentfulContainerAsHyperlink
           cfHyperlink="https://contentful.com"
           onMouseDown={onMouseDown}
           node={node}
-          editorMode={true}></ContentfulSectionAsHyperlink>
+          editorMode={true}></ContentfulContainerAsHyperlink>
       )
 
-      const hyperlink = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(hyperlink).toBeDefined()
       expect(hyperlink?.tagName).toBe('A')
@@ -111,15 +111,15 @@ describe('ContentfulSectionAsHyperlink', () => {
       const onMouseDown = jest.fn()
 
       render(
-        <ContentfulSectionAsHyperlink
+        <ContentfulContainerAsHyperlink
           className="test-class-name"
           cfHyperlink="https://contentful.com"
           onMouseDown={onMouseDown}
           node={node}
-          editorMode={true}></ContentfulSectionAsHyperlink>
+          editorMode={true}></ContentfulContainerAsHyperlink>
       )
 
-      const hyperlink = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(hyperlink).toBeDefined()
       expect(hyperlink?.className).toBe('test-class-name defaultStyles cf-section-link')
@@ -137,15 +137,15 @@ describe('ContentfulSectionAsHyperlink', () => {
       const onMouseDown = jest.fn()
 
       render(
-        <ContentfulSectionAsHyperlink
+        <ContentfulContainerAsHyperlink
           cfHyperlink="https://contentful.com"
           onMouseDown={onMouseDown}
           node={node}
           editorMode={true}
-          cfOpenInNewTab={true}></ContentfulSectionAsHyperlink>
+          cfOpenInNewTab={true}></ContentfulContainerAsHyperlink>
       )
 
-      const hyperlink = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(hyperlink).toBeDefined()
       expect(hyperlink?.target).toBe('_blank')
@@ -156,14 +156,14 @@ describe('ContentfulSectionAsHyperlink', () => {
       const onMouseDown = jest.fn()
 
       render(
-        <ContentfulSectionAsHyperlink
+        <ContentfulContainerAsHyperlink
           cfHyperlink="https://contentful.com"
           onMouseDown={onMouseDown}
           node={node}
-          editorMode={true}></ContentfulSectionAsHyperlink>
+          editorMode={true}></ContentfulContainerAsHyperlink>
       )
 
-      const hyperlink = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(hyperlink).toBeDefined()
       expect(hyperlink?.className).toBe('defaultStyles cf-section-link')
@@ -190,17 +190,17 @@ describe('ContentfulSectionAsHyperlink', () => {
       const onMouseDown = jest.fn()
 
       const { getByTestId } = render(
-        <ContentfulSectionAsHyperlink
+        <ContentfulContainerAsHyperlink
           cfHyperlink="https://contentful.com"
           onMouseDown={onMouseDown}
           node={node}
           editorMode={true}>
           <h1 data-test-id="child1">Hello world!</h1>
           <button data-test-id="child2">Button</button>
-        </ContentfulSectionAsHyperlink>
+        </ContentfulContainerAsHyperlink>
       )
 
-      const hyperlink = document.getElementById('ContentfulSection') as HTMLAnchorElement | null
+      const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 
       expect(hyperlink).toBeDefined()
       expect(getByTestId('child1')).toBeDefined()
