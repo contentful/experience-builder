@@ -1,5 +1,5 @@
 {
-  "name": "@contentful/experience-builder-components",
+  "name": "@elylucas/experience-builder-components",
   "version": "1.0.0",
   "description": "A basic set of components to use with Experience Builder",
   "main": "./dist/cjs/index.js",
@@ -11,7 +11,7 @@
     "build": "rollup -c rollup.config.mjs",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0",
     "lint.fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
-    "test": "npx cypress run --component",
+    "test:component": "npx cypress run --component",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
