@@ -3,8 +3,8 @@ import React, { useMemo } from 'react';
 import { createClient } from 'contentful';
 import { CompositionMode } from '@contentful/experience-builder/dist/types';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useExperienceBuilderComponents } from '@contentful/experience-builder-components';
-import '@contentful/experience-builder-components/styles.css';
+import { useExperienceBuilderComponents } from '@elylucas/experience-builder-components';
+import '@elylucas/experience-builder-components/styles.css';
 
 const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
 
