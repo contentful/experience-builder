@@ -2,6 +2,7 @@ import React from 'react';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { Document, BLOCKS } from '@contentful/rich-text-types';
 import { Text } from '../Text/Text';
+import { combineClasses } from '@/utils/combineClasses';
 
 export interface RichTextProps extends Omit<React.HTMLAttributes<HTMLElement>, 'value'> {
   /**
@@ -25,11 +26,13 @@ export interface RichTextProps extends Omit<React.HTMLAttributes<HTMLElement>, '
 }
 
 export const RichText: React.FC<RichTextProps> = ({ className, value, ...props }) => {
+  const classes = combineClasses('cf-richtext', className);
+
   return documentToReactComponents(value, {
     renderNode: {
       [BLOCKS.PARAGRAPH]: (_node, children) => {
         return (
-          <Text className={className} {...props}>
+          <Text className={classes} {...props}>
             {children}
           </Text>
         );

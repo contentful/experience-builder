@@ -1,3 +1,4 @@
+import { combineClasses } from '@/utils/combineClasses';
 import React from 'react';
 
 export interface TextProps extends React.HTMLAttributes<HTMLElement> {
@@ -34,9 +35,10 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const Text: React.FC<TextProps> = ({ as = 'p', children, className, value, ...props }) => {
+  const classes = combineClasses('cf-text', className);
   const Tag = as;
   return (
-    <Tag className={className} {...props}>
+    <Tag className={classes} {...props}>
       {value ? value : children}
     </Tag>
   );

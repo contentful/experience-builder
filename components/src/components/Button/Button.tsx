@@ -1,3 +1,4 @@
+import { combineClasses } from '@/utils/combineClasses';
 import React from 'react';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -70,6 +71,8 @@ export const Button: React.FC<ButtonProps> = ({
   url,
   ...props
 }) => {
+  const classes = combineClasses('cf-button', className);
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (onNavigate && url) {
       event.preventDefault();
@@ -80,7 +83,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   const button = (
     <button
-      className={className}
+      className={classes}
       data-url={url}
       data-target={target}
       onClick={handleClick}

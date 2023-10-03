@@ -1,3 +1,4 @@
+import { combineClasses } from '@/utils/combineClasses';
 import React from 'react';
 
 export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
@@ -41,8 +42,9 @@ export const Heading: React.FC<HeadingProps> = ({
   ...props
 }) => {
   const Tag = type;
+  const classes = combineClasses('cf-heading', className);
   return (
-    <Tag className={className} {...props}>
+    <Tag className={classes} {...props}>
       {text ? text : children}
     </Tag>
   );
