@@ -1,7 +1,12 @@
 {
-  "name": "@elylucas/experience-builder-components",
+  "name": "@contentful/experience-builder-components",
   "version": "0.0.1-alpha.3",
   "description": "A basic set of components to use with Experience Builder",
+  "homepage": "https://github.com/contentful/experience-builder-components#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/experience-builder-components.git"
+  },
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/index.d.ts",

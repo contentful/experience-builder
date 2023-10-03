@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.0.1-alpha.3](https://github.com/contentful/experience-builder-components/compare/v0.0.1-alpha.2...v0.0.1-alpha.3) (2023-10-03)
 
-**Note:** Version bump only for package @elylucas/experience-builder-components
+**Note:** Version bump only for package @contentful/experience-builder-components
 
 
 
