@@ -18,7 +18,7 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   publish:
     needs: [install-build, check]
-    if: github.ref_name == 'main' || github.ref_name == 'development' || github.ref_name == 'next'
+    if: (github.ref_name == 'main' || github.ref_name == 'development' || github.ref_name == 'next') && !contains(github.event.head_commit.message, 'skip-release')
     permissions:
       contents: write
     uses: ./.github/workflows/publish.yaml
