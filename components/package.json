@@ -10,7 +10,7 @@
     "prebuild": "rimraf dist",
     "build": "rollup -c rollup.config.mjs",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0",
-    "lint.fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
+    "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test:component": "npx cypress run --component",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

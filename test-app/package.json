@@ -8,7 +8,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "lint.fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
+    "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "preview": "vite preview"
   },
   "dependencies": {
