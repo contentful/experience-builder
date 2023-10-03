@@ -5,8 +5,6 @@ on:
     secrets:
       NPM_TOKEN:
         required: true
-      PACKAGE_GITHUB_TOKEN:
-        required: true
 
 jobs:
   publish:
@@ -31,10 +29,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-folders
-      - name: 'Setup npm' # Add our registry to npm config
-        run: |
-          npm set @elylucas:registry=https://npm.pkg.github.com/elylucas
-          npm set "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_GITHUB_TOKEN }}"
       - name: 'Version and publish'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

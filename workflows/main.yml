@@ -24,4 +24,3 @@ jobs:
     uses: ./.github/workflows/publish.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      PACKAGE_GITHUB_TOKEN: ${{ secrets.PACKAGE_GITHUB_TOKEN }}
