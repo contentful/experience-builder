@@ -1,0 +1,38 @@
+name: 'Run Checks: Lint & Tests'
+
+on:
+  workflow_call:
+    secrets:
+      NPM_TOKEN:
+        required: true
+
+jobs:
+  # this job relies on the install-build workflow to run first
+  component-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: 'Use NodeJS 18'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - name: Restore Cypress Binary
+        uses: actions/cache/restore@v3
+        id: restore-cypress
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
+      - name: Authenticate with private NPM package
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      - name: Install dependencies
+        run: npm ci
+      - name: Download the build folders
+        uses: actions/download-artifact@v3
+        with:
+          name: build-folders
+      - name: Run Linting
+        run: npm run lint
+      - name: Run CT Tests
+        run: npm run test:component

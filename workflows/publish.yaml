@@ -1,0 +1,64 @@
+name: Publish packages
+
+on:
+  workflow_call:
+    secrets:
+      NPM_TOKEN:
+        required: true
+      PACKAGE_GITHUB_TOKEN:
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Checkout all branches and tags, needed for publish
+      - name: 'Use NodeJS 18'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: |
+          npm ci
+      - name: Download the build folders
+        uses: actions/download-artifact@v3
+        with:
+          name: build-folders
+      - name: 'Setup npm' # Add our registry to npm config
+        run: |
+          npm set @elylucas:registry=https://npm.pkg.github.com/elylucas
+          npm set "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_GITHUB_TOKEN }}"
+      - name: 'Version and publish'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "${{ github.actor }})"
+          git config user.email "${{ github.actor}}@users.noreply.github.com"
+
+          if [ ${{ github.ref_name }} = development ]; then
+            npx lerna publish prerelease --conventional-commits --conventional-prerelease --preid dev-$(date +%Y%m%dT%H%M%S) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
+          elif [ ${{ github.ref_name }} = next ]; then
+            npx lerna publish prerelease --conventional-commits --conventional-prerelease --preid alpha --yes --no-private --dist-tag next
+          else
+            npx lerna publish --conventional-commits --conventional-graduate --yes --no-private --create-release github --dist-tag latest
+          fi
+
+          # merge upstream package version changes to next/dev 
+
+          if [ ${{ github.ref_name }} = main ]; then
+            git checkout next
+            git rebase main
+            git push origin
+            git checkout development
+            git rebase next
+            git push origin
+          elif [ ${{ github.ref_name }} = next ]; then
+            git checkout development
+            git rebase next
+            git push origin
+          fi
