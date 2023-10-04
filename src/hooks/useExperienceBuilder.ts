@@ -3,7 +3,7 @@ import { Experience, ExternalSDKMode, InternalSDKMode } from '../types'
 import { useExperienceStore } from './useExperienceStore'
 import { supportedModes } from '../constants'
 import type { ContentfulClientApi } from 'contentful'
-import { defineComponent, defineComponents } from '../core/componentRegistry'
+import { defineComponents } from '../core/componentRegistry'
 
 type UseExperienceBuilderProps = {
   /**
@@ -59,10 +59,6 @@ export const useExperienceBuilder = ({
 
   return {
     experience,
-    /**
-     * @deprecated please use `defineComponents` function instead
-     */
-    defineComponent,
     defineComponents,
   }
 }

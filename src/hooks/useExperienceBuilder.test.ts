@@ -39,7 +39,7 @@ jest.mock('../core/constants', () => ({
 }))
 
 describe('useExperienceBuilder', () => {
-  it('should return experience and defineComponent and set delivery mode by default', () => {
+  it('should return experience and defineComponents and set delivery mode by default', () => {
     const res = renderHook((props) => useExperienceBuilder(props), {
       initialProps: {
         experienceTypeId,
@@ -68,7 +68,6 @@ describe('useExperienceBuilder', () => {
     })
 
     expect(output.defineComponents).toBeDefined()
-    expect(output.defineComponent).toBeDefined()
   })
 
   it('should switch the mode to editor via switchToEditorMode fn', () => {
