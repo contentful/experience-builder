@@ -1,6 +1,8 @@
+## Documentation
+
 Please find more information about this sdk [on our Wiki page](https://github.com/contentful/experience-builder/wiki)
 
-# Installation
+## Installation
 
 ```
 npm install @contentful/experience-builder -S
