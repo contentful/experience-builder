@@ -191,7 +191,7 @@ export function VisualEditorContextProvider({
         }
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
           const { selectedNodeId } = payload
-
+          sendSelectedComponentCoordinates(selectedNodeId)
           setSelectedNodeId(selectedNodeId)
           break
         }
