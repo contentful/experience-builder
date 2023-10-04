@@ -40,6 +40,9 @@ import {
 import { createClient } from 'contentful'
 import { useRouter } from 'next/router'
 
+// component example can be found at the top of this document
+import { MyButton } from './components/MyButton' 
+
 const client = createClient({
   space: 'YOUR_SPACE_ID',
   environment: 'YOUR_ENVIRONMENT_ID',
@@ -85,7 +88,7 @@ const Home = () => {
   useEffect(() => {
     defineComponents([
       {
-        component: MyButton,
+        component: MyButton,  // component example can be found at the top of this document
         definition: {
           id: 'my-button',
           name: 'MyButton',
