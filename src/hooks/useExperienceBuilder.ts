@@ -1,97 +1,64 @@
-import { useEffect, useState } from 'react'
-import throttle from 'lodash.throttle'
-import type { PlainClientAPI } from 'contentful-management'
-import { BindingMapByBlockId, BoundData } from '../types'
-import { useCommunication } from './useCommunication'
-
-type VisualEditorMessagePayload = {
-  source: string
-  eventType: string
-  payload: any
-}
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Experience, ExternalSDKMode, InternalSDKMode } from '../types'
+import { useExperienceStore } from './useExperienceStore'
+import { supportedModes } from '../constants'
+import type { ContentfulClientApi } from 'contentful'
+import { defineComponents } from '../core/componentRegistry'
 
 type UseExperienceBuilderProps = {
-  cma: PlainClientAPI
+  /**
+   * Id of the content type of the target experience
+   */
+  experienceTypeId: string
+  /**
+   * Instance of a Delivery or Preview client from "contentful" package
+   */
+  client: ContentfulClientApi<undefined>
+  /**
+   *  Mode defines the behaviour of the sdk.
+   * - `preview` - fetching and rendering draft data. Will automatically switch to `editor` mode if open from contentful web app.
+   * - `delivery` - fetching and rendering of published data. Can not be switched to `editor` mode. */
+  mode?: ExternalSDKMode
 }
 
-export const useExperienceBuilder = ({ cma }: UseExperienceBuilderProps) => {
-  const [tree, setTree] = useState({})
-  const [binding, setBinding] = useState<BindingMapByBlockId>({})
-  const [boundData, setBoundData] = useState<BoundData>({})
+export const useExperienceBuilder = ({
+  experienceTypeId,
+  client,
+  mode = 'delivery',
+}: UseExperienceBuilderProps) => {
+  const [activeMode, setMode] = useState<InternalSDKMode>(() => {
+    if (supportedModes.includes(mode)) {
+      return mode
+    }
 
-  const { sendMessage } = useCommunication()
+    throw new Error(`Unsupported mode provided: ${mode}. Supported values: ${supportedModes}`)
+  })
 
   useEffect(() => {
-    const onMessage = (event: MessageEvent) => {
-      // where the app is contentful hosted when run locally
-      if (event.origin !== 'http://localhost:3001') {
-        return
-      }
-
-      // @ts-expect-error not typed
-      let eventData: VisualEditorMessagePayload = {}
-      try {
-        if (event.data && typeof event.data === 'string') {
-          eventData = JSON.parse(event.data)
-        }
-      } catch (e) {
-        console.log('event data caused error', event.data)
-      }
-      console.log('customer app received message', eventData)
-
-      if (eventData.source === 'composability-app') {
-        const { payload } = eventData
-
-        switch (eventData.eventType) {
-          case 'componentDropped': {
-            console.log('component dropped', payload)
-            break
-          }
-          case 'componentTreeUpdated': {
-            const { tree, binding = {} } = payload
-            setTree(tree)
-            setBinding(binding)
-            break
-          }
-          case 'valueChanged': {
-            const { boundData = {}, binding = {} } = payload
-            setBinding(binding)
-            console.log('setting stuff', boundData)
-            setBoundData(boundData)
-            break
-          }
-          default:
-        }
-      }
+    if (supportedModes.includes(mode)) {
+      setMode(mode)
     }
+  }, [mode])
 
-    window.addEventListener('message', onMessage)
+  const store = useExperienceStore({ client })
 
-    return () => {
-      window.removeEventListener('message', onMessage)
-    }
+  const switchToEditorMode = useCallback(() => {
+    setMode('editor')
   }, [])
 
-  useEffect(() => {
-    const onMouseMove = throttle((e: MouseEvent) => {
-      sendMessage('mouseMove', {
-        pageX: e.pageX,
-        pageY: e.pageY,
-        clientX: e.clientX,
-        clientY: e.clientY,
-      })
-    }, 20)
-
-    window.addEventListener('mousemove', onMouseMove)
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove)
-    }
-  }, [sendMessage])
+  const experience = useMemo<Experience>(
+    () => ({
+      store,
+      client,
+      experienceTypeId,
+      mode: activeMode,
+      switchToEditorMode,
+    }),
+    [activeMode, client, experienceTypeId, store, switchToEditorMode]
+  )
 
   return {
-    tree,
-    binding,
-    boundData,
+    experience,
+    defineComponents,
   }
 }

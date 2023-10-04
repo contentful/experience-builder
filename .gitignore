@@ -28,3 +28,8 @@ vite.config.ts.timestamp-*
 *.sln
 *.sw?
 .pnp.*
+
+tmp/
+
+# Necessary for pushing to alternative npm registry
+.npmrc

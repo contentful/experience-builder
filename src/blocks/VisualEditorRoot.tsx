@@ -1,58 +1,84 @@
-import tokens from '@contentful/f36-tokens'
-import { css, cx } from '@emotion/css'
-import React from 'react'
-import { BindingMapByBlockId, BoundData } from '../types'
-import { useInteraction } from '../hooks/useInteraction'
+import React, { useEffect, useState } from 'react'
 import { VisualEditorBlock } from './VisualEditorBlock'
+import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
-const styles = {
-  root: css({
-    height: '92vh',
-  }),
-  hover: css({
-    border: `3px solid transparent`,
-    '&:hover': {
-      border: `3px solid ${tokens.blue500}`,
-    },
-  }),
-}
+import '../styles/VisualEditorRoot.css'
+import { useHoverIndicator } from '../hooks/useHoverIndicator'
+import { onComponentDropped } from '../communication/onComponentDrop'
+import { useBreakpoints } from '../hooks/useBreakpoints'
+import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
+
+import { InternalSDKMode } from '../types'
+import { VisualEditorContextProvider } from './VisualEditorContext'
+import { useEditorContext } from './useEditorContext'
 
 type VisualEditorRootProps = {
-  visualEditorData?: Record<string, any>
-  binding: BindingMapByBlockId
-  boundData: BoundData
+  initialLocale: string
+  mode: InternalSDKMode
 }
 
-export const VisualEditorRoot = ({
-  visualEditorData = {},
-  binding,
-  boundData,
-}: VisualEditorRootProps) => {
-  const { onComponentDropped } = useInteraction()
+export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
+  // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
 
-  if (!visualEditorData.root) {
-    return React.createElement(
-      'div',
-      {
-        className: cx(styles.root, styles.hover),
-        onMouseUp: () => {
-          onComponentDropped({ node: { data: { id: 'root' } } })
-        },
-      },
-      []
-    )
+  return (
+    <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
+      <VisualEditorRootComponents />
+    </VisualEditorContextProvider>
+  )
+}
+
+const VisualEditorRootComponents = () => {
+  const { tree, dataSource, isDragging, locale, unboundValues, breakpoints, entityStore } =
+    useEditorContext()
+
+  // We call it here instead of on block-level to avoid registering too many even listeners for media queries
+  const { resolveDesignValue } = useBreakpoints(breakpoints)
+  useHoverIndicator(isDragging)
+  const [areEntitiesFetched, setEntitiesFetched] = useState(false)
+
+  useEffect(() => {
+    if (!locale) return
+    entityStore.current = new EditorModeEntityStore({
+      entities: [],
+      locale: locale,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale])
+
+  useEffect(() => {
+    if (!tree || !tree?.root.children.length || !isDragging) return
+    const onMouseUp = () => {
+      onComponentDropped({ node: tree.root })
+    }
+    document.addEventListener('mouseup', onMouseUp)
+    return () => document.removeEventListener('mouseup', onMouseUp)
+  }, [tree, isDragging])
+
+  useEffect(() => {
+    const resolveEntities = async () => {
+      setEntitiesFetched(false)
+      const entityLinks = Object.values(dataSource || {})
+      await entityStore.current.fetchEntities(entityLinks)
+      setEntitiesFetched(true)
+    }
+    resolveEntities()
+  }, [dataSource, entityStore, locale])
+  if (!tree?.root.children.length) {
+    return React.createElement(EmptyEditorContainer, { isDragging }, [])
   }
-
-  return React.createElement(
-    'div',
-    {
-      className: styles.root,
-      onMouseUp: () => {
-        onComponentDropped({ node: visualEditorData.root })
-      },
-    },
-    visualEditorData.root.children.map((node: any) => (
-      <VisualEditorBlock key={node.data.id} node={node} binding={binding} boundData={boundData} />
-    ))
+  return (
+    <div id="VisualEditorRoot" className="root" data-type="root">
+      {tree.root.children.map((node: any) => (
+        <VisualEditorBlock
+          key={node.data.id}
+          node={node}
+          dataSource={dataSource}
+          unboundValues={unboundValues}
+          resolveDesignValue={resolveDesignValue}
+          entityStore={entityStore}
+          areEntitiesFetched={areEntitiesFetched}
+        />
+      ))}
+    </div>
   )
 }

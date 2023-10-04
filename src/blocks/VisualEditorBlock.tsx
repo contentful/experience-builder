@@ -1,177 +1,209 @@
-import tokens from '@contentful/f36-tokens'
-import { css, cx } from '@emotion/css'
-import React, { useMemo, useRef } from 'react'
-import { BindingMapByBlockId, BoundData } from '../types'
-import { useCommunication } from '../hooks/useCommunication'
-import { useInteraction } from '../hooks/useInteraction'
-import { VisualEditorTemplate } from './VisualEditorTemplate'
-import { useComponents } from '../hooks'
+import React, { RefObject, useMemo } from 'react'
+import {
+  OutgoingExperienceBuilderEvent,
+  CompositionComponentNode,
+  StyleProps,
+  Link,
+  CompositionVariableValueType,
+  CompositionDataSource,
+  CompositionUnboundValues,
+} from '../types'
 
-const styles = {
-  hover: css({
-    ':hover': {
-      border: `3px solid ${tokens.blue500}`,
-    },
-  }),
-  emptyContainer: css({
-    padding: tokens.spacing4Xl,
-  }),
-  container: css({
-    backgroundColor: '#ffffff',
-    opacity: 0.8,
-    backgroundImage:
-      'repeating-linear-gradient(45deg, #f6f6f6 25%, transparent 25%, transparent 75%, #f6f6f6 75%, #f6f6f6), repeating-linear-gradient(45deg, #f6f6f6 25%, #ffffff 25%, #ffffff 75%, #f6f6f6 75%, #f6f6f6)',
-    backgroundPosition: '0 0, 10px 10px',
-    backgroundSize: '20px 20px',
-  }),
-}
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { ContentfulContainer } from './ContentfulContainer'
+
+import { getUnboundValues } from '../core/getUnboundValues'
+import { ResolveDesignValueType } from '../hooks/useBreakpoints'
+import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
+import type { EntityStore } from '@contentful/visual-sdk'
+import { transformContentValue } from './transformers'
+
+import { useStyleTag } from '../hooks/useStyleTag'
+import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils'
+import omit from 'lodash.omit'
+import { sendMessage } from '../communication/sendMessage'
+import { getComponentRegistration } from '../core/componentRegistry'
+import { useEditorContext } from './useEditorContext'
+
+type PropsType =
+  | StyleProps
+  | Record<string, CompositionVariableValueType | Link<'Entry'> | Link<'Asset'>>
 
 type VisualEditorBlockProps = {
-  node: any
-  template?: any
-  binding: BindingMapByBlockId
-  boundData: BoundData
+  node: CompositionComponentNode
+
+  dataSource: CompositionDataSource
+  unboundValues: CompositionUnboundValues
+
+  resolveDesignValue: ResolveDesignValueType
+  entityStore: RefObject<EntityStore>
+  areEntitiesFetched: boolean
 }
 
 export const VisualEditorBlock = ({
   node,
-  template,
-  binding,
-  boundData,
+  dataSource,
+  unboundValues,
+  resolveDesignValue,
+  entityStore,
+  areEntitiesFetched,
 }: VisualEditorBlockProps) => {
-  const { sendMessage } = useCommunication()
-  const { getComponentDefinition } = useComponents()
-  const { onComponentDropped } = useInteraction()
-  const wasMousePressed = useRef(false)
-
-  const blockType = node.data.blockId.split(':')[0]
-
-  const blockConfiguration = useMemo(
-    () => getComponentDefinition(blockType),
-    [blockType, getComponentDefinition]
+  const componentRegistration = useMemo(
+    () => getComponentRegistration(node.data.blockId as string),
+    [node]
   )
 
-  const { nodeBinding = {}, nodeBoundProps = {} } = useMemo(() => {
-    // plain node, not a child of a template
-    if (!template) {
-      return {
-        nodeBinding: binding[node.data.blockId],
-        nodeBoundProps: boundData[node.data.blockId],
-      }
-    }
+  const { setSelectedNodeId } = useEditorContext()
 
-    // child of a template, but not template root node
-    if (node.type !== 'template') {
-      const parentTemplateBoundData = boundData[template.data.blockId]
-      const parentTemplateBinding = binding[template.data.blockId]
+  useSelectedInstanceCoordinates({ node })
 
-      const parentTemplateBoundDataSourceData = parentTemplateBoundData
-        ? parentTemplateBoundData[template.data.dataSource?.sys.id]
-        : undefined
-
-      return {
-        nodeBinding: parentTemplateBinding ? parentTemplateBinding[node.data.blockId] : undefined,
-        nodeBoundProps: parentTemplateBoundDataSourceData
-          ? parentTemplateBoundDataSourceData[node.data.blockId]
-          : undefined,
-      }
-    }
-
-    // template root node
-    const templateBoundData = boundData[node.data.blockId]
-    return {
-      nodeBinding: binding[node.data.blockId],
-      nodeBoundProps: templateBoundData
-        ? templateBoundData[template.data.dataSource.sys.id]
-        : undefined,
-    }
-  }, [template, binding, node, boundData])
-
-  const props = useMemo(() => {
-    if (!blockConfiguration) {
+  const props: PropsType = useMemo(() => {
+    if (!componentRegistration) {
       return {}
     }
 
-    return blockConfiguration.componentDefinition.variables.reduce((acc, variable) => {
-      const boundValue = nodeBoundProps ? nodeBoundProps[variable.name]?.value : undefined
+    return Object.entries(componentRegistration.definition.variables).reduce(
+      (acc, [variableName, variableDefinition]) => {
+        const variableMapping = node.data.props[variableName]
+        if (!variableMapping) {
+          return {
+            ...acc,
+            [variableName]: variableDefinition.defaultValue,
+          }
+        }
 
-      return {
-        ...acc,
-        [variable.name]: boundValue || node.data.props[variable.name] || variable.defaultValue,
-      }
-    }, {})
-  }, [blockConfiguration, node.data.props, nodeBoundProps])
+        if (variableMapping.type === 'DesignValue') {
+          const valueByBreakpoint = resolveDesignValue(variableMapping.valuesByBreakpoint)
+          const designValue =
+            variableName === 'cfHeight'
+              ? calculateNodeDefaultHeight({
+                  blockId: node.data.blockId,
+                  parentId: node.parentId,
+                  children: node.children,
+                  value: valueByBreakpoint,
+                })
+              : valueByBreakpoint
 
-  if (node.type === 'template') {
-    return (
-      <VisualEditorTemplate
-        key={node.data.id}
-        node={node}
-        binding={binding}
-        boundData={boundData}
-      />
+          return {
+            ...acc,
+            [variableName]: designValue,
+          }
+        } else if (variableMapping.type === 'BoundValue') {
+          // take value from the datasource for both bound and unbound value types
+          const [, uuid, ...path] = variableMapping.path.split('/')
+          const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>
+
+          const boundValue = areEntitiesFetched
+            ? entityStore.current?.getValue(binding, path.slice(0, -1))
+            : undefined
+          const value = boundValue || variableDefinition.defaultValue
+
+          return {
+            ...acc,
+            [variableName]: transformContentValue(value, variableDefinition),
+          }
+        } else {
+          const value = getUnboundValues({
+            key: variableMapping.key,
+            fallback: variableDefinition.defaultValue,
+            unboundValues: unboundValues || {},
+          })
+
+          return {
+            ...acc,
+            [variableName]: value,
+          }
+        }
+      },
+      {}
     )
-  }
+  }, [
+    componentRegistration,
+    node.data.props,
+    node.data.blockId,
+    node.parentId,
+    node.children,
+    resolveDesignValue,
+    dataSource,
+    areEntitiesFetched,
+    entityStore,
+    unboundValues,
+  ])
 
-  if (!blockConfiguration) {
+  const cfStyles = buildCfStyles(props)
+  const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id })
+
+  if (!componentRegistration) {
     return null
   }
 
-  const { component, componentDefinition } = blockConfiguration
+  const { component, definition } = componentRegistration
 
-  const children = node.children.map((childNode: any) => {
-    if (childNode.type === 'string') {
-      return (
-        nodeBoundProps[childNode.data.propKey]?.value ||
-        childNode.data.props[childNode.data.propKey]
-      )
-    }
+  const children =
+    definition.children === true
+      ? node.children.map((childNode) => {
+          return (
+            <VisualEditorBlock
+              node={childNode}
+              key={childNode.data.id}
+              dataSource={dataSource}
+              unboundValues={unboundValues}
+              resolveDesignValue={resolveDesignValue}
+              entityStore={entityStore}
+              areEntitiesFetched={areEntitiesFetched}
+            />
+          )
+        })
+      : null
 
-    // if childnode's binding is present in the template, then pass the template on
-    // if not, then template should be undefined as we consider it the end of the template's scope
-    // there can be child nodes in the template that are dropped separtely and hence are unrelated to the current template
-    const parentTemplateBoundData = template && boundData[template.data.blockId]
-    const parentTemplateBoundDataSourceData = parentTemplateBoundData
-      ? parentTemplateBoundData[template.data.dataSource?.sys.id]
-      : undefined
-
-    const childNodeTemplate = parentTemplateBoundDataSourceData?.[childNode.data.blockId]
-      ? template
-      : undefined
-
+  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
+  if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(definition.id)) {
     return (
-      <VisualEditorBlock
-        node={childNode}
-        key={childNode.data.id}
-        template={childNodeTemplate}
-        binding={binding}
-        boundData={boundData}
-      />
+      <ContentfulContainer
+        className={className}
+        editorMode={true}
+        key={node.data.id}
+        node={node}
+        onMouseDown={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          setSelectedNodeId(node.data.id)
+          sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
+            node,
+          })
+        }}
+        // something is off with conditional types and eslint can't recognize it
+        // eslint-disable-next-line react/prop-types
+        cfHyperlink={(props as StyleProps).cfHyperlink}
+        // eslint-disable-next-line react/prop-types
+        cfOpenInNewTab={(props as StyleProps).cfOpenInNewTab}>
+        {children}
+      </ContentfulContainer>
     )
-  })
+  }
 
+  // imported component
   return React.createElement(
     component,
     {
-      onMouseUp: () => {
-        onComponentDropped({ node, template })
-        wasMousePressed.current = false
-      },
       onMouseDown: (e: MouseEvent) => {
         e.stopPropagation()
         e.preventDefault()
-        wasMousePressed.current = true
-        sendMessage('componentSelected', {
+        setSelectedNodeId(node.data.id)
+        sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
           node,
-          template,
         })
       },
-      className: cx(
-        styles.hover,
-        componentDefinition.container && !children?.length ? styles.emptyContainer : undefined,
-        componentDefinition.container ? styles.container : undefined
-      ),
-      ...props,
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        e.preventDefault()
+      },
+      'data-cf-node-id': node.data.id,
+      'data-cf-node-block-id': node.data.blockId,
+      'data-cf-node-block-type': node.type,
+      className,
+      // TODO: do we really need lodash just for this?
+      ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     },
     children
   )
