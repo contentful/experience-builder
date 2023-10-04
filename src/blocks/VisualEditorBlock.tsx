@@ -10,7 +10,7 @@ import {
 } from '../types'
 
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
-import { ContentfulSection } from './ContentfulSection'
+import { ContentfulContainer } from './ContentfulContainer'
 
 import { getUnboundValues } from '../core/getUnboundValues'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
@@ -23,6 +23,7 @@ import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils'
 import omit from 'lodash.omit'
 import { sendMessage } from '../communication/sendMessage'
 import { getComponentRegistration } from '../core/componentRegistry'
+import { useEditorContext } from './useEditorContext'
 
 type PropsType =
   | StyleProps
@@ -30,10 +31,10 @@ type PropsType =
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode
-  locale: string
+
   dataSource: CompositionDataSource
   unboundValues: CompositionUnboundValues
-  selectedNodeId?: string
+
   resolveDesignValue: ResolveDesignValueType
   entityStore: RefObject<EntityStore>
   areEntitiesFetched: boolean
@@ -41,10 +42,8 @@ type VisualEditorBlockProps = {
 
 export const VisualEditorBlock = ({
   node,
-  locale,
   dataSource,
   unboundValues,
-  selectedNodeId,
   resolveDesignValue,
   entityStore,
   areEntitiesFetched,
@@ -54,7 +53,9 @@ export const VisualEditorBlock = ({
     [node]
   )
 
-  useSelectedInstanceCoordinates({ instanceId: selectedNodeId, node })
+  const { setSelectedNodeId } = useEditorContext()
+
+  useSelectedInstanceCoordinates({ node })
 
   const props: PropsType = useMemo(() => {
     if (!componentRegistration) {
@@ -145,10 +146,8 @@ export const VisualEditorBlock = ({
             <VisualEditorBlock
               node={childNode}
               key={childNode.data.id}
-              locale={locale}
               dataSource={dataSource}
               unboundValues={unboundValues}
-              selectedNodeId={selectedNodeId}
               resolveDesignValue={resolveDesignValue}
               entityStore={entityStore}
               areEntitiesFetched={areEntitiesFetched}
@@ -157,10 +156,10 @@ export const VisualEditorBlock = ({
         })
       : null
 
-  // contentful section
-  if ([CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(definition.id)) {
+  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
+  if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(definition.id)) {
     return (
-      <ContentfulSection
+      <ContentfulContainer
         className={className}
         editorMode={true}
         key={node.data.id}
@@ -168,13 +167,18 @@ export const VisualEditorBlock = ({
         onMouseDown={(e) => {
           e.stopPropagation()
           e.preventDefault()
+          setSelectedNodeId(node.data.id)
           sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
             node,
           })
         }}
-        {...(omit(props, CF_STYLE_ATTRIBUTES) as unknown as StyleProps)}>
+        // something is off with conditional types and eslint can't recognize it
+        // eslint-disable-next-line react/prop-types
+        cfHyperlink={(props as StyleProps).cfHyperlink}
+        // eslint-disable-next-line react/prop-types
+        cfOpenInNewTab={(props as StyleProps).cfOpenInNewTab}>
         {children}
-      </ContentfulSection>
+      </ContentfulContainer>
     )
   }
 
@@ -185,6 +189,7 @@ export const VisualEditorBlock = ({
       onMouseDown: (e: MouseEvent) => {
         e.stopPropagation()
         e.preventDefault()
+        setSelectedNodeId(node.data.id)
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
           node,
         })
@@ -197,7 +202,8 @@ export const VisualEditorBlock = ({
       'data-cf-node-block-id': node.data.blockId,
       'data-cf-node-block-type': node.type,
       className,
-      ...omit(props, CF_STYLE_ATTRIBUTES),
+      // TODO: do we really need lodash just for this?
+      ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     },
     children
   )

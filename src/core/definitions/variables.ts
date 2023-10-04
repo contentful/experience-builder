@@ -1,7 +1,7 @@
-import { ComponentDefinitionVariable, SectionStyleVariableName } from '../../types'
+import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../../types'
 
 export const builtInStyles: Record<
-  SectionStyleVariableName,
+  ContainerStyleVariableName,
   ComponentDefinitionVariable<'Text' | 'Boolean'>
 > = {
   cfVerticalAlignment: {
@@ -123,6 +123,7 @@ export const builtInStyles: Record<
   cfBackgroundImageUrl: {
     displayName: 'Background Image',
     type: 'Text',
+    defaultValue: '',
     description: 'Background image for section or container',
   },
   cfBackgroundImageScaling: {

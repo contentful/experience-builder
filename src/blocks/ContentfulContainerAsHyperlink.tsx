@@ -1,10 +1,9 @@
 import React, { MouseEventHandler } from 'react'
-import './SectionHyperlink.css'
-import './ContentfulSection.css'
+import '../styles/ContentfulContainer.css'
 import { CompositionComponentNode, StyleProps } from '../types'
 import classNames from 'classnames'
 
-export type ContentfulSectionProps<EditorMode = boolean> = EditorMode extends true
+export type ContentfulContainerProps<EditorMode = boolean> = EditorMode extends true
   ? {
       onMouseDown: MouseEventHandler<HTMLElement>
       children?: React.ReactNode
@@ -22,7 +21,7 @@ export type ContentfulSectionProps<EditorMode = boolean> = EditorMode extends tr
       editorMode: EditorMode
     }
 
-export const ContentfulSectionAsHyperlink = (props: ContentfulSectionProps) => {
+export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) => {
   const { cfHyperlink, cfOpenInNewTab, children, editorMode, className } = props
 
   let anchorTagProps = {}
@@ -36,7 +35,7 @@ export const ContentfulSectionAsHyperlink = (props: ContentfulSectionProps) => {
   if (editorMode === false) {
     return (
       <a
-        id="ContentfulSection"
+        id="ContentfulContainer"
         className={classNames(className, 'defaultStyles', 'cf-section-link')}
         href={cfHyperlink}
         {...anchorTagProps}>
@@ -55,7 +54,7 @@ export const ContentfulSectionAsHyperlink = (props: ContentfulSectionProps) => {
 
   return (
     <a
-      id="ContentfulSection"
+      id="ContentfulContainer"
       className={classNames(className, 'defaultStyles', 'cf-section-link')}
       href={cfHyperlink}
       {...anchorTagProps}

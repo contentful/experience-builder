@@ -11,7 +11,7 @@ import React, { useMemo } from 'react'
 import type { UnresolvedLink } from 'contentful'
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { EntityStore } from '@contentful/visual-sdk'
-import { ContentfulSection } from './ContentfulSection'
+import { ContentfulContainer } from './ContentfulContainer'
 import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { transformContentValue } from './transformers'
 import { buildCfStyles } from '../core/stylesUtils'
@@ -43,7 +43,7 @@ export const CompositionBlock = ({
     [node]
   )
 
-  const props = useMemo(() => {
+  const nodeProps = useMemo(() => {
     if (!componentRegistration) {
       return {}
     }
@@ -82,7 +82,7 @@ export const CompositionBlock = ({
     unboundValues,
   ])
 
-  const cfStyles = buildCfStyles(props)
+  const cfStyles = buildCfStyles(nodeProps)
   const { className } = useStyleTag({ styles: cfStyles })
 
   if (!componentRegistration) {
@@ -109,20 +109,25 @@ export const CompositionBlock = ({
         })
       : null
 
+  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
-      <ContentfulSection
+      <ContentfulContainer
         editorMode={false}
-        {...(omit(props, CF_STYLE_ATTRIBUTES) as unknown as StyleProps)}
+        cfHyperlink={(nodeProps as StyleProps).cfHyperlink}
+        cfOpenInNewTab={(nodeProps as StyleProps).cfOpenInNewTab}
         className={className}>
         {children}
-      </ContentfulSection>
+      </ContentfulContainer>
     )
   }
 
   return React.createElement(
     component,
-    { ...omit(props, CF_STYLE_ATTRIBUTES), className },
+    {
+      ...omit(nodeProps, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+      className,
+    },
     children
   )
 }
