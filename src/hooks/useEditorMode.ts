@@ -159,7 +159,7 @@ export const useEditorMode = ({ initialLocale, mode }: UseEditorModeProps) => {
         }
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
           const { selectedNodeId } = payload
-
+          sendSelectedComponentCoordinates(selectedNodeId)
           setSelectedNodeId(selectedNodeId)
           break
         }
