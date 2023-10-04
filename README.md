@@ -111,7 +111,7 @@ export default App
 
 ## Next.js website
 
-SSR data pre-fetching is currently not possible. Stay tuned.
+SSR data pre-fetching is currently not possible. Stay tuned!
 
 ```tsx
 import { useEffect, useMemo } from 'react'
