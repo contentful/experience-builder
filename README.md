@@ -30,6 +30,8 @@ function MyButton({ buttonTitle, buttonUrl, ...props }) {
 
 ## Setup example
 
+Please find more setup examples [on a dedicated Wiki page](https://github.com/contentful/experience-builder/wiki/Setup-examples)
+
 ```tsx
 import { useEffect, useMemo } from 'react'
 import {
@@ -46,7 +48,7 @@ import { MyButton } from './components/MyButton'
 const client = createClient({
   space: 'YOUR_SPACE_ID',
   environment: 'YOUR_ENVIRONMENT_ID',
-  host: 'cdn.contentful.com', // Supported values: 'preview.contentful.com' or 'cdn.contentful.com',
+  host: 'preview.contentful.com', // Supported values: 'preview.contentful.com' or 'cdn.contentful.com',
   accessToken: 'YOUR_PREVIEW_OR_DELIVERY_TOKEN', // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
 });
 
@@ -81,7 +83,7 @@ const Home = () => {
      *
      * you have the flexibility to define your own logic to determine the mode in which you want to run your website (for example: depending on the query parameter / hardcoded for a specific deployed instance of the website / env variable)
      */
-    mode: 'delivery'
+    mode: 'preview'
   })
 
   // 2.5 Define components via useEffect (or outside of React flow - see 1.)
