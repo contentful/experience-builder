@@ -1,4 +1,14 @@
-# Setup Examples
+Please find more information about this sdk [on our Wiki page](https://github.com/contentful/experience-builder/wiki)
+
+# Installation
+
+```
+npm install @contentful/experience-builder -S
+```
+
+```
+yarn add @contentful/experience-builder
+```
 
 ## Example Component:
 
@@ -16,102 +26,7 @@ function MyButton({ buttonTitle, buttonUrl, ...props }) {
 }
 ```
 
-## Dynamic website
-
-You can use this as a reference example or even paste this into `App.js` of the create-react-app generated app.
-
-```tsx
-// Remember to add dependency on 'contentful' package
-// > npm add contentful
-
-import { useEffect } from 'react'
-import {
-  useExperienceBuilder,
-  ExperienceRoot,
-  defineComponents,
-} from '@contentful/experience-builder'
-import { createClient } from 'contentful'
-
-const client = createClient({
-  space: process.env.REACT_APP_CTFL_SPACE_ID,
-  environment: process.env.REACT_APP_CTFL_ENV_ID,
-  host: process.env.REACT_APP_CTFL_API_HOST, // Supported values: 'preview.contentful.com' or 'cdn.contentful.com',
-  accessToken: process.env.REACT_APP_CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
-})
-
-// 1. Define components outside of React (or within React - see 2.5)
-defineComponents([
-  {
-    component: MyButton,
-    definition: {
-      id: 'my-button',
-      name: 'MyButton',
-      variables: {
-        buttonTitle: { type: 'Text', defaultValue: 'Click me' },
-        buttonUrl: {
-          type: 'Text',
-          defaultValue: 'https://www.google.com?q=button+was+clicked',
-        },
-      },
-    },
-  },
-])
-
-const App = () => {
-  // 2. Configure the sdk
-  const { experience, defineComponents } = useExperienceBuilder({
-    client, // preview or delivery client
-    experienceTypeId: process.env.REACT_APP_CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
-    /**
-     * Supported values 'preview' or 'delivery'
-     * 'preview' mode will fetch and render unpublished data from Contentful's preview api. Automatically supports canvas interactions if opened on canvas from Contentful's web app
-     * 'delivery' mode will fetch and render published data from Contentful's delivery api
-     *
-     * you have the flexibility to define your own logic to determine the mode in which you want to run your website (for example: depending on the query parameter / hardcoded for a specific deployed instance of the website / env variable)
-     */
-    mode: 'delivery',
-  })
-
-  // 2.5 Optionally define components via useEffect
-  useEffect(() => {
-    defineComponents([
-      {
-        component: MyButton,
-        definition: {
-          id: 'my-button',
-          name: 'MyButton',
-          variables: {
-            buttonTitle: { type: 'Text', defaultValue: 'Click me' },
-            buttonUrl: {
-              type: 'Text',
-              defaultValue: 'https://www.google.com?q=button+was+clicked',
-            },
-          },
-        },
-      },
-    ])
-  }, [defineComponents]);
-
-  // 3. Render your experience
-  return (
-    <ExperienceRoot
-      experience={experience}
-      // The locale that will appear on the website first
-      // You could nicely tie it to the useParam() from router or intenral state or locale manager
-      // this value - en-US here is provided as an example reference
-      locale="en-US"
-      // slug of the entry. Will be used for fetching it using the client
-      slug="landing-page"
-    />
-  )
-}
-
-export default App
-```
-
-## Next.js website
-
-SSR data pre-fetching is currently not possible. Stay tuned!
+## Setup example
 
 ```tsx
 import { useEffect, useMemo } from 'react'
@@ -124,16 +39,16 @@ import { createClient } from 'contentful'
 import { useRouter } from 'next/router'
 
 const client = createClient({
-  space: process.env.CTFL_SPACE_ID,
-  environment: process.env.CTFL_ENV_ID,
-  host: process.env.CTFL_API_HOST // Supported values: 'preview.contentful.com' or 'cdn.contentful.com',
-  accessToken: process.env.CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
+  space: 'YOUR_SPACE_ID',
+  environment: 'YOUR_ENVIRONMENT_ID',
+  host: 'cdn.contentful.com', // Supported values: 'preview.contentful.com' or 'cdn.contentful.com',
+  accessToken: 'YOUR_PREVIEW_OR_DELIVERY_TOKEN', // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
 });
 
 // 1. Define components outside of React (or within React - see 2.5)
 defineComponents([
   {
-    component: MyButton,
+    component: MyButton,  // example component defined above in this file
     definition: {
       id: 'my-button',
       name: 'MyButton',
@@ -141,7 +56,7 @@ defineComponents([
         buttonTitle: { type: 'Text', defaultValue: 'Click me' },
         buttonUrl: {
           type: 'Text',
-          defaultValue: 'https://www.google.com?q=button+was+clicked',
+          defaultValue: 'https://www.contentful.com/',
         },
       },
     },
@@ -164,7 +79,7 @@ const Home = () => {
     mode: 'delivery'
   })
 
-  // 2.5 Optionally define components via useEffect
+  // 2.5 Define components via useEffect (or outside of React flow - see 1.)
   useEffect(() => {
     defineComponents([
       {
@@ -176,7 +91,7 @@ const Home = () => {
             buttonTitle: { type: 'Text', defaultValue: 'Click me' },
             buttonUrl: {
               type: 'Text',
-              defaultValue: 'https://www.google.com?q=button+was+clicked',
+              defaultValue: 'https://www.contentful.com/',
             },
           },
         },
@@ -192,96 +107,7 @@ const Home = () => {
       // this value - en-US here is provided as an example reference
       locale={router.locale}
       // slug of the entry. Will be used for fetching it using the client
-      slug='landing-page'
-    />
-  );
-}
-```
-
-## Gatsby website
-
-SSR data pre-fetching is currently not possible. Stay tuned.
-
-```tsx
-import { useEffect, useMemo } from 'react'
-import {
-  useExperienceBuilder,
-  ExperienceRoot,
-  defineComponents
-} from '@contentful/experience-builder'
-import { createClient } from 'contentful'
-
-const client = createClient({
-  space: process.env.CTFL_SPACE_ID,
-  environment: process.env.CTFL_ENV_ID,
-  host: process.env.CTFL_API_HOST // Supported values: 'preview.contentful.com' or 'cdn.contentful.com',
-  accessToken: process.env.CTFL_TOKEN, // needs to be preview token if host = 'preview.contentful.com' and delivery token if 'cdn.contentful.com'
-});
-
-// 1. Define components outside of React (or within React - see 2.5)
-defineComponents([
-  {
-    component: MyButton,
-    definition: {
-      id: 'my-button',
-      name: 'MyButton',
-      variables: {
-        buttonTitle: { type: 'Text', defaultValue: 'Click me' },
-        buttonUrl: {
-          type: 'Text',
-          defaultValue: 'https://www.google.com?q=button+was+clicked',
-        },
-      },
-    },
-  },
-])
-
-const ExperienceBuilderPage = ({ pageContext }) => {
-  const router = useRouter();
-  // 2. Configure the sdk
-  const { settings, experience, defineComponents } = useExperienceBuilder({
-    client, // preview or delivery client
-    experienceTypeId: pageContext.expereinceTypeId, // id of the experience type (content type)
-    /**
-     * Supported values 'preview' or 'delivery'
-     * 'preview' mode will fetch and render unpublished data from Contentful's preview api. Automatically supports canvas interactions if opened on canvas from Contentful's web app
-     * 'delivery' mode will fetch and render published data from Contentful's delivery api
-     *
-     * you have the flexibility to define your own logic to determine the mode in which you want to run your website (for example: depending on the query parameter / hardcoded for a specific deployed instance of the website / env variable)
-     */
-    mode: 'delivery'
-  })
-
-  // 2.5 Optionally define components via useEffect
-  useEffect(() => {
-    defineComponents([
-      {
-        component: MyButton,
-        definition: {
-          id: 'my-button',
-          name: 'MyButton',
-          variables: {
-            buttonTitle: { type: 'Text', defaultValue: 'Click me' },
-            buttonUrl: {
-              type: 'Text',
-              defaultValue: 'https://www.google.com?q=button+was+clicked',
-            },
-          },
-        },
-      },
-    ])
-  }, [defineComponents]);
-
-  // 3. Render your experience
-  return (
-    <ExperienceRoot
-      experience={experience}
-      // The locale that will appear on the website first
-      // You could nicely tie it to the useParam() from router or intenral state or locale manager
-      // this value - en-US here is provided as an example reference
-      locale={pageContext.locale}
-      // slug of the entry. Will be used for fetching it using the client
-      slug={pageContext.slug}
+      slug='SLUG_FROM_YOUR_EXPERIENCE_ENTRY'
     />
   );
 }
