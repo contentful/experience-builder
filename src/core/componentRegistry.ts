@@ -120,21 +120,6 @@ export const defineComponents = (componentRegistrations: Array<ComponentRegistra
 }
 
 /**
- * @deprecated please use `defineComponents` function instead
- * @param component - your react component
- * @param definition - the component definition
- * @returns void
- */
-export const defineComponent = (component: ElementType, definition: ComponentDefinition) => {
-  const enrichedComponentConfig = enrichComponentDefinition({ component, definition })
-  componentRegistry.set(enrichedComponentConfig.definition.id, enrichedComponentConfig)
-
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent(InternalEvents.COMPONENTS_REGISTERED))
-  }
-}
-
-/**
  * use this function only in tests
  */
 export const resetComponentRegistry = () => {
