@@ -24,3 +24,7 @@ jobs:
     uses: ./.github/workflows/publish.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  upload-artifact-cleanup:
+    if: ${{ always() }}
+    needs: [install-build, check, publish]
+    uses: ./.github/workflows/cleanup.yaml

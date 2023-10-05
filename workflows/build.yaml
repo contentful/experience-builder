@@ -39,11 +39,10 @@ jobs:
       - name: Build app
         run: |
           npm run build
-      - name: Save build folder
-        uses: actions/upload-artifact@v3
+      - name: Save Build folders        
+        uses: actions/cache/save@v3
         with:
-          name: build-folders
-          if-no-files-found: error
           path: |
-            packages/**/dist
-            packages/**/build
+            packages/*/dist
+            packages/*/build
+          key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}

@@ -1,0 +1,35 @@
+name: Upload artifacts and cleanup
+
+on:
+  workflow_call:
+
+jobs:
+  upload-artifact-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Restore the build folders
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            packages/*/dist
+            packages/*/build
+          key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Save build folder to artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: built-assets
+          if-no-files-found: error
+          path: |
+            packages/*/dist
+            packages/*/build
+      - name: Cleanup build cache
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh extension install actions/gh-actions-cache
+          CACHE_KEY="build-cache-${{ github.run_id }}-${{ github.run_attempt }}"
+          echo "Deleting cache key: $CACHE_KEY"
+          gh actions-cache delete $CACHE_KEY --confirm
+          echo "Done"

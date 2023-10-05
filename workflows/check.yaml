@@ -29,10 +29,17 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - name: Install dependencies
         run: npm ci
-      - name: Download the build folders
-        uses: actions/download-artifact@v3
+      - name: Restore the build folders
+        uses: actions/cache/restore@v3
         with:
-          name: build-folders
+          path: |
+            packages/*/dist
+            packages/*/build
+          key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: List component build folders
+        run: ls -la packages/components/dist
+      - name: List test-app build folders
+        run: ls -la packages/test-app/dist
       - name: Run Linting
         run: npm run lint
       - name: Run CT Tests
