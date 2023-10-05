@@ -12,7 +12,7 @@
   "types": "./dist/index.d.ts",
   "style": "./styles.css",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist && rimraf styles.css",
     "build": "rollup -c rollup.config.mjs",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
