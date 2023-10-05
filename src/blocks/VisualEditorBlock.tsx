@@ -78,7 +78,6 @@ export const VisualEditorBlock = ({
             variableName === 'cfHeight'
               ? calculateNodeDefaultHeight({
                   blockId: node.data.blockId,
-                  parentId: node.parentId,
                   children: node.children,
                   value: valueByBreakpoint,
                 })
@@ -121,7 +120,6 @@ export const VisualEditorBlock = ({
     componentRegistration,
     node.data.props,
     node.data.blockId,
-    node.parentId,
     node.children,
     resolveDesignValue,
     dataSource,
