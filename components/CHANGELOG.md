@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.8](https://github.com/contentful/experience-builder-components/compare/v0.0.1-alpha.7...v0.0.1-alpha.8) (2023-10-05)
+
+
+### Bug Fixes
+
+* **components:** adding styles.css to build cache [] ([#27](https://github.com/contentful/experience-builder-components/issues/27)) ([ecfc7d7](https://github.com/contentful/experience-builder-components/commit/ecfc7d79b02944c347d5157457bddb313f7c78b6))
+* **components:** faux fix to kick off build ([8a55356](https://github.com/contentful/experience-builder-components/commit/8a553565c96318ffdebcccc0e7c7c370c5eadd52))
+
+
+
+
+
 ## [0.0.1-alpha.7](https://github.com/contentful/experience-builder-components/compare/v0.0.1-alpha.6...v0.0.1-alpha.7) (2023-10-04)
 
 
