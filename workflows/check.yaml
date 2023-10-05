@@ -33,10 +33,12 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: |
-            packages/components/styles.css # Save file that gets built to root dir for easy import purposes
+            packages/components/styles.css
             packages/*/dist
             packages/*/build
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: List components folder
+        run: ls -la packages/components
       - name: List component build folders
         run: ls -la packages/components/dist
       - name: List test-app build folders
