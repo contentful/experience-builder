@@ -29,10 +29,10 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: |
+            packages/components/styles.css # Save file that gets built to root dir for easy import purposes
             packages/*/dist
             packages/*/build
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
       - name: 'Version and publish'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
