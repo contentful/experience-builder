@@ -94,9 +94,5 @@ export const calculateNodeDefaultHeight = ({
     return 'fit-content'
   }
 
-  if (parentId !== 'root') {
-    return 'fill'
-  }
-
   return '200px'
 }
