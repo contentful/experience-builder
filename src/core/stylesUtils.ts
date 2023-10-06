@@ -78,12 +78,10 @@ export const buildCfStyles = ({
 export const calculateNodeDefaultHeight = ({
   blockId,
   children,
-  parentId,
   value,
 }: {
   blockId?: string
   children: CompositionComponentNode['children']
-  parentId?: string
   value: CompositionVariableValueType
 }) => {
   if (!blockId || CONTENTFUL_CONTAINER_ID !== blockId || value !== 'auto') {
@@ -92,10 +90,6 @@ export const calculateNodeDefaultHeight = ({
 
   if (!children.every((child) => child.data.blockId === CONTENTFUL_CONTAINER_ID)) {
     return 'fit-content'
-  }
-
-  if (parentId !== 'root') {
-    return 'fill'
   }
 
   return '200px'
