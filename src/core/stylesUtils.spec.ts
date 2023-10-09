@@ -6,7 +6,6 @@ describe('calculateNodeDefaultHeight', () => {
   it('should return value when blockId is undefined', () => {
     const result = calculateNodeDefaultHeight({
       children: [],
-      parentId: 'root',
       value: '400px',
     })
 
@@ -16,7 +15,6 @@ describe('calculateNodeDefaultHeight', () => {
   it('should return value when value is not "auto"', () => {
     const result = calculateNodeDefaultHeight({
       children: [],
-      parentId: 'root',
       value: '456px',
     })
 
@@ -27,7 +25,6 @@ describe('calculateNodeDefaultHeight', () => {
     const result = calculateNodeDefaultHeight({
       blockId: 'node-block-id',
       children: [],
-      parentId: 'root',
       value: '567px',
     })
 
@@ -38,7 +35,6 @@ describe('calculateNodeDefaultHeight', () => {
     const result = calculateNodeDefaultHeight({
       blockId: CONTENTFUL_CONTAINER_ID,
       children: [],
-      parentId: 'root',
       value: 'auto',
     })
 
@@ -61,7 +57,6 @@ describe('calculateNodeDefaultHeight', () => {
     const result = calculateNodeDefaultHeight({
       blockId: CONTENTFUL_CONTAINER_ID,
       children: [childNode],
-      parentId: 'root',
       value: 'auto',
     })
 
@@ -88,28 +83,5 @@ describe('calculateNodeDefaultHeight', () => {
     })
 
     expect(result).toBe('fit-content')
-  })
-
-  it('should return "fill" if container is nested', () => {
-    const childNode: CompositionComponentNode = {
-      type: 'block',
-      data: {
-        id: 'node-1',
-        blockId: CONTENTFUL_CONTAINER_ID,
-        props: {},
-        dataSource: {},
-        unboundValues: {},
-        breakpoints: [],
-      },
-      children: [],
-    }
-
-    const result = calculateNodeDefaultHeight({
-      blockId: CONTENTFUL_CONTAINER_ID,
-      children: [childNode],
-      value: 'auto',
-    })
-
-    expect(result).toBe('fill')
   })
 })
