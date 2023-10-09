@@ -268,7 +268,7 @@ export function VisualEditorContextProvider({
       }, 150)
     }
 
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { capture: true })
 
     return () => {
       window.removeEventListener('scroll', onScroll)
