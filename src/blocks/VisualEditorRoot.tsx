@@ -63,7 +63,6 @@ const VisualEditorRootComponents = () => {
     }
 
     resolveEntities()
-    throw new Error('testing error')
   }, [dataSource, entityStore, locale])
 
   if (!tree?.root.children.length) {
