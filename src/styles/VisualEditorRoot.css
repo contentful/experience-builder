@@ -18,5 +18,5 @@ html::-webkit-scrollbar {
 #VisualEditorRoot.root {
   height: 100vh;
   padding-bottom: 100px;
-  overflow: scroll;
+  overflow: auto;
 }
