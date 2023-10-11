@@ -1,6 +1,6 @@
 {
   "name": "create-experience-builder",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "description": "A CLI tool to get up and running with Contentful Experience Builder quickly",
   "homepage": "https://github.com/contentful/experience-builder-toolkit/tree/next/packages/create-experience-builder#readme",
   "repository": {
