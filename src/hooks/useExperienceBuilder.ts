@@ -1,30 +1,32 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Experience, ExternalSDKMode, InternalSDKMode } from '../types'
-import { useExperienceStore } from './useExperienceStore'
 import { supportedModes } from '../constants'
 import type { ContentfulClientApi } from 'contentful'
 import { defineComponents } from '../core/componentRegistry'
+import { EntityStore } from '../core/EntityStore'
 
 type UseExperienceBuilderProps = {
   /**
    * Id of the content type of the target experience
    */
   experienceTypeId: string
-  /**
-   * Instance of a Delivery or Preview client from "contentful" package
-   */
   client: ContentfulClientApi<undefined>
   /**
    *  Mode defines the behaviour of the sdk.
    * - `preview` - fetching and rendering draft data. Will automatically switch to `editor` mode if open from contentful web app.
    * - `delivery` - fetching and rendering of published data. Can not be switched to `editor` mode. */
   mode?: ExternalSDKMode
+  ssr?: {
+    entityStore: EntityStore
+    experienceEntryId: string
+  }
 }
 
 export const useExperienceBuilder = ({
   experienceTypeId,
   client,
   mode = 'delivery',
+  ssr,
 }: UseExperienceBuilderProps) => {
   const [activeMode, setMode] = useState<InternalSDKMode>(() => {
     if (supportedModes.includes(mode)) {
@@ -34,13 +36,13 @@ export const useExperienceBuilder = ({
     throw new Error(`Unsupported mode provided: ${mode}. Supported values: ${supportedModes}`)
   })
 
+  const [entityStore, setEntityStore] = useState(ssr?.entityStore)
+
   useEffect(() => {
     if (supportedModes.includes(mode)) {
       setMode(mode)
     }
   }, [mode])
-
-  const store = useExperienceStore({ client })
 
   const switchToEditorMode = useCallback(() => {
     setMode('editor')
@@ -48,13 +50,14 @@ export const useExperienceBuilder = ({
 
   const experience = useMemo<Experience>(
     () => ({
-      store,
       client,
+      entityStore,
       experienceTypeId,
       mode: activeMode,
       switchToEditorMode,
+      setEntityStore,
     }),
-    [activeMode, client, experienceTypeId, store, switchToEditorMode]
+    [activeMode, experienceTypeId, client, switchToEditorMode, setEntityStore, entityStore]
   )
 
   return {

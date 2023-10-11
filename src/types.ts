@@ -4,7 +4,7 @@
  * parts to prepare this library for EAP
  */
 
-import type { ContentfulClientApi } from 'contentful'
+import type { AssetCollection, ContentfulClientApi, Entry, EntryCollection, EntrySkeletonType } from 'contentful'
 import { EntityStore } from './core/EntityStore'
 
 export enum ScrollStates {
@@ -264,6 +264,12 @@ export type Composition = {
   unboundValues: CompositionUnboundValues
 }
 
+export type ExperienceEntry = {
+  sys: Entry['sys'],
+  fields: Composition,
+  metadata: Entry['metadata']
+}
+
 export interface RawCoordinates {
   left: number
   top: number
@@ -274,36 +280,24 @@ export interface RawCoordinates {
 export interface Coordinates extends RawCoordinates {
   childrenCoordinates: RawCoordinates[]
 }
+
 export interface HoveredElement {
   blockType: string | undefined
   nodeId: string | undefined
   blockId: string | undefined
 }
 
-export interface ExperienceStore {
-  composition: Composition | undefined
-  entityStore: EntityStore | undefined
-  isLoading: boolean
-  children: Composition['componentTree']['children']
-  breakpoints: Composition['componentTree']['breakpoints']
-  dataSource: Composition['dataSource']
-  unboundValues: Composition['unboundValues']
-  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined
-  fetchBySlug: ({
-    experienceTypeId,
-    slug,
-    localeCode,
-  }: {
-    experienceTypeId: string
-    slug: string
-    localeCode: string
-  }) => Promise<{ success: boolean; error?: Error }>
-}
-
 export interface Experience {
-  store: ExperienceStore
+  entityStore?: EntityStore
   client: ContentfulClientApi<undefined>
   experienceTypeId: string
   mode: InternalSDKMode
   switchToEditorMode: () => void
+  setEntityStore: (entityStore: EntityStore) => void;
+}
+
+export interface ExpereinceStoreInitialState {
+  experienceEntry: Composition;
+  boundEntries: EntryCollection<EntrySkeletonType>;
+  boundAssets: AssetCollection;
 }

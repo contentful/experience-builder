@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { Experience } from '../types'
 import { CompositionBlock } from './CompositionBlock'
 import { compatibleVersions } from '../constants'
-import { useBreakpoints, useEditorModeSwitch } from '../hooks'
+import { useBreakpoints, useEditorModeSwitch, useClientSideFetch } from '../hooks'
 import { usePrevious } from '../hooks/usePrevious'
 
 type DeliveryRootProps = {
@@ -15,62 +15,65 @@ export const PreviewDeliveryRoot = ({ locale, slug, experience }: DeliveryRootPr
   const attemptedToFetch = useRef<boolean>(false)
   const previousLocale = usePrevious(locale)
 
-  const { mode, switchToEditorMode } = experience
-  const { composition, isLoading, fetchBySlug, entityStore } = experience.store
+  const { experienceTypeId, mode, switchToEditorMode, entityStore, client } = experience
 
   useEditorModeSwitch({
     mode,
     switchToEditorMode,
   })
 
+  const { fetchBySlug, isFetching } = useClientSideFetch({ setEntityStore: experience.setEntityStore })
+
   useEffect(() => {
     // TODO: Test it, it is crucial
-    // will make it fetch on each locale change as well as if composition hasn't been fetched yet at least once
-    const shouldFetch = (!composition && !attemptedToFetch.current) || previousLocale !== locale
+    // will make it fetch on each locale change as well as if experience entry hasn't been fetched yet at least once
+    const shouldFetch = client && (!entityStore && !attemptedToFetch.current) || previousLocale !== locale
     // this useEffect is meant to trigger fetching for the first time if it hasn't been done earlier
     // if not yet fetched and not fetchin at the moment
-    if (shouldFetch && !isLoading && slug) {
+    if (shouldFetch && !isFetching && slug) {
       attemptedToFetch.current = true
       fetchBySlug({
-        experienceTypeId: experience.experienceTypeId,
+        client,
+        experienceTypeId,
         localeCode: locale,
         slug,
       })
     }
   }, [
-    experience.experienceTypeId,
-    composition,
-    isLoading,
+    experienceTypeId,
+    entityStore,
+    isFetching,
     fetchBySlug,
+    client,
     slug,
     locale,
     previousLocale,
   ])
 
-  const { resolveDesignValue } = useBreakpoints(experience.store.breakpoints)
+  const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? [])
 
-  if (!experience.store.composition || !experience.store.schemaVersion) {
+  if (!entityStore?.experienceEntry || !entityStore?.schemaVersion) {
     return null
   }
 
-  if (!compatibleVersions.includes(experience.store.schemaVersion)) {
+  if (!compatibleVersions.includes(entityStore.schemaVersion)) {
     console.warn(
-      `[exp-builder.sdk] Contenful composition schema version: ${experience.store.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`
+      `[exp-builder.sdk] Contenful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`
     )
     return null
   }
 
   return (
     <>
-      {experience.store.children.map((childNode, index) => (
+      {entityStore.experienceEntry.componentTree.children.map((childNode, index) => (
         <CompositionBlock
           key={index}
           node={childNode}
           locale={locale}
           entityStore={entityStore}
-          dataSource={experience.store.dataSource}
-          unboundValues={experience.store.unboundValues}
-          breakpoints={experience.store.breakpoints}
+          dataSource={entityStore.dataSource}
+          unboundValues={entityStore.unboundValues}
+          breakpoints={entityStore.breakpoints}
           resolveDesignValue={resolveDesignValue}
         />
       ))}

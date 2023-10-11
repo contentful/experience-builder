@@ -16,7 +16,6 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
   const { mode } = experience
 
   validateExperienceBuilderConfig({
-    client: experience.client,
     locale,
     mode,
   })

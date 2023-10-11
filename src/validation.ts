@@ -1,6 +1,6 @@
-import type { ContentfulClientApi } from 'contentful'
+import type { Entry } from 'contentful'
 import { supportedModes } from './constants'
-import { InternalSDKMode, IncomingExperienceBuilderEvent } from './types'
+import { InternalSDKMode, IncomingExperienceBuilderEvent, ExperienceEntry } from './types'
 
 export type VisualEditorMessagePayload = {
   source: string
@@ -24,6 +24,24 @@ const isValidJsonObject = (s: string) => {
   } catch (e) {
     return false
   }
+}
+
+// @ts-expect-error type incompatibility
+export const isExperienceEntry = (entry: Entry): entry is ExperienceEntry => {
+  return (
+    entry.sys.type === 'Entry' &&
+    !!entry.fields.title &&
+    !!entry.fields.slug &&
+    !!entry.fields.componentTree &&
+    // @ts-expect-error type incompatibility due to conditional types in Entry
+    Array.isArray(entry.fields.componentTree.breakpoints) &&
+    // @ts-expect-error type incompatibility due to conditional types in Entry
+    Array.isArray(entry.fields.componentTree.children) &&
+    // @ts-expect-error type incompatibility due to conditional types in Entry
+    typeof entry.fields.componentTree.schemaVersion === 'string' &&
+    !!entry.fields.dataSource &&
+    !!entry.fields.unboundValues
+  )
 }
 
 export const doesMismatchMessageSchema = (event: MessageEvent): false | string => {
@@ -76,11 +94,9 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
 }
 
 export const validateExperienceBuilderConfig = ({
-  client,
   locale,
   mode,
 }: {
-  client: ContentfulClientApi<undefined>
   locale: string
   mode: InternalSDKMode
 }) => {
@@ -97,12 +113,6 @@ export const validateExperienceBuilderConfig = ({
   if (!locale) {
     throw new Error(
       'Parameter "locale" is required for expereince builder initialization outside of editor mode'
-    )
-  }
-
-  if (!client) {
-    throw new Error(
-      'Parameter "client" is required for expereince builder initialization outside of editor mode'
     )
   }
 }

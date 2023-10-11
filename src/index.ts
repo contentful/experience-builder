@@ -21,3 +21,4 @@ export {
   CONTENTFUL_CONTAINER_ID,
   LATEST_SCHEMA_VERSION,
 } from './constants'
+export { EntityStore } from './core/EntityStore';
