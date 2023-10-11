@@ -11,6 +11,13 @@
   "main": "./dist/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "readme.md",
+    "package.json",
+    "dist/**/*.*",
+    "bin/**/*.*",
+    "templates/**/*.*"
+  ],
   "scripts": {
     "dev": "tsc -w",
     "prebuild": "npm uninstall -g && rimraf dist",
@@ -32,6 +39,7 @@
   "dependencies": {
     "@clack/prompts": "^0.7.0",
     "cross-spawn": "^7.0.3",
+    "kleur": "^4.1.5",
     "open": "^9.1.0",
     "yargs": "^17.7.2"
   }
