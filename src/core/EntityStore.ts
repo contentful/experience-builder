@@ -1,4 +1,4 @@
-import type { Asset, Entry, UnresolvedLink, AssetFile, ContentfulClientApi } from 'contentful'
+import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful'
 import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk'
 import { Composition } from '../types'
 import { isExperienceEntry } from '../validation';
@@ -16,47 +16,6 @@ export class EntityStore extends VisualSdkEntityStore {
     } else {
       throw new Error('Invalid experience entry provided');
     }
-  }
-
-  public async fetchReferencedEntities({
-    client,
-  }: {
-    client: ContentfulClientApi<undefined>
-  }) {
-    if (!this._experienceEntry || !super.locale) {
-      return
-    }
-
-    const entryIds: string[] = [],
-      assetIds: string[] = []
-    for (const dataBinding of Object.values(this._experienceEntry.dataSource)) {
-      if (!('sys' in dataBinding)) {
-        continue
-      }
-      if (dataBinding.sys.linkType === 'Entry') {
-        entryIds.push(dataBinding.sys.id)
-      }
-      if (dataBinding.sys.linkType === 'Asset') {
-        assetIds.push(dataBinding.sys.id)
-      }
-    }
-
-    const [entriesResponse, assetsResponse] = await Promise.all([
-      entryIds.length > 0
-        ? client.getEntries({ 'sys.id[in]': entryIds, locale: super.locale })
-        : { items: [] },
-      assetIds.length > 0
-        ? client.getAssets({ 'sys.id[in]': assetIds, locale: super.locale })
-        : { items: [] },
-    ])
-    
-    const combinedEntities = [...entriesResponse.items, ...assetsResponse.items];
-    
-    for (const entity of combinedEntities) {
-      super.entitiesMap.set(entity.sys.id, entity);
-    }
-
-    return combinedEntities;
   }
 
   public getCurrentLocale() {

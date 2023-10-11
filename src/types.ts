@@ -289,11 +289,7 @@ export interface HoveredElement {
 
 export interface Experience {
   entityStore?: EntityStore
-  client: ContentfulClientApi<undefined>
-  experienceTypeId: string
   mode: InternalSDKMode
-  switchToEditorMode: () => void
-  setEntityStore: (entityStore: EntityStore) => void;
 }
 
 export interface ExpereinceStoreInitialState {

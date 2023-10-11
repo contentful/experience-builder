@@ -21,4 +21,5 @@ export {
   CONTENTFUL_CONTAINER_ID,
   LATEST_SCHEMA_VERSION,
 } from './constants'
-export { EntityStore } from './core/EntityStore';
+export * as ssr from './ssr';
+export * as fetchers from './fetchers';

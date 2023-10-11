@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import {
-  Experience,
   IncomingExperienceBuilderEvent,
+  InternalSDKMode,
   OutgoingExperienceBuilderEvent,
 } from '../types'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
@@ -10,7 +10,7 @@ import { sendMessage } from '../communication/sendMessage'
 export const useEditorModeSwitch = ({
   mode,
   switchToEditorMode,
-}: Pick<Experience, 'mode' | 'switchToEditorMode'>) => {
+}: { mode: InternalSDKMode, switchToEditorMode: () => void; }) => {
   const hasConnectEventBeenSent = useRef(false)
 
   // switch from preview mode to editor mode

@@ -1,5 +1,5 @@
-import React from 'react'
-import { Experience } from '../types'
+import React, { useCallback, useState } from 'react'
+import { Experience, InternalSDKMode } from '../types'
 import { VisualEditorRoot } from './VisualEditorRoot'
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
 import { supportedModes } from '../constants'
@@ -9,26 +9,45 @@ import { ErrorBoundary } from './ErrorBoundary'
 type ExperienceRootProps = {
   experience: Experience
   locale: string
-  slug: string
+  // slug: string
 }
 
-export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
-  const { mode } = experience
+export const ExperienceRoot = ({ locale, experience /*, slug */ }: ExperienceRootProps) => {
+  const [activeMode, setMode] = useState<InternalSDKMode>(() => {
+    if (supportedModes.includes(experience.mode)) {
+      return experience.mode
+    }
+
+    throw new Error(
+      `Unsupported mode provided: ${experience.mode}. Supported values: ${supportedModes}`
+    )
+  })
+
+  const switchToEditorMode = useCallback(() => {
+    setMode('editor')
+  }, [])
 
   validateExperienceBuilderConfig({
     locale,
-    mode,
+    mode: activeMode,
   })
 
-  if (!mode || !supportedModes.includes(mode)) return null
+  if (!activeMode || !supportedModes.includes(activeMode)) return null
 
-  if (mode === 'editor') {
+  if (activeMode === 'editor') {
     return (
       <ErrorBoundary>
-        <VisualEditorRoot initialLocale={locale} mode={mode} />
+        <VisualEditorRoot initialLocale={locale} mode={activeMode} />
       </ErrorBoundary>
-    )
+    );
   }
 
-  return <PreviewDeliveryRoot locale={locale} slug={slug} experience={experience} />
+  return (
+    <PreviewDeliveryRoot
+      locale={locale}
+      mode={activeMode}
+      switchToEditorMode={switchToEditorMode}
+      /* slug={slug} */ experience={experience}
+    />
+  )
 }
