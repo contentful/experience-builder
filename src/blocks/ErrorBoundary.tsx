@@ -22,13 +22,15 @@ export class ErrorBoundary extends React.Component<
     this.setState({ error, errorInfo })
     if (!(error instanceof ImportedComponentError)) {
       sendMessage(OutgoingExperienceBuilderEvent.CANVAS_ERROR, error)
+    } else {
+      throw error
     }
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="error-message">
+        <div className="cf-error-message">
           <h2 className="title">{`Something went wrong while rendering the experience`}</h2>
           <div>
             The Experience Builder SDK has encountered an error. It may be that the SDK has not been
