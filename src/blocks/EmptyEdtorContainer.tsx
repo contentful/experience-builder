@@ -18,7 +18,6 @@ export const EmptyEditorContainer = ({
     <div
       id="EmptyContainer"
       data-type="empty-container"
-      className={`container`}
       onMouseUp={() => {
         if (!isDragging) {
           return
