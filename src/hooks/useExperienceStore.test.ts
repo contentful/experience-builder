@@ -4,7 +4,7 @@ import { EntityStore } from '../core/EntityStore'
 import { compositionEntry } from '../../test/__fixtures__/composition'
 import { entries, assets } from '../../test/__fixtures__/entities'
 import type { ContentfulClientApi } from 'contentful'
-import { ExperienceStore } from '../types'
+import { DeprecatedExperienceStore } from '../types'
 
 jest.mock('../core/EntityStore')
 
@@ -45,7 +45,7 @@ describe('useExperienceStore', () => {
       entityStore: undefined,
       isLoading: false,
       fetchBySlug: store.fetchBySlug,
-    } as ExperienceStore)
+    } as DeprecatedExperienceStore)
   })
 
   it('should fetch the experience by slug with bound entities', async () => {
@@ -65,7 +65,7 @@ describe('useExperienceStore', () => {
       entityStore: undefined,
       isLoading: false,
       fetchBySlug: store.fetchBySlug,
-    } as ExperienceStore)
+    } as DeprecatedExperienceStore)
 
     await act(() => store.fetchBySlug({ experienceTypeId, localeCode, slug }))
 
@@ -100,7 +100,7 @@ describe('useExperienceStore', () => {
       entityStore: res.result.current.entityStore,
       isLoading: false,
       fetchBySlug: store.fetchBySlug,
-    } as ExperienceStore)
+    } as DeprecatedExperienceStore)
   })
 
   it('should throw an error if composition was not found', async () => {

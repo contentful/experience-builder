@@ -1,11 +1,12 @@
 export { ExperienceRoot } from './blocks'
-export { useExperienceBuilder, getValueForBreakpoint } from './hooks'
+export { useExperienceBuilder, getValueForBreakpoint, useFetchExperience } from './hooks'
 export { defineComponents } from './core/componentRegistry'
 export { calculateNodeDefaultHeight } from './core/stylesUtils'
 export type {
   ComponentDefinition,
   ComponentRegistration,
   Experience,
+  DeprecatedExperience,
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,
   CompositionVariableValueType,
@@ -21,5 +22,4 @@ export {
   CONTENTFUL_CONTAINER_ID,
   LATEST_SCHEMA_VERSION,
 } from './constants'
-export * as ssr from './ssr';
-export * as fetchers from './fetchers';
+export { createExperience, fetchers } from './core';

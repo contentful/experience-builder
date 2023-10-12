@@ -1,6 +1,5 @@
-import type { Entry } from 'contentful'
 import { supportedModes } from './constants'
-import { InternalSDKMode, IncomingExperienceBuilderEvent, ExperienceEntry } from './types'
+import { InternalSDKMode, IncomingExperienceBuilderEvent } from './types'
 
 export type VisualEditorMessagePayload = {
   source: string
@@ -24,24 +23,6 @@ const isValidJsonObject = (s: string) => {
   } catch (e) {
     return false
   }
-}
-
-// @ts-expect-error type incompatibility
-export const isExperienceEntry = (entry: Entry): entry is ExperienceEntry => {
-  return (
-    entry.sys.type === 'Entry' &&
-    !!entry.fields.title &&
-    !!entry.fields.slug &&
-    !!entry.fields.componentTree &&
-    // @ts-expect-error type incompatibility due to conditional types in Entry
-    Array.isArray(entry.fields.componentTree.breakpoints) &&
-    // @ts-expect-error type incompatibility due to conditional types in Entry
-    Array.isArray(entry.fields.componentTree.children) &&
-    // @ts-expect-error type incompatibility due to conditional types in Entry
-    typeof entry.fields.componentTree.schemaVersion === 'string' &&
-    !!entry.fields.dataSource &&
-    !!entry.fields.unboundValues
-  )
 }
 
 export const doesMismatchMessageSchema = (event: MessageEvent): false | string => {

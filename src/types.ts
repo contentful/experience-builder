@@ -1,10 +1,9 @@
 /**
  * danv:
- * NOTE!! The code commented here will be used in future. We commented it out to remove not yet fully unsupported
- * parts to prepare this library for EAP
+ * NOTE!! The code commented here will be used in future. We commented it out to remove not yet fully unsupported parts
  */
 
-import type { AssetCollection, ContentfulClientApi, Entry, EntryCollection, EntrySkeletonType } from 'contentful'
+import type { ContentfulClientApi, Entry } from 'contentful'
 import { EntityStore } from './core/EntityStore'
 
 export enum ScrollStates {
@@ -287,13 +286,45 @@ export interface HoveredElement {
   blockId: string | undefined
 }
 
+export interface DeprecatedExperienceStore {
+  composition: Composition | undefined
+  entityStore: EntityStore | undefined
+  isLoading: boolean
+  children: Composition['componentTree']['children']
+  breakpoints: Composition['componentTree']['breakpoints']
+  dataSource: Composition['dataSource']
+  unboundValues: Composition['unboundValues']
+  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined
+  fetchBySlug: ({
+    experienceTypeId,
+    slug,
+    localeCode,
+  }: {
+    experienceTypeId: string
+    slug: string
+    localeCode: string
+  }) => Promise<{ success: boolean; error?: Error }>
+}
+
 export interface Experience {
   entityStore?: EntityStore
   mode: InternalSDKMode
 }
 
-export interface ExpereinceStoreInitialState {
-  experienceEntry: Composition;
-  boundEntries: EntryCollection<EntrySkeletonType>;
-  boundAssets: AssetCollection;
+/**
+  * @deprecated please use `Experience` instead
+*/
+export interface DeprecatedExperience {
+  /**
+   * @deprecated please don't use
+   */
+  client: ContentfulClientApi<undefined>
+  /**
+   * @deprecated please don't use
+   */
+  experienceTypeId: string
+  /**
+   * @deprecated please don't use
+   */
+  mode: InternalSDKMode
 }

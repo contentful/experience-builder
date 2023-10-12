@@ -1,5 +1,5 @@
-import type { ContentfulClientApi, Entry } from "contentful"
-import { isExperienceEntry } from "../validation";
+import type { Asset, ContentfulClientApi, Entry } from "contentful"
+import { isExperienceEntry } from "../typeguards";
 
 type fetchExperienceEntitiesArgs = {
   client: ContentfulClientApi<undefined>;
@@ -49,8 +49,8 @@ export const fetchExperienceEntities = async ({
   ])
   
   return {
-    entries: entriesResponse.items ?? [],
-    assets: assetsResponse.items ?? [],
+    entries: (entriesResponse.items ?? []) as Entry[],
+    assets: (assetsResponse.items ?? []) as Asset[],
   }
 }
 
@@ -99,5 +99,5 @@ export const fetchExperienceEntry = async ({
     throw new Error(`More than one experience with identifier: ${JSON.stringify(idenifier)} was found`);
   }
 
-  return entries.items[0];
+  return entries.items[0] as Entry | undefined;
 }

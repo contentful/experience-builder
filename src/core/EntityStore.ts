@@ -1,7 +1,7 @@
 import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful'
 import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk'
 import { Composition } from '../types'
-import { isExperienceEntry } from '../validation';
+import { isExperienceEntry } from '../typeguards';
 
 type EntityStoreArgs = { experienceEntry: Entry; entities: Array<Entry | Asset>; locale: string }
 

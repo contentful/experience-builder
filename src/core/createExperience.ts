@@ -1,7 +1,7 @@
 import type { Asset, Entry } from "contentful";
 import { Experience, ExternalSDKMode } from "../types";
-import { isExperienceEntry } from "../validation";
-import { EntityStore } from "../core/EntityStore";
+import { EntityStore } from "./EntityStore";
+import { isExperienceEntry } from "../typeguards";
 
 type createExperienceArgs = {
   experienceEntry: Entry;
