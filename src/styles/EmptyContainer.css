@@ -1,6 +1,6 @@
 @import './variables.css';
 
-#EmptyContainer.container {
+#EmptyContainer {
   height: 200px;
   display: flex;
   align-items: center;
