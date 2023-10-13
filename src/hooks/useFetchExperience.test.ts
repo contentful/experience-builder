@@ -1,12 +1,10 @@
-import { useExperienceStore } from './useExperienceStore'
+import { useFetchExperience } from './useFetchExperience'
 import { act, renderHook } from '@testing-library/react'
 import { EntityStore } from '../core/EntityStore'
 import { compositionEntry } from '../../test/__fixtures__/composition'
 import { entries, assets } from '../../test/__fixtures__/entities'
-import type { ContentfulClientApi } from 'contentful'
-import { DeprecatedExperienceStore } from '../types'
-
-jest.mock('../core/EntityStore')
+import type { ContentfulClientApi, Entry } from 'contentful'
+import { ExternalSDKMode } from '../types'
 
 const experienceTypeId = 'layout'
 const localeCode = 'en-US'
@@ -14,7 +12,7 @@ const slug = 'hello-world'
 
 let clientMock: ContentfulClientApi<undefined>
 
-describe('useExperienceStore', () => {
+describe('useFetchExperience', () => {
   beforeEach(() => {
     clientMock = {
       getEntries: jest.fn().mockImplementation((data) => {
@@ -29,45 +27,50 @@ describe('useExperienceStore', () => {
   })
 
   it('should be defined', () => {
-    const res = renderHook((props) => useExperienceStore(props), {
-      initialProps: { client: clientMock },
+    const res = renderHook((props) => useFetchExperience(props), {
+      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
     })
 
     const store = res.result.current
 
     expect(store).toEqual({
-      composition: undefined,
-      children: [],
-      breakpoints: [],
-      schemaVersion: undefined,
-      dataSource: {},
-      unboundValues: {},
       entityStore: undefined,
-      isLoading: false,
+      isFetching: false,
       fetchBySlug: store.fetchBySlug,
-    } as DeprecatedExperienceStore)
+    })
   })
 
   it('should fetch the experience by slug with bound entities', async () => {
-    const res = renderHook((props) => useExperienceStore(props), {
-      initialProps: { client: clientMock },
+    const res = renderHook((props) => useFetchExperience(props), {
+      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
     })
 
     const store = res.result.current
 
     expect(store).toEqual({
-      composition: undefined,
-      children: [],
-      breakpoints: [],
-      schemaVersion: undefined,
-      dataSource: {},
-      unboundValues: {},
-      entityStore: undefined,
-      isLoading: false,
+      experience: undefined,
+      isFetching: false,
       fetchBySlug: store.fetchBySlug,
-    } as DeprecatedExperienceStore)
+    })
 
-    await act(() => store.fetchBySlug({ experienceTypeId, localeCode, slug }))
+    await act(async () => {
+      const { error, experience, success } = await store.fetchBySlug({
+        experienceTypeId,
+        localeCode,
+        slug,
+      });
+
+      const entityStore = new EntityStore({
+        experienceEntry: compositionEntry as unknown as Entry,
+        entities: [...entries, ...assets],
+        locale: localeCode,
+      });
+
+      expect(error).toBeUndefined()
+      expect(experience?.mode).toBe('preview')
+      expect(experience?.entityStore).toMatchObject(entityStore)
+      expect(success).toBe(true)
+    })
 
     expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
       content_type: experienceTypeId,
@@ -85,35 +88,24 @@ describe('useExperienceStore', () => {
       locale: localeCode,
     })
 
-    expect(EntityStore).toHaveBeenCalledWith({
-      entities: [...entries, ...assets],
-      locale: localeCode,
-    })
-
     expect(res.result.current).toEqual({
-      composition: compositionEntry.fields,
-      children: compositionEntry.fields.componentTree.children,
-      breakpoints: compositionEntry.fields.componentTree.breakpoints,
-      schemaVersion: compositionEntry.fields.componentTree.schemaVersion,
-      dataSource: compositionEntry.fields.dataSource,
-      unboundValues: compositionEntry.fields.unboundValues,
-      entityStore: res.result.current.entityStore,
-      isLoading: false,
+      experience: res.result.current.experience,
+      isFetching: false,
       fetchBySlug: store.fetchBySlug,
-    } as DeprecatedExperienceStore)
+    })
   })
 
   it('should throw an error if composition was not found', async () => {
     clientMock.getEntries = jest.fn().mockResolvedValue({ items: [] })
 
-    const res = renderHook((props) => useExperienceStore(props), {
-      initialProps: { client: clientMock },
+    const res = renderHook((props) => useFetchExperience(props), {
+      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
     })
 
     try {
       await act(() => res.result.current.fetchBySlug({ experienceTypeId, slug, localeCode }))
     } catch (e) {
-      expect((e as Error).message).toBe(`No composition with slug: ${slug} exists`)
+      expect((e as Error).message).toBe(`No experience entry with slug: ${slug} exists`)
     }
   })
 
@@ -122,20 +114,22 @@ describe('useExperienceStore', () => {
       .fn()
       .mockResolvedValue({ items: [compositionEntry, compositionEntry] })
 
-    const res = renderHook((props) => useExperienceStore(props), {
-      initialProps: { client: clientMock },
+    const res = renderHook((props) => useFetchExperience(props), {
+      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
     })
 
     try {
       await act(() => res.result.current.fetchBySlug({ experienceTypeId, slug, localeCode }))
     } catch (e) {
-      expect((e as Error).message).toBe(`More than one composition with slug: ${slug} was found`)
+      expect((e as Error).message).toBe(
+        `More than one experience with identifier: ${JSON.stringify({ slug })} was found`
+      )
     }
   })
 
   it('should throw an error if experienceTypeId is not defined', async () => {
-    const res = renderHook((props) => useExperienceStore(props), {
-      initialProps: { client: clientMock },
+    const res = renderHook((props) => useFetchExperience(props), {
+      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
     })
 
     try {
@@ -145,14 +139,14 @@ describe('useExperienceStore', () => {
       )
     } catch (e) {
       expect((e as Error).message).toBe(
-        'Preview and delivery mode requires a composition experienceTypeId to be provided'
+        'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided'
       )
     }
   })
 
   it('should throw an error if slug is not defined', async () => {
-    const res = renderHook((props) => useExperienceStore(props), {
-      initialProps: { client: clientMock },
+    const res = renderHook((props) => useFetchExperience(props), {
+      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
     })
 
     try {
@@ -162,14 +156,16 @@ describe('useExperienceStore', () => {
       )
     } catch (e) {
       expect((e as Error).message).toBe(
-        'Preview and delivery mode requires a composition slug to be provided'
+        `Failed to fetch experience entities. At least one identifier must be provided. Received: ${JSON.stringify(
+          {}
+        )}`
       )
     }
   })
 
   it('should throw an error if localeCode is not defined', async () => {
-    const res = renderHook((props) => useExperienceStore(props), {
-      initialProps: { client: clientMock },
+    const res = renderHook((props) => useFetchExperience(props), {
+      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
     })
 
     try {
@@ -179,7 +175,7 @@ describe('useExperienceStore', () => {
       )
     } catch (e) {
       expect((e as Error).message).toBe(
-        'Preview and delivery mode requires a locale code to be provided'
+        'Failed to fetch experience entities. Required "locale" parameter was not provided'
       )
     }
   })
