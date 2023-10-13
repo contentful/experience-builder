@@ -1,0 +1,18 @@
+.cf-error-message {
+  margin: 24px;
+  font-size: var(--font-size-m);
+  font-family: var(--font-stack-primary);
+  color: var(--red800);
+  padding: 16px;
+  background-color: var(--red200);
+}
+
+.cf-error-message .title {
+  margin-top: 0;
+  font-size: var(--font-size-l);
+}
+
+.cf-error-message .more-details {
+  cursor: pointer;
+  color: var(--blue700);
+}

@@ -61,8 +61,10 @@ const VisualEditorRootComponents = () => {
       await entityStore.current.fetchEntities(entityLinks)
       setEntitiesFetched(true)
     }
+
     resolveEntities()
   }, [dataSource, entityStore, locale])
+
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, [])
   }

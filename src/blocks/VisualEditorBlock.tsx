@@ -24,6 +24,7 @@ import omit from 'lodash.omit'
 import { sendMessage } from '../communication/sendMessage'
 import { getComponentRegistration } from '../core/componentRegistry'
 import { useEditorContext } from './useEditorContext'
+import { ImportedComponentErrorBoundary } from './ErrorBoundary'
 
 type PropsType =
   | StyleProps
@@ -180,8 +181,7 @@ export const VisualEditorBlock = ({
     )
   }
 
-  // imported component
-  return React.createElement(
+  const importedComponent = React.createElement(
     component,
     {
       onMouseDown: (e: MouseEvent) => {
@@ -205,4 +205,6 @@ export const VisualEditorBlock = ({
     },
     children
   )
+
+  return <ImportedComponentErrorBoundary>{importedComponent}</ImportedComponentErrorBoundary>
 }

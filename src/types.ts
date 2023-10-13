@@ -26,6 +26,7 @@ export enum OutgoingExperienceBuilderEvent {
   UPDATE_SELECTED_COMPONENT_COORDINATES = 'updateSelectedComponentCoordinates',
   UPDATE_HOVERED_COMPONENT_COORDINATES = 'updateHoveredComponentCoordinates',
   CANVAS_SCROLL = 'canvasScrolling',
+  CANVAS_ERROR = 'canvasError',
 }
 
 export enum IncomingExperienceBuilderEvent {
