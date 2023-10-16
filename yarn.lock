@@ -618,10 +618,10 @@
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.2.1.tgz#27236f276f473500e0dd5e330a074a98fc2d223b"
   integrity sha512-fBxqYcyG3Nw33DhifuE7Ndw3xlrWlOMjwsOvhLmVP4LO475Qyy9ioRChtEt6DPUdH2SFpobvM0qqC/fVe0MNDA==
 
-"@contentful/visual-sdk@^1.0.0-alpha.9":
-  version "1.0.0-alpha.9"
-  resolved "https://registry.npmjs.org/@contentful/visual-sdk/-/visual-sdk-1.0.0-alpha.9.tgz"
-  integrity sha512-YrVQObux12XDd3t0C60vJZSdlOTLA/3R6Ppmj/cnNPsU/s+9KFgq18RO8V0KAeO2exZWEBo83PZXHPLveS4aVg==
+"@contentful/visual-sdk@^1.0.0-alpha.24":
+  version "1.0.0-alpha.24"
+  resolved "https://registry.yarnpkg.com/@contentful/visual-sdk/-/visual-sdk-1.0.0-alpha.24.tgz#d2d4d550ce7a49f99e961c0b34b40c766fae88e8"
+  integrity sha512-tteYw0rCT3eq+J0SLZ/2hqNdaf3WaPDwV4V9HhxbqAJDehVxJMfphULtcEYlzj7S+ZvHF/0QAxhAWsDpCtENNg==
 
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"

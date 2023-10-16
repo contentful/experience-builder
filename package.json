@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@contentful/rich-text-types": "^16.2.1",
-    "@contentful/visual-sdk": "^1.0.0-alpha.9",
+    "@contentful/visual-sdk": "^1.0.0-alpha.24",
     "classnames": "^2.3.2",
     "contentful": "^10.3.0",
     "csstype": "^3.1.2",
