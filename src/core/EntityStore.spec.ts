@@ -5,6 +5,11 @@ import type { Entry } from 'contentful'
 
 const locale = 'en-US'
 
+jest.mock('../core/constants', () => ({
+  SDK_VERSION: '0.0.0-test',
+  __esModule: true,
+}))
+
 describe('EntityStore', () => {
   it('should be defined', () => {
     expect(EntityStore).toBeDefined()

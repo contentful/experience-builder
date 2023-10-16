@@ -12,6 +12,11 @@ const slug = 'hello-world'
 
 let clientMock: ContentfulClientApi<undefined>
 
+jest.mock('../core/constants', () => ({
+  SDK_VERSION: '0.0.0-test',
+  __esModule: true,
+}))
+
 describe('useFetchExperience', () => {
   beforeEach(() => {
     clientMock = {
