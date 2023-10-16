@@ -50,7 +50,7 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
       <ErrorBoundary>
         <VisualEditorRoot initialLocale={locale} mode={mode} />
       </ErrorBoundary>
-    );
+    )
   }
 
   if (isDeprecatedExperience(experience)) {

@@ -95,7 +95,7 @@ describe('useFetchExperience', () => {
     })
   })
 
-  it('should throw an error if composition was not found', async () => {
+  it('should throw an error if experience entry was not found', async () => {
     clientMock.getEntries = jest.fn().mockResolvedValue({ items: [] })
 
     const res = renderHook((props) => useFetchExperience(props), {
@@ -109,7 +109,7 @@ describe('useFetchExperience', () => {
     }
   })
 
-  it('should throw an error if multiple compositions were found', async () => {
+  it('should throw an error if multiple experience entries were found', async () => {
     clientMock.getEntries = jest
       .fn()
       .mockResolvedValue({ items: [compositionEntry, compositionEntry] })

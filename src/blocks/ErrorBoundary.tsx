@@ -1,7 +1,7 @@
 import React, { ErrorInfo, ReactElement } from 'react'
 import { sendMessage } from '../communication/sendMessage'
 import { OutgoingExperienceBuilderEvent } from '../types'
-import '../styles/ErrorBoundary.css';
+import '../styles/ErrorBoundary.css'
 
 class ImportedComponentError extends Error {}
 

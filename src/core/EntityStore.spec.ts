@@ -32,7 +32,7 @@ describe('EntityStore', () => {
     expect(store.breakpoints).toEqual(compositionEntry.fields.componentTree.breakpoints)
     expect(store.dataSource).toEqual(compositionEntry.fields.dataSource)
     expect(store.unboundValues).toEqual(compositionEntry.fields.unboundValues)
-    expect(store.getCurrentLocale()).toBe(locale);
+    expect(store.getCurrentLocale()).toBe(locale)
   })
 
   it('should create a new instance with initial state', () => {

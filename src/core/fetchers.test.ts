@@ -73,7 +73,7 @@ describe('fetchExperienceEntry', () => {
   })
 
   it('should call client.getEntries with given parameters', async () => {
-    (mockClient.getEntries as jest.Mock).mockResolvedValue({ items: [compositionEntry] })
+    ;(mockClient.getEntries as jest.Mock).mockResolvedValue({ items: [compositionEntry] })
 
     const experienceEntry = await fetchExperienceEntry({
       client: mockClient,
@@ -82,7 +82,7 @@ describe('fetchExperienceEntry', () => {
       idenifier: { slug: 'slug' },
     })
 
-    expect(experienceEntry).toEqual(compositionEntry);
+    expect(experienceEntry).toEqual(compositionEntry)
 
     expect(mockClient.getEntries).toHaveBeenCalledWith({
       content_type: 'books',
@@ -103,11 +103,13 @@ describe('fetchExperienceEntry', () => {
       'sys.id': 'entry-id',
     })
 
-    expect(expEntry).toEqual(compositionEntry);
+    expect(expEntry).toEqual(compositionEntry)
   })
 
   it('should throw and error if getEntries call returns more than one entry', async () => {
-    (mockClient.getEntries as jest.Mock).mockResolvedValue({ items: [compositionEntry, entries[0]] })
+    ;(mockClient.getEntries as jest.Mock).mockResolvedValue({
+      items: [compositionEntry, entries[0]],
+    })
 
     try {
       await fetchExperienceEntry({
@@ -117,7 +119,9 @@ describe('fetchExperienceEntry', () => {
         idenifier: { slug: 'slug' },
       })
     } catch (e) {
-      expect((e as Error).message).toBe('More than one experience with identifier: {"slug":"slug"} was found');
+      expect((e as Error).message).toBe(
+        'More than one experience with identifier: {"slug":"slug"} was found'
+      )
     }
   })
 })
@@ -129,12 +133,14 @@ describe('fetchExperienceEntities', () => {
         // @ts-expect-error intentionally setting it to undefined
         client: undefined,
         experienceEntry: compositionEntry as unknown as Entry,
-        locale: 'en-US'
+        locale: 'en-US',
       })
-    } catch(e) {
-      expect((e as Error).message).toBe('Failed to fetch experience entities. Required "client" parameter was not provided');
+    } catch (e) {
+      expect((e as Error).message).toBe(
+        'Failed to fetch experience entities. Required "client" parameter was not provided'
+      )
     }
-  });
+  })
 
   it('should throw an error if locale has not been provided', async () => {
     try {
@@ -142,48 +148,52 @@ describe('fetchExperienceEntities', () => {
         client: mockClient,
         experienceEntry: compositionEntry as unknown as Entry,
         // @ts-expect-error intentionally setting it to undefined
-        locale: undefined
+        locale: undefined,
       })
-    } catch(e) {
-      expect((e as Error).message).toBe('Failed to fetch experience entities. Required "locale" parameter was not provided');
+    } catch (e) {
+      expect((e as Error).message).toBe(
+        'Failed to fetch experience entities. Required "locale" parameter was not provided'
+      )
     }
-  });
+  })
 
   it('should throw an error if provided entry is not experience entry', async () => {
     try {
       await fetchExperienceEntities({
         client: mockClient,
         experienceEntry: entries[0],
-        locale: 'en-US'
+        locale: 'en-US',
       })
-    } catch(e) {
-      expect((e as Error).message).toBe('Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema');
+    } catch (e) {
+      expect((e as Error).message).toBe(
+        'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema'
+      )
     }
-  });
+  })
 
   it('should fetch referenced entities', async () => {
-    (mockClient.getAssets as jest.Mock).mockResolvedValue({ items: assets });
-    (mockClient.getEntries as jest.Mock).mockResolvedValue({ items: entries });
+    ;(mockClient.getAssets as jest.Mock).mockResolvedValue({ items: assets })
+    ;(mockClient.getEntries as jest.Mock).mockResolvedValue({ items: entries })
 
     const res = await fetchExperienceEntities({
       client: mockClient,
       experienceEntry: compositionEntry as unknown as Entry,
-      locale: 'en-US'
-    });
+      locale: 'en-US',
+    })
 
     expect(mockClient.getAssets).toHaveBeenCalledWith({
       locale: 'en-US',
-      'sys.id[in]': assets.map((asset) => asset.sys.id)
-    });
+      'sys.id[in]': assets.map((asset) => asset.sys.id),
+    })
 
     expect(mockClient.getEntries).toHaveBeenCalledWith({
       locale: 'en-US',
-      'sys.id[in]': entries.map((entry) => entry.sys.id)
-    });
+      'sys.id[in]': entries.map((entry) => entry.sys.id),
+    })
 
     expect(res).toEqual({
       assets,
-      entries
-    });
-  });
+      entries,
+    })
+  })
 })
