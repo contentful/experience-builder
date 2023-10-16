@@ -58,13 +58,13 @@ describe('useFetchExperience', () => {
         experienceTypeId,
         localeCode,
         slug,
-      });
+      })
 
       const entityStore = new EntityStore({
         experienceEntry: compositionEntry as unknown as Entry,
         entities: [...entries, ...assets],
         locale: localeCode,
-      });
+      })
 
       expect(error).toBeUndefined()
       expect(experience?.mode).toBe('preview')

@@ -19,10 +19,7 @@ type useClientsideExperienceFetchersProps = {
   client: ContentfulClientApi<undefined>
 }
 
-export const useFetchExperience = ({
-  mode,
-  client,
-}: useClientsideExperienceFetchersProps) => {
+export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetchersProps) => {
   const [experience, setExperience] = useState<Experience | undefined>(undefined)
   const [isFetching, setIsFetching] = useState(false)
   /**
@@ -93,7 +90,6 @@ export const useFetchExperience = ({
         } finally {
           setIsFetching(false)
         }
-
       } catch (e) {
         handleError(errorMessagesWhileFetching.experience, e)
         return {

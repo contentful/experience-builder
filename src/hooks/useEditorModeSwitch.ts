@@ -10,7 +10,10 @@ import { sendMessage } from '../communication/sendMessage'
 export const useEditorModeSwitch = ({
   mode,
   switchToEditorMode,
-}: { mode: InternalSDKMode, switchToEditorMode: () => void; }) => {
+}: {
+  mode: InternalSDKMode
+  switchToEditorMode: () => void
+}) => {
   const hasConnectEventBeenSent = useRef(false)
 
   // switch from preview mode to editor mode

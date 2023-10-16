@@ -22,4 +22,4 @@ export {
   CONTENTFUL_CONTAINER_ID,
   LATEST_SCHEMA_VERSION,
 } from './constants'
-export { createExperience, fetchers } from './core';
+export { createExperience, fetchers } from './core'

@@ -39,19 +39,19 @@ export const useExperienceBuilder = ({
   return {
     /**
      * @deprecated please fetch the experience using `useFetchExperience` hook or fetch the data manually using `fetchers` or `client` and create experience with `createExperience` function
-     * 
+     *
      * @example
-     * 
+     *
      * import { useFetchExperience } from '@contentful/experience-builder'
-     * 
+     *
      * const { fetchBySlug, experience, isFetching } = useFetchExperience({ client, mode })
      */
     experience,
     /**
      * @deprecated please import the function from the library
-     * 
+     *
      * @example
-     * 
+     *
      * import { defineComponents } from '@contentful/experience-builder'
      */
     defineComponents,

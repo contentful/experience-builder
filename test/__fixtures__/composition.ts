@@ -1,4 +1,4 @@
-import { Composition } from '../../src/types'
+import { Composition, ExperienceEntry } from '../../src/types'
 import { entityIds } from './entities'
 
 const compositionFields: Composition = {
@@ -50,7 +50,7 @@ const compositionFields: Composition = {
   },
 }
 
-export const compositionEntry = {
+export const compositionEntry: ExperienceEntry = {
   sys: {
     id: 'composition-id',
     type: 'Entry',
@@ -61,6 +61,24 @@ export const compositionEntry = {
         linkType: 'ContentType',
       },
     },
+    createdAt: '2023-06-27T00:00:00.000Z',
+    updatedAt: '2023-06-27T00:00:00.000Z',
+    revision: 1,
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: 'cfexampleSpace',
+      },
+    },
+    environment: {
+      sys: {
+        type: 'Link',
+        linkType: 'Environment',
+        id: 'cfexampleEnvironment',
+      },
+    },
   },
+  metadata: { tags: [] },
   fields: compositionFields,
 }

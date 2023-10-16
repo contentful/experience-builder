@@ -7,11 +7,16 @@ import { useBreakpoints, useEditorModeSwitch } from '../hooks'
 type DeliveryRootProps = {
   experience: Experience
   locale: string
-  mode: InternalSDKMode;
-  switchToEditorMode: () => void;
+  mode: InternalSDKMode
+  switchToEditorMode: () => void
 }
 
-export const PreviewDeliveryRoot = ({ locale, mode, switchToEditorMode, experience }: DeliveryRootProps) => {
+export const PreviewDeliveryRoot = ({
+  locale,
+  mode,
+  switchToEditorMode,
+  experience,
+}: DeliveryRootProps) => {
   const { entityStore } = experience
 
   useEditorModeSwitch({
@@ -21,7 +26,7 @@ export const PreviewDeliveryRoot = ({ locale, mode, switchToEditorMode, experien
 
   const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? [])
 
-  if (!entityStore?.experienceEntry || !entityStore?.schemaVersion) {
+  if (!entityStore?.experienceEntryFields || !entityStore?.schemaVersion) {
     return null
   }
 
@@ -34,7 +39,7 @@ export const PreviewDeliveryRoot = ({ locale, mode, switchToEditorMode, experien
 
   return (
     <>
-      {entityStore.experienceEntry.componentTree.children.map((childNode, index) => (
+      {entityStore.experienceEntryFields.componentTree.children.map((childNode, index) => (
         <CompositionBlock
           key={index}
           node={childNode}

@@ -1,7 +1,7 @@
 import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful'
 import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk'
 import { Composition } from '../types'
-import { isExperienceEntry } from '../typeguards';
+import { isExperienceEntry } from '../typeguards'
 
 type EntityStoreArgs = { experienceEntry: Entry; entities: Array<Entry | Asset>; locale: string }
 
@@ -12,9 +12,9 @@ export class EntityStore extends VisualSdkEntityStore {
     super({ entities, locale })
 
     if (isExperienceEntry(experienceEntry)) {
-      this._experienceEntry = experienceEntry.fields;
+      this._experienceEntry = experienceEntry.fields
     } else {
-      throw new Error('Invalid experience entry provided');
+      throw new Error('Provided entry is not experience entry')
     }
   }
 
@@ -22,29 +22,24 @@ export class EntityStore extends VisualSdkEntityStore {
     return super.locale
   }
 
-  public switchLocale(locale: string) {
-    super.locale = locale
-    super.entitiesMap.clear()
-  }
-
-  public get experienceEntry() {
-    return this._experienceEntry;
+  public get experienceEntryFields() {
+    return this._experienceEntry
   }
 
   public get schemaVersion() {
-    return this._experienceEntry?.componentTree.schemaVersion;
+    return this._experienceEntry?.componentTree.schemaVersion
   }
 
   public get breakpoints() {
-    return this._experienceEntry?.componentTree.breakpoints ?? [];
+    return this._experienceEntry?.componentTree.breakpoints ?? []
   }
 
   public get dataSource() {
-    return this._experienceEntry?.dataSource ?? {};
+    return this._experienceEntry?.dataSource ?? {}
   }
 
   public get unboundValues() {
-    return this._experienceEntry?.unboundValues ?? {};
+    return this._experienceEntry?.unboundValues ?? {}
   }
 
   public getFieldValue(

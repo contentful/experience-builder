@@ -264,8 +264,8 @@ export type Composition = {
 }
 
 export type ExperienceEntry = {
-  sys: Entry['sys'],
-  fields: Composition,
+  sys: Entry['sys']
+  fields: Composition
   metadata: Entry['metadata']
 }
 
@@ -312,8 +312,8 @@ export interface Experience {
 }
 
 /**
-  * @deprecated please use `Experience` instead
-*/
+ * @deprecated please use `Experience` instead
+ */
 export interface DeprecatedExperience {
   /**
    * @deprecated please don't use

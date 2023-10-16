@@ -2,7 +2,7 @@ import { resetComponentRegistry } from '../core/componentRegistry'
 import { sendMessage } from '../communication/sendMessage'
 import { renderHook, waitFor } from '@testing-library/react'
 import { useEditorModeSwitch } from './useEditorModeSwitch'
-import { Experience, ExternalSDKMode, OutgoingExperienceBuilderEvent } from '../types'
+import { ExternalSDKMode, OutgoingExperienceBuilderEvent } from '../types'
 
 jest.mock('../communication/sendMessage')
 jest.mock('../core/constants', () => {
@@ -24,7 +24,7 @@ describe('useEditorModeSwitch', () => {
     renderHook((props) => useEditorModeSwitch(props), {
       initialProps: {
         mode: 'preview' as ExternalSDKMode,
-        switchToEditorMode: jest.fn() as Experience['switchToEditorMode'],
+        switchToEditorMode: jest.fn() as () => void,
       },
     })
 
@@ -35,7 +35,7 @@ describe('useEditorModeSwitch', () => {
     renderHook((props) => useEditorModeSwitch(props), {
       initialProps: {
         mode: 'delivery' as ExternalSDKMode,
-        switchToEditorMode: jest.fn() as Experience['switchToEditorMode'],
+        switchToEditorMode: jest.fn() as () => void,
       },
     })
 
@@ -49,7 +49,7 @@ describe('useEditorModeSwitch', () => {
   })
 
   it('should switch the mode to editor when it receives a REQUEST_EDITOR_MODE message', () => {
-    const switchToEditorMode = jest.fn() as Experience['switchToEditorMode']
+    const switchToEditorMode = jest.fn() as () => void
 
     renderHook((props) => useEditorModeSwitch(props), {
       initialProps: {

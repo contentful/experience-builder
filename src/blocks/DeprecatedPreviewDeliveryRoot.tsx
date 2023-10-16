@@ -8,16 +8,22 @@ import { usePrevious } from '../hooks/usePrevious'
 type DeprecatedPreviewDeliveryRootProps = {
   deprecatedExperience: DeprecatedExperience
   locale: string
-  mode: InternalSDKMode;
-  switchToEditorMode: () => void;
-  slug?: string;
+  mode: InternalSDKMode
+  switchToEditorMode: () => void
+  slug?: string
 }
 
 /**
  * @deprecated Remove after the BETA release
- * @returns 
+ * @returns
  */
-export const DeprecatedPreviewDeliveryRoot = ({ locale, mode, switchToEditorMode, slug, deprecatedExperience }: DeprecatedPreviewDeliveryRootProps) => {
+export const DeprecatedPreviewDeliveryRoot = ({
+  locale,
+  mode,
+  switchToEditorMode,
+  slug,
+  deprecatedExperience,
+}: DeprecatedPreviewDeliveryRootProps) => {
   const attemptedToFetch = useRef<boolean>(false)
   const previousLocale = usePrevious(locale)
 
@@ -26,16 +32,20 @@ export const DeprecatedPreviewDeliveryRoot = ({ locale, mode, switchToEditorMode
     switchToEditorMode,
   })
 
-  const { experienceTypeId, client } = deprecatedExperience;
+  const { experienceTypeId, client } = deprecatedExperience
 
-  const { fetchBySlug, experience, isFetching } = useFetchExperience({ client, mode: mode as ExternalSDKMode });
+  const { fetchBySlug, experience, isFetching } = useFetchExperience({
+    client,
+    mode: mode as ExternalSDKMode,
+  })
 
-  const entityStore = experience?.entityStore;
+  const entityStore = experience?.entityStore
 
   useEffect(() => {
     // TODO: Test it, it is crucial
     // will make it fetch on each locale change as well as if experience entry hasn't been fetched yet at least once
-    const shouldFetch = client && (!entityStore && !attemptedToFetch.current) || previousLocale !== locale
+    const shouldFetch =
+      (client && !entityStore && !attemptedToFetch.current) || previousLocale !== locale
     // this useEffect is meant to trigger fetching for the first time if it hasn't been done earlier
     // if not yet fetched and not fetchin at the moment
     if (shouldFetch && !isFetching && slug) {
@@ -46,20 +56,11 @@ export const DeprecatedPreviewDeliveryRoot = ({ locale, mode, switchToEditorMode
         slug,
       })
     }
-  }, [
-    experienceTypeId,
-    entityStore,
-    isFetching,
-    fetchBySlug,
-    client,
-    slug,
-    locale,
-    previousLocale,
-  ])
+  }, [experienceTypeId, entityStore, isFetching, fetchBySlug, client, slug, locale, previousLocale])
 
   const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? [])
 
-  if (!entityStore?.experienceEntry || !entityStore?.schemaVersion) {
+  if (!entityStore?.experienceEntryFields || !entityStore?.schemaVersion) {
     return null
   }
 
@@ -72,7 +73,7 @@ export const DeprecatedPreviewDeliveryRoot = ({ locale, mode, switchToEditorMode
 
   return (
     <>
-      {entityStore.experienceEntry.componentTree.children.map((childNode, index) => (
+      {entityStore.experienceEntryFields.componentTree.children.map((childNode, index) => (
         <CompositionBlock
           key={index}
           node={childNode}

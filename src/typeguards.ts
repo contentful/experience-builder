@@ -23,9 +23,9 @@ export const isDeprecatedExperience = (
   experience: Experience | DeprecatedExperience
 ): experience is DeprecatedExperience => {
   return (
-    experience && 
+    experience &&
     {}.hasOwnProperty.call(experience, 'client') &&
     {}.hasOwnProperty.call(experience, 'experienceTypeId') &&
     {}.hasOwnProperty.call(experience, 'mode')
-  );
+  )
 }
