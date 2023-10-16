@@ -73,7 +73,8 @@ describe('fetchExperienceEntry', () => {
   })
 
   it('should call client.getEntries with given parameters', async () => {
-    (mockClient.getEntries as jest.Mock).mockResolvedValue({ items: [compositionEntry] })
+    /* eslint-disable @typescript-eslint/no-extra-semi */
+    ;(mockClient.getEntries as jest.Mock).mockResolvedValue({ items: [compositionEntry] })
 
     const experienceEntry = await fetchExperienceEntry({
       client: mockClient,
@@ -107,7 +108,8 @@ describe('fetchExperienceEntry', () => {
   })
 
   it('should throw and error if getEntries call returns more than one entry', async () => {
-    (mockClient.getEntries as jest.Mock).mockResolvedValue({
+    /* eslint-disable @typescript-eslint/no-extra-semi */
+    ;(mockClient.getEntries as jest.Mock).mockResolvedValue({
       items: [compositionEntry, entries[0]],
     })
 
@@ -172,9 +174,11 @@ describe('fetchExperienceEntities', () => {
   })
 
   it('should fetch referenced entities', async () => {
-    (mockClient.getAssets as jest.Mock)
-      .mockResolvedValue({ items: assets })(mockClient.getEntries as jest.Mock)
-      .mockResolvedValue({ items: entries })
+    /* eslint-disable @typescript-eslint/no-extra-semi */
+    ;(mockClient.getAssets as jest.Mock).mockResolvedValue({ items: assets })
+
+    /* eslint-disable @typescript-eslint/no-extra-semi */
+    ;(mockClient.getEntries as jest.Mock).mockResolvedValue({ items: entries })
 
     const res = await fetchExperienceEntities({
       client: mockClient,
