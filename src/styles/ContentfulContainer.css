@@ -4,7 +4,7 @@
   overflow: scroll;
   position: relative;
   display: flex;
-	box-sizing: border-box;
+  box-sizing: border-box;
 
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */

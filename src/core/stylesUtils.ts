@@ -7,7 +7,7 @@ import {
 //@ts-expect-error no types available
 import md5 from 'md5'
 import {
-	transformWidthSizing,
+  transformWidthSizing,
   transformAlignment,
   transformBackgroundImage,
   transformBorderStyle,
