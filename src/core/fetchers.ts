@@ -114,3 +114,38 @@ export const fetchExperienceEntry = async ({
 
   return entries.items[0] as Entry | undefined
 }
+
+type fetchExperienceArgs = {
+  client: ContentfulClientApi<undefined>
+  experienceTypeId: string
+  locale: string
+  idenifier: {
+    slug?: string
+    id?: string
+  }
+}
+
+export const fetchExperience = async ({
+  client,
+  experienceTypeId,
+  locale,
+  idenifier,
+}: fetchExperienceArgs) => {
+  const entry = await fetchExperienceEntry({ client, experienceTypeId, locale, idenifier })
+
+  if (!entry) {
+    return { experienceEntry: undefined, referencedAssets: [], referencedEntries: [] }
+  }
+
+  const { assets, entries } = await fetchExperienceEntities({
+    client,
+    experienceEntry: entry,
+    locale,
+  })
+
+  return {
+    experienceEntry: entry,
+    referencedAssets: assets,
+    referencedEntries: entries,
+  }
+}

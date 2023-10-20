@@ -42,6 +42,7 @@ describe('useFetchExperience', () => {
       entityStore: undefined,
       isFetching: false,
       fetchBySlug: store.fetchBySlug,
+      fetchById: store.fetchById
     })
   })
 
@@ -56,6 +57,7 @@ describe('useFetchExperience', () => {
       experience: undefined,
       isFetching: false,
       fetchBySlug: store.fetchBySlug,
+      fetchById: store.fetchById,
     })
 
     await act(async () => {
@@ -97,6 +99,64 @@ describe('useFetchExperience', () => {
       experience: res.result.current.experience,
       isFetching: false,
       fetchBySlug: store.fetchBySlug,
+      fetchById: store.fetchById,
+    })
+  })
+
+  it('should fetch the experience by id with bound entities', async () => {
+    const res = renderHook((props) => useFetchExperience(props), {
+      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
+    })
+
+    const store = res.result.current
+
+    expect(store).toEqual({
+      experience: undefined,
+      isFetching: false,
+      fetchBySlug: store.fetchBySlug,
+      fetchById: store.fetchById,
+    })
+
+    await act(async () => {
+      const { error, experience, success } = await store.fetchById({
+        experienceTypeId,
+        localeCode,
+        id: compositionEntry.sys.id,
+      })
+
+      const entityStore = new EntityStore({
+        experienceEntry: compositionEntry as unknown as Entry,
+        entities: [...entries, ...assets],
+        locale: localeCode,
+      })
+
+      expect(error).toBeUndefined()
+      expect(experience?.mode).toBe('preview')
+      expect(experience?.entityStore).toMatchObject(entityStore)
+      expect(success).toBe(true)
+    })
+
+    expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
+      content_type: experienceTypeId,
+      'sys.id': compositionEntry.sys.id,
+      locale: localeCode,
+    })
+
+    expect(clientMock.getEntries).toHaveBeenNthCalledWith(2, {
+      'sys.id[in]': entries.map((entry) => entry.sys.id),
+      locale: localeCode,
+    })
+
+    expect(clientMock.getAssets).toHaveBeenCalledWith({
+      'sys.id[in]': assets.map((asset) => asset.sys.id),
+      locale: localeCode,
+    })
+
+    expect(res.result.current).toEqual({
+      experience: res.result.current.experience,
+      isFetching: false,
+      fetchBySlug: store.fetchBySlug,
+      fetchById: store.fetchById,
     })
   })
 

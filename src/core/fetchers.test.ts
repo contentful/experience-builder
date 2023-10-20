@@ -1,5 +1,5 @@
 import type { ContentfulClientApi, Entry } from 'contentful'
-import { fetchExperienceEntities, fetchExperienceEntry } from './fetchers'
+import * as fetchers from './fetchers'
 import { compositionEntry } from '../../test/__fixtures__/composition'
 import { assets, entries } from '../../test/__fixtures__/entities'
 
@@ -16,7 +16,7 @@ jest.mock('../core/constants', () => ({
 describe('fetchExperienceEntry', () => {
   it('should throw and error if client has not been provided', async () => {
     try {
-      await fetchExperienceEntry({
+      await fetchers.fetchExperienceEntry({
         // @ts-expect-error intentionally setting it to undefined
         client: undefined,
         experienceTypeId: 'books',
@@ -32,7 +32,7 @@ describe('fetchExperienceEntry', () => {
 
   it('should throw an error if locale has not been provided', async () => {
     try {
-      await fetchExperienceEntry({
+      await fetchers.fetchExperienceEntry({
         client: mockClient,
         experienceTypeId: 'books',
         // @ts-expect-error intentionally setting it to undefined
@@ -48,7 +48,7 @@ describe('fetchExperienceEntry', () => {
 
   it('should throw an error if experienceId has not been provided', async () => {
     try {
-      await fetchExperienceEntry({
+      await fetchers.fetchExperienceEntry({
         client: mockClient,
         // @ts-expect-error intentionally setting it to undefined
         experienceTypeId: undefined,
@@ -64,7 +64,7 @@ describe('fetchExperienceEntry', () => {
 
   it('should throw and error if neither id nor slug identifier has been provided', async () => {
     try {
-      await fetchExperienceEntry({
+      await fetchers.fetchExperienceEntry({
         client: mockClient,
         experienceTypeId: 'books',
         locale: 'en-US',
@@ -81,7 +81,7 @@ describe('fetchExperienceEntry', () => {
     /* eslint-disable @typescript-eslint/no-extra-semi */
     ;(mockClient.getEntries as jest.Mock).mockResolvedValue({ items: [compositionEntry] })
 
-    const experienceEntry = await fetchExperienceEntry({
+    const experienceEntry = await fetchers.fetchExperienceEntry({
       client: mockClient,
       experienceTypeId: 'books',
       locale: 'en-US',
@@ -96,7 +96,7 @@ describe('fetchExperienceEntry', () => {
       'fields.slug': 'slug',
     })
 
-    const expEntry = await fetchExperienceEntry({
+    const expEntry = await fetchers.fetchExperienceEntry({
       client: mockClient,
       experienceTypeId: 'books',
       locale: 'en-US',
@@ -119,7 +119,7 @@ describe('fetchExperienceEntry', () => {
     })
 
     try {
-      await fetchExperienceEntry({
+      await fetchers.fetchExperienceEntry({
         client: mockClient,
         experienceTypeId: 'books',
         locale: 'en-US',
@@ -136,7 +136,7 @@ describe('fetchExperienceEntry', () => {
 describe('fetchExperienceEntities', () => {
   it('should throw an error if client has not been provided', async () => {
     try {
-      await fetchExperienceEntities({
+      await fetchers.fetchExperienceEntities({
         // @ts-expect-error intentionally setting it to undefined
         client: undefined,
         experienceEntry: compositionEntry as unknown as Entry,
@@ -151,7 +151,7 @@ describe('fetchExperienceEntities', () => {
 
   it('should throw an error if locale has not been provided', async () => {
     try {
-      await fetchExperienceEntities({
+      await fetchers.fetchExperienceEntities({
         client: mockClient,
         experienceEntry: compositionEntry as unknown as Entry,
         // @ts-expect-error intentionally setting it to undefined
@@ -166,7 +166,7 @@ describe('fetchExperienceEntities', () => {
 
   it('should throw an error if provided entry is not experience entry', async () => {
     try {
-      await fetchExperienceEntities({
+      await fetchers.fetchExperienceEntities({
         client: mockClient,
         experienceEntry: entries[0],
         locale: 'en-US',
@@ -185,7 +185,7 @@ describe('fetchExperienceEntities', () => {
     /* eslint-disable @typescript-eslint/no-extra-semi */
     ;(mockClient.getEntries as jest.Mock).mockResolvedValue({ items: entries })
 
-    const res = await fetchExperienceEntities({
+    const res = await fetchers.fetchExperienceEntities({
       client: mockClient,
       experienceEntry: compositionEntry as unknown as Entry,
       locale: 'en-US',
@@ -207,3 +207,44 @@ describe('fetchExperienceEntities', () => {
     })
   })
 })
+
+
+describe('fetchExperience', () => {
+  beforeEach(() => {
+    /* eslint-disable @typescript-eslint/no-extra-semi */
+    ;(mockClient.getEntries as jest.Mock).mockResolvedValueOnce({
+      items: [compositionEntry],
+    })
+
+    /* eslint-disable @typescript-eslint/no-extra-semi */
+    ;(mockClient.getAssets as jest.Mock).mockResolvedValue({ items: assets })
+
+    /* eslint-disable @typescript-eslint/no-extra-semi */
+    ;(mockClient.getEntries as jest.Mock).mockResolvedValue({ items: entries })
+  });
+
+  it('should call fetchExperienceEntry and fetchExperienceEntities with given parameters', async () => {
+    const fetchEntrySpy = jest.spyOn(fetchers, 'fetchExperienceEntry');
+    const fetchReferencesSpy = jest.spyOn(fetchers, 'fetchExperienceEntities');
+
+    await fetchers.fetchExperience({
+      client: mockClient,
+      experienceTypeId: 'books',
+      locale: 'en-US',
+      idenifier: { slug: 'slug' },
+    });
+
+    expect(fetchEntrySpy).toHaveBeenCalledWith({
+      client: mockClient,
+      experienceTypeId: 'books',
+      locale: 'en-US',
+      idenifier: { slug: 'slug' },
+    });
+
+    expect(fetchReferencesSpy).toHaveBeenCalledWith({
+      client: mockClient,
+      experienceEntry: compositionEntry,
+      locale: 'en-US',
+    });
+  });
+});
