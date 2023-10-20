@@ -10,9 +10,9 @@
   "scripts": {
     "dev": "vite",
     "build": "VITE_SDK_VERSION=$npm_package_version vite build",
-    "test": "NODE_ENV=test jest",
-    "test:watch": "NODE_ENV=test jest --watch",
-    "test:coverage": "NODE_ENV=test jest --coverage",
+    "test": "NODE_ENV=test jest --maxWorkers=2",
+    "test:watch": "NODE_ENV=test jest --watch --maxWorkers=2",
+    "test:coverage": "NODE_ENV=test jest --coverage --maxWorkers=2",
     "check-types": "tsc",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx'",
     "presemantic-release": "yarn build",
