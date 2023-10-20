@@ -42,7 +42,7 @@ describe('useFetchExperience', () => {
       entityStore: undefined,
       isFetching: false,
       fetchBySlug: store.fetchBySlug,
-      fetchById: store.fetchById
+      fetchById: store.fetchById,
     })
   })
 

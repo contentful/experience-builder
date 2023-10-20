@@ -208,7 +208,6 @@ describe('fetchExperienceEntities', () => {
   })
 })
 
-
 describe('fetchExperience', () => {
   beforeEach(() => {
     /* eslint-disable @typescript-eslint/no-extra-semi */
@@ -221,30 +220,30 @@ describe('fetchExperience', () => {
 
     /* eslint-disable @typescript-eslint/no-extra-semi */
     ;(mockClient.getEntries as jest.Mock).mockResolvedValue({ items: entries })
-  });
+  })
 
   it('should call fetchExperienceEntry and fetchExperienceEntities with given parameters', async () => {
-    const fetchEntrySpy = jest.spyOn(fetchers, 'fetchExperienceEntry');
-    const fetchReferencesSpy = jest.spyOn(fetchers, 'fetchExperienceEntities');
+    const fetchEntrySpy = jest.spyOn(fetchers, 'fetchExperienceEntry')
+    const fetchReferencesSpy = jest.spyOn(fetchers, 'fetchExperienceEntities')
 
     await fetchers.fetchExperience({
       client: mockClient,
       experienceTypeId: 'books',
       locale: 'en-US',
       idenifier: { slug: 'slug' },
-    });
+    })
 
     expect(fetchEntrySpy).toHaveBeenCalledWith({
       client: mockClient,
       experienceTypeId: 'books',
       locale: 'en-US',
       idenifier: { slug: 'slug' },
-    });
+    })
 
     expect(fetchReferencesSpy).toHaveBeenCalledWith({
       client: mockClient,
       experienceEntry: compositionEntry,
       locale: 'en-US',
-    });
-  });
-});
+    })
+  })
+})
