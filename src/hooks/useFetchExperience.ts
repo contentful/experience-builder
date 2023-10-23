@@ -46,7 +46,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
           client,
           experienceTypeId,
           locale: localeCode,
-          idenifier: {
+          identifier: {
             slug,
           },
         })
@@ -127,7 +127,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
           client,
           experienceTypeId,
           locale: localeCode,
-          idenifier: {
+          identifier: {
             id,
           },
         })

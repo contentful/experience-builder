@@ -60,7 +60,7 @@ type fetchExperienceEntryArgs = {
   client: ContentfulClientApi<undefined>
   experienceTypeId: string
   locale: string
-  idenifier: {
+  identifier: {
     slug?: string
     id?: string
   }
@@ -70,7 +70,7 @@ export const fetchExperienceEntry = async ({
   client,
   experienceTypeId,
   locale,
-  idenifier,
+  identifier,
 }: fetchExperienceEntryArgs) => {
   if (!client) {
     throw new Error(
@@ -90,15 +90,15 @@ export const fetchExperienceEntry = async ({
     )
   }
 
-  if (!idenifier.slug && !idenifier.id) {
+  if (!identifier.slug && !identifier.id) {
     throw new Error(
       `Failed to fetch experience entities. At least one identifier must be provided. Received: ${JSON.stringify(
-        idenifier
+        identifier
       )}`
     )
   }
 
-  const filter = idenifier.slug ? { 'fields.slug': idenifier.slug } : { 'sys.id': idenifier.id }
+  const filter = identifier.slug ? { 'fields.slug': identifier.slug } : { 'sys.id': identifier.id }
 
   const entries = await client.getEntries({
     content_type: experienceTypeId,
@@ -108,7 +108,7 @@ export const fetchExperienceEntry = async ({
 
   if (entries.items.length > 1) {
     throw new Error(
-      `More than one experience with identifier: ${JSON.stringify(idenifier)} was found`
+      `More than one experience with identifier: ${JSON.stringify(identifier)} was found`
     )
   }
 
@@ -119,7 +119,7 @@ type fetchExperienceArgs = {
   client: ContentfulClientApi<undefined>
   experienceTypeId: string
   locale: string
-  idenifier: {
+  identifier: {
     slug?: string
     id?: string
   }
@@ -129,9 +129,9 @@ export const fetchExperience = async ({
   client,
   experienceTypeId,
   locale,
-  idenifier,
+  identifier,
 }: fetchExperienceArgs) => {
-  const entry = await fetchExperienceEntry({ client, experienceTypeId, locale, idenifier })
+  const entry = await fetchExperienceEntry({ client, experienceTypeId, locale, identifier })
 
   if (!entry) {
     return { experienceEntry: undefined, referencedAssets: [], referencedEntries: [] }

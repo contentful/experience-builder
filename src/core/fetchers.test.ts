@@ -21,7 +21,7 @@ describe('fetchExperienceEntry', () => {
         client: undefined,
         experienceTypeId: 'books',
         locale: 'en-US',
-        idenifier: { slug: 'slug' },
+        identifier: { slug: 'slug' },
       })
     } catch (e) {
       expect((e as Error).message).toBe(
@@ -37,7 +37,7 @@ describe('fetchExperienceEntry', () => {
         experienceTypeId: 'books',
         // @ts-expect-error intentionally setting it to undefined
         locale: undefined,
-        idenifier: { slug: 'slug' },
+        identifier: { slug: 'slug' },
       })
     } catch (e) {
       expect((e as Error).message).toBe(
@@ -53,7 +53,7 @@ describe('fetchExperienceEntry', () => {
         // @ts-expect-error intentionally setting it to undefined
         experienceTypeId: undefined,
         locale: 'en-US',
-        idenifier: { slug: 'slug' },
+        identifier: { slug: 'slug' },
       })
     } catch (e) {
       expect((e as Error).message).toBe(
@@ -68,7 +68,7 @@ describe('fetchExperienceEntry', () => {
         client: mockClient,
         experienceTypeId: 'books',
         locale: 'en-US',
-        idenifier: {},
+        identifier: {},
       })
     } catch (e) {
       expect((e as Error).message).toBe(
@@ -85,7 +85,7 @@ describe('fetchExperienceEntry', () => {
       client: mockClient,
       experienceTypeId: 'books',
       locale: 'en-US',
-      idenifier: { slug: 'slug' },
+      identifier: { slug: 'slug' },
     })
 
     expect(experienceEntry).toEqual(compositionEntry)
@@ -100,7 +100,7 @@ describe('fetchExperienceEntry', () => {
       client: mockClient,
       experienceTypeId: 'books',
       locale: 'en-US',
-      idenifier: { id: 'entry-id' },
+      identifier: { id: 'entry-id' },
     })
 
     expect(mockClient.getEntries).toHaveBeenCalledWith({
@@ -123,7 +123,7 @@ describe('fetchExperienceEntry', () => {
         client: mockClient,
         experienceTypeId: 'books',
         locale: 'en-US',
-        idenifier: { slug: 'slug' },
+        identifier: { slug: 'slug' },
       })
     } catch (e) {
       expect((e as Error).message).toBe(
@@ -230,14 +230,14 @@ describe('fetchExperience', () => {
       client: mockClient,
       experienceTypeId: 'books',
       locale: 'en-US',
-      idenifier: { slug: 'slug' },
+      identifier: { slug: 'slug' },
     })
 
     expect(fetchEntrySpy).toHaveBeenCalledWith({
       client: mockClient,
       experienceTypeId: 'books',
       locale: 'en-US',
-      idenifier: { slug: 'slug' },
+      identifier: { slug: 'slug' },
     })
 
     expect(fetchReferencesSpy).toHaveBeenCalledWith({
