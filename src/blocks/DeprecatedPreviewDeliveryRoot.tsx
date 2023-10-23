@@ -54,6 +54,8 @@ export const DeprecatedPreviewDeliveryRoot = ({
         experienceTypeId,
         localeCode: locale,
         slug,
+      }).catch(() => {
+        // noop
       })
     }
   }, [experienceTypeId, entityStore, isFetching, fetchBySlug, client, slug, locale, previousLocale])

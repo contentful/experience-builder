@@ -1,4 +1,4 @@
-import type { ContentfulClientApi } from 'contentful'
+import type { ContentfulClientApi, Entry } from 'contentful'
 import { useCallback, useState } from 'react'
 import { fetchExperienceEntities, fetchExperienceEntry } from '../core/fetchers'
 import { Experience, ExternalSDKMode } from '../types'
@@ -38,11 +38,13 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
       experienceTypeId: string
       slug: string
       localeCode: string
-    }): Promise<{ success: boolean; error?: Error; experience?: Experience }> => {
+    }): Promise<Experience | undefined> => {
       setIsFetching(true)
 
+      let experienceEntry: Entry | undefined = undefined
+
       try {
-        const experienceEntry = await fetchExperienceEntry({
+        experienceEntry = await fetchExperienceEntry({
           client,
           experienceTypeId,
           locale: localeCode,
@@ -50,55 +52,42 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
             slug,
           },
         })
-
-        if (!experienceEntry) {
-          const error = new Error(`No experience with slug: ${slug} exists`)
-          handleError(errorMessagesWhileFetching.experience, error)
-
-          return {
-            success: false,
-            error,
-          }
-        }
-
-        try {
-          const { entries, assets } = await fetchExperienceEntities({
-            client,
-            experienceEntry,
-            locale: localeCode,
-          })
-
-          const experience = createExperience({
-            experienceEntry,
-            referencedAssets: assets,
-            referencedEntries: entries,
-            locale: localeCode,
-            mode,
-          })
-
-          setExperience(experience)
-
-          return {
-            success: true,
-            experience,
-          }
-        } catch (e) {
-          handleError(errorMessagesWhileFetching.experienceReferences, e)
-          return {
-            success: false,
-            error: e as Error,
-          }
-        } finally {
-          setIsFetching(false)
-        }
       } catch (e) {
         handleError(errorMessagesWhileFetching.experience, e)
-        return {
-          success: false,
-          error: e as Error,
-        }
-      } finally {
         setIsFetching(false)
+        throw e
+      }
+
+      if (!experienceEntry) {
+        const error = new Error(`No experience entry with slug: ${slug} exists`)
+        handleError(errorMessagesWhileFetching.experience, error)
+        setIsFetching(false)
+        throw error
+      }
+
+      try {
+        const { entries, assets } = await fetchExperienceEntities({
+          client,
+          experienceEntry,
+          locale: localeCode,
+        })
+
+        const experience = createExperience({
+          experienceEntry,
+          referencedAssets: assets,
+          referencedEntries: entries,
+          locale: localeCode,
+          mode,
+        })
+
+        setExperience(experience)
+        setIsFetching(false)
+
+        return experience
+      } catch (e) {
+        handleError(errorMessagesWhileFetching.experienceReferences, e)
+        setIsFetching(false)
+        throw e
       }
     },
     [client, mode]
@@ -119,11 +108,13 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
       experienceTypeId: string
       id: string
       localeCode: string
-    }): Promise<{ success: boolean; error?: Error; experience?: Experience }> => {
+    }): Promise<Experience | undefined> => {
       setIsFetching(true)
 
+      let experienceEntry: Entry | undefined = undefined
+
       try {
-        const experienceEntry = await fetchExperienceEntry({
+        experienceEntry = await fetchExperienceEntry({
           client,
           experienceTypeId,
           locale: localeCode,
@@ -131,55 +122,43 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
             id,
           },
         })
-
-        if (!experienceEntry) {
-          const error = new Error(`No experience with id: ${id} exists`)
-          handleError(errorMessagesWhileFetching.experience, error)
-
-          return {
-            success: false,
-            error,
-          }
-        }
-
-        try {
-          const { entries, assets } = await fetchExperienceEntities({
-            client,
-            experienceEntry,
-            locale: localeCode,
-          })
-
-          const experience = createExperience({
-            experienceEntry,
-            referencedAssets: assets,
-            referencedEntries: entries,
-            locale: localeCode,
-            mode,
-          })
-
-          setExperience(experience)
-
-          return {
-            success: true,
-            experience,
-          }
-        } catch (e) {
-          handleError(errorMessagesWhileFetching.experienceReferences, e)
-          return {
-            success: false,
-            error: e as Error,
-          }
-        } finally {
-          setIsFetching(false)
-        }
       } catch (e) {
         handleError(errorMessagesWhileFetching.experience, e)
-        return {
-          success: false,
-          error: e as Error,
-        }
-      } finally {
         setIsFetching(false)
+
+        throw e
+      }
+
+      if (!experienceEntry) {
+        const error = new Error(`No experience entry with id: ${id} exists`)
+        handleError(errorMessagesWhileFetching.experience, error)
+        setIsFetching(false)
+        throw error
+      }
+
+      try {
+        const { entries, assets } = await fetchExperienceEntities({
+          client,
+          experienceEntry,
+          locale: localeCode,
+        })
+
+        const experience = createExperience({
+          experienceEntry,
+          referencedAssets: assets,
+          referencedEntries: entries,
+          locale: localeCode,
+          mode,
+        })
+
+        setExperience(experience)
+        setIsFetching(false)
+
+        return experience
+      } catch (e) {
+        handleError(errorMessagesWhileFetching.experienceReferences, e)
+        setIsFetching(false)
+        throw e
       }
     },
     [client, mode]

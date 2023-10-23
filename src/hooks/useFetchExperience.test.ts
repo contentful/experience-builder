@@ -61,7 +61,7 @@ describe('useFetchExperience', () => {
     })
 
     await act(async () => {
-      const { error, experience, success } = await store.fetchBySlug({
+      const experience = await store.fetchBySlug({
         experienceTypeId,
         localeCode,
         slug,
@@ -73,10 +73,8 @@ describe('useFetchExperience', () => {
         locale: localeCode,
       })
 
-      expect(error).toBeUndefined()
       expect(experience?.mode).toBe('preview')
       expect(experience?.entityStore).toMatchObject(entityStore)
-      expect(success).toBe(true)
     })
 
     expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
@@ -118,7 +116,7 @@ describe('useFetchExperience', () => {
     })
 
     await act(async () => {
-      const { error, experience, success } = await store.fetchById({
+      const experience = await store.fetchById({
         experienceTypeId,
         localeCode,
         id: compositionEntry.sys.id,
@@ -130,10 +128,8 @@ describe('useFetchExperience', () => {
         locale: localeCode,
       })
 
-      expect(error).toBeUndefined()
       expect(experience?.mode).toBe('preview')
       expect(experience?.entityStore).toMatchObject(entityStore)
-      expect(success).toBe(true)
     })
 
     expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
@@ -172,6 +168,8 @@ describe('useFetchExperience', () => {
     } catch (e) {
       expect((e as Error).message).toBe(`No experience entry with slug: ${slug} exists`)
     }
+
+    expect(res.result.current.isFetching).toBe(false)
   })
 
   it('should throw an error if multiple experience entries were found', async () => {
@@ -190,6 +188,8 @@ describe('useFetchExperience', () => {
         `More than one experience with identifier: ${JSON.stringify({ slug })} was found`
       )
     }
+
+    expect(res.result.current.isFetching).toBe(false)
   })
 
   it('should throw an error if experienceTypeId is not defined', async () => {
@@ -207,6 +207,8 @@ describe('useFetchExperience', () => {
         'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided'
       )
     }
+
+    expect(res.result.current.isFetching).toBe(false)
   })
 
   it('should throw an error if slug is not defined', async () => {
@@ -226,6 +228,8 @@ describe('useFetchExperience', () => {
         )}`
       )
     }
+
+    expect(res.result.current.isFetching).toBe(false)
   })
 
   it('should throw an error if localeCode is not defined', async () => {
@@ -243,5 +247,7 @@ describe('useFetchExperience', () => {
         'Failed to fetch experience entities. Required "locale" parameter was not provided'
       )
     }
+
+    expect(res.result.current.isFetching).toBe(false)
   })
 })

@@ -44,7 +44,7 @@ export const useExperienceBuilder = ({
      *
      * import { useFetchExperience } from '@contentful/experience-builder'
      *
-     * const { fetchBySlug, experience, isFetching } = useFetchExperience({ client, mode })
+     * const { fetchBySlug, fetchById, experience, isFetching } = useFetchExperience({ client, mode })
      */
     experience,
     /**
