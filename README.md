@@ -33,7 +33,7 @@ function MyButton({ buttonTitle, buttonUrl, ...props }) {
 Please find more setup examples [on a dedicated Wiki page](https://github.com/contentful/experience-builder/wiki/Setup-examples)
 
 ```tsx
-import { useEffect, useMemo } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   useFetchExperience,
   ExperienceRoot,
