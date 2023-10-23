@@ -35,7 +35,7 @@ Please find more setup examples [on a dedicated Wiki page](https://github.com/co
 ```tsx
 import { useEffect, useMemo } from 'react'
 import {
-  useExperienceBuilder,
+  useFetchExperience,
   ExperienceRoot,
   defineComponents
 } from '@contentful/experience-builder'
@@ -71,11 +71,12 @@ defineComponents([
 ])
 
 const Home = () => {
+  const fetchedOnce = useRef(false);
+  const [error, setError] = useState();
   const router = useRouter();
   // 2. Configure the sdk
-  const { settings, experience, defineComponents } = useExperienceBuilder({
+  const { experience, isFetching, fetchBySlug } = useFetchExperience({
     client, // preview or delivery client
-    experienceTypeId: process.env.CTFL_EXPERIENCE_TYPE_ID, // id of the experience type (content type)
     /**
      * Supported values 'preview' or 'delivery'
      * 'preview' mode will fetch and render unpublished data from Contentful's preview api. Automatically supports canvas interactions if opened on canvas from Contentful's web app
@@ -86,25 +87,22 @@ const Home = () => {
     mode: 'preview'
   })
 
-  // 2.5 Define components via useEffect (or outside of React flow - see 1.)
+  // 3 - fetch the experience
   useEffect(() => {
-    defineComponents([
-      {
-        component: MyButton,  // component example can be found at the top of this document
-        definition: {
-          id: 'my-button',
-          name: 'MyButton',
-          variables: {
-            buttonTitle: { type: 'Text', defaultValue: 'Click me' },
-            buttonUrl: {
-              type: 'Text',
-              defaultValue: 'https://www.contentful.com/',
-            },
-          },
-        },
-      },
-    ])
-  }, [defineComponents]);
+    const fetchFn = async () => {
+      setError(undefined);
+      try {
+       await fetchBySlug({ slug, experienceTypeId, locale })
+      } catch (e) {
+        setError(e);
+      }
+    }
+    
+    if (!experience && !fetchedOnce.current && !isFetching) {
+      fetchedOnce.current = true;
+      fetchFn();
+    }
+  }, [fetchBySlug, slug, experienceTypeId, locale]);
 
   return (
     <ExperienceRoot
@@ -113,8 +111,6 @@ const Home = () => {
       // You could nicely tie it to the useParam() from router or intenral state or locale manager
       // this value - en-US here is provided as an example reference
       locale={router.locale}
-      // slug of the entry. Will be used for fetching it using the client
-      slug='SLUG_FROM_YOUR_EXPERIENCE_ENTRY'
     />
   );
 }
