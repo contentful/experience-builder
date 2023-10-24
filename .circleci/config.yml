@@ -55,6 +55,7 @@ jobs:
     executor: docker-with-node
     steps:
       - with-workspace
+      - run: yarn prettier:check
       - run: yarn lint
       - run: yarn check-types
 

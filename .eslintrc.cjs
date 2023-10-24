@@ -4,21 +4,20 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
-    'plugin:@typescript-eslint/recommended',
+    require.resolve('@contentful/eslint-config-extension'),
+    require.resolve('@contentful/eslint-config-extension/react.js'),
+    require.resolve('@contentful/eslint-config-extension/typescript.js'),
   ],
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-  },
-  plugins: ['react', 'react-hooks', '@typescript-eslint'],
+  plugins: ['eslint-plugin-import-helpers'],
   rules: {
-    'react-hooks/exhaustive-deps': 'warn',
+    'import-helpers/order-imports': [
+      'warn',
+      {
+        newlinesBetween: 'always',
+        groups: ['/^react/', 'module', ['parent', 'sibling', 'index']],
+        alphabetize: { order: 'asc', ignoreCase: true },
+      },
+    ],
+    'react/react-in-jsx-scope': 'off'
   },
 }
