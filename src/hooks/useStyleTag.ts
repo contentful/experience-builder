@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { buildStyleTag } from '../core/stylesUtils'
 import { CSSProperties } from '../types'
 
@@ -14,7 +14,7 @@ import { CSSProperties } from '../types'
 export const useStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
   const [className, setClassName] = useState('')
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (Object.keys(styles).length === 0) {
       return
     }
