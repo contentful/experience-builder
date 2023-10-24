@@ -7,6 +7,7 @@ import {
 //@ts-expect-error no types available
 import md5 from 'md5'
 import {
+  transformWidthSizing,
   transformAlignment,
   transformBackgroundImage,
   transformBorderStyle,
@@ -54,7 +55,7 @@ export const buildCfStyles = ({
     margin: cfMargin,
     padding: cfPadding,
     backgroundColor: cfBackgroundColor,
-    width: transformFill(cfWidth),
+    width: transformWidthSizing({ value: cfWidth, cfMargin }),
     height: transformFill(cfHeight),
     maxWidth: cfMaxWidth,
     ...transformBorderStyle(cfBorder),

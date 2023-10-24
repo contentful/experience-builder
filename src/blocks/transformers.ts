@@ -170,3 +170,21 @@ export const transformRichText = (
   }
   return undefined
 }
+
+export const transformWidthSizing = ({
+  value,
+  cfMargin,
+}: {
+  value: string | undefined
+  cfMargin: string | undefined
+}) => {
+  if (!value || !cfMargin) return undefined
+
+  const transformedValue = transformFill(value)
+  const marginValues = cfMargin.split(' ')
+
+  const rightMargin = marginValues[1] || '0px'
+  const leftMargin = marginValues[3] || '0px'
+
+  return `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`
+}
