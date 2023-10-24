@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src", "vite.config.ts"],
+  "exclude": [
+    "./src/__tests__/**",
+    "./src/__mocks__/**",
+    "./src/test-utils",
+    "**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"
+  ]
+}
