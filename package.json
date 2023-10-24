@@ -1,59 +1,60 @@
 {
-    "name": "@contentful/experience",
-    "private": "true",
-    "author": "Contentful GmbH",
-    "license": "MIT",
-    "description": "Contentful Experience Framework",
-    "homepage": "https://github.com/contentful/experience-builder#readme",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/contentful/experience-builder.git"
-    },
-    "bugs": {
-        "url": "https://github.com/contentful/experience-builder/issues"
-    },
-    "workspaces": [
-        "packages/*"
+  "name": "@contentful/experience",
+  "private": "true",
+  "author": "Contentful GmbH",
+  "license": "MIT",
+  "description": "Contentful Experience Framework",
+  "homepage": "https://github.com/contentful/experience-builder#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/contentful/experience-builder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/experience-builder/issues"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "lerna run lint",
+    "tsc": "lerna run tsc",
+    "test": "lerna run --stream test",
+    "test:ci": "lerna run test:ci",
+    "coverage": "lerna run coverage",
+    "prepare": "husky install",
+    "build": "lerna run build",
+    "start": "lerna run --stream start",
+    "prepublish": "lerna run build",
+    "prettier:check": "lerna run prettier:check",
+    "cm": "git-cz"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
+    "@contentful/eslint-config-extension": "0.4.3",
+    "commitizen": "4.3.0",
+    "concurrently": "8.2.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import-helpers": "^1.2.1",
+    "husky": "^8.0.3",
+    "lerna": "^7.4.1",
+    "lint-staged": "^15.0.1",
+    "prettier": "2.8.8",
+    "nx": "16.10.0",
+    "nx-cloud": "latest"
+  },
+  "lint-staged": {
+    "*.{t,j}s?(x)": [
+      "prettier --write"
     ],
-    "scripts": {
-        "lint": "lerna run lint",
-        "tsc": "lerna run tsc",
-        "test": "lerna run --stream test",
-        "test:ci": "lerna run test:ci",
-        "coverage": "lerna run coverage",
-        "prepare": "husky install",
-        "build": "lerna run build",
-        "start": "lerna run --stream start",
-        "prepublish": "lerna run build",
-        "cm": "git-cz"
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "@commitlint/cli": "^18.0.0",
-        "@commitlint/config-conventional": "^18.0.0",
-        "@contentful/eslint-config-extension": "0.4.3",
-        "commitizen": "4.3.0",
-        "concurrently": "8.2.2",
-        "eslint-plugin-import": "^2.26.0",
-        "eslint-plugin-import-helpers": "^1.2.1",
-        "husky": "^8.0.3",
-        "lerna": "^7.4.1",
-        "lint-staged": "^15.0.1",
-        "prettier": "2.8.8",
-        "nx": "16.10.0",
-        "nx-cloud": "latest"
-    },
-    "lint-staged": {
-        "*.{t,j}s?(x)": [
-            "prettier --write"
-        ],
-        "*.{json,yml,html}": [
-            "prettier --write"
-        ]
-    },
-    "config": {
-        "commitizen": {
-            "path": "./node_modules/cz-conventional-changelog"
-        }
+    "*.{json,yml,html}": [
+      "prettier --write"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
     }
+  }
 }
