@@ -52,42 +52,39 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
             slug,
           },
         })
+
+        if (!experienceEntry) {
+          const error = new Error(`No experience entry with slug: ${slug} exists`)
+          throw error
+        }
+
+        try {
+          const { entries, assets } = await fetchExperienceEntities({
+            client,
+            experienceEntry,
+            locale: localeCode,
+          })
+
+          const experience = createExperience({
+            experienceEntry,
+            referencedAssets: assets,
+            referencedEntries: entries,
+            locale: localeCode,
+            mode,
+          })
+
+          setExperience(experience)
+
+          return experience
+        } catch (e) {
+          handleError(errorMessagesWhileFetching.experienceReferences, e)
+          throw e
+        }
       } catch (e) {
         handleError(errorMessagesWhileFetching.experience, e)
-        setIsFetching(false)
         throw e
-      }
-
-      if (!experienceEntry) {
-        const error = new Error(`No experience entry with slug: ${slug} exists`)
-        handleError(errorMessagesWhileFetching.experience, error)
+      } finally {
         setIsFetching(false)
-        throw error
-      }
-
-      try {
-        const { entries, assets } = await fetchExperienceEntities({
-          client,
-          experienceEntry,
-          locale: localeCode,
-        })
-
-        const experience = createExperience({
-          experienceEntry,
-          referencedAssets: assets,
-          referencedEntries: entries,
-          locale: localeCode,
-          mode,
-        })
-
-        setExperience(experience)
-        setIsFetching(false)
-
-        return experience
-      } catch (e) {
-        handleError(errorMessagesWhileFetching.experienceReferences, e)
-        setIsFetching(false)
-        throw e
       }
     },
     [client, mode]
@@ -122,43 +119,39 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
             id,
           },
         })
+
+        if (!experienceEntry) {
+          const error = new Error(`No experience entry with id: ${id} exists`)
+          throw error
+        }
+
+        try {
+          const { entries, assets } = await fetchExperienceEntities({
+            client,
+            experienceEntry,
+            locale: localeCode,
+          })
+
+          const experience = createExperience({
+            experienceEntry,
+            referencedAssets: assets,
+            referencedEntries: entries,
+            locale: localeCode,
+            mode,
+          })
+
+          setExperience(experience)
+
+          return experience
+        } catch (e) {
+          handleError(errorMessagesWhileFetching.experienceReferences, e)
+          throw e
+        }
       } catch (e) {
         handleError(errorMessagesWhileFetching.experience, e)
-        setIsFetching(false)
-
         throw e
-      }
-
-      if (!experienceEntry) {
-        const error = new Error(`No experience entry with id: ${id} exists`)
-        handleError(errorMessagesWhileFetching.experience, error)
+      } finally {
         setIsFetching(false)
-        throw error
-      }
-
-      try {
-        const { entries, assets } = await fetchExperienceEntities({
-          client,
-          experienceEntry,
-          locale: localeCode,
-        })
-
-        const experience = createExperience({
-          experienceEntry,
-          referencedAssets: assets,
-          referencedEntries: entries,
-          locale: localeCode,
-          mode,
-        })
-
-        setExperience(experience)
-        setIsFetching(false)
-
-        return experience
-      } catch (e) {
-        handleError(errorMessagesWhileFetching.experienceReferences, e)
-        setIsFetching(false)
-        throw e
       }
     },
     [client, mode]
