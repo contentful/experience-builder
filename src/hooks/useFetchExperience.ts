@@ -1,6 +1,6 @@
 import type { ContentfulClientApi, Entry } from 'contentful'
 import { useCallback, useState } from 'react'
-import { fetchExperienceEntities, fetchExperienceEntry } from '../core/fetchers'
+import { fetchReferencedEntities, fetchExperienceEntry } from '../core/fetchers'
 import { Experience, ExternalSDKMode } from '../types'
 import { createExperience } from '../core'
 
@@ -59,7 +59,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
         }
 
         try {
-          const { entries, assets } = await fetchExperienceEntities({
+          const { entries, assets } = await fetchReferencedEntities({
             client,
             experienceEntry,
             locale: localeCode,
@@ -126,7 +126,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
         }
 
         try {
-          const { entries, assets } = await fetchExperienceEntities({
+          const { entries, assets } = await fetchReferencedEntities({
             client,
             experienceEntry,
             locale: localeCode,

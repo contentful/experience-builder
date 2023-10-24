@@ -1,17 +1,17 @@
 import type { Asset, ContentfulClientApi, Entry } from 'contentful'
 import { isExperienceEntry } from '../typeguards'
 
-type fetchExperienceEntitiesArgs = {
+type fetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>
   experienceEntry: Entry
   locale: string
 }
 
-export const fetchExperienceEntities = async ({
+export const fetchReferencedEntities = async ({
   client,
   experienceEntry,
   locale,
-}: fetchExperienceEntitiesArgs) => {
+}: fetchReferencedEntitiesArgs) => {
   if (!client) {
     throw new Error(
       'Failed to fetch experience entities. Required "client" parameter was not provided'
@@ -137,7 +137,7 @@ export const fetchExperience = async ({
     return { experienceEntry: undefined, referencedAssets: [], referencedEntries: [] }
   }
 
-  const { assets, entries } = await fetchExperienceEntities({
+  const { assets, entries } = await fetchReferencedEntities({
     client,
     experienceEntry: entry,
     locale,

@@ -133,10 +133,10 @@ describe('fetchExperienceEntry', () => {
   })
 })
 
-describe('fetchExperienceEntities', () => {
+describe('fetchReferencedEntities', () => {
   it('should throw an error if client has not been provided', async () => {
     try {
-      await fetchers.fetchExperienceEntities({
+      await fetchers.fetchReferencedEntities({
         // @ts-expect-error intentionally setting it to undefined
         client: undefined,
         experienceEntry: compositionEntry as unknown as Entry,
@@ -151,7 +151,7 @@ describe('fetchExperienceEntities', () => {
 
   it('should throw an error if locale has not been provided', async () => {
     try {
-      await fetchers.fetchExperienceEntities({
+      await fetchers.fetchReferencedEntities({
         client: mockClient,
         experienceEntry: compositionEntry as unknown as Entry,
         // @ts-expect-error intentionally setting it to undefined
@@ -166,7 +166,7 @@ describe('fetchExperienceEntities', () => {
 
   it('should throw an error if provided entry is not experience entry', async () => {
     try {
-      await fetchers.fetchExperienceEntities({
+      await fetchers.fetchReferencedEntities({
         client: mockClient,
         experienceEntry: entries[0],
         locale: 'en-US',
@@ -185,7 +185,7 @@ describe('fetchExperienceEntities', () => {
     /* eslint-disable @typescript-eslint/no-extra-semi */
     ;(mockClient.getEntries as jest.Mock).mockResolvedValue({ items: entries })
 
-    const res = await fetchers.fetchExperienceEntities({
+    const res = await fetchers.fetchReferencedEntities({
       client: mockClient,
       experienceEntry: compositionEntry as unknown as Entry,
       locale: 'en-US',
@@ -222,9 +222,9 @@ describe('fetchExperience', () => {
     ;(mockClient.getEntries as jest.Mock).mockResolvedValue({ items: entries })
   })
 
-  it('should call fetchExperienceEntry and fetchExperienceEntities with given parameters', async () => {
+  it('should call fetchExperienceEntry and fetchReferencedEntities with given parameters', async () => {
     const fetchEntrySpy = jest.spyOn(fetchers, 'fetchExperienceEntry')
-    const fetchReferencesSpy = jest.spyOn(fetchers, 'fetchExperienceEntities')
+    const fetchReferencesSpy = jest.spyOn(fetchers, 'fetchReferencedEntities')
 
     await fetchers.fetchExperience({
       client: mockClient,
