@@ -12,7 +12,7 @@
     "build": "VITE_SDK_VERSION=$npm_package_version vite build",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
-    "test:coverage": "NODE_ENV=test jest --coverage",
+    "test:coverage": "NODE_ENV=test jest --coverage --maxWorkers 2",
     "tsc": "tsc --noEmit",
     "lint": "eslint ./src --ext '.ts,.tsx,.js,.jsx'",
     "presemantic-release": "yarn build",
