@@ -2,3 +2,9 @@ testing-library.js
 .eslintrc.cjs
 commitlint.config.cjs
 lint-staged.config.cjs
+node_modules/
+.coverage/
+.cache/
+dist/
+build/
+tests

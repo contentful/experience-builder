@@ -10,8 +10,8 @@ lerna-debug.log*
 node_modules
 build
 .yarn
-/dist
-/reports
+dist/
+reports
 dist-ssr
 *.local
 .yarnrc.yml

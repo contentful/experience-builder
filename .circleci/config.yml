@@ -57,7 +57,7 @@ jobs:
       - with-workspace
       - run: yarn prettier:check
       - run: yarn lint
-      - run: yarn check-types
+      - run: yarn tsc
 
   unit-tests:
     executor: docker-with-node
@@ -76,7 +76,12 @@ jobs:
       - checkout
       - use-vault
       - install-dependencies
-      - run: yarn semantic-release
+      - vault/configure-lerna
+      - run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
+      - run: yarn build # This should not be needed, but without it it will not contain any files
+      - run: yarn lerna version --no-private --conventional-commits --create-release
+          github --yes
+      - run: yarn lerna publish from-git --yes
 
 workflows:
   version: 2
