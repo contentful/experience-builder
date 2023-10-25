@@ -1,6 +1,8 @@
 import React from 'react'
-import { Test } from './Test'
+
 import { render } from '@testing-library/react'
+
+import { Test } from './Test'
 
 jest.mock('./core/constants', () => ({
   VITE_SDK_VERSION: '0.0.0-test',

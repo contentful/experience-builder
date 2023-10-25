@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { VisualEditorBlock } from './VisualEditorBlock'
-import { EmptyEditorContainer } from './EmptyEdtorContainer'
 
 import '../styles/VisualEditorRoot.css'
-import { useHoverIndicator } from '../hooks/useHoverIndicator'
 import { onComponentDropped } from '../communication/onComponentDrop'
-import { useBreakpoints } from '../hooks/useBreakpoints'
 import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
-
+import { useBreakpoints } from '../hooks/useBreakpoints'
+import { useHoverIndicator } from '../hooks/useHoverIndicator'
 import { InternalSDKMode } from '../types'
-import { VisualEditorContextProvider } from './VisualEditorContext'
+import { EmptyEditorContainer } from './EmptyEdtorContainer'
 import { useEditorContext } from './useEditorContext'
+import { VisualEditorBlock } from './VisualEditorBlock'
+import { VisualEditorContextProvider } from './VisualEditorContext'
 
 type VisualEditorRootProps = {
   initialLocale: string

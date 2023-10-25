@@ -1,8 +1,10 @@
 import React from 'react'
+
 import { fireEvent, render } from '@testing-library/react'
-import { ContentfulContainer } from './ContentfulContainer'
-import { CompositionComponentNode } from '../types'
+
 import { CONTENTFUL_SECTION_ID } from '../constants'
+import { CompositionComponentNode } from '../types'
+import { ContentfulContainer } from './ContentfulContainer'
 
 describe('ContentfulContainer', () => {
   describe('when in editor mode', () => {
@@ -17,12 +19,7 @@ describe('ContentfulContainer', () => {
     it('should render a section', () => {
       const onMouseDown = jest.fn()
 
-      render(
-        <ContentfulContainer
-          editorMode={true}
-          node={node}
-          onMouseDown={onMouseDown}></ContentfulContainer>
-      )
+      render(<ContentfulContainer editorMode={true} node={node} onMouseDown={onMouseDown} />)
 
       const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null
 
@@ -45,7 +42,8 @@ describe('ContentfulContainer', () => {
           editorMode={true}
           node={node}
           className="custom-test-class-name"
-          onMouseDown={onMouseDown}></ContentfulContainer>
+          onMouseDown={onMouseDown}
+        />
       )
 
       const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null
@@ -62,7 +60,8 @@ describe('ContentfulContainer', () => {
           editorMode={true}
           node={node}
           cfHyperlink="https://contentful.com"
-          onMouseDown={onMouseDown}></ContentfulContainer>
+          onMouseDown={onMouseDown}
+        />
       )
 
       const section = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
@@ -98,7 +97,7 @@ describe('ContentfulContainer', () => {
 
   describe('when NOT in editor mode', () => {
     it('should render a section', () => {
-      render(<ContentfulContainer editorMode={false}></ContentfulContainer>)
+      render(<ContentfulContainer editorMode={false} />)
 
       const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null
 
@@ -108,11 +107,7 @@ describe('ContentfulContainer', () => {
     })
 
     it('should allow to pass a custom class name', () => {
-      render(
-        <ContentfulContainer
-          editorMode={false}
-          className="custom-test-class-name"></ContentfulContainer>
-      )
+      render(<ContentfulContainer editorMode={false} className="custom-test-class-name" />)
 
       const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null
 
@@ -121,11 +116,7 @@ describe('ContentfulContainer', () => {
     })
 
     it('should render an anchor if hyperlink prop is provided', () => {
-      render(
-        <ContentfulContainer
-          editorMode={false}
-          cfHyperlink="https://contentful.com"></ContentfulContainer>
-      )
+      render(<ContentfulContainer editorMode={false} cfHyperlink="https://contentful.com" />)
 
       const section = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
 

@@ -1,5 +1,7 @@
-import type { ContentfulClientApi } from 'contentful'
 import { useState, useMemo, useCallback } from 'react'
+
+import type { ContentfulClientApi } from 'contentful'
+
 import { EntityStore } from '../core/EntityStore'
 import { Composition, ExperienceStore } from '../types'
 

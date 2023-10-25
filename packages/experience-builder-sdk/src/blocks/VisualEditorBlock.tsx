@@ -1,4 +1,16 @@
 import React, { RefObject, useMemo } from 'react'
+
+import type { EntityStore } from '@contentful/visual-sdk'
+import omit from 'lodash.omit'
+
+import { sendMessage } from '../communication/sendMessage'
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { getComponentRegistration } from '../core/componentRegistry'
+import { getUnboundValues } from '../core/getUnboundValues'
+import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils'
+import { ResolveDesignValueType } from '../hooks/useBreakpoints'
+import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
+import { useStyleTag } from '../hooks/useStyleTag'
 import {
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
@@ -8,23 +20,10 @@ import {
   CompositionDataSource,
   CompositionUnboundValues,
 } from '../types'
-
-import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
 import { ContentfulContainer } from './ContentfulContainer'
-
-import { getUnboundValues } from '../core/getUnboundValues'
-import { ResolveDesignValueType } from '../hooks/useBreakpoints'
-import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
-import type { EntityStore } from '@contentful/visual-sdk'
-import { transformContentValue } from './transformers'
-
-import { useStyleTag } from '../hooks/useStyleTag'
-import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils'
-import omit from 'lodash.omit'
-import { sendMessage } from '../communication/sendMessage'
-import { getComponentRegistration } from '../core/componentRegistry'
-import { useEditorContext } from './useEditorContext'
 import { ImportedComponentErrorBoundary } from './ErrorBoundary'
+import { transformContentValue } from './transformers'
+import { useEditorContext } from './useEditorContext'
 
 type PropsType =
   | StyleProps

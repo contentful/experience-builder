@@ -1,12 +1,13 @@
 import React from 'react'
-import { render } from '@testing-library/react'
-import { VisualEditorBlock } from './VisualEditorBlock'
+
 import { EntityStore } from '@contentful/visual-sdk'
-import { CompositionComponentNode } from '../types'
+import { render } from '@testing-library/react'
 
 import { sendMessage } from '../communication/sendMessage'
-import { defineComponents, resetComponentRegistry } from '../core/componentRegistry'
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { defineComponents, resetComponentRegistry } from '../core/componentRegistry'
+import { CompositionComponentNode } from '../types'
+import { VisualEditorBlock } from './VisualEditorBlock'
 
 const TestComponent = (props: any) => {
   return <div {...props}>{props.text}</div>

@@ -1,13 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-   "types": ["vite-plugin-svgr/client"],
+   "types": ["node", "jest", "@testing-library/jest-dom","vite-plugin-svgr/client"],
+   "moduleResolution": "node",
   },
   "include": ["src", "vite.config.ts"],
-  "exclude": [
-    "./src/__tests__/**",
-    "./src/__mocks__/**",
-    "./src/test-utils",
-    "**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"
-  ]
 }

@@ -1,3 +1,14 @@
+import React, { useMemo } from 'react'
+
+import { EntityStore } from '@contentful/visual-sdk'
+import type { UnresolvedLink } from 'contentful'
+import omit from 'lodash.omit'
+
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { getComponentRegistration } from '../core/componentRegistry'
+import { buildCfStyles } from '../core/stylesUtils'
+import { ResolveDesignValueType } from '../hooks/useBreakpoints'
+import { useStyleTag } from '../hooks/useStyleTag'
 import type {
   Breakpoint,
   CompositionDataSource,
@@ -6,18 +17,8 @@ import type {
   CompositionVariableValueType,
   StyleProps,
 } from '../types'
-
-import React, { useMemo } from 'react'
-import type { UnresolvedLink } from 'contentful'
-import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
-import { EntityStore } from '@contentful/visual-sdk'
 import { ContentfulContainer } from './ContentfulContainer'
-import { ResolveDesignValueType } from '../hooks/useBreakpoints'
 import { transformContentValue } from './transformers'
-import { buildCfStyles } from '../core/stylesUtils'
-import { useStyleTag } from '../hooks/useStyleTag'
-import omit from 'lodash.omit'
-import { getComponentRegistration } from '../core/componentRegistry'
 
 type CompositionBlockProps = {
   node: CompositionNode

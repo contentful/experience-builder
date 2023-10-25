@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react'
-import { Experience } from '../types'
-import { CompositionBlock } from './CompositionBlock'
+
 import { compatibleVersions } from '../constants'
 import { useBreakpoints, useEditorModeSwitch } from '../hooks'
 import { usePrevious } from '../hooks/usePrevious'
+import { Experience } from '../types'
+import { CompositionBlock } from './CompositionBlock'
 
 type DeliveryRootProps = {
   experience: Experience

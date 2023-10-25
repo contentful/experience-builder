@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience",
-  "private": "true",
+  "private": true,
   "author": "Contentful GmbH",
   "license": "MIT",
   "description": "Contentful Experience Framework",

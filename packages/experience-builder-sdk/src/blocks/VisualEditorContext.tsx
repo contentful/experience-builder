@@ -1,4 +1,13 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react'
+
+import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
+import { sendMessage } from '../communication/sendMessage'
+import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
+import {
+  sendConnectedEventWithRegisteredComponents,
+  sendRegisteredComponentsMessage,
+} from '../core/componentRegistry'
+import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
 import {
   Breakpoint,
   CompositionComponentNode,
@@ -12,16 +21,8 @@ import {
   ScrollStates,
   InternalEvents,
 } from '../types'
-import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
-import { sendMessage } from '../communication/sendMessage'
-import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 import { getDataFromTree } from '../utils'
-import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
-import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
-import {
-  sendConnectedEventWithRegisteredComponents,
-  sendRegisteredComponentsMessage,
-} from '../core/componentRegistry'
+import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 
 type VisualEditorContextType = {
   tree: CompositionTree | undefined

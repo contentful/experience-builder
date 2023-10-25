@@ -1,10 +1,11 @@
+import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types'
+
 import {
   StyleProps,
   CSSProperties,
   ComponentDefinitionVariable,
   CompositionVariableValueType,
 } from '../types'
-import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types'
 
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value)
 export const transformBorderStyle = (value?: string): CSSProperties => {

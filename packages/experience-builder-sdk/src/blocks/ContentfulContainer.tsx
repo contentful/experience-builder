@@ -3,9 +3,10 @@ import React from 'react'
 import '../styles/ContentfulContainer.css'
 
 import classNames from 'classnames'
+
+import { Flex } from '../core'
 import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink'
 import type { ContentfulContainerProps } from './ContentfulContainerAsHyperlink'
-import { Flex } from '../core'
 
 export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
   const { children, className, editorMode } = sectionProps

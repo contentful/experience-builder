@@ -1,9 +1,10 @@
 import React from 'react'
-import { render } from '@testing-library/react'
-import { CompositionNode } from '../types'
 
-import { defineComponents, resetComponentRegistry } from '../core/componentRegistry'
+import { render } from '@testing-library/react'
+
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
+import { defineComponents, resetComponentRegistry } from '../core/componentRegistry'
+import { CompositionNode } from '../types'
 import { CompositionBlock } from './CompositionBlock'
 
 const TestComponent = (props: any) => {

@@ -1,4 +1,5 @@
 import { PostMessageMethods } from '@contentful/visual-sdk'
+
 import { OutgoingExperienceBuilderEvent } from '../types'
 
 export const sendMessage = (

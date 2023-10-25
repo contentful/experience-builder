@@ -1,4 +1,5 @@
 import type { ContentfulClientApi } from 'contentful'
+
 import { supportedModes } from './constants'
 import { InternalSDKMode, IncomingExperienceBuilderEvent } from './types'
 

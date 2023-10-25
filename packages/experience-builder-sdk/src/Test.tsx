@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { defineComponents } from './core/componentRegistry'
 
 const TestComponent = () => {

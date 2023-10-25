@@ -1,4 +1,5 @@
 import { useLayoutEffect, useState } from 'react'
+
 import { buildStyleTag } from '../core/stylesUtils'
 import { CSSProperties } from '../types'
 

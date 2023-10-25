@@ -5,6 +5,7 @@
  */
 
 import type { ContentfulClientApi } from 'contentful'
+
 import { EntityStore } from './core/EntityStore'
 
 export enum ScrollStates {

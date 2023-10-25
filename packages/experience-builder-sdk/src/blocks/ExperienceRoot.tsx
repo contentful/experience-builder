@@ -1,10 +1,11 @@
 import React from 'react'
-import { Experience } from '../types'
-import { VisualEditorRoot } from './VisualEditorRoot'
-import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
+
 import { supportedModes } from '../constants'
+import { Experience } from '../types'
 import { validateExperienceBuilderConfig } from '../validation'
 import { ErrorBoundary } from './ErrorBoundary'
+import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
+import { VisualEditorRoot } from './VisualEditorRoot'
 
 type ExperienceRootProps = {
   experience: Experience

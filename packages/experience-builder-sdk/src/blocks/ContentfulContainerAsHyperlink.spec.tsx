@@ -1,16 +1,16 @@
 import React from 'react'
+
 import { fireEvent, render } from '@testing-library/react'
-import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink'
+
 import { CONTENTFUL_SECTION_ID } from '../constants'
 import { CompositionComponentNode } from '../types'
+import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink'
 
 describe('ContentfulContainerAsHyperlink', () => {
   describe('when NOT in editor mode', () => {
     it('should render anchor tag without editor mode specific props', () => {
       render(
-        <ContentfulContainerAsHyperlink
-          cfHyperlink="https://contentful.com"
-          editorMode={false}></ContentfulContainerAsHyperlink>
+        <ContentfulContainerAsHyperlink cfHyperlink="https://contentful.com" editorMode={false} />
       )
 
       const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
@@ -26,7 +26,8 @@ describe('ContentfulContainerAsHyperlink', () => {
         <ContentfulContainerAsHyperlink
           cfHyperlink="https://contentful.com"
           className="test-class-name"
-          editorMode={false}></ContentfulContainerAsHyperlink>
+          editorMode={false}
+        />
       )
 
       const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
@@ -41,7 +42,8 @@ describe('ContentfulContainerAsHyperlink', () => {
         <ContentfulContainerAsHyperlink
           cfHyperlink="https://contentful.com"
           cfOpenInNewTab={true}
-          editorMode={false}></ContentfulContainerAsHyperlink>
+          editorMode={false}
+        />
       )
 
       const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
@@ -89,7 +91,8 @@ describe('ContentfulContainerAsHyperlink', () => {
           cfHyperlink="https://contentful.com"
           onMouseDown={onMouseDown}
           node={node}
-          editorMode={true}></ContentfulContainerAsHyperlink>
+          editorMode={true}
+        />
       )
 
       const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
@@ -116,7 +119,8 @@ describe('ContentfulContainerAsHyperlink', () => {
           cfHyperlink="https://contentful.com"
           onMouseDown={onMouseDown}
           node={node}
-          editorMode={true}></ContentfulContainerAsHyperlink>
+          editorMode={true}
+        />
       )
 
       const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
@@ -142,7 +146,8 @@ describe('ContentfulContainerAsHyperlink', () => {
           onMouseDown={onMouseDown}
           node={node}
           editorMode={true}
-          cfOpenInNewTab={true}></ContentfulContainerAsHyperlink>
+          cfOpenInNewTab={true}
+        />
       )
 
       const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null
@@ -160,7 +165,8 @@ describe('ContentfulContainerAsHyperlink', () => {
           cfHyperlink="https://contentful.com"
           onMouseDown={onMouseDown}
           node={node}
-          editorMode={true}></ContentfulContainerAsHyperlink>
+          editorMode={true}
+        />
       )
 
       const hyperlink = document.getElementById('ContentfulContainer') as HTMLAnchorElement | null

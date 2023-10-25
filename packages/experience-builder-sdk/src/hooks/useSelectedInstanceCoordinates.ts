@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
-import { CompositionComponentNode } from '../types'
-import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
+
 import { useEditorContext } from '../blocks/useEditorContext'
+import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
+import { CompositionComponentNode } from '../types'
 
 /**
  * This hook gets the element co-ordinates of a specified element in the DOM

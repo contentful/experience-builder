@@ -1,7 +1,8 @@
 module.exports = {
-  env: {
-    browser: true,
-    es2021: true,
+  root: true,
+  parserOptions: {
+    project: true,
+    tsconfigRootDir: __dirname,
   },
   extends: [
     require.resolve('@contentful/eslint-config-extension'),
@@ -20,4 +21,4 @@ module.exports = {
     ],
     'react/react-in-jsx-scope': 'off'
   },
-}
+};

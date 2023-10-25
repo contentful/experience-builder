@@ -1,7 +1,7 @@
 import React from 'react'
+import { onComponentDropped } from '../communication/onComponentDrop'
 import EmptyStateIcon from '../svg/emptyState.svg?react'
 import '../styles/EmptyContainer.css'
-import { onComponentDropped } from '../communication/onComponentDrop'
 
 export interface EmptyContainerProps {
   isFirst?: boolean
