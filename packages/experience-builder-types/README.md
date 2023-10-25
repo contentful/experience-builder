@@ -5,7 +5,7 @@
 ## Usage
 
 ```
-const experienceBuilderTypes = require('experience-builder-types');
+import * as experienceBuilderTypes from 'experience-builder-types';
 
 // TODO: DEMONSTRATE API
 ```
