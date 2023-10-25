@@ -13,7 +13,7 @@
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
     "test:coverage": "NODE_ENV=test jest --coverage",
-    "check-types": "tsc",
+    "tsc": "tsc --noEmit",
     "lint": "eslint ./src --ext '.ts,.tsx,.js,.jsx'",
     "presemantic-release": "yarn build",
     "semantic-release": "semantic-release",

@@ -57,7 +57,7 @@ jobs:
       - with-workspace
       - run: yarn prettier:check
       - run: yarn lint
-      - run: yarn check-types
+      - run: yarn tsc
 
   unit-tests:
     executor: docker-with-node
