@@ -6,18 +6,18 @@
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  color: var(--gray500);
-  font-size: var(--font-size-l);
-  font-family: var(--font-stack-primary);
-  border: 1px dashed var(--gray500);
+  color: var(--f36-gray500);
+  font-size: var(--f36-font-size-l);
+  font-family: var(--f36-font-stack-primary);
+  border: 1px dashed var(--f36-gray500);
 }
 
 #EmptyContainer.highlight {
-  border: 1px dashed var(--blue500);
-  background-color: var(--blue100);
+  border: 1px dashed var(--f36-blue500);
+  background-color: var(--f36-blue100);
   cursor: grabbing;
 }
 
 #EmptyContainer .icon {
-  margin-left: var(--spacing-s);
+  margin-left: var(--f36-spacing-s);
 }
