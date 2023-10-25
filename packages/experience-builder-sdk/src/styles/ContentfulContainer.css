@@ -17,14 +17,14 @@
 #ContentfulContainer .lineHorizontal {
   height: 3px;
   width: 200px;
-  background: var(--blue500);
+  background: var(--exp-builder-blue500);
   margin: 10px;
 }
 
 #ContentfulContainer .lineVertical {
   height: 190px;
   width: 3px;
-  background: var(--blue500);
+  background: var(--exp-builder-blue500);
   margin: 10px;
 }
 
