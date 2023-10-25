@@ -1,5 +1,3 @@
-import React from 'react'
-
 jest.mock('./core/constants', () => ({
   VITE_SDK_VERSION: '0.0.0-test',
 }))
