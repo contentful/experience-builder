@@ -1,18 +1,18 @@
 .cf-error-message {
   margin: 24px;
-  font-size: var(--f36-font-size-m);
-  font-family: var(--f36-font-stack-primary);
-  color: var(--f36-red800);
+  font-size: var(--exp-builder-font-size-m);
+  font-family: var(--exp-builder-font-stack-primary);
+  color: var(--exp-builder-red800);
   padding: 16px;
-  background-color: var(--f36-red200);
+  background-color: var(--exp-builder-red200);
 }
 
 .cf-error-message .title {
   margin-top: 0;
-  font-size: var(--f36-font-size-l);
+  font-size: var(--exp-builder-font-size-l);
 }
 
 .cf-error-message .more-details {
   cursor: pointer;
-  color: var(--f36-blue700);
+  color: var(--exp-builder-blue700);
 }
