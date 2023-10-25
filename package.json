@@ -20,7 +20,7 @@
     "tsc": "lerna run tsc",
     "test": "lerna run --stream test",
     "test:ci": "lerna run test:ci",
-    "coverage": "lerna run coverage",
+    "test:coverage": "lerna run test:coverage",
     "prepare": "husky install",
     "build": "lerna run build",
     "start": "lerna run --stream start",
