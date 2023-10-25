@@ -11,7 +11,7 @@ node_modules
 build
 .yarn
 dist/
-/reports
+reports
 dist-ssr
 *.local
 .yarnrc.yml
