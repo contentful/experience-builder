@@ -1,24 +1,26 @@
 module.exports = {
-  root: true,
-  parserOptions: {
-    project: true,
-    tsconfigRootDir: __dirname,
+  env: {
+    browser: true,
+    es2021: true,
   },
   extends: [
-    require.resolve('@contentful/eslint-config-extension'),
-    require.resolve('@contentful/eslint-config-extension/react.js'),
-    require.resolve('@contentful/eslint-config-extension/typescript.js'),
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
-  plugins: ['eslint-plugin-import-helpers'],
-  rules: {
-    'import-helpers/order-imports': [
-      'warn',
-      {
-        newlinesBetween: 'always',
-        groups: ['/^react/', 'module', ['parent', 'sibling', 'index']],
-        alphabetize: { order: 'asc', ignoreCase: true },
-      },
-    ],
-    'react/react-in-jsx-scope': 'off'
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
-};
+  plugins: ['react', 'react-hooks', '@typescript-eslint'],
+  rules: {
+    'react-hooks/exhaustive-deps': 'warn',
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+  },
+}

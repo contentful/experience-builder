@@ -1,5 +1,3 @@
-import { ElementType } from 'react'
-
 import {
   ComponentRegistration,
   ComponentDefinition,

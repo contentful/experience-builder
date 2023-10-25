@@ -3,9 +3,8 @@ import {
   resetComponentRegistry,
   defineComponents,
   getComponentRegistration,
-  enrichComponentDefinition,
 } from './componentRegistry'
-import { ComponentDefinition, InternalEvents } from '../types'
+import { InternalEvents } from '../types'
 import { CONTENTFUL_SECTION_ID } from '../constants'
 import { containerDefinition } from './definitions/components'
 
@@ -16,17 +15,6 @@ jest.mock('../core/constants', () => ({
 
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>
-}
-
-const definitionId = 'TestComponent'
-const testComponentDefinition: ComponentDefinition = {
-  id: definitionId,
-  name: 'TestComponent',
-  variables: {
-    isChecked: {
-      type: 'Boolean',
-    },
-  },
 }
 
 describe('component registration', () => {
