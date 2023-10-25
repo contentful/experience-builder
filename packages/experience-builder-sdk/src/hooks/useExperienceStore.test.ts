@@ -140,7 +140,7 @@ describe('useExperienceStore', () => {
 
     try {
       await act(() =>
-        // @ts-expect-error undefined is not alloed through types, but it can still happen if invoked from a plain js
+        // @ts-expect-error undefined is not allowed through types, but it can still happen if invoked from a plain js
         res.result.current.fetchBySlug({ experienceTypeId: undefined, slug, localeCode })
       )
     } catch (e) {
