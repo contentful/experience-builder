@@ -7,7 +7,7 @@
   justify-content: center;
   flex-direction: row;
   color: var(--gray500);
-  font-size: var(--font-size-m);
+  font-size: var(--font-size-l);
   font-family: var(--font-stack-primary);
   border: 1px dashed var(--gray500);
 }
@@ -15,8 +15,9 @@
 #EmptyContainer.highlight {
   border: 1px dashed var(--blue500);
   background-color: var(--blue100);
+  cursor: grabbing;
 }
 
-#EmptyContainer.icon {
+#EmptyContainer .icon {
   margin-left: var(--spacing-s);
 }

@@ -1,3 +1,9 @@
+/*
+ * All of these variables are tokens from Forma-36 and may not be adjusted as these
+ * are global variables that may affect different places.
+ * Forma-36 tokens: https://f36.contentful.com/tokens/color-system
+ */
+
 :root {
   /* color */
   --blue100: #e8f5ff;
@@ -29,7 +35,7 @@
 
   /* typography */
   --font-size-l: 1rem;
-  --font-size-m: 1.475rem;
+  --font-size-m: 0.875rem;
   --font-stack-primary: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif,
     Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
   --line-height-condensed: 1.25;
