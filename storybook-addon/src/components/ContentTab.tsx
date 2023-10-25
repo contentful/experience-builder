@@ -55,7 +55,7 @@ const ContentTab: React.FC<ContentTabProps> = ({ componentDefinition }) => {
     return (
       <Flex flexDirection="column" alignItems="center" className={styles.emptyStateWrapper}>
         <Box as="div" className={styles.emptyStateSvg}>
-          <img src={CompositionFallBackIcon} alt="" />
+          <CompositionFallBackIcon />
         </Box>
         <Paragraph className={styles.emptyStateParagraph}>
           Select a component to view content options
@@ -83,7 +83,7 @@ const ContentTab: React.FC<ContentTabProps> = ({ componentDefinition }) => {
             <ArrowDownIcon variant="muted" testId={`${componentDefinition.id}-down-arrow`} />
           )}
           <Box as="span" className={styles.componentIcon}>
-            <img src={CompositionFallBackIcon} alt="" />
+            <CompositionFallBackIcon />
           </Box>
           <Box as="span" marginLeft="spacingXs">
             {componentDefinition?.name || 'Untitled'}

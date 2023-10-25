@@ -160,7 +160,7 @@ const StylesTab = ({ componentDefinition }: StylesTabProps) => {
     return (
       <Flex flexDirection="column" alignItems="center" className={styles.emptyStateWrapper}>
         <Box as="div" className={styles.emptyStateSvg}>
-          <img src={CompositionFallBackIcon} alt="" />
+          <CompositionFallBackIcon />
         </Box>
         <Paragraph className={styles.emptyStateParagraph}>
           {!componentDefinition

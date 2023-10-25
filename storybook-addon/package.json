@@ -120,7 +120,6 @@
     "@contentful/f36-workbench": "^4.21.0",
     "@contentful/field-editor-rich-text": "^3.12.5",
     "constate": "^3.3.2",
-    "emotion": "10.0.27",
-    "vite-svg-loader": "^4.0.0"
+    "emotion": "10.0.27"
   }
 }

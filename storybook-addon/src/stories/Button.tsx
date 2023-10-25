@@ -50,7 +50,7 @@ export const Button: CompositionComponent<ButtonProps> = ({
 Button.ComponentDefinition = {
   id: 'button',
   name: 'Button',
-  builtInStyles: ['cfPadding', 'cfMargin', 'cfFlexWrap'],
+  builtInStyles: ['cfPadding', 'cfMargin', 'cfFlexWrap', 'cfFlexDirection'],
   variables: {
     label: {
       defaultValue: 'My Button',

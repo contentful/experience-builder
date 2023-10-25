@@ -83,15 +83,15 @@ export const BorderInput = ({ variableDefinition, variableName }: BorderInputPro
             </Select.Option>
           ))}
         </Select>
-        <img src={BorderWidthLinesIcon} alt="" className={styles.borderWidthIcon} />
-        <TextInput
+        <BorderWidthLinesIcon />
+        {/* <TextInput
           name="borderWidth"
           aria-label="Border width"
           placeholder={defaultValue ? defaultValue.toString() : ''}
           value={unvalidatedBorderWidth}
           onChange={updateUnvalidatedBorderWidth}
           onBlur={validateBorderWidth}
-        />
+        /> */}
       </Flex>
     </Flex>
   );
