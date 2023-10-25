@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 
+import { VisualEditorBlock } from './VisualEditorBlock'
+import { EmptyEditorContainer } from './EmptyEditorContainer'
 import '../styles/VisualEditorRoot.css'
 import { onComponentDropped } from '../communication/onComponentDrop'
 import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
 import { useBreakpoints } from '../hooks/useBreakpoints'
 import { useHoverIndicator } from '../hooks/useHoverIndicator'
 import { InternalSDKMode } from '../types'
-import { EmptyEditorContainer } from './EmptyEdtorContainer'
 import { useEditorContext } from './useEditorContext'
-import { VisualEditorBlock } from './VisualEditorBlock'
 import { VisualEditorContextProvider } from './VisualEditorContext'
 
 type VisualEditorRootProps = {
@@ -18,7 +18,6 @@ type VisualEditorRootProps = {
 
 export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
   // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
-
   return (
     <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
       <VisualEditorRootComponents />
