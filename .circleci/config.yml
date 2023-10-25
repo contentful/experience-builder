@@ -74,9 +74,8 @@ jobs:
     executor: docker-with-node
     steps:
       - checkout
-      - vault/get-secrets:
-          template-preset: 'semantic-release'
-      - yarn_install
+      - use-vault
+      - install-dependencies
       - vault/configure-lerna
       - run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
       - run: yarn build # This should not be needed, but without it it will not contain any files
