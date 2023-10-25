@@ -1,0 +1,47 @@
+{
+  "name": "create-experience-builder",
+  "version": "0.0.1-alpha.0",
+  "description": "A CLI tool to get up and running with Contentful Experience Builder quickly",
+  "homepage": "https://github.com/contentful/experience-builder-toolkit/tree/next/packages/create-experience-builder#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/experience-builder-toolkit.git"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "readme.md",
+    "package.json",
+    "dist/**/*.*",
+    "bin/**/*.*",
+    "templates/**/*.*"
+  ],
+  "scripts": {
+    "dev": "tsc -w",
+    "prebuild": "npm uninstall -g && rimraf dist",
+    "build": "tsc",
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0",
+    "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
+    "postbuild": "npm install -g",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/yargs": "^17.0.28",
+    "eslint-plugin-prettier": "^5.0.1",
+    "typescript": "^5.2.2"
+  },
+  "bin": {
+    "create-experience-builder": "./dist/index.js"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "cross-spawn": "^7.0.3",
+    "kleur": "^4.1.5",
+    "open": "^9.1.0",
+    "yargs": "^17.7.2"
+  }
+}
