@@ -1,1 +1,1 @@
-export { ExperienceRoot } from './ExperienceRoot'
+export { ExperienceRoot } from './ExperienceRoot';

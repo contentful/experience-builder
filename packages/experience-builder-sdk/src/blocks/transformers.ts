@@ -1,26 +1,26 @@
-import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types'
+import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types';
 
 import {
   StyleProps,
   CSSProperties,
   ComponentDefinitionVariable,
   CompositionVariableValueType,
-} from '../types'
+} from '../types';
 
-export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value)
+export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
 export const transformBorderStyle = (value?: string): CSSProperties => {
-  if (!value) return {}
-  const parts = value.split(' ')
+  if (!value) return {};
+  const parts = value.split(' ');
   // Just accept the passed value
-  if (parts.length < 3) return { border: value }
+  if (parts.length < 3) return { border: value };
   // Replace the second part always with `solid` and set the box sizing accordingly
-  const [borderSize, borderPlacement, ...borderColorParts] = parts
-  const borderColor = borderColorParts.join(' ')
+  const [borderSize, borderPlacement, ...borderColorParts] = parts;
+  const borderColor = borderColorParts.join(' ');
   return {
     border: `${borderSize} solid ${borderColor}`,
     boxSizing: borderPlacement === 'inside' ? 'border-box' : 'content-box',
-  }
-}
+  };
+};
 
 export const transformAlignment = (
   cfHorizontalAlignment?: string,
@@ -39,12 +39,12 @@ export const transformAlignment = (
           cfHorizontalAlignment === 'center'
             ? `safe ${cfHorizontalAlignment}`
             : cfHorizontalAlignment,
-      }
+      };
 
 interface CSSPropertiesForBackground extends CSSProperties {
-  backgroundImage: string
-  backgroundRepeat: 'repeat' | 'no-repeat'
-  backgroundSize?: 'cover' | 'contain'
+  backgroundImage: string;
+  backgroundRepeat: 'repeat' | 'no-repeat';
+  backgroundSize?: 'cover' | 'contain';
 
   backgroundPosition?:
     | 'left top'
@@ -55,7 +55,7 @@ interface CSSPropertiesForBackground extends CSSProperties {
     | 'right bottom'
     | 'center top'
     | 'center center'
-    | 'center bottom'
+    | 'center bottom';
 }
 
 export const transformBackgroundImage = (
@@ -66,63 +66,65 @@ export const transformBackgroundImage = (
   const matchBackgroundSize = (
     backgroundImageScaling?: StyleProps['cfBackgroundImageScaling']
   ): 'cover' | 'contain' | undefined => {
-    if ('fill' === backgroundImageScaling) return 'cover'
-    if ('fit' === backgroundImageScaling) return 'contain'
-    return undefined
-  }
+    if ('fill' === backgroundImageScaling) return 'cover';
+    if ('fit' === backgroundImageScaling) return 'contain';
+    return undefined;
+  };
 
   const matchBackgroundPosition = (
     cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment']
   ): CSSPropertiesForBackground['backgroundPosition'] | undefined => {
     if (!cfBackgroundImageAlignment) {
-      return undefined
+      return undefined;
     }
     if ('string' !== typeof cfBackgroundImageAlignment) {
-      return undefined
+      return undefined;
     }
-    let [horizontalAlignment, verticalAlignment] = cfBackgroundImageAlignment.trim().split(/\s+/, 2)
+    let [horizontalAlignment, verticalAlignment] = cfBackgroundImageAlignment
+      .trim()
+      .split(/\s+/, 2);
 
     // Special case for handling single values
     // for backwards compatibility with single values 'right','left', 'center', 'top','bottom'
     if (horizontalAlignment && !verticalAlignment) {
-      const singleValue = horizontalAlignment
+      const singleValue = horizontalAlignment;
       switch (singleValue) {
         case 'left':
-          horizontalAlignment = 'left'
-          verticalAlignment = 'center'
-          break
+          horizontalAlignment = 'left';
+          verticalAlignment = 'center';
+          break;
         case 'right':
-          horizontalAlignment = 'right'
-          verticalAlignment = 'center'
-          break
+          horizontalAlignment = 'right';
+          verticalAlignment = 'center';
+          break;
         case 'center':
-          horizontalAlignment = 'center'
-          verticalAlignment = 'center'
-          break
+          horizontalAlignment = 'center';
+          verticalAlignment = 'center';
+          break;
         case 'top':
-          horizontalAlignment = 'center'
-          verticalAlignment = 'top'
-          break
+          horizontalAlignment = 'center';
+          verticalAlignment = 'top';
+          break;
         case 'bottom':
-          horizontalAlignment = 'center'
-          verticalAlignment = 'bottom'
-          break
+          horizontalAlignment = 'center';
+          verticalAlignment = 'bottom';
+          break;
         default:
         // just fall down to the normal validation logic for horiz and vert
       }
     }
 
-    const isHorizontalValid = ['left', 'right', 'center'].includes(horizontalAlignment)
-    const isVerticalValid = ['top', 'bottom', 'center'].includes(verticalAlignment)
+    const isHorizontalValid = ['left', 'right', 'center'].includes(horizontalAlignment);
+    const isVerticalValid = ['top', 'bottom', 'center'].includes(verticalAlignment);
 
-    horizontalAlignment = isHorizontalValid ? horizontalAlignment : 'left'
-    verticalAlignment = isVerticalValid ? verticalAlignment : 'top'
+    horizontalAlignment = isHorizontalValid ? horizontalAlignment : 'left';
+    verticalAlignment = isVerticalValid ? verticalAlignment : 'top';
 
-    return `${horizontalAlignment} ${verticalAlignment}` as CSSPropertiesForBackground['backgroundPosition']
-  }
+    return `${horizontalAlignment} ${verticalAlignment}` as CSSPropertiesForBackground['backgroundPosition'];
+  };
 
   if (!cfBackgroundImageUrl) {
-    return undefined
+    return undefined;
   }
 
   return {
@@ -130,18 +132,18 @@ export const transformBackgroundImage = (
     backgroundRepeat: cfBackgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat',
     backgroundPosition: matchBackgroundPosition(cfBackgroundImageAlignment),
     backgroundSize: matchBackgroundSize(cfBackgroundImageScaling),
-  }
-}
+  };
+};
 
 export const transformContentValue = (
   value: CompositionVariableValueType,
   variableDefinition: ComponentDefinitionVariable
 ) => {
   if (variableDefinition.type === 'RichText') {
-    return transformRichText(value)
+    return transformRichText(value);
   }
-  return value
-}
+  return value;
+};
 
 export const transformRichText = (
   value: CompositionVariableValueType
@@ -164,28 +166,28 @@ export const transformRichText = (
         },
       ],
       nodeType: BLOCKS.DOCUMENT,
-    }
+    };
   }
   if (typeof value === 'object' && value.nodeType === BLOCKS.DOCUMENT) {
-    return value as RichTextDocument
+    return value as RichTextDocument;
   }
-  return undefined
-}
+  return undefined;
+};
 
 export const transformWidthSizing = ({
   value,
   cfMargin,
 }: {
-  value: string | undefined
-  cfMargin: string | undefined
+  value: string | undefined;
+  cfMargin: string | undefined;
 }) => {
-  if (!value || !cfMargin) return undefined
+  if (!value || !cfMargin) return undefined;
 
-  const transformedValue = transformFill(value)
-  const marginValues = cfMargin.split(' ')
+  const transformedValue = transformFill(value);
+  const marginValues = cfMargin.split(' ');
 
-  const rightMargin = marginValues[1] || '0px'
-  const leftMargin = marginValues[3] || '0px'
+  const rightMargin = marginValues[1] || '0px';
+  const leftMargin = marginValues[3] || '0px';
 
-  return `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`
-}
+  return `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`;
+};

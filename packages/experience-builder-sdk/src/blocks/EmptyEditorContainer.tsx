@@ -1,12 +1,12 @@
-import React from 'react'
-import { onComponentDropped } from '../communication/onComponentDrop'
-import EmptyStateIcon from '../svg/emptyState.svg?react'
-import '../styles/EmptyContainer.css'
+import React from 'react';
+import { onComponentDropped } from '../communication/onComponentDrop';
+import EmptyStateIcon from '../svg/emptyState.svg?react';
+import '../styles/EmptyContainer.css';
 
 export interface EmptyContainerProps {
-  isFirst?: boolean
-  isDragging?: boolean
-  isHoveringOnRoot?: boolean
+  isFirst?: boolean;
+  isDragging?: boolean;
+  isHoveringOnRoot?: boolean;
 }
 
 export const EmptyEditorContainer = ({
@@ -20,7 +20,7 @@ export const EmptyEditorContainer = ({
       data-type="empty-container"
       onMouseUp={() => {
         if (!isDragging) {
-          return
+          return;
         }
 
         onComponentDropped({
@@ -29,7 +29,7 @@ export const EmptyEditorContainer = ({
             data: { id: 'root', props: {}, dataSource: {}, unboundValues: {}, breakpoints: [] },
             children: [],
           },
-        })
+        });
       }}>
       {isFirst || isDragging ? (
         <>
@@ -38,5 +38,5 @@ export const EmptyEditorContainer = ({
         </>
       ) : null}
     </div>
-  )
-}
+  );
+};

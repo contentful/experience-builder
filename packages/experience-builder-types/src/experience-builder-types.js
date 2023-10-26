@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-module.exports = experienceBuilderTypes;
+module.exports = experienceBuilderTypes
 
 function experienceBuilderTypes() {
-  return 'Hello from experienceBuilderTypes';
+  return 'Hello from experienceBuilderTypes'
 }

@@ -1,10 +1,10 @@
-import { Asset, AssetFile, Entry } from 'contentful'
+import { Asset, AssetFile, Entry } from 'contentful';
 
 export const entityIds = {
   ENTRY1: 'entry1',
   ENTRY2: 'entry2',
   ASSET1: 'asset1',
-}
+};
 export const entries: Entry[] = [
   {
     sys: {
@@ -80,7 +80,7 @@ export const entries: Entry[] = [
       tags: [],
     },
   },
-]
+];
 export const assets: Asset[] = [
   {
     sys: {
@@ -117,6 +117,6 @@ export const assets: Asset[] = [
       tags: [],
     },
   },
-]
+];
 
-export const entities: Array<Entry | Asset> = [...entries, ...assets]
+export const entities: Array<Entry | Asset> = [...entries, ...assets];

@@ -1,48 +1,51 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react';
 import {
-  Experience,
   IncomingExperienceBuilderEvent,
+  InternalSDKMode,
   OutgoingExperienceBuilderEvent,
-} from '../types'
-import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
-import { sendMessage } from '../communication/sendMessage'
+} from '../types';
+import { doesMismatchMessageSchema, tryParseMessage } from '../validation';
+import { sendMessage } from '../communication/sendMessage';
 
 export const useEditorModeSwitch = ({
   mode,
   switchToEditorMode,
-}: Pick<Experience, 'mode' | 'switchToEditorMode'>) => {
-  const hasConnectEventBeenSent = useRef(false)
+}: {
+  mode: InternalSDKMode;
+  switchToEditorMode: () => void;
+}) => {
+  const hasConnectEventBeenSent = useRef(false);
 
   // switch from preview mode to editor mode
   useEffect(() => {
     if (mode !== 'preview') {
-      return
+      return;
     }
 
     const onMessage = (event: MessageEvent) => {
       if (doesMismatchMessageSchema(event)) {
-        return
+        return;
       }
-      const eventData = tryParseMessage(event)
+      const eventData = tryParseMessage(event);
 
       if (eventData.eventType === IncomingExperienceBuilderEvent.REQUEST_EDITOR_MODE) {
-        switchToEditorMode()
+        switchToEditorMode();
       }
-    }
+    };
 
     if (typeof window !== 'undefined') {
-      window.addEventListener('message', onMessage)
+      window.addEventListener('message', onMessage);
 
       if (!hasConnectEventBeenSent.current) {
-        sendMessage(OutgoingExperienceBuilderEvent.CONNECTED)
-        hasConnectEventBeenSent.current = true
+        sendMessage(OutgoingExperienceBuilderEvent.CONNECTED);
+        hasConnectEventBeenSent.current = true;
       }
     }
 
     return () => {
       if (typeof window !== 'undefined') {
-        window.removeEventListener('message', onMessage)
+        window.removeEventListener('message', onMessage);
       }
-    }
-  }, [mode, switchToEditorMode])
-}
+    };
+  }, [mode, switchToEditorMode]);
+};

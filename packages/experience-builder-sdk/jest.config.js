@@ -8,5 +8,6 @@ export default {
   moduleNameMapper: {
     '\\.(css)$': '<rootDir>/test/styleMock.ts',
     '^.+\\.svg$': '<rootDir>/test/fileMock.ts',
+    '^.+\\.svg\\?react$': '<rootDir>/test/fileMock.ts',
   },
-}
+};

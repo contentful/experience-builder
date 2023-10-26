@@ -3,22 +3,13 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "tsc",
-          "test",
-          "test:ci",
-          "coverage"
-        ]
+        "cacheableOperations": ["build", "lint", "tsc", "test", "test:ci", "coverage"]
       }
     }
   },
   "targetDefaults": {
     "build": {
-      "outputs": [
-        "{projectRoot}/dist"
-      ]
+      "outputs": ["{projectRoot}/dist"]
     }
   }
 }

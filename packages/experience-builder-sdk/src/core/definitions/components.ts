@@ -1,6 +1,6 @@
-import { CONTENTFUL_COMPONENT_CATEGORY, CONTENTFUL_CONTAINER_ID } from '../../constants'
-import { ComponentDefinition } from '../../types'
-import { containerBuiltInStyles } from './variables'
+import { CONTENTFUL_COMPONENT_CATEGORY, CONTENTFUL_CONTAINER_ID } from '../../constants';
+import { ComponentDefinition } from '../../types';
+import { containerBuiltInStyles } from './variables';
 
 export const containerDefinition: ComponentDefinition = {
   id: CONTENTFUL_CONTAINER_ID,
@@ -8,4 +8,4 @@ export const containerDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: containerBuiltInStyles,
-}
+};

@@ -1,5 +1,5 @@
-import React from 'react'
+import React from 'react';
 
-import { VisualEditorContext } from './VisualEditorContext'
+import { VisualEditorContext } from './VisualEditorContext';
 
-export const useEditorContext = () => React.useContext(VisualEditorContext)
+export const useEditorContext = () => React.useContext(VisualEditorContext);

@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@contentful/rich-text-types": "^16.2.1",
-    "@contentful/visual-sdk": "^1.0.0-alpha.9",
+    "@contentful/visual-sdk": "^1.0.0-alpha.26",
     "classnames": "^2.3.2",
     "contentful": "^10.3.0",
     "csstype": "^3.1.2",
@@ -57,7 +57,7 @@
     "ts-jest": "^29.1.0",
     "typescript": "^5.2.2",
     "vite": "^4.3.9",
-    "vite-plugin-dts": "^2.0.1",
+    "vite-plugin-dts": "^3.6.1",
     "vite-plugin-svgr": "^4.1.0"
   },
   "peerDependencies": {
