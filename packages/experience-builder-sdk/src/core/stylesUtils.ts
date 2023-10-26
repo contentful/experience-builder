@@ -72,9 +72,8 @@ export const buildCfStyles = ({
 }
 /**
  * Container/section default behaviour:
- * If the container is dropped on root => height: '200px'
- * If the container is nested in another container => height: 'fill'
- * If a non-container component is nested in a container => height: 'fit-content'
+ * Default height => height: '200px'
+ * If a container component has children => height: 'fit-content'
  */
 export const calculateNodeDefaultHeight = ({
   blockId,
@@ -89,7 +88,7 @@ export const calculateNodeDefaultHeight = ({
     return value
   }
 
-  if (!children.every((child) => child.data.blockId === CONTENTFUL_CONTAINER_ID)) {
+  if (children.length) {
     return 'fit-content'
   }
 
