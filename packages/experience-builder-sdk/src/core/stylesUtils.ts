@@ -89,7 +89,7 @@ export const calculateNodeDefaultHeight = ({
     return value
   }
 
-  if (!children.every((child) => child.data.blockId === CONTENTFUL_CONTAINER_ID)) {
+  if (children.length) {
     return 'fit-content'
   }
 

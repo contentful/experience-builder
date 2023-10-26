@@ -41,28 +41,6 @@ describe('calculateNodeDefaultHeight', () => {
     expect(result).toBe('200px')
   })
 
-  it('should return defaultValue of "200px" when container is on "root" and has only container children', () => {
-    const childNode: CompositionComponentNode = {
-      type: 'block',
-      data: {
-        id: 'node-1',
-        blockId: CONTENTFUL_CONTAINER_ID,
-        props: {},
-        dataSource: {},
-        unboundValues: {},
-        breakpoints: [],
-      },
-      children: [],
-    }
-    const result = calculateNodeDefaultHeight({
-      blockId: CONTENTFUL_CONTAINER_ID,
-      children: [childNode],
-      value: 'auto',
-    })
-
-    expect(result).toBe('200px')
-  })
-
   it('should return "fit-content" when container has a non-container child', () => {
     const childNode: CompositionComponentNode = {
       type: 'block',
