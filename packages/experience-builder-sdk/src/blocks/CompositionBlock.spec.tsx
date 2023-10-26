@@ -1,19 +1,19 @@
-import React from 'react'
+import React from 'react';
 
-import { render } from '@testing-library/react'
+import { render } from '@testing-library/react';
 
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
-import { defineComponents, resetComponentRegistry } from '../core/componentRegistry'
-import { CompositionNode } from '../types'
-import { CompositionBlock } from './CompositionBlock'
+import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
+import { defineComponents, resetComponentRegistry } from '../core/componentRegistry';
+import { CompositionNode } from '../types';
+import { CompositionBlock } from './CompositionBlock';
 
 const TestComponent = (props: any) => {
-  return <div {...props}>{props.text}</div>
-}
+  return <div {...props}>{props.text}</div>;
+};
 
 jest.mock('../core/constants', () => ({
   SDK_VERSION: 'test',
-}))
+}));
 
 describe('CompositionBlock', () => {
   beforeEach(() => {
@@ -32,12 +32,12 @@ describe('CompositionBlock', () => {
           },
         },
       },
-    ])
-  })
+    ]);
+  });
 
   afterEach(() => {
-    resetComponentRegistry()
-  })
+    resetComponentRegistry();
+  });
 
   it('renders the custom component node', () => {
     const mockCompositionComponentNode: CompositionNode = {
@@ -46,7 +46,7 @@ describe('CompositionBlock', () => {
         text: { type: 'UnboundValue', key: 'value1' },
       },
       children: [],
-    }
+    };
 
     // Render the component with the initial text
     render(
@@ -62,15 +62,15 @@ describe('CompositionBlock', () => {
         }}
         resolveDesignValue={jest.fn()}
       />
-    )
-  })
+    );
+  });
 
   it('renders section node', () => {
     const sectionNode: CompositionNode = {
       definitionId: CONTENTFUL_SECTION_ID,
       variables: {},
       children: [],
-    }
+    };
 
     render(
       <CompositionBlock
@@ -82,17 +82,17 @@ describe('CompositionBlock', () => {
         unboundValues={{}}
         resolveDesignValue={jest.fn()}
       />
-    )
+    );
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined()
-  })
+    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+  });
 
   it('renders container node', () => {
     const containerNode: CompositionNode = {
       definitionId: CONTENTFUL_CONTAINER_ID,
       variables: {},
       children: [],
-    }
+    };
 
     render(
       <CompositionBlock
@@ -104,8 +104,8 @@ describe('CompositionBlock', () => {
         unboundValues={{}}
         resolveDesignValue={jest.fn()}
       />
-    )
+    );
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined()
-  })
-})
+    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+  });
+});

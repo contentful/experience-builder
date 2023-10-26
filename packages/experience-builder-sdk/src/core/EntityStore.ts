@@ -1,63 +1,63 @@
-import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful'
-import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk'
-import { Composition } from '../types'
-import { isExperienceEntry } from '../typeguards'
+import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful';
+import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk';
+import { Composition } from '../types';
+import { isExperienceEntry } from '../typeguards';
 
-type EntityStoreArgs = { experienceEntry: Entry; entities: Array<Entry | Asset>; locale: string }
+type EntityStoreArgs = { experienceEntry: Entry; entities: Array<Entry | Asset>; locale: string };
 
 export class EntityStore extends VisualSdkEntityStore {
-  private _experienceEntry: Composition | undefined
+  private _experienceEntry: Composition | undefined;
 
   constructor({ experienceEntry, entities, locale }: EntityStoreArgs) {
-    super({ entities, locale })
+    super({ entities, locale });
 
     if (isExperienceEntry(experienceEntry)) {
-      this._experienceEntry = experienceEntry.fields
+      this._experienceEntry = experienceEntry.fields;
     } else {
-      throw new Error('Provided entry is not experience entry')
+      throw new Error('Provided entry is not experience entry');
     }
   }
 
   public getCurrentLocale() {
-    return this.locale
+    return this.locale;
   }
 
   public get experienceEntryFields() {
-    return this._experienceEntry
+    return this._experienceEntry;
   }
 
   public get schemaVersion() {
-    return this._experienceEntry?.componentTree.schemaVersion
+    return this._experienceEntry?.componentTree.schemaVersion;
   }
 
   public get breakpoints() {
-    return this._experienceEntry?.componentTree.breakpoints ?? []
+    return this._experienceEntry?.componentTree.breakpoints ?? [];
   }
 
   public get dataSource() {
-    return this._experienceEntry?.dataSource ?? {}
+    return this._experienceEntry?.dataSource ?? {};
   }
 
   public get unboundValues() {
-    return this._experienceEntry?.unboundValues ?? {}
+    return this._experienceEntry?.unboundValues ?? {};
   }
 
   public getFieldValue(
     entityLink: UnresolvedLink<'Entry' | 'Asset'>,
     path: string[]
   ): string | undefined {
-    const entity = this.entitiesMap.get(entityLink.sys.id)
+    const entity = this.entitiesMap.get(entityLink.sys.id);
 
     if (!entity || entity.sys.type !== entityLink.sys.linkType) {
-      console.warn(`Experience references unresolved entity: ${JSON.stringify(entityLink)}`)
-      return
+      console.warn(`Experience references unresolved entity: ${JSON.stringify(entityLink)}`);
+      return;
     }
 
-    const fieldValue = super.getValue(entityLink, path)
+    const fieldValue = super.getValue(entityLink, path);
 
     // walk around to render asset files
     return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
       ? (fieldValue as AssetFile).url
-      : fieldValue
+      : fieldValue;
   }
 }

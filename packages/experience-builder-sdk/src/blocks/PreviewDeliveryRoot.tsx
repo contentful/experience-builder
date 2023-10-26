@@ -1,16 +1,16 @@
-import React from 'react'
+import React from 'react';
 
-import { Experience, InternalSDKMode } from '../types'
-import { CompositionBlock } from './CompositionBlock'
-import { compatibleVersions } from '../constants'
-import { useBreakpoints, useEditorModeSwitch } from '../hooks'
+import { Experience, InternalSDKMode } from '../types';
+import { CompositionBlock } from './CompositionBlock';
+import { compatibleVersions } from '../constants';
+import { useBreakpoints, useEditorModeSwitch } from '../hooks';
 
 type DeliveryRootProps = {
-  experience: Experience
-  locale: string
-  mode: InternalSDKMode
-  switchToEditorMode: () => void
-}
+  experience: Experience;
+  locale: string;
+  mode: InternalSDKMode;
+  switchToEditorMode: () => void;
+};
 
 export const PreviewDeliveryRoot = ({
   locale,
@@ -18,24 +18,24 @@ export const PreviewDeliveryRoot = ({
   switchToEditorMode,
   experience,
 }: DeliveryRootProps) => {
-  const { entityStore } = experience
+  const { entityStore } = experience;
 
   useEditorModeSwitch({
     mode,
     switchToEditorMode,
-  })
+  });
 
-  const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? [])
+  const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? []);
 
   if (!entityStore?.experienceEntryFields || !entityStore?.schemaVersion) {
-    return null
+    return null;
   }
 
   if (!compatibleVersions.includes(entityStore.schemaVersion)) {
     console.warn(
       `[exp-builder.sdk] Contenful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`
-    )
-    return null
+    );
+    return null;
   }
 
   return (
@@ -53,5 +53,5 @@ export const PreviewDeliveryRoot = ({
         />
       ))}
     </>
-  )
-}
+  );
+};

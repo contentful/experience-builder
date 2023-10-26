@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
-import { buildStyleTag } from '../core/stylesUtils'
-import { CSSProperties } from '../types'
+import { buildStyleTag } from '../core/stylesUtils';
+import { CSSProperties } from '../types';
 
 /**
  *
@@ -13,34 +13,34 @@ import { CSSProperties } from '../types'
  * In preview/delivery mode the styles don't change oftem so we're using the md5 hash of the content of the tag
  */
 export const useStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
-  const [className, setClassName] = useState('')
+  const [className, setClassName] = useState('');
 
   useEffect(() => {
     if (Object.keys(styles).length === 0) {
-      return
+      return;
     }
 
-    const [className, styleRule] = buildStyleTag({ styles, nodeId })
+    const [className, styleRule] = buildStyleTag({ styles, nodeId });
 
-    setClassName(className)
+    setClassName(className);
 
-    const existingTag = document.querySelector(`[data-cf-styles="${className}"]`)
+    const existingTag = document.querySelector(`[data-cf-styles="${className}"]`);
 
     if (existingTag) {
       // editor mode - update existing
       if (nodeId) {
-        existingTag.innerHTML = styleRule
+        existingTag.innerHTML = styleRule;
       }
       // preview/delivery mode - here we don't need to update the existing tag because
       // the className is based on the md5 hash of the content so it hasn't changed
-      return
+      return;
     }
 
-    const styleTag = document.createElement('style')
-    styleTag.dataset['cfStyles'] = className
+    const styleTag = document.createElement('style');
+    styleTag.dataset['cfStyles'] = className;
 
-    document.head.appendChild(styleTag).innerHTML = styleRule
-  }, [styles, nodeId])
+    document.head.appendChild(styleTag).innerHTML = styleRule;
+  }, [styles, nodeId]);
 
-  return { className }
-}
+  return { className };
+};

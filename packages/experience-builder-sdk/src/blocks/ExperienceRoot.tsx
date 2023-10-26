@@ -1,57 +1,57 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { supportedModes } from '../constants'
-import { DeprecatedExperience, Experience, InternalSDKMode } from '../types'
-import { validateExperienceBuilderConfig } from '../validation'
-import { ErrorBoundary } from './ErrorBoundary'
-import { isDeprecatedExperience } from '../typeguards'
-import { DeprecatedPreviewDeliveryRoot } from './DeprecatedPreviewDeliveryRoot'
-import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
-import { VisualEditorRoot } from './VisualEditorRoot'
+import { supportedModes } from '../constants';
+import { DeprecatedExperience, Experience, InternalSDKMode } from '../types';
+import { validateExperienceBuilderConfig } from '../validation';
+import { ErrorBoundary } from './ErrorBoundary';
+import { isDeprecatedExperience } from '../typeguards';
+import { DeprecatedPreviewDeliveryRoot } from './DeprecatedPreviewDeliveryRoot';
+import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
+import { VisualEditorRoot } from './VisualEditorRoot';
 
 type ExperienceRootProps = {
-  experience: Experience | DeprecatedExperience
-  locale: string
+  experience: Experience | DeprecatedExperience;
+  locale: string;
   /**
    * @deprecated
    */
-  slug?: string
-}
+  slug?: string;
+};
 
 export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
   const [mode, setMode] = useState<InternalSDKMode>(() => {
     if (supportedModes.includes(experience.mode)) {
-      return experience.mode
+      return experience.mode;
     }
 
     throw new Error(
       `Unsupported mode provided: ${experience.mode}. Supported values: ${supportedModes}`
-    )
-  })
+    );
+  });
 
   useEffect(() => {
     if (supportedModes.includes(mode)) {
-      setMode(mode)
+      setMode(mode);
     }
-  }, [mode])
+  }, [mode]);
 
   const switchToEditorMode = useCallback(() => {
-    setMode('editor')
-  }, [])
+    setMode('editor');
+  }, []);
 
   validateExperienceBuilderConfig({
     locale,
     mode,
-  })
+  });
 
-  if (!mode || !supportedModes.includes(mode)) return null
+  if (!mode || !supportedModes.includes(mode)) return null;
 
   if (mode === 'editor') {
     return (
       <ErrorBoundary>
         <VisualEditorRoot initialLocale={locale} mode={mode} />
       </ErrorBoundary>
-    )
+    );
   }
 
   if (isDeprecatedExperience(experience)) {
@@ -63,7 +63,7 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
         locale={locale}
         slug={slug}
       />
-    )
+    );
   }
 
   return (
@@ -73,5 +73,5 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
       switchToEditorMode={switchToEditorMode}
       experience={experience}
     />
-  )
-}
+  );
+};

@@ -10,4 +10,4 @@ export default {
     '^.+\\.svg$': '<rootDir>/test/fileMock.ts',
     '^.+\\.svg\\?react$': '<rootDir>/test/fileMock.ts',
   },
-}
+};

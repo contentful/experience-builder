@@ -1,23 +1,23 @@
-import { useMemo } from 'react'
-import { DeprecatedExperience, ExternalSDKMode } from '../types'
-import type { ContentfulClientApi } from 'contentful'
-import { defineComponents } from '../core/componentRegistry'
+import { useMemo } from 'react';
+import { DeprecatedExperience, ExternalSDKMode } from '../types';
+import type { ContentfulClientApi } from 'contentful';
+import { defineComponents } from '../core/componentRegistry';
 
 type UseExperienceBuilderProps = {
   /**
    * Id of the content type of the target experience
    */
-  experienceTypeId: string
+  experienceTypeId: string;
   /**
    * Instance of a Delivery or Preview client from "contentful" package
    */
-  client: ContentfulClientApi<undefined>
+  client: ContentfulClientApi<undefined>;
   /**
    *  Mode defines the behaviour of the sdk.
    * - `preview` - fetching and rendering draft data. Will automatically switch to `editor` mode if open from contentful web app.
    * - `delivery` - fetching and rendering of published data. Can not be switched to `editor` mode. */
-  mode?: ExternalSDKMode
-}
+  mode?: ExternalSDKMode;
+};
 
 /**
  * @deprecated This hook is deprecated. We re-designed the SDK to enable client or server side rendering
@@ -34,7 +34,7 @@ export const useExperienceBuilder = ({
       mode,
     }),
     [mode, client, experienceTypeId]
-  )
+  );
 
   return {
     /**
@@ -55,5 +55,5 @@ export const useExperienceBuilder = ({
      * import { defineComponents } from '@contentful/experience-builder'
      */
     defineComponents,
-  }
-}
+  };
+};

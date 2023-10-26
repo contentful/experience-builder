@@ -1,6 +1,6 @@
-import { LATEST_SCHEMA_VERSION } from '../../src'
-import { Composition, ExperienceEntry, SchemaVersions } from '../../src/types'
-import { entityIds } from './entities'
+import { LATEST_SCHEMA_VERSION } from '../../src';
+import { Composition, ExperienceEntry, SchemaVersions } from '../../src/types';
+import { entityIds } from './entities';
 
 const compositionFields: Composition = {
   title: 'Test Composition',
@@ -49,7 +49,7 @@ const compositionFields: Composition = {
       value: 'test',
     },
   },
-}
+};
 
 export const compositionEntry: ExperienceEntry = {
   sys: {
@@ -82,11 +82,11 @@ export const compositionEntry: ExperienceEntry = {
   },
   metadata: { tags: [] },
   fields: compositionFields,
-}
+};
 
 type createCompositionEntryArgs = {
-  schemaVersion: SchemaVersions
-}
+  schemaVersion: SchemaVersions;
+};
 
 export const createCompositionEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
@@ -169,5 +169,5 @@ export const createCompositionEntry = ({
         },
       },
     },
-  }
-}
+  };
+};

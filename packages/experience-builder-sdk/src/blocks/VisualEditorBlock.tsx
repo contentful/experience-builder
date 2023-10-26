@@ -1,16 +1,16 @@
-import React, { RefObject, useMemo } from 'react'
+import React, { RefObject, useMemo } from 'react';
 
-import type { EntityStore } from '@contentful/visual-sdk'
-import omit from 'lodash.omit'
+import type { EntityStore } from '@contentful/visual-sdk';
+import omit from 'lodash.omit';
 
-import { sendMessage } from '../communication/sendMessage'
-import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
-import { getComponentRegistration } from '../core/componentRegistry'
-import { getUnboundValues } from '../core/getUnboundValues'
-import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils'
-import { ResolveDesignValueType } from '../hooks/useBreakpoints'
-import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates'
-import { useStyleTag } from '../hooks/useStyleTag'
+import { sendMessage } from '../communication/sendMessage';
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
+import { getComponentRegistration } from '../core/componentRegistry';
+import { getUnboundValues } from '../core/getUnboundValues';
+import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils';
+import { ResolveDesignValueType } from '../hooks/useBreakpoints';
+import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates';
+import { useStyleTag } from '../hooks/useStyleTag';
 import {
   OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
@@ -19,26 +19,26 @@ import {
   CompositionVariableValueType,
   CompositionDataSource,
   CompositionUnboundValues,
-} from '../types'
-import { ContentfulContainer } from './ContentfulContainer'
-import { ImportedComponentErrorBoundary } from './ErrorBoundary'
-import { transformContentValue } from './transformers'
-import { useEditorContext } from './useEditorContext'
+} from '../types';
+import { ContentfulContainer } from './ContentfulContainer';
+import { ImportedComponentErrorBoundary } from './ErrorBoundary';
+import { transformContentValue } from './transformers';
+import { useEditorContext } from './useEditorContext';
 
 type PropsType =
   | StyleProps
-  | Record<string, CompositionVariableValueType | Link<'Entry'> | Link<'Asset'>>
+  | Record<string, CompositionVariableValueType | Link<'Entry'> | Link<'Asset'>>;
 
 type VisualEditorBlockProps = {
-  node: CompositionComponentNode
+  node: CompositionComponentNode;
 
-  dataSource: CompositionDataSource
-  unboundValues: CompositionUnboundValues
+  dataSource: CompositionDataSource;
+  unboundValues: CompositionUnboundValues;
 
-  resolveDesignValue: ResolveDesignValueType
-  entityStore: RefObject<EntityStore>
-  areEntitiesFetched: boolean
-}
+  resolveDesignValue: ResolveDesignValueType;
+  entityStore: RefObject<EntityStore>;
+  areEntitiesFetched: boolean;
+};
 
 export const VisualEditorBlock = ({
   node,
@@ -51,29 +51,29 @@ export const VisualEditorBlock = ({
   const componentRegistration = useMemo(
     () => getComponentRegistration(node.data.blockId as string),
     [node]
-  )
+  );
 
-  const { setSelectedNodeId } = useEditorContext()
+  const { setSelectedNodeId } = useEditorContext();
 
-  useSelectedInstanceCoordinates({ node })
+  useSelectedInstanceCoordinates({ node });
 
   const props: PropsType = useMemo(() => {
     if (!componentRegistration) {
-      return {}
+      return {};
     }
 
     return Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
-        const variableMapping = node.data.props[variableName]
+        const variableMapping = node.data.props[variableName];
         if (!variableMapping) {
           return {
             ...acc,
             [variableName]: variableDefinition.defaultValue,
-          }
+          };
         }
 
         if (variableMapping.type === 'DesignValue') {
-          const valueByBreakpoint = resolveDesignValue(variableMapping.valuesByBreakpoint)
+          const valueByBreakpoint = resolveDesignValue(variableMapping.valuesByBreakpoint);
           const designValue =
             variableName === 'cfHeight'
               ? calculateNodeDefaultHeight({
@@ -81,41 +81,41 @@ export const VisualEditorBlock = ({
                   children: node.children,
                   value: valueByBreakpoint,
                 })
-              : valueByBreakpoint
+              : valueByBreakpoint;
 
           return {
             ...acc,
             [variableName]: designValue,
-          }
+          };
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
-          const [, uuid, ...path] = variableMapping.path.split('/')
-          const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>
+          const [, uuid, ...path] = variableMapping.path.split('/');
+          const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
           const boundValue = areEntitiesFetched
             ? entityStore.current?.getValue(binding, path.slice(0, -1))
-            : undefined
-          const value = boundValue || variableDefinition.defaultValue
+            : undefined;
+          const value = boundValue || variableDefinition.defaultValue;
 
           return {
             ...acc,
             [variableName]: transformContentValue(value, variableDefinition),
-          }
+          };
         } else {
           const value = getUnboundValues({
             key: variableMapping.key,
             fallback: variableDefinition.defaultValue,
             unboundValues: unboundValues || {},
-          })
+          });
 
           return {
             ...acc,
             [variableName]: value,
-          }
+          };
         }
       },
       {}
-    )
+    );
   }, [
     componentRegistration,
     node.data.props,
@@ -126,16 +126,16 @@ export const VisualEditorBlock = ({
     areEntitiesFetched,
     entityStore,
     unboundValues,
-  ])
+  ]);
 
-  const cfStyles = buildCfStyles(props)
-  const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id })
+  const cfStyles = buildCfStyles(props);
+  const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
 
   if (!componentRegistration) {
-    return null
+    return null;
   }
 
-  const { component, definition } = componentRegistration
+  const { component, definition } = componentRegistration;
 
   const children =
     definition.children === true
@@ -150,9 +150,9 @@ export const VisualEditorBlock = ({
               entityStore={entityStore}
               areEntitiesFetched={areEntitiesFetched}
             />
-          )
+          );
         })
-      : null
+      : null;
 
   // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(definition.id)) {
@@ -163,12 +163,12 @@ export const VisualEditorBlock = ({
         key={node.data.id}
         node={node}
         onMouseDown={(e) => {
-          e.stopPropagation()
-          e.preventDefault()
-          setSelectedNodeId(node.data.id)
+          e.stopPropagation();
+          e.preventDefault();
+          setSelectedNodeId(node.data.id);
           sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
             node,
-          })
+          });
         }}
         // something is off with conditional types and eslint can't recognize it
         // eslint-disable-next-line react/prop-types
@@ -177,23 +177,23 @@ export const VisualEditorBlock = ({
         cfOpenInNewTab={(props as StyleProps).cfOpenInNewTab}>
         {children}
       </ContentfulContainer>
-    )
+    );
   }
 
   const importedComponent = React.createElement(
     component,
     {
       onMouseDown: (e: MouseEvent) => {
-        e.stopPropagation()
-        e.preventDefault()
-        setSelectedNodeId(node.data.id)
+        e.stopPropagation();
+        e.preventDefault();
+        setSelectedNodeId(node.data.id);
         sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
           node,
-        })
+        });
       },
       onClick: (e: MouseEvent) => {
-        e.stopPropagation()
-        e.preventDefault()
+        e.stopPropagation();
+        e.preventDefault();
       },
       'data-cf-node-id': node.data.id,
       'data-cf-node-block-id': node.data.blockId,
@@ -203,7 +203,7 @@ export const VisualEditorBlock = ({
       ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     },
     children
-  )
+  );
 
-  return <ImportedComponentErrorBoundary>{importedComponent}</ImportedComponentErrorBoundary>
-}
+  return <ImportedComponentErrorBoundary>{importedComponent}</ImportedComponentErrorBoundary>;
+};

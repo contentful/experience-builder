@@ -1,4 +1,4 @@
-import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../../types'
+import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../../types';
 
 export const builtInStyles: Record<
   ContainerStyleVariableName,
@@ -171,7 +171,7 @@ export const builtInStyles: Record<
     defaultValue: false,
     description: 'To open hyperlink in new Tab or not',
   },
-}
+};
 
 export const containerBuiltInStyles = {
   ...builtInStyles,
@@ -182,4 +182,4 @@ export const containerBuiltInStyles = {
     description: 'The height of the section',
     defaultValue: 'auto',
   } as ComponentDefinitionVariable<'Text'>,
-}
+};

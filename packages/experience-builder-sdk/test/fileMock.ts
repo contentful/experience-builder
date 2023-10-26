@@ -1,2 +1,2 @@
-export default 'test-file-stub'
-export const ReactComponent = 'div'
+export default 'test-file-stub';
+export const ReactComponent = 'div';

@@ -1,20 +1,20 @@
-import { PostMessageMethods } from '@contentful/visual-sdk'
+import { PostMessageMethods } from '@contentful/visual-sdk';
 
-import { OutgoingExperienceBuilderEvent } from '../types'
+import { OutgoingExperienceBuilderEvent } from '../types';
 
 export const sendMessage = (
   eventType: OutgoingExperienceBuilderEvent | PostMessageMethods,
   data?: any
 ) => {
   if (typeof window === 'undefined') {
-    return
+    return;
   }
 
   console.debug('data sent', {
     source: 'customer-app',
     eventType,
     payload: data,
-  })
+  });
 
   window.parent?.postMessage(
     {
@@ -23,5 +23,5 @@ export const sendMessage = (
       payload: data,
     },
     '*'
-  )
-}
+  );
+};

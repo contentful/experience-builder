@@ -1,5 +1,5 @@
-import type { Entry } from 'contentful'
-import type { DeprecatedExperience, Experience, ExperienceEntry } from './types'
+import type { Entry } from 'contentful';
+import type { DeprecatedExperience, Experience, ExperienceEntry } from './types';
 
 // @ts-expect-error type incompatibility
 export const isExperienceEntry = (entry: Entry): entry is ExperienceEntry => {
@@ -16,8 +16,8 @@ export const isExperienceEntry = (entry: Entry): entry is ExperienceEntry => {
     typeof entry.fields.componentTree.schemaVersion === 'string' &&
     !!entry.fields?.dataSource &&
     !!entry.fields?.unboundValues
-  )
-}
+  );
+};
 
 export const isDeprecatedExperience = (
   experience: Experience | DeprecatedExperience
@@ -27,5 +27,5 @@ export const isDeprecatedExperience = (
     {}.hasOwnProperty.call(experience, 'client') &&
     {}.hasOwnProperty.call(experience, 'experienceTypeId') &&
     {}.hasOwnProperty.call(experience, 'mode')
-  )
-}
+  );
+};

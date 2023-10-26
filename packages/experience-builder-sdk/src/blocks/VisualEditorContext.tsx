@@ -1,13 +1,13 @@
-import React, { ReactElement, useEffect, useRef, useState } from 'react'
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 
-import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates'
-import { sendMessage } from '../communication/sendMessage'
-import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates'
+import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates';
+import { sendMessage } from '../communication/sendMessage';
+import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates';
 import {
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
-} from '../core/componentRegistry'
-import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
+} from '../core/componentRegistry';
+import { EditorModeEntityStore } from '../core/EditorModeEntityStore';
 import {
   Breakpoint,
   CompositionComponentNode,
@@ -20,21 +20,21 @@ import {
   OutgoingExperienceBuilderEvent,
   ScrollStates,
   InternalEvents,
-} from '../types'
-import { getDataFromTree } from '../utils'
-import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
+} from '../types';
+import { getDataFromTree } from '../utils';
+import { doesMismatchMessageSchema, tryParseMessage } from '../validation';
 
 type VisualEditorContextType = {
-  tree: CompositionTree | undefined
-  dataSource: CompositionDataSource
-  isDragging: boolean
-  locale: string | null
-  selectedNodeId: string | null
-  setSelectedNodeId: (id: string) => void
-  unboundValues: CompositionUnboundValues
-  breakpoints: Breakpoint[]
-  entityStore: React.MutableRefObject<EditorModeEntityStore>
-}
+  tree: CompositionTree | undefined;
+  dataSource: CompositionDataSource;
+  isDragging: boolean;
+  locale: string | null;
+  selectedNodeId: string | null;
+  setSelectedNodeId: (id: string) => void;
+  unboundValues: CompositionUnboundValues;
+  breakpoints: Breakpoint[];
+  entityStore: React.MutableRefObject<EditorModeEntityStore>;
+};
 
 export const VisualEditorContext = React.createContext<VisualEditorContextType>({
   tree: undefined,
@@ -48,108 +48,108 @@ export const VisualEditorContext = React.createContext<VisualEditorContextType>(
   locale: null,
   breakpoints: [],
   entityStore: {} as React.MutableRefObject<EditorModeEntityStore>,
-})
+});
 
 type VisualEditorContextProviderProps = {
-  initialLocale: string
-  mode: InternalSDKMode
-  children: ReactElement
-}
+  initialLocale: string;
+  mode: InternalSDKMode;
+  children: ReactElement;
+};
 
 export function VisualEditorContextProvider({
   initialLocale,
   mode,
   children,
 }: VisualEditorContextProviderProps) {
-  const hasConnectEventBeenSent = useRef(false)
-  const [tree, setTree] = useState<CompositionTree>()
-  const [dataSource, setDataSource] = useState<CompositionDataSource>({})
-  const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({})
-  const [isDragging, setIsDragging] = useState(false)
-  const [selectedNodeId, setSelectedNodeId] = useState<string>('')
-  const [locale, setLocale] = useState<string>(initialLocale)
+  const hasConnectEventBeenSent = useRef(false);
+  const [tree, setTree] = useState<CompositionTree>();
+  const [dataSource, setDataSource] = useState<CompositionDataSource>({});
+  const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({});
+  const [isDragging, setIsDragging] = useState(false);
+  const [selectedNodeId, setSelectedNodeId] = useState<string>('');
+  const [locale, setLocale] = useState<string>(initialLocale);
 
   const entityStore = useRef<EditorModeEntityStore>(
     new EditorModeEntityStore({
       entities: [],
       locale: locale,
     })
-  )
+  );
 
   const reloadApp = () => {
-    sendMessage(OutgoingExperienceBuilderEvent.CANVAS_RELOAD, {})
+    sendMessage(OutgoingExperienceBuilderEvent.CANVAS_RELOAD, {});
     // Wait a moment to ensure that the message was sent
     setTimeout(() => {
       // Received a hot reload message from webpack dev server -> reload the canvas
-      window.location.reload()
-    }, 50)
-  }
+      window.location.reload();
+    }, 50);
+  };
 
   // sends component definitions to the web app
   // InternalEvents.COMPONENTS_REGISTERED is triggered by defineComponents function
   useEffect(() => {
     if (!hasConnectEventBeenSent.current) {
       // sending CONNECT but with the registered components now
-      sendConnectedEventWithRegisteredComponents()
-      hasConnectEventBeenSent.current = true
+      sendConnectedEventWithRegisteredComponents();
+      hasConnectEventBeenSent.current = true;
     }
 
     const onComponentsRegistered = () => {
-      sendRegisteredComponentsMessage()
-    }
+      sendRegisteredComponentsMessage();
+    };
 
     if (typeof window !== 'undefined') {
-      window.addEventListener(InternalEvents.COMPONENTS_REGISTERED, onComponentsRegistered)
+      window.addEventListener(InternalEvents.COMPONENTS_REGISTERED, onComponentsRegistered);
     }
 
     return () => {
       if (typeof window !== 'undefined') {
-        window.removeEventListener(InternalEvents.COMPONENTS_REGISTERED, onComponentsRegistered)
+        window.removeEventListener(InternalEvents.COMPONENTS_REGISTERED, onComponentsRegistered);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   useEffect(() => {
     if (mode !== 'editor') {
-      return
+      return;
     }
 
     // once switched to editor, we request the update from the web app to send the data to render on canvas
-    sendMessage(OutgoingExperienceBuilderEvent.REQUEST_COMPONENT_TREE_UPDATE)
-  }, [mode])
+    sendMessage(OutgoingExperienceBuilderEvent.REQUEST_COMPONENT_TREE_UPDATE);
+  }, [mode]);
 
   useEffect(() => {
-    setLocale(initialLocale)
-  }, [initialLocale])
+    setLocale(initialLocale);
+  }, [initialLocale]);
 
   useEffect(() => {
     // We only care about this communication when in editor mode
-    if (mode !== 'editor') return
+    if (mode !== 'editor') return;
     const onMessage = (event: MessageEvent) => {
-      let reason
+      let reason;
       if ((reason = doesMismatchMessageSchema(event))) {
         if (
           event.origin.startsWith('http://localhost') &&
           `${event.data}`.includes('webpackHotUpdate')
         ) {
-          reloadApp()
+          reloadApp();
         } else {
           console.warn(
             `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
             event
-          )
+          );
         }
-        return
+        return;
       }
 
-      const eventData = tryParseMessage(event)
+      const eventData = tryParseMessage(event);
 
       console.debug(
         `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
         eventData
-      )
+      );
 
-      const { payload } = eventData
+      const { payload } = eventData;
 
       switch (eventData.eventType) {
         case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
@@ -159,14 +159,14 @@ export function VisualEditorContextProvider({
             changedNode,
             changedValueType,
           }: {
-            tree: CompositionTree
-            locale: string
-            changedNode?: CompositionComponentNode
-            changedValueType?: CompositionComponentPropValue['type']
-          } = payload
+            tree: CompositionTree;
+            locale: string;
+            changedNode?: CompositionComponentNode;
+            changedValueType?: CompositionComponentPropValue['type'];
+          } = payload;
 
-          setTree(tree)
-          setLocale(locale)
+          setTree(tree);
+          setLocale(locale);
 
           if (changedNode) {
             /**
@@ -177,105 +177,105 @@ export function VisualEditorContextProvider({
              * We still update the tree here so we don't have a stale "tree"
              */
             changedValueType === 'BoundValue' &&
-              setDataSource((dataSource) => ({ ...dataSource, ...changedNode.data.dataSource }))
+              setDataSource((dataSource) => ({ ...dataSource, ...changedNode.data.dataSource }));
             changedValueType === 'UnboundValue' &&
               setUnboundValues((unboundValues) => ({
                 ...unboundValues,
                 ...changedNode.data.unboundValues,
-              }))
+              }));
           } else {
-            const { dataSource, unboundValues } = getDataFromTree(tree)
-            setDataSource(dataSource)
-            setUnboundValues(unboundValues)
+            const { dataSource, unboundValues } = getDataFromTree(tree);
+            setDataSource(dataSource);
+            setUnboundValues(unboundValues);
           }
-          break
+          break;
         }
         case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
-          const { selectedNodeId } = payload
-          sendSelectedComponentCoordinates(selectedNodeId)
-          setSelectedNodeId(selectedNodeId)
-          break
+          const { selectedNodeId } = payload;
+          sendSelectedComponentCoordinates(selectedNodeId);
+          setSelectedNodeId(selectedNodeId);
+          break;
         }
         case IncomingExperienceBuilderEvent.CANVAS_RESIZED:
         case IncomingExperienceBuilderEvent.SELECT_COMPONENT: {
-          const { selectedNodeId } = payload
-          sendSelectedComponentCoordinates(selectedNodeId)
-          break
+          const { selectedNodeId } = payload;
+          sendSelectedComponentCoordinates(selectedNodeId);
+          break;
         }
         case IncomingExperienceBuilderEvent.HOVER_COMPONENT: {
-          const { hoveredNodeId } = payload
-          sendHoveredComponentCoordinates(hoveredNodeId)
-          break
+          const { hoveredNodeId } = payload;
+          sendHoveredComponentCoordinates(hoveredNodeId);
+          break;
         }
         case IncomingExperienceBuilderEvent.COMPONENT_DRAGGING_CHANGED: {
-          const { isDragging } = payload
-          setIsDragging(isDragging)
-          break
+          const { isDragging } = payload;
+          setIsDragging(isDragging);
+          break;
         }
         case IncomingExperienceBuilderEvent.UPDATED_ENTITY: {
-          const { entity } = payload
-          entity && entityStore.current.updateEntity(entity)
-          break
+          const { entity } = payload;
+          entity && entityStore.current.updateEntity(entity);
+          break;
         }
         case IncomingExperienceBuilderEvent.REQUEST_EDITOR_MODE: {
           // do nothing cause we are already in editor mode
-          break
+          break;
         }
         default:
           console.error(
             `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`
-          )
+          );
       }
-    }
+    };
 
-    window.addEventListener('message', onMessage)
+    window.addEventListener('message', onMessage);
 
     return () => {
-      window.removeEventListener('message', onMessage)
-    }
-  }, [mode])
+      window.removeEventListener('message', onMessage);
+    };
+  }, [mode]);
 
   /*
    * Handles on scroll business
    */
   useEffect(() => {
     // We only care about this communication when in editor mode
-    if (mode !== 'editor') return
-    let timeoutId = 0
-    let isScrolling = false
+    if (mode !== 'editor') return;
+    let timeoutId = 0;
+    let isScrolling = false;
 
     const onScroll = () => {
       if (isScrolling === false) {
-        sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_START)
+        sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_START);
       }
 
-      sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.IS_SCROLLING)
-      isScrolling = true
+      sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.IS_SCROLLING);
+      isScrolling = true;
 
-      clearTimeout(timeoutId)
+      clearTimeout(timeoutId);
 
       timeoutId = window.setTimeout(() => {
         if (isScrolling === false) {
-          return
+          return;
         }
 
-        isScrolling = false
-        sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_END)
+        isScrolling = false;
+        sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_END);
 
         /**
          * On scroll end, send new co-ordinates of selected node
          */
-        sendSelectedComponentCoordinates(selectedNodeId)
-      }, 150)
-    }
+        sendSelectedComponentCoordinates(selectedNodeId);
+      }, 150);
+    };
 
-    window.addEventListener('scroll', onScroll, { capture: true, passive: true })
+    window.addEventListener('scroll', onScroll, { capture: true, passive: true });
 
     return () => {
-      window.removeEventListener('scroll', onScroll)
-      clearTimeout(timeoutId)
-    }
-  }, [mode, selectedNodeId])
+      window.removeEventListener('scroll', onScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [mode, selectedNodeId]);
 
   return (
     <VisualEditorContext.Provider
@@ -292,5 +292,5 @@ export function VisualEditorContextProvider({
       }}>
       {children}
     </VisualEditorContext.Provider>
-  )
+  );
 }

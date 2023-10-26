@@ -1,8 +1,8 @@
-import React, { ErrorInfo, ReactElement } from 'react'
+import React, { ErrorInfo, ReactElement } from 'react';
 
-import { sendMessage } from '../communication/sendMessage'
-import { OutgoingExperienceBuilderEvent } from '../types'
-import '../styles/ErrorBoundary.css'
+import { sendMessage } from '../communication/sendMessage';
+import { OutgoingExperienceBuilderEvent } from '../types';
+import '../styles/ErrorBoundary.css';
 
 class ImportedComponentError extends Error {}
 
@@ -11,20 +11,20 @@ export class ErrorBoundary extends React.Component<
   { hasError: boolean; error: Error | null; errorInfo: ErrorInfo | null; showErrorDetails: boolean }
 > {
   constructor(props: { children: ReactElement }) {
-    super(props)
-    this.state = { hasError: false, error: null, errorInfo: null, showErrorDetails: false }
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null, showErrorDetails: false };
   }
 
   static getDerivedStateFromError() {
-    return { hasError: true }
+    return { hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    this.setState({ error, errorInfo })
+    this.setState({ error, errorInfo });
     if (!(error instanceof ImportedComponentError)) {
-      sendMessage(OutgoingExperienceBuilderEvent.CANVAS_ERROR, error)
+      sendMessage(OutgoingExperienceBuilderEvent.CANVAS_ERROR, error);
     } else {
-      throw error
+      throw error;
     }
   }
 
@@ -58,25 +58,25 @@ export class ErrorBoundary extends React.Component<
           {this.state.showErrorDetails && (
             <code>
               {this.state.error?.stack?.split('\n').map((i, key) => {
-                return <div key={key}>{i}</div>
+                return <div key={key}>{i}</div>;
               })}
             </code>
           )}
         </div>
-      )
+      );
     }
-    return this.props.children
+    return this.props.children;
   }
 }
 
 export class ImportedComponentErrorBoundary extends React.Component<{ children: ReactElement }> {
   componentDidCatch(error: Error, _errorInfo: ErrorInfo) {
-    const err = new ImportedComponentError(error.message)
-    err.stack = error.stack
-    throw err
+    const err = new ImportedComponentError(error.message);
+    err.stack = error.stack;
+    throw err;
   }
 
   render() {
-    return this.props.children
+    return this.props.children;
   }
 }
