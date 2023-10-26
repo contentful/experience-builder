@@ -9,4 +9,7 @@ export default {
     '\\.(css)$': '<rootDir>/test/styleMock.ts',
     '^.+\\.svg$': '<rootDir>/test/fileMock.ts',
   },
+  transform: {
+    '\\.[jt]sx?$': 'ts-jest',
+  },
 }
