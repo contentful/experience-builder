@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "typings": "./dist/index.d.ts",
