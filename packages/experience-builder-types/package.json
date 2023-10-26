@@ -1,0 +1,8 @@
+{
+  "name": "experience-builder-types",
+  "version": "1.0.0",
+  "description": "Experience builder types",
+  "main": "src/index.ts",
+  "author": "Contentful GmbH",
+  "license": "MIT"
+}

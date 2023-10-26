@@ -1,6 +1,6 @@
-# `experience-builder-types`
+# `@contentful/experience-builder-types`
 
-> TODO: description
+Type definitions and constants for the Contentful Experience Builder.
 
 ## Usage
 
