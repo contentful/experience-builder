@@ -63,7 +63,7 @@ jobs:
     executor: docker-with-node
     steps:
       - with-workspace
-      - run: yarn test:coverage
+      - run: yarn test
       - store_test_results:
           path: reports
       - store_artifacts:

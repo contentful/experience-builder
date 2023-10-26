@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback } from 'react'
 
 import type { ContentfulClientApi } from 'contentful'
 
-import { EntityStore } from '../core/EntityStore'
+import { EntityStore } from '../types'
 import { Composition, ExperienceStore } from '../types'
 
 type UseExperienceStoreProps = {

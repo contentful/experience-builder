@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { EntityStore } from '@contentful/visual-sdk'
+import type { EntityStore } from '../types'
 import { render } from '@testing-library/react'
 
 import { sendMessage } from '../communication/sendMessage'

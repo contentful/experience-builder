@@ -1,4 +1,5 @@
-import { CompositionComponentNode, OutgoingExperienceBuilderEvent } from '../types'
+import { CompositionComponentNode } from '../types'
+import { OUTGOING_EVENTS } from '../constants'
 import { sendMessage } from './sendMessage'
 
 export const onComponentDropped = ({
@@ -8,7 +9,7 @@ export const onComponentDropped = ({
   node: CompositionComponentNode
   index?: number
 }) => {
-  sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_DROPPED, {
+  sendMessage(OUTGOING_EVENTS.ComponentDropped, {
     node,
     index: index ?? node.children.length,
   })

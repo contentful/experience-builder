@@ -1,12 +1,10 @@
 import { useExperienceStore } from './useExperienceStore'
 import { act, renderHook } from '@testing-library/react'
-import { EntityStore } from '../core/EntityStore'
+import { EntityStore } from '../types'
 import { compositionEntry } from '../../test/__fixtures__/composition'
 import { entries, assets } from '../../test/__fixtures__/entities'
 import type { ContentfulClientApi } from 'contentful'
 import { ExperienceStore } from '../types'
-
-jest.mock('../core/EntityStore')
 
 const experienceTypeId = 'layout'
 const localeCode = 'en-US'

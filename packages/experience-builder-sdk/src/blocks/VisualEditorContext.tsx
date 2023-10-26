@@ -15,12 +15,9 @@ import {
   CompositionDataSource,
   CompositionTree,
   CompositionUnboundValues,
-  IncomingExperienceBuilderEvent,
   InternalSDKMode,
-  OutgoingExperienceBuilderEvent,
-  ScrollStates,
-  InternalEvents,
 } from '../types'
+import { INCOMING_EVENTS, OUTGOING_EVENTS, SCROLL_STATES, INTERNAL_EVENTS } from '../constants'
 import { getDataFromTree } from '../utils'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 
@@ -77,7 +74,7 @@ export function VisualEditorContextProvider({
   )
 
   const reloadApp = () => {
-    sendMessage(OutgoingExperienceBuilderEvent.CANVAS_RELOAD, {})
+    sendMessage(OUTGOING_EVENTS.CanvasReload, {})
     // Wait a moment to ensure that the message was sent
     setTimeout(() => {
       // Received a hot reload message from webpack dev server -> reload the canvas
@@ -99,12 +96,12 @@ export function VisualEditorContextProvider({
     }
 
     if (typeof window !== 'undefined') {
-      window.addEventListener(InternalEvents.COMPONENTS_REGISTERED, onComponentsRegistered)
+      window.addEventListener(INTERNAL_EVENTS.ComponentsRegistered, onComponentsRegistered)
     }
 
     return () => {
       if (typeof window !== 'undefined') {
-        window.removeEventListener(InternalEvents.COMPONENTS_REGISTERED, onComponentsRegistered)
+        window.removeEventListener(INTERNAL_EVENTS.ComponentsRegistered, onComponentsRegistered)
       }
     }
   }, [])
@@ -115,7 +112,7 @@ export function VisualEditorContextProvider({
     }
 
     // once switched to editor, we request the update from the web app to send the data to render on canvas
-    sendMessage(OutgoingExperienceBuilderEvent.REQUEST_COMPONENT_TREE_UPDATE)
+    sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate)
   }, [mode])
 
   useEffect(() => {
@@ -152,7 +149,7 @@ export function VisualEditorContextProvider({
       const { payload } = eventData
 
       switch (eventData.eventType) {
-        case IncomingExperienceBuilderEvent.COMPOSITION_UPDATED: {
+        case INCOMING_EVENTS.CompositionUpdated: {
           const {
             tree,
             locale,
@@ -164,7 +161,6 @@ export function VisualEditorContextProvider({
             changedNode?: CompositionComponentNode
             changedValueType?: CompositionComponentPropValue['type']
           } = payload
-
           setTree(tree)
           setLocale(locale)
 
@@ -190,34 +186,34 @@ export function VisualEditorContextProvider({
           }
           break
         }
-        case IncomingExperienceBuilderEvent.SELECTED_COMPONENT_CHANGED: {
+        case INCOMING_EVENTS.SelectedComponentChanged: {
           const { selectedNodeId } = payload
           sendSelectedComponentCoordinates(selectedNodeId)
           setSelectedNodeId(selectedNodeId)
           break
         }
-        case IncomingExperienceBuilderEvent.CANVAS_RESIZED:
-        case IncomingExperienceBuilderEvent.SELECT_COMPONENT: {
+        case INCOMING_EVENTS.CanvasResized:
+        case INCOMING_EVENTS.SelectComponent: {
           const { selectedNodeId } = payload
           sendSelectedComponentCoordinates(selectedNodeId)
           break
         }
-        case IncomingExperienceBuilderEvent.HOVER_COMPONENT: {
+        case INCOMING_EVENTS.HoverComponent: {
           const { hoveredNodeId } = payload
           sendHoveredComponentCoordinates(hoveredNodeId)
           break
         }
-        case IncomingExperienceBuilderEvent.COMPONENT_DRAGGING_CHANGED: {
+        case INCOMING_EVENTS.ComponentDraggingChanged: {
           const { isDragging } = payload
           setIsDragging(isDragging)
           break
         }
-        case IncomingExperienceBuilderEvent.UPDATED_ENTITY: {
+        case INCOMING_EVENTS.UpdatedEntity: {
           const { entity } = payload
           entity && entityStore.current.updateEntity(entity)
           break
         }
-        case IncomingExperienceBuilderEvent.REQUEST_EDITOR_MODE: {
+        case INCOMING_EVENTS.RequestEditorMode: {
           // do nothing cause we are already in editor mode
           break
         }
@@ -246,10 +242,10 @@ export function VisualEditorContextProvider({
 
     const onScroll = () => {
       if (isScrolling === false) {
-        sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_START)
+        sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.Start)
       }
 
-      sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.IS_SCROLLING)
+      sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.IsScrolling)
       isScrolling = true
 
       clearTimeout(timeoutId)
@@ -260,7 +256,7 @@ export function VisualEditorContextProvider({
         }
 
         isScrolling = false
-        sendMessage(OutgoingExperienceBuilderEvent.CANVAS_SCROLL, ScrollStates.SCROLL_END)
+        sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.End)
 
         /**
          * On scroll end, send new co-ordinates of selected node

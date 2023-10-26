@@ -1,5 +1,5 @@
 import { getElementCoordinates } from '../core/domValues'
-import { OutgoingExperienceBuilderEvent } from '../types'
+import { OUTGOING_EVENTS } from '../constants'
 import { sendMessage } from './sendMessage'
 
 /**
@@ -21,7 +21,7 @@ export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   }
 
   if (selectedElement) {
-    sendMessage(OutgoingExperienceBuilderEvent.UPDATE_SELECTED_COMPONENT_COORDINATES, {
+    sendMessage(OUTGOING_EVENTS.UpdateSelectedComponentCoordinates, {
       selectedNodeCoordinates: getElementCoordinates(selectedElement),
       parentCoordinates: parent ? getElementCoordinates(parent) : null,
     })

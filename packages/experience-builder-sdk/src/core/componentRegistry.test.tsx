@@ -4,7 +4,7 @@ import {
   defineComponents,
   getComponentRegistration,
 } from './componentRegistry'
-import { InternalEvents } from '../types'
+import { INTERNAL_EVENTS } from '../constants'
 import { CONTENTFUL_SECTION_ID } from '../constants'
 import { containerDefinition } from './definitions/components'
 
@@ -59,7 +59,7 @@ describe('component registration', () => {
       const componentRegistration = getComponentRegistration(definitionId)
       expect(componentRegistration).toBeDefined()
       expect(window.dispatchEvent).toHaveBeenCalledWith(
-        new CustomEvent(InternalEvents.COMPONENTS_REGISTERED)
+        new CustomEvent(INTERNAL_EVENTS.ComponentsRegistered)
       )
     })
 

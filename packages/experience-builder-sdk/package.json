@@ -22,6 +22,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@contentful/experience-builder-types": "^1.0.0",
     "@contentful/rich-text-types": "^16.2.1",
     "@contentful/visual-sdk": "^1.0.0-alpha.9",
     "classnames": "^2.3.2",

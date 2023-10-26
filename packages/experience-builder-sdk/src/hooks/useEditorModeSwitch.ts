@@ -1,9 +1,6 @@
 import { useEffect, useRef } from 'react'
-import {
-  Experience,
-  IncomingExperienceBuilderEvent,
-  OutgoingExperienceBuilderEvent,
-} from '../types'
+import { Experience } from '../types'
+import { INCOMING_EVENTS, OUTGOING_EVENTS } from '../constants'
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation'
 import { sendMessage } from '../communication/sendMessage'
 
@@ -25,7 +22,7 @@ export const useEditorModeSwitch = ({
       }
       const eventData = tryParseMessage(event)
 
-      if (eventData.eventType === IncomingExperienceBuilderEvent.REQUEST_EDITOR_MODE) {
+      if (eventData.eventType === INCOMING_EVENTS.RequestEditorMode) {
         switchToEditorMode()
       }
     }
@@ -34,7 +31,7 @@ export const useEditorModeSwitch = ({
       window.addEventListener('message', onMessage)
 
       if (!hasConnectEventBeenSent.current) {
-        sendMessage(OutgoingExperienceBuilderEvent.CONNECTED)
+        sendMessage(OUTGOING_EVENTS.Connected)
         hasConnectEventBeenSent.current = true
       }
     }

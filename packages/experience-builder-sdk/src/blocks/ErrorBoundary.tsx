@@ -1,7 +1,7 @@
 import React, { ErrorInfo, ReactElement } from 'react'
 
 import { sendMessage } from '../communication/sendMessage'
-import { OutgoingExperienceBuilderEvent } from '../types'
+import { OUTGOING_EVENTS } from '../constants'
 import '../styles/ErrorBoundary.css'
 
 class ImportedComponentError extends Error {}
@@ -22,7 +22,7 @@ export class ErrorBoundary extends React.Component<
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ error, errorInfo })
     if (!(error instanceof ImportedComponentError)) {
-      sendMessage(OutgoingExperienceBuilderEvent.CANVAS_ERROR, error)
+      sendMessage(OUTGOING_EVENTS.CanvasError, error)
     } else {
       throw error
     }
