@@ -1,9 +1,10 @@
 import { useFetchExperience } from './useFetchExperience';
+import { EntityStore } from '../core/EntityStore';
 import { act, renderHook } from '@testing-library/react';
 import { compositionEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
 import type { ContentfulClientApi, Entry } from 'contentful';
-import { ExternalSDKMode, EntityStore } from '../types';
+import { ExternalSDKMode } from '../types';
 
 const experienceTypeId = 'layout';
 const localeCode = 'en-US';

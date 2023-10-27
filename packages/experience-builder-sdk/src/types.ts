@@ -1,1 +1,1 @@
-export * from '@contentful/experience-builder-types/dist/src/types';
+export * from '@contentful/experience-builder-types/dist/types';

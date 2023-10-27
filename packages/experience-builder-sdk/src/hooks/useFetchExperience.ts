@@ -1,5 +1,6 @@
 import type { ContentfulClientApi, Entry } from 'contentful';
 import { useCallback, useState } from 'react';
+import { EntityStore } from '../core/EntityStore';
 import { fetchReferencedEntities, fetchExperienceEntry } from '../core/fetchers';
 import { Experience, ExternalSDKMode } from '../types';
 import { createExperience } from '../core';
@@ -20,7 +21,7 @@ type useClientsideExperienceFetchersProps = {
 };
 
 export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetchersProps) => {
-  const [experience, setExperience] = useState<Experience | undefined>(undefined);
+  const [experience, setExperience] = useState<Experience<EntityStore> | undefined>(undefined);
   const [isFetching, setIsFetching] = useState(false);
 
   /**
@@ -38,7 +39,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
       experienceTypeId: string;
       slug: string;
       localeCode: string;
-    }): Promise<Experience | undefined> => {
+    }): Promise<Experience<EntityStore> | undefined> => {
       setIsFetching(true);
 
       let experienceEntry: Entry | undefined = undefined;
@@ -105,7 +106,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
       experienceTypeId: string;
       id: string;
       localeCode: string;
-    }): Promise<Experience | undefined> => {
+    }): Promise<Experience<EntityStore> | undefined> => {
       setIsFetching(true);
 
       let experienceEntry: Entry | undefined = undefined;

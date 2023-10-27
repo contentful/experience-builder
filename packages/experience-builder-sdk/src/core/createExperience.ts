@@ -1,6 +1,8 @@
 import type { Asset, Entry } from 'contentful';
 import { isExperienceEntry } from '@contentful/experience-builder-types';
-import { Experience, ExternalSDKMode, EntityStore } from '../types';
+import { EntityStore } from './EntityStore';
+
+import { Experience, ExternalSDKMode } from '../types';
 
 type createExperienceArgs = {
   experienceEntry: Entry;
@@ -16,7 +18,7 @@ export const createExperience = ({
   referencedEntries,
   mode,
   locale,
-}: createExperienceArgs): Experience => {
+}: createExperienceArgs): Experience<EntityStore> => {
   if (!isExperienceEntry(experienceEntry)) {
     throw new Error('Provided entry is not experience entry');
   }

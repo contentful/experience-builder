@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { isDeprecatedExperience } from '@contentful/experience-builder-types';
-
+import { EntityStore } from '../core/EntityStore';
 import { supportedModes } from '../constants';
 import { DeprecatedExperience, Experience, InternalSDKMode } from '../types';
 import { validateExperienceBuilderConfig } from '../validation';
@@ -11,7 +11,7 @@ import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
 import { VisualEditorRoot } from './VisualEditorRoot';
 
 type ExperienceRootProps = {
-  experience: Experience | DeprecatedExperience;
+  experience: Experience<EntityStore> | DeprecatedExperience;
   locale: string;
   /**
    * @deprecated

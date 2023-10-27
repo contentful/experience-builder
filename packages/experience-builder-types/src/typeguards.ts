@@ -1,4 +1,5 @@
 import type { Entry } from 'contentful';
+import { EntityStore } from '@contentful/visual-sdk';
 import type { DeprecatedExperience, Experience, ExperienceEntry } from './types';
 
 // @ts-expect-error type incompatibility
@@ -18,7 +19,7 @@ export const isExperienceEntry = (entry: Entry): entry is ExperienceEntry => {
 };
 
 export const isDeprecatedExperience = (
-  experience: Experience | DeprecatedExperience
+  experience: Experience<EntityStore> | DeprecatedExperience
 ): experience is DeprecatedExperience => {
   return (
     experience &&

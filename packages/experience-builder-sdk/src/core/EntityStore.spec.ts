@@ -1,12 +1,13 @@
-import { EntityStore } from './EntityStore';
+import type { Entry } from 'contentful';
+
 import { entities, entityIds, entries } from '../../test/__fixtures__/entities';
 import { compositionEntry } from '../../test/__fixtures__/composition';
-import type { Entry } from 'contentful';
+
+import { EntityStore } from './EntityStore';
 
 const locale = 'en-US';
 
-jest.mock('../constants', () => ({
-  ...jest.requireActual('../constants'),
+jest.mock('../core/constants', () => ({
   SDK_VERSION: '0.0.0-test',
   __esModule: true,
 }));

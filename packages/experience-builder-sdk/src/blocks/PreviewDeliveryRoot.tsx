@@ -1,12 +1,13 @@
 import React from 'react';
 
+import { EntityStore } from '../core/EntityStore';
 import { Experience, InternalSDKMode } from '../types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../constants';
 import { useBreakpoints, useEditorModeSwitch } from '../hooks';
 
 type DeliveryRootProps = {
-  experience: Experience;
+  experience: Experience<EntityStore>;
   locale: string;
   mode: InternalSDKMode;
   switchToEditorMode: () => void;

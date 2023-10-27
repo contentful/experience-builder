@@ -4,10 +4,8 @@
  */
 
 import type { ContentfulClientApi, Entry } from 'contentful';
-import { EntityStore } from './core/EntityStore';
+import type { EntityStore } from '@contentful/visual-sdk';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from './constants';
-
-export { EntityStore };
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
@@ -284,8 +282,8 @@ export interface DeprecatedExperienceStore {
   }) => Promise<{ success: boolean; error?: Error }>;
 }
 
-export interface Experience {
-  entityStore?: EntityStore;
+export interface Experience<T extends EntityStore> {
+  entityStore?: T;
   mode: InternalSDKMode;
 }
 

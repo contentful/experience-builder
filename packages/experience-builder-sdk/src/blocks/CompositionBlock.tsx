@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 
 import type { UnresolvedLink } from 'contentful';
 import omit from 'lodash.omit';
+import { EntityStore } from '@contentful/visual-sdk';
 
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
 import { getComponentRegistration } from '../core/componentRegistry';
@@ -15,7 +16,6 @@ import type {
   CompositionUnboundValues,
   CompositionVariableValueType,
   StyleProps,
-  EntityStore,
 } from '../types';
 import { ContentfulContainer } from './ContentfulContainer';
 import { transformContentValue } from './transformers';
