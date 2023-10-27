@@ -5,43 +5,21 @@
 
 import type { ContentfulClientApi, Entry } from 'contentful';
 import { EntityStore } from './core/EntityStore';
+import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from './constants';
 
-export enum ScrollStates {
-  SCROLL_START = 'scrollStart',
-  IS_SCROLLING = 'isScrolling',
-  SCROLL_END = 'scrollEnd',
-}
+export { EntityStore };
 
-export enum OutgoingExperienceBuilderEvent {
-  CONNECTED = 'connected',
-  HOVERED_SECTION = 'hoveredSection',
-  MOUSE_MOVE = 'mouseMove',
-  NEW_HOVERED_COMPONENT = 'newHoveredElement',
-  COMPONENT_SELECTED = 'componentSelected',
-  REGISTERED_COMPONENTS = 'registeredComponents',
-  REQUEST_COMPONENT_TREE_UPDATE = 'requestComponentTreeUpdate',
-  COMPONENT_DROPPED = 'componentDropped',
-  CANVAS_RELOAD = 'canvasReload',
-  UPDATE_SELECTED_COMPONENT_COORDINATES = 'updateSelectedComponentCoordinates',
-  UPDATE_HOVERED_COMPONENT_COORDINATES = 'updateHoveredComponentCoordinates',
-  CANVAS_SCROLL = 'canvasScrolling',
-  CANVAS_ERROR = 'canvasError',
-}
+type ScrollStateKey = keyof typeof SCROLL_STATES;
+export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
 
-export enum IncomingExperienceBuilderEvent {
-  REQUEST_EDITOR_MODE = 'requestEditorMode',
-  COMPOSITION_UPDATED = 'componentTreeUpdated',
-  COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
-  SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
-  CANVAS_RESIZED = 'canvasResized',
-  SELECT_COMPONENT = 'selectComponent',
-  HOVER_COMPONENT = 'hoverComponent',
-  UPDATED_ENTITY = 'updatedEntity',
-}
+type OutgoingEventKey = keyof typeof OUTGOING_EVENTS;
+export type OutgoingEvent = (typeof OUTGOING_EVENTS)[OutgoingEventKey];
 
-export enum InternalEvents {
-  COMPONENTS_REGISTERED = 'componentsRegistered',
-}
+type IncomingEventKey = keyof typeof INCOMING_EVENTS;
+export type IncomingEvent = (typeof INCOMING_EVENTS)[IncomingEventKey];
+
+type InternalEventKey = keyof typeof INTERNAL_EVENTS;
+export type InternalEvent = (typeof INTERNAL_EVENTS)[InternalEventKey];
 
 export interface Link<T extends string> {
   sys: {

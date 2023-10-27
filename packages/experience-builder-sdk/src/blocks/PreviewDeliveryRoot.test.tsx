@@ -1,8 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
-import { Experience, SchemaVersions } from '../types';
-import { EntityStore } from '../core/EntityStore';
+import { Experience, SchemaVersions, EntityStore } from '../types';
 import { createCompositionEntry } from '../../test/__fixtures__/composition';
 import { assets, entries } from '../../test/__fixtures__/entities';
 import type { Entry } from 'contentful';
