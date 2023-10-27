@@ -1,15 +1,15 @@
-import React from 'react'
+import React from 'react';
 
-import '../styles/ContentfulContainer.css'
+import '../styles/ContentfulContainer.css';
 
-import classNames from 'classnames'
+import classNames from 'classnames';
 
-import { Flex } from '../core'
-import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink'
-import type { ContentfulContainerProps } from './ContentfulContainerAsHyperlink'
+import { Flex } from '../core';
+import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink';
+import type { ContentfulContainerProps } from './ContentfulContainerAsHyperlink';
 
 export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
-  const { children, className, editorMode } = sectionProps
+  const { children, className, editorMode } = sectionProps;
 
   if (sectionProps.cfHyperlink) {
     return (
@@ -22,7 +22,7 @@ export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
         node={(sectionProps as ContentfulContainerProps<true>).node}>
         {children}
       </ContentfulContainerAsHyperlink>
-    )
+    );
   }
 
   if (editorMode === false) {
@@ -30,11 +30,11 @@ export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
       <Flex id="ContentfulContainer" className={classNames(className, 'defaultStyles')}>
         {children}
       </Flex>
-    )
+    );
   }
 
   // Extract properties that are only available in editor mode
-  const { node, onMouseDown } = sectionProps
+  const { node, onMouseDown } = sectionProps;
 
   return (
     <Flex
@@ -46,5 +46,5 @@ export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
       onMouseDown={onMouseDown}>
       {children}
     </Flex>
-  )
-}
+  );
+};

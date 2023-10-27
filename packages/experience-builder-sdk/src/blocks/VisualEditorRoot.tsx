@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
-import { VisualEditorBlock } from './VisualEditorBlock'
-import { EmptyEditorContainer } from './EmptyEditorContainer'
-import '../styles/VisualEditorRoot.css'
-import { onComponentDropped } from '../communication/onComponentDrop'
-import { EditorModeEntityStore } from '../core/EditorModeEntityStore'
-import { useBreakpoints } from '../hooks/useBreakpoints'
-import { useHoverIndicator } from '../hooks/useHoverIndicator'
-import { InternalSDKMode } from '../types'
-import { useEditorContext } from './useEditorContext'
-import { VisualEditorContextProvider } from './VisualEditorContext'
+import { VisualEditorBlock } from './VisualEditorBlock';
+import { EmptyEditorContainer } from './EmptyEditorContainer';
+import '../styles/VisualEditorRoot.css';
+import { onComponentDropped } from '../communication/onComponentDrop';
+import { EditorModeEntityStore } from '../core/EditorModeEntityStore';
+import { useBreakpoints } from '../hooks/useBreakpoints';
+import { useHoverIndicator } from '../hooks/useHoverIndicator';
+import { InternalSDKMode } from '../types';
+import { useEditorContext } from './useEditorContext';
+import { VisualEditorContextProvider } from './VisualEditorContext';
 
 type VisualEditorRootProps = {
-  initialLocale: string
-  mode: InternalSDKMode
-}
+  initialLocale: string;
+  mode: InternalSDKMode;
+};
 
 export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
   // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
@@ -22,49 +22,49 @@ export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps)
     <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
       <VisualEditorRootComponents />
     </VisualEditorContextProvider>
-  )
-}
+  );
+};
 
 const VisualEditorRootComponents = () => {
   const { tree, dataSource, isDragging, locale, unboundValues, breakpoints, entityStore } =
-    useEditorContext()
+    useEditorContext();
 
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
-  const { resolveDesignValue } = useBreakpoints(breakpoints)
-  useHoverIndicator(isDragging)
-  const [areEntitiesFetched, setEntitiesFetched] = useState(false)
+  const { resolveDesignValue } = useBreakpoints(breakpoints);
+  useHoverIndicator(isDragging);
+  const [areEntitiesFetched, setEntitiesFetched] = useState(false);
 
   useEffect(() => {
-    if (!locale) return
+    if (!locale) return;
     entityStore.current = new EditorModeEntityStore({
       entities: [],
       locale: locale,
-    })
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale])
+  }, [locale]);
 
   useEffect(() => {
-    if (!tree || !tree?.root.children.length || !isDragging) return
+    if (!tree || !tree?.root.children.length || !isDragging) return;
     const onMouseUp = () => {
-      onComponentDropped({ node: tree.root })
-    }
-    document.addEventListener('mouseup', onMouseUp)
-    return () => document.removeEventListener('mouseup', onMouseUp)
-  }, [tree, isDragging])
+      onComponentDropped({ node: tree.root });
+    };
+    document.addEventListener('mouseup', onMouseUp);
+    return () => document.removeEventListener('mouseup', onMouseUp);
+  }, [tree, isDragging]);
 
   useEffect(() => {
     const resolveEntities = async () => {
-      setEntitiesFetched(false)
-      const entityLinks = Object.values(dataSource || {})
-      await entityStore.current.fetchEntities(entityLinks)
-      setEntitiesFetched(true)
-    }
+      setEntitiesFetched(false);
+      const entityLinks = Object.values(dataSource || {});
+      await entityStore.current.fetchEntities(entityLinks);
+      setEntitiesFetched(true);
+    };
 
-    resolveEntities()
-  }, [dataSource, entityStore, locale])
+    resolveEntities();
+  }, [dataSource, entityStore, locale]);
 
   if (!tree?.root.children.length) {
-    return React.createElement(EmptyEditorContainer, { isDragging }, [])
+    return React.createElement(EmptyEditorContainer, { isDragging }, []);
   }
   return (
     <div id="VisualEditorRoot" className="root" data-type="root">
@@ -80,5 +80,5 @@ const VisualEditorRootComponents = () => {
         />
       ))}
     </div>
-  )
-}
+  );
+};

@@ -1,36 +1,77 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { supportedModes } from '../constants'
-import { Experience } from '../types'
-import { validateExperienceBuilderConfig } from '../validation'
-import { ErrorBoundary } from './ErrorBoundary'
-import { PreviewDeliveryRoot } from './PreviewDeliveryRoot'
-import { VisualEditorRoot } from './VisualEditorRoot'
+import { supportedModes } from '../constants';
+import { DeprecatedExperience, Experience, InternalSDKMode } from '../types';
+import { validateExperienceBuilderConfig } from '../validation';
+import { ErrorBoundary } from './ErrorBoundary';
+import { isDeprecatedExperience } from '../typeguards';
+import { DeprecatedPreviewDeliveryRoot } from './DeprecatedPreviewDeliveryRoot';
+import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
+import { VisualEditorRoot } from './VisualEditorRoot';
 
 type ExperienceRootProps = {
-  experience: Experience
-  locale: string
-  slug: string
-}
+  experience: Experience | DeprecatedExperience;
+  locale: string;
+  /**
+   * @deprecated
+   */
+  slug?: string;
+};
 
 export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
-  const { mode } = experience
+  const [mode, setMode] = useState<InternalSDKMode>(() => {
+    if (supportedModes.includes(experience.mode)) {
+      return experience.mode;
+    }
+
+    throw new Error(
+      `Unsupported mode provided: ${experience.mode}. Supported values: ${supportedModes}`
+    );
+  });
+
+  useEffect(() => {
+    if (supportedModes.includes(mode)) {
+      setMode(mode);
+    }
+  }, [mode]);
+
+  const switchToEditorMode = useCallback(() => {
+    setMode('editor');
+  }, []);
 
   validateExperienceBuilderConfig({
-    client: experience.client,
     locale,
     mode,
-  })
+  });
 
-  if (!mode || !supportedModes.includes(mode)) return null
+  if (!mode || !supportedModes.includes(mode)) return null;
 
   if (mode === 'editor') {
     return (
       <ErrorBoundary>
         <VisualEditorRoot initialLocale={locale} mode={mode} />
       </ErrorBoundary>
-    )
+    );
   }
 
-  return <PreviewDeliveryRoot locale={locale} slug={slug} experience={experience} />
-}
+  if (isDeprecatedExperience(experience)) {
+    return (
+      <DeprecatedPreviewDeliveryRoot
+        deprecatedExperience={experience}
+        mode={mode}
+        switchToEditorMode={switchToEditorMode}
+        locale={locale}
+        slug={slug}
+      />
+    );
+  }
+
+  return (
+    <PreviewDeliveryRoot
+      locale={locale}
+      mode={mode}
+      switchToEditorMode={switchToEditorMode}
+      experience={experience}
+    />
+  );
+};

@@ -1,17 +1,18 @@
-export { ExperienceRoot } from './blocks'
-export { useExperienceBuilder, getValueForBreakpoint } from './hooks'
-export { defineComponents } from './core/componentRegistry'
-export { calculateNodeDefaultHeight } from './core/stylesUtils'
+export { ExperienceRoot } from './blocks';
+export { useExperienceBuilder, getValueForBreakpoint, useFetchExperience } from './hooks';
+export { defineComponents } from './core/componentRegistry';
+export { calculateNodeDefaultHeight } from './core/stylesUtils';
 export type {
   ComponentDefinition,
   ComponentRegistration,
   Experience,
+  DeprecatedExperience,
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,
   CompositionVariableValueType,
   CompositionComponentPropValue,
   ValidationOption,
-} from './types'
+} from './types';
 export {
   /**
    * @deprecated Sections are deprecated and are replaced by Containers in the schema version "2023-09-28". Support for sections will be removed completely as soon as all customer data was migrated.
@@ -20,4 +21,5 @@ export {
   CONTENTFUL_COMPONENT_CATEGORY,
   CONTENTFUL_CONTAINER_ID,
   LATEST_SCHEMA_VERSION,
-} from './constants'
+} from './constants';
+export { createExperience, fetchers } from './core';

@@ -1,4 +1,4 @@
-import { findOutermostCoordinates, getElementCoordinates } from './domValues'
+import { findOutermostCoordinates, getElementCoordinates } from './domValues';
 
 const mockChild1Rect = {
   width: 120,
@@ -10,7 +10,7 @@ const mockChild1Rect = {
   x: 20,
   y: 1,
   toJSON: jest.fn(),
-}
+};
 
 const mockChild2Rect = {
   width: 120,
@@ -22,7 +22,7 @@ const mockChild2Rect = {
   x: 4,
   y: 3,
   toJSON: jest.fn(),
-}
+};
 
 describe('Find outermost coordinates', () => {
   it('should return outermost coordinates', () => {
@@ -31,13 +31,13 @@ describe('Find outermost coordinates', () => {
       left: 4,
       right: 25,
       top: 1,
-    })
-  })
-})
+    });
+  });
+});
 
 describe('Get element coordinates', () => {
   it('should return element coordinates', () => {
-    const mockElement = document.createElement('div')
+    const mockElement = document.createElement('div');
     expect(getElementCoordinates(mockElement)).toEqual({
       x: 0,
       y: 0,
@@ -47,19 +47,19 @@ describe('Get element coordinates', () => {
       right: 0,
       top: 0,
       width: 0,
-    })
-  })
+    });
+  });
 
   it("should return child cooordinates as element coordinates if parent element's width & height is 0", () => {
-    const mockElement = document.createElement('div')
-    const mockChild1 = document.createElement('div')
-    const mockChild2 = document.createElement('div')
+    const mockElement = document.createElement('div');
+    const mockChild1 = document.createElement('div');
+    const mockChild2 = document.createElement('div');
 
-    mockElement.appendChild(mockChild1)
-    mockElement.appendChild(mockChild2)
+    mockElement.appendChild(mockChild1);
+    mockElement.appendChild(mockChild2);
 
-    mockChild1.getBoundingClientRect = jest.fn(() => mockChild1Rect)
-    mockChild2.getBoundingClientRect = jest.fn(() => mockChild2Rect)
+    mockChild1.getBoundingClientRect = jest.fn(() => mockChild1Rect);
+    mockChild2.getBoundingClientRect = jest.fn(() => mockChild2Rect);
 
     const rectResult = {
       x: 4,
@@ -71,13 +71,13 @@ describe('Get element coordinates', () => {
       width: 21,
       height: 11,
       toJSON: jest.fn(),
-    }
+    };
 
     // @ts-expect-error ts wants the full DOMRect object which is unnecessary for this test
     global.DOMRect = {
       fromRect: jest.fn(() => rectResult),
-    }
+    };
 
-    expect(getElementCoordinates(mockElement as Element)).toEqual(rectResult)
-  })
-})
+    expect(getElementCoordinates(mockElement as Element)).toEqual(rectResult);
+  });
+});

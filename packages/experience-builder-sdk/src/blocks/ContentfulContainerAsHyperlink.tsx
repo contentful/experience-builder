@@ -1,37 +1,37 @@
-import React, { MouseEventHandler } from 'react'
+import React, { MouseEventHandler } from 'react';
 
-import '../styles/ContentfulContainer.css'
-import classNames from 'classnames'
+import '../styles/ContentfulContainer.css';
+import classNames from 'classnames';
 
-import { CompositionComponentNode, StyleProps } from '../types'
+import { CompositionComponentNode, StyleProps } from '../types';
 
 export type ContentfulContainerProps<EditorMode = boolean> = EditorMode extends true
   ? {
-      onMouseDown: MouseEventHandler<HTMLElement>
-      children?: React.ReactNode
-      className?: string
-      cfHyperlink?: StyleProps['cfHyperlink']
-      cfOpenInNewTab?: StyleProps['cfOpenInNewTab']
-      editorMode?: EditorMode
-      node: CompositionComponentNode
+      onMouseDown: MouseEventHandler<HTMLElement>;
+      children?: React.ReactNode;
+      className?: string;
+      cfHyperlink?: StyleProps['cfHyperlink'];
+      cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
+      editorMode?: EditorMode;
+      node: CompositionComponentNode;
     }
   : {
-      className?: string
-      cfHyperlink?: StyleProps['cfHyperlink']
-      cfOpenInNewTab?: StyleProps['cfOpenInNewTab']
-      children?: React.ReactNode
-      editorMode: EditorMode
-    }
+      className?: string;
+      cfHyperlink?: StyleProps['cfHyperlink'];
+      cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
+      children?: React.ReactNode;
+      editorMode: EditorMode;
+    };
 
 export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) => {
-  const { cfHyperlink, cfOpenInNewTab, children, editorMode, className } = props
+  const { cfHyperlink, cfOpenInNewTab, children, editorMode, className } = props;
 
-  let anchorTagProps = {}
+  let anchorTagProps = {};
   if (cfOpenInNewTab) {
     anchorTagProps = {
       target: '_blank',
       rel: 'noopener noreferrer',
-    }
+    };
   }
 
   if (editorMode === false) {
@@ -43,16 +43,16 @@ export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) 
         {...anchorTagProps}>
         {children}
       </a>
-    )
+    );
   }
 
   // Extract properties that are only available in editor mode
-  const { node, onMouseDown } = props
+  const { node, onMouseDown } = props;
 
   const stopPropagationInEditorMode = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    e.stopPropagation()
-    e.preventDefault()
-  }
+    e.stopPropagation();
+    e.preventDefault();
+  };
 
   return (
     <a
@@ -67,5 +67,5 @@ export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) 
       onMouseDown={onMouseDown}>
       {children}
     </a>
-  )
-}
+  );
+};

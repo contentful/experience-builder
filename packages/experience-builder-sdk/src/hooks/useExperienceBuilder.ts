@@ -1,64 +1,59 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Experience, ExternalSDKMode, InternalSDKMode } from '../types'
-import { useExperienceStore } from './useExperienceStore'
-import { supportedModes } from '../constants'
-import type { ContentfulClientApi } from 'contentful'
-import { defineComponents } from '../core/componentRegistry'
+import { useMemo } from 'react';
+import { DeprecatedExperience, ExternalSDKMode } from '../types';
+import type { ContentfulClientApi } from 'contentful';
+import { defineComponents } from '../core/componentRegistry';
 
 type UseExperienceBuilderProps = {
   /**
    * Id of the content type of the target experience
    */
-  experienceTypeId: string
+  experienceTypeId: string;
   /**
    * Instance of a Delivery or Preview client from "contentful" package
    */
-  client: ContentfulClientApi<undefined>
+  client: ContentfulClientApi<undefined>;
   /**
    *  Mode defines the behaviour of the sdk.
    * - `preview` - fetching and rendering draft data. Will automatically switch to `editor` mode if open from contentful web app.
    * - `delivery` - fetching and rendering of published data. Can not be switched to `editor` mode. */
-  mode?: ExternalSDKMode
-}
+  mode?: ExternalSDKMode;
+};
 
+/**
+ * @deprecated This hook is deprecated. We re-designed the SDK to enable client or server side rendering
+ */
 export const useExperienceBuilder = ({
   experienceTypeId,
   client,
   mode = 'delivery',
 }: UseExperienceBuilderProps) => {
-  const [activeMode, setMode] = useState<InternalSDKMode>(() => {
-    if (supportedModes.includes(mode)) {
-      return mode
-    }
-
-    throw new Error(`Unsupported mode provided: ${mode}. Supported values: ${supportedModes}`)
-  })
-
-  useEffect(() => {
-    if (supportedModes.includes(mode)) {
-      setMode(mode)
-    }
-  }, [mode])
-
-  const store = useExperienceStore({ client })
-
-  const switchToEditorMode = useCallback(() => {
-    setMode('editor')
-  }, [])
-
-  const experience = useMemo<Experience>(
+  const experience = useMemo<DeprecatedExperience>(
     () => ({
-      store,
       client,
       experienceTypeId,
-      mode: activeMode,
-      switchToEditorMode,
+      mode,
     }),
-    [activeMode, client, experienceTypeId, store, switchToEditorMode]
-  )
+    [mode, client, experienceTypeId]
+  );
 
   return {
+    /**
+     * @deprecated please fetch the experience using `useFetchExperience` hook or fetch the data manually using `fetchers` or `client` and create experience with `createExperience` function
+     *
+     * @example
+     *
+     * import { useFetchExperience } from '@contentful/experience-builder'
+     *
+     * const { fetchBySlug, fetchById, experience, isFetching } = useFetchExperience({ client, mode })
+     */
     experience,
+    /**
+     * @deprecated please import the function from the library
+     *
+     * @example
+     *
+     * import { defineComponents } from '@contentful/experience-builder'
+     */
     defineComponents,
-  }
-}
+  };
+};

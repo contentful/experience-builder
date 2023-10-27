@@ -1,31 +1,31 @@
-import React from 'react'
+import React from 'react';
 
-import type { EntityStore } from '../types'
-import { render } from '@testing-library/react'
+import type { EntityStore } from '../types';
+import { render } from '@testing-library/react';
 
-import { sendMessage } from '../communication/sendMessage'
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants'
-import { defineComponents, resetComponentRegistry } from '../core/componentRegistry'
-import { CompositionComponentNode } from '../types'
-import { VisualEditorBlock } from './VisualEditorBlock'
+import { sendMessage } from '../communication/sendMessage';
+import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
+import { defineComponents, resetComponentRegistry } from '../core/componentRegistry';
+import { CompositionComponentNode } from '../types';
+import { VisualEditorBlock } from './VisualEditorBlock';
 
 const TestComponent = (props: any) => {
-  return <div {...props}>{props.text}</div>
-}
+  return <div {...props}>{props.text}</div>;
+};
 
 jest.mock('../communication/sendMessage', () => ({
   sendMessage: jest.fn(),
-}))
+}));
 
 jest.mock('./useEditorContext', () => ({
   useEditorContext: () => ({
     selectedNodeId: '1',
     setSelectedNodeId: jest.fn(),
   }),
-}))
+}));
 jest.mock('../core/constants', () => ({
   SDK_VERSION: 'test',
-}))
+}));
 
 describe('VisualEditorBlock', () => {
   beforeEach(() => {
@@ -44,12 +44,12 @@ describe('VisualEditorBlock', () => {
           },
         },
       },
-    ])
-  })
+    ]);
+  });
 
   afterEach(() => {
-    resetComponentRegistry()
-  })
+    resetComponentRegistry();
+  });
 
   it('renders with initial text and updates when prop changes', () => {
     const mockCompositionComponentNode: CompositionComponentNode = {
@@ -69,7 +69,7 @@ describe('VisualEditorBlock', () => {
         breakpoints: [],
       },
       children: [],
-    }
+    };
 
     // Render the component with the initial text
     const { rerender } = render(
@@ -81,9 +81,9 @@ describe('VisualEditorBlock', () => {
         unboundValues={mockCompositionComponentNode.data.unboundValues}
         resolveDesignValue={jest.fn()}
       />
-    )
+    );
 
-    expect(sendMessage).toHaveBeenCalled()
+    expect(sendMessage).toHaveBeenCalled();
 
     rerender(
       <VisualEditorBlock
@@ -94,11 +94,11 @@ describe('VisualEditorBlock', () => {
         unboundValues={mockCompositionComponentNode.data.unboundValues}
         resolveDesignValue={jest.fn()}
       />
-    )
+    );
 
     // check if it is called it again
-    expect(sendMessage).toHaveBeenCalled()
-  })
+    expect(sendMessage).toHaveBeenCalled();
+  });
 
   it('renders section node', () => {
     const sectionNode: CompositionComponentNode = {
@@ -112,7 +112,7 @@ describe('VisualEditorBlock', () => {
         breakpoints: [],
       },
       children: [],
-    }
+    };
 
     render(
       <VisualEditorBlock
@@ -123,10 +123,10 @@ describe('VisualEditorBlock', () => {
         unboundValues={sectionNode.data.unboundValues}
         resolveDesignValue={jest.fn()}
       />
-    )
+    );
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined()
-  })
+    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+  });
 
   it('renders container node', () => {
     const containerNode: CompositionComponentNode = {
@@ -140,7 +140,7 @@ describe('VisualEditorBlock', () => {
         breakpoints: [],
       },
       children: [],
-    }
+    };
 
     render(
       <VisualEditorBlock
@@ -151,8 +151,8 @@ describe('VisualEditorBlock', () => {
         unboundValues={containerNode.data.unboundValues}
         resolveDesignValue={jest.fn()}
       />
-    )
+    );
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined()
-  })
-})
+    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+  });
+});

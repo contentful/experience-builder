@@ -1,5 +1,5 @@
-import { CompositionComponentNode } from './types'
-import { getInsertionData } from './utils'
+import { CompositionComponentNode } from './types';
+import { getInsertionData } from './utils';
 
 const dropReceiverChildNode: CompositionComponentNode = {
   type: 'block',
@@ -11,7 +11,7 @@ const dropReceiverChildNode: CompositionComponentNode = {
     breakpoints: [],
   },
   children: [],
-}
+};
 
 const dropReceiverNode: CompositionComponentNode = {
   type: 'block',
@@ -23,7 +23,7 @@ const dropReceiverNode: CompositionComponentNode = {
     breakpoints: [],
   },
   children: [dropReceiverChildNode],
-}
+};
 
 const childFillerNode1: CompositionComponentNode = {
   type: 'block',
@@ -35,7 +35,7 @@ const childFillerNode1: CompositionComponentNode = {
     breakpoints: [],
   },
   children: [],
-}
+};
 
 const childFillerNode2: CompositionComponentNode = {
   type: 'block',
@@ -47,7 +47,7 @@ const childFillerNode2: CompositionComponentNode = {
     breakpoints: [],
   },
   children: [],
-}
+};
 
 const dropReceiverParentNode: CompositionComponentNode = {
   type: 'root',
@@ -59,7 +59,7 @@ const dropReceiverParentNode: CompositionComponentNode = {
     breakpoints: [],
   },
   children: [childFillerNode1, dropReceiverNode, childFillerNode2],
-}
+};
 
 describe('getInsertionData', () => {
   it('should prepend outside of the drop receiver node if mouse at the top border', () => {
@@ -78,8 +78,8 @@ describe('getInsertionData', () => {
     ).toEqual({
       node: dropReceiverParentNode,
       index: 1, // dropped before the dropReceiverNode within the dropReceiverParentNode
-    })
-  })
+    });
+  });
 
   it('should append outside of the drop receiver node if mouse at the bottom border', () => {
     expect(
@@ -97,8 +97,8 @@ describe('getInsertionData', () => {
     ).toEqual({
       node: dropReceiverParentNode,
       index: 2, // dropped after the dropReceiverNode within the dropReceiverParentNode
-    })
-  })
+    });
+  });
 
   it('should prepend outside of the drop receiver node if mouse over the top section indicator', () => {
     expect(
@@ -116,8 +116,8 @@ describe('getInsertionData', () => {
     ).toEqual({
       node: dropReceiverParentNode,
       index: 1, // dropped before the dropReceiverNode within the dropReceiverParentNode
-    })
-  })
+    });
+  });
 
   it('should append outside of the drop receiver node if mouse over the bottom section indicator', () => {
     expect(
@@ -135,8 +135,8 @@ describe('getInsertionData', () => {
     ).toEqual({
       node: dropReceiverParentNode,
       index: 2, // dropped after the dropReceiverNode within the dropReceiverParentNode
-    })
-  })
+    });
+  });
 
   describe('if flex direction != column', () => {
     it('should prepend inside the drop receiver node if mouse is in the left half', () => {
@@ -155,8 +155,8 @@ describe('getInsertionData', () => {
       ).toEqual({
         node: dropReceiverNode,
         index: 0, // dropped as the new first child within the dropReceiverNode
-      })
-    })
+      });
+    });
 
     it('should append inside the drop receiver node if mouse is not in left half', () => {
       expect(
@@ -174,9 +174,9 @@ describe('getInsertionData', () => {
       ).toEqual({
         node: dropReceiverNode,
         index: 1, // dropped as the new last child within the dropReceiverNode
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('if flex direction = column', () => {
     it('should prepend inside the drop receiver node if mouse is in upper half', () => {
@@ -195,8 +195,8 @@ describe('getInsertionData', () => {
       ).toEqual({
         node: dropReceiverNode,
         index: 0, // dropped as the new first child within the dropReceiverNode
-      })
-    })
+      });
+    });
 
     it('should append inside the drop receiver node if mouse is not in upper half', () => {
       expect(
@@ -214,7 +214,7 @@ describe('getInsertionData', () => {
       ).toEqual({
         node: dropReceiverNode,
         index: 1, // dropped as the new last child within the dropReceiverNode
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});

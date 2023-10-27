@@ -10,7 +10,7 @@ lerna-debug.log*
 node_modules
 build
 .yarn
-dist/
+dist
 reports
 dist-ssr
 *.local

@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 
-import { defineComponents } from './core/componentRegistry'
+import { defineComponents } from './core/componentRegistry';
 
 const TestComponent = () => {
-  return null
-}
+  return null;
+};
 
 export const Test = () => {
   defineComponents([
@@ -20,6 +20,6 @@ export const Test = () => {
         },
       },
     },
-  ])
-  return <div data-test-id="test">Test</div>
-}
+  ]);
+  return <div data-test-id="test">Test</div>;
+};

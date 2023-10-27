@@ -1,13 +1,13 @@
-import React, { useMemo } from 'react'
+import React, { useMemo } from 'react';
 
-import type { UnresolvedLink } from 'contentful'
-import omit from 'lodash.omit'
+import type { UnresolvedLink } from 'contentful';
+import omit from 'lodash.omit';
 
-import { CF_STYLE_ATTRIBUTES, CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID } from '../constants'
-import { getComponentRegistration } from '../core/componentRegistry'
-import { buildCfStyles } from '../core/stylesUtils'
-import { ResolveDesignValueType } from '../hooks/useBreakpoints'
-import { useStyleTag } from '../hooks/useStyleTag'
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
+import { getComponentRegistration } from '../core/componentRegistry';
+import { buildCfStyles } from '../core/stylesUtils';
+import { ResolveDesignValueType } from '../hooks/useBreakpoints';
+import { useStyleTag } from '../hooks/useStyleTag';
 import type {
   Breakpoint,
   CompositionDataSource,
@@ -16,19 +16,19 @@ import type {
   CompositionVariableValueType,
   StyleProps,
   EntityStore,
-} from '../types'
-import { ContentfulContainer } from './ContentfulContainer'
-import { transformContentValue } from './transformers'
+} from '../types';
+import { ContentfulContainer } from './ContentfulContainer';
+import { transformContentValue } from './transformers';
 
 type CompositionBlockProps = {
-  node: CompositionNode
-  locale: string
-  dataSource: CompositionDataSource
-  unboundValues: CompositionUnboundValues
-  entityStore?: EntityStore
-  breakpoints: Breakpoint[]
-  resolveDesignValue: ResolveDesignValueType
-}
+  node: CompositionNode;
+  locale: string;
+  dataSource: CompositionDataSource;
+  unboundValues: CompositionUnboundValues;
+  entityStore?: EntityStore;
+  breakpoints: Breakpoint[];
+  resolveDesignValue: ResolveDesignValueType;
+};
 
 export const CompositionBlock = ({
   node,
@@ -42,38 +42,38 @@ export const CompositionBlock = ({
   const componentRegistration = useMemo(
     () => getComponentRegistration(node.definitionId as string),
     [node]
-  )
+  );
 
   const nodeProps = useMemo(() => {
     if (!componentRegistration) {
-      return {}
+      return {};
     }
 
-    const propMap: Record<string, CompositionVariableValueType> = {}
+    const propMap: Record<string, CompositionVariableValueType> = {};
 
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
       switch (variable.type) {
         case 'DesignValue':
-          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint)
-          break
+          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint);
+          break;
         case 'BoundValue': {
-          const [, uuid, ...path] = variable.path.split('/')
-          const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>
-          const value = entityStore?.getValue(binding, path.slice(0, -1))
-          const variableDefinition = componentRegistration.definition.variables[variableName]
-          acc[variableName] = transformContentValue(value, variableDefinition)
-          break
+          const [, uuid, ...path] = variable.path.split('/');
+          const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
+          const value = entityStore?.getValue(binding, path.slice(0, -1));
+          const variableDefinition = componentRegistration.definition.variables[variableName];
+          acc[variableName] = transformContentValue(value, variableDefinition);
+          break;
         }
         case 'UnboundValue': {
-          const uuid = variable.key
-          acc[variableName] = unboundValues[uuid]?.value
-          break
+          const uuid = variable.key;
+          acc[variableName] = unboundValues[uuid]?.value;
+          break;
         }
         default:
-          break
+          break;
       }
-      return acc
-    }, propMap)
+      return acc;
+    }, propMap);
   }, [
     componentRegistration,
     node.variables,
@@ -81,16 +81,16 @@ export const CompositionBlock = ({
     dataSource,
     entityStore,
     unboundValues,
-  ])
+  ]);
 
-  const cfStyles = buildCfStyles(nodeProps)
-  const { className } = useStyleTag({ styles: cfStyles })
+  const cfStyles = buildCfStyles(nodeProps);
+  const { className } = useStyleTag({ styles: cfStyles });
 
   if (!componentRegistration) {
-    return null
+    return null;
   }
 
-  const { component } = componentRegistration
+  const { component } = componentRegistration;
 
   const children =
     componentRegistration.definition.children === true
@@ -106,9 +106,9 @@ export const CompositionBlock = ({
               breakpoints={breakpoints}
               resolveDesignValue={resolveDesignValue}
             />
-          )
+          );
         })
-      : null
+      : null;
 
   // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
@@ -120,7 +120,7 @@ export const CompositionBlock = ({
         className={className}>
         {children}
       </ContentfulContainer>
-    )
+    );
   }
 
   return React.createElement(
@@ -130,5 +130,5 @@ export const CompositionBlock = ({
       className,
     },
     children
-  )
-}
+  );
+};
