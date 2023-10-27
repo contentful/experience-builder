@@ -15,7 +15,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "NODE_ENV=test jest"
+    "test": "NODE_ENV=test jest",
+    "test:coverage": "NODE_ENV=test jest --coverage --maxWorkers 2"
   },
   "dependencies": {
     "@contentful/visual-sdk": "^1.0.0-alpha.26",
