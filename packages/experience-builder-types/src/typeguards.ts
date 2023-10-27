@@ -13,9 +13,7 @@ export const isExperienceEntry = (entry: Entry): entry is ExperienceEntry => {
     // @ts-expect-error type incompatibility due to conditional types in Entry
     Array.isArray(entry.fields.componentTree.children) &&
     // @ts-expect-error type incompatibility due to conditional types in Entry
-    typeof entry.fields.componentTree.schemaVersion === 'string' &&
-    !!entry.fields?.dataSource &&
-    !!entry.fields?.unboundValues
+    typeof entry.fields.componentTree.schemaVersion === 'string'
   );
 };
 
