@@ -1,10 +1,10 @@
-import { InternalSDKMode, SchemaVersions } from './types'
+import { InternalSDKMode } from './types';
 
 export const SCROLL_STATES = {
   Start: 'scrollStart',
   IsScrolling: 'isScrolling',
   End: 'scrollEnd',
-}
+};
 
 export const OUTGOING_EVENTS = {
   Connected: 'connected',
@@ -20,7 +20,7 @@ export const OUTGOING_EVENTS = {
   UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
-}
+};
 
 export const INCOMING_EVENTS = {
   RequestEditorMode: 'requestEditorMode',
@@ -31,18 +31,18 @@ export const INCOMING_EVENTS = {
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
-}
+};
 
 export const INTERNAL_EVENTS = {
   ComponentsRegistered: 'componentsRegistered',
-}
+};
 
-export const CONTENTFUL_SECTION_ID = 'contentful-section' // TODO: remove me once all customers are using 2023-09-28 schema version
-export const CONTENTFUL_CONTAINER_ID = 'contentful-container'
-export const CONTENTFUL_SECTION_NAME = 'Section' // TODO: remove me once all customers are using 2023-09-28 schema version
-export const CONTENTFUL_CONTAINER_NAME = 'Container'
-export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component'
-export const LATEST_SCHEMA_VERSION = '2023-09-28'
+export const CONTENTFUL_SECTION_ID = 'contentful-section'; // TODO: remove me once all customers are using 2023-09-28 schema version
+export const CONTENTFUL_CONTAINER_ID = 'contentful-container';
+export const CONTENTFUL_SECTION_NAME = 'Section'; // TODO: remove me once all customers are using 2023-09-28 schema version
+export const CONTENTFUL_CONTAINER_NAME = 'Container';
+export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component';
+export const LATEST_SCHEMA_VERSION = '2023-09-28';
 export const CF_STYLE_ATTRIBUTES = [
   'cfHorizontalAlignment',
   'cfVerticalAlignment',
@@ -65,8 +65,6 @@ export const CF_STYLE_ATTRIBUTES = [
   // can filter them out and not pass as props
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',
-]
+];
 
-export const supportedModes: InternalSDKMode[] = ['delivery', 'preview', 'editor']
-// this is the array of version which currently LATEST_SCHEMA_VERSION is compatible with
-export const compatibleVersions: SchemaVersions[] = ['2023-08-23', '2023-09-28']
+export const supportedModes: InternalSDKMode[] = ['delivery', 'preview', 'editor'];
