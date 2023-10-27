@@ -10689,14 +10689,6 @@ ts-jest@^29.1.1:
     semver "^7.5.3"
     yargs-parser "^21.0.1"
 
-ts-morph@17.0.1:
-  version "17.0.1"
-  resolved "https://registry.npmjs.org/ts-morph/-/ts-morph-17.0.1.tgz"
-  integrity sha512-10PkHyXmrtsTvZSL+cqtJLTgFXkU43Gd0JCc0Rw6GchWbqKe0Rwgt1v3ouobTZwQzF1mGhDeAlWYBMGRV7y+3g==
-  dependencies:
-    "@ts-morph/common" "~0.18.0"
-    code-block-writer "^11.0.3"
-
 ts-node@^10.8.1:
   version "10.9.1"
   resolved "https://registry.npmjs.org/ts-node/-/ts-node-10.9.1.tgz"

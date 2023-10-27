@@ -18,6 +18,7 @@
     "test": "NODE_ENV=test jest"
   },
   "dependencies": {
+    "@contentful/visual-sdk": "^1.0.0-alpha.26",
     "contentful": "^10.3.0"
   },
   "devDependencies": {

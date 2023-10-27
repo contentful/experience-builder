@@ -1,5 +1,6 @@
 import React, { RefObject, useMemo } from 'react';
 
+import type { EntityStore } from '@contentful/visual-sdk';
 import omit from 'lodash.omit';
 
 import { sendMessage } from '../communication/sendMessage';
@@ -17,7 +18,6 @@ import {
   CompositionVariableValueType,
   CompositionDataSource,
   CompositionUnboundValues,
-  EntityStore,
 } from '../types';
 import { OUTGOING_EVENTS } from '../constants';
 import { ContentfulContainer } from './ContentfulContainer';
