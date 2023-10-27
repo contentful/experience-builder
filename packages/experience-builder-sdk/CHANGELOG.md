@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.6.0...@contentful/experience-builder@2.6.1) (2023-10-27)
+
+### Bug Fixes
+
+- ease exp entry validation [] ([#147](https://github.com/contentful/experience-builder/issues/147)) ([cbe3cd9](https://github.com/contentful/experience-builder/commit/cbe3cd9d27d87e2ce2b5439fbc7dd58bb1ff9383))
+
 # [2.6.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.5.1...@contentful/experience-builder@2.6.0) (2023-10-26)
 
 ### Features
