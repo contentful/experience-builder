@@ -3,7 +3,7 @@
   "version": "2.6.1",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
+  "typings": "./dist/src/index.d.ts",
   "type": "module",
   "author": "Contentful GmbH",
   "license": "MIT",
