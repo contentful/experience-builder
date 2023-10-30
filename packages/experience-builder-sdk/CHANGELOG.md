@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.6.1...@contentful/experience-builder@2.6.2) (2023-10-30)
+
+### Bug Fixes
+
+- initial setup for experience-builder-types [SPA-1395] ([#145](https://github.com/contentful/experience-builder/issues/145)) ([7b138ab](https://github.com/contentful/experience-builder/commit/7b138ab68ff2e1d685c95d665de5f7930d897916))
+
 ## [2.6.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.6.0...@contentful/experience-builder@2.6.1) (2023-10-27)
 
 ### Bug Fixes
