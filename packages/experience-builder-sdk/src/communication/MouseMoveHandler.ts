@@ -1,10 +1,10 @@
-import { OutgoingExperienceBuilderEvent } from '../types';
+import { OUTGOING_EVENTS } from '../constants';
 import { sendMessage } from './sendMessage';
 
 export class MouseMoveHandler {
   onMouseMove = (event: MouseEvent) => {
     const [x, y] = [event.clientX, event.clientY];
-    sendMessage(OutgoingExperienceBuilderEvent.MOUSE_MOVE, {
+    sendMessage(OUTGOING_EVENTS.MouseMove, {
       clientX: x,
       clientY: y,
     });

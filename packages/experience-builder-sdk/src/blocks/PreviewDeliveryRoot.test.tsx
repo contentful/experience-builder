@@ -1,8 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { EntityStore } from '../core/EntityStore';
+
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
 import { Experience, SchemaVersions } from '../types';
-import { EntityStore } from '../core/EntityStore';
 import { createCompositionEntry } from '../../test/__fixtures__/composition';
 import { assets, entries } from '../../test/__fixtures__/entities';
 import type { Entry } from 'contentful';
@@ -20,7 +21,7 @@ const entityStore = new EntityStore({
   locale,
 });
 
-const experience: Experience = {
+const experience: Experience<EntityStore> = {
   entityStore,
   mode: 'preview',
 };
@@ -61,7 +62,7 @@ describe('PreviewDeliveryRoot', () => {
       locale,
     });
 
-    const experience: Experience = {
+    const experience: Experience<EntityStore> = {
       entityStore,
       mode: 'preview',
     };

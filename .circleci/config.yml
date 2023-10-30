@@ -65,9 +65,9 @@ jobs:
       - with-workspace
       - run: yarn test:coverage
       - store_test_results:
-          path: reports
+          path: packages/*/reports
       - store_artifacts:
-          path: ./reports/clover.xml
+          path: ./packages/*/reports/clover.xml
 
   # Do not use the workspace for the release step
   release:

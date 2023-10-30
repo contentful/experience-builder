@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "types": ["node", "jest", "@testing-library/jest-dom", "vite-plugin-svgr/client"],
+    "allowJs": true,
     "moduleResolution": "node"
   },
   "include": ["src", "vite.config.ts"]

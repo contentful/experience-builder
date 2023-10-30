@@ -1,9 +1,10 @@
 import { supportedModes } from './constants';
-import { InternalSDKMode, IncomingExperienceBuilderEvent } from './types';
+import { InternalSDKMode, IncomingEvent } from './types';
+import { INCOMING_EVENTS } from './constants';
 
 export type VisualEditorMessagePayload = {
   source: string;
-  eventType: IncomingExperienceBuilderEvent;
+  eventType: IncomingEvent;
   payload: any;
 };
 
@@ -62,7 +63,7 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
   }
 
   // check eventData.eventType
-  const supportedEventTypes = Object.values(IncomingExperienceBuilderEvent);
+  const supportedEventTypes = Object.values(INCOMING_EVENTS);
   if (!supportedEventTypes.includes(eventData.eventType)) {
     throw new ParseError(
       `Field eventData.eventType must be one of the supported values: [${supportedEventTypes.join(

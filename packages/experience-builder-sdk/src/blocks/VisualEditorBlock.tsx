@@ -12,7 +12,6 @@ import { ResolveDesignValueType } from '../hooks/useBreakpoints';
 import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates';
 import { useStyleTag } from '../hooks/useStyleTag';
 import {
-  OutgoingExperienceBuilderEvent,
   CompositionComponentNode,
   StyleProps,
   Link,
@@ -20,6 +19,7 @@ import {
   CompositionDataSource,
   CompositionUnboundValues,
 } from '../types';
+import { OUTGOING_EVENTS } from '../constants';
 import { ContentfulContainer } from './ContentfulContainer';
 import { ImportedComponentErrorBoundary } from './ErrorBoundary';
 import { transformContentValue } from './transformers';
@@ -166,7 +166,7 @@ export const VisualEditorBlock = ({
           e.stopPropagation();
           e.preventDefault();
           setSelectedNodeId(node.data.id);
-          sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
+          sendMessage(OUTGOING_EVENTS.ComponentSelected, {
             node,
           });
         }}
@@ -187,7 +187,7 @@ export const VisualEditorBlock = ({
         e.stopPropagation();
         e.preventDefault();
         setSelectedNodeId(node.data.id);
-        sendMessage(OutgoingExperienceBuilderEvent.COMPONENT_SELECTED, {
+        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
           node,
         });
       },

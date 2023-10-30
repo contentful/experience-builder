@@ -1,5 +1,5 @@
 import type { Asset, ContentfulClientApi, Entry } from 'contentful';
-import { isExperienceEntry } from '../typeguards';
+import { isExperienceEntry } from '@contentful/experience-builder-types';
 
 type fetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;

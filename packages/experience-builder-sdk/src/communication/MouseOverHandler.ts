@@ -1,4 +1,5 @@
-import { HoveredElement, OutgoingExperienceBuilderEvent } from '../types';
+import { HoveredElement } from '../types';
+import { OUTGOING_EVENTS } from '../constants';
 import { sendMessage } from './sendMessage';
 
 export class MouseOverHandler {
@@ -118,7 +119,7 @@ export class MouseOverHandler {
     const { coordinates, hoveredElement, parentElement, parentSectionIndex } = hoveredElementInfo;
     this.currentHoveredElementId = hoveredElementInfo.hoveredElement.nodeId || null;
 
-    sendMessage(OutgoingExperienceBuilderEvent.NEW_HOVERED_COMPONENT, {
+    sendMessage(OUTGOING_EVENTS.NewHoveredElement, {
       hoveredElement,
       parentElement,
       parentSectionIndex,
