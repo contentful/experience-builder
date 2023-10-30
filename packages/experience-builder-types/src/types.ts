@@ -282,7 +282,7 @@ export interface DeprecatedExperienceStore {
   }) => Promise<{ success: boolean; error?: Error }>;
 }
 
-export interface Experience<T extends EntityStore> {
+export interface Experience<T extends EntityStore = EntityStore> {
   entityStore?: T;
   mode: InternalSDKMode;
 }
