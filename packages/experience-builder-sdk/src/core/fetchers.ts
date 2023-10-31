@@ -50,8 +50,14 @@ export const fetchReferencedEntities = async ({
     assetIds.length > 0 ? client.getAssets({ 'sys.id[in]': assetIds, locale }) : { items: [] },
   ]);
 
+  // Using client getEntries resolves all linked entry references, so we do not need to resolve entries in usedComponents
+  const allResolvedEntries = [
+    ...((entriesResponse.items ?? []) as Entry[]),
+    ...(experienceEntry.fields.usedComponents as Entry[]),
+  ];
+
   return {
-    entries: (entriesResponse.items ?? []) as Entry[],
+    entries: allResolvedEntries as Entry[],
     assets: (assetsResponse.items ?? []) as Asset[],
   };
 };

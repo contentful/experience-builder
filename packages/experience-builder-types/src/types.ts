@@ -227,6 +227,15 @@ export type Breakpoint = {
 
 export type SchemaVersions = '2023-09-28' | '2023-06-27' | '2023-07-26' | '2023-08-23';
 
+export type ExperienceComponentSettings = {
+  // Later these definitions will be a bit different from developer components as
+  // they will support bound/ unbound values as default values.
+  variableDefinitions: Record<
+    string,
+    ComponentDefinitionVariableBase<ComponentDefinitionVariableType>
+  >;
+};
+
 export type Composition = {
   title: string;
   slug: string;
@@ -237,6 +246,8 @@ export type Composition = {
   };
   dataSource: CompositionDataSource;
   unboundValues: CompositionUnboundValues;
+  usedComponents?: Array<Link<'Entry'> | Entry>;
+  componentSettings?: ExperienceComponentSettings;
 };
 
 export type ExperienceEntry = {
