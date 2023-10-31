@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+'use client';
+import React, { useCallback, useEffect, useState, Suspense, lazy } from 'react';
 
 import { isDeprecatedExperience } from '@contentful/experience-builder-types';
 import { EntityStore } from '../core/EntityStore';
 import { supportedModes } from '../constants';
 import { DeprecatedExperience, Experience, InternalSDKMode } from '../types';
 import { validateExperienceBuilderConfig } from '../validation';
-import { ErrorBoundary } from './ErrorBoundary';
 import { DeprecatedPreviewDeliveryRoot } from './DeprecatedPreviewDeliveryRoot';
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
-import { VisualEditorRoot } from './VisualEditorRoot';
+//import { VisualEditorRoot } from './VisualEditorRoot';
 
 type ExperienceRootProps = {
   experience: Experience<EntityStore> | DeprecatedExperience;
@@ -48,10 +48,11 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
   if (!mode || !supportedModes.includes(mode)) return null;
 
   if (mode === 'editor') {
+    const VisualEditorRoot = lazy(() => import('../blocks/VisualEditorRoot'));
     return (
-      <ErrorBoundary>
-        <VisualEditorRoot initialLocale={locale} mode={mode} />
-      </ErrorBoundary>
+      <Suspense fallback={<div>Loading...</div>}>
+        <VisualEditorRoot initialLocale={locale} mode={mode} />;
+      </Suspense>
     );
   }
 

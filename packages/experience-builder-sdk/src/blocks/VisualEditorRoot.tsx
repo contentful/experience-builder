@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 
 import { VisualEditorBlock } from './VisualEditorBlock';
@@ -10,18 +11,21 @@ import { useHoverIndicator } from '../hooks/useHoverIndicator';
 import { InternalSDKMode } from '../types';
 import { useEditorContext } from './useEditorContext';
 import { VisualEditorContextProvider } from './VisualEditorContext';
+import { ErrorBoundary } from './ErrorBoundary';
 
 type VisualEditorRootProps = {
   initialLocale: string;
   mode: InternalSDKMode;
 };
 
-export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
+const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
   // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
   return (
-    <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
-      <VisualEditorRootComponents />
-    </VisualEditorContextProvider>
+    <ErrorBoundary>
+      <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
+        <VisualEditorRootComponents />
+      </VisualEditorContextProvider>
+    </ErrorBoundary>
   );
 };
 
@@ -82,3 +86,5 @@ const VisualEditorRootComponents = () => {
     </div>
   );
 };
+
+export default VisualEditorRoot;
