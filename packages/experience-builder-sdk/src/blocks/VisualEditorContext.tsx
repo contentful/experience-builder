@@ -169,7 +169,7 @@ export function VisualEditorContextProvider({
           } = payload;
           setTree(tree);
           setLocale(locale);
-          setDesignComponents(designComponents);
+          designComponents && setDesignComponents(designComponents);
 
           if (changedNode) {
             /**
