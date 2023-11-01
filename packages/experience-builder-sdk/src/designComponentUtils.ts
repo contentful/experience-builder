@@ -12,7 +12,7 @@ import {
 } from './types';
 import { generateRandomId } from './utils';
 
-export const deserializeNode = ({
+export const deserializeDesignComponentNode = ({
   node,
   parentId,
   compositionDataSource,
@@ -40,11 +40,11 @@ export const deserializeNode = ({
     }
   }
 
-  const isDesignComponent = node.definitionId?.split('-')[0] === 'DesignComponent';
+  const isDesignComponent = node.definitionId?.startsWith('DesignComponent');
   const nodeId = isDesignComponent ? node.definitionId?.split('-')[1] : generateRandomId(16);
 
   const children: CompositionComponentNode[] = node.children.map((child) =>
-    deserializeNode({
+    deserializeDesignComponentNode({
       node: child,
       parentId: nodeId,
       compositionDataSource,
@@ -53,7 +53,8 @@ export const deserializeNode = ({
   );
 
   return {
-    type: isDesignComponent ? 'DesignComponent' : 'block',
+    // separate node type identifiers for design components and their blocks, so we can treat them differently in as much as we want
+    type: isDesignComponent ? 'DesignComponent' : 'DesignComponentBlock',
     parentId,
     data: {
       id: nodeId,
@@ -95,7 +96,7 @@ export const resolveDesignComponent = ({
     return node;
   }
 
-  const deserializedNode = deserializeNode({
+  const deserializedNode = deserializeDesignComponentNode({
     node: {
       definitionId: node.data.blockId || '',
       variables: {},

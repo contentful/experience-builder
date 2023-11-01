@@ -186,6 +186,7 @@ export const VisualEditorBlock = ({
         onMouseDown={(e) => {
           e.stopPropagation();
           e.preventDefault();
+          if (node.type === 'DesignComponentBlock') return;
           setSelectedNodeId(node.data.id);
           sendMessage(OUTGOING_EVENTS.ComponentSelected, {
             node,
@@ -207,6 +208,8 @@ export const VisualEditorBlock = ({
       onMouseDown: (e: MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
+        if (node.type === 'DesignComponentBlock') return;
+
         setSelectedNodeId(node.data.id);
         sendMessage(OUTGOING_EVENTS.ComponentSelected, {
           node,
