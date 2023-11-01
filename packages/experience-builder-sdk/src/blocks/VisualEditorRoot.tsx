@@ -18,7 +18,7 @@ type VisualEditorRootProps = {
 };
 
 const DesignComponent = ({ ...props }) => {
-  return <div style={{ width: '100%' }} {...props} />;
+  return <div {...props} />;
 };
 
 export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {

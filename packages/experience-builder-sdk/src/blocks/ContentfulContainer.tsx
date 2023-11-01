@@ -43,7 +43,12 @@ export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
       data-cf-node-block-id={node.data.blockId}
       data-cf-node-block-type={node.type}
       className={classNames(className, 'defaultStyles')}
-      onMouseDown={onMouseDown}>
+      onMouseDown={onMouseDown}
+      // For blocks of design components, they should not be clickable
+      // Clicking on anywhere in the design component should not trigger the selection a child block
+      // Hence we place design component blocks behind the design component wrapper, so that on mouse down
+      // it select only the wrapper component
+      cssStyles={{ zIndex: node.type === 'DesignComponentBlock' ? '-1' : '1' }}>
       {children}
     </Flex>
   );
