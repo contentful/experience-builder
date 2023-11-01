@@ -7,13 +7,18 @@ import { onComponentDropped } from '../communication/onComponentDrop';
 import { EditorModeEntityStore } from '../core/EditorModeEntityStore';
 import { useBreakpoints } from '../hooks/useBreakpoints';
 import { useHoverIndicator } from '../hooks/useHoverIndicator';
-import { InternalSDKMode } from '../types';
+import { ComponentRegistration, InternalSDKMode } from '../types';
 import { useEditorContext } from './useEditorContext';
 import { VisualEditorContextProvider } from './VisualEditorContext';
+import { getDesignComponentRegistration } from '../designComponentUtils';
 
 type VisualEditorRootProps = {
   initialLocale: string;
   mode: InternalSDKMode;
+};
+
+const DesignComponent = ({ ...props }) => {
+  return <div style={{ width: '100%' }} {...props} />;
 };
 
 export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps) => {
@@ -26,13 +31,24 @@ export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps)
 };
 
 const VisualEditorRootComponents = () => {
-  const { tree, dataSource, isDragging, locale, unboundValues, breakpoints, entityStore } =
-    useEditorContext();
+  const {
+    tree,
+    dataSource,
+    isDragging,
+    locale,
+    unboundValues,
+    breakpoints,
+    entityStore,
+    designComponents,
+  } = useEditorContext();
 
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
   const { resolveDesignValue } = useBreakpoints(breakpoints);
   useHoverIndicator(isDragging);
   const [areEntitiesFetched, setEntitiesFetched] = useState(false);
+  const [designComponentsDefinitions, setDesignComponentsDefinitions] = useState<
+    ComponentRegistration[]
+  >([]);
 
   useEffect(() => {
     if (!locale) return;
@@ -55,13 +71,27 @@ const VisualEditorRootComponents = () => {
   useEffect(() => {
     const resolveEntities = async () => {
       setEntitiesFetched(false);
-      const entityLinks = Object.values(dataSource || {});
-      await entityStore.current.fetchEntities(entityLinks);
+      const datasourceEntityLinks = Object.values(dataSource || {});
+      await entityStore.current.fetchEntities([
+        ...datasourceEntityLinks,
+        ...(designComponents || []),
+      ]);
       setEntitiesFetched(true);
     };
 
     resolveEntities();
-  }, [dataSource, entityStore, locale]);
+  }, [dataSource, entityStore, designComponents, locale]);
+
+  useEffect(() => {
+    if (!areEntitiesFetched || !designComponents) return;
+    const designComponentsDefinitions = getDesignComponentRegistration({
+      component: DesignComponent,
+      designComponents: designComponents ?? [],
+      entityStore: entityStore.current,
+    });
+
+    setDesignComponentsDefinitions(designComponentsDefinitions);
+  }, [areEntitiesFetched, entityStore, designComponents]);
 
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, []);
@@ -73,6 +103,8 @@ const VisualEditorRootComponents = () => {
           key={node.data.id}
           node={node}
           dataSource={dataSource}
+          designComponents={designComponents}
+          designComponentsDefinitions={designComponentsDefinitions}
           unboundValues={unboundValues}
           resolveDesignValue={resolveDesignValue}
           entityStore={entityStore}

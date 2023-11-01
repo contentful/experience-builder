@@ -18,12 +18,14 @@ import {
   CompositionVariableValueType,
   CompositionDataSource,
   CompositionUnboundValues,
+  ComponentRegistration,
 } from '../types';
 import { OUTGOING_EVENTS } from '../constants';
 import { ContentfulContainer } from './ContentfulContainer';
 import { ImportedComponentErrorBoundary } from './ErrorBoundary';
 import { transformContentValue } from './transformers';
 import { useEditorContext } from './useEditorContext';
+import { resolveDesignComponent } from '../designComponentUtils';
 
 type PropsType =
   | StyleProps
@@ -33,6 +35,8 @@ type VisualEditorBlockProps = {
   node: CompositionComponentNode;
 
   dataSource: CompositionDataSource;
+  designComponents: Link<'Entry'>[];
+  designComponentsDefinitions: ComponentRegistration[];
   unboundValues: CompositionUnboundValues;
 
   resolveDesignValue: ResolveDesignValueType;
@@ -41,16 +45,31 @@ type VisualEditorBlockProps = {
 };
 
 export const VisualEditorBlock = ({
-  node,
+  node: rawNode,
   dataSource,
+  designComponents,
+  designComponentsDefinitions,
   unboundValues,
   resolveDesignValue,
   entityStore,
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
+  const node = useMemo(() => {
+    if (rawNode.type === 'DesignComponent' && areEntitiesFetched) {
+      return resolveDesignComponent({
+        node: rawNode,
+        entityStore: entityStore.current,
+        designComponents,
+      });
+    }
+
+    return rawNode;
+  }, [areEntitiesFetched, entityStore, designComponents, rawNode]);
+
   const componentRegistration = useMemo(
     () => getComponentRegistration(node.data.blockId as string),
-    [node]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [designComponentsDefinitions?.length, node.data.blockId]
   );
 
   const { setSelectedNodeId } = useEditorContext();
@@ -145,6 +164,8 @@ export const VisualEditorBlock = ({
               node={childNode}
               key={childNode.data.id}
               dataSource={dataSource}
+              designComponents={designComponents}
+              designComponentsDefinitions={designComponentsDefinitions}
               unboundValues={unboundValues}
               resolveDesignValue={resolveDesignValue}
               entityStore={entityStore}

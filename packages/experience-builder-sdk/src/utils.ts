@@ -1,3 +1,5 @@
+import times from 'lodash/times';
+import random from 'lodash/random';
 import {
   CompositionTree,
   CompositionComponentNode,
@@ -111,4 +113,12 @@ export const getInsertionData = ({
       index: isMouseInUpperHalf ? PREPEND_INSIDE : APPEND_INSIDE,
     };
   }
+};
+
+export const generateRandomId = (count: number): string => {
+  const LETTERS = 'abcdefghijklmnopqvwxyzABCDEFGHIJKLMNOPQVWXYZ';
+  const NUMS = '0123456789';
+  const ALNUM = NUMS + LETTERS;
+
+  return times(count, () => ALNUM[random(0, ALNUM.length - 1)]).join('');
 };

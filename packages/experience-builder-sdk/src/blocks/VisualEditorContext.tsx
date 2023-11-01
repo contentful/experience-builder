@@ -16,6 +16,7 @@ import {
   CompositionTree,
   CompositionUnboundValues,
   InternalSDKMode,
+  Link,
 } from '../types';
 import { INCOMING_EVENTS, OUTGOING_EVENTS, SCROLL_STATES, INTERNAL_EVENTS } from '../constants';
 import { getDataFromTree } from '../utils';
@@ -24,6 +25,7 @@ import { doesMismatchMessageSchema, tryParseMessage } from '../validation';
 type VisualEditorContextType = {
   tree: CompositionTree | undefined;
   dataSource: CompositionDataSource;
+  designComponents: Link<'Entry'>[];
   isDragging: boolean;
   locale: string | null;
   selectedNodeId: string | null;
@@ -36,6 +38,7 @@ type VisualEditorContextType = {
 export const VisualEditorContext = React.createContext<VisualEditorContextType>({
   tree: undefined,
   dataSource: {},
+  designComponents: [],
   unboundValues: {},
   isDragging: false,
   selectedNodeId: null,
@@ -61,6 +64,7 @@ export function VisualEditorContextProvider({
   const hasConnectEventBeenSent = useRef(false);
   const [tree, setTree] = useState<CompositionTree>();
   const [dataSource, setDataSource] = useState<CompositionDataSource>({});
+  const [designComponents, setDesignComponents] = useState<Link<'Entry'>[]>([]);
   const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({});
   const [isDragging, setIsDragging] = useState(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string>('');
@@ -155,15 +159,17 @@ export function VisualEditorContextProvider({
             locale,
             changedNode,
             changedValueType,
+            designComponents,
           }: {
             tree: CompositionTree;
+            designComponents: Link<'Entry'>[];
             locale: string;
             changedNode?: CompositionComponentNode;
             changedValueType?: CompositionComponentPropValue['type'];
           } = payload;
-
           setTree(tree);
           setLocale(locale);
+          setDesignComponents(designComponents);
 
           if (changedNode) {
             /**
@@ -279,6 +285,7 @@ export function VisualEditorContextProvider({
       value={{
         tree,
         dataSource,
+        designComponents,
         unboundValues,
         isDragging,
         selectedNodeId,
