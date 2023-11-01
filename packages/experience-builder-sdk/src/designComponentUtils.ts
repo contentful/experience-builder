@@ -132,6 +132,7 @@ export const getDesignComponentRegistration = ({
       name: componentFields.title || 'Design Component',
       variables: {},
       children: true,
+      category: 'Design Components',
     };
     designComponentsDefinitions.push({ component, definition });
   });
