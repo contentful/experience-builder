@@ -4,12 +4,14 @@ import { sendHoveredComponentCoordinates } from '../communication/sendHoveredCom
 import { sendMessage } from '../communication/sendMessage';
 import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates';
 import {
+  addComponentRegistration,
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
 } from '../core/componentRegistry';
 import { EditorModeEntityStore } from '../core/EditorModeEntityStore';
 import {
   Breakpoint,
+  ComponentRegistration,
   CompositionComponentNode,
   CompositionComponentPropValue,
   CompositionDataSource,
@@ -21,11 +23,12 @@ import {
 import { INCOMING_EVENTS, OUTGOING_EVENTS, SCROLL_STATES, INTERNAL_EVENTS } from '../constants';
 import { getDataFromTree } from '../utils';
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation';
+import { Entry } from 'contentful';
+import { DesignComponent } from './DesignComponent';
 
 type VisualEditorContextType = {
   tree: CompositionTree | undefined;
   dataSource: CompositionDataSource;
-  designComponents: Link<'Entry'>[];
   isDragging: boolean;
   locale: string | null;
   selectedNodeId: string | null;
@@ -38,7 +41,6 @@ type VisualEditorContextType = {
 export const VisualEditorContext = React.createContext<VisualEditorContextType>({
   tree: undefined,
   dataSource: {},
-  designComponents: [],
   unboundValues: {},
   isDragging: false,
   selectedNodeId: null,
@@ -56,6 +58,13 @@ type VisualEditorContextProviderProps = {
   children: ReactElement;
 };
 
+export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
+export const setDesignComponents = (designComponents: Link<'Entry'>[]) => {
+  for (const designComponent of designComponents) {
+    designComponentsRegistry.set(designComponent.sys.id, designComponent);
+  }
+};
+
 export function VisualEditorContextProvider({
   initialLocale,
   mode,
@@ -64,7 +73,6 @@ export function VisualEditorContextProvider({
   const hasConnectEventBeenSent = useRef(false);
   const [tree, setTree] = useState<CompositionTree>();
   const [dataSource, setDataSource] = useState<CompositionDataSource>({});
-  const [designComponents, setDesignComponents] = useState<Link<'Entry'>[]>([]);
   const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({});
   const [isDragging, setIsDragging] = useState(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string>('');
@@ -193,6 +201,31 @@ export function VisualEditorContextProvider({
           }
           break;
         }
+        case INCOMING_EVENTS.DesignComponentsUpdated: {
+          const {
+            tree,
+            designComponent,
+            designComponentDefinition,
+          }: {
+            tree: CompositionTree;
+            designComponent: Entry;
+            designComponentDefinition: ComponentRegistration['definition'];
+          } = payload;
+          if (designComponent) {
+            entityStore.current.updateEntity(designComponent);
+            // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
+            designComponentsRegistry.set(designComponent.sys.id, {
+              sys: { id: designComponent.sys.id, linkType: 'Entry', type: 'Link' },
+            } as Link<'Entry'>);
+            designComponentDefinition &&
+              addComponentRegistration({
+                component: DesignComponent,
+                definition: designComponentDefinition,
+              });
+            setTree(tree);
+          }
+          break;
+        }
         case INCOMING_EVENTS.SelectedComponentChanged: {
           const { selectedNodeId } = payload;
           sendSelectedComponentCoordinates(selectedNodeId);
@@ -285,7 +318,6 @@ export function VisualEditorContextProvider({
       value={{
         tree,
         dataSource,
-        designComponents,
         unboundValues,
         isDragging,
         selectedNodeId,

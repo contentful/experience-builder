@@ -1,6 +1,4 @@
 import { EntityStore } from '@contentful/visual-sdk';
-import { Link } from './types';
-import { defineComponents } from './core/componentRegistry';
 import {
   CompositionNode,
   CompositionDataSource,
@@ -8,9 +6,9 @@ import {
   CompositionComponentNode,
   CompositionComponentPropValue,
   Composition,
-  ComponentRegistration,
 } from './types';
 import { generateRandomId } from './utils';
+import { designComponentsRegistry } from './blocks/VisualEditorContext';
 
 export const deserializeDesignComponentNode = ({
   node,
@@ -70,11 +68,9 @@ export const deserializeDesignComponentNode = ({
 
 export const resolveDesignComponent = ({
   node,
-  designComponents,
   entityStore,
 }: {
   node: CompositionComponentNode;
-  designComponents: Link<'Entry'>[];
   entityStore: EntityStore | null;
 }) => {
   if (node.type !== 'DesignComponent') {
@@ -82,13 +78,13 @@ export const resolveDesignComponent = ({
   }
 
   const componentId = node.data.blockId?.split('-')[1] as string;
-  const componentLink = designComponents?.find((link) => link.sys.id === componentId);
+  const designComponent = designComponentsRegistry.get(componentId);
 
-  if (!componentLink) {
+  if (!designComponent) {
     return node;
   }
 
-  const componentFields = entityStore?.getValue(componentLink, [
+  const componentFields = entityStore?.getValue(designComponent, [
     'fields',
   ]) as unknown as Composition;
 
@@ -108,36 +104,4 @@ export const resolveDesignComponent = ({
   });
 
   return deserializedNode;
-};
-
-export const getDesignComponentRegistration = ({
-  component,
-  designComponents,
-  entityStore,
-}: {
-  component: ComponentRegistration['component'];
-  designComponents: Link<'Entry'>[];
-  entityStore: EntityStore | null;
-}) => {
-  const designComponentsDefinitions: ComponentRegistration[] = [];
-
-  designComponents.forEach((link) => {
-    const componentFields = entityStore?.getValue(link, ['fields']) as unknown as Composition;
-
-    if (!componentFields) return;
-
-    const definitionId = `DesignComponent-${link.sys.id}`;
-    const definition = {
-      id: definitionId,
-      name: componentFields.title || 'Design Component',
-      variables: {},
-      children: true,
-      category: 'Design Components',
-    };
-    designComponentsDefinitions.push({ component, definition });
-  });
-
-  defineComponents(designComponentsDefinitions);
-
-  return designComponentsDefinitions;
 };

@@ -5,7 +5,10 @@ import omit from 'lodash.omit';
 
 import { sendMessage } from '../communication/sendMessage';
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
-import { getComponentRegistration } from '../core/componentRegistry';
+import {
+  getComponentRegistration,
+  createDesignComponentRegistration,
+} from '../core/componentRegistry';
 import { getUnboundValues } from '../core/getUnboundValues';
 import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils';
 import { ResolveDesignValueType } from '../hooks/useBreakpoints';
@@ -18,7 +21,6 @@ import {
   CompositionVariableValueType,
   CompositionDataSource,
   CompositionUnboundValues,
-  ComponentRegistration,
 } from '../types';
 import { OUTGOING_EVENTS } from '../constants';
 import { ContentfulContainer } from './ContentfulContainer';
@@ -26,6 +28,7 @@ import { ImportedComponentErrorBoundary } from './ErrorBoundary';
 import { transformContentValue } from './transformers';
 import { useEditorContext } from './useEditorContext';
 import { resolveDesignComponent } from '../designComponentUtils';
+import { DesignComponent } from './DesignComponent';
 
 type PropsType =
   | StyleProps
@@ -35,8 +38,7 @@ type VisualEditorBlockProps = {
   node: CompositionComponentNode;
 
   dataSource: CompositionDataSource;
-  designComponents: Link<'Entry'>[];
-  designComponentsDefinitions: ComponentRegistration[];
+  // designComponents: Link<'Entry'>[];
   unboundValues: CompositionUnboundValues;
 
   resolveDesignValue: ResolveDesignValueType;
@@ -47,8 +49,6 @@ type VisualEditorBlockProps = {
 export const VisualEditorBlock = ({
   node: rawNode,
   dataSource,
-  designComponents,
-  designComponentsDefinitions,
   unboundValues,
   resolveDesignValue,
   entityStore,
@@ -59,18 +59,19 @@ export const VisualEditorBlock = ({
       return resolveDesignComponent({
         node: rawNode,
         entityStore: entityStore.current,
-        designComponents,
       });
     }
 
     return rawNode;
-  }, [areEntitiesFetched, entityStore, designComponents, rawNode]);
+  }, [areEntitiesFetched, entityStore, rawNode]);
 
-  const componentRegistration = useMemo(
-    () => getComponentRegistration(node.data.blockId as string),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [designComponentsDefinitions?.length, node.data.blockId]
-  );
+  const componentRegistration = useMemo(() => {
+    const registeration = getComponentRegistration(node.data.blockId as string);
+    if (node.type === 'DesignComponent' && !registeration) {
+      return createDesignComponentRegistration({ node, component: DesignComponent });
+    }
+    return registeration;
+  }, [node]);
 
   const { setSelectedNodeId } = useEditorContext();
 
@@ -164,8 +165,6 @@ export const VisualEditorBlock = ({
               node={childNode}
               key={childNode.data.id}
               dataSource={dataSource}
-              designComponents={designComponents}
-              designComponentsDefinitions={designComponentsDefinitions}
               unboundValues={unboundValues}
               resolveDesignValue={resolveDesignValue}
               entityStore={entityStore}

@@ -1,4 +1,4 @@
-import { ComponentRegistration, ComponentDefinition } from '../types';
+import { ComponentRegistration, ComponentDefinition, CompositionComponentNode } from '../types';
 import { OUTGOING_EVENTS, INTERNAL_EVENTS } from '../constants';
 import { builtInStyles as builtInStyleDefinitions } from './definitions/variables';
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
@@ -128,4 +128,39 @@ export const getComponentRegistration = (id: string) => {
     return componentRegistry.get(CONTENTFUL_CONTAINER_ID);
   }
   return componentRegistry.get(id);
+};
+
+export const addComponentRegistration = (componentRegistration: ComponentRegistration) => {
+  componentRegistry.set(componentRegistration.definition.id, componentRegistration);
+};
+
+export const createDesignComponentRegistration = ({
+  node,
+  defintionName,
+  component,
+}: {
+  node: CompositionComponentNode;
+  defintionName?: string;
+  component: ComponentRegistration['component'];
+}) => {
+  const componentId = node.data.blockId?.split('-')[1] as string;
+  const definitionId = `DesignComponent-${componentId}`;
+
+  const componentRegistration = componentRegistry.get(definitionId);
+
+  if (componentRegistration) {
+    return componentRegistration;
+  }
+
+  const definition = {
+    id: definitionId,
+    name: defintionName || 'Design Component',
+    variables: {},
+    children: true,
+    category: 'Design Components',
+  };
+
+  addComponentRegistration({ component, definition });
+
+  return { component, definition };
 };
