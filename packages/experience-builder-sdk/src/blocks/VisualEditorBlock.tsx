@@ -45,6 +45,8 @@ type VisualEditorBlockProps = {
   areEntitiesFetched: boolean;
 };
 
+const designComponentTypes = ['DesignComponent', 'DesignComponentBlock'];
+
 export const VisualEditorBlock = ({
   node: rawNode,
   dataSource,
@@ -162,6 +164,12 @@ export const VisualEditorBlock = ({
   const children =
     definition.children === true
       ? node.children.map((childNode) => {
+          // if parent is a design component, only render children belonging to the design component
+          if (
+            designComponentTypes.includes(node.type) &&
+            !designComponentTypes.includes(childNode.type)
+          )
+            return null;
           return (
             <VisualEditorBlock
               node={childNode}
