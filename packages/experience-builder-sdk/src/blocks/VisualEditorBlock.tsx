@@ -27,7 +27,7 @@ import { ContentfulContainer } from './ContentfulContainer';
 import { ImportedComponentErrorBoundary } from './ErrorBoundary';
 import { transformContentValue } from './transformers';
 import { useEditorContext } from './useEditorContext';
-import { resolveDesignComponent } from '../designComponentUtils';
+import { resolveDesignComponent } from '../core/editor/designComponentUtils';
 import { DesignComponent } from './DesignComponent';
 
 type PropsType =
@@ -38,7 +38,6 @@ type VisualEditorBlockProps = {
   node: CompositionComponentNode;
 
   dataSource: CompositionDataSource;
-  // designComponents: Link<'Entry'>[];
   unboundValues: CompositionUnboundValues;
 
   resolveDesignValue: ResolveDesignValueType;
@@ -68,7 +67,10 @@ export const VisualEditorBlock = ({
   const componentRegistration = useMemo(() => {
     const registeration = getComponentRegistration(node.data.blockId as string);
     if (node.type === 'DesignComponent' && !registeration) {
-      return createDesignComponentRegistration({ node, component: DesignComponent });
+      return createDesignComponentRegistration({
+        definitionId: node.data.blockId as string,
+        component: DesignComponent,
+      });
     }
     return registeration;
   }, [node]);

@@ -1,17 +1,23 @@
 import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful';
 import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk';
-import { Composition, isExperienceEntry } from '@contentful/experience-builder-types';
+import {
+  Composition,
+  CompositionUnboundValues,
+  isExperienceEntry,
+} from '@contentful/experience-builder-types';
 
 type EntityStoreArgs = { experienceEntry: Entry; entities: Array<Entry | Asset>; locale: string };
 
 export class EntityStore extends VisualSdkEntityStore {
   private _experienceEntry: Composition | undefined;
+  private _unboundValues: CompositionUnboundValues | undefined;
 
   constructor({ experienceEntry, entities, locale }: EntityStoreArgs) {
     super({ entities, locale });
 
     if (isExperienceEntry(experienceEntry)) {
       this._experienceEntry = experienceEntry.fields;
+      this._unboundValues = experienceEntry.fields.unboundValues;
     } else {
       throw new Error('Provided entry is not experience entry');
     }
@@ -38,7 +44,11 @@ export class EntityStore extends VisualSdkEntityStore {
   }
 
   public get unboundValues() {
-    return this._experienceEntry?.unboundValues ?? {};
+    return this._unboundValues ?? {};
+  }
+
+  public updateUnboundValues(unboundValues: CompositionUnboundValues) {
+    this._unboundValues = { ...(this._unboundValues ?? {}), ...unboundValues };
   }
 
   public getFieldValue(

@@ -26,16 +26,8 @@ export const VisualEditorRoot = ({ initialLocale, mode }: VisualEditorRootProps)
 };
 
 const VisualEditorRootComponents = () => {
-  const {
-    tree,
-    dataSource,
-    isDragging,
-    locale,
-    unboundValues,
-    breakpoints,
-    entityStore,
-    // designComponents,
-  } = useEditorContext();
+  const { tree, dataSource, isDragging, locale, unboundValues, breakpoints, entityStore } =
+    useEditorContext();
 
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
   const { resolveDesignValue } = useBreakpoints(breakpoints);
