@@ -1,4 +1,4 @@
-import React, { RefObject, useMemo } from 'react';
+import React, { RefObject, useCallback, useMemo } from 'react';
 
 import type { EntityStore } from '@contentful/visual-sdk';
 import omit from 'lodash.omit';
@@ -155,6 +155,35 @@ export const VisualEditorBlock = ({
   const cfStyles = buildCfStyles(props);
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
 
+  const onMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      if (node.type === 'DesignComponentBlock') {
+        const designComponentElement = e.currentTarget.closest(
+          '[data-cf-node-block-type="DesignComponent"]'
+        );
+        const designComponentNodeId = designComponentElement?.getAttribute('data-cf-node-id');
+
+        if (!designComponentNodeId) return;
+
+        setSelectedNodeId(designComponentNodeId);
+        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+          nodeId: designComponentNodeId,
+        });
+
+        return;
+      }
+
+      setSelectedNodeId(node.data.id);
+      sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+        nodeId: node.data.id,
+      });
+    },
+    [node, setSelectedNodeId]
+  );
+
   if (!componentRegistration) {
     return null;
   }
@@ -192,15 +221,7 @@ export const VisualEditorBlock = ({
         editorMode={true}
         key={node.data.id}
         node={node}
-        onMouseDown={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          if (node.type === 'DesignComponentBlock') return;
-          setSelectedNodeId(node.data.id);
-          sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-            node,
-          });
-        }}
+        onMouseDown={onMouseDown}
         // something is off with conditional types and eslint can't recognize it
         // eslint-disable-next-line react/prop-types
         cfHyperlink={(props as StyleProps).cfHyperlink}
@@ -214,16 +235,7 @@ export const VisualEditorBlock = ({
   const importedComponent = React.createElement(
     component,
     {
-      onMouseDown: (e: MouseEvent) => {
-        e.stopPropagation();
-        e.preventDefault();
-        if (node.type === 'DesignComponentBlock') return;
-
-        setSelectedNodeId(node.data.id);
-        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-          node,
-        });
-      },
+      onMouseDown,
       onClick: (e: MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
