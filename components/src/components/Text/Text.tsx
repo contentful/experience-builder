@@ -13,7 +13,7 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
    */
   value?: string;
   /**
-   * The children to display. If text is provided, this will not be used.
+   * The children to display in the text. If text is provided, text will be used instead of this.
    * @default null
    * @optional
    * @example
@@ -28,7 +28,7 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
    * @optional
    * @example
    * ```tsx
-   * <Text as="span">My Text</Text>
+   * <Text>My Text</Text>
    * ```
    */
   as?: 'p' | 'span' | 'div' | 'label' | 'caption' | 'small' | 'strong' | 'em';
