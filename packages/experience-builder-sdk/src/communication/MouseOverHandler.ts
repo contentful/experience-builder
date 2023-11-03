@@ -5,17 +5,28 @@ import { sendMessage } from './sendMessage';
 export class MouseOverHandler {
   private currentHoveredElementId: string | null = null;
 
+  private getMargins = (element: HTMLElement) => {
+    const styles = window.getComputedStyle(element);
+    const top = parseInt(styles.marginTop);
+    const bottom = parseInt(styles.marginBottom);
+    const left = parseInt(styles.marginLeft);
+    const right = parseInt(styles.marginRight);
+
+    return { top, bottom, left, right };
+  };
+
   private getFullCoordinates = (element: HTMLElement) => {
     const validChildren = Array.from(element.children).filter(
       (child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block'
     );
 
     const { left, top, width, height } = element.getBoundingClientRect();
+    const margins = this.getMargins(element);
 
     const childrenCoordinates = validChildren.map((child) => {
       const { left, top, width, height } = child.getBoundingClientRect();
 
-      return { left, top, width, height };
+      return { left, top, width, height, margins };
     });
 
     return {
@@ -23,6 +34,7 @@ export class MouseOverHandler {
       top,
       width,
       height,
+      margins,
       childrenCoordinates,
     };
   };
