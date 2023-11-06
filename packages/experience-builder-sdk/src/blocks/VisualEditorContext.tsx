@@ -63,7 +63,7 @@ export function VisualEditorContextProvider({
   const [dataSource, setDataSource] = useState<CompositionDataSource>({});
   const [unboundValues, setUnboundValues] = useState<CompositionUnboundValues>({});
   const [isDragging, setIsDragging] = useState(false);
-  const [selectedNodeId, setSelectedNodeId] = useState<string>('');
+  const selectedNodeId = useRef<string>('');
   const [locale, setLocale] = useState<string>(initialLocale);
 
   const entityStore = useRef<EditorModeEntityStore>(
@@ -187,16 +187,11 @@ export function VisualEditorContextProvider({
           }
           break;
         }
-        case INCOMING_EVENTS.SelectedComponentChanged: {
-          const { selectedNodeId } = payload;
-          sendSelectedComponentCoordinates(selectedNodeId);
-          setSelectedNodeId(selectedNodeId);
-          break;
-        }
         case INCOMING_EVENTS.CanvasResized:
         case INCOMING_EVENTS.SelectComponent: {
-          const { selectedNodeId } = payload;
-          sendSelectedComponentCoordinates(selectedNodeId);
+          const { selectedNodeId: nodeId } = payload;
+          selectedNodeId.current = nodeId;
+          sendSelectedComponentCoordinates(nodeId);
           break;
         }
         case INCOMING_EVENTS.HoverComponent: {
@@ -262,7 +257,7 @@ export function VisualEditorContextProvider({
         /**
          * On scroll end, send new co-ordinates of selected node
          */
-        sendSelectedComponentCoordinates(selectedNodeId);
+        sendSelectedComponentCoordinates(selectedNodeId.current);
       }, 150);
     };
 
@@ -272,7 +267,11 @@ export function VisualEditorContextProvider({
       window.removeEventListener('scroll', onScroll);
       clearTimeout(timeoutId);
     };
-  }, [mode, selectedNodeId]);
+  }, [mode]);
+
+  const setSelectedNodeId = (nodeId: string) => {
+    selectedNodeId.current = nodeId;
+  };
 
   return (
     <VisualEditorContext.Provider
@@ -281,7 +280,7 @@ export function VisualEditorContextProvider({
         dataSource,
         unboundValues,
         isDragging,
-        selectedNodeId,
+        selectedNodeId: selectedNodeId.current,
         setSelectedNodeId,
         locale,
         breakpoints: tree?.root.data.breakpoints ?? [],
