@@ -228,12 +228,6 @@ export function VisualEditorContextProvider({
           }
           break;
         }
-        case INCOMING_EVENTS.SelectedComponentChanged: {
-          const { selectedNodeId } = payload;
-          sendSelectedComponentCoordinates(selectedNodeId);
-          setSelectedNodeId(selectedNodeId);
-          break;
-        }
         case INCOMING_EVENTS.CanvasResized:
         case INCOMING_EVENTS.SelectComponent: {
           const { selectedNodeId: nodeId } = payload;
