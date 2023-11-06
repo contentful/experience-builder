@@ -161,6 +161,7 @@ export const VisualEditorBlock = ({
       e.preventDefault();
 
       if (node.type === 'DesignComponentBlock') {
+        // If a design component block is clicked, find the parent design component and select it
         const designComponentElement = e.currentTarget.closest(
           '[data-cf-node-block-type="DesignComponent"]'
         );
