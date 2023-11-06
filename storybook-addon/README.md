@@ -1,92 +1,77 @@
-# Storybook Addon Contentful Experience Builder Addon
-Develop Contentful experience builder components with storybook
+# Contentful Experience Builder Addon
 
-### Development scripts
+**Develop experience builder components with storybook**
 
-- `yarn start` runs babel in watch mode and starts Storybook
-- `yarn build` build and package your addon code
+> Experience Builder is currently in a private alpha and not available publicly. If you are interested in participating in the alpha, please reach out to your Contentful account team.
 
-### Switch from TypeScript to JavaScript
+This folder contains the source code for the experience builder storybook plugin that allows developers to more efficiently build custom experience builder components. With this plugin developers can visually see how their various component definition
+options translate to a different UI for their editors.
 
-Don't want to use TypeScript? We offer a handy eject command: `yarn eject-ts`
+## In this guide
 
-This will convert all code to JS. It is a destructive process, so we recommended running this before you start writing any code.
+- [Getting started](#getting-started)
+  - [Installation](#installation)
+  - [Enabling the Plugin](#enabling-the-plugin)
+  - [Usage](#usage)
 
-## What's included?
+## Getting started
 
-![Demo](https://user-images.githubusercontent.com/42671/107857205-e7044380-6dfa-11eb-8718-ad02e3ba1a3f.gif)
-
-The addon code lives in `src`. It demonstrates all core addon related concepts. The three [UI paradigms](https://storybook.js.org/docs/react/addons/addon-types#ui-based-addons)
-
-- `src/Tool.tsx`
-- `src/Panel.tsx`
-- `src/Tab.tsx`
-
-Which, along with the addon itself, are registered in `src/manager.ts`.
-
-Managing State and interacting with a story:
-
-- `src/withGlobals.ts` & `src/Tool.tsx` demonstrates how to use `useGlobals` to manage global state and modify the contents of a Story.
-- `src/withRoundTrip.ts` & `src/Panel.tsx` demonstrates two-way communication using channels.
-- `src/Tab.tsx` demonstrates how to use `useParameter` to access the current story's parameters.
-
-Your addon might use one or more of these patterns. Feel free to delete unused code. Update `src/manager.ts` and `src/preview.ts` accordingly.
-
-Lastly, configure you addon name in `src/constants.ts`.
-
-### Metadata
-
-Storybook addons are listed in the [catalog](https://storybook.js.org/addons) and distributed via npm. The catalog is populated by querying npm's registry for Storybook-specific metadata in `package.json`. This project has been configured with sample data. Learn more about available options in the [Addon metadata docs](https://storybook.js.org/docs/react/addons/addon-catalog#addon-metadata).
-
-## Release Management
-
-### Setup
-
-This project is configured to use [auto](https://github.com/intuit/auto) for release management. It generates a changelog and pushes it to both GitHub and npm. Therefore, you need to configure access to both:
-
-- [`NPM_TOKEN`](https://docs.npmjs.com/creating-and-viewing-access-tokens#creating-access-tokens) Create a token with both _Read and Publish_ permissions.
-- [`GH_TOKEN`](https://github.com/settings/tokens) Create a token with the `repo` scope.
-
-Then open your `package.json` and edit the following fields:
-
-- `name`
-- `author`
-- `repository`
-
-#### Local
-
-To use `auto` locally create a `.env` file at the root of your project and add your tokens to it:
+### Installation
 
 ```bash
-GH_TOKEN=<value you just got from GitHub>
-NPM_TOKEN=<value you just got from npm>
+npm install @contentful/experience-builder-storybook-addon
 ```
 
-Lastly, **create labels on GitHub**. You’ll use these labels in the future when making changes to the package.
+### Enabling the Plugin
 
-```bash
-npx auto create-labels
+> This guide assumes you already have Experience Builder configured in your application and space. If you don't, please contact your Contentful representative for instructions on how to do so.
+
+In your `.storybook/main.ts` file add the plugin into the addons section of the Storybook configuration:
+
+```ts
+const config: StorybookConfig = {
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@contentful/experience-builder-storybook-addon', // <- add storybook plugin here
+  ],
+  // ... additional config
+};
 ```
 
-If you check on GitHub, you’ll now see a set of labels that `auto` would like you to use. Use these to tag future pull requests.
+### Usage
 
-#### GitHub Actions
+Once the plugin is enabled, you can then hook up your component definition to a storybook layout with the `experienceBuilder` Storybook parameter
 
-This template comes with GitHub actions already set up to publish your addon anytime someone pushes to your repository.
+`stories/butotn.stories.tsx`
 
-Go to `Settings > Secrets`, click `New repository secret`, and add your `NPM_TOKEN`.
+```ts
+import type { Meta, StoryObj } from '@storybook/react';
 
-### Creating a release
+import Button from '../components/atoms/Button';
 
-To create a release locally you can run the following command, otherwise the GitHub action will make the release for you.
+const meta = {
+  title: 'Example/Button',
+  component: Button,
+  parameters: {
+    // Required to view component definition changes in Storybook
+    experienceBuilder: Button.ComponentDefinition,
+  },
+} satisfies Meta<typeof Button>;
 
-```sh
-yarn release
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    targetUrl: '/en',
+    variant: 'default',
+    label: 'Button',
+  },
+};
 ```
 
-That will:
+After the parameter for the component has been imported, changes to the component's ComponentDefinition will be visible live on the Storybook instance as such:
 
-- Build and package the addon code
-- Bump the version
-- Push a release to GitHub and npm
-- Push a changelog to GitHub
+![Example Usage](./assets/example.png)
