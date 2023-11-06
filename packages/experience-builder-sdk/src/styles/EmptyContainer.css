@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  color: var(--exp-builder-gray500);
+  color: var(--exp-builder-gray400);
   font-size: var(--exp-builder-font-size-l);
   font-family: var(--exp-builder-font-stack-primary);
   border: 1px dashed var(--exp-builder-gray500);
