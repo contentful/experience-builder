@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.0...@contentful/experience-builder@2.7.1) (2023-11-06)
+
+### Bug Fixes
+
+- correctly retrieve the url from the bound asset in preview/delivery ([#152](https://github.com/contentful/experience-builder/issues/152)) ([cb36d40](https://github.com/contentful/experience-builder/commit/cb36d40ee87d5d6cc11e2b099cb5490429567523))
+
 # [2.7.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.6.3...@contentful/experience-builder@2.7.0) (2023-11-06)
 
 ### Features
