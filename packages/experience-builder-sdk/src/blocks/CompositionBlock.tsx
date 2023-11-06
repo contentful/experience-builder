@@ -83,7 +83,7 @@ export const CompositionBlock = ({
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/');
           const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-          const value = entityStore?.getFieldValue(binding, path.slice(0, -1));
+          const value = entityStore?.getValue(binding, path.slice(0, -1));
           const variableDefinition = componentRegistration.definition.variables[variableName];
           acc[variableName] = transformContentValue(value, variableDefinition);
           break;
