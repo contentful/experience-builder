@@ -26,7 +26,6 @@ export const INCOMING_EVENTS = {
   RequestEditorMode: 'requestEditorMode',
   CompositionUpdated: 'componentTreeUpdated',
   ComponentDraggingChanged: 'componentDraggingChanged',
-  SelectedComponentChanged: 'selectedComponentChanged',
   CanvasResized: 'canvasResized',
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
