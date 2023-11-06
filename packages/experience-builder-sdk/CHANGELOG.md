@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.6.3...@contentful/experience-builder@2.7.0) (2023-11-06)
+
+### Features
+
+- [SPA-1522] send also the margins with the coordinates ([#149](https://github.com/contentful/experience-builder/issues/149)) ([4ef60ba](https://github.com/contentful/experience-builder/commit/4ef60baf75ce5ed0ad84bb1d260714233afe14eb))
+
 ## [2.6.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.6.2...@contentful/experience-builder@2.6.3) (2023-11-06)
 
 **Note:** Version bump only for package @contentful/experience-builder

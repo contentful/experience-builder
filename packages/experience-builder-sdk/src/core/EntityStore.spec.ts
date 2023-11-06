@@ -1,4 +1,4 @@
-import type { Entry } from 'contentful';
+import type { Asset, Entry } from 'contentful';
 
 import { entities, entityIds, entries } from '../../test/__fixtures__/entities';
 import { compositionEntry } from '../../test/__fixtures__/composition';
@@ -127,6 +127,35 @@ describe('EntityStore', () => {
           'title',
         ])
       ).toBeUndefined();
+    });
+
+    it('should url if given path to the asset file and entityType is Asset', () => {
+      const store = new EntityStore({
+        experienceEntry: compositionEntry as unknown as Entry,
+        entities: [
+          {
+            sys: {
+              id: 'assetId',
+              type: 'Asset',
+            },
+            fields: {
+              title: 'assetTitle',
+              file: {
+                url: 'assetFileUrl',
+                description: 'assetFileDescription',
+              },
+            },
+          } as unknown as Asset,
+        ],
+        locale,
+      });
+
+      expect(
+        store.getValue({ sys: { id: 'assetId', linkType: 'Asset', type: 'Link' } }, [
+          'fields',
+          'file',
+        ])
+      ).toBe('assetFileUrl');
     });
   });
 });

@@ -51,7 +51,7 @@ export class EntityStore extends VisualSdkEntityStore {
     this._unboundValues = { ...(this._unboundValues ?? {}), ...unboundValues };
   }
 
-  public getFieldValue(
+  public getValue(
     entityLink: UnresolvedLink<'Entry' | 'Asset'>,
     path: string[]
   ): string | undefined {
