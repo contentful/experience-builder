@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.10](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.1-alpha.9...@contentful/experience-builder-components@0.0.1-alpha.10) (2023-10-27)
+
+
+### Bug Fixes
+
+* **components:** expose the withExperienceBuilder hook ([fca2e37](https://github.com/contentful/experience-builder-toolkit/commit/fca2e371f99cae4e619a1fd4a608e899907a1805))
+
+
+
+
+
 ## 0.0.1-alpha.9 (2023-10-11)
 
 

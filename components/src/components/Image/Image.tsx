@@ -1,27 +1,14 @@
 import { combineClasses } from '@/utils/combineClasses';
 import React from 'react';
 
-export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  /**
-   * The URL of the image to display
-   * @example
-   * ```tsx
-   * <Image url="https://placekitten.com/g/200/300" />
-   * ```
-   */
-  url: string;
-  width?: number;
-  alt?: string;
-}
+export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
 
-export const Image: React.FC<ImageProps> = ({ className, url, width, alt, ...props }) => {
-  if (!url) {
+export const Image: React.FC<ImageProps> = ({ className, src, ...props }) => {
+  if (!src) {
     return null;
   }
 
   const classes = combineClasses('cf-image', className);
 
-  return (
-    <img className={classes} src={url} width={width ? width : undefined} alt={alt} {...props} />
-  );
+  return <img src={src} className={classes} {...props} />;
 };
