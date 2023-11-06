@@ -6,7 +6,7 @@ export class MouseOverHandler {
   private currentHoveredElementId: string | null = null;
 
   private getMargins = (element: HTMLElement) => {
-    if (!window) return undefined;
+    if (typeof window === 'undefined') return undefined;
     const styles = window.getComputedStyle(element);
     const top = parseInt(styles.marginTop);
     const bottom = parseInt(styles.marginBottom);
