@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.1...@contentful/experience-builder@2.7.2) (2023-11-06)
+
+### Bug Fixes
+
+- minor change to empty container font color [ALT-59] ([3a08275](https://github.com/contentful/experience-builder/commit/3a082759b97e03f9dc7a218001e255fe458b58a0))
+
 ## [2.7.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.0...@contentful/experience-builder@2.7.1) (2023-11-06)
 
 ### Bug Fixes
