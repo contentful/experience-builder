@@ -44,7 +44,7 @@ const config: StorybookConfig = {
 
 Once the plugin is enabled, you can then hook up your component definition to a storybook layout with the `experienceBuilder` Storybook parameter
 
-`stories/butotn.stories.tsx`
+`stories/button.stories.tsx`
 
 ```ts
 import type { Meta, StoryObj } from '@storybook/react';
