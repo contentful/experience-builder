@@ -6,6 +6,7 @@ export type {
   ComponentDefinition,
   ComponentRegistration,
   Experience,
+  ExternalSDKMode,
   DeprecatedExperience,
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,
