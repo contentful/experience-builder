@@ -56,6 +56,7 @@ describe('CompositionBlock', () => {
         locale="en-US"
         breakpoints={[]}
         entityStore={undefined}
+        usedComponents={[]}
         unboundValues={{
           value1: { value: 'unboundValue1' },
           value2: { value: 1 },
@@ -79,6 +80,7 @@ describe('CompositionBlock', () => {
         locale="en-US"
         breakpoints={[]}
         entityStore={undefined}
+        usedComponents={[]}
         unboundValues={{}}
         resolveDesignValue={jest.fn()}
       />
@@ -101,6 +103,7 @@ describe('CompositionBlock', () => {
         locale="en-US"
         breakpoints={[]}
         entityStore={undefined}
+        usedComponents={[]}
         unboundValues={{}}
         resolveDesignValue={jest.fn()}
       />
