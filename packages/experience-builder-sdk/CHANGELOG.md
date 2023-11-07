@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.2...@contentful/experience-builder@2.7.3) (2023-11-07)
+
+### Bug Fixes
+
+- empty container highlight on hover ([4501be2](https://github.com/contentful/experience-builder/commit/4501be237704ea53cd7ea4bea3ccab92dc69668f))
+
 ## [2.7.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.1...@contentful/experience-builder@2.7.2) (2023-11-06)
 
 ### Bug Fixes
