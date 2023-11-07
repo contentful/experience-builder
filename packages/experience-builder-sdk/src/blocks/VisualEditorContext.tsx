@@ -201,7 +201,7 @@ export function VisualEditorContextProvider({
           }
           break;
         }
-        case INCOMING_EVENTS.DesignComponentsUpdated: {
+        case INCOMING_EVENTS.DesignComponentsAdded: {
           const {
             tree,
             designComponent,

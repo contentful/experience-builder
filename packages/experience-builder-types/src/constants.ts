@@ -30,7 +30,7 @@ export const INCOMING_EVENTS = {
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
-  DesignComponentsUpdated: 'designComponentsUpdated',
+  DesignComponentsAdded: 'designComponentsAdded',
 };
 
 export const INTERNAL_EVENTS = {
