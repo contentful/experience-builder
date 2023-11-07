@@ -12,7 +12,7 @@
   border: 1px dashed var(--exp-builder-gray500);
 }
 
-#EmptyContainer.highlight {
+#EmptyContainer.highlight:hover {
   border: 1px dashed var(--exp-builder-blue500);
   background-color: var(--exp-builder-blue100);
   cursor: grabbing;
