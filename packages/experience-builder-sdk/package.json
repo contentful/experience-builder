@@ -54,6 +54,7 @@
     "jsdom": "^21.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
     "semantic-release": "19.0.5",
     "ts-jest": "^29.1.0",
     "typescript": "^5.2.2",
