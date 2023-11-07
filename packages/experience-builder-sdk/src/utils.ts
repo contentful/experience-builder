@@ -116,12 +116,12 @@ export const getInsertionData = ({
   }
 };
 
-export const generateRandomId = (count: number): string => {
+export const generateRandomId = (letterCount: number): string => {
   const LETTERS = 'abcdefghijklmnopqvwxyzABCDEFGHIJKLMNOPQVWXYZ';
   const NUMS = '0123456789';
   const ALNUM = NUMS + LETTERS;
 
-  return times(count, () => ALNUM[random(0, ALNUM.length - 1)]).join('');
+  return times(letterCount, () => ALNUM[random(0, ALNUM.length - 1)]).join('');
 };
 
 export const checkIfDesignComponent = ({

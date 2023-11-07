@@ -15,13 +15,13 @@ export const deserializeDesignComponentNode = ({
   nodeId,
   parentId,
   experienceDataSource,
-  experiencenUnboundValues,
+  experienceUnboundValues,
 }: {
   node: CompositionNode;
   nodeId: string;
   parentId?: string;
   experienceDataSource: CompositionDataSource;
-  experiencenUnboundValues: CompositionUnboundValues;
+  experienceUnboundValues: CompositionUnboundValues;
 }): CompositionComponentNode => {
   const childNodeVariable: Record<string, CompositionComponentPropValue<'DesignValue'>> = {};
   const dataSource: CompositionDataSource = {};
@@ -36,7 +36,7 @@ export const deserializeDesignComponentNode = ({
       dataSource[uuid] = { ...experienceDataSource[uuid] };
     } else if (variable.type === 'UnboundValue') {
       const uuid = variable.key;
-      unboundValues[uuid] = experiencenUnboundValues[uuid];
+      unboundValues[uuid] = experienceUnboundValues[uuid];
     }
   }
 
@@ -48,7 +48,7 @@ export const deserializeDesignComponentNode = ({
       nodeId: generateRandomId(16),
       parentId: nodeId,
       experienceDataSource,
-      experiencenUnboundValues,
+      experienceUnboundValues,
     })
   );
 
@@ -103,7 +103,7 @@ export const resolveDesignComponent = ({
     nodeId: node.data.id,
     parentId: node.parentId,
     experienceDataSource: {},
-    experiencenUnboundValues: componentFields.unboundValues,
+    experienceUnboundValues: componentFields.unboundValues,
   });
 
   return deserializedNode;

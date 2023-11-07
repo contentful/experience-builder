@@ -55,9 +55,9 @@ const VisualEditorRootComponents = () => {
   useEffect(() => {
     const resolveEntities = async () => {
       setEntitiesFetched(false);
-      const datasourceEntityLinks = Object.values(dataSource || {});
+      const dataSourceEntityLinks = Object.values(dataSource || {});
       await entityStore.current.fetchEntities([
-        ...datasourceEntityLinks,
+        ...dataSourceEntityLinks,
         ...(designComponentsRegistry.values() || []),
       ]);
       setEntitiesFetched(true);

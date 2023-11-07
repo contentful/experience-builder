@@ -45,7 +45,7 @@ type VisualEditorBlockProps = {
   areEntitiesFetched: boolean;
 };
 
-const designComponentTypes = ['designComponent', 'designComponentBlock'];
+const DESIGN_COMPONENT_NODE_TYPES = ['designComponent', 'designComponentBlock'];
 
 export const VisualEditorBlock = ({
   node: rawNode,
@@ -67,14 +67,14 @@ export const VisualEditorBlock = ({
   }, [areEntitiesFetched, entityStore, rawNode]);
 
   const componentRegistration = useMemo(() => {
-    const registeration = getComponentRegistration(node.data.blockId as string);
-    if (node.type === 'designComponent' && !registeration) {
+    const registration = getComponentRegistration(node.data.blockId as string);
+    if (node.type === 'designComponent' && !registration) {
       return createDesignComponentRegistration({
         definitionId: node.data.blockId as string,
         component: DesignComponent,
       });
     }
-    return registeration;
+    return registration;
   }, [node]);
 
   const { setSelectedNodeId } = useEditorContext();
@@ -196,8 +196,8 @@ export const VisualEditorBlock = ({
       ? node.children.map((childNode) => {
           // if parent is a design component, only render children belonging to the design component
           if (
-            designComponentTypes.includes(node.type) &&
-            !designComponentTypes.includes(childNode.type)
+            DESIGN_COMPONENT_NODE_TYPES.includes(node.type) &&
+            !DESIGN_COMPONENT_NODE_TYPES.includes(childNode.type)
           )
             return null;
           return (

@@ -63,15 +63,15 @@ export const CompositionBlock = ({
   }, [entityStore, isDesignComponent, rawNode]);
 
   const componentRegistration = useMemo(() => {
-    const registeration = getComponentRegistration(node.definitionId as string);
+    const registration = getComponentRegistration(node.definitionId as string);
 
-    if (isDesignComponent && !registeration) {
+    if (isDesignComponent && !registration) {
       return createDesignComponentRegistration({
         definitionId: node.definitionId as string,
         component: DesignComponent,
       });
     }
-    return registeration;
+    return registration;
   }, [isDesignComponent, node.definitionId]);
 
   const nodeProps = useMemo(() => {
