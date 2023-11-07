@@ -18,12 +18,14 @@ import type {
   CompositionNode,
   CompositionUnboundValues,
   CompositionVariableValueType,
+  ExperienceEntry,
   StyleProps,
 } from '../types';
 import { ContentfulContainer } from './ContentfulContainer';
 import { transformContentValue } from './transformers';
 import { resolveDesignComponent } from '../core/preview/designComponentUtils';
 import { DesignComponent } from './DesignComponent';
+import { checkIfDesignComponent } from '../utils';
 
 type CompositionBlockProps = {
   node: CompositionNode;
@@ -33,6 +35,7 @@ type CompositionBlockProps = {
   entityStore?: EntityStore;
   breakpoints: Breakpoint[];
   resolveDesignValue: ResolveDesignValueType;
+  usedComponents: ExperienceEntry['fields']['usedComponents'];
 };
 
 export const CompositionBlock = ({
@@ -43,21 +46,24 @@ export const CompositionBlock = ({
   unboundValues,
   breakpoints,
   resolveDesignValue,
+  usedComponents,
 }: CompositionBlockProps) => {
-  const node = useMemo(() => {
-    const isDesignComponent = rawNode.definitionId.startsWith('DesignComponent');
+  const isDesignComponent = useMemo(
+    () => checkIfDesignComponent({ componentId: rawNode.definitionId, usedComponents }),
+    [rawNode.definitionId, usedComponents]
+  );
 
+  const node = useMemo(() => {
     return isDesignComponent
       ? resolveDesignComponent({
           node: rawNode,
           entityStore,
         })
       : rawNode;
-  }, [entityStore, rawNode]);
+  }, [entityStore, isDesignComponent, rawNode]);
 
   const componentRegistration = useMemo(() => {
     const registeration = getComponentRegistration(node.definitionId as string);
-    const isDesignComponent = node.definitionId.startsWith('DesignComponent');
 
     if (isDesignComponent && !registeration) {
       return createDesignComponentRegistration({
@@ -66,7 +72,7 @@ export const CompositionBlock = ({
       });
     }
     return registeration;
-  }, [node]);
+  }, [isDesignComponent, node.definitionId]);
 
   const nodeProps = useMemo(() => {
     if (!componentRegistration) {
@@ -129,6 +135,7 @@ export const CompositionBlock = ({
               entityStore={entityStore}
               breakpoints={breakpoints}
               resolveDesignValue={resolveDesignValue}
+              usedComponents={usedComponents}
             />
           );
         })

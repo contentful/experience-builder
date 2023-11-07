@@ -47,6 +47,10 @@ export class EntityStore extends VisualSdkEntityStore {
     return this._unboundValues ?? {};
   }
 
+  public get usedComponents() {
+    return this._experienceEntry?.usedComponents ?? [];
+  }
+
   public updateUnboundValues(unboundValues: CompositionUnboundValues) {
     this._unboundValues = { ...(this._unboundValues ?? {}), ...unboundValues };
   }

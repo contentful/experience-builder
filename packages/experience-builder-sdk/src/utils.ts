@@ -6,6 +6,7 @@ import {
   StyleProps,
   CompositionDataSource,
   CompositionUnboundValues,
+  ExperienceEntry,
 } from './types';
 
 export const getDataFromTree = (
@@ -121,4 +122,16 @@ export const generateRandomId = (count: number): string => {
   const ALNUM = NUMS + LETTERS;
 
   return times(count, () => ALNUM[random(0, ALNUM.length - 1)]).join('');
+};
+
+export const checkIfDesignComponent = ({
+  componentId,
+  usedComponents,
+}: {
+  componentId: string;
+  usedComponents: ExperienceEntry['fields']['usedComponents'];
+}) => {
+  if (!usedComponents?.length) return false;
+
+  return usedComponents.some((usedComponent) => usedComponent.sys.id === componentId);
 };

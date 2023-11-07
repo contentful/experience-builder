@@ -50,6 +50,7 @@ export const PreviewDeliveryRoot = ({
           dataSource={entityStore.dataSource}
           unboundValues={entityStore.unboundValues}
           breakpoints={entityStore.breakpoints}
+          usedComponents={entityStore.usedComponents}
           resolveDesignValue={resolveDesignValue}
         />
       ))}

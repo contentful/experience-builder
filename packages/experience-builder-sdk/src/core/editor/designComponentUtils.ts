@@ -12,14 +12,16 @@ import { designComponentsRegistry } from '../../blocks/VisualEditorContext';
 
 export const deserializeDesignComponentNode = ({
   node,
+  nodeId,
   parentId,
-  compositionDataSource,
-  compositionUnboundValues,
+  experienceDataSource,
+  experiencenUnboundValues,
 }: {
   node: CompositionNode;
+  nodeId: string;
   parentId?: string;
-  compositionDataSource: CompositionDataSource;
-  compositionUnboundValues: CompositionUnboundValues;
+  experienceDataSource: CompositionDataSource;
+  experiencenUnboundValues: CompositionUnboundValues;
 }): CompositionComponentNode => {
   const childNodeVariable: Record<string, CompositionComponentPropValue<'DesignValue'>> = {};
   const dataSource: CompositionDataSource = {};
@@ -31,22 +33,22 @@ export const deserializeDesignComponentNode = ({
     } else if (variable.type === 'BoundValue') {
       const [, uuid, ,] = variable.path.split('/');
 
-      dataSource[uuid] = { ...compositionDataSource[uuid] };
+      dataSource[uuid] = { ...experienceDataSource[uuid] };
     } else if (variable.type === 'UnboundValue') {
       const uuid = variable.key;
-      unboundValues[uuid] = compositionUnboundValues[uuid];
+      unboundValues[uuid] = experiencenUnboundValues[uuid];
     }
   }
 
-  const isDesignComponent = node.definitionId?.startsWith('DesignComponent');
-  const nodeId = isDesignComponent ? node.definitionId?.split('-')[1] : generateRandomId(16);
+  const isDesignComponent = designComponentsRegistry.has(node.definitionId);
 
   const children: CompositionComponentNode[] = node.children.map((child) =>
     deserializeDesignComponentNode({
       node: child,
+      nodeId: generateRandomId(16),
       parentId: nodeId,
-      compositionDataSource,
-      compositionUnboundValues,
+      experienceDataSource,
+      experiencenUnboundValues,
     })
   );
 
@@ -77,7 +79,7 @@ export const resolveDesignComponent = ({
     return node;
   }
 
-  const componentId = node.data.blockId?.split('-')[1] as string;
+  const componentId = node.data.blockId as string;
   const designComponent = designComponentsRegistry.get(componentId);
 
   if (!designComponent) {
@@ -98,9 +100,10 @@ export const resolveDesignComponent = ({
       variables: {},
       children: componentFields.componentTree.children,
     },
+    nodeId: node.data.id,
     parentId: node.parentId,
-    compositionDataSource: {},
-    compositionUnboundValues: componentFields.unboundValues,
+    experienceDataSource: {},
+    experiencenUnboundValues: componentFields.unboundValues,
   });
 
   return deserializedNode;
