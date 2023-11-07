@@ -45,7 +45,7 @@ type VisualEditorBlockProps = {
   areEntitiesFetched: boolean;
 };
 
-const designComponentTypes = ['DesignComponent', 'DesignComponentBlock'];
+const designComponentTypes = ['designComponent', 'designComponentBlock'];
 
 export const VisualEditorBlock = ({
   node: rawNode,
@@ -56,7 +56,7 @@ export const VisualEditorBlock = ({
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
   const node = useMemo(() => {
-    if (rawNode.type === 'DesignComponent' && areEntitiesFetched) {
+    if (rawNode.type === 'designComponent' && areEntitiesFetched) {
       return resolveDesignComponent({
         node: rawNode,
         entityStore: entityStore.current,
@@ -68,7 +68,7 @@ export const VisualEditorBlock = ({
 
   const componentRegistration = useMemo(() => {
     const registeration = getComponentRegistration(node.data.blockId as string);
-    if (node.type === 'DesignComponent' && !registeration) {
+    if (node.type === 'designComponent' && !registeration) {
       return createDesignComponentRegistration({
         definitionId: node.data.blockId as string,
         component: DesignComponent,
@@ -160,10 +160,10 @@ export const VisualEditorBlock = ({
       e.stopPropagation();
       e.preventDefault();
 
-      if (node.type === 'DesignComponentBlock') {
+      if (node.type === 'designComponentBlock') {
         // If a design component block is clicked, find the parent design component and select it
         const designComponentElement = e.currentTarget.closest(
-          '[data-cf-node-block-type="DesignComponent"]'
+          '[data-cf-node-block-type="designComponent"]'
         );
         const designComponentNodeId = designComponentElement?.getAttribute('data-cf-node-id');
 

@@ -54,7 +54,7 @@ export const deserializeDesignComponentNode = ({
 
   return {
     // separate node type identifiers for design components and their blocks, so we can treat them differently in as much as we want
-    type: isDesignComponent ? 'DesignComponent' : 'DesignComponentBlock',
+    type: isDesignComponent ? 'designComponent' : 'designComponentBlock',
     parentId,
     data: {
       id: nodeId,
@@ -75,7 +75,7 @@ export const resolveDesignComponent = ({
   node: CompositionComponentNode;
   entityStore: EntityStore | null;
 }) => {
-  if (node.type !== 'DesignComponent') {
+  if (node.type !== 'designComponent') {
     return node;
   }
 
