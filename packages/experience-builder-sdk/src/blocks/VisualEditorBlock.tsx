@@ -1,11 +1,21 @@
-import React, { RefObject, useMemo } from 'react';
+import React, { RefObject, useCallback, useMemo } from 'react';
 
 import type { EntityStore } from '@contentful/visual-sdk';
 import omit from 'lodash.omit';
 
 import { sendMessage } from '../communication/sendMessage';
-import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
-import { getComponentRegistration } from '../core/componentRegistry';
+import {
+  CF_STYLE_ATTRIBUTES,
+  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_SECTION_ID,
+  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+  DESIGN_COMPONENT_NODE_TYPE,
+  DESIGN_COMPONENT_NODE_TYPES,
+} from '../constants';
+import {
+  getComponentRegistration,
+  createDesignComponentRegistration,
+} from '../core/componentRegistry';
 import { getUnboundValues } from '../core/getUnboundValues';
 import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils';
 import { ResolveDesignValueType } from '../hooks/useBreakpoints';
@@ -24,6 +34,8 @@ import { ContentfulContainer } from './ContentfulContainer';
 import { ImportedComponentErrorBoundary } from './ErrorBoundary';
 import { transformContentValue } from './transformers';
 import { useEditorContext } from './useEditorContext';
+import { resolveDesignComponent } from '../core/editor/designComponentUtils';
+import { DesignComponent } from './DesignComponent';
 
 type PropsType =
   | StyleProps
@@ -41,17 +53,34 @@ type VisualEditorBlockProps = {
 };
 
 export const VisualEditorBlock = ({
-  node,
+  node: rawNode,
   dataSource,
   unboundValues,
   resolveDesignValue,
   entityStore,
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
-  const componentRegistration = useMemo(
-    () => getComponentRegistration(node.data.blockId as string),
-    [node]
-  );
+  const node = useMemo(() => {
+    if (rawNode.type === DESIGN_COMPONENT_NODE_TYPE && areEntitiesFetched) {
+      return resolveDesignComponent({
+        node: rawNode,
+        entityStore: entityStore.current,
+      });
+    }
+
+    return rawNode;
+  }, [areEntitiesFetched, entityStore, rawNode]);
+
+  const componentRegistration = useMemo(() => {
+    const registration = getComponentRegistration(node.data.blockId as string);
+    if (node.type === DESIGN_COMPONENT_NODE_TYPE && !registration) {
+      return createDesignComponentRegistration({
+        definitionId: node.data.blockId as string,
+        component: DesignComponent,
+      });
+    }
+    return registration;
+  }, [node]);
 
   const { setSelectedNodeId } = useEditorContext();
 
@@ -131,6 +160,36 @@ export const VisualEditorBlock = ({
   const cfStyles = buildCfStyles(props);
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
 
+  const onMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      if (node.type === DESIGN_COMPONENT_BLOCK_NODE_TYPE) {
+        // If a design component block is clicked, find the parent design component and select it
+        const designComponentElement = e.currentTarget.closest(
+          '[data-cf-node-block-type="designComponent"]'
+        );
+        const designComponentNodeId = designComponentElement?.getAttribute('data-cf-node-id');
+
+        if (!designComponentNodeId) return;
+
+        setSelectedNodeId(designComponentNodeId);
+        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+          nodeId: designComponentNodeId,
+        });
+
+        return;
+      }
+
+      setSelectedNodeId(node.data.id);
+      sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+        nodeId: node.data.id,
+      });
+    },
+    [node, setSelectedNodeId]
+  );
+
   if (!componentRegistration) {
     return null;
   }
@@ -140,6 +199,12 @@ export const VisualEditorBlock = ({
   const children =
     definition.children === true
       ? node.children.map((childNode) => {
+          // if parent is a design component, only render children belonging to the design component
+          if (
+            DESIGN_COMPONENT_NODE_TYPES.includes(node.type) &&
+            !DESIGN_COMPONENT_NODE_TYPES.includes(childNode.type)
+          )
+            return null;
           return (
             <VisualEditorBlock
               node={childNode}
@@ -162,14 +227,7 @@ export const VisualEditorBlock = ({
         editorMode={true}
         key={node.data.id}
         node={node}
-        onMouseDown={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          setSelectedNodeId(node.data.id);
-          sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-            node,
-          });
-        }}
+        onMouseDown={onMouseDown}
         // something is off with conditional types and eslint can't recognize it
         // eslint-disable-next-line react/prop-types
         cfHyperlink={(props as StyleProps).cfHyperlink}
@@ -183,14 +241,7 @@ export const VisualEditorBlock = ({
   const importedComponent = React.createElement(
     component,
     {
-      onMouseDown: (e: MouseEvent) => {
-        e.stopPropagation();
-        e.preventDefault();
-        setSelectedNodeId(node.data.id);
-        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-          node,
-        });
-      },
+      onMouseDown,
       onClick: (e: MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();

@@ -129,3 +129,35 @@ export const getComponentRegistration = (id: string) => {
   }
   return componentRegistry.get(id);
 };
+
+export const addComponentRegistration = (componentRegistration: ComponentRegistration) => {
+  componentRegistry.set(componentRegistration.definition.id, componentRegistration);
+};
+
+export const createDesignComponentRegistration = ({
+  definitionId,
+  defintionName,
+  component,
+}: {
+  definitionId: string;
+  defintionName?: string;
+  component: ComponentRegistration['component'];
+}) => {
+  const componentRegistration = componentRegistry.get(definitionId);
+
+  if (componentRegistration) {
+    return componentRegistration;
+  }
+
+  const definition = {
+    id: definitionId,
+    name: defintionName || 'Design Component',
+    variables: {} as ComponentDefinition['variables'],
+    children: true,
+    category: 'Design Components',
+  };
+
+  addComponentRegistration({ component, definition });
+
+  return { component, definition };
+};

@@ -4,22 +4,27 @@ import { sendHoveredComponentCoordinates } from '../communication/sendHoveredCom
 import { sendMessage } from '../communication/sendMessage';
 import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates';
 import {
+  addComponentRegistration,
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
 } from '../core/componentRegistry';
 import { EditorModeEntityStore } from '../core/EditorModeEntityStore';
 import {
   Breakpoint,
+  ComponentRegistration,
   CompositionComponentNode,
   CompositionComponentPropValue,
   CompositionDataSource,
   CompositionTree,
   CompositionUnboundValues,
   InternalSDKMode,
+  Link,
 } from '../types';
 import { INCOMING_EVENTS, OUTGOING_EVENTS, SCROLL_STATES, INTERNAL_EVENTS } from '../constants';
 import { getDataFromTree } from '../utils';
 import { doesMismatchMessageSchema, tryParseMessage } from '../validation';
+import { Entry } from 'contentful';
+import { DesignComponent } from './DesignComponent';
 
 type VisualEditorContextType = {
   tree: CompositionTree | undefined;
@@ -51,6 +56,13 @@ type VisualEditorContextProviderProps = {
   initialLocale: string;
   mode: InternalSDKMode;
   children: ReactElement;
+};
+
+export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
+export const setDesignComponents = (designComponents: Link<'Entry'>[]) => {
+  for (const designComponent of designComponents) {
+    designComponentsRegistry.set(designComponent.sys.id, designComponent);
+  }
 };
 
 export function VisualEditorContextProvider({
@@ -155,15 +167,17 @@ export function VisualEditorContextProvider({
             locale,
             changedNode,
             changedValueType,
+            designComponents,
           }: {
             tree: CompositionTree;
+            designComponents: Link<'Entry'>[];
             locale: string;
             changedNode?: CompositionComponentNode;
             changedValueType?: CompositionComponentPropValue['type'];
           } = payload;
-
           setTree(tree);
           setLocale(locale);
+          designComponents && setDesignComponents(designComponents);
 
           if (changedNode) {
             /**
@@ -184,6 +198,33 @@ export function VisualEditorContextProvider({
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
+          }
+          break;
+        }
+        case INCOMING_EVENTS.DesignComponentsAdded: {
+          const {
+            tree,
+            designComponent,
+            designComponentDefinition,
+          }: {
+            tree: CompositionTree;
+            designComponent: Entry;
+            designComponentDefinition: ComponentRegistration['definition'];
+          } = payload;
+          if (designComponent) {
+            entityStore.current.updateEntity(designComponent);
+            // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
+            // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
+            // of all bound and unbound values when new values are added
+            designComponentsRegistry.set(designComponent.sys.id, {
+              sys: { id: designComponent.sys.id, linkType: 'Entry', type: 'Link' },
+            } as Link<'Entry'>);
+            designComponentDefinition &&
+              addComponentRegistration({
+                component: DesignComponent,
+                definition: designComponentDefinition,
+              });
+            setTree(tree);
           }
           break;
         }

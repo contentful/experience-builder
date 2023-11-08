@@ -9,7 +9,7 @@ import { useBreakpoints } from '../hooks/useBreakpoints';
 import { useHoverIndicator } from '../hooks/useHoverIndicator';
 import { InternalSDKMode } from '../types';
 import { useEditorContext } from './useEditorContext';
-import { VisualEditorContextProvider } from './VisualEditorContext';
+import { VisualEditorContextProvider, designComponentsRegistry } from './VisualEditorContext';
 
 type VisualEditorRootProps = {
   initialLocale: string;
@@ -55,8 +55,11 @@ const VisualEditorRootComponents = () => {
   useEffect(() => {
     const resolveEntities = async () => {
       setEntitiesFetched(false);
-      const entityLinks = Object.values(dataSource || {});
-      await entityStore.current.fetchEntities(entityLinks);
+      const dataSourceEntityLinks = Object.values(dataSource || {});
+      await entityStore.current.fetchEntities([
+        ...dataSourceEntityLinks,
+        ...(designComponentsRegistry.values() || []),
+      ]);
       setEntitiesFetched(true);
     };
 

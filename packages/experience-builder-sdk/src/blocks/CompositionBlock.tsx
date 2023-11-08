@@ -2,10 +2,13 @@ import React, { useMemo } from 'react';
 
 import type { UnresolvedLink } from 'contentful';
 import omit from 'lodash.omit';
-import { EntityStore } from '@contentful/visual-sdk';
+import { EntityStore } from '../core/EntityStore';
 
 import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
-import { getComponentRegistration } from '../core/componentRegistry';
+import {
+  createDesignComponentRegistration,
+  getComponentRegistration,
+} from '../core/componentRegistry';
 import { buildCfStyles } from '../core/stylesUtils';
 import { ResolveDesignValueType } from '../hooks/useBreakpoints';
 import { useStyleTag } from '../hooks/useStyleTag';
@@ -15,10 +18,14 @@ import type {
   CompositionNode,
   CompositionUnboundValues,
   CompositionVariableValueType,
+  ExperienceEntry,
   StyleProps,
 } from '../types';
 import { ContentfulContainer } from './ContentfulContainer';
 import { transformContentValue } from './transformers';
+import { resolveDesignComponent } from '../core/preview/designComponentUtils';
+import { DesignComponent } from './DesignComponent';
+import { checkIfDesignComponent } from '../utils';
 
 type CompositionBlockProps = {
   node: CompositionNode;
@@ -28,21 +35,44 @@ type CompositionBlockProps = {
   entityStore?: EntityStore;
   breakpoints: Breakpoint[];
   resolveDesignValue: ResolveDesignValueType;
+  usedComponents: ExperienceEntry['fields']['usedComponents'];
 };
 
 export const CompositionBlock = ({
-  node,
+  node: rawNode,
   locale,
   entityStore,
   dataSource,
   unboundValues,
   breakpoints,
   resolveDesignValue,
+  usedComponents,
 }: CompositionBlockProps) => {
-  const componentRegistration = useMemo(
-    () => getComponentRegistration(node.definitionId as string),
-    [node]
+  const isDesignComponent = useMemo(
+    () => checkIfDesignComponent({ componentId: rawNode.definitionId, usedComponents }),
+    [rawNode.definitionId, usedComponents]
   );
+
+  const node = useMemo(() => {
+    return isDesignComponent
+      ? resolveDesignComponent({
+          node: rawNode,
+          entityStore,
+        })
+      : rawNode;
+  }, [entityStore, isDesignComponent, rawNode]);
+
+  const componentRegistration = useMemo(() => {
+    const registration = getComponentRegistration(node.definitionId as string);
+
+    if (isDesignComponent && !registration) {
+      return createDesignComponentRegistration({
+        definitionId: node.definitionId as string,
+        component: DesignComponent,
+      });
+    }
+    return registration;
+  }, [isDesignComponent, node.definitionId]);
 
   const nodeProps = useMemo(() => {
     if (!componentRegistration) {
@@ -66,7 +96,7 @@ export const CompositionBlock = ({
         }
         case 'UnboundValue': {
           const uuid = variable.key;
-          acc[variableName] = unboundValues[uuid]?.value;
+          acc[variableName] = (entityStore?.unboundValues || unboundValues)[uuid]?.value;
           break;
         }
         default:
@@ -105,6 +135,7 @@ export const CompositionBlock = ({
               entityStore={entityStore}
               breakpoints={breakpoints}
               resolveDesignValue={resolveDesignValue}
+              usedComponents={usedComponents}
             />
           );
         })

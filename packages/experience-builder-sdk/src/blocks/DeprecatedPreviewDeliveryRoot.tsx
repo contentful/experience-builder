@@ -94,6 +94,7 @@ export const DeprecatedPreviewDeliveryRoot = ({
           unboundValues={entityStore.unboundValues}
           breakpoints={entityStore.breakpoints}
           resolveDesignValue={resolveDesignValue}
+          usedComponents={entityStore.usedComponents}
         />
       ))}
     </>

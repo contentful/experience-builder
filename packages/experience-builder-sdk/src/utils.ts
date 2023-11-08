@@ -1,9 +1,12 @@
+import times from 'lodash/times';
+import random from 'lodash/random';
 import {
   CompositionTree,
   CompositionComponentNode,
   StyleProps,
   CompositionDataSource,
   CompositionUnboundValues,
+  ExperienceEntry,
 } from './types';
 
 export const getDataFromTree = (
@@ -111,4 +114,24 @@ export const getInsertionData = ({
       index: isMouseInUpperHalf ? PREPEND_INSIDE : APPEND_INSIDE,
     };
   }
+};
+
+export const generateRandomId = (letterCount: number): string => {
+  const LETTERS = 'abcdefghijklmnopqvwxyzABCDEFGHIJKLMNOPQVWXYZ';
+  const NUMS = '0123456789';
+  const ALNUM = NUMS + LETTERS;
+
+  return times(letterCount, () => ALNUM[random(0, ALNUM.length - 1)]).join('');
+};
+
+export const checkIfDesignComponent = ({
+  componentId,
+  usedComponents,
+}: {
+  componentId: string;
+  usedComponents: ExperienceEntry['fields']['usedComponents'];
+}) => {
+  if (!usedComponents?.length) return false;
+
+  return usedComponents.some((usedComponent) => usedComponent.sys.id === componentId);
 };

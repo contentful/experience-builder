@@ -30,6 +30,7 @@ export const INCOMING_EVENTS = {
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
+  DesignComponentsAdded: 'designComponentsAdded',
 };
 
 export const INTERNAL_EVENTS = {
@@ -41,6 +42,12 @@ export const CONTENTFUL_CONTAINER_ID = 'contentful-container';
 export const CONTENTFUL_SECTION_NAME = 'Section'; // TODO: remove me once all customers are using 2023-09-28 schema version
 export const CONTENTFUL_CONTAINER_NAME = 'Container';
 export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component';
+export const DESIGN_COMPONENT_NODE_TYPE = 'designComponent';
+export const DESIGN_COMPONENT_BLOCK_NODE_TYPE = 'designComponentBlock';
+export const DESIGN_COMPONENT_NODE_TYPES = [
+  DESIGN_COMPONENT_NODE_TYPE,
+  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+];
 export const LATEST_SCHEMA_VERSION = '2023-09-28';
 export const CF_STYLE_ATTRIBUTES = [
   'cfHorizontalAlignment',
