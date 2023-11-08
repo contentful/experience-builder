@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.8.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.3...@contentful/experience-builder@2.8.0) (2023-11-08)
+
+### Features
+
+- render design component within an experience [SPA-1583] ([#151](https://github.com/contentful/experience-builder/issues/151)) ([cb4a38a](https://github.com/contentful/experience-builder/commit/cb4a38a3fbf75f8c4773ff95b203a11ae12220bc))
+
 ## [2.7.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.2...@contentful/experience-builder@2.7.3) (2023-11-07)
 
 ### Bug Fixes
