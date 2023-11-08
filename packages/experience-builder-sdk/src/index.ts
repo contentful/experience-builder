@@ -1,4 +1,4 @@
-export { ExperienceRoot } from './blocks';
+export { ExperienceRoot } from './ExperienceRoot';
 export { useExperienceBuilder, getValueForBreakpoint, useFetchExperience } from './hooks';
 export { defineComponents } from './core/componentRegistry';
 export { calculateNodeDefaultHeight } from './utils/stylesUtils';
