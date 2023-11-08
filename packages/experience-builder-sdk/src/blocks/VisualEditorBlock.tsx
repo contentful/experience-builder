@@ -4,7 +4,14 @@ import type { EntityStore } from '@contentful/visual-sdk';
 import omit from 'lodash.omit';
 
 import { sendMessage } from '../communication/sendMessage';
-import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
+import {
+  CF_STYLE_ATTRIBUTES,
+  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_SECTION_ID,
+  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+  DESIGN_COMPONENT_NODE_TYPE,
+  DESIGN_COMPONENT_NODE_TYPES,
+} from '../constants';
 import {
   getComponentRegistration,
   createDesignComponentRegistration,
@@ -45,8 +52,6 @@ type VisualEditorBlockProps = {
   areEntitiesFetched: boolean;
 };
 
-const DESIGN_COMPONENT_NODE_TYPES = ['designComponent', 'designComponentBlock'];
-
 export const VisualEditorBlock = ({
   node: rawNode,
   dataSource,
@@ -56,7 +61,7 @@ export const VisualEditorBlock = ({
   areEntitiesFetched,
 }: VisualEditorBlockProps) => {
   const node = useMemo(() => {
-    if (rawNode.type === 'designComponent' && areEntitiesFetched) {
+    if (rawNode.type === DESIGN_COMPONENT_NODE_TYPE && areEntitiesFetched) {
       return resolveDesignComponent({
         node: rawNode,
         entityStore: entityStore.current,
@@ -68,7 +73,7 @@ export const VisualEditorBlock = ({
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.data.blockId as string);
-    if (node.type === 'designComponent' && !registration) {
+    if (node.type === DESIGN_COMPONENT_NODE_TYPE && !registration) {
       return createDesignComponentRegistration({
         definitionId: node.data.blockId as string,
         component: DesignComponent,
@@ -160,7 +165,7 @@ export const VisualEditorBlock = ({
       e.stopPropagation();
       e.preventDefault();
 
-      if (node.type === 'designComponentBlock') {
+      if (node.type === DESIGN_COMPONENT_BLOCK_NODE_TYPE) {
         // If a design component block is clicked, find the parent design component and select it
         const designComponentElement = e.currentTarget.closest(
           '[data-cf-node-block-type="designComponent"]'

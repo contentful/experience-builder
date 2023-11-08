@@ -9,6 +9,7 @@ import {
 } from '../../types';
 import { generateRandomId } from '../../utils';
 import { designComponentsRegistry } from '../../blocks/VisualEditorContext';
+import { DESIGN_COMPONENT_BLOCK_NODE_TYPE, DESIGN_COMPONENT_NODE_TYPE } from '../../constants';
 
 export const deserializeDesignComponentNode = ({
   node,
@@ -54,7 +55,7 @@ export const deserializeDesignComponentNode = ({
 
   return {
     // separate node type identifiers for design components and their blocks, so we can treat them differently in as much as we want
-    type: isDesignComponent ? 'designComponent' : 'designComponentBlock',
+    type: isDesignComponent ? DESIGN_COMPONENT_NODE_TYPE : DESIGN_COMPONENT_BLOCK_NODE_TYPE,
     parentId,
     data: {
       id: nodeId,
@@ -75,7 +76,7 @@ export const resolveDesignComponent = ({
   node: CompositionComponentNode;
   entityStore: EntityStore | null;
 }) => {
-  if (node.type !== 'designComponent') {
+  if (node.type !== DESIGN_COMPONENT_NODE_TYPE) {
     return node;
   }
 
