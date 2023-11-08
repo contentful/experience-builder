@@ -1,4 +1,4 @@
-import { LATEST_SCHEMA_VERSION } from '../../src';
+import { CONTENTFUL_CONTAINER_ID, LATEST_SCHEMA_VERSION } from '../../src';
 import { Composition, ExperienceEntry, SchemaVersions } from '../../src/types';
 import { entityIds } from './entities';
 
@@ -166,6 +166,70 @@ export const createCompositionEntry = ({
       unboundValues: {
         uuid1: {
           value: 'test',
+        },
+      },
+    },
+  };
+};
+
+export const createDesignComponentEntry = ({
+  schemaVersion = LATEST_SCHEMA_VERSION,
+  id = 'design-component-id',
+}: createCompositionEntryArgs & { id: string }): ExperienceEntry => {
+  return {
+    sys: {
+      id,
+      type: 'Entry',
+      contentType: {
+        sys: {
+          id: 'layout',
+          type: 'Link',
+          linkType: 'ContentType',
+        },
+      },
+      createdAt: '2023-06-27T00:00:00.000Z',
+      updatedAt: '2023-06-27T00:00:00.000Z',
+      revision: 1,
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: 'cfexampleSpace',
+        },
+      },
+      environment: {
+        sys: {
+          type: 'Link',
+          linkType: 'Environment',
+          id: 'cfexampleEnvironment',
+        },
+      },
+    },
+    metadata: { tags: [] },
+    fields: {
+      title: 'Test Composition',
+      slug: 'test',
+      componentTree: {
+        children: [
+          {
+            definitionId: CONTENTFUL_CONTAINER_ID,
+            variables: {},
+            children: [
+              {
+                definitionId: 'custom-component',
+                variables: { text: { key: 'uuid1', type: 'UnboundValue' } },
+                children: [],
+              },
+            ],
+          },
+        ],
+        breakpoints: [],
+        schemaVersion,
+      },
+      dataSource: {},
+      unboundValues: {
+        uuid1: {
+          value: 'custom component title',
         },
       },
     },

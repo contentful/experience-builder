@@ -1,7 +1,6 @@
-import { Composition, CompositionNode } from '../../types';
+import { Composition, CompositionNode, ExperienceEntry } from '../../types';
 import { checkIfDesignComponent } from '../../utils';
 import { EntityStore } from '../EntityStore';
-import { Entry } from 'contentful';
 
 export const resolveDesignComponent = ({
   node,
@@ -28,7 +27,7 @@ export const resolveDesignComponent = ({
     return node;
   }
 
-  const componentFields = (designComponent as Entry).fields as unknown as Composition;
+  const componentFields = (designComponent as ExperienceEntry).fields as unknown as Composition;
 
   const deserializedNode = {
     ...node,
