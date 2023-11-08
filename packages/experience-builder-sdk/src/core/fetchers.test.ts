@@ -8,7 +8,8 @@ const mockClient = {
   getAssets: jest.fn(),
 } as unknown as ContentfulClientApi<undefined>;
 
-jest.mock('../core/constants', () => ({
+jest.mock('../constants', () => ({
+  ...jest.requireActual('../constants'),
   SDK_VERSION: '0.0.0-test',
   __esModule: true,
 }));

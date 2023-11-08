@@ -26,8 +26,9 @@ const experience: Experience<EntityStore> = {
   mode: 'preview',
 };
 
-jest.mock('../core/constants', () => {
+jest.mock('../../constants', () => {
   return {
+    ...jest.requireActual('../../constants'),
     SDK_VERSION: '0.0.0-alpha',
     compatibleVersions: ['2023-09-28', '2023-08-23'] as SchemaVersions[],
   };

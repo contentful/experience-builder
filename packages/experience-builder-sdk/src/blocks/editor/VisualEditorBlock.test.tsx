@@ -13,7 +13,7 @@ const TestComponent = (props: any) => {
   return <div {...props}>{props.text}</div>;
 };
 
-jest.mock('../communication/sendMessage', () => ({
+jest.mock('../../communication/sendMessage', () => ({
   sendMessage: jest.fn(),
 }));
 
@@ -23,7 +23,8 @@ jest.mock('./useEditorContext', () => ({
     setSelectedNodeId: jest.fn(),
   }),
 }));
-jest.mock('../core/constants', () => ({
+jest.mock('../../constants', () => ({
+  ...jest.requireActual('../../constants'),
   SDK_VERSION: 'test',
 }));
 

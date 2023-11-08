@@ -16,7 +16,7 @@ import {
   getComponentRegistration,
   createDesignComponentRegistration,
 } from '../../core/componentRegistry';
-import { getUnboundValues } from '../../core/getUnboundValues';
+import { getUnboundValues } from '../../utils/getUnboundValues';
 import { buildCfStyles, calculateNodeDefaultHeight } from '../../utils/stylesUtils';
 import { ResolveDesignValueType } from '../../hooks/useBreakpoints';
 import { useSelectedInstanceCoordinates } from '../../hooks/useSelectedInstanceCoordinates';

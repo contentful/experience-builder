@@ -9,7 +9,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "VITE_SDK_VERSION=$npm_package_version vite build",
+    "prebuild": "node -p \"'export const SDK_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/sdkVersion.ts",
+    "build": "vite build",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
     "test:coverage": "NODE_ENV=test jest --coverage --maxWorkers 2",

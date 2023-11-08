@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { VisualEditorBlock } from './VisualEditorBlock';
 import { EmptyEditorContainer } from '../../components/EmptyEditorContainer';
-import '../styles/VisualEditorRoot.css';
+import '../../styles/VisualEditorRoot.css';
 import { onComponentDropped } from '../../communication/onComponentDrop';
 import { EditorModeEntityStore } from '../../core/editor/EditorModeEntityStore';
 import { useBreakpoints } from '../../hooks/useBreakpoints';

@@ -6,8 +6,9 @@ import { ExternalSDKMode } from '../types';
 import { OUTGOING_EVENTS } from '../constants';
 
 jest.mock('../communication/sendMessage');
-jest.mock('../core/constants', () => {
+jest.mock('../constants', () => {
   return {
+    ...jest.requireActual('../constants'),
     SDK_VERSION: '0.0.0-test',
     CONTENTFUL_SECTION_ID: 'contentful-section',
     CONTENTFUL_CONTAINER_ID: 'contentful-container',

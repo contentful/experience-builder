@@ -11,7 +11,8 @@ const TestComponent = (props: any) => {
   return <div {...props}>{props.text}</div>;
 };
 
-jest.mock('../core/constants', () => ({
+jest.mock('../../constants', () => ({
+  ...jest.requireActual('../../constants'),
   SDK_VERSION: 'test',
 }));
 

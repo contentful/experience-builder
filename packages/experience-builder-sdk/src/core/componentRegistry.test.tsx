@@ -4,11 +4,11 @@ import {
   defineComponents,
   getComponentRegistration,
 } from './componentRegistry';
-import { INTERNAL_EVENTS } from '../constants';
-import { CONTENTFUL_SECTION_ID } from '../constants';
+import { INTERNAL_EVENTS, CONTENTFUL_SECTION_ID } from '../constants';
 import { containerDefinition } from './definitions/components';
 
-jest.mock('../core/constants', () => ({
+jest.mock('../constants', () => ({
+  ...jest.requireActual('../constants'),
   SDK_VERSION: '0.0.0-test',
   __esModule: true,
 }));

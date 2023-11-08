@@ -4,8 +4,9 @@ import { render } from '@testing-library/react';
 
 import { Test } from './Test';
 
-jest.mock('./core/constants', () => ({
-  VITE_SDK_VERSION: '0.0.0-test',
+jest.mock('./constants', () => ({
+  ...jest.requireActual('../../constants'),
+  SDK_VERSION: '0.0.0-test',
 }));
 
 describe('test', () => {
