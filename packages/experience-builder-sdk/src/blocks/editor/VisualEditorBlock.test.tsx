@@ -1,12 +1,12 @@
 import React from 'react';
 
-import type { EntityStore } from '../core/EntityStore';
+import type { EntityStore } from '../../core/preview/EntityStore';
 import { render } from '@testing-library/react';
 
-import { sendMessage } from '../communication/sendMessage';
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
-import { defineComponents, resetComponentRegistry } from '../core/componentRegistry';
-import { CompositionComponentNode } from '../types';
+import { sendMessage } from '../../communication/sendMessage';
+import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../../constants';
+import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
+import { CompositionComponentNode } from '../../types';
 import { VisualEditorBlock } from './VisualEditorBlock';
 
 const TestComponent = (props: any) => {

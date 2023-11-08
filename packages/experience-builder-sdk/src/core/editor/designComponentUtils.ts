@@ -7,8 +7,8 @@ import {
   CompositionComponentPropValue,
   Composition,
 } from '../../types';
-import { generateRandomId } from '../../utils';
-import { designComponentsRegistry } from '../../blocks/VisualEditorContext';
+import { generateRandomId } from '../../utils/utils';
+import { designComponentsRegistry } from '../../blocks/editor/VisualEditorContext';
 import { DESIGN_COMPONENT_BLOCK_NODE_TYPE, DESIGN_COMPONENT_NODE_TYPE } from '../../constants';
 
 export const deserializeDesignComponentNode = ({

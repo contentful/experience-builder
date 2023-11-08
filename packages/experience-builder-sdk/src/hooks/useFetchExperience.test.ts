@@ -1,5 +1,5 @@
 import { useFetchExperience } from './useFetchExperience';
-import { EntityStore } from '../core/EntityStore';
+import { EntityStore } from '../core/preview/EntityStore';
 import { act, renderHook } from '@testing-library/react';
 import { compositionEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { DeprecatedExperience, ExternalSDKMode, InternalSDKMode } from '../types';
+import { DeprecatedExperience, ExternalSDKMode, InternalSDKMode } from '../../types';
 import { CompositionBlock } from './CompositionBlock';
-import { compatibleVersions } from '../constants';
-import { useBreakpoints, useEditorModeSwitch, useFetchExperience } from '../hooks';
-import { usePrevious } from '../hooks/usePrevious';
+import { compatibleVersions } from '../../constants';
+import { useBreakpoints, useEditorModeSwitch, useFetchExperience } from '../../hooks';
+import { usePrevious } from '../../hooks/usePrevious';
 
 type DeprecatedPreviewDeliveryRootProps = {
   deprecatedExperience: DeprecatedExperience;

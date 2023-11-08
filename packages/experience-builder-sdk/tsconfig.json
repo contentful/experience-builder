@@ -5,5 +5,5 @@
     "allowJs": true,
     "moduleResolution": "node"
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "vite.config.ts", "test/components/Test.spec.tsx", "test/components/Test.tsx"]
 }

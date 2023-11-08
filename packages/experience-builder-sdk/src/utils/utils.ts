@@ -7,7 +7,7 @@ import {
   CompositionDataSource,
   CompositionUnboundValues,
   ExperienceEntry,
-} from './types';
+} from '../types';
 
 export const getDataFromTree = (
   tree: CompositionTree

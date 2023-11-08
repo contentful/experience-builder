@@ -1,14 +1,14 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
 
-import { sendHoveredComponentCoordinates } from '../communication/sendHoveredComponentCoordinates';
-import { sendMessage } from '../communication/sendMessage';
-import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates';
+import { sendHoveredComponentCoordinates } from '../../communication/sendHoveredComponentCoordinates';
+import { sendMessage } from '../../communication/sendMessage';
+import { sendSelectedComponentCoordinates } from '../../communication/sendSelectedComponentCoordinates';
 import {
   addComponentRegistration,
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
-} from '../core/componentRegistry';
-import { EditorModeEntityStore } from '../core/EditorModeEntityStore';
+} from '../../core/componentRegistry';
+import { EditorModeEntityStore } from '../../core/editor/EditorModeEntityStore';
 import {
   Breakpoint,
   ComponentRegistration,
@@ -19,12 +19,12 @@ import {
   CompositionUnboundValues,
   InternalSDKMode,
   Link,
-} from '../types';
-import { INCOMING_EVENTS, OUTGOING_EVENTS, SCROLL_STATES, INTERNAL_EVENTS } from '../constants';
-import { getDataFromTree } from '../utils';
-import { doesMismatchMessageSchema, tryParseMessage } from '../validation';
+} from '../../types';
+import { INCOMING_EVENTS, OUTGOING_EVENTS, SCROLL_STATES, INTERNAL_EVENTS } from '../../constants';
+import { getDataFromTree } from '../../utils/utils';
+import { doesMismatchMessageSchema, tryParseMessage } from '../../utils/validation';
 import { Entry } from 'contentful';
-import { DesignComponent } from './DesignComponent';
+import { DesignComponent } from '../../components/DesignComponent';
 
 type VisualEditorContextType = {
   tree: CompositionTree | undefined;

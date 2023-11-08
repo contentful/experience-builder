@@ -1,7 +1,7 @@
 import type { Asset, Entry } from 'contentful';
 
-import { entities, entityIds, entries } from '../../test/__fixtures__/entities';
-import { compositionEntry } from '../../test/__fixtures__/composition';
+import { entities, entityIds, entries } from '../../../test/__fixtures__/entities';
+import { compositionEntry } from '../../../test/__fixtures__/composition';
 
 import { EntityStore } from './EntityStore';
 

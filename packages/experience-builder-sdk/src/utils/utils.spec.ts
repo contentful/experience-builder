@@ -1,4 +1,4 @@
-import { CompositionComponentNode } from './types';
+import { CompositionComponentNode } from '../types';
 import { getInsertionData } from './utils';
 
 const dropReceiverChildNode: CompositionComponentNode = {

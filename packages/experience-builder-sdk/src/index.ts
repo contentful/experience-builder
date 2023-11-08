@@ -1,8 +1,8 @@
 export { ExperienceRoot } from './blocks';
 export { useExperienceBuilder, getValueForBreakpoint, useFetchExperience } from './hooks';
 export { defineComponents } from './core/componentRegistry';
-export { calculateNodeDefaultHeight } from './core/stylesUtils';
-export { checkIfDesignComponent } from './utils';
+export { calculateNodeDefaultHeight } from './utils/stylesUtils';
+export { checkIfDesignComponent } from './utils/utils';
 export type {
   ComponentDefinition,
   ComponentRegistration,

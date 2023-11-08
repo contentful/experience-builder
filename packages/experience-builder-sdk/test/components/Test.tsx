@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { defineComponents } from './core/componentRegistry';
+import { defineComponents } from '../../src/core/componentRegistry';
 
 const TestComponent = () => {
   return null;

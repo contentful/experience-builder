@@ -2,7 +2,7 @@ import { ComponentRegistration, ComponentDefinition } from '../types';
 import { OUTGOING_EVENTS, INTERNAL_EVENTS } from '../constants';
 import { builtInStyles as builtInStyleDefinitions } from './definitions/variables';
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
-import { ContentfulContainer } from '../blocks/ContentfulContainer';
+import { ContentfulContainer } from '../components/ContentfulContainer';
 import { containerDefinition } from './definitions/components';
 import { sendMessage } from '../communication/sendMessage';
 import { SDK_VERSION } from './constants';

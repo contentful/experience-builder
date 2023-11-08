@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
 import { VisualEditorBlock } from './VisualEditorBlock';
-import { EmptyEditorContainer } from './EmptyEditorContainer';
+import { EmptyEditorContainer } from '../../components/EmptyEditorContainer';
 import '../styles/VisualEditorRoot.css';
-import { onComponentDropped } from '../communication/onComponentDrop';
-import { EditorModeEntityStore } from '../core/EditorModeEntityStore';
-import { useBreakpoints } from '../hooks/useBreakpoints';
-import { useHoverIndicator } from '../hooks/useHoverIndicator';
-import { InternalSDKMode } from '../types';
+import { onComponentDropped } from '../../communication/onComponentDrop';
+import { EditorModeEntityStore } from '../../core/editor/EditorModeEntityStore';
+import { useBreakpoints } from '../../hooks/useBreakpoints';
+import { useHoverIndicator } from '../../hooks/useHoverIndicator';
+import { InternalSDKMode } from '../../types';
 import { useEditorContext } from './useEditorContext';
 import { VisualEditorContextProvider, designComponentsRegistry } from './VisualEditorContext';
 

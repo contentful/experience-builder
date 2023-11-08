@@ -1,6 +1,6 @@
 import { Composition, CompositionNode } from '../../types';
-import { checkIfDesignComponent } from '../../utils';
-import { EntityStore } from '../EntityStore';
+import { checkIfDesignComponent } from '../../utils/utils';
+import { EntityStore } from './EntityStore';
 import { Entry } from 'contentful';
 
 export const resolveDesignComponent = ({

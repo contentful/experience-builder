@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { useEditorContext } from '../blocks/useEditorContext';
+import { useEditorContext } from '../blocks/editor/useEditorContext';
 import { sendSelectedComponentCoordinates } from '../communication/sendSelectedComponentCoordinates';
 import { CompositionComponentNode } from '../types';
 

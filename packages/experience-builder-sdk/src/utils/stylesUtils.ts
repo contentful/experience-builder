@@ -12,7 +12,7 @@ import {
   transformBackgroundImage,
   transformBorderStyle,
   transformFill,
-} from '../blocks/transformers';
+} from './transformers';
 import { CONTENTFUL_CONTAINER_ID } from '../constants';
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
