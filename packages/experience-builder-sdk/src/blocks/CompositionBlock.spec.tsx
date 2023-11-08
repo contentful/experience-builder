@@ -116,7 +116,7 @@ describe('CompositionBlock', () => {
     expect(getByTestId('contentful-container')).toBeInTheDocument();
   });
 
-  it.only('renders design component node', () => {
+  it('renders design component node', () => {
     const designComponentEntry = createDesignComponentEntry({
       id: 'design-component-id',
       schemaVersion: '2023-09-28',

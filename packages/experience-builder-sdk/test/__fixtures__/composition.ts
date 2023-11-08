@@ -175,7 +175,7 @@ export const createCompositionEntry = ({
 export const createDesignComponentEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = 'design-component-id',
-}: createCompositionEntryArgs & { id: string }): ExperienceEntry => {
+}: createCompositionEntryArgs & { id: string }) => {
   return {
     sys: {
       id,

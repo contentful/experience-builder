@@ -24,14 +24,13 @@ export const deserializeDesignComponentNode = ({
   experienceDataSource: CompositionDataSource;
   experienceUnboundValues: CompositionUnboundValues;
 }): CompositionComponentNode => {
-  const childNodeVariable: Record<string, CompositionComponentPropValue<'DesignValue'>> = {};
+  const childNodeVariable: Record<string, CompositionComponentPropValue> = {};
   const dataSource: CompositionDataSource = {};
   const unboundValues: CompositionUnboundValues = {};
 
   for (const [variableName, variable] of Object.entries(node.variables)) {
-    if (variable.type === 'DesignValue') {
-      childNodeVariable[variableName] = variable;
-    } else if (variable.type === 'BoundValue') {
+    childNodeVariable[variableName] = variable;
+    if (variable.type === 'BoundValue') {
       const [, uuid, ,] = variable.path.split('/');
 
       dataSource[uuid] = { ...experienceDataSource[uuid] };
