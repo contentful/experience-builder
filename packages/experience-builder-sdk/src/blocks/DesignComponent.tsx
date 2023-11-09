@@ -7,5 +7,5 @@ const designComponentStyle = { display: 'contents' };
 export const DesignComponent = ({ ...props }) => {
   // Using a display contents so design component content/children
   // can appear as if they are direct children of the div wrapper's parent
-  return <div {...props} style={designComponentStyle} />;
+  return <div data-test-id="design-component" {...props} style={designComponentStyle} />;
 };

@@ -1,17 +1,31 @@
 import React from 'react';
 
 import type { EntityStore } from '../core/EntityStore';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 
 import { sendMessage } from '../communication/sendMessage';
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
+import {
+  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_SECTION_ID,
+  DESIGN_COMPONENT_NODE_TYPE,
+} from '../constants';
 import { defineComponents, resetComponentRegistry } from '../core/componentRegistry';
 import { CompositionComponentNode } from '../types';
 import { VisualEditorBlock } from './VisualEditorBlock';
+import { createDesignComponentEntry } from '../../test/__fixtures__/composition';
+import { EditorModeEntityStore } from '../core/EditorModeEntityStore';
+import { assets } from '../../test/__fixtures__/entities';
+import { Asset, Entry } from 'contentful';
+import { designComponentsRegistry } from './VisualEditorContext';
 
 const TestComponent = (props: any) => {
   return <div {...props}>{props.text}</div>;
 };
+
+const designComponentEntry = createDesignComponentEntry({
+  id: 'design-component-id',
+  schemaVersion: '2023-09-28',
+});
 
 jest.mock('../communication/sendMessage', () => ({
   sendMessage: jest.fn(),
@@ -45,10 +59,15 @@ describe('VisualEditorBlock', () => {
         },
       },
     ]);
+
+    designComponentsRegistry.set(designComponentEntry.sys.id, {
+      sys: { id: designComponentEntry.sys.id, type: 'Link', linkType: 'Entry' },
+    });
   });
 
   afterEach(() => {
     resetComponentRegistry();
+    designComponentsRegistry.clear();
   });
 
   it('renders with initial text and updates when prop changes', () => {
@@ -114,7 +133,7 @@ describe('VisualEditorBlock', () => {
       children: [],
     };
 
-    render(
+    const { getByTestId } = render(
       <VisualEditorBlock
         node={sectionNode}
         dataSource={{}}
@@ -125,7 +144,7 @@ describe('VisualEditorBlock', () => {
       />
     );
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+    expect(getByTestId('contentful-container')).toBeDefined();
   });
 
   it('renders container node', () => {
@@ -142,7 +161,7 @@ describe('VisualEditorBlock', () => {
       children: [],
     };
 
-    render(
+    const { getByTestId } = render(
       <VisualEditorBlock
         node={containerNode}
         dataSource={{}}
@@ -153,6 +172,51 @@ describe('VisualEditorBlock', () => {
       />
     );
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+    expect(getByTestId('contentful-container')).toBeDefined();
+  });
+
+  it('renders design component node', () => {
+    const designComponentEntry = createDesignComponentEntry({
+      id: 'design-component-id',
+      schemaVersion: '2023-09-28',
+    });
+
+    const entityStore = new EditorModeEntityStore({
+      entities: [designComponentEntry, ...assets] as Array<Entry | Asset>,
+      locale: 'en-US',
+    });
+
+    const designComponentNode: CompositionComponentNode = {
+      type: DESIGN_COMPONENT_NODE_TYPE,
+      data: {
+        id: 'random-design-component-id',
+        blockId: designComponentEntry.sys.id,
+        props: {},
+        dataSource: {},
+        unboundValues: designComponentEntry.fields.unboundValues,
+        breakpoints: [],
+      },
+      children: [],
+    };
+
+    const { getByTestId, getByText } = render(
+      <VisualEditorBlock
+        node={designComponentNode}
+        dataSource={{}}
+        areEntitiesFetched={true}
+        entityStore={{ current: entityStore }}
+        unboundValues={designComponentNode.data.unboundValues}
+        resolveDesignValue={jest.fn()}
+      />
+    );
+
+    expect(getByTestId('design-component')).toBeInTheDocument();
+    expect(getByTestId('contentful-container')).toBeInTheDocument();
+    expect(getByText('custom component title')).toBeInTheDocument();
+
+    fireEvent.mouseDown(getByText('custom component title'));
+    expect(sendMessage).toHaveBeenCalledWith('componentSelected', {
+      nodeId: designComponentNode.data.id,
+    });
   });
 });
