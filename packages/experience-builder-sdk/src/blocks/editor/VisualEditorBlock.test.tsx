@@ -37,10 +37,6 @@ jest.mock('./useEditorContext', () => ({
     setSelectedNodeId: jest.fn(),
   }),
 }));
-jest.mock('../../constants', () => ({
-  ...jest.requireActual('../../constants'),
-  SDK_VERSION: 'test',
-}));
 
 describe('VisualEditorBlock', () => {
   beforeEach(() => {

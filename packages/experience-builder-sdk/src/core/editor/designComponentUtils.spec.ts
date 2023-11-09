@@ -12,10 +12,6 @@ const designComponentEntry = createDesignComponentEntry({
   schemaVersion: '2023-09-28',
 });
 
-jest.mock('../constants', () => ({
-  SDK_VERSION: 'test',
-}));
-
 describe('deserializeDesignComponentNode', () => {
   beforeEach(() => {
     designComponentsRegistry.set(designComponentEntry.sys.id, {

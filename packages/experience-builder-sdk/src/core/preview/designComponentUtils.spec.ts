@@ -9,11 +9,6 @@ import { CompositionNode } from '../../types';
 import { EntityStore } from './EntityStore';
 import { resolveDesignComponent } from './designComponentUtils';
 
-jest.mock('../../constants', () => ({
-  ...jest.requireActual('../../constants'),
-  SDK_VERSION: 'test',
-}));
-
 describe('resolveDesignComponent', () => {
   it('should return the input node when it is not a design component', () => {
     const containerNode: CompositionNode = {

@@ -8,12 +8,6 @@ const mockClient = {
   getAssets: jest.fn(),
 } as unknown as ContentfulClientApi<undefined>;
 
-jest.mock('../constants', () => ({
-  ...jest.requireActual('../constants'),
-  SDK_VERSION: '0.0.0-test',
-  __esModule: true,
-}));
-
 describe('fetchExperienceEntry', () => {
   it('should throw and error if client has not been provided', async () => {
     try {

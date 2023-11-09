@@ -4,12 +4,6 @@ import * as registry from './componentRegistry';
 import { containerDefinition } from './definitions/components';
 import { ComponentRegistration } from '../types';
 
-jest.mock('../constants', () => ({
-  ...jest.requireActual('../constants'),
-  SDK_VERSION: '0.0.0-test',
-  __esModule: true,
-}));
-
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>;
 };

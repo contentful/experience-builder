@@ -9,12 +9,6 @@ const clientMock = {
 
 const experienceTypeId = 'books';
 
-jest.mock('../constants', () => ({
-  ...jest.requireActual('../constants'),
-  SDK_VERSION: '0.0.0-test',
-  __esModule: true,
-}));
-
 describe('useExperienceBuilder', () => {
   it('should return experience and defineComponents and set delivery mode by default', () => {
     const res = renderHook((props) => useExperienceBuilder(props), {
