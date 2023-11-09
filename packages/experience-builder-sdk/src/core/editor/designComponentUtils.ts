@@ -98,7 +98,7 @@ export const resolveDesignComponent = ({
     node: {
       definitionId: node.data.blockId || '',
       variables: {},
-      children: componentFields.componentTree.children,
+      children: componentFields.componentTree?.children ?? [],
     },
     nodeId: node.data.id,
     parentId: node.parentId,

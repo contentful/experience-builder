@@ -217,7 +217,7 @@ export const createDesignComponentEntry = ({
             children: [
               {
                 definitionId: 'custom-component',
-                variables: { text: { key: 'uuid1', type: 'UnboundValue' } },
+                variables: { text: { key: 'uuid1DesignComponent', type: 'UnboundValue' } },
                 children: [],
               },
             ],
@@ -228,7 +228,7 @@ export const createDesignComponentEntry = ({
       },
       dataSource: {},
       unboundValues: {
-        uuid1: {
+        uuid1DesignComponent: {
           value: 'custom component title',
         },
       },
