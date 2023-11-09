@@ -1,5 +1,5 @@
 import type { Asset, ContentfulClientApi, Entry } from 'contentful';
-import { isExperienceEntry } from '@contentful/experience-builder-types';
+import { ExperienceEntry, isExperienceEntry } from '@contentful/experience-builder-types';
 
 type fetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;
@@ -53,7 +53,7 @@ export const fetchReferencedEntities = async ({
   // Using client getEntries resolves all linked entry references, so we do not need to resolve entries in usedComponents
   const allResolvedEntries = [
     ...((entriesResponse.items ?? []) as Entry[]),
-    ...((experienceEntry.fields.usedComponents as Entry[]) || []),
+    ...((experienceEntry.fields.usedComponents as ExperienceEntry[]) || []),
   ];
 
   return {

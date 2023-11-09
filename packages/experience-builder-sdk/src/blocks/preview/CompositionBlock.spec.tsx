@@ -4,8 +4,15 @@ import { render } from '@testing-library/react';
 
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../../constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
-import { CompositionNode } from '../../types';
+import { CompositionNode, ExperienceEntry } from '../../types';
 import { CompositionBlock } from './CompositionBlock';
+import type { Entry } from 'contentful';
+import {
+  compositionEntry,
+  createDesignComponentEntry,
+} from '../../../test/__fixtures__/composition';
+import { EntityStore } from '../../core/preview/EntityStore';
+import { assets, entries } from '../../../test/__fixtures__/entities';
 
 const TestComponent = (props: any) => {
   return <div {...props}>{props.text}</div>;
@@ -74,7 +81,7 @@ describe('CompositionBlock', () => {
       children: [],
     };
 
-    render(
+    const { getByTestId } = render(
       <CompositionBlock
         node={sectionNode}
         dataSource={{}}
@@ -87,7 +94,7 @@ describe('CompositionBlock', () => {
       />
     );
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+    expect(getByTestId('contentful-container')).toBeInTheDocument();
   });
 
   it('renders container node', () => {
@@ -97,7 +104,7 @@ describe('CompositionBlock', () => {
       children: [],
     };
 
-    render(
+    const { getByTestId } = render(
       <CompositionBlock
         node={containerNode}
         dataSource={{}}
@@ -110,6 +117,48 @@ describe('CompositionBlock', () => {
       />
     );
 
-    expect(document.getElementById('ContentfulContainer')).toBeDefined();
+    expect(getByTestId('contentful-container')).toBeInTheDocument();
+  });
+
+  it('renders design component node', () => {
+    const designComponentEntry = createDesignComponentEntry({
+      id: 'design-component-id',
+      schemaVersion: '2023-09-28',
+    });
+
+    const entityStore = new EntityStore({
+      experienceEntry: {
+        ...compositionEntry,
+        fields: {
+          ...compositionEntry.fields,
+          usedComponents: [designComponentEntry],
+        },
+      } as unknown as Entry,
+      entities: [...entries, ...assets],
+      locale: 'en-US',
+    });
+
+    const designComponentNode: CompositionNode = {
+      definitionId: 'design-component-id',
+      variables: {},
+      children: [],
+    };
+
+    const { getByTestId, getByText } = render(
+      <CompositionBlock
+        node={designComponentNode}
+        dataSource={{}}
+        locale="en-US"
+        breakpoints={[]}
+        entityStore={entityStore}
+        usedComponents={[designComponentEntry] as ExperienceEntry[]}
+        unboundValues={{}}
+        resolveDesignValue={jest.fn()}
+      />
+    );
+
+    expect(getByTestId('design-component')).toBeInTheDocument();
+    expect(getByTestId('contentful-container')).toBeInTheDocument();
+    expect(getByText('custom component title')).toBeInTheDocument();
   });
 });

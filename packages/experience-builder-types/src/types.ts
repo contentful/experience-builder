@@ -246,7 +246,7 @@ export type Composition = {
   };
   dataSource: CompositionDataSource;
   unboundValues: CompositionUnboundValues;
-  usedComponents?: Array<Link<'Entry'> | Entry>;
+  usedComponents?: Array<Link<'Entry'> | ExperienceEntry>;
   componentSettings?: ExperienceComponentSettings;
 };
 
