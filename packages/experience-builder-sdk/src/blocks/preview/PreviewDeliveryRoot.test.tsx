@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { EntityStore } from '../../core/preview/EntityStore';
 
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
-import { Experience, SchemaVersions } from '../../types';
+import { Experience } from '../../types';
 import { createCompositionEntry } from '../../../test/__fixtures__/composition';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import type { Entry } from 'contentful';
