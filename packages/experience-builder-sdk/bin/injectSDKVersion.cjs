@@ -7,4 +7,4 @@ const path = require('path');
 const sdkVersionFilePath = path.resolve(__dirname, '../src/sdkVersion.ts');
 
 // eslint-disable-next-line no-undef
-fs.writeFileSync(sdkVersionFilePath, `export const SDK_VERSION = '${process.env.npm_package_version}'; \n`, { flag: 'w' });
+fs.writeFileSync(sdkVersionFilePath, `export const SDK_VERSION = '${process.env.npm_package_version}';\n`, { flag: 'w' });
