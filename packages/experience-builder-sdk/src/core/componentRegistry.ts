@@ -136,11 +136,11 @@ export const addComponentRegistration = (componentRegistration: ComponentRegistr
 
 export const createDesignComponentRegistration = ({
   definitionId,
-  defintionName,
+  definitionName,
   component,
 }: {
   definitionId: string;
-  defintionName?: string;
+  definitionName?: string;
   component: ComponentRegistration['component'];
 }) => {
   const componentRegistration = componentRegistry.get(definitionId);
@@ -151,7 +151,7 @@ export const createDesignComponentRegistration = ({
 
   const definition = {
     id: definitionId,
-    name: defintionName || 'Design Component',
+    name: definitionName || 'Design Component',
     variables: {} as ComponentDefinition['variables'],
     children: true,
     category: 'Design Components',
@@ -159,5 +159,5 @@ export const createDesignComponentRegistration = ({
 
   addComponentRegistration({ component, definition });
 
-  return { component, definition };
+  return componentRegistry.get(definitionId);
 };
