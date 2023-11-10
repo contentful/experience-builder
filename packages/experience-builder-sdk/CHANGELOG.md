@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.2...@contentful/experience-builder@2.8.3) (2023-11-10)
+
+### Bug Fixes
+
+- **experience-builder-sdk:** export ExternalSDKMode and EntityStore types [] ([#156](https://github.com/contentful/experience-builder/issues/156)) ([32a50a8](https://github.com/contentful/experience-builder/commit/32a50a81d669506837caef3e653332ae84a35f76))
+
 ## [2.8.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.1...@contentful/experience-builder@2.8.2) (2023-11-10)
 
 ### Bug Fixes
