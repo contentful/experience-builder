@@ -5,6 +5,7 @@ export { calculateNodeDefaultHeight } from './core/stylesUtils';
 export type {
   ComponentDefinition,
   ComponentRegistration,
+  EntityStore,
   Experience,
   ExternalSDKMode,
   DeprecatedExperience,
