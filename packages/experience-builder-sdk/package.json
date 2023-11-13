@@ -9,6 +9,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
+    "prepare": "node ./bin/injectSDKVersion.cjs",
     "prebuild": "node ./bin/injectSDKVersion.cjs",
     "build": "vite build",
     "test": "NODE_ENV=test jest",
