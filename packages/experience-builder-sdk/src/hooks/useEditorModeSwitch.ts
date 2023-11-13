@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { InternalSDKMode } from '../types';
 import { INCOMING_EVENTS, OUTGOING_EVENTS } from '../constants';
-import { doesMismatchMessageSchema, tryParseMessage } from '../validation';
+import { doesMismatchMessageSchema, tryParseMessage } from '../utils/validation';
 import { sendMessage } from '../communication/sendMessage';
 
 export const useEditorModeSwitch = ({

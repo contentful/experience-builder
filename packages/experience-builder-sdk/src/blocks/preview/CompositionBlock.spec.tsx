@@ -2,22 +2,21 @@ import React from 'react';
 
 import { render } from '@testing-library/react';
 
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
-import { defineComponents, resetComponentRegistry } from '../core/componentRegistry';
-import { CompositionNode, ExperienceEntry } from '../types';
+import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../../constants';
+import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
+import { CompositionNode, ExperienceEntry } from '../../types';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
-import { compositionEntry, createDesignComponentEntry } from '../../test/__fixtures__/composition';
-import { EntityStore } from '../core/EntityStore';
-import { assets, entries } from '../../test/__fixtures__/entities';
+import {
+  compositionEntry,
+  createDesignComponentEntry,
+} from '../../../test/__fixtures__/composition';
+import { EntityStore } from '../../core/preview/EntityStore';
+import { assets, entries } from '../../../test/__fixtures__/entities';
 
 const TestComponent = (props: any) => {
   return <div {...props}>{props.text}</div>;
 };
-
-jest.mock('../core/constants', () => ({
-  SDK_VERSION: 'test',
-}));
 
 describe('CompositionBlock', () => {
   beforeEach(() => {

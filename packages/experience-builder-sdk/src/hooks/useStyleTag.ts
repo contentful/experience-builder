@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { buildStyleTag } from '../core/stylesUtils';
+import { buildStyleTag } from '../utils/stylesUtils';
 import { CSSProperties } from '../types';
 
 /**

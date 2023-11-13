@@ -3,7 +3,7 @@ import React, { RefObject, useCallback, useMemo } from 'react';
 import type { EntityStore } from '@contentful/visual-sdk';
 import omit from 'lodash.omit';
 
-import { sendMessage } from '../communication/sendMessage';
+import { sendMessage } from '../../communication/sendMessage';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_CONTAINER_ID,
@@ -11,16 +11,16 @@ import {
   DESIGN_COMPONENT_BLOCK_NODE_TYPE,
   DESIGN_COMPONENT_NODE_TYPE,
   DESIGN_COMPONENT_NODE_TYPES,
-} from '../constants';
+} from '../../constants';
 import {
   getComponentRegistration,
   createDesignComponentRegistration,
-} from '../core/componentRegistry';
-import { getUnboundValues } from '../core/getUnboundValues';
-import { buildCfStyles, calculateNodeDefaultHeight } from '../core/stylesUtils';
-import { ResolveDesignValueType } from '../hooks/useBreakpoints';
-import { useSelectedInstanceCoordinates } from '../hooks/useSelectedInstanceCoordinates';
-import { useStyleTag } from '../hooks/useStyleTag';
+} from '../../core/componentRegistry';
+import { getUnboundValues } from '../../utils/getUnboundValues';
+import { buildCfStyles, calculateNodeDefaultHeight } from '../../utils/stylesUtils';
+import { ResolveDesignValueType } from '../../hooks/useBreakpoints';
+import { useSelectedInstanceCoordinates } from '../../hooks/useSelectedInstanceCoordinates';
+import { useStyleTag } from '../../hooks/useStyleTag';
 import {
   CompositionComponentNode,
   StyleProps,
@@ -28,14 +28,14 @@ import {
   CompositionVariableValueType,
   CompositionDataSource,
   CompositionUnboundValues,
-} from '../types';
-import { OUTGOING_EVENTS } from '../constants';
-import { ContentfulContainer } from './ContentfulContainer';
-import { ImportedComponentErrorBoundary } from './ErrorBoundary';
-import { transformContentValue } from './transformers';
+} from '../../types';
+import { OUTGOING_EVENTS } from '../../constants';
+import { ContentfulContainer } from '../../components/ContentfulContainer';
+import { ImportedComponentErrorBoundary } from '../../components/ErrorBoundary';
+import { transformContentValue } from '../../utils/transformers';
 import { useEditorContext } from './useEditorContext';
-import { resolveDesignComponent } from '../core/editor/designComponentUtils';
-import { DesignComponent } from './DesignComponent';
+import { resolveDesignComponent } from '../../core/editor/designComponentUtils';
+import { DesignComponent } from '../../components/DesignComponent';
 
 type PropsType =
   | StyleProps

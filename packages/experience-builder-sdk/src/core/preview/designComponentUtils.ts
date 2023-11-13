@@ -1,6 +1,6 @@
 import { Composition, CompositionNode, ExperienceEntry } from '../../types';
-import { checkIfDesignComponent } from '../../utils';
-import { EntityStore } from '../EntityStore';
+import { checkIfDesignComponent } from '../../utils/utils';
+import { EntityStore } from './EntityStore';
 
 export const resolveDesignComponent = ({
   node,

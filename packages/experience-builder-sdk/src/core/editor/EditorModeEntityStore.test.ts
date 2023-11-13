@@ -1,4 +1,4 @@
-import { entities, entityIds } from '../../test/__fixtures__/entities';
+import { entities, entityIds } from '../../../test/__fixtures__/entities';
 import { EditorModeEntityStore } from './EditorModeEntityStore';
 
 describe('ExperienceBuilderEditorEntityStore', () => {

@@ -1,4 +1,4 @@
-import { getElementCoordinates } from '../core/domValues';
+import { getElementCoordinates } from '../utils/domValues';
 import { OUTGOING_EVENTS } from '../constants';
 import { sendMessage } from './sendMessage';
 

@@ -1,9 +1,9 @@
 import type { ContentfulClientApi, Entry } from 'contentful';
 import { useCallback, useState } from 'react';
-import { EntityStore } from '../core/EntityStore';
+import { EntityStore } from '../core/preview/EntityStore';
 import { fetchReferencedEntities, fetchExperienceEntry } from '../core/fetchers';
 import { Experience, ExternalSDKMode } from '../types';
-import { createExperience } from '../core';
+import { createExperience } from '../utils/createExperience';
 
 const errorMessagesWhileFetching = {
   experience: 'Failed to fetch experience',

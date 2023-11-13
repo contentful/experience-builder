@@ -6,12 +6,8 @@ import {
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import { CONTENTFUL_CONTAINER_ID } from '../../constants';
 import { CompositionNode } from '../../types';
-import { EntityStore } from '../EntityStore';
+import { EntityStore } from './EntityStore';
 import { resolveDesignComponent } from './designComponentUtils';
-
-jest.mock('../constants', () => ({
-  SDK_VERSION: 'test',
-}));
 
 describe('resolveDesignComponent', () => {
   it('should return the input node when it is not a design component', () => {

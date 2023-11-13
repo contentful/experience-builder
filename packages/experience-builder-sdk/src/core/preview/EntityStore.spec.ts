@@ -1,16 +1,11 @@
 import type { Asset, Entry } from 'contentful';
 
-import { entities, entityIds, entries } from '../../test/__fixtures__/entities';
-import { compositionEntry } from '../../test/__fixtures__/composition';
+import { entities, entityIds, entries } from '../../../test/__fixtures__/entities';
+import { compositionEntry } from '../../../test/__fixtures__/composition';
 
 import { EntityStore } from './EntityStore';
 
 const locale = 'en-US';
-
-jest.mock('../core/constants', () => ({
-  SDK_VERSION: '0.0.0-test',
-  __esModule: true,
-}));
 
 describe('EntityStore', () => {
   it('should be defined', () => {

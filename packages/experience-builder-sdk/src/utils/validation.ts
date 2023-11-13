@@ -1,6 +1,6 @@
-import { supportedModes } from './constants';
-import { InternalSDKMode, IncomingEvent } from './types';
-import { INCOMING_EVENTS } from './constants';
+import { supportedModes } from '../constants';
+import { InternalSDKMode, IncomingEvent } from '../types';
+import { INCOMING_EVENTS } from '../constants';
 
 export type VisualEditorMessagePayload = {
   source: string;

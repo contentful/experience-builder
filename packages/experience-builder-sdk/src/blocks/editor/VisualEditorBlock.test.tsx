@@ -1,20 +1,20 @@
 import React from 'react';
 
-import type { EntityStore } from '../core/EntityStore';
+import type { EntityStore } from '../../core/preview/EntityStore';
 import { fireEvent, render } from '@testing-library/react';
 
-import { sendMessage } from '../communication/sendMessage';
+import { sendMessage } from '../../communication/sendMessage';
 import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
   DESIGN_COMPONENT_NODE_TYPE,
-} from '../constants';
-import { defineComponents, resetComponentRegistry } from '../core/componentRegistry';
-import { CompositionComponentNode } from '../types';
+} from '../../constants';
+import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
+import { CompositionComponentNode } from '../../types';
 import { VisualEditorBlock } from './VisualEditorBlock';
-import { createDesignComponentEntry } from '../../test/__fixtures__/composition';
-import { EditorModeEntityStore } from '../core/EditorModeEntityStore';
-import { assets } from '../../test/__fixtures__/entities';
+import { createDesignComponentEntry } from '../../../test/__fixtures__/composition';
+import { EditorModeEntityStore } from '../../core/editor/EditorModeEntityStore';
+import { assets } from '../../../test/__fixtures__/entities';
 import { Asset, Entry } from 'contentful';
 import { designComponentsRegistry } from './VisualEditorContext';
 
@@ -27,7 +27,7 @@ const designComponentEntry = createDesignComponentEntry({
   schemaVersion: '2023-09-28',
 });
 
-jest.mock('../communication/sendMessage', () => ({
+jest.mock('../../communication/sendMessage', () => ({
   sendMessage: jest.fn(),
 }));
 
@@ -36,9 +36,6 @@ jest.mock('./useEditorContext', () => ({
     selectedNodeId: '1',
     setSelectedNodeId: jest.fn(),
   }),
-}));
-jest.mock('../core/constants', () => ({
-  SDK_VERSION: 'test',
 }));
 
 describe('VisualEditorBlock', () => {
