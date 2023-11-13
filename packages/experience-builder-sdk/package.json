@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "node ./bin/injectSDKVersion.cjs",
+    "prepare": "node ./bin/injectSDKVersion.cjs",
     "build": "vite build",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
