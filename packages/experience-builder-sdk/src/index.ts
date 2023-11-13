@@ -6,7 +6,9 @@ export { checkIfDesignComponent } from './utils/utils';
 export type {
   ComponentDefinition,
   ComponentRegistration,
+  EntityStore,
   Experience,
+  ExternalSDKMode,
   DeprecatedExperience,
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,
