@@ -1,5 +1,5 @@
 import type { ContentfulClientApi, Entry } from 'contentful';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { EntityStore } from '../core/preview/EntityStore';
 import { fetchReferencedEntities, fetchExperienceEntry } from '../core/fetchers';
 import { Experience, ExternalSDKMode } from '../types';
@@ -15,14 +15,26 @@ const handleError = (generalMessage: string, error: unknown) => {
   console.error(`${generalMessage} with error: ${message}`);
 };
 
-type useClientsideExperienceFetchersProps = {
+type useClientSideExperienceFetchersProps = {
   mode: ExternalSDKMode;
   client: ContentfulClientApi<undefined>;
+  slug?: string;
+  id?: string;
+  experienceTypeId: string;
+  localeCode: string;
 };
 
-export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetchersProps) => {
+export const useFetchExperience = ({
+  mode,
+  client,
+  slug,
+  id,
+  experienceTypeId,
+  localeCode,
+}: useClientSideExperienceFetchersProps) => {
   const [experience, setExperience] = useState<Experience<EntityStore> | undefined>(undefined);
   const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState<Error>();
 
   /**
    * Fetch experience entry using slug as the identifier
@@ -41,6 +53,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
       localeCode: string;
     }): Promise<Experience<EntityStore> | undefined> => {
       setIsFetching(true);
+      setError(undefined);
 
       let experienceEntry: Entry | undefined = undefined;
 
@@ -56,7 +69,8 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
 
         if (!experienceEntry) {
           const error = new Error(`No experience entry with slug: ${slug} exists`);
-          throw error;
+          setError(error);
+          return;
         }
 
         try {
@@ -77,13 +91,13 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
           setExperience(experience);
 
           return experience;
-        } catch (e) {
-          handleError(errorMessagesWhileFetching.experienceReferences, e);
-          throw e;
+        } catch (error) {
+          handleError(errorMessagesWhileFetching.experienceReferences, error);
+          setError(error as Error);
         }
-      } catch (e) {
-        handleError(errorMessagesWhileFetching.experience, e);
-        throw e;
+      } catch (error) {
+        handleError(errorMessagesWhileFetching.experience, error);
+        setError(error as Error);
       } finally {
         setIsFetching(false);
       }
@@ -123,7 +137,8 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
 
         if (!experienceEntry) {
           const error = new Error(`No experience entry with id: ${id} exists`);
-          throw error;
+          setError(error as Error);
+          return;
         }
 
         try {
@@ -144,13 +159,13 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
           setExperience(experience);
 
           return experience;
-        } catch (e) {
-          handleError(errorMessagesWhileFetching.experienceReferences, e);
-          throw e;
+        } catch (error) {
+          handleError(errorMessagesWhileFetching.experienceReferences, error);
+          setError(error as Error);
         }
-      } catch (e) {
-        handleError(errorMessagesWhileFetching.experience, e);
-        throw e;
+      } catch (error) {
+        handleError(errorMessagesWhileFetching.experience, error);
+        setError(error as Error);
       } finally {
         setIsFetching(false);
       }
@@ -158,7 +173,18 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
     [client, mode]
   );
 
+  useEffect(() => {
+    if (slug) {
+      fetchBySlug({ slug, localeCode, experienceTypeId });
+    } else if (id) {
+      fetchById({ id, localeCode, experienceTypeId });
+    } else {
+      setError(Error('Either slug or id must be provided to useFetchExperience'));
+    }
+  }, [experienceTypeId, fetchById, fetchBySlug, id, localeCode, slug]);
+
   return {
+    error,
     fetchBySlug,
     fetchById,
     experience,

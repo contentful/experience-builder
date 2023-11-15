@@ -9,6 +9,7 @@ import { ExternalSDKMode } from '../types';
 const experienceTypeId = 'layout';
 const localeCode = 'en-US';
 const slug = 'hello-world';
+const id = 'composition-id';
 
 let clientMock: ContentfulClientApi<undefined>;
 
@@ -26,51 +27,44 @@ describe('useFetchExperience', () => {
     } as unknown as ContentfulClientApi<undefined>;
   });
 
-  it('should be defined', () => {
-    const res = renderHook((props) => useFetchExperience(props), {
-      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
+  it('should be defined', async () => {
+    const { result } = await act(async () => {
+      return renderHook(useFetchExperience, {
+        initialProps: {
+          client: clientMock,
+          mode: 'preview' as ExternalSDKMode,
+          slug,
+          experienceTypeId,
+          localeCode,
+        },
+      });
     });
 
-    const store = res.result.current;
-
-    expect(store).toEqual({
-      entityStore: undefined,
-      isFetching: false,
-      fetchBySlug: store.fetchBySlug,
-      fetchById: store.fetchById,
-    });
+    expect(result.current).toBeDefined();
+    expect(result.current.isFetching).toBe(false);
   });
 
   it('should fetch the experience by slug with bound entities', async () => {
-    const res = renderHook((props) => useFetchExperience(props), {
-      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
+    const { result } = await act(async () =>
+      renderHook(useFetchExperience, {
+        initialProps: {
+          client: clientMock,
+          mode: 'preview' as ExternalSDKMode,
+          slug,
+          experienceTypeId,
+          localeCode,
+        },
+      })
+    );
+
+    const entityStore = new EntityStore({
+      experienceEntry: compositionEntry as unknown as Entry,
+      entities: [...entries, ...assets],
+      locale: localeCode,
     });
 
-    const store = res.result.current;
-
-    expect(store).toEqual({
-      experience: undefined,
-      isFetching: false,
-      fetchBySlug: store.fetchBySlug,
-      fetchById: store.fetchById,
-    });
-
-    await act(async () => {
-      const experience = await store.fetchBySlug({
-        experienceTypeId,
-        localeCode,
-        slug,
-      });
-
-      const entityStore = new EntityStore({
-        experienceEntry: compositionEntry as unknown as Entry,
-        entities: [...entries, ...assets],
-        locale: localeCode,
-      });
-
-      expect(experience?.mode).toBe('preview');
-      expect(experience?.entityStore).toMatchObject(entityStore);
-    });
+    expect(result.current.experience?.mode).toBe('preview');
+    expect(result.current.experience?.entityStore).toMatchObject(entityStore);
 
     expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
       content_type: experienceTypeId,
@@ -88,44 +82,37 @@ describe('useFetchExperience', () => {
       locale: localeCode,
     });
 
-    expect(res.result.current).toEqual({
-      experience: res.result.current.experience,
+    expect(result.current).toEqual({
+      experience: result.current.experience,
       isFetching: false,
-      fetchBySlug: store.fetchBySlug,
-      fetchById: store.fetchById,
+      fetchBySlug: result.current.fetchBySlug,
+      fetchById: result.current.fetchById,
     });
   });
 
   it('should fetch the experience by id with bound entities', async () => {
-    const res = renderHook((props) => useFetchExperience(props), {
-      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
+    const { result } = await act(async () =>
+      renderHook(useFetchExperience, {
+        initialProps: {
+          client: clientMock,
+          mode: 'preview' as ExternalSDKMode,
+          id,
+          experienceTypeId,
+          localeCode,
+        },
+      })
+    );
+
+    const store = result.current;
+
+    const entityStore = new EntityStore({
+      experienceEntry: compositionEntry as unknown as Entry,
+      entities: [...entries, ...assets],
+      locale: localeCode,
     });
 
-    const store = res.result.current;
-
-    expect(store).toEqual({
-      experience: undefined,
-      isFetching: false,
-      fetchBySlug: store.fetchBySlug,
-      fetchById: store.fetchById,
-    });
-
-    await act(async () => {
-      const experience = await store.fetchById({
-        experienceTypeId,
-        localeCode,
-        id: compositionEntry.sys.id,
-      });
-
-      const entityStore = new EntityStore({
-        experienceEntry: compositionEntry as unknown as Entry,
-        entities: [...entries, ...assets],
-        locale: localeCode,
-      });
-
-      expect(experience?.mode).toBe('preview');
-      expect(experience?.entityStore).toMatchObject(entityStore);
-    });
+    expect(store.experience?.mode).toBe('preview');
+    expect(store.experience?.entityStore).toMatchObject(entityStore);
 
     expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
       content_type: experienceTypeId,
@@ -143,106 +130,149 @@ describe('useFetchExperience', () => {
       locale: localeCode,
     });
 
-    expect(res.result.current).toEqual({
-      experience: res.result.current.experience,
+    expect(result.current).toEqual({
+      experience: result.current.experience,
       isFetching: false,
       fetchBySlug: store.fetchBySlug,
       fetchById: store.fetchById,
     });
   });
 
-  it('should throw an error if experience entry was not found', async () => {
+  it('should return an error if experience entry was not found, then when slug changes to good entry the error should be undefined', async () => {
     clientMock.getEntries = jest.fn().mockResolvedValue({ items: [] });
-
-    const res = renderHook((props) => useFetchExperience(props), {
-      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
+    const initialProps = {
+      client: clientMock,
+      mode: 'preview' as ExternalSDKMode,
+      slug: 'unknown-slug',
+      experienceTypeId,
+      localeCode,
+    };
+    const { result, rerender } = await act(async () => {
+      return renderHook(useFetchExperience, { initialProps });
     });
 
-    try {
-      await act(() => res.result.current.fetchBySlug({ experienceTypeId, slug, localeCode }));
-    } catch (e) {
-      expect((e as Error).message).toBe(`No experience entry with slug: ${slug} exists`);
-    }
+    expect(result.current.error?.message).toBe(
+      'No experience entry with slug: unknown-slug exists'
+    );
 
-    expect(res.result.current.isFetching).toBe(false);
+    // Reset stub
+    clientMock.getEntries = jest.fn().mockImplementation((data) => {
+      if ('sys.id[in]' in data) {
+        return Promise.resolve({ items: entries });
+      }
+      return Promise.resolve({ items: [compositionEntry] });
+    });
+
+    await act(async () => rerender({ ...initialProps, slug: 'hello-world' }));
+
+    expect(result.current.error).toBeUndefined();
   });
 
-  it('should throw an error if multiple experience entries were found', async () => {
+  it('should return an error if multiple experience entries were found, then when slug changes to only one entry, then the error should be undefined', async () => {
     clientMock.getEntries = jest
       .fn()
       .mockResolvedValue({ items: [compositionEntry, compositionEntry] });
+    const initialProps = {
+      client: clientMock,
+      mode: 'preview' as ExternalSDKMode,
+      slug,
+      experienceTypeId,
+      localeCode,
+    };
+    const { result, rerender } = await act(async () =>
+      renderHook(useFetchExperience, { initialProps })
+    );
 
-    const res = renderHook((props) => useFetchExperience(props), {
-      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
-    });
+    expect(result.current.error?.message).toBe(
+      `More than one experience with identifier: ${JSON.stringify({ slug })} was found`
+    );
 
-    try {
-      await act(() => res.result.current.fetchBySlug({ experienceTypeId, slug, localeCode }));
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        `More than one experience with identifier: ${JSON.stringify({ slug })} was found`
-      );
-    }
+    expect(result.current.isFetching).toBe(false);
 
-    expect(res.result.current.isFetching).toBe(false);
+    // Reset stub
+    clientMock.getEntries = jest
+      .fn()
+      .mockResolvedValue({ items: [{ ...compositionEntry, slug: 'hello-world2' }] });
+
+    await act(async () => rerender({ ...initialProps, slug: 'hello-world2' }));
+
+    expect(result.current.error).toBeUndefined();
   });
 
-  it('should throw an error if experienceTypeId is not defined', async () => {
-    const res = renderHook((props) => useFetchExperience(props), {
-      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
-    });
+  it('should return an error if experienceTypeId is not defined', async () => {
+    const initialProps = {
+      client: clientMock,
+      mode: 'preview' as ExternalSDKMode,
+      slug,
+      localeCode,
+      experienceTypeId: undefined,
+    };
 
-    try {
-      await act(() =>
-        // @ts-expect-error undefined is not alloed through types, but it can still happen if invoked from a plain js
-        res.result.current.fetchBySlug({ experienceTypeId: undefined, slug, localeCode })
-      );
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided'
-      );
-    }
+    const { result, rerender } = await act(async () =>
+      renderHook(useFetchExperience, {
+        // @ts-expect-error undefined is not allowed through types, but it can still happen if invoked from a plain js
+        initialProps,
+      })
+    );
 
-    expect(res.result.current.isFetching).toBe(false);
+    expect(result.current.error?.message).toBe(
+      'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided'
+    );
+
+    await act(async () => rerender({ ...initialProps, experienceTypeId }));
+
+    expect(result.current.error).toBeUndefined();
   });
 
-  it('should throw an error if slug is not defined', async () => {
-    const res = renderHook((props) => useFetchExperience(props), {
-      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
-    });
+  it('should return an error if slug and id are both undefined, then when one becomes defined the error should be undefined', async () => {
+    const initialProps: Parameters<typeof useFetchExperience>[0] = {
+      client: clientMock,
+      mode: 'preview' as ExternalSDKMode,
+      slug: undefined,
+      id: undefined,
+      experienceTypeId,
+      localeCode,
+    };
 
-    try {
-      await act(() =>
-        // @ts-expect-error undefined is not alloed through types, but it can still happen if invoked from a plain js
-        res.result.current.fetchBySlug({ experienceTypeId, slug: undefined, localeCode })
-      );
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        `Failed to fetch experience entities. At least one identifier must be provided. Received: ${JSON.stringify(
-          {}
-        )}`
-      );
-    }
+    const { result, rerender } = await act(async () =>
+      renderHook(useFetchExperience, {
+        initialProps,
+      })
+    );
 
-    expect(res.result.current.isFetching).toBe(false);
+    expect(result.current.error?.message).toBe(
+      'Either slug or id must be provided to useFetchExperience'
+    );
+
+    expect(result.current.isFetching).toBe(false);
+
+    await act(async () => rerender({ ...initialProps, slug }));
+
+    expect(result.current.error).toBeUndefined();
   });
 
-  it('should throw an error if localeCode is not defined', async () => {
-    const res = renderHook((props) => useFetchExperience(props), {
-      initialProps: { client: clientMock, mode: 'preview' as ExternalSDKMode },
-    });
+  it('should return an error if localeCode is not defined, then when localCode is provided, the error should be undefined', async () => {
+    const initialProps: Parameters<typeof useFetchExperience>[0] = {
+      client: clientMock,
+      mode: 'preview' as ExternalSDKMode,
+      slug,
+      experienceTypeId,
+      // @ts-expect-error undefined is not allowed through types, but it can still happen if invoked from a plain js
+      localeCode: undefined,
+    };
 
-    try {
-      await act(() =>
-        // @ts-expect-error undefined is not alloed through types, but it can still happen if invoked from a plain js
-        res.result.current.fetchBySlug({ experienceTypeId, slug, localeCode: undefined })
-      );
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "locale" parameter was not provided'
-      );
-    }
+    const { result, rerender } = await act(async () =>
+      renderHook(useFetchExperience, { initialProps })
+    );
 
-    expect(res.result.current.isFetching).toBe(false);
+    expect(result.current.error?.message).toBe(
+      'Failed to fetch experience entities. Required "locale" parameter was not provided'
+    );
+
+    expect(result.current.isFetching).toBe(false);
+
+    await act(async () => rerender({ ...initialProps, localeCode }));
+
+    expect(result.current.error).toBeUndefined();
   });
 });
