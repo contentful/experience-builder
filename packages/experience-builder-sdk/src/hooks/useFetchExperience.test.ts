@@ -210,7 +210,7 @@ describe('useFetchExperience', () => {
 
     const { result, rerender } = await act(async () =>
       renderHook(useFetchExperience, {
-        // @ts-expect-error undefined is not allowed through types, but it can still happen if invoked from a plain js
+        // @ts-expect-error undefined is not allowed through types, but it can still happen if invoked from plain js
         initialProps,
       })
     );
@@ -257,7 +257,7 @@ describe('useFetchExperience', () => {
       mode: 'preview' as ExternalSDKMode,
       slug,
       experienceTypeId,
-      // @ts-expect-error undefined is not allowed through types, but it can still happen if invoked from a plain js
+      // @ts-expect-error undefined is not allowed through types, but it can still happen if invoked from plain js
       localeCode: undefined,
     };
 
