@@ -11,7 +11,7 @@ import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 import { VisualEditorRoot } from './blocks/editor/VisualEditorRoot';
 
 type ExperienceRootProps = {
-  experience: Experience<EntityStore> | DeprecatedExperience;
+  experience?: Experience<EntityStore> | DeprecatedExperience;
   locale: string;
   /**
    * @deprecated
@@ -21,6 +21,10 @@ type ExperienceRootProps = {
 
 export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
   const [mode, setMode] = useState<InternalSDKMode>(() => {
+    if (!experience) {
+      return 'editor';
+    }
+
     if (supportedModes.includes(experience.mode)) {
       return experience.mode;
     }
@@ -47,7 +51,7 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
 
   if (!mode || !supportedModes.includes(mode)) return null;
 
-  if (mode === 'editor') {
+  if (!experience || mode === 'editor') {
     return (
       <ErrorBoundary>
         <VisualEditorRoot initialLocale={locale} mode={mode} />
