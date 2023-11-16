@@ -41,6 +41,7 @@ export const CONTENTFUL_SECTION_NAME = 'Section'; // TODO: remove me once all cu
 export const CONTENTFUL_CONTAINER_NAME = 'Container';
 export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component';
 export const DESIGN_COMPONENT_NODE_TYPE = 'designComponent';
+export const DESIGN_COMPONENT_DEFAULT_CATEGORY = 'Design Components';
 export const DESIGN_COMPONENT_BLOCK_NODE_TYPE = 'designComponentBlock';
 export const DESIGN_COMPONENT_NODE_TYPES = [
   DESIGN_COMPONENT_NODE_TYPE,
