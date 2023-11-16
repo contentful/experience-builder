@@ -176,11 +176,13 @@ export const useFetchExperience = ({
   useEffect(() => {
     if (slug) {
       fetchBySlug({ slug, localeCode, experienceTypeId });
-    } else if (id) {
-      fetchById({ id, localeCode, experienceTypeId });
-    } else {
-      setError(Error('Either slug or id must be provided to useFetchExperience'));
+      return;
     }
+    if (id) {
+      fetchById({ id, localeCode, experienceTypeId });
+      return;
+    }
+    setError(Error('Either slug or id must be provided to useFetchExperience'));
   }, [experienceTypeId, fetchById, fetchBySlug, id, localeCode, slug]);
 
   return {
