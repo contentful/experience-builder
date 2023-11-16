@@ -8,7 +8,6 @@ export const SCROLL_STATES = {
 
 export const OUTGOING_EVENTS = {
   Connected: 'connected',
-  HoveredSection: 'hoveredSection',
   MouseMove: 'mouseMove',
   NewHoveredElement: 'newHoveredElement',
   ComponentSelected: 'componentSelected',
@@ -17,7 +16,6 @@ export const OUTGOING_EVENTS = {
   ComponentDropped: 'componentDropped',
   CanvasReload: 'canvasReload',
   UpdateSelectedComponentCoordinates: 'updateSelectedComponentCoordinates',
-  UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
 };
