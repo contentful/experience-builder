@@ -22,7 +22,10 @@ type ExperienceRootProps = {
 export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
   const [mode, setMode] = useState<InternalSDKMode>(() => {
     if (!experience) {
-      return 'editor';
+      if (window !== window.parent) {
+        return 'editor';
+      }
+      return 'delivery';
     }
 
     if (supportedModes.includes(experience.mode)) {
@@ -51,13 +54,15 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
 
   if (!mode || !supportedModes.includes(mode)) return null;
 
-  if (!experience || mode === 'editor') {
+  if (mode === 'editor') {
     return (
       <ErrorBoundary>
         <VisualEditorRoot initialLocale={locale} mode={mode} />
       </ErrorBoundary>
     );
   }
+
+  if (!experience) return null;
 
   if (isDeprecatedExperience(experience)) {
     return (
