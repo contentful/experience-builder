@@ -22,7 +22,7 @@ type ExperienceRootProps = {
 export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
   const [mode, setMode] = useState<InternalSDKMode>(() => {
     if (!experience) {
-      if (window !== window.parent) {
+      if (typeof window !== 'undefined' && window !== window.parent) {
         return 'editor';
       }
       return 'delivery';
