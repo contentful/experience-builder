@@ -37,6 +37,7 @@ export enum IncomingExperienceBuilderEvent {
   SELECT_COMPONENT = 'selectComponent',
   HOVER_COMPONENT = 'hoverComponent',
   UPDATED_ENTITY = 'updatedEntity',
+  INIT_EDITOR = 'initEditor',
 }
 
 export enum InternalEvents {

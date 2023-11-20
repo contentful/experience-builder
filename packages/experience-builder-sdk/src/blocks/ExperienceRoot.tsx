@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, Suspense } from 'react';
 
 import { supportedModes } from '../constants';
 import { DeprecatedExperience, Experience, InternalSDKMode } from '../types';
@@ -7,10 +7,11 @@ import { ErrorBoundary } from './ErrorBoundary';
 import { isDeprecatedExperience } from '../typeguards';
 import { DeprecatedPreviewDeliveryRoot } from './DeprecatedPreviewDeliveryRoot';
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
-import { VisualEditorRoot } from './VisualEditorRoot';
+
+const VisualEditor = React.lazy(() => import('./VisualEditor'));
 
 type ExperienceRootProps = {
-  experience: Experience | DeprecatedExperience;
+  experience?: Experience | DeprecatedExperience;
   locale: string;
   /**
    * @deprecated
@@ -18,8 +19,24 @@ type ExperienceRootProps = {
   slug?: string;
 };
 
+function inIframe() {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+}
+
 export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
   const [mode, setMode] = useState<InternalSDKMode>(() => {
+    if (inIframe()) {
+      return 'editor';
+    }
+
+    if (!experience) {
+      return 'delivery';
+    }
+
     if (supportedModes.includes(experience.mode)) {
       return experience.mode;
     }
@@ -49,10 +66,14 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
   if (mode === 'editor') {
     return (
       <ErrorBoundary>
-        <VisualEditorRoot initialLocale={locale} mode={mode} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <VisualEditor mode={mode} initialLocale={locale} />
+        </Suspense>
       </ErrorBoundary>
     );
   }
+
+  if (!experience) return null;
 
   if (isDeprecatedExperience(experience)) {
     return (

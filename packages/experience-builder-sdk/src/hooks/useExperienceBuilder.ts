@@ -36,6 +36,7 @@ export const useExperienceBuilder = ({
     [mode, client, experienceTypeId]
   );
 
+  console.log('creating experience');
   return {
     /**
      * @deprecated please fetch the experience using `useFetchExperience` hook or fetch the data manually using `fetchers` or `client` and create experience with `createExperience` function

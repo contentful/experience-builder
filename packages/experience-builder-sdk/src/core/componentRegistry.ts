@@ -27,7 +27,7 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
 } satisfies Record<string, ComponentRegistration>;
 
 // pre-filling with the default component registrations
-const componentRegistry = new Map<string, ComponentRegistration>([
+export const componentRegistry = new Map<string, ComponentRegistration>([
   [
     DEFAULT_COMPONENT_REGISTRATIONS.container.definition.id,
     DEFAULT_COMPONENT_REGISTRATIONS.container,
@@ -76,9 +76,7 @@ export const enrichComponentDefinition = ({
 
 export const sendRegisteredComponentsMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
-  const registeredDefinitions = Array.from(componentRegistry.values()).map(
-    ({ definition }) => definition
-  );
+  const registeredDefinitions = Array.from(componentRegistry.values());
 
   sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, {
     definitions: registeredDefinitions,

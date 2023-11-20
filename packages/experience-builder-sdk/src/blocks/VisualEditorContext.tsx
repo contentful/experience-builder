@@ -34,6 +34,8 @@ type VisualEditorContextType = {
   unboundValues: CompositionUnboundValues;
   breakpoints: Breakpoint[];
   entityStore: React.MutableRefObject<EditorModeEntityStore>;
+  bundleUrl: string | null;
+  stylesUrl: string | null;
 };
 
 export const VisualEditorContext = React.createContext<VisualEditorContextType>({
@@ -47,6 +49,8 @@ export const VisualEditorContext = React.createContext<VisualEditorContextType>(
   },
   locale: null,
   breakpoints: [],
+  bundleUrl: null,
+  stylesUrl: null,
   entityStore: {} as React.MutableRefObject<EditorModeEntityStore>,
 });
 
@@ -68,6 +72,9 @@ export function VisualEditorContextProvider({
   const [isDragging, setIsDragging] = useState(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string>('');
   const [locale, setLocale] = useState<string>(initialLocale);
+
+  const [bundleUrl, setBundleUrl] = useState<string | null>(null);
+  const [stylesUrl, setStylesUrl] = useState<string | null>(null);
 
   const entityStore = useRef<EditorModeEntityStore>(
     new EditorModeEntityStore({
@@ -217,6 +224,12 @@ export function VisualEditorContextProvider({
           entity && entityStore.current.updateEntity(entity);
           break;
         }
+        case IncomingExperienceBuilderEvent.INIT_EDITOR: {
+          const { bundleUrl, stylesUrl } = payload;
+          setBundleUrl(bundleUrl);
+          setStylesUrl(stylesUrl);
+          break;
+        }
         case IncomingExperienceBuilderEvent.REQUEST_EDITOR_MODE: {
           // do nothing cause we are already in editor mode
           break;
@@ -283,6 +296,8 @@ export function VisualEditorContextProvider({
         tree,
         dataSource,
         unboundValues,
+        bundleUrl,
+        stylesUrl,
         isDragging,
         selectedNodeId,
         setSelectedNodeId,
