@@ -1,0 +1,147 @@
+.DraggableComponent {
+  pointer-events: auto;
+}
+
+.DraggableComponent--isDragging {
+  background: #abc7e510;
+  outline: 2px var(--puck-color-azure-8) solid;
+  overflow: hidden;
+}
+
+.DraggableComponent-contents {
+  position: relative; /* Reset stacking context */
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Prevent margin collapsing  */
+.DraggableComponent-contents::before,
+.DraggableComponent-contents::after {
+  content: " ";
+  display: table;
+}
+
+.DraggableComponent-overlay {
+  display: none;
+  background: #abc7e530;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  position: absolute;
+  z-index: 0;
+  font-family: var(--puck-font-stack);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.DraggableComponent-loadingOverlay {
+  background: var(--puck-color-white);
+  color: var(--puck-color-grey-2);
+  border-radius: 4px;
+  display: flex;
+  padding: 8px;
+  top: 8px;
+  right: 8px;
+  position: absolute;
+  z-index: 1;
+  pointer-events: all;
+  box-sizing: border-box;
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.DraggableComponent:hover:not(.DraggableComponent--isLocked)
+  > .DraggableComponent-overlay {
+  display: block;
+  pointer-events: none;
+}
+
+.DraggableComponent--forceHover > .DraggableComponent-overlay {
+  display: block;
+  pointer-events: none;
+}
+
+.DraggableComponent:not(.DraggableComponent--isSelected)
+  > .DraggableComponent-overlay {
+  outline: 2px var(--puck-color-azure-8) solid;
+}
+
+.DraggableComponent--indicativeHover > .DraggableComponent-overlay {
+  display: block;
+  background: transparent; /* We only use backgrounds on natural hovers */
+  pointer-events: none;
+}
+
+/* Won't work in FF */
+.DraggableComponent:not(.DraggableComponent--isSelected):has(
+    .DraggableComponent:hover > .DraggableComponent-overlay
+  )
+  > .DraggableComponent-overlay {
+  display: none;
+}
+
+.DraggableComponent--isSelected {
+  outline: 2px var(--puck-color-azure-6) solid;
+}
+
+.DraggableComponent--isSelected > .DraggableComponent-overlay {
+  background: none;
+  display: block;
+  position: sticky;
+  top: 56px;
+  z-index: 1;
+}
+
+.DraggableComponent-actions {
+  position: absolute;
+  right: 6.5px;
+  width: auto;
+  top: -48px;
+  padding: 4px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-radius: 8px;
+  background: var(--puck-color-grey-0);
+  color: white;
+  display: none;
+  gap: 4px;
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+
+.DraggableComponent--isSelected
+  > .DraggableComponent-overlay
+  > .DraggableComponent-actions {
+  display: flex;
+}
+
+.DraggableComponent-actionsLabel {
+  color: var(--puck-color-grey-7);
+  display: flex;
+  font-size: var(--puck-font-size-xxxs);
+  font-weight: 500;
+  justify-content: center;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 16px;
+  margin-right: 8px;
+  border-right: 1px solid var(--puck-color-grey-4);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.DraggableComponent-action {
+  background: transparent;
+  border: none;
+  color: var(--puck-color-grey-7);
+  padding: 6px 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.DraggableComponent-action:hover {
+  background: var(--puck-color-grey-2);
+  color: var(--puck-color-azure-5);
+  cursor: pointer;
+}
