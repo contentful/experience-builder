@@ -267,6 +267,10 @@ export function VisualEditorContextProvider({
           // do nothing cause we are already in editor mode
           break;
         }
+        case INCOMING_EVENTS.ComponentDragStarted: {
+          // do nothing cause we are already in editor mode
+          break;
+        }
         default:
           console.error(
             `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`
