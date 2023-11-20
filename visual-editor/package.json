@@ -8,8 +8,10 @@
   "style": "./dist/style.css",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc && vite build",
-    "build:watch": "tsc && vite build --watch",
+    "build": "tsc && vite build && npm run bundle",
+    "watch": "tsc && vite build --watch",
+    "bundle:watch": "watchify ./dist/index.cjs -o ./dist/bundle.js",
+    "bundle": "browserify ./dist/index.cjs -o ./dist/bundle.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "preview": "vite preview"
@@ -37,6 +39,8 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
+    "browserify": "^17.0.0",
+    "browserify-livereload": "^1.0.10",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
@@ -45,7 +49,8 @@
     "storybook": "^7.5.1",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
-    "vite-plugin-dts": "^3.6.3"
+    "vite-plugin-dts": "^3.6.3",
+    "watchify": "^4.0.0"
   },
   "peerDependencies": {
     "react": "^18.2.0",
