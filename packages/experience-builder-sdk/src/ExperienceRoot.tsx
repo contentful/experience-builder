@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState, Suspense } from 'react';
 const VisualEditor = React.lazy(() => import('./blocks/VisualEditor'));
 
 import { isDeprecatedExperience } from '@contentful/experience-builder-types';
+import { EntityStore } from './core/preview/EntityStore';
 import { supportedModes } from './constants';
 import { DeprecatedExperience, Experience, InternalSDKMode } from './types';
 import { validateExperienceBuilderConfig } from './utils/validation';
@@ -11,7 +12,12 @@ import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPrevie
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 
 type ExperienceRootProps = {
-  experience?: Experience | DeprecatedExperience;
+  experience: Experience<EntityStore> | DeprecatedExperience;
+  locale: string;
+  /**
+   * @deprecated
+   */
+  slug?: string;
 };
 
 function inIframe() {
@@ -22,14 +28,10 @@ function inIframe() {
   }
 }
 
-export const ExperienceRoot = ({ experience }: ExperienceRootProps) => {
+export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
   const [mode, setMode] = useState<InternalSDKMode>(() => {
     if (inIframe()) {
       return 'editor';
-    }
-
-    if (!experience) {
-      return 'delivery';
     }
 
     if (supportedModes.includes(experience.mode)) {
@@ -67,8 +69,6 @@ export const ExperienceRoot = ({ experience }: ExperienceRootProps) => {
       </ErrorBoundary>
     );
   }
-
-  if (!experience) return null;
 
   if (isDeprecatedExperience(experience)) {
     return (
