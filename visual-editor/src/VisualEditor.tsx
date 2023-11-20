@@ -7,6 +7,8 @@ import { VerticalSpace } from './components/editor-components/VerticalSpace';
 import { Flex } from './components/editor-components/Flex';
 import { Columns } from './components/editor-components/Columns';
 import { Container } from './components/editor-components/Container';
+import { sendMessage } from './communication/sendMessage';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder';
 
 // Describe the initial data
 const initialData: Data = {
@@ -28,7 +30,7 @@ const initialData: Data = {
       },
     },
     {
-      type: 'Button',
+      type: 'button',
       props: {
         id: 'Button-cdc56262-36ea-4f3a-8b45-43b1049f4217',
       },
@@ -42,7 +44,7 @@ const initialData: Data = {
       },
     },
     {
-      type: 'Button',
+      type: 'button',
       props: {
         id: 'Button-ab847982-a5e2-41f3-80ce-c3fbe7c166ad',
       },
@@ -127,22 +129,22 @@ const makeField = (
 const VisualEditor: React.FC<InitConfig> = ({ components = [] }) => {
   useEffect(() => {
     const onMouseMove = (event: MouseEvent) => {
-      const data = {
-        name: 'MOUSE_MOVE',
-        data: {
-          x: event.pageX,
-          y: event.pageY,
-        },
-      };
+      // const data = {
+      //   name: 'MOUSE_MOVE',
+      //   data: {
+      //     x: event.pageX,
+      //     y: event.pageY,
+      //   },
+      // };
 
-      window.parent.postMessage(JSON.stringify(data), '*');
+      sendMessage(OUTGOING_EVENTS.MouseMove, {
+        clientX: event.pageX,
+        clientY: event.pageY,
+      });
     };
-    const onMouseUp = (event: MouseEvent) => {
-      const data = {
-        name: 'MOUSE_UP',
-      };
 
-      window.parent.postMessage(JSON.stringify(data), '*');
+    const onMouseUp = () => {
+      sendMessage(OUTGOING_EVENTS.MouseUp);
     };
 
     document.addEventListener('mousemove', onMouseMove);
@@ -183,7 +185,7 @@ const VisualEditor: React.FC<InitConfig> = ({ components = [] }) => {
         return definitions;
       }
 
-      return { ...definitions, [obj.definition.name]: component };
+      return { ...definitions, [obj.definition.id]: component };
     }, {});
 
     const defaultCategories: Record<string, { components: string[] }> = {

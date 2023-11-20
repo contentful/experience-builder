@@ -5,6 +5,17 @@ interface Props {
   id: string;
 }
 
+function getStyle(style, snapshot) {
+  if (!snapshot.isDropAnimating) {
+    return style;
+  }
+  return {
+    ...style,
+    // cannot be 0, but make it super tiny
+    transitionDuration: `0.001s`,
+  };
+}
+
 const DraggableContainer: React.FC<Props> = ({ id }) => {
   return (
     <div
@@ -26,7 +37,7 @@ const DraggableContainer: React.FC<Props> = ({ id }) => {
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
                   style={{
-                    ...provided.draggableProps.style,
+                    ...getStyle(provided.draggableProps.style, snapshot),
                     width: 15,
                     height: 15,
                   }}

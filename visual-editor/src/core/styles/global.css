@@ -1,2 +1,14 @@
-@import "./color.css";
-@import "./typography.css";
+@import './color.css';
+@import './typography.css';
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#root,
+#visual-editor {
+  height: 100%;
+}

@@ -11,7 +11,13 @@ import { flushZones } from '../../lib/flush-zones';
 import { AppProvider, defaultAppState } from './context';
 import { useResolvedData } from '../../lib/use-resolved-data';
 import DraggableContainer from './DraggableContainer';
-
+import {
+  INCOMING_EVENTS,
+  tryParseMessage,
+  doesMismatchMessageSchema,
+  OUTGOING_EVENTS,
+} from '@contentful/experience-builder';
+import { sendMessage } from '@/communication/sendMessage';
 export const tryParse = (data: any) => {
   try {
     return JSON.parse(data);
@@ -143,20 +149,31 @@ export function Puck({
 
   const receiveMessage = (event: any) => {
     // Check the origin of the message for security
-
-    if (!event.data) {
+    let reason;
+    if ((reason = doesMismatchMessageSchema(event))) {
+      if (
+        event.origin.startsWith('http://localhost') &&
+        `${event.data}`.includes('webpackHotUpdate')
+      ) {
+        // reloadApp();
+        return;
+      } else {
+        console.warn(
+          `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
+          event
+        );
+      }
       return;
     }
 
-    const data = tryParse(event.data);
+    const eventData = tryParseMessage(event);
 
-    if (!data) {
-      return;
-    }
+    const { payload } = eventData;
 
-    if (data.name === 'START_DRAG') {
+    if (eventData.eventType === INCOMING_EVENTS.ComponentDragStarted) {
       dragState.current.dragStarted = true;
-      setDragItem(data.dragId || 'Heading');
+      setDragItem(payload.id || 'Heading');
+      return;
     }
   };
 
@@ -236,11 +253,7 @@ export function Puck({
               dragStarted: false,
             };
 
-            const data = {
-              name: 'MOUSE_UP',
-            };
-
-            window.parent.postMessage(JSON.stringify(data), '*');
+            sendMessage(OUTGOING_EVENTS.MouseUp);
             // User cancel drag
             if (!droppedItem.destination) {
               return;
@@ -307,7 +320,7 @@ export function Puck({
             <dropZoneContext.Consumer>
               {(ctx) => {
                 return (
-                  <div style={{}}>
+                  <>
                     {dragItem && <DraggableContainer id={dragItem} />}
                     {/* <DraggableContainer
                       id="Heading"
@@ -321,12 +334,14 @@ export function Puck({
                         position: 'relative',
                         display: 'flex',
                         flexDirection: 'column',
+                        height: '100%',
                       }}
                       onClick={() => setItemSelector(null)}
                       id="puck-frame">
                       <div
                         className="puck-root"
                         style={{
+                          height: '100%',
                           boxShadow: '0px 0px 0px 32px var(--puck-color-grey-10)',
                           // margin: 32,
                           zoom: 0.75,
@@ -342,7 +357,7 @@ export function Puck({
                       </div>
                       {/* Fill empty space under root */}
                     </div>
-                  </div>
+                  </>
                 );
               }}
             </dropZoneContext.Consumer>

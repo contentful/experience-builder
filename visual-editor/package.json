@@ -17,6 +17,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@contentful/experience-builder": "file:../../../experience-builder/packages/experience-builder-sdk/",
+    "@contentful/visual-sdk": "^1.0.0-alpha.32",
     "@hello-pangea/dnd": "^16.3.0",
     "event-emitter": "^0.3.5",
     "react-feather": "^2.0.10",
