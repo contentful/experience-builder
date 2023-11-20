@@ -1,10 +1,13 @@
-import { useExperienceBuilder, ExperienceRoot } from '@contentful/experience-builder';
+import {
+  useExperienceBuilder,
+  ExperienceRoot,
+  ExternalSDKMode,
+} from '@contentful/experience-builder';
 import React, { useMemo } from 'react';
 import { createClient } from 'contentful';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useExperienceBuilderComponents } from '@contentful/experience-builder-components';
 import '@contentful/experience-builder-components/styles.css';
-import { ExternalSDKMode } from '@contentful/experience-builder/dist/types';
 
 const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
 
@@ -35,7 +38,8 @@ const Page: React.FC = () => {
 
   const { experience, defineComponents } = useExperienceBuilder({
     experienceTypeId,
-    client,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    client: client as any,
     mode: mode as ExternalSDKMode,
   });
 
