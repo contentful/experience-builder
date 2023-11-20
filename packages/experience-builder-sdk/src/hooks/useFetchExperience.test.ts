@@ -1,6 +1,6 @@
 import { useFetchExperience } from './useFetchExperience';
+import { EntityStore } from '../core/preview/EntityStore';
 import { act, renderHook } from '@testing-library/react';
-import { EntityStore } from '../core/EntityStore';
 import { compositionEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
 import type { ContentfulClientApi, Entry } from 'contentful';
@@ -11,11 +11,6 @@ const localeCode = 'en-US';
 const slug = 'hello-world';
 
 let clientMock: ContentfulClientApi<undefined>;
-
-jest.mock('../core/constants', () => ({
-  SDK_VERSION: '0.0.0-test',
-  __esModule: true,
-}));
 
 describe('useFetchExperience', () => {
   beforeEach(() => {

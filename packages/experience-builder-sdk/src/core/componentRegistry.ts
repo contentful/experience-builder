@@ -1,15 +1,15 @@
+import { ComponentRegistration, ComponentDefinition } from '../types';
 import {
-  ComponentRegistration,
-  ComponentDefinition,
-  OutgoingExperienceBuilderEvent,
-  InternalEvents,
-} from '../types';
+  OUTGOING_EVENTS,
+  INTERNAL_EVENTS,
+  SDK_VERSION,
+  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_SECTION_ID,
+} from '../constants';
 import { builtInStyles as builtInStyleDefinitions } from './definitions/variables';
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../constants';
-import { ContentfulContainer } from '../blocks/ContentfulContainer';
+import { ContentfulContainer } from '../components/ContentfulContainer';
 import { containerDefinition } from './definitions/components';
 import { sendMessage } from '../communication/sendMessage';
-import { SDK_VERSION } from './constants';
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -78,7 +78,7 @@ export const sendRegisteredComponentsMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values());
 
-  sendMessage(OutgoingExperienceBuilderEvent.REGISTERED_COMPONENTS, {
+  sendMessage(OUTGOING_EVENTS.RegisteredComponents, {
     definitions: registeredDefinitions,
   });
 };
@@ -89,7 +89,7 @@ export const sendConnectedEventWithRegisteredComponents = () => {
     ({ definition }) => definition
   );
 
-  sendMessage(OutgoingExperienceBuilderEvent.CONNECTED, {
+  sendMessage(OUTGOING_EVENTS.Connected, {
     sdkVersion: SDK_VERSION,
     definitions: registeredDefinitions,
   });
@@ -111,7 +111,7 @@ export const defineComponents = (componentRegistrations: Array<ComponentRegistra
   }
 
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent(InternalEvents.COMPONENTS_REGISTERED));
+    window.dispatchEvent(new CustomEvent(INTERNAL_EVENTS.ComponentsRegistered));
   }
 };
 
@@ -130,4 +130,36 @@ export const getComponentRegistration = (id: string) => {
     return componentRegistry.get(CONTENTFUL_CONTAINER_ID);
   }
   return componentRegistry.get(id);
+};
+
+export const addComponentRegistration = (componentRegistration: ComponentRegistration) => {
+  componentRegistry.set(componentRegistration.definition.id, componentRegistration);
+};
+
+export const createDesignComponentRegistration = ({
+  definitionId,
+  definitionName,
+  component,
+}: {
+  definitionId: string;
+  definitionName?: string;
+  component: ComponentRegistration['component'];
+}) => {
+  const componentRegistration = componentRegistry.get(definitionId);
+
+  if (componentRegistration) {
+    return componentRegistration;
+  }
+
+  const definition = {
+    id: definitionId,
+    name: definitionName || 'Design Component',
+    variables: {} as ComponentDefinition['variables'],
+    children: true,
+    category: 'Design Components',
+  };
+
+  addComponentRegistration({ component, definition });
+
+  return componentRegistry.get(definitionId);
 };

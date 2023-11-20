@@ -1,11 +1,14 @@
-export { ExperienceRoot } from './blocks';
+export { ExperienceRoot } from './ExperienceRoot';
 export { useExperienceBuilder, getValueForBreakpoint, useFetchExperience } from './hooks';
 export { defineComponents } from './core/componentRegistry';
-export { calculateNodeDefaultHeight } from './core/stylesUtils';
+export { calculateNodeDefaultHeight } from './utils/stylesUtils';
+export { checkIfDesignComponent } from './utils/utils';
 export type {
   ComponentDefinition,
   ComponentRegistration,
+  EntityStore,
   Experience,
+  ExternalSDKMode,
   DeprecatedExperience,
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,
@@ -22,4 +25,5 @@ export {
   CONTENTFUL_CONTAINER_ID,
   LATEST_SCHEMA_VERSION,
 } from './constants';
-export { createExperience, fetchers } from './core';
+export { fetchers } from './core';
+export { createExperience } from './utils/createExperience';

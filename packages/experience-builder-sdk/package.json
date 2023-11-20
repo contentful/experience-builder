@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder",
-  "version": "2.6.1",
+  "version": "2.9.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -9,7 +9,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "VITE_SDK_VERSION=$npm_package_version vite build",
+    "prepare": "node ./bin/injectSDKVersion.cjs",
+    "prebuild": "node ./bin/injectSDKVersion.cjs",
+    "build": "vite build",
+    "watch": "vite build --watch",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
     "test:coverage": "NODE_ENV=test jest --coverage --maxWorkers 2",
@@ -22,6 +25,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@contentful/experience-builder-types": "^1.2.2",
     "@contentful/rich-text-types": "^16.2.1",
     "@contentful/visual-sdk": "^1.0.0-alpha.26",
     "classnames": "^2.3.2",
@@ -29,7 +33,9 @@
     "csstype": "^3.1.2",
     "lodash.get": "^4.4.2",
     "lodash.omit": "^4.5.0",
+    "lodash.random": "^3.2.0",
     "lodash.throttle": "^4.1.1",
+    "lodash.times": "^4.3.2",
     "md5": "^2.3.0",
     "vite-plugin-css-injected-by-js": "^3.1.1"
   },
@@ -53,6 +59,7 @@
     "jsdom": "^21.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
     "semantic-release": "19.0.5",
     "ts-jest": "^29.1.0",
     "typescript": "^5.2.2",

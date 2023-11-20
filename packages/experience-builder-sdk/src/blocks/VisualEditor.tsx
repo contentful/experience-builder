@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { ComponentRegistration, InternalSDKMode } from '../types';
-import { VisualEditorContextProvider } from './VisualEditorContext';
+import { VisualEditorContextProvider } from './editor/VisualEditorContext';
 import { componentRegistry } from '../core/componentRegistry';
-import { useEditorContext } from './useEditorContext';
+import { useEditorContext } from './editor/useEditorContext';
 
 // const bundleUrl = 'https://storage.googleapis.com/sandbox-eb/bundle.js';
 

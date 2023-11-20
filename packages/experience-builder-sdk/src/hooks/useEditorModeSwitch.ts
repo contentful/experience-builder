@@ -1,10 +1,7 @@
 import { useEffect, useRef } from 'react';
-import {
-  IncomingExperienceBuilderEvent,
-  InternalSDKMode,
-  OutgoingExperienceBuilderEvent,
-} from '../types';
-import { doesMismatchMessageSchema, tryParseMessage } from '../validation';
+import { InternalSDKMode } from '../types';
+import { INCOMING_EVENTS, OUTGOING_EVENTS } from '../constants';
+import { doesMismatchMessageSchema, tryParseMessage } from '../utils/validation';
 import { sendMessage } from '../communication/sendMessage';
 
 export const useEditorModeSwitch = ({
@@ -28,7 +25,7 @@ export const useEditorModeSwitch = ({
       }
       const eventData = tryParseMessage(event);
 
-      if (eventData.eventType === IncomingExperienceBuilderEvent.REQUEST_EDITOR_MODE) {
+      if (eventData.eventType === INCOMING_EVENTS.RequestEditorMode) {
         switchToEditorMode();
       }
     };
@@ -37,7 +34,7 @@ export const useEditorModeSwitch = ({
       window.addEventListener('message', onMessage);
 
       if (!hasConnectEventBeenSent.current) {
-        sendMessage(OutgoingExperienceBuilderEvent.CONNECTED);
+        sendMessage(OUTGOING_EVENTS.Connected);
         hasConnectEventBeenSent.current = true;
       }
     }

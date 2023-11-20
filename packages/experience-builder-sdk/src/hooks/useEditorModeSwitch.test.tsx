@@ -2,17 +2,10 @@ import { resetComponentRegistry } from '../core/componentRegistry';
 import { sendMessage } from '../communication/sendMessage';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useEditorModeSwitch } from './useEditorModeSwitch';
-import { ExternalSDKMode, OutgoingExperienceBuilderEvent } from '../types';
+import { ExternalSDKMode } from '../types';
+import { OUTGOING_EVENTS } from '../constants';
 
 jest.mock('../communication/sendMessage');
-jest.mock('../core/constants', () => {
-  return {
-    SDK_VERSION: '0.0.0-test',
-    CONTENTFUL_SECTION_ID: 'contentful-section',
-    CONTENTFUL_CONTAINER_ID: 'contentful-container',
-    __esModule: true,
-  };
-});
 
 describe('useEditorModeSwitch', () => {
   beforeEach(() => {
@@ -28,7 +21,7 @@ describe('useEditorModeSwitch', () => {
       },
     });
 
-    expect(sendMessage).toHaveBeenCalledWith(OutgoingExperienceBuilderEvent.CONNECTED);
+    expect(sendMessage).toHaveBeenCalledWith(OUTGOING_EVENTS.Connected);
   });
 
   it('should not send CONNECTED event in delivery mode', () => {

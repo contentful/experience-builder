@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.5...@contentful/experience-builder@2.9.0) (2023-11-20)
+
+### Features
+
+- add watch command to npm build command for hot reload development ([0e3de5e](https://github.com/contentful/experience-builder/commit/0e3de5ef9ea4e0db7e311a73e48c854f93e36e8b))
+
+## [2.8.5](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.4...@contentful/experience-builder@2.8.5) (2023-11-16)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
+## [2.8.4](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.3...@contentful/experience-builder@2.8.4) (2023-11-13)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
+## [2.8.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.2...@contentful/experience-builder@2.8.3) (2023-11-10)
+
+### Bug Fixes
+
+- **experience-builder-sdk:** export ExternalSDKMode and EntityStore types [] ([#156](https://github.com/contentful/experience-builder/issues/156)) ([32a50a8](https://github.com/contentful/experience-builder/commit/32a50a81d669506837caef3e653332ae84a35f76))
+
+## [2.8.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.1...@contentful/experience-builder@2.8.2) (2023-11-10)
+
+### Bug Fixes
+
+- **experience-builder-sdk:** update rollup config to not include react in build ([#155](https://github.com/contentful/experience-builder/issues/155)) ([7e0f5ca](https://github.com/contentful/experience-builder/commit/7e0f5ca8b731586fc43a26dd9d562013cb4b1250))
+
+## [2.8.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.0...@contentful/experience-builder@2.8.1) (2023-11-09)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
+# [2.8.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.3...@contentful/experience-builder@2.8.0) (2023-11-08)
+
+### Features
+
+- render design component within an experience [SPA-1583] ([#151](https://github.com/contentful/experience-builder/issues/151)) ([cb4a38a](https://github.com/contentful/experience-builder/commit/cb4a38a3fbf75f8c4773ff95b203a11ae12220bc))
+
+## [2.7.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.2...@contentful/experience-builder@2.7.3) (2023-11-07)
+
+### Bug Fixes
+
+- empty container highlight on hover ([4501be2](https://github.com/contentful/experience-builder/commit/4501be237704ea53cd7ea4bea3ccab92dc69668f))
+
+## [2.7.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.1...@contentful/experience-builder@2.7.2) (2023-11-06)
+
+### Bug Fixes
+
+- minor change to empty container font color [ALT-59] ([3a08275](https://github.com/contentful/experience-builder/commit/3a082759b97e03f9dc7a218001e255fe458b58a0))
+
+## [2.7.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.7.0...@contentful/experience-builder@2.7.1) (2023-11-06)
+
+### Bug Fixes
+
+- correctly retrieve the url from the bound asset in preview/delivery ([#152](https://github.com/contentful/experience-builder/issues/152)) ([cb36d40](https://github.com/contentful/experience-builder/commit/cb36d40ee87d5d6cc11e2b099cb5490429567523))
+
+# [2.7.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.6.3...@contentful/experience-builder@2.7.0) (2023-11-06)
+
+### Features
+
+- [SPA-1522] send also the margins with the coordinates ([#149](https://github.com/contentful/experience-builder/issues/149)) ([4ef60ba](https://github.com/contentful/experience-builder/commit/4ef60baf75ce5ed0ad84bb1d260714233afe14eb))
+
+## [2.6.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.6.2...@contentful/experience-builder@2.6.3) (2023-11-06)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
+## [2.6.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.6.1...@contentful/experience-builder@2.6.2) (2023-10-30)
+
+### Bug Fixes
+
+- initial setup for experience-builder-types [SPA-1395] ([#145](https://github.com/contentful/experience-builder/issues/145)) ([7b138ab](https://github.com/contentful/experience-builder/commit/7b138ab68ff2e1d685c95d665de5f7930d897916))
+
 ## [2.6.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.6.0...@contentful/experience-builder@2.6.1) (2023-10-27)
 
 ### Bug Fixes
