@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.5...@contentful/experience-builder@2.9.0) (2023-11-20)
+
+### Features
+
+- add watch command to npm build command for hot reload development ([0e3de5e](https://github.com/contentful/experience-builder/commit/0e3de5ef9ea4e0db7e311a73e48c854f93e36e8b))
+
 ## [2.8.5](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.4...@contentful/experience-builder@2.8.5) (2023-11-16)
 
 **Note:** Version bump only for package @contentful/experience-builder
