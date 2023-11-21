@@ -203,11 +203,9 @@ export function VisualEditorContextProvider({
         }
         case INCOMING_EVENTS.DesignComponentsAdded: {
           const {
-            tree,
             designComponent,
             designComponentDefinition,
           }: {
-            tree: CompositionTree;
             designComponent: Entry;
             designComponentDefinition: ComponentRegistration['definition'];
           } = payload;
@@ -224,7 +222,6 @@ export function VisualEditorContextProvider({
                 component: DesignComponent,
                 definition: designComponentDefinition,
               });
-            setTree(tree);
           }
           break;
         }
