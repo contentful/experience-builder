@@ -15,14 +15,18 @@ export const deserializeDesignComponentNode = ({
   node,
   nodeId,
   parentId,
-  experienceDataSource,
-  experienceUnboundValues,
+  designComponentDataSource,
+  designComponentUnboundValues,
+  componentInstanceProps,
+  componentInstanceUnboundValues,
 }: {
   node: CompositionNode;
   nodeId: string;
   parentId?: string;
-  experienceDataSource: CompositionDataSource;
-  experienceUnboundValues: CompositionUnboundValues;
+  designComponentDataSource: CompositionDataSource;
+  designComponentUnboundValues: CompositionUnboundValues;
+  componentInstanceProps: CompositionComponentNode['data']['props'];
+  componentInstanceUnboundValues: CompositionUnboundValues;
 }): CompositionComponentNode => {
   const childNodeVariable: Record<string, CompositionComponentPropValue> = {};
   const dataSource: CompositionDataSource = {};
@@ -33,10 +37,16 @@ export const deserializeDesignComponentNode = ({
     if (variable.type === 'BoundValue') {
       const [, uuid, ,] = variable.path.split('/');
 
-      dataSource[uuid] = { ...experienceDataSource[uuid] };
+      dataSource[uuid] = { ...designComponentDataSource[uuid] };
     } else if (variable.type === 'UnboundValue') {
       const uuid = variable.key;
-      unboundValues[uuid] = experienceUnboundValues[uuid];
+      unboundValues[uuid] = designComponentUnboundValues[uuid];
+    } else if (variable.type === 'ComponentValue') {
+      const uuid = variable.key;
+      // For design component, we are only handling binding for UnboundValues for now
+      if (componentInstanceProps[uuid].type === 'UnboundValue') {
+        unboundValues[uuid] = componentInstanceUnboundValues[componentInstanceProps[uuid]['key']];
+      }
     }
   }
 
@@ -47,8 +57,10 @@ export const deserializeDesignComponentNode = ({
       node: child,
       nodeId: generateRandomId(16),
       parentId: nodeId,
-      experienceDataSource,
-      experienceUnboundValues,
+      designComponentDataSource,
+      designComponentUnboundValues,
+      componentInstanceProps,
+      componentInstanceUnboundValues,
     })
   );
 
@@ -102,8 +114,10 @@ export const resolveDesignComponent = ({
     },
     nodeId: node.data.id,
     parentId: node.parentId,
-    experienceDataSource: {},
-    experienceUnboundValues: componentFields.unboundValues,
+    designComponentDataSource: {},
+    designComponentUnboundValues: componentFields.unboundValues,
+    componentInstanceProps: node.data.props,
+    componentInstanceUnboundValues: node.data.unboundValues,
   });
 
   return deserializedNode;
