@@ -28,6 +28,9 @@ export const resolveDesignComponent = ({
   }
 
   const componentFields = (designComponent as ExperienceEntry).fields as unknown as Composition;
+  if (!componentFields) {
+    return node;
+  }
 
   const deserializedNode = {
     ...node,
