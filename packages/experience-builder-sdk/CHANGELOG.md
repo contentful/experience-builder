@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.10.0...@contentful/experience-builder@2.10.1) (2023-11-21)
+
+### Bug Fixes
+
+- allow ExperienceRoot to render editor mode when entry first created [ALT-104] ([d69d5da](https://github.com/contentful/experience-builder/commit/d69d5dabd448929164ab37a93bdab8122fbfe899))
+- incorporate reviewer feedback ([ea236c9](https://github.com/contentful/experience-builder/commit/ea236c93eab52b51135169dfa43f1c73948f32b6))
+- refactoring and update contentful cli to latest [ALT-106] ([7b290a2](https://github.com/contentful/experience-builder/commit/7b290a23e000cd1ad4704da5dbaaa04c735f8bfb))
+
 # [2.10.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.9.0...@contentful/experience-builder@2.10.0) (2023-11-21)
 
 ### Features
