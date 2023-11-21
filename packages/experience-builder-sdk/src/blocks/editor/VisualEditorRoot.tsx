@@ -7,7 +7,7 @@ import { onComponentDropped } from '../../communication/onComponentDrop';
 import { EditorModeEntityStore } from '../../core/editor/EditorModeEntityStore';
 import { useBreakpoints } from '../../hooks/useBreakpoints';
 import { useHoverIndicator } from '../../hooks/useHoverIndicator';
-import { InternalSDKMode } from '../../types';
+import { CompositionComponentNode, InternalSDKMode } from '../../types';
 import { useEditorContext } from './useEditorContext';
 import { VisualEditorContextProvider, designComponentsRegistry } from './VisualEditorContext';
 
@@ -69,9 +69,10 @@ const VisualEditorRootComponents = () => {
   if (!tree?.root.children.length) {
     return React.createElement(EmptyEditorContainer, { isDragging }, []);
   }
+
   return (
     <div id="VisualEditorRoot" className="root" data-type="root">
-      {tree.root.children.map((node: any) => (
+      {tree.root.children.map((node: CompositionComponentNode) => (
         <VisualEditorBlock
           key={node.data.id}
           node={node}
