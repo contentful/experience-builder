@@ -34,8 +34,10 @@ describe('deserializeDesignComponentNode', () => {
       node,
       nodeId: 'random-node-id',
       parentId: 'root',
-      experienceDataSource: {},
-      experienceUnboundValues: designComponentEntry.fields.unboundValues,
+      designComponentDataSource: {},
+      designComponentUnboundValues: designComponentEntry.fields.unboundValues,
+      componentInstanceProps: {},
+      componentInstanceUnboundValues: {},
     });
 
     expect(result).toEqual({

@@ -25,7 +25,7 @@ export const deserializeDesignComponentNode = ({
   parentId?: string;
   designComponentDataSource: CompositionDataSource;
   designComponentUnboundValues: CompositionUnboundValues;
-  componentInstanceProps: CompositionComponentNode['data']['props'];
+  componentInstanceProps: Record<string, CompositionComponentPropValue>;
   componentInstanceUnboundValues: CompositionUnboundValues;
 }): CompositionComponentNode => {
   const childNodeVariable: Record<string, CompositionComponentPropValue> = {};
@@ -43,9 +43,11 @@ export const deserializeDesignComponentNode = ({
       unboundValues[uuid] = designComponentUnboundValues[uuid];
     } else if (variable.type === 'ComponentValue') {
       const uuid = variable.key;
+      const variableMapping = componentInstanceProps[uuid];
+
       // For design component, we are only handling binding for UnboundValues for now
-      if (componentInstanceProps[uuid].type === 'UnboundValue') {
-        unboundValues[uuid] = componentInstanceUnboundValues[componentInstanceProps[uuid]['key']];
+      if (variableMapping.type === 'UnboundValue') {
+        unboundValues[uuid] = componentInstanceUnboundValues[variableMapping.key];
       }
     }
   }
