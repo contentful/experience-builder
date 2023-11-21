@@ -121,9 +121,26 @@ export const VisualEditorBlock = ({
           const [, uuid, ...path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
-          const boundValue = areEntitiesFetched
+          let boundValue: string | Link<'Asset'> | undefined = areEntitiesFetched
             ? entityStore.current?.getValue(binding, path.slice(0, -1))
             : undefined;
+
+          // If there is no boundValue found, we check with the second last item removed as well
+          // this might be the case for the additional linked asset
+          if (!boundValue) {
+            boundValue = areEntitiesFetched
+              ? (entityStore.current?.getValue(
+                  binding,
+                  path.slice(0, -2)
+                ) as unknown as Link<'Asset'>)
+              : undefined;
+          }
+
+          if (typeof boundValue === 'object' && boundValue.sys.linkType === 'Asset') {
+            boundValue = entityStore.current?.getValue(boundValue, ['fields', 'file']);
+            console.log('HERE', boundValue);
+          }
+
           const value = boundValue || variableDefinition.defaultValue;
 
           return {

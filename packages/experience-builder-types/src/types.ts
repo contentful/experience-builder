@@ -34,6 +34,7 @@ export type ComponentDefinitionVariableType =
   | 'Date'
   | 'Boolean'
   | 'Location'
+  | 'Media'
   | 'Object';
 // | 'Link'
 // | 'Array'
