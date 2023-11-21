@@ -12,7 +12,10 @@ import {
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
 import { CompositionComponentNode } from '../../types';
 import { VisualEditorBlock } from './VisualEditorBlock';
-import { createDesignComponentEntry } from '../../../test/__fixtures__/composition';
+import {
+  createDesignComponentEntry,
+  designComponentGeneratedVariableName,
+} from '../../../test/__fixtures__/composition';
 import { EditorModeEntityStore } from '../../core/editor/EditorModeEntityStore';
 import { assets } from '../../../test/__fixtures__/entities';
 import { Asset, Entry } from 'contentful';
@@ -188,9 +191,18 @@ describe('VisualEditorBlock', () => {
       data: {
         id: 'random-design-component-id',
         blockId: designComponentEntry.sys.id,
-        props: {},
+        props: {
+          [designComponentGeneratedVariableName]: {
+            type: 'UnboundValue',
+            key: 'unbound_uuid1Experience',
+          },
+        },
         dataSource: {},
-        unboundValues: designComponentEntry.fields.unboundValues,
+        unboundValues: {
+          unbound_uuid1Experience: {
+            value: 'New year eve',
+          },
+        },
         breakpoints: [],
       },
       children: [],
@@ -209,9 +221,9 @@ describe('VisualEditorBlock', () => {
 
     expect(getByTestId('design-component')).toBeInTheDocument();
     expect(getByTestId('contentful-container')).toBeInTheDocument();
-    expect(getByText('custom component title')).toBeInTheDocument();
+    expect(getByText('New year eve')).toBeInTheDocument();
 
-    fireEvent.mouseDown(getByText('custom component title'));
+    fireEvent.mouseDown(getByText('New year eve'));
     expect(sendMessage).toHaveBeenCalledWith('componentSelected', {
       nodeId: designComponentNode.data.id,
     });

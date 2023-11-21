@@ -10,6 +10,7 @@ import type { Entry } from 'contentful';
 import {
   compositionEntry,
   createDesignComponentEntry,
+  designComponentGeneratedVariableName,
 } from '../../../test/__fixtures__/composition';
 import { EntityStore } from '../../core/preview/EntityStore';
 import { assets, entries } from '../../../test/__fixtures__/entities';
@@ -147,13 +148,17 @@ describe('CompositionBlock', () => {
         breakpoints={[]}
         entityStore={entityStore}
         usedComponents={[designComponentEntry] as ExperienceEntry[]}
-        unboundValues={{}}
+        unboundValues={{
+          [designComponentGeneratedVariableName]: {
+            value: 'New year eve',
+          },
+        }}
         resolveDesignValue={jest.fn()}
       />
     );
 
     expect(getByTestId('design-component')).toBeInTheDocument();
     expect(getByTestId('contentful-container')).toBeInTheDocument();
-    expect(getByText('custom component title')).toBeInTheDocument();
+    expect(getByText('New year eve')).toBeInTheDocument();
   });
 });
