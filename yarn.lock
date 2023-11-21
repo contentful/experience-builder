@@ -3148,17 +3148,19 @@ axios@1.1.3:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-axios@^0.26.1:
-  version "0.26.1"
-  resolved "https://registry.npmjs.org/axios/-/axios-0.26.1.tgz"
-  integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
-  dependencies:
-    follow-redirects "^1.14.8"
-
 axios@^1.0.0:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.5.1.tgz#11fbaa11fc35f431193a9564109c88c1f27b585f"
   integrity sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==
+  dependencies:
+    follow-redirects "^1.15.0"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
+axios@^1.6.0:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.2.tgz#de67d42c755b571d3e698df1b6504cde9b0ee9f2"
+  integrity sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==
   dependencies:
     follow-redirects "^1.15.0"
     form-data "^4.0.0"
@@ -3826,35 +3828,34 @@ console-control-strings@^1.1.0:
   resolved "https://registry.npmjs.org/console-control-strings/-/console-control-strings-1.1.0.tgz"
   integrity sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==
 
-contentful-resolve-response@^1.3.6:
-  version "1.7.0"
-  resolved "https://registry.npmjs.org/contentful-resolve-response/-/contentful-resolve-response-1.7.0.tgz"
-  integrity sha512-NIaQkXAdNWf/1wp13aqtrmHWHy71oCIIbynojGs9ONDtA7hBXC2yCEf2IjzfgOkrkEfOMvwDQHizD0WmL6FR8w==
+contentful-resolve-response@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/contentful-resolve-response/-/contentful-resolve-response-1.8.1.tgz#b44ff13e12fab7deb00ef6216d8a7171bdda0395"
+  integrity sha512-VXGK2c8dBIGcRCknqudKmkDr2PzsUYfjLN6hhx71T09UzoXOdA/c0kfDhsf/BBCBWPWcLaUgaJEFU0lCo45TSg==
   dependencies:
     fast-copy "^2.1.7"
 
-contentful-sdk-core@^7.0.2:
-  version "7.1.0"
-  resolved "https://registry.npmjs.org/contentful-sdk-core/-/contentful-sdk-core-7.1.0.tgz"
-  integrity sha512-RzTPnRsbCdVAhyka3wa9sDsAu9YsxoerNgaMqd63Ljb7qpG2zkdHcP7NTfyIbuHDJNJdAQdifyafxfEEwP+q/w==
+contentful-sdk-core@^8.1.0:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/contentful-sdk-core/-/contentful-sdk-core-8.1.1.tgz#810ebdf3daec03153930fb66cc1917e0dd412e2a"
+  integrity sha512-0oWZmU4V9AgFVwljJLQc1sQJzxSodnLQk9TCmUTFw12rjiloPKYLRo4iz6KJD1enyVmZsz+Ckb0wADUVvFKg6A==
   dependencies:
     fast-copy "^2.1.7"
     lodash.isplainobject "^4.0.6"
     lodash.isstring "^4.0.1"
     p-throttle "^4.1.1"
-    qs "^6.9.4"
 
-contentful@^10.3.0:
-  version "10.3.0"
-  resolved "https://registry.npmjs.org/contentful/-/contentful-10.3.0.tgz"
-  integrity sha512-o1AhgGHzn3TwWXvAbY3fHJk/QZ/uGNBBtjE9C3h86cQMUU4glGcKpzI6qp/80efCG4DLROxzjtgSOPSuE7BbRg==
+contentful@^10.6.10:
+  version "10.6.10"
+  resolved "https://registry.yarnpkg.com/contentful/-/contentful-10.6.10.tgz#921b51b0e3bb3a824ca9c64e93beeec229072a8f"
+  integrity sha512-9i3Op+6QatXzPGc3dEUHpl2VjKOQ7QX+leelUTbXFWXTI5Mh54+OfiRYdqDxZUPtySHWHU2z0rNQp6a4DzsTKQ==
   dependencies:
     "@contentful/rich-text-types" "^16.0.2"
-    axios "^0.26.1"
-    contentful-resolve-response "^1.3.6"
-    contentful-sdk-core "^7.0.2"
+    axios "^1.6.0"
+    contentful-resolve-response "^1.8.1"
+    contentful-sdk-core "^8.1.0"
     json-stringify-safe "^5.0.1"
-    type-fest "^3.1.0"
+    type-fest "^4.0.0"
 
 conventional-changelog-angular@6.0.0, conventional-changelog-angular@^6.0.0:
   version "6.0.0"
@@ -5132,11 +5133,6 @@ flatted@^3.2.9:
   version "3.2.9"
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.9.tgz#7eb4c67ca1ba34232ca9d2d93e9886e611ad7daf"
   integrity sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==
-
-follow-redirects@^1.14.8:
-  version "1.15.2"
-  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.2.tgz"
-  integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
 
 follow-redirects@^1.15.0:
   version "1.15.3"
@@ -9452,13 +9448,6 @@ qrcode-terminal@^0.12.0:
   resolved "https://registry.npmjs.org/qrcode-terminal/-/qrcode-terminal-0.12.0.tgz"
   integrity sha512-EXtzRZmC+YGmGlDFbXKxQiMZNwCLEO6BANKXG4iCtSIM0yqc/pappSx3RIKr4r0uh5JsBckOXeKrB3Iz7mdQpQ==
 
-qs@^6.9.4:
-  version "6.11.2"
-  resolved "https://registry.npmjs.org/qs/-/qs-6.11.2.tgz"
-  integrity sha512-tDNIz22aBzCDxLtVH++VnTfzxlfeK5CbqohpSqpJgj1Wg/cQbStNAz3NuqCs5vV+pjBsK4x4pN9HlVh7rcYRiA==
-  dependencies:
-    side-channel "^1.0.4"
-
 querystringify@^2.1.1:
   version "2.2.0"
   resolved "https://registry.npmjs.org/querystringify/-/querystringify-2.2.0.tgz"
@@ -10789,10 +10778,10 @@ type-fest@^1.0.2:
   resolved "https://registry.npmjs.org/type-fest/-/type-fest-1.4.0.tgz"
   integrity sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==
 
-type-fest@^3.1.0:
-  version "3.12.0"
-  resolved "https://registry.npmjs.org/type-fest/-/type-fest-3.12.0.tgz"
-  integrity sha512-qj9wWsnFvVEMUDbESiilKeXeHL7FwwiFcogfhfyjmvT968RXSvnl23f1JOClTHYItsi7o501C/7qVllscUP3oA==
+type-fest@^4.0.0:
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-4.8.1.tgz#2a5bf1074abb580d2d6eb5c1e79c11147fd11d4f"
+  integrity sha512-ShaaYnjf+0etG8W/FumARKMjjIToy/haCaTjN2dvcewOSoNqCQzdgG7m2JVOlM5qndGTHjkvsrWZs+k/2Z7E0Q==
 
 typed-array-buffer@^1.0.0:
   version "1.0.0"
