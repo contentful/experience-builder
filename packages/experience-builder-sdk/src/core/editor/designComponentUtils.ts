@@ -34,14 +34,7 @@ export const deserializeDesignComponentNode = ({
 
   for (const [variableName, variable] of Object.entries(node.variables)) {
     childNodeVariable[variableName] = variable;
-    if (variable.type === 'BoundValue') {
-      const [, uuid, ,] = variable.path.split('/');
-
-      dataSource[uuid] = { ...designComponentDataSource[uuid] };
-    } else if (variable.type === 'UnboundValue') {
-      const uuid = variable.key;
-      unboundValues[uuid] = designComponentUnboundValues[uuid];
-    } else if (variable.type === 'ComponentValue') {
+    if (variable.type === 'ComponentValue') {
       const uuid = variable.key;
       const variableMapping = componentInstanceProps[uuid];
 
