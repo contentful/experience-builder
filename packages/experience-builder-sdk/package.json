@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder",
-  "version": "2.8.4-alpha-312",
+  "version": "2.8.4",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -11,7 +11,7 @@
     "dev": "vite",
     "prepare": "node ./bin/injectSDKVersion.cjs",
     "prebuild": "node ./bin/injectSDKVersion.cjs",
-    "build": "node bump-alpha.cjs && vite build",
+    "build": "vite build",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
     "test:coverage": "NODE_ENV=test jest --coverage --maxWorkers 2",
