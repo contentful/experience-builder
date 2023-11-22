@@ -125,8 +125,10 @@ export const VisualEditorBlock = ({
             ? entityStore.current?.getValue(binding, path.slice(0, -1))
             : undefined;
 
-          // If there is no boundValue found, we check with the second last item removed as well
-          // this might be the case for the additional linked asset
+          // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
+          // If no 'boundValue' is found, we also attempt to extract the value associated with the second-to-last item in the path.
+          // If successful, it means we have identified the linked asset.
+
           if (!boundValue) {
             boundValue = areEntitiesFetched
               ? (entityStore.current?.getValue(
