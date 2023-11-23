@@ -46,7 +46,7 @@ export const deserializeDesignComponentNode = ({
       const variableMapping = componentInstanceProps[uuid];
 
       // For design component, we are only handling binding for UnboundValues for now
-      if (variableMapping.type === 'UnboundValue') {
+      if (variableMapping?.type === 'UnboundValue') {
         unboundValues[uuid] = componentInstanceUnboundValues[variableMapping.key];
       }
     }
