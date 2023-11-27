@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "prepare": "node ./bin/injectSDKVersion.cjs",
+    "prepare": "node ./bin/injectSDKVersion.cjs && relative-deps",
     "prebuild": "node ./bin/injectSDKVersion.cjs",
     "build": "vite build",
     "watch": "vite build --watch",
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@contentful/experience-builder-types": "^1.2.2",
+    "@contentful/experience-builder-visual-editor": "^0.0.1-dev126",
     "@contentful/rich-text-types": "^16.2.1",
     "@contentful/visual-sdk": "^1.0.0-alpha.26",
     "classnames": "^2.3.2",
@@ -59,6 +60,7 @@
     "jsdom": "^21.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "relative-deps": "^1.0.7",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "semantic-release": "19.0.5",
     "ts-jest": "^29.1.0",
@@ -74,5 +76,8 @@
   "files": [
     "dist",
     "package.json"
-  ]
+  ],
+  "relativeDependencies": {
+    "@contentful/experience-builder-visual-editor": "../../../experience-builder-toolkit/packages/visual-editor"
+  }
 }
