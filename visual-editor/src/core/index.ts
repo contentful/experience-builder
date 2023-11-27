@@ -5,5 +5,3 @@ export * from './types/Config';
 export * from './components/DropZone';
 export * from './components/IconButton';
 export * from './components/Puck';
-
-export * from './lib/resolve-all-data';

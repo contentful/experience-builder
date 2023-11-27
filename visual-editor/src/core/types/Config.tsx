@@ -2,6 +2,7 @@ import { ReactElement } from 'react';
 import { ReactNode } from 'react';
 import { ItemSelector } from '../lib/get-item';
 import { DropZone } from '../components/DropZone';
+import { CompositionComponentNode } from '@/types';
 
 type WithPuckProps<Props> = Props & {
   id: string;
@@ -98,7 +99,7 @@ export type Fields<ComponentProps extends DefaultComponentProps = DefaultCompone
 };
 
 export type Content<Props extends { [key: string]: any } = { [key: string]: any }> =
-  ComponentData<Props>[];
+  ComponentData[];
 
 export type PuckComponent<Props extends DefaultComponentProps = DefaultComponentProps> = (
   props: WithPuckProps<Props & { puck: PuckContext }>
@@ -111,17 +112,10 @@ export type PuckContext = {
 export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
   DefaultProps = ComponentProps,
-  DataShape = ComponentData<ComponentProps>,
 > = {
+  id: string;
   render: PuckComponent<ComponentProps>;
   defaultProps?: DefaultProps;
-  fields?: Fields<ComponentProps>;
-  resolveData?: (
-    data: DataShape,
-    params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
-  ) =>
-    | Promise<Partial<ComponentDataWithOptionalProps<ComponentProps>>>
-    | Partial<ComponentDataWithOptionalProps<ComponentProps>>;
 };
 
 type Category<ComponentName> = {
@@ -148,8 +142,7 @@ export type Config<
   root?: Partial<
     ComponentConfig<
       RootProps & { children: ReactNode },
-      Partial<RootProps & { children: ReactNode }>,
-      RootDataWithProps<RootProps>
+      Partial<RootProps & { children: ReactNode }>
     >
   >;
 };
@@ -158,10 +151,7 @@ export type BaseData<Props extends { [key: string]: any } = { [key: string]: any
   readOnly?: Partial<Record<keyof Props, boolean>>;
 };
 
-export type ComponentData<Props extends DefaultComponentProps = DefaultComponentProps> = {
-  type: keyof Props;
-  props: WithPuckProps<Props>;
-} & BaseData<Props>;
+export type ComponentData = CompositionComponentNode;
 
 export type RootDataWithProps<Props extends DefaultRootProps = DefaultRootProps> = {
   props: Props;
@@ -187,7 +177,7 @@ export type Data<
   RootProps extends DefaultRootProps = DefaultRootProps,
 > = {
   root: RootData<RootProps>;
-  content: Content<WithPuckProps<Props>>;
+  children: CompositionComponentNode[];
   zones?: Record<string, Content<WithPuckProps<Props>>>;
 };
 

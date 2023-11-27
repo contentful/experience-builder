@@ -13,21 +13,7 @@ export type ContainerProps = {
 };
 
 export const Container: ComponentConfig<ContainerProps> = {
-  fields: {
-    maxWidth: {
-      type: 'text',
-    },
-    padding: {
-      type: 'number',
-    },
-    margin: {
-      type: 'number',
-    },
-    backgroundImage: {
-      type: 'text',
-      label: 'Background Image',
-    },
-  },
+  id: 'Container',
   defaultProps: {
     padding: 0,
     margin: 0,

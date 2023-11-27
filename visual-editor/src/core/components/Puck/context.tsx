@@ -4,7 +4,7 @@ import { PuckAction } from '../../reducer';
 import { getItem } from '../../lib/get-item';
 
 export const defaultAppState: AppState = {
-  data: { content: [], root: { title: '' } },
+  data: { children: [], root: { title: '' } },
   ui: {
     leftSideBarVisible: true,
     arrayState: {},
@@ -17,14 +17,12 @@ type AppContext = {
   state: AppState;
   dispatch: (action: PuckAction) => void;
   config: Config;
-  componentState: Record<string, { loading: boolean }>;
 };
 
 export const appContext = createContext<AppContext>({
   state: defaultAppState,
   dispatch: () => null,
   config: { components: {} },
-  componentState: {},
 });
 
 export const AppProvider = appContext.Provider;

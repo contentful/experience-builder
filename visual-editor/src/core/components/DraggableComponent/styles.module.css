@@ -4,7 +4,7 @@
 
 .DraggableComponent--isDragging {
   background: #abc7e510;
-  outline: 2px var(--puck-color-azure-8) solid;
+  /* outline: 2px var(--puck-color-azure-8) solid; */
   overflow: hidden;
 }
 
@@ -17,7 +17,7 @@
 /* Prevent margin collapsing  */
 .DraggableComponent-contents::before,
 .DraggableComponent-contents::after {
-  content: " ";
+  content: ' ';
   display: table;
 }
 
@@ -51,8 +51,7 @@
   z-index: 1;
 }
 
-.DraggableComponent:hover:not(.DraggableComponent--isLocked)
-  > .DraggableComponent-overlay {
+.DraggableComponent:hover:not(.DraggableComponent--isLocked) > .DraggableComponent-overlay {
   display: block;
   pointer-events: none;
 }
@@ -62,9 +61,8 @@
   pointer-events: none;
 }
 
-.DraggableComponent:not(.DraggableComponent--isSelected)
-  > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-8) solid;
+.DraggableComponent:not(.DraggableComponent--isSelected) > .DraggableComponent-overlay {
+  /* outline: 2px var(--puck-color-azure-8) solid; */
 }
 
 .DraggableComponent--indicativeHover > .DraggableComponent-overlay {
@@ -82,7 +80,7 @@
 }
 
 .DraggableComponent--isSelected {
-  outline: 2px var(--puck-color-azure-6) solid;
+  /* outline: 2px var(--puck-color-azure-6) solid; */
 }
 
 .DraggableComponent--isSelected > .DraggableComponent-overlay {
@@ -110,9 +108,7 @@
   box-sizing: border-box;
 }
 
-.DraggableComponent--isSelected
-  > .DraggableComponent-overlay
-  > .DraggableComponent-actions {
+.DraggableComponent--isSelected > .DraggableComponent-overlay > .DraggableComponent-actions {
   display: flex;
 }
 

@@ -12,6 +12,7 @@
     "prebuild": "npm run clean",
     "build": "rollup -c ./rollup.config.mjs",
     "predev": "npm run clean",
+    "bundle": "npx watchify dist/index.cjs -o dist/bundle.js",
     "dev": "rollup -c ./rollup.dev.config.mjs --watch",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix"
@@ -20,7 +21,10 @@
     "@contentful/experience-builder": "file:../../../experience-builder/packages/experience-builder-sdk/",
     "@contentful/visual-sdk": "^1.0.0-alpha.32",
     "@hello-pangea/dnd": "^16.3.0",
+    "contentful": "^10.6.11",
     "event-emitter": "^0.3.5",
+    "lodash": "^4.17.21",
+    "md5": "^2.3.0",
     "react-feather": "^2.0.10",
     "react-router-dom": "^6.16.0",
     "react-spinners": "^0.13.8",

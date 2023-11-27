@@ -1,24 +1,51 @@
+import { CompositionComponentNode } from '@/types';
 import { Data } from '../types/Config';
 import { rootDroppableId } from './root-droppable-id';
-import { setupZone } from './setup-zone';
 
 export type ItemSelector = {
-  index: number;
-  zone?: string;
+  id: string;
 };
 
-export const getItem = (
-  selector: ItemSelector,
-  data: Data,
-  dynamicProps: Record<string, any> = {}
-): Data['content'][0] | undefined => {
-  if (!selector.zone || selector.zone === rootDroppableId) {
-    const item = data.content[selector.index];
+function getItemFromTree(
+  id: string,
+  node: CompositionComponentNode
+): CompositionComponentNode | undefined {
+  // Check if the current node's id matches the search id
 
-    return { ...item, props: dynamicProps[item.props.id] || item.props };
+  if (node.data.id === id) {
+    return node;
   }
 
-  const item = setupZone(data, selector.zone).zones[selector.zone][selector.index];
+  // Recursively search through each child
+  for (const child of node.children) {
+    const foundNode = getItemFromTree(id, child);
+    if (foundNode) {
+      // Node found in children
+      return foundNode;
+    }
+  }
 
-  return { ...item, props: dynamicProps[item.props.id] || item.props };
+  // If the node is not found in this branch of the tree, return undefined
+  return undefined;
+}
+
+export const getItem = (selector: ItemSelector, data: Data): Data['children'][0] | undefined => {
+  return getItemFromTree(selector.id, {
+    data: {
+      id: rootDroppableId,
+    },
+    children: data.children,
+  } as any);
+
+  // console.log('get', data, selector);
+  // // if (!selector.zone || selector.zone === rootDroppableId) {
+  // const item = data.children[selector.index];
+  // return item;
+  // return { ...item, props: dynamicProps[item.data.id] || item.props };
+  // }
+  // console.log('other', data, selector);
+  // return item
+  // const item = setupZone(data, selector.zone).zones[selector.zone][selector.index];
+  // return item;
+  // return { ...item, props: dynamicProps[item.data.id] || item.props };
 };

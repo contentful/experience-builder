@@ -1,1 +1,1 @@
-export const rootDroppableId = 'default-zone';
+export const rootDroppableId = 'root';

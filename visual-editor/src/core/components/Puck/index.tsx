@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { createElement, useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { DragDropContext, DragStart, DragUpdate, Draggable, Droppable } from '@hello-pangea/dnd';
 import type { AppState, Config, Data } from '../../types/Config';
@@ -9,7 +9,6 @@ import { ItemSelector, getItem } from '../../lib/get-item';
 import { StateReducer, createReducer } from '../../reducer';
 import { flushZones } from '../../lib/flush-zones';
 import { AppProvider, defaultAppState } from './context';
-import { useResolvedData } from '../../lib/use-resolved-data';
 import DraggableContainer from './DraggableContainer';
 import {
   INCOMING_EVENTS,
@@ -17,7 +16,12 @@ import {
   doesMismatchMessageSchema,
   OUTGOING_EVENTS,
 } from '@contentful/experience-builder';
+import type { EntityStore } from '@contentful/visual-sdk';
 import { sendMessage } from '@/communication/sendMessage';
+import { CompositionDataSource, CompositionUnboundValues } from '@/types';
+import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
+import { useEditorContext } from '@components/editor/useEditorContext';
+import dragState from '@/core/dragState';
 export const tryParse = (data: any) => {
   try {
     return JSON.parse(data);
@@ -26,26 +30,33 @@ export const tryParse = (data: any) => {
   }
 };
 
-export function Puck({
-  config,
-  data: initialData = {
-    content: [],
-    root: { props: { title: '' }, title: '' },
-  },
-  onChange,
-}: {
-  config: Config;
+interface Props {
   data: Data;
+
+  dataSource: CompositionDataSource;
+  unboundValues: CompositionUnboundValues;
+  config: Config;
+  resolveDesignValue: ResolveDesignValueType;
+  entityStore: RefObject<EntityStore>;
+  areEntitiesFetched: boolean;
   onChange?: (data: Data) => void;
-}) {
+}
+
+export const Puck: React.FC<Props> = ({
+  data,
+  onChange,
+  config,
+  dataSource,
+  unboundValues,
+  resolveDesignValue,
+  entityStore,
+  areEntitiesFetched,
+}) => {
   const [reducer] = useState(() => createReducer({ config }));
-
-  // useEffect(() => {
-
-  // }, [])
+  const { setSelectedNodeId } = useEditorContext();
   const [initialAppState] = useState<AppState>({
     ...defaultAppState,
-    data: initialData,
+    data,
     ui: {
       ...defaultAppState.ui,
 
@@ -68,11 +79,9 @@ export function Puck({
 
   const [appState, dispatch] = useReducer<StateReducer>(reducer, flushZones(initialAppState));
 
-  const { data, ui } = appState;
+  const { ui } = appState;
 
-  const { resolveData, componentState } = useResolvedData(data, config, dispatch);
-
-  const { itemSelector, leftSideBarVisible } = ui;
+  const { itemSelector } = ui;
 
   const setItemSelector = useCallback((newItemSelector: ItemSelector | null) => {
     dispatch({
@@ -80,8 +89,6 @@ export function Puck({
       ui: { itemSelector: newItemSelector },
     });
   }, []);
-
-  const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
   const Page = useCallback(
     (pageProps: any) =>
@@ -91,28 +98,6 @@ export function Puck({
     [config.root]
   );
 
-  // const ComponentListWrapper = useCallback((props) => {
-  //   const children = (
-  //     <PluginRenderer
-  //       plugins={plugins}
-  //       renderMethod="renderComponentList"
-  //       dispatch={props.dispatch}
-  //       state={props.state}
-  //     >
-  //       {props.children}
-  //     </PluginRenderer>
-  //   );
-
-  //   // User's render method wraps the plugin render methods
-  //   return renderComponentList
-  //     ? renderComponentList({
-  //         children,
-  //         dispatch,
-  //         state: appState,
-  //       })
-  //     : children;
-  // }, []);
-
   useEffect(() => {
     if (onChange) onChange(data);
   }, [data]);
@@ -121,23 +106,14 @@ export function Puck({
 
   const [draggedItem, setDraggedItem] = useState<DragStart & Partial<DragUpdate>>();
 
-  // const componentList = useComponentList(config, appState.ui);
-
-  // DEPRECATED
-  useEffect(() => {
-    if (Object.keys(data.root).length > 0 && !data.root.props) {
-      console.error(
-        'Warning: Defining props on `root` is deprecated. Please use `root.props`. This will be a breaking change in a future release.'
-      );
-    }
-  }, []);
-
-  const dragState = useRef({
-    isDragging: false,
-    dragStarted: false,
-  });
-
   const [dragItem, setDragItem] = useState<string>();
+
+  useEffect(() => {
+    dispatch({
+      type: 'setData',
+      data,
+    });
+  }, [data]);
 
   useEffect(() => {
     window.addEventListener('message', receiveMessage, false);
@@ -171,7 +147,7 @@ export function Puck({
     const { payload } = eventData;
 
     if (eventData.eventType === INCOMING_EVENTS.ComponentDragStarted) {
-      dragState.current.dragStarted = true;
+      dragState.updateIsDragStartedOnParent(true);
       setDragItem(payload.id || 'Heading');
       return;
     }
@@ -191,17 +167,17 @@ export function Puck({
   function simulateMouseEvent(coordX: number, coordY: number) {
     const element = document.querySelector('#item');
 
-    if (!dragState.current.dragStarted) {
+    if (!dragState.isDragStart) {
       return;
     }
 
     let name = 'mousemove';
 
-    if (!dragState.current.isDragging) {
+    if (!dragState.isDragging) {
       updateDraggableElement(coordX, coordY);
 
       name = 'mousedown';
-      dragState.current.isDragging = true;
+      dragState.updateIsDragging(true);
     }
 
     const options = {
@@ -222,6 +198,8 @@ export function Puck({
     element.dispatchEvent(event);
   }
 
+  console.log(data);
+
   return (
     <div
       className="puck"
@@ -234,9 +212,13 @@ export function Puck({
         }
         //
 
+        if (!dragState.isDragging) {
+          return;
+        }
+
         simulateMouseEvent(e.pageX, e.pageY);
       }}>
-      <AppProvider value={{ state: appState, dispatch, config, componentState }}>
+      <AppProvider value={{ state: appState, dispatch, config }}>
         <DragDropContext
           onDragUpdate={(update) => {
             setDraggedItem({ ...draggedItem, ...update });
@@ -245,13 +227,14 @@ export function Puck({
           onBeforeDragStart={(start) => {
             onDragStartOrUpdate(start);
             setItemSelector(null);
+            setSelectedNodeId('');
+            sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+              nodeId: '',
+            });
           }}
           onDragEnd={(droppedItem) => {
             setDraggedItem(undefined);
-            dragState.current = {
-              isDragging: false,
-              dragStarted: false,
-            };
+            dragState.reset();
 
             sendMessage(OUTGOING_EVENTS.MouseUp);
             // User cancel drag
@@ -264,19 +247,20 @@ export function Puck({
               droppedItem.source.droppableId.startsWith('component-list') &&
               droppedItem.destination
             ) {
-              const [_, componentId] = droppedItem.draggableId.split('::');
-
               dispatch({
                 type: 'insert',
-                componentType: componentId || droppedItem.draggableId,
+                componentType: droppedItem.draggableId,
                 destinationIndex: droppedItem.destination!.index,
                 destinationZone: droppedItem.destination.droppableId,
               });
+              // setItemSelector({
+              //   id: droppedItem.
+              // })
 
-              setItemSelector({
-                index: droppedItem.destination!.index,
-                zone: droppedItem.destination.droppableId,
-              });
+              // setItemSelector({
+              //   index: droppedItem.destination!.index,
+              //   zone: droppedItem.destination.droppableId,
+              // });
 
               return;
             } else {
@@ -299,10 +283,10 @@ export function Puck({
                 });
               }
 
-              setItemSelector({
-                index: destination.index,
-                zone: destination.droppableId,
-              });
+              // setItemSelector({
+              //   index: destination.index,
+              //   zone: destination.droppableId,
+              // });
             }
           }}>
           <DropZoneProvider
@@ -334,24 +318,30 @@ export function Puck({
                         position: 'relative',
                         display: 'flex',
                         flexDirection: 'column',
-                        height: '100%',
                       }}
                       onClick={() => setItemSelector(null)}
                       id="puck-frame">
                       <div
                         className="puck-root"
-                        style={{
-                          height: '100%',
-                          boxShadow: '0px 0px 0px 32px var(--puck-color-grey-10)',
-                          // margin: 32,
-                          zoom: 0.75,
-                        }}>
+                        style={
+                          {
+                            // margin: 32,
+                            // zoom: 0.75,
+                          }
+                        }>
                         <div
                           style={{
-                            border: '1px solid var(--puck-color-grey-8)',
+                            border: '1px solid transparent',
                           }}>
                           <Page dispatch={dispatch} state={appState} {...data.root}>
-                            <DropZone zone={rootDroppableId} />
+                            <DropZone
+                              zone={rootDroppableId}
+                              unboundValues={unboundValues}
+                              areEntitiesFetched={areEntitiesFetched}
+                              dataSource={dataSource}
+                              resolveDesignValue={resolveDesignValue}
+                              entityStore={entityStore}
+                            />
                           </Page>
                         </div>
                       </div>
@@ -366,4 +356,4 @@ export function Puck({
       </AppProvider>
     </div>
   );
-}
+};

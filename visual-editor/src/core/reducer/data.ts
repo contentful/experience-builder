@@ -9,6 +9,9 @@ import { getItem } from '../lib/get-item';
 import { duplicateRelatedZones, removeRelatedZones } from '../lib/reduce-related-zones';
 import { generateId } from '../lib/generate-id';
 import { PuckAction, ReplaceAction } from './actions';
+import { CompositionComponentNode } from '@/types';
+import { onComponentDropped } from '@/communication/onComponentDrop';
+import { getZoneId } from '../lib/get-zone-id';
 
 // Restore unregistered zones when re-registering in same session
 export const zoneCache = {};
@@ -21,7 +24,7 @@ export const replaceAction = (data: Data, action: ReplaceAction) => {
   if (action.destinationZone === rootDroppableId) {
     return {
       ...data,
-      content: replace(data.content, action.destinationIndex, action.data),
+      children: replace(data.children, action.destinationIndex, action.data),
     };
   }
 
@@ -42,18 +45,39 @@ export const replaceAction = (data: Data, action: ReplaceAction) => {
 
 export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   if (action.type === 'insert') {
-    const emptyComponentData = {
-      type: action.componentType,
-      props: {
-        ...(config.components[action.componentType].defaultProps || {}),
-        id: generateId(action.componentType),
+    const isRoot = !data.children.length;
+
+    const [parentId] = getZoneId(action.destinationZone);
+
+    const parentNode = getItem({ id: parentId }, data);
+
+    const parentIsRoot = parentId === rootDroppableId;
+
+    const emptyComponentData: CompositionComponentNode = {
+      type: isRoot ? 'root' : 'block',
+      parentId,
+      children: [],
+      data: {
+        blockId: !isRoot ? action.componentType : undefined,
+        id: isRoot ? 'root' : generateId(action.componentType),
+        breakpoints: [],
+        dataSource: {},
+        props: {},
+        unboundValues: {},
       },
     };
+
+    onComponentDropped({
+      node: emptyComponentData,
+      index: action.destinationIndex,
+      parentType: parentIsRoot ? 'root' : parentNode?.type,
+      parentBlockId: parentNode?.data.blockId,
+    });
 
     if (action.destinationZone === rootDroppableId) {
       return {
         ...data,
-        content: insert(data.content, action.destinationIndex, emptyComponentData),
+        children: insert(data.children, action.destinationIndex, emptyComponentData),
       };
     }
 
@@ -78,17 +102,17 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
     const newItem = {
       ...item,
       props: {
-        ...item.props,
+        ...item.data,
         id: generateId(item.type),
       },
     };
 
-    const dataWithRelatedDuplicated = duplicateRelatedZones(item, data, newItem.props.id);
+    const dataWithRelatedDuplicated = duplicateRelatedZones(item, data, newItem.data.id);
 
     if (action.sourceZone === rootDroppableId) {
       return {
         ...dataWithRelatedDuplicated,
-        content: insert(data.content, action.sourceIndex + 1, newItem),
+        children: insert(data.children, action.sourceIndex + 1, newItem),
       };
     }
 
@@ -109,7 +133,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
     if (action.destinationZone === rootDroppableId) {
       return {
         ...data,
-        content: reorder(data.content, action.sourceIndex, action.destinationIndex),
+        children: reorder(data.children, action.sourceIndex, action.destinationIndex),
       };
     }
 
@@ -136,7 +160,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
     if (action.sourceZone === rootDroppableId) {
       return {
         ...newData,
-        content: remove(newData.content, action.sourceIndex),
+        children: remove(newData.children, action.sourceIndex),
         zones: {
           ...newData.zones,
 
@@ -152,7 +176,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
     if (action.destinationZone === rootDroppableId) {
       return {
         ...newData,
-        content: insert(newData.content, action.destinationIndex, item),
+        children: insert(newData.children, action.destinationIndex, item),
         zones: {
           ...newData.zones,
           [action.sourceZone]: remove(newData.zones[action.sourceZone], action.sourceIndex),
@@ -187,7 +211,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
     if (action.zone === rootDroppableId) {
       return {
         ...dataWithRelatedRemoved,
-        content: remove(data.content, action.index),
+        children: remove(data.children, action.index),
       };
     }
 

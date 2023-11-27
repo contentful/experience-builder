@@ -1,6 +1,6 @@
 import { Reducer } from 'react';
 import { AppState, Config } from '../types/Config';
-import { recordDiff } from '../lib/use-puck-history';
+
 import { reduceData } from './data';
 import { PuckAction } from './actions';
 import { reduceUi } from './state';
@@ -16,13 +16,9 @@ const storeInterceptor = (reducer: StateReducer) => {
   return (state: AppState, action: PuckAction) => {
     const newAppState = reducer(state, action);
 
-    const isValidType = !['registerZone', 'unregisterZone', 'setData', 'setUi', 'set'].includes(
-      action.type
-    );
-
-    if (typeof action.recordHistory !== 'undefined' ? action.recordHistory : isValidType) {
-      recordDiff(newAppState);
-    }
+    // const isValidType = !['registerZone', 'unregisterZone', 'setData', 'setUi', 'set'].includes(
+    //   action.type
+    // );
 
     return newAppState;
   };

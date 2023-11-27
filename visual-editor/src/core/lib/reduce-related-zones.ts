@@ -16,7 +16,7 @@ export const reduceRelatedZones = (
     zones: Object.keys(data.zones || {}).reduce<Required<Data>['zones']>((acc, key) => {
       const [parentId] = getZoneId(key);
 
-      if (parentId === item.props.id) {
+      if (parentId === item.data.id) {
         const zones = data.zones!;
         return fn(acc, key, zones[key]);
       }
@@ -32,7 +32,7 @@ const findRelatedByZoneId = (zoneId: string, data: Data) => {
   return (data.zones![zoneId] || []).reduce((acc, zoneItem) => {
     const related = findRelatedByItem(zoneItem, data);
 
-    if (zoneItem.props.id === zoneParentId) {
+    if (zoneItem.data.id === zoneParentId) {
       return { ...acc, ...related, [zoneId]: zoneItem };
     }
 
@@ -44,7 +44,7 @@ const findRelatedByItem = (item: Data['content'][0], data: Data) => {
   return Object.keys(data.zones || {}).reduce((acc, zoneId) => {
     const [zoneParentId] = getZoneId(zoneId);
 
-    if (item.props.id === zoneParentId) {
+    if (item.data.id === zoneParentId) {
       const related = findRelatedByZoneId(zoneId, data);
 
       return {
@@ -77,14 +77,14 @@ export const duplicateRelatedZones = (item: Data['content'][0], data: Data, newI
   return reduceRelatedZones(item, data, (acc, key, zone) => {
     const dupedZone = zone.map((zoneItem) => ({
       ...zoneItem,
-      props: { ...zoneItem.props, id: generateId(zoneItem.type) },
+      props: { ...zoneItem.data.props, id: generateId(zoneItem.type) },
     }));
 
     // We need to dupe any related items in our dupes
     const dupeOfDupes = dupedZone.reduce(
       (dupeOfDupes, item, index) => ({
         ...dupeOfDupes,
-        ...duplicateRelatedZones(zone[index], data, item.props.id).zones,
+        ...duplicateRelatedZones(zone[index], data, item.data.id).zones,
       }),
       acc
     );

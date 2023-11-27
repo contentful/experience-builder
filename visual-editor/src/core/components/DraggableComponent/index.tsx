@@ -13,7 +13,6 @@ export const DraggableComponent = ({
   children,
   id,
   index,
-  isLoading = false,
   isSelected = false,
   onClick = () => null,
   onMount = () => null,
@@ -46,7 +45,6 @@ export const DraggableComponent = ({
   debug?: string;
   label?: string;
   isLocked: boolean;
-  isLoading: boolean;
   isDragDisabled?: boolean;
   forceHover?: boolean;
   indicativeHover?: boolean;
@@ -82,22 +80,8 @@ export const DraggableComponent = ({
           onMouseUp={onMouseUp}
           onClick={onClick}>
           {debug}
-          {isLoading && (
-            <div className={getClassName('loadingOverlay')}>
-              <ClipLoader size={16} color="inherit" />
-            </div>
-          )}
-          <div className={getClassName('overlay')}>
-            <div className={getClassName('actions')}>
-              {label && <div className={getClassName('actionsLabel')}>{label}</div>}
-              <button className={getClassName('action')} onClick={onDuplicate}>
-                <Copy size={16} />
-              </button>
-              <button className={getClassName('action')} onClick={onDelete}>
-                <Trash size={16} />
-              </button>
-            </div>
-          </div>
+          <div className={getClassName('overlay')} />
+
           <div className={getClassName('contents')}>{children}</div>
         </div>
       )}

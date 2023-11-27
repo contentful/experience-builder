@@ -1,6 +1,6 @@
-import React, { CSSProperties, useContext, useEffect, useState } from 'react';
+import React, { CSSProperties, RefObject, useContext, useEffect, useMemo, useState } from 'react';
 import { DraggableComponent } from '../DraggableComponent';
-import { Droppable } from '@hello-pangea/dnd';
+import { Direction, Droppable } from '@hello-pangea/dnd';
 import { getItem } from '../../lib/get-item';
 import { setupZone } from '../../lib/setup-zone';
 import { rootDroppableId } from '../../lib/root-droppable-id';
@@ -8,7 +8,12 @@ import { getClassNameFactory } from '../../lib';
 import styles from './styles.module.css';
 import { DropZoneProvider, dropZoneContext } from './context';
 import { getZoneId } from '../../lib/get-zone-id';
-import { useAppContext } from '../Puck/context';
+import { CompositionDataSource, CompositionUnboundValues } from '@/types';
+import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
+import { EntityStore } from '@contentful/visual-sdk';
+import EditorBlock from './EditorBlock';
+import { ComponentData } from '@/core/types/Config';
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder';
 
 const getClassName = getClassNameFactory('DropZone', styles);
 
@@ -17,28 +22,42 @@ export { DropZoneProvider, dropZoneContext } from './context';
 type DropZoneProps = {
   zone: string;
   style?: CSSProperties;
+  node?: ComponentData;
+  dataSource?: CompositionDataSource;
+  unboundValues?: CompositionUnboundValues;
+  resolveDesignValue?: ResolveDesignValueType;
+  entityStore?: RefObject<EntityStore>;
+  areEntitiesFetched?: boolean;
+  className?: string;
+  WrapperComponent?: any;
 };
 
-function DropZoneEdit({ zone, style }: DropZoneProps) {
-  const appContext = useAppContext();
+function DropZoneEdit({
+  node,
+  zone,
+  style,
+  dataSource,
+  unboundValues,
+  resolveDesignValue,
+  entityStore,
+  areEntitiesFetched,
+  className,
+  WrapperComponent = 'div',
+  ...rest
+}: DropZoneProps) {
   const ctx = useContext(dropZoneContext);
 
   const {
     // These all need setting via context
     data,
-    dispatch = () => null,
-    config,
     itemSelector,
-    setItemSelector = () => null,
     areaId,
     draggedItem,
     placeholderStyle,
     registerZoneArea,
-    areasWithZones,
-    hoveringComponent,
   } = ctx! || {};
 
-  let content = data.content || [];
+  const content = node?.children || data?.children || [];
   let zoneCompound = rootDroppableId;
 
   useEffect(() => {
@@ -63,7 +82,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
   if (areaId) {
     if (zone !== rootDroppableId) {
       zoneCompound = `${areaId}:${zone}`;
-      content = setupZone(data, zoneCompound).zones[zoneCompound];
+      // content = setupZone(data, zoneCompound).zones[zoneCompound];
     }
   }
 
@@ -83,6 +102,30 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
   const draggingOverArea = userIsDragging && zoneArea === draggedSourceArea;
   const draggingNewComponent = draggedSourceId?.startsWith('component-list');
 
+  const direction: Direction = useMemo(() => {
+    if (!node) {
+      return 'vertical';
+    }
+
+    if (node.data.blockId !== CONTENTFUL_CONTAINER_ID) {
+      return 'vertical';
+    }
+
+    const designValues = node.data.props['cfFlexDirection'];
+
+    if (!designValues || !resolveDesignValue || designValues.type !== 'DesignValue') {
+      return 'vertical';
+    }
+
+    const direction = resolveDesignValue(designValues.valuesByBreakpoint);
+
+    if (direction === 'row') {
+      return 'horizontal';
+    }
+
+    return 'vertical';
+  }, []);
+
   if (
     !ctx?.config ||
     !ctx.setHoveringArea ||
@@ -90,18 +133,17 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
     !ctx.setHoveringComponent ||
     !ctx.setItemSelector ||
     !ctx.registerPath ||
-    !ctx.dispatch
+    !ctx.dispatch ||
+    !dataSource ||
+    !resolveDesignValue ||
+    !entityStore ||
+    !areEntitiesFetched ||
+    !unboundValues
   ) {
     return <div>DropZone requires context to work.</div>;
   }
 
-  const {
-    hoveringArea = 'root',
-    setHoveringArea,
-    hoveringZone,
-    setHoveringZone,
-    setHoveringComponent,
-  } = ctx;
+  const { hoveringArea = 'root', setHoveringArea, hoveringZone, setHoveringZone } = ctx;
 
   const hoveringOverArea = hoveringArea ? hoveringArea === zoneArea : isRootZone;
   const hoveringOverZone = hoveringZone === zoneCompound;
@@ -129,7 +171,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
   }
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
-  const isAreaSelected = selectedItem && zoneArea === selectedItem.props.id;
+  const isAreaSelected = selectedItem && zoneArea === selectedItem.data.id;
 
   return (
     <div
@@ -144,149 +186,43 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
         isAreaSelected,
         hasChildren: content.length > 0,
       })}>
-      <Droppable droppableId={zoneCompound} direction={'vertical'} isDropDisabled={!isEnabled}>
+      <Droppable droppableId={zoneCompound} direction={direction} isDropDisabled={!isEnabled}>
         {(provided, snapshot) => {
           return (
-            <div
+            <WrapperComponent
               {...(provided || { droppableProps: {} }).droppableProps}
-              className={getClassName('content')}
+              className={`${getClassName('content')} ${className}`}
               ref={provided?.innerRef}
-              style={style}
+              // style={style}
               id={zoneCompound}
               onMouseOver={(e) => {
                 e.stopPropagation();
                 setHoveringArea(zoneArea);
                 setHoveringZone(zoneCompound);
-              }}>
+              }}
+              {...rest}>
               {content.map((item, i) => {
-                const componentId = item.props.id;
-
-                const defaultedProps = {
-                  ...config.components[item.type]?.defaultProps,
-                  ...item.props,
-                  puck: { renderDropZone: DropZone },
-                  editMode: true,
-                };
-
-                const isSelected = selectedItem?.props.id === componentId || false;
-
-                const isDragging =
-                  (draggedItem?.draggableId || 'draggable-').split('draggable-')[1] === componentId;
-
-                const containsZone = areasWithZones ? areasWithZones[componentId] : false;
-
-                const Render = config.components[item.type]
-                  ? config.components[item.type].render
-                  : () => (
-                      <div style={{ padding: 48, textAlign: 'center' }}>
-                        No configuration for {item.type}
-                      </div>
-                    );
+                const componentId = item.data.id;
 
                 return (
-                  <div
-                    key={item.props.id}
-                    className={getClassName('item')}
-                    style={{ zIndex: isDragging ? 1 : undefined }}>
-                    <DropZoneProvider
-                      value={{
-                        ...ctx,
-                        areaId: componentId,
-                      }}>
-                      <DraggableComponent
-                        label={item.type.toString()}
-                        id={`draggable-${componentId}`}
-                        index={i}
-                        isSelected={isSelected}
-                        isLocked={userIsDragging}
-                        forceHover={hoveringComponent === componentId && !userIsDragging}
-                        indicativeHover={
-                          userIsDragging && containsZone && hoveringArea === componentId
-                        }
-                        isLoading={appContext.componentState[componentId]?.loading}
-                        onMount={() => {
-                          ctx.registerPath!({
-                            index: i,
-                            zone: zoneCompound,
-                          });
-                        }}
-                        onClick={(e) => {
-                          setItemSelector({
-                            index: i,
-                            zone: zoneCompound,
-                          });
-                          e.stopPropagation();
-                        }}
-                        onMouseDown={(e) => {
-                          e.stopPropagation();
-                          setUserWillDrag(true);
-                        }}
-                        onMouseUp={(e) => {
-                          e.stopPropagation();
-                          setUserWillDrag(false);
-                        }}
-                        onMouseOver={(e) => {
-                          e.stopPropagation();
-
-                          if (containsZone) {
-                            setHoveringArea(componentId);
-                          } else {
-                            setHoveringArea(zoneArea);
-                          }
-
-                          setHoveringComponent(componentId);
-
-                          setHoveringZone(zoneCompound);
-                        }}
-                        onMouseOut={() => {
-                          setHoveringArea(null);
-                          setHoveringZone(null);
-                          setHoveringComponent(null);
-                        }}
-                        onDelete={(e) => {
-                          dispatch({
-                            type: 'remove',
-                            index: i,
-                            zone: zoneCompound,
-                          });
-
-                          setItemSelector(null);
-
-                          e.stopPropagation();
-                        }}
-                        onDuplicate={(e) => {
-                          dispatch({
-                            type: 'duplicate',
-                            sourceIndex: i,
-                            sourceZone: zoneCompound,
-                          });
-
-                          setItemSelector({
-                            zone: zoneCompound,
-                            index: i + 1,
-                          });
-
-                          e.stopPropagation();
-                        }}
-                        style={{
-                          pointerEvents: userIsDragging && draggingNewComponent ? 'all' : undefined,
-                        }}>
-                        <div style={{ zoom: 0.75 }}>
-                          <Render {...defaultedProps} />
-                        </div>
-                      </DraggableComponent>
-                    </DropZoneProvider>
-                    {userIsDragging && (
-                      <div
-                        className={getClassName('hitbox')}
-                        onMouseOver={(e) => {
-                          e.stopPropagation();
-                          setHoveringArea(zoneArea);
-                          setHoveringZone(zoneCompound);
-                        }}
-                      />
-                    )}
-                  </div>
+                  <EditorBlock
+                    index={i}
+                    userIsDragging={userIsDragging}
+                    zoneCompound={zoneCompound}
+                    zoneArea={zoneArea}
+                    draggingNewComponent={draggingNewComponent}
+                    setUserWillDrag={setUserWillDrag}
+                    node={item}
+                    dataSource={dataSource}
+                    unboundValues={unboundValues}
+                    resolveDesignValue={resolveDesignValue}
+                    entityStore={entityStore}
+                    areEntitiesFetched={areEntitiesFetched}
+                    ctx={{
+                      ...ctx,
+                      areaId: componentId,
+                    }}
+                  />
                 );
               })}
               {provided?.placeholder}
@@ -301,7 +237,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                   }}
                 />
               )}
-            </div>
+            </WrapperComponent>
           );
         }}
       </Droppable>
@@ -315,7 +251,7 @@ function DropZoneRender({ zone }: DropZoneProps) {
   const { data, areaId = 'root', config } = ctx || {};
 
   let zoneCompound = rootDroppableId;
-  let content = data?.content || [];
+  let content = data?.children || [];
 
   if (!data || !config) {
     return null;
@@ -329,12 +265,12 @@ function DropZoneRender({ zone }: DropZoneProps) {
   return (
     <>
       {content.map((item) => {
-        const Component = config.components[item.type];
+        const Component = config.components[item.data.blockId!];
 
         if (Component) {
           return (
-            <DropZoneProvider key={item.props.id} value={{ data, config, areaId: item.props.id }}>
-              <Component.render {...item.props} puck={{ renderDropZone: DropZone }} />
+            <DropZoneProvider key={item.data.id} value={{ data, config, areaId: item.data.id }}>
+              <Component.render {...item.data.props} puck={{ renderDropZone: DropZone }} />
             </DropZoneProvider>
           );
         }

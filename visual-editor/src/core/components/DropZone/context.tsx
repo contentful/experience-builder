@@ -114,15 +114,15 @@ export const DropZoneProvider = ({
         return;
       }
 
-      const [area] = getZoneId(selector.zone);
+      const [area] = getZoneId(selector.id);
 
       setPathData((latestPathData = {}) => {
         const parentPathData = latestPathData[area] || { path: [] };
 
         return {
           ...latestPathData,
-          [item.props.id]: {
-            path: [...parentPathData.path, ...(selector.zone ? [selector.zone] : [])],
+          [item.data.id]: {
+            path: [...parentPathData.path],
             label: item.type as string,
           },
         };

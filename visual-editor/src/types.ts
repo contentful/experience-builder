@@ -3,12 +3,27 @@
  * NOTE!! The code commented here will be used in future. We commented it out to remove not yet fully unsupported parts
  */
 
+import { VisualEditorRootProps } from './VisualEditorRoot';
+
+// type VisualEditorContextType = {
+//   tree: CompositionTree | undefined;
+//   dataSource: CompositionDataSource;
+//   isDragging: boolean;
+//   locale: string | null;
+//   selectedNodeId: string | null;
+//   setSelectedNodeId: (id: string) => void;
+//   unboundValues: CompositionUnboundValues;
+//   breakpoints: Breakpoint[];
+//   entityStore: React.MutableRefObject<EditorModeEntityStore>;
+//   bundleUrl: string | null;
+//   stylesUrl: string | null;
+// };
 export interface InitConfig {
   components: ComponentRegistration[];
 }
 declare global {
   interface Window {
-    InitializeVisualEditor: (config: InitConfig, element: HTMLElement) => void;
+    InitializeVisualEditor: (config: VisualEditorRootProps, element: HTMLElement) => void;
   }
 }
 

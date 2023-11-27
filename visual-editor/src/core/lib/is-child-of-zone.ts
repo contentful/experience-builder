@@ -14,7 +14,7 @@ export const isChildOfZone = (
     ? !!pathData[maybeChild.props.id]?.path.find((zoneCompound) => {
         const [area] = getZoneId(zoneCompound);
 
-        return area === item.props.id;
+        return area === item.data.id;
       })
     : false;
 };
