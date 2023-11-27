@@ -66,7 +66,7 @@ const VisualEditor: React.FC = () => {
       //   },
       // };
 
-      if (!dragState.isDragging) {
+      if (!dragState.isDragStart) {
         return;
       }
 

@@ -210,9 +210,8 @@ export const Puck: React.FC<Props> = ({
         if (e.target?.id === 'item') {
           return;
         }
-        //
 
-        if (!dragState.isDragging) {
+        if (!dragState.isDragStart) {
           return;
         }
 
