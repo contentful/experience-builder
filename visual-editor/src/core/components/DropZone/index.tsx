@@ -8,12 +8,15 @@ import { getClassNameFactory } from '../../lib';
 import styles from './styles.module.css';
 import { DropZoneProvider, dropZoneContext } from './context';
 import { getZoneId } from '../../lib/get-zone-id';
-import { CompositionDataSource, CompositionUnboundValues } from '@/types';
+import {
+  CompositionDataSource,
+  CompositionUnboundValues,
+} from '@contentful/experience-builder-core';
 import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
 import { EntityStore } from '@contentful/visual-sdk';
 import EditorBlock from './EditorBlock';
 import { ComponentData } from '@/core/types/Config';
-import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder';
+import { CF_STYLE_ATTRIBUTES, CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core';
 
 const getClassName = getClassNameFactory('DropZone', styles);
 

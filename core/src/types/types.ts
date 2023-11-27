@@ -1,68 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * danv:
  * NOTE!! The code commented here will be used in future. We commented it out to remove not yet fully unsupported parts
  */
 
-import { VisualEditorRootProps } from './VisualEditorRoot';
+import type { ContentfulClientApi, Entry } from 'contentful';
+import type { EntityStore } from '@contentful/visual-sdk';
+import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from './constants';
 
-// type VisualEditorContextType = {
-//   tree: CompositionTree | undefined;
-//   dataSource: CompositionDataSource;
-//   isDragging: boolean;
-//   locale: string | null;
-//   selectedNodeId: string | null;
-//   setSelectedNodeId: (id: string) => void;
-//   unboundValues: CompositionUnboundValues;
-//   breakpoints: Breakpoint[];
-//   entityStore: React.MutableRefObject<EditorModeEntityStore>;
-//   bundleUrl: string | null;
-//   stylesUrl: string | null;
-// };
-export interface InitConfig {
-  components: ComponentRegistration[];
-}
-declare global {
-  interface Window {
-    InitializeVisualEditor: (config: VisualEditorRootProps, element: HTMLElement) => void;
-  }
-}
+type ScrollStateKey = keyof typeof SCROLL_STATES;
+export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
 
-export enum ScrollStates {
-  SCROLL_START = 'scrollStart',
-  IS_SCROLLING = 'isScrolling',
-  SCROLL_END = 'scrollEnd',
-}
+type OutgoingEventKey = keyof typeof OUTGOING_EVENTS;
+export type OutgoingEvent = (typeof OUTGOING_EVENTS)[OutgoingEventKey];
 
-export enum OutgoingExperienceBuilderEvent {
-  CONNECTED = 'connected',
-  HOVERED_SECTION = 'hoveredSection',
-  MOUSE_MOVE = 'mouseMove',
-  NEW_HOVERED_COMPONENT = 'newHoveredElement',
-  COMPONENT_SELECTED = 'componentSelected',
-  REGISTERED_COMPONENTS = 'registeredComponents',
-  REQUEST_COMPONENT_TREE_UPDATE = 'requestComponentTreeUpdate',
-  COMPONENT_DROPPED = 'componentDropped',
-  CANVAS_RELOAD = 'canvasReload',
-  UPDATE_SELECTED_COMPONENT_COORDINATES = 'updateSelectedComponentCoordinates',
-  UPDATE_HOVERED_COMPONENT_COORDINATES = 'updateHoveredComponentCoordinates',
-  CANVAS_SCROLL = 'canvasScrolling',
-  CANVAS_ERROR = 'canvasError',
-}
+type IncomingEventKey = keyof typeof INCOMING_EVENTS;
+export type IncomingEvent = (typeof INCOMING_EVENTS)[IncomingEventKey];
 
-export enum IncomingExperienceBuilderEvent {
-  REQUEST_EDITOR_MODE = 'requestEditorMode',
-  COMPOSITION_UPDATED = 'componentTreeUpdated',
-  COMPONENT_DRAGGING_CHANGED = 'componentDraggingChanged',
-  SELECTED_COMPONENT_CHANGED = 'selectedComponentChanged',
-  CANVAS_RESIZED = 'canvasResized',
-  SELECT_COMPONENT = 'selectComponent',
-  HOVER_COMPONENT = 'hoverComponent',
-  UPDATED_ENTITY = 'updatedEntity',
-}
-
-export enum InternalEvents {
-  COMPONENTS_REGISTERED = 'componentsRegistered',
-}
+type InternalEventKey = keyof typeof INTERNAL_EVENTS;
+export type InternalEvent = (typeof INTERNAL_EVENTS)[InternalEventKey];
 
 export interface Link<T extends string> {
   sys: {
@@ -178,23 +134,24 @@ export type BindingMapByBlockId = Record<string, BindingMap>;
 export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>;
 
 export type CompositionVariableValueType = string | boolean | number | Record<any, any> | undefined;
-type CompositionComponentPropType = 'BoundValue' | 'UnboundValue' | 'DesignValue';
+type CompositionComponentPropType =
+  | 'BoundValue'
+  | 'UnboundValue'
+  | 'DesignValue'
+  | 'ComponentValue';
 
 export type CompositionComponentPropValue<
   T extends CompositionComponentPropType = CompositionComponentPropType,
 > = T extends 'DesignValue'
   ? // The keys in valuesByBreakpoint are the breakpoint ids
-    {
-      type: T;
-      valuesByBreakpoint: Record<string, CompositionVariableValueType>;
-    }
+    { type: T; valuesByBreakpoint: Record<string, CompositionVariableValueType> }
   : T extends 'BoundValue'
     ? { type: T; path: string }
     : { type: T; key: string };
 
 // TODO: add conditional typing magic to reduce the number of optionals
 export type CompositionComponentNode = {
-  type: 'block' | 'root' | 'editorRoot';
+  type: 'block' | 'root' | 'editorRoot' | 'designComponent' | 'designComponentBlock';
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
@@ -275,6 +232,15 @@ export type Breakpoint = {
 
 export type SchemaVersions = '2023-09-28' | '2023-06-27' | '2023-07-26' | '2023-08-23';
 
+export type ExperienceComponentSettings = {
+  variableDefinitions: Record<
+    string,
+    Omit<ComponentDefinitionVariableBase<ComponentDefinitionVariableType>, 'defaultValue'> & {
+      defaultValue: CompositionComponentPropValue<'BoundValue' | 'UnboundValue'>;
+    }
+  >;
+};
+
 export type Composition = {
   title: string;
   slug: string;
@@ -285,6 +251,14 @@ export type Composition = {
   };
   dataSource: CompositionDataSource;
   unboundValues: CompositionUnboundValues;
+  usedComponents?: Array<Link<'Entry'> | ExperienceEntry>;
+  componentSettings?: ExperienceComponentSettings;
+};
+
+export type ExperienceEntry = {
+  sys: Entry['sys'];
+  fields: Composition;
+  metadata: Entry['metadata'];
 };
 
 export interface RawCoordinates {
@@ -302,4 +276,47 @@ export interface HoveredElement {
   blockType: string | undefined;
   nodeId: string | undefined;
   blockId: string | undefined;
+}
+
+export interface DeprecatedExperienceStore {
+  composition: Composition | undefined;
+  entityStore: EntityStore | undefined;
+  isLoading: boolean;
+  children: Composition['componentTree']['children'];
+  breakpoints: Composition['componentTree']['breakpoints'];
+  dataSource: Composition['dataSource'];
+  unboundValues: Composition['unboundValues'];
+  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined;
+  fetchBySlug: ({
+    experienceTypeId,
+    slug,
+    localeCode,
+  }: {
+    experienceTypeId: string;
+    slug: string;
+    localeCode: string;
+  }) => Promise<{ success: boolean; error?: Error }>;
+}
+
+export interface Experience<T extends EntityStore = EntityStore> {
+  entityStore?: T;
+  mode: InternalSDKMode;
+}
+
+/**
+ * @deprecated please use `Experience` instead
+ */
+export interface DeprecatedExperience {
+  /**
+   * @deprecated please don't use
+   */
+  client: ContentfulClientApi<undefined>;
+  /**
+   * @deprecated please don't use
+   */
+  experienceTypeId: string;
+  /**
+   * @deprecated please don't use
+   */
+  mode: InternalSDKMode;
 }

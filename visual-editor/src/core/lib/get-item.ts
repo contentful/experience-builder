@@ -1,4 +1,4 @@
-import { CompositionComponentNode } from '@/types';
+import { CompositionComponentNode } from '@contentful/experience-builder-core';
 import { Data } from '../types/Config';
 import { rootDroppableId } from './root-droppable-id';
 

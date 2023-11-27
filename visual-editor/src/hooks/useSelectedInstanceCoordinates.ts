@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { CompositionComponentNode } from '../types';
+import { CompositionComponentNode } from '@contentful/experience-builder-core';
 import { useEditorContext } from '../components/editor/useEditorContext';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 /**

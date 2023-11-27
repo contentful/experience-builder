@@ -5,7 +5,7 @@ import {
   CSSProperties,
   ComponentDefinitionVariable,
   CompositionVariableValueType,
-} from '../types';
+} from '@contentful/experience-builder-core';
 
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
 export const transformBorderStyle = (value?: string): CSSProperties => {

@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 import { ReactNode } from 'react';
 import { ItemSelector } from '../lib/get-item';
 import { DropZone } from '../components/DropZone';
-import { CompositionComponentNode } from '@/types';
+import { CompositionComponentNode } from '@contentful/experience-builder-core';
 
 type WithPuckProps<Props> = Props & {
   id: string;

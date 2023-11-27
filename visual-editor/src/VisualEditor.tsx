@@ -2,13 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 // Editor.jsx
 import { ComponentConfig, Puck, Config, Data } from './core';
 
-import { ComponentRegistration, CompositionTree } from './types';
+import { ComponentRegistration, CompositionTree } from '@contentful/experience-builder-core';
 import { VerticalSpace } from './components/editor-components/VerticalSpace';
 import { Flex } from './components/editor-components/Flex';
 import { Columns } from './components/editor-components/Columns';
 import { Container } from './components/editor-components/Container';
 import { sendMessage } from './communication/sendMessage';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder-core';
 import { useEditorContext } from '@components/editor/useEditorContext';
 import { useBreakpoints } from './hooks/useBreakpoints';
 import { ContentfulContainerDefinition } from '@components/editor-components/ContentfulContainer/ContentfulContainer';

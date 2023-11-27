@@ -8,7 +8,7 @@ import {
   CompositionDataSource,
   CompositionUnboundValues,
   StyleProps,
-} from '../../../types';
+} from '@contentful/experience-builder-core';
 import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
 import { EntityStore } from '@contentful/visual-sdk';
 

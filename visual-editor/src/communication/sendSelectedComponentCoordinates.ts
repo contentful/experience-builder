@@ -1,4 +1,4 @@
-import { OUTGOING_EVENTS } from '@contentful/experience-builder';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder-core';
 import { getElementCoordinates } from '../utils/domValues';
 import { sendMessage } from './sendMessage';
 
