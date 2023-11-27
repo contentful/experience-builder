@@ -40,7 +40,13 @@ export const deserializeDesignComponentNode = ({
 
       // For design component, we are only handling binding for UnboundValues for now
       if (variableMapping?.type === 'UnboundValue') {
-        unboundValues[uuid] = componentInstanceUnboundValues[variableMapping.key];
+        const componentInstanceValue = componentInstanceUnboundValues[variableMapping.key].value;
+
+        if (typeof componentInstanceValue === 'object' && componentInstanceValue !== null) {
+          unboundValues[uuid] = designComponentUnboundValues[componentInstanceValue['key']];
+        } else {
+          unboundValues[uuid] = componentInstanceUnboundValues[variableMapping.key];
+        }
       }
     }
   }
