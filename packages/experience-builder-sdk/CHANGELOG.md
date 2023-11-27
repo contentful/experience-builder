@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.11.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.10.1...@contentful/experience-builder@2.11.0) (2023-11-27)
+
+### Features
+
+- handle bindings for design components [SPA-1606] ([#167](https://github.com/contentful/experience-builder/issues/167)) ([3eb7bb5](https://github.com/contentful/experience-builder/commit/3eb7bb5b05ccb6057d8834c9a0bc9718b90faf50))
+
 ## [2.10.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.10.0...@contentful/experience-builder@2.10.1) (2023-11-21)
 
 ### Bug Fixes
