@@ -19,7 +19,7 @@ export default defineConfig({
     },
     rollupOptions: {
       plugins: [peerDepsExternal()],
-      external: ['react', 'react-dom'],
+      external: [/node_modules/],
       output: {
         globals: {
           react: 'React',
