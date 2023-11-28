@@ -87,7 +87,8 @@ export const VisualEditorBlock = ({
   useSelectedInstanceCoordinates({ node });
 
   const props: PropsType = useMemo(() => {
-    if (!componentRegistration) {
+    // Don't enrich the design component wrapper node with props
+    if (!componentRegistration || node.type === DESIGN_COMPONENT_NODE_TYPE) {
       return {};
     }
 

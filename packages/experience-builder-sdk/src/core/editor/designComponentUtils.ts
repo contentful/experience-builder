@@ -96,6 +96,7 @@ export const resolveDesignComponent = ({
   const designComponent = designComponentsRegistry.get(componentId);
 
   if (!designComponent) {
+    console.warn(`Link to design component with ID '${componentId}' not found`);
     return node;
   }
 
@@ -104,6 +105,7 @@ export const resolveDesignComponent = ({
   ]) as unknown as Composition;
 
   if (!componentFields) {
+    console.warn(`Entry for design component with ID '${componentId}' not found`);
     return node;
   }
 
