@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.11.0...@contentful/experience-builder@2.11.1) (2023-11-29)
+
+### Bug Fixes
+
+- dont show warning about alien message, don't render invalid attributes [] ([#170](https://github.com/contentful/experience-builder/issues/170)) ([e52ab8d](https://github.com/contentful/experience-builder/commit/e52ab8d0861f1d9c751922d018f17980d002a37a))
+
 # [2.11.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.10.1...@contentful/experience-builder@2.11.0) (2023-11-27)
 
 ### Features
