@@ -30,7 +30,6 @@ import { transformContentValue } from '../../utils/transformers';
 import { resolveDesignComponent } from '../../core/preview/designComponentUtils';
 import { DesignComponent } from '../../components/DesignComponent';
 import { checkIfDesignComponent } from '../../utils/utils';
-import { Link } from '../../types';
 
 type CompositionBlockProps = {
   node: CompositionNode;
