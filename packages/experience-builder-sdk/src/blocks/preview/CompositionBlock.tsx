@@ -79,7 +79,8 @@ export const CompositionBlock = ({
   }, [isDesignComponent, node.definitionId]);
 
   const nodeProps = useMemo(() => {
-    if (!componentRegistration) {
+    // Don't enrich the design component wrapper node with props
+    if (!componentRegistration || isDesignComponent) {
       return {};
     }
 
@@ -115,6 +116,7 @@ export const CompositionBlock = ({
     }, propMap);
   }, [
     componentRegistration,
+    isDesignComponent,
     node.variables,
     resolveDesignValue,
     dataSource,
