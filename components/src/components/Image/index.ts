@@ -17,7 +17,7 @@ export const ExperienceBuilderImage = withExperienceBuilder(
         displayName: 'Alt',
         type: 'Text',
       },
-      src: {
+      url: {
         displayName: 'Image Url',
         type: 'Text',
         defaultValue: constants.placeholderImage,

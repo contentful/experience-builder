@@ -13,6 +13,11 @@ export default [
     input: 'src/index.ts',
     output: [
       {
+        file: packageJson.main,
+        format: 'cjs',
+        sourcemap: true,
+      },
+      {
         file: packageJson.module,
         format: 'esm',
         sourcemap: true,
@@ -25,7 +30,7 @@ export default [
       typescript({ tsconfig: './tsconfig.json' }),
       terser(),
     ],
-    external: [/node_modules/],
+    external: ['react', 'react-dom'],
   },
   {
     input: 'src/styles.ts',
