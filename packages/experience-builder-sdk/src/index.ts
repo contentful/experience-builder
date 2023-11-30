@@ -16,6 +16,8 @@ export type {
   CompositionVariableValueType,
   CompositionComponentPropValue,
   ValidationOption,
+  ExperienceEntry,
+  IncomingEvent,
 } from './types';
 
 export {
@@ -28,6 +30,12 @@ export {
   CONTENTFUL_COMPONENT_CATEGORY,
   CONTENTFUL_CONTAINER_ID,
   LATEST_SCHEMA_VERSION,
+  CF_STYLE_ATTRIBUTES,
+  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+  DESIGN_COMPONENT_NODE_TYPE,
+  DESIGN_COMPONENT_NODE_TYPES,
+  SCROLL_STATES,
+  supportedModes,
 } from './constants';
 export { fetchers } from './core';
 export { createExperience } from './utils/createExperience';

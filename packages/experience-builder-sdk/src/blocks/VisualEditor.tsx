@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ComponentRegistration, InternalSDKMode } from '../types';
+import { ComponentRegistration, CompositionTree, InternalSDKMode } from '../types';
 import { VisualEditorContextProvider } from './editor/VisualEditorContext';
 import { componentRegistry } from '../core/componentRegistry';
 import { useEditorContext } from './editor/useEditorContext';
@@ -7,7 +7,10 @@ import { useEditorContext } from './editor/useEditorContext';
 // const bundleUrl = 'https://storage.googleapis.com/sandbox-eb/bundle.js';
 
 export interface Config {
-  components: ComponentRegistration[];
+  initialLocale: string;
+  initialTree: CompositionTree;
+  initialComponentRegistry: Map<string, ComponentRegistration>;
+  mode: InternalSDKMode;
 }
 
 declare global {
@@ -44,7 +47,7 @@ function addStyles(url: string) {
 }
 
 const VisualEditor = () => {
-  const { bundleUrl, stylesUrl } = useEditorContext();
+  const { bundleUrl, stylesUrl, tree, locale } = useEditorContext();
 
   useEffect(() => {
     const init = () => {
@@ -62,7 +65,15 @@ const VisualEditor = () => {
           components.push(comp);
         });
 
-        window.InitializeVisualEditor({ components }, editor);
+        window.InitializeVisualEditor(
+          {
+            initialComponentRegistry: componentRegistry,
+            initialLocale: locale || 'en-US',
+            initialTree: tree!,
+            mode: 'editor',
+          },
+          editor
+        );
       }, 200);
     };
 
