@@ -1,5 +1,5 @@
-import { InternalSDKMode } from '../types';
-import { INCOMING_EVENTS, IncomingEvent, supportedModes } from '@contentful/experience-builder';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { supportedModes, InternalSDKMode, IncomingEvent, INCOMING_EVENTS } from '../types';
 
 export type VisualEditorMessagePayload = {
   source: string;

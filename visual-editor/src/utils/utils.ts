@@ -6,9 +6,9 @@ import {
   StyleProps,
   CompositionDataSource,
   CompositionUnboundValues,
-} from '../types';
+} from '@contentful/experience-builder-core';
 
-import { ExperienceEntry } from '@contentful/experience-builder';
+import { ExperienceEntry } from '@contentful/experience-builder-core';
 
 export const getDataFromTree = (
   tree: CompositionTree

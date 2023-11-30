@@ -5,15 +5,14 @@ import '../../styles/VisualEditorRoot.css';
 import { onComponentDropped } from '../../communication/onComponentDrop';
 import { EditorModeEntityStore } from '../../core/EditorModeEntityStore';
 import { useBreakpoints } from '../../hooks/useBreakpoints';
-import { CompositionTree, InternalSDKMode } from '../../types';
+import { InternalSDKMode } from '@contentful/experience-builder-core';
 import { useEditorContext } from './useEditorContext';
-import { VisualEditorContextProvider, designComponentsRegistry } from './VisualEditorContext';
-import { ComponentRegistration, OUTGOING_EVENTS } from '@contentful/experience-builder';
+import { VisualEditorContextProvider } from './VisualEditorContext';
+import { ComponentRegistration, OUTGOING_EVENTS } from '@contentful/experience-builder-core';
 import { sendMessage } from '@/communication/sendMessage';
 
 type VisualEditorRootProps = {
   initialLocale: string;
-  initialTree: CompositionTree;
   initialComponentRegistry: Map<string, ComponentRegistration>;
   mode: InternalSDKMode;
 };
@@ -21,7 +20,6 @@ type VisualEditorRootProps = {
 export const VisualEditorRoot = ({
   initialLocale,
   mode,
-  initialTree,
   initialComponentRegistry,
 }: VisualEditorRootProps) => {
   // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
@@ -29,7 +27,6 @@ export const VisualEditorRoot = ({
   return (
     <VisualEditorContextProvider
       initialComponentRegistry={initialComponentRegistry}
-      initialTree={initialTree}
       mode={mode}
       initialLocale={initialLocale}>
       <VisualEditorRootComponents />

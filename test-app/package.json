@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@contentful/experience-builder": "^1.1.0-alpha.75",
-    "@contentful/experience-builder-components": "*",
-    "@contentful/experience-builder-storybook-addon": "*",
+    "@contentful/experience-builder-components": "file:../components",
+    "@contentful/experience-builder-storybook-addon": "file:../storybook-addon",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0"

@@ -11,15 +11,16 @@ import {
   CompositionUnboundValues,
   InternalSDKMode,
   Link,
-} from '../../types';
+} from '@contentful/experience-builder-core';
 import {
   ComponentRegistration,
   INCOMING_EVENTS,
   OUTGOING_EVENTS,
   SCROLL_STATES,
-} from '@contentful/experience-builder';
+  doesMismatchMessageSchema,
+  tryParseMessage,
+} from '@contentful/experience-builder-core';
 import { getDataFromTree } from '../../utils/utils';
-import { doesMismatchMessageSchema, tryParseMessage } from '../../utils/validation';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import dragState from '@/core/dragState';
 
@@ -64,7 +65,6 @@ export const VisualEditorContext = React.createContext<VisualEditorContextType>(
 
 type VisualEditorContextProviderProps = {
   initialLocale: string;
-  initialTree?: CompositionTree;
   initialComponentRegistry: Map<string, ComponentRegistration>;
   mode: InternalSDKMode;
   children: ReactElement;
@@ -80,7 +80,6 @@ export const setDesignComponents = (designComponents: Link<'Entry'>[]) => {
 export function VisualEditorContextProvider({
   initialLocale,
   initialComponentRegistry,
-  initialTree,
   mode,
   children,
 }: VisualEditorContextProviderProps) {

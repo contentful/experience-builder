@@ -9,7 +9,7 @@ import { getItem } from '../lib/get-item';
 import { duplicateRelatedZones, removeRelatedZones } from '../lib/reduce-related-zones';
 import { generateId } from '../lib/generate-id';
 import { Action, ReplaceAction } from './actions';
-import { CompositionComponentNode } from '@/types';
+import { CompositionComponentNode } from '@contentful/experience-builder-core';
 import { onComponentDropped } from '@/communication/onComponentDrop';
 import { getZoneId } from '../lib/get-zone-id';
 

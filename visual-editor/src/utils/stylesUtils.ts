@@ -3,7 +3,7 @@ import {
   CompositionComponentNode,
   CompositionVariableValueType,
   StyleProps,
-} from '../types';
+} from '@contentful/experience-builder-core';
 import md5 from 'md5';
 import {
   transformWidthSizing,

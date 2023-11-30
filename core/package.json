@@ -1,0 +1,43 @@
+{
+  "name": "@contentful/experience-builder-core",
+  "version": "0.0.1-dev125",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/experience-builder-toolkit.git"
+  },
+  "files": [
+    "readme.md",
+    "package.json",
+    "dist/**/*.*"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "build": "rollup -c ./rollup.config.mjs",
+    "predev": "npm run clean",
+    "dev": "rollup -c ./rollup.dev.config.mjs --watch",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
+    "eslint": "^8.54.0",
+    "rimraf": "^5.0.5",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-ts": "^3.4.5"
+  },
+  "peerDependencies": {
+    "@contentful/visual-sdk": "^1.0.0-alpha.32",
+    "contentful": "^10.6.11"
+  }
+}

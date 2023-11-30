@@ -1,6 +1,6 @@
 import { PostMessageMethods } from '@contentful/visual-sdk';
 
-import { OutgoingEvent } from '@contentful/experience-builder/dist';
+import { OutgoingEvent } from '@contentful/experience-builder-core';
 
 export const sendMessage = (eventType: OutgoingEvent | PostMessageMethods, data?: any) => {
   if (typeof window === 'undefined') {
