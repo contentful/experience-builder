@@ -122,9 +122,27 @@ export const VisualEditorBlock = ({
           const [, uuid, ...path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
-          const boundValue = areEntitiesFetched
+          let boundValue: string | Link<'Asset'> | undefined = areEntitiesFetched
             ? entityStore.current?.getValue(binding, path.slice(0, -1))
             : undefined;
+
+          // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
+          // If no 'boundValue' is found, we also attempt to extract the value associated with the second-to-last item in the path.
+          // If successful, it means we have identified the linked asset.
+
+          if (!boundValue) {
+            boundValue = areEntitiesFetched
+              ? (entityStore.current?.getValue(
+                  binding,
+                  path.slice(0, -2)
+                ) as unknown as Link<'Asset'>)
+              : undefined;
+          }
+
+          if (typeof boundValue === 'object' && boundValue.sys.linkType === 'Asset') {
+            boundValue = entityStore.current?.getValue(boundValue, ['fields', 'file']);
+          }
+
           const value = boundValue || variableDefinition.defaultValue;
 
           return {
