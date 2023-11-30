@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState, Suspense } from 'react';
 
 const VisualEditor = React.lazy(() => import('./blocks/VisualEditor'));
-
 import { isDeprecatedExperience } from '@contentful/experience-builder-types';
 import { EntityStore } from './core/preview/EntityStore';
 import { supportedModes } from './constants';
@@ -24,18 +23,18 @@ function inIframe() {
   try {
     return window.self !== window.top;
   } catch (e) {
-    return true;
+    return false;
   }
 }
 
 export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
   const [mode, setMode] = useState<InternalSDKMode>(() => {
-    if (inIframe()) {
-      return 'editor';
-    }
-
     if (supportedModes.includes(experience.mode)) {
       return experience.mode;
+    }
+
+    if (inIframe()) {
+      return 'editor';
     }
 
     throw new Error(

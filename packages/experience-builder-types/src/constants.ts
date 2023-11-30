@@ -29,6 +29,7 @@ export const INCOMING_EVENTS = {
   CompositionUpdated: 'componentTreeUpdated',
   ComponentDraggingChanged: 'componentDraggingChanged',
   ComponentDragStarted: 'componentDragStarted',
+  ComponentDragEnded: 'componentDragEnded',
   CanvasResized: 'canvasResized',
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
