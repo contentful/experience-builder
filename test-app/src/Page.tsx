@@ -1,51 +1,41 @@
-import { useExperienceBuilder, ExperienceRoot } from '@contentful/experience-builder';
-import React, { useMemo } from 'react';
+import {
+  useFetchExperience,
+  defineComponents,
+  ExperienceRoot,
+  ExternalSDKMode,
+} from '@contentful/experience-builder';
 import { createClient } from 'contentful';
-import { useParams, useSearchParams } from 'react-router-dom';
 import { useExperienceBuilderComponents } from '@contentful/experience-builder-components';
 import '@contentful/experience-builder-components/styles.css';
-import { ExternalSDKMode } from '@contentful/experience-builder/dist/types';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
+const isPreview = window.location.search.includes('isPreview=true');
+const mode = isPreview ? 'preview' : (import.meta.env.VITE_MODE as ExternalSDKMode) || 'delivery';
 const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
 
-const Page: React.FC = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const [qs] = useSearchParams();
+const client = createClient({
+  space: import.meta.env.VITE_SPACE_ID || '',
+  environment: import.meta.env.VITE_ENVIRONMENT_ID || 'master',
+  host: isPreview ? 'preview.contentful.com' : 'cdn.contentful.com',
+  accessToken: isPreview
+    ? import.meta.env.VITE_PREVIEW_ACCESS_TOKEN
+    : import.meta.env.VITE_ACCESS_TOKEN,
+});
 
-  const isPreview = qs.get('isPreview') === 'true';
-  const isEditor = true; // qs.get('isEditor') === 'true';
+export default function Page() {
+  const localeCode = 'en-US';
+  const { slug = '' } = useParams<{ slug: string }>();
 
-  const mode = isEditor ? 'editor' : isPreview ? 'preview' : 'delivery';
-
-  const client = useMemo(() => {
-    const space = import.meta.env.VITE_SPACE_ID || '';
-    const environment = import.meta.env.VITE_ENVIRONMENT_ID || 'master';
-    const accessToken = isPreview
-      ? import.meta.env.VITE_PREVIEW_ACCESS_TOKEN
-      : import.meta.env.VITE_ACCESS_TOKEN;
-    const host = isPreview ? 'preview.contentful.com' : 'cdn.contentful.com';
-
-    return createClient({
-      space,
-      environment,
-      host,
-      accessToken: accessToken as string,
-    });
-  }, [isPreview]);
-
-  const { experience, defineComponents } = useExperienceBuilder({
-    experienceTypeId,
-    client,
-    mode: mode as ExternalSDKMode,
-  });
+  const { experience, fetchBySlug } = useFetchExperience({ client, mode });
 
   useExperienceBuilderComponents(defineComponents);
 
-  return (
-    <>
-      <ExperienceRoot slug={slug || '/'} experience={experience} locale={'en-US'} />
-    </>
-  );
-};
+  useEffect(() => {
+    if (slug) {
+      fetchBySlug({ experienceTypeId, slug, localeCode });
+    }
+  }, [fetchBySlug, slug]);
 
-export default Page;
+  return <ExperienceRoot experience={experience} locale={localeCode} />;
+}
