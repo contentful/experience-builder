@@ -76,8 +76,8 @@ export const reduceData = (data: Data, action: Action, config: Config): Data => 
       parentId,
       children: [],
       data: {
-        blockId: !isRoot ? action.componentType : undefined,
-        id: isRoot ? 'root' : generateId(action.componentType),
+        blockId: action.componentType,
+        id: generateId(action.componentType),
         breakpoints: [],
         dataSource: {},
         props: {},
@@ -90,6 +90,7 @@ export const reduceData = (data: Data, action: Action, config: Config): Data => 
       index: action.destinationIndex,
       parentType: parentIsRoot ? 'root' : parentNode?.type,
       parentBlockId: parentNode?.data.blockId,
+      parentId: parentIsRoot ? 'root' : parentId,
     });
 
     if (action.destinationZone === rootDroppableId) {

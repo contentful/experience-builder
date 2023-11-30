@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateItem } from '@/redux/draggedItemSlice';
 import { RootState } from '@/redux/store';
 import { DRAGGABLE_HEIGHT, DRAGGABLE_WIDTH } from '@/utils/constants';
+import { onDrop } from '@/core/lib/on-drop';
 export const tryParse = (data: any) => {
   try {
     return JSON.parse(data);
@@ -101,8 +102,6 @@ export const Puck: React.FC<Props> = ({
     });
   }, [data]);
 
-  console.log(data.children);
-
   return (
     <AppProvider value={{ state: appState, dispatch: appDispatch, config }}>
       <DragDropContext
@@ -138,6 +137,7 @@ export const Puck: React.FC<Props> = ({
           dragState.reset();
 
           sendMessage(OUTGOING_EVENTS.MouseUp);
+
           // User cancel drag
           if (!droppedItem.destination) {
             return;
@@ -148,9 +148,8 @@ export const Puck: React.FC<Props> = ({
             droppedItem.source.droppableId.startsWith('component-list') &&
             droppedItem.destination
           ) {
-            console.log('insert', droppedItem.destination);
-            appDispatch({
-              type: 'insert',
+            onDrop({
+              data,
               componentType: droppedItem.draggableId,
               destinationIndex: droppedItem.destination!.index,
               destinationZone: droppedItem.destination.droppableId,

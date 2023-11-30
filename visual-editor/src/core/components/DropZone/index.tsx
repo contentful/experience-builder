@@ -190,8 +190,6 @@ function DropZoneEdit({
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
   const isAreaSelected = selectedItem && zoneArea === selectedItem.data.id;
 
-  console.log('zone', zoneCompound);
-
   return (
     <div
       className={getClassName({

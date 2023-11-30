@@ -1,5 +1,5 @@
-import { CompositionComponentNode } from '@contentful/experience-builder-core';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core';
+import { CompositionComponentNode, OUTGOING_EVENTS } from '@contentful/experience-builder-core';
+
 import { sendMessage } from './sendMessage';
 
 export const onComponentDropped = ({
@@ -7,16 +7,23 @@ export const onComponentDropped = ({
   index,
   parentBlockId,
   parentType,
+  parentId,
 }: {
   node: CompositionComponentNode;
   index?: number;
   parentType?: string;
   parentBlockId?: string;
+  parentId?: string;
 }) => {
   sendMessage(OUTGOING_EVENTS.ComponentDropped, {
     node,
     index: index ?? node.children.length,
-    parentBlockId,
-    parentType,
+    parentNode: {
+      type: parentType,
+      data: {
+        blockId: parentBlockId,
+        id: parentId,
+      },
+    },
   });
 };

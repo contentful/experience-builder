@@ -70,7 +70,7 @@ const VisualEditorRootComponents = () => {
     };
 
     const onMouseUp = () => {
-      onComponentDropped({ node: tree.root });
+      // onComponentDropped({ node: tree.root });
       sendMessage(OUTGOING_EVENTS.MouseUp);
     };
 

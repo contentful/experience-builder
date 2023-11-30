@@ -1,5 +1,4 @@
-import { CompositionComponentNode } from '../types';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder';
+import { CompositionComponentNode, OUTGOING_EVENTS } from '@contentful/experience-builder-core';
 import { sendMessage } from './sendMessage';
 
 export const onComponentUpdate = ({
@@ -13,10 +12,10 @@ export const onComponentUpdate = ({
   parentType?: string;
   parentBlockId?: string;
 }) => {
-  sendMessage(OUTGOING_EVENTS.ComponentUpdated, {
-    node,
-    index: index ?? node.children.length,
-    parentBlockId,
-    parentType,
-  });
+  // sendMessage(OUTGOING_EVENTS.ComponentDropped, {
+  //   node,
+  //   index: index ?? node.children.length,
+  //   parentBlockId,
+  //   parentType,
+  // });
 };
