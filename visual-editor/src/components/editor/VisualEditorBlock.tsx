@@ -223,7 +223,6 @@ export const VisualEditorBlock = ({
         editorMode={true}
         key={node.data.id}
         node={node}
-        onMouseDown={onMouseDown}
         // something is off with conditional types and eslint can't recognize it
 
         cfHyperlink={(props as StyleProps).cfHyperlink}

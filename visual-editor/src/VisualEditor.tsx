@@ -5,7 +5,7 @@ import { ComponentConfig, Puck, Config, Data } from './core';
 import { ComponentRegistration, CompositionTree } from './types';
 import { VerticalSpace } from './components/editor-components/VerticalSpace';
 import { Flex } from './components/editor-components/Flex';
-import { Columns } from './components/editor-components/Columns';
+import { Columns, ColumnsDefinition } from './components/editor-components/Columns';
 import { Container } from './components/editor-components/Container';
 import { sendMessage } from './communication/sendMessage';
 import { OUTGOING_EVENTS } from '@contentful/experience-builder';
@@ -14,6 +14,7 @@ import { useBreakpoints } from './hooks/useBreakpoints';
 import { ContentfulContainerDefinition } from '@components/editor-components/ContentfulContainer/ContentfulContainer';
 import { EditorModeEntityStore } from './core/EditorModeEntityStore';
 import dragState from './core/dragState';
+import { DRAGGABLE_HEIGHT, DRAGGABLE_WIDTH } from './utils/constants';
 
 const createData = (tree: CompositionTree): Data => {
   return {
@@ -23,6 +24,51 @@ const createData = (tree: CompositionTree): Data => {
     children: tree.root.children,
   };
 };
+
+function updateDraggableElement(x: number, y: number) {
+  const container = document.querySelector('#component-list') as HTMLDivElement;
+
+  if (!container) {
+    return;
+  }
+
+  container.style.setProperty('top', `${y}px`);
+  container.style.setProperty('left', `${x}px`);
+}
+
+function simulateMouseEvent(coordX: number, coordY: number) {
+  const element = document.querySelector('#item');
+
+  if (!dragState.isDragStart) {
+    return;
+  }
+
+  let name = 'mousemove';
+
+  if (!dragState.isDragging) {
+    updateDraggableElement(coordX, coordY);
+
+    name = 'mousedown';
+    dragState.updateIsDragging(true);
+  }
+
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    view: window,
+    pageX: 0,
+    pageY: 0,
+    clientX: coordX - DRAGGABLE_WIDTH / 2,
+    clientY: coordY - DRAGGABLE_HEIGHT / 2 - window.scrollY,
+  };
+
+  if (!element) {
+    return;
+  }
+
+  const event = new MouseEvent(name, options);
+  element.dispatchEvent(event);
+}
 
 // Render Puck editor
 const VisualEditor: React.FC = () => {
@@ -57,22 +103,20 @@ const VisualEditor: React.FC = () => {
   }, [locale]);
 
   useEffect(() => {
-    const onMouseMove = (event: MouseEvent) => {
-      // const data = {
-      //   name: 'MOUSE_MOVE',
-      //   data: {
-      //     x: event.pageX,
-      //     y: event.pageY,
-      //   },
-      // };
+    const onMouseMove = (e: MouseEvent) => {
+      if ((e.target as any)?.id === 'item') {
+        return;
+      }
 
       if (!dragState.isDragStart) {
         return;
       }
 
+      simulateMouseEvent(e.pageX, e.pageY);
+
       sendMessage(OUTGOING_EVENTS.MouseMove, {
-        clientX: event.pageX,
-        clientY: event.pageY,
+        clientX: e.pageX,
+        clientY: e.pageY - window.scrollY,
       });
     };
 
@@ -128,11 +172,12 @@ const VisualEditor: React.FC = () => {
     const categories = components.reduce((categories, comp) => categories, defaultCategories);
 
     const builtInComponents = {
-      Columns,
-      Flex,
-      VerticalSpace,
-      Container,
+      // Columns,
+      // Flex,
+      // VerticalSpace,
+      // Container,
       [ContentfulContainerDefinition.id]: ContentfulContainerDefinition,
+      // [ColumnsDefinition.id]: ColumnsDefinition,
     };
 
     return {

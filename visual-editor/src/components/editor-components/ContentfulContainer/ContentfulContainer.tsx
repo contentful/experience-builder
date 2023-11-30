@@ -7,9 +7,10 @@ import classNames from 'classnames';
 import { Flex } from './Flex';
 import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink';
 import type { ContentfulContainerProps } from './ContentfulContainerAsHyperlink';
-import { ComponentConfig, DropZone } from '@/core';
+import { ComponentConfig } from '@/core';
 import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder';
 import { Section } from '../Section';
+import { DropZone } from '@/core/components/DropZone';
 
 export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
   const { children, className, editorMode } = sectionProps;
@@ -48,9 +49,6 @@ export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
     );
   }
 
-  // TODO
-  // Figure out zone relationships
-
   // Extract properties that are only available in editor mode
   const { node, ...dropZoneEditorProps } = sectionProps;
 
@@ -63,7 +61,7 @@ export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
         data-cf-node-block-id={node.data.blockId}
         data-cf-node-block-type={node.type}
         className={classNames(className, 'defaultStyles')}
-        zone={`item-1`}
+        zone={node.data.id}
         node={node}
         WrapperComponent={Flex}
         {...dropZoneEditorProps}

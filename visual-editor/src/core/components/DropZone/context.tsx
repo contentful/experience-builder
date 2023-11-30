@@ -1,11 +1,12 @@
 import React, { CSSProperties, ReactNode, createContext, useCallback, useState } from 'react';
 import { Config, Data } from '../../types/Config';
-import { DragStart, DragUpdate } from '@hello-pangea/dnd';
 import { ItemSelector, getItem } from '../../lib/get-item';
-import { PuckAction } from '../../reducer';
+import { Action } from '../../reducer';
 import { rootDroppableId } from '../../lib/root-droppable-id';
 import { useDebounce } from 'use-debounce';
 import { getZoneId } from '../../lib/get-zone-id';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
@@ -15,9 +16,8 @@ export type DropZoneContext = {
   componentState?: Record<string, any>;
   itemSelector?: ItemSelector | null;
   setItemSelector?: (newIndex: ItemSelector | null) => void;
-  dispatch?: (action: PuckAction) => void;
+  dispatch?: (action: Action) => void;
   areaId?: string;
-  draggedItem?: DragStart & Partial<DragUpdate>;
   placeholderStyle?: CSSProperties;
   hoveringArea?: string | null;
   setHoveringArea?: (area: string | null) => void;
@@ -44,6 +44,8 @@ export const DropZoneProvider = ({
   children: ReactNode;
   value: DropZoneContext;
 }) => {
+  const { draggedItem } = useSelector((state: RootState) => state.draggedItem);
+
   const [hoveringArea, setHoveringArea] = useState<string | null>(null);
   const [hoveringZone, setHoveringZone] = useState<string | null>(rootDroppableId);
 
@@ -136,7 +138,7 @@ export const DropZoneProvider = ({
       {value && (
         <dropZoneContext.Provider
           value={{
-            hoveringArea: value.draggedItem ? hoveringAreaDb : hoveringArea,
+            hoveringArea: draggedItem ? hoveringAreaDb : hoveringArea,
             setHoveringArea,
             hoveringZone,
             setHoveringZone,

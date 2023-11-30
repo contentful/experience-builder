@@ -1,4 +1,10 @@
-import { AppState, Data, UiState } from '../types/Config';
+import { AppState, Data, DropZone, UiState } from '../types/Config';
+
+export type DropZoneUpdate = {
+  type: 'dropzone_update_direction';
+  id: string;
+  data: Partial<DropZone>;
+};
 
 export type InsertAction = {
   type: 'insert';
@@ -66,7 +72,7 @@ export type UnregisterZoneAction = {
   zone: string;
 };
 
-export type PuckAction = { recordHistory?: boolean } & (
+export type Action = { recordHistory?: boolean } & (
   | ReorderAction
   | InsertAction
   | MoveAction
@@ -78,4 +84,5 @@ export type PuckAction = { recordHistory?: boolean } & (
   | SetUiAction
   | RegisterZoneAction
   | UnregisterZoneAction
+  | DropZoneUpdate
 );

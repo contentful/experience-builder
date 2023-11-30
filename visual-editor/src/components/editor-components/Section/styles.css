@@ -1,6 +1,6 @@
 .Section:not(.Section .Section) {
-  padding-left: 24px;
-  padding-right: 24px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .Section:not(.Section .Section) .Section-inner {

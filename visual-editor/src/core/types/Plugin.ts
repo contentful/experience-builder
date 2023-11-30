@@ -1,21 +1,21 @@
 import { ReactElement, ReactNode } from 'react';
 import { AppState } from './Config';
-import { PuckAction } from '../reducer';
+import { Action } from '../reducer';
 
 export type Plugin = {
   renderRootFields?: (props: {
     children: ReactNode;
-    dispatch: (action: PuckAction) => void;
+    dispatch: (action: Action) => void;
     state: AppState;
   }) => ReactElement<any>;
   renderRoot?: (props: {
     children: ReactNode;
-    dispatch: (action: PuckAction) => void;
+    dispatch: (action: Action) => void;
     state: AppState;
   }) => ReactElement<any>;
   renderFields?: (props: {
     children: ReactNode;
-    dispatch: (action: PuckAction) => void;
+    dispatch: (action: Action) => void;
     state: AppState;
   }) => ReactElement<any>;
 };

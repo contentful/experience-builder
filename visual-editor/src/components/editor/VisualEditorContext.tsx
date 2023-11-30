@@ -21,6 +21,8 @@ import {
 import { getDataFromTree } from '../../utils/utils';
 import { doesMismatchMessageSchema, tryParseMessage } from '../../utils/validation';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
+import dragState from '@/core/dragState';
+
 // import { Entry } from 'contentful';
 // import { DesignComponent } from '../../components/DesignComponent';
 
@@ -82,14 +84,7 @@ export function VisualEditorContextProvider({
   mode,
   children,
 }: VisualEditorContextProviderProps) {
-  const [tree, setTree] = useState<CompositionTree>(
-    initialTree ??
-      ({
-        root: {
-          children: [],
-        },
-      } as any)
-  );
+  const [tree, setTree] = useState<CompositionTree>();
   const [dragItem, setDragItem] = useState<string>('');
 
   const [componentRegistry, setComponentRegistry] =
@@ -127,7 +122,6 @@ export function VisualEditorContextProvider({
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
   }, []);
 
-  // console.log('updated tree', tree);
   useEffect(() => {
     // We only care about this communication when in editor mode
     if (mode !== 'editor') return;
@@ -257,7 +251,13 @@ export function VisualEditorContextProvider({
           break;
         }
         case INCOMING_EVENTS.ComponentDragStarted: {
+          dragState.updateIsDragStartedOnParent(true);
           setDragItem(payload.id || 'Heading');
+          break;
+        }
+        case INCOMING_EVENTS.ComponentDragEnded: {
+          dragState.updateIsDragStartedOnParent(false);
+          setDragItem('');
           break;
         }
         case INCOMING_EVENTS.SelectComponent: {

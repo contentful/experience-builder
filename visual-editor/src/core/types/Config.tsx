@@ -203,4 +203,10 @@ export type UiState = {
   >;
 };
 
-export type AppState = { data: Data; ui: UiState };
+export interface DropZone {
+  direction: 'horizontal' | 'vertical';
+}
+
+export type DropZoneMap = Map<string, DropZone>;
+
+export type AppState = { data: Data; ui: UiState; dropZones: DropZoneMap };

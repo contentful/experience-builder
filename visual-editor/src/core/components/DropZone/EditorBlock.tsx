@@ -25,6 +25,8 @@ import { CF_STYLE_ATTRIBUTES, OUTGOING_EVENTS } from '@contentful/experience-bui
 import { useStyleTag } from '@/hooks/useStyleTag';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { omit } from 'lodash';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 type PropsType =
   | StyleProps
@@ -64,6 +66,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   ctx,
 }) => {
   const { componentRegistry, setSelectedNodeId } = useEditorContext();
+  const { draggedItem } = useSelector((state: RootState) => state.draggedItem);
   const {
     // These all need setting via context
     data,
@@ -72,7 +75,6 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
     itemSelector,
     setItemSelector = () => null,
     areaId,
-    draggedItem,
     placeholderStyle,
     registerZoneArea,
     registerPath,

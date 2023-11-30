@@ -1,4 +1,4 @@
-import { Config, Content, Data } from '../types/Config';
+import { Config, Content, Data, DropZoneMap } from '../types/Config';
 import { reorder } from '../lib/reorder';
 import { rootDroppableId } from '../lib/root-droppable-id';
 import { insert } from '../lib/insert';
@@ -8,7 +8,7 @@ import { replace } from '../lib/replace';
 import { getItem } from '../lib/get-item';
 import { duplicateRelatedZones, removeRelatedZones } from '../lib/reduce-related-zones';
 import { generateId } from '../lib/generate-id';
-import { PuckAction, ReplaceAction } from './actions';
+import { Action, ReplaceAction } from './actions';
 import { CompositionComponentNode } from '@/types';
 import { onComponentDropped } from '@/communication/onComponentDrop';
 import { getZoneId } from '../lib/get-zone-id';
@@ -43,11 +43,29 @@ export const replaceAction = (data: Data, action: ReplaceAction) => {
   };
 };
 
-export const reduceData = (data: Data, action: PuckAction, config: Config) => {
+export const reduceDropZones = (
+  dropZones: DropZoneMap,
+  action: Action,
+  config: Config
+): DropZoneMap => {
+  if (action.type === 'dropzone_update_direction') {
+    const zone = dropZones.get(action.id);
+
+    dropZones.set(action.id, { ...(zone || {}), ...action.data } as any);
+
+    return dropZones;
+  }
+
+  return dropZones;
+};
+
+export const reduceData = (data: Data, action: Action, config: Config): Data => {
   if (action.type === 'insert') {
     const isRoot = !data.children.length;
 
-    const [parentId] = getZoneId(action.destinationZone);
+    const [areaId, zoneId] = getZoneId(action.destinationZone);
+
+    const parentId = zoneId || areaId;
 
     const parentNode = getItem({ id: parentId }, data);
 
@@ -97,7 +115,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   }
 
   if (action.type === 'duplicate') {
-    const item = getItem({ index: action.sourceIndex, zone: action.sourceZone }, data)!;
+    const item = getItem({ id: action.sourceZone }, data)!;
 
     const newItem = {
       ...item,
@@ -155,7 +173,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   if (action.type === 'move') {
     const newData = setupZone(setupZone(data, action.sourceZone), action.destinationZone);
 
-    const item = getItem({ zone: action.sourceZone, index: action.sourceIndex }, newData);
+    const item = getItem({ id: action.sourceZone }, newData);
 
     if (action.sourceZone === rootDroppableId) {
       return {
@@ -203,7 +221,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   }
 
   if (action.type === 'remove') {
-    const item = getItem({ index: action.index, zone: action.zone }, data)!;
+    const item = getItem({ id: action.zone }, data);
 
     // Remove any related zones
     const dataWithRelatedRemoved = setupZone(removeRelatedZones(item, data), action.zone);

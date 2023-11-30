@@ -1,7 +1,7 @@
 import { UiState } from '../types/Config';
-import { PuckAction } from './actions';
+import { Action } from './actions';
 
-export const reduceUi = (ui: UiState, action: PuckAction) => {
+export const reduceUi = (ui: UiState, action: Action) => {
   if (action.type === 'setUi') {
     if (typeof action.ui === 'object') {
       return {

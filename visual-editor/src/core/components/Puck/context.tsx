@@ -1,10 +1,11 @@
 import { createContext, useContext } from 'react';
 import { AppState, Config, UiState } from '../../types/Config';
-import { PuckAction } from '../../reducer';
+import { Action } from '../../reducer';
 import { getItem } from '../../lib/get-item';
 
 export const defaultAppState: AppState = {
   data: { children: [], root: { title: '' } },
+  dropZones: new Map(),
   ui: {
     leftSideBarVisible: true,
     arrayState: {},
@@ -15,7 +16,7 @@ export const defaultAppState: AppState = {
 
 type AppContext = {
   state: AppState;
-  dispatch: (action: PuckAction) => void;
+  dispatch: (action: Action) => void;
   config: Config;
 };
 

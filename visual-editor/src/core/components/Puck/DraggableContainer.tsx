@@ -1,3 +1,4 @@
+import { DRAGGABLE_HEIGHT, DRAGGABLE_WIDTH } from '@/utils/constants';
 import { Draggable, Droppable } from '@hello-pangea/dnd';
 import React from 'react';
 
@@ -27,7 +28,7 @@ const DraggableContainer: React.FC<Props> = ({ id }) => {
         zIndex: -1,
       }}>
       <Droppable droppableId={`component-list`} isDropDisabled>
-        {(provided, snapshot) => (
+        {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             <Draggable draggableId={id} key={id} index={0}>
               {(provided, snapshot) => (
@@ -38,8 +39,8 @@ const DraggableContainer: React.FC<Props> = ({ id }) => {
                   {...provided.dragHandleProps}
                   style={{
                     ...getStyle(provided.draggableProps.style, snapshot),
-                    width: 15,
-                    height: 15,
+                    width: DRAGGABLE_WIDTH,
+                    height: DRAGGABLE_HEIGHT,
                   }}
                 />
               )}

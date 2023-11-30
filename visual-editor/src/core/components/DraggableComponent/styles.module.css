@@ -137,7 +137,7 @@
 }
 
 .DraggableComponent-action:hover {
-  background: var(--puck-color-grey-2);
+  background: var(--exp-builder-blue200);
   color: var(--puck-color-azure-5);
   cursor: pointer;
 }
