@@ -79,7 +79,8 @@ export const CompositionBlock = ({
   }, [isDesignComponent, node.definitionId]);
 
   const nodeProps = useMemo(() => {
-    if (!componentRegistration) {
+    // Don't enrich the design component wrapper node with props
+    if (!componentRegistration || isDesignComponent) {
       return {};
     }
 
@@ -93,7 +94,17 @@ export const CompositionBlock = ({
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/');
           const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-          const value = entityStore?.getValue(binding, path.slice(0, -1));
+          let value = entityStore?.getValue(binding, path.slice(0, -1));
+          if (!value) {
+            const foundAssetValue = entityStore?.getValue(binding, [
+              ...path.slice(0, -2),
+              'fields',
+              'file',
+            ]);
+            if (foundAssetValue) {
+              value = foundAssetValue;
+            }
+          }
           const variableDefinition = componentRegistration.definition.variables[variableName];
           acc[variableName] = transformContentValue(value, variableDefinition);
           break;
@@ -103,6 +114,11 @@ export const CompositionBlock = ({
           acc[variableName] = (entityStore?.unboundValues || unboundValues)[uuid]?.value;
           break;
         }
+        case 'ComponentValue': {
+          const uuid = variable.key;
+          acc[variableName] = unboundValues[uuid]?.value;
+          break;
+        }
         default:
           break;
       }
@@ -110,6 +126,7 @@ export const CompositionBlock = ({
     }, propMap);
   }, [
     componentRegistration,
+    isDesignComponent,
     node.variables,
     resolveDesignValue,
     dataSource,

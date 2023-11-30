@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.12.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.11.1...@contentful/experience-builder@2.12.0) (2023-11-30)
+
+### Features
+
+- [SPA-1574] add media type and handle it ([#168](https://github.com/contentful/experience-builder/issues/168)) ([7fe96c3](https://github.com/contentful/experience-builder/commit/7fe96c3f3e89db1208e787d06c7291765ee18c19))
+
+## [2.11.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.11.0...@contentful/experience-builder@2.11.1) (2023-11-29)
+
+### Bug Fixes
+
+- dont show warning about alien message, don't render invalid attributes [] ([#170](https://github.com/contentful/experience-builder/issues/170)) ([e52ab8d](https://github.com/contentful/experience-builder/commit/e52ab8d0861f1d9c751922d018f17980d002a37a))
+
+# [2.11.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.10.1...@contentful/experience-builder@2.11.0) (2023-11-27)
+
+### Features
+
+- handle bindings for design components [SPA-1606] ([#167](https://github.com/contentful/experience-builder/issues/167)) ([3eb7bb5](https://github.com/contentful/experience-builder/commit/3eb7bb5b05ccb6057d8834c9a0bc9718b90faf50))
+
+## [2.10.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.10.0...@contentful/experience-builder@2.10.1) (2023-11-21)
+
+### Bug Fixes
+
+- allow ExperienceRoot to render editor mode when entry first created [ALT-104] ([d69d5da](https://github.com/contentful/experience-builder/commit/d69d5dabd448929164ab37a93bdab8122fbfe899))
+- incorporate reviewer feedback ([ea236c9](https://github.com/contentful/experience-builder/commit/ea236c93eab52b51135169dfa43f1c73948f32b6))
+- refactoring and update contentful cli to latest [ALT-106] ([7b290a2](https://github.com/contentful/experience-builder/commit/7b290a23e000cd1ad4704da5dbaaa04c735f8bfb))
+
+# [2.10.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.9.0...@contentful/experience-builder@2.10.0) (2023-11-21)
+
+### Features
+
+- add new constant and remove unused variables [SPA-1605] ([#163](https://github.com/contentful/experience-builder/issues/163)) ([bdd6a08](https://github.com/contentful/experience-builder/commit/bdd6a086d0f107eae55b3bc519a7ed8f70b489b0))
+
 # [2.9.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.8.5...@contentful/experience-builder@2.9.0) (2023-11-20)
 
 ### Features

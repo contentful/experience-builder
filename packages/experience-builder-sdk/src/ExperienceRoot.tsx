@@ -11,7 +11,7 @@ import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPrevie
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 
 type ExperienceRootProps = {
-  experience: Experience<EntityStore> | DeprecatedExperience;
+  experience?: Experience<EntityStore> | DeprecatedExperience;
   locale: string;
   /**
    * @deprecated
@@ -29,6 +29,13 @@ function inIframe() {
 
 export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
   const [mode, setMode] = useState<InternalSDKMode>(() => {
+    if (!experience) {
+      if (typeof window !== 'undefined' && window !== window.parent) {
+        return 'editor';
+      }
+      return 'delivery';
+    }
+
     if (supportedModes.includes(experience.mode)) {
       return experience.mode;
     }
@@ -68,6 +75,8 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
       </ErrorBoundary>
     );
   }
+
+  if (!experience) return null;
 
   if (isDeprecatedExperience(experience)) {
     return (

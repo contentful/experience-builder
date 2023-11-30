@@ -25,6 +25,7 @@ import { getDataFromTree } from '../../utils/utils';
 import { doesMismatchMessageSchema, tryParseMessage } from '../../utils/validation';
 import { Entry } from 'contentful';
 import { DesignComponent } from '../../components/DesignComponent';
+import { PostMessageMethods } from '@contentful/visual-sdk';
 
 type VisualEditorContextType = {
   tree: CompositionTree | undefined;
@@ -159,6 +160,10 @@ export function VisualEditorContextProvider({
       }
 
       const eventData = tryParseMessage(event);
+      if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
+        // Expected message: This message is handled in the visual-sdk to store fetched entities
+        return;
+      }
 
       console.debug(
         `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
@@ -210,11 +215,9 @@ export function VisualEditorContextProvider({
         }
         case INCOMING_EVENTS.DesignComponentsAdded: {
           const {
-            tree,
             designComponent,
             designComponentDefinition,
           }: {
-            tree: CompositionTree;
             designComponent: Entry;
             designComponentDefinition: ComponentRegistration['definition'];
           } = payload;
@@ -231,7 +234,6 @@ export function VisualEditorContextProvider({
                 component: DesignComponent,
                 definition: designComponentDefinition,
               });
-            setTree(tree);
           }
           break;
         }

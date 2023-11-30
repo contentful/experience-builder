@@ -87,7 +87,8 @@ export const VisualEditorBlock = ({
   useSelectedInstanceCoordinates({ node });
 
   const props: PropsType = useMemo(() => {
-    if (!componentRegistration) {
+    // Don't enrich the design component wrapper node with props
+    if (!componentRegistration || node.type === DESIGN_COMPONENT_NODE_TYPE) {
       return {};
     }
 
@@ -121,14 +122,44 @@ export const VisualEditorBlock = ({
           const [, uuid, ...path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
-          const boundValue = areEntitiesFetched
+          let boundValue: string | Link<'Asset'> | undefined = areEntitiesFetched
             ? entityStore.current?.getValue(binding, path.slice(0, -1))
             : undefined;
+
+          // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
+          // If no 'boundValue' is found, we also attempt to extract the value associated with the second-to-last item in the path.
+          // If successful, it means we have identified the linked asset.
+
+          if (!boundValue) {
+            boundValue = areEntitiesFetched
+              ? (entityStore.current?.getValue(
+                  binding,
+                  path.slice(0, -2)
+                ) as unknown as Link<'Asset'>)
+              : undefined;
+          }
+
+          if (typeof boundValue === 'object' && boundValue.sys.linkType === 'Asset') {
+            boundValue = entityStore.current?.getValue(boundValue, ['fields', 'file']);
+          }
+
           const value = boundValue || variableDefinition.defaultValue;
 
           return {
             ...acc,
             [variableName]: transformContentValue(value, variableDefinition),
+          };
+        } else if (variableMapping.type === 'ComponentValue') {
+          // For design component, we are only handling binding for UnboundValues for now
+          const value = getUnboundValues({
+            key: variableMapping.key,
+            fallback: variableDefinition.defaultValue,
+            unboundValues: node.data.unboundValues || {},
+          });
+
+          return {
+            ...acc,
+            [variableName]: value,
           };
         } else {
           const value = getUnboundValues({
@@ -149,6 +180,7 @@ export const VisualEditorBlock = ({
     componentRegistration,
     node.data.props,
     node.data.blockId,
+    node.data.unboundValues,
     node.children,
     resolveDesignValue,
     dataSource,

@@ -1,5 +1,8 @@
 import { Asset, Entry } from 'contentful';
-import { createDesignComponentEntry } from '../../../test/__fixtures__/composition';
+import {
+  createDesignComponentEntry,
+  designComponentGeneratedVariableName,
+} from '../../../test/__fixtures__/composition';
 import { assets } from '../../../test/__fixtures__/entities';
 import { designComponentsRegistry } from '../../blocks/editor/VisualEditorContext';
 import { DESIGN_COMPONENT_BLOCK_NODE_TYPE, DESIGN_COMPONENT_NODE_TYPE } from '../../constants';
@@ -34,8 +37,17 @@ describe('deserializeDesignComponentNode', () => {
       node,
       nodeId: 'random-node-id',
       parentId: 'root',
-      experienceDataSource: {},
-      experienceUnboundValues: designComponentEntry.fields.unboundValues,
+      designComponentDataSource: {},
+      designComponentUnboundValues: designComponentEntry.fields.unboundValues,
+      componentInstanceProps: {
+        [designComponentGeneratedVariableName]: {
+          type: 'UnboundValue',
+          key: 'unbound_uuid1Experience',
+        },
+      },
+      componentInstanceUnboundValues: {
+        unbound_uuid1Experience: { value: 'New year Eve' },
+      },
     });
 
     expect(result).toEqual({
@@ -68,11 +80,11 @@ describe('deserializeDesignComponentNode', () => {
               data: {
                 blockId: 'custom-component',
                 id: expect.any(String),
-                props: { text: { key: 'uuid1DesignComponent', type: 'UnboundValue' } },
+                props: { text: { key: 'text_uuid1DesignComponent', type: 'ComponentValue' } },
                 dataSource: {},
                 unboundValues: {
-                  uuid1DesignComponent: {
-                    value: 'custom component title',
+                  text_uuid1DesignComponent: {
+                    value: 'New year Eve',
                   },
                 },
                 breakpoints: [],
@@ -190,15 +202,22 @@ describe('resolveDesignComponent', () => {
     expect(result).toEqual(node);
   });
 
-  it('should return a deserialized node', () => {
+  it('should return a deserialized design component node with unboundValues and props', () => {
     const node: CompositionComponentNode = {
       type: DESIGN_COMPONENT_NODE_TYPE,
       data: {
         blockId: 'design-component-id',
         id: 'random-node-id',
-        props: {},
+        props: {
+          [designComponentGeneratedVariableName]: {
+            type: 'UnboundValue',
+            key: 'unbound_uuid1Experience',
+          },
+        },
         dataSource: {},
-        unboundValues: {},
+        unboundValues: {
+          unbound_uuid1Experience: { value: 'New year Eve' },
+        },
         breakpoints: [],
       },
       children: [],
@@ -243,11 +262,16 @@ describe('resolveDesignComponent', () => {
               data: {
                 blockId: 'custom-component',
                 id: expect.any(String),
-                props: { text: { key: 'uuid1DesignComponent', type: 'UnboundValue' } },
+                props: {
+                  text: {
+                    key: designComponentGeneratedVariableName,
+                    type: 'ComponentValue',
+                  },
+                },
                 dataSource: {},
                 unboundValues: {
-                  uuid1DesignComponent: {
-                    value: 'custom component title',
+                  [designComponentGeneratedVariableName]: {
+                    value: 'New year Eve',
                   },
                 },
                 breakpoints: [],
