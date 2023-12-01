@@ -14,6 +14,7 @@ import './styles.css';
 const isPreview = window.location.search.includes('isPreview=true');
 const mode = isPreview ? 'preview' : (import.meta.env.VITE_MODE as ExternalSDKMode) || 'delivery';
 const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
+const localeCode = 'en-US';
 
 const isStaging = import.meta.env.VITE_CONTENTFUL_ENV === 'staging';
 
@@ -29,9 +30,7 @@ const client = createClient({
 });
 
 export default function Page() {
-  const localeCode = 'en-US';
-  const { slug = '' } = useParams<{ slug: string }>();
-
+  const { slug = 'homePage' } = useParams<{ slug: string }>();
   const { experience, fetchBySlug } = useFetchExperience({ client, mode });
 
   useExperienceBuilderComponents(defineComponents);
