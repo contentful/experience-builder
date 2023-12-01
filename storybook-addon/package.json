@@ -114,7 +114,9 @@
   },
   "dependencies": {
     "@contentful/app-sdk": "^4.23.1",
-    "@contentful/experience-builder": "2.0.2",
+    "@contentful/experience-builder": "^2.8.0",
+    "@contentful/experience-builder-components": "file:../components",
+    "@contentful/experience-builder-storybook-addon": "file:../storybook-addon",
     "@contentful/f36-components": "^4.52.1",
     "@contentful/f36-tokens": "^4.0.2",
     "@contentful/f36-workbench": "^4.21.0",
