@@ -68,6 +68,7 @@ describe('EntityStore', () => {
           'title',
         ])
       ).toEqual('Entry 1');
+
       expect(
         store.getValue({ sys: { id: entityIds.ASSET1, linkType: 'Asset', type: 'Link' } }, [
           'fields',
