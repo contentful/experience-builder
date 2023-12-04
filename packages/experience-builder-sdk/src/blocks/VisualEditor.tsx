@@ -16,6 +16,7 @@ export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({ initialLocal
       <VisualEditor
         mode={'editor'}
         initialLocale={initialLocale}
+        //@ts-expect-error TODO: fix types - import from core package
         initialComponentRegistry={componentRegistry}
       />
     </VisualEditorContextProvider>

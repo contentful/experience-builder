@@ -3,7 +3,9 @@
   "compilerOptions": {
     "types": ["node", "jest", "@testing-library/jest-dom", "vite-plugin-svgr/client"],
     "allowJs": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "outDir": "dist"
   },
   "include": ["src", "vite.config.ts", "test/components/Test.spec.tsx", "test/components/Test.tsx"]
 }
