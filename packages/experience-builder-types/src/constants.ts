@@ -12,6 +12,7 @@ export const OUTGOING_EVENTS = {
   NewHoveredElement: 'newHoveredElement',
   ComponentSelected: 'componentSelected',
   RegisteredComponents: 'registeredComponents',
+  DesignTokens: 'registerDesignTokens',
   RequestComponentTreeUpdate: 'requestComponentTreeUpdate',
   ComponentDropped: 'componentDropped',
   CanvasReload: 'canvasReload',
