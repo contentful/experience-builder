@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "prepare": "node ./bin/injectSDKVersion.cjs",
+    "prepare": "node ./bin/injectSDKVersion.cjs && relative-deps",
     "prebuild": "node ./bin/injectSDKVersion.cjs",
     "build": "vite build",
     "watch": "vite build --watch",
@@ -25,7 +25,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@contentful/experience-builder-components": "https://gitpkg.now.sh/contentful/experience-builder-toolkit/packages/components?ALT-115/components",
+    "@contentful/experience-builder-components": "^0.0.1-alpha.10",
     "@contentful/experience-builder-types": "^1.5.0",
     "@contentful/rich-text-types": "^16.2.1",
     "@contentful/visual-sdk": "^1.0.0-alpha.26",
@@ -60,6 +60,7 @@
     "jsdom": "^21.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "relative-deps": "^1.0.7",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "semantic-release": "19.0.5",
     "ts-jest": "^29.1.0",
@@ -67,6 +68,9 @@
     "vite": "^4.3.9",
     "vite-plugin-dts": "^3.6.1",
     "vite-plugin-svgr": "^4.1.0"
+  },
+  "relativeDependencies": {
+    "@contentful/experience-builder-components": "../../../experience-builder-toolkit/packages/components"
   },
   "peerDependencies": {
     "react": ">=16.0.0",
