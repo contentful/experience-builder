@@ -25,7 +25,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@contentful/experience-builder-components": "^0.0.1-alpha.10",
+    "@contentful/experience-builder-components": "https://gitpkg.now.sh/contentful/experience-builder-toolkit/packages/components?ALT-115/components",
     "@contentful/experience-builder-types": "^1.5.0",
     "@contentful/rich-text-types": "^16.2.1",
     "@contentful/visual-sdk": "^1.0.0-alpha.26",
@@ -68,10 +68,6 @@
     "vite": "^4.3.9",
     "vite-plugin-dts": "^3.6.1",
     "vite-plugin-svgr": "^4.1.0"
-  },
-  "relativeDependencies": {
-    "@contentful/experience-builder-components": "../../../experience-builder-toolkit/packages/components",
-    "@contentful/experience-builder-types": "../experience-builder-types"
   },
   "peerDependencies": {
     "react": ">=16.0.0",
