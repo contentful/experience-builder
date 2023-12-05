@@ -259,6 +259,8 @@ export type Composition = {
   componentSettings?: ExperienceComponentSettings;
 };
 
+export type DesignTokensDefinition = { [key: string]: Record<string, string> };
+
 export type ExperienceEntry = {
   sys: Entry['sys'];
   fields: Composition;
