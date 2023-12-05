@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.13.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.12.0...@contentful/experience-builder@2.13.0) (2023-12-05)
+
+### Features
+
+- inject user defined layout styling through component definition ([9d18ed6](https://github.com/contentful/experience-builder/commit/9d18ed68a82c6ece4c162ed764313837a178f1b7))
+
 # [2.12.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.11.1...@contentful/experience-builder@2.12.0) (2023-11-30)
 
 ### Features

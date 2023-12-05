@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder",
-  "version": "2.12.0",
+  "version": "2.13.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -25,7 +25,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@contentful/experience-builder-types": "^1.4.0",
+    "@contentful/experience-builder-types": "^1.5.0",
     "@contentful/rich-text-types": "^16.2.1",
     "@contentful/visual-sdk": "^1.0.0-alpha.26",
     "classnames": "^2.3.2",
