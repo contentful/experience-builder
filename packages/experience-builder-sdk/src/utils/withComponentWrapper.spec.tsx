@@ -1,161 +1,137 @@
-// import React from 'react';
-// import { withExperienceBuilder } from './withExperienceBuilder';
+import React from 'react';
+import { withComponentWrapper } from './withComponentWrapper';
+import { fireEvent, render } from '@testing-library/react';
 
-// const MyButton: React.FC<React.PropsWithChildren> = ({ children, ...props }) => (
-//   <button {...props}>{children}</button>
-// );
+const MyButton: React.FC<React.PropsWithChildren> = ({ children, ...props }) => (
+  <button {...props}>{children}</button>
+);
 
-// describe('withExperienceBuilder', () => {
-//   describe('when component is wrapped', () => {
-//     const ExperienceBuilderButton = withExperienceBuilder(
-//       MyButton,
-//       {
-//         id: 'button',
-//         name: 'Button',
-//         category: 'Components',
-//         variables: {},
-//       },
-//       { wrapComponent: true }
-//     );
+describe('withComponentWrapper', () => {
+  describe('when component is wrapped', () => {
+    const WrappedButton = withComponentWrapper(MyButton);
 
-//     it('events should be bound to the container div', () => {
-//       const onClickSpy = cy.spy().as('onClickSpy');
-//       const onMouseDownSpy = cy.spy().as('onMouseDownSpy');
-//       const onMouseUpSpy = cy.spy().as('onMouseUpSpy');
-//       cy.mount(
-//         <ExperienceBuilderButton
-//           onClick={onClickSpy}
-//           onMouseDown={onMouseDownSpy}
-//           onMouseUp={onMouseUpSpy}
-//           className="my-div" //so we can select it later
-//         >
-//           Click me
-//         </ExperienceBuilderButton>
-//       );
-//       cy.get('div.my-div').click();
-//       cy.get('@onClickSpy').should('have.been.calledOnce');
-//       cy.get('@onMouseDownSpy').should('have.been.calledOnce');
-//       cy.get('@onMouseUpSpy').should('have.been.calledOnce');
-//     });
+    it('events should be bound to the container div', () => {
+      const onClickSpy = jest.fn();
+      const onMouseDownSpy = jest.fn();
+      const onMouseUpSpy = jest.fn();
 
-//     it('extra props should be passed to the container div', () => {
-//       cy.mount(
-//         <ExperienceBuilderButton
-//           data-cf-node-block-id="test1"
-//           data-cf-node-block-type="test2"
-//           data-cf-node-id="test3"
-//           className="my-div" //so we can select it later
-//         >
-//           Click me
-//         </ExperienceBuilderButton>
-//       );
+      const { container } = render(
+        <WrappedButton onClick={onClickSpy} onMouseDown={onMouseDownSpy} onMouseUp={onMouseUpSpy}>
+          Click me
+        </WrappedButton>
+      );
 
-//       cy.get('div.my-div').should('have.attr', 'data-cf-node-block-id', 'test1');
-//       cy.get('div.my-div').should('have.attr', 'data-cf-node-block-type', 'test2');
-//       cy.get('div.my-div').should('have.attr', 'data-cf-node-id', 'test3');
-//     });
+      fireEvent.click(container.firstChild!);
+      expect(onClickSpy).toHaveBeenCalledTimes(1);
 
-//     it('can wrap a component with a custom tag', () => {
-//       const ExperienceBuilderButtonSpan = withExperienceBuilder(
-//         MyButton,
-//         {
-//           id: 'button',
-//           name: 'Button',
-//           category: 'Components',
-//           variables: {},
-//         },
-//         { wrapComponent: true, wrapContainerTag: 'span' }
-//       );
-//       cy.mount(
-//         <ExperienceBuilderButtonSpan
-//           className="my-span" //so we can select it later
-//         >
-//           Click me
-//         </ExperienceBuilderButtonSpan>
-//       );
-//       cy.get('span.my-span').should('exist').find('button').contains('Click me');
-//     });
+      fireEvent.mouseDown(container.firstChild!);
+      expect(onMouseDownSpy).toHaveBeenCalledTimes(1);
 
-//     it('classes get added to the correct elements', () => {
-//       cy.mount(
-//         <ExperienceBuilderButton
-//           data-cf-node-block-id="test1"
-//           data-cf-node-block-type="test2"
-//           data-cf-node-id="test3"
-//           className="my-wrapper" //so we can select it later
-//           classes="my-class"
-//           data-caca="yep">
-//           Click me
-//         </ExperienceBuilderButton>
-//       );
-//       cy.get('div.my-wrapper').should('have.class', 'my-wrapper');
-//       cy.get('button').should('have.class', 'my-class');
-//       cy.get('button').should('have.attr', 'data-caca', 'yep');
-//     });
-//   });
+      fireEvent.mouseUp(container.firstChild!);
+      expect(onMouseUpSpy).toHaveBeenCalledTimes(1);
+    });
 
-//   describe('when component is not wrapped', () => {
-//     const ExperienceBuilderButton = withExperienceBuilder(
-//       MyButton,
-//       {
-//         id: 'button',
-//         name: 'Button',
-//         category: 'Components',
-//         variables: {},
-//       },
-//       { wrapComponent: false }
-//     );
+    it('extra props should be passed to the container div', () => {
+      const { container } = render(
+        <WrappedButton
+          data-cf-node-block-id="test1"
+          data-cf-node-block-type="test2"
+          data-cf-node-id="test3">
+          Click me
+        </WrappedButton>
+      );
 
-//     it('classes should be applied to the component itself', () => {
-//       cy.mount(<ExperienceBuilderButton classes="test">Click me</ExperienceBuilderButton>);
-//       cy.get('button').should('have.class', 'test');
-//     });
+      expect(container.firstChild).toHaveAttribute('data-cf-node-block-id', 'test1');
+      expect(container.firstChild).toHaveAttribute('data-cf-node-block-type', 'test2');
+      expect(container.firstChild).toHaveAttribute('data-cf-node-id', 'test3');
+    });
 
-//     it('events should be bound to the component itself', () => {
-//       const onClickSpy = cy.spy().as('onClickSpy');
-//       const onMouseDownSpy = cy.spy().as('onMouseDownSpy');
-//       const onMouseUpSpy = cy.spy().as('onMouseUpSpy');
-//       cy.mount(
-//         <ExperienceBuilderButton
-//           onClick={onClickSpy}
-//           onMouseDown={onMouseDownSpy}
-//           onMouseUp={onMouseUpSpy}>
-//           Click me
-//         </ExperienceBuilderButton>
-//       );
-//       cy.get('button').first().click();
-//       cy.get('@onClickSpy').should('have.been.calledOnce');
-//       cy.get('@onMouseDownSpy').should('have.been.calledOnce');
-//       cy.get('@onMouseUpSpy').should('have.been.calledOnce');
-//     });
+    it('can wrap a component with a custom tag', () => {
+      const WrappedButtonSpan = withComponentWrapper(MyButton, { wrapContainerTag: 'span' });
 
-//     it('extra props should be passed to the component', () => {
-//       cy.mount(
-//         <ExperienceBuilderButton
-//           data-cf-node-block-id="test1"
-//           data-cf-node-block-type="test2"
-//           data-cf-node-id="test3">
-//           Click me
-//         </ExperienceBuilderButton>
-//       );
-//       cy.get('button').should('have.attr', 'data-cf-node-block-id', 'test1');
-//       cy.get('button').should('have.attr', 'data-cf-node-block-type', 'test2');
-//       cy.get('button').should('have.attr', 'data-cf-node-id', 'test3');
-//     });
+      const { container } = render(
+        <WrappedButtonSpan className="my-span">Click me</WrappedButtonSpan>
+      );
 
-//     it('classes get added to the correct elements', () => {
-//       cy.mount(
-//         <ExperienceBuilderButton
-//           data-cf-node-block-id="test1"
-//           data-cf-node-block-type="test2"
-//           data-cf-node-id="test3"
-//           className="my-button" //so we can select it later
-//           classes="my-class">
-//           Click me
-//         </ExperienceBuilderButton>
-//       );
-//       cy.get('button').should('have.class', 'my-button');
-//       cy.get('button').should('have.class', 'my-class');
-//     });
-//   });
-// });
+      expect(container.firstChild).toHaveClass('my-span');
+      expect(container.firstChild).toHaveTextContent('Click me');
+    });
+
+    it('classes get added to the correct elements', () => {
+      const { container, getByRole } = render(
+        <WrappedButton
+          data-cf-node-block-id="test1"
+          data-cf-node-block-type="test2"
+          data-cf-node-id="test3"
+          className="my-wrapper"
+          classes="my-class"
+          data-caca="yep">
+          Click me
+        </WrappedButton>
+      );
+
+      expect(container.firstChild).toHaveClass('my-wrapper');
+      expect(getByRole('button')).toHaveClass('my-class');
+      expect(getByRole('button')).toHaveAttribute('data-caca', 'yep');
+    });
+  });
+
+  describe('when component is not wrapped', () => {
+    const Button = withComponentWrapper(MyButton, { wrapComponent: false });
+
+    it('classes should be applied to the component itself', () => {
+      const { getByRole } = render(<Button classes="test">Click me</Button>);
+      expect(getByRole('button')).toHaveClass('test');
+    });
+
+    it('events should be bound to the component itself', () => {
+      const onClickSpy = jest.fn();
+      const onMouseDownSpy = jest.fn();
+      const onMouseUpSpy = jest.fn();
+
+      const { container } = render(
+        <Button onClick={onClickSpy} onMouseDown={onMouseDownSpy} onMouseUp={onMouseUpSpy}>
+          Click me
+        </Button>
+      );
+
+      fireEvent.click(container.firstChild!);
+      expect(onClickSpy).toHaveBeenCalledTimes(1);
+
+      fireEvent.mouseDown(container.firstChild!);
+      expect(onMouseDownSpy).toHaveBeenCalledTimes(1);
+
+      fireEvent.mouseUp(container.firstChild!);
+      expect(onMouseUpSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('extra props should be passed to the component', () => {
+      const { container } = render(
+        <Button
+          data-cf-node-block-id="test1"
+          data-cf-node-block-type="test2"
+          data-cf-node-id="test3">
+          Click me
+        </Button>
+      );
+      expect(container.firstChild).toHaveAttribute('data-cf-node-block-id', 'test1');
+      expect(container.firstChild).toHaveAttribute('data-cf-node-block-type', 'test2');
+      expect(container.firstChild).toHaveAttribute('data-cf-node-id', 'test3');
+    });
+
+    it('classes get added to the correct elements', () => {
+      const { container } = render(
+        <Button
+          data-cf-node-block-id="test1"
+          data-cf-node-block-type="test2"
+          data-cf-node-id="test3"
+          className="my-button" //so we can select it later
+          classes="my-class">
+          Click me
+        </Button>
+      );
+      expect(container.firstChild).toHaveClass('my-button');
+      expect(container.firstChild).toHaveClass('my-class');
+    });
+  });
+});

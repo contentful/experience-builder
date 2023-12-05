@@ -1,13 +1,13 @@
-// import { ComponentDefinition } from '@contentful/experience-builder-types';
+import { ComponentRegistration } from '@contentful/experience-builder-types';
 import React from 'react';
 
-export interface CFProps {
+interface CFProps {
   /**
-   * Classes to be applied to the container component.
+   * Classes to be applied to the container component if `wrapComponent` is true, or directly to the child component if false.
    */
   className?: string;
   /**
-   * Classes to be applied to the child component.
+   * Classes to be applied to the child component if `wrapComponent` is true, or directly to the child component if false.
    */
   classes?: string;
   onMouseDown?: React.MouseEventHandler;
@@ -27,25 +27,17 @@ export interface CFProps {
   'data-cf-node-block-type'?: string;
 }
 
-export interface WithComponentWrapperOptions {
-  /**
-   * This will be the tag of the container component.
-   * @default 'div'
-   * @optional
-   */
-  wrapContainerTag?: keyof JSX.IntrinsicElements;
-}
-
 /**
  * Sets up a component to be consumed by Experience Builder. This function can be used to wrap a component with a container component, or to pass props to the component directly.
  * @param Component Component to be used by Experience Builder.
  * @param options Options for the `withComponentWrapper` function.
- * @default { wrapContainerTag: 'div' }
- * @returns A component that can be passed to `defineComponents` in Experience Builder.
+ * @default { wrapComponent: true, wrapContainerTag: 'div' }
+ * @returns A component that can be passed to `defineComponents`.
  */
 export function withComponentWrapper<T extends object>(
   Component: React.ElementType<T>,
-  options: WithComponentWrapperOptions = {
+  options: ComponentRegistration['options'] = {
+    wrapComponent: true,
     wrapContainerTag: 'div',
   }
 ) {
@@ -69,7 +61,8 @@ export function withComponentWrapper<T extends object>(
       onMouseDown,
       onMouseUp,
     };
-    return (
+
+    const component = options.wrapComponent ? (
       <Tag className={className} {...cfProps}>
         {typeof Component === 'string' ? (
           React.createElement(Component, { className: classes, ...props })
@@ -77,7 +70,15 @@ export function withComponentWrapper<T extends object>(
           <Component className={classes} {...(props as T)} />
         )}
       </Tag>
+    ) : (
+      React.createElement(Component, {
+        className: classes + className ? classes + ' ' + className : undefined,
+        ...cfProps,
+        ...(props as T),
+      })
     );
+    return component;
   };
+
   return Wrapped;
 }

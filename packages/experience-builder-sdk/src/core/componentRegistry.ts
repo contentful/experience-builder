@@ -52,11 +52,12 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
 export const enrichComponentDefinition = ({
   component,
   definition,
+  options,
 }: ComponentRegistration): ComponentRegistration => {
   const definitionWithFallbacks = applyComponentDefinitionFallbacks(definition);
   const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks);
   return {
-    component: withComponentWrapper(component),
+    component: withComponentWrapper(component, options),
     definition: definitionWithBuiltInStyles,
   };
 };
@@ -109,7 +110,6 @@ export const sendRegisteredComponentsMessage = () => {
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
     ({ definition }) => definition
   );
-  console.log('[DEBUG] sendRegisteredComponentsMessage', registeredDefinitions);
 
   sendMessage(OUTGOING_EVENTS.RegisteredComponents, {
     definitions: registeredDefinitions,
@@ -121,7 +121,6 @@ export const sendConnectedEventWithRegisteredComponents = () => {
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
     ({ definition }) => definition
   );
-  console.log('[DEBUG] sendConnectedEventWithRegisteredComponents', registeredDefinitions);
 
   sendMessage(OUTGOING_EVENTS.Connected, {
     sdkVersion: SDK_VERSION,
@@ -131,10 +130,10 @@ export const sendConnectedEventWithRegisteredComponents = () => {
 
 /**
  * Registers multiple components and their component definitions at once
- * @param componentRegistrations - Array<{ component: ReactElement, definition: ComponentDefinition }>
+ * @param componentRegistrations - ComponentRegistration[]
  * @returns void
  */
-export const defineComponents = (componentRegistrations: Array<ComponentRegistration>) => {
+export const defineComponents = (componentRegistrations: ComponentRegistration[]) => {
   for (const registration of componentRegistrations) {
     // Fill definitions with fallbacks values
     const enrichedComponentRegistration = enrichComponentDefinition(registration);
