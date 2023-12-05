@@ -117,6 +117,10 @@ export type ComponentDefinition<
 export type ComponentRegistration = {
   component: React.ElementType;
   definition: ComponentDefinition;
+  options?: {
+    wrapComponent?: boolean;
+    wrapContainerTag?: keyof JSX.IntrinsicElements;
+  };
 };
 
 export type Binding = {
