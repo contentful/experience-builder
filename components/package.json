@@ -29,6 +29,8 @@
     "dist/**/*.*"
   ],
   "devDependencies": {
+    "@contentful/experience-builder-storybook-addon": "*",
+    "@contentful/experience-builder-types": "^1.4.0",
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@rollup/plugin-terser": "^0.4.3",
@@ -47,7 +49,7 @@
     "cypress": "^13.1.0",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-storybook": "^0.6.13",
     "prettier": "^3.0.3",
     "react": "^18.2.0",
@@ -68,7 +70,6 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@contentful/experience-builder": "^1.1.0-alpha.75",
     "@contentful/rich-text-react-renderer": "^15.17.2"
   }
 }

@@ -3,7 +3,7 @@ import React from 'react';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
-   * The URL to navigate to when the button is clicked.
+   * The URL to navigate to when the button is clicked. When provided, the button will be wrapped in an anchor tag.
    * @default undefined
    * @optional
    * @example
@@ -50,7 +50,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
    */
   label?: string;
   /**
-   * The children to display in the button. If text is provided, this will not be used.
+   * The children to display in the button. If label is provided, label will be used instead of this.
    * @default null
    * @optional
    * @example
