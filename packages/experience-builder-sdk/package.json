@@ -25,7 +25,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@contentful/experience-builder-components": "^0.0.1-alpha.10",
+    "@contentful/experience-builder-components": "^0.0.1-alpha.11",
     "@contentful/experience-builder-types": "^1.5.0",
     "@contentful/rich-text-types": "^16.2.1",
     "@contentful/visual-sdk": "^1.0.0-alpha.26",
