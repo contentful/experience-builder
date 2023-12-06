@@ -14,8 +14,8 @@ export const ImageComponentDefinition: ComponentDefinition = {
       displayName: 'Alt',
       type: 'Text',
     },
-    url: {
-      displayName: 'Image Url',
+    src: {
+      displayName: 'Image Src',
       type: 'Text',
       defaultValue: constants.placeholderImage,
     },
