@@ -19,7 +19,7 @@ describe('ContentfulContainer', () => {
     it('should render a section', () => {
       const onMouseDown = jest.fn();
 
-      render(<ContentfulContainer editorMode={true} node={node} onMouseDown={onMouseDown} />);
+      render(<ContentfulContainer editorMode={true} node={node} renderDropZone={() => <></>} />);
 
       const section = document.getElementById('ContentfulContainer') as HTMLDivElement | null;
 
@@ -35,14 +35,12 @@ describe('ContentfulContainer', () => {
     });
 
     it('should allow to pass a custom class name', () => {
-      const onMouseDown = jest.fn();
-
       render(
         <ContentfulContainer
           editorMode={true}
           node={node}
           className="custom-test-class-name"
-          onMouseDown={onMouseDown}
+          renderDropZone={() => <></>}
         />
       );
 
@@ -53,14 +51,12 @@ describe('ContentfulContainer', () => {
     });
 
     it('should render an anchor if hyperlink prop is provided', () => {
-      const onMouseDown = jest.fn();
-
       render(
         <ContentfulContainer
           editorMode={true}
           node={node}
           cfHyperlink="https://contentful.com"
-          onMouseDown={onMouseDown}
+          renderDropZone={() => <></>}
         />
       );
 
@@ -76,10 +72,8 @@ describe('ContentfulContainer', () => {
     });
 
     it('supports child components', () => {
-      const onMouseDown = jest.fn();
-
       const { getByTestId } = render(
-        <ContentfulContainer editorMode={true} node={node} onMouseDown={onMouseDown}>
+        <ContentfulContainer editorMode={true} node={node} renderDropZone={() => <></>}>
           <h1 data-test-id="child1">Hello world!</h1>
           <button data-test-id="child2">Button</button>
         </ContentfulContainer>
