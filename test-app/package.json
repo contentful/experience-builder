@@ -10,6 +10,7 @@
     "build:vercel": "npm run build --prefix ../components && npm run build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
+    "prepare": "relative-deps",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -40,9 +41,13 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "eslint-plugin-storybook": "^0.6.15",
+    "relative-deps": "1.0.7",
     "rimraf": "^5.0.5",
     "storybook": "^7.5.1",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
+  },
+  "relativeDependencies": {
+    "@contentful/experience-builder": "../../../experience-builder/packages/experience-builder-sdk"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-components",
-  "version": "0.0.1-alpha.10",
+  "version": "0.0.1-alpha.12",
   "description": "A basic set of components to use with Experience Builder",
   "homepage": "https://github.com/contentful/experience-builder-toolkit/tree/next/packages/components#readme",
   "repository": {
@@ -68,7 +68,6 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "@contentful/experience-builder": "^2.8.0",
     "@contentful/rich-text-react-renderer": "^15.17.2"
   }
 }
