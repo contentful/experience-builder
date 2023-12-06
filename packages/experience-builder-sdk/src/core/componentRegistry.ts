@@ -1,3 +1,4 @@
+import * as Components from '@contentful/experience-builder-components';
 import { ComponentRegistration, ComponentDefinition } from '../types';
 import {
   OUTGOING_EVENTS,
@@ -10,6 +11,7 @@ import { builtInStyles as builtInStyleDefinitions } from './definitions/variable
 import { ContentfulContainer } from '../components/ContentfulContainer';
 import { containerDefinition } from './definitions/components';
 import { sendMessage } from '../communication/sendMessage';
+import { withComponentWrapper } from '../utils/withComponentWrapper';
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -18,21 +20,6 @@ const cloneObject = <T>(targetObject: T): T => {
 
   return JSON.parse(JSON.stringify(targetObject));
 };
-
-const DEFAULT_COMPONENT_REGISTRATIONS = {
-  container: {
-    component: ContentfulContainer,
-    definition: containerDefinition,
-  },
-} satisfies Record<string, ComponentRegistration>;
-
-// pre-filling with the default component registrations
-const componentRegistry = new Map<string, ComponentRegistration>([
-  [
-    DEFAULT_COMPONENT_REGISTRATIONS.container.definition.id,
-    DEFAULT_COMPONENT_REGISTRATIONS.container,
-  ],
-]);
 
 const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinition) => {
   const clone = cloneObject(componentDefinition);
@@ -65,14 +52,58 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
 export const enrichComponentDefinition = ({
   component,
   definition,
+  options,
 }: ComponentRegistration): ComponentRegistration => {
   const definitionWithFallbacks = applyComponentDefinitionFallbacks(definition);
   const definitionWithBuiltInStyles = applyBuiltInStyleDefinitions(definitionWithFallbacks);
   return {
-    component,
+    component: withComponentWrapper(component, options),
     definition: definitionWithBuiltInStyles,
   };
 };
+
+const DEFAULT_COMPONENT_REGISTRATIONS = {
+  container: {
+    component: ContentfulContainer,
+    definition: containerDefinition,
+  },
+  button: enrichComponentDefinition({
+    component: Components.Button,
+    definition: Components.ButtonComponentDefinition,
+  }),
+  heading: enrichComponentDefinition({
+    component: Components.Heading,
+    definition: Components.HeadingComponentDefinition,
+  }),
+  image: enrichComponentDefinition({
+    component: Components.Image,
+    definition: Components.ImageComponentDefinition,
+  }),
+  richText: enrichComponentDefinition({
+    component: Components.RichText,
+    definition: Components.RichTextComponentDefinition,
+  }),
+  text: enrichComponentDefinition({
+    component: Components.Text,
+    definition: Components.TextComponentDefinition,
+  }),
+} satisfies Record<string, ComponentRegistration>;
+
+// pre-filling with the default component registrations
+const componentRegistry = new Map<string, ComponentRegistration>([
+  [
+    DEFAULT_COMPONENT_REGISTRATIONS.container.definition.id,
+    DEFAULT_COMPONENT_REGISTRATIONS.container,
+  ],
+  [DEFAULT_COMPONENT_REGISTRATIONS.button.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.button],
+  [DEFAULT_COMPONENT_REGISTRATIONS.heading.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.heading],
+  [DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.image],
+  [
+    DEFAULT_COMPONENT_REGISTRATIONS.richText.definition.id,
+    DEFAULT_COMPONENT_REGISTRATIONS.richText,
+  ],
+  [DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.text],
+]);
 
 export const sendRegisteredComponentsMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
@@ -99,10 +130,10 @@ export const sendConnectedEventWithRegisteredComponents = () => {
 
 /**
  * Registers multiple components and their component definitions at once
- * @param componentRegistrations - Array<{ component: ReactElement, definition: ComponentDefinition }>
+ * @param componentRegistrations - ComponentRegistration[]
  * @returns void
  */
-export const defineComponents = (componentRegistrations: Array<ComponentRegistration>) => {
+export const defineComponents = (componentRegistrations: ComponentRegistration[]) => {
   for (const registration of componentRegistrations) {
     // Fill definitions with fallbacks values
     const enrichedComponentRegistration = enrichComponentDefinition(registration);
