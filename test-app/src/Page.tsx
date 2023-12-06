@@ -1,11 +1,9 @@
 import {
   useFetchExperience,
-  defineComponents,
   ExperienceRoot,
   ExternalSDKMode,
 } from '@contentful/experience-builder';
 import { createClient } from 'contentful';
-import { useExperienceBuilderComponents } from '@contentful/experience-builder-components';
 import '@contentful/experience-builder-components/styles.css';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -28,8 +26,6 @@ export default function Page() {
   const { slug = '' } = useParams<{ slug: string }>();
 
   const { experience, fetchBySlug } = useFetchExperience({ client, mode });
-
-  useExperienceBuilderComponents(defineComponents);
 
   useEffect(() => {
     if (slug) {
