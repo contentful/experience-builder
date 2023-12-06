@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-components",
-  "version": "0.0.1-alpha.11",
+  "version": "0.0.1-alpha.12",
   "description": "A basic set of components to use with Experience Builder",
   "homepage": "https://github.com/contentful/experience-builder-toolkit/tree/next/packages/components#readme",
   "repository": {
