@@ -1,0 +1,49 @@
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  height: 100%;
+  outline-offset: -1px;
+  outline: 1px solid transparent;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.isEmpty {
+  height: 200px;
+}
+
+.hitbox {
+  position: absolute;
+  bottom: -18px;
+  width: 100%;
+  z-index: 1;
+  pointer-events: all !important;
+  height: 36px;
+  width: calc(100% + 100px);
+  left: -50px;
+}
+
+.block {
+  pointer-events: none;
+}
+
+.isDragging {
+  outline: 1px dashed var(--exp-builder-blue500);
+}
+
+.isHovering {
+  /* outline: 1px solid var(--exp-builder-gray800); */
+}
+
+.isHovering > .overlay {
+  /* opacity: 1; */
+}
+
+.isDestination {
+}
+
+.isDestination:not(.isRoot) {
+  outline: 1px dashed var(--exp-builder-blue500);
+  background-color: var(--exp-builder-blue100);
+}

@@ -1,5 +1,5 @@
 import { OUTGOING_EVENTS } from '@contentful/experience-builder-core';
-import { getElementCoordinates } from '../utils/domValues';
+import { getElementCoordinates } from '../shared/utils/domValues';
 import { sendMessage } from './sendMessage';
 
 /**

@@ -5,6 +5,7 @@ import dts from 'rollup-plugin-dts';
 import terser from '@rollup/plugin-terser';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
+import postcssImport from 'postcss-import';
 
 import packageJson from './package.json' assert { type: 'json' };
 
@@ -19,6 +20,9 @@ export default [
       },
     ],
     plugins: [
+      postcss({
+        plugins: [postcssImport()],
+      }),
       peerDepsExternal(),
       resolve(),
       commonjs(),

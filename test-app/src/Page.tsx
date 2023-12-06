@@ -28,7 +28,8 @@ const Page: React.FC = () => {
   const { slug = 'homePage' } = useParams<{ slug: string }>();
   const { experience, fetchBySlug } = useFetchExperience({ client, mode });
 
-  useExperienceBuilderComponents(defineComponents);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  useExperienceBuilderComponents(defineComponents as any);
 
   useEffect(() => {
     if (slug) {

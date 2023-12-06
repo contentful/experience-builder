@@ -1,0 +1,25 @@
+.container {
+  height: 200px;
+  display: flex;
+  width: 100%;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  transition: all 0.2s;
+  color: var(--exp-builder-gray400);
+  font-size: var(--exp-builder-font-size-l);
+  font-family: var(--exp-builder-font-stack-primary);
+  outline: 1px dashed var(--exp-builder-gray500);
+  outline-offset: -1px;
+}
+
+.highlight:hover {
+  outline: 1px dashed var(--exp-builder-blue500);
+  background-color: var(--exp-builder-blue100);
+  cursor: grabbing;
+}
+
+.icon {
+  margin-left: var(--exp-builder-spacing-s);
+}
