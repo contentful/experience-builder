@@ -11,6 +11,7 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "style": "./styles.css",
+  "type": "module",
   "scripts": {
     "prebuild": "rimraf dist && rimraf styles.css",
     "build": "rollup -c rollup.config.mjs",
@@ -55,7 +56,6 @@
     "rimraf": "^5.0.1",
     "rollup": "^3.29.1",
     "rollup-plugin-dts": "^6.0.2",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-ts": "^3.4.5",
     "storybook": "^7.4.1",
@@ -68,6 +68,7 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
+    "@contentful/experience-builder-core": "file:../core",
     "@contentful/rich-text-react-renderer": "^15.17.2"
   }
 }

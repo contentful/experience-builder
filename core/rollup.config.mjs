@@ -16,7 +16,7 @@ export default [
       },
     ],
     plugins: [resolve(), typescript({ tsconfig: './tsconfig.json' }), terser()],
-    external: [/node_modules/],
+    external: [/node_modules\/(?!tslib.*)/],
   },
   {
     input: 'src/index.ts',

@@ -28,7 +28,7 @@ export default [
       typescript({ tsconfig: './tsconfig.json' }),
       terser(),
     ],
-    external: [/node_modules/],
+    external: [/node_modules\/(?!tslib.*)/],
   },
   {
     input: 'src/index.tsx',

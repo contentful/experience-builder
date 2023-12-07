@@ -1,4 +1,4 @@
-import { ComponentDefinition } from '@contentful/experience-builder-types';
+import { ComponentDefinition } from '@contentful/experience-builder-core';
 import constants from '@/utils/constants';
 
 export * from './Text';
