@@ -25,7 +25,7 @@ import type {
   ExperienceEntry,
   StyleProps,
 } from '../../types';
-import { ContentfulContainer } from '../../components/ContentfulContainer';
+import { ContentfulContainer } from '@contentful/experience-builder-components';
 import { transformContentValue } from '../../utils/transformers';
 import { resolveDesignComponent } from '../../core/preview/designComponentUtils';
 import { DesignComponent } from '../../components/DesignComponent';
@@ -165,6 +165,7 @@ export const CompositionBlock = ({
   // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
+      // <div>dogcrap</div>
       <ContentfulContainer
         editorMode={false}
         cfHyperlink={(nodeProps as StyleProps).cfHyperlink}

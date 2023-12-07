@@ -109,7 +109,8 @@ export type ComponentDefinition<
   name: string;
   category?: string;
   thumbnailUrl?: string;
-  variables: Record<string, ComponentDefinitionVariable<T>>;
+  variables: Partial<Record<ContainerStyleVariableName, ComponentDefinitionVariable<T>>> &
+    Record<string, ComponentDefinitionVariable<T>>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
 };
@@ -117,6 +118,10 @@ export type ComponentDefinition<
 export type ComponentRegistration = {
   component: React.ElementType;
   definition: ComponentDefinition;
+  options?: {
+    wrapComponent?: boolean;
+    wrapContainerTag?: keyof JSX.IntrinsicElements;
+  };
 };
 
 export type Binding = {
@@ -254,6 +259,8 @@ export type Composition = {
   usedComponents?: Array<Link<'Entry'> | ExperienceEntry>;
   componentSettings?: ExperienceComponentSettings;
 };
+
+export type DesignTokensDefinition = { [key: string]: Record<string, string> };
 
 export type ExperienceEntry = {
   sys: Entry['sys'];

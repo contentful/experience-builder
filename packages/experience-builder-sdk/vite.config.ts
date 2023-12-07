@@ -4,8 +4,6 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import svgr from 'vite-plugin-svgr';
-//@ts-expect-error ignore
-import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 export default defineConfig({
   build: {
@@ -18,8 +16,7 @@ export default defineConfig({
       formats: ['cjs', 'es'],
     },
     rollupOptions: {
-      plugins: [peerDepsExternal()],
-      external: ['react', 'react-dom'],
+      external: ['node_modules'],
       output: {
         globals: {
           react: 'React',
