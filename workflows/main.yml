@@ -1,4 +1,4 @@
-name: Main-new
+name: Main
 
 on:
   push:
