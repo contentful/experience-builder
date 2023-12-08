@@ -59,7 +59,10 @@ export class EntityStore extends VisualSdkEntityStore {
     entityLink: UnresolvedLink<'Entry' | 'Asset'>,
     path: string[]
   ): string | undefined {
-    const entity = this.entitiesMap.get(entityLink.sys.id);
+    const entity =
+      entityLink.sys.linkType === 'Entry'
+        ? this.entryMap.get(entityLink.sys.id)
+        : this.assetMap.get(entityLink.sys.id);
 
     if (!entity || entity.sys.type !== entityLink.sys.linkType) {
       console.warn(`Experience references unresolved entity: ${JSON.stringify(entityLink)}`);

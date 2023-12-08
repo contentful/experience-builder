@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.0.0...@contentful/experience-builder@3.0.1) (2023-12-07)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
+# [3.0.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.13.0...@contentful/experience-builder@3.0.0) (2023-12-06)
+
+- feat!: register toolkit components and include wrap container by default [ALT-115] (#175) ([1097764](https://github.com/contentful/experience-builder/commit/1097764e33fa0a5a5b89007b04d0cf5f18d6d71e)), closes [#175](https://github.com/contentful/experience-builder/issues/175)
+
+### BREAKING CHANGES
+
+- Registered components will be wrapped with a div container by default. The `wrapComponent` option can be used when registering components to opt-out of this behavior if necessary.
+
 # [2.13.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.12.0...@contentful/experience-builder@2.13.0) (2023-12-05)
 
 ### Features
