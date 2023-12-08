@@ -9,3 +9,5 @@ Please refer to our [our Wiki page](https://github.com/contentful/experience-bui
 ## Packages
 
 * [@contentful/experience-builder](https://github.com/contentful/experience-builder/tree/main/packages/experience-builder-sdk) - the SDK
+
+* [@contentful/experience-builder-types](https://github.com/contentful/experience-builder/tree/main/packages/experience-builder-types) - the types and consts used in the SDK
