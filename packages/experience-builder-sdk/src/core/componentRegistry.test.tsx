@@ -178,6 +178,7 @@ describe('createDesignComponentRegistration', () => {
 
   afterEach(() => {
     registry.resetComponentRegistry();
+    jest.restoreAllMocks();
   });
 
   it('should return an existing component registration object if one already exists with the given definition ID', () => {
