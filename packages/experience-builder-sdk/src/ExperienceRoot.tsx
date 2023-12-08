@@ -37,6 +37,8 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
     );
   });
 
+  console.log('mode', mode);
+
   useEffect(() => {
     if (supportedModes.includes(mode)) {
       setMode(mode);
