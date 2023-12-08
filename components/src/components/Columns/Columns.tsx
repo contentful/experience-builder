@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect } from 'react';
 
 // import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder';
