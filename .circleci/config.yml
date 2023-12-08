@@ -91,8 +91,8 @@ jobs:
       - vault/configure-lerna
       - run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
       - run: yarn build # This should not be needed, but without it it will not contain any files
-      - run: yarn lerna version --no-private --conventional-commits --conventional-prerelease --preid next --dist-tag next --create-release github --yes
-      - run: yarn lerna publish from-git --yes
+      - run: yarn lerna version --no-private --conventional-commits --conventional-prerelease --preid next --create-release github --yes
+      - run: yarn lerna publish from-git --pre-dist-tag next --yes
 
 workflows:
   version: 2
