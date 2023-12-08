@@ -2,6 +2,7 @@ import React, { RefObject, useCallback, useMemo } from 'react';
 
 import type { EntityStore } from '@contentful/visual-sdk';
 import omit from 'lodash.omit';
+import { isLinkToAsset } from '@contentful/experience-builder-types';
 
 import { sendMessage } from '../../communication/sendMessage';
 import {
@@ -131,12 +132,13 @@ export const VisualEditorBlock = ({
           // If successful, it means we have identified the linked asset.
 
           if (!boundValue) {
-            boundValue = areEntitiesFetched
-              ? (entityStore.current?.getValue(
-                  binding,
-                  path.slice(0, -2)
-                ) as unknown as Link<'Asset'>)
+            const maybeBoundAsset = areEntitiesFetched
+              ? entityStore.current?.getValue(binding, path.slice(0, -2))
               : undefined;
+
+            if (isLinkToAsset(maybeBoundAsset)) {
+              boundValue = maybeBoundAsset;
+            }
           }
 
           if (typeof boundValue === 'object' && boundValue.sys.linkType === 'Asset') {
