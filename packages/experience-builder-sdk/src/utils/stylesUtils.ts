@@ -89,7 +89,7 @@ export const calculateNodeDefaultHeight = ({
   }
 
   if (children.length) {
-    return 'fit-content';
+    return '100%';
   }
 
   return '200px';
