@@ -15,7 +15,7 @@
   "scripts": {
     "prebuild": "rimraf dist && rimraf styles.css",
     "build": "rollup -c rollup.config.mjs",
-    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0",
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test:component": "npx cypress run --component",
     "storybook": "storybook dev -p 6006",

@@ -22,7 +22,7 @@
     "dev": "tsc -w",
     "prebuild": "npm uninstall -g && rimraf dist",
     "build": "tsc",
-    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0",
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "postbuild": "npm install -g",
     "test": "echo \"Error: no test specified\" && exit 1"

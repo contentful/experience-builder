@@ -8,7 +8,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc && vite build",
     "build:vercel": "npm run build --prefix ../core && npm run build --prefix ../components && npm run build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "prepare": "relative-deps",
     "preview": "vite preview",

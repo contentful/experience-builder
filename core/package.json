@@ -21,7 +21,7 @@
     "build": "rollup -c ./rollup.config.mjs",
     "predev": "npm run clean",
     "dev": "rollup -c ./rollup.dev.config.mjs --watch",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --ignore-path ../../.eslintignore",
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix"
   },
   "author": "",
