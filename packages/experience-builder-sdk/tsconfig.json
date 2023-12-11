@@ -1,11 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["node", "jest", "@testing-library/jest-dom", "vite-plugin-svgr/client"],
+    "types": ["node", "jest", "@testing-library/jest-dom"],
     "allowJs": true,
     "moduleResolution": "node",
     "jsx": "react-jsx",
     "outDir": "dist"
   },
-  "include": ["src", "vite.config.ts", "test/components/Test.spec.tsx", "test/components/Test.tsx"]
+  "include": ["src", "test/components/Test.spec.tsx", "test/components/Test.tsx"]
 }
