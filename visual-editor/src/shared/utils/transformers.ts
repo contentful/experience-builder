@@ -25,7 +25,7 @@ export const transformBorderStyle = (value?: string): CSSProperties => {
 export const transformAlignment = (
   cfHorizontalAlignment?: string,
   cfVerticalAlignment?: string,
-  cfFlexDirection = 'row'
+  cfFlexDirection = 'column'
 ): CSSProperties =>
   cfFlexDirection === 'row'
     ? {

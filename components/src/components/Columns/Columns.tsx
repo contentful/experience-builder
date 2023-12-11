@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect } from 'react';
-
+import './Columns.css';
 // import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder';
 import classNames from 'classnames';
 // import { generateId } from '@/shared/utils/generate-id';

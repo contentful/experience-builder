@@ -1,10 +1,11 @@
 /* eslint-disable */
 import React from 'react';
-
+import './ContentfulContainer.css';
 import classNames from 'classnames';
-import { Flex } from './Flex';
+import { Flex } from '../Layout/Flex';
 import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink';
 import type { ContentfulContainerProps } from './ContentfulContainerAsHyperlink';
+import { Section } from '@components/Layout/Section';
 
 export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
   const { className, editorMode, children } = sectionProps;

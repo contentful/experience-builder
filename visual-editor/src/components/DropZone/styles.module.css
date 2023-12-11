@@ -7,6 +7,7 @@
   outline: 1px solid transparent;
   width: 100%;
   transition: all 0.2s;
+  min-height: 200px;
 }
 
 .isEmpty {
@@ -20,8 +21,6 @@
   z-index: 1;
   pointer-events: all !important;
   height: 36px;
-  width: calc(100% + 100px);
-  left: -50px;
 }
 
 .block {

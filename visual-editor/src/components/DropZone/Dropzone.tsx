@@ -126,54 +126,57 @@ export function DropZone({
     <Droppable droppableId={droppableId} direction={direction} isDropDisabled={!dropEnabled}>
       {(provided, snapshot) => {
         return (
-          <div
+          <WrapperComponent
             {...(provided || { droppableProps: {} }).droppableProps}
             ref={provided?.innerRef}
             id={droppableId}
-            className={classNames(styles.container, {
-              [styles.isEmpty]: isEmptyCanvas,
-              [styles.isRoot]: isRootZone,
-              [styles.hoveringRoot]: userIsDragging && hoveringRootZone,
-              [styles.isDragging]: userIsDragging,
-              [styles.isHovering]: hoveringOverZone && !userIsDragging,
-              [styles.isDestination]: isDestination,
-            })}
+            className={classNames(
+              styles.container,
+              {
+                [styles.isEmpty]: isEmptyCanvas,
+                [styles.isRoot]: isRootZone,
+                [styles.hoveringRoot]: userIsDragging && hoveringRootZone,
+                [styles.isDragging]: userIsDragging,
+                [styles.isHovering]: hoveringOverZone && !userIsDragging,
+                [styles.isDestination]: isDestination,
+              },
+              className
+            )}
             onMouseOver={(e) => {
               e.stopPropagation();
               setHoveringZone(zoneId);
             }}
             onMouseOut={() => {
               setHoveringZone('');
-            }}>
-            <WrapperComponent className={className} {...rest}>
-              {isEmptyCanvas ? (
-                <EmptyEditorContainer isDragging={isRootZone && userIsDragging} />
-              ) : (
-                content.map((item, i) => {
-                  const componentId = item.data.id;
+            }}
+            {...rest}>
+            {isEmptyCanvas ? (
+              <EmptyEditorContainer isDragging={isRootZone && userIsDragging} />
+            ) : (
+              content.map((item, i) => {
+                const componentId = item.data.id;
 
-                  return (
-                    <EditorBlock
-                      index={i}
-                      parentSectionId={sectionId}
-                      zoneId={zoneId}
-                      key={componentId}
-                      userIsDragging={userIsDragging}
-                      draggingNewComponent={draggingNewComponent}
-                      setUserWillDrag={setUserWillDrag}
-                      node={item}
-                      resolveDesignValue={resolveDesignValue}
-                      areEntitiesFetched={areEntitiesFetched}
-                    />
-                  );
-                })
-              )}
-              {provided?.placeholder}
-              {snapshot?.isDraggingOver && !isEmptyCanvas && (
-                <div data-ctfl-placeholder style={placeholderStyle} />
-              )}
-            </WrapperComponent>
-          </div>
+                return (
+                  <EditorBlock
+                    index={i}
+                    parentSectionId={sectionId}
+                    zoneId={zoneId}
+                    key={componentId}
+                    userIsDragging={userIsDragging}
+                    draggingNewComponent={draggingNewComponent}
+                    setUserWillDrag={setUserWillDrag}
+                    node={item}
+                    resolveDesignValue={resolveDesignValue}
+                    areEntitiesFetched={areEntitiesFetched}
+                  />
+                );
+              })
+            )}
+            {provided?.placeholder}
+            {snapshot?.isDraggingOver && !isEmptyCanvas && (
+              <div data-ctfl-placeholder style={placeholderStyle} />
+            )}
+          </WrapperComponent>
         );
       }}
     </Droppable>
