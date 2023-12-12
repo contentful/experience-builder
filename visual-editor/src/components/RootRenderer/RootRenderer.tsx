@@ -15,6 +15,7 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
 import styles from './render.module.css';
+import { onComponentMoved } from '@/communication/onComponentMoved';
 
 interface Props {
   resolveDesignValue: ResolveDesignValueType;
@@ -79,23 +80,13 @@ export const RootRenderer: React.FC<Props> = ({
 
           return;
         } else {
-          // const { source, destination } = droppedItem;
-          // if (source.droppableId === destination.droppableId) {
-          //   appDispatch({
-          //     type: 'reorder',
-          //     sourceIndex: source.index,
-          //     destinationIndex: destination.index,
-          //     destinationZone: destination.droppableId,
-          //   });
-          // } else {
-          //   appDispatch({
-          //     type: 'move',
-          //     sourceZone: source.droppableId,
-          //     sourceIndex: source.index,
-          //     destinationIndex: destination.index,
-          //     destinationZone: destination.droppableId,
-          //   });
-          // }
+          onComponentMoved({
+            nodeId: droppedItem.draggableId.replace('draggable-', ''),
+            destinationIndex: droppedItem.destination!.index,
+            destinationParentId: droppedItem.destination.droppableId,
+            sourceIndex: droppedItem.source.index,
+            sourceParentId: droppedItem.source.droppableId,
+          });
         }
       }}>
       {dragItem && <DraggableContainer id={dragItem} />}

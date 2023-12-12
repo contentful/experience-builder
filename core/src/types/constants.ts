@@ -17,6 +17,7 @@ export const OUTGOING_EVENTS = {
   RegisteredComponents: 'registeredComponents',
   RequestComponentTreeUpdate: 'requestComponentTreeUpdate',
   ComponentDropped: 'componentDropped',
+  ComponentMoved: 'componentMoved',
   CanvasReload: 'canvasReload',
   UpdateSelectedComponentCoordinates: 'updateSelectedComponentCoordinates',
   UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
