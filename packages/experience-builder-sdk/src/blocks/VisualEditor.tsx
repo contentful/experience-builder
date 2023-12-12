@@ -10,10 +10,8 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 const scriptUrl =
   '/Users/adrian.meyer/Repos/experience-builder-toolkit/packages/visual-editor/dist/renderApp.js';
 
-const VisualEditor: React.FC<{ elementId: string }> = ({ elementId }) => {
+const VisualEditor: React.FC = () => {
   useEffect(() => {
-    console.log('[SDK::DEBUG] VisualEditor useEffect...');
-
     const script = document.createElement('script');
     script.type = 'module';
     script.src = scriptUrl;
@@ -26,7 +24,7 @@ const VisualEditor: React.FC<{ elementId: string }> = ({ elementId }) => {
     };
   }, []);
 
-  return <div id={elementId} />;
+  return <div id="cf-visual-editor" />;
 };
 
 type Props = {
@@ -40,7 +38,7 @@ export const VisualEditorRoot: React.FC<Props> = ({ initialLocale, mode }) => {
     <ErrorBoundary>
       <Suspense fallback={<div>Loading...</div>}>
         <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
-          <VisualEditor elementId="cf-visual-editor" />
+          <VisualEditor />
         </VisualEditorContextProvider>
       </Suspense>
     </ErrorBoundary>

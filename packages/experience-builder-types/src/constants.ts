@@ -39,6 +39,8 @@ export const INCOMING_EVENTS = {
 
 export const INTERNAL_EVENTS = {
   ComponentsRegistered: 'componentsRegistered',
+  VisualEditorConnected: 'visualEditorConnected',
+  VisualEditorComponents: 'visualEditorComponents',
 };
 
 export const CONTENTFUL_SECTION_ID = 'contentful-section'; // TODO: remove me once all customers are using 2023-09-28 schema version

@@ -5,6 +5,7 @@ import { sendMessage } from '../../communication/sendMessage';
 import { sendSelectedComponentCoordinates } from '../../communication/sendSelectedComponentCoordinates';
 import {
   addComponentRegistration,
+  componentRegistry,
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
 } from '../../core/componentRegistry';
@@ -134,6 +135,23 @@ export function VisualEditorContextProvider({
     // once switched to editor, we request the update from the web app to send the data to render on canvas
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
   }, [mode]);
+
+  useEffect(() => {
+    function onVisualEditorConnected() {
+      window.dispatchEvent(
+        // TODO: switch string to INTERNAL_EVENTS.VisualEditorComponents
+        new CustomEvent('visualEditorComponents', { detail: { componentRegistry } })
+      );
+    }
+
+    if (typeof window !== 'undefined') {
+      // TODO: switch string to INTERNAL_EVENTS.VisualEditorConnected
+      window.addEventListener('visualEditorConnected', onVisualEditorConnected);
+      return () => {
+        window.removeEventListener('visualEditorConnected', onVisualEditorConnected);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     setLocale(initialLocale);
