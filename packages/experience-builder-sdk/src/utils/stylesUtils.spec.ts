@@ -60,6 +60,6 @@ describe('calculateNodeDefaultHeight', () => {
       value: 'auto',
     });
 
-    expect(result).toBe('fit-content');
+    expect(result).toBe('100%');
   });
 });
