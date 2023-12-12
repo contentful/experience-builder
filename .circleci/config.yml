@@ -12,12 +12,12 @@ commands:
   install-dependencies:
     steps:
       - restore_cache:
-          key: dependency-cache-primary-{{ arch }}-yarn-packages-{{ checksum ".nvmrc"}}-{{ checksum "yarn.lock" }}-{{ .Branch }}
-      - run: yarn install --prefer-offline --pure-lockfile
+          key: dependency-cache-primary-{{ arch }}-npm-packages-{{ checksum ".nvmrc"}}-{{ checksum "package-lock.json" }}-{{ .Branch }}
+      - run: npm ci
       - save_cache:
-          key: dependency-cache-primary-{{ arch }}-yarn-packages-{{ checksum ".nvmrc"}}-{{ checksum "yarn.lock" }}-{{ .Branch }}
+          key: dependency-cache-primary-{{ arch }}-npm-packages-{{ checksum ".nvmrc"}}-{{ checksum "package-lock.json" }}-{{ .Branch }}
           paths:
-            - ~/.cache/yarn
+            - ~/.cache/npm
 
   persist-workspace:
     steps:
@@ -49,21 +49,21 @@ jobs:
     executor: docker-with-node
     steps:
       - with-workspace
-      - run: yarn build
+      - run: npm run build
 
   lint:
     executor: docker-with-node
     steps:
       - with-workspace
-      - run: yarn prettier:check
-      - run: yarn lint
-      - run: yarn tsc
+      - run: npm run prettier:check
+      - run: npm run lint
+      - run: npm run tsc
 
   unit-tests:
     executor: docker-with-node
     steps:
       - with-workspace
-      - run: yarn test:coverage
+      - run: npm run test:coverage
       - store_test_results:
           path: packages/*/reports
       - store_artifacts:
@@ -78,10 +78,10 @@ jobs:
       - install-dependencies
       - vault/configure-lerna
       - run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
-      - run: yarn build # This should not be needed, but without it it will not contain any files
-      - run: yarn lerna version --no-private --conventional-commits --create-release
+      - run: npm run build # This should not be needed, but without it it will not contain any files
+      - run: npm run lerna version --no-private --conventional-commits --create-release
           github --yes
-      - run: yarn lerna publish from-git --yes
+      - run: npm run lerna publish from-git --yes
 
 workflows:
   version: 2
