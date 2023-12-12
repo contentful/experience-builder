@@ -1,0 +1,1 @@
+export { FieldContentBindingTrigger } from './FieldContentBindingTrigger';

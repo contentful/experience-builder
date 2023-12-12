@@ -1,0 +1,67 @@
+.DraggableComponent {
+  pointer-events: auto;
+  position: relative;
+  transition: all 0.2s;
+  cursor: grab;
+  outline-offset: -2px;
+  outline: 2px solid transparent;
+}
+
+.DraggableComponent > * {
+  pointer-events: none;
+}
+
+.isDragging {
+  background: #abc7e510;
+  overflow: hidden;
+}
+
+.isSelected {
+  outline: 2px solid transparent !important;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--exp-builder-color-white);
+  padding: 4px 8px;
+  transition: all 0.2s;
+  /* opacity: 0; */
+  font-family: var(--exp-builder-font-stack-primary);
+  z-index: 1;
+  top: 0;
+  font-size: 14px;
+  background-color: var(--exp-builder-gray500);
+  padding: 2px 6px 2px 5px;
+  color: white;
+  border-radius: 0 0 2px 0;
+  transition: opacity 0.2s;
+  opacity: 0;
+  font-weight: 500;
+}
+
+/* .DraggableComponent:hover .overlay {
+  opacity: 1;
+} */
+
+.userIsDragging > .overlay {
+  opacity: 0 !important;
+}
+
+.userIsDragging {
+  outline: 2px solid transparent !important;
+}
+
+.DraggableComponent:hover,
+.DraggableComponent:hover div[data-rfd-draggable-id] {
+  outline: 2px dashed var(--exp-builder-gray500);
+}
+
+.DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)) > .overlay {
+  opacity: 1;
+}
+
+.DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
+  outline: 2px solid var(--exp-builder-gray500);
+}

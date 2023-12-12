@@ -1,0 +1,9 @@
+.cf-button {
+  color: var(--cf-button-color);
+  background-color: var(--cf-button-bg);
+  padding: var(--cf-spacing-6) var(--cf-spacing-10);
+  font-size: var(--cf-text-lg);
+  font-weight: var(--cf-font-semibold);
+  border-radius: var(--cf-border-radius-xl);
+  font-family: var(--cf-font-family-sans);
+}

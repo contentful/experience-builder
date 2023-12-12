@@ -1,0 +1,7 @@
+.cf-text {
+  color: var(--cf-text-color);
+  font-size: var(--cf-text-base);
+  font-weight: var(--cf-font-normal);
+  font-family: var(--cf-font-family-sans);
+  margin: var(--cf-spacing-0);
+}
