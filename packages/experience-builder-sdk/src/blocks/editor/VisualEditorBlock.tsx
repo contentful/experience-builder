@@ -102,9 +102,11 @@ export const VisualEditorBlock = ({
             [variableName]: variableDefinition.defaultValue,
           };
         }
-
         if (variableMapping.type === 'DesignValue') {
-          const valueByBreakpoint = resolveDesignValue(variableMapping.valuesByBreakpoint);
+          const valueByBreakpoint = resolveDesignValue(
+            variableMapping.valuesByBreakpoint,
+            variableName
+          );
           const designValue =
             variableName === 'cfHeight'
               ? calculateNodeDefaultHeight({
