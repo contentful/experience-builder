@@ -19,6 +19,7 @@ export const deserializeDesignComponentNode = ({
   designComponentUnboundValues,
   componentInstanceProps,
   componentInstanceUnboundValues,
+  componentInstanceDataSource,
 }: {
   node: CompositionNode;
   nodeId: string;
@@ -27,6 +28,7 @@ export const deserializeDesignComponentNode = ({
   designComponentUnboundValues: CompositionUnboundValues;
   componentInstanceProps: Record<string, CompositionComponentPropValue>;
   componentInstanceUnboundValues: CompositionUnboundValues;
+  componentInstanceDataSource: CompositionDataSource;
 }): CompositionComponentNode => {
   const childNodeVariable: Record<string, CompositionComponentPropValue> = {};
   const dataSource: CompositionDataSource = {};
@@ -35,18 +37,26 @@ export const deserializeDesignComponentNode = ({
   for (const [variableName, variable] of Object.entries(node.variables)) {
     childNodeVariable[variableName] = variable;
     if (variable.type === 'ComponentValue') {
-      const uuid = variable.key;
-      const variableMapping = componentInstanceProps[uuid];
+      const componentValueKey = variable.key;
+      const instanceProperty = componentInstanceProps[componentValueKey];
 
-      // For design component, we are only handling binding for UnboundValues for now
-      if (variableMapping?.type === 'UnboundValue') {
-        const componentInstanceValue = componentInstanceUnboundValues[variableMapping.key].value;
-
-        if (typeof componentInstanceValue === 'object' && componentInstanceValue !== null) {
-          unboundValues[uuid] = designComponentUnboundValues[componentInstanceValue['key']];
-        } else {
-          unboundValues[uuid] = componentInstanceUnboundValues[variableMapping.key];
-        }
+      // For design component, we look up the value in the design component instance and
+      // replace the componentValue with that one.
+      if (instanceProperty?.type === 'UnboundValue') {
+        const componentInstanceValue = componentInstanceUnboundValues[instanceProperty.key];
+        unboundValues[instanceProperty.key] = componentInstanceValue;
+        childNodeVariable[variableName] = {
+          type: 'UnboundValue',
+          key: instanceProperty.key,
+        };
+      } else if (instanceProperty?.type === 'BoundValue') {
+        const [, dataSourceKey] = instanceProperty.path.split('/');
+        const componentInstanceValue = componentInstanceDataSource[dataSourceKey];
+        dataSource[dataSourceKey] = componentInstanceValue;
+        childNodeVariable[variableName] = {
+          type: 'BoundValue',
+          path: instanceProperty.path,
+        };
       }
     }
   }
@@ -62,6 +72,7 @@ export const deserializeDesignComponentNode = ({
       designComponentUnboundValues,
       componentInstanceProps,
       componentInstanceUnboundValues,
+      componentInstanceDataSource,
     })
   );
 
@@ -121,6 +132,7 @@ export const resolveDesignComponent = ({
     designComponentUnboundValues: componentFields.unboundValues,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
+    componentInstanceDataSource: node.data.dataSource,
   });
 
   return deserializedNode;

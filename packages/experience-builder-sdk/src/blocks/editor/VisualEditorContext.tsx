@@ -212,21 +212,20 @@ export function VisualEditorContextProvider({
             designComponentDefinition,
           }: {
             designComponent: Entry;
-            designComponentDefinition: ComponentRegistration['definition'];
+            designComponentDefinition?: ComponentRegistration['definition'];
           } = payload;
-          if (designComponent) {
-            entityStore.current.updateEntity(designComponent);
-            // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
-            // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
-            // of all bound and unbound values when new values are added
-            designComponentsRegistry.set(designComponent.sys.id, {
-              sys: { id: designComponent.sys.id, linkType: 'Entry', type: 'Link' },
-            } as Link<'Entry'>);
-            designComponentDefinition &&
-              addComponentRegistration({
-                component: DesignComponent,
-                definition: designComponentDefinition,
-              });
+          entityStore.current.updateEntity(designComponent);
+          // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
+          // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
+          // of all bound and unbound values when new values are added
+          designComponentsRegistry.set(designComponent.sys.id, {
+            sys: { id: designComponent.sys.id, linkType: 'Entry', type: 'Link' },
+          } as Link<'Entry'>);
+          if (designComponentDefinition) {
+            addComponentRegistration({
+              component: DesignComponent,
+              definition: designComponentDefinition,
+            });
           }
           break;
         }
