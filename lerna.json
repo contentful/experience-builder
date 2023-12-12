@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "npmClient": "yarn",
+  "npmClient": "npm",
   "version": "independent",
   "command": {
     "version": {
@@ -14,7 +14,7 @@
         "**/*.stories.*",
         "**/__fixtures__/**",
         "**/__tests__/**",
-        "yarn.lock",
+        "package-lock.lock",
         "lerna.json",
         ".eslintrc.js",
         ".eslintignore",

@@ -6,14 +6,12 @@ import terser from '@rollup/plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import postcssImport from 'postcss-import';
 
-import packageJson from './package.json' assert { type: 'json' };
-
 export default [
   {
     input: 'src/index.tsx',
     output: [
       {
-        file: packageJson.module,
+        dir: 'dist',
         format: 'esm',
         sourcemap: true,
       },
