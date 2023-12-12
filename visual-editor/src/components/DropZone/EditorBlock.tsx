@@ -1,5 +1,8 @@
 import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
-import { CompositionComponentNode } from '@contentful/experience-builder-core';
+import {
+  CONTENTFUL_CONTAINER_ID,
+  CompositionComponentNode,
+} from '@contentful/experience-builder-core';
 import React from 'react';
 import styles from './styles.module.css';
 import { DraggableComponent } from '../Draggable/DraggableComponent';
@@ -50,60 +53,57 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   const containsZone = sectionsWithZone[componentId];
 
   return (
-    <>
-      <DraggableComponent
-        label={label || 'No Label Specified'}
-        id={`draggable-${componentId}`}
-        index={index}
-        isSelected={selectedNodeId === componentId}
-        userIsDragging={userIsDragging}
-        isLocked={userIsDragging}
-        onClick={(e) => {
-          e.stopPropagation();
-          setSelectedNodeId(componentId);
-          sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-            nodeId: componentId,
-          });
-        }}
-        onMouseDown={(e) => {
-          e.stopPropagation();
-          setUserWillDrag(true);
-        }}
-        onMouseUp={(e) => {
-          e.stopPropagation();
-          setUserWillDrag(false);
-        }}
+    <DraggableComponent
+      label={label || 'No Label Specified'}
+      id={`draggable-${componentId}`}
+      index={index}
+      isSelected={selectedNodeId === componentId}
+      userIsDragging={userIsDragging}
+      isLocked={userIsDragging}
+      onClick={(e) => {
+        e.stopPropagation();
+        setSelectedNodeId(componentId);
+        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+          nodeId: componentId,
+        });
+      }}
+      onMouseDown={(e) => {
+        e.stopPropagation();
+        setUserWillDrag(true);
+      }}
+      onMouseUp={(e) => {
+        e.stopPropagation();
+        setUserWillDrag(false);
+      }}
+      onMouseOver={(e) => {
+        e.stopPropagation();
+
+        if (containsZone) {
+          setHoveringSection(componentId);
+        } else {
+          setHoveringSection(parentSectionId);
+        }
+        setHoveringZone(zoneId);
+      }}
+      onMouseOut={() => {
+        setHoveringZone('');
+      }}
+      style={{
+        pointerEvents: userIsDragging && draggingNewComponent ? 'all' : undefined,
+        width: node.data.blockId === CONTENTFUL_CONTAINER_ID ? '100%' : 'auto',
+      }}>
+      <Render {...props} />
+
+      {/* Hitboxes allow users to add a section between 2 components */}
+      <div
+        className={styles.hitbox}
         onMouseOver={(e) => {
           e.stopPropagation();
-
-          if (containsZone) {
-            setHoveringSection(componentId);
-          } else {
-            setHoveringSection(parentSectionId);
-          }
           setHoveringZone(zoneId);
+          setHoveringSection(parentSectionId);
         }}
-        onMouseOut={() => {
-          setHoveringZone('');
-        }}
-        style={{
-          pointerEvents: userIsDragging && draggingNewComponent ? 'all' : undefined,
-        }}>
-        <Render {...props} />
-
-        {/* Hitboxes allow users to add a section between 2 components */}
-        {userIsDragging && (
-          <div
-            className={styles.hitbox}
-            onMouseOver={(e) => {
-              e.stopPropagation();
-              setHoveringZone(zoneId);
-              setHoveringSection(parentSectionId);
-            }}
-          />
-        )}
-      </DraggableComponent>
-    </>
+      />
+    </DraggableComponent>
   );
 };
 

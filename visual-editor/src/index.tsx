@@ -1,4 +1,4 @@
-import '@contentful/experience-builder-components/styles.css';
+import './global.css';
 
 import { VisualEditorRoot } from './components/VisualEditorRoot';
 

@@ -25,8 +25,7 @@ export const usePlaceholderStyle = () => {
         return;
       }
 
-      const targetListElement = document.querySelector(`[data-rfd-droppable-id='${droppableId}']`)
-        ?.children[0];
+      const targetListElement = document.querySelector(`[data-rfd-droppable-id='${droppableId}']`);
 
       const { clientHeight, clientWidth } = draggedDOM;
 

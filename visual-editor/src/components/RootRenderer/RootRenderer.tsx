@@ -111,6 +111,19 @@ export const RootRenderer: React.FC<Props> = ({
           areEntitiesFetched={areEntitiesFetched}
           resolveDesignValue={resolveDesignValue}
         />
+        {/* 
+          This hitbox is required so that users can
+          add sections to the bottom of the document.
+        */}
+        {userIsDragging && (
+          <div
+            className={styles.hitboxLower}
+            onMouseOver={(e) => {
+              e.stopPropagation();
+              setHoveringSection(ROOT_ID);
+            }}
+          />
+        )}
       </div>
     </DragDropContext>
   );

@@ -4,6 +4,47 @@ body {
   padding: 0;
 }
 
-#root,
-#visual-editor {
+
+/*
+ * All of these variables are tokens from Forma-36 and should not be adjusted as these
+ * are global variables that may affect multiple places.
+ * As our customers may use other design libraries, we try to avoid overlapping global
+ * variables by always using the prefix `--exp-builder-` inside this SDK.
+ */
+
+:root {
+  /* Color tokens from Forma 36: https://f36.contentful.com/tokens/color-system */
+  --exp-builder-blue100: #e8f5ff;
+  --exp-builder-blue200: #ceecff;
+  --exp-builder-blue300: #98cbff;
+  --exp-builder-blue400: #40a0ff;
+  --exp-builder-blue500: #036fe3;
+  --exp-builder-blue600: #0059c8;
+  --exp-builder-blue700: #0041ab;
+  --exp-builder-blue800: #003298;
+  --exp-builder-blue900: #002a8e;
+  --exp-builder-gray100: #f7f9fa;
+  --exp-builder-gray200: #e7ebee;
+  --exp-builder-gray300: #cfd9e0;
+  --exp-builder-gray400: #aec1cc;
+  --exp-builder-gray500: #67728a;
+  --exp-builder-gray600: #5a657c;
+  --exp-builder-gray700: #414d63;
+  --exp-builder-gray800: #1b273a;
+  --exp-builder-gray900: #111b2b;
+  --exp-builder-red200: #ffe0e0;
+  --exp-builder-red800: #7f0010;
+  --exp-builder-color-white: #ffffff;
+  --exp-builder-glow-primary: 0px 0px 0px 3px #e8f5ff;
+
+  /* Spacing tokens from Forma 36: https://f36.contentful.com/tokens/spacing */
+  --exp-builder-spacing-s: 0.75rem;
+  --exp-builder-spacing-2xs: 0.25rem;
+
+  /* Typography tokens from Forma 36: https://f36.contentful.com/tokens/typography */
+  --exp-builder-font-size-l: 1rem;
+  --exp-builder-font-size-m: 0.875rem;
+  --exp-builder-font-stack-primary: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
+    sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  --exp-builder-line-height-condensed: 1.25;
 }
