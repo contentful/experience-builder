@@ -1,10 +1,7 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { InternalSDKMode } from '../types';
-import { componentRegistry as initialComponentRegistry } from '../core/componentRegistry';
 import { VisualEditorContextProvider } from './editor/VisualEditorContext';
 import { ErrorBoundary } from '../components/ErrorBoundary';
-
-// can we get
 
 //============================================================
 // Import the visual editor directly from the package
@@ -14,17 +11,13 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 // Lazy load the visual editor from the package
 // const VisualEditor = React.lazy(() => import('@contentful/experience-builder-visual-editor'));
 
+//============================================================
+// Lazy load the visual editor from a CDN - this is the ideal solution if we can get it to work
 // const VisualEditor = React.lazy(
 //   () =>
 //     import(
-//       '/Users/adrian.meyer/Repos/experience-builder-toolkit/packages/visual-editor/dist/index.js'
+//       'https://unpkg.com/@contentful/experience-builder-visual-editor@0.0.1-pre-20231212T111240.0/dist/index.js'
 //     )
-// );
-
-//============================================================
-// Lazy load the visual editor from a CDN
-// const VisualEditor = React.lazy(
-//   () => import('https://unpkg.com/@contentful/experience-builder-visual-editor?module')
 // );
 
 //============================================================
@@ -48,51 +41,44 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 // const scriptUrl =
 //   'https://unpkg.com/@contentful/experience-builder-visual-editor@0.0.1-pre-20231208T034641.0/dist/index.js';
 
-// const scriptUrl =
-//   '/Users/adrian.meyer/Repos/experience-builder-toolkit/packages/visual-editor/dist/index.js';
+const scriptUrl =
+  '/Users/adrian.meyer/Repos/experience-builder-toolkit/packages/visual-editor/dist/renderApp.js';
 
 // const loaded = new Map<string, string>();
 
-// declare global {
-//   interface Window {
-//     cfInitVisualEditor: (element: HTMLElement, props: VisualEditorRootProps) => void;
-//   }
-// }
+const VisualEditor: React.FC<{ elementId: string }> = ({ elementId }) => {
+  useEffect(() => {
+    console.log('[SDK::DEBUG] VisualEditor useEffect...');
 
-// const VisualEditor: React.FC<{ initialLocale: string }> = ({ initialLocale }) => {
-//   const elementId = 'cf-visual-editor';
+    // if (loaded.get(initialLocale) === scriptUrl) {
+    //   return;
+    // }
 
-//   useEffect(() => {
-//     console.log('[SDK::DEBUG] VisualEditor useEffect...');
+    // const element = document.getElementById(elementId);
+    // if (!element) {
+    //   console.error('No editor container found');
+    //   return;
+    // }
 
-//     if (loaded.get(initialLocale) === scriptUrl) {
-//       return;
-//     }
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = scriptUrl;
+    script.async = true;
 
-//     const element = document.getElementById(elementId);
-//     if (!element) {
-//       console.error('No editor container found');
-//       return;
-//     }
+    // script.onload = () => {
+    //   loaded.set(initialLocale, scriptUrl);
+    //   window.cfInitVisualEditor(element, { initialLocale, initialComponentRegistry });
+    // };
 
-//     const script = document.createElement('script');
-//     script.src = scriptUrl;
-//     script.async = true;
+    document.body.appendChild(script);
 
-//     script.onload = () => {
-//       loaded.set(initialLocale, scriptUrl);
-//       window.cfInitVisualEditor(element, { initialLocale, initialComponentRegistry });
-//     };
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
-//     document.body.appendChild(script);
-
-//     return () => {
-//       document.body.removeChild(script);
-//     };
-//   }, [initialLocale]);
-
-//   return <div id={elementId} />;
-// };
+  return <div id={elementId} />;
+};
 
 // const VisualEditor = React.lazy(() =>
 //   loadRemoteScript(scriptUrl).then(() => {
@@ -117,11 +103,7 @@ export const VisualEditorRoot: React.FC<Props> = ({ initialLocale, mode }) => {
     <ErrorBoundary>
       <Suspense fallback={<div>Loading...</div>}>
         <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
-          <VisualEditor
-            initialLocale={initialLocale}
-            //@ts-expect-error
-            initialComponentRegistry={initialComponentRegistry}
-          />
+          <VisualEditor elementId="cf-visual-editor" />
         </VisualEditorContextProvider>
       </Suspense>
     </ErrorBoundary>
