@@ -38,9 +38,12 @@ export const INCOMING_EVENTS = {
 };
 
 export const INTERNAL_EVENTS = {
-  ComponentsRegistered: 'componentsRegistered',
-  VisualEditorConnected: 'visualEditorConnected',
-  VisualEditorComponents: 'visualEditorComponents',
+  ComponentsRegistered: 'cfComponentsRegistered',
+  VisualEditorInitialize: 'cfVisualEditorInitialize',
+};
+
+export const VISUAL_EDITOR_EVENTS = {
+  Ready: 'cfVisualEditorReady',
 };
 
 export const CONTENTFUL_SECTION_ID = 'contentful-section'; // TODO: remove me once all customers are using 2023-09-28 schema version

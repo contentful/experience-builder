@@ -137,25 +137,25 @@ export function VisualEditorContextProvider({
   }, [mode]);
 
   useEffect(() => {
-    function onVisualEditorConnected() {
-      window.dispatchEvent(
-        // TODO: switch string to INTERNAL_EVENTS.VisualEditorComponents
-        new CustomEvent('visualEditorComponents', { detail: { componentRegistry } })
-      );
-    }
-
-    if (typeof window !== 'undefined') {
-      // TODO: switch string to INTERNAL_EVENTS.VisualEditorConnected
-      window.addEventListener('visualEditorConnected', onVisualEditorConnected);
-      return () => {
-        window.removeEventListener('visualEditorConnected', onVisualEditorConnected);
-      };
-    }
-  }, []);
-
-  useEffect(() => {
     setLocale(initialLocale);
   }, [initialLocale]);
+
+  useEffect(() => {
+    const onVisualEditorReady = () => {
+      window.dispatchEvent(
+        // TODO: switch string to INTERNAL_EVENTS.VisualEditorInitialize
+        new CustomEvent('cfVisualEditorInitialize', { detail: { componentRegistry, locale } })
+      );
+    };
+
+    if (typeof window !== 'undefined') {
+      // TODO: switch string to VISUAL_EDITOR_EVENTS.Ready
+      window.addEventListener('cfVisualEditorReady', onVisualEditorReady);
+      return () => {
+        window.removeEventListener('cfVisualEditorReady', onVisualEditorReady);
+      };
+    }
+  }, [locale]);
 
   useEffect(() => {
     // We only care about this communication when in editor mode
