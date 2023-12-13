@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { InternalSDKMode } from '../types';
 import { VisualEditorContextProvider } from './editor/VisualEditorContext';
 
-const version = '0.0.1-pre-20231212T210325.0';
+const version = '0.0.1-pre-20231213T101751.0';
 const scriptUrl = `https://unpkg.com/@contentful/experience-builder-visual-editor@${version}/dist/renderApp.js`;
 
 const VisualEditor: React.FC = () => {
