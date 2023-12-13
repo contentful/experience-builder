@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { InternalSDKMode, VisualEditorMode } from '../types';
 import { VisualEditorContextProvider } from './editor/VisualEditorContext';
+import { visualEditorMode } from '../core/visualEditorSettings';
 
 export type VisualEditorRootProps = {
   initialLocale: string;
   mode: InternalSDKMode;
-  visualEditorMode: VisualEditorMode;
 };
 
-export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
-  initialLocale,
-  mode,
-  visualEditorMode,
-}) => {
+export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({ initialLocale, mode }) => {
   const [VisualEditor, setVisualEditor] = useState<React.ComponentType | null>(null);
 
   useEffect(() => {
-    if (visualEditorMode === 'lazyLoad') {
+    if (visualEditorMode === VisualEditorMode.LazyLoad) {
       import('@contentful/experience-builder-visual-editor').then((module) => {
         setVisualEditor(() => module.default);
       });
@@ -25,7 +21,7 @@ export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
         setVisualEditor(() => module.default);
       });
     }
-  }, [visualEditorMode]);
+  }, []);
 
   if (!VisualEditor) return null;
 

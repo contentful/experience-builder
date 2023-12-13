@@ -492,7 +492,16 @@
   dependencies:
     chalk "^4.1.0"
 
-"@contentful/experience-builder-components@0.0.1-pre-20231213T103332.0":
+"@contentful/experience-builder-components@0.0.1-pre-20231207T195552.0":
+  version "0.0.1-pre-20231207T195552.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-components/-/experience-builder-components-0.0.1-pre-20231207T195552.0.tgz#0ce2ec517e829852c543ee8ccfc8b0acce44c1b2"
+  integrity sha512-Lnqi2Yd1ZZB3GHhScqhIW3hMnILyBjXMPFBO/titFbuadRDsuZ3jUo6MmUxfw3buitGnCPXvnVHKNRQyTBdBXQ==
+  dependencies:
+    "@contentful/experience-builder-core" "^0.0.1-pre-20231207T195552.0"
+    "@contentful/rich-text-react-renderer" "^15.17.2"
+    postcss-import "^15.1.0"
+
+"@contentful/experience-builder-components@^0.0.1-pre-20231207T195552.0":
   version "0.0.1-pre-20231213T103332.0"
   resolved "https://registry.yarnpkg.com/@contentful/experience-builder-components/-/experience-builder-components-0.0.1-pre-20231213T103332.0.tgz#0f5c8bb603d700f33075114905cae26a07ed3b39"
   integrity sha512-NIRlShUi8+KCkYZ36dwuon7HFF31DGG30sDuEA77Sica6t6gdWmO80s1/Qxgt6GlftIw+H5h5DfA8ZFhSsxSHQ==
@@ -501,22 +510,10 @@
     "@contentful/rich-text-react-renderer" "^15.17.2"
     postcss-import "^15.1.0"
 
-"@contentful/experience-builder-components@file:../experience-builder-toolkit/packages/components":
-  version "0.0.1-alpha.12"
-  dependencies:
-    "@contentful/experience-builder-core" "file:../../Library/Caches/Yarn/v6/npm-@contentful-experience-builder-components-0.0.1-alpha.12-f978878e-6107-4982-9912-6de53b800de0-1702503715822/node_modules/@contentful/core"
-    "@contentful/rich-text-react-renderer" "^15.17.2"
-    postcss-import "^15.1.0"
-
-"@contentful/experience-builder-core@^0.0.1-pre-20231213T103332.0":
+"@contentful/experience-builder-core@^0.0.1-pre-20231207T195552.0", "@contentful/experience-builder-core@^0.0.1-pre-20231213T103332.0":
   version "0.0.1-pre-20231213T103332.0"
   resolved "https://registry.yarnpkg.com/@contentful/experience-builder-core/-/experience-builder-core-0.0.1-pre-20231213T103332.0.tgz#65677acc74cb8a9e1dc3db3e4929374d593efbd3"
   integrity sha512-zLRtKReNvcHmwvfPgJQzGV/V72hNZuL2Q2+8h07lFq4uORNiYxMpJl4juIxgWfVlDQPhEgIk81zz/2N3xrhVjw==
-  dependencies:
-    "@contentful/visual-sdk" "^1.0.0-alpha.34"
-
-"@contentful/experience-builder-core@file:../experience-builder-toolkit/packages/core":
-  version "0.0.1-dev125"
   dependencies:
     "@contentful/visual-sdk" "^1.0.0-alpha.34"
 
@@ -526,11 +523,13 @@
     "@contentful/visual-sdk" "^1.0.0-alpha.26"
     contentful "^10.6.10"
 
-"@contentful/experience-builder-visual-editor@file:../experience-builder-toolkit/packages/visual-editor":
-  version "0.0.1-dev126"
+"@contentful/experience-builder-visual-editor@0.0.1-pre-20231207T195552.0":
+  version "0.0.1-pre-20231207T195552.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-visual-editor/-/experience-builder-visual-editor-0.0.1-pre-20231207T195552.0.tgz#a5aa023a32f7a9cef9539ba23ec70d932ef209c3"
+  integrity sha512-YS34In26cf+dLvslN6ifyz8nk3QDBAIrEi12cl3zMdmCMX15ydHJX1mJXK7p9gCRErfGUHPVTYnukTs8kAvbKQ==
   dependencies:
-    "@contentful/experience-builder-components" "file:../../Library/Caches/Yarn/v6/npm-@contentful-experience-builder-visual-editor-0.0.1-dev126-7487fd45-dbbf-4671-80a9-0fc1479984bd-1702503715819/node_modules/@contentful/components"
-    "@contentful/experience-builder-core" "file:../../Library/Caches/Yarn/v6/npm-@contentful-experience-builder-visual-editor-0.0.1-dev126-7487fd45-dbbf-4671-80a9-0fc1479984bd-1702503715819/node_modules/@contentful/core"
+    "@contentful/experience-builder-components" "^0.0.1-pre-20231207T195552.0"
+    "@contentful/experience-builder-core" "^0.0.1-pre-20231207T195552.0"
     "@contentful/visual-sdk" "^1.0.0-alpha.32"
     "@hello-pangea/dnd" "^16.3.0"
     classnames "^2.3.2"
