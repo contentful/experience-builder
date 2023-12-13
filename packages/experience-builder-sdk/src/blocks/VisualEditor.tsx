@@ -3,12 +3,11 @@ import { InternalSDKMode } from '../types';
 import { VisualEditorContextProvider } from './editor/VisualEditorContext';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
-// const scriptUrl = 'https://unpkg.com/@contentful/experience-builder-visual-editor';
-// const scriptUrl =
-//   'https://unpkg.com/@contentful/experience-builder-visual-editor@0.0.1-pre-20231208T034641.0/dist/index.js';
+const version = '0.0.1-pre-20231212T210325.0';
+const scriptUrl = `https://unpkg.com/@contentful/experience-builder-visual-editor@${version}/dist/renderApp.js`;
 
-const scriptUrl =
-  '/Users/adrian.meyer/Repos/experience-builder-toolkit/packages/visual-editor/dist/renderApp.js';
+// const scriptUrl =
+//   '/Users/adrian.meyer/Repos/experience-builder-toolkit/packages/visual-editor/dist/renderApp.js';
 
 const VisualEditor: React.FC = () => {
   useEffect(() => {
