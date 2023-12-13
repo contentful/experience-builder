@@ -36,6 +36,7 @@ import { transformContentValue } from '../../utils/transformers';
 import { useEditorContext } from './useEditorContext';
 import { resolveDesignComponent } from '../../core/editor/designComponentUtils';
 import { DesignComponent } from '../../components/DesignComponent';
+import { isLinkToAsset } from '../../utils/isLinkToAsset';
 
 type PropsType =
   | StyleProps
@@ -131,12 +132,13 @@ export const VisualEditorBlock = ({
           // If successful, it means we have identified the linked asset.
 
           if (!boundValue) {
-            boundValue = areEntitiesFetched
-              ? (entityStore.current?.getValue(
-                  binding,
-                  path.slice(0, -2)
-                ) as unknown as Link<'Asset'>)
+            const maybeBoundAsset = areEntitiesFetched
+              ? entityStore.current?.getValue(binding, path.slice(0, -2))
               : undefined;
+
+            if (isLinkToAsset(maybeBoundAsset)) {
+              boundValue = maybeBoundAsset;
+            }
           }
 
           if (typeof boundValue === 'object' && boundValue.sys.linkType === 'Asset') {
