@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { InternalSDKMode } from '../types';
 import { VisualEditorContextProvider } from './editor/VisualEditorContext';
+import { VISUAL_EDITOR_CONTAINER_ID } from '@contentful/experience-builder-types';
 
-const version = '0.0.1-pre-20231213T101751.0';
+const version = '0.0.1-pre-20231213T103332.0';
 const scriptUrl = `https://unpkg.com/@contentful/experience-builder-visual-editor@${version}/dist/renderApp.js`;
 
 const VisualEditor: React.FC = () => {
@@ -19,7 +20,7 @@ const VisualEditor: React.FC = () => {
     };
   }, []);
 
-  return <div id="cf-visual-editor" />;
+  return <div id={VISUAL_EDITOR_CONTAINER_ID} />;
 };
 
 type VisualEditorRootProps = {
