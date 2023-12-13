@@ -21,7 +21,13 @@ import {
   InternalSDKMode,
   Link,
 } from '../../types';
-import { INCOMING_EVENTS, OUTGOING_EVENTS, SCROLL_STATES, INTERNAL_EVENTS } from '../../constants';
+import {
+  INCOMING_EVENTS,
+  OUTGOING_EVENTS,
+  SCROLL_STATES,
+  INTERNAL_EVENTS,
+  VISUAL_EDITOR_EVENTS,
+} from '../../constants';
 import { getDataFromTree } from '../../utils/utils';
 import { doesMismatchMessageSchema, tryParseMessage } from '../../utils/validation';
 import { Entry } from 'contentful';
@@ -143,16 +149,16 @@ export function VisualEditorContextProvider({
   useEffect(() => {
     const onVisualEditorReady = () => {
       window.dispatchEvent(
-        // TODO: switch string to INTERNAL_EVENTS.VisualEditorInitialize
-        new CustomEvent('cfVisualEditorInitialize', { detail: { componentRegistry, locale } })
+        new CustomEvent(INTERNAL_EVENTS.VisualEditorInitialize, {
+          detail: { componentRegistry, locale },
+        })
       );
     };
 
     if (typeof window !== 'undefined') {
-      // TODO: switch string to VISUAL_EDITOR_EVENTS.Ready
-      window.addEventListener('cfVisualEditorReady', onVisualEditorReady);
+      window.addEventListener(VISUAL_EDITOR_EVENTS.Ready, onVisualEditorReady);
       return () => {
-        window.removeEventListener('cfVisualEditorReady', onVisualEditorReady);
+        window.removeEventListener(VISUAL_EDITOR_EVENTS.Ready, onVisualEditorReady);
       };
     }
   }, [locale]);
