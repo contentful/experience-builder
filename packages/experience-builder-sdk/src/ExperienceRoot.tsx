@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, Suspense } from 'react';
 
 const VisualEditor = React.lazy(() => import('./blocks/VisualEditor'));
 import { isDeprecatedExperience } from '@contentful/experience-builder-types';
@@ -6,9 +6,9 @@ import { EntityStore } from './core/preview/EntityStore';
 import { supportedModes } from './constants';
 import { DeprecatedExperience, Experience, InternalSDKMode } from './types';
 import { validateExperienceBuilderConfig } from './utils/validation';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPreviewDeliveryRoot';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
-import { ErrorBoundary } from './components/ErrorBoundary';
 
 type ExperienceRootProps = {
   experience?: Experience<EntityStore> | DeprecatedExperience;
