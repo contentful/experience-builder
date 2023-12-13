@@ -2,7 +2,6 @@ import React, { RefObject, useCallback, useMemo } from 'react';
 
 import type { EntityStore } from '@contentful/visual-sdk';
 import omit from 'lodash.omit';
-import { isLinkToAsset } from '@contentful/experience-builder-types';
 
 import { sendMessage } from '../../communication/sendMessage';
 import {
@@ -37,6 +36,7 @@ import { transformContentValue } from '../../utils/transformers';
 import { useEditorContext } from './useEditorContext';
 import { resolveDesignComponent } from '../../core/editor/designComponentUtils';
 import { DesignComponent } from '../../components/DesignComponent';
+import { isLinkToAsset } from '../../utils/isLinkToAsset';
 
 type PropsType =
   | StyleProps
