@@ -1,13 +1,9 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { InternalSDKMode } from '../types';
 import { VisualEditorContextProvider } from './editor/VisualEditorContext';
-import { ErrorBoundary } from '../components/ErrorBoundary';
 
 const version = '0.0.1-pre-20231212T210325.0';
 const scriptUrl = `https://unpkg.com/@contentful/experience-builder-visual-editor@${version}/dist/renderApp.js`;
-
-// const scriptUrl =
-//   '/Users/adrian.meyer/Repos/experience-builder-toolkit/packages/visual-editor/dist/renderApp.js';
 
 const VisualEditor: React.FC = () => {
   useEffect(() => {
@@ -26,21 +22,17 @@ const VisualEditor: React.FC = () => {
   return <div id="cf-visual-editor" />;
 };
 
-type Props = {
+type VisualEditorRootProps = {
   initialLocale: string;
   mode: InternalSDKMode;
 };
 
-export const VisualEditorRoot: React.FC<Props> = ({ initialLocale, mode }) => {
+export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({ initialLocale, mode }) => {
   // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
   return (
-    <ErrorBoundary>
-      <Suspense fallback={<div>Loading...</div>}>
-        <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
-          <VisualEditor />
-        </VisualEditorContextProvider>
-      </Suspense>
-    </ErrorBoundary>
+    <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
+      <VisualEditor />
+    </VisualEditorContextProvider>
   );
 };
 
