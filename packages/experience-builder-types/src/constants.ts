@@ -46,6 +46,7 @@ export const VISUAL_EDITOR_EVENTS = {
   Ready: 'cfVisualEditorReady',
 };
 
+export const VISUAL_EDITOR_CONTAINER_ID = 'cf-visual-editor';
 export const CONTENTFUL_SECTION_ID = 'contentful-section'; // TODO: remove me once all customers are using 2023-09-28 schema version
 export const CONTENTFUL_CONTAINER_ID = 'contentful-container';
 export const CONTENTFUL_SECTION_NAME = 'Section'; // TODO: remove me once all customers are using 2023-09-28 schema version
