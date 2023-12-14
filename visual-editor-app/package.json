@@ -48,7 +48,7 @@
     "vite": "^4.4.5"
   },
   "relativeDependencies": {
-    "@contentful/experience-builder": "../../../experience-builder/packages/experience-builder-sdk/",
+    "@contentful/experience-builder": "../../../experience-builder/packages/experience-builder-sdk",
     "@contentful/experience-builder-types": "../../../experience-builder/packages/experience-builder-types",
     "@contentful/experience-builder-visual-editor": "../visual-editor"
   }

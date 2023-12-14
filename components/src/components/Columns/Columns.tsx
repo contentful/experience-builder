@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import './Columns.css';
 // import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder';
-import classNames from 'classnames';
+import { combineClasses } from '../../utils/combineClasses';
 // import { generateId } from '@/shared/utils/generate-id';
 // import { onComponentUpdate } from '@/communication/onComponentUpdate';
 // import { CompositionComponentNode } from '@contentful/experience-builder-core';
@@ -63,7 +63,7 @@ export const Columns: React.FC<any> = ({ columns, editorMode, className, ...rest
   //   return (
   //     <Section>
   //       <div
-  //         className={classNames(className, 'Columns')}
+  //         className={combineClasses(className, 'Columns')}
   //         style={{
   //           gridTemplateColumns: `repeat(${colsArray.length}, 1fr)`,
   //         }}>
@@ -89,7 +89,7 @@ export const Columns: React.FC<any> = ({ columns, editorMode, className, ...rest
       data-cf-node-id={node.data.id}
       data-cf-node-block-id={node.data.blockId}
       data-cf-node-block-type={node.type}
-      className={classNames(className, 'Columns')}
+      className={combineClasses(className, 'Columns')}
       style={{
         gridTemplateColumns: `repeat(${colsArray.length}, 1fr)`,
       }}>

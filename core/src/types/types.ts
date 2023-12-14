@@ -171,6 +171,11 @@ export type CompositionTree = {
 export type ExternalSDKMode = 'preview' | 'delivery';
 export type InternalSDKMode = ExternalSDKMode | 'editor';
 
+export enum VisualEditorMode {
+  LazyLoad = 'lazyLoad',
+  InjectScript = 'injectScript',
+}
+
 /**
  * Internally defined style variables are prefix with `cf` to avoid
  * collisions with user defined variables.

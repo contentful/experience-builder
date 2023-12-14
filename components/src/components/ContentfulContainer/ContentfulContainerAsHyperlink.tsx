@@ -1,8 +1,6 @@
 /* eslint-disable */ /* TODO: fix eslint errors */
 import React, { RefObject } from 'react';
 
-import classNames from 'classnames';
-
 import {
   CompositionComponentNode,
   CompositionDataSource,
@@ -11,6 +9,7 @@ import {
 } from '@contentful/experience-builder-core';
 
 import { EntityStore } from '@contentful/visual-sdk';
+import { combineClasses } from '../../utils/combineClasses';
 
 export type ContentfulContainerProps<EditorMode = boolean> = EditorMode extends true
   ? {
@@ -53,7 +52,7 @@ export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) 
     return (
       <a
         id="ContentfulContainer"
-        className={classNames(className, 'defaultStyles', 'cf-section-link')}
+        className={combineClasses(className, 'defaultStyles', 'cf-section-link')}
         href={cfHyperlink}
         {...anchorTagProps}>
         {children}
@@ -74,7 +73,7 @@ export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) 
     ['data-cf-node-block-id']: node.data.blockId,
     ['data-cf-node-block-type']: node.type,
     id: 'ContentfulContainer',
-    className: classNames(className, 'defaultStyles', 'cf-section-link'),
+    className: combineClasses(className, 'defaultStyles', 'cf-section-link'),
     zoneId: node.data.id,
     WrapperComponent: 'a',
     onClick: stopPropagationInEditorMode,
@@ -83,7 +82,7 @@ export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) 
   // return (
   //   <a
   //     id="ContentfulContainer"
-  //     className={classNames(className, 'defaultStyles', 'cf-section-link')}
+  //     className={combineClasses(className, 'defaultStyles', 'cf-section-link')}
   //     href={cfHyperlink}
   //     {...anchorTagProps}
   //     onClick={stopPropagationInEditorMode}
