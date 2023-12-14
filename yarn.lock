@@ -492,28 +492,19 @@
   dependencies:
     chalk "^4.1.0"
 
-"@contentful/experience-builder-components@0.0.1-pre-20231207T195552.0":
-  version "0.0.1-pre-20231207T195552.0"
-  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-components/-/experience-builder-components-0.0.1-pre-20231207T195552.0.tgz#0ce2ec517e829852c543ee8ccfc8b0acce44c1b2"
-  integrity sha512-Lnqi2Yd1ZZB3GHhScqhIW3hMnILyBjXMPFBO/titFbuadRDsuZ3jUo6MmUxfw3buitGnCPXvnVHKNRQyTBdBXQ==
+"@contentful/experience-builder-components@0.0.1-pre-20231213T210727.0", "@contentful/experience-builder-components@^0.0.1-pre-20231213T210727.0":
+  version "0.0.1-pre-20231213T210727.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-components/-/experience-builder-components-0.0.1-pre-20231213T210727.0.tgz#7f74a668938d3bdeb0e5364ac98bcf2ddafe0eed"
+  integrity sha512-YH+aiQ7fxLvrHkd2bXCM1gY7TQXvuWou6ZsJ/to4iEDX6VTlKVJTiMXVVvnCwcxl4Z7+qCYAPgvh15WfKoW9Hw==
   dependencies:
-    "@contentful/experience-builder-core" "^0.0.1-pre-20231207T195552.0"
+    "@contentful/experience-builder-core" "^0.0.1-pre-20231213T210727.0"
     "@contentful/rich-text-react-renderer" "^15.17.2"
     postcss-import "^15.1.0"
 
-"@contentful/experience-builder-components@^0.0.1-pre-20231207T195552.0":
-  version "0.0.1-pre-20231213T103332.0"
-  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-components/-/experience-builder-components-0.0.1-pre-20231213T103332.0.tgz#0f5c8bb603d700f33075114905cae26a07ed3b39"
-  integrity sha512-NIRlShUi8+KCkYZ36dwuon7HFF31DGG30sDuEA77Sica6t6gdWmO80s1/Qxgt6GlftIw+H5h5DfA8ZFhSsxSHQ==
-  dependencies:
-    "@contentful/experience-builder-core" "^0.0.1-pre-20231213T103332.0"
-    "@contentful/rich-text-react-renderer" "^15.17.2"
-    postcss-import "^15.1.0"
-
-"@contentful/experience-builder-core@^0.0.1-pre-20231207T195552.0", "@contentful/experience-builder-core@^0.0.1-pre-20231213T103332.0":
-  version "0.0.1-pre-20231213T103332.0"
-  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-core/-/experience-builder-core-0.0.1-pre-20231213T103332.0.tgz#65677acc74cb8a9e1dc3db3e4929374d593efbd3"
-  integrity sha512-zLRtKReNvcHmwvfPgJQzGV/V72hNZuL2Q2+8h07lFq4uORNiYxMpJl4juIxgWfVlDQPhEgIk81zz/2N3xrhVjw==
+"@contentful/experience-builder-core@^0.0.1-pre-20231213T210727.0":
+  version "0.0.1-pre-20231213T210727.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-core/-/experience-builder-core-0.0.1-pre-20231213T210727.0.tgz#ed30f1672b542bd5b63f62f917ee8047c1b8e992"
+  integrity sha512-AqwIcgOIKMP3K0GagHW7Efw4Sa+MHZdL+Uk8i9b6ML2kJ1KDTAsEmQq/gVW+mjHLOL9Y/Cjl0+g0Jv1fujkBxg==
   dependencies:
     "@contentful/visual-sdk" "^1.0.0-alpha.34"
 
@@ -523,13 +514,13 @@
     "@contentful/visual-sdk" "^1.0.0-alpha.26"
     contentful "^10.6.10"
 
-"@contentful/experience-builder-visual-editor@0.0.1-pre-20231207T195552.0":
-  version "0.0.1-pre-20231207T195552.0"
-  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-visual-editor/-/experience-builder-visual-editor-0.0.1-pre-20231207T195552.0.tgz#a5aa023a32f7a9cef9539ba23ec70d932ef209c3"
-  integrity sha512-YS34In26cf+dLvslN6ifyz8nk3QDBAIrEi12cl3zMdmCMX15ydHJX1mJXK7p9gCRErfGUHPVTYnukTs8kAvbKQ==
+"@contentful/experience-builder-visual-editor@0.0.1-pre-20231213T210727.0":
+  version "0.0.1-pre-20231213T210727.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-visual-editor/-/experience-builder-visual-editor-0.0.1-pre-20231213T210727.0.tgz#ade6420c960d02cc102ba168a5551a1c7993f238"
+  integrity sha512-n24IslSxO7UAjnPgUF2XHv2PKKriuHAZVsbqa/4B3stnCh4gN3+INpVCndd0csS7hZdjN6vJ9kZ+R+sDIlT3pQ==
   dependencies:
-    "@contentful/experience-builder-components" "^0.0.1-pre-20231207T195552.0"
-    "@contentful/experience-builder-core" "^0.0.1-pre-20231207T195552.0"
+    "@contentful/experience-builder-components" "^0.0.1-pre-20231213T210727.0"
+    "@contentful/experience-builder-core" "^0.0.1-pre-20231213T210727.0"
     "@contentful/visual-sdk" "^1.0.0-alpha.32"
     "@hello-pangea/dnd" "^16.3.0"
     classnames "^2.3.2"
