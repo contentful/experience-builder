@@ -1,0 +1,14 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  install-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Echo ref_name'
+        run: echo ${{ github.ref_name }}
