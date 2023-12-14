@@ -10,13 +10,7 @@ export type SectionProps = {
   style?: CSSProperties;
 };
 
-export const Section = ({
-  children,
-  padding = '0px',
-  maxWidth = '1280px',
-  style = {},
-  ...rest
-}: SectionProps) => {
+export const Section = ({ children, style = {}, ...rest }: SectionProps) => {
   return (
     <div
       className="ctfl-section"
