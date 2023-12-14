@@ -492,28 +492,19 @@
   dependencies:
     chalk "^4.1.0"
 
-"@contentful/experience-builder-components@0.0.1-pre-20231207T195552.0":
-  version "0.0.1-pre-20231207T195552.0"
-  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-components/-/experience-builder-components-0.0.1-pre-20231207T195552.0.tgz#0ce2ec517e829852c543ee8ccfc8b0acce44c1b2"
-  integrity sha512-Lnqi2Yd1ZZB3GHhScqhIW3hMnILyBjXMPFBO/titFbuadRDsuZ3jUo6MmUxfw3buitGnCPXvnVHKNRQyTBdBXQ==
+"@contentful/experience-builder-components@^0.0.1-pre-20231214T165446.0":
+  version "0.0.1-pre-20231214T165446.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-components/-/experience-builder-components-0.0.1-pre-20231214T165446.0.tgz#cb20f3365c9c3d21a12f3ba612ba2bf78f67964d"
+  integrity sha512-dWGumPvyZtOs4Wu+Wp5PeT/gKTU1JU70oGQQs6ukRSVXg2/0RNXKXiLfKk25UpWIIOGsUTanixchSZ0DDWn6sw==
   dependencies:
-    "@contentful/experience-builder-core" "^0.0.1-pre-20231207T195552.0"
+    "@contentful/experience-builder-core" "^0.0.1-pre-20231214T165446.0"
     "@contentful/rich-text-react-renderer" "^15.17.2"
     postcss-import "^15.1.0"
 
-"@contentful/experience-builder-components@^0.0.1-pre-20231207T195552.0":
-  version "0.0.1-pre-20231208T034641.0"
-  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-components/-/experience-builder-components-0.0.1-pre-20231208T034641.0.tgz#7956aa0d1aa8bd74eb0ab4535d857f74c3e9a84d"
-  integrity sha512-/HS07UOK7/PDttbEgJHe+IY8N4EdUcyVptatuBKvhxuLsQsruFkV6ZJJfIhWnP+50KVTHtq50ClpvV/eOrddGQ==
-  dependencies:
-    "@contentful/experience-builder-core" "^0.0.1-pre-20231208T034641.0"
-    "@contentful/rich-text-react-renderer" "^15.17.2"
-    postcss-import "^15.1.0"
-
-"@contentful/experience-builder-core@^0.0.1-pre-20231207T195552.0", "@contentful/experience-builder-core@^0.0.1-pre-20231208T034641.0":
-  version "0.0.1-pre-20231208T034641.0"
-  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-core/-/experience-builder-core-0.0.1-pre-20231208T034641.0.tgz#c70afda6272d3292c8d6b95309e93aa93a89e8d1"
-  integrity sha512-MuMnqOhNPOjlOL06DnrTDVeCzAmFOCa18Ghxw4O6X5wwCqOaBQ0TKa+EK2NfO5KECYp5abag3CmgtC9R8zoKAg==
+"@contentful/experience-builder-core@^0.0.1-pre-20231214T165446.0":
+  version "0.0.1-pre-20231214T165446.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-core/-/experience-builder-core-0.0.1-pre-20231214T165446.0.tgz#b410639ed7ae6315e78c2825e15caf6dfe0afbf5"
+  integrity sha512-2kct46SaMvn1DSVGfQBkoq+AQJoeCpjifc6AFPyOn1MsMxHwhSpAaobxt15El4xddEijhP5rIWuLZFiTYpyyyw==
   dependencies:
     "@contentful/visual-sdk" "^1.0.0-alpha.34"
 
@@ -523,13 +514,13 @@
     "@contentful/visual-sdk" "^1.0.0-alpha.26"
     contentful "^10.6.10"
 
-"@contentful/experience-builder-visual-editor@0.0.1-pre-20231207T195552.0":
-  version "0.0.1-pre-20231207T195552.0"
-  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-visual-editor/-/experience-builder-visual-editor-0.0.1-pre-20231207T195552.0.tgz#a5aa023a32f7a9cef9539ba23ec70d932ef209c3"
-  integrity sha512-YS34In26cf+dLvslN6ifyz8nk3QDBAIrEi12cl3zMdmCMX15ydHJX1mJXK7p9gCRErfGUHPVTYnukTs8kAvbKQ==
+"@contentful/experience-builder-visual-editor@^0.0.1-pre-20231214T165446.0":
+  version "0.0.1-pre-20231214T165446.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-visual-editor/-/experience-builder-visual-editor-0.0.1-pre-20231214T165446.0.tgz#28f8b4195ec49ec5eba1f7ffa2e14f6a4d5c80ce"
+  integrity sha512-JGOQVA5DjHhFdavQb0mV4mmKTCrZS0LHxtRJkUm0ULUbRnehVZSxbamYU01uHJjmrNIIw/U2PLXci4FgIZYOsA==
   dependencies:
-    "@contentful/experience-builder-components" "^0.0.1-pre-20231207T195552.0"
-    "@contentful/experience-builder-core" "^0.0.1-pre-20231207T195552.0"
+    "@contentful/experience-builder-components" "^0.0.1-pre-20231214T165446.0"
+    "@contentful/experience-builder-core" "^0.0.1-pre-20231214T165446.0"
     "@contentful/visual-sdk" "^1.0.0-alpha.32"
     "@hello-pangea/dnd" "^16.3.0"
     classnames "^2.3.2"
