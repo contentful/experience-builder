@@ -30,7 +30,7 @@ describe('useBreakpoints', () => {
         [breakpoints[1].id]: 'blue',
         [breakpoints[2].id]: 'green',
       };
-      const value = getValueForBreakpoint(valuesByBreakpoint, breakpoints, 1);
+      const value = getValueForBreakpoint(valuesByBreakpoint, breakpoints, 1, 'cfColor');
       expect(value).toBe('blue');
     });
 
@@ -40,7 +40,7 @@ describe('useBreakpoints', () => {
         [breakpoints[1].id]: 'blue',
         [breakpoints[2].id]: 'green',
       };
-      const value = getValueForBreakpoint(valuesByBreakpoint, breakpoints, -1);
+      const value = getValueForBreakpoint(valuesByBreakpoint, breakpoints, -1, 'cfColor');
       expect(value).toBe('red');
     });
 
@@ -51,7 +51,7 @@ describe('useBreakpoints', () => {
       };
       // We ask for the mobile value but it's not defined.
       // Thus, we expect to get the tablet value.
-      const value = getValueForBreakpoint(valuesByBreakpoint, breakpoints, 2);
+      const value = getValueForBreakpoint(valuesByBreakpoint, breakpoints, 2, 'cfColor');
       expect(value).toBe('blue');
     });
   });

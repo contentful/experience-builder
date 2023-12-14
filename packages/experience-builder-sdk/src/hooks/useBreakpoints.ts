@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Breakpoint, CompositionVariableValueType } from '../types';
+import { getDesignTokenRegistrationForSpacing } from '../core/designTokenRegistry';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
 
@@ -8,7 +9,8 @@ export type ValuesByBreakpoint =
   | CompositionVariableValueType;
 
 export type ResolveDesignValueType = (
-  valuesByBreakpoint: ValuesByBreakpoint
+  valuesByBreakpoint: ValuesByBreakpoint,
+  variableName: string
 ) => CompositionVariableValueType;
 
 const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
@@ -25,6 +27,8 @@ const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
   }
   return undefined;
 };
+
+const availableDesignTokenVariables = new Set(['cfPadding', 'cfMargin']);
 
 // Remove this helper when upgrading to TypeScript 5.0 - https://github.com/microsoft/TypeScript/issues/48829
 const findLast = <T>(
@@ -46,7 +50,8 @@ const getFallbackBreakpointIndex = (breakpoints: Breakpoint[]) => {
 export const getValueForBreakpoint = (
   valuesByBreakpoint: ValuesByBreakpoint,
   breakpoints: Breakpoint[],
-  activeBreakpointIndex: number
+  activeBreakpointIndex: number,
+  variableName: string
 ) => {
   const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
   const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id;
@@ -54,6 +59,10 @@ export const getValueForBreakpoint = (
     // Assume that the values are sorted by media query to apply the cascading CSS logic
     for (let index = activeBreakpointIndex; index >= 0; index--) {
       const breakpointId = breakpoints[index].id;
+      if (availableDesignTokenVariables.has(variableName)) {
+        if (variableName === 'cfMargin' || variableName === 'cfPadding')
+          return getDesignTokenRegistrationForSpacing(valuesByBreakpoint[breakpointId]);
+      }
       if (valuesByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade
         return valuesByBreakpoint[breakpointId];
@@ -132,8 +141,16 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   }, [breakpoints, fallbackBreakpointIndex, mediaQueryMatches]);
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
-    (valuesByBreakpoint: ValuesByBreakpoint): CompositionVariableValueType => {
-      return getValueForBreakpoint(valuesByBreakpoint, breakpoints, activeBreakpointIndex);
+    (
+      valuesByBreakpoint: ValuesByBreakpoint,
+      variableName: string
+    ): CompositionVariableValueType => {
+      return getValueForBreakpoint(
+        valuesByBreakpoint,
+        breakpoints,
+        activeBreakpointIndex,
+        variableName
+      );
     },
     [activeBreakpointIndex, breakpoints]
   );

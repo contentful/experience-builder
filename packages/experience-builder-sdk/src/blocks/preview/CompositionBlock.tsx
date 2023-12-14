@@ -89,7 +89,7 @@ export const CompositionBlock = ({
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
       switch (variable.type) {
         case 'DesignValue':
-          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint);
+          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
           break;
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/');
