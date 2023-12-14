@@ -43,7 +43,17 @@ jobs:
         run: ls -la packages/components/dist
       - name: List test-app build folders
         run: ls -la packages/test-app/dist
+      - name: Run Prettier
+        run: npm run prettier:check
       - name: Run Linting
         run: npm run lint
+      - name: Run TSC
+        run: npm run tsc
+      - name: Run Unit Tests
+        run: npm run test:coverage
+        store_test_results:
+          path: packages/*/reports
+        store_artifacts:
+          path: ./packages/*/reports/clover.xml
       - name: Run CT Tests
         run: npm run test:component
