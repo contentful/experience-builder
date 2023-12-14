@@ -42,7 +42,7 @@ jobs:
 
           if [ ${{ github.ref_name }} = development ]; then
             npx lerna publish prerelease --conventional-commits --conventional-prerelease --preid dev-$(date +%Y%m%dT%H%M%S) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
-          elif [ ${{ github.ref_name }} = feat/native-visual-editor ]; then
+          elif [ ${{ github.ref_name }} = chore/repo-migration ]; then
             npx lerna publish prerelease --conventional-commits --conventional-prerelease --preid pre-$(date +%Y%m%dT%H%M%S) --no-changelog --no-git-tag-version --dist-tag pre --no-push --yes
           elif [ ${{ github.ref_name }} = next ]; then
             npx lerna publish prerelease --conventional-commits --conventional-prerelease --preid alpha --yes --no-private --dist-tag latest

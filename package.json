@@ -21,6 +21,7 @@
     "test": "lerna run --stream test",
     "test:ci": "lerna run test:ci",
     "test:coverage": "lerna run test:coverage",
+    "test:component": "lerna run test:component",
     "prepare": "husky install",
     "build": "lerna run build",
     "start": "lerna run --stream start",
