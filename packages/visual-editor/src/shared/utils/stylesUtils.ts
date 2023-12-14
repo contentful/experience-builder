@@ -3,6 +3,7 @@ import {
   CompositionComponentNode,
   CompositionVariableValueType,
   StyleProps,
+  CONTENTFUL_CONTAINER_ID,
 } from '@contentful/experience-builder-core';
 import md5 from 'md5';
 import {
@@ -12,7 +13,6 @@ import {
   transformBorderStyle,
   transformFill,
 } from './transformers';
-import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder';
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 
