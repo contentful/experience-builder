@@ -7,7 +7,7 @@ import { VISUAL_EDITOR_CONTAINER_ID } from '@contentful/experience-builder-types
  *
  * If the version is empty, unpkg will redirect to the latest version of the package
  */
-const version = '@pre';
+const version = '@0.0.1-pre-20231213T210727.0';
 
 // CDN URL for the visual editor script
 const scriptUrl = `https://unpkg.com/@contentful/experience-builder-visual-editor${version}/dist/renderApp.js`;
