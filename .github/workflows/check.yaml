@@ -8,7 +8,7 @@ on:
 
 jobs:
   # this job relies on the install-build workflow to run first
-  component-tests:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -53,3 +53,11 @@ jobs:
         run: npm run test:coverage
       - name: Run CT Tests
         run: npm run test:component
+      - name: Save test results to artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-assets
+          if-no-files-found: error
+          path: |
+            packages/*/reports
+            packages/*/reports/clover.xml
