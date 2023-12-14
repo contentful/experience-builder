@@ -9,9 +9,16 @@ import { VISUAL_EDITOR_CONTAINER_ID } from '@contentful/experience-builder-types
  */
 const version = '@0.0.1-pre-20231213T210727.0';
 
-// CDN URL for the visual editor script
+/**
+ * CDN URL for the visual editor script
+ *
+ * This can be changed to a local file path for development
+ */
 const scriptUrl = `https://unpkg.com/@contentful/experience-builder-visual-editor${version}/dist/renderApp.js`;
 
+/**
+ * This component injects the visual editor script into the page
+ */
 export default function VisualEditorInjectScript() {
   useEffect(() => {
     const script = document.createElement('script');
@@ -20,7 +27,6 @@ export default function VisualEditorInjectScript() {
     script.async = true;
 
     document.body.appendChild(script);
-
     return () => {
       document.body.removeChild(script);
     };

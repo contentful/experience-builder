@@ -16,7 +16,7 @@ export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
   const [VisualEditor, setVisualEditor] = useState<React.ComponentType | null>(null);
 
   useEffect(() => {
-    // Dynamically import the visual editor based on the configured mode.
+    // Dynamically import the visual editor based on the configured mode
     switch (visualEditorMode) {
       case VisualEditorMode.InjectScript:
         import('./VisualEditorInjectScript').then((module) => {
