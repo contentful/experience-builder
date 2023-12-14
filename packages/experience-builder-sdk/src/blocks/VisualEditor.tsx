@@ -1,27 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { InternalSDKMode, VisualEditorMode } from '../types';
 import { VisualEditorContextProvider } from './editor/VisualEditorContext';
-import { visualEditorMode } from '../core/visualEditorSettings';
 
-export type VisualEditorRootProps = {
+type VisualEditorRootProps = {
   initialLocale: string;
   mode: InternalSDKMode;
+  visualEditorMode: VisualEditorMode;
 };
 
-export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({ initialLocale, mode }) => {
+export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
+  initialLocale,
+  mode,
+  visualEditorMode,
+}) => {
   const [VisualEditor, setVisualEditor] = useState<React.ComponentType | null>(null);
 
   useEffect(() => {
-    if (visualEditorMode === VisualEditorMode.LazyLoad) {
-      import('@contentful/experience-builder-visual-editor').then((module) => {
-        setVisualEditor(() => module.default);
-      });
-    } else {
-      import('./InjectVisualEditor').then((module) => {
-        setVisualEditor(() => module.default);
-      });
+    // Dynamically import the visual editor based on the configured mode.
+    switch (visualEditorMode) {
+      case VisualEditorMode.InjectScript:
+        import('./VisualEditorInjectScript').then((module) => {
+          setVisualEditor(() => module.default);
+        });
+        break;
+
+      // VisualEditorMode.LazyLoad:
+      default:
+        import('@contentful/experience-builder-visual-editor').then((module) => {
+          setVisualEditor(() => module.default);
+        });
     }
-  }, []);
+  }, [visualEditorMode]);
 
   if (!VisualEditor) return null;
 

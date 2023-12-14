@@ -2,7 +2,6 @@ export { ExperienceRoot } from './ExperienceRoot';
 export { useExperienceBuilder, getValueForBreakpoint, useFetchExperience } from './hooks';
 export { defineComponents } from './core/componentRegistry';
 export { defineDesignTokens } from './core/designTokenRegistry';
-export { setVisualEditorMode } from './core/visualEditorSettings';
 export { calculateNodeDefaultHeight } from './utils/stylesUtils';
 export { checkIfDesignComponent } from './utils/utils';
 export { tryParseMessage, doesMismatchMessageSchema } from './utils/validation';
