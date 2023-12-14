@@ -14,14 +14,13 @@ export const DraggableComponent = ({
   onMouseUp = () => null,
   onMouseOver = () => null,
   onMouseOut = () => null,
-  debug,
   label,
-  isLocked = false,
   userIsDragging,
-  forceHover = false,
-  indicativeHover = false,
   style,
+  className,
+  ...rest
 }: {
+  className?: string;
   label: string;
   children: ReactNode;
   id: string;
@@ -32,11 +31,7 @@ export const DraggableComponent = ({
   onMouseUp?: (e: SyntheticEvent) => void;
   onMouseOver?: (e: SyntheticEvent) => void;
   onMouseOut?: (e: SyntheticEvent) => void;
-  debug?: string;
-  isLocked: boolean;
   userIsDragging?: boolean;
-  forceHover?: boolean;
-  indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
   return (
@@ -46,13 +41,11 @@ export const DraggableComponent = ({
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={classNames(styles.DraggableComponent, {
+          {...rest}
+          className={classNames(styles.DraggableComponent, className, {
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,
             [styles.userIsDragging]: userIsDragging,
-            isLocked,
-            forceHover,
-            indicativeHover,
           })}
           style={{
             ...style,
@@ -63,7 +56,6 @@ export const DraggableComponent = ({
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
           onClick={onClick}>
-          {debug}
           {!isSelected ? <div className={styles.overlay}>{label}</div> : null}
 
           {children}
