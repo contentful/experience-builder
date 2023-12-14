@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.4](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.0.3...@contentful/experience-builder@3.0.4) (2023-12-14)
+
+### Bug Fixes
+
+- replace component values with actual onces before rendering [] ([#192](https://github.com/contentful/experience-builder/issues/192)) ([2eb2b66](https://github.com/contentful/experience-builder/commit/2eb2b666bb524c7bd0e1251a0119dad1187e2966))
+
 ## [3.0.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.0.2...@contentful/experience-builder@3.0.3) (2023-12-13)
 
 ### Bug Fixes
