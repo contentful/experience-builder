@@ -56,20 +56,34 @@ export class EntityStore extends VisualSdkEntityStore {
   }
 
   public getValue(
-    entityLink: UnresolvedLink<'Entry' | 'Asset'>,
+    entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
     path: string[]
   ): string | undefined {
-    const entity =
-      entityLink.sys.linkType === 'Entry'
-        ? this.entryMap.get(entityLink.sys.id)
-        : this.assetMap.get(entityLink.sys.id);
+    const isLink = (
+      entity: typeof entityLinkOrEntity
+    ): entity is UnresolvedLink<'Entry' | 'Asset'> => entityLinkOrEntity.sys.type === 'Link';
 
-    if (!entity || entity.sys.type !== entityLink.sys.linkType) {
-      console.warn(`Experience references unresolved entity: ${JSON.stringify(entityLink)}`);
-      return;
+    let entity: Entry | Asset;
+    if (isLink(entityLinkOrEntity)) {
+      const resolvedEntity =
+        entityLinkOrEntity.sys.linkType === 'Entry'
+          ? this.entryMap.get(entityLinkOrEntity.sys.id)
+          : this.assetMap.get(entityLinkOrEntity.sys.id);
+
+      if (!resolvedEntity || resolvedEntity.sys.type !== entityLinkOrEntity.sys.linkType) {
+        console.warn(
+          `Experience references unresolved entity: ${JSON.stringify(entityLinkOrEntity)}`
+        );
+        return;
+      }
+      entity = resolvedEntity;
+    } else {
+      entity = entityLinkOrEntity;
     }
 
-    const fieldValue = super.getValue(entityLink, path);
+    // We already have the complete entity in preview and don't need to resolve links
+    // but we need the logic from the super class to resolve the path with the value.
+    const fieldValue = super.getValue(entity as any, path);
 
     // walk around to render asset files
     return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
