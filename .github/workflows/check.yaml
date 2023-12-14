@@ -50,6 +50,6 @@ jobs:
       - name: Run TSC
         run: npm run tsc
       - name: Run Unit Tests
-        run: npm run test:ci
+        run: npm run test:coverage
       - name: Run CT Tests
         run: npm run test:component
