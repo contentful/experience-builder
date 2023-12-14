@@ -25,19 +25,20 @@ export const useComponent = ({ node, resolveDesignValue, areEntitiesFetched }: C
 
   const componentId = node.data.id;
 
-  const props = useComponentProps({
+  const [props, editorWrapperProps] = useComponentProps({
     node,
     areEntitiesFetched,
     resolveDesignValue,
     definition: componentRegistration.definition,
   });
 
-  const Render = builtInComponents[node.data.blockId!] || componentRegistration.component;
+  const Component = builtInComponents[node.data.blockId!] || componentRegistration.component;
 
   return {
     componentId,
-    Render,
+    Component,
     props,
+    wrapperProps: editorWrapperProps,
     label: componentRegistration.definition.name,
   };
 };

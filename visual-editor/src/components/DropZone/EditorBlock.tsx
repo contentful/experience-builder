@@ -12,6 +12,7 @@ import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoord
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from '@/hooks/useComponent';
 import { useZoneStore } from '@/store/zone';
+import classNames from 'classnames';
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode;
@@ -42,7 +43,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { componentId, props, label, Render } = useComponent({
+  const { componentId, props, wrapperProps, label, Component } = useComponent({
     node,
     areEntitiesFetched,
     resolveDesignValue,
@@ -50,6 +51,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
 
   const sectionsWithZone = useZoneStore((state) => state.sectionsWithZones);
 
+  const isContainer = node.data.blockId === CONTENTFUL_CONTAINER_ID;
   const containsZone = sectionsWithZone[componentId];
 
   return (
@@ -59,7 +61,10 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
       index={index}
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
-      isLocked={userIsDragging}
+      className={classNames({
+        [styles.fullWidth]: isContainer && !wrapperProps.isFixedWidth,
+        [styles.fixedWidth]: isContainer && wrapperProps.isFixedWidth,
+      })}
       onClick={(e) => {
         e.stopPropagation();
         setSelectedNodeId(componentId);
@@ -90,19 +95,20 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
       }}
       style={{
         pointerEvents: userIsDragging && draggingNewComponent ? 'all' : undefined,
-        width: node.data.blockId === CONTENTFUL_CONTAINER_ID ? '100%' : 'auto',
       }}>
-      <Render {...props} />
+      <Component {...props} />
 
       {/* Hitboxes allow users to add a section between 2 components */}
-      <div
-        className={styles.hitbox}
-        onMouseOver={(e) => {
-          e.stopPropagation();
-          setHoveringZone(zoneId);
-          setHoveringSection(parentSectionId);
-        }}
-      />
+      {userIsDragging && (
+        <div
+          className={styles.hitbox}
+          onMouseOver={(e) => {
+            e.stopPropagation();
+            setHoveringZone(zoneId);
+            setHoveringSection(parentSectionId);
+          }}
+        />
+      )}
     </DraggableComponent>
   );
 };

@@ -3,6 +3,7 @@ import { buildCfStyles, calculateNodeDefaultHeight } from '@/shared/utils/styles
 import { useEditorStore } from '@/store/editor';
 import {
   CF_STYLE_ATTRIBUTES,
+  CONTENTFUL_CONTAINER_ID,
   ComponentRegistration,
   CompositionComponentNode,
   CompositionVariableValueType,
@@ -116,6 +117,28 @@ export const useComponentProps = ({
   ]);
 
   const cfStyles = buildCfStyles(props);
+
+  const editorWrapperProps = useMemo(() => {
+    const wrapperProps = {
+      isFixedWidth: false,
+    };
+
+    if (node.data.blockId !== CONTENTFUL_CONTAINER_ID) {
+      return wrapperProps;
+    }
+
+    const width = props['cfWidth'];
+
+    if (typeof width === 'number') {
+      wrapperProps.isFixedWidth = true;
+    }
+    if (typeof width === 'string') {
+      wrapperProps.isFixedWidth = !isNaN(Number(width.replace('px', '')));
+    }
+
+    return wrapperProps;
+  }, [node, props]);
+
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
 
   const renderDropZone = (node: CompositionComponentNode, props?: Record<string, any>) => {
@@ -143,5 +166,5 @@ export const useComponentProps = ({
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
   };
 
-  return defaultedProps;
+  return [defaultedProps, editorWrapperProps] as [typeof defaultedProps, typeof editorWrapperProps];
 };
