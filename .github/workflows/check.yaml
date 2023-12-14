@@ -51,9 +51,5 @@ jobs:
         run: npm run tsc
       - name: Run Unit Tests
         run: npm run test:coverage
-        store_test_results:
-          path: packages/*/reports
-        store_artifacts:
-          path: ./packages/*/reports/clover.xml
       - name: Run CT Tests
         run: npm run test:component
