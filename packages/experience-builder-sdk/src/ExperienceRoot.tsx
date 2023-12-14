@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, Suspense } from 'react';
 
 const VisualEditor = React.lazy(() => import('./blocks/VisualEditor'));
-import { isDeprecatedExperience } from '@contentful/experience-builder-types';
+import { VisualEditorMode, isDeprecatedExperience } from '@contentful/experience-builder-types';
 import { EntityStore } from './core/preview/EntityStore';
 import { supportedModes } from './constants';
 import { DeprecatedExperience, Experience, InternalSDKMode } from './types';
@@ -17,6 +17,7 @@ type ExperienceRootProps = {
    * @deprecated
    */
   slug?: string;
+  visualEditorMode?: VisualEditorMode;
 };
 
 function inIframe() {
@@ -27,7 +28,12 @@ function inIframe() {
   }
 }
 
-export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps) => {
+export const ExperienceRoot = ({
+  locale,
+  experience,
+  slug,
+  visualEditorMode = VisualEditorMode.LazyLoad,
+}: ExperienceRootProps) => {
   const [mode, setMode] = useState<InternalSDKMode>(() => {
     if (!experience) {
       if (typeof window !== 'undefined' && window !== window.parent) {
@@ -70,7 +76,7 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
     return (
       <ErrorBoundary>
         <Suspense fallback={<div>Loading...</div>}>
-          <VisualEditor mode={mode} initialLocale={locale} />
+          <VisualEditor mode={mode} initialLocale={locale} visualEditorMode={visualEditorMode} />
         </Suspense>
       </ErrorBoundary>
     );

@@ -492,7 +492,16 @@
   dependencies:
     chalk "^4.1.0"
 
-"@contentful/experience-builder-components@^0.0.1-pre-20231214T165446.0":
+"@contentful/experience-builder-components@0.0.1-pre-20231214T130949.0":
+  version "0.0.1-pre-20231214T130949.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-components/-/experience-builder-components-0.0.1-pre-20231214T130949.0.tgz#82f503058856407aecc579a02654ea3ec55e3bee"
+  integrity sha512-2oIRM43bkdayXoXYJM1ZHvKFocLc+jdMlQilxbnEZtXX0f4QnP8Q4V+YsnydX3FOSx5zGdoz084TJm7YJgzriQ==
+  dependencies:
+    "@contentful/experience-builder-core" "^0.0.1-pre-20231214T130949.0"
+    "@contentful/rich-text-react-renderer" "^15.17.2"
+    postcss-import "^15.1.0"
+
+"@contentful/experience-builder-components@^0.0.1-pre-20231214T130949.0":
   version "0.0.1-pre-20231214T165446.0"
   resolved "https://registry.yarnpkg.com/@contentful/experience-builder-components/-/experience-builder-components-0.0.1-pre-20231214T165446.0.tgz#cb20f3365c9c3d21a12f3ba612ba2bf78f67964d"
   integrity sha512-dWGumPvyZtOs4Wu+Wp5PeT/gKTU1JU70oGQQs6ukRSVXg2/0RNXKXiLfKk25UpWIIOGsUTanixchSZ0DDWn6sw==
@@ -501,7 +510,7 @@
     "@contentful/rich-text-react-renderer" "^15.17.2"
     postcss-import "^15.1.0"
 
-"@contentful/experience-builder-core@^0.0.1-pre-20231214T165446.0":
+"@contentful/experience-builder-core@^0.0.1-pre-20231214T130949.0", "@contentful/experience-builder-core@^0.0.1-pre-20231214T165446.0":
   version "0.0.1-pre-20231214T165446.0"
   resolved "https://registry.yarnpkg.com/@contentful/experience-builder-core/-/experience-builder-core-0.0.1-pre-20231214T165446.0.tgz#b410639ed7ae6315e78c2825e15caf6dfe0afbf5"
   integrity sha512-2kct46SaMvn1DSVGfQBkoq+AQJoeCpjifc6AFPyOn1MsMxHwhSpAaobxt15El4xddEijhP5rIWuLZFiTYpyyyw==
@@ -514,13 +523,13 @@
     "@contentful/visual-sdk" "^1.0.0-alpha.26"
     contentful "^10.6.10"
 
-"@contentful/experience-builder-visual-editor@^0.0.1-pre-20231214T165446.0":
-  version "0.0.1-pre-20231214T165446.0"
-  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-visual-editor/-/experience-builder-visual-editor-0.0.1-pre-20231214T165446.0.tgz#28f8b4195ec49ec5eba1f7ffa2e14f6a4d5c80ce"
-  integrity sha512-JGOQVA5DjHhFdavQb0mV4mmKTCrZS0LHxtRJkUm0ULUbRnehVZSxbamYU01uHJjmrNIIw/U2PLXci4FgIZYOsA==
+"@contentful/experience-builder-visual-editor@0.0.1-pre-20231214T130949.0":
+  version "0.0.1-pre-20231214T130949.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-visual-editor/-/experience-builder-visual-editor-0.0.1-pre-20231214T130949.0.tgz#b81b99353ac8cbfca4975ab3e76003dcc608080f"
+  integrity sha512-ZfH6BVcwTftv4uRQqZ/flcNcN61pw8l/TcSY3fLJ47RSSPQHjB8OM9u+l1S03M2sbxcNEWS+j5ciBK48aOCblg==
   dependencies:
-    "@contentful/experience-builder-components" "^0.0.1-pre-20231214T165446.0"
-    "@contentful/experience-builder-core" "^0.0.1-pre-20231214T165446.0"
+    "@contentful/experience-builder-components" "^0.0.1-pre-20231214T130949.0"
+    "@contentful/experience-builder-core" "^0.0.1-pre-20231214T130949.0"
     "@contentful/visual-sdk" "^1.0.0-alpha.32"
     "@hello-pangea/dnd" "^16.3.0"
     classnames "^2.3.2"
@@ -2260,9 +2269,9 @@
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^18.0.28":
-  version "18.2.43"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.43.tgz#c58e5abe241e6f71f60ce30e2a9aceb9d3a2a374"
-  integrity sha512-nvOV01ZdBdd/KW6FahSbcNplt2jCJfyWdTos61RYHV+FVv5L/g9AOX1bmbVcWcLFL8+KHQfh1zVIQrud6ihyQA==
+  version "18.2.45"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.45.tgz#253f4fac288e7e751ab3dc542000fb687422c15c"
+  integrity sha512-TtAxCNrlrBp8GoeEp1npd5g+d/OejJHFxS3OWmrPBMFaVQMSN0OFySozJio5BHxTuTeug00AVXVAjfDSfk+lUg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -3231,9 +3240,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001565:
-  version "1.0.30001568"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001568.tgz#53fa9297273c9a977a560663f48cbea1767518b7"
-  integrity sha512-vSUkH84HontZJ88MiNrOau1EBrCqEQYgkC5gIySiDlpsm8sGVrhU7Kx4V6h0tnqaHzIHZv08HlJIwPbL4XL9+A==
+  version "1.0.30001570"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001570.tgz#b4e5c1fa786f733ab78fc70f592df6b3f23244ca"
+  integrity sha512-+3e0ASu4sw1SWaoCtvPeyXp+5PsjigkSt8OXZbF9StH5pQWbxEjLAZE3n8Aup5udop1uRiKA7a4utUk/uoSpUw==
 
 cardinal@^2.1.1:
   version "2.1.1"
@@ -4411,9 +4420,9 @@ ejs@^3.1.7:
     jake "^10.8.5"
 
 electron-to-chromium@^1.4.601:
-  version "1.4.609"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.609.tgz#5790a70aaa96de232501b56e14b64d17aff93988"
-  integrity sha512-ihiCP7PJmjoGNuLpl7TjNA8pCQWu09vGyjlPYw1Rqww4gvNuCcmvl+44G+2QyJ6S2K4o+wbTS++Xz0YN8Q9ERw==
+  version "1.4.612"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.612.tgz#350c6fd4201d677307519b931949fa64dae6a5cc"
+  integrity sha512-dM8BMtXtlH237ecSMnYdYuCkib2QHq0kpWfUnavjdYsyr/6OsAwg5ZGUfnQ9KD1Ga4QgB2sqXlB2NT8zy2GnVg==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -11856,9 +11865,9 @@ write-pkg@4.0.0:
     write-json-file "^3.2.0"
 
 ws@^8.11.0, ws@^8.13.0:
-  version "8.15.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.15.0.tgz#db080a279260c5f532fc668d461b8346efdfcf86"
-  integrity sha512-H/Z3H55mrcrgjFwI+5jKavgXvwQLtfPCUEp6pi35VhoB0pfcHnSoyuTzkBEZpzq49g1193CUEwIvmsjcotenYw==
+  version "8.15.1"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.15.1.tgz#271ba33a45ca0cc477940f7f200cd7fba7ee1997"
+  integrity sha512-W5OZiCjXEmk0yZ66ZN82beM5Sz7l7coYxpRkzS+p9PP+ToQry8szKh+61eNktr7EA9DOwvFGhfC605jDHbP6QQ==
 
 xml-name-validator@^4.0.0:
   version "4.0.0"
