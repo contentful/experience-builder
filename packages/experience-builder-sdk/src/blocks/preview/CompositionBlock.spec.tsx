@@ -7,11 +7,11 @@ import { defineComponents, resetComponentRegistry } from '../../core/componentRe
 import { CompositionNode, ExperienceEntry } from '../../types';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
+import { compositionEntry } from '../../../test/__fixtures__/composition';
 import {
-  compositionEntry,
   createDesignComponentEntry,
   designComponentGeneratedVariableName,
-} from '../../../test/__fixtures__/composition';
+} from '../../../test/__fixtures__/designComponent';
 import { EntityStore } from '../../core/preview/EntityStore';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 

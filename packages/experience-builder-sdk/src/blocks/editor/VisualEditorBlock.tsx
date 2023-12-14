@@ -151,18 +151,6 @@ export const VisualEditorBlock = ({
             ...acc,
             [variableName]: transformContentValue(value, variableDefinition),
           };
-        } else if (variableMapping.type === 'ComponentValue') {
-          // For design component, we are only handling binding for UnboundValues for now
-          const value = getUnboundValues({
-            key: variableMapping.key,
-            fallback: variableDefinition.defaultValue,
-            unboundValues: node.data.unboundValues || {},
-          });
-
-          return {
-            ...acc,
-            [variableName]: value,
-          };
         } else {
           const value = getUnboundValues({
             key: variableMapping.key,
@@ -180,9 +168,9 @@ export const VisualEditorBlock = ({
     );
   }, [
     componentRegistration,
+    node.type,
     node.data.props,
     node.data.blockId,
-    node.data.unboundValues,
     node.children,
     resolveDesignValue,
     dataSource,

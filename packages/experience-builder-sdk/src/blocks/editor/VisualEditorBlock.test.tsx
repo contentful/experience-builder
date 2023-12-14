@@ -15,7 +15,7 @@ import { VisualEditorBlock } from './VisualEditorBlock';
 import {
   createDesignComponentEntry,
   designComponentGeneratedVariableName,
-} from '../../../test/__fixtures__/composition';
+} from '../../../test/__fixtures__/designComponent';
 import { EditorModeEntityStore } from '../../core/editor/EditorModeEntityStore';
 import { assets } from '../../../test/__fixtures__/entities';
 import { Asset, Entry } from 'contentful';
