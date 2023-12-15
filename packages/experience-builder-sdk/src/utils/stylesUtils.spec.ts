@@ -41,7 +41,7 @@ describe('calculateNodeDefaultHeight', () => {
     expect(result).toBe('200px');
   });
 
-  it.only('should return "100%" when container has a non-container child', () => {
+  it('should return "100%" when container has a non-container child', () => {
     const childNode: CompositionComponentNode = {
       type: 'block',
       data: {
