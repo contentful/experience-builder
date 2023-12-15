@@ -28,7 +28,7 @@ const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
   return undefined;
 };
 
-const availableDesignTokenVariables = new Set(['cfPadding', 'cfMargin']);
+const availableDesignTokenVariables = new Set(['cfPadding', 'cfMargin', 'cfGap']);
 
 // Remove this helper when upgrading to TypeScript 5.0 - https://github.com/microsoft/TypeScript/issues/48829
 const findLast = <T>(
@@ -60,7 +60,7 @@ export const getValueForBreakpoint = (
     for (let index = activeBreakpointIndex; index >= 0; index--) {
       const breakpointId = breakpoints[index].id;
       if (availableDesignTokenVariables.has(variableName)) {
-        if (variableName === 'cfMargin' || variableName === 'cfPadding')
+        if (variableName === 'cfMargin' || variableName === 'cfPadding' || variableName === 'cfGap')
           return getDesignTokenRegistrationForSpacing(valuesByBreakpoint[breakpointId]);
       }
       if (valuesByBreakpoint[breakpointId]) {
