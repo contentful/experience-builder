@@ -1,24 +1,42 @@
-import React from 'react';
-import { InternalSDKMode } from '../types';
-import { componentRegistry } from '../core/componentRegistry';
-import VisualEditor from '@contentful/experience-builder-visual-editor';
+import React, { useEffect, useState } from 'react';
+import { InternalSDKMode, VisualEditorMode } from '../types';
 import { VisualEditorContextProvider } from './editor/VisualEditorContext';
 
 type VisualEditorRootProps = {
   initialLocale: string;
   mode: InternalSDKMode;
+  visualEditorMode: VisualEditorMode;
 };
 
-export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({ initialLocale, mode }) => {
-  // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
+export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
+  initialLocale,
+  mode,
+  visualEditorMode,
+}) => {
+  const [VisualEditor, setVisualEditor] = useState<React.ComponentType | null>(null);
+
+  useEffect(() => {
+    // Dynamically import the visual editor based on the configured mode
+    switch (visualEditorMode) {
+      case VisualEditorMode.InjectScript:
+        import('./VisualEditorInjectScript').then((module) => {
+          setVisualEditor(() => module.default);
+        });
+        break;
+
+      // VisualEditorMode.LazyLoad:
+      default:
+        import('@contentful/experience-builder-visual-editor').then((module) => {
+          setVisualEditor(() => module.default);
+        });
+    }
+  }, [visualEditorMode]);
+
+  if (!VisualEditor) return null;
+
   return (
     <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
-      <VisualEditor
-        mode={'editor'}
-        initialLocale={initialLocale}
-        //@ts-expect-error TODO: fix types - import from core package
-        initialComponentRegistry={componentRegistry}
-      />
+      <VisualEditor />
     </VisualEditorContextProvider>
   );
 };

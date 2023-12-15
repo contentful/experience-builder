@@ -5,6 +5,7 @@ import { sendMessage } from '../../communication/sendMessage';
 import { sendSelectedComponentCoordinates } from '../../communication/sendSelectedComponentCoordinates';
 import {
   addComponentRegistration,
+  componentRegistry,
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
 } from '../../core/componentRegistry';
@@ -20,7 +21,13 @@ import {
   InternalSDKMode,
   Link,
 } from '../../types';
-import { INCOMING_EVENTS, OUTGOING_EVENTS, SCROLL_STATES, INTERNAL_EVENTS } from '../../constants';
+import {
+  INCOMING_EVENTS,
+  OUTGOING_EVENTS,
+  SCROLL_STATES,
+  INTERNAL_EVENTS,
+  VISUAL_EDITOR_EVENTS,
+} from '../../constants';
 import { getDataFromTree } from '../../utils/utils';
 import { doesMismatchMessageSchema, tryParseMessage } from '../../utils/validation';
 import { Entry } from 'contentful';
@@ -138,6 +145,23 @@ export function VisualEditorContextProvider({
   useEffect(() => {
     setLocale(initialLocale);
   }, [initialLocale]);
+
+  useEffect(() => {
+    const onVisualEditorReady = () => {
+      window.dispatchEvent(
+        new CustomEvent(INTERNAL_EVENTS.VisualEditorInitialize, {
+          detail: { componentRegistry, locale },
+        })
+      );
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener(VISUAL_EDITOR_EVENTS.Ready, onVisualEditorReady);
+      return () => {
+        window.removeEventListener(VISUAL_EDITOR_EVENTS.Ready, onVisualEditorReady);
+      };
+    }
+  }, [locale]);
 
   useEffect(() => {
     // We only care about this communication when in editor mode
