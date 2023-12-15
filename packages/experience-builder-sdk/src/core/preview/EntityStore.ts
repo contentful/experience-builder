@@ -78,16 +78,29 @@ export class EntityStore extends VisualSdkEntityStore {
       }
       entity = resolvedEntity;
     } else {
+      // We already have the complete entity in preview & delivery (resolved by the CMA client)
       entity = entityLinkOrEntity;
     }
 
-    // We already have the complete entity in preview and don't need to resolve links
-    // but we need the logic from the super class to resolve the path with the value.
-    const fieldValue = super.getValue(entity as any, path);
+    const fieldValue = get<string>(entity, path);
 
     // walk around to render asset files
     return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
       ? (fieldValue as AssetFile).url
       : fieldValue;
+  }
+}
+
+// Taken from visual-sdk. We need this when we already have the full entity instead of the link (preview & delivery)
+function get<T>(obj: Record<string, any>, path: string[]): T | undefined {
+  if (!path.length) {
+    return obj as T;
+  }
+
+  try {
+    const [currentPath, ...nextPath] = path;
+    return get(obj[currentPath], nextPath);
+  } catch (err) {
+    return undefined;
   }
 }
