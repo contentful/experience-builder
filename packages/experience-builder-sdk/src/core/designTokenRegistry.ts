@@ -3,7 +3,7 @@ import { sendMessage } from '../communication/sendMessage';
 import { DesignTokensDefinition } from '../types';
 
 const designTokensRegistry = {} as DesignTokensDefinition;
-const templateStringRegex = /\$\{([^}]+)\}/g;
+const templateStringRegex = /\${(.+?)}/g;
 
 /**
  * Register design tokens styling
@@ -25,7 +25,6 @@ export const getDesignTokenRegistrationForSpacing = (breakpointValue: string) =>
     if (isTemplateStringFormat(value)) tokenValue = resolveSpacingDesignToken(value);
     resolvedValue += `${tokenValue} `;
   });
-
   return resolvedValue;
 };
 
@@ -35,7 +34,6 @@ const isTemplateStringFormat = (str: string) => {
 };
 
 const resolveSpacingDesignToken = (templateString: string) => {
-  if (!templateStringRegex.test(templateString)) return templateString;
   const nonTemplateValue = templateString.replace(templateStringRegex, '$1');
   const designKeys = nonTemplateValue.split('.');
   const spacingValues = designTokensRegistry[designKeys[0]] as DesignTokensDefinition;
