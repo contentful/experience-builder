@@ -77,6 +77,7 @@ export default function Page() {
       <ExperienceRoot
         experience={experience}
         locale={localeCode}
+        // @ts-expect-error TODO: fix types
         visualEditorMode={visualEditorMode}
       />
       <footer
