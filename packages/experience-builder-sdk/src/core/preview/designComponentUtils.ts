@@ -41,8 +41,6 @@ export const deserializeDesignComponentNode = ({
   );
 
   return {
-    // separate node type identifiers for design components and their blocks, so we can treat them differently in as much as we want
-    // type: isDesignComponent ? DESIGN_COMPONENT_NODE_TYPE : DESIGN_COMPONENT_BLOCK_NODE_TYPE,
     definitionId: node.definitionId,
     variables,
     children,
