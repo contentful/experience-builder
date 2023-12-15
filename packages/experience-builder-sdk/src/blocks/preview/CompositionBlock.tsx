@@ -114,11 +114,6 @@ export const CompositionBlock = ({
           acc[variableName] = (entityStore?.unboundValues || unboundValues)[uuid]?.value;
           break;
         }
-        case 'ComponentValue': {
-          const uuid = variable.key;
-          acc[variableName] = unboundValues[uuid]?.value;
-          break;
-        }
         default:
           break;
       }
