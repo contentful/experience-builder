@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
 
 import { sendHoveredComponentCoordinates } from '../../communication/sendHoveredComponentCoordinates';
-import { sendMessage } from '../../communication/sendMessage';
 import { sendSelectedComponentCoordinates } from '../../communication/sendSelectedComponentCoordinates';
 import {
   addComponentRegistration,
@@ -9,7 +8,7 @@ import {
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
 } from '../../core/componentRegistry';
-import { EditorModeEntityStore } from '../../core/editor/EditorModeEntityStore';
+import { EditorModeEntityStore, sendMessage } from '@contentful/experience-builder-core';
 import {
   Breakpoint,
   ComponentRegistration,

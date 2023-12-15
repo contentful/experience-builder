@@ -517,6 +517,13 @@
   dependencies:
     "@contentful/visual-sdk" "^1.0.0-alpha.34"
 
+"@contentful/experience-builder-core@^0.0.1-pre-20231214T205813.0":
+  version "0.0.1-pre-20231214T205813.0"
+  resolved "https://registry.yarnpkg.com/@contentful/experience-builder-core/-/experience-builder-core-0.0.1-pre-20231214T205813.0.tgz#2bdc617f256c948cc8d6d4e7586848cafb22e84f"
+  integrity sha512-TiLYe7ZzCr4rXyZh6nSFmasgupNVhIv8abJfVS6EQ0AFi9nN0Awi9OD+DL4+I1LiQDEDvCgrX3DVBjd96i0w0Q==
+  dependencies:
+    "@contentful/visual-sdk" "^1.0.0-alpha.34"
+
 "@contentful/experience-builder-types@file:packages/experience-builder-types":
   version "2.0.1"
   dependencies:

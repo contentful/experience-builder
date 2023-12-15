@@ -10,7 +10,7 @@ import {
 import { builtInStyles as builtInStyleDefinitions } from './definitions/variables';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 import { containerDefinition } from './definitions/components';
-import { sendMessage } from '../communication/sendMessage';
+import { sendMessage } from '@contentful/experience-builder-core';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 
 const cloneObject = <T>(targetObject: T): T => {

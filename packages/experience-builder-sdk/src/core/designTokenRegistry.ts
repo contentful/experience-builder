@@ -1,5 +1,5 @@
 import { OUTGOING_EVENTS } from '../constants';
-import { sendMessage } from '../communication/sendMessage';
+import { sendMessage } from '@contentful/experience-builder-core';
 import { DesignTokensDefinition } from '../types';
 
 /**

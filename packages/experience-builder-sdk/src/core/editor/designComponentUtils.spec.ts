@@ -7,7 +7,7 @@ import { assets } from '../../../test/__fixtures__/entities';
 import { designComponentsRegistry } from '../../blocks/editor/VisualEditorContext';
 import { DESIGN_COMPONENT_BLOCK_NODE_TYPE, DESIGN_COMPONENT_NODE_TYPE } from '../../constants';
 import { CompositionComponentNode, CompositionNode } from '../../types';
-import { EditorModeEntityStore } from './EditorModeEntityStore';
+import { EditorModeEntityStore } from '@contentful/experience-builder-core';
 import { deserializeDesignComponentNode, resolveDesignComponent } from './designComponentUtils';
 
 const designComponentEntry = createDesignComponentEntry({
