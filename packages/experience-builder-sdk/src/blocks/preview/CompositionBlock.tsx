@@ -13,7 +13,7 @@ import {
   createDesignComponentRegistration,
   getComponentRegistration,
 } from '../../core/componentRegistry';
-import { buildCfStyles } from '../../utils/stylesUtils';
+import { buildCfStyles } from '@contentful/experience-builder-core';
 import { ResolveDesignValueType } from '../../hooks/useBreakpoints';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import type {

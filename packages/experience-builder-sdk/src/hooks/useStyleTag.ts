@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { buildStyleTag } from '../utils/stylesUtils';
+import { buildStyleTag } from '@contentful/experience-builder-core';
 import { CSSProperties } from '../types';
 
 /**
