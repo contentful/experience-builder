@@ -94,6 +94,7 @@ export const DeprecatedPreviewDeliveryRoot = ({
           unboundValues={entityStore.unboundValues}
           breakpoints={entityStore.breakpoints}
           resolveDesignValue={resolveDesignValue}
+          //@ts-expect-error todo: fix types
           usedComponents={entityStore.usedComponents}
         />
       ))}

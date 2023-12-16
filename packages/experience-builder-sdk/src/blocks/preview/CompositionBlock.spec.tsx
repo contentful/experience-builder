@@ -4,7 +4,8 @@ import { render } from '@testing-library/react';
 
 import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../../constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
-import { CompositionNode, ExperienceEntry } from '../../types';
+import { CompositionNode } from '../../types';
+import { ExperienceEntry } from '@contentful/experience-builder-core';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
 import {

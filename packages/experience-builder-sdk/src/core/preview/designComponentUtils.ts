@@ -1,5 +1,5 @@
+import { checkIfDesignComponent } from '@contentful/experience-builder-core';
 import { CompositionNode } from '../../types';
-import { checkIfDesignComponent } from '../../utils/utils';
 import { EntityStore } from './EntityStore';
 
 export const resolveDesignComponent = ({
@@ -11,6 +11,7 @@ export const resolveDesignComponent = ({
 }) => {
   const isDesignComponent = checkIfDesignComponent({
     componentId: node.definitionId,
+    //@ts-expect-error todo: fix type
     usedComponents: entityStore?.usedComponents,
   });
 

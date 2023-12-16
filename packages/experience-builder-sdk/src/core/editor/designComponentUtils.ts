@@ -7,9 +7,9 @@ import {
   CompositionComponentPropValue,
   Composition,
 } from '../../types';
-import { generateRandomId } from '../../utils/utils';
 import { designComponentsRegistry } from '../../blocks/editor/VisualEditorContext';
 import { DESIGN_COMPONENT_BLOCK_NODE_TYPE, DESIGN_COMPONENT_NODE_TYPE } from '../../constants';
+import { generateRandomId } from '@contentful/experience-builder-core';
 
 export const deserializeDesignComponentNode = ({
   node,

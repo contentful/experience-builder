@@ -8,7 +8,11 @@ import {
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
 } from '../../core/componentRegistry';
-import { EditorModeEntityStore, sendMessage } from '@contentful/experience-builder-core';
+import {
+  EditorModeEntityStore,
+  sendMessage,
+  getDataFromTree,
+} from '@contentful/experience-builder-core';
 import {
   Breakpoint,
   ComponentRegistration,
@@ -27,7 +31,6 @@ import {
   INTERNAL_EVENTS,
   VISUAL_EDITOR_EVENTS,
 } from '../../constants';
-import { getDataFromTree } from '../../utils/utils';
 import { doesMismatchMessageSchema, tryParseMessage } from '../../utils/validation';
 import { Entry } from 'contentful';
 import { DesignComponent } from '../../components/DesignComponent';
