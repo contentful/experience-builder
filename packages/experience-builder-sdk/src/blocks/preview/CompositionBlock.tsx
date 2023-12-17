@@ -8,16 +8,12 @@ import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
-} from '../../constants';
+} from '@contentful/experience-builder-core/constants';
 import {
   createDesignComponentRegistration,
   getComponentRegistration,
 } from '../../core/componentRegistry';
-import {
-  buildCfStyles,
-  checkIfDesignComponent,
-  ExperienceEntry,
-} from '@contentful/experience-builder-core';
+import { buildCfStyles, checkIfDesignComponent } from '@contentful/experience-builder-core';
 import { ResolveDesignValueType } from '../../hooks/useBreakpoints';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import type {
@@ -27,11 +23,12 @@ import type {
   CompositionUnboundValues,
   CompositionVariableValueType,
   StyleProps,
-} from '../../types';
+} from '@contentful/experience-builder-core/types';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 import { transformContentValue } from '../../utils/transformers';
 import { resolveDesignComponent } from '../../core/preview/designComponentUtils';
 import { DesignComponent } from '../../components/DesignComponent';
+import type { ExperienceEntry } from '@contentful/experience-builder-core/types';
 
 type CompositionBlockProps = {
   node: CompositionNode;

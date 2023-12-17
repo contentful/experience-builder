@@ -1,10 +1,14 @@
 import React, { useCallback, useEffect, useState, Suspense } from 'react';
 
 const VisualEditor = React.lazy(() => import('./blocks/VisualEditor'));
-import { VisualEditorMode, isDeprecatedExperience } from '@contentful/experience-builder-types';
+import { VisualEditorMode, isDeprecatedExperience } from '@contentful/experience-builder-core';
 import { EntityStore } from './core/preview/EntityStore';
-import { supportedModes } from './constants';
-import { DeprecatedExperience, Experience, InternalSDKMode } from './types';
+import { supportedModes } from '@contentful/experience-builder-core';
+import type {
+  DeprecatedExperience,
+  Experience,
+  InternalSDKMode,
+} from '@contentful/experience-builder-core/types';
 import { validateExperienceBuilderConfig } from './utils/validation';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPreviewDeliveryRoot';
@@ -87,7 +91,7 @@ export const ExperienceRoot = ({
   if (isDeprecatedExperience(experience)) {
     return (
       <DeprecatedPreviewDeliveryRoot
-        deprecatedExperience={experience}
+        deprecatedExperience={experience as DeprecatedExperience}
         mode={mode}
         switchToEditorMode={switchToEditorMode}
         locale={locale}

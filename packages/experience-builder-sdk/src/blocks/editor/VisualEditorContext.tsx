@@ -13,7 +13,7 @@ import {
   sendMessage,
   getDataFromTree,
 } from '@contentful/experience-builder-core';
-import {
+import type {
   Breakpoint,
   ComponentRegistration,
   CompositionComponentNode,
@@ -23,14 +23,14 @@ import {
   CompositionUnboundValues,
   InternalSDKMode,
   Link,
-} from '../../types';
+} from '@contentful/experience-builder-core/types';
 import {
   INCOMING_EVENTS,
   OUTGOING_EVENTS,
   SCROLL_STATES,
   INTERNAL_EVENTS,
   VISUAL_EDITOR_EVENTS,
-} from '../../constants';
+} from '@contentful/experience-builder-core/constants';
 import { doesMismatchMessageSchema, tryParseMessage } from '../../utils/validation';
 import { Entry } from 'contentful';
 import { DesignComponent } from '../../components/DesignComponent';

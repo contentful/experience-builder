@@ -1,9 +1,7 @@
 import type { Asset, Entry } from 'contentful';
-import { isExperienceEntry } from '@contentful/experience-builder-types';
+import { isExperienceEntry } from '@contentful/experience-builder-core';
 import { EntityStore } from '../core/preview/EntityStore';
-import { Experience } from '@contentful/experience-builder-core';
-
-import { ExternalSDKMode } from '../types';
+import type { Experience, ExternalSDKMode } from '@contentful/experience-builder-core/types';
 
 type createExperienceArgs = {
   experienceEntry: Entry;

@@ -1,27 +1,15 @@
 export { ExperienceRoot } from './ExperienceRoot';
-export { useExperienceBuilder, getValueForBreakpoint, useFetchExperience } from './hooks';
+export { useExperienceBuilder, useFetchExperience } from './hooks';
 export { defineComponents } from './core/componentRegistry';
 export { defineDesignTokens } from './core/designTokenRegistry';
 export {
   calculateNodeDefaultHeight,
   checkIfDesignComponent,
+  VisualEditorMode,
 } from '@contentful/experience-builder-core';
 export { tryParseMessage, doesMismatchMessageSchema } from './utils/validation';
-export type {
-  ComponentDefinition,
-  ComponentRegistration,
-  EntityStore,
-  Experience,
-  ExternalSDKMode,
-  DeprecatedExperience,
-  ComponentDefinitionVariable,
-  ComponentDefinitionVariableType,
-  CompositionVariableValueType,
-  CompositionComponentPropValue,
-  ValidationOption,
-  ExperienceEntry,
-  IncomingEvent,
-} from './types';
+
+export type { InternalSDKMode, ExternalSDKMode } from '@contentful/experience-builder-core/types';
 
 export {
   /**
@@ -38,7 +26,8 @@ export {
   DESIGN_COMPONENT_NODE_TYPE,
   DESIGN_COMPONENT_NODE_TYPES,
   SCROLL_STATES,
-  supportedModes,
-} from './constants';
+} from '@contentful/experience-builder-core/constants';
+export { supportedModes } from '@contentful/experience-builder-core';
+export { EntityStore } from '@contentful/visual-sdk';
 export { fetchers } from './core';
 export { createExperience } from './utils/createExperience';

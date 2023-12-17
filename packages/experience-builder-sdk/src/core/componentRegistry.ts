@@ -1,17 +1,20 @@
 import * as Components from '@contentful/experience-builder-components';
-import { ComponentRegistration, ComponentDefinition } from '../types';
+import type {
+  ComponentRegistration,
+  ComponentDefinition,
+} from '@contentful/experience-builder-core/types';
 import {
   OUTGOING_EVENTS,
   INTERNAL_EVENTS,
-  SDK_VERSION,
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
-} from '../constants';
+} from '@contentful/experience-builder-core/constants';
 import { builtInStyles as builtInStyleDefinitions } from './definitions/variables';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 import { containerDefinition } from './definitions/components';
 import { sendMessage } from '@contentful/experience-builder-core';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
+import { SDK_VERSION } from '../constants';
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {

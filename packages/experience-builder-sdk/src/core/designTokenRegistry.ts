@@ -1,6 +1,6 @@
-import { OUTGOING_EVENTS } from '../constants';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 import { sendMessage } from '@contentful/experience-builder-core';
-import { DesignTokensDefinition } from '../types';
+import { DesignTokensDefinition } from '@contentful/experience-builder-core/types';
 
 /**
  * Register design tokens styling

@@ -2,10 +2,12 @@ import React from 'react';
 
 import { render } from '@testing-library/react';
 
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../../constants';
+import {
+  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_SECTION_ID,
+} from '@contentful/experience-builder-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
-import { CompositionNode } from '../../types';
-import { ExperienceEntry } from '@contentful/experience-builder-core';
+import type { CompositionNode, ExperienceEntry } from '@contentful/experience-builder-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
 import {

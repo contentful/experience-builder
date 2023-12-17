@@ -1,5 +1,5 @@
-import { Breakpoint } from '../types';
-import { getValueForBreakpoint } from './useBreakpoints';
+import type { Breakpoint } from '@contentful/experience-builder-core/types';
+import { getValueForBreakpoint } from '@contentful/experience-builder-core';
 
 const breakpoints: Breakpoint[] = [
   {
