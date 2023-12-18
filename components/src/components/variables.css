@@ -1,0 +1,67 @@
+@import url(https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;1,400;1,600&display=swap);
+
+:root {
+  /* All sizing comments based of 16px base body font size */
+
+  /* color */
+  --cf-color-white: #fff;
+  --cf-color-black: #000;
+
+  /* spacing */
+  --cf-spacing-0: 0rem; /* 0px */
+  --cf-spacing-1: 0.125rem; /* 2px */
+  --cf-spacing-2: 0.25rem; /* 4px */
+  --cf-spacing-3: 0.375rem; /* 6px */
+  --cf-spacing-4: 0.5rem; /* 8px */
+  --cf-spacing-5: 0.625rem; /* 10px */
+  --cf-spacing-6: 0.75rem; /* 12px */
+  --cf-spacing-7: 0.875rem; /* 14px */
+  --cf-spacing-8: 1rem; /* 16px */
+  --cf-spacing-9: 1.25rem; /* 20px */
+  --cf-spacing-10: 1.5rem; /* 24px */
+  --cf-spacing-11: 1.75rem; /* 28px */
+  --cf-spacing-12: 2rem; /* 32px */
+  --cf-spacing-13: 2.25rem; /* 36px */
+
+  /* font-size */
+  --cf-text-xs: 0.75rem; /* 12px */
+  --cf-text-sm: 0.875rem; /* 14px */
+  --cf-text-base: 1rem; /* 16px */
+  --cf-text-lg: 1.125rem; /* 18px */
+  --cf-text-xl: 1.25rem; /* 20px */
+  --cf-text-2xl: 1.5rem; /* 24px */
+  --cf-text-3xl: 2rem; /* 32px */
+  --cf-text-4xl: 2.75rem; /* 44px */
+
+  /* font-weight */
+  --cf-font-light: 300;
+  --cf-font-normal: 400;
+  --cf-font-medium: 500;
+  --cf-font-semibold: 600;
+  --cf-font-bold: 700;
+  --cf-font-extra-bold: 800;
+  --cf-font-black: 900;
+
+  /* border-radius */
+  --cf-border-radius-none: 0px; /* none */
+  --cf-border-radius-sm: 0.125rem; /* 2px */
+  --cf-border-radius: 0.25rem; /* 4px */
+  --cf-border-radius-md: 0.375rem; /* 6px */
+  --cf-border-radius-lg: 0.5rem; /* 8px */
+  --cf-border-radius-xl: 0.75rem; /* 12px */
+  --cf-border-radius-2xl: 1rem; /* 16px */
+  --cf-border-radius-3xl: 1.5rem; /* 24px */
+  --cf-border-radius-full: 9999px; /* full */
+
+  /* font-family */
+  --cf-font-family-sans: Archivo, Helvetica, Arial, sans-serif;
+  --cf-font-family-serif: Georgia, Cambria, Times New Roman, Times, serif;
+
+  /* max widths */
+  --cf-max-width-full: 100%;
+
+  /* component specific colors */
+  --cf-button-bg: var(--cf-color-black);
+  --cf-button-color: var(--cf-color-white);
+  --cf-text-color: var(--cf-color-black);
+}
