@@ -10,6 +10,17 @@
   min-height: 200px;
 }
 
+.fixedWidth {
+  width: fit-content;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.pointerEvents {
+  pointer-events: all;
+}
 .isEmpty {
   height: 200px;
 }

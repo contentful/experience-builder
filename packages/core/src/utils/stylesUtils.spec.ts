@@ -1,6 +1,7 @@
-import { CONTENTFUL_CONTAINER_ID } from '../constants';
-import { CompositionComponentNode } from '../types';
+import { CompositionComponentNode } from '@/types';
 import { calculateNodeDefaultHeight } from './stylesUtils';
+import { describe, it, expect } from 'vitest';
+import { CONTENTFUL_CONTAINER_ID } from '@/constants';
 
 describe('calculateNodeDefaultHeight', () => {
   it('should return value when blockId is undefined', () => {
@@ -41,7 +42,7 @@ describe('calculateNodeDefaultHeight', () => {
     expect(result).toBe('200px');
   });
 
-  it('should return "fit-content" when container has a non-container child', () => {
+  it('should return "100%" when container has a non-container child', () => {
     const childNode: CompositionComponentNode = {
       type: 'block',
       data: {

@@ -1,5 +1,6 @@
-import { entities, entityIds } from '../../../test/__fixtures__/entities';
+import { entities, entityIds } from '../test/__fixtures__/entities';
 import { EditorModeEntityStore } from './EditorModeEntityStore';
+import { describe, it, expect } from 'vitest';
 
 describe('ExperienceBuilderEditorEntityStore', () => {
   const locale = 'en-US';

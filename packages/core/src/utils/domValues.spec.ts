@@ -1,4 +1,5 @@
 import { findOutermostCoordinates, getElementCoordinates } from './domValues';
+import { describe, it, expect, vi } from 'vitest';
 
 const mockChild1Rect = {
   width: 120,
@@ -9,7 +10,7 @@ const mockChild1Rect = {
   right: 25,
   x: 20,
   y: 1,
-  toJSON: jest.fn(),
+  toJSON: vi.fn(),
 };
 
 const mockChild2Rect = {
@@ -21,7 +22,7 @@ const mockChild2Rect = {
   right: 25,
   x: 4,
   y: 3,
-  toJSON: jest.fn(),
+  toJSON: vi.fn(),
 };
 
 describe('Find outermost coordinates', () => {
@@ -58,8 +59,8 @@ describe('Get element coordinates', () => {
     mockElement.appendChild(mockChild1);
     mockElement.appendChild(mockChild2);
 
-    mockChild1.getBoundingClientRect = jest.fn(() => mockChild1Rect);
-    mockChild2.getBoundingClientRect = jest.fn(() => mockChild2Rect);
+    mockChild1.getBoundingClientRect = vi.fn(() => mockChild1Rect);
+    mockChild2.getBoundingClientRect = vi.fn(() => mockChild2Rect);
 
     const rectResult = {
       x: 4,
@@ -70,12 +71,12 @@ describe('Get element coordinates', () => {
       top: 1,
       width: 21,
       height: 11,
-      toJSON: jest.fn(),
+      toJSON: vi.fn(),
     };
 
     // @ts-expect-error ts wants the full DOMRect object which is unnecessary for this test
     global.DOMRect = {
-      fromRect: jest.fn(() => rectResult),
+      fromRect: vi.fn(() => rectResult),
     };
 
     expect(getElementCoordinates(mockElement as Element)).toEqual(rectResult);

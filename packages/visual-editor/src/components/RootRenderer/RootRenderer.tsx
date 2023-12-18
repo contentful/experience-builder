@@ -3,19 +3,20 @@ import { useEffect } from 'react';
 import { DragDropContext } from '@hello-pangea/dnd';
 import { DropZone } from '../DropZone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
-import { CompositionTree, OUTGOING_EVENTS } from '@contentful/experience-builder-core';
-import { sendMessage } from '@/communication/sendMessage';
+import { sendMessage } from '@contentful/experience-builder-core';
 import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
-import dragState from '@/shared/utils/dragState';
-import { onDrop } from '@/shared/utils/onDrop';
+import dragState from '@/utils/dragState';
+import { onDrop } from '@/utils/onDrop';
 import { usePlaceholderStyle } from '@/hooks/usePlaceholderStyle';
-import { ROOT_ID } from '@/shared/utils/constants';
+import { ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
 import styles from './render.module.css';
 import { onComponentMoved } from '@/communication/onComponentMoved';
+import { CompositionTree } from '@contentful/experience-builder-core/types';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 
 interface Props {
   resolveDesignValue: ResolveDesignValueType;

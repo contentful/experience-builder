@@ -1,44 +1,39 @@
 import { useEffect, useState } from 'react';
-
-import { sendMessage } from '../communication/sendMessage';
-import { EditorModeEntityStore } from '../shared/EditorModeEntityStore';
 import {
-  CompositionComponentNode,
-  CompositionComponentPropValue,
-  CompositionTree,
-  Link,
-} from '@contentful/experience-builder-core';
-import {
-  ComponentRegistration,
-  INCOMING_EVENTS,
-  OUTGOING_EVENTS,
-  SCROLL_STATES,
+  EditorModeEntityStore,
+  sendMessage,
+  getDataFromTree,
   doesMismatchMessageSchema,
   tryParseMessage,
 } from '@contentful/experience-builder-core';
-import { getDataFromTree } from '../shared/utils/utils';
+import {
+  OUTGOING_EVENTS,
+  INTERNAL_EVENTS,
+  VISUAL_EDITOR_EVENTS,
+  INCOMING_EVENTS,
+  SCROLL_STATES,
+} from '@contentful/experience-builder-core/constants';
+import {
+  CompositionTree,
+  CompositionComponentNode,
+  CompositionComponentPropValue,
+} from '@contentful/experience-builder-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
-import dragState from '@/shared/utils/dragState';
+import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
-
-type VisualEditorSubsciberProps = {
-  initialLocale: string;
-  initialComponentRegistry: Map<string, ComponentRegistration>;
-};
+import { Link } from 'contentful';
 
 export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
 export const setDesignComponents = (designComponents: Link<'Entry'>[]) => {
   for (const designComponent of designComponents) {
+    //@ts-expect-error TODO: Fix typing
     designComponentsRegistry.set(designComponent.sys.id, designComponent);
   }
 };
 
-export function useEditorSubscriber({
-  initialLocale,
-  initialComponentRegistry,
-}: VisualEditorSubsciberProps) {
+export function useEditorSubscriber() {
   const updateTree = useTreeStore((state) => state.updateTree);
 
   const dataSource = useEditorStore((state) => state.dataSource);
@@ -51,7 +46,8 @@ export function useEditorSubscriber({
   const initializeEditor = useEditorStore((state) => state.initializeEditor);
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
 
-  const [locale, setLocale] = useState<string>(initialLocale);
+  const [locale, setLocale] = useState<string>('');
+  const [initialized, setInitialized] = useState(false);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
@@ -63,15 +59,38 @@ export function useEditorSubscriber({
   };
 
   useEffect(() => {
-    initializeEditor({
-      initialLocale,
-      componentRegistry: initialComponentRegistry,
-      entityStore: new EditorModeEntityStore({
-        entities: [],
-        locale: locale,
-      }),
-    });
-  }, []);
+    const onVisualEditorInitialize = (event) => {
+      if (!event.detail) return;
+      const { componentRegistry, locale: initialLocale } = event.detail;
+
+      if (componentRegistry) {
+        initializeEditor({
+          initialLocale,
+          componentRegistry,
+          entityStore: new EditorModeEntityStore({
+            entities: [],
+            locale: locale || initialLocale,
+          }),
+        });
+        setInitialized(true);
+      }
+
+      if (initialLocale) {
+        setLocale(initialLocale);
+      }
+    };
+
+    // Listen for VisualEditorComponents internal event
+    window.addEventListener(INTERNAL_EVENTS.VisualEditorInitialize, onVisualEditorInitialize);
+
+    // Dispatch Visual Editor Ready event
+    window.dispatchEvent(new CustomEvent(VISUAL_EDITOR_EVENTS.Ready));
+
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener(INTERNAL_EVENTS.VisualEditorInitialize, onVisualEditorInitialize);
+    };
+  });
 
   useEffect(() => {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
@@ -270,4 +289,6 @@ export function useEditorSubscriber({
       clearTimeout(timeoutId);
     };
   }, []);
+
+  return initialized;
 }

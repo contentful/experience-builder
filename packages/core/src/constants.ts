@@ -1,5 +1,3 @@
-import { InternalSDKMode } from './types';
-
 export const SCROLL_STATES = {
   Start: 'scrollStart',
   IsScrolling: 'isScrolling',
@@ -8,17 +6,20 @@ export const SCROLL_STATES = {
 
 export const OUTGOING_EVENTS = {
   Connected: 'connected',
+  DesignTokens: 'registerDesignTokens',
+  HoveredSection: 'hoveredSection',
   MouseMove: 'mouseMove',
   MouseUp: 'mouseUp',
   MouseDown: 'mouseDown',
   NewHoveredElement: 'newHoveredElement',
   ComponentSelected: 'componentSelected',
   RegisteredComponents: 'registeredComponents',
-  DesignTokens: 'registerDesignTokens',
   RequestComponentTreeUpdate: 'requestComponentTreeUpdate',
   ComponentDropped: 'componentDropped',
+  ComponentMoved: 'componentMoved',
   CanvasReload: 'canvasReload',
   UpdateSelectedComponentCoordinates: 'updateSelectedComponentCoordinates',
+  UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
 };
@@ -83,5 +84,3 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',
 ];
-
-export const supportedModes: InternalSDKMode[] = ['delivery', 'preview', 'editor'];

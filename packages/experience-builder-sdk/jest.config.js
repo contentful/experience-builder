@@ -13,5 +13,5 @@ export default {
   transform: {
     '\\.[jt]sx?$': ['ts-jest'],
   },
-  transformIgnorePatterns: ['node_modules/(?!@contentful/.*/.*|style-inject)'],
+  transformIgnorePatterns: ['node_modules/(?!(@contentful/.*/.*|style-inject|lodash-es)/)'],
 };

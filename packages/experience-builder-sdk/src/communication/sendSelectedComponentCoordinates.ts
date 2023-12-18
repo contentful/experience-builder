@@ -1,6 +1,5 @@
-import { getElementCoordinates } from '../utils/domValues';
-import { OUTGOING_EVENTS } from '../constants';
-import { sendMessage } from './sendMessage';
+import { sendMessage, getElementCoordinates } from '@contentful/experience-builder-core';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 
 /**
  * This function gets the element co-ordinates of a specified component in the DOM and its parent

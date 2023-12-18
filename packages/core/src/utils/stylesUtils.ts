@@ -1,10 +1,3 @@
-import {
-  CSSProperties,
-  CompositionComponentNode,
-  CompositionVariableValueType,
-  StyleProps,
-} from '../types';
-//@ts-expect-error no types available
 import md5 from 'md5';
 import {
   transformWidthSizing,
@@ -13,7 +6,13 @@ import {
   transformBorderStyle,
   transformFill,
 } from './transformers';
-import { CONTENTFUL_CONTAINER_ID } from '../constants';
+import {
+  CSSProperties,
+  StyleProps,
+  CompositionComponentNode,
+  CompositionVariableValueType,
+} from '@/types';
+import { CONTENTFUL_CONTAINER_ID } from '@/constants';
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 

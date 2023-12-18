@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react';
 import { compositionEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
 import type { ContentfulClientApi, Entry } from 'contentful';
-import { ExternalSDKMode } from '../types';
+import type { ExternalSDKMode } from '@contentful/experience-builder-core/types';
 
 const experienceTypeId = 'layout';
 const localeCode = 'en-US';

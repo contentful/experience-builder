@@ -5,7 +5,7 @@
 
 import type { ContentfulClientApi, Entry } from 'contentful';
 import type { EntityStore } from '@contentful/visual-sdk';
-import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from './constants';
+import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
@@ -59,7 +59,8 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
   group?: 'style' | 'content';
   description?: string;
   displayName?: string;
-  defaultValue?: string | boolean | number | Record<any, any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  defaultValue?: string | boolean | number | Record<any, any>; //todo: fix typings
 }
 
 // export interface ComponentDefinitionVariableLink extends ComponentDefinitionVariableBase<'Link'> {
@@ -138,7 +139,8 @@ export type BindingMapByBlockId = Record<string, BindingMap>;
 
 export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>;
 
-export type CompositionVariableValueType = string | boolean | number | Record<any, any> | undefined;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type CompositionVariableValueType = string | boolean | number | Record<any, any> | undefined; //todo: fix typings
 type CompositionComponentPropType =
   | 'BoundValue'
   | 'UnboundValue'
@@ -332,3 +334,7 @@ export interface DeprecatedExperience {
    */
   mode: InternalSDKMode;
 }
+
+export type ValuesByBreakpoint =
+  | Record<string, CompositionVariableValueType>
+  | CompositionVariableValueType;

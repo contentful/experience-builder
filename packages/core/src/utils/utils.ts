@@ -1,5 +1,5 @@
-import times from 'lodash/times';
-import random from 'lodash/random';
+import times from 'lodash-es/times';
+import random from 'lodash-es/random';
 import {
   CompositionTree,
   CompositionComponentNode,
@@ -7,7 +7,7 @@ import {
   CompositionDataSource,
   CompositionUnboundValues,
   ExperienceEntry,
-} from '../types';
+} from '@/types';
 
 export const getDataFromTree = (
   tree: CompositionTree

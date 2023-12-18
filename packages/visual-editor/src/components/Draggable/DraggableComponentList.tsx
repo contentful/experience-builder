@@ -1,4 +1,4 @@
-import { DRAGGABLE_HEIGHT, DRAGGABLE_WIDTH } from '@/shared/utils/constants';
+import { DRAGGABLE_HEIGHT, DRAGGABLE_WIDTH } from '@/types/constants';
 import { Draggable, Droppable } from '@hello-pangea/dnd';
 import React from 'react';
 

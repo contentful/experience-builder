@@ -1,7 +1,5 @@
-import {
-  CONTENTFUL_CONTAINER_ID,
-  CompositionComponentNode,
-} from '@contentful/experience-builder-core';
+import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
+import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
 import { ResolveDesignValueType } from './useBreakpoints';
 import { useEffect } from 'react';
 import { useZoneStore } from '@/store/zone';

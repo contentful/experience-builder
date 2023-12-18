@@ -1,8 +1,11 @@
 import React from 'react';
-import { INTERNAL_EVENTS, CONTENTFUL_SECTION_ID } from '../constants';
+import {
+  INTERNAL_EVENTS,
+  CONTENTFUL_SECTION_ID,
+} from '@contentful/experience-builder-core/constants';
 import * as registry from './componentRegistry';
 import { containerDefinition } from './definitions/components';
-import { ComponentRegistration } from '../types';
+import type { ComponentRegistration } from '@contentful/experience-builder-core/types';
 
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>;

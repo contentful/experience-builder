@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Breakpoint, CompositionVariableValueType } from '../types';
+import type {
+  Breakpoint,
+  CompositionVariableValueType,
+  ValuesByBreakpoint,
+} from '@contentful/experience-builder-core/types';
+import { getValueForBreakpoint } from '@contentful/experience-builder-core';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
-
-export type ValuesByBreakpoint =
-  | Record<string, CompositionVariableValueType>
-  | CompositionVariableValueType;
 
 export type ResolveDesignValueType = (
   valuesByBreakpoint: ValuesByBreakpoint
@@ -41,28 +42,6 @@ const getFallbackBreakpointIndex = (breakpoints: Breakpoint[]) => {
     breakpoints.findIndex(({ query }) => query === '*'),
     0
   );
-};
-
-export const getValueForBreakpoint = (
-  valuesByBreakpoint: ValuesByBreakpoint,
-  breakpoints: Breakpoint[],
-  activeBreakpointIndex: number
-) => {
-  const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
-  const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id;
-  if (valuesByBreakpoint instanceof Object) {
-    // Assume that the values are sorted by media query to apply the cascading CSS logic
-    for (let index = activeBreakpointIndex; index >= 0; index--) {
-      const breakpointId = breakpoints[index].id;
-      if (valuesByBreakpoint[breakpointId]) {
-        // If the value is defined, we use it and stop the breakpoints cascade
-        return valuesByBreakpoint[breakpointId];
-      }
-    }
-    return valuesByBreakpoint[fallbackBreakpointId];
-  } else {
-    return valuesByBreakpoint;
-  }
 };
 
 // TODO: In order to support integrations without React, we should extract this heavy logic into simple

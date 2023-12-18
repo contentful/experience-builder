@@ -1,7 +1,7 @@
 {
   "name": "test-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1-pre-20231216T233830.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,6 @@
     "build:vercel": "npm run build --prefix ../core && npm run build --prefix ../components && npm run build",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
-    "prepare": "relative-deps",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

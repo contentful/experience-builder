@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { DragStart, DragUpdate } from '@hello-pangea/dnd';
-import { ROOT_ID } from '../shared/utils/constants';
+import { ROOT_ID } from '../types/constants';
 import { usePlaceholderStyleStore } from '@/store/placeholderStyle';
 import { useZoneStore } from '@/store/zone';
 

@@ -1,14 +1,13 @@
-import times from 'lodash/times';
-import random from 'lodash/random';
+import times from 'lodash-es/times';
+import random from 'lodash-es/random';
 import {
   CompositionTree,
   CompositionComponentNode,
   StyleProps,
   CompositionDataSource,
   CompositionUnboundValues,
-} from '@contentful/experience-builder-core';
-
-import { ExperienceEntry } from '@contentful/experience-builder-core';
+  ExperienceEntry,
+} from '@/types';
 
 export const getDataFromTree = (
   tree: CompositionTree

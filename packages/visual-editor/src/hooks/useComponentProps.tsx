@@ -1,23 +1,29 @@
 import React from 'react';
-import { buildCfStyles, calculateNodeDefaultHeight } from '@/shared/utils/stylesUtils';
 import { useEditorStore } from '@/store/editor';
 import {
-  CF_STYLE_ATTRIBUTES,
-  ComponentRegistration,
-  CompositionComponentNode,
-  CompositionVariableValueType,
-  Link,
-  StyleProps,
+  buildCfStyles,
+  calculateNodeDefaultHeight,
+  transformContentValue,
 } from '@contentful/experience-builder-core';
+import {
+  CONTENTFUL_CONTAINER_ID,
+  CF_STYLE_ATTRIBUTES,
+} from '@contentful/experience-builder-core/constants';
+import type {
+  StyleProps,
+  CompositionVariableValueType,
+  CompositionComponentNode,
+  ComponentRegistration,
+} from '@contentful/experience-builder-core/types';
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useStyleTag } from './useStyleTag';
-import { omit } from 'lodash';
+import omit from 'lodash-es/omit';
 import { ResolveDesignValueType } from './useBreakpoints';
-import { getUnboundValues } from '@/shared/utils/getUnboundValues';
-import { transformContentValue } from '@/shared/utils/transformers';
-
+import { getUnboundValues } from '@/utils/getUnboundValues';
 import { DropZone } from '@components/DropZone/Dropzone';
+
+import { Link } from 'contentful';
 
 type PropsType =
   | StyleProps
@@ -77,7 +83,7 @@ export const useComponentProps = ({
         } else if (variableMapping.type === 'BoundValue') {
           // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/');
-          const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
+          const binding = dataSource[uuid];
 
           const boundValue = areEntitiesFetched
             ? entityStore?.getValue(binding, path.slice(0, -1))
@@ -116,6 +122,28 @@ export const useComponentProps = ({
   ]);
 
   const cfStyles = buildCfStyles(props);
+
+  const editorWrapperProps = useMemo(() => {
+    const wrapperProps = {
+      isFixedWidth: false,
+    };
+
+    if (node.data.blockId !== CONTENTFUL_CONTAINER_ID) {
+      return wrapperProps;
+    }
+
+    const width = props['cfWidth'];
+
+    if (typeof width === 'number') {
+      wrapperProps.isFixedWidth = true;
+    }
+    if (typeof width === 'string') {
+      wrapperProps.isFixedWidth = !isNaN(Number(width.replace('px', '')));
+    }
+
+    return wrapperProps;
+  }, [node, props]);
+
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
 
   const renderDropZone = (node: CompositionComponentNode, props?: Record<string, any>) => {
@@ -143,5 +171,5 @@ export const useComponentProps = ({
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
   };
 
-  return defaultedProps;
+  return [defaultedProps, editorWrapperProps] as [typeof defaultedProps, typeof editorWrapperProps];
 };

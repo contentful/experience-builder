@@ -2,7 +2,9 @@ import {
   useFetchExperience,
   ExperienceRoot,
   ExternalSDKMode,
+  VisualEditorMode,
 } from '@contentful/experience-builder';
+
 import { createClient } from 'contentful';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -12,6 +14,8 @@ import './styles.css';
 const isPreview = window.location.search.includes('isPreview=true');
 const mode = isPreview ? 'preview' : (import.meta.env.VITE_MODE as ExternalSDKMode) || 'delivery';
 const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
+const visualEditorMode =
+  (import.meta.env.VITE_VISUAL_EDITOR_MODE as VisualEditorMode) || VisualEditorMode.LazyLoad;
 const localeCode = 'en-US';
 
 const isStaging = import.meta.env.VITE_CONTENTFUL_ENV === 'staging';
@@ -75,7 +79,11 @@ export default function Page() {
           <a href="">Link 3</a>
         </div>
       </div>
-      <ExperienceRoot experience={experience} locale={localeCode} />
+      <ExperienceRoot
+        experience={experience}
+        locale={localeCode}
+        visualEditorMode={visualEditorMode}
+      />
       <footer
         style={{
           backgroundColor: '#000',

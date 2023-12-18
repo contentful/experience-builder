@@ -1,11 +1,11 @@
 /* eslint-disable */
 import React from 'react';
 import './ContentfulContainer.css';
-import classNames from 'classnames';
 import { Flex } from '../Layout/Flex';
 import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink';
 import type { ContentfulContainerProps } from './ContentfulContainerAsHyperlink';
 import { Section } from '@components/Layout/Section';
+import { combineClasses } from '../../utils/combineClasses';
 
 export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
   const { className, editorMode, children } = sectionProps;
@@ -28,7 +28,7 @@ export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
       <Flex
         id="ContentfulContainer"
         data-test-id="contentful-container"
-        className={classNames(className, 'defaultStyles')}>
+        className={combineClasses(className, 'defaultStyles')}>
         {(sectionProps as any).children}
       </Flex>
     );
@@ -43,7 +43,7 @@ export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
     ['data-cf-node-block-id']: node.data.blockId,
     ['data-cf-node-block-type']: node.type,
     id: 'ContentfulContainer',
-    className: classNames(className, 'defaultStyles'),
+    className: combineClasses(className, 'defaultStyles'),
     zoneId: node.data.id,
     WrapperComponent: Flex,
   });

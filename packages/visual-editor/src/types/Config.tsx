@@ -1,4 +1,4 @@
-import { CompositionComponentNode } from '@contentful/experience-builder-core';
+import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
 
 type WithCtflProps<Props> = Props & {
   id: string;
