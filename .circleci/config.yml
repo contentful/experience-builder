@@ -1,0 +1,22 @@
+version: 2.1
+orbs:
+  vault: contentful/vault@1
+
+executors:
+  docker-with-node:
+    docker:
+      - image: cimg/node:18.17
+    working_directory: ~/build-and-test
+
+jobs:
+  prepare:
+    executor: docker-with-node
+    steps:
+      - checkout
+      - run: node --version
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - prepare
