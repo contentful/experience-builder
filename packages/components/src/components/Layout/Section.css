@@ -1,0 +1,12 @@
+.ctfl-section {
+  /* padding-left: 16px; */
+  /* padding-right: 16px; */
+  display: flex;
+  justify-content: center;
+}
+
+.ctfl-section-inner {
+  /* margin-left: auto; */
+  /* margin-right: auto; */
+  width: 100%;
+}
