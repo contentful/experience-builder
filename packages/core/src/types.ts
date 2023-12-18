@@ -223,8 +223,8 @@ export type StyleProps = {
   cfLineHeight: string;
   cfLetterSpacing: string;
   cfTextColor: string;
-  cfTextAlign: 'left' | 'right' | 'center' | 'justify';
-  cfTextTransform: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+  cfTextAlign: 'left' | 'center' | 'right';
+  cfTextTransform: 'none' | 'capitalize' | 'uppercase' | 'lowercase';
   cfTextBold: boolean;
   cfTextItalic: boolean;
   cfTextUnderline: boolean;
