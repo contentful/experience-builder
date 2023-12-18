@@ -25,9 +25,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@contentful/experience-builder-components": "^0.0.1-pre-20231217T133016.0",
-    "@contentful/experience-builder-core": "^0.0.1-pre-20231217T133016.0",
-    "@contentful/experience-builder-visual-editor": "^0.0.1-pre-20231217T133016.0",
+    "@contentful/experience-builder-components": "file:../components",
+    "@contentful/experience-builder-types": "file:../experience-builder-types",
+    "@contentful/experience-builder-visual-editor": "file:../visual-editor",
     "@contentful/rich-text-types": "^16.2.1",
     "@contentful/visual-sdk": "^1.0.0-alpha.26",
     "classnames": "^2.3.2",
@@ -84,10 +84,5 @@
   "files": [
     "dist",
     "package.json"
-  ],
-  "relativeDependencies": {
-    "@contentful/experience-builder-core": "../../../experience-builder-toolkit/packages/core",
-    "@contentful/experience-builder-visual-editor": "../../../experience-builder-toolkit/packages/visual-editor",
-    "@contentful/experience-builder-components": "../../../experience-builder-toolkit/packages/components/"
-  }
+  ]
 }
