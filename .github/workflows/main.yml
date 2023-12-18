@@ -18,7 +18,7 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   publish:
     needs: [install-build, check]
-    if: (github.ref_name == 'main' || github.ref_name == 'development' || github.ref_name == 'next' || github.ref_name == 'chore/repo-migration') && !contains(github.event.head_commit.message, 'skip-release')
+    if: (github.ref_name == 'main' || github.ref_name == 'development' || github.ref_name == 'next' || github.ref_name == 'chore/toolkit-repo-migration') && !contains(github.event.head_commit.message, 'skip-release')
     permissions:
       contents: write
     uses: ./.github/workflows/publish.yaml
