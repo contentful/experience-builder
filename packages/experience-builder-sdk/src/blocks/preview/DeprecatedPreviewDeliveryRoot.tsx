@@ -41,6 +41,9 @@ export const DeprecatedPreviewDeliveryRoot = ({
   const { fetchBySlug, experience, isFetching } = useFetchExperience({
     client,
     mode: mode as ExternalSDKMode,
+    slug,
+    experienceTypeId,
+    localeCode: locale,
   });
 
   const entityStore = experience?.entityStore;
