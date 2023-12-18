@@ -61,24 +61,51 @@ export class EntityStore extends VisualSdkEntityStore {
   }
 
   public getValue(
-    entityLink: UnresolvedLink<'Entry' | 'Asset'>,
+    entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
     path: string[]
   ): string | undefined {
-    const entity =
-      entityLink.sys.linkType === 'Entry'
-        ? this.entryMap.get(entityLink.sys.id)
-        : this.assetMap.get(entityLink.sys.id);
+    const isLink = (
+      entity: typeof entityLinkOrEntity
+    ): entity is UnresolvedLink<'Entry' | 'Asset'> => entityLinkOrEntity.sys.type === 'Link';
 
-    if (!entity || entity.sys.type !== entityLink.sys.linkType) {
-      console.warn(`Experience references unresolved entity: ${JSON.stringify(entityLink)}`);
-      return;
+    let entity: Entry | Asset;
+    if (isLink(entityLinkOrEntity)) {
+      const resolvedEntity =
+        entityLinkOrEntity.sys.linkType === 'Entry'
+          ? this.entryMap.get(entityLinkOrEntity.sys.id)
+          : this.assetMap.get(entityLinkOrEntity.sys.id);
+
+      if (!resolvedEntity || resolvedEntity.sys.type !== entityLinkOrEntity.sys.linkType) {
+        console.warn(
+          `Experience references unresolved entity: ${JSON.stringify(entityLinkOrEntity)}`
+        );
+        return;
+      }
+      entity = resolvedEntity;
+    } else {
+      // We already have the complete entity in preview & delivery (resolved by the CMA client)
+      entity = entityLinkOrEntity;
     }
 
-    const fieldValue = super.getValue(entityLink, path);
+    const fieldValue = get<string>(entity, path);
 
     // walk around to render asset files
     return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
       ? (fieldValue as AssetFile).url
       : fieldValue;
+  }
+}
+
+// Taken from visual-sdk. We need this when we already have the full entity instead of the link (preview & delivery)
+function get<T>(obj: Record<string, any>, path: string[]): T | undefined {
+  if (!path.length) {
+    return obj as T;
+  }
+
+  try {
+    const [currentPath, ...nextPath] = path;
+    return get(obj[currentPath], nextPath);
+  } catch (err) {
+    return undefined;
   }
 }

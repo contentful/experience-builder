@@ -22,6 +22,7 @@ import type {
   CompositionTree,
   CompositionUnboundValues,
   InternalSDKMode,
+  EntityStore,
   Link,
 } from '@contentful/experience-builder-core/types';
 import {
@@ -46,8 +47,7 @@ type VisualEditorContextType = {
   unboundValues: CompositionUnboundValues;
   breakpoints: Breakpoint[];
   entityStore: React.MutableRefObject<EditorModeEntityStore>;
-  bundleUrl: string | null;
-  stylesUrl: string | null;
+  areEntitiesFetched: boolean;
 };
 
 export const VisualEditorContext = React.createContext<VisualEditorContextType>({
@@ -61,15 +61,15 @@ export const VisualEditorContext = React.createContext<VisualEditorContextType>(
   },
   locale: null,
   breakpoints: [],
-  bundleUrl: null,
-  stylesUrl: null,
   entityStore: {} as React.MutableRefObject<EditorModeEntityStore>,
+  areEntitiesFetched: false,
 });
 
 type VisualEditorContextProviderProps = {
   initialLocale: string;
   mode: InternalSDKMode;
   children: ReactElement;
+  previousEntityStore?: EntityStore;
 };
 
 export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
@@ -83,6 +83,7 @@ export function VisualEditorContextProvider({
   initialLocale,
   mode,
   children,
+  previousEntityStore,
 }: VisualEditorContextProviderProps) {
   const hasConnectEventBeenSent = useRef(false);
   const [tree, setTree] = useState<CompositionTree>();
@@ -91,16 +92,42 @@ export function VisualEditorContextProvider({
   const [isDragging, setIsDragging] = useState(false);
   const selectedNodeId = useRef<string>('');
   const [locale, setLocale] = useState<string>(initialLocale);
-
-  const [bundleUrl, setBundleUrl] = useState<string | null>(null);
-  const [stylesUrl, setStylesUrl] = useState<string | null>(null);
+  const [areEntitiesFetched, setEntitiesFetched] = useState(false);
 
   const entityStore = useRef<EditorModeEntityStore>(
     new EditorModeEntityStore({
-      entities: [],
+      // Initially, the SDK boots in preview mode and already fetches entities.
+      // We utilizes the previosuly existing store to avoid loading twice and
+      // have the entities ready as early as possible.
+      entities: previousEntityStore?.entities ?? [],
       locale: locale,
     })
   );
+
+  // Reload the entity store when the locale changed
+  useEffect(() => {
+    if (!locale || locale === entityStore.current.locale) return;
+    entityStore.current = new EditorModeEntityStore({
+      entities: [],
+      locale: locale,
+    });
+  }, [locale]);
+
+  // When the tree was updated, we store the dataSource and
+  // afterward, this effect fetches the respective entities.
+  useEffect(() => {
+    const resolveEntities = async () => {
+      setEntitiesFetched(false);
+      const dataSourceEntityLinks = Object.values(dataSource || {});
+      await entityStore.current.fetchEntities([
+        ...dataSourceEntityLinks,
+        ...(designComponentsRegistry.values() || []),
+      ]);
+      setEntitiesFetched(true);
+    };
+
+    resolveEntities();
+  }, [dataSource]);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
@@ -245,21 +272,20 @@ export function VisualEditorContextProvider({
             designComponentDefinition,
           }: {
             designComponent: Entry;
-            designComponentDefinition: ComponentRegistration['definition'];
+            designComponentDefinition?: ComponentRegistration['definition'];
           } = payload;
-          if (designComponent) {
-            entityStore.current.updateEntity(designComponent);
-            // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
-            // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
-            // of all bound and unbound values when new values are added
-            designComponentsRegistry.set(designComponent.sys.id, {
-              sys: { id: designComponent.sys.id, linkType: 'Entry', type: 'Link' },
-            } as Link<'Entry'>);
-            designComponentDefinition &&
-              addComponentRegistration({
-                component: DesignComponent,
-                definition: designComponentDefinition,
-              });
+          entityStore.current.updateEntity(designComponent);
+          // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
+          // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
+          // of all bound and unbound values when new values are added
+          designComponentsRegistry.set(designComponent.sys.id, {
+            sys: { id: designComponent.sys.id, linkType: 'Entry', type: 'Link' },
+          } as Link<'Entry'>);
+          if (designComponentDefinition) {
+            addComponentRegistration({
+              component: DesignComponent,
+              definition: designComponentDefinition,
+            });
           }
           break;
         }
@@ -286,9 +312,6 @@ export function VisualEditorContextProvider({
           break;
         }
         case INCOMING_EVENTS.InitEditor: {
-          const { bundleUrl, stylesUrl } = payload;
-          setBundleUrl(bundleUrl);
-          setStylesUrl(stylesUrl);
           break;
         }
         case INCOMING_EVENTS.RequestEditorMode: {
@@ -369,14 +392,13 @@ export function VisualEditorContextProvider({
         tree,
         dataSource,
         unboundValues,
-        bundleUrl,
-        stylesUrl,
         isDragging,
         selectedNodeId: selectedNodeId.current,
         setSelectedNodeId,
         locale,
         breakpoints: tree?.root.data.breakpoints ?? [],
         entityStore,
+        areEntitiesFetched,
       }}>
       {children}
     </VisualEditorContext.Provider>

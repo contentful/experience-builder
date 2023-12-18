@@ -1,13 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type {
-  Breakpoint,
-  CompositionVariableValueType,
-  ValuesByBreakpoint,
-} from '@contentful/experience-builder-core/types';
-import {
-  getValueForBreakpoint,
-  getDesignTokenRegistration,
-} from '@contentful/experience-builder-core';
+import { Breakpoint, CompositionVariableValueType, ValuesByBreakpoint } from '@/types';
+import { getFallbackBreakpointIndex, getValueForBreakpoint } from '@/utils/getValueForBreakpoint';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
 
@@ -37,15 +30,6 @@ const findLast = <T>(
   predicate: Parameters<Array<T>['find']>[0]
 ): T | undefined => {
   return array.reverse().find(predicate);
-};
-
-const getFallbackBreakpointIndex = (breakpoints: Breakpoint[]) => {
-  // We assume that there will be a single breakpoint which uses the wildcard query.
-  // If there is none, we just take the first one in the list.
-  return Math.max(
-    breakpoints.findIndex(({ query }) => query === '*'),
-    0
-  );
 };
 
 // TODO: In order to support integrations without React, we should extract this heavy logic into simple

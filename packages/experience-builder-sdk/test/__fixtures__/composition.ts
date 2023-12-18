@@ -1,4 +1,4 @@
-import { CONTENTFUL_CONTAINER_ID, LATEST_SCHEMA_VERSION } from '../../src';
+import { LATEST_SCHEMA_VERSION } from '../../src';
 import type {
   Composition,
   ExperienceEntry,
@@ -170,87 +170,6 @@ export const createCompositionEntry = ({
       unboundValues: {
         uuid1: {
           value: 'test',
-        },
-      },
-    },
-  };
-};
-
-export const designComponentGeneratedVariableName = 'text_uuid1DesignComponent';
-export const createDesignComponentEntry = ({
-  schemaVersion = LATEST_SCHEMA_VERSION,
-  id = 'design-component-id',
-}: createCompositionEntryArgs & { id: string }) => {
-  return {
-    sys: {
-      id,
-      type: 'Entry',
-      contentType: {
-        sys: {
-          id: 'layout',
-          type: 'Link',
-          linkType: 'ContentType',
-        },
-      },
-      createdAt: '2023-06-27T00:00:00.000Z',
-      updatedAt: '2023-06-27T00:00:00.000Z',
-      revision: 1,
-      space: {
-        sys: {
-          type: 'Link',
-          linkType: 'Space',
-          id: 'cfexampleSpace',
-        },
-      },
-      environment: {
-        sys: {
-          type: 'Link',
-          linkType: 'Environment',
-          id: 'cfexampleEnvironment',
-        },
-      },
-    },
-    metadata: { tags: [] },
-    fields: {
-      title: 'Test Composition',
-      slug: 'test',
-      componentTree: {
-        children: [
-          {
-            definitionId: CONTENTFUL_CONTAINER_ID,
-            variables: {},
-            children: [
-              {
-                definitionId: 'custom-component',
-                variables: {
-                  text: {
-                    key: designComponentGeneratedVariableName,
-                    type: 'ComponentValue',
-                  },
-                },
-                children: [],
-              },
-            ],
-          },
-        ],
-        breakpoints: [],
-        schemaVersion,
-      },
-      dataSource: {},
-      unboundValues: {
-        unbound_uuid1DesignComponent: {
-          value: 'custom component title',
-        },
-      },
-      componentSettings: {
-        variableDefinitions: {
-          [designComponentGeneratedVariableName]: {
-            id: 'text',
-            name: 'Text',
-            type: 'Text',
-            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1DesignComponent' },
-            required: false,
-          },
         },
       },
     },

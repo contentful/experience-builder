@@ -3,6 +3,8 @@ import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
 import { sendMessage } from '../communication/sendMessage';
 
 export class EditorModeEntityStore extends EditorEntityStore {
+  public locale: string;
+
   constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
     const subscribe = (method: unknown, cb: (payload: RequestedEntitiesMessage) => void) => {
       const listeners = (event: MessageEvent) => {
@@ -31,6 +33,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
     };
 
     super({ entities, sendMessage, subscribe, locale });
+    this.locale = locale;
   }
 
   async fetchEntities(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {
@@ -40,7 +43,8 @@ export class EditorModeEntityStore extends EditorEntityStore {
     const uniqueEntryLinks = new Set(entryLinks.map((link) => link.sys.id));
     const uniqueAssetLinks = new Set(assetLinks.map((link) => link.sys.id));
 
-    return await Promise.allSettled([
+    // Entries and assets will be stored in entryMap and assetMap
+    await Promise.allSettled([
       this.fetchEntries([...uniqueEntryLinks]),
       this.fetchAssets([...uniqueAssetLinks]),
     ]);

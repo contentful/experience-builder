@@ -77,8 +77,6 @@ export const ExperienceRoot = ({
     mode,
   });
 
-  if (!mode || !supportedModes.includes(mode)) return null;
-
   if (mode === 'editor') {
     return (
       <ErrorBoundary>
