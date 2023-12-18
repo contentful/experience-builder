@@ -1,4 +1,4 @@
-import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../types';
+import { ComponentDefinitionVariable, ContainerStyleVariableName } from '@/types';
 
 export const builtInStyles: Record<
   ContainerStyleVariableName,

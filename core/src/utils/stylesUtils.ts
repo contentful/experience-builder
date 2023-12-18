@@ -1,9 +1,3 @@
-import {
-  CSSProperties,
-  CompositionComponentNode,
-  CompositionVariableValueType,
-  StyleProps,
-} from '@contentful/experience-builder-core';
 import md5 from 'md5';
 import {
   transformWidthSizing,
@@ -12,7 +6,13 @@ import {
   transformBorderStyle,
   transformFill,
 } from './transformers';
-import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder';
+import {
+  CSSProperties,
+  StyleProps,
+  CompositionComponentNode,
+  CompositionVariableValueType,
+} from '@/types';
+import { CONTENTFUL_CONTAINER_ID } from '@/constants';
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 

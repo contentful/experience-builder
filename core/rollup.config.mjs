@@ -1,26 +1,30 @@
-import resolve from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import dts from 'rollup-plugin-dts';
-import terser from '@rollup/plugin-terser';
-
-import packageJson from './package.json' assert { type: 'json' };
-
 export default [
   {
     input: 'src/index.ts',
     output: [
       {
-        file: packageJson.module,
+        dir: 'dist',
         format: 'esm',
         sourcemap: true,
+        preserveModules: true,
       },
     ],
-    plugins: [resolve(), typescript({ tsconfig: './tsconfig.json' }), terser()],
+    plugins: [nodeResolve(), typescript({ tsconfig: './tsconfig.json' })],
     external: [/node_modules\/(?!tslib.*)/],
   },
   {
-    input: 'src/index.ts',
-    output: [{ file: 'dist/index.d.ts', format: 'es' }],
-    plugins: [dts()],
+    input: 'src/constants.ts',
+    output: [
+      {
+        dir: 'dist',
+        format: 'esm',
+        sourcemap: true,
+        preserveModules: true,
+      },
+    ],
+    plugins: [nodeResolve(), typescript({ tsconfig: './tsconfig.json' })],
+    external: [/node_modules\/(?!tslib.*)/],
   },
 ];

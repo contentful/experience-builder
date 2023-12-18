@@ -1,12 +1,12 @@
 /* eslint-disable */ /* TODO: fix eslint errors */
 import React, { RefObject } from 'react';
 
-import {
+import type {
   CompositionComponentNode,
   CompositionDataSource,
   CompositionUnboundValues,
   StyleProps,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experience-builder-core/types';
 
 import { EntityStore } from '@contentful/visual-sdk';
 import { combineClasses } from '../../utils/combineClasses';

@@ -1,7 +1,7 @@
 {
   "name": "test-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1-pre-20231216T233830.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,13 +10,12 @@
     "build:vercel": "npm run build --prefix ../core && npm run build --prefix ../components && npm run build",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
-    "prepare": "relative-deps",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@contentful/experience-builder": "^3.0.1",
+    "@contentful/experience-builder": "^3.0.2-pre-20231217T135230.0",
     "@contentful/experience-builder-components": "file:../components",
     "@contentful/experience-builder-storybook-addon": "file:../storybook-addon",
     "react": "^18.2.0",
@@ -48,7 +47,6 @@
     "vite": "^4.4.5"
   },
   "relativeDependencies": {
-    "@contentful/experience-builder": "../../../experience-builder/packages/experience-builder-sdk",
-    "@contentful/experience-builder-types": "../../../experience-builder/packages/experience-builder-types"
+    "@contentful/experience-builder": "../../../experience-builder/packages/experience-builder-sdk"
   }
 }

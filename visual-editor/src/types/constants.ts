@@ -1,7 +1,7 @@
 import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experience-builder-core/constants';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 
 export const DRAGGABLE_HEIGHT = 74;

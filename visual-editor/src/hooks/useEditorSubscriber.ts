@@ -1,32 +1,34 @@
 import { useEffect, useState } from 'react';
-
-import { sendMessage } from '../communication/sendMessage';
-import { EditorModeEntityStore } from '../shared/EditorModeEntityStore';
 import {
-  CompositionComponentNode,
-  CompositionComponentPropValue,
-  CompositionTree,
-  INTERNAL_EVENTS,
-  VISUAL_EDITOR_EVENTS,
-  Link,
-} from '@contentful/experience-builder-core';
-import {
-  INCOMING_EVENTS,
-  OUTGOING_EVENTS,
-  SCROLL_STATES,
+  EditorModeEntityStore,
+  sendMessage,
+  getDataFromTree,
   doesMismatchMessageSchema,
   tryParseMessage,
 } from '@contentful/experience-builder-core';
-import { getDataFromTree } from '../shared/utils/utils';
+import {
+  OUTGOING_EVENTS,
+  INTERNAL_EVENTS,
+  VISUAL_EDITOR_EVENTS,
+  INCOMING_EVENTS,
+  SCROLL_STATES,
+} from '@contentful/experience-builder-core/constants';
+import {
+  CompositionTree,
+  CompositionComponentNode,
+  CompositionComponentPropValue,
+} from '@contentful/experience-builder-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
-import dragState from '@/shared/utils/dragState';
+import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
+import { Link } from 'contentful';
 
 export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
 export const setDesignComponents = (designComponents: Link<'Entry'>[]) => {
   for (const designComponent of designComponents) {
+    //@ts-expect-error TODO: Fix typing
     designComponentsRegistry.set(designComponent.sys.id, designComponent);
   }
 };

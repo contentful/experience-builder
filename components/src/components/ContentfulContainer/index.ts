@@ -1,11 +1,13 @@
+import { builtInStyles } from '@contentful/experience-builder-core';
+import { ContentfulContainer } from './ContentfulContainer';
+import {
+  ComponentDefinitionVariable,
+  ComponentDefinition,
+} from '@contentful/experience-builder-core/types';
 import {
   CONTENTFUL_COMPONENT_CATEGORY,
   CONTENTFUL_CONTAINER_ID,
-  ComponentDefinition,
-  ComponentDefinitionVariable,
-  builtInStyles,
-} from '@contentful/experience-builder-core';
-import { ContentfulContainer } from './ContentfulContainer';
+} from '@contentful/experience-builder-core/constants';
 
 export { ContentfulContainer };
 

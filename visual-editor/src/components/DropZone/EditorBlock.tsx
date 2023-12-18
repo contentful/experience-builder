@@ -1,18 +1,18 @@
 import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
-import {
-  CONTENTFUL_CONTAINER_ID,
-  CompositionComponentNode,
-} from '@contentful/experience-builder-core';
 import React from 'react';
 import styles from './styles.module.css';
 import { DraggableComponent } from '../Draggable/DraggableComponent';
-import { sendMessage } from '@/communication/sendMessage';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core';
+import { sendMessage } from '@contentful/experience-builder-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from '@/hooks/useComponent';
 import { useZoneStore } from '@/store/zone';
 import classNames from 'classnames';
+import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
+import {
+  CONTENTFUL_CONTAINER_ID,
+  OUTGOING_EVENTS,
+} from '@contentful/experience-builder-core/constants';
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode;

@@ -8,9 +8,9 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import { usePlaceholderStyleStore } from '@/store/placeholderStyle';
 import styles from './styles.module.css';
 import classNames from 'classnames';
-import { ROOT_ID } from '@/shared/utils/constants';
+import { ROOT_ID } from '@/types/constants';
 import { EmptyEditorContainer } from '@components/EmptyContainer/EmptyContainer';
-import { getZoneParents } from '@/shared/utils/zone';
+import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
 import { useDropZoneDirection } from '@/hooks/useDropZoneDirection';
 

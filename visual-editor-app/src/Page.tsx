@@ -1,5 +1,10 @@
-import { useFetchExperience, ExperienceRoot } from '@contentful/experience-builder';
-import { ExternalSDKMode, VisualEditorMode } from '@contentful/experience-builder-core';
+import {
+  useFetchExperience,
+  ExperienceRoot,
+  ExternalSDKMode,
+  VisualEditorMode
+} from '@contentful/experience-builder';
+
 import { createClient } from 'contentful';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -77,7 +82,6 @@ export default function Page() {
       <ExperienceRoot
         experience={experience}
         locale={localeCode}
-        // @ts-expect-error TODO: fix types
         visualEditorMode={visualEditorMode}
       />
       <footer

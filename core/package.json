@@ -15,6 +15,20 @@
     "package.json",
     "dist/**/*.*"
   ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./constants": "./dist/constants.js"
+  },
+  "typesVersions": {
+    "*": {
+      "types": [
+        "./dist/types.d.ts"
+      ],
+      "constants": [
+        "./dist/constants.d.ts"
+      ]
+    }
+  },
   "scripts": {
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
@@ -22,7 +36,9 @@
     "predev": "npm run clean",
     "dev": "rollup -c ./rollup.dev.config.mjs --watch",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
-    "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix"
+    "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "author": "",
   "license": "MIT",
@@ -33,12 +49,18 @@
     "@rollup/plugin-typescript": "^11.1.5",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
+    "@vitest/coverage-v8": "^1.0.4",
     "eslint": "^8.54.0",
+    "happy-dom": "^12.10.3",
     "rimraf": "^5.0.5",
     "rollup-plugin-dts": "^6.1.0",
-    "rollup-plugin-ts": "^3.4.5"
+    "rollup-plugin-ts": "^3.4.5",
+    "vite-tsconfig-paths": "^4.2.2",
+    "vitest": "^1.0.4"
   },
   "dependencies": {
-    "@contentful/visual-sdk": "^1.0.0-alpha.34"
+    "@contentful/rich-text-types": "^16.3.0",
+    "@contentful/visual-sdk": "^1.0.0-alpha.34",
+    "lodash-es": "^4.17.21"
   }
 }

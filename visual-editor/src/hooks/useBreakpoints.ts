@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Breakpoint, CompositionVariableValueType } from '@contentful/experience-builder-core';
+import type {
+  Breakpoint,
+  CompositionVariableValueType,
+} from '@contentful/experience-builder-core/types';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
 

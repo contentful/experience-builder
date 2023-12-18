@@ -1,4 +1,4 @@
-import resolve from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
@@ -26,7 +26,7 @@ export default [
           return `import styleInject from 'style-inject';\nstyleInject(${cssVariableName});`;
         },
       }),
-      resolve(),
+      nodeResolve(),
       commonjs(),
       typescript({ tsconfig: './tsconfig.json' }),
       terser(),
@@ -55,7 +55,7 @@ export default [
           return `import styleInject from 'style-inject';\nstyleInject(${cssVariableName});`;
         },
       }),
-      resolve(),
+      nodeResolve(),
       commonjs(),
       injectProcessEnv({
         NODE_ENV: 'production',

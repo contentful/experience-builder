@@ -35,7 +35,7 @@ export const getElementCoordinates = (element: Element): DOMRect => {
    * E.g child1 => {top: 2, bottom: 3, left: 4, right: 6} & child2 => {top: 1, bottom: 8, left: 12, right: 24}
    * The final assumed coordinates of the element would be => { top: 1, right: 24, bottom: 8, left: 4 }
    */
-  for (const child of (element as any).children) {
+  for (const child of element.children) {
     const childRect = getElementCoordinates(child);
     if (childRect.width !== 0 || childRect.height !== 0) {
       const { top, right, bottom, left } = childRect;

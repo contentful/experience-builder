@@ -2,11 +2,11 @@ import { useEditorStore } from '@/store/editor';
 import {
   ComponentRegistration,
   CompositionComponentNode,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experience-builder-core/types';
 import { useMemo } from 'react';
 import { ResolveDesignValueType } from './useBreakpoints';
 import { useComponentProps } from './useComponentProps';
-import { builtInComponents } from '@/shared/utils/constants';
+import { builtInComponents } from '@/types/constants';
 
 interface ComponentParams {
   node: CompositionComponentNode;

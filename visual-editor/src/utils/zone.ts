@@ -1,4 +1,4 @@
-import { ROOT_ID } from './constants';
+import { ROOT_ID } from '../types/constants';
 
 export const getZoneParents = (zoneId: string) => {
   const element = document.querySelector(`[data-rfd-droppable-id='${zoneId}']`);
