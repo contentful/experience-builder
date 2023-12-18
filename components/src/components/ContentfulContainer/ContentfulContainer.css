@@ -1,0 +1,25 @@
+#ContentfulContainer.defaultStyles {
+  overflow: scroll;
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+#ContentfulContainer.defaultStyles::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+/* used by ContentfulSectionAsHyperlink.tsx */
+.cf-section-link,
+.cf-section-link:active,
+.cf-section-link:visited,
+.cf-section-link:hover,
+.cf-section-link:read-write,
+.cf-section-link:focus-visible {
+  color: inherit;
+  text-decoration: unset;
+  outline: unset;
+}
