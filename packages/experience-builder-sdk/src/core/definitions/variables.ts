@@ -176,7 +176,7 @@ export const builtInStyles: Record<
     type: 'Text',
     group: 'style',
     description: 'The font size of the section',
-    defaultValue: '1rem',
+    defaultValue: '16px',
   },
   cfFontWeight: {
     displayName: 'Font Weight',
@@ -190,14 +190,14 @@ export const builtInStyles: Record<
     type: 'Text',
     group: 'style',
     description: 'The line height of the section',
-    defaultValue: 'normal',
+    defaultValue: '20px',
   },
   cfLetterSpacing: {
     displayName: 'Letter Spacing',
     type: 'Text',
     group: 'style',
     description: 'The letter spacing of the section',
-    defaultValue: 'normal',
+    defaultValue: '0px',
   },
   cfTextColor: {
     displayName: 'Text Color',
