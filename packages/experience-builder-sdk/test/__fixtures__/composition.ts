@@ -1,5 +1,9 @@
 import { CONTENTFUL_CONTAINER_ID, LATEST_SCHEMA_VERSION } from '../../src';
-import { Composition, ExperienceEntry, SchemaVersions } from '../../src/types';
+import type {
+  Composition,
+  ExperienceEntry,
+  SchemaVersions,
+} from '@contentful/experience-builder-core/types';
 import { entityIds } from './entities';
 
 const compositionFields: Composition = {

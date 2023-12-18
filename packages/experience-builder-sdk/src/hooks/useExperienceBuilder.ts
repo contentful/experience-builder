@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { DeprecatedExperience, ExternalSDKMode } from '../types';
+import type {
+  DeprecatedExperience,
+  ExternalSDKMode,
+} from '@contentful/experience-builder-core/types';
 import type { ContentfulClientApi } from 'contentful';
 import { defineComponents } from '../core/componentRegistry';
 

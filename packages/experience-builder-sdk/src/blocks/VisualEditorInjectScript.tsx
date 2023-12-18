@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { VISUAL_EDITOR_CONTAINER_ID } from '@contentful/experience-builder-types';
+import { VISUAL_EDITOR_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
 
 /**
  * The version can be any semver version or dist tag

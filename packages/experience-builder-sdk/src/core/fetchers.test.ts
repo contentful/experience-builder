@@ -132,7 +132,7 @@ describe('fetchReferencedEntities', () => {
       await fetchers.fetchReferencedEntities({
         // @ts-expect-error intentionally setting it to undefined
         client: undefined,
-        experienceEntry: compositionEntry as unknown as Entry,
+        experienceEntry: compositionEntry,
         locale: 'en-US',
       });
     } catch (e) {
@@ -146,7 +146,7 @@ describe('fetchReferencedEntities', () => {
     try {
       await fetchers.fetchReferencedEntities({
         client: mockClient,
-        experienceEntry: compositionEntry as unknown as Entry,
+        experienceEntry: compositionEntry,
         // @ts-expect-error intentionally setting it to undefined
         locale: undefined,
       });

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { InternalSDKMode, VisualEditorMode } from '../types';
+import type { InternalSDKMode } from '@contentful/experience-builder-core/types';
 import { VisualEditorContextProvider } from './editor/VisualEditorContext';
+import { VisualEditorMode } from '@contentful/experience-builder-core';
 
 type VisualEditorRootProps = {
   initialLocale: string;

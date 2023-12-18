@@ -1,0 +1,30 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  install-build:
+    uses: ./.github/workflows/build.yaml
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  check:
+    needs: install-build
+    uses: ./.github/workflows/check.yaml
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  publish:
+    needs: [install-build, check]
+    if: (github.ref_name == 'main' || github.ref_name == 'development' || github.ref_name == 'next' || github.ref_name == 'chore/toolkit-repo-migration') && !contains(github.event.head_commit.message, 'skip-release')
+    permissions:
+      contents: write
+    uses: ./.github/workflows/publish.yaml
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  upload-artifact-cleanup:
+    if: ${{ always() }}
+    needs: [install-build, check, publish]
+    uses: ./.github/workflows/cleanup.yaml

@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
 
 import { sendHoveredComponentCoordinates } from '../../communication/sendHoveredComponentCoordinates';
-import { sendMessage } from '../../communication/sendMessage';
 import { sendSelectedComponentCoordinates } from '../../communication/sendSelectedComponentCoordinates';
 import {
   addComponentRegistration,
@@ -9,8 +8,12 @@ import {
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
 } from '../../core/componentRegistry';
-import { EditorModeEntityStore } from '../../core/editor/EditorModeEntityStore';
 import {
+  EditorModeEntityStore,
+  sendMessage,
+  getDataFromTree,
+} from '@contentful/experience-builder-core';
+import type {
   Breakpoint,
   ComponentRegistration,
   CompositionComponentNode,
@@ -20,15 +23,14 @@ import {
   CompositionUnboundValues,
   InternalSDKMode,
   Link,
-} from '../../types';
+} from '@contentful/experience-builder-core/types';
 import {
   INCOMING_EVENTS,
   OUTGOING_EVENTS,
   SCROLL_STATES,
   INTERNAL_EVENTS,
   VISUAL_EDITOR_EVENTS,
-} from '../../constants';
-import { getDataFromTree } from '../../utils/utils';
+} from '@contentful/experience-builder-core/constants';
 import { doesMismatchMessageSchema, tryParseMessage } from '../../utils/validation';
 import { Entry } from 'contentful';
 import { DesignComponent } from '../../components/DesignComponent';

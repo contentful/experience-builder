@@ -1,4 +1,7 @@
-import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../../types';
+import type {
+  ComponentDefinitionVariable,
+  ContainerStyleVariableName,
+} from '@contentful/experience-builder-core/types';
 
 export const builtInStyles: Record<
   ContainerStyleVariableName,
