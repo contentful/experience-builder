@@ -52,12 +52,12 @@ export const ExperienceRoot = ({ locale, experience, slug }: ExperienceRootProps
     mode,
   });
 
-  if (!mode || !supportedModes.includes(mode)) return null;
-
   if (mode === 'editor') {
+    const entityStore =
+      experience && !isDeprecatedExperience(experience) ? experience.entityStore : undefined;
     return (
       <ErrorBoundary>
-        <VisualEditorRoot initialLocale={locale} mode={mode} />
+        <VisualEditorRoot initialLocale={locale} mode={mode} previousEntityStore={entityStore} />
       </ErrorBoundary>
     );
   }

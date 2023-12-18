@@ -98,7 +98,7 @@ export const validateExperienceBuilderConfig = ({
 
   if (!locale) {
     throw new Error(
-      'Parameter "locale" is required for expereince builder initialization outside of editor mode'
+      'Parameter "locale" is required for experience builder initialization outside of editor mode'
     );
   }
 };
