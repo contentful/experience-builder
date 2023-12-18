@@ -18,6 +18,7 @@ import {
   CompositionTree,
   CompositionUnboundValues,
   InternalSDKMode,
+  EntityStore,
   Link,
 } from '../../types';
 import { INCOMING_EVENTS, OUTGOING_EVENTS, SCROLL_STATES, INTERNAL_EVENTS } from '../../constants';
@@ -37,6 +38,7 @@ type VisualEditorContextType = {
   unboundValues: CompositionUnboundValues;
   breakpoints: Breakpoint[];
   entityStore: React.MutableRefObject<EditorModeEntityStore>;
+  areEntitiesFetched: boolean;
 };
 
 export const VisualEditorContext = React.createContext<VisualEditorContextType>({
@@ -51,12 +53,14 @@ export const VisualEditorContext = React.createContext<VisualEditorContextType>(
   locale: null,
   breakpoints: [],
   entityStore: {} as React.MutableRefObject<EditorModeEntityStore>,
+  areEntitiesFetched: false,
 });
 
 type VisualEditorContextProviderProps = {
   initialLocale: string;
   mode: InternalSDKMode;
   children: ReactElement;
+  previousEntityStore?: EntityStore;
 };
 
 export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
@@ -70,6 +74,7 @@ export function VisualEditorContextProvider({
   initialLocale,
   mode,
   children,
+  previousEntityStore,
 }: VisualEditorContextProviderProps) {
   const hasConnectEventBeenSent = useRef(false);
   const [tree, setTree] = useState<CompositionTree>();
@@ -78,13 +83,42 @@ export function VisualEditorContextProvider({
   const [isDragging, setIsDragging] = useState(false);
   const selectedNodeId = useRef<string>('');
   const [locale, setLocale] = useState<string>(initialLocale);
+  const [areEntitiesFetched, setEntitiesFetched] = useState(false);
 
   const entityStore = useRef<EditorModeEntityStore>(
     new EditorModeEntityStore({
-      entities: [],
+      // Initially, the SDK boots in preview mode and already fetches entities.
+      // We utilizes the previosuly existing store to avoid loading twice and
+      // have the entities ready as early as possible.
+      entities: previousEntityStore?.entities ?? [],
       locale: locale,
     })
   );
+
+  // Reload the entity store when the locale changed
+  useEffect(() => {
+    if (!locale || locale === entityStore.current.locale) return;
+    entityStore.current = new EditorModeEntityStore({
+      entities: [],
+      locale: locale,
+    });
+  }, [locale]);
+
+  // When the tree was updated, we store the dataSource and
+  // afterward, this effect fetches the respective entities.
+  useEffect(() => {
+    const resolveEntities = async () => {
+      setEntitiesFetched(false);
+      const dataSourceEntityLinks = Object.values(dataSource || {});
+      await entityStore.current.fetchEntities([
+        ...dataSourceEntityLinks,
+        ...(designComponentsRegistry.values() || []),
+      ]);
+      setEntitiesFetched(true);
+    };
+
+    resolveEntities();
+  }, [dataSource]);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
@@ -327,6 +361,7 @@ export function VisualEditorContextProvider({
         locale,
         breakpoints: tree?.root.data.breakpoints ?? [],
         entityStore,
+        areEntitiesFetched,
       }}>
       {children}
     </VisualEditorContext.Provider>
