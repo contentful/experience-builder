@@ -1,7 +1,7 @@
 {
   "name": "@contentful/experience-builder",
   "version": "3.0.1",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "typings": "./dist/src/index.d.ts",
   "type": "module",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "prepare": "node ./bin/injectSDKVersion.cjs && relative-deps",
+    "prepare": "node ./bin/injectSDKVersion.cjs",
     "prebuild": "rimraf dist && node ./bin/injectSDKVersion.cjs",
     "build": "rollup -c rollup.config.mjs",
     "watch": "vite build --watch",
@@ -25,9 +25,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@contentful/experience-builder-components": "^0.0.1-pre-20231215T221113.0",
-    "@contentful/experience-builder-types": "file:../experience-builder-types",
-    "@contentful/experience-builder-visual-editor": "^0.0.1-pre-20231215T221113.0",
+    "@contentful/experience-builder-components": "^0.0.1-pre-20231217T133016.0",
+    "@contentful/experience-builder-core": "^0.0.1-pre-20231217T133016.0",
+    "@contentful/experience-builder-visual-editor": "^0.0.1-pre-20231217T133016.0",
     "@contentful/rich-text-types": "^16.2.1",
     "@contentful/visual-sdk": "^1.0.0-alpha.26",
     "classnames": "^2.3.2",
@@ -86,6 +86,7 @@
     "package.json"
   ],
   "relativeDependencies": {
+    "@contentful/experience-builder-core": "../../../experience-builder-toolkit/packages/core",
     "@contentful/experience-builder-visual-editor": "../../../experience-builder-toolkit/packages/visual-editor",
     "@contentful/experience-builder-components": "../../../experience-builder-toolkit/packages/components/"
   }

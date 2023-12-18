@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { EntityStore } from '../../core/preview/EntityStore';
-import { Experience, InternalSDKMode } from '../../types';
+import type { Experience, InternalSDKMode } from '@contentful/experience-builder-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
 import { useBreakpoints, useEditorModeSwitch } from '../../hooks';

@@ -1,4 +1,4 @@
-import { ComponentRegistration } from '@contentful/experience-builder-types';
+import { ComponentRegistration } from '@contentful/experience-builder-core/types';
 import React from 'react';
 
 interface CFProps {

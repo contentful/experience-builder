@@ -1,6 +1,6 @@
-import { supportedModes } from '../constants';
-import { InternalSDKMode, IncomingEvent } from '../types';
-import { INCOMING_EVENTS } from '../constants';
+import { supportedModes } from '@contentful/experience-builder-core';
+import type { InternalSDKMode, IncomingEvent } from '@contentful/experience-builder-core/types';
+import { INCOMING_EVENTS } from '@contentful/experience-builder-core/constants';
 import { PostMessageMethods } from '@contentful/visual-sdk';
 
 export type VisualEditorMessagePayload = {

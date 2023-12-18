@@ -1,15 +1,18 @@
 import { EntityStore } from '@contentful/visual-sdk';
-import {
+import type {
   CompositionNode,
   CompositionDataSource,
   CompositionUnboundValues,
   CompositionComponentNode,
   CompositionComponentPropValue,
   Composition,
-} from '../../types';
-import { generateRandomId } from '../../utils/utils';
+} from '@contentful/experience-builder-core/types';
 import { designComponentsRegistry } from '../../blocks/editor/VisualEditorContext';
-import { DESIGN_COMPONENT_BLOCK_NODE_TYPE, DESIGN_COMPONENT_NODE_TYPE } from '../../constants';
+import {
+  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+  DESIGN_COMPONENT_NODE_TYPE,
+} from '@contentful/experience-builder-core/constants';
+import { generateRandomId } from '@contentful/experience-builder-core';
 
 export const deserializeDesignComponentNode = ({
   node,

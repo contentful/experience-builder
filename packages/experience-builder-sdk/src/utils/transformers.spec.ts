@@ -1,4 +1,4 @@
-import { StyleProps } from '../types';
+import type { StyleProps } from '@contentful/experience-builder-core/types';
 import { transformBackgroundImage, transformBorderStyle, transformFill } from './transformers';
 
 type CompositeAlignment = StyleProps['cfBackgroundImageAlignment'];

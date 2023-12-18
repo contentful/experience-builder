@@ -1,9 +1,10 @@
 import type { Asset, ContentfulClientApi, Entry } from 'contentful';
-import { ExperienceEntry, isExperienceEntry } from '@contentful/experience-builder-types';
+import { isExperienceEntry } from '@contentful/experience-builder-core';
+import { ExperienceEntry } from '@contentful/experience-builder-core/types';
 
 type fetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;
-  experienceEntry: Entry;
+  experienceEntry: Entry | ExperienceEntry;
   locale: string;
 };
 
@@ -33,7 +34,7 @@ export const fetchReferencedEntities = async ({
   const entryIds: string[] = [];
   const assetIds: string[] = [];
 
-  for (const dataBinding of Object.values(experienceEntry.fields.dataSource)) {
+  for (const dataBinding of Object.values((experienceEntry as ExperienceEntry).fields.dataSource)) {
     if (!('sys' in dataBinding)) {
       continue;
     }

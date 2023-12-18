@@ -3,7 +3,10 @@ import React, { MouseEventHandler } from 'react';
 import '../styles/ContentfulContainer.css';
 import classNames from 'classnames';
 
-import { CompositionComponentNode, StyleProps } from '../types';
+import type {
+  CompositionComponentNode,
+  StyleProps,
+} from '@contentful/experience-builder-core/types';
 
 export type ContentfulContainerProps<EditorMode = boolean> = EditorMode extends true
   ? {
