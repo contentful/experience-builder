@@ -18,7 +18,7 @@
     "test:coverage": "NODE_ENV=test jest --coverage --maxWorkers 2",
     "tsc": "tsc --noEmit",
     "lint": "eslint ./src --ext '.ts,.tsx,.js,.jsx'",
-    "presemantic-release": "yarn build",
+    "presemantic-release": "npm run build",
     "semantic-release": "semantic-release",
     "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx,css}'",
     "prettier": "prettier --write '**/*.{jsx,js,ts,tsx,css}'",
