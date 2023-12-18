@@ -1,5 +1,5 @@
 import { HoveredElement } from '../types';
-import { OUTGOING_EVENTS } from '../constants';
+import { DESIGN_COMPONENT_NODE_TYPE, OUTGOING_EVENTS } from '../constants';
 import { sendMessage } from './sendMessage';
 
 export class MouseOverHandler {
@@ -16,16 +16,47 @@ export class MouseOverHandler {
     return { top, bottom, left, right };
   };
 
+  private getBoundingClientRect(element: Element) {
+    const isDesignComponent =
+      element.getAttribute('data-cf-node-block-type') === DESIGN_COMPONENT_NODE_TYPE;
+    if (!isDesignComponent) {
+      return element.getBoundingClientRect();
+    } else {
+      // As we use `display: contents` for design components, there is no real "block"
+      // in the DOM and thus the browser fails to calculate the bounding rect.
+      // Instead, we calculate it for each child and add it up:
+      if (!element.firstElementChild) {
+        return { left: 0, top: 0, width: 0, height: 0 };
+      }
+      const firstChildRect = element.firstElementChild.getBoundingClientRect();
+      let fullHeight = firstChildRect.height;
+      let nextChild = element.firstElementChild.nextElementSibling;
+      while (nextChild) {
+        const nextChildRect = nextChild.getBoundingClientRect();
+        fullHeight += nextChildRect.height;
+        nextChild = nextChild.nextElementSibling;
+      }
+      // The root of a design component positions its first level containers vertically.
+      // So we just need to add up the height and use the remaining properties from the first child.
+      return {
+        left: firstChildRect.left,
+        top: firstChildRect.top,
+        width: firstChildRect.width,
+        height: fullHeight,
+      };
+    }
+  }
+
   private getFullCoordinates = (element: HTMLElement) => {
     const validChildren = Array.from(element.children).filter(
       (child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block'
     );
 
-    const { left, top, width, height } = element.getBoundingClientRect();
+    const { left, top, width, height } = this.getBoundingClientRect(element);
     const margins = this.getMargins(element);
 
     const childrenCoordinates = validChildren.map((child) => {
-      const { left, top, width, height } = child.getBoundingClientRect();
+      const { left, top, width, height } = this.getBoundingClientRect(child);
 
       return { left, top, width, height, margins };
     });
