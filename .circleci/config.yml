@@ -8,107 +8,15 @@ executors:
       - image: cimg/node:18.17
     working_directory: ~/build-and-test
 
-commands:
-  install-dependencies:
-    steps:
-      - restore_cache:
-          key: dependency-cache-primary-{{ arch }}-yarn-packages-{{ checksum ".nvmrc"}}-{{ checksum "yarn.lock" }}-{{ .Branch }}
-      - run: yarn install --prefer-offline --pure-lockfile
-      - save_cache:
-          key: dependency-cache-primary-{{ arch }}-yarn-packages-{{ checksum ".nvmrc"}}-{{ checksum "yarn.lock" }}-{{ .Branch }}
-          paths:
-            - ~/.cache/yarn
-
-  persist-workspace:
-    steps:
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
-
-  with-workspace:
-    steps:
-      - attach_workspace:
-          at: ~/build-and-test
-
-  use-vault:
-    steps:
-      - vault/get-secrets:
-          template-preset: 'semantic-release-ecosystem'
-
 jobs:
   prepare:
     executor: docker-with-node
     steps:
       - checkout
       - run: node --version
-      - install-dependencies
-      - persist-workspace
-
-  build:
-    executor: docker-with-node
-    steps:
-      - with-workspace
-      - run: yarn build
-
-  lint:
-    executor: docker-with-node
-    steps:
-      - with-workspace
-      - run: yarn prettier:check
-      - run: yarn lint
-      - run: yarn tsc
-
-  unit-tests:
-    executor: docker-with-node
-    steps:
-      - with-workspace
-      - run: yarn test:coverage
-      - store_test_results:
-          path: packages/*/reports
-      - store_artifacts:
-          path: ./packages/*/reports/clover.xml
-
-  # Do not use the workspace for the release step
-  release:
-    executor: docker-with-node
-    steps:
-      - checkout
-      - use-vault
-      - install-dependencies
-      - vault/configure-lerna
-      - run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
-      - run: yarn build # This should not be needed, but without it it will not contain any files
-      - run: yarn lerna version --no-private --conventional-commits --create-release
-          github --yes
-      - run: yarn lerna publish from-git --yes
 
 workflows:
   version: 2
   build_and_test:
     jobs:
       - prepare
-      - build:
-          requires:
-            - prepare
-      - lint:
-          requires:
-            - prepare
-      - unit-tests:
-          requires:
-            - prepare
-      - release:
-          context: vault
-          requires:
-            - prepare
-            - build
-            - unit-tests
-            - lint
-          filters:
-            branches:
-              only:
-                - main
-                - next
-                - next-major
-                - alpha
-                - beta

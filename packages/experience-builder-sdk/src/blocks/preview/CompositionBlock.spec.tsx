@@ -2,14 +2,18 @@ import React from 'react';
 
 import { render } from '@testing-library/react';
 
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '../../constants';
+import {
+  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_SECTION_ID,
+} from '@contentful/experience-builder-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
-import { CompositionNode, ExperienceEntry } from '../../types';
+import type { CompositionNode, ExperienceEntry } from '@contentful/experience-builder-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
 import {
   compositionEntry,
   createDesignComponentEntry,
+  designComponentGeneratedVariableName,
 } from '../../../test/__fixtures__/composition';
 import { EntityStore } from '../../core/preview/EntityStore';
 import { assets, entries } from '../../../test/__fixtures__/entities';
@@ -147,13 +151,17 @@ describe('CompositionBlock', () => {
         breakpoints={[]}
         entityStore={entityStore}
         usedComponents={[designComponentEntry] as ExperienceEntry[]}
-        unboundValues={{}}
+        unboundValues={{
+          [designComponentGeneratedVariableName]: {
+            value: 'New year eve',
+          },
+        }}
         resolveDesignValue={jest.fn()}
       />
     );
 
     expect(getByTestId('design-component')).toBeInTheDocument();
     expect(getByTestId('contentful-container')).toBeInTheDocument();
-    expect(getByText('custom component title')).toBeInTheDocument();
+    expect(getByText('New year eve')).toBeInTheDocument();
   });
 });

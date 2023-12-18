@@ -1,5 +1,8 @@
-import { CONTENTFUL_COMPONENT_CATEGORY, CONTENTFUL_CONTAINER_ID } from '../../constants';
-import { ComponentDefinition } from '../../types';
+import {
+  CONTENTFUL_COMPONENT_CATEGORY,
+  CONTENTFUL_CONTAINER_ID,
+} from '@contentful/experience-builder-core/constants';
+import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
 import { containerBuiltInStyles } from './variables';
 
 export const containerDefinition: ComponentDefinition = {

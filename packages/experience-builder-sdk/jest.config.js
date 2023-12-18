@@ -11,6 +11,7 @@ export default {
     '^.+\\.svg\\?react$': '<rootDir>/test/fileMock.ts',
   },
   transform: {
-    '\\.[jt]sx?$': 'ts-jest',
+    '\\.[jt]sx?$': ['ts-jest'],
   },
+  transformIgnorePatterns: ['node_modules/(?!(@contentful/.*/.*|style-inject|lodash-es)/)'],
 };

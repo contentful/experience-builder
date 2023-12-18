@@ -1,15 +1,19 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
 
 import { sendHoveredComponentCoordinates } from '../../communication/sendHoveredComponentCoordinates';
-import { sendMessage } from '../../communication/sendMessage';
 import { sendSelectedComponentCoordinates } from '../../communication/sendSelectedComponentCoordinates';
 import {
   addComponentRegistration,
+  componentRegistry,
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
 } from '../../core/componentRegistry';
-import { EditorModeEntityStore } from '../../core/editor/EditorModeEntityStore';
 import {
+  EditorModeEntityStore,
+  sendMessage,
+  getDataFromTree,
+} from '@contentful/experience-builder-core';
+import type {
   Breakpoint,
   ComponentRegistration,
   CompositionComponentNode,
@@ -19,12 +23,18 @@ import {
   CompositionUnboundValues,
   InternalSDKMode,
   Link,
-} from '../../types';
-import { INCOMING_EVENTS, OUTGOING_EVENTS, SCROLL_STATES, INTERNAL_EVENTS } from '../../constants';
-import { getDataFromTree } from '../../utils/utils';
+} from '@contentful/experience-builder-core/types';
+import {
+  INCOMING_EVENTS,
+  OUTGOING_EVENTS,
+  SCROLL_STATES,
+  INTERNAL_EVENTS,
+  VISUAL_EDITOR_EVENTS,
+} from '@contentful/experience-builder-core/constants';
 import { doesMismatchMessageSchema, tryParseMessage } from '../../utils/validation';
 import { Entry } from 'contentful';
 import { DesignComponent } from '../../components/DesignComponent';
+import { PostMessageMethods } from '@contentful/visual-sdk';
 
 type VisualEditorContextType = {
   tree: CompositionTree | undefined;
@@ -36,6 +46,8 @@ type VisualEditorContextType = {
   unboundValues: CompositionUnboundValues;
   breakpoints: Breakpoint[];
   entityStore: React.MutableRefObject<EditorModeEntityStore>;
+  bundleUrl: string | null;
+  stylesUrl: string | null;
 };
 
 export const VisualEditorContext = React.createContext<VisualEditorContextType>({
@@ -49,6 +61,8 @@ export const VisualEditorContext = React.createContext<VisualEditorContextType>(
   },
   locale: null,
   breakpoints: [],
+  bundleUrl: null,
+  stylesUrl: null,
   entityStore: {} as React.MutableRefObject<EditorModeEntityStore>,
 });
 
@@ -77,6 +91,9 @@ export function VisualEditorContextProvider({
   const [isDragging, setIsDragging] = useState(false);
   const selectedNodeId = useRef<string>('');
   const [locale, setLocale] = useState<string>(initialLocale);
+
+  const [bundleUrl, setBundleUrl] = useState<string | null>(null);
+  const [stylesUrl, setStylesUrl] = useState<string | null>(null);
 
   const entityStore = useRef<EditorModeEntityStore>(
     new EditorModeEntityStore({
@@ -132,6 +149,23 @@ export function VisualEditorContextProvider({
   }, [initialLocale]);
 
   useEffect(() => {
+    const onVisualEditorReady = () => {
+      window.dispatchEvent(
+        new CustomEvent(INTERNAL_EVENTS.VisualEditorInitialize, {
+          detail: { componentRegistry, locale },
+        })
+      );
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener(VISUAL_EDITOR_EVENTS.Ready, onVisualEditorReady);
+      return () => {
+        window.removeEventListener(VISUAL_EDITOR_EVENTS.Ready, onVisualEditorReady);
+      };
+    }
+  }, [locale]);
+
+  useEffect(() => {
     // We only care about this communication when in editor mode
     if (mode !== 'editor') return;
     const onMessage = (event: MessageEvent) => {
@@ -152,6 +186,10 @@ export function VisualEditorContextProvider({
       }
 
       const eventData = tryParseMessage(event);
+      if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
+        // Expected message: This message is handled in the visual-sdk to store fetched entities
+        return;
+      }
 
       console.debug(
         `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
@@ -203,11 +241,9 @@ export function VisualEditorContextProvider({
         }
         case INCOMING_EVENTS.DesignComponentsAdded: {
           const {
-            tree,
             designComponent,
             designComponentDefinition,
           }: {
-            tree: CompositionTree;
             designComponent: Entry;
             designComponentDefinition: ComponentRegistration['definition'];
           } = payload;
@@ -224,7 +260,6 @@ export function VisualEditorContextProvider({
                 component: DesignComponent,
                 definition: designComponentDefinition,
               });
-            setTree(tree);
           }
           break;
         }
@@ -250,7 +285,21 @@ export function VisualEditorContextProvider({
           entity && entityStore.current.updateEntity(entity);
           break;
         }
+        case INCOMING_EVENTS.InitEditor: {
+          const { bundleUrl, stylesUrl } = payload;
+          setBundleUrl(bundleUrl);
+          setStylesUrl(stylesUrl);
+          break;
+        }
         case INCOMING_EVENTS.RequestEditorMode: {
+          // do nothing cause we are already in editor mode
+          break;
+        }
+        case INCOMING_EVENTS.ComponentDragStarted: {
+          // do nothing cause we are already in editor mode
+          break;
+        }
+        case INCOMING_EVENTS.ComponentDragEnded: {
           // do nothing cause we are already in editor mode
           break;
         }
@@ -320,6 +369,8 @@ export function VisualEditorContextProvider({
         tree,
         dataSource,
         unboundValues,
+        bundleUrl,
+        stylesUrl,
         isDragging,
         selectedNodeId: selectedNodeId.current,
         setSelectedNodeId,

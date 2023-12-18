@@ -1,21 +1,12 @@
 import React, { useMemo } from 'react';
-
 import type { UnresolvedLink } from 'contentful';
 import omit from 'lodash.omit';
 import { EntityStore } from '../../core/preview/EntityStore';
-
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
-} from '../../constants';
-import {
-  createDesignComponentRegistration,
-  getComponentRegistration,
-} from '../../core/componentRegistry';
-import { buildCfStyles } from '../../utils/stylesUtils';
-import { ResolveDesignValueType } from '../../hooks/useBreakpoints';
-import { useStyleTag } from '../../hooks/useStyleTag';
+} from '@contentful/experience-builder-core/constants';
 import type {
   Breakpoint,
   CompositionDataSource,
@@ -24,12 +15,18 @@ import type {
   CompositionVariableValueType,
   ExperienceEntry,
   StyleProps,
-} from '../../types';
-import { ContentfulContainer } from '../../components/ContentfulContainer';
+} from '@contentful/experience-builder-core/types';
+import {
+  createDesignComponentRegistration,
+  getComponentRegistration,
+} from '../../core/componentRegistry';
+import { buildCfStyles, checkIfDesignComponent } from '@contentful/experience-builder-core';
+import { ResolveDesignValueType } from '../../hooks/useBreakpoints';
+import { useStyleTag } from '../../hooks/useStyleTag';
+import { ContentfulContainer } from '@contentful/experience-builder-components';
 import { transformContentValue } from '../../utils/transformers';
 import { resolveDesignComponent } from '../../core/preview/designComponentUtils';
 import { DesignComponent } from '../../components/DesignComponent';
-import { checkIfDesignComponent } from '../../utils/utils';
 
 type CompositionBlockProps = {
   node: CompositionNode;
@@ -79,7 +76,8 @@ export const CompositionBlock = ({
   }, [isDesignComponent, node.definitionId]);
 
   const nodeProps = useMemo(() => {
-    if (!componentRegistration) {
+    // Don't enrich the design component wrapper node with props
+    if (!componentRegistration || isDesignComponent) {
       return {};
     }
 
@@ -93,7 +91,17 @@ export const CompositionBlock = ({
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/');
           const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-          const value = entityStore?.getValue(binding, path.slice(0, -1));
+          let value = entityStore?.getValue(binding, path.slice(0, -1));
+          if (!value) {
+            const foundAssetValue = entityStore?.getValue(binding, [
+              ...path.slice(0, -2),
+              'fields',
+              'file',
+            ]);
+            if (foundAssetValue) {
+              value = foundAssetValue;
+            }
+          }
           const variableDefinition = componentRegistration.definition.variables[variableName];
           acc[variableName] = transformContentValue(value, variableDefinition);
           break;
@@ -103,6 +111,11 @@ export const CompositionBlock = ({
           acc[variableName] = (entityStore?.unboundValues || unboundValues)[uuid]?.value;
           break;
         }
+        case 'ComponentValue': {
+          const uuid = variable.key;
+          acc[variableName] = unboundValues[uuid]?.value;
+          break;
+        }
         default:
           break;
       }
@@ -110,6 +123,7 @@ export const CompositionBlock = ({
     }, propMap);
   }, [
     componentRegistration,
+    isDesignComponent,
     node.variables,
     resolveDesignValue,
     dataSource,
@@ -148,6 +162,7 @@ export const CompositionBlock = ({
   // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
+      // <div>dogcrap</div>
       <ContentfulContainer
         editorMode={false}
         cfHyperlink={(nodeProps as StyleProps).cfHyperlink}

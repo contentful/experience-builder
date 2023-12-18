@@ -1,28 +1,35 @@
 import { EntityStore } from '@contentful/visual-sdk';
-import {
+import type {
   CompositionNode,
   CompositionDataSource,
   CompositionUnboundValues,
   CompositionComponentNode,
   CompositionComponentPropValue,
   Composition,
-} from '../../types';
-import { generateRandomId } from '../../utils/utils';
+} from '@contentful/experience-builder-core/types';
 import { designComponentsRegistry } from '../../blocks/editor/VisualEditorContext';
-import { DESIGN_COMPONENT_BLOCK_NODE_TYPE, DESIGN_COMPONENT_NODE_TYPE } from '../../constants';
+import {
+  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+  DESIGN_COMPONENT_NODE_TYPE,
+} from '@contentful/experience-builder-core/constants';
+import { generateRandomId } from '@contentful/experience-builder-core';
 
 export const deserializeDesignComponentNode = ({
   node,
   nodeId,
   parentId,
-  experienceDataSource,
-  experienceUnboundValues,
+  designComponentDataSource,
+  designComponentUnboundValues,
+  componentInstanceProps,
+  componentInstanceUnboundValues,
 }: {
   node: CompositionNode;
   nodeId: string;
   parentId?: string;
-  experienceDataSource: CompositionDataSource;
-  experienceUnboundValues: CompositionUnboundValues;
+  designComponentDataSource: CompositionDataSource;
+  designComponentUnboundValues: CompositionUnboundValues;
+  componentInstanceProps: Record<string, CompositionComponentPropValue>;
+  componentInstanceUnboundValues: CompositionUnboundValues;
 }): CompositionComponentNode => {
   const childNodeVariable: Record<string, CompositionComponentPropValue> = {};
   const dataSource: CompositionDataSource = {};
@@ -30,13 +37,20 @@ export const deserializeDesignComponentNode = ({
 
   for (const [variableName, variable] of Object.entries(node.variables)) {
     childNodeVariable[variableName] = variable;
-    if (variable.type === 'BoundValue') {
-      const [, uuid, ,] = variable.path.split('/');
-
-      dataSource[uuid] = { ...experienceDataSource[uuid] };
-    } else if (variable.type === 'UnboundValue') {
+    if (variable.type === 'ComponentValue') {
       const uuid = variable.key;
-      unboundValues[uuid] = experienceUnboundValues[uuid];
+      const variableMapping = componentInstanceProps[uuid];
+
+      // For design component, we are only handling binding for UnboundValues for now
+      if (variableMapping?.type === 'UnboundValue') {
+        const componentInstanceValue = componentInstanceUnboundValues[variableMapping.key].value;
+
+        if (typeof componentInstanceValue === 'object' && componentInstanceValue !== null) {
+          unboundValues[uuid] = designComponentUnboundValues[componentInstanceValue['key']];
+        } else {
+          unboundValues[uuid] = componentInstanceUnboundValues[variableMapping.key];
+        }
+      }
     }
   }
 
@@ -47,8 +61,10 @@ export const deserializeDesignComponentNode = ({
       node: child,
       nodeId: generateRandomId(16),
       parentId: nodeId,
-      experienceDataSource,
-      experienceUnboundValues,
+      designComponentDataSource,
+      designComponentUnboundValues,
+      componentInstanceProps,
+      componentInstanceUnboundValues,
     })
   );
 
@@ -83,6 +99,7 @@ export const resolveDesignComponent = ({
   const designComponent = designComponentsRegistry.get(componentId);
 
   if (!designComponent) {
+    console.warn(`Link to design component with ID '${componentId}' not found`);
     return node;
   }
 
@@ -91,6 +108,7 @@ export const resolveDesignComponent = ({
   ]) as unknown as Composition;
 
   if (!componentFields) {
+    console.warn(`Entry for design component with ID '${componentId}' not found`);
     return node;
   }
 
@@ -102,8 +120,10 @@ export const resolveDesignComponent = ({
     },
     nodeId: node.data.id,
     parentId: node.parentId,
-    experienceDataSource: {},
-    experienceUnboundValues: componentFields.unboundValues,
+    designComponentDataSource: {},
+    designComponentUnboundValues: componentFields.unboundValues,
+    componentInstanceProps: node.data.props,
+    componentInstanceUnboundValues: node.data.unboundValues,
   });
 
   return deserializedNode;

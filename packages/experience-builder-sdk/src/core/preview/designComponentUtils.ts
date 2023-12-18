@@ -1,5 +1,5 @@
-import { Composition, CompositionNode, ExperienceEntry } from '../../types';
-import { checkIfDesignComponent } from '../../utils/utils';
+import { checkIfDesignComponent } from '@contentful/experience-builder-core';
+import type { CompositionNode } from '@contentful/experience-builder-core/types';
 import { EntityStore } from './EntityStore';
 
 export const resolveDesignComponent = ({
@@ -27,7 +27,10 @@ export const resolveDesignComponent = ({
     return node;
   }
 
-  const componentFields = (designComponent as ExperienceEntry).fields as unknown as Composition;
+  if (!('fields' in designComponent)) {
+    return node;
+  }
+  const componentFields = designComponent.fields;
 
   const deserializedNode = {
     ...node,

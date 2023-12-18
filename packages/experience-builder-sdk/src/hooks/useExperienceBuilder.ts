@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { DeprecatedExperience, ExternalSDKMode } from '../types';
+import type {
+  DeprecatedExperience,
+  ExternalSDKMode,
+} from '@contentful/experience-builder-core/types';
 import type { ContentfulClientApi } from 'contentful';
 import { defineComponents } from '../core/componentRegistry';
 
@@ -36,6 +39,7 @@ export const useExperienceBuilder = ({
     [mode, client, experienceTypeId]
   );
 
+  console.log('creating experience');
   return {
     /**
      * @deprecated please fetch the experience using `useFetchExperience` hook or fetch the data manually using `fetchers` or `client` and create experience with `createExperience` function

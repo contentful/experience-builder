@@ -1,4 +1,7 @@
-import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../../types';
+import type {
+  ComponentDefinitionVariable,
+  ContainerStyleVariableName,
+} from '@contentful/experience-builder-core/types';
 
 export const builtInStyles: Record<
   ContainerStyleVariableName,
@@ -97,7 +100,7 @@ export const builtInStyles: Record<
     type: 'Text',
     group: 'style',
     description: 'The orientation of the section',
-    defaultValue: 'row',
+    defaultValue: 'column',
   },
   cfFlexWrap: {
     displayName: 'Wrap objects',

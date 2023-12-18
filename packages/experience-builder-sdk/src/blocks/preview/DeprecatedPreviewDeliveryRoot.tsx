@@ -1,5 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { DeprecatedExperience, ExternalSDKMode, InternalSDKMode } from '../../types';
+import type {
+  DeprecatedExperience,
+  ExternalSDKMode,
+  InternalSDKMode,
+} from '@contentful/experience-builder-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
 import { useBreakpoints, useEditorModeSwitch, useFetchExperience } from '../../hooks';

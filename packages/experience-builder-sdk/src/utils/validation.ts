@@ -1,6 +1,7 @@
-import { supportedModes } from '../constants';
-import { InternalSDKMode, IncomingEvent } from '../types';
-import { INCOMING_EVENTS } from '../constants';
+import { supportedModes } from '@contentful/experience-builder-core';
+import type { InternalSDKMode, IncomingEvent } from '@contentful/experience-builder-core/types';
+import { INCOMING_EVENTS } from '@contentful/experience-builder-core/constants';
+import { PostMessageMethods } from '@contentful/visual-sdk';
 
 export type VisualEditorMessagePayload = {
   source: string;
@@ -65,11 +66,14 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
   // check eventData.eventType
   const supportedEventTypes = Object.values(INCOMING_EVENTS);
   if (!supportedEventTypes.includes(eventData.eventType)) {
-    throw new ParseError(
-      `Field eventData.eventType must be one of the supported values: [${supportedEventTypes.join(
-        ', '
-      )}]`
-    );
+    // Expected message: This message is handled in the visual-sdk to store fetched entities
+    if (eventData.eventType !== PostMessageMethods.REQUESTED_ENTITIES) {
+      throw new ParseError(
+        `Field eventData.eventType must be one of the supported values: [${supportedEventTypes.join(
+          ', '
+        )}]`
+      );
+    }
   }
 
   return eventData;

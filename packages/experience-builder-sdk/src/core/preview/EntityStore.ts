@@ -1,12 +1,17 @@
 import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful';
 import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk';
-import {
+import { isExperienceEntry } from '@contentful/experience-builder-core';
+import type {
   Composition,
   CompositionUnboundValues,
-  isExperienceEntry,
-} from '@contentful/experience-builder-types';
+  ExperienceEntry,
+} from '@contentful/experience-builder-core/types';
 
-type EntityStoreArgs = { experienceEntry: Entry; entities: Array<Entry | Asset>; locale: string };
+type EntityStoreArgs = {
+  experienceEntry: ExperienceEntry | Entry;
+  entities: Array<Entry | Asset>;
+  locale: string;
+};
 
 export class EntityStore extends VisualSdkEntityStore {
   private _experienceEntry: Composition | undefined;
@@ -16,8 +21,8 @@ export class EntityStore extends VisualSdkEntityStore {
     super({ entities, locale });
 
     if (isExperienceEntry(experienceEntry)) {
-      this._experienceEntry = experienceEntry.fields;
-      this._unboundValues = experienceEntry.fields.unboundValues;
+      this._experienceEntry = (experienceEntry as ExperienceEntry).fields;
+      this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
     } else {
       throw new Error('Provided entry is not experience entry');
     }
@@ -59,7 +64,10 @@ export class EntityStore extends VisualSdkEntityStore {
     entityLink: UnresolvedLink<'Entry' | 'Asset'>,
     path: string[]
   ): string | undefined {
-    const entity = this.entitiesMap.get(entityLink.sys.id);
+    const entity =
+      entityLink.sys.linkType === 'Entry'
+        ? this.entryMap.get(entityLink.sys.id)
+        : this.assetMap.get(entityLink.sys.id);
 
     if (!entity || entity.sys.type !== entityLink.sys.linkType) {
       console.warn(`Experience references unresolved entity: ${JSON.stringify(entityLink)}`);

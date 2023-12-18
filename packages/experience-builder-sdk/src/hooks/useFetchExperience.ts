@@ -2,7 +2,11 @@ import type { ContentfulClientApi, Entry } from 'contentful';
 import { useCallback, useEffect, useState } from 'react';
 import { EntityStore } from '../core/preview/EntityStore';
 import { fetchReferencedEntities, fetchExperienceEntry } from '../core/fetchers';
-import { Experience, ExternalSDKMode } from '../types';
+import type {
+  Experience,
+  ExperienceEntry,
+  ExternalSDKMode,
+} from '@contentful/experience-builder-core/types';
 import { createExperience } from '../utils/createExperience';
 
 const errorMessagesWhileFetching = {
@@ -55,7 +59,7 @@ export const useFetchExperience = ({
       setIsFetching(true);
       setError(undefined);
 
-      let experienceEntry: Entry | undefined = undefined;
+      let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
 
       try {
         experienceEntry = await fetchExperienceEntry({

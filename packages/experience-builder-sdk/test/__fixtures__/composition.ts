@@ -1,5 +1,9 @@
 import { CONTENTFUL_CONTAINER_ID, LATEST_SCHEMA_VERSION } from '../../src';
-import { Composition, ExperienceEntry, SchemaVersions } from '../../src/types';
+import type {
+  Composition,
+  ExperienceEntry,
+  SchemaVersions,
+} from '@contentful/experience-builder-core/types';
 import { entityIds } from './entities';
 
 const compositionFields: Composition = {
@@ -172,6 +176,7 @@ export const createCompositionEntry = ({
   };
 };
 
+export const designComponentGeneratedVariableName = 'text_uuid1DesignComponent';
 export const createDesignComponentEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = 'design-component-id',
@@ -217,7 +222,12 @@ export const createDesignComponentEntry = ({
             children: [
               {
                 definitionId: 'custom-component',
-                variables: { text: { key: 'uuid1DesignComponent', type: 'UnboundValue' } },
+                variables: {
+                  text: {
+                    key: designComponentGeneratedVariableName,
+                    type: 'ComponentValue',
+                  },
+                },
                 children: [],
               },
             ],
@@ -228,8 +238,19 @@ export const createDesignComponentEntry = ({
       },
       dataSource: {},
       unboundValues: {
-        uuid1DesignComponent: {
+        unbound_uuid1DesignComponent: {
           value: 'custom component title',
+        },
+      },
+      componentSettings: {
+        variableDefinitions: {
+          [designComponentGeneratedVariableName]: {
+            id: 'text',
+            name: 'Text',
+            type: 'Text',
+            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1DesignComponent' },
+            required: false,
+          },
         },
       },
     },
