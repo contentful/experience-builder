@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Breakpoint, CompositionVariableValueType } from '../types';
-import { getDesignTokenRegistrationForSpacing } from '../core/designTokenRegistry';
+import { getDesignTokenRegistration } from '../core/designTokenRegistry';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
 
@@ -27,8 +27,6 @@ const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
   }
   return undefined;
 };
-
-const availableDesignTokenVariables = new Set(['cfPadding', 'cfMargin', 'cfGap']);
 
 // Remove this helper when upgrading to TypeScript 5.0 - https://github.com/microsoft/TypeScript/issues/48829
 const findLast = <T>(
@@ -59,9 +57,15 @@ export const getValueForBreakpoint = (
     // Assume that the values are sorted by media query to apply the cascading CSS logic
     for (let index = activeBreakpointIndex; index >= 0; index--) {
       const breakpointId = breakpoints[index].id;
-      if (availableDesignTokenVariables.has(variableName)) {
-        if (variableName === 'cfMargin' || variableName === 'cfPadding' || variableName === 'cfGap')
-          return getDesignTokenRegistrationForSpacing(valuesByBreakpoint[breakpointId]);
+      if (
+        variableName === 'cfMargin' ||
+        variableName === 'cfPadding' ||
+        variableName === 'cfGap' ||
+        variableName === 'cfWidth' ||
+        variableName === 'cfHeight' ||
+        variableName === 'cfBackgroundColor'
+      ) {
+        return getDesignTokenRegistration(valuesByBreakpoint[breakpointId]);
       }
       if (valuesByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade
