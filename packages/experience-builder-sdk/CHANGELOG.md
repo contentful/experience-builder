@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.1.3...@contentful/experience-builder@3.2.0) (2023-12-18)
+
+### Features
+
+- initialize sustainable entity store ([#200](https://github.com/contentful/experience-builder/issues/200)) ([b136abf](https://github.com/contentful/experience-builder/commit/b136abf860a7c90de072e18d69652e2b4fc65956))
+
 ## [3.1.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.1.2...@contentful/experience-builder@3.1.3) (2023-12-18)
 
 ### Bug Fixes
