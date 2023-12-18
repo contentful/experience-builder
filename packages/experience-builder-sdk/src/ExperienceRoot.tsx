@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useState, Suspense } from 'react';
 
 const VisualEditor = React.lazy(() => import('./blocks/VisualEditor'));
-import { VisualEditorMode, isDeprecatedExperience } from '@contentful/experience-builder-core';
+import {
+  VisualEditorMode,
+  isDeprecatedExperience,
+  supportedModes,
+} from '@contentful/experience-builder-core';
 import { EntityStore } from './core/preview/EntityStore';
-import { supportedModes } from '@contentful/experience-builder-core';
 import type {
   DeprecatedExperience,
   Experience,

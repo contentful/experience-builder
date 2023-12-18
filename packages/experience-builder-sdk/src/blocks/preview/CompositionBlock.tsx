@@ -1,14 +1,21 @@
 import React, { useMemo } from 'react';
-
 import type { UnresolvedLink } from 'contentful';
 import omit from 'lodash.omit';
 import { EntityStore } from '../../core/preview/EntityStore';
-
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
 } from '@contentful/experience-builder-core/constants';
+import type {
+  Breakpoint,
+  CompositionDataSource,
+  CompositionNode,
+  CompositionUnboundValues,
+  CompositionVariableValueType,
+  ExperienceEntry,
+  StyleProps,
+} from '@contentful/experience-builder-core/types';
 import {
   createDesignComponentRegistration,
   getComponentRegistration,
@@ -16,19 +23,10 @@ import {
 import { buildCfStyles, checkIfDesignComponent } from '@contentful/experience-builder-core';
 import { ResolveDesignValueType } from '../../hooks/useBreakpoints';
 import { useStyleTag } from '../../hooks/useStyleTag';
-import type {
-  Breakpoint,
-  CompositionDataSource,
-  CompositionNode,
-  CompositionUnboundValues,
-  CompositionVariableValueType,
-  StyleProps,
-} from '@contentful/experience-builder-core/types';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 import { transformContentValue } from '../../utils/transformers';
 import { resolveDesignComponent } from '../../core/preview/designComponentUtils';
 import { DesignComponent } from '../../components/DesignComponent';
-import type { ExperienceEntry } from '@contentful/experience-builder-core/types';
 
 type CompositionBlockProps = {
   node: CompositionNode;

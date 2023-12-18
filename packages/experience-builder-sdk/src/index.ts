@@ -5,12 +5,9 @@ export { defineDesignTokens } from './core/designTokenRegistry';
 export {
   calculateNodeDefaultHeight,
   checkIfDesignComponent,
+  supportedModes,
   VisualEditorMode,
 } from '@contentful/experience-builder-core';
-export { tryParseMessage, doesMismatchMessageSchema } from './utils/validation';
-
-export type { InternalSDKMode, ExternalSDKMode } from '@contentful/experience-builder-core/types';
-
 export {
   /**
    * @deprecated Sections are deprecated and are replaced by Containers in the schema version "2023-09-28". Support for sections will be removed completely as soon as all customer data was migrated.
@@ -27,7 +24,9 @@ export {
   DESIGN_COMPONENT_NODE_TYPES,
   SCROLL_STATES,
 } from '@contentful/experience-builder-core/constants';
-export { supportedModes } from '@contentful/experience-builder-core';
+export { tryParseMessage, doesMismatchMessageSchema } from './utils/validation';
+
+export type { InternalSDKMode, ExternalSDKMode } from '@contentful/experience-builder-core/types';
 export { EntityStore } from '@contentful/visual-sdk';
 export { fetchers } from './core';
 export { createExperience } from './utils/createExperience';
