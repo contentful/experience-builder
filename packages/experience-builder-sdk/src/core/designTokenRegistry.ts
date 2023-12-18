@@ -17,14 +17,15 @@ export const defineDesignTokens = (designTokenDefinition: DesignTokensDefinition
   });
 };
 
-export const getDesignTokenRegistrationForSpacing = (breakpointValue: string) => {
+export const getDesignTokenRegistration = (breakpointValue: string) => {
   let resolvedValue = '';
   const values = breakpointValue.split(' ');
   values.forEach((value) => {
     let tokenValue = value;
-    if (isTemplateStringFormat(value)) tokenValue = resolveSpacingDesignToken(value);
+    if (isTemplateStringFormat(value)) tokenValue = resolveSimpleDesignToken(value);
     resolvedValue += `${tokenValue} `;
   });
+
   return resolvedValue;
 };
 
@@ -33,7 +34,7 @@ const isTemplateStringFormat = (str: string) => {
   return templateStringRegex.test(str);
 };
 
-const resolveSpacingDesignToken = (templateString: string) => {
+const resolveSimpleDesignToken = (templateString: string) => {
   const nonTemplateValue = templateString.replace(templateStringRegex, '$1');
   const designKeys = nonTemplateValue.split('.');
   const spacingValues = designTokensRegistry[designKeys[0]] as DesignTokensDefinition;
