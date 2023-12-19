@@ -3,9 +3,8 @@ import type {
   ContainerStyleVariableName,
 } from '@contentful/experience-builder-core/types';
 
-export const builtInStyles: Record<
-  ContainerStyleVariableName,
-  ComponentDefinitionVariable<'Text' | 'Boolean'>
+export const builtInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 > = {
   cfVerticalAlignment: {
     validations: {
@@ -174,6 +173,11 @@ export const builtInStyles: Record<
     defaultValue: false,
     description: 'To open hyperlink in new Tab or not',
   },
+};
+
+export const optionalBuiltInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+> = {
   cfFontSize: {
     displayName: 'Font Size',
     type: 'Text',

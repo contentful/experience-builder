@@ -9,7 +9,10 @@ import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
 } from '@contentful/experience-builder-core/constants';
-import { builtInStyles as builtInStyleDefinitions } from './definitions/variables';
+import {
+  builtInStyles as builtInStyleDefinitions,
+  optionalBuiltInStyles,
+} from './definitions/variables';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 import { containerDefinition } from './definitions/components';
 import { sendMessage } from '@contentful/experience-builder-core';
@@ -48,7 +51,11 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
     if (builtInStyleDefinitions[style]) {
       clone.variables[style] = builtInStyleDefinitions[style];
     }
+    if (optionalBuiltInStyles[style]) {
+      clone.variables[style] = optionalBuiltInStyles[style];
+    }
   }
+
   return clone;
 };
 

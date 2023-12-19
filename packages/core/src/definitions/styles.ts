@@ -1,8 +1,7 @@
 import { ComponentDefinitionVariable, ContainerStyleVariableName } from '@/types';
 
-export const builtInStyles: Record<
-  ContainerStyleVariableName,
-  ComponentDefinitionVariable<'Text' | 'Boolean'>
+export const builtInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 > = {
   cfVerticalAlignment: {
     validations: {
@@ -171,6 +170,11 @@ export const builtInStyles: Record<
     defaultValue: false,
     description: 'To open hyperlink in new Tab or not',
   },
+};
+
+export const optionalBuiltInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+> = {
   cfFontSize: {
     displayName: 'Font Size',
     type: 'Text',
@@ -207,6 +211,22 @@ export const builtInStyles: Record<
     defaultValue: 'rgba(0, 0, 0, 1)',
   },
   cfTextAlign: {
+    validations: {
+      in: [
+        {
+          value: 'left',
+          displayName: 'Align left',
+        },
+        {
+          value: 'center',
+          displayName: 'Align center',
+        },
+        {
+          value: 'right',
+          displayName: 'Align right',
+        },
+      ],
+    },
     displayName: 'Text Align',
     type: 'Text',
     group: 'style',
@@ -214,6 +234,26 @@ export const builtInStyles: Record<
     defaultValue: 'left',
   },
   cfTextTransform: {
+    validations: {
+      in: [
+        {
+          value: 'none',
+          displayName: 'None',
+        },
+        {
+          value: 'capitalize',
+          displayName: 'Capitalize',
+        },
+        {
+          value: 'uppercase',
+          displayName: 'Uppercase',
+        },
+        {
+          value: 'lowercase',
+          displayName: 'Lowercase',
+        },
+      ],
+    },
     displayName: 'Text Transform',
     type: 'Text',
     group: 'style',
