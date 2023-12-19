@@ -3,9 +3,8 @@ import type {
   ContainerStyleVariableName,
 } from '@contentful/experience-builder-core/types';
 
-export const builtInStyles: Record<
-  ContainerStyleVariableName,
-  ComponentDefinitionVariable<'Text' | 'Boolean'>
+export const builtInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 > = {
   cfVerticalAlignment: {
     validations: {
@@ -173,6 +172,81 @@ export const builtInStyles: Record<
     type: 'Boolean',
     defaultValue: false,
     description: 'To open hyperlink in new Tab or not',
+  },
+};
+
+export const optionalBuiltInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+> = {
+  cfFontSize: {
+    displayName: 'Font Size',
+    type: 'Text',
+    group: 'style',
+    description: 'The font size of the section',
+    defaultValue: '16px',
+  },
+  cfFontWeight: {
+    displayName: 'Font Weight',
+    type: 'Text',
+    group: 'style',
+    description: 'The font weight of the section',
+    defaultValue: 'normal',
+  },
+  cfLineHeight: {
+    displayName: 'Line Height',
+    type: 'Text',
+    group: 'style',
+    description: 'The line height of the section',
+    defaultValue: '20px',
+  },
+  cfLetterSpacing: {
+    displayName: 'Letter Spacing',
+    type: 'Text',
+    group: 'style',
+    description: 'The letter spacing of the section',
+    defaultValue: '0px',
+  },
+  cfTextColor: {
+    displayName: 'Text Color',
+    type: 'Text',
+    group: 'style',
+    description: 'The text color of the section',
+    defaultValue: 'rgba(0, 0, 0, 1)',
+  },
+  cfTextAlign: {
+    displayName: 'Text Align',
+    type: 'Text',
+    group: 'style',
+    description: 'The text alignment of the section',
+    defaultValue: 'left',
+  },
+  cfTextTransform: {
+    displayName: 'Text Transform',
+    type: 'Text',
+    group: 'style',
+    description: 'The text transform of the section',
+    defaultValue: 'none',
+  },
+  cfTextBold: {
+    displayName: 'Bold',
+    type: 'Boolean',
+    group: 'style',
+    description: 'The text bold of the section',
+    defaultValue: false,
+  },
+  cfTextItalic: {
+    displayName: 'Italic',
+    type: 'Boolean',
+    group: 'style',
+    description: 'The text italic of the section',
+    defaultValue: false,
+  },
+  cfTextUnderline: {
+    displayName: 'Underline',
+    type: 'Boolean',
+    group: 'style',
+    description: 'The text underline of the section',
+    defaultValue: false,
   },
 };
 

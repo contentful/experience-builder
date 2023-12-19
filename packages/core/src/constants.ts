@@ -77,6 +77,16 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageUrl',
   'cfBackgroundImageScaling',
   'cfBackgroundImageAlignment',
+  'cfFontSize',
+  'cfFontWeight',
+  'cfLineHeight',
+  'cfLetterSpacing',
+  'cfTextColor',
+  'cfTextAlign',
+  'cfTextTransform',
+  'cfTextBold',
+  'cfTextItalic',
+  'cfTextUnderline',
   // For backwards compatibility
   // we need to keep those in this constant array
   // so that omit() in <VisualEditorBlock> and <CompositionBlock>

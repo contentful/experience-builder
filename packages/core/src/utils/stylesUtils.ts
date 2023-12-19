@@ -49,6 +49,16 @@ export const buildCfStyles = ({
   cfBackgroundImageUrl,
   cfBackgroundImageAlignment,
   cfBackgroundImageScaling,
+  cfFontSize,
+  cfFontWeight,
+  cfLineHeight,
+  cfLetterSpacing,
+  cfTextColor,
+  cfTextAlign,
+  cfTextTransform,
+  cfTextBold,
+  cfTextItalic,
+  cfTextUnderline,
 }: Partial<StyleProps>): CSSProperties => {
   return {
     margin: cfMargin,
@@ -67,6 +77,15 @@ export const buildCfStyles = ({
       cfBackgroundImageScaling,
       cfBackgroundImageAlignment
     ),
+    fontSize: cfFontSize,
+    fontWeight: cfTextBold ? 'bold' : cfFontWeight,
+    fontStyle: cfTextItalic ? 'italic' : 'normal',
+    lineHeight: cfLineHeight,
+    letterSpacing: cfLetterSpacing,
+    color: cfTextColor,
+    textAlign: cfTextAlign,
+    textTransform: cfTextTransform,
+    textDecoration: cfTextUnderline ? 'underline' : 'none',
   };
 };
 /**
