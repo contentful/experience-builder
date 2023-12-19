@@ -55,7 +55,6 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
       clone.variables[style] = optionalBuiltInStyles[style];
     }
   }
-
   return clone;
 };
 
