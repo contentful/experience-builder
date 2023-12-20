@@ -2,6 +2,10 @@ import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-
 import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
 import { sendMessage } from '../../communication/sendMessage';
 
+// The default of 3s in the EditorEntityStore is sometimes timing out and
+// leads to not rendering bound content and design components.
+const REQUEST_TIMEOUT = 10000;
+
 export class EditorModeEntityStore extends EditorEntityStore {
   public locale: string;
 
@@ -36,7 +40,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
       };
     };
 
-    super({ entities, sendMessage, subscribe, locale });
+    super({ entities, sendMessage, subscribe, locale, timeoutDuration: REQUEST_TIMEOUT });
     this.locale = locale;
   }
 
