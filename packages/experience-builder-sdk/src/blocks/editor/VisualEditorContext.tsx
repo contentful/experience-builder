@@ -97,7 +97,11 @@ export function VisualEditorContextProvider({
 
   // Reload the entity store when the locale changed
   useEffect(() => {
-    if (!locale || locale === entityStore.current.locale) return;
+    const storeLocale = entityStore.current.locale;
+    if (!locale || locale === storeLocale) return;
+    console.debug(
+      `[exp-builder.sdk] Resetting entity store because the locale changed from '${storeLocale}' to '${locale}'.`
+    );
     entityStore.current = new EditorModeEntityStore({
       entities: [],
       locale: locale,
@@ -187,15 +191,15 @@ export function VisualEditorContextProvider({
       }
 
       const eventData = tryParseMessage(event);
-      if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
-        // Expected message: This message is handled in the visual-sdk to store fetched entities
-        return;
-      }
-
       console.debug(
         `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
         eventData
       );
+
+      if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
+        // Expected message: This message is handled in the visual-sdk to store fetched entities
+        return;
+      }
 
       const { payload } = eventData;
 
