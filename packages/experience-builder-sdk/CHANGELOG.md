@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.4...@contentful/experience-builder@3.5.0) (2023-12-20)
+
+### Features
+
+- increase the timeout for editor entity store to avoid data loss ([#212](https://github.com/contentful/experience-builder/issues/212)) ([844a1ad](https://github.com/contentful/experience-builder/commit/844a1adf9c0ed33d91c76bd3c9a01680adea906b))
+
 ## [3.4.4](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.3...@contentful/experience-builder@3.4.4) (2023-12-20)
 
 **Note:** Version bump only for package @contentful/experience-builder
