@@ -15,7 +15,7 @@ import {
   createDesignComponentEntry,
   designComponentGeneratedVariableName,
 } from '../../../test/__fixtures__/composition';
-import { EntityStore } from '../../core/preview/EntityStore';
+import { EntityStore } from '@contentful/experience-builder-core';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 
 const TestComponent = (props: any) => {

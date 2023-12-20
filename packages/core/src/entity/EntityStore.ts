@@ -1,11 +1,7 @@
 import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful';
 import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk';
-import { isExperienceEntry } from '@contentful/experience-builder-core';
-import type {
-  Composition,
-  CompositionUnboundValues,
-  ExperienceEntry,
-} from '@contentful/experience-builder-core/types';
+import { isExperienceEntry } from '@/utils';
+import type { Composition, CompositionUnboundValues, ExperienceEntry } from '@/types';
 
 type EntityStoreArgs = {
   experienceEntry: ExperienceEntry | Entry;

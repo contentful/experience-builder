@@ -1,6 +1,5 @@
-import { checkIfDesignComponent } from '@contentful/experience-builder-core';
+import { checkIfDesignComponent, EntityStore } from '@contentful/experience-builder-core';
 import type { CompositionNode } from '@contentful/experience-builder-core/types';
-import { EntityStore } from './EntityStore';
 
 export const resolveDesignComponent = ({
   node,
