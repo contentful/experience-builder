@@ -96,7 +96,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The orientation of the section',
-    defaultValue: 'row',
+    defaultValue: 'column',
   },
   cfFlexWrap: {
     displayName: 'Wrap objects',
