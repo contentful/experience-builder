@@ -41,8 +41,8 @@ export class EditorModeEntityStore extends EditorEntityStore {
   }
 
   async fetchEntities(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {
-    const entryLinks = entityLinks.filter((link) => link.sys.linkType === 'Entry');
-    const assetLinks = entityLinks.filter((link) => link.sys.linkType === 'Asset');
+    const entryLinks = entityLinks.filter((link) => link.sys?.linkType === 'Entry');
+    const assetLinks = entityLinks.filter((link) => link.sys?.linkType === 'Asset');
 
     const uniqueEntryLinks = new Set(entryLinks.map((link) => link.sys.id));
     const uniqueAssetLinks = new Set(assetLinks.map((link) => link.sys.id));

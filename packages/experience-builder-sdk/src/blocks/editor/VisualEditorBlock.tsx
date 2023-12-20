@@ -1,4 +1,4 @@
-import React, { RefObject, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import type { EntityStore } from '@contentful/visual-sdk';
 import omit from 'lodash.omit';
@@ -49,7 +49,7 @@ type VisualEditorBlockProps = {
   unboundValues: CompositionUnboundValues;
 
   resolveDesignValue: ResolveDesignValueType;
-  entityStore: RefObject<EntityStore>;
+  entityStore: EntityStore;
   areEntitiesFetched: boolean;
 };
 
@@ -65,7 +65,7 @@ export const VisualEditorBlock = ({
     if (rawNode.type === DESIGN_COMPONENT_NODE_TYPE && areEntitiesFetched) {
       return resolveDesignComponent({
         node: rawNode,
-        entityStore: entityStore.current,
+        entityStore,
       });
     }
 
@@ -126,7 +126,7 @@ export const VisualEditorBlock = ({
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
           let boundValue: string | Link<'Asset'> | undefined = areEntitiesFetched
-            ? entityStore.current?.getValue(binding, path.slice(0, -1))
+            ? entityStore.getValue(binding, path.slice(0, -1))
             : undefined;
 
           // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
@@ -135,7 +135,7 @@ export const VisualEditorBlock = ({
 
           if (!boundValue) {
             const maybeBoundAsset = areEntitiesFetched
-              ? entityStore.current?.getValue(binding, path.slice(0, -2))
+              ? entityStore.getValue(binding, path.slice(0, -2))
               : undefined;
 
             if (isLinkToAsset(maybeBoundAsset)) {
@@ -144,7 +144,7 @@ export const VisualEditorBlock = ({
           }
 
           if (typeof boundValue === 'object' && boundValue.sys.linkType === 'Asset') {
-            boundValue = entityStore.current?.getValue(boundValue, ['fields', 'file']);
+            boundValue = entityStore.getValue(boundValue, ['fields', 'file']);
           }
 
           const value = boundValue || variableDefinition.defaultValue;

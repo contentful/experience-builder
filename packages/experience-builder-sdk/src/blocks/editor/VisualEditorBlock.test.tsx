@@ -96,7 +96,7 @@ describe('VisualEditorBlock', () => {
         node={mockCompositionComponentNode}
         dataSource={{}}
         areEntitiesFetched={true}
-        entityStore={{ current: {} as EntityStore }}
+        entityStore={{} as EntityStore}
         unboundValues={mockCompositionComponentNode.data.unboundValues}
         resolveDesignValue={jest.fn()}
       />
@@ -109,7 +109,7 @@ describe('VisualEditorBlock', () => {
         node={mockCompositionComponentNode}
         dataSource={{}}
         areEntitiesFetched={true}
-        entityStore={{ current: {} as EntityStore }}
+        entityStore={{} as EntityStore}
         unboundValues={mockCompositionComponentNode.data.unboundValues}
         resolveDesignValue={jest.fn()}
       />
@@ -138,7 +138,7 @@ describe('VisualEditorBlock', () => {
         node={sectionNode}
         dataSource={{}}
         areEntitiesFetched={true}
-        entityStore={{ current: {} as EntityStore }}
+        entityStore={{} as EntityStore}
         unboundValues={sectionNode.data.unboundValues}
         resolveDesignValue={jest.fn()}
       />
@@ -166,7 +166,7 @@ describe('VisualEditorBlock', () => {
         node={containerNode}
         dataSource={{}}
         areEntitiesFetched={true}
-        entityStore={{ current: {} as EntityStore }}
+        entityStore={{} as EntityStore}
         unboundValues={containerNode.data.unboundValues}
         resolveDesignValue={jest.fn()}
       />
@@ -213,7 +213,7 @@ describe('VisualEditorBlock', () => {
         node={designComponentNode}
         dataSource={{}}
         areEntitiesFetched={true}
-        entityStore={{ current: entityStore }}
+        entityStore={entityStore}
         unboundValues={designComponentNode.data.unboundValues}
         resolveDesignValue={jest.fn()}
       />
