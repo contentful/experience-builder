@@ -7,7 +7,20 @@ export const TextComponentDefinition: ComponentDefinition = {
   id: 'text',
   name: 'Text',
   category: 'Contentful',
-  builtInStyles: ['cfMargin', 'cfPadding'],
+  builtInStyles: [
+    'cfMargin',
+    'cfPadding',
+    'cfFontSize',
+    'cfFontWeight',
+    'cfLineHeight',
+    'cfLetterSpacing',
+    'cfTextColor',
+    'cfTextAlign',
+    'cfTextTransform',
+    'cfTextBold',
+    'cfTextItalic',
+    'cfTextUnderline',
+  ],
   thumbnailUrl: constants.thumbnails.text,
   variables: {
     value: {

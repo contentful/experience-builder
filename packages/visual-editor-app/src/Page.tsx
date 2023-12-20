@@ -2,34 +2,30 @@ import {
   useFetchExperience,
   ExperienceRoot,
   ExternalSDKMode,
-  VisualEditorMode,
   defineDesignTokens,
 } from '@contentful/experience-builder';
 
 import { createClient } from 'contentful';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 import '@contentful/experience-builder-components/styles.css';
 import './styles.css';
 
 const isPreview = window.location.search.includes('isPreview=true');
 const mode = isPreview ? 'preview' : (import.meta.env.VITE_MODE as ExternalSDKMode) || 'delivery';
-const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
-const visualEditorMode =
-  (import.meta.env.VITE_VISUAL_EDITOR_MODE as VisualEditorMode) || VisualEditorMode.LazyLoad;
+const experienceTypeId = import.meta.env.VITE_EXPERIENCE_TYPE_ID || 'layout';
 const localeCode = 'en-US';
-
-const isStaging = import.meta.env.VITE_CONTENTFUL_ENV === 'staging';
-
-const domain = isStaging ? 'flinkly' : 'contentful';
-
+const domain = import.meta.env.VITE_DOMAIN || 'contentful.com';
+const space = import.meta.env.VITE_SPACE_ID;
+const environment = import.meta.env.VITE_ENVIRONMENT_TYPE_ID || 'master';
+const host = isPreview ? `preview.${domain}` : `cdn.${domain}`;
+const accessToken = isPreview
+  ? import.meta.env.VITE_PREVIEW_ACCESS_TOKEN
+  : import.meta.env.VITE_ACCESS_TOKEN;
 const client = createClient({
-  space: import.meta.env.VITE_SPACE_ID || '',
-  environment: import.meta.env.VITE_ENVIRONMENT_ID || 'master',
-  host: isPreview ? `preview.${domain}.com` : `cdn.${domain}.com`,
-  accessToken: isPreview
-    ? import.meta.env.VITE_PREVIEW_ACCESS_TOKEN
-    : import.meta.env.VITE_ACCESS_TOKEN,
+  space,
+  environment,
+  host,
+  accessToken,
 });
 
 defineDesignTokens({
@@ -59,13 +55,17 @@ defineDesignTokens({
 
 export default function Page() {
   const { slug = 'homePage' } = useParams<{ slug: string }>();
-  const { experience, fetchBySlug } = useFetchExperience({ client, mode });
+  const { experience, error } = useFetchExperience({
+    client,
+    slug,
+    mode,
+    experienceTypeId,
+    localeCode,
+  });
 
-  useEffect(() => {
-    if (slug) {
-      fetchBySlug({ experienceTypeId, slug, localeCode });
-    }
-  }, [fetchBySlug, slug]);
+  if (error) {
+    return <div>{error.message}</div>;
+  }
 
   return (
     <>
@@ -105,11 +105,7 @@ export default function Page() {
           <a href="">Link 3</a>
         </div>
       </div>
-      <ExperienceRoot
-        experience={experience}
-        locale={localeCode}
-        visualEditorMode={visualEditorMode}
-      />
+      <ExperienceRoot experience={experience} locale={localeCode} />
       <footer
         style={{
           backgroundColor: '#000',

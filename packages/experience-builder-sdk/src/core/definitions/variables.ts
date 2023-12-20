@@ -1,4 +1,7 @@
-import { ComponentDefinitionVariable, ContainerStyleVariableName } from '@/types';
+import type {
+  ComponentDefinitionVariable,
+  ContainerStyleVariableName,
+} from '@contentful/experience-builder-core/types';
 
 export const builtInStyles: Partial<
   Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
@@ -172,17 +175,6 @@ export const builtInStyles: Partial<
   },
 };
 
-export const containerBuiltInStyles = {
-  ...builtInStyles,
-  cfHeight: {
-    displayName: 'Height',
-    type: 'Text',
-    group: 'style',
-    description: 'The height of the section',
-    defaultValue: 'auto',
-  } as ComponentDefinitionVariable<'Text'>,
-};
-
 export const optionalBuiltInStyles: Partial<
   Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 > = {
@@ -222,22 +214,6 @@ export const optionalBuiltInStyles: Partial<
     defaultValue: 'rgba(0, 0, 0, 1)',
   },
   cfTextAlign: {
-    validations: {
-      in: [
-        {
-          value: 'left',
-          displayName: 'Align left',
-        },
-        {
-          value: 'center',
-          displayName: 'Align center',
-        },
-        {
-          value: 'right',
-          displayName: 'Align right',
-        },
-      ],
-    },
     displayName: 'Text Align',
     type: 'Text',
     group: 'style',
@@ -245,26 +221,6 @@ export const optionalBuiltInStyles: Partial<
     defaultValue: 'left',
   },
   cfTextTransform: {
-    validations: {
-      in: [
-        {
-          value: 'none',
-          displayName: 'None',
-        },
-        {
-          value: 'capitalize',
-          displayName: 'Capitalize',
-        },
-        {
-          value: 'uppercase',
-          displayName: 'Uppercase',
-        },
-        {
-          value: 'lowercase',
-          displayName: 'Lowercase',
-        },
-      ],
-    },
     displayName: 'Text Transform',
     type: 'Text',
     group: 'style',
@@ -292,4 +248,15 @@ export const optionalBuiltInStyles: Partial<
     description: 'The text underline of the section',
     defaultValue: false,
   },
+};
+
+export const containerBuiltInStyles = {
+  ...builtInStyles,
+  cfHeight: {
+    displayName: 'Height',
+    type: 'Text',
+    group: 'style',
+    description: 'The height of the section',
+    defaultValue: 'auto',
+  } as ComponentDefinitionVariable<'Text'>,
 };

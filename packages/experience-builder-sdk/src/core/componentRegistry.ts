@@ -5,6 +5,7 @@ import type {
 } from '@contentful/experience-builder-core/types';
 import {
   builtInStyles as builtInStyleDefinitions,
+  optionalBuiltInStyles,
   containerDefinition,
 } from '@contentful/experience-builder-core';
 import {
@@ -49,6 +50,9 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
   for (const style of Object.values(clone.builtInStyles || [])) {
     if (builtInStyleDefinitions[style]) {
       clone.variables[style] = builtInStyleDefinitions[style];
+    }
+    if (optionalBuiltInStyles[style]) {
+      clone.variables[style] = optionalBuiltInStyles[style];
     }
   }
   return clone;
