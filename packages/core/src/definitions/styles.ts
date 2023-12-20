@@ -238,7 +238,7 @@ export const optionalBuiltInStyles: Partial<
       in: [
         {
           value: 'none',
-          displayName: 'None',
+          displayName: 'Normal',
         },
         {
           value: 'capitalize',
