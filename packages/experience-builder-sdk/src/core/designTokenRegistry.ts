@@ -26,7 +26,8 @@ export const getDesignTokenRegistration = (breakpointValue: string) => {
     resolvedValue += `${tokenValue} `;
   });
 
-  return resolvedValue;
+  // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
+  return resolvedValue.trim();
 };
 
 // Using this because export const StringTemplateRegex = /\${(.*?)\}/g doesn't work
