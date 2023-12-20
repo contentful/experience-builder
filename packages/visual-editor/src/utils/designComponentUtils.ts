@@ -7,12 +7,13 @@ import type {
   CompositionComponentPropValue,
   Composition,
 } from '@contentful/experience-builder-core/types';
-import { designComponentsRegistry } from '../../blocks/editor/VisualEditorContext';
+
 import {
   DESIGN_COMPONENT_BLOCK_NODE_TYPE,
   DESIGN_COMPONENT_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 import { generateRandomId } from '@contentful/experience-builder-core';
+import { designComponentsRegistry } from '@/store/registries';
 
 export const deserializeDesignComponentNode = ({
   node,
@@ -114,7 +115,7 @@ export const resolveDesignComponent = ({
     return node;
   }
 
-  const componentFields = entityStore?.getValue(designComponent, [
+  const componentFields = entityStore?.getValue(designComponent as any, [
     'fields',
   ]) as unknown as Composition;
 

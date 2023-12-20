@@ -1,12 +1,16 @@
 import { useEditorStore } from '@/store/editor';
-import {
+import type {
   ComponentRegistration,
   CompositionComponentNode,
+  ResolveDesignValueType,
 } from '@contentful/experience-builder-core/types';
 import { useMemo } from 'react';
-import { ResolveDesignValueType } from './useBreakpoints';
 import { useComponentProps } from './useComponentProps';
 import { builtInComponents } from '@/types/constants';
+import { DESIGN_COMPONENT_NODE_TYPE } from '@contentful/experience-builder-core/constants';
+import { DesignComponent } from '@contentful/experience-builder-components';
+import { resolveDesignComponent } from '@/utils/designComponentUtils';
+import { componentRegistry, createDesignComponentRegistration } from '@/store/registries';
 
 interface ComponentParams {
   node: CompositionComponentNode;
@@ -14,13 +18,34 @@ interface ComponentParams {
   areEntitiesFetched: boolean;
 }
 
-export const useComponent = ({ node, resolveDesignValue, areEntitiesFetched }: ComponentParams) => {
-  const componentRegistry = useEditorStore((state) => state.componentRegistry);
+export const useComponent = ({
+  node: rawNode,
+  resolveDesignValue,
+  areEntitiesFetched,
+}: ComponentParams) => {
+  const entityStore = useEditorStore((state) => state.entityStore);
+
+  const node = useMemo(() => {
+    if (rawNode.type === DESIGN_COMPONENT_NODE_TYPE && areEntitiesFetched) {
+      return resolveDesignComponent({
+        node: rawNode,
+        entityStore: entityStore!,
+      });
+    }
+
+    return rawNode;
+  }, [areEntitiesFetched, entityStore, rawNode]);
 
   const componentRegistration = useMemo(() => {
-    const id = node.data.blockId as string;
+    const registration = componentRegistry.get(node.data.blockId as string);
 
-    return componentRegistry.get(id) as ComponentRegistration;
+    if (node.type === DESIGN_COMPONENT_NODE_TYPE && !registration) {
+      return createDesignComponentRegistration({
+        definitionId: node.data.blockId as string,
+        component: DesignComponent,
+      }) as ComponentRegistration;
+    }
+    return registration as ComponentRegistration;
   }, [node]);
 
   const componentId = node.data.id;
@@ -35,6 +60,7 @@ export const useComponent = ({ node, resolveDesignValue, areEntitiesFetched }: C
   const Component = builtInComponents[node.data.blockId!] || componentRegistration.component;
 
   return {
+    node,
     componentId,
     Component,
     props,

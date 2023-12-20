@@ -4,10 +4,7 @@ import type {
   CompositionVariableValueType,
   ValuesByBreakpoint,
 } from '@contentful/experience-builder-core/types';
-import {
-  getValueForBreakpoint,
-  getDesignTokenRegistration,
-} from '@contentful/experience-builder-core';
+import { getValueForBreakpoint } from '@contentful/experience-builder-core';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
 

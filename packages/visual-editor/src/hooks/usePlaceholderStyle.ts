@@ -38,25 +38,17 @@ export const usePlaceholderStyle = () => {
 
       const isRoot = draggedItem.destination?.droppableId === ROOT_ID;
 
-      const isSameDroppable =
-        draggedItem.source.droppableId === draggedItem.destination?.droppableId;
-
-      const children = Array.from(targetListElement.children).filter(
-        (item) =>
+      const children = Array.from(targetListElement.children).filter((item) => {
+        return (
           item !== draggedDOM &&
           item.getAttributeNames().indexOf('data-ctfl-placeholder') === -1 &&
           item.getAttributeNames().indexOf('data-rfd-placeholder-context-id') === -1
-      );
+        );
+      });
 
       if (destinationIndex > 0 && direction === 'vertical' && isRoot) {
-        const end =
-          destinationIndex > draggedItem.source.index && isSameDroppable
-            ? destinationIndex + 1
-            : destinationIndex;
-
-        const rootChildren = children.slice(0, end);
-
-        clientY = rootChildren.reduce(
+        const childrenAbove = children.slice(0, destinationIndex);
+        clientY = childrenAbove.reduce(
           (total, item) =>
             total +
             item.clientHeight +

@@ -17,36 +17,37 @@ import {
   CompositionTree,
   CompositionComponentNode,
   CompositionComponentPropValue,
+  ComponentRegistration,
+  Link,
 } from '@contentful/experience-builder-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { Link } from 'contentful';
-
-export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
-export const setDesignComponents = (designComponents: Link<'Entry'>[]) => {
-  for (const designComponent of designComponents) {
-    //@ts-expect-error TODO: Fix typing
-    designComponentsRegistry.set(designComponent.sys.id, designComponent);
-  }
-};
+import { Entry } from 'contentful';
+import { DesignComponent } from '@contentful/experience-builder-components';
+import {
+  addComponentRegistration,
+  designComponentsRegistry,
+  setDesignComponents,
+} from '@/store/registries';
+import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
+import { PostMessageMethods } from '@contentful/visual-sdk';
 
 export function useEditorSubscriber() {
   const updateTree = useTreeStore((state) => state.updateTree);
 
-  const dataSource = useEditorStore((state) => state.dataSource);
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const entityStore = useEditorStore((state) => state.entityStore);
 
+  const setLocale = useEditorStore((state) => state.setLocale);
   const setUnboundValues = useEditorStore((state) => state.setUnboundValues);
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const initializeEditor = useEditorStore((state) => state.initializeEditor);
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
 
-  const [locale, setLocale] = useState<string>('');
   const [initialized, setInitialized] = useState(false);
 
   const reloadApp = () => {
@@ -61,36 +62,36 @@ export function useEditorSubscriber() {
   useEffect(() => {
     const onVisualEditorInitialize = (event) => {
       if (!event.detail) return;
-      const { componentRegistry, locale: initialLocale } = event.detail;
+      const { componentRegistry, locale: initialLocale, entities } = event.detail;
 
-      if (componentRegistry) {
-        initializeEditor({
-          initialLocale,
-          componentRegistry,
-          entityStore: new EditorModeEntityStore({
-            entities: [],
-            locale: locale || initialLocale,
-          }),
-        });
-        setInitialized(true);
-      }
-
-      if (initialLocale) {
-        setLocale(initialLocale);
-      }
+      initializeEditor({
+        initialLocale,
+        componentRegistry,
+        entityStore: new EditorModeEntityStore({
+          entities: entities || [],
+          locale: initialLocale,
+        }),
+      });
+      setInitialized(true);
     };
 
     // Listen for VisualEditorComponents internal event
     window.addEventListener(INTERNAL_EVENTS.VisualEditorInitialize, onVisualEditorInitialize);
 
-    // Dispatch Visual Editor Ready event
-    window.dispatchEvent(new CustomEvent(VISUAL_EDITOR_EVENTS.Ready));
-
     // Clean up the event listener
     return () => {
       window.removeEventListener(INTERNAL_EVENTS.VisualEditorInitialize, onVisualEditorInitialize);
     };
-  });
+  }, []);
+
+  useEffect(() => {
+    if (initialized) {
+      return;
+    }
+
+    // Dispatch Visual Editor Ready event
+    window.dispatchEvent(new CustomEvent(VISUAL_EDITOR_EVENTS.Ready));
+  }, []);
 
   useEffect(() => {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
@@ -116,6 +117,10 @@ export function useEditorSubscriber() {
 
       const eventData = tryParseMessage(event);
 
+      if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
+        // Expected message: This message is handled in the visual-sdk to store fetched entities
+        return;
+      }
       console.debug(
         `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
         eventData
@@ -151,8 +156,7 @@ export function useEditorSubscriber() {
              *
              * We still update the tree here so we don't have a stale "tree"
              */
-            changedValueType === 'BoundValue' &&
-              setDataSource({ ...dataSource, ...changedNode.data.dataSource });
+            changedValueType === 'BoundValue' && setDataSource(changedNode.data.dataSource);
             changedValueType === 'UnboundValue' &&
               setUnboundValues({
                 ...unboundValues,
@@ -165,33 +169,29 @@ export function useEditorSubscriber() {
           }
           break;
         }
-        // case INCOMING_EVENTS.DesignComponentsAdded: {
-        //   const {
-        //     tree,
-        //     designComponent,
-        //     designComponentDefinition,
-        //   }: {
-        //     tree: CompositionTree;
-        //     designComponent: Entry;
-        //     designComponentDefinition: ComponentRegistration['definition'];
-        //   } = payload;
-        //   if (designComponent) {
-        //     entityStore.current.updateEntity(designComponent);
-        //     // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
-        //     // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
-        //     // of all bound and unbound values when new values are added
-        //     designComponentsRegistry.set(designComponent.sys.id, {
-        //       sys: { id: designComponent.sys.id, linkType: 'Entry', type: 'Link' },
-        //     } as Link<'Entry'>);
-        //     designComponentDefinition &&
-        //       addComponentRegistration({
-        //         component: DesignComponent,
-        //         definition: designComponentDefinition,
-        //       });
-        //     setTree(tree);
-        //   }
-        //   break;
-        // }
+        case INCOMING_EVENTS.DesignComponentsAdded: {
+          const {
+            designComponent,
+            designComponentDefinition,
+          }: {
+            designComponent: Entry;
+            designComponentDefinition?: ComponentRegistration['definition'];
+          } = payload;
+          entityStore?.updateEntity(designComponent);
+          // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
+          // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
+          // of all bound and unbound values when new values are added
+          designComponentsRegistry.set(designComponent.sys.id, {
+            sys: { id: designComponent.sys.id, linkType: 'Entry', type: 'Link' },
+          } as Link<'Entry'>);
+          if (designComponentDefinition) {
+            addComponentRegistration({
+              component: DesignComponent,
+              definition: designComponentDefinition,
+            });
+          }
+          break;
+        }
         // case INCOMING_EVENTS.CanvasResized:
         // case INCOMING_EVENTS.SelectComponent: {
         //   const { selectedNodeId: nodeId } = payload;
@@ -199,11 +199,11 @@ export function useEditorSubscriber() {
         //   sendSelectedComponentCoordinates(nodeId);
         //   break;
         // }
-        // case INCOMING_EVENTS.HoverComponent: {
-        //   const { hoveredNodeId } = payload;
-        //   sendHoveredComponentCoordinates(hoveredNodeId);
-        //   break;
-        // }
+        case INCOMING_EVENTS.HoverComponent: {
+          const { hoveredNodeId } = payload;
+          sendHoveredComponentCoordinates(hoveredNodeId);
+          break;
+        }
         case INCOMING_EVENTS.ComponentDraggingChanged: {
           const { isDragging } = payload;
 

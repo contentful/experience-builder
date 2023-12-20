@@ -1,6 +1,6 @@
 import { DesignTokensDefinition } from '@/types';
-import { sendMessage } from '@contentful/experience-builder-core/src';
 import { OUTGOING_EVENTS } from '@/constants';
+import { sendMessage } from '@/communication';
 
 const designTokensRegistry = {} as DesignTokensDefinition;
 const templateStringRegex = /\${(.+?)}/g;

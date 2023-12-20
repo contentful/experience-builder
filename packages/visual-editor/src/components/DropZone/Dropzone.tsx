@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
+import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
 import EditorBlock from './EditorBlock';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
@@ -13,6 +13,7 @@ import { EmptyEditorContainer } from '@components/EmptyContainer/EmptyContainer'
 import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
 import { useDropZoneDirection } from '@/hooks/useDropZoneDirection';
+import { DESIGN_COMPONENT_NODE_TYPES } from '@contentful/experience-builder-core/constants';
 
 type DropZoneProps = {
   zoneId: string;
@@ -31,8 +32,13 @@ function isDropEnabled(
   hoveringOverSection: boolean,
   draggingRootZone: boolean,
   isRootZone: boolean,
-  draggingOverArea: boolean
+  draggingOverArea: boolean,
+  isDesignComponent: boolean
 ) {
+  if (isDesignComponent) {
+    return false;
+  }
+
   if (!userIsDragging) {
     return false;
   }
@@ -78,8 +84,6 @@ export function DropZone({
   const draggedDestinationId = draggedItem && draggedItem.destination?.droppableId;
   const draggingParentIds = getZoneParents(draggedSourceId || '');
 
-  const [userWillDrag, setUserWillDrag] = useState(false);
-
   const hoveringRootZone = hoveringSection ? hoveringSection === zoneId : isRootZone;
   const hoveringOverZone = hoveringZone === zoneId;
 
@@ -100,6 +104,8 @@ export function DropZone({
     return draggingParentIds[0] === zoneId;
   }, [userIsDragging, draggingParentIds, zoneId]);
 
+  const isDesignComponent = DESIGN_COMPONENT_NODE_TYPES.includes(node?.type || '');
+
   const draggingRootZone = draggedSourceId === ROOT_ID;
 
   const draggingNewComponent = !!draggedSourceId?.startsWith('component-list');
@@ -115,7 +121,8 @@ export function DropZone({
     hoveringOverSection,
     draggingRootZone,
     isRootZone,
-    draggingOverArea
+    draggingOverArea,
+    isDesignComponent
   );
 
   if (!resolveDesignValue || !areEntitiesFetched) {
@@ -136,9 +143,9 @@ export function DropZone({
                 [styles.isEmpty]: isEmptyCanvas,
                 [styles.isRoot]: isRootZone,
                 [styles.hoveringRoot]: userIsDragging && hoveringRootZone,
-                [styles.isDragging]: userIsDragging,
+                [styles.isDragging]: userIsDragging && !isDesignComponent,
                 [styles.isHovering]: hoveringOverZone && !userIsDragging,
-                [styles.isDestination]: isDestination,
+                [styles.isDestination]: isDestination && !isDesignComponent,
               },
               className
             )}
@@ -164,7 +171,6 @@ export function DropZone({
                     key={componentId}
                     userIsDragging={userIsDragging}
                     draggingNewComponent={draggingNewComponent}
-                    setUserWillDrag={setUserWillDrag}
                     node={item}
                     resolveDesignValue={resolveDesignValue}
                     areEntitiesFetched={areEntitiesFetched}

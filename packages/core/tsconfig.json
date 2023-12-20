@@ -17,13 +17,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "cypress",
-    "src/registries/designTokenRegistry.ts",
-    "../experience-builder-sdk/src/core/componentRegistry.ts",
-    "../experience-builder-sdk/src/core/componentRegistry.test.tsx"
-  ],
+  "include": ["src/**/*", "cypress"],
   "exclude": [
     "dist",
     "node_modules",

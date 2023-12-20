@@ -4,7 +4,11 @@ import { DragDropContext } from '@hello-pangea/dnd';
 import { DropZone } from '../DropZone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
 import { sendMessage } from '@contentful/experience-builder-core';
-import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
+import type {
+  ResolveDesignValueType,
+  CompositionTree,
+} from '@contentful/experience-builder-core/types';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 import dragState from '@/utils/dragState';
 import { onDrop } from '@/utils/onDrop';
 import { usePlaceholderStyle } from '@/hooks/usePlaceholderStyle';
@@ -15,8 +19,6 @@ import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
 import styles from './render.module.css';
 import { onComponentMoved } from '@/communication/onComponentMoved';
-import { CompositionTree } from '@contentful/experience-builder-core/types';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 
 interface Props {
   resolveDesignValue: ResolveDesignValueType;

@@ -1,78 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { Suspense } from 'react';
+import { VisualEditorMode } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/visual-sdk';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { useInitializeVisualEditor } from '../../hooks/useInitializeVisualEditor';
 
-import { VisualEditorBlock } from './VisualEditorBlock';
-import { EmptyEditorContainer } from '../../components/EmptyEditorContainer';
-import '../../styles/VisualEditorRoot.css';
-import { onComponentDropped } from '../../communication/onComponentDrop';
-import { useBreakpoints } from '../../hooks/useBreakpoints';
-import { useHoverIndicator } from '../../hooks/useHoverIndicator';
-import { CompositionComponentNode, EntityStore, InternalSDKMode } from '../../types';
-import { useEditorContext } from './useEditorContext';
-import { VisualEditorContextProvider } from './VisualEditorContext';
+const VisualEditorLoader = React.lazy(() => import('./VisualEditorLoader'));
 
 type VisualEditorRootProps = {
+  visualEditorMode: VisualEditorMode;
+  initialEntities: EntityStore['entities'];
   initialLocale: string;
-  mode: InternalSDKMode;
-  previousEntityStore?: EntityStore;
 };
 
-export const VisualEditorRoot = ({
+export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
+  visualEditorMode,
+  initialEntities,
   initialLocale,
-  mode,
-  previousEntityStore,
-}: VisualEditorRootProps) => {
-  // in editor mode locale can change via sendMessage from web app, hence we use the locale from props only as initial locale
+}) => {
+  useInitializeVisualEditor({
+    initialLocale,
+    initialEntities,
+  });
+
   return (
-    <VisualEditorContextProvider
-      mode={mode}
-      initialLocale={initialLocale}
-      previousEntityStore={previousEntityStore}>
-      <VisualEditorRootComponents />
-    </VisualEditorContextProvider>
+    <ErrorBoundary>
+      <Suspense fallback={<div>Loading...</div>}>
+        <VisualEditorLoader visualEditorMode={visualEditorMode} />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 
-const VisualEditorRootComponents = () => {
-  const {
-    tree,
-    dataSource,
-    isDragging,
-    unboundValues,
-    breakpoints,
-    entityStore,
-    areEntitiesFetched,
-  } = useEditorContext();
-
-  // We call it here instead of on block-level to avoid registering too many even listeners for media queries
-  const { resolveDesignValue } = useBreakpoints(breakpoints);
-  useHoverIndicator(isDragging);
-
-  useEffect(() => {
-    if (!tree || !tree?.root.children.length || !isDragging) return;
-    const onMouseUp = () => {
-      onComponentDropped({ node: tree.root });
-    };
-    document.addEventListener('mouseup', onMouseUp);
-    return () => document.removeEventListener('mouseup', onMouseUp);
-  }, [tree, isDragging]);
-
-  if (!tree?.root.children.length) {
-    return React.createElement(EmptyEditorContainer, { isDragging }, []);
-  }
-
-  return (
-    <div id="VisualEditorRoot" className="root" data-type="root">
-      {tree.root.children.map((node: CompositionComponentNode) => (
-        <VisualEditorBlock
-          key={node.data.id}
-          node={node}
-          dataSource={dataSource}
-          unboundValues={unboundValues}
-          resolveDesignValue={resolveDesignValue}
-          entityStore={entityStore}
-          areEntitiesFetched={areEntitiesFetched}
-        />
-      ))}
-    </div>
-  );
-};
+export default VisualEditorRoot;

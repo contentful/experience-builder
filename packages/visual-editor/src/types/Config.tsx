@@ -4,7 +4,7 @@ type WithCtflProps<Props> = Props & {
   id: string;
 };
 
-export type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
+export type DefaultComponentProps = { [key: string]: any; editorMode?: boolean };
 
 export type Content = ComponentData[];
 

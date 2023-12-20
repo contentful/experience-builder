@@ -1,4 +1,3 @@
-import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
 import React from 'react';
 import styles from './styles.module.css';
 import { DraggableComponent } from '../Draggable/DraggableComponent';
@@ -8,9 +7,13 @@ import { useEditorStore } from '@/store/editor';
 import { useComponent } from '@/hooks/useComponent';
 import { useZoneStore } from '@/store/zone';
 import classNames from 'classnames';
-import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
+import type {
+  CompositionComponentNode,
+  ResolveDesignValueType,
+} from '@contentful/experience-builder-core/types';
 import {
   CONTENTFUL_CONTAINER_ID,
+  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
 } from '@contentful/experience-builder-core/constants';
 
@@ -19,7 +22,6 @@ type VisualEditorBlockProps = {
   index: number;
   userIsDragging: boolean;
   draggingNewComponent: boolean | undefined;
-  setUserWillDrag: (bool: boolean) => void;
   resolveDesignValue: ResolveDesignValueType;
   areEntitiesFetched: boolean;
   zoneId: string;
@@ -27,32 +29,39 @@ type VisualEditorBlockProps = {
 };
 
 const EditorBlock: React.FC<VisualEditorBlockProps> = ({
-  node,
+  node: rawNode,
   resolveDesignValue,
   areEntitiesFetched,
   draggingNewComponent,
-  setUserWillDrag,
   index,
   zoneId,
   parentSectionId,
   userIsDragging,
 }) => {
-  useSelectedInstanceCoordinates({ node });
-
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { componentId, props, wrapperProps, label, Component } = useComponent({
-    node,
+  const { node, componentId, props, wrapperProps, label, Component } = useComponent({
+    node: rawNode,
     areEntitiesFetched,
     resolveDesignValue,
   });
+
+  useSelectedInstanceCoordinates({ node });
 
   const sectionsWithZone = useZoneStore((state) => state.sectionsWithZones);
 
   const isContainer = node.data.blockId === CONTENTFUL_CONTAINER_ID;
   const containsZone = sectionsWithZone[componentId];
+
+  const isDesignComponentBlock = node.type === DESIGN_COMPONENT_BLOCK_NODE_TYPE;
+
+  // Currently, design component blocks are not editable (readonly) so
+  // we simply render that underlying component instead of making it draggable
+  if (isDesignComponentBlock) {
+    return <Component {...props} />;
+  }
 
   return (
     <DraggableComponent
@@ -71,14 +80,6 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
         sendMessage(OUTGOING_EVENTS.ComponentSelected, {
           nodeId: componentId,
         });
-      }}
-      onMouseDown={(e) => {
-        e.stopPropagation();
-        setUserWillDrag(true);
-      }}
-      onMouseUp={(e) => {
-        e.stopPropagation();
-        setUserWillDrag(false);
       }}
       onMouseOver={(e) => {
         e.stopPropagation();

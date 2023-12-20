@@ -1,4 +1,4 @@
-import type { Link } from '@contentful/experience-builder-core/types';
+import type { Link } from '@/types';
 
 export const isLinkToAsset = (variable: any): variable is Link<'Asset'> => {
   if (!variable) return false;

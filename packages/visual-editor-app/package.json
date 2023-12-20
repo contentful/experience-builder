@@ -15,6 +15,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@contentful/experience-builder-components": "file:../experience-builder-components",
     "@contentful/experience-builder": "file:../experience-builder-sdk",
     "@contentful/experience-builder-storybook-addon": "file:../storybook-addon",
     "react": "^18.2.0",

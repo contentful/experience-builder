@@ -6,7 +6,7 @@
   outline-offset: -1px;
   outline: 1px solid transparent;
   width: 100%;
-  transition: all 0.2s;
+  transition: outline 0.2s;
   min-height: 200px;
 }
 

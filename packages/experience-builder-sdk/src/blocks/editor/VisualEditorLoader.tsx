@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import type { InternalSDKMode } from '@contentful/experience-builder-core/types';
-import { VisualEditorContextProvider } from './editor/VisualEditorContext';
 import { VisualEditorMode } from '@contentful/experience-builder-core';
 
-type VisualEditorRootProps = {
-  initialLocale: string;
-  mode: InternalSDKMode;
+type VisualEditorLoaderProps = {
   visualEditorMode: VisualEditorMode;
 };
 
-export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
-  initialLocale,
-  mode,
-  visualEditorMode,
-}) => {
+export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({ visualEditorMode }) => {
   const [VisualEditor, setVisualEditor] = useState<React.ComponentType | null>(null);
 
   useEffect(() => {
@@ -35,11 +27,7 @@ export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
 
   if (!VisualEditor) return null;
 
-  return (
-    <VisualEditorContextProvider mode={mode} initialLocale={initialLocale}>
-      <VisualEditor />
-    </VisualEditorContextProvider>
-  );
+  return <VisualEditor />;
 };
 
-export default VisualEditorRoot;
+export default VisualEditorLoader;

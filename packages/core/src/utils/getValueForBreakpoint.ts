@@ -1,5 +1,5 @@
 import { Breakpoint, ValuesByBreakpoint } from '@/types';
-import { getDesignTokenRegistration } from '..';
+import { getDesignTokenRegistration } from '@/registries';
 
 export const getFallbackBreakpointIndex = (breakpoints: Breakpoint[]) => {
   // We assume that there will be a single breakpoint which uses the wildcard query.
@@ -30,7 +30,10 @@ export const getValueForBreakpoint = (
         variableName === 'cfHeight' ||
         variableName === 'cfBackgroundColor'
       ) {
-        return getDesignTokenRegistration(valuesByBreakpoint[breakpointId]);
+        const breakPointValue =
+          valuesByBreakpoint[breakpointId] || valuesByBreakpoint[fallbackBreakpointId];
+
+        return getDesignTokenRegistration(breakPointValue);
       }
       if (valuesByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade
