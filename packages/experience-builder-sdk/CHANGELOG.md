@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.2...@contentful/experience-builder@3.4.3) (2023-12-20)
+
+### Bug Fixes
+
+- switching locale makes design components disappear [SPA-1711] ([#209](https://github.com/contentful/experience-builder/issues/209)) ([84ca724](https://github.com/contentful/experience-builder/commit/84ca7248cbfcbd835a58c979d26ec9d375a02931))
+
 ## [3.4.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.1...@contentful/experience-builder@3.4.2) (2023-12-20)
 
 ### Bug Fixes
