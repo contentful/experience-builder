@@ -122,11 +122,12 @@ export function VisualEditorContextProvider({
     const resolveEntities = async () => {
       const dataSourceEntityLinks = Object.values(dataSource || {});
       const entityLinks = [...dataSourceEntityLinks, ...(designComponentsRegistry.values() || [])];
-      const deferredEntities = entityStore.fetchEntities(entityLinks);
+      const fetchingResponse = entityStore.fetchEntities(entityLinks);
       // Only update the state and rerender when we're actually fetching something
-      if (deferredEntities === false) return;
+      if (fetchingResponse === false) return;
       setEntitiesFetched(false);
-      await deferredEntities;
+      // Await until the fetching is done to update the state variable at the right moment
+      await fetchingResponse;
       setEntitiesFetched(true);
     };
 

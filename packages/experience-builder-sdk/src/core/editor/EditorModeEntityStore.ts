@@ -40,7 +40,14 @@ export class EditorModeEntityStore extends EditorEntityStore {
     this.locale = locale;
   }
 
-  fetchEntities(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {
+  /**
+   * This function collects and returns the list of requested entries and assets. Additionally, it checks
+   * upfront whether any async fetching logic is actually happening. If not, it returns a plain `false` value, so we
+   * can detect this early and avoid unnecessary re-renders.
+   * @param entityLinks
+   * @returns false if no async fetching is happening, otherwise a promise that resolves when all entities are fetched
+   */
+  fetchEntities(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]): false | Promise<void> {
     const entryLinks = entityLinks.filter((link) => link.sys?.linkType === 'Entry');
     const assetLinks = entityLinks.filter((link) => link.sys?.linkType === 'Asset');
 
@@ -55,7 +62,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
 
     // Entries and assets will be stored in entryMap and assetMap
     return Promise.all([this.fetchEntries(uniqueEntryIds), this.fetchAssets(uniqueAssetIds)]).then(
-      ([entries, assets]) => [...entries, ...assets]
+      () => Promise.resolve()
     );
   }
 
