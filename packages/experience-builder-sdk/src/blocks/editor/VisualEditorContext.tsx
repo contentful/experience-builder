@@ -228,7 +228,9 @@ export function VisualEditorContextProvider({
             changedValueType?: CompositionComponentPropValue['type'];
           } = payload;
           // Make sure to first store the design components before setting the tree and thus triggering a rerender
-          designComponents && setDesignComponents(designComponents);
+          if (designComponents) {
+            setDesignComponents(designComponents);
+          }
           setTree(tree);
           setLocale(locale);
 
@@ -296,7 +298,9 @@ export function VisualEditorContextProvider({
         }
         case INCOMING_EVENTS.UpdatedEntity: {
           const { entity } = payload;
-          entity && entityStore.updateEntity(entity);
+          if (entity) {
+            entityStore.updateEntity(entity);
+          }
           break;
         }
         case INCOMING_EVENTS.RequestEditorMode: {
