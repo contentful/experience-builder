@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.1...@contentful/experience-builder@3.4.2) (2023-12-20)
+
+### Bug Fixes
+
+- design token logic breaks auto height for empty containers ([#210](https://github.com/contentful/experience-builder/issues/210)) ([901bf67](https://github.com/contentful/experience-builder/commit/901bf67c6f7e3fb1a6b968b7fbb26b27d302f13b))
+
 ## [3.4.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.0...@contentful/experience-builder@3.4.1) (2023-12-20)
 
 ### Bug Fixes
