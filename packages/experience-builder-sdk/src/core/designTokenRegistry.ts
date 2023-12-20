@@ -17,7 +17,9 @@ export const defineDesignTokens = (designTokenDefinition: DesignTokensDefinition
   });
 };
 
-export const getDesignTokenRegistration = (breakpointValue: string) => {
+export const getDesignTokenRegistration = (breakpointValue?: string) => {
+  if (!breakpointValue) return breakpointValue;
+
   let resolvedValue = '';
   const values = breakpointValue.split(' ');
   values.forEach((value) => {

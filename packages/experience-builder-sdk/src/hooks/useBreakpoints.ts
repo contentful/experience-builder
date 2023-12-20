@@ -65,9 +65,9 @@ export const getValueForBreakpoint = (
         variableName === 'cfHeight' ||
         variableName === 'cfBackgroundColor'
       ) {
-        const breakPointValue =
+        const breakpointValue =
           valuesByBreakpoint[breakpointId] || valuesByBreakpoint[fallbackBreakpointId];
-        return getDesignTokenRegistration(breakPointValue);
+        return getDesignTokenRegistration(breakpointValue);
       }
       if (valuesByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade

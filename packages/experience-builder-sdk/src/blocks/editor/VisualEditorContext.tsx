@@ -63,6 +63,9 @@ type VisualEditorContextProviderProps = {
   previousEntityStore?: EntityStore;
 };
 
+// Note: During development, the hot reloading might empty this and it
+// stays empty leading to not rendering design components. Ideally, this is
+// integrated into the state machine to keep track of its state.
 export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
 export const setDesignComponents = (designComponents: Link<'Entry'>[]) => {
   for (const designComponent of designComponents) {
@@ -83,7 +86,9 @@ export function VisualEditorContextProvider({
   const [isDragging, setIsDragging] = useState(false);
   const selectedNodeId = useRef<string>('');
   const [locale, setLocale] = useState<string>(initialLocale);
-  const [areEntitiesFetched, setEntitiesFetched] = useState(false);
+  // Optimistic loading. Try to render everything as early as possible.
+  // The entities might already be defined in the entity store.
+  const [areEntitiesFetched, setEntitiesFetched] = useState(true);
 
   const [entityStore, setEntityStore] = useState<EditorModeEntityStore>(
     () =>
@@ -115,12 +120,14 @@ export function VisualEditorContextProvider({
   // afterward, this effect fetches the respective entities.
   useEffect(() => {
     const resolveEntities = async () => {
-      setEntitiesFetched(false);
       const dataSourceEntityLinks = Object.values(dataSource || {});
-      await entityStore.fetchEntities([
-        ...dataSourceEntityLinks,
-        ...(designComponentsRegistry.values() || []),
-      ]);
+      const entityLinks = [...dataSourceEntityLinks, ...(designComponentsRegistry.values() || [])];
+      const fetchingResponse = entityStore.fetchEntities(entityLinks);
+      // Only update the state and rerender when we're actually fetching something
+      if (fetchingResponse === false) return;
+      setEntitiesFetched(false);
+      // Await until the fetching is done to update the state variable at the right moment
+      await fetchingResponse;
       setEntitiesFetched(true);
     };
 
@@ -221,9 +228,12 @@ export function VisualEditorContextProvider({
             changedNode?: CompositionComponentNode;
             changedValueType?: CompositionComponentPropValue['type'];
           } = payload;
+          // Make sure to first store the design components before setting the tree and thus triggering a rerender
+          if (designComponents) {
+            setDesignComponents(designComponents);
+          }
           setTree(tree);
           setLocale(locale);
-          designComponents && setDesignComponents(designComponents);
 
           if (changedNode) {
             /**
@@ -289,7 +299,9 @@ export function VisualEditorContextProvider({
         }
         case INCOMING_EVENTS.UpdatedEntity: {
           const { entity } = payload;
-          entity && entityStore.updateEntity(entity);
+          if (entity) {
+            entityStore.updateEntity(entity);
+          }
           break;
         }
         case INCOMING_EVENTS.RequestEditorMode: {
