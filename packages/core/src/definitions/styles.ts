@@ -186,18 +186,6 @@ export const optionalBuiltInStyles: Partial<
     validations: {
       in: [
         {
-          value: '100',
-          displayName: 'Thin',
-        },
-        {
-          value: '200',
-          displayName: 'Extra Light',
-        },
-        {
-          value: '300',
-          displayName: 'Light',
-        },
-        {
           value: '400',
           displayName: 'Normal',
         },
@@ -208,18 +196,6 @@ export const optionalBuiltInStyles: Partial<
         {
           value: '600',
           displayName: 'Semi Bold',
-        },
-        {
-          value: '700',
-          displayName: 'Bold',
-        },
-        {
-          value: '800',
-          displayName: 'Extra Bold',
-        },
-        {
-          value: '900',
-          displayName: 'Black',
         },
       ],
     },
