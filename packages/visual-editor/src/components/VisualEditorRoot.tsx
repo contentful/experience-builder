@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
-import { sendMessage, useBreakpoints } from '@contentful/experience-builder-core';
+import { sendMessage } from '@contentful/experience-builder-core';
 import dragState from '@/utils/dragState';
 import { RootRenderer } from './RootRenderer/RootRenderer';
 import { useEditorStore } from '@/store/editor';
@@ -8,6 +8,7 @@ import { useTreeStore } from '@/store/tree';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
 import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 import { designComponentsRegistry } from '@/store/registries';
+import { useBreakpoints } from '@/hooks/useBreakpoints';
 
 export const VisualEditorRoot = () => {
   const initialized = useEditorSubscriber();

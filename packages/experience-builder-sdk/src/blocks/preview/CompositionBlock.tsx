@@ -14,6 +14,7 @@ import type {
   CompositionUnboundValues,
   CompositionVariableValueType,
   ExperienceEntry,
+  ResolveDesignValueType,
   StyleProps,
 } from '@contentful/experience-builder-core/types';
 import {
@@ -21,7 +22,6 @@ import {
   getComponentRegistration,
 } from '../../core/componentRegistry';
 import { buildCfStyles, checkIfDesignComponent } from '@contentful/experience-builder-core';
-import { ResolveDesignValueType } from '../../hooks/useBreakpoints';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 import { transformContentValue } from '../../utils/transformers';
