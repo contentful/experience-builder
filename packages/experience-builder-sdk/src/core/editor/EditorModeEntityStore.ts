@@ -40,18 +40,23 @@ export class EditorModeEntityStore extends EditorEntityStore {
     this.locale = locale;
   }
 
-  async fetchEntities(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {
+  fetchEntities(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {
     const entryLinks = entityLinks.filter((link) => link.sys?.linkType === 'Entry');
     const assetLinks = entityLinks.filter((link) => link.sys?.linkType === 'Asset');
 
-    const uniqueEntryLinks = new Set(entryLinks.map((link) => link.sys.id));
-    const uniqueAssetLinks = new Set(assetLinks.map((link) => link.sys.id));
+    const uniqueEntryIds = [...new Set(entryLinks.map((link) => link.sys.id))];
+    const uniqueAssetIds = [...new Set(assetLinks.map((link) => link.sys.id))];
+
+    const { missing: missingEntryIds } = this.getEntitiesFromMap('Entry', uniqueEntryIds);
+    const { missing: missingAssetIds } = this.getEntitiesFromMap('Asset', uniqueAssetIds);
+
+    // Return false to indicate that no async fetching is happening
+    if (!missingAssetIds.length && !missingEntryIds.length) return false;
 
     // Entries and assets will be stored in entryMap and assetMap
-    await Promise.allSettled([
-      this.fetchEntries([...uniqueEntryLinks]),
-      this.fetchAssets([...uniqueAssetLinks]),
-    ]);
+    return Promise.all([this.fetchEntries(uniqueEntryIds), this.fetchAssets(uniqueAssetIds)]).then(
+      ([entries, assets]) => [...entries, ...assets]
+    );
   }
 
   getValue(
