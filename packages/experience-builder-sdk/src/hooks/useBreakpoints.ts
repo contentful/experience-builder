@@ -1,14 +1,14 @@
-import {
+import type {
   ValuesByBreakpoint,
-  type Breakpoint,
+  Breakpoint,
   CompositionVariableValueType,
+  ResolveDesignValueType,
 } from '@contentful/experience-builder-core/types';
 import {
   mediaQueryMatcher,
   getFallbackBreakpointIndex,
   getActiveBreakpointIndex,
   getValueForBreakpoint,
-  ResolveDesignValueType,
 } from '@contentful/experience-builder-core';
 import { useCallback, useEffect, useState } from 'react';
 

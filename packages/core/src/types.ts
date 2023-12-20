@@ -2,7 +2,6 @@
  * danv:
  * NOTE!! The code commented here will be used in future. We commented it out to remove not yet fully unsupported parts
  */
-export * from './index';
 
 import type { ContentfulClientApi, Entry } from 'contentful';
 import type { EntityStore } from '@contentful/visual-sdk';
@@ -344,3 +343,8 @@ export interface DeprecatedExperience {
 export type ValuesByBreakpoint =
   | Record<string, CompositionVariableValueType>
   | CompositionVariableValueType;
+
+export type ResolveDesignValueType = (
+  valuesByBreakpoint: ValuesByBreakpoint,
+  variableName: string
+) => CompositionVariableValueType;

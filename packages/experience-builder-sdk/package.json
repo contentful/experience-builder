@@ -40,8 +40,7 @@
     "lodash.throttle": "^4.1.1",
     "lodash.times": "^4.3.2",
     "md5": "^2.3.0",
-    "vite-plugin-css-injected-by-js": "^3.1.1",
-    "zustand": "^4.4.7"
+    "vite-plugin-css-injected-by-js": "^3.1.1"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",

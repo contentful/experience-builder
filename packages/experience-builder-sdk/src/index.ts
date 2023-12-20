@@ -30,3 +30,5 @@ export type { InternalSDKMode, ExternalSDKMode } from '@contentful/experience-bu
 export { EntityStore } from '@contentful/visual-sdk';
 export { fetchers } from './core';
 export { createExperience } from './utils/createExperience';
+
+import { create } from 'zustand';

@@ -1,16 +1,7 @@
-import {
-  Breakpoint,
-  CompositionVariableValueType,
-  ValuesByBreakpoint,
-  getDesignTokenRegistration,
-} from '@/types';
+import { getDesignTokenRegistration } from '@/registries';
+import { Breakpoint, ValuesByBreakpoint } from '@/types';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
-
-export type ResolveDesignValueType = (
-  valuesByBreakpoint: ValuesByBreakpoint,
-  variableName: string
-) => CompositionVariableValueType;
 
 const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
   if (query === '*') return undefined;
