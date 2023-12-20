@@ -37,7 +37,7 @@ type VisualEditorContextType = {
   setSelectedNodeId: (id: string) => void;
   unboundValues: CompositionUnboundValues;
   breakpoints: Breakpoint[];
-  entityStore: React.MutableRefObject<EditorModeEntityStore>;
+  entityStore: EditorModeEntityStore;
   areEntitiesFetched: boolean;
 };
 
@@ -52,7 +52,7 @@ export const VisualEditorContext = React.createContext<VisualEditorContextType>(
   },
   locale: null,
   breakpoints: [],
-  entityStore: {} as React.MutableRefObject<EditorModeEntityStore>,
+  entityStore: {} as EditorModeEntityStore,
   areEntitiesFetched: false,
 });
 
@@ -85,28 +85,31 @@ export function VisualEditorContextProvider({
   const [locale, setLocale] = useState<string>(initialLocale);
   const [areEntitiesFetched, setEntitiesFetched] = useState(false);
 
-  const entityStore = useRef<EditorModeEntityStore>(
-    new EditorModeEntityStore({
-      // Initially, the SDK boots in preview mode and already fetches entities.
-      // We utilizes the previosuly existing store to avoid loading twice and
-      // have the entities ready as early as possible.
-      entities: previousEntityStore?.entities ?? [],
-      locale: locale,
-    })
+  const [entityStore, setEntityStore] = useState<EditorModeEntityStore>(
+    () =>
+      new EditorModeEntityStore({
+        // Initially, the SDK boots in preview mode and already fetches entities.
+        // We utilizes the previosuly existing store to avoid loading twice and
+        // have the entities ready as early as possible.
+        entities: previousEntityStore?.entities ?? [],
+        locale,
+      })
   );
 
   // Reload the entity store when the locale changed
   useEffect(() => {
-    const storeLocale = entityStore.current.locale;
+    const storeLocale = entityStore.locale;
     if (!locale || locale === storeLocale) return;
     console.debug(
       `[exp-builder.sdk] Resetting entity store because the locale changed from '${storeLocale}' to '${locale}'.`
     );
-    entityStore.current = new EditorModeEntityStore({
-      entities: [],
-      locale: locale,
-    });
-  }, [locale]);
+    setEntityStore(
+      new EditorModeEntityStore({
+        entities: [],
+        locale: locale,
+      })
+    );
+  }, [entityStore, locale]);
 
   // When the tree was updated, we store the dataSource and
   // afterward, this effect fetches the respective entities.
@@ -114,7 +117,7 @@ export function VisualEditorContextProvider({
     const resolveEntities = async () => {
       setEntitiesFetched(false);
       const dataSourceEntityLinks = Object.values(dataSource || {});
-      await entityStore.current.fetchEntities([
+      await entityStore.fetchEntities([
         ...dataSourceEntityLinks,
         ...(designComponentsRegistry.values() || []),
       ]);
@@ -122,7 +125,7 @@ export function VisualEditorContextProvider({
     };
 
     resolveEntities();
-  }, [dataSource]);
+  }, [dataSource, entityStore]);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
@@ -252,7 +255,7 @@ export function VisualEditorContextProvider({
             designComponent: Entry;
             designComponentDefinition?: ComponentRegistration['definition'];
           } = payload;
-          entityStore.current.updateEntity(designComponent);
+          entityStore.updateEntity(designComponent);
           // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
           // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
           // of all bound and unbound values when new values are added
@@ -286,7 +289,7 @@ export function VisualEditorContextProvider({
         }
         case INCOMING_EVENTS.UpdatedEntity: {
           const { entity } = payload;
-          entity && entityStore.current.updateEntity(entity);
+          entity && entityStore.updateEntity(entity);
           break;
         }
         case INCOMING_EVENTS.RequestEditorMode: {
@@ -305,7 +308,7 @@ export function VisualEditorContextProvider({
     return () => {
       window.removeEventListener('message', onMessage);
     };
-  }, [mode]);
+  }, [entityStore, mode]);
 
   /*
    * Handles on scroll business
