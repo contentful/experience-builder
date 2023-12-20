@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.3.1...@contentful/experience-builder@3.4.0) (2023-12-20)
+
+### Features
+
+- improve logs for example using a consistent prefix ([#207](https://github.com/contentful/experience-builder/issues/207)) ([96c306d](https://github.com/contentful/experience-builder/commit/96c306d23ac546c6b7bf6f425b434a9517f99b6f))
+
 ## [3.3.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.3.0...@contentful/experience-builder@3.3.1) (2023-12-19)
 
 ### Bug Fixes
