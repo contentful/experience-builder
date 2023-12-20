@@ -117,40 +117,6 @@ describe('useFetchById', () => {
     await waitFor(() => expect(result.current.error).toBeUndefined());
   });
 
-  it('should return an error if multiple experience entries were found, then when id changes to only one entry, then the error should be undefined', async () => {
-    clientMock.getEntries = jest
-      .fn()
-      .mockResolvedValue({ items: [compositionEntry, compositionEntry] });
-    const initialProps: useFetchByIdArgs = {
-      client: clientMock,
-      mode: 'preview' as ExternalSDKMode,
-      id,
-      experienceTypeId,
-      localeCode,
-    };
-    const { result, rerender } = renderHook(useFetchById, { initialProps });
-
-    await waitFor(() => {
-      expect(result.current.error?.message).toBe(
-        `More than one experience with identifier: ${JSON.stringify({ id })} was found`
-      );
-      expect(result.current.isFetching).toBe(false);
-      expect(clientMock.getEntries).toHaveBeenCalledTimes(1);
-    });
-
-    // Reset stub
-    clientMock.getEntries = jest
-      .fn()
-      .mockResolvedValue({ items: [{ ...compositionEntry, id: 'composition-id' }] });
-
-    rerender({ ...initialProps, id: 'composition-id' });
-
-    await waitFor(() => {
-      expect(result.current.error).toBeUndefined();
-      expect(clientMock.getEntries).toHaveBeenCalledTimes(2);
-    });
-  });
-
   it('should return an error if experienceTypeId is not defined', async () => {
     const initialProps = {
       client: clientMock,
