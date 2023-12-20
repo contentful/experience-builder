@@ -3,7 +3,7 @@ import {
   CONTENTFUL_CONTAINER_ID,
 } from '@contentful/experience-builder-core/constants';
 import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
-import { containerBuiltInStyles } from './variables';
+import { containerBuiltInStyles } from '@contentful/experience-builder-core';
 
 export const containerDefinition: ComponentDefinition = {
   id: CONTENTFUL_CONTAINER_ID,

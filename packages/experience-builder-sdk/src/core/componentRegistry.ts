@@ -9,13 +9,13 @@ import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
 } from '@contentful/experience-builder-core/constants';
+import { ContentfulContainer } from '@contentful/experience-builder-components';
+import { containerDefinition } from './definitions/components';
 import {
   builtInStyles as builtInStyleDefinitions,
   optionalBuiltInStyles,
-} from './definitions/variables';
-import { ContentfulContainer } from '@contentful/experience-builder-components';
-import { containerDefinition } from './definitions/components';
-import { sendMessage } from '@contentful/experience-builder-core';
+  sendMessage,
+} from '@contentful/experience-builder-core';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
 
