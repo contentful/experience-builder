@@ -129,10 +129,15 @@ export function VisualEditorContextProvider({
       // Await until the fetching is done to update the state variable at the right moment
       await fetchingResponse;
       setEntitiesFetched(true);
+      console.debug('[exp-builder.sdk] Finish fetching entities', {
+        entityStore,
+        entityLinks,
+        areEntitiesFetched,
+      });
     };
 
     resolveEntities();
-  }, [dataSource, entityStore]);
+  }, [areEntitiesFetched, dataSource, entityStore]);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
