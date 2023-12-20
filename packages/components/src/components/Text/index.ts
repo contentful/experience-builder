@@ -11,7 +11,6 @@ export const TextComponentDefinition: ComponentDefinition = {
     'cfMargin',
     'cfPadding',
     'cfFontSize',
-    'cfFontWeight',
     'cfLineHeight',
     'cfLetterSpacing',
     'cfTextColor',
@@ -23,6 +22,29 @@ export const TextComponentDefinition: ComponentDefinition = {
   ],
   thumbnailUrl: constants.thumbnails.text,
   variables: {
+    // Override Font Weight options
+    cfFontWeight: {
+      validations: {
+        in: [
+          {
+            value: '400',
+            displayName: 'Normal',
+          },
+          {
+            value: '500',
+            displayName: 'Medium',
+          },
+          {
+            value: '600',
+            displayName: 'Semi Bold',
+          },
+        ],
+      },
+      displayName: 'Font Weight',
+      type: 'Text',
+      group: 'style',
+      defaultValue: '400',
+    },
     value: {
       displayName: 'Value',
       description: 'The text to display. If not provided, children will be used instead.',

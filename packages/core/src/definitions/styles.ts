@@ -183,11 +183,51 @@ export const optionalBuiltInStyles: Partial<
     defaultValue: '16px',
   },
   cfFontWeight: {
+    validations: {
+      in: [
+        {
+          value: '100',
+          displayName: 'Thin',
+        },
+        {
+          value: '200',
+          displayName: 'Extra Light',
+        },
+        {
+          value: '300',
+          displayName: 'Light',
+        },
+        {
+          value: '400',
+          displayName: 'Normal',
+        },
+        {
+          value: '500',
+          displayName: 'Medium',
+        },
+        {
+          value: '600',
+          displayName: 'Semi Bold',
+        },
+        {
+          value: '700',
+          displayName: 'Bold',
+        },
+        {
+          value: '800',
+          displayName: 'Extra Bold',
+        },
+        {
+          value: '900',
+          displayName: 'Black',
+        },
+      ],
+    },
     displayName: 'Font Weight',
     type: 'Text',
     group: 'style',
     description: 'The font weight of the section',
-    defaultValue: 'normal',
+    defaultValue: '400',
   },
   cfLineHeight: {
     displayName: 'Line Height',
