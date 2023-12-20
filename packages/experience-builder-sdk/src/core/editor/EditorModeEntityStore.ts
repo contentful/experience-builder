@@ -6,6 +6,10 @@ export class EditorModeEntityStore extends EditorEntityStore {
   public locale: string;
 
   constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
+    console.debug(
+      `[exp-builder.sdk] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
+      { entities }
+    );
     const subscribe = (method: unknown, cb: (payload: RequestedEntitiesMessage) => void) => {
       const listeners = (event: MessageEvent) => {
         const data: {
