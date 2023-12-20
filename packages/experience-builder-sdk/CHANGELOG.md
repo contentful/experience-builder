@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.0...@contentful/experience-builder@3.4.1) (2023-12-20)
+
+### Bug Fixes
+
+- dont initialise entity store on every render by using state [SPA-1711] ([#208](https://github.com/contentful/experience-builder/issues/208)) ([b04f44b](https://github.com/contentful/experience-builder/commit/b04f44bae930df18ee53c74754f40ddb2bca2fbe))
+
 # [3.4.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.3.1...@contentful/experience-builder@3.4.0) (2023-12-20)
 
 ### Features
