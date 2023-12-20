@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.4](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.3...@contentful/experience-builder@3.4.4) (2023-12-20)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
 ## [3.4.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.2...@contentful/experience-builder@3.4.3) (2023-12-20)
 
 ### Bug Fixes
