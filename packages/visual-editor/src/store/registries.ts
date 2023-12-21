@@ -9,6 +9,9 @@ import {
   CONTENTFUL_SECTION_ID,
 } from '@contentful/experience-builder-core/constants';
 
+// Note: During development, the hot reloading might empty this and it
+// stays empty leading to not rendering design components. Ideally, this is
+// integrated into the state machine to keep track of its state.
 export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
 export const setDesignComponents = (designComponents: Link<'Entry'>[]) => {
   for (const designComponent of designComponents) {

@@ -1,7 +1,9 @@
 import type { HoveredElement } from '@contentful/experience-builder-core/types';
 import { sendMessage } from '@contentful/experience-builder-core';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
-import { DESIGN_COMPONENT_NODE_TYPE } from '..';
+import {
+  OUTGOING_EVENTS,
+  DESIGN_COMPONENT_NODE_TYPE,
+} from '@contentful/experience-builder-core/constants';
 
 export class MouseOverHandler {
   private currentHoveredElementId: string | null = null;

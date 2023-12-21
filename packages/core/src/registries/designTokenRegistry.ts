@@ -28,6 +28,7 @@ export const getDesignTokenRegistration = (breakpointValue: string) => {
     resolvedValue += `${tokenValue} `;
   });
 
+  // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
   return resolvedValue.trim();
 };
 

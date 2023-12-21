@@ -75,6 +75,10 @@ export function useEditorSubscriber() {
       // Await until the fetching is done to update the state variable at the right moment
       await fetchingResponse;
       setEntitiesFetched(true);
+      console.debug('[exp-builder.sdk] Finish fetching entities', {
+        entityStore,
+        entityLinks,
+      });
     };
 
     resolveEntities();
@@ -218,7 +222,9 @@ export function useEditorSubscriber() {
         }
         case INCOMING_EVENTS.UpdatedEntity: {
           const { entity } = payload;
-          entity && entityStore.updateEntity(entity);
+          if (entity) {
+            entityStore.updateEntity(entity);
+          }
           break;
         }
         case INCOMING_EVENTS.RequestEditorMode: {

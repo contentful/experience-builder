@@ -76,10 +76,12 @@ export const ExperienceRoot = ({
   });
 
   if (mode === 'editor') {
+    const entityStore =
+      experience && !isDeprecatedExperience(experience) ? experience.entityStore : undefined;
     return (
       <VisualEditorRoot
         visualEditorMode={visualEditorMode}
-        initialEntities={(experience as Experience)?.entityStore?.entities || []}
+        initialEntities={entityStore?.entities || []}
         initialLocale={locale}
       />
     );

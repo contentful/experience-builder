@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.4...@contentful/experience-builder@3.5.0) (2023-12-20)
+
+### Features
+
+- increase the timeout for editor entity store to avoid data loss ([#212](https://github.com/contentful/experience-builder/issues/212)) ([844a1ad](https://github.com/contentful/experience-builder/commit/844a1adf9c0ed33d91c76bd3c9a01680adea906b))
+
+## [3.4.4](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.3...@contentful/experience-builder@3.4.4) (2023-12-20)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
+## [3.4.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.2...@contentful/experience-builder@3.4.3) (2023-12-20)
+
+### Bug Fixes
+
+- switching locale makes design components disappear [SPA-1711] ([#209](https://github.com/contentful/experience-builder/issues/209)) ([84ca724](https://github.com/contentful/experience-builder/commit/84ca7248cbfcbd835a58c979d26ec9d375a02931))
+
+## [3.4.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.1...@contentful/experience-builder@3.4.2) (2023-12-20)
+
+### Bug Fixes
+
+- design token logic breaks auto height for empty containers ([#210](https://github.com/contentful/experience-builder/issues/210)) ([901bf67](https://github.com/contentful/experience-builder/commit/901bf67c6f7e3fb1a6b968b7fbb26b27d302f13b))
+
+## [3.4.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.0...@contentful/experience-builder@3.4.1) (2023-12-20)
+
+### Bug Fixes
+
+- dont initialise entity store on every render by using state [SPA-1711] ([#208](https://github.com/contentful/experience-builder/issues/208)) ([b04f44b](https://github.com/contentful/experience-builder/commit/b04f44bae930df18ee53c74754f40ddb2bca2fbe))
+
+# [3.4.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.3.1...@contentful/experience-builder@3.4.0) (2023-12-20)
+
+### Features
+
+- improve logs for example using a consistent prefix ([#207](https://github.com/contentful/experience-builder/issues/207)) ([96c306d](https://github.com/contentful/experience-builder/commit/96c306d23ac546c6b7bf6f425b434a9517f99b6f))
+
+## [3.3.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.3.0...@contentful/experience-builder@3.3.1) (2023-12-19)
+
+### Bug Fixes
+
+- resolve breakpoint values correctly so that the ui doesn't crash ([91cc76a](https://github.com/contentful/experience-builder/commit/91cc76a65e45e621f90665118410d7089e6f5a94))
+
 # [3.3.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.2.0...@contentful/experience-builder@3.3.0) (2023-12-18)
 
 ### Features
