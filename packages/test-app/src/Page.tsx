@@ -1,50 +1,28 @@
-import {
-  useFetchExperience,
-  ExperienceRoot,
-  ExternalSDKMode,
-} from '@contentful/experience-builder';
-import { createClient } from 'contentful';
-import '@contentful/experience-builder-components/styles.css';
 import { useParams } from 'react-router-dom';
 import '@contentful/experience-builder-components/styles.css';
+import './styles.css';
+import { ExperienceRoot } from '@contentful/experience-builder';
+import { useContentfulClient } from './hooks/useContentfulClient';
+import { useContentfulConfig } from './hooks/useContentfulConfig';
+import { useFetchBySlug } from './hooks/useFetchBySlug';
 
-const isPreview = window.location.search.includes('isPreview=true');
-const mode = isPreview ? 'preview' : (import.meta.env.VITE_MODE as ExternalSDKMode) || 'delivery';
-const experienceTypeId = import.meta.env.VITE_EXPERIENCE_TYPE_ID || 'layout';
-const localeCode = 'en-US';
-const domain = import.meta.env.VITE_DOMAIN || 'contentful.com';
-const space = import.meta.env.VITE_SPACE_ID;
-const environment = import.meta.env.VITE_ENVIRONMENT_TYPE_ID || 'master';
-const host = isPreview ? `preview.${domain}` : `cdn.${domain}`;
-const accessToken = isPreview
-  ? import.meta.env.VITE_PREVIEW_ACCESS_TOKEN
-  : import.meta.env.VITE_ACCESS_TOKEN;
-const client = createClient({
-  space,
-  environment,
-  host,
-  accessToken,
-});
-
-const Page: React.FC = () => {
+export default function Page() {
   const { slug = 'homePage' } = useParams<{ slug: string }>();
-  const { experience, error } = useFetchExperience({
-    client,
+  const localeCode = 'en-US';
+  const { mode, config } = useContentfulConfig();
+  const { client } = useContentfulClient();
+
+  const { experience, error, isLoading } = useFetchBySlug({
     slug,
-    mode,
-    experienceTypeId,
     localeCode,
+    mode,
+    client,
+    experienceTypeId: config.experienceTypeId,
   });
 
-  if (error) {
-    return <div>{error.message}</div>;
-  }
+  if (isLoading) return <div>Loading...</div>;
 
-  return (
-    <>
-      <ExperienceRoot experience={experience} locale={localeCode} />
-    </>
-  );
-};
+  if (error) return <div>{error.message}</div>;
 
-export default Page;
+  return <ExperienceRoot experience={experience} locale={localeCode} />;
+}
