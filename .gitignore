@@ -33,3 +33,5 @@ tmp/
 
 # Necessary for pushing to alternative npm registry
 .npmrc
+
+.vercel

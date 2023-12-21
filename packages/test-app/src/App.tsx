@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Page from './Page';
-import SpaceSelector from './components/SpaceSelector';
+// import SpaceSelector from './components/SpaceSelector';
 import { ContentfulConfigProvider } from './utils/ContentfulConfigProvider';
 
 const router = createBrowserRouter([
@@ -18,7 +18,7 @@ function App() {
   return (
     <ContentfulConfigProvider>
       <RouterProvider router={router} />
-      <SpaceSelector />
+      {/* <SpaceSelector /> */}
     </ContentfulConfigProvider>
   );
 }
