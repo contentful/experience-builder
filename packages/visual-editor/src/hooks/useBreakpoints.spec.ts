@@ -1,5 +1,6 @@
 import { getValueForBreakpoint } from '@contentful/experience-builder-core';
 import { Breakpoint } from '@contentful/experience-builder-core/types';
+import { describe, it, expect } from 'vitest';
 
 const breakpoints: Breakpoint[] = [
   {

@@ -16,7 +16,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*", "cypress", "../experience-builder-sdk/src/hooks/useBreakpoints.spec.ts"],
+  "include": ["src/**/*", "cypress"],
   "exclude": [
     "dist",
     "node_modules",

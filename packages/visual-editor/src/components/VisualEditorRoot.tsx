@@ -21,11 +21,11 @@ export const VisualEditorRoot = () => {
     }
 
     resetEntityStore(locale);
-  }, [locale]);
+  }, [locale, resetEntityStore]);
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      if ((e.target as any)?.id === 'item') {
+      if ((e.target as HTMLElement)?.id === 'item') {
         return;
       }
 

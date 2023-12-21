@@ -33,7 +33,7 @@ export const useInitializeEditor = () => {
     return () => {
       window.removeEventListener(INTERNAL_EVENTS.VisualEditorInitialize, onVisualEditorInitialize);
     };
-  }, []);
+  }, [initializeEditor, resetEntityStore]);
 
   useEffect(() => {
     if (initialized) {
@@ -42,7 +42,7 @@ export const useInitializeEditor = () => {
 
     // Dispatch Visual Editor Ready event
     window.dispatchEvent(new CustomEvent(VISUAL_EDITOR_EVENTS.Ready));
-  }, []);
+  }, [initialized]);
 
   return initialized;
 };

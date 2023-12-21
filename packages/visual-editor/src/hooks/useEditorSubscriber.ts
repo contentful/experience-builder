@@ -78,7 +78,7 @@ export function useEditorSubscriber() {
     };
 
     resolveEntities();
-  }, [dataSource, areEntitesResolvedInParent, entityStore]);
+  }, [dataSource, areEntitesResolvedInParent, entityStore, setEntitiesFetched]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -252,7 +252,17 @@ export function useEditorSubscriber() {
     return () => {
       window.removeEventListener('message', onMessage);
     };
-  }, []);
+  }, [
+    entityStore,
+    setComponentId,
+    setDataSource,
+    setLocale,
+    setSelectedNodeId,
+    setEntitiesResolvedInParent,
+    setUnboundValues,
+    unboundValues,
+    updateTree,
+  ]);
 
   /*
    * Handles on scroll business

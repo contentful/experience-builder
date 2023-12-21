@@ -1,5 +1,5 @@
 import { isLinkToAsset } from './isLinkToAsset';
-
+import { describe, it, expect } from 'vitest';
 describe('isLinkToAsset', () => {
   it('should return false for undefined', () => {
     expect(isLinkToAsset(undefined)).toBe(false);

@@ -3,9 +3,9 @@ import {
   createDesignComponentEntry,
   createDesignComponentNode,
   designComponentGeneratedVariableName,
-} from '../../../test/__fixtures__/designComponent';
-import { assets } from '../../../test/__fixtures__/entities';
-import { designComponentsRegistry } from '../../blocks/editor/VisualEditorContext';
+} from '../../test/__fixtures__/designComponent';
+import { assets } from '../../test/__fixtures__/entities';
+
 import {
   DESIGN_COMPONENT_BLOCK_NODE_TYPE,
   DESIGN_COMPONENT_NODE_TYPE,
@@ -16,6 +16,8 @@ import type {
 } from '@contentful/experience-builder-core/types';
 import { EditorModeEntityStore } from '@contentful/experience-builder-core';
 import { deserializeDesignComponentNode, resolveDesignComponent } from './designComponentUtils';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { designComponentsRegistry } from '@/store/registries';
 
 const designComponentEntry = createDesignComponentEntry({
   id: 'design-component-id',

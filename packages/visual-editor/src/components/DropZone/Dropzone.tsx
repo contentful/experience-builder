@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { ElementType, useEffect, useMemo } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
 import EditorBlock from './EditorBlock';
@@ -21,7 +21,7 @@ type DropZoneProps = {
   resolveDesignValue?: ResolveDesignValueType;
   className?: string;
   sectionId: string;
-  WrapperComponent?: any;
+  WrapperComponent?: ElementType | string;
 };
 
 function isDropEnabled(
@@ -92,7 +92,7 @@ export function DropZone({
 
   useEffect(() => {
     addSectionWithZone(sectionId);
-  }, [sectionId]);
+  }, [sectionId, addSectionWithZone]);
 
   const draggingOverArea = useMemo(() => {
     if (!userIsDragging) {

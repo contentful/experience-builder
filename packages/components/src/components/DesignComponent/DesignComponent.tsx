@@ -1,4 +1,8 @@
-import { CompositionComponentNode, StyleProps } from '@contentful/experience-builder-core/types';
+import {
+  CompositionComponentNode,
+  ResolveDesignValueType,
+  StyleProps,
+} from '@contentful/experience-builder-core/types';
 import React from 'react';
 
 export type DesignComponentProps<EditorMode = boolean> = EditorMode extends true
@@ -9,13 +13,15 @@ export type DesignComponentProps<EditorMode = boolean> = EditorMode extends true
       cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
       editorMode?: EditorMode;
       node: CompositionComponentNode;
-      resolveDesignValue?: any;
+      resolveDesignValue?: ResolveDesignValueType;
       renderDropZone: (
         node: CompositionComponentNode,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         props?: Record<string, any>
       ) => React.ReactNode;
     }
-  : Record<string, any>;
+  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Record<string, any>;
 
 const designComponentStyle = { display: 'contents' };
 

@@ -40,8 +40,8 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const tree = useTreeStore((state) => state.tree);
 
   useEffect(() => {
-    if (onChange) onChange(tree as any);
-  }, [tree]);
+    if (onChange) onChange(tree);
+  }, [tree, onChange]);
 
   const { onDragStartOrUpdate } = usePlaceholderStyle();
 

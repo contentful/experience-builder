@@ -141,7 +141,7 @@ export const usePlaceholderStyle = () => {
         outlineOffset: -1,
       });
     },
-    [zones]
+    [zones, updateStyle]
   );
 
   return { onDragStartOrUpdate };

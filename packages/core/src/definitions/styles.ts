@@ -172,17 +172,6 @@ export const builtInStyles: Partial<
   },
 };
 
-export const containerBuiltInStyles = {
-  ...builtInStyles,
-  cfHeight: {
-    displayName: 'Height',
-    type: 'Text',
-    group: 'style',
-    description: 'The height of the section',
-    defaultValue: 'auto',
-  } as ComponentDefinitionVariable<'Text'>,
-};
-
 export const optionalBuiltInStyles: Partial<
   Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 > = {

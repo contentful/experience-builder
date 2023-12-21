@@ -168,7 +168,7 @@ export const useComponentProps = ({
 
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
 
-  const renderDropZone = (node: CompositionComponentNode, props?: Record<string, any>) => {
+  const renderDropZone = (node: CompositionComponentNode, props?: Record<string, unknown>) => {
     return (
       <DropZone
         sectionId={node.data.id}
