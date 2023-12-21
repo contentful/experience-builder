@@ -4,12 +4,12 @@ import type { Experience } from '@contentful/experience-builder-core/types';
 
 export const useFetchByBase = (fetchMethod: () => Promise<Experience<EntityStore> | undefined>) => {
   const [experience, setExperience] = useState<Experience<EntityStore>>();
-  const [isFetching, setIsFetching] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error>();
 
   useEffect(() => {
     (async () => {
-      setIsFetching(true);
+      setIsLoading(true);
       setError(undefined);
       try {
         const exp = await fetchMethod();
@@ -17,7 +17,7 @@ export const useFetchByBase = (fetchMethod: () => Promise<Experience<EntityStore
       } catch (error) {
         setError(error as Error);
       } finally {
-        setIsFetching(false);
+        setIsLoading(false);
       }
     })();
   }, [fetchMethod]);
@@ -25,6 +25,6 @@ export const useFetchByBase = (fetchMethod: () => Promise<Experience<EntityStore
   return {
     error,
     experience,
-    isFetching,
+    isLoading,
   };
 };

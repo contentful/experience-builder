@@ -39,7 +39,7 @@ describe('useFetchById', () => {
 
     await waitFor(() => {
       expect(result.current).toBeDefined();
-      expect(result.current.isFetching).toBe(true);
+      expect(result.current.isLoading).toBe(true);
     });
   });
 
@@ -158,7 +158,7 @@ describe('useFetchById', () => {
       expect(result.current.error?.message).toBe(
         'Failed to fetch experience entities. Required "locale" parameter was not provided'
       );
-      expect(result.current.isFetching).toBe(false);
+      expect(result.current.isLoading).toBe(false);
     });
 
     rerender({ ...initialProps, localeCode });

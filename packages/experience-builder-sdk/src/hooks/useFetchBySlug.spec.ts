@@ -39,7 +39,7 @@ describe('useFetchBySlug', () => {
 
     await waitFor(() => {
       expect(result.current).toBeDefined();
-      expect(result.current.isFetching).toBe(true);
+      expect(result.current.isLoading).toBe(true);
     });
   });
 
@@ -135,7 +135,7 @@ describe('useFetchBySlug', () => {
       expect(result.current.error?.message).toBe(
         `More than one experience with identifier: ${JSON.stringify({ slug })} was found`
       );
-      expect(result.current.isFetching).toBe(false);
+      expect(result.current.isLoading).toBe(false);
       expect(clientMock.getEntries).toHaveBeenCalledTimes(1);
     });
 
@@ -193,7 +193,7 @@ describe('useFetchBySlug', () => {
       expect(result.current.error?.message).toBe(
         'Failed to fetch experience entities. Required "locale" parameter was not provided'
       );
-      expect(result.current.isFetching).toBe(false);
+      expect(result.current.isLoading).toBe(false);
     });
 
     rerender({ ...initialProps, localeCode });
