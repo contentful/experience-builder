@@ -115,7 +115,7 @@ export const resolveDesignComponent = ({
     return node;
   }
 
-  const componentFields = entityStore?.getValue(designComponent as any, [
+  const componentFields = entityStore?.getValue(designComponent, [
     'fields',
   ]) as unknown as Composition;
 

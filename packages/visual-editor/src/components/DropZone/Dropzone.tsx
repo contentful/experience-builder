@@ -19,7 +19,6 @@ type DropZoneProps = {
   zoneId: string;
   node?: ComponentData;
   resolveDesignValue?: ResolveDesignValueType;
-  areEntitiesFetched?: boolean;
   className?: string;
   sectionId: string;
   WrapperComponent?: any;
@@ -63,7 +62,6 @@ export function DropZone({
   zoneId,
   sectionId,
   resolveDesignValue,
-  areEntitiesFetched,
   className,
   WrapperComponent = 'div',
   ...rest
@@ -125,7 +123,7 @@ export function DropZone({
     isDesignComponent
   );
 
-  if (!resolveDesignValue || !areEntitiesFetched) {
+  if (!resolveDesignValue) {
     return null;
   }
 
@@ -173,7 +171,6 @@ export function DropZone({
                     draggingNewComponent={draggingNewComponent}
                     node={item}
                     resolveDesignValue={resolveDesignValue}
-                    areEntitiesFetched={areEntitiesFetched}
                   />
                 );
               })

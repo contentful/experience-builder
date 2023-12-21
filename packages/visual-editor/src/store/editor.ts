@@ -1,4 +1,3 @@
-import { EditorModeEntityStore } from '@contentful/experience-builder-core';
 import type {
   ComponentRegistration,
   CompositionDataSource,
@@ -6,18 +5,17 @@ import type {
 } from '@contentful/experience-builder-core/types';
 import { create } from 'zustand';
 import { componentRegistry } from './registries';
+import { isEqual } from 'lodash-es';
 
 export interface InitEditorParams {
   componentRegistry: Map<string, ComponentRegistration>;
   initialLocale: string;
-  entityStore: EditorModeEntityStore;
 }
 export interface EditorStore {
   dataSource: CompositionDataSource;
   locale: string | null;
   selectedNodeId: string | null;
   unboundValues: CompositionUnboundValues;
-  entityStore: EditorModeEntityStore | undefined;
   // updaters
   setDataSource: (data: CompositionDataSource) => void;
   setUnboundValues: (values: CompositionUnboundValues) => void;
@@ -41,7 +39,11 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   },
   setDataSource(data) {
     const dataSource = get().dataSource;
-    set({ dataSource: { ...dataSource, ...data } });
+    const newDataSource = { ...dataSource, ...data };
+    if (isEqual(dataSource, newDataSource)) {
+      return;
+    }
+    set({ dataSource: newDataSource });
   },
   setUnboundValues(values) {
     set({ unboundValues: values });
@@ -52,19 +54,12 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     if (locale === currentLocale) {
       return;
     }
-
-    set({
-      locale,
-      entityStore: new EditorModeEntityStore({
-        entities: [],
-        locale: locale,
-      }),
-    });
+    set({ locale });
   },
-  initializeEditor({ componentRegistry: initialRegistry, initialLocale, entityStore }) {
+  initializeEditor({ componentRegistry: initialRegistry, initialLocale }) {
     initialRegistry.forEach((registration) => {
       componentRegistry.set(registration.definition.id, registration);
     });
-    set({ locale: initialLocale, entityStore });
+    set({ locale: initialLocale });
   },
 }));

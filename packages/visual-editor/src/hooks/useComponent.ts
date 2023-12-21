@@ -1,4 +1,3 @@
-import { useEditorStore } from '@/store/editor';
 import type {
   ComponentRegistration,
   CompositionComponentNode,
@@ -11,30 +10,27 @@ import { DESIGN_COMPONENT_NODE_TYPE } from '@contentful/experience-builder-core/
 import { DesignComponent } from '@contentful/experience-builder-components';
 import { resolveDesignComponent } from '@/utils/designComponentUtils';
 import { componentRegistry, createDesignComponentRegistration } from '@/store/registries';
+import { useEntityStore } from '@/store/entityStore';
 
 interface ComponentParams {
   node: CompositionComponentNode;
   resolveDesignValue: ResolveDesignValueType;
-  areEntitiesFetched: boolean;
 }
 
-export const useComponent = ({
-  node: rawNode,
-  resolveDesignValue,
-  areEntitiesFetched,
-}: ComponentParams) => {
-  const entityStore = useEditorStore((state) => state.entityStore);
+export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentParams) => {
+  const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
+  const entityStore = useEntityStore((state) => state.entityStore);
 
   const node = useMemo(() => {
     if (rawNode.type === DESIGN_COMPONENT_NODE_TYPE && areEntitiesFetched) {
       return resolveDesignComponent({
         node: rawNode,
-        entityStore: entityStore!,
+        entityStore,
       });
     }
 
     return rawNode;
-  }, [areEntitiesFetched, entityStore, rawNode]);
+  }, [areEntitiesFetched, rawNode, entityStore]);
 
   const componentRegistration = useMemo(() => {
     const registration = componentRegistry.get(node.data.blockId as string);

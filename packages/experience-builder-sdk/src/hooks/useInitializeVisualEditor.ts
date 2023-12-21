@@ -62,5 +62,5 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
     return () => {
       window.removeEventListener(VISUAL_EDITOR_EVENTS.Ready, onVisualEditorReady);
     };
-  }, [locale]);
+  }, [locale, initialEntities]);
 };

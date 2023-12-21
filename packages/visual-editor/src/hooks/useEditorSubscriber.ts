@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
-  EditorModeEntityStore,
   sendMessage,
   getDataFromTree,
   doesMismatchMessageSchema,
@@ -8,8 +7,6 @@ import {
 } from '@contentful/experience-builder-core';
 import {
   OUTGOING_EVENTS,
-  INTERNAL_EVENTS,
-  VISUAL_EDITOR_EVENTS,
   INCOMING_EVENTS,
   SCROLL_STATES,
 } from '@contentful/experience-builder-core/constants';
@@ -34,21 +31,22 @@ import {
 } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { PostMessageMethods } from '@contentful/visual-sdk';
+import { useEntityStore } from '@/store/entityStore';
 
 export function useEditorSubscriber() {
+  const areEntitesResolvedInParent = useEntityStore((state) => state.areEntitesResolvedInParent);
+  const entityStore = useEntityStore((state) => state.entityStore);
+  const setEntitiesResolvedInParent = useEntityStore((state) => state.setEntitiesResolvedInParent);
+  const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
   const updateTree = useTreeStore((state) => state.updateTree);
-
   const unboundValues = useEditorStore((state) => state.unboundValues);
-  const entityStore = useEditorStore((state) => state.entityStore);
-
+  const dataSource = useEditorStore((state) => state.dataSource);
   const setLocale = useEditorStore((state) => state.setLocale);
   const setUnboundValues = useEditorStore((state) => state.setUnboundValues);
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
-  const initializeEditor = useEditorStore((state) => state.initializeEditor);
-  const setComponentId = useDraggedItemStore((state) => state.setComponentId);
 
-  const [initialized, setInitialized] = useState(false);
+  const setComponentId = useDraggedItemStore((state) => state.setComponentId);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
@@ -60,42 +58,27 @@ export function useEditorSubscriber() {
   };
 
   useEffect(() => {
-    const onVisualEditorInitialize = (event) => {
-      if (!event.detail) return;
-      const { componentRegistry, locale: initialLocale, entities } = event.detail;
-
-      initializeEditor({
-        initialLocale,
-        componentRegistry,
-        entityStore: new EditorModeEntityStore({
-          entities: entities || [],
-          locale: initialLocale,
-        }),
-      });
-      setInitialized(true);
-    };
-
-    // Listen for VisualEditorComponents internal event
-    window.addEventListener(INTERNAL_EVENTS.VisualEditorInitialize, onVisualEditorInitialize);
-
-    // Clean up the event listener
-    return () => {
-      window.removeEventListener(INTERNAL_EVENTS.VisualEditorInitialize, onVisualEditorInitialize);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (initialized) {
-      return;
-    }
-
-    // Dispatch Visual Editor Ready event
-    window.dispatchEvent(new CustomEvent(VISUAL_EDITOR_EVENTS.Ready));
-  }, []);
-
-  useEffect(() => {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
   }, []);
+
+  useEffect(() => {
+    if (!areEntitesResolvedInParent) {
+      return;
+    }
+    const resolveEntities = async () => {
+      const dataSourceEntityLinks = Object.values(dataSource || {});
+      const entityLinks = [...dataSourceEntityLinks, ...(designComponentsRegistry.values() || [])];
+      const fetchingResponse = entityStore.fetchEntities(entityLinks);
+      // Only update the state and rerender when we're actually fetching something
+      if (fetchingResponse === false) return;
+      setEntitiesFetched(false);
+      // Await until the fetching is done to update the state variable at the right moment
+      await fetchingResponse;
+      setEntitiesFetched(true);
+    };
+
+    resolveEntities();
+  }, [dataSource, areEntitesResolvedInParent, entityStore]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -116,7 +99,6 @@ export function useEditorSubscriber() {
       }
 
       const eventData = tryParseMessage(event);
-
       if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
         // Expected message: This message is handled in the visual-sdk to store fetched entities
         return;
@@ -136,17 +118,26 @@ export function useEditorSubscriber() {
             changedNode,
             changedValueType,
             designComponents,
+            entitiesResolved,
           }: {
             tree: CompositionTree;
             designComponents: Link<'Entry'>[];
             locale: string;
+            entitiesResolved?: boolean;
             changedNode?: CompositionComponentNode;
             changedValueType?: CompositionComponentPropValue['type'];
           } = payload;
 
+          // Make sure to first store the design components before setting the tree and thus triggering a rerender
+          if (designComponents) {
+            setDesignComponents(designComponents);
+          }
+
+          if (entitiesResolved) {
+            setEntitiesResolvedInParent(entitiesResolved);
+          }
           updateTree(tree);
           setLocale(locale);
-          designComponents && setDesignComponents(designComponents);
 
           if (changedNode) {
             /**
@@ -169,6 +160,18 @@ export function useEditorSubscriber() {
           }
           break;
         }
+        case INCOMING_EVENTS.DesignComponentsRegistered: {
+          const { designComponents }: { designComponents: ComponentRegistration['definition'][] } =
+            payload;
+
+          designComponents.forEach((definition) => {
+            addComponentRegistration({
+              component: DesignComponent,
+              definition,
+            });
+          });
+          break;
+        }
         case INCOMING_EVENTS.DesignComponentsAdded: {
           const {
             designComponent,
@@ -177,7 +180,7 @@ export function useEditorSubscriber() {
             designComponent: Entry;
             designComponentDefinition?: ComponentRegistration['definition'];
           } = payload;
-          entityStore?.updateEntity(designComponent);
+          entityStore.updateEntity(designComponent);
           // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
           // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
           // of all bound and unbound values when new values are added
@@ -192,13 +195,13 @@ export function useEditorSubscriber() {
           }
           break;
         }
-        // case INCOMING_EVENTS.CanvasResized:
-        // case INCOMING_EVENTS.SelectComponent: {
-        //   const { selectedNodeId: nodeId } = payload;
-        //   selectedNodeId.current = nodeId;
-        //   sendSelectedComponentCoordinates(nodeId);
-        //   break;
-        // }
+        case INCOMING_EVENTS.EntitiesResolved: {
+          setEntitiesResolvedInParent(true);
+          break;
+        }
+        case INCOMING_EVENTS.CanvasResized: {
+          break;
+        }
         case INCOMING_EVENTS.HoverComponent: {
           const { hoveredNodeId } = payload;
           sendHoveredComponentCoordinates(hoveredNodeId);
@@ -215,7 +218,7 @@ export function useEditorSubscriber() {
         }
         case INCOMING_EVENTS.UpdatedEntity: {
           const { entity } = payload;
-          entity && entityStore?.updateEntity(entity);
+          entity && entityStore.updateEntity(entity);
           break;
         }
         case INCOMING_EVENTS.RequestEditorMode: {
@@ -249,7 +252,7 @@ export function useEditorSubscriber() {
     return () => {
       window.removeEventListener('message', onMessage);
     };
-  }, [entityStore]);
+  }, []);
 
   /*
    * Handles on scroll business
@@ -289,6 +292,4 @@ export function useEditorSubscriber() {
       clearTimeout(timeoutId);
     };
   }, []);
-
-  return initialized;
 }

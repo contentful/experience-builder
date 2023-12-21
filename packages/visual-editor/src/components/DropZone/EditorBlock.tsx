@@ -23,7 +23,6 @@ type VisualEditorBlockProps = {
   userIsDragging: boolean;
   draggingNewComponent: boolean | undefined;
   resolveDesignValue: ResolveDesignValueType;
-  areEntitiesFetched: boolean;
   zoneId: string;
   parentSectionId: string;
 };
@@ -31,7 +30,6 @@ type VisualEditorBlockProps = {
 const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   node: rawNode,
   resolveDesignValue,
-  areEntitiesFetched,
   draggingNewComponent,
   index,
   zoneId,
@@ -44,7 +42,6 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
   const { node, componentId, props, wrapperProps, label, Component } = useComponent({
     node: rawNode,
-    areEntitiesFetched,
     resolveDesignValue,
   });
 

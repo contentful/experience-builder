@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
+import React, { useEffect } from 'react';
 import { sendMessage } from '@contentful/experience-builder-core';
 import dragState from '@/utils/dragState';
 import { RootRenderer } from './RootRenderer/RootRenderer';
-import { useEditorStore } from '@/store/editor';
-import { useTreeStore } from '@/store/tree';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
 import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
-import { designComponentsRegistry } from '@/store/registries';
-import { useBreakpoints } from '@/hooks/useBreakpoints';
+import { useInitializeEditor } from '@/hooks/useInitializeEditor';
+import LoaderOverlay from './LoaderOverlay/LoaderOverlay';
+import { useEntityStore } from '@/store/entityStore';
+import { useEditorStore } from '@/store/editor';
 
 export const VisualEditorRoot = () => {
-  const initialized = useEditorSubscriber();
-
-  const dataSource = useEditorStore((state) => state.dataSource);
+  const initialized = useInitializeEditor();
   const locale = useEditorStore((state) => state.locale);
-  const breakpoints = useTreeStore((state) => state.breakpoints);
-  const entityStore = useEditorStore((state) => state.entityStore);
 
-  const [areEntitiesFetched, setEntitiesFetched] = useState(false);
+  const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
 
-  const { resolveDesignValue } = useBreakpoints(breakpoints);
+  useEffect(() => {
+    if (!locale) {
+      return;
+    }
+
+    resetEntityStore(locale);
+  }, [locale]);
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
@@ -53,23 +54,7 @@ export const VisualEditorRoot = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const resolveEntities = async () => {
-      setEntitiesFetched(false);
-      const dataSourceEntityLinks = Object.values(dataSource || {});
-      await entityStore?.fetchEntities([
-        ...dataSourceEntityLinks,
-        ...((designComponentsRegistry.values() || []) as any),
-      ]);
-      setEntitiesFetched(true);
-    };
+  if (!initialized) return <LoaderOverlay />;
 
-    resolveEntities();
-  }, [dataSource, entityStore, locale]);
-
-  if (!initialized || !entityStore) return null;
-
-  return (
-    <RootRenderer resolveDesignValue={resolveDesignValue} areEntitiesFetched={areEntitiesFetched} />
-  );
+  return <RootRenderer />;
 };

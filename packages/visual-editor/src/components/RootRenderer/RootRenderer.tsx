@@ -4,10 +4,7 @@ import { DragDropContext } from '@hello-pangea/dnd';
 import { DropZone } from '../DropZone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
 import { sendMessage } from '@contentful/experience-builder-core';
-import type {
-  ResolveDesignValueType,
-  CompositionTree,
-} from '@contentful/experience-builder-core/types';
+import type { CompositionTree } from '@contentful/experience-builder-core/types';
 import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 import dragState from '@/utils/dragState';
 import { onDrop } from '@/utils/onDrop';
@@ -19,24 +16,27 @@ import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
 import styles from './render.module.css';
 import { onComponentMoved } from '@/communication/onComponentMoved';
+import { useBreakpoints } from '@/hooks/useBreakpoints';
+import LoaderOverlay from '@components/LoaderOverlay/LoaderOverlay';
+import { useEntityStore } from '@/store/entityStore';
+import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 
 interface Props {
-  resolveDesignValue: ResolveDesignValueType;
-  areEntitiesFetched: boolean;
   onChange?: (data: CompositionTree) => void;
 }
 
-export const RootRenderer: React.FC<Props> = ({
-  onChange,
-  resolveDesignValue,
-  areEntitiesFetched,
-}) => {
+export const RootRenderer: React.FC<Props> = ({ onChange }) => {
+  useEditorSubscriber();
+
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const updateItem = useDraggedItemStore((state) => state.updateItem);
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const userIsDragging = !!dragItem;
+  const areEntitesResolvedInParent = useEntityStore((state) => state.areEntitesResolvedInParent);
+  const breakpoints = useTreeStore((state) => state.breakpoints);
 
+  const { resolveDesignValue } = useBreakpoints(breakpoints);
   const tree = useTreeStore((state) => state.tree);
 
   useEffect(() => {
@@ -44,6 +44,10 @@ export const RootRenderer: React.FC<Props> = ({
   }, [tree]);
 
   const { onDragStartOrUpdate } = usePlaceholderStyle();
+
+  if (!areEntitesResolvedInParent) {
+    return <LoaderOverlay />;
+  }
 
   return (
     <DragDropContext
@@ -108,12 +112,7 @@ export const RootRenderer: React.FC<Props> = ({
             }}
           />
         )}
-        <DropZone
-          sectionId={ROOT_ID}
-          zoneId={ROOT_ID}
-          areEntitiesFetched={areEntitiesFetched}
-          resolveDesignValue={resolveDesignValue}
-        />
+        <DropZone sectionId={ROOT_ID} zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
         {/* 
           This hitbox is required so that users can
           add sections to the bottom of the document.

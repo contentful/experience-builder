@@ -18,6 +18,8 @@ export const defineDesignTokens = (designTokenDefinition: DesignTokensDefinition
 };
 
 export const getDesignTokenRegistration = (breakpointValue: string) => {
+  if (!breakpointValue) return breakpointValue;
+
   let resolvedValue = '';
   const values = breakpointValue.split(' ');
   values.forEach((value) => {
@@ -26,7 +28,7 @@ export const getDesignTokenRegistration = (breakpointValue: string) => {
     resolvedValue += `${tokenValue} `;
   });
 
-  return resolvedValue;
+  return resolvedValue.trim();
 };
 
 // Using this because export const StringTemplateRegex = /\${(.*?)\}/g doesn't work

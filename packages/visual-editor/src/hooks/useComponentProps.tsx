@@ -24,6 +24,7 @@ import { useStyleTag } from './useStyleTag';
 import omit from 'lodash-es/omit';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { DropZone } from '@components/DropZone/Dropzone';
+import { useEntityStore } from '@/store/entityStore';
 
 type PropsType =
   | StyleProps
@@ -42,10 +43,9 @@ export const useComponentProps = ({
   resolveDesignValue,
   definition,
 }: ComponentPropsParams) => {
-  const entityStore = useEditorStore((state) => state.entityStore);
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
-
+  const entityStore = useEntityStore((state) => state.entityStore);
   const props: PropsType = useMemo(() => {
     // Don't enrich the design component wrapper node with props
     if (!definition || node.type === DESIGN_COMPONENT_NODE_TYPE) {
@@ -86,7 +86,7 @@ export const useComponentProps = ({
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
           let boundValue: string | Link<'Asset'> | undefined = areEntitiesFetched
-            ? entityStore?.getValue(binding, path.slice(0, -1))
+            ? entityStore.getValue(binding, path.slice(0, -1))
             : undefined;
           // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
           // If no 'boundValue' is found, we also attempt to extract the value associated with the second-to-last item in the path.
@@ -94,7 +94,7 @@ export const useComponentProps = ({
 
           if (!boundValue) {
             const maybeBoundAsset = areEntitiesFetched
-              ? entityStore?.getValue(binding, path.slice(0, -2))
+              ? entityStore.getValue(binding, path.slice(0, -2))
               : undefined;
 
             if (isLinkToAsset(maybeBoundAsset)) {
@@ -138,9 +138,9 @@ export const useComponentProps = ({
     resolveDesignValue,
     dataSource,
     areEntitiesFetched,
-    entityStore,
     unboundValues,
     node.type,
+    entityStore,
   ]);
 
   const cfStyles = buildCfStyles(props);
@@ -175,7 +175,6 @@ export const useComponentProps = ({
         zoneId={node.data.id}
         node={node}
         resolveDesignValue={resolveDesignValue}
-        areEntitiesFetched={areEntitiesFetched}
         {...props}
       />
     );
