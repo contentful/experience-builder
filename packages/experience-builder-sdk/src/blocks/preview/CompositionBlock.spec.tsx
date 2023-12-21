@@ -10,11 +10,12 @@ import { defineComponents, resetComponentRegistry } from '../../core/componentRe
 import type { CompositionNode, ExperienceEntry } from '@contentful/experience-builder-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
+import { compositionEntry } from '../../../test/__fixtures__/composition';
 import {
-  compositionEntry,
   createDesignComponentEntry,
+  defaultDesignComponentId,
   designComponentGeneratedVariableName,
-} from '../../../test/__fixtures__/composition';
+} from '../../../test/__fixtures__/designComponent';
 import { EntityStore } from '../../core/preview/EntityStore';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 
@@ -120,26 +121,35 @@ describe('CompositionBlock', () => {
   });
 
   it('renders design component node', () => {
+    const unboundValueKey = 'some-unbound-value-key';
     const designComponentEntry = createDesignComponentEntry({
-      id: 'design-component-id',
+      id: defaultDesignComponentId,
       schemaVersion: '2023-09-28',
     });
+    const experienceEntry = {
+      ...compositionEntry,
+      fields: {
+        ...compositionEntry.fields,
+        usedComponents: [designComponentEntry],
+        unboundValues: {
+          [unboundValueKey]: {
+            value: 'New year eve',
+          },
+        },
+      },
+    } as ExperienceEntry;
 
     const entityStore = new EntityStore({
-      experienceEntry: {
-        ...compositionEntry,
-        fields: {
-          ...compositionEntry.fields,
-          usedComponents: [designComponentEntry],
-        },
-      } as unknown as Entry,
+      experienceEntry: experienceEntry as unknown as Entry,
       entities: [...entries, ...assets],
       locale: 'en-US',
     });
 
     const designComponentNode: CompositionNode = {
-      definitionId: 'design-component-id',
-      variables: {},
+      definitionId: defaultDesignComponentId,
+      variables: {
+        [designComponentGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },
+      },
       children: [],
     };
 
@@ -151,11 +161,7 @@ describe('CompositionBlock', () => {
         breakpoints={[]}
         entityStore={entityStore}
         usedComponents={[designComponentEntry] as ExperienceEntry[]}
-        unboundValues={{
-          [designComponentGeneratedVariableName]: {
-            value: 'New year eve',
-          },
-        }}
+        unboundValues={experienceEntry.fields.unboundValues}
         resolveDesignValue={jest.fn()}
       />
     );

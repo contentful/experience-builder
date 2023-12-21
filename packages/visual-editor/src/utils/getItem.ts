@@ -39,6 +39,7 @@ export const getItem = (
     type: 'block',
     data: {
       id: ROOT_ID,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
     children: tree.root.children,
   });

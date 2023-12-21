@@ -55,7 +55,7 @@ export const EmptyEditorContainer = ({ isDragging }: EmptyContainerProps) => {
         <path
           fill="#fff"
           stroke="#fff"
-          stroke-width=".243"
+          strokeWidth=".243"
           d="M31.113 17.038a.463.463 0 0 0-.683-.517l-1.763 1.032-1.033-1.763a.464.464 0 0 0-.8.469l1.034 1.763-1.763 1.033a.463.463 0 1 0 .468.8l1.763-1.033 1.033 1.763a.463.463 0 1 0 .8-.469l-1.033-1.763 1.763-1.033a.463.463 0 0 0 .214-.282Z"
         />
       </svg>

@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.2.0...@contentful/experience-builder@3.3.0) (2023-12-18)
+
+### Features
+
+- adds design token resultion for cfGap, cfWidth, cfHeight, and cfBackgroundColor ([ab747e5](https://github.com/contentful/experience-builder/commit/ab747e5eba2c4ad98290f551105a41c49e3c4395))
+- resolve design tokens for row and column gap ([0b5d122](https://github.com/contentful/experience-builder/commit/0b5d122a10b01438bd014038665597b97f0cb807))
+
+# [3.2.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.1.3...@contentful/experience-builder@3.2.0) (2023-12-18)
+
+### Features
+
+- initialize sustainable entity store ([#200](https://github.com/contentful/experience-builder/issues/200)) ([b136abf](https://github.com/contentful/experience-builder/commit/b136abf860a7c90de072e18d69652e2b4fc65956))
+
+## [3.1.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.1.2...@contentful/experience-builder@3.1.3) (2023-12-18)
+
+### Bug Fixes
+
+- calculate component client rect via children ([#196](https://github.com/contentful/experience-builder/issues/196)) ([e7d537e](https://github.com/contentful/experience-builder/commit/e7d537eea09b5d7e6442699a70bc27d52f3e2a8d))
+
+## [3.1.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.1.1...@contentful/experience-builder@3.1.2) (2023-12-15)
+
+### Bug Fixes
+
+- small fix to design token registry resolving design token values ([9dadf38](https://github.com/contentful/experience-builder/commit/9dadf389dec6dfa8c1ee2e1ea93dfc9ba042a17d))
+
+## [3.1.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.1.0...@contentful/experience-builder@3.1.1) (2023-12-15)
+
+### Bug Fixes
+
+- render component values in preview and resolve links properly [] ([#194](https://github.com/contentful/experience-builder/issues/194)) ([7183fbd](https://github.com/contentful/experience-builder/commit/7183fbdc16e27c1cef3b2cab8a556d7a54f54770))
+
+# [3.1.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.0.4...@contentful/experience-builder@3.1.0) (2023-12-14)
+
+### Features
+
+- resolves the design token values ([2b2936a](https://github.com/contentful/experience-builder/commit/2b2936aae773859bbed4f6c265f51e6e2c48393e))
+
+## [3.0.4](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.0.3...@contentful/experience-builder@3.0.4) (2023-12-14)
+
+### Bug Fixes
+
+- replace component values with actual onces before rendering [] ([#192](https://github.com/contentful/experience-builder/issues/192)) ([2eb2b66](https://github.com/contentful/experience-builder/commit/2eb2b666bb524c7bd0e1251a0119dad1187e2966))
+
+## [3.0.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.0.2...@contentful/experience-builder@3.0.3) (2023-12-13)
+
+### Bug Fixes
+
+- strictly check for asset link type [SPA-1673] ([#187](https://github.com/contentful/experience-builder/issues/187)) ([c5f1c18](https://github.com/contentful/experience-builder/commit/c5f1c1802bde6373237f49de45b84a6bd110921d))
+
+## [3.0.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.0.1...@contentful/experience-builder@3.0.2) (2023-12-12)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
 ## [3.0.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.0.0...@contentful/experience-builder@3.0.1) (2023-12-07)
 
 **Note:** Version bump only for package @contentful/experience-builder

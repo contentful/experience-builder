@@ -14,7 +14,6 @@ export default [
     ],
     plugins: [nodeResolve(), typescript({ tsconfig: './tsconfig.json' })],
     external: [/node_modules\/(?!tslib.*)/],
-    treeshake: false,
   },
   //specific exports in package.json
   {
@@ -29,7 +28,6 @@ export default [
     ],
     plugins: [nodeResolve(), typescript({ tsconfig: './tsconfig.json' })],
     external: [/node_modules\/(?!tslib.*)/],
-    treeshake: false,
   },
   //typings
   {
@@ -37,13 +35,11 @@ export default [
     output: [{ dir: 'dist', format: 'esm', preserveModules: true }],
     plugins: [dts({ tsconfig: './tsconfig.json' })],
     external: [/.css/],
-    treeshake: false,
   },
   {
     input: 'src/exports.ts',
     output: [{ dir: 'dist', format: 'esm', preserveModules: true }],
     plugins: [dts({ tsconfig: './tsconfig.json' })],
     external: [/.css/],
-    treeshake: false,
   },
 ];

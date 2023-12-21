@@ -1,7 +1,7 @@
 export { ExperienceRoot } from './ExperienceRoot';
 export { useExperienceBuilder, useFetchExperience } from './hooks';
 export { defineComponents } from './core/componentRegistry';
-export { defineDesignTokens } from './core/designTokenRegistry';
+export { defineDesignTokens } from '@contentful/experience-builder-core';
 export {
   calculateNodeDefaultHeight,
   checkIfDesignComponent,
