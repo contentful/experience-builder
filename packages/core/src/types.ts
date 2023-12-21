@@ -178,11 +178,6 @@ export type CompositionTree = {
 export type ExternalSDKMode = 'preview' | 'delivery';
 export type InternalSDKMode = ExternalSDKMode | 'editor';
 
-export enum VisualEditorMode {
-  LazyLoad = 'lazyLoad',
-  InjectScript = 'injectScript',
-}
-
 /**
  * Internally defined style variables are prefix with `cf` to avoid
  * collisions with user defined variables.
@@ -218,6 +213,16 @@ export type StyleProps = {
     | 'center bottom';
   cfHyperlink: string;
   cfOpenInNewTab: boolean;
+  cfFontSize: string;
+  cfFontWeight: string;
+  cfLineHeight: string;
+  cfLetterSpacing: string;
+  cfTextColor: string;
+  cfTextAlign: 'left' | 'center' | 'right';
+  cfTextTransform: 'none' | 'capitalize' | 'uppercase' | 'lowercase';
+  cfTextBold: boolean;
+  cfTextItalic: boolean;
+  cfTextUnderline: boolean;
 };
 
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic
