@@ -82,7 +82,7 @@ describe('useFetchBySlug', () => {
 
       expect(result.current).toEqual({
         experience: result.current.experience,
-        isFetching: false,
+        isLoading: false,
         error: undefined,
       });
     });

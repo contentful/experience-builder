@@ -83,7 +83,7 @@ describe('useFetchById', () => {
 
       expect(store).toEqual({
         experience: store.experience,
-        isFetching: false,
+        isLoading: false,
         error: undefined,
       });
     });
