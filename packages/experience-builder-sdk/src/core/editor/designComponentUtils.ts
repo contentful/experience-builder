@@ -122,6 +122,12 @@ export const resolveDesignComponent = ({
     return node;
   }
 
+  if (!componentFields.componentTree?.children) {
+    console.warn(`Component tree for design component with ID '${componentId}' not found`, {
+      componentFields,
+    });
+  }
+
   const deserializedNode = deserializeDesignComponentNode({
     node: {
       definitionId: node.data.blockId || '',
