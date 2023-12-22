@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 
 import { sendHoveredComponentCoordinates } from '../../communication/sendHoveredComponentCoordinates';
 import { sendMessage } from '../../communication/sendMessage';
@@ -38,7 +38,7 @@ type VisualEditorContextType = {
   unboundValues: CompositionUnboundValues;
   breakpoints: Breakpoint[];
   entityStore: EditorModeEntityStore;
-  areEntitiesFetched: boolean;
+  areInitialEntitiesFetched: boolean;
 };
 
 export const VisualEditorContext = React.createContext<VisualEditorContextType>({
@@ -53,7 +53,7 @@ export const VisualEditorContext = React.createContext<VisualEditorContextType>(
   locale: null,
   breakpoints: [],
   entityStore: {} as EditorModeEntityStore,
-  areEntitiesFetched: false,
+  areInitialEntitiesFetched: false,
 });
 
 type VisualEditorContextProviderProps = {
@@ -86,9 +86,8 @@ export function VisualEditorContextProvider({
   const [isDragging, setIsDragging] = useState(false);
   const selectedNodeId = useRef<string>('');
   const [locale, setLocale] = useState<string>(initialLocale);
-  // Optimistic loading. Try to render everything as early as possible.
-  // The entities might already be defined in the entity store.
-  const [areEntitiesFetched, setEntitiesFetched] = useState(true);
+  const [areInitialEntitiesFetched, setInitialEntitiesFetched] = useState(false);
+  const [isFetchingEntities, setFetchingEntities] = useState(false);
 
   const [entityStore, setEntityStore] = useState<EditorModeEntityStore>(
     () =>
@@ -116,28 +115,38 @@ export function VisualEditorContextProvider({
     );
   }, [entityStore, locale]);
 
+  // Either gets called when dataSource changed or designComponetsRegistry changed (manually)
+  const fetchMissingEntities = useCallback(async () => {
+    const entityLinks = [...Object.values(dataSource), ...designComponentsRegistry.values()];
+    const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
+    // Only continue and trigger rerendering when we need to fetch something and we're not fetching yet
+    if (!missingAssetIds.length && !missingEntryIds.length) {
+      setInitialEntitiesFetched(true);
+      return;
+    }
+    setInitialEntitiesFetched(false);
+    setFetchingEntities(true);
+    try {
+      // Await until the fetching is done to update the state variable at the right moment
+      await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
+      console.debug('[exp-builder.sdk] Finished fetching entities', { entityStore, entityLinks });
+    } catch (error) {
+      console.error('[exp-builder.sdk] Failed fetching entities');
+      console.error(error);
+    } finally {
+      // Important to set this as it is the only state variable that triggers a rerendering
+      // of the components (changes inside the entityStore are not part of the state)
+      setInitialEntitiesFetched(true);
+      setFetchingEntities(false);
+    }
+  }, [dataSource, entityStore]);
+
   // When the tree was updated, we store the dataSource and
   // afterward, this effect fetches the respective entities.
   useEffect(() => {
-    const resolveEntities = async () => {
-      const dataSourceEntityLinks = Object.values(dataSource || {});
-      const entityLinks = [...dataSourceEntityLinks, ...(designComponentsRegistry.values() || [])];
-      const fetchingResponse = entityStore.fetchEntities(entityLinks);
-      // Only update the state and rerender when we're actually fetching something
-      if (fetchingResponse === false) return;
-      setEntitiesFetched(false);
-      // Await until the fetching is done to update the state variable at the right moment
-      await fetchingResponse;
-      setEntitiesFetched(true);
-      console.debug('[exp-builder.sdk] Finish fetching entities', {
-        entityStore,
-        entityLinks,
-        areEntitiesFetched,
-      });
-    };
-
-    resolveEntities();
-  }, [areEntitiesFetched, dataSource, entityStore]);
+    if (areInitialEntitiesFetched || isFetchingEntities) return;
+    fetchMissingEntities();
+  }, [areInitialEntitiesFetched, fetchMissingEntities, isFetchingEntities]);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
@@ -188,7 +197,7 @@ export function VisualEditorContextProvider({
   useEffect(() => {
     // We only care about this communication when in editor mode
     if (mode !== 'editor') return;
-    const onMessage = (event: MessageEvent) => {
+    const onMessage = async (event: MessageEvent) => {
       let reason;
       if ((reason = doesMismatchMessageSchema(event))) {
         if (
@@ -236,6 +245,9 @@ export function VisualEditorContextProvider({
           // Make sure to first store the design components before setting the tree and thus triggering a rerender
           if (designComponents) {
             setDesignComponents(designComponents);
+            // Since design components are stored outside of the React state, we need to manually update the entity store
+            // TODO: Move designComponentsRegistry into React to avoid these async issues and manual tweaks
+            await fetchMissingEntities();
           }
           setTree(tree);
           setLocale(locale);
@@ -325,7 +337,7 @@ export function VisualEditorContextProvider({
     return () => {
       window.removeEventListener('message', onMessage);
     };
-  }, [entityStore, mode]);
+  }, [fetchMissingEntities, entityStore, mode]);
 
   /*
    * Handles on scroll business
@@ -385,7 +397,7 @@ export function VisualEditorContextProvider({
         locale,
         breakpoints: tree?.root.data.breakpoints ?? [],
         entityStore,
-        areEntitiesFetched,
+        areInitialEntitiesFetched,
       }}>
       {children}
     </VisualEditorContext.Provider>

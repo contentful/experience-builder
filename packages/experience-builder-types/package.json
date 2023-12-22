@@ -17,7 +17,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@contentful/visual-sdk": "^1.0.0-alpha.26",
+    "@contentful/visual-sdk": "^1.0.0-alpha.38",
     "contentful": "^10.6.10"
   },
   "devDependencies": {
