@@ -516,6 +516,11 @@
   resolved "https://registry.yarnpkg.com/@contentful/visual-sdk/-/visual-sdk-1.0.0-alpha.34.tgz#c193aaca5b64ecb34c62903594423b9be36de35c"
   integrity sha512-umPTFWfh3gNNmruyIRD5jgcQQN3KIzSd/6DaoTxPpz+ud3O+g4zYItytJoD0iZaEz1+V9ciVFw+C5+Xe57RvMg==
 
+"@contentful/visual-sdk@^1.0.0-alpha.38":
+  version "1.0.0-alpha.38"
+  resolved "https://registry.yarnpkg.com/@contentful/visual-sdk/-/visual-sdk-1.0.0-alpha.38.tgz#a0f7be8f3873023cf89d31fca687ad64b4c6619b"
+  integrity sha512-x+DFtTULEIUEYVEpOYyfh5SFG0GmcslLpMjhl9Yyen6eNCiOXG0mnAzPATPT/Nj9oeJNSIf/ZuYP3avOcckPVg==
+
 "@esbuild/android-arm64@0.18.20":
   version "0.18.20"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.18.20.tgz#984b4f9c8d0377443cc2dfcef266d02244593622"
