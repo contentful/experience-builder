@@ -50,7 +50,7 @@ type VisualEditorBlockProps = {
 
   resolveDesignValue: ResolveDesignValueType;
   entityStore: EntityStore;
-  areEntitiesFetched: boolean;
+  areInitialEntitiesFetched: boolean;
 };
 
 export const VisualEditorBlock = ({
@@ -59,10 +59,10 @@ export const VisualEditorBlock = ({
   unboundValues,
   resolveDesignValue,
   entityStore,
-  areEntitiesFetched,
+  areInitialEntitiesFetched,
 }: VisualEditorBlockProps) => {
   const node = useMemo(() => {
-    if (rawNode.type === DESIGN_COMPONENT_NODE_TYPE && areEntitiesFetched) {
+    if (rawNode.type === DESIGN_COMPONENT_NODE_TYPE && areInitialEntitiesFetched) {
       return resolveDesignComponent({
         node: rawNode,
         entityStore,
@@ -70,7 +70,7 @@ export const VisualEditorBlock = ({
     }
 
     return rawNode;
-  }, [areEntitiesFetched, entityStore, rawNode]);
+  }, [areInitialEntitiesFetched, entityStore, rawNode]);
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.data.blockId as string);
@@ -127,7 +127,7 @@ export const VisualEditorBlock = ({
           const [, uuid, ...path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
-          let boundValue: string | Link<'Asset'> | undefined = areEntitiesFetched
+          let boundValue: string | Link<'Asset'> | undefined = areInitialEntitiesFetched
             ? entityStore.getValue(binding, path.slice(0, -1))
             : undefined;
 
@@ -136,7 +136,7 @@ export const VisualEditorBlock = ({
           // If successful, it means we have identified the linked asset.
 
           if (!boundValue) {
-            const maybeBoundAsset = areEntitiesFetched
+            const maybeBoundAsset = areInitialEntitiesFetched
               ? entityStore.getValue(binding, path.slice(0, -2))
               : undefined;
 
@@ -178,7 +178,7 @@ export const VisualEditorBlock = ({
     node.children,
     resolveDesignValue,
     dataSource,
-    areEntitiesFetched,
+    areInitialEntitiesFetched,
     entityStore,
     unboundValues,
   ]);
@@ -239,7 +239,7 @@ export const VisualEditorBlock = ({
               unboundValues={unboundValues}
               resolveDesignValue={resolveDesignValue}
               entityStore={entityStore}
-              areEntitiesFetched={areEntitiesFetched}
+              areInitialEntitiesFetched={areInitialEntitiesFetched}
             />
           );
         })
