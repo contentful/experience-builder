@@ -87,6 +87,7 @@ export function VisualEditorContextProvider({
   const selectedNodeId = useRef<string>('');
   const [locale, setLocale] = useState<string>(initialLocale);
   const [areInitialEntitiesFetched, setInitialEntitiesFetched] = useState(false);
+  const [isFetchingEntities, setFetchingEntities] = useState(false);
 
   const [entityStore, setEntityStore] = useState<EditorModeEntityStore>(
     () =>
@@ -120,27 +121,29 @@ export function VisualEditorContextProvider({
     const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
     // Only continue and trigger rerendering when we need to fetch something and we're not fetching yet
     if (!missingAssetIds.length && !missingEntryIds.length) return;
+    setInitialEntitiesFetched(false);
+    setFetchingEntities(true);
     try {
+      // Await until the fetching is done to update the state variable at the right moment
       await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
       console.debug('[exp-builder.sdk] Finished fetching entities', { entityStore, entityLinks });
     } catch (error) {
       console.error('[exp-builder.sdk] Failed fetching entities');
       console.error(error);
+    } finally {
+      // Important to set this as it is the only state variable that triggers a rerendering
+      // of the components (changes inside the entityStore are not part of the state)
+      setInitialEntitiesFetched(true);
+      setFetchingEntities(false);
     }
   }, [dataSource, entityStore]);
 
   // When the tree was updated, we store the dataSource and
   // afterward, this effect fetches the respective entities.
   useEffect(() => {
-    if (areInitialEntitiesFetched) return;
-    (async function () {
-      // Await until the fetching is done to update the state variable at the right moment
-      await fetchMissingEntities();
-      // Important to set this as it is the only state variable that triggers a rerendering
-      // of the components (changes inside the entityStore are not part of the state)
-      setInitialEntitiesFetched(true);
-    })();
-  }, [areInitialEntitiesFetched, fetchMissingEntities]);
+    if (areInitialEntitiesFetched || isFetchingEntities) return;
+    fetchMissingEntities();
+  }, [areInitialEntitiesFetched, fetchMissingEntities, isFetchingEntities]);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
