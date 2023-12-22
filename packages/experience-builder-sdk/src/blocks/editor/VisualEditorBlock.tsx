@@ -79,6 +79,8 @@ export const VisualEditorBlock = ({
         definitionId: node.data.blockId as string,
         component: DesignComponent,
       });
+    } else if (!registration) {
+      console.warn(`[exp-builder.sdk] Component registration not found for ${node.data.blockId}`);
     }
     return registration;
   }, [node]);
