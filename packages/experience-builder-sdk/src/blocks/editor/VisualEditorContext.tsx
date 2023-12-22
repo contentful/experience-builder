@@ -120,7 +120,10 @@ export function VisualEditorContextProvider({
     const entityLinks = [...Object.values(dataSource), ...designComponentsRegistry.values()];
     const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
     // Only continue and trigger rerendering when we need to fetch something and we're not fetching yet
-    if (!missingAssetIds.length && !missingEntryIds.length) return;
+    if (!missingAssetIds.length && !missingEntryIds.length) {
+      setInitialEntitiesFetched(true);
+      return;
+    }
     setInitialEntitiesFetched(false);
     setFetchingEntities(true);
     try {
