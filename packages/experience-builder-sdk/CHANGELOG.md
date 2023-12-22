@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.5.0...@contentful/experience-builder@3.5.1) (2023-12-22)
+
+### Bug Fixes
+
+- improve initial fetching mechanism [SPA-1711] ([#217](https://github.com/contentful/experience-builder/issues/217)) ([f160913](https://github.com/contentful/experience-builder/commit/f160913219e4f02cea3fe9db0060e5338fbe2f20))
+
 # [3.5.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.4...@contentful/experience-builder@3.5.0) (2023-12-20)
 
 ### Features
