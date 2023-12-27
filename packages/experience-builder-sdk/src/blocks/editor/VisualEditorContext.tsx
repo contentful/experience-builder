@@ -121,7 +121,7 @@ export function VisualEditorContextProvider({
 
   // Either gets called when dataSource changed or designComponetsRegistry changed (manually)
   const fetchMissingEntities = useCallback(
-    async (newDataSource?: typeof dataSource) => {
+    async (newDataSource?: CompositionDataSource) => {
       const entityLinks = [
         ...Object.values(newDataSource ?? dataSource),
         ...designComponentsRegistry.values(),
