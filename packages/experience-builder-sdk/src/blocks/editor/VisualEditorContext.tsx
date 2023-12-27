@@ -38,7 +38,7 @@ type VisualEditorContextType = {
   unboundValues: CompositionUnboundValues;
   breakpoints: Breakpoint[];
   entityStore: EditorModeEntityStore;
-  areInitialEntitiesFetched: boolean;
+  areEntitiesFetched: boolean;
 };
 
 export const VisualEditorContext = React.createContext<VisualEditorContextType>({
@@ -53,7 +53,7 @@ export const VisualEditorContext = React.createContext<VisualEditorContextType>(
   locale: null,
   breakpoints: [],
   entityStore: {} as EditorModeEntityStore,
-  areInitialEntitiesFetched: false,
+  areEntitiesFetched: false,
 });
 
 type VisualEditorContextProviderProps = {
@@ -86,7 +86,10 @@ export function VisualEditorContextProvider({
   const [isDragging, setIsDragging] = useState(false);
   const selectedNodeId = useRef<string>('');
   const [locale, setLocale] = useState<string>(initialLocale);
-  const [areInitialEntitiesFetched, setInitialEntitiesFetched] = useState(false);
+  // Set to true when entities were fetched from the parent app.
+  // Reset to false when we receive a tree update and need to validate
+  // again whether all necessary entities are fetched.
+  const [areEntitiesFetched, setEntitiesFetched] = useState(false);
   const [isFetchingEntities, setFetchingEntities] = useState(false);
 
   const [entityStore, setEntityStore] = useState<EditorModeEntityStore>(
@@ -113,40 +116,47 @@ export function VisualEditorContextProvider({
         locale: locale,
       })
     );
+    setEntitiesFetched(false);
   }, [entityStore, locale]);
 
   // Either gets called when dataSource changed or designComponetsRegistry changed (manually)
-  const fetchMissingEntities = useCallback(async () => {
-    const entityLinks = [...Object.values(dataSource), ...designComponentsRegistry.values()];
-    const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
-    // Only continue and trigger rerendering when we need to fetch something and we're not fetching yet
-    if (!missingAssetIds.length && !missingEntryIds.length) {
-      setInitialEntitiesFetched(true);
-      return;
-    }
-    setInitialEntitiesFetched(false);
-    setFetchingEntities(true);
-    try {
-      // Await until the fetching is done to update the state variable at the right moment
-      await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
-      console.debug('[exp-builder.sdk] Finished fetching entities', { entityStore, entityLinks });
-    } catch (error) {
-      console.error('[exp-builder.sdk] Failed fetching entities');
-      console.error(error);
-    } finally {
-      // Important to set this as it is the only state variable that triggers a rerendering
-      // of the components (changes inside the entityStore are not part of the state)
-      setInitialEntitiesFetched(true);
-      setFetchingEntities(false);
-    }
-  }, [dataSource, entityStore]);
+  const fetchMissingEntities = useCallback(
+    async (newDataSource?: CompositionDataSource) => {
+      const entityLinks = [
+        ...Object.values(newDataSource ?? dataSource),
+        ...designComponentsRegistry.values(),
+      ];
+      const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
+      // Only continue and trigger rerendering when we need to fetch something and we're not fetching yet
+      if (!missingAssetIds.length && !missingEntryIds.length) {
+        setEntitiesFetched(true);
+        return;
+      }
+      setEntitiesFetched(false);
+      setFetchingEntities(true);
+      try {
+        // Await until the fetching is done to update the state variable at the right moment
+        await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
+        console.debug('[exp-builder.sdk] Finished fetching entities', { entityStore, entityLinks });
+      } catch (error) {
+        console.error('[exp-builder.sdk] Failed fetching entities');
+        console.error(error);
+      } finally {
+        // Important to set this as it is the only state variable that triggers a rerendering
+        // of the components (changes inside the entityStore are not part of the state)
+        setEntitiesFetched(true);
+        setFetchingEntities(false);
+      }
+    },
+    [dataSource, entityStore]
+  );
 
   // When the tree was updated, we store the dataSource and
   // afterward, this effect fetches the respective entities.
   useEffect(() => {
-    if (areInitialEntitiesFetched || isFetchingEntities) return;
+    if (areEntitiesFetched || isFetchingEntities) return;
     fetchMissingEntities();
-  }, [areInitialEntitiesFetched, fetchMissingEntities, isFetchingEntities]);
+  }, [areEntitiesFetched, fetchMissingEntities, isFetchingEntities]);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
@@ -245,12 +255,9 @@ export function VisualEditorContextProvider({
           // Make sure to first store the design components before setting the tree and thus triggering a rerender
           if (designComponents) {
             setDesignComponents(designComponents);
-            // Since design components are stored outside of the React state, we need to manually update the entity store
-            // TODO: Move designComponentsRegistry into React to avoid these async issues and manual tweaks
-            await fetchMissingEntities();
+            // If the designComponentEntry is not yet fetched, this will be done below by
+            // the imperative calls to fetchMissingEntities.
           }
-          setTree(tree);
-          setLocale(locale);
 
           if (changedNode) {
             /**
@@ -260,18 +267,26 @@ export function VisualEditorContextProvider({
              *
              * We still update the tree here so we don't have a stale "tree"
              */
-            changedValueType === 'BoundValue' &&
-              setDataSource((dataSource) => ({ ...dataSource, ...changedNode.data.dataSource }));
-            changedValueType === 'UnboundValue' &&
+            if (changedValueType === 'BoundValue') {
+              const newDataSource = { ...dataSource, ...changedNode.data.dataSource };
+              setDataSource(newDataSource);
+              await fetchMissingEntities(newDataSource);
+            } else if (changedValueType === 'UnboundValue') {
               setUnboundValues((unboundValues) => ({
                 ...unboundValues,
                 ...changedNode.data.unboundValues,
               }));
+            }
           } else {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
+            await fetchMissingEntities(dataSource);
           }
+
+          // Update the tree when all necessary data is fetched and ready for rendering.
+          setTree(tree);
+          setLocale(locale);
           break;
         }
         case INCOMING_EVENTS.DesignComponentsAdded: {
@@ -337,7 +352,7 @@ export function VisualEditorContextProvider({
     return () => {
       window.removeEventListener('message', onMessage);
     };
-  }, [fetchMissingEntities, entityStore, mode]);
+  }, [fetchMissingEntities, entityStore, mode, dataSource]);
 
   /*
    * Handles on scroll business
@@ -397,7 +412,7 @@ export function VisualEditorContextProvider({
         locale,
         breakpoints: tree?.root.data.breakpoints ?? [],
         entityStore,
-        areInitialEntitiesFetched,
+        areEntitiesFetched,
       }}>
       {children}
     </VisualEditorContext.Provider>

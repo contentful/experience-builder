@@ -40,7 +40,7 @@ const VisualEditorRootComponents = () => {
     unboundValues,
     breakpoints,
     entityStore,
-    areInitialEntitiesFetched,
+    areEntitiesFetched,
   } = useEditorContext();
 
   // We call it here instead of on block-level to avoid registering too many even listeners for media queries
@@ -70,7 +70,7 @@ const VisualEditorRootComponents = () => {
           unboundValues={unboundValues}
           resolveDesignValue={resolveDesignValue}
           entityStore={entityStore}
-          areInitialEntitiesFetched={areInitialEntitiesFetched}
+          areEntitiesFetched={areEntitiesFetched}
         />
       ))}
     </div>
