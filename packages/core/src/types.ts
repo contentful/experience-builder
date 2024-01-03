@@ -272,7 +272,15 @@ export type Composition = {
   componentSettings?: ExperienceComponentSettings;
 };
 
-export type DesignTokensDefinition = { [key: string]: string | DesignTokensDefinition };
+export type DesignTokensDefinition = {
+  spacing?: Record<string, string>;
+  sizing?: Record<string, string>;
+  colors?: Record<string, string>;
+  borders?: Record<string, { size: string; color: string }>;
+  fontSize?: Record<string, string>;
+} & {
+  [key: string]: string | Record<string, string>;
+};
 
 export type ExperienceEntry = {
   sys: Entry['sys'];
