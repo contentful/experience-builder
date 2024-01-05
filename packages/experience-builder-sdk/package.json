@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder",
-  "version": "3.5.2",
+  "version": "4.0.0-next.2",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -77,6 +77,9 @@
     "vite": "^4.3.9",
     "vite-plugin-dts": "^3.6.1",
     "vite-plugin-svgr": "^4.1.0"
+  },
+  "relativeDependencies": {
+    "@contentful/experience-builder-components": "../../../experience-builder-toolkit/packages/components"
   },
   "peerDependencies": {
     "react": ">=16.0.0",

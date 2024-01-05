@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-next.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-next.1...@contentful/experience-builder@4.0.0-next.2) (2023-12-08)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
+# [4.0.0-next.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-next.0...@contentful/experience-builder@4.0.0-next.1) (2023-12-08)
+
+- feat!: testing the breaking change (#181) ([ac2f4b0](https://github.com/contentful/experience-builder/commit/ac2f4b07001fe022e7c56e83fa2b8dac08125095)), closes [#181](https://github.com/contentful/experience-builder/issues/181)
+
+### BREAKING CHANGES
+
+- for science
+
+# [4.0.0-next.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.13.0...@contentful/experience-builder@4.0.0-next.0) (2023-12-08)
+
+### chore
+
+- circleci setup to allow pre-release on next branch [SPA-1634] ([#176](https://github.com/contentful/experience-builder/issues/176)) ([9b6b5b3](https://github.com/contentful/experience-builder/commit/9b6b5b38ba6506393008a5ca024682e70986ee29)), closes [#175](https://github.com/contentful/experience-builder/issues/175) [#178](https://github.com/contentful/experience-builder/issues/178)
+
+### BREAKING CHANGES
+
+- Registered components will be wrapped with a div container by default. The `wrapComponent` option can be used when registering components to opt-out of this behavior if necessary.
+
+- chore(release): updated release notes and package versions [ci skip]
+
+* @contentful/experience-builder@3.0.0
+* @contentful/experience-builder-types@2.0.0
+
 ## [3.5.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.5.1...@contentful/experience-builder@3.5.2) (2023-12-27)
 
 ### Bug Fixes
@@ -107,6 +134,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [3.0.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.0.1...@contentful/experience-builder@3.0.2) (2023-12-12)
 
 **Note:** Version bump only for package @contentful/experience-builder
+
 
 ## [3.0.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.0.0...@contentful/experience-builder@3.0.1) (2023-12-07)
 
