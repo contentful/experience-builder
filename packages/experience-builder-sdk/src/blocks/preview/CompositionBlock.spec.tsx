@@ -19,7 +19,7 @@ import {
 import { EntityStore } from '@contentful/experience-builder-core';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 
-const TestComponent = (props: any) => {
+const TestComponent: React.FC<{ text: string }> = (props) => {
   return <div {...props}>{props.text}</div>;
 };
 
