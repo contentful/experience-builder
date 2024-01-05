@@ -116,11 +116,9 @@
     "@contentful/app-sdk": "^4.23.1",
     "@contentful/experience-builder": "file:../experience-builder-sdk",
     "@contentful/experience-builder-components": "file:../components",
-    "@contentful/experience-builder-storybook-addon": "file:../storybook-addon",
     "@contentful/f36-components": "^4.52.1",
     "@contentful/f36-tokens": "^4.0.2",
     "@contentful/f36-workbench": "^4.21.0",
-    "@contentful/field-editor-rich-text": "^3.12.5",
     "constate": "^3.3.2",
     "emotion": "10.0.27"
   }

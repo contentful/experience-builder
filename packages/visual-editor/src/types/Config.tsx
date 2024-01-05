@@ -4,12 +4,12 @@ type WithCtflProps<Props> = Props & {
   id: string;
 };
 
-export type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
+export type DefaultComponentProps = { [key: string]: unknown; editorMode?: boolean };
 
 export type Content = ComponentData[];
 
 export type CtflComponent<Props extends DefaultComponentProps = DefaultComponentProps> = (
-  props: WithCtflProps<Props & { ctfl: any }>
+  props: WithCtflProps<Props & { ctfl: unknown }>
 ) => JSX.Element;
 
 export type ComponentConfig<

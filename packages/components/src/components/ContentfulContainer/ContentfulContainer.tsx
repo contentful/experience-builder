@@ -44,7 +44,6 @@ export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
     ['data-cf-node-block-type']: node.type,
     id: 'ContentfulContainer',
     className: combineClasses(className, 'defaultStyles'),
-    zoneId: node.data.id,
     WrapperComponent: Flex,
   });
 };

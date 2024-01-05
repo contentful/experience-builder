@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { InternalSDKMode, IncomingEvent } from '@/types';
 import { INCOMING_EVENTS } from '@/constants';
-import { supportedModes } from '@/utils/supportedModes';
+import { supportedModes } from '@/utils';
+import { PostMessageMethods } from '@contentful/visual-sdk';
 
 export type VisualEditorMessagePayload = {
   source: string;
@@ -66,11 +67,14 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
   // check eventData.eventType
   const supportedEventTypes = Object.values(INCOMING_EVENTS);
   if (!supportedEventTypes.includes(eventData.eventType)) {
-    throw new ParseError(
-      `Field eventData.eventType must be one of the supported values: [${supportedEventTypes.join(
-        ', '
-      )}]`
-    );
+    // Expected message: This message is handled in the visual-sdk to store fetched entities
+    if (eventData.eventType !== PostMessageMethods.REQUESTED_ENTITIES) {
+      throw new ParseError(
+        `Field eventData.eventType must be one of the supported values: [${supportedEventTypes.join(
+          ', '
+        )}]`
+      );
+    }
   }
 
   return eventData;
@@ -95,7 +99,7 @@ export const validateExperienceBuilderConfig = ({
 
   if (!locale) {
     throw new Error(
-      'Parameter "locale" is required for expereince builder initialization outside of editor mode'
+      'Parameter "locale" is required for experience builder initialization outside of editor mode'
     );
   }
 };

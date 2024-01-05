@@ -7,12 +7,13 @@ import type {
   CompositionComponentPropValue,
   Composition,
 } from '@contentful/experience-builder-core/types';
-import { designComponentsRegistry } from '../../blocks/editor/VisualEditorContext';
+
 import {
   DESIGN_COMPONENT_BLOCK_NODE_TYPE,
   DESIGN_COMPONENT_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 import { generateRandomId } from '@contentful/experience-builder-core';
+import { designComponentsRegistry } from '@/store/registries';
 
 export const deserializeDesignComponentNode = ({
   node,
@@ -22,6 +23,7 @@ export const deserializeDesignComponentNode = ({
   designComponentUnboundValues,
   componentInstanceProps,
   componentInstanceUnboundValues,
+  componentInstanceDataSource,
 }: {
   node: CompositionNode;
   nodeId: string;
@@ -30,6 +32,7 @@ export const deserializeDesignComponentNode = ({
   designComponentUnboundValues: CompositionUnboundValues;
   componentInstanceProps: Record<string, CompositionComponentPropValue>;
   componentInstanceUnboundValues: CompositionUnboundValues;
+  componentInstanceDataSource: CompositionDataSource;
 }): CompositionComponentNode => {
   const childNodeVariable: Record<string, CompositionComponentPropValue> = {};
   const dataSource: CompositionDataSource = {};
@@ -38,18 +41,26 @@ export const deserializeDesignComponentNode = ({
   for (const [variableName, variable] of Object.entries(node.variables)) {
     childNodeVariable[variableName] = variable;
     if (variable.type === 'ComponentValue') {
-      const uuid = variable.key;
-      const variableMapping = componentInstanceProps[uuid];
+      const componentValueKey = variable.key;
+      const instanceProperty = componentInstanceProps[componentValueKey];
 
-      // For design component, we are only handling binding for UnboundValues for now
-      if (variableMapping?.type === 'UnboundValue') {
-        const componentInstanceValue = componentInstanceUnboundValues[variableMapping.key].value;
-
-        if (typeof componentInstanceValue === 'object' && componentInstanceValue !== null) {
-          unboundValues[uuid] = designComponentUnboundValues[componentInstanceValue['key']];
-        } else {
-          unboundValues[uuid] = componentInstanceUnboundValues[variableMapping.key];
-        }
+      // For design component, we look up the value in the design component instance and
+      // replace the componentValue with that one.
+      if (instanceProperty?.type === 'UnboundValue') {
+        const componentInstanceValue = componentInstanceUnboundValues[instanceProperty.key];
+        unboundValues[instanceProperty.key] = componentInstanceValue;
+        childNodeVariable[variableName] = {
+          type: 'UnboundValue',
+          key: instanceProperty.key,
+        };
+      } else if (instanceProperty?.type === 'BoundValue') {
+        const [, dataSourceKey] = instanceProperty.path.split('/');
+        const componentInstanceValue = componentInstanceDataSource[dataSourceKey];
+        dataSource[dataSourceKey] = componentInstanceValue;
+        childNodeVariable[variableName] = {
+          type: 'BoundValue',
+          path: instanceProperty.path,
+        };
       }
     }
   }
@@ -65,6 +76,7 @@ export const deserializeDesignComponentNode = ({
       designComponentUnboundValues,
       componentInstanceProps,
       componentInstanceUnboundValues,
+      componentInstanceDataSource,
     })
   );
 
@@ -99,7 +111,9 @@ export const resolveDesignComponent = ({
   const designComponent = designComponentsRegistry.get(componentId);
 
   if (!designComponent) {
-    console.warn(`Link to design component with ID '${componentId}' not found`);
+    console.warn(`Link to design component with ID '${componentId}' not found`, {
+      designComponentsRegistry,
+    });
     return node;
   }
 
@@ -108,7 +122,7 @@ export const resolveDesignComponent = ({
   ]) as unknown as Composition;
 
   if (!componentFields) {
-    console.warn(`Entry for design component with ID '${componentId}' not found`);
+    console.warn(`Entry for design component with ID '${componentId}' not found`, { entityStore });
     return node;
   }
 
@@ -124,6 +138,7 @@ export const resolveDesignComponent = ({
     designComponentUnboundValues: componentFields.unboundValues,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
+    componentInstanceDataSource: node.data.dataSource,
   });
 
   return deserializedNode;

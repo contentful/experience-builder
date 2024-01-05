@@ -1,6 +1,8 @@
 import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
-import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
-import { ResolveDesignValueType } from './useBreakpoints';
+import type {
+  CompositionComponentNode,
+  ResolveDesignValueType,
+} from '@contentful/experience-builder-core/types';
 import { useEffect } from 'react';
 import { useZoneStore } from '@/store/zone';
 
@@ -30,7 +32,7 @@ export const useDropZoneDirection = ({ resolveDesignValue, node, zoneId }: Param
         return 'vertical';
       }
 
-      const direction = resolveDesignValue(designValues.valuesByBreakpoint);
+      const direction = resolveDesignValue(designValues.valuesByBreakpoint, 'cfFlexDirection');
 
       if (direction === 'row') {
         return 'horizontal';
@@ -40,7 +42,7 @@ export const useDropZoneDirection = ({ resolveDesignValue, node, zoneId }: Param
     }
 
     upsertZone(zoneId, { direction: getDirection() });
-  }, [node]);
+  }, [node, resolveDesignValue, zoneId, upsertZone]);
 
   return zone[zoneId]?.direction || 'vertical';
 };

@@ -96,7 +96,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The orientation of the section',
-    defaultValue: 'row',
+    defaultValue: 'column',
   },
   cfFlexWrap: {
     displayName: 'Wrap objects',
@@ -183,11 +183,27 @@ export const optionalBuiltInStyles: Partial<
     defaultValue: '16px',
   },
   cfFontWeight: {
+    validations: {
+      in: [
+        {
+          value: '400',
+          displayName: 'Normal',
+        },
+        {
+          value: '500',
+          displayName: 'Medium',
+        },
+        {
+          value: '600',
+          displayName: 'Semi Bold',
+        },
+      ],
+    },
     displayName: 'Font Weight',
     type: 'Text',
     group: 'style',
     description: 'The font weight of the section',
-    defaultValue: 'normal',
+    defaultValue: '400',
   },
   cfLineHeight: {
     displayName: 'Line Height',
@@ -238,7 +254,7 @@ export const optionalBuiltInStyles: Partial<
       in: [
         {
           value: 'none',
-          displayName: 'None',
+          displayName: 'Normal',
         },
         {
           value: 'capitalize',
@@ -281,4 +297,15 @@ export const optionalBuiltInStyles: Partial<
     description: 'The text underline of the section',
     defaultValue: false,
   },
+};
+
+export const containerBuiltInStyles = {
+  ...builtInStyles,
+  cfHeight: {
+    displayName: 'Height',
+    type: 'Text',
+    group: 'style',
+    description: 'The height of the section',
+    defaultValue: 'auto',
+  } as ComponentDefinitionVariable<'Text'>,
 };

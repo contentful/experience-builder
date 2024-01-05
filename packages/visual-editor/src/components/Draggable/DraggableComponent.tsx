@@ -18,6 +18,7 @@ export const DraggableComponent = ({
   userIsDragging,
   style,
   className,
+  isDragDisabled = false,
   ...rest
 }: {
   className?: string;
@@ -33,9 +34,10 @@ export const DraggableComponent = ({
   onMouseOut?: (e: SyntheticEvent) => void;
   userIsDragging?: boolean;
   style?: CSSProperties;
+  isDragDisabled?: boolean;
 }) => {
   return (
-    <Draggable key={id} draggableId={id} index={index}>
+    <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}

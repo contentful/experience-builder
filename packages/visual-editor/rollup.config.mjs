@@ -26,7 +26,17 @@ export default [
       }),
       nodeResolve(),
       commonjs(),
-      typescript({ tsconfig: './tsconfig.json' }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        exclude: [
+          'dist',
+          'node_modules',
+          'src/**/*.test.tsx',
+          'src/**/*.spec.tsx',
+          'src/**/*.stories.tsx',
+          'test',
+        ],
+      }),
       terser(),
     ],
     external: [/node_modules\/(?!tslib.*)/],

@@ -35,7 +35,9 @@ export const INCOMING_EVENTS = {
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
   DesignComponentsAdded: 'designComponentsAdded',
+  DesignComponentsRegistered: 'designComponentsRegistered',
   InitEditor: 'initEditor',
+  EntitiesResolved: 'entitiesResolved',
 };
 
 export const INTERNAL_EVENTS = {

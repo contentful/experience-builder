@@ -1,4 +1,10 @@
-import { ExperienceRoot, ExternalSDKMode, useFetchBySlug } from '@contentful/experience-builder';
+import {
+  useFetchBySlug,
+  ExperienceRoot,
+  ExternalSDKMode,
+  defineDesignTokens,
+} from '@contentful/experience-builder';
+
 import { createClient } from 'contentful';
 import '@contentful/experience-builder-components/styles.css';
 import { useParams, Link } from 'react-router-dom';
@@ -21,6 +27,31 @@ const client = createClient({
   environment,
   host,
   accessToken,
+});
+
+defineDesignTokens({
+  spacing: { 0: '0px', XS: '16px', S: '24px', M: '32px', L: '64px', XL: '128px' },
+  sizing: { 0: '0px', XS: '100px', S: '200px', M: '300px', L: '600px', XL: '1024px' },
+  colors: {
+    WHITE: '#FFFFFF',
+    GREEN: '#00FF00',
+    BLUE: '#0000Ff',
+    primary: 'rgba(0, 0, 0, 0.25)',
+    secondary: 'rgba(0, 255, 255, 0.5)',
+    backup: 'rgba(30, 25, 25, 0.75)',
+    fancy: 'rgb(0, 4, 7)',
+  },
+  border: {
+    White: { size: '20px', color: '#FFFFFF', style: 'outside' },
+    Azure: { size: '20px', color: 'azure', style: 'outside' },
+    Hero: { size: '20px', color: '#ffaabb', style: 'outside' },
+    Card: { size: '40px', color: '#ffccbb', style: 'inside' },
+    Carousel: { size: '25px', color: 'rgba(30, 25, 25, 0.75)' },
+    Callout: { size: '25px', color: 'rgba(31, 25, 25, 0.75)' },
+    'Case Study': { size: '25px', color: 'rgba(32, 25, 25, 0.75)' },
+    Animal: { size: '25px', color: 'rgba(33, 25, 25, 0.75)' },
+    Safari: { size: '25px', color: 'rgba(34, 25, 25, 0.75)' },
+  },
 });
 
 export default function Page() {
