@@ -1,4 +1,4 @@
-import { useFetchBySlug, useFetchBySlugArgs } from './useFetchBySlug';
+import { useFetchBySlug, UseFetchBySlugArgs } from './useFetchBySlug';
 import { EntityStore } from '@contentful/experience-builder-core';
 import { renderHook, waitFor } from '@testing-library/react';
 import { compositionEntry } from '../../test/__fixtures__/composition';
@@ -90,7 +90,7 @@ describe('useFetchBySlug', () => {
 
   it('should return an error if experience entry was not found, then when slug changes to good entry the error should be undefined', async () => {
     clientMock.getEntries = jest.fn().mockResolvedValue({ items: [] });
-    const initialProps: useFetchBySlugArgs = {
+    const initialProps: UseFetchBySlugArgs = {
       client: clientMock,
       mode: 'preview' as ExternalSDKMode,
       slug: 'unknown-slug',
@@ -122,7 +122,7 @@ describe('useFetchBySlug', () => {
     clientMock.getEntries = jest
       .fn()
       .mockResolvedValue({ items: [compositionEntry, compositionEntry] });
-    const initialProps: useFetchBySlugArgs = {
+    const initialProps: UseFetchBySlugArgs = {
       client: clientMock,
       mode: 'preview' as ExternalSDKMode,
       slug,
@@ -178,7 +178,7 @@ describe('useFetchBySlug', () => {
   });
 
   it('should return an error if localeCode is not defined, then when localCode is provided, the error should be undefined', async () => {
-    const initialProps: useFetchBySlugArgs = {
+    const initialProps: UseFetchBySlugArgs = {
       client: clientMock,
       mode: 'preview' as ExternalSDKMode,
       slug,

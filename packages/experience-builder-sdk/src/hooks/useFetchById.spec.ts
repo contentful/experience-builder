@@ -1,4 +1,4 @@
-import { useFetchById, useFetchByIdArgs } from './useFetchById';
+import { useFetchById, UseFetchByIdArgs } from './useFetchById';
 import { EntityStore } from '@contentful/experience-builder-core';
 import { renderHook, waitFor } from '@testing-library/react';
 import { compositionEntry } from '../../test/__fixtures__/composition';
@@ -91,7 +91,7 @@ describe('useFetchById', () => {
 
   it('should return an error if experience entry was not found, then when id changes to good entry the error should be undefined', async () => {
     clientMock.getEntries = jest.fn().mockResolvedValue({ items: [] });
-    const initialProps: useFetchByIdArgs = {
+    const initialProps: UseFetchByIdArgs = {
       client: clientMock,
       mode: 'preview' as ExternalSDKMode,
       id: 'unknown-id',
@@ -143,7 +143,7 @@ describe('useFetchById', () => {
   });
 
   it('should return an error if localeCode is not defined, then when localCode is provided, the error should be undefined', async () => {
-    const initialProps: useFetchByIdArgs = {
+    const initialProps: UseFetchByIdArgs = {
       client: clientMock,
       mode: 'preview' as ExternalSDKMode,
       id,

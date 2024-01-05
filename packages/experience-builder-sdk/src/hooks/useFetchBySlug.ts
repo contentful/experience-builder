@@ -4,7 +4,7 @@ import type { ExternalSDKMode } from '@contentful/experience-builder-core/types'
 import { useFetchByBase } from './useFetchByBase';
 import { fetchBySlug } from '@contentful/experience-builder-core';
 
-export type useFetchBySlugArgs = {
+export type UseFetchBySlugArgs = {
   mode: ExternalSDKMode;
   client: ContentfulClientApi<undefined>;
   slug: string;
@@ -18,7 +18,7 @@ export const useFetchBySlug = ({
   client,
   experienceTypeId,
   mode,
-}: useFetchBySlugArgs) => {
+}: UseFetchBySlugArgs) => {
   const fetchMethod = useCallback(() => {
     return fetchBySlug({ slug, localeCode, client, experienceTypeId, mode });
   }, [slug, localeCode, client, experienceTypeId, mode]);
