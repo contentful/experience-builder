@@ -4,7 +4,7 @@ import {
   isDeprecatedExperience,
   supportedModes,
 } from '@contentful/experience-builder-core';
-import { EntityStore } from './core/preview/EntityStore';
+import { EntityStore } from '@contentful/experience-builder-core';
 import type {
   DeprecatedExperience,
   Experience,

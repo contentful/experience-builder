@@ -1,13 +1,13 @@
 import {
-  useFetchExperience,
+  useFetchBySlug,
   ExperienceRoot,
   ExternalSDKMode,
   defineDesignTokens,
 } from '@contentful/experience-builder';
 
 import { createClient } from 'contentful';
-import { useParams } from 'react-router-dom';
 import '@contentful/experience-builder-components/styles.css';
+import { useParams, Link } from 'react-router-dom';
 import './styles.css';
 
 const isPreview = window.location.search.includes('isPreview=true');
@@ -21,6 +21,7 @@ const host = isPreview ? `preview.${domain}` : `cdn.${domain}`;
 const accessToken = isPreview
   ? import.meta.env.VITE_PREVIEW_ACCESS_TOKEN
   : import.meta.env.VITE_ACCESS_TOKEN;
+
 const client = createClient({
   space,
   environment,
@@ -55,7 +56,8 @@ defineDesignTokens({
 
 export default function Page() {
   const { slug = 'homePage' } = useParams<{ slug: string }>();
-  const { experience, error } = useFetchExperience({
+
+  const { experience, error } = useFetchBySlug({
     client,
     slug,
     mode,
@@ -84,13 +86,15 @@ export default function Page() {
           padding: '12px 24px',
           alignItems: 'center',
         }}>
-        <img
-          src="https://images.ctfassets.net/w8vf7dk7f259/N3oD9LQUQYMIG4mj0IHck/2cae76d412675c96100941b2a381672d/colorful-coin-logo.svg"
-          style={{
-            height: 40,
-          }}
-          alt=""
-        />
+        <Link to="/">
+          <img
+            src="https://images.ctfassets.net/w8vf7dk7f259/N3oD9LQUQYMIG4mj0IHck/2cae76d412675c96100941b2a381672d/colorful-coin-logo.svg"
+            style={{
+              height: 40,
+            }}
+            alt=""
+          />
+        </Link>
         <div
           style={{
             display: 'flex',
@@ -100,9 +104,8 @@ export default function Page() {
             fontWeight: 'var(--cf-font-semibold)',
             fontFamily: 'var(--cf-font-family-sans)',
           }}>
-          <a href="">Link 1</a>
-          <a href="">Link 2</a>
-          <a href="">Link 3</a>
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
         </div>
       </div>
       <ExperienceRoot experience={experience} locale={localeCode} />

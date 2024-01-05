@@ -1,8 +1,4 @@
-import {
-  useFetchExperience,
-  ExperienceRoot,
-  ExternalSDKMode,
-} from '@contentful/experience-builder';
+import { useFetchBySlug, ExperienceRoot, ExternalSDKMode } from '@contentful/experience-builder';
 import { createClient } from 'contentful';
 import '@contentful/experience-builder-components/styles.css';
 import { useParams } from 'react-router-dom';
@@ -28,7 +24,7 @@ const client = createClient({
 
 const Page: React.FC = () => {
   const { slug = 'homePage' } = useParams<{ slug: string }>();
-  const { experience, error } = useFetchExperience({
+  const { experience, error } = useFetchBySlug({
     client,
     slug,
     mode,

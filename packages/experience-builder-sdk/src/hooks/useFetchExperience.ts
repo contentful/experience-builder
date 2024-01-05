@@ -1,41 +1,21 @@
-import type { ContentfulClientApi, Entry } from 'contentful';
-import { useCallback, useEffect, useState } from 'react';
-import { EntityStore } from '../core/preview/EntityStore';
-import { fetchReferencedEntities, fetchExperienceEntry } from '../core/fetchers';
-import type {
-  Experience,
-  ExperienceEntry,
-  ExternalSDKMode,
-} from '@contentful/experience-builder-core/types';
-import { createExperience } from '../utils/createExperience';
+import type { ContentfulClientApi } from 'contentful';
+import { useCallback, useState } from 'react';
+import {
+  EntityStore,
+  fetchBySlug as fetchBySlugCore,
+  fetchById as fetchByIdCore,
+} from '@contentful/experience-builder-core';
+import { Experience, ExternalSDKMode } from '@contentful/experience-builder-core/types';
 
-const errorMessagesWhileFetching = {
-  experience: 'Failed to fetch experience',
-  experienceReferences: 'Failed to fetch entities, referenced in experience',
-};
-
-const handleError = (generalMessage: string, error: unknown) => {
-  const message = error instanceof Error ? error.message : `Unknown error: ${error}`;
-  console.error(`${generalMessage} with error: ${message}`);
-};
-
-type useClientSideExperienceFetchersProps = {
+type useClientsideExperienceFetchersProps = {
   mode: ExternalSDKMode;
   client: ContentfulClientApi<undefined>;
-  slug?: string;
-  id?: string;
-  experienceTypeId: string;
-  localeCode: string;
 };
 
-export const useFetchExperience = ({
-  mode,
-  client,
-  slug,
-  id,
-  experienceTypeId,
-  localeCode,
-}: useClientSideExperienceFetchersProps) => {
+/**
+ * @deprecated please use `useFetchBySlug` or `useFetchById` hooks instead
+ */
+export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetchersProps) => {
   const [experience, setExperience] = useState<Experience<EntityStore> | undefined>(undefined);
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<Error>();
@@ -58,49 +38,19 @@ export const useFetchExperience = ({
     }): Promise<Experience<EntityStore> | undefined> => {
       setIsFetching(true);
       setError(undefined);
-
-      let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
-
       try {
-        experienceEntry = await fetchExperienceEntry({
+        const experience = await fetchBySlugCore({
           client,
           experienceTypeId,
-          locale: localeCode,
-          identifier: {
-            slug,
-          },
+          localeCode,
+          slug,
+          mode,
         });
 
-        if (!experienceEntry) {
-          const error = new Error(`No experience entry with slug: ${slug} exists`);
-          setError(error);
-          return;
-        }
+        setExperience(experience);
 
-        try {
-          const { entries, assets } = await fetchReferencedEntities({
-            client,
-            experienceEntry,
-            locale: localeCode,
-          });
-
-          const experience = createExperience({
-            experienceEntry,
-            referencedAssets: assets,
-            referencedEntries: entries,
-            locale: localeCode,
-            mode,
-          });
-
-          setExperience(experience);
-
-          return experience;
-        } catch (error) {
-          handleError(errorMessagesWhileFetching.experienceReferences, error);
-          setError(error as Error);
-        }
+        return experience;
       } catch (error) {
-        handleError(errorMessagesWhileFetching.experience, error);
         setError(error as Error);
       } finally {
         setIsFetching(false);
@@ -126,49 +76,19 @@ export const useFetchExperience = ({
       localeCode: string;
     }): Promise<Experience<EntityStore> | undefined> => {
       setIsFetching(true);
-
-      let experienceEntry: Entry | undefined = undefined;
-
+      setError(undefined);
       try {
-        experienceEntry = await fetchExperienceEntry({
+        const experience = await fetchByIdCore({
           client,
           experienceTypeId,
-          locale: localeCode,
-          identifier: {
-            id,
-          },
+          localeCode,
+          id,
+          mode,
         });
 
-        if (!experienceEntry) {
-          const error = new Error(`No experience entry with id: ${id} exists`);
-          setError(error as Error);
-          return;
-        }
-
-        try {
-          const { entries, assets } = await fetchReferencedEntities({
-            client,
-            experienceEntry,
-            locale: localeCode,
-          });
-
-          const experience = createExperience({
-            experienceEntry,
-            referencedAssets: assets,
-            referencedEntries: entries,
-            locale: localeCode,
-            mode,
-          });
-
-          setExperience(experience);
-
-          return experience;
-        } catch (error) {
-          handleError(errorMessagesWhileFetching.experienceReferences, error);
-          setError(error as Error);
-        }
+        setExperience(experience);
+        return experience;
       } catch (error) {
-        handleError(errorMessagesWhileFetching.experience, error);
         setError(error as Error);
       } finally {
         setIsFetching(false);
@@ -177,22 +97,10 @@ export const useFetchExperience = ({
     [client, mode]
   );
 
-  useEffect(() => {
-    if (slug) {
-      fetchBySlug({ slug, localeCode, experienceTypeId });
-      return;
-    }
-    if (id) {
-      fetchById({ id, localeCode, experienceTypeId });
-      return;
-    }
-    setError(Error('Either slug or id must be provided to useFetchExperience'));
-  }, [experienceTypeId, fetchById, fetchBySlug, id, localeCode, slug]);
-
   return {
-    error,
     fetchBySlug,
     fetchById,
+    error,
     experience,
     isFetching,
   };
