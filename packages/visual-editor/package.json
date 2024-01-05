@@ -25,7 +25,7 @@
   "dependencies": {
     "@contentful/experience-builder-components": "file:../components",
     "@contentful/experience-builder-core": "file:../core",
-    "@contentful/visual-sdk": "^1.0.0-alpha.34",
+    "@contentful/visual-sdk": "^1.0.0-alpha.38",
     "@hello-pangea/dnd": "^16.3.0",
     "classnames": "^2.3.2",
     "contentful": "^10.6.14",

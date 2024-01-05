@@ -37,7 +37,6 @@ export const INCOMING_EVENTS = {
   DesignComponentsAdded: 'designComponentsAdded',
   DesignComponentsRegistered: 'designComponentsRegistered',
   InitEditor: 'initEditor',
-  EntitiesResolved: 'entitiesResolved',
 };
 
 export const INTERNAL_EVENTS = {

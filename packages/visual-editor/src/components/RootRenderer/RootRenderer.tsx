@@ -17,8 +17,6 @@ import { useZoneStore } from '@/store/zone';
 import styles from './render.module.css';
 import { onComponentMoved } from '@/communication/onComponentMoved';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
-import LoaderOverlay from '@components/LoaderOverlay/LoaderOverlay';
-import { useEntityStore } from '@/store/entityStore';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 
 interface Props {
@@ -33,7 +31,6 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const updateItem = useDraggedItemStore((state) => state.updateItem);
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const userIsDragging = !!dragItem;
-  const areEntitesResolvedInParent = useEntityStore((state) => state.areEntitesResolvedInParent);
   const breakpoints = useTreeStore((state) => state.breakpoints);
 
   const { resolveDesignValue } = useBreakpoints(breakpoints);
@@ -44,10 +41,6 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   }, [tree, onChange]);
 
   const { onDragStartOrUpdate } = usePlaceholderStyle();
-
-  if (!areEntitesResolvedInParent) {
-    return <LoaderOverlay />;
-  }
 
   return (
     <DragDropContext

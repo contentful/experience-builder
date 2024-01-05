@@ -36,3 +36,6 @@ tmp/
 
 # Ignore built styles.css file in packages/components
 /packages/components/styles.css
+
+# Ingore .nx local files
+.nx
