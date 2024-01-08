@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
-import omit from 'lodash.omit';
+import omit from 'lodash-es/omit';
 import { EntityStore } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
