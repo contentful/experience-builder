@@ -75,6 +75,16 @@ export const getFallbackBreakpointIndex = (breakpoints: Breakpoint[]) => {
   );
 };
 
+const builtInStylesWithDesignTokens = [
+  'cfMargin',
+  'cfPadding',
+  'cfGap',
+  'cfWidth',
+  'cfHeight',
+  'cfBackgroundColor',
+  'cfFontSize',
+];
+
 export const getValueForBreakpoint = (
   valuesByBreakpoint: ValuesByBreakpoint,
   breakpoints: Breakpoint[],
@@ -87,18 +97,11 @@ export const getValueForBreakpoint = (
     // Assume that the values are sorted by media query to apply the cascading CSS logic
     for (let index = activeBreakpointIndex; index >= 0; index--) {
       const breakpointId = breakpoints[index].id;
-      if (
-        variableName === 'cfMargin' ||
-        variableName === 'cfPadding' ||
-        variableName === 'cfGap' ||
-        variableName === 'cfWidth' ||
-        variableName === 'cfHeight' ||
-        variableName === 'cfBackgroundColor'
-      ) {
-        const breakPointValue =
+      if (builtInStylesWithDesignTokens.includes(variableName)) {
+        const breakpointValue =
           valuesByBreakpoint[breakpointId] || valuesByBreakpoint[fallbackBreakpointId];
 
-        return getDesignTokenRegistration(breakPointValue);
+        return getDesignTokenRegistration(breakpointValue);
       }
       if (valuesByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade
