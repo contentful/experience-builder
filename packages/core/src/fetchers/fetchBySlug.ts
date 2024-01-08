@@ -1,7 +1,8 @@
+import { EntityStore } from '@contentful/visual-sdk';
 import { createExperience } from './createExperience';
 import { fetchExperienceEntry } from './fetchExperienceEntry';
 import { fetchReferencedEntities } from './fetchReferencedEntities';
-import { ExperienceEntry, ExternalSDKMode } from '@/types';
+import { Experience, ExperienceEntry, ExternalSDKMode } from '@/types';
 import { ContentfulClientApi, Entry } from 'contentful';
 
 const errorMessagesWhileFetching = {
