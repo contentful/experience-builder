@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.2...@contentful/experience-builder-visual-editor@0.0.2-alpha.3) (2024-01-08)
+
+### Bug Fixes
+
+- add missing script-inject dep to required packages ([ba16c1b](https://github.com/contentful/experience-builder/commit/ba16c1bc89b17457496ddceed055bb96eb755e54))
+
 ## 0.0.2-alpha.2 (2024-01-08)
 
 ### Bug Fixes
