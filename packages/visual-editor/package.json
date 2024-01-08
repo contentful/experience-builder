@@ -32,6 +32,7 @@
     "immer": "^10.0.3",
     "lodash-es": "^4.17.21",
     "md5": "^2.3.0",
+    "style-inject": "^0.3.0",
     "use-debounce": "^10.0.0",
     "uuid": "^9.0.1",
     "zustand": "^4.4.7"
