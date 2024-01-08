@@ -21,7 +21,7 @@ import type {
 } from '@contentful/experience-builder-core/types';
 import { useMemo } from 'react';
 import { useStyleTag } from './useStyleTag';
-import omit from 'lodash-es/omit';
+import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { Dropzone } from '@components/Dropzone/Dropzone';
 import { useEntityStore } from '@/store/entityStore';

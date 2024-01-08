@@ -1,5 +1,5 @@
-import times from 'lodash-es/times';
-import random from 'lodash-es/random';
+import { times } from 'lodash-es';
+import { random } from 'lodash-es';
 import {
   CompositionTree,
   CompositionComponentNode,

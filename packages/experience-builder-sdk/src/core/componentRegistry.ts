@@ -12,6 +12,7 @@ import {
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 import {
   builtInStyles as builtInStyleDefinitions,
+  designTokensRegistry,
   optionalBuiltInStyles,
   sendMessage,
   containerDefinition,
@@ -132,6 +133,10 @@ export const sendConnectedEventWithRegisteredComponents = () => {
   sendMessage(OUTGOING_EVENTS.Connected, {
     sdkVersion: SDK_VERSION,
     definitions: registeredDefinitions,
+  });
+
+  sendMessage(OUTGOING_EVENTS.DesignTokens, {
+    designTokens: designTokensRegistry,
   });
 };
 
