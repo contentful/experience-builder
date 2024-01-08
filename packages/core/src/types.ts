@@ -272,7 +272,16 @@ export type Composition = {
   componentSettings?: ExperienceComponentSettings;
 };
 
-export type DesignTokensDefinition = { [key: string]: string | DesignTokensDefinition };
+export type RecursiveDesignTokenDefinition = {
+  [key: string]: string | RecursiveDesignTokenDefinition;
+};
+
+export type DesignTokensDefinition = {
+  spacing?: Record<string, string>;
+  sizing?: Record<string, string>;
+  colors?: Record<string, string>;
+  borders?: Record<string, { width: string; style: string; color: string }>;
+} & RecursiveDesignTokenDefinition;
 
 export type ExperienceEntry = {
   sys: Entry['sys'];
