@@ -1,5 +1,5 @@
 export { ExperienceRoot } from './ExperienceRoot';
-export { useExperienceBuilder, useFetchExperience } from './hooks';
+export { useExperienceBuilder, useFetchExperience, useFetchById, useFetchBySlug } from './hooks';
 export { defineComponents } from './core/componentRegistry';
 export {
   calculateNodeDefaultHeight,
@@ -7,6 +7,8 @@ export {
   defineDesignTokens,
   supportedModes,
   VisualEditorMode,
+  fetchById,
+  fetchBySlug,
 } from '@contentful/experience-builder-core';
 export {
   /**
@@ -28,5 +30,3 @@ export { tryParseMessage, doesMismatchMessageSchema } from './utils/validation';
 
 export type { InternalSDKMode, ExternalSDKMode } from '@contentful/experience-builder-core/types';
 export { EntityStore } from '@contentful/visual-sdk';
-export { fetchers } from './core';
-export { createExperience } from './utils/createExperience';

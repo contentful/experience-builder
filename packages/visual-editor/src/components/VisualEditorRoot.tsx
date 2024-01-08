@@ -5,7 +5,6 @@ import { RootRenderer } from './RootRenderer/RootRenderer';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
 import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 import { useInitializeEditor } from '@/hooks/useInitializeEditor';
-import LoaderOverlay from './LoaderOverlay/LoaderOverlay';
 import { useEntityStore } from '@/store/entityStore';
 import { useEditorStore } from '@/store/editor';
 
@@ -54,7 +53,7 @@ export const VisualEditorRoot = () => {
     };
   }, []);
 
-  if (!initialized) return <LoaderOverlay />;
+  if (!initialized) return null;
 
   return <RootRenderer />;
 };

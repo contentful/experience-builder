@@ -23,7 +23,7 @@ type UseExperienceBuilderProps = {
 };
 
 /**
- * @deprecated This hook is deprecated. We re-designed the SDK to enable client or server side rendering
+ * @deprecated This hook is deprecated. Use fetchBySlug or fetchById instead
  */
 export const useExperienceBuilder = ({
   experienceTypeId,

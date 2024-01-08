@@ -16,10 +16,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
     );
 
     const subscribe = (method: unknown, cb: (payload: RequestedEntitiesMessage) => void) => {
-      const listeners = (event: MessageEvent) => {
-        if (typeof event.data !== 'string') {
-          return;
-        }
+      const handleMessage = (event: MessageEvent) => {
         const data: {
           source: 'composability-app';
           eventType: string;
@@ -35,12 +32,12 @@ export class EditorModeEntityStore extends EditorEntityStore {
       };
 
       if (typeof window !== 'undefined') {
-        window.addEventListener('message', listeners);
+        window.addEventListener('message', handleMessage);
       }
 
       return () => {
         if (typeof window !== 'undefined') {
-          window.removeEventListener('message', listeners);
+          window.removeEventListener('message', handleMessage);
         }
       };
     };
@@ -55,7 +52,18 @@ export class EditorModeEntityStore extends EditorEntityStore {
    * @param entityLinks
    * @returns false if no async fetching is happening, otherwise a promise that resolves when all entities are fetched
    */
-  fetchEntities(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]): false | Promise<void> {
+  async fetchEntities({
+    missingEntryIds,
+    missingAssetIds,
+  }: {
+    missingEntryIds: string[];
+    missingAssetIds: string[];
+  }) {
+    // Entries and assets will be stored in entryMap and assetMap
+    await Promise.all([this.fetchEntries(missingEntryIds), this.fetchAssets(missingAssetIds)]);
+  }
+
+  getMissingEntityIds(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {
     const entryLinks = entityLinks.filter((link) => link.sys?.linkType === 'Entry');
     const assetLinks = entityLinks.filter((link) => link.sys?.linkType === 'Asset');
 
@@ -65,13 +73,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
     const { missing: missingEntryIds } = this.getEntitiesFromMap('Entry', uniqueEntryIds);
     const { missing: missingAssetIds } = this.getEntitiesFromMap('Asset', uniqueAssetIds);
 
-    // Return false to indicate that no async fetching is happening
-    if (!missingAssetIds.length && !missingEntryIds.length) return false;
-
-    // Entries and assets will be stored in entryMap and assetMap
-    return Promise.all([this.fetchEntries(uniqueEntryIds), this.fetchAssets(uniqueAssetIds)]).then(
-      () => Promise.resolve()
-    );
+    return { missingEntryIds, missingAssetIds };
   }
 
   getValue(

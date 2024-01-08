@@ -23,8 +23,8 @@ export type ComponentConfig<
 
 export type ComponentData = CompositionComponentNode;
 
-export interface DropZone {
+export interface Dropzone {
   direction: 'horizontal' | 'vertical';
 }
 
-export type DropZoneMap = Map<string, DropZone>;
+export type DropzoneMap = Map<string, Dropzone>;

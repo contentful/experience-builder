@@ -14,7 +14,7 @@ export type DesignComponentProps<EditorMode = boolean> = EditorMode extends true
       editorMode?: EditorMode;
       node: CompositionComponentNode;
       resolveDesignValue?: ResolveDesignValueType;
-      renderDropZone: (
+      renderDropzone: (
         node: CompositionComponentNode,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         props?: Record<string, any>
@@ -31,7 +31,7 @@ export const DesignComponent: React.FC<DesignComponentProps> = (props) => {
   if (props.editorMode) {
     const { node } = props;
 
-    return props.renderDropZone(node, {
+    return props.renderDropzone(node, {
       ['data-test-id']: 'contentful-container',
       ['data-cf-node-id']: node.data.id,
       ['data-cf-node-block-id']: node.data.blockId,

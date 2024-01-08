@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { EntityStore } from '../../core/preview/EntityStore';
-
+import { EntityStore } from '@contentful/experience-builder-core';
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
 import type { Experience } from '@contentful/experience-builder-core/types';
 import { createCompositionEntry } from '../../../test/__fixtures__/composition';

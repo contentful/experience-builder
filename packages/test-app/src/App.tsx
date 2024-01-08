@@ -1,5 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Page from './Page';
+// import SpaceSelector from './components/SpaceSelector';
+import { ContentfulConfigProvider } from './utils/ContentfulConfigProvider';
 
 const router = createBrowserRouter([
   {
@@ -13,7 +15,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ContentfulConfigProvider>
+      <RouterProvider router={router} />
+      {/* <SpaceSelector /> */}
+    </ContentfulConfigProvider>
+  );
 }
 
 export default App;

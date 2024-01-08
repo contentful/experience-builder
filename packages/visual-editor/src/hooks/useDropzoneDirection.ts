@@ -12,7 +12,7 @@ interface Params {
   zoneId: string;
 }
 
-export const useDropZoneDirection = ({ resolveDesignValue, node, zoneId }: Params) => {
+export const useDropzoneDirection = ({ resolveDesignValue, node, zoneId }: Params) => {
   const zone = useZoneStore((state) => state.zones);
   const upsertZone = useZoneStore((state) => state.upsertZone);
 

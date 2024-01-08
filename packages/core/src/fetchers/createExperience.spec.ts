@@ -1,7 +1,8 @@
 import type { Entry } from 'contentful';
-import { compositionEntry } from '../../test/__fixtures__/composition';
-import { assets, entries } from '../../test/__fixtures__/entities';
+import { compositionEntry } from '../test/__fixtures__/composition';
+import { assets, entries } from '../test/__fixtures__/entities';
 import { createExperience } from './createExperience';
+import { describe, it, expect } from 'vitest';
 
 describe('createExperience', () => {
   it('throws an error if given entry is not an experience entry', () => {
