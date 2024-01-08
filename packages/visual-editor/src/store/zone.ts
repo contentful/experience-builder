@@ -1,7 +1,7 @@
 import { Direction } from '@hello-pangea/dnd';
 import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
 
+import { produce } from 'immer';
 export interface Zone {
   id: string;
   direction: Direction;
@@ -21,31 +21,33 @@ interface Actions {
   addSectionWithZone: (sectionId: string) => void;
 }
 
-export const useZoneStore = create<Actions & State>()(
-  immer((set) => ({
-    zones: {},
-    hoveringSection: '',
-    hoveringZone: '',
-    sectionsWithZones: {},
-    setHoveringZone(zoneId) {
-      set({
-        hoveringZone: zoneId,
-      });
-    },
-    setHoveringSection(sectionId) {
-      set({
-        hoveringSection: sectionId,
-      });
-    },
-    addSectionWithZone(sectionId) {
-      set((state) => {
+export const useZoneStore = create<Actions & State>()((set) => ({
+  zones: {},
+  hoveringSection: '',
+  hoveringZone: '',
+  sectionsWithZones: {},
+  setHoveringZone(zoneId) {
+    set({
+      hoveringZone: zoneId,
+    });
+  },
+  setHoveringSection(sectionId) {
+    set({
+      hoveringSection: sectionId,
+    });
+  },
+  addSectionWithZone(sectionId) {
+    set(
+      produce((state) => {
         state.sectionsWithZones[sectionId] = true;
-      });
-    },
-    upsertZone(id, data) {
-      set((state) => {
+      })
+    );
+  },
+  upsertZone(id, data) {
+    set(
+      produce((state) => {
         state.zones[id] = { ...(state.zones[id] || {}), ...data };
-      });
-    },
-  }))
-);
+      })
+    );
+  },
+}));

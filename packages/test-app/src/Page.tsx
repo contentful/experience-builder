@@ -1,10 +1,9 @@
 import { useParams } from 'react-router-dom';
 import '@contentful/experience-builder-components/styles.css';
 import './styles.css';
-import { ExperienceRoot } from '@contentful/experience-builder';
+import { ExperienceRoot, useFetchBySlug } from '@contentful/experience-builder';
 import { useContentfulClient } from './hooks/useContentfulClient';
 import { useContentfulConfig } from './hooks/useContentfulConfig';
-import { useFetchBySlug } from './hooks/useFetchBySlug';
 
 export default function Page() {
   const { slug = 'homePage' } = useParams<{ slug: string }>();

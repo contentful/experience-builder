@@ -1,10 +1,10 @@
 import React from 'react';
+import { containerDefinition } from '@contentful/experience-builder-core';
 import {
   INTERNAL_EVENTS,
   CONTENTFUL_SECTION_ID,
 } from '@contentful/experience-builder-core/constants';
 import * as registry from './componentRegistry';
-import { containerDefinition } from './definitions/components';
 import type { ComponentRegistration } from '@contentful/experience-builder-core/types';
 
 const TestComponent = () => {

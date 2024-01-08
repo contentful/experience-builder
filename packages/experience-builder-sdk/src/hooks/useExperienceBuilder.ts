@@ -23,7 +23,7 @@ type UseExperienceBuilderProps = {
 };
 
 /**
- * @deprecated This hook is deprecated. We re-designed the SDK to enable client or server side rendering
+ * @deprecated This hook is deprecated. Use fetchBySlug or fetchById instead
  */
 export const useExperienceBuilder = ({
   experienceTypeId,
@@ -39,7 +39,6 @@ export const useExperienceBuilder = ({
     [mode, client, experienceTypeId]
   );
 
-  console.log('creating experience');
   return {
     /**
      * @deprecated please fetch the experience using `useFetchExperience` hook or fetch the data manually using `fetchers` or `client` and create experience with `createExperience` function

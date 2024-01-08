@@ -1,12 +1,10 @@
 import type { Entry } from 'contentful';
-import {
-  compositionEntry,
-  createDesignComponentEntry,
-} from '../../../test/__fixtures__/composition';
+import { compositionEntry } from '../../../test/__fixtures__/composition';
+import { createDesignComponentEntry } from '../../../test/__fixtures__/designComponent';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
 import type { CompositionNode } from '@contentful/experience-builder-core/types';
-import { EntityStore } from './EntityStore';
+import { EntityStore } from '@contentful/experience-builder-core';
 import { resolveDesignComponent } from './designComponentUtils';
 
 describe('resolveDesignComponent', () => {

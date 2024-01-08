@@ -272,7 +272,7 @@ export type Composition = {
   componentSettings?: ExperienceComponentSettings;
 };
 
-export type DesignTokensDefinition = { [key: string]: Record<string, string> };
+export type DesignTokensDefinition = { [key: string]: string | DesignTokensDefinition };
 
 export type ExperienceEntry = {
   sys: Entry['sys'];
@@ -343,3 +343,8 @@ export interface DeprecatedExperience {
 export type ValuesByBreakpoint =
   | Record<string, CompositionVariableValueType>
   | CompositionVariableValueType;
+
+export type ResolveDesignValueType = (
+  valuesByBreakpoint: ValuesByBreakpoint,
+  variableName: string
+) => CompositionVariableValueType;

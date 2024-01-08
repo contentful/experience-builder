@@ -1,40 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
-import { EditorModeEntityStore, sendMessage } from '@contentful/experience-builder-core';
+import React, { useEffect } from 'react';
+import { sendMessage } from '@contentful/experience-builder-core';
 import dragState from '@/utils/dragState';
 import { RootRenderer } from './RootRenderer/RootRenderer';
-import { useBreakpoints } from '@/hooks/useBreakpoints';
-import { useEditorStore } from '@/store/editor';
-import { useTreeStore } from '@/store/tree';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
 import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import { useInitializeEditor } from '@/hooks/useInitializeEditor';
+import { useEntityStore } from '@/store/entityStore';
+import { useEditorStore } from '@/store/editor';
 
 export const VisualEditorRoot = () => {
-  const initialized = useEditorSubscriber();
-
-  const dataSource = useEditorStore((state) => state.dataSource);
+  const initialized = useInitializeEditor();
   const locale = useEditorStore((state) => state.locale);
-  const breakpoints = useTreeStore((state) => state.breakpoints);
-  const entityStore = useEditorStore((state) => state.entityStore);
-  const setEntityStore = useEditorStore((state) => state.setEntityStore);
 
-  const [areEntitiesFetched, setEntitiesFetched] = useState(false);
-
-  const { resolveDesignValue } = useBreakpoints(breakpoints);
+  const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
 
   useEffect(() => {
-    if (!locale) return;
-    setEntityStore(
-      new EditorModeEntityStore({
-        entities: [],
-        locale: locale,
-      })
-    );
-  }, [locale]);
+    if (!locale) {
+      return;
+    }
+
+    resetEntityStore(locale);
+  }, [locale, resetEntityStore]);
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      if ((e.target as any)?.id === 'item') {
+      if ((e.target as HTMLElement)?.id === 'item') {
         return;
       }
 
@@ -63,23 +53,7 @@ export const VisualEditorRoot = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const resolveEntities = async () => {
-      setEntitiesFetched(false);
-      const dataSourceEntityLinks = Object.values(dataSource || {});
-      await entityStore?.fetchEntities([
-        ...dataSourceEntityLinks,
-        // ...(designComponentsRegistry.values() || []),
-      ]);
-      setEntitiesFetched(true);
-    };
+  if (!initialized) return null;
 
-    resolveEntities();
-  }, [dataSource, entityStore, locale]);
-
-  if (!initialized || !entityStore) return null;
-
-  return (
-    <RootRenderer resolveDesignValue={resolveDesignValue} areEntitiesFetched={areEntitiesFetched} />
-  );
+  return <RootRenderer />;
 };

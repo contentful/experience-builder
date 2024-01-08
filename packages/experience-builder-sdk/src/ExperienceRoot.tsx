@@ -1,21 +1,19 @@
-import React, { useCallback, useEffect, useState, Suspense } from 'react';
-
-const VisualEditor = React.lazy(() => import('./blocks/VisualEditor'));
+import React, { useCallback, useState } from 'react';
 import {
   VisualEditorMode,
   isDeprecatedExperience,
   supportedModes,
 } from '@contentful/experience-builder-core';
-import { EntityStore } from './core/preview/EntityStore';
+import { EntityStore } from '@contentful/experience-builder-core';
 import type {
   DeprecatedExperience,
   Experience,
   InternalSDKMode,
 } from '@contentful/experience-builder-core/types';
 import { validateExperienceBuilderConfig } from './utils/validation';
-import { ErrorBoundary } from './components/ErrorBoundary';
 import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPreviewDeliveryRoot';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
+import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
 
 type ExperienceRootProps = {
   experience?: Experience<EntityStore> | DeprecatedExperience;
@@ -62,30 +60,25 @@ export const ExperienceRoot = ({
     );
   });
 
-  useEffect(() => {
-    if (supportedModes.includes(mode)) {
-      setMode(mode);
-    }
-  }, [mode]);
-
   const switchToEditorMode = useCallback(() => {
+    console.debug(`[exp-builder.sdk] Switching from ${mode} to editor mode.`);
     setMode('editor');
-  }, []);
+  }, [mode]);
 
   validateExperienceBuilderConfig({
     locale,
     mode,
   });
 
-  if (!mode || !supportedModes.includes(mode)) return null;
-
   if (mode === 'editor') {
+    const entityStore =
+      experience && !isDeprecatedExperience(experience) ? experience.entityStore : undefined;
     return (
-      <ErrorBoundary>
-        <Suspense fallback={<div>Loading...</div>}>
-          <VisualEditor mode={mode} initialLocale={locale} visualEditorMode={visualEditorMode} />
-        </Suspense>
-      </ErrorBoundary>
+      <VisualEditorRoot
+        visualEditorMode={visualEditorMode}
+        initialEntities={entityStore?.entities || []}
+        initialLocale={locale}
+      />
     );
   }
 

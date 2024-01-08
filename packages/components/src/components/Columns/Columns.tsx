@@ -6,7 +6,7 @@ import { combineClasses } from '../../utils/combineClasses';
 // import { generateId } from '@/shared/utils/generate-id';
 // import { onComponentUpdate } from '@/communication/onComponentUpdate';
 // import { CompositionComponentNode } from '@contentful/experience-builder-core';
-// import { DropZone } from '@components/DropZone/DropzoneContainer';
+// import { Dropzone } from '@components/Dropzone/DropzoneContainer';
 // import { ComponentConfig } from '@/types/Config';
 
 export type ColumnsProps = {
@@ -26,7 +26,7 @@ const createChildren = (columns: number[], nodes: any[]) => {
 export const Columns: React.FC<any> = ({ columns, editorMode, className, ...rest }) => {
   const colsArray = Array.from(Array(Number(columns)).keys());
 
-  const { node, ...dropZoneEditorProps } = rest;
+  const { node, ...dropzoneEditorProps } = rest;
 
   // useEffect(() => {
   //   if (node) {
@@ -69,7 +69,7 @@ export const Columns: React.FC<any> = ({ columns, editorMode, className, ...rest
   //         }}>
   //         {colsArray.map((idx) => (
   //           <div key={idx}>
-  //             <DropZone zone={`column-${idx}`} />
+  //             <Dropzone zone={`column-${idx}`} />
   //           </div>
   //         ))}
   //       </div>
@@ -99,10 +99,10 @@ export const Columns: React.FC<any> = ({ columns, editorMode, className, ...rest
         }
         return;
         // return (
-        //   <DropZone // id="ContentfulContainer"
+        //   <Dropzone // id="ContentfulContainer"
         //     node={childNode}
         //     key={childNode.data.id}
-        //     {...dropZoneEditorProps}
+        //     {...dropzoneEditorProps}
         //     zone={childNode.data.id}
         //   />
         // );

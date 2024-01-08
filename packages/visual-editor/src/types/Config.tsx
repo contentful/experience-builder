@@ -4,12 +4,12 @@ type WithCtflProps<Props> = Props & {
   id: string;
 };
 
-export type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
+export type DefaultComponentProps = { [key: string]: unknown; editorMode?: boolean };
 
 export type Content = ComponentData[];
 
 export type CtflComponent<Props extends DefaultComponentProps = DefaultComponentProps> = (
-  props: WithCtflProps<Props & { ctfl: any }>
+  props: WithCtflProps<Props & { ctfl: unknown }>
 ) => JSX.Element;
 
 export type ComponentConfig<
@@ -23,8 +23,8 @@ export type ComponentConfig<
 
 export type ComponentData = CompositionComponentNode;
 
-export interface DropZone {
+export interface Dropzone {
   direction: 'horizontal' | 'vertical';
 }
 
-export type DropZoneMap = Map<string, DropZone>;
+export type DropzoneMap = Map<string, Dropzone>;

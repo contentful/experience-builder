@@ -2,10 +2,21 @@ import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-
 import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
 import { sendMessage } from '../communication/sendMessage';
 
+// The default of 3s in the EditorEntityStore is sometimes timing out and
+// leads to not rendering bound content and design components.
+const REQUEST_TIMEOUT = 10000;
+
 export class EditorModeEntityStore extends EditorEntityStore {
+  public locale: string;
+
   constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
+    console.debug(
+      `[exp-builder.sdk] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
+      { entities }
+    );
+
     const subscribe = (method: unknown, cb: (payload: RequestedEntitiesMessage) => void) => {
-      const listeners = (event: MessageEvent) => {
+      const handleMessage = (event: MessageEvent) => {
         const data: {
           source: 'composability-app';
           eventType: string;
@@ -13,6 +24,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
         } = JSON.parse(event.data);
 
         if (typeof data !== 'object' || !data) return;
+
         if (data.source !== 'composability-app') return;
         if (data.eventType === method) {
           cb(data.payload);
@@ -20,30 +32,48 @@ export class EditorModeEntityStore extends EditorEntityStore {
       };
 
       if (typeof window !== 'undefined') {
-        window.addEventListener('message', listeners);
+        window.addEventListener('message', handleMessage);
       }
 
       return () => {
         if (typeof window !== 'undefined') {
-          window.removeEventListener('message', listeners);
+          window.removeEventListener('message', handleMessage);
         }
       };
     };
 
-    super({ entities, sendMessage, subscribe, locale });
+    super({ entities, sendMessage, subscribe, locale, timeoutDuration: REQUEST_TIMEOUT });
+    this.locale = locale;
+  }
+  /**
+   * This function collects and returns the list of requested entries and assets. Additionally, it checks
+   * upfront whether any async fetching logic is actually happening. If not, it returns a plain `false` value, so we
+   * can detect this early and avoid unnecessary re-renders.
+   * @param entityLinks
+   * @returns false if no async fetching is happening, otherwise a promise that resolves when all entities are fetched
+   */
+  async fetchEntities({
+    missingEntryIds,
+    missingAssetIds,
+  }: {
+    missingEntryIds: string[];
+    missingAssetIds: string[];
+  }) {
+    // Entries and assets will be stored in entryMap and assetMap
+    await Promise.all([this.fetchEntries(missingEntryIds), this.fetchAssets(missingAssetIds)]);
   }
 
-  async fetchEntities(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {
-    const entryLinks = entityLinks.filter((link) => link.sys.linkType === 'Entry');
-    const assetLinks = entityLinks.filter((link) => link.sys.linkType === 'Asset');
+  getMissingEntityIds(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {
+    const entryLinks = entityLinks.filter((link) => link.sys?.linkType === 'Entry');
+    const assetLinks = entityLinks.filter((link) => link.sys?.linkType === 'Asset');
 
-    const uniqueEntryLinks = new Set(entryLinks.map((link) => link.sys.id));
-    const uniqueAssetLinks = new Set(assetLinks.map((link) => link.sys.id));
+    const uniqueEntryIds = [...new Set(entryLinks.map((link) => link.sys.id))];
+    const uniqueAssetIds = [...new Set(assetLinks.map((link) => link.sys.id))];
 
-    return await Promise.allSettled([
-      this.fetchEntries([...uniqueEntryLinks]),
-      this.fetchAssets([...uniqueAssetLinks]),
-    ]);
+    const { missing: missingEntryIds } = this.getEntitiesFromMap('Entry', uniqueEntryIds);
+    const { missing: missingAssetIds } = this.getEntitiesFromMap('Asset', uniqueAssetIds);
+
+    return { missingEntryIds, missingAssetIds };
   }
 
   getValue(

@@ -1,10 +1,11 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { DragDropContext } from '@hello-pangea/dnd';
-import { DropZone } from '../DropZone/Dropzone';
+import { Dropzone } from '../Dropzone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
 import { sendMessage } from '@contentful/experience-builder-core';
-import { ResolveDesignValueType } from '@/hooks/useBreakpoints';
+import type { CompositionTree } from '@contentful/experience-builder-core/types';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 import dragState from '@/utils/dragState';
 import { onDrop } from '@/utils/onDrop';
 import { usePlaceholderStyle } from '@/hooks/usePlaceholderStyle';
@@ -15,31 +16,29 @@ import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
 import styles from './render.module.css';
 import { onComponentMoved } from '@/communication/onComponentMoved';
-import { CompositionTree } from '@contentful/experience-builder-core/types';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import { useBreakpoints } from '@/hooks/useBreakpoints';
+import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 
 interface Props {
-  resolveDesignValue: ResolveDesignValueType;
-  areEntitiesFetched: boolean;
   onChange?: (data: CompositionTree) => void;
 }
 
-export const RootRenderer: React.FC<Props> = ({
-  onChange,
-  resolveDesignValue,
-  areEntitiesFetched,
-}) => {
+export const RootRenderer: React.FC<Props> = ({ onChange }) => {
+  useEditorSubscriber();
+
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const updateItem = useDraggedItemStore((state) => state.updateItem);
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const userIsDragging = !!dragItem;
+  const breakpoints = useTreeStore((state) => state.breakpoints);
 
+  const { resolveDesignValue } = useBreakpoints(breakpoints);
   const tree = useTreeStore((state) => state.tree);
 
   useEffect(() => {
-    if (onChange) onChange(tree as any);
-  }, [tree]);
+    if (onChange) onChange(tree);
+  }, [tree, onChange]);
 
   const { onDragStartOrUpdate } = usePlaceholderStyle();
 
@@ -106,12 +105,7 @@ export const RootRenderer: React.FC<Props> = ({
             }}
           />
         )}
-        <DropZone
-          sectionId={ROOT_ID}
-          zoneId={ROOT_ID}
-          areEntitiesFetched={areEntitiesFetched}
-          resolveDesignValue={resolveDesignValue}
-        />
+        <Dropzone sectionId={ROOT_ID} zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
         {/* 
           This hitbox is required so that users can
           add sections to the bottom of the document.

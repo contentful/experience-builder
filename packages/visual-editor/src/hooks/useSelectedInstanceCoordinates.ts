@@ -15,5 +15,5 @@ export const useSelectedInstanceCoordinates = ({ node }: { node: CompositionComp
     }
 
     sendSelectedComponentCoordinates(node.data.id);
-  }, [node]);
+  }, [node, selectedNodeId]);
 };

@@ -17,13 +17,15 @@
     "predev": "npm run clean",
     "bundle": "npx watchify dist/index.cjs -o dist/bundle.js",
     "dev": "rollup -c ./rollup.dev.config.mjs --watch",
-    "lint": "echo \"No linting configured until current code is cleaned up\"",
-    "lint:fix": "echo \"No linting configured until current code is cleaned up\""
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@contentful/experience-builder-components": "file:../components",
     "@contentful/experience-builder-core": "file:../core",
-    "@contentful/visual-sdk": "^1.0.0-alpha.32",
+    "@contentful/visual-sdk": "^1.0.0-alpha.38",
     "@hello-pangea/dnd": "^16.3.0",
     "classnames": "^2.3.2",
     "contentful": "^10.6.14",
@@ -59,7 +61,7 @@
     "typescript": "^5.0.2"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
   }
 }

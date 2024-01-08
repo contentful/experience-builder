@@ -34,17 +34,16 @@ export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
     );
   }
 
-  const { renderDropZone, node } = sectionProps;
+  const { renderDropzone, node } = sectionProps;
   // Extract properties that are only available in editor mode
 
-  return renderDropZone(node, {
+  return renderDropzone(node, {
     ['data-test-id']: 'contentful-container',
     ['data-cf-node-id']: node.data.id,
     ['data-cf-node-block-id']: node.data.blockId,
     ['data-cf-node-block-type']: node.type,
     id: 'ContentfulContainer',
     className: combineClasses(className, 'defaultStyles'),
-    zoneId: node.data.id,
     WrapperComponent: Flex,
   });
 };
