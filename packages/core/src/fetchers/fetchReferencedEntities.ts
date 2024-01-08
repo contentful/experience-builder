@@ -12,7 +12,7 @@ export const fetchReferencedEntities = async ({
   client,
   experienceEntry,
   locale,
-}: FetchReferencedEntitiesArgs) => {
+}: fetchReferencedEntitiesArgs) => {
   if (!client) {
     throw new Error(
       'Failed to fetch experience entities. Required "client" parameter was not provided'
