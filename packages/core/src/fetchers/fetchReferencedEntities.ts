@@ -2,7 +2,7 @@ import { ExperienceEntry } from '@/types';
 import { ContentfulClientApi, Entry, Asset } from 'contentful';
 import { isExperienceEntry } from '@/utils';
 
-type fetchReferencedEntitiesArgs = {
+type FetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;
   experienceEntry: Entry | ExperienceEntry;
   locale: string;
