@@ -1,5 +1,5 @@
 import type { Asset, Entry } from 'contentful';
-
+import { describe, vi, expect, beforeEach, afterEach, it } from 'vitest';
 import assetJSON from '../__test__/fixtures/asset.json';
 import entryJSON from '../__test__/fixtures/entry.json';
 import { EditorEntityStore, PostMessageMethods } from './EditorEntityStore';
@@ -27,8 +27,8 @@ describe('EditorEntityStore', () => {
     },
   };
 
-  const sendMessage = jest.fn();
-  const subscribe = jest.fn().mockReturnValue(() => {
+  const sendMessage = vi.fn();
+  const subscribe = vi.fn().mockReturnValue(() => {
     /* unsubscribe */
   });
 
@@ -57,13 +57,13 @@ describe('EditorEntityStore', () => {
   }
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.runOnlyPendingTimers();
-    jest.useRealTimers();
-    jest.clearAllMocks();
+    vi.runOnlyPendingTimers();
+    vi.useRealTimers();
+    vi.clearAllMocks();
   });
 
   const createStore = () => new EditorEntityStore({ entities, locale, sendMessage, subscribe });
@@ -103,7 +103,7 @@ describe('EditorEntityStore', () => {
     it('should return undefined if the requested asset does not exist', async () => {
       const promise = createStore().fetchAsset('unknown');
       resolveEntries('unknown', 'Asset', []);
-      jest.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(3000);
       const result = await promise;
 
       expect(result).toBeUndefined();
@@ -127,7 +127,7 @@ describe('EditorEntityStore', () => {
       expect.assertions(1);
 
       const promise = createStore().fetchAssets(['unknown', asset.sys.id]);
-      jest.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(3000);
 
       await expect(promise).rejects.toThrowError();
     });
@@ -159,7 +159,7 @@ describe('EditorEntityStore', () => {
     it('should return undefined if the requested entry does not exist', async () => {
       const promise = createStore().fetchEntry('unknown');
       resolveEntries('unknown', 'Entry', []);
-      jest.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(3000);
       const result = await promise;
 
       expect(result).toBeUndefined();
@@ -183,7 +183,7 @@ describe('EditorEntityStore', () => {
       expect.assertions(1);
 
       const promise = createStore().fetchAssets(['unknown', entry.sys.id]);
-      jest.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(3000);
 
       await expect(promise).rejects.toThrowError();
     });
