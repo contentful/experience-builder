@@ -9,7 +9,6 @@ export default [
         dir: 'dist',
         format: 'esm',
         sourcemap: true,
-        preserveModules: true,
       },
     ],
     plugins: [nodeResolve(), typescript({ tsconfig: './tsconfig.json' })],
