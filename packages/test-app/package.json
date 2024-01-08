@@ -17,6 +17,7 @@
   "dependencies": {
     "@contentful/experience-builder": "file:../experience-builder-sdk",
     "@contentful/experience-builder-storybook-addon": "file:../storybook-addon",
+    "contentful": "^10.6.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0"
