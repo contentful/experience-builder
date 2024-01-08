@@ -1,0 +1,63 @@
+name: 'Run Checks: Lint & Tests'
+
+on:
+  workflow_call:
+    secrets:
+      NPM_TOKEN:
+        required: true
+
+jobs:
+  # this job relies on the install-build workflow to run first
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: 'Use NodeJS 18'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - name: Restore Cypress Binary
+        uses: actions/cache/restore@v3
+        id: restore-cypress
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
+          restore-keys: cypress-${{ runner.os }}-
+      - name: Authenticate with private NPM package
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      - name: Install dependencies
+        run: npm ci
+      - name: Restore the build folders
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            packages/components/styles.css
+            packages/*/dist
+            packages/*/build
+          key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: List components folder
+        run: ls -la packages/components
+      - name: List component build folders
+        run: ls -la packages/components/dist
+      - name: List test-app build folders
+        run: ls -la packages/test-app/dist
+      - name: Run Prettier
+        run: npm run prettier:check
+      - name: Run Linting
+        run: npm run lint
+      - name: Run TSC
+        run: npm run tsc
+      - name: Run Unit Tests
+        run: npm run test:coverage
+      - name: Run CT Tests
+        run: npm run test:component
+      - name: Save test results to artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-assets
+          if-no-files-found: error
+          path: |
+            packages/*/reports
+            packages/*/reports/clover.xml

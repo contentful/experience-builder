@@ -33,3 +33,10 @@ tmp/
 
 # Necessary for pushing to alternative npm registry
 .npmrc
+
+.vercel
+# Ignore built styles.css file in packages/components
+/packages/components/styles.css
+
+# Ingore .nx local files
+.nx

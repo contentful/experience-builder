@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { DeprecatedExperience, ExternalSDKMode } from '../types';
+import type {
+  DeprecatedExperience,
+  ExternalSDKMode,
+} from '@contentful/experience-builder-core/types';
 import type { ContentfulClientApi } from 'contentful';
 import { defineComponents } from '../core/componentRegistry';
 
@@ -20,7 +23,7 @@ type UseExperienceBuilderProps = {
 };
 
 /**
- * @deprecated This hook is deprecated. We re-designed the SDK to enable client or server side rendering
+ * @deprecated This hook is deprecated. Use fetchBySlug or fetchById instead
  */
 export const useExperienceBuilder = ({
   experienceTypeId,

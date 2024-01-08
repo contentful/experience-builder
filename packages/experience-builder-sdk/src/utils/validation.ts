@@ -1,12 +1,12 @@
-import { supportedModes } from '../constants';
-import { InternalSDKMode, IncomingEvent } from '../types';
-import { INCOMING_EVENTS } from '../constants';
+import { supportedModes } from '@contentful/experience-builder-core';
+import type { InternalSDKMode, IncomingEvent } from '@contentful/experience-builder-core/types';
+import { INCOMING_EVENTS } from '@contentful/experience-builder-core/constants';
 import { PostMessageMethods } from '@contentful/visual-sdk';
 
-export type VisualEditorMessagePayload = {
+export type VisualEditorMessagePayload<T = unknown> = {
   source: string;
   eventType: IncomingEvent;
-  payload: any;
+  payload: T;
 };
 
 class ParseError extends Error {
@@ -98,7 +98,7 @@ export const validateExperienceBuilderConfig = ({
 
   if (!locale) {
     throw new Error(
-      'Parameter "locale" is required for expereince builder initialization outside of editor mode'
+      'Parameter "locale" is required for experience builder initialization outside of editor mode'
     );
   }
 };

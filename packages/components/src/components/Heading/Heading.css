@@ -1,0 +1,41 @@
+.cf-heading {
+  color: var(--cf-text-color);
+  font-weight: var(--cf-font-semibold);
+  font-family: var(--cf-font-family-sans);
+  margin: var(--cf-spacing-0);
+}
+
+h1.cf-heading {
+  line-height: calc(var(--cf-text-4xl) * 1.5);
+  font-size: var(--cf-text-4xl);
+}
+
+h2.cf-heading {
+  line-height: calc(var(--cf-text-3xl) * 1.5);
+  font-size: var(--cf-text-3xl);
+}
+
+h3.cf-heading {
+  line-height: calc(var(--cf-text-2xl) * 1.5);
+  font-size: var(--cf-text-2xl);
+}
+
+h4.cf-heading {
+  line-height: calc(var(--cf-text-xl) * 1.5);
+  font-size: var(--cf-text-xl);
+}
+
+h4.cf-heading {
+  line-height: calc(var(--cf-text-lg) * 1.5);
+  font-size: var(--cf-text-lg);
+}
+
+h5.cf-heading {
+  line-height: calc(var(--cf-text-base) * 1.5);
+  font-size: var(--cf-text-base);
+}
+
+h6.cf-heading {
+  line-height: calc(var(--cf-text-sm) * 1.5);
+  font-size: var(--cf-text-sm);
+}

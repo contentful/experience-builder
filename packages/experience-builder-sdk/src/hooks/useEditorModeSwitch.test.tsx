@@ -1,11 +1,11 @@
 import { resetComponentRegistry } from '../core/componentRegistry';
-import { sendMessage } from '../communication/sendMessage';
+import { sendMessage } from '@contentful/experience-builder-core';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useEditorModeSwitch } from './useEditorModeSwitch';
-import { ExternalSDKMode } from '../types';
-import { OUTGOING_EVENTS } from '../constants';
+import type { ExternalSDKMode } from '@contentful/experience-builder-core/types';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 
-jest.mock('../communication/sendMessage');
+jest.mock('@contentful/experience-builder-core');
 
 describe('useEditorModeSwitch', () => {
   beforeEach(() => {

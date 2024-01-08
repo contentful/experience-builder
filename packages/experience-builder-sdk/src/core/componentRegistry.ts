@@ -1,17 +1,23 @@
 import * as Components from '@contentful/experience-builder-components';
-import { ComponentRegistration, ComponentDefinition } from '../types';
+import type {
+  ComponentRegistration,
+  ComponentDefinition,
+} from '@contentful/experience-builder-core/types';
 import {
   OUTGOING_EVENTS,
   INTERNAL_EVENTS,
-  SDK_VERSION,
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
-} from '../constants';
-import { builtInStyles as builtInStyleDefinitions } from './definitions/variables';
-import { ContentfulContainer } from '../components/ContentfulContainer';
-import { containerDefinition } from './definitions/components';
-import { sendMessage } from '../communication/sendMessage';
+} from '@contentful/experience-builder-core/constants';
+import { ContentfulContainer } from '@contentful/experience-builder-components';
+import {
+  builtInStyles as builtInStyleDefinitions,
+  optionalBuiltInStyles,
+  sendMessage,
+  containerDefinition,
+} from '@contentful/experience-builder-core';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
+import { SDK_VERSION } from '../constants';
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -44,6 +50,9 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
   for (const style of Object.values(clone.builtInStyles || [])) {
     if (builtInStyleDefinitions[style]) {
       clone.variables[style] = builtInStyleDefinitions[style];
+    }
+    if (optionalBuiltInStyles[style]) {
+      clone.variables[style] = optionalBuiltInStyles[style];
     }
   }
   return clone;
@@ -90,7 +99,7 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
 } satisfies Record<string, ComponentRegistration>;
 
 // pre-filling with the default component registrations
-const componentRegistry = new Map<string, ComponentRegistration>([
+export const componentRegistry = new Map<string, ComponentRegistration>([
   [
     DEFAULT_COMPONENT_REGISTRATIONS.container.definition.id,
     DEFAULT_COMPONENT_REGISTRATIONS.container,
@@ -107,9 +116,7 @@ const componentRegistry = new Map<string, ComponentRegistration>([
 
 export const sendRegisteredComponentsMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
-  const registeredDefinitions = Array.from(componentRegistry.values()).map(
-    ({ definition }) => definition
-  );
+  const registeredDefinitions = Array.from(componentRegistry.values());
 
   sendMessage(OUTGOING_EVENTS.RegisteredComponents, {
     definitions: registeredDefinitions,

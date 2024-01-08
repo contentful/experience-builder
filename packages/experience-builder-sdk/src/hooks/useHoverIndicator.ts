@@ -8,20 +8,21 @@ export const useHoverIndicator = (isDragging: boolean): void => {
   const mouseOverHandler = useRef<MouseOverHandler>(new MouseOverHandler());
 
   useEffect(() => {
-    mouseOverHandler.current.attachEvent();
-
+    const current = mouseOverHandler.current;
+    current.attachEvent();
     return () => {
-      mouseOverHandler.current.detachEvent();
+      current.detachEvent();
     };
   }, []);
 
   useEffect(() => {
+    const current = mouseMoveIndicator.current;
     if (isDragging) {
-      mouseMoveIndicator.current.attachEvent();
+      current.attachEvent();
     }
 
     return () => {
-      mouseMoveIndicator.current.detachEvent();
+      current.detachEvent();
     };
   }, [isDragging]);
 };

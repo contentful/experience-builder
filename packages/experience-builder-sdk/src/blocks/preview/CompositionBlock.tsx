@@ -1,21 +1,12 @@
 import React, { useMemo } from 'react';
-
 import type { UnresolvedLink } from 'contentful';
 import omit from 'lodash.omit';
-import { EntityStore } from '../../core/preview/EntityStore';
-
+import { EntityStore } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
-} from '../../constants';
-import {
-  createDesignComponentRegistration,
-  getComponentRegistration,
-} from '../../core/componentRegistry';
-import { buildCfStyles } from '../../utils/stylesUtils';
-import { ResolveDesignValueType } from '../../hooks/useBreakpoints';
-import { useStyleTag } from '../../hooks/useStyleTag';
+} from '@contentful/experience-builder-core/constants';
 import type {
   Breakpoint,
   CompositionDataSource,
@@ -23,13 +14,19 @@ import type {
   CompositionUnboundValues,
   CompositionVariableValueType,
   ExperienceEntry,
+  ResolveDesignValueType,
   StyleProps,
-} from '../../types';
-import { ContentfulContainer } from '../../components/ContentfulContainer';
+} from '@contentful/experience-builder-core/types';
+import {
+  createDesignComponentRegistration,
+  getComponentRegistration,
+} from '../../core/componentRegistry';
+import { buildCfStyles, checkIfDesignComponent } from '@contentful/experience-builder-core';
+import { useStyleTag } from '../../hooks/useStyleTag';
+import { ContentfulContainer } from '@contentful/experience-builder-components';
 import { transformContentValue } from '../../utils/transformers';
 import { resolveDesignComponent } from '../../core/preview/designComponentUtils';
 import { DesignComponent } from '../../components/DesignComponent';
-import { checkIfDesignComponent } from '../../utils/utils';
 
 type CompositionBlockProps = {
   node: CompositionNode;
@@ -89,7 +86,7 @@ export const CompositionBlock = ({
     return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
       switch (variable.type) {
         case 'DesignValue':
-          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint);
+          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
           break;
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/');
@@ -112,11 +109,6 @@ export const CompositionBlock = ({
         case 'UnboundValue': {
           const uuid = variable.key;
           acc[variableName] = (entityStore?.unboundValues || unboundValues)[uuid]?.value;
-          break;
-        }
-        case 'ComponentValue': {
-          const uuid = variable.key;
-          acc[variableName] = unboundValues[uuid]?.value;
           break;
         }
         default:

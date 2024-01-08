@@ -2,8 +2,8 @@ import React from 'react';
 
 import { fireEvent, render } from '@testing-library/react';
 
-import { CONTENTFUL_SECTION_ID } from '../constants';
-import { CompositionComponentNode } from '../types';
+import { CONTENTFUL_SECTION_ID } from '@contentful/experience-builder-core/constants';
+import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
 import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink';
 
 describe('ContentfulContainerAsHyperlink', () => {
