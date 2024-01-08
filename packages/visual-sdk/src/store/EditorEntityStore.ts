@@ -32,6 +32,7 @@ type Subscribe = (
  * over the sendMessage and subscribe functions.
  */
 export class EditorEntityStore extends EntityStore {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private requestCache = new Map<string, Promise<any>>();
   private sendMessage: SendMessage;
   private subscribe: Subscribe;

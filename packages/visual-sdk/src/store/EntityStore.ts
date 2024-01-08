@@ -1,4 +1,4 @@
-import type { Asset, Entry, UnresolvedLink } from 'contentful';
+import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 
 import { get } from './utils';
 
@@ -45,8 +45,8 @@ export class EntityStore {
   }
 
   protected getEntitiesFromMap(type: 'Entry' | 'Asset', ids: string[]) {
-    const resolved = [];
-    const missing = [];
+    const resolved: Array<Entry | Asset<ChainModifiers, string>> = [];
+    const missing: string[] = [];
 
     for (const id of ids) {
       const entity = this.getEntity(type, id);
