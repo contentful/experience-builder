@@ -35,7 +35,9 @@ export class EntityStore {
 
     if (!entity) {
       // TODO: move to `debug` utils once it is extracted
-      console.warn(`Unresolved entity reference: ${entityLink.sys.linkType} with ID ${entityLink.sys.id}`);
+      console.warn(
+        `Unresolved entity reference: ${entityLink.sys.linkType} with ID ${entityLink.sys.id}`
+      );
       return;
     }
 

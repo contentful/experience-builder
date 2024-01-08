@@ -10,7 +10,7 @@ export type RequestEntitiesMessage = {
 
 export type RequestedEntitiesMessage = {
   entities: Array<Entry | Asset>;
-  missingEntityIds?: string[]
+  missingEntityIds?: string[];
 };
 
 export enum PostMessageMethods {
@@ -105,13 +105,17 @@ export class EditorEntityStore extends EntityStore {
 
             unsubscribe();
           } else {
-            console.warn('Unexpected entities received in REQUESTED_ENTITIES. Ignoring this response.')
+            console.warn(
+              'Unexpected entities received in REQUESTED_ENTITIES. Ignoring this response.'
+            );
           }
         }
       );
 
       const timeout = setTimeout(() => {
-        reject(new Error(`Request for entities timed out ${this.timeoutDuration}ms} for ${cacheId}`));
+        reject(
+          new Error(`Request for entities timed out ${this.timeoutDuration}ms} for ${cacheId}`)
+        );
 
         this.cleanupPromise(cacheId);
         ids.forEach((id) => this.cleanupPromise(id));
