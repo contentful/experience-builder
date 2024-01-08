@@ -99,7 +99,7 @@ describe('fetchExperienceEntry', () => {
     expect(expEntry).toEqual(compositionEntry);
   });
 
-  it.only('should throw and error if getEntries call returns more than one entry', () => {
+  it('should throw and error if getEntries call returns more than one entry', () => {
     (mockClient.getEntries as Mock).mockResolvedValue({
       items: [compositionEntry, entries[0]],
     });
