@@ -1,11 +1,11 @@
 import type { ContentfulClientApi } from 'contentful';
 import { useCallback, useState } from 'react';
 import {
+  EntityStore,
   fetchBySlug as fetchBySlugCore,
   fetchById as fetchByIdCore,
 } from '@contentful/experience-builder-core';
 import { Experience, ExternalSDKMode } from '@contentful/experience-builder-core/types';
-import { EntityStore } from '@contentful/visual-sdk';
 
 type useClientsideExperienceFetchersProps = {
   mode: ExternalSDKMode;

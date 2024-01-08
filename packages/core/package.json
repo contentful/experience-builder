@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "@contentful/rich-text-types": "^16.3.0",
-    "@contentful/visual-sdk": "^1.0.0-alpha.38",
+    "@contentful/visual-sdk": "^1.0.0-alpha.34",
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
