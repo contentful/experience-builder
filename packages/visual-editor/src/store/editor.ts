@@ -1,7 +1,9 @@
+import { defineDesignTokens } from '@contentful/experience-builder-core';
 import type {
   ComponentRegistration,
   CompositionDataSource,
   CompositionUnboundValues,
+  DesignTokensDefinition,
 } from '@contentful/experience-builder-core/types';
 import { create } from 'zustand';
 import { componentRegistry } from './registries';
@@ -9,6 +11,7 @@ import { isEqual } from 'lodash-es';
 
 export interface InitEditorParams {
   componentRegistry: Map<string, ComponentRegistration>;
+  designTokens: DesignTokensDefinition;
   initialLocale: string;
 }
 export interface EditorStore {
@@ -56,10 +59,14 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     }
     set({ locale });
   },
-  initializeEditor({ componentRegistry: initialRegistry, initialLocale }) {
+  initializeEditor({ componentRegistry: initialRegistry, designTokens, initialLocale }) {
     initialRegistry.forEach((registration) => {
       componentRegistry.set(registration.definition.id, registration);
     });
+
+    // Re-register the design tokens with the Visual Editor's instance of the experience-builder-core package
+    defineDesignTokens(designTokens);
+
     set({ locale: initialLocale });
   },
 }));

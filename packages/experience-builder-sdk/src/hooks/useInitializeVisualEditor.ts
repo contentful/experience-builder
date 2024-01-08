@@ -9,6 +9,7 @@ import {
   INTERNAL_EVENTS,
   VISUAL_EDITOR_EVENTS,
 } from '@contentful/experience-builder-core/constants';
+import { designTokensRegistry } from '@contentful/experience-builder-core';
 
 type InitializeVisualEditorParams = {
   initialLocale: string;
@@ -53,7 +54,12 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
     const onVisualEditorReady = () => {
       window.dispatchEvent(
         new CustomEvent(INTERNAL_EVENTS.VisualEditorInitialize, {
-          detail: { componentRegistry, locale, entities: initialEntities ?? [] },
+          detail: {
+            componentRegistry,
+            designTokens: designTokensRegistry,
+            locale,
+            entities: initialEntities ?? [],
+          },
         })
       );
     };
