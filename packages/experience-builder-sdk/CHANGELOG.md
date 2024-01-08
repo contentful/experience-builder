@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.1...@contentful/experience-builder@4.0.0-alpha.2) (2024-01-08)
+
+### Bug Fixes
+
+- add missing script-inject dep to required packages ([ba16c1b](https://github.com/contentful/experience-builder/commit/ba16c1bc89b17457496ddceed055bb96eb755e54))
+
+# [4.0.0-alpha.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.5.0...@contentful/experience-builder@4.0.0-alpha.1) (2024-01-08)
+
+### Bug Fixes
+
+- change types reference to core ([51b3ec7](https://github.com/contentful/experience-builder/commit/51b3ec7230acd4da74df33350d9cd82e3aa6dbb9))
+- enable typography styles on the default Text component [ALT-144] ([#202](https://github.com/contentful/experience-builder/issues/202)) ([ec89fc3](https://github.com/contentful/experience-builder/commit/ec89fc3f888d216decfb925ebd71aff96af592c0))
+- entity store issues with design components ([28446d8](https://github.com/contentful/experience-builder/commit/28446d85695b3a6d5847c7309de544074be2dacc))
+- exclude any node_modules from being included in the bundle ([1bf2682](https://github.com/contentful/experience-builder/commit/1bf26820b7d6205331dc1dd72a127017743561b3))
+- fixing tests and EntityStore getValue fetch ([63eec38](https://github.com/contentful/experience-builder/commit/63eec3847bae76776ca89e6ce4f241592b996b5f))
+- inject script for Visual Editor [ALT-169] ([#193](https://github.com/contentful/experience-builder/issues/193)) ([2125f70](https://github.com/contentful/experience-builder/commit/2125f70fd8bac95c7490e25ffac4cdbef8f6ee31))
+- linter ([52dfbba](https://github.com/contentful/experience-builder/commit/52dfbbaa63f83a8cc2adc22905d591f9d62987d9))
+- putting peerdeps back in temporarily to fix runtime issue ([48197d8](https://github.com/contentful/experience-builder/commit/48197d8da7eb19d33dcea0650ce623a2cd0695b0))
+- tests and linting ([c1e2e05](https://github.com/contentful/experience-builder/commit/c1e2e05ec7b1fcca14ec364f83944eae201cc1d8))
+- update font weight validations ([#213](https://github.com/contentful/experience-builder/issues/213)) ([79dbd95](https://github.com/contentful/experience-builder/commit/79dbd95339edc34c0f288b78d413e02b98ed7811))
+- update text transform label and import builtInStyles from core package [ALT-227] ([#214](https://github.com/contentful/experience-builder/issues/214)) ([6c563e7](https://github.com/contentful/experience-builder/commit/6c563e7cb8163a7c609f756b540d6b86bca14c7f))
+- use entryMap instead of entitiesMap in the EntityStore ([3b10b89](https://github.com/contentful/experience-builder/commit/3b10b8989b005337e8efbe6cd4c52a8458c13280))
+
+### Features
+
+- add useFetchBySlug, useFetchById hooks and plain js fetchBySlug and fetchById methods ([#206](https://github.com/contentful/experience-builder/issues/206)) ([9e9b72f](https://github.com/contentful/experience-builder/commit/9e9b72f2af18bc2aaf1f6ede429ad6e5d971d3a8))
+- allow users to drop new components onto canvas ([6c24fc3](https://github.com/contentful/experience-builder/commit/6c24fc35a828a07bb1c3e330d1edbcc3d1f5f6cd))
+- change container defaults ([9a9afeb](https://github.com/contentful/experience-builder/commit/9a9afeba07a1f3b6d400023eec5ceca724a68837))
+- **experience-builder-sdk:** use visual editor package ([#169](https://github.com/contentful/experience-builder/issues/169)) ([7477225](https://github.com/contentful/experience-builder/commit/74772256690b031cb3d8a57b34b23ce6935422fe))
+- implement design components with hybrid editor ([9601a9b](https://github.com/contentful/experience-builder/commit/9601a9b2365e63a4068d895cc72ffa3ccd46d10d))
+- initialization code for injectable editor ([6f49c40](https://github.com/contentful/experience-builder/commit/6f49c40ce9345dc1f6e41f64f36af8f6266f8066))
+
+# [4.0.0-next.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-next.1...@contentful/experience-builder@4.0.0-next.2) (2023-12-08)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
+# [4.0.0-next.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-next.0...@contentful/experience-builder@4.0.0-next.1) (2023-12-08)
+
+- feat!: testing the breaking change (#181) ([ac2f4b0](https://github.com/contentful/experience-builder/commit/ac2f4b07001fe022e7c56e83fa2b8dac08125095)), closes [#181](https://github.com/contentful/experience-builder/issues/181)
+
+### BREAKING CHANGES
+
+- for science
+
+# [4.0.0-next.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@2.13.0...@contentful/experience-builder@4.0.0-next.0) (2023-12-08)
+
+### chore
+
+- circleci setup to allow pre-release on next branch [SPA-1634] ([#176](https://github.com/contentful/experience-builder/issues/176)) ([9b6b5b3](https://github.com/contentful/experience-builder/commit/9b6b5b38ba6506393008a5ca024682e70986ee29)), closes [#175](https://github.com/contentful/experience-builder/issues/175) [#178](https://github.com/contentful/experience-builder/issues/178)
+
+### BREAKING CHANGES
+
+- Registered components will be wrapped with a div container by default. The `wrapComponent` option can be used when registering components to opt-out of this behavior if necessary.
+
+- chore(release): updated release notes and package versions [ci skip]
+
+* @contentful/experience-builder@3.0.0
+* @contentful/experience-builder-types@2.0.0
+
+## [3.5.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.5.1...@contentful/experience-builder@3.5.2) (2023-12-27)
+
+### Bug Fixes
+
+- refetch when dataSource or design components changed [SPA-1711] ([#218](https://github.com/contentful/experience-builder/issues/218)) ([50814d5](https://github.com/contentful/experience-builder/commit/50814d5893c030d061fc3461009707213d98556f))
+
+## [3.5.1](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.5.0...@contentful/experience-builder@3.5.1) (2023-12-22)
+
+### Bug Fixes
+
+- improve initial fetching mechanism [SPA-1711] ([#217](https://github.com/contentful/experience-builder/issues/217)) ([f160913](https://github.com/contentful/experience-builder/commit/f160913219e4f02cea3fe9db0060e5338fbe2f20))
+
 # [3.5.0](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@3.4.4...@contentful/experience-builder@3.5.0) (2023-12-20)
 
 ### Features

@@ -15,11 +15,12 @@ export const useInitializeEditor = () => {
   useEffect(() => {
     const onVisualEditorInitialize = (event) => {
       if (!event.detail) return;
-      const { componentRegistry, locale: initialLocale, entities } = event.detail;
+      const { componentRegistry, designTokens, locale: initialLocale, entities } = event.detail;
 
       initializeEditor({
         initialLocale,
         componentRegistry,
+        designTokens,
       });
 
       resetEntityStore(initialLocale, entities);

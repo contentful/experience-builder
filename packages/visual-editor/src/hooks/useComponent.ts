@@ -40,6 +40,8 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
         definitionId: node.data.blockId as string,
         component: DesignComponent,
       }) as ComponentRegistration;
+    } else if (!registration) {
+      console.warn(`[exp-builder.sdk] Component registration not found for ${node.data.blockId}`);
     }
     return registration as ComponentRegistration;
   }, [node]);

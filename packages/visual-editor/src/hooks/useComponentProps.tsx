@@ -23,7 +23,7 @@ import { useMemo } from 'react';
 import { useStyleTag } from './useStyleTag';
 import omit from 'lodash-es/omit';
 import { getUnboundValues } from '@/utils/getUnboundValues';
-import { DropZone } from '@components/DropZone/Dropzone';
+import { Dropzone } from '@components/Dropzone/Dropzone';
 import { useEntityStore } from '@/store/entityStore';
 
 type PropsType =
@@ -168,9 +168,9 @@ export const useComponentProps = ({
 
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
 
-  const renderDropZone = (node: CompositionComponentNode, props?: Record<string, unknown>) => {
+  const renderDropzone = (node: CompositionComponentNode, props?: Record<string, unknown>) => {
     return (
-      <DropZone
+      <Dropzone
         sectionId={node.data.id}
         zoneId={node.data.id}
         node={node}
@@ -184,7 +184,7 @@ export const useComponentProps = ({
     className,
     editorMode: true,
     node,
-    renderDropZone,
+    renderDropzone,
     'data-cf-node-id': node.data.id,
     'data-cf-node-block-id': node.data.blockId,
     'data-cf-node-block-type': node.type,

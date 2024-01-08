@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   sendMessage,
   getDataFromTree,
@@ -16,6 +16,7 @@ import {
   CompositionComponentPropValue,
   ComponentRegistration,
   Link,
+  CompositionDataSource,
 } from '@contentful/experience-builder-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import dragState from '@/utils/dragState';
@@ -34,9 +35,8 @@ import { PostMessageMethods } from '@contentful/visual-sdk';
 import { useEntityStore } from '@/store/entityStore';
 
 export function useEditorSubscriber() {
-  const areEntitesResolvedInParent = useEntityStore((state) => state.areEntitesResolvedInParent);
   const entityStore = useEntityStore((state) => state.entityStore);
-  const setEntitiesResolvedInParent = useEntityStore((state) => state.setEntitiesResolvedInParent);
+  const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
   const updateTree = useTreeStore((state) => state.updateTree);
   const unboundValues = useEditorStore((state) => state.unboundValues);
@@ -47,6 +47,8 @@ export function useEditorSubscriber() {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
 
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
+
+  const [isFetchingEntities, setFetchingEntities] = useState(false);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
@@ -61,31 +63,46 @@ export function useEditorSubscriber() {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
   }, []);
 
-  useEffect(() => {
-    if (!areEntitesResolvedInParent) {
-      return;
-    }
-    const resolveEntities = async () => {
-      const dataSourceEntityLinks = Object.values(dataSource || {});
-      const entityLinks = [...dataSourceEntityLinks, ...(designComponentsRegistry.values() || [])];
-      const fetchingResponse = entityStore.fetchEntities(entityLinks);
-      // Only update the state and rerender when we're actually fetching something
-      if (fetchingResponse === false) return;
+  // Either gets called when dataSource changed or designComponetsRegistry changed (manually)
+  const fetchMissingEntities = useCallback(
+    async (newDataSource?: CompositionDataSource) => {
+      const entityLinks = [
+        ...Object.values(newDataSource ?? dataSource),
+        ...designComponentsRegistry.values(),
+      ];
+      const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
+      // Only continue and trigger rerendering when we need to fetch something and we're not fetching yet
+      if (!missingAssetIds.length && !missingEntryIds.length) {
+        setEntitiesFetched(true);
+        return;
+      }
       setEntitiesFetched(false);
-      // Await until the fetching is done to update the state variable at the right moment
-      await fetchingResponse;
-      setEntitiesFetched(true);
-      console.debug('[exp-builder.sdk] Finish fetching entities', {
-        entityStore,
-        entityLinks,
-      });
-    };
-
-    resolveEntities();
-  }, [dataSource, areEntitesResolvedInParent, entityStore, setEntitiesFetched]);
+      setFetchingEntities(true);
+      try {
+        // Await until the fetching is done to update the state variable at the right moment
+        await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
+        console.debug('[exp-builder.sdk] Finished fetching entities', { entityStore, entityLinks });
+      } catch (error) {
+        console.error('[exp-builder.sdk] Failed fetching entities');
+        console.error(error);
+      } finally {
+        // Important to set this as it is the only state variable that triggers a rerendering
+        // of the components (changes inside the entityStore are not part of the state)
+        setEntitiesFetched(true);
+        setFetchingEntities(false);
+      }
+    },
+    [dataSource, entityStore, setEntitiesFetched]
+  );
+  // When the tree was updated, we store the dataSource and
+  // afterward, this effect fetches the respective entities.
+  useEffect(() => {
+    if (areEntitiesFetched || isFetchingEntities) return;
+    fetchMissingEntities();
+  }, [areEntitiesFetched, fetchMissingEntities, isFetchingEntities]);
 
   useEffect(() => {
-    const onMessage = (event: MessageEvent) => {
+    const onMessage = async (event: MessageEvent) => {
       let reason;
       if ((reason = doesMismatchMessageSchema(event))) {
         if (
@@ -122,7 +139,6 @@ export function useEditorSubscriber() {
             changedNode,
             changedValueType,
             designComponents,
-            entitiesResolved,
           }: {
             tree: CompositionTree;
             designComponents: Link<'Entry'>[];
@@ -135,13 +151,9 @@ export function useEditorSubscriber() {
           // Make sure to first store the design components before setting the tree and thus triggering a rerender
           if (designComponents) {
             setDesignComponents(designComponents);
+            // If the designComponentEntry is not yet fetched, this will be done below by
+            // the imperative calls to fetchMissingEntities.
           }
-
-          if (entitiesResolved) {
-            setEntitiesResolvedInParent(entitiesResolved);
-          }
-          updateTree(tree);
-          setLocale(locale);
 
           if (changedNode) {
             /**
@@ -151,17 +163,26 @@ export function useEditorSubscriber() {
              *
              * We still update the tree here so we don't have a stale "tree"
              */
-            changedValueType === 'BoundValue' && setDataSource(changedNode.data.dataSource);
-            changedValueType === 'UnboundValue' &&
+            if (changedValueType === 'BoundValue') {
+              const newDataSource = { ...dataSource, ...changedNode.data.dataSource };
+              setDataSource(newDataSource);
+              await fetchMissingEntities(newDataSource);
+            } else if (changedValueType === 'UnboundValue') {
               setUnboundValues({
                 ...unboundValues,
                 ...changedNode.data.unboundValues,
               });
+            }
           } else {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
+            await fetchMissingEntities(dataSource);
           }
+
+          // Update the tree when all necessary data is fetched and ready for rendering.
+          updateTree(tree);
+          setLocale(locale);
           break;
         }
         case INCOMING_EVENTS.DesignComponentsRegistered: {
@@ -197,10 +218,6 @@ export function useEditorSubscriber() {
               definition: designComponentDefinition,
             });
           }
-          break;
-        }
-        case INCOMING_EVENTS.EntitiesResolved: {
-          setEntitiesResolvedInParent(true);
           break;
         }
         case INCOMING_EVENTS.CanvasResized: {
@@ -264,7 +281,9 @@ export function useEditorSubscriber() {
     setDataSource,
     setLocale,
     setSelectedNodeId,
-    setEntitiesResolvedInParent,
+    dataSource,
+    areEntitiesFetched,
+    fetchMissingEntities,
     setUnboundValues,
     unboundValues,
     updateTree,

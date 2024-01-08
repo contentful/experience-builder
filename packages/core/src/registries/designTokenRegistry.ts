@@ -1,9 +1,6 @@
 import { DesignTokensDefinition } from '@/types';
-import { OUTGOING_EVENTS } from '@/constants';
-import { sendMessage } from '@/communication';
 
-const designTokensRegistry = {} as DesignTokensDefinition;
-const templateStringRegex = /\${(.+?)}/g;
+export const designTokensRegistry: DesignTokensDefinition = {};
 
 /**
  * Register design tokens styling
@@ -12,29 +9,20 @@ const templateStringRegex = /\${(.+?)}/g;
  */
 export const defineDesignTokens = (designTokenDefinition: DesignTokensDefinition) => {
   Object.assign(designTokensRegistry, designTokenDefinition);
-  sendMessage(OUTGOING_EVENTS.DesignTokens, {
-    designTokens: designTokenDefinition,
-  });
 };
+
+const templateStringRegex = /\${(.+?)}/g;
 
 export const getDesignTokenRegistration = (breakpointValue: string) => {
   if (!breakpointValue) return breakpointValue;
 
   let resolvedValue = '';
-  const values = breakpointValue.split(' ');
-  values.forEach((value) => {
-    let tokenValue = value;
-    if (isTemplateStringFormat(value)) tokenValue = resolveSimpleDesignToken(value);
+  for (const part of breakpointValue.split(' ')) {
+    const tokenValue = templateStringRegex.test(part) ? resolveSimpleDesignToken(part) : part;
     resolvedValue += `${tokenValue} `;
-  });
-
+  }
   // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
   return resolvedValue.trim();
-};
-
-// Using this because export const StringTemplateRegex = /\${(.*?)\}/g doesn't work
-const isTemplateStringFormat = (str: string) => {
-  return templateStringRegex.test(str);
 };
 
 const resolveSimpleDesignToken = (templateString: string) => {

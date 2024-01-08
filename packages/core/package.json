@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-core",
-  "version": "0.0.1-dev125",
+  "version": "0.0.2-alpha.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -47,9 +47,11 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.5",
+    "@types/lodash-es": "^4.17.12",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
     "@vitest/coverage-v8": "^1.0.4",
+    "contentful": "^10.6.4",
     "eslint": "^8.54.0",
     "happy-dom": "^12.10.3",
     "rimraf": "^5.0.5",
@@ -62,5 +64,8 @@
     "@contentful/rich-text-types": "^16.3.0",
     "@contentful/visual-sdk": "^1.0.0-alpha.34",
     "lodash-es": "^4.17.21"
+  },
+  "peerDependencies": {
+    "contentful": ">=10.6.0"
   }
 }

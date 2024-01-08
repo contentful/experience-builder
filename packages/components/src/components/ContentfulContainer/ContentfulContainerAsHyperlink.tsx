@@ -24,7 +24,7 @@ export type ContentfulContainerProps<EditorMode = boolean> = EditorMode extends 
       resolveDesignValue?: any;
       entityStore?: RefObject<EntityStore>;
       areEntitiesFetched?: boolean;
-      renderDropZone: (
+      renderDropzone: (
         node: CompositionComponentNode,
         props?: Record<string, any>
       ) => React.ReactNode;
@@ -60,14 +60,14 @@ export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) 
     );
   }
 
-  const { renderDropZone, node } = props;
+  const { renderDropzone, node } = props;
 
   const stopPropagationInEditorMode = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.stopPropagation();
     e.preventDefault();
   };
 
-  return renderDropZone(node, {
+  return renderDropzone(node, {
     ['data-test-id']: 'contentful-container',
     ['data-cf-node-id']: node.data.id,
     ['data-cf-node-block-id']: node.data.blockId,
@@ -89,7 +89,7 @@ export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) 
   //     data-cf-node-id={node.data.id}
   //     data-cf-node-block-id={node.data.blockId}
   //     data-cf-node-block-type={node.type}>
-  //     {renderDropZone(node)}
+  //     {renderDropzone(node)}
   //   </a>
 
   // );

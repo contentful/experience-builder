@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   VisualEditorMode,
   isDeprecatedExperience,
   supportedModes,
 } from '@contentful/experience-builder-core';
-import { EntityStore } from './core/preview/EntityStore';
+import { EntityStore } from '@contentful/experience-builder-core';
 import type {
   DeprecatedExperience,
   Experience,
@@ -60,15 +60,10 @@ export const ExperienceRoot = ({
     );
   });
 
-  useEffect(() => {
-    if (supportedModes.includes(mode)) {
-      setMode(mode);
-    }
-  }, [mode]);
-
   const switchToEditorMode = useCallback(() => {
+    console.debug(`[exp-builder.sdk] Switching from ${mode} to editor mode.`);
     setMode('editor');
-  }, []);
+  }, [mode]);
 
   validateExperienceBuilderConfig({
     locale,

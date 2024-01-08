@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { DragDropContext } from '@hello-pangea/dnd';
-import { DropZone } from '../DropZone/Dropzone';
+import { Dropzone } from '../Dropzone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
 import { sendMessage } from '@contentful/experience-builder-core';
 import type { CompositionTree } from '@contentful/experience-builder-core/types';
@@ -17,8 +17,6 @@ import { useZoneStore } from '@/store/zone';
 import styles from './render.module.css';
 import { onComponentMoved } from '@/communication/onComponentMoved';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
-import LoaderOverlay from '@components/LoaderOverlay/LoaderOverlay';
-import { useEntityStore } from '@/store/entityStore';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 
 interface Props {
@@ -33,7 +31,6 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const updateItem = useDraggedItemStore((state) => state.updateItem);
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const userIsDragging = !!dragItem;
-  const areEntitesResolvedInParent = useEntityStore((state) => state.areEntitesResolvedInParent);
   const breakpoints = useTreeStore((state) => state.breakpoints);
 
   const { resolveDesignValue } = useBreakpoints(breakpoints);
@@ -44,10 +41,6 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   }, [tree, onChange]);
 
   const { onDragStartOrUpdate } = usePlaceholderStyle();
-
-  if (!areEntitesResolvedInParent) {
-    return <LoaderOverlay />;
-  }
 
   return (
     <DragDropContext
@@ -112,7 +105,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
             }}
           />
         )}
-        <DropZone sectionId={ROOT_ID} zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
+        <Dropzone sectionId={ROOT_ID} zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
         {/* 
           This hitbox is required so that users can
           add sections to the bottom of the document.

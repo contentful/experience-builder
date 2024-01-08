@@ -4,7 +4,7 @@ import { createDesignComponentEntry } from '../../../test/__fixtures__/designCom
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
 import type { CompositionNode } from '@contentful/experience-builder-core/types';
-import { EntityStore } from './EntityStore';
+import { EntityStore } from '@contentful/experience-builder-core';
 import { resolveDesignComponent } from './designComponentUtils';
 
 describe('resolveDesignComponent', () => {

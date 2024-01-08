@@ -3,3 +3,5 @@ export { useExperienceBuilder } from './useExperienceBuilder';
 export { useBreakpoints } from './useBreakpoints';
 export { useEditorModeSwitch } from './useEditorModeSwitch';
 export { useFetchExperience } from './useFetchExperience';
+export * from './useFetchById';
+export * from './useFetchBySlug';
