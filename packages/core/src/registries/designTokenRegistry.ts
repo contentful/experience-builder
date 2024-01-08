@@ -19,9 +19,23 @@ export const getDesignTokenRegistration = (breakpointValue: string, variableName
 
   let resolvedValue = '';
   for (const part of breakpointValue.split(' ')) {
+<<<<<<< HEAD
     const tokenValue = templateStringRegex.test(part)
       ? resolveSimpleDesignToken(part, variableName)
       : part;
+=======
+    let tokenValue = '';
+    if (variableName === 'cfBorder' && templateStringRegex.test(part)) {
+      tokenValue = resolveBorderDesignToken(part);
+      const { width, color, style } =
+        (tokenValue as unknown as DesignTokensDefinition['borders']) || {
+          width: '1px',
+          style: 'outside',
+          color: 'rgba(0,0,0,1)',
+        };
+      tokenValue = `${width} ${style} ${color}`;
+    } else tokenValue = templateStringRegex.test(part) ? resolveSimpleDesignToken(part) : part;
+>>>>>>> c5cb531 (feat: add cfBorder designTokens resolver)
     resolvedValue += `${tokenValue} `;
   }
   // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
@@ -48,4 +62,12 @@ const resolveSimpleDesignToken = (templateString: string, variableName: string) 
     return optionalBuiltInStyles[variableName].defaultValue;
   }
   return '0px';
+};
+
+const resolveBorderDesignToken = (templateString: string) => {
+  const nonTemplateValue = templateString.replace(templateStringRegex, '$1');
+  const designKeys = nonTemplateValue.split('.');
+  const designValues = designTokensRegistry[designKeys[0]] as DesignTokensDefinition;
+  const resolvedValue = designValues[designKeys[1]] as string;
+  return resolvedValue;
 };
