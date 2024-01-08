@@ -10,67 +10,59 @@ const mockClient = {
 } as unknown as ContentfulClientApi<undefined>;
 
 describe('fetchExperienceEntry', () => {
-  it('should throw and error if client has not been provided', async () => {
-    try {
-      await fetchExperienceEntry({
+  it('should throw and error if client has not been provided', () => {
+    expect(
+      fetchExperienceEntry({
         // @ts-expect-error intentionally setting it to undefined
         client: undefined,
         experienceTypeId: 'books',
         locale: 'en-US',
         identifier: { slug: 'slug' },
-      });
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "client" parameter was not provided'
-      );
-    }
+      })
+    ).rejects.toThrow(
+      'Failed to fetch experience entities. Required "client" parameter was not provided'
+    );
   });
 
-  it('should throw an error if locale has not been provided', async () => {
-    try {
-      await fetchExperienceEntry({
+  it('should throw an error if locale has not been provided', () => {
+    expect(
+      fetchExperienceEntry({
         client: mockClient,
         experienceTypeId: 'books',
         // @ts-expect-error intentionally setting it to undefined
         locale: undefined,
         identifier: { slug: 'slug' },
-      });
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "locale" parameter was not provided'
-      );
-    }
+      })
+    ).rejects.toThrow(
+      'Failed to fetch experience entities. Required "locale" parameter was not provided'
+    );
   });
 
-  it('should throw an error if experienceId has not been provided', async () => {
-    try {
-      await fetchExperienceEntry({
+  it('should throw an error if experienceId has not been provided', () => {
+    expect(
+      fetchExperienceEntry({
         client: mockClient,
         // @ts-expect-error intentionally setting it to undefined
         experienceTypeId: undefined,
         locale: 'en-US',
         identifier: { slug: 'slug' },
-      });
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided'
-      );
-    }
+      })
+    ).rejects.toThrow(
+      'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided'
+    );
   });
 
-  it('should throw and error if neither id nor slug identifier has been provided', async () => {
-    try {
-      await fetchExperienceEntry({
+  it('should throw and error if neither id nor slug identifier has been provided', () => {
+    expect(
+      fetchExperienceEntry({
         client: mockClient,
         experienceTypeId: 'books',
         locale: 'en-US',
         identifier: {},
-      });
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. At least one identifier must be provided. Received: {}'
-      );
-    }
+      })
+    ).rejects.toThrow(
+      'Failed to fetch experience entities. At least one identifier must be provided. Received: {}'
+    );
   });
 
   it('should call client.getEntries with given parameters', async () => {
@@ -107,22 +99,18 @@ describe('fetchExperienceEntry', () => {
     expect(expEntry).toEqual(compositionEntry);
   });
 
-  it('should throw and error if getEntries call returns more than one entry', async () => {
+  it.only('should throw and error if getEntries call returns more than one entry', () => {
     (mockClient.getEntries as Mock).mockResolvedValue({
       items: [compositionEntry, entries[0]],
     });
 
-    try {
-      await fetchExperienceEntry({
+    expect(
+      fetchExperienceEntry({
         client: mockClient,
         experienceTypeId: 'books',
         locale: 'en-US',
         identifier: { slug: 'slug' },
-      });
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'More than one experience with identifier: {"slug":"slug"} was found'
-      );
-    }
+      })
+    ).rejects.toThrow('More than one experience with identifier: {"slug":"slug"} was found');
   });
 });
