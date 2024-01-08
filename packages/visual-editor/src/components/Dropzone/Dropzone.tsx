@@ -12,10 +12,10 @@ import { ROOT_ID } from '@/types/constants';
 import { EmptyEditorContainer } from '@components/EmptyContainer/EmptyContainer';
 import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
-import { useDropZoneDirection } from '@/hooks/useDropZoneDirection';
+import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
 import { DESIGN_COMPONENT_NODE_TYPES } from '@contentful/experience-builder-core/constants';
 
-type DropZoneProps = {
+type DropzoneProps = {
   zoneId: string;
   node?: ComponentData;
   resolveDesignValue?: ResolveDesignValueType;
@@ -57,7 +57,7 @@ function isDropEnabled(
   return draggingOverArea;
 }
 
-export function DropZone({
+export function Dropzone({
   node,
   zoneId,
   sectionId,
@@ -65,7 +65,7 @@ export function DropZone({
   className,
   WrapperComponent = 'div',
   ...rest
-}: DropZoneProps) {
+}: DropzoneProps) {
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
   const tree = useTreeStore((state) => state.tree);
   const placeholderStyle = usePlaceholderStyleStore((state) => state.style);
@@ -110,7 +110,7 @@ export function DropZone({
 
   const isEmptyCanvas = isRootZone && !content.length;
 
-  const direction = useDropZoneDirection({ resolveDesignValue, node, zoneId });
+  const direction = useDropzoneDirection({ resolveDesignValue, node, zoneId });
 
   const dropEnabled = isDropEnabled(
     isEmptyCanvas,
