@@ -21,6 +21,7 @@ const handleError = (generalMessage: string, error: unknown) => {
  * @param {string} localeCode - locale code to fetch the experience. Falls back to the currently active locale in the state
  */
 
+//  Promise<Experience<EntityStore> | undefined> =>
 export async function fetchBySlug({
   client,
   experienceTypeId,
@@ -33,7 +34,7 @@ export async function fetchBySlug({
   slug: string;
   localeCode: string;
   mode: ExternalSDKMode;
-}): Promise<Experience<EntityStore> | undefined> {
+}) {
   let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
 
   try {
