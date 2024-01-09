@@ -1,3 +1,4 @@
+import React from 'react';
 import type {
   ComponentRegistration,
   CompositionComponentNode,
@@ -7,7 +8,7 @@ import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
 import { builtInComponents } from '@/types/constants';
 import { DESIGN_COMPONENT_NODE_TYPE } from '@contentful/experience-builder-core/constants';
-import { DesignComponent } from '@contentful/experience-builder-components';
+import { ContentfulContainer, DesignComponent } from '@contentful/experience-builder-components';
 import { resolveDesignComponent } from '@/utils/designComponentUtils';
 import { componentRegistry, createDesignComponentRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
@@ -55,13 +56,18 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
     definition: componentRegistration.definition,
   });
 
-  const Component = builtInComponents[node.data.blockId!] || componentRegistration.component;
+  // Only pass editor props to built-in components
+  const { editorMode, renderDropzone, ...componentProps } = props;
+  const elementToRender = builtInComponents.includes(node.data.blockId || '') ? (
+    <ContentfulContainer {...props} />
+  ) : (
+    React.createElement(componentRegistration.component, componentProps)
+  );
 
   return {
     node,
     componentId,
-    Component,
-    props,
+    elementToRender,
     wrapperProps: editorWrapperProps,
     label: componentRegistration.definition.name,
   };
