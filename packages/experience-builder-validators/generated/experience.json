@@ -1,0 +1,274 @@
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "componentTree": {
+      "type": "object",
+      "properties": {
+        "breakpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              },
+              "previewSize": {
+                "type": "string"
+              },
+              "displayName": {
+                "type": "string"
+              }
+            },
+            "required": ["id", "query", "previewSize", "displayName"],
+            "additionalProperties": false
+          }
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "definitionId": {
+                "type": "string"
+              },
+              "variables": {
+                "type": "object",
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "DesignValue"
+                        },
+                        "valuesByBreakpoint": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "object",
+                                "additionalProperties": {}
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "required": ["type", "valuesByBreakpoint"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "BoundValue"
+                        },
+                        "path": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["type", "path"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "UnboundValue"
+                        },
+                        "key": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["type", "key"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "ComponentValue"
+                        },
+                        "key": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["type", "key"],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "children": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/properties/componentTree/properties/children/items"
+                }
+              }
+            },
+            "required": ["definitionId", "variables", "children"],
+            "additionalProperties": false
+          }
+        },
+        "schemaVersion": {
+          "type": "string",
+          "enum": ["2023-09-28", "2023-06-27", "2023-07-26", "2023-08-23"]
+        }
+      },
+      "required": ["breakpoints", "children", "schemaVersion"],
+      "additionalProperties": false
+    },
+    "dataSource": {
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "sys": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "Link"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "linkType": {
+                    "type": "string",
+                    "const": "Entry"
+                  }
+                },
+                "required": ["type", "id", "linkType"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["sys"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "sys": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "Link"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "linkType": {
+                    "type": "string",
+                    "const": "Asset"
+                  }
+                },
+                "required": ["type", "id", "linkType"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["sys"],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "unboundValues": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/properties/componentTree/properties/children/items/properties/variables/additionalProperties/anyOf/0/properties/valuesByBreakpoint/additionalProperties"
+          }
+        },
+        "required": ["value"],
+        "additionalProperties": false
+      }
+    },
+    "usedComponents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sys": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "Link"
+              },
+              "id": {
+                "type": "string"
+              },
+              "linkType": {
+                "type": "string",
+                "const": "Entry"
+              }
+            },
+            "required": ["type", "id", "linkType"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["sys"],
+        "additionalProperties": false
+      }
+    },
+    "componentSettings": {
+      "type": "object",
+      "properties": {
+        "variableDefinitions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["BoundValue", "UnboundValue", "DesignValue", "ComponentValue"]
+              },
+              "label": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "defaultValue": {
+                "$ref": "#/properties/componentTree/properties/children/items/properties/variables/additionalProperties"
+              }
+            },
+            "required": ["type", "label", "defaultValue"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["variableDefinitions"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["title", "slug", "componentTree", "dataSource", "unboundValues"],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,8 +1,8 @@
 import { LATEST_SCHEMA_VERSION } from '../../src';
-import { Composition, ExperienceEntry, SchemaVersions } from '../../src/types';
+import { CompositionZod, ExperienceEntry, SchemaVersions } from '../../src/types';
 import { entityIds } from './entities';
 
-const compositionFields: Composition = {
+const compositionFields: CompositionZod = {
   title: 'Test Composition',
   slug: 'test',
   componentTree: {
@@ -81,6 +81,7 @@ export const compositionEntry: ExperienceEntry = {
     },
   },
   metadata: { tags: [] },
+  // @ts-expect-error
   fields: compositionFields,
 };
 

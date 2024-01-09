@@ -1,0 +1,26 @@
+{
+  "name": "experience-builder-validators",
+  "version": "0.0.1",
+  "description": "Validators for experience data structures",
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "typings": "./dist/src/index.d.ts",
+  "author": "Contentful GmbH",
+  "homepage": "https://github.com/contentful/experience-builder/tree/main/packages/experience-builder-validators#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/experience-builder.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "generate:json-schema": "yarn build && node ./dist/generate-json-schemas.js",
+    "validate:experience": "yarn build && node ./dist/validate-experience.js"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/experience-builder/issues"
+  },
+  "dependencies": {
+    "zod": "^3.22.4",
+    "zod-to-json-schema": "^3.22.3"
+  }
+}
