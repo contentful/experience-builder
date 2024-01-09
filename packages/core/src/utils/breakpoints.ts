@@ -101,7 +101,7 @@ export const getValueForBreakpoint = (
         const breakpointValue =
           valuesByBreakpoint[breakpointId] || valuesByBreakpoint[fallbackBreakpointId];
 
-        return getDesignTokenRegistration(breakpointValue);
+        return getDesignTokenRegistration(breakpointValue, variableName);
       }
       if (valuesByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade
