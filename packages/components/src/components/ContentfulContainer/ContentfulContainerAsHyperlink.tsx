@@ -37,7 +37,7 @@ export type ContentfulContainerProps<EditorMode = boolean> = EditorMode extends 
       children?: React.ReactNode;
     };
 
-export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) => {
+export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerProps> = (props) => {
   const { cfHyperlink, cfOpenInNewTab, editorMode, className, children } = props;
 
   let anchorTagProps = {};
