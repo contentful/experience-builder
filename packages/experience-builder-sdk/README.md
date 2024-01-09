@@ -101,3 +101,40 @@ const Home = () => {
   );
 };
 ```
+
+
+## Registering Design Tokens (Coming soon)
+
+In order to define your design tokens import the `defineDesignTokens` hook.
+```
+import { defineDesignTokens } from '@contentful/experience-builder'
+```
+
+There are several key terms that are specifically tied to the Design sidebar in Experience Builder, namely `spacing`, `sizing`, `colors`, and `borders`. You are also free to define your own custom key-value pairings however you like, just keep in mind that the key terms listed are specifically reserved to affect the Design sidebar.
+
+Here's a quick example of a DesignTokenDefinition.
+```
+const DesignTokensDefinition = {
+  spacing: { XS: '4px', S: '16px', M: '32px', L: '64px', XL: '128px' },
+  sizing: { XS: '16px', S: '100px', M: '300px', L: '600px', XL: '1024px' },
+  colors: {
+    "Slate": "#94a3b8",
+    "Azure": "azure",
+    "Orange": "#fdba74",
+    "Blue": "#0000Ff",
+
+  },
+  border: {
+    "Azure": { width: '20px', style: 'outside', color: Colors.Azure },
+    "Hero": { width: '20px', style: 'outside', color: "#ffaabb" },
+    "Card": { width: '10px', style: 'inside', color: "#ffccbb" },
+    "Carousel": { width: '15px', style: 'outside', color: 'rgba(30, 25, 25, 0.75)', },
+  }
+}
+defineDesignTokens(DesignTokensDefinition)
+```
+
+Notice that for `spacing`, `sizing`, and `colors` that it's just a simple key-value object. `border` however, is a more complex object where its values have three parts rather than just a single string value.
+
+## Design Token Documentation
+Please refer to our [our Wiki page](https://github.com/contentful/experience-builder/wiki#design-token-documentation) for Design Token Documentation
