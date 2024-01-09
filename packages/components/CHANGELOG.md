@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.4](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.3...@contentful/experience-builder-components@0.0.2-alpha.4) (2024-01-09)
+
+### Bug Fixes
+
+- change visual-sdk to build tooling of monorepo ([edf0991](https://github.com/contentful/experience-builder-toolkit/commit/edf0991cc44f07429047a86a71baa950d7255ef8))
+
 ## [0.0.2-alpha.3](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.2...@contentful/experience-builder-components@0.0.2-alpha.3) (2024-01-08)
 
 ### Bug Fixes

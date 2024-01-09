@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.3](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.2...@contentful/experience-builder@4.0.0-alpha.3) (2024-01-09)
+
+### Bug Fixes
+
+- build scripts with new entity store ([be0349a](https://github.com/contentful/experience-builder/commit/be0349a7beaed235d2ac0e8b930e4fd4adf42166))
+- design tokens in visual editor [ALT-200] ([#222](https://github.com/contentful/experience-builder/issues/222)) ([f4ffc8b](https://github.com/contentful/experience-builder/commit/f4ffc8b7d5e726f1c0eb6252daca4147070fba52))
+- fix lodash deps ([a7cba34](https://github.com/contentful/experience-builder/commit/a7cba342e1c92bfef8dccc7ae027326955d8b741))
+- use named exports vs default for lodash ([aa3c91a](https://github.com/contentful/experience-builder/commit/aa3c91a045078a598f9eb640922948da1d36fb4d))
+
 # [4.0.0-alpha.2](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.1...@contentful/experience-builder@4.0.0-alpha.2) (2024-01-08)
 
 ### Bug Fixes
