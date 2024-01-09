@@ -40,7 +40,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, props, wrapperProps, label, Component } = useComponent({
+  const { node, componentId, wrapperProps, label, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
   });
@@ -57,7 +57,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   // Currently, design component blocks are not editable (readonly) so
   // we simply render that underlying component instead of making it draggable
   if (isDesignComponentBlock) {
-    return <Component {...props} />;
+    return elementToRender;
   }
 
   return (
@@ -94,7 +94,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
       style={{
         pointerEvents: userIsDragging && draggingNewComponent ? 'all' : undefined,
       }}>
-      <Component {...props} />
+      {elementToRender}
 
       {/* Hitboxes allow users to add a section between 2 components */}
       {userIsDragging && (

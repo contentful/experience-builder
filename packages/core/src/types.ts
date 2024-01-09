@@ -282,6 +282,8 @@ export type DesignTokensDefinition = {
   colors?: Record<string, string>;
   borders?: Record<string, { width: string; style: 'inside' | 'outside'; color: string }>;
   fontSize?: Record<string, string>;
+  lineHeight?: Record<string, string>;
+  letterSpacing?: Record<string, string>;
 } & RecursiveDesignTokenDefinition;
 
 export type ExperienceEntry = {
