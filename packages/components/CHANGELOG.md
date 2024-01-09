@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.6](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.5...@contentful/experience-builder-components@0.0.2-alpha.6) (2024-01-09)
+
+### Bug Fixes
+
+- **visual-editor:** remove error around passing editor props to normal elements ([#231](https://github.com/contentful/experience-builder-toolkit/issues/231)) ([4024a68](https://github.com/contentful/experience-builder-toolkit/commit/4024a68b3da06919ae777c15e7d25a8a40d6c263))
+
 ## [0.0.2-alpha.5](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.4...@contentful/experience-builder-components@0.0.2-alpha.5) (2024-01-09)
 
 **Note:** Version bump only for package @contentful/experience-builder-components

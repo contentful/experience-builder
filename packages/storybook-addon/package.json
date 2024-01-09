@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-storybook-addon",
-  "version": "0.0.2-alpha.5",
+  "version": "0.0.2-alpha.6",
   "description": "Develop Contentful experience builder components with storybook",
   "keywords": [
     "storybook-addons",
