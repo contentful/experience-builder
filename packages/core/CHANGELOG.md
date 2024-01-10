@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.7](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.6...@contentful/experience-builder-core@0.0.2-alpha.7) (2024-01-10)
+
+### Bug Fixes
+
+- change default border style color to 0px width ([#238](https://github.com/contentful/experience-builder-toolkit/issues/238)) ([f067000](https://github.com/contentful/experience-builder-toolkit/commit/f0670000b73a562127d26eae0ee3f13e27b7781f))
+
 ## [0.0.2-alpha.6](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.5...@contentful/experience-builder-core@0.0.2-alpha.6) (2024-01-10)
 
 ### Bug Fixes
