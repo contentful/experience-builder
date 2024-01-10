@@ -80,7 +80,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
     entityLink: UnresolvedLink<'Entry' | 'Asset'> | undefined,
     path: string[]
   ): string | undefined {
-    if (!entityLink) return;
+    if (!entityLink || !entityLink.sys) return;
 
     const fieldValue = super.getValue(entityLink, path);
 
