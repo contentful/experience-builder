@@ -12,19 +12,16 @@ function updateDraggableElement(x: number, y: number) {
   container.style.setProperty('left', `${x}px`);
 }
 
-export function simulateMouseEvent(coordX: number, coordY: number) {
+export function simulateMouseEvent(coordX: number, coordY: number, eventName = 'mousemove') {
   const element = document.querySelector('#item');
 
   if (!dragState.isDragStart) {
     return;
   }
 
-  let name = 'mousemove';
-
   if (!dragState.isDragging) {
     updateDraggableElement(coordX, coordY);
-
-    name = 'mousedown';
+    eventName = 'mousedown';
     dragState.updateIsDragging(true);
   }
 
@@ -42,6 +39,6 @@ export function simulateMouseEvent(coordX: number, coordY: number) {
     return;
   }
 
-  const event = new MouseEvent(name, options);
+  const event = new MouseEvent(eventName, options);
   element.dispatchEvent(event);
 }

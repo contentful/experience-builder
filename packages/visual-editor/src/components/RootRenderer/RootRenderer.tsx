@@ -63,6 +63,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
 
         // User cancel drag
         if (!droppedItem.destination) {
+          sendMessage(OUTGOING_EVENTS.ComponentDragCanceled);
           return;
         }
 
