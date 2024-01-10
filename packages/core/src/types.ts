@@ -279,11 +279,12 @@ export type RecursiveDesignTokenDefinition = {
 export type DesignTokensDefinition = {
   spacing?: Record<string, string>;
   sizing?: Record<string, string>;
-  colors?: Record<string, string>;
-  borders?: Record<string, { width: string; style: 'inside' | 'outside'; color: string }>;
+  color?: Record<string, string>;
+  border?: Record<string, { width: string; style: 'inside' | 'outside'; color: string }>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;
   letterSpacing?: Record<string, string>;
+  textColor?: Record<string, string>;
 } & RecursiveDesignTokenDefinition;
 
 export type ExperienceEntry = {
