@@ -7,7 +7,7 @@ import type { ContentfulContainerProps } from './ContentfulContainerAsHyperlink'
 import { Section } from '@components/Layout/Section';
 import { combineClasses } from '../../utils/combineClasses';
 
-export const ContentfulContainer = (sectionProps: ContentfulContainerProps) => {
+export const ContentfulContainer: React.FC<ContentfulContainerProps> = (sectionProps) => {
   const { className, editorMode, children } = sectionProps;
 
   if (sectionProps.cfHyperlink) {

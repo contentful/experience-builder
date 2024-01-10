@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.7](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.6...@contentful/experience-builder-core@0.0.2-alpha.7) (2024-01-10)
+
+### Bug Fixes
+
+- change default border style color to 0px width ([#238](https://github.com/contentful/experience-builder-toolkit/issues/238)) ([f067000](https://github.com/contentful/experience-builder-toolkit/commit/f0670000b73a562127d26eae0ee3f13e27b7781f))
+
+## [0.0.2-alpha.6](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.5...@contentful/experience-builder-core@0.0.2-alpha.6) (2024-01-10)
+
+### Bug Fixes
+
+- handle missing linkType property ([#237](https://github.com/contentful/experience-builder-toolkit/issues/237)) ([1827d96](https://github.com/contentful/experience-builder-toolkit/commit/1827d960f0a53412e1e39b06e265f7e1511e54f5))
+
+### Features
+
+- add cfBorder designTokens resolver ([e5de5e5](https://github.com/contentful/experience-builder-toolkit/commit/e5de5e5d1023e58c6ab9ae3b1b42581b04e128c6))
+
+## [0.0.2-alpha.5](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.4...@contentful/experience-builder-core@0.0.2-alpha.5) (2024-01-09)
+
+### Bug Fixes
+
+- **core:** add design token fallback values besed on default values in builtInStyles [ALT-200] ([#232](https://github.com/contentful/experience-builder-toolkit/issues/232)) ([37e8feb](https://github.com/contentful/experience-builder-toolkit/commit/37e8feb5361a7c1074da7bbc4e59736d21220d2b))
+- **core:** add line height and letter spacing to DesignTokensDefinition [ALT-248] ([#233](https://github.com/contentful/experience-builder-toolkit/issues/233)) ([1a44c44](https://github.com/contentful/experience-builder-toolkit/commit/1a44c447e2b102feb147645b8bc1796acd60793d))
+
+## [0.0.2-alpha.4](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.3...@contentful/experience-builder-core@0.0.2-alpha.4) (2024-01-09)
+
+### Bug Fixes
+
+- **core:** enabling design tokens for font size [ALT-245] ([#227](https://github.com/contentful/experience-builder-toolkit/issues/227)) ([d4d8e15](https://github.com/contentful/experience-builder-toolkit/commit/d4d8e15231230d89a1c139976c4ea66ea020db34))
+
 ## [0.0.2-alpha.3](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.2...@contentful/experience-builder-core@0.0.2-alpha.3) (2024-01-09)
 
 ### Bug Fixes

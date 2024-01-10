@@ -110,7 +110,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The border of the section',
-    defaultValue: '0px',
+    defaultValue: '0px outside rgba(255, 255, 255, 1)',
   },
   cfGap: {
     displayName: 'Gap',

@@ -1,4 +1,5 @@
 import { DesignTokensDefinition } from '@/types';
+import { builtInStyles, optionalBuiltInStyles } from '../definitions/styles';
 
 export const designTokensRegistry: DesignTokensDefinition = {};
 
@@ -13,22 +14,38 @@ export const defineDesignTokens = (designTokenDefinition: DesignTokensDefinition
 
 const templateStringRegex = /\${(.+?)}/g;
 
-export const getDesignTokenRegistration = (breakpointValue: string) => {
+export const getDesignTokenRegistration = (breakpointValue: string, variableName: string) => {
   if (!breakpointValue) return breakpointValue;
 
   let resolvedValue = '';
   for (const part of breakpointValue.split(' ')) {
-    const tokenValue = templateStringRegex.test(part) ? resolveSimpleDesignToken(part) : part;
+    const tokenValue = templateStringRegex.test(part)
+      ? resolveSimpleDesignToken(part, variableName)
+      : part;
     resolvedValue += `${tokenValue} `;
   }
   // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
   return resolvedValue.trim();
 };
 
-const resolveSimpleDesignToken = (templateString: string) => {
+const resolveSimpleDesignToken = (templateString: string, variableName: string) => {
   const nonTemplateValue = templateString.replace(templateStringRegex, '$1');
-  const designKeys = nonTemplateValue.split('.');
-  const spacingValues = designTokensRegistry[designKeys[0]] as DesignTokensDefinition;
-  const resolvedValue = spacingValues[designKeys[1]] as string;
-  return resolvedValue || '0px';
+  const [tokenCategory, tokenName] = nonTemplateValue.split('.');
+  const tokenValues = designTokensRegistry[tokenCategory];
+
+  if (tokenValues && tokenValues[tokenName]) {
+    if (variableName === 'cfBorder') {
+      const { width, style, color } = tokenValues[tokenName];
+      return `${width} ${style} ${color}`;
+    }
+
+    return tokenValues[tokenName];
+  }
+  if (builtInStyles[variableName]) {
+    return builtInStyles[variableName].defaultValue;
+  }
+  if (optionalBuiltInStyles[variableName]) {
+    return optionalBuiltInStyles[variableName].defaultValue;
+  }
+  return '0px';
 };

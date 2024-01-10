@@ -102,10 +102,7 @@ export const useComponentProps = ({
             }
           }
 
-          if (
-            typeof boundValue === 'object' &&
-            (boundValue as Link<'Entry' | 'Asset'>).sys.linkType === 'Asset'
-          ) {
+          if (typeof boundValue === 'object' && boundValue.sys?.linkType === 'Asset') {
             boundValue = entityStore?.getValue(boundValue, ['fields', 'file']);
           }
 
