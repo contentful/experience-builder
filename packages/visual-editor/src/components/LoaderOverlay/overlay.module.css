@@ -1,9 +1,9 @@
-.overlay {
+.overlayed {
   height: 100vh;
   width: 100vw;
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 20;
+  left: 20;
   z-index: 10000;
   background-color: #fff;
   display: flex;

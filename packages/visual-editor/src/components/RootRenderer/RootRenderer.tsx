@@ -45,6 +45,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   return (
     <DragDropContext
       onDragUpdate={(update) => {
+        console.log("UPDATE", update)
         updateItem(update);
         onDragStartOrUpdate(update);
       }}
@@ -69,8 +70,10 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
 
         // New component added to canvas
         if (droppedItem.source.droppableId.startsWith('component-list')) {
+          // console.log("ADD COMPONENT ITEM", droppedItem)
           onAddComponent(droppedItem);
         } else {
+          // console.log("DROPPED ITEM", droppedItem)
           onMoveComponent(droppedItem);
         }
       }}>

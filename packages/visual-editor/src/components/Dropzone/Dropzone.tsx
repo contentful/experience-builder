@@ -50,6 +50,8 @@ function isDropEnabled(
   }
 
   if (draggingNewComponent) {
+    console.log('draggingNewComponent', draggingNewComponent)
+    console.log('hoveringOverSection', hoveringOverSection)
     return hoveringOverSection;
   }
 
@@ -85,11 +87,11 @@ export function Dropzone({
   const draggedDestinationId = draggedItem && draggedItem.destination?.droppableId;
   const draggingParentIds = getZoneParents(draggedSourceId || '');
 
-  const hoveringRootZone = hoveringSection ? hoveringSection === zoneId : isRootZone;
+  const hoveringRootZone = hoveringSection === ROOT_ID ?? false;
   const hoveringOverZone = hoveringZone === zoneId;
 
   const isDestination = draggedDestinationId === zoneId;
-  const hoveringOverSection = hoveringSection ? hoveringSection === sectionId : isRootZone;
+  const hoveringOverSection = hoveringSection !== ROOT_ID ?? false;
 
   const userIsDragging = !!draggedItem;
 
@@ -154,9 +156,11 @@ export function Dropzone({
             )}
             onMouseOver={(e) => {
               e.stopPropagation();
+              console.log('zoneId OVER', zoneId)
               setHoveringZone(zoneId);
             }}
             onMouseOut={() => {
+              console.log('zoneId OUT', zoneId)
               setHoveringZone('');
             }}
             {...rest}>

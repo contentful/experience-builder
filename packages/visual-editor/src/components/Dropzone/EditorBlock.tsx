@@ -62,7 +62,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
 
   return (
     <DraggableComponent
-      label={label || 'No Label Specified'}
+      label={'No Label Specified'}
       id={`draggable-${componentId}`}
       index={index}
       isSelected={selectedNodeId === componentId}

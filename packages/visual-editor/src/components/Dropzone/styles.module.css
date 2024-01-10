@@ -27,8 +27,8 @@
 
 .hitbox {
   position: absolute;
-  bottom: -18px;
-  width: 100%;
+  /* bottom: -18px;
+  width: 100%; */
   z-index: 1;
   pointer-events: all !important;
   height: 36px;

@@ -48,6 +48,7 @@ export default function useCanvasInteractions() {
   };
 
   const onMoveComponent = (droppedItem: DropResult) => {
+    // console.log('onMoveComponent', droppedItem)
     const { destination, source, draggableId } = droppedItem;
 
     if (!destination || !source) {

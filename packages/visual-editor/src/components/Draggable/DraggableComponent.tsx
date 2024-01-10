@@ -59,7 +59,6 @@ export const DraggableComponent = ({
           onMouseUp={onMouseUp}
           onClick={onClick}>
           {!isSelected ? <div className={styles.overlay}>{label}</div> : null}
-
           {children}
         </div>
       )}
