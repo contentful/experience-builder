@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.7](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.6...@contentful/experience-builder-visual-editor@0.0.2-alpha.7) (2024-01-10)
+
+### Bug Fixes
+
+- handle missing linkType property ([#237](https://github.com/contentful/experience-builder/issues/237)) ([1827d96](https://github.com/contentful/experience-builder/commit/1827d960f0a53412e1e39b06e265f7e1511e54f5))
+
 ## [0.0.2-alpha.6](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.5...@contentful/experience-builder-visual-editor@0.0.2-alpha.6) (2024-01-09)
 
 ### Bug Fixes

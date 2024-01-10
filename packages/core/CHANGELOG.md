@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.6](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.5...@contentful/experience-builder-core@0.0.2-alpha.6) (2024-01-10)
+
+### Bug Fixes
+
+- handle missing linkType property ([#237](https://github.com/contentful/experience-builder-toolkit/issues/237)) ([1827d96](https://github.com/contentful/experience-builder-toolkit/commit/1827d960f0a53412e1e39b06e265f7e1511e54f5))
+
+### Features
+
+- add cfBorder designTokens resolver ([e5de5e5](https://github.com/contentful/experience-builder-toolkit/commit/e5de5e5d1023e58c6ab9ae3b1b42581b04e128c6))
+
 ## [0.0.2-alpha.5](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.4...@contentful/experience-builder-core@0.0.2-alpha.5) (2024-01-09)
 
 ### Bug Fixes
