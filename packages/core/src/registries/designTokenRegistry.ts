@@ -47,5 +47,5 @@ const resolveSimpleDesignToken = (templateString: string, variableName: string) 
   if (optionalBuiltInStyles[variableName]) {
     return optionalBuiltInStyles[variableName].defaultValue;
   }
-  return variableName === 'cfBorder' ? '1px outside rgba(0,0,0,1)' : '0px';
+  return '0px';
 };
