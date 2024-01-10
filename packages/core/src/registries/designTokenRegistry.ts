@@ -31,9 +31,15 @@ export const getDesignTokenRegistration = (breakpointValue: string, variableName
 const resolveSimpleDesignToken = (templateString: string, variableName: string) => {
   const nonTemplateValue = templateString.replace(templateStringRegex, '$1');
   const [tokenCategory, tokenName] = nonTemplateValue.split('.');
-  const spacingValues = designTokensRegistry[tokenCategory];
-  if (spacingValues && spacingValues[tokenName]) {
-    return spacingValues[tokenName];
+  const tokenValues = designTokensRegistry[tokenCategory];
+
+  if (tokenValues && tokenValues[tokenName]) {
+    if (variableName === 'cfBorder') {
+      const { width, style, color } = tokenValues[tokenName];
+      return `${width} ${style} ${color}`;
+    }
+
+    return tokenValues[tokenName];
   }
   if (builtInStyles[variableName]) {
     return builtInStyles[variableName].defaultValue;
@@ -41,5 +47,5 @@ const resolveSimpleDesignToken = (templateString: string, variableName: string) 
   if (optionalBuiltInStyles[variableName]) {
     return optionalBuiltInStyles[variableName].defaultValue;
   }
-  return '0px';
+  return variableName === 'cfBorder' ? '1px outside rgba(0,0,0,1)' : '0px';
 };
