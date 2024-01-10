@@ -82,7 +82,6 @@ const builtInStylesWithDesignTokens = [
   'cfWidth',
   'cfHeight',
   'cfBackgroundColor',
-  'cfBorder',
   'cfFontSize',
   'cfLineHeight',
   'cfLetterSpacing',
