@@ -33,6 +33,7 @@ import {
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { PostMessageMethods } from '@contentful/visual-sdk';
 import { useEntityStore } from '@/store/entityStore';
+import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
 
 export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
@@ -63,7 +64,7 @@ export function useEditorSubscriber() {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
   }, []);
 
-  // Either gets called when dataSource changed or designComponetsRegistry changed (manually)
+  // Either gets called when dataSource changed or designComponentsRegistry changed (manually)
   const fetchMissingEntities = useCallback(
     async (newDataSource?: CompositionDataSource) => {
       const entityLinks = [
@@ -245,6 +246,13 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.RequestEditorMode: {
+          break;
+        }
+        case INCOMING_EVENTS.ComponentDragCanceled: {
+          if (dragState.isDragging) {
+            //simulate a mouseup event to cancel the drag
+            simulateMouseEvent(0, 0, 'mouseup');
+          }
           break;
         }
         case INCOMING_EVENTS.ComponentDragStarted: {
