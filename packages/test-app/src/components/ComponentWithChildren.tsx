@@ -1,11 +1,15 @@
 import React from 'react';
 
-interface DuplexProps {
+interface ComponentWithChildrenProps {
   children: React.ReactNode;
   heading: string;
 }
 
-const Duplex: React.FC<DuplexProps> = ({ children, heading, ...rest }) => {
+const ComponentWithChildren: React.FC<ComponentWithChildrenProps> = ({
+  children,
+  heading,
+  ...rest
+}) => {
   return (
     <div
       {...rest}
@@ -47,4 +51,4 @@ const Duplex: React.FC<DuplexProps> = ({ children, heading, ...rest }) => {
   );
 };
 
-export default Duplex;
+export default ComponentWithChildren;
