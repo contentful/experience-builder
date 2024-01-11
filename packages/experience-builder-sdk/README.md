@@ -103,7 +103,7 @@ const Home = () => {
 ```
 
 
-## Registering Design Tokens (Coming soon)
+## Registering Design Tokens
 
 In order to define your design tokens import the `defineDesignTokens` hook.
 ```
