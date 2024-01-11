@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.11](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.10...@contentful/experience-builder-visual-editor@0.0.2-alpha.11) (2024-01-11)
+
+### Bug Fixes
+
+- **visual-editor:** canvas interactions flickering on changes [ALT-241] ([#240](https://github.com/contentful/experience-builder/issues/240)) ([6ccea0f](https://github.com/contentful/experience-builder/commit/6ccea0f6e2b3e58852ee4e137ead35678831f84d)), closes [#243](https://github.com/contentful/experience-builder/issues/243) [#242](https://github.com/contentful/experience-builder/issues/242) [#244](https://github.com/contentful/experience-builder/issues/244) [#249](https://github.com/contentful/experience-builder/issues/249)
+
 ## [0.0.2-alpha.10](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.9...@contentful/experience-builder-visual-editor@0.0.2-alpha.10) (2024-01-11)
 
 ### Bug Fixes
