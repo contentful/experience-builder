@@ -60,6 +60,9 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
   const { editorMode, renderDropzone, ...componentProps } = props;
   const elementToRender = builtInComponents.includes(node.data.blockId || '') ? (
     <ContentfulContainer {...props} />
+  ) : node.type === DESIGN_COMPONENT_NODE_TYPE ? (
+    // DesignComponent.tsx requires renderDropzone and editorMode as well
+    React.createElement(componentRegistration.component, props)
   ) : (
     React.createElement(componentRegistration.component, componentProps)
   );
