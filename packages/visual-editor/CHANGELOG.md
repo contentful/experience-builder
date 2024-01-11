@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.9](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.8...@contentful/experience-builder-visual-editor@0.0.2-alpha.9) (2024-01-11)
+
+### Bug Fixes
+
+- **visual-editor:** render assembly nodes by passing the required props [ALT-255] ([#245](https://github.com/contentful/experience-builder/issues/245)) ([6d2dd5a](https://github.com/contentful/experience-builder/commit/6d2dd5a64337e13ac84c0014da2c03e519f7f78b))
+
 ## [0.0.2-alpha.8](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.7...@contentful/experience-builder-visual-editor@0.0.2-alpha.8) (2024-01-10)
 
 **Note:** Version bump only for package @contentful/experience-builder-visual-editor

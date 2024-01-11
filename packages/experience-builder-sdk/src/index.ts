@@ -28,5 +28,9 @@ export {
 } from '@contentful/experience-builder-core/constants';
 export { tryParseMessage, doesMismatchMessageSchema } from './utils/validation';
 
-export type { InternalSDKMode, ExternalSDKMode } from '@contentful/experience-builder-core/types';
+export type {
+  InternalSDKMode,
+  ExternalSDKMode,
+  ComponentDefinition,
+} from '@contentful/experience-builder-core/types';
 export { EntityStore } from '@contentful/visual-sdk';
