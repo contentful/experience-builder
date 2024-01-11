@@ -45,8 +45,6 @@ export default function useCanvasInteractions() {
       destinationIndex: destination.index,
       destinationZoneId: destination.droppableId,
     });
-
-    return;
   };
 
   const onMoveComponent = (droppedItem: DropResult) => {
@@ -67,8 +65,6 @@ export default function useCanvasInteractions() {
       sourceIndex: source.index,
       sourceParentId: source.droppableId,
     });
-
-    return;
   };
 
   return { onAddComponent, onMoveComponent };

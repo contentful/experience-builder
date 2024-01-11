@@ -1,51 +1,44 @@
 import { CompositionComponentNode } from '@contentful/experience-builder-core/types';
-
-export type TreeDiffType =
-  | 'remove_node'
-  | 'add_node'
-  | 'move_node'
-  | 'update_node'
-  | 'reorder_node'
-  | 'replace_node';
+import { TreeAction } from './constants';
 
 interface DiffBase {
-  type: TreeDiffType;
+  type: TreeAction;
 }
 
 export interface RemoveNode extends DiffBase {
-  type: 'remove_node';
+  type: TreeAction.REMOVE_NODE;
   indexToRemove: number;
   parentNodeId: string;
 }
 
 export interface AddNode extends DiffBase {
-  type: 'add_node';
+  type: TreeAction.ADD_NODE;
   indexToAdd: number;
   nodeToAdd: CompositionComponentNode;
   parentNodeId: string;
 }
 
 export interface ReplaceNode extends DiffBase {
-  type: 'replace_node';
+  type: TreeAction.REPLACE_NODE;
   originalId: string;
   node: CompositionComponentNode;
 }
 
 export interface UpdateNode extends DiffBase {
-  type: 'update_node';
+  type: TreeAction.UPDATE_NODE;
   nodeId: string;
   node: CompositionComponentNode;
 }
 
 export interface MoveNode extends DiffBase {
-  type: 'move_node';
+  type: TreeAction.MOVE_NODE;
   sourceIndex: number;
   destinationIndex: number;
   parentNodeId: string;
 }
 
 export interface ReorderNode extends DiffBase {
-  type: 'reorder_node';
+  type: TreeAction.REORDER_NODE;
   sourceIndex: number;
   destinationIndex: number;
   parentNodeId: string;

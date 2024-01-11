@@ -75,7 +75,6 @@ export function addChildToNode(
       node
     );
   }
-  return;
 }
 
 export function removeChildFromNode(
@@ -104,8 +103,6 @@ export function removeChildFromNode(
     changed = true;
     removeChildNode(i, nodeId, node);
   });
-
-  return;
 }
 
 export function removeChildNode(

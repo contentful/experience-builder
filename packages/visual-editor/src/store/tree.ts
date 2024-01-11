@@ -3,7 +3,7 @@ import type {
   CompositionComponentNode,
   CompositionTree,
 } from '@contentful/experience-builder-core/types';
-import { ROOT_ID } from '@/types/constants';
+import { ROOT_ID, TreeAction } from '@/types/constants';
 import { create } from 'zustand';
 import { produce } from 'immer';
 import {
@@ -71,20 +71,20 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
       produce((state: TreeStore) => {
         treeDiff.map((diff) => {
           switch (diff.type) {
-            case 'add_node':
+            case TreeAction.ADD_NODE:
               addChildNode(diff.indexToAdd, diff.parentNodeId, diff.nodeToAdd, state.tree.root);
               break;
-            case 'replace_node':
+            case TreeAction.REPLACE_NODE:
               replaceNode(diff.originalId, diff.node, state.tree.root);
               break;
-            case 'update_node':
+            case TreeAction.UPDATE_NODE:
               updateNode(diff.nodeId, diff.node, state.tree.root);
               break;
-            case 'remove_node':
+            case TreeAction.REMOVE_NODE:
               removeChildNode(diff.indexToRemove, diff.parentNodeId, state.tree.root);
               break;
-            case 'move_node':
-            case 'reorder_node':
+            case TreeAction.MOVE_NODE:
+            case TreeAction.REORDER_NODE:
               state.tree = tree;
               break;
             default:
