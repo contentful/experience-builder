@@ -189,5 +189,17 @@ export const transformWidthSizing = ({
   const rightMargin = marginValues[1] || '0px';
   const leftMargin = marginValues[3] || '0px';
 
-  return `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`;
+  const calcValue = `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`;
+
+  /**
+   * We want to check if the calculated value is valid CSS. If this fails,
+   * this means the `transformedValue` is not a calculable value (not a px, rem, or %).
+   * The value may instead be a string such as `min-content` or `max-content`. In
+   * that case we don't want to use calc and instead return the raw value.
+   */
+  if (CSS.supports('width', calcValue)) {
+    return calcValue;
+  }
+
+  return transformedValue;
 };
