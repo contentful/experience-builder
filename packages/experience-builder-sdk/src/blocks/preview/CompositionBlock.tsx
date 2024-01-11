@@ -21,10 +21,14 @@ import {
   createDesignComponentRegistration,
   getComponentRegistration,
 } from '../../core/componentRegistry';
-import { buildCfStyles, checkIfDesignComponent } from '@contentful/experience-builder-core';
+import {
+  buildCfStyles,
+  checkIfDesignComponent,
+  transformContentValue,
+} from '@contentful/experience-builder-core';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
-import { transformContentValue } from '../../utils/transformers';
+
 import { resolveDesignComponent } from '../../core/preview/designComponentUtils';
 import { DesignComponent } from '../../components/DesignComponent';
 
