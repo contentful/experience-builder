@@ -7,7 +7,7 @@
   outline: 1px solid transparent;
   width: 100%;
   transition: outline 0.2s;
-  min-height: 200px;
+  min-height: 120px;
 }
 
 .fixedWidth {
