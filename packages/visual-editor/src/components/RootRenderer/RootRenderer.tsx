@@ -7,7 +7,6 @@ import { sendMessage } from '@contentful/experience-builder-core';
 import type { CompositionTree } from '@contentful/experience-builder-core/types';
 import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 import dragState from '@/utils/dragState';
-import { onDrop } from '@/utils/onDrop';
 import { usePlaceholderStyle } from '@/hooks/usePlaceholderStyle';
 import { ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
@@ -15,9 +14,9 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
 import styles from './render.module.css';
-import { onComponentMoved } from '@/communication/onComponentMoved';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
+import useCanvasInteractions from '@/hooks/useCanvasInteractions';
 
 interface Props {
   onChange?: (data: CompositionTree) => void;
@@ -36,6 +35,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const { resolveDesignValue } = useBreakpoints(breakpoints);
   const tree = useTreeStore((state) => state.tree);
 
+  const { onAddComponent, onMoveComponent } = useCanvasInteractions();
   useEffect(() => {
     if (onChange) onChange(tree);
   }, [tree, onChange]);
@@ -63,30 +63,15 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
 
         // User cancel drag
         if (!droppedItem.destination) {
+          sendMessage(OUTGOING_EVENTS.ComponentDragCanceled);
           return;
         }
 
-        // New component
-        if (
-          droppedItem.source.droppableId.startsWith('component-list') &&
-          droppedItem.destination
-        ) {
-          onDrop({
-            data: tree,
-            componentType: droppedItem.draggableId,
-            destinationIndex: droppedItem.destination!.index,
-            destinationZoneId: droppedItem.destination.droppableId,
-          });
-
-          return;
+        // New component added to canvas
+        if (droppedItem.source.droppableId.startsWith('component-list')) {
+          onAddComponent(droppedItem);
         } else {
-          onComponentMoved({
-            nodeId: droppedItem.draggableId.replace('draggable-', ''),
-            destinationIndex: droppedItem.destination!.index,
-            destinationParentId: droppedItem.destination.droppableId,
-            sourceIndex: droppedItem.source.index,
-            sourceParentId: droppedItem.source.droppableId,
-          });
+          onMoveComponent(droppedItem);
         }
       }}>
       {dragItem && <DraggableContainer id={dragItem} />}

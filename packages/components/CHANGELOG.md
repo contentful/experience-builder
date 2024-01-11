@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.11](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.10...@contentful/experience-builder-components@0.0.2-alpha.11) (2024-01-11)
+
+### Bug Fixes
+
+- **components:** fix button target label for eb props ([#251](https://github.com/contentful/experience-builder-toolkit/issues/251)) ([a051360](https://github.com/contentful/experience-builder-toolkit/commit/a05136011f1136ef9a988fd04a01dd5ef4793c88))
+
+## [0.0.2-alpha.10](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.9...@contentful/experience-builder-components@0.0.2-alpha.10) (2024-01-11)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.9](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.8...@contentful/experience-builder-components@0.0.2-alpha.9) (2024-01-11)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
 ## [0.0.2-alpha.8](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.7...@contentful/experience-builder-components@0.0.2-alpha.8) (2024-01-10)
 
 **Note:** Version bump only for package @contentful/experience-builder-components

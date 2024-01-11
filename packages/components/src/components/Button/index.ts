@@ -21,7 +21,7 @@ export const ButtonComponentDefinition: ComponentDefinition = {
       defaultValue: '/',
     },
     target: {
-      displayName: 'URL',
+      displayName: 'Target',
       type: 'Text',
       defaultValue: '',
     },
