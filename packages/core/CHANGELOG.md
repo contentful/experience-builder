@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.9](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.8...@contentful/experience-builder-core@0.0.2-alpha.9) (2024-01-11)
+
+### Bug Fixes
+
+- **core:** enable design tokens for text color style [ALT-249] ([#244](https://github.com/contentful/experience-builder-toolkit/issues/244)) ([81f5a27](https://github.com/contentful/experience-builder-toolkit/commit/81f5a27acaa3815b381b2d114766f892bc1c764b))
+- **visual-editor:** properly handle when drag operations are canceled ([#242](https://github.com/contentful/experience-builder-toolkit/issues/242)) ([e5e99e8](https://github.com/contentful/experience-builder-toolkit/commit/e5e99e891d05991e90d69d5788b236c9adbb038d))
+
 ## [0.0.2-alpha.8](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.7...@contentful/experience-builder-core@0.0.2-alpha.8) (2024-01-11)
 
 ### Bug Fixes

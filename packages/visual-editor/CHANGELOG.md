@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.10](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.9...@contentful/experience-builder-visual-editor@0.0.2-alpha.10) (2024-01-11)
+
+### Bug Fixes
+
+- **visual-editor:** properly handle when drag operations are canceled ([#242](https://github.com/contentful/experience-builder/issues/242)) ([e5e99e8](https://github.com/contentful/experience-builder/commit/e5e99e891d05991e90d69d5788b236c9adbb038d))
+
 ## [0.0.2-alpha.9](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.8...@contentful/experience-builder-visual-editor@0.0.2-alpha.9) (2024-01-11)
 
 ### Bug Fixes

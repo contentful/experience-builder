@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.9](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.8...@contentful/experience-builder@4.0.0-alpha.9) (2024-01-11)
+
+### Bug Fixes
+
+- **experience-builder-sdk:** export ComponentDefintion ([#243](https://github.com/contentful/experience-builder/issues/243)) ([b74d292](https://github.com/contentful/experience-builder/commit/b74d2927575cc10dcd4bb7e4800c47b979d7e15b))
+
 # [4.0.0-alpha.8](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.7...@contentful/experience-builder@4.0.0-alpha.8) (2024-01-11)
 
 ### Bug Fixes
