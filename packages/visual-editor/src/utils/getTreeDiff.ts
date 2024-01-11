@@ -6,7 +6,7 @@ import {
 import { getItem } from './getItem';
 import { countNodes } from './treeHelpers';
 import { isEqual } from 'lodash-es';
-import { ROOT_ID } from '@/types/constants';
+import { ROOT_ID, TreeAction } from '@/types/constants';
 import { TreeDiff } from '@/types/treeActions';
 
 interface MissingNodeActionParams {
@@ -27,7 +27,7 @@ function missingNodeAction({
   currentNode,
 }: MissingNodeActionParams): TreeDiff | null {
   if (nodeAdded) {
-    return { type: 'add_node', indexToAdd: index, nodeToAdd: child, parentNodeId };
+    return { type: TreeAction.ADD_NODE, indexToAdd: index, nodeToAdd: child, parentNodeId };
   }
 
   const item = getItem({ id: child.data.id }, tree);
@@ -40,11 +40,11 @@ function missingNodeAction({
     }
     const sourceIndex = parentNode.children.findIndex((c) => c.data.id === child.data.id);
 
-    return { type: 'move_node', sourceIndex, destinationIndex: index, parentNodeId };
+    return { type: TreeAction.MOVE_NODE, sourceIndex, destinationIndex: index, parentNodeId };
   }
 
   return {
-    type: 'replace_node',
+    type: TreeAction.REPLACE_NODE,
     originalId: currentNode.children[index].data.id,
     node: child,
   };
@@ -67,7 +67,7 @@ function matchingNodeAction({
 }: MatchingNodeActionParams): TreeDiff | null {
   if (index !== originalIndex && !nodeRemoved && !nodeAdded) {
     return {
-      type: 'reorder_node',
+      type: TreeAction.REORDER_NODE,
       sourceIndex: originalIndex,
       destinationIndex: index,
       parentNodeId,
@@ -111,7 +111,7 @@ function compareNodes({
    */
   if (!isRoot && !isEqual(currentNode.data, updatedNode.data)) {
     differences.push({
-      type: 'update_node',
+      type: TreeAction.UPDATE_NODE,
       nodeId: currentNode.data.id,
       node: updatedNode,
     });
@@ -166,7 +166,7 @@ function compareNodes({
       return;
     }
     // Remaining nodes in the map are removed in the second tree
-    differences.push({ type: 'remove_node', indexToRemove: index, parentNodeId });
+    differences.push({ type: TreeAction.REMOVE_NODE, indexToRemove: index, parentNodeId });
   });
 
   return differences;

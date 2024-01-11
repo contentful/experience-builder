@@ -62,6 +62,8 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
      */
     const treeDiff = getTreeDiffs({ ...currentTree.root }, { ...tree.root }, currentTree);
 
+    console.log('::DIFF', tree);
+
     // The current and updated tree are the same, no tree update required.
     if (!treeDiff.length) {
       return;
