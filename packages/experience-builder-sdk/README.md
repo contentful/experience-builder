@@ -70,7 +70,7 @@ defineComponents([
   },
 ]);
 
-// 2. Define design tokens
+// 2. Define design tokens (optional)
 defineDesignTokens({
   spacing: { XS: '4px', S: '16px', M: '32px', L: '64px', XL: '128px' },
   color: { Slate: '#94a3b8', Azure: 'azure', Orange: '#fdba74' },
