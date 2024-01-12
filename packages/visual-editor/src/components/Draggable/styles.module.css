@@ -6,6 +6,7 @@
   outline-offset: -2px;
   outline: 2px solid transparent;
   min-width: 100px;
+  box-sizing: border-box;
 }
 
 .DraggableComponent > * {

@@ -1,3 +1,4 @@
+import './eb-config';
 import { useParams } from 'react-router-dom';
 import '@contentful/experience-builder-components/styles.css';
 import './styles.css';

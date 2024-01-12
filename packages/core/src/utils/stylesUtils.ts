@@ -86,6 +86,7 @@ export const buildCfStyles = ({
     textAlign: cfTextAlign,
     textTransform: cfTextTransform,
     textDecoration: cfTextUnderline ? 'underline' : 'none',
+    boxSizing: 'border-box',
   };
 };
 /**
