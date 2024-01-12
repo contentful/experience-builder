@@ -158,7 +158,14 @@ export type CompositionComponentPropValue<
 
 // TODO: add conditional typing magic to reduce the number of optionals
 export type CompositionComponentNode = {
-  type: 'block' | 'root' | 'editorRoot' | 'designComponent' | 'designComponentBlock';
+  type:
+    | 'block'
+    | 'root'
+    | 'editorRoot'
+    | 'designComponent'
+    | 'designComponentBlock'
+    | 'assembly'
+    | 'assemblyBlock';
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
