@@ -13,7 +13,7 @@ import type {
 } from '@contentful/experience-builder-core/types';
 import {
   CONTENTFUL_CONTAINER_ID,
-  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+  ASSEMBLY_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
 } from '@contentful/experience-builder-core/constants';
 
@@ -52,7 +52,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   const isContainer = node.data.blockId === CONTENTFUL_CONTAINER_ID;
   const containsZone = sectionsWithZone[componentId];
 
-  const isAssemblyBlock = node.type === DESIGN_COMPONENT_BLOCK_NODE_TYPE;
+  const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
 
   // Currently, assembly blocks are not editable (readonly) so
   // we simply render that underlying component instead of making it draggable
