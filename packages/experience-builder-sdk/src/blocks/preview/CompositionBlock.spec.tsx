@@ -166,7 +166,7 @@ describe('CompositionBlock', () => {
       />
     );
 
-    expect(getByTestId('design-component')).toBeInTheDocument();
+    expect(getByTestId('assembly')).toBeInTheDocument();
     expect(getByTestId('contentful-container')).toBeInTheDocument();
     expect(getByText('New year eve')).toBeInTheDocument();
   });

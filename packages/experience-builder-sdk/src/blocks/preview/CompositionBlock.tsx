@@ -27,7 +27,7 @@ import { useStyleTag } from '../../hooks/useStyleTag';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 
 import { resolveDesignComponent } from '../../core/preview/designComponentUtils';
-import { DesignComponent } from '../../components/DesignComponent';
+import { Assembly } from '../../components/Assembly';
 
 type CompositionBlockProps = {
   node: CompositionNode;
@@ -70,7 +70,7 @@ export const CompositionBlock = ({
     if (isDesignComponent && !registration) {
       return createAssemblyRegistration({
         definitionId: node.definitionId as string,
-        component: DesignComponent,
+        component: Assembly,
       });
     }
     return registration;

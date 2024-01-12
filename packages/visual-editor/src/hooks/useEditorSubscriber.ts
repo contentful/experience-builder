@@ -24,7 +24,7 @@ import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { Entry } from 'contentful';
-import { DesignComponent } from '@contentful/experience-builder-components';
+import { Assembly } from '@contentful/experience-builder-components';
 import {
   addComponentRegistration,
   designComponentsRegistry,
@@ -192,7 +192,7 @@ export function useEditorSubscriber() {
 
           designComponents.forEach((definition) => {
             addComponentRegistration({
-              component: DesignComponent,
+              component: Assembly,
               definition,
             });
           });
@@ -215,7 +215,7 @@ export function useEditorSubscriber() {
           } as Link<'Entry'>);
           if (designComponentDefinition) {
             addComponentRegistration({
-              component: DesignComponent,
+              component: Assembly,
               definition: designComponentDefinition,
             });
           }

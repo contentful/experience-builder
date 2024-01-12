@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
 import { builtInComponents } from '@/types/constants';
 import { DESIGN_COMPONENT_NODE_TYPE } from '@contentful/experience-builder-core/constants';
-import { ContentfulContainer, DesignComponent } from '@contentful/experience-builder-components';
+import { ContentfulContainer, Assembly } from '@contentful/experience-builder-components';
 import { resolveDesignComponent } from '@/utils/designComponentUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
@@ -39,7 +39,7 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
     if (node.type === DESIGN_COMPONENT_NODE_TYPE && !registration) {
       return createAssemblyRegistration({
         definitionId: node.data.blockId as string,
-        component: DesignComponent,
+        component: Assembly,
       }) as ComponentRegistration;
     } else if (!registration) {
       console.warn(`[exp-builder.sdk] Component registration not found for ${node.data.blockId}`);
@@ -61,7 +61,7 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
   const elementToRender = builtInComponents.includes(node.data.blockId || '') ? (
     <ContentfulContainer {...props} />
   ) : node.type === DESIGN_COMPONENT_NODE_TYPE ? (
-    // DesignComponent.tsx requires renderDropzone and editorMode as well
+    // Assembly.tsx requires renderDropzone and editorMode as well
     React.createElement(componentRegistration.component, props)
   ) : (
     React.createElement(componentRegistration.component, componentProps)
