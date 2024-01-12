@@ -206,7 +206,7 @@ describe('createDesignComponentRegistration', () => {
       component,
       definition: {
         id: definitionId,
-        name: 'Design Component',
+        name: 'Component',
         variables: {},
         children: true,
         category: 'Design Components',

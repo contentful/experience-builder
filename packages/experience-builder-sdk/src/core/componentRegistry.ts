@@ -198,7 +198,7 @@ export const createDesignComponentRegistration = ({
 
   const definition = {
     id: definitionId,
-    name: definitionName || 'Design Component',
+    name: definitionName || 'Component',
     variables: {} as ComponentDefinition['variables'],
     children: true,
     category: 'Design Components',
