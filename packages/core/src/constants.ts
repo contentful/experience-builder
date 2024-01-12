@@ -36,8 +36,12 @@ export const INCOMING_EVENTS = {
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
+  /** @deprecated use `AssembliesAdded` instead. This will be removed in version 5. */
   DesignComponentsAdded: 'designComponentsAdded',
+  /** @deprecated use `AssembliesRegistered` instead. This will be removed in version 5. */
   DesignComponentsRegistered: 'designComponentsRegistered',
+  AssembliesAdded: 'assembliesAdded',
+  AssembliesRegistered: 'assembliesRegistered',
   InitEditor: 'initEditor',
 };
 

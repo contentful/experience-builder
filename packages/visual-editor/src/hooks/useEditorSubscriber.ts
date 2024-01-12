@@ -182,7 +182,8 @@ export function useEditorSubscriber() {
           setLocale(locale);
           break;
         }
-        case INCOMING_EVENTS.DesignComponentsRegistered: {
+        case INCOMING_EVENTS.DesignComponentsRegistered:
+        case INCOMING_EVENTS.AssembliesRegistered: {
           const { assemblies }: { assemblies: ComponentRegistration['definition'][] } = payload;
 
           assemblies.forEach((definition) => {
@@ -193,7 +194,8 @@ export function useEditorSubscriber() {
           });
           break;
         }
-        case INCOMING_EVENTS.DesignComponentsAdded: {
+        case INCOMING_EVENTS.DesignComponentsAdded:
+        case INCOMING_EVENTS.AssembliesAdded: {
           const {
             assembly,
             assemblyDefinition,
