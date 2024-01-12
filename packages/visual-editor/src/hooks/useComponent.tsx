@@ -10,7 +10,7 @@ import { builtInComponents } from '@/types/constants';
 import { DESIGN_COMPONENT_NODE_TYPE } from '@contentful/experience-builder-core/constants';
 import { ContentfulContainer, DesignComponent } from '@contentful/experience-builder-components';
 import { resolveDesignComponent } from '@/utils/designComponentUtils';
-import { componentRegistry, createDesignComponentRegistration } from '@/store/registries';
+import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 
 interface ComponentParams {
@@ -37,7 +37,7 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
     const registration = componentRegistry.get(node.data.blockId as string);
 
     if (node.type === DESIGN_COMPONENT_NODE_TYPE && !registration) {
-      return createDesignComponentRegistration({
+      return createAssemblyRegistration({
         definitionId: node.data.blockId as string,
         component: DesignComponent,
       }) as ComponentRegistration;

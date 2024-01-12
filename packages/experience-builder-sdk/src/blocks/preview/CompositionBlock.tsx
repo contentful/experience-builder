@@ -17,10 +17,7 @@ import type {
   ResolveDesignValueType,
   StyleProps,
 } from '@contentful/experience-builder-core/types';
-import {
-  createDesignComponentRegistration,
-  getComponentRegistration,
-} from '../../core/componentRegistry';
+import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import {
   buildCfStyles,
   checkIfDesignComponent,
@@ -71,7 +68,7 @@ export const CompositionBlock = ({
     const registration = getComponentRegistration(node.definitionId as string);
 
     if (isDesignComponent && !registration) {
-      return createDesignComponentRegistration({
+      return createAssemblyRegistration({
         definitionId: node.definitionId as string,
         component: DesignComponent,
       });

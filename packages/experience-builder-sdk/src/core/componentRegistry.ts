@@ -181,7 +181,7 @@ export const addComponentRegistration = (componentRegistration: ComponentRegistr
   componentRegistry.set(componentRegistration.definition.id, componentRegistration);
 };
 
-export const createDesignComponentRegistration = ({
+export const createAssemblyRegistration = ({
   definitionId,
   definitionName,
   component,

@@ -163,7 +163,7 @@ describe('component registration', () => {
   });
 });
 
-describe('createDesignComponentRegistration', () => {
+describe('createAssemblyRegistration', () => {
   let existingComponentRegistration: ComponentRegistration;
   beforeEach(() => {
     existingComponentRegistration = {
@@ -189,7 +189,7 @@ describe('createDesignComponentRegistration', () => {
     const component = jest.fn();
     const addComponentRegistrationMock = jest.spyOn(registry, 'addComponentRegistration');
 
-    const result = registry.createDesignComponentRegistration({ definitionId, component });
+    const result = registry.createAssemblyRegistration({ definitionId, component });
 
     expect(result).toBe(existingComponentRegistration);
     expect(addComponentRegistrationMock).not.toHaveBeenCalled();
@@ -200,7 +200,7 @@ describe('createDesignComponentRegistration', () => {
     const component = jest.fn();
     const addComponentRegistrationMock = jest.spyOn(registry, 'addComponentRegistration');
 
-    const result = registry.createDesignComponentRegistration({ definitionId, component });
+    const result = registry.createAssemblyRegistration({ definitionId, component });
 
     expect(result).toEqual({
       component,
