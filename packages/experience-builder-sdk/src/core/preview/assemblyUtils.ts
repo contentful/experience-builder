@@ -66,15 +66,15 @@ export const resolveAssembly = ({
   }
 
   const componentId = node.definitionId as string;
-  const designComponent = entityStore?.experienceEntryFields?.usedComponents?.find(
+  const assembly = entityStore?.experienceEntryFields?.usedComponents?.find(
     (component) => component.sys.id === componentId
   );
 
-  if (!designComponent || !('fields' in designComponent)) {
+  if (!assembly || !('fields' in assembly)) {
     return node;
   }
 
-  const componentFields = designComponent.fields;
+  const componentFields = assembly.fields;
 
   const deserializedNode = deserializeAssemblyNode({
     node: {

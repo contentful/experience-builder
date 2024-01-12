@@ -26,7 +26,7 @@ import {
 import { useStyleTag } from '../../hooks/useStyleTag';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 
-import { resolveAssembly } from '../../core/preview/designComponentUtils';
+import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
 
 type CompositionBlockProps = {

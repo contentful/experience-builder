@@ -2,8 +2,8 @@ import { Asset, Entry } from 'contentful';
 import {
   createAssemblyEntry,
   createAssemblyNode,
-  designComponentGeneratedVariableName,
-} from '../../test/__fixtures__/designComponent';
+  assemblyGeneratedVariableName,
+} from '../../test/__fixtures__/assembly';
 import { assets } from '../../test/__fixtures__/entities';
 
 import {
@@ -15,41 +15,41 @@ import type {
   CompositionNode,
 } from '@contentful/experience-builder-core/types';
 import { EditorModeEntityStore } from '@contentful/experience-builder-core';
-import { deserializeAssemblyNode, resolveAssembly } from './designComponentUtils';
+import { deserializeAssemblyNode, resolveAssembly } from './assemblyUtils';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { designComponentsRegistry } from '@/store/registries';
+import { assembliesRegistry } from '@/store/registries';
 
-const designComponentEntry = createAssemblyEntry({
+const assemblyEntry = createAssemblyEntry({
   id: 'design-component-id',
   schemaVersion: '2023-09-28',
 });
 
 describe('deserializeAssemblyNode', () => {
   beforeEach(() => {
-    designComponentsRegistry.set(designComponentEntry.sys.id, {
-      sys: { id: designComponentEntry.sys.id, type: 'Link', linkType: 'Entry' },
+    assembliesRegistry.set(assemblyEntry.sys.id, {
+      sys: { id: assemblyEntry.sys.id, type: 'Link', linkType: 'Entry' },
     });
   });
 
   afterEach(() => {
-    designComponentsRegistry.clear();
+    assembliesRegistry.clear();
   });
 
   it('should correctly deserialize a simple CompositionNode with no variables or children', () => {
     const node: CompositionNode = {
       definitionId: 'design-component-id',
       variables: {},
-      children: designComponentEntry.fields.componentTree.children as CompositionNode['children'],
+      children: assemblyEntry.fields.componentTree.children as CompositionNode['children'],
     };
 
     const result = deserializeAssemblyNode({
       node,
       nodeId: 'random-node-id',
       parentId: 'root',
-      designComponentDataSource: {},
-      designComponentUnboundValues: designComponentEntry.fields.unboundValues,
+      assemblyDataSource: {},
+      assemblyUnboundValues: assemblyEntry.fields.unboundValues,
       componentInstanceProps: {
-        [designComponentGeneratedVariableName]: {
+        [assemblyGeneratedVariableName]: {
           type: 'UnboundValue',
           key: 'unbound_uuid1Experience',
         },
@@ -110,13 +110,13 @@ describe('deserializeAssemblyNode', () => {
 
 describe('resolveAssembly', () => {
   beforeEach(() => {
-    designComponentsRegistry.set(designComponentEntry.sys.id, {
-      sys: { id: designComponentEntry.sys.id, type: 'Link', linkType: 'Entry' },
+    assembliesRegistry.set(assemblyEntry.sys.id, {
+      sys: { id: assemblyEntry.sys.id, type: 'Link', linkType: 'Entry' },
     });
   });
 
   afterEach(() => {
-    designComponentsRegistry.clear();
+    assembliesRegistry.clear();
   });
 
   it('should return the input node when its type is not a design component node type', () => {
@@ -146,7 +146,7 @@ describe('resolveAssembly', () => {
     expect(result).toEqual(node);
   });
 
-  it('should return the input node when designComponentsRegistry does not have the componentId', () => {
+  it('should return the input node when assembliesRegistry does not have the componentId', () => {
     const node: CompositionComponentNode = {
       type: DESIGN_COMPONENT_NODE_TYPE,
       data: {
@@ -183,7 +183,7 @@ describe('resolveAssembly', () => {
     };
 
     const entityStore = new EditorModeEntityStore({
-      entities: [{ ...designComponentEntry, fields: {} }, ...assets] as Array<Entry | Asset>,
+      entities: [{ ...assemblyEntry, fields: {} }, ...assets] as Array<Entry | Asset>,
       locale: 'en-US',
     });
 
@@ -224,7 +224,7 @@ describe('resolveAssembly', () => {
     });
 
     const entityStore = new EditorModeEntityStore({
-      entities: [designComponentEntry, ...assets] as Array<Entry | Asset>,
+      entities: [assemblyEntry, ...assets] as Array<Entry | Asset>,
       locale: 'en-US',
     });
 
@@ -290,7 +290,7 @@ describe('resolveAssembly', () => {
     });
 
     const entityStore = new EditorModeEntityStore({
-      entities: [designComponentEntry, ...assets] as Array<Entry | Asset>,
+      entities: [assemblyEntry, ...assets] as Array<Entry | Asset>,
       locale: 'en-US',
     });
 

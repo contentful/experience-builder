@@ -9,7 +9,7 @@ import { useComponentProps } from './useComponentProps';
 import { builtInComponents } from '@/types/constants';
 import { DESIGN_COMPONENT_NODE_TYPE } from '@contentful/experience-builder-core/constants';
 import { ContentfulContainer, Assembly } from '@contentful/experience-builder-components';
-import { resolveAssembly } from '@/utils/designComponentUtils';
+import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 

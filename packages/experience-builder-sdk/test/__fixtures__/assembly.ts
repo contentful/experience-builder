@@ -15,7 +15,7 @@ type createAssemblyEntryArgs = {
 
 export const defaultAssemblyId = 'design-component-id';
 
-export const designComponentGeneratedVariableName = 'text_uuid1Assembly';
+export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
 export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = defaultAssemblyId,
@@ -63,7 +63,7 @@ export const createAssemblyEntry = ({
                 definitionId: 'custom-component',
                 variables: {
                   text: {
-                    key: designComponentGeneratedVariableName,
+                    key: assemblyGeneratedVariableName,
                     type: 'ComponentValue',
                   },
                 },
@@ -83,7 +83,7 @@ export const createAssemblyEntry = ({
       },
       componentSettings: {
         variableDefinitions: {
-          [designComponentGeneratedVariableName]: {
+          [assemblyGeneratedVariableName]: {
             id: 'text',
             name: 'Text',
             type: 'Text',
@@ -125,7 +125,7 @@ export const createAssemblyNode = ({
     parentId: 'root',
   };
   if (unboundValueKey) {
-    node.data.props[designComponentGeneratedVariableName] = {
+    node.data.props[assemblyGeneratedVariableName] = {
       type: 'UnboundValue',
       key: unboundValueKey,
     };
@@ -133,7 +133,7 @@ export const createAssemblyNode = ({
       [unboundValueKey]: { value: unboundValue },
     };
   } else if (boundValueKey) {
-    node.data.props[designComponentGeneratedVariableName] = {
+    node.data.props[assemblyGeneratedVariableName] = {
       type: 'BoundValue',
       path: `/${boundValueKey}/fields/someFieldId/~locale`,
     };

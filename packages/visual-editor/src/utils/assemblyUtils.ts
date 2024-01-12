@@ -13,14 +13,14 @@ import {
   DESIGN_COMPONENT_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 import { generateRandomId } from '@contentful/experience-builder-core';
-import { designComponentsRegistry } from '@/store/registries';
+import { assembliesRegistry } from '@/store/registries';
 
 export const deserializeAssemblyNode = ({
   node,
   nodeId,
   parentId,
-  designComponentDataSource,
-  designComponentUnboundValues,
+  assemblyDataSource,
+  assemblyUnboundValues,
   componentInstanceProps,
   componentInstanceUnboundValues,
   componentInstanceDataSource,
@@ -28,8 +28,8 @@ export const deserializeAssemblyNode = ({
   node: CompositionNode;
   nodeId: string;
   parentId?: string;
-  designComponentDataSource: CompositionDataSource;
-  designComponentUnboundValues: CompositionUnboundValues;
+  assemblyDataSource: CompositionDataSource;
+  assemblyUnboundValues: CompositionUnboundValues;
   componentInstanceProps: Record<string, CompositionComponentPropValue>;
   componentInstanceUnboundValues: CompositionUnboundValues;
   componentInstanceDataSource: CompositionDataSource;
@@ -65,15 +65,15 @@ export const deserializeAssemblyNode = ({
     }
   }
 
-  const isAssembly = designComponentsRegistry.has(node.definitionId);
+  const isAssembly = assembliesRegistry.has(node.definitionId);
 
   const children: CompositionComponentNode[] = node.children.map((child) =>
     deserializeAssemblyNode({
       node: child,
       nodeId: generateRandomId(16),
       parentId: nodeId,
-      designComponentDataSource,
-      designComponentUnboundValues,
+      assemblyDataSource,
+      assemblyUnboundValues,
       componentInstanceProps,
       componentInstanceUnboundValues,
       componentInstanceDataSource,
@@ -108,18 +108,16 @@ export const resolveAssembly = ({
   }
 
   const componentId = node.data.blockId as string;
-  const designComponent = designComponentsRegistry.get(componentId);
+  const assembly = assembliesRegistry.get(componentId);
 
-  if (!designComponent) {
+  if (!assembly) {
     console.warn(`Link to design component with ID '${componentId}' not found`, {
-      designComponentsRegistry,
+      assembliesRegistry,
     });
     return node;
   }
 
-  const componentFields = entityStore?.getValue(designComponent, [
-    'fields',
-  ]) as unknown as Composition;
+  const componentFields = entityStore?.getValue(assembly, ['fields']) as unknown as Composition;
 
   if (!componentFields) {
     console.warn(`Entry for design component with ID '${componentId}' not found`, { entityStore });
@@ -140,8 +138,8 @@ export const resolveAssembly = ({
     },
     nodeId: node.data.id,
     parentId: node.parentId,
-    designComponentDataSource: {},
-    designComponentUnboundValues: componentFields.unboundValues,
+    assemblyDataSource: {},
+    assemblyUnboundValues: componentFields.unboundValues,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
     componentInstanceDataSource: node.data.dataSource,
