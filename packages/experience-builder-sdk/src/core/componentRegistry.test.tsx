@@ -3,6 +3,7 @@ import { containerDefinition } from '@contentful/experience-builder-core';
 import {
   INTERNAL_EVENTS,
   CONTENTFUL_SECTION_ID,
+  ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import * as registry from './componentRegistry';
 import type { ComponentRegistration } from '@contentful/experience-builder-core/types';
@@ -173,7 +174,7 @@ describe('createAssemblyRegistration', () => {
         name: 'Existing Definition',
         variables: {},
         children: true,
-        category: 'Design Components',
+        category: ASSEMBLY_DEFAULT_CATEGORY,
       },
     };
     registry.addComponentRegistration(existingComponentRegistration);
@@ -209,7 +210,7 @@ describe('createAssemblyRegistration', () => {
         name: 'Component',
         variables: {},
         children: true,
-        category: 'Design Components',
+        category: ASSEMBLY_DEFAULT_CATEGORY,
       },
     });
     expect(addComponentRegistrationMock).toHaveBeenCalled();

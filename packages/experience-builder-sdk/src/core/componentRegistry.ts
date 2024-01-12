@@ -8,6 +8,7 @@ import {
   INTERNAL_EVENTS,
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
+  ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 import {
@@ -201,7 +202,7 @@ export const createAssemblyRegistration = ({
     name: definitionName || 'Component',
     variables: {} as ComponentDefinition['variables'],
     children: true,
-    category: 'Design Components',
+    category: ASSEMBLY_DEFAULT_CATEGORY,
   };
 
   addComponentRegistration({ component, definition });

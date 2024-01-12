@@ -7,6 +7,7 @@ import type {
 import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
+  ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 
 // Note: During development, the hot reloading might empty this and it
@@ -52,7 +53,7 @@ export const createAssemblyRegistration = ({
     name: definitionName || 'Component',
     variables: {} as ComponentDefinition['variables'],
     children: true,
-    category: 'Design Components',
+    category: ASSEMBLY_DEFAULT_CATEGORY,
   };
 
   addComponentRegistration({ component, definition });

@@ -3,6 +3,7 @@ import { sendMessage } from '@contentful/experience-builder-core';
 import {
   OUTGOING_EVENTS,
   DESIGN_COMPONENT_NODE_TYPE,
+  ASSEMBLY_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 
 export class MouseOverHandler {
@@ -21,7 +22,8 @@ export class MouseOverHandler {
 
   private getBoundingClientRect(element: Element) {
     const isAssembly =
-      element.getAttribute('data-cf-node-block-type') === DESIGN_COMPONENT_NODE_TYPE;
+      element.getAttribute('data-cf-node-block-type') === DESIGN_COMPONENT_NODE_TYPE ||
+      element.getAttribute('data-cf-node-block-type') === ASSEMBLY_NODE_TYPE;
     if (!isAssembly) {
       return element.getBoundingClientRect();
     } else {

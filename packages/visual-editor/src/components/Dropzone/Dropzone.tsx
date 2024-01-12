@@ -13,7 +13,10 @@ import { EmptyEditorContainer } from '@components/EmptyContainer/EmptyContainer'
 import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
 import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
-import { DESIGN_COMPONENT_NODE_TYPES } from '@contentful/experience-builder-core/constants';
+import {
+  DESIGN_COMPONENT_NODE_TYPES,
+  ASSEMBLY_NODE_TYPES,
+} from '@contentful/experience-builder-core/constants';
 
 type DropzoneProps = {
   zoneId: string;
@@ -102,7 +105,9 @@ export function Dropzone({
     return draggingParentIds[0] === zoneId;
   }, [userIsDragging, draggingParentIds, zoneId]);
 
-  const isAssembly = DESIGN_COMPONENT_NODE_TYPES.includes(node?.type || '');
+  const isAssembly =
+    DESIGN_COMPONENT_NODE_TYPES.includes(node?.type || '') ||
+    ASSEMBLY_NODE_TYPES.includes(node?.type || '');
 
   const draggingRootZone = draggedSourceId === ROOT_ID;
 

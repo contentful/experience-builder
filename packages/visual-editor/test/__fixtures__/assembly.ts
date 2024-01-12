@@ -1,6 +1,6 @@
 import {
   CONTENTFUL_CONTAINER_ID,
-  DESIGN_COMPONENT_NODE_TYPE,
+  ASSEMBLY_NODE_TYPE,
   LATEST_SCHEMA_VERSION,
 } from '@contentful/experience-builder-core/constants';
 import type {
@@ -112,7 +112,7 @@ export const createAssemblyNode = ({
   boundValueKey = undefined,
 }: createAssemblyNodeArgs): CompositionComponentNode => {
   const node: CompositionComponentNode = {
-    type: DESIGN_COMPONENT_NODE_TYPE,
+    type: ASSEMBLY_NODE_TYPE,
     data: {
       blockId,
       id,
