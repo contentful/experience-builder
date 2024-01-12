@@ -20,7 +20,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { assembliesRegistry } from '@/store/registries';
 
 const assemblyEntry = createAssemblyEntry({
-  id: 'design-component-id',
+  id: 'assembly-id',
   schemaVersion: '2023-09-28',
 });
 
@@ -37,7 +37,7 @@ describe('deserializeAssemblyNode', () => {
 
   it('should correctly deserialize a simple CompositionNode with no variables or children', () => {
     const node: CompositionNode = {
-      definitionId: 'design-component-id',
+      definitionId: 'assembly-id',
       variables: {},
       children: assemblyEntry.fields.componentTree.children as CompositionNode['children'],
     };
@@ -64,7 +64,7 @@ describe('deserializeAssemblyNode', () => {
       type: DESIGN_COMPONENT_NODE_TYPE,
       parentId: 'root',
       data: {
-        blockId: 'design-component-id',
+        blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -150,7 +150,7 @@ describe('resolveAssembly', () => {
     const node: CompositionComponentNode = {
       type: DESIGN_COMPONENT_NODE_TYPE,
       data: {
-        blockId: 'design-componentId',
+        blockId: 'assemblyId',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -162,7 +162,7 @@ describe('resolveAssembly', () => {
 
     const entityStore = null;
 
-    // Throws warning "Entry for design component with ID 'design-component-id' not found"
+    // Throws warning "Entry for design component with ID 'assembly-id' not found"
     const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
@@ -172,7 +172,7 @@ describe('resolveAssembly', () => {
     const node: CompositionComponentNode = {
       type: DESIGN_COMPONENT_NODE_TYPE,
       data: {
-        blockId: 'design-component-id',
+        blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -196,7 +196,7 @@ describe('resolveAssembly', () => {
     const node: CompositionComponentNode = {
       type: DESIGN_COMPONENT_NODE_TYPE,
       data: {
-        blockId: 'design-component-id',
+        blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -208,7 +208,7 @@ describe('resolveAssembly', () => {
 
     const entityStore = null;
 
-    // Throws warning "Entry for design component with ID 'design-component-id' not found"
+    // Throws warning "Entry for design component with ID 'assembly-id' not found"
     const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
@@ -235,7 +235,7 @@ describe('resolveAssembly', () => {
       type: DESIGN_COMPONENT_NODE_TYPE,
       parentId: 'root',
       data: {
-        blockId: 'design-component-id',
+        blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},

@@ -13,7 +13,7 @@ type createAssemblyEntryArgs = {
   id: string;
 };
 
-export const defaultAssemblyId = 'design-component-id';
+export const defaultAssemblyId = 'assembly-id';
 
 export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
 export const createAssemblyEntry = ({

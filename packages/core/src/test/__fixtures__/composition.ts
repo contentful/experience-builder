@@ -175,7 +175,7 @@ export const createCompositionEntry = ({
 export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
 export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
-  id = 'design-component-id',
+  id = 'assembly-id',
 }: createCompositionEntryArgs & { id: string }) => {
   return {
     sys: {

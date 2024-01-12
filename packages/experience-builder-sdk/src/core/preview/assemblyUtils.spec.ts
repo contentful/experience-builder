@@ -41,7 +41,7 @@ describe('resolveAssembly', () => {
 
   it('should return the input node when the corresponding component is not found in the entity store', () => {
     const assemblyNode: CompositionNode = {
-      definitionId: 'design-component-id',
+      definitionId: 'assembly-id',
       variables: {},
       children: [],
     };
@@ -58,13 +58,13 @@ describe('resolveAssembly', () => {
   });
   it('should return a design component node with children', () => {
     const assemblyNode: CompositionNode = {
-      definitionId: 'design-component-id',
+      definitionId: 'assembly-id',
       variables: {},
       children: [],
     };
 
     const assemblyEntry = createAssemblyEntry({
-      id: 'design-component-id',
+      id: 'assembly-id',
       schemaVersion: '2023-09-28',
     });
 
