@@ -14,7 +14,7 @@ body {
 
 :root {
   /* Color tokens from Forma 36: https://f36.contentful.com/tokens/color-system */
-  --exp-builder-blue100: #e8f5ff; 
+  --exp-builder-blue100: #e8f5ff;
   --exp-builder-blue200: #ceecff;
   --exp-builder-blue300: #98cbff;
   --exp-builder-blue400: #40a0ff;
