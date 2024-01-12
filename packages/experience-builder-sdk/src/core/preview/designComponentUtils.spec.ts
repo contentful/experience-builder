@@ -1,13 +1,13 @@
 import type { Entry } from 'contentful';
 import { compositionEntry } from '../../../test/__fixtures__/composition';
-import { createDesignComponentEntry } from '../../../test/__fixtures__/designComponent';
+import { createAssemblyEntry } from '../../../test/__fixtures__/designComponent';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
 import type { CompositionNode } from '@contentful/experience-builder-core/types';
 import { EntityStore } from '@contentful/experience-builder-core';
-import { resolveDesignComponent } from './designComponentUtils';
+import { resolveAssembly } from './designComponentUtils';
 
-describe('resolveDesignComponent', () => {
+describe('resolveAssembly', () => {
   it('should return the input node when it is not a design component', () => {
     const containerNode: CompositionNode = {
       definitionId: CONTENTFUL_CONTAINER_ID,
@@ -20,7 +20,7 @@ describe('resolveDesignComponent', () => {
       locale: 'en-US',
     });
 
-    const result = resolveDesignComponent({ node: containerNode, entityStore });
+    const result = resolveAssembly({ node: containerNode, entityStore });
 
     expect(result).toBe(containerNode);
   });
@@ -34,7 +34,7 @@ describe('resolveDesignComponent', () => {
 
     const entityStore = undefined;
 
-    const result = resolveDesignComponent({ node: containerNode, entityStore });
+    const result = resolveAssembly({ node: containerNode, entityStore });
 
     expect(result).toBe(containerNode);
   });
@@ -52,7 +52,7 @@ describe('resolveDesignComponent', () => {
       locale: 'en-US',
     });
 
-    const result = resolveDesignComponent({ node: designComponentNode, entityStore });
+    const result = resolveAssembly({ node: designComponentNode, entityStore });
 
     expect(result).toBe(designComponentNode);
   });
@@ -63,7 +63,7 @@ describe('resolveDesignComponent', () => {
       children: [],
     };
 
-    const designComponentEntry = createDesignComponentEntry({
+    const designComponentEntry = createAssemblyEntry({
       id: 'design-component-id',
       schemaVersion: '2023-09-28',
     });
@@ -80,7 +80,7 @@ describe('resolveDesignComponent', () => {
       locale: 'en-US',
     });
 
-    const result = resolveDesignComponent({ node: designComponentNode, entityStore });
+    const result = resolveAssembly({ node: designComponentNode, entityStore });
 
     expect(result).toEqual({
       ...designComponentNode,

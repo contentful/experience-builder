@@ -12,8 +12,8 @@ import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
 import { compositionEntry } from '../../../test/__fixtures__/composition';
 import {
-  createDesignComponentEntry,
-  defaultDesignComponentId,
+  createAssemblyEntry,
+  defaultAssemblyId,
   designComponentGeneratedVariableName,
 } from '../../../test/__fixtures__/designComponent';
 import { EntityStore } from '@contentful/experience-builder-core';
@@ -122,8 +122,8 @@ describe('CompositionBlock', () => {
 
   it('renders design component node', () => {
     const unboundValueKey = 'some-unbound-value-key';
-    const designComponentEntry = createDesignComponentEntry({
-      id: defaultDesignComponentId,
+    const designComponentEntry = createAssemblyEntry({
+      id: defaultAssemblyId,
       schemaVersion: '2023-09-28',
     });
     const experienceEntry = {
@@ -146,7 +146,7 @@ describe('CompositionBlock', () => {
     });
 
     const designComponentNode: CompositionNode = {
-      definitionId: defaultDesignComponentId,
+      definitionId: defaultAssemblyId,
       variables: {
         [designComponentGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },
       },

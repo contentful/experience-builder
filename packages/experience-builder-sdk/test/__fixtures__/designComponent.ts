@@ -8,18 +8,18 @@ import type {
   SchemaVersions,
 } from '@contentful/experience-builder-core/types';
 
-type createDesignComponentEntryArgs = {
+type createAssemblyEntryArgs = {
   schemaVersion: SchemaVersions;
   id: string;
 };
 
-export const defaultDesignComponentId = 'design-component-id';
+export const defaultAssemblyId = 'design-component-id';
 
-export const designComponentGeneratedVariableName = 'text_uuid1DesignComponent';
-export const createDesignComponentEntry = ({
+export const designComponentGeneratedVariableName = 'text_uuid1Assembly';
+export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
-  id = defaultDesignComponentId,
-}: createDesignComponentEntryArgs) => {
+  id = defaultAssemblyId,
+}: createAssemblyEntryArgs) => {
   return {
     sys: {
       id,
@@ -77,7 +77,7 @@ export const createDesignComponentEntry = ({
       },
       dataSource: {},
       unboundValues: {
-        unbound_uuid1DesignComponent: {
+        unbound_uuid1Assembly: {
           value: 'custom component title',
         },
       },
@@ -87,7 +87,7 @@ export const createDesignComponentEntry = ({
             id: 'text',
             name: 'Text',
             type: 'Text',
-            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1DesignComponent' },
+            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },
             required: false,
           },
         },
@@ -96,7 +96,7 @@ export const createDesignComponentEntry = ({
   };
 };
 
-type createDesignComponentNodeArgs = {
+type createAssemblyNodeArgs = {
   id: string;
   blockId?: string;
   unboundValue?: string;
@@ -104,13 +104,13 @@ type createDesignComponentNodeArgs = {
   boundValueKey?: string;
 };
 
-export const createDesignComponentNode = ({
+export const createAssemblyNode = ({
   id,
-  blockId = defaultDesignComponentId,
+  blockId = defaultAssemblyId,
   unboundValue = 'New year Eve',
   unboundValueKey = undefined,
   boundValueKey = undefined,
-}: createDesignComponentNodeArgs): CompositionComponentNode => {
+}: createAssemblyNodeArgs): CompositionComponentNode => {
   const node: CompositionComponentNode = {
     type: DESIGN_COMPONENT_NODE_TYPE,
     data: {

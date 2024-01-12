@@ -9,7 +9,7 @@ import { useComponentProps } from './useComponentProps';
 import { builtInComponents } from '@/types/constants';
 import { DESIGN_COMPONENT_NODE_TYPE } from '@contentful/experience-builder-core/constants';
 import { ContentfulContainer, Assembly } from '@contentful/experience-builder-components';
-import { resolveDesignComponent } from '@/utils/designComponentUtils';
+import { resolveAssembly } from '@/utils/designComponentUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 
@@ -24,7 +24,7 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
 
   const node = useMemo(() => {
     if (rawNode.type === DESIGN_COMPONENT_NODE_TYPE && areEntitiesFetched) {
-      return resolveDesignComponent({
+      return resolveAssembly({
         node: rawNode,
         entityStore,
       });

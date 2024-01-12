@@ -20,9 +20,9 @@ export class MouseOverHandler {
   };
 
   private getBoundingClientRect(element: Element) {
-    const isDesignComponent =
+    const isAssembly =
       element.getAttribute('data-cf-node-block-type') === DESIGN_COMPONENT_NODE_TYPE;
-    if (!isDesignComponent) {
+    if (!isAssembly) {
       return element.getBoundingClientRect();
     } else {
       // As we use `display: contents` for design components, there is no real "block"

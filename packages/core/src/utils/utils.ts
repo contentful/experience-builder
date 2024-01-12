@@ -124,7 +124,7 @@ export const generateRandomId = (letterCount: number): string => {
   return times(letterCount, () => ALNUM[random(0, ALNUM.length - 1)]).join('');
 };
 
-export const checkIfDesignComponent = ({
+export const checkIsAssembly = ({
   componentId,
   usedComponents,
 }: {

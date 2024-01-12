@@ -28,7 +28,7 @@ import { Assembly } from '@contentful/experience-builder-components';
 import {
   addComponentRegistration,
   designComponentsRegistry,
-  setDesignComponents,
+  setAssemblies,
 } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { PostMessageMethods } from '@contentful/visual-sdk';
@@ -151,7 +151,7 @@ export function useEditorSubscriber() {
 
           // Make sure to first store the design components before setting the tree and thus triggering a rerender
           if (designComponents) {
-            setDesignComponents(designComponents);
+            setAssemblies(designComponents);
             // If the designComponentEntry is not yet fetched, this will be done below by
             // the imperative calls to fetchMissingEntities.
           }

@@ -52,11 +52,11 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   const isContainer = node.data.blockId === CONTENTFUL_CONTAINER_ID;
   const containsZone = sectionsWithZone[componentId];
 
-  const isDesignComponentBlock = node.type === DESIGN_COMPONENT_BLOCK_NODE_TYPE;
+  const isAssemblyBlock = node.type === DESIGN_COMPONENT_BLOCK_NODE_TYPE;
 
   // Currently, design component blocks are not editable (readonly) so
   // we simply render that underlying component instead of making it draggable
-  if (isDesignComponentBlock) {
+  if (isAssemblyBlock) {
     return elementToRender;
   }
 

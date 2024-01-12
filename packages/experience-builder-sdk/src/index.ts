@@ -3,7 +3,7 @@ export { useExperienceBuilder, useFetchExperience, useFetchById, useFetchBySlug 
 export { defineComponents } from './core/componentRegistry';
 export {
   calculateNodeDefaultHeight,
-  checkIfDesignComponent,
+  checkIsAssembly,
   defineDesignTokens,
   supportedModes,
   VisualEditorMode,

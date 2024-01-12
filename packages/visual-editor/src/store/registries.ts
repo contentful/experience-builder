@@ -13,7 +13,7 @@ import {
 // stays empty leading to not rendering design components. Ideally, this is
 // integrated into the state machine to keep track of its state.
 export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
-export const setDesignComponents = (designComponents: Link<'Entry'>[]) => {
+export const setAssemblies = (designComponents: Link<'Entry'>[]) => {
   for (const designComponent of designComponents) {
     designComponentsRegistry.set(designComponent.sys.id, designComponent);
   }

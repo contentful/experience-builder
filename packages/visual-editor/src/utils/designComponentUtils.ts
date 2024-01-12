@@ -15,7 +15,7 @@ import {
 import { generateRandomId } from '@contentful/experience-builder-core';
 import { designComponentsRegistry } from '@/store/registries';
 
-export const deserializeDesignComponentNode = ({
+export const deserializeAssemblyNode = ({
   node,
   nodeId,
   parentId,
@@ -65,10 +65,10 @@ export const deserializeDesignComponentNode = ({
     }
   }
 
-  const isDesignComponent = designComponentsRegistry.has(node.definitionId);
+  const isAssembly = designComponentsRegistry.has(node.definitionId);
 
   const children: CompositionComponentNode[] = node.children.map((child) =>
-    deserializeDesignComponentNode({
+    deserializeAssemblyNode({
       node: child,
       nodeId: generateRandomId(16),
       parentId: nodeId,
@@ -82,7 +82,7 @@ export const deserializeDesignComponentNode = ({
 
   return {
     // separate node type identifiers for design components and their blocks, so we can treat them differently in as much as we want
-    type: isDesignComponent ? DESIGN_COMPONENT_NODE_TYPE : DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+    type: isAssembly ? DESIGN_COMPONENT_NODE_TYPE : DESIGN_COMPONENT_BLOCK_NODE_TYPE,
     parentId,
     data: {
       id: nodeId,
@@ -96,7 +96,7 @@ export const deserializeDesignComponentNode = ({
   };
 };
 
-export const resolveDesignComponent = ({
+export const resolveAssembly = ({
   node,
   entityStore,
 }: {
@@ -132,7 +132,7 @@ export const resolveDesignComponent = ({
     });
   }
 
-  const deserializedNode = deserializeDesignComponentNode({
+  const deserializedNode = deserializeAssemblyNode({
     node: {
       definitionId: node.data.blockId || '',
       variables: {},

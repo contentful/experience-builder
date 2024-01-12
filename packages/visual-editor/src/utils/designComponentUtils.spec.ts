@@ -1,7 +1,7 @@
 import { Asset, Entry } from 'contentful';
 import {
-  createDesignComponentEntry,
-  createDesignComponentNode,
+  createAssemblyEntry,
+  createAssemblyNode,
   designComponentGeneratedVariableName,
 } from '../../test/__fixtures__/designComponent';
 import { assets } from '../../test/__fixtures__/entities';
@@ -15,16 +15,16 @@ import type {
   CompositionNode,
 } from '@contentful/experience-builder-core/types';
 import { EditorModeEntityStore } from '@contentful/experience-builder-core';
-import { deserializeDesignComponentNode, resolveDesignComponent } from './designComponentUtils';
+import { deserializeAssemblyNode, resolveAssembly } from './designComponentUtils';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { designComponentsRegistry } from '@/store/registries';
 
-const designComponentEntry = createDesignComponentEntry({
+const designComponentEntry = createAssemblyEntry({
   id: 'design-component-id',
   schemaVersion: '2023-09-28',
 });
 
-describe('deserializeDesignComponentNode', () => {
+describe('deserializeAssemblyNode', () => {
   beforeEach(() => {
     designComponentsRegistry.set(designComponentEntry.sys.id, {
       sys: { id: designComponentEntry.sys.id, type: 'Link', linkType: 'Entry' },
@@ -42,7 +42,7 @@ describe('deserializeDesignComponentNode', () => {
       children: designComponentEntry.fields.componentTree.children as CompositionNode['children'],
     };
 
-    const result = deserializeDesignComponentNode({
+    const result = deserializeAssemblyNode({
       node,
       nodeId: 'random-node-id',
       parentId: 'root',
@@ -108,7 +108,7 @@ describe('deserializeDesignComponentNode', () => {
   });
 });
 
-describe('resolveDesignComponent', () => {
+describe('resolveAssembly', () => {
   beforeEach(() => {
     designComponentsRegistry.set(designComponentEntry.sys.id, {
       sys: { id: designComponentEntry.sys.id, type: 'Link', linkType: 'Entry' },
@@ -141,7 +141,7 @@ describe('resolveDesignComponent', () => {
 
     const entityStore = null;
 
-    const result = resolveDesignComponent({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
   });
@@ -163,7 +163,7 @@ describe('resolveDesignComponent', () => {
     const entityStore = null;
 
     // Throws warning "Entry for design component with ID 'design-component-id' not found"
-    const result = resolveDesignComponent({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
   });
@@ -187,7 +187,7 @@ describe('resolveDesignComponent', () => {
       locale: 'en-US',
     });
 
-    const result = resolveDesignComponent({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
   });
@@ -209,15 +209,15 @@ describe('resolveDesignComponent', () => {
     const entityStore = null;
 
     // Throws warning "Entry for design component with ID 'design-component-id' not found"
-    const result = resolveDesignComponent({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
   });
 
   // TODO: This tests is basically a plain snapshot test and missing specific assertions.
-  // Also it is testing almost completley the same as above for `deserializeDesignComponentNode`.
+  // Also it is testing almost completley the same as above for `deserializeAssemblyNode`.
   it('returns a deserialized design component node with unboundValues and props', () => {
-    const node = createDesignComponentNode({
+    const node = createAssemblyNode({
       id: 'random-node-id',
       unboundValueKey: 'unbound_uuid1Experience',
       unboundValue: 'New year Eve',
@@ -228,7 +228,7 @@ describe('resolveDesignComponent', () => {
       locale: 'en-US',
     });
 
-    const result = resolveDesignComponent({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).not.toEqual(node);
     expect(result).toEqual({
@@ -284,7 +284,7 @@ describe('resolveDesignComponent', () => {
   });
 
   it('returns a deserialized design component node with a bound value', () => {
-    const node = createDesignComponentNode({
+    const node = createAssemblyNode({
       id: 'random-node-id',
       boundValueKey: 'bound_uuid1Experience',
     });
@@ -294,7 +294,7 @@ describe('resolveDesignComponent', () => {
       locale: 'en-US',
     });
 
-    const result = resolveDesignComponent({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).not.toEqual(node);
     expect(result.children[0].children[0].data.props.text).toEqual({
