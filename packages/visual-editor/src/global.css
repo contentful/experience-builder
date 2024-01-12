@@ -37,6 +37,10 @@ body {
   --exp-builder-color-white: #ffffff;
   --exp-builder-glow-primary: 0px 0px 0px 3px #e8f5ff;
 
+  /* RGB colors for applying opacity */
+  --exp-builder-blue100-rgb: 232, 245, 255;
+  --exp-builder-blue300-rgb: 152, 203, 255;
+
   /* Spacing tokens from Forma 36: https://f36.contentful.com/tokens/spacing */
   --exp-builder-spacing-s: 0.75rem;
   --exp-builder-spacing-2xs: 0.25rem;

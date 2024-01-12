@@ -15,13 +15,17 @@ export const EmptyEditorContainer = ({ isDragging }: EmptyContainerProps) => {
         [styles.highlight]: isDragging,
       })}
       data-type="empty-container">
-      <svg xmlns="http://www.w3.org/2000/svg" width="37" height="36" fill="none">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="37"
+        height="36"
+        fill="none"
+        className={styles.icon}>
         <rect
           width="11.676"
           height="11.676"
           x="18.512"
           y=".153"
-          fill="#CFD9E0"
           rx="1.621"
           transform="rotate(45 18.512 .153)"
         />
@@ -30,7 +34,6 @@ export const EmptyEditorContainer = ({ isDragging }: EmptyContainerProps) => {
           height="11.676"
           x="9.254"
           y="9.139"
-          fill="#CFD9E0"
           rx="1.621"
           transform="rotate(45 9.254 9.139)"
         />
@@ -39,7 +42,6 @@ export const EmptyEditorContainer = ({ isDragging }: EmptyContainerProps) => {
           height="11.676"
           x="18.011"
           y="18.625"
-          fill="#CFD9E0"
           rx="1.621"
           transform="rotate(45 18.01 18.625)"
         />
@@ -48,7 +50,6 @@ export const EmptyEditorContainer = ({ isDragging }: EmptyContainerProps) => {
           height="11.676"
           x="30.557"
           y="10.131"
-          fill="#CFD9E0"
           rx="1.621"
           transform="rotate(60 30.557 10.13)"
         />
@@ -60,7 +61,7 @@ export const EmptyEditorContainer = ({ isDragging }: EmptyContainerProps) => {
         />
       </svg>
 
-      <span className={styles.icon}>Add components to begin</span>
+      <span className={styles.label}>Add elements to begin</span>
     </div>
   );
 };

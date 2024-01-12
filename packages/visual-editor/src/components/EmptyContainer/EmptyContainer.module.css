@@ -10,16 +10,20 @@
   color: var(--exp-builder-gray400);
   font-size: var(--exp-builder-font-size-l);
   font-family: var(--exp-builder-font-stack-primary);
-  outline: 1px dashed var(--exp-builder-gray500);
-  outline-offset: -1px;
+  outline: 2px dashed var(--exp-builder-gray400);
+  outline-offset: -2px;
 }
 
 .highlight:hover {
-  outline: 1px dashed var(--exp-builder-blue500);
-  background-color: var(--exp-builder-blue100);
+  outline: 2px dashed var(--exp-builder-blue500);
+  background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
   cursor: grabbing;
 }
 
-.icon {
+.icon rect {
+  fill: var(--exp-builder-gray400);
+}
+
+.label {
   margin-left: var(--exp-builder-spacing-s);
 }
