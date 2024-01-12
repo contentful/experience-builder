@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.12](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.11...@contentful/experience-builder-visual-editor@0.0.2-alpha.12) (2024-01-12)
+
+### Bug Fixes
+
+- **visual-editor:** enable dropzones on custom components ([#253](https://github.com/contentful/experience-builder/issues/253)) ([b0d87c0](https://github.com/contentful/experience-builder/commit/b0d87c02d4343e8c0ec79daf00edee2d3e07bad9))
+
 ## [0.0.2-alpha.11](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.10...@contentful/experience-builder-visual-editor@0.0.2-alpha.11) (2024-01-11)
 
 ### Bug Fixes
