@@ -19,7 +19,7 @@ export const deserializeAssemblyNode = ({
       const componentValueKey = variable.key;
       const instanceProperty = componentInstanceVariables[componentValueKey];
 
-      // For design component, we look up the variable in the design component instance and
+      // For assembly, we look up the variable in the assembly instance and
       // replace the componentValue with that one.
       if (instanceProperty?.type === 'UnboundValue') {
         variables[variableName] = {

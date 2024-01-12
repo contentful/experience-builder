@@ -77,7 +77,7 @@ export const CompositionBlock = ({
   }, [isAssembly, node.definitionId]);
 
   const nodeProps = useMemo(() => {
-    // Don't enrich the design component wrapper node with props
+    // Don't enrich the assembly wrapper node with props
     if (!componentRegistration || isAssembly) {
       return {};
     }

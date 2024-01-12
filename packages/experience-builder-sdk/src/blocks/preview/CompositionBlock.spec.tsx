@@ -120,7 +120,7 @@ describe('CompositionBlock', () => {
     expect(getByTestId('contentful-container')).toBeInTheDocument();
   });
 
-  it('renders design component node', () => {
+  it('renders assembly node', () => {
     const unboundValueKey = 'some-unbound-value-key';
     const assemblyEntry = createAssemblyEntry({
       id: defaultAssemblyId,

@@ -8,7 +8,7 @@ import { EntityStore } from '@contentful/experience-builder-core';
 import { resolveAssembly } from './assemblyUtils';
 
 describe('resolveAssembly', () => {
-  it('should return the input node when it is not a design component', () => {
+  it('should return the input node when it is not a assembly', () => {
     const containerNode: CompositionNode = {
       definitionId: CONTENTFUL_CONTAINER_ID,
       variables: {},
@@ -56,7 +56,7 @@ describe('resolveAssembly', () => {
 
     expect(result).toBe(assemblyNode);
   });
-  it('should return a design component node with children', () => {
+  it('should return a assembly node with children', () => {
     const assemblyNode: CompositionNode = {
       definitionId: 'assembly-id',
       variables: {},

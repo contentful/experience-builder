@@ -11,7 +11,7 @@ import {
 } from '@contentful/experience-builder-core/constants';
 
 // Note: During development, the hot reloading might empty this and it
-// stays empty leading to not rendering design components. Ideally, this is
+// stays empty leading to not rendering assemblies. Ideally, this is
 // integrated into the state machine to keep track of its state.
 export const assembliesRegistry = new Map<string, Link<'Entry'>>([]);
 export const setAssemblies = (assemblies: Link<'Entry'>[]) => {

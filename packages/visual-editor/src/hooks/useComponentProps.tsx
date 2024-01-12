@@ -48,7 +48,7 @@ export const useComponentProps = ({
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: PropsType = useMemo(() => {
-    // Don't enrich the design component wrapper node with props
+    // Don't enrich the assembly wrapper node with props
     if (
       !definition ||
       node.type === DESIGN_COMPONENT_NODE_TYPE ||

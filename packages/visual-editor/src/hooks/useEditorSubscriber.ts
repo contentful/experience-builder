@@ -145,7 +145,7 @@ export function useEditorSubscriber() {
             changedValueType?: CompositionComponentPropValue['type'];
           } = payload;
 
-          // Make sure to first store the design components before setting the tree and thus triggering a rerender
+          // Make sure to first store the assemblies before setting the tree and thus triggering a rerender
           if (assemblies) {
             setAssemblies(assemblies);
             // If the assemblyEntry is not yet fetched, this will be done below by
@@ -204,7 +204,7 @@ export function useEditorSubscriber() {
             assemblyDefinition?: ComponentRegistration['definition'];
           } = payload;
           entityStore.updateEntity(assembly);
-          // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
+          // Using a Map here to avoid setting state and rerending all existing assemblies when a new assembly is added
           // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
           // of all bound and unbound values when new values are added
           assembliesRegistry.set(assembly.sys.id, {

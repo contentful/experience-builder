@@ -54,7 +54,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
 
   const isAssemblyBlock = node.type === DESIGN_COMPONENT_BLOCK_NODE_TYPE;
 
-  // Currently, design component blocks are not editable (readonly) so
+  // Currently, assembly blocks are not editable (readonly) so
   // we simply render that underlying component instead of making it draggable
   if (isAssemblyBlock) {
     return elementToRender;
