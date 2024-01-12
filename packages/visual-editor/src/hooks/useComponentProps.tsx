@@ -177,7 +177,7 @@ export const useComponentProps = ({
     );
   };
 
-  const defaultedProps = {
+  const defaultedProps: Record<string, unknown> = {
     className,
     editorMode: true,
     node,
@@ -188,6 +188,10 @@ export const useComponentProps = ({
     // TODO: do we really need lodash just for this?
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
   };
+
+  if (definition.children) {
+    defaultedProps.children = renderDropzone(node);
+  }
 
   return [defaultedProps, editorWrapperProps] as [typeof defaultedProps, typeof editorWrapperProps];
 };
