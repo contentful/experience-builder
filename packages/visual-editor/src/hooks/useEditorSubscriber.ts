@@ -219,6 +219,11 @@ export function useEditorSubscriber() {
               definition: designComponentDefinition,
             });
           }
+
+          //HACK: The node that is dropped doesn't identify as a designComponent,
+          //so we need to force a rerender to get a new tree, which correctly identifies the node as a designComponent
+          sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
+
           break;
         }
         case INCOMING_EVENTS.CanvasResized: {
