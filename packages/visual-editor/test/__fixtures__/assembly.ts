@@ -1,6 +1,6 @@
 import {
   CONTENTFUL_CONTAINER_ID,
-  DESIGN_COMPONENT_NODE_TYPE,
+  ASSEMBLY_NODE_TYPE,
   LATEST_SCHEMA_VERSION,
 } from '@contentful/experience-builder-core/constants';
 import type {
@@ -8,18 +8,18 @@ import type {
   SchemaVersions,
 } from '@contentful/experience-builder-core/types';
 
-type createDesignComponentEntryArgs = {
+type createAssemblyEntryArgs = {
   schemaVersion: SchemaVersions;
   id: string;
 };
 
-export const defaultDesignComponentId = 'design-component-id';
+export const defaultAssemblyId = 'assembly-id';
 
-export const designComponentGeneratedVariableName = 'text_uuid1DesignComponent';
-export const createDesignComponentEntry = ({
+export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
+export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
-  id = defaultDesignComponentId,
-}: createDesignComponentEntryArgs) => {
+  id = defaultAssemblyId,
+}: createAssemblyEntryArgs) => {
   return {
     sys: {
       id,
@@ -63,7 +63,7 @@ export const createDesignComponentEntry = ({
                 definitionId: 'custom-component',
                 variables: {
                   text: {
-                    key: designComponentGeneratedVariableName,
+                    key: assemblyGeneratedVariableName,
                     type: 'ComponentValue',
                   },
                 },
@@ -77,17 +77,17 @@ export const createDesignComponentEntry = ({
       },
       dataSource: {},
       unboundValues: {
-        unbound_uuid1DesignComponent: {
+        unbound_uuid1Assembly: {
           value: 'custom component title',
         },
       },
       componentSettings: {
         variableDefinitions: {
-          [designComponentGeneratedVariableName]: {
+          [assemblyGeneratedVariableName]: {
             id: 'text',
             name: 'Text',
             type: 'Text',
-            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1DesignComponent' },
+            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },
             required: false,
           },
         },
@@ -96,7 +96,7 @@ export const createDesignComponentEntry = ({
   };
 };
 
-type createDesignComponentNodeArgs = {
+type createAssemblyNodeArgs = {
   id: string;
   blockId?: string;
   unboundValue?: string;
@@ -104,15 +104,15 @@ type createDesignComponentNodeArgs = {
   boundValueKey?: string;
 };
 
-export const createDesignComponentNode = ({
+export const createAssemblyNode = ({
   id,
-  blockId = defaultDesignComponentId,
+  blockId = defaultAssemblyId,
   unboundValue = 'New year Eve',
   unboundValueKey = undefined,
   boundValueKey = undefined,
-}: createDesignComponentNodeArgs): CompositionComponentNode => {
+}: createAssemblyNodeArgs): CompositionComponentNode => {
   const node: CompositionComponentNode = {
-    type: DESIGN_COMPONENT_NODE_TYPE,
+    type: ASSEMBLY_NODE_TYPE,
     data: {
       blockId,
       id,
@@ -125,7 +125,7 @@ export const createDesignComponentNode = ({
     parentId: 'root',
   };
   if (unboundValueKey) {
-    node.data.props[designComponentGeneratedVariableName] = {
+    node.data.props[assemblyGeneratedVariableName] = {
       type: 'UnboundValue',
       key: unboundValueKey,
     };
@@ -133,7 +133,7 @@ export const createDesignComponentNode = ({
       [unboundValueKey]: { value: unboundValue },
     };
   } else if (boundValueKey) {
-    node.data.props[designComponentGeneratedVariableName] = {
+    node.data.props[assemblyGeneratedVariableName] = {
       type: 'BoundValue',
       path: `/${boundValueKey}/fields/someFieldId/~locale`,
     };

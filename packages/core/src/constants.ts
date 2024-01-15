@@ -36,8 +36,12 @@ export const INCOMING_EVENTS = {
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
+  /** @deprecated use `AssembliesAdded` instead. This will be removed in version 5. */
   DesignComponentsAdded: 'designComponentsAdded',
+  /** @deprecated use `AssembliesRegistered` instead. This will be removed in version 5. */
   DesignComponentsRegistered: 'designComponentsRegistered',
+  AssembliesAdded: 'assembliesAdded',
+  AssembliesRegistered: 'assembliesRegistered',
   InitEditor: 'initEditor',
 };
 
@@ -56,9 +60,18 @@ export const CONTENTFUL_CONTAINER_ID = 'contentful-container';
 export const CONTENTFUL_SECTION_NAME = 'Section'; // TODO: remove me once all customers are using 2023-09-28 schema version
 export const CONTENTFUL_CONTAINER_NAME = 'Container';
 export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component';
+export const ASSEMBLY_NODE_TYPE = 'assembly';
+export const ASSEMBLY_DEFAULT_CATEGORY = 'Assemblies';
+export const ASSEMBLY_BLOCK_NODE_TYPE = 'assemblyBlock';
+export const ASSEMBLY_NODE_TYPES = [ASSEMBLY_NODE_TYPE, ASSEMBLY_BLOCK_NODE_TYPE];
+
+/** @deprecated use `ASSEMBLY_NODE_TYPE` instead. This will be removed in version 5. */
 export const DESIGN_COMPONENT_NODE_TYPE = 'designComponent';
+/** @deprecated use `ASSEMBLY_DEFAULT_CATEGORY` instead. This will be removed in version 5. */
 export const DESIGN_COMPONENT_DEFAULT_CATEGORY = 'Design Components';
+/** @deprecated use `ASSEMBLY_BLOCK_NODE_TYPE` instead. This will be removed in version 5. */
 export const DESIGN_COMPONENT_BLOCK_NODE_TYPE = 'designComponentBlock';
+/** @deprecated use `ASSEMBLY_NODE_TYPES` instead. This will be removed in version 5. */
 export const DESIGN_COMPONENT_NODE_TYPES = [
   DESIGN_COMPONENT_NODE_TYPE,
   DESIGN_COMPONENT_BLOCK_NODE_TYPE,

@@ -1,55 +1,55 @@
 import { Asset, Entry } from 'contentful';
 import {
-  createDesignComponentEntry,
-  createDesignComponentNode,
-  designComponentGeneratedVariableName,
-} from '../../test/__fixtures__/designComponent';
+  createAssemblyEntry,
+  createAssemblyNode,
+  assemblyGeneratedVariableName,
+} from '../../test/__fixtures__/assembly';
 import { assets } from '../../test/__fixtures__/entities';
 
 import {
-  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
-  DESIGN_COMPONENT_NODE_TYPE,
+  ASSEMBLY_BLOCK_NODE_TYPE,
+  ASSEMBLY_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 import type {
   CompositionComponentNode,
   CompositionNode,
 } from '@contentful/experience-builder-core/types';
 import { EditorModeEntityStore } from '@contentful/experience-builder-core';
-import { deserializeDesignComponentNode, resolveDesignComponent } from './designComponentUtils';
+import { deserializeAssemblyNode, resolveAssembly } from './assemblyUtils';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { designComponentsRegistry } from '@/store/registries';
+import { assembliesRegistry } from '@/store/registries';
 
-const designComponentEntry = createDesignComponentEntry({
-  id: 'design-component-id',
+const assemblyEntry = createAssemblyEntry({
+  id: 'assembly-id',
   schemaVersion: '2023-09-28',
 });
 
-describe('deserializeDesignComponentNode', () => {
+describe('deserializeAssemblyNode', () => {
   beforeEach(() => {
-    designComponentsRegistry.set(designComponentEntry.sys.id, {
-      sys: { id: designComponentEntry.sys.id, type: 'Link', linkType: 'Entry' },
+    assembliesRegistry.set(assemblyEntry.sys.id, {
+      sys: { id: assemblyEntry.sys.id, type: 'Link', linkType: 'Entry' },
     });
   });
 
   afterEach(() => {
-    designComponentsRegistry.clear();
+    assembliesRegistry.clear();
   });
 
   it('should correctly deserialize a simple CompositionNode with no variables or children', () => {
     const node: CompositionNode = {
-      definitionId: 'design-component-id',
+      definitionId: 'assembly-id',
       variables: {},
-      children: designComponentEntry.fields.componentTree.children as CompositionNode['children'],
+      children: assemblyEntry.fields.componentTree.children as CompositionNode['children'],
     };
 
-    const result = deserializeDesignComponentNode({
+    const result = deserializeAssemblyNode({
       node,
       nodeId: 'random-node-id',
       parentId: 'root',
-      designComponentDataSource: {},
-      designComponentUnboundValues: designComponentEntry.fields.unboundValues,
+      assemblyDataSource: {},
+      assemblyUnboundValues: assemblyEntry.fields.unboundValues,
       componentInstanceProps: {
-        [designComponentGeneratedVariableName]: {
+        [assemblyGeneratedVariableName]: {
           type: 'UnboundValue',
           key: 'unbound_uuid1Experience',
         },
@@ -61,10 +61,10 @@ describe('deserializeDesignComponentNode', () => {
     });
 
     expect(result).toEqual({
-      type: DESIGN_COMPONENT_NODE_TYPE,
+      type: ASSEMBLY_NODE_TYPE,
       parentId: 'root',
       data: {
-        blockId: 'design-component-id',
+        blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -73,7 +73,7 @@ describe('deserializeDesignComponentNode', () => {
       },
       children: [
         {
-          type: DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+          type: ASSEMBLY_BLOCK_NODE_TYPE,
           parentId: 'random-node-id',
           data: {
             blockId: 'contentful-container',
@@ -85,7 +85,7 @@ describe('deserializeDesignComponentNode', () => {
           },
           children: [
             {
-              type: DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+              type: ASSEMBLY_BLOCK_NODE_TYPE,
               parentId: expect.any(String),
               data: {
                 blockId: 'custom-component',
@@ -108,18 +108,18 @@ describe('deserializeDesignComponentNode', () => {
   });
 });
 
-describe('resolveDesignComponent', () => {
+describe('resolveAssembly', () => {
   beforeEach(() => {
-    designComponentsRegistry.set(designComponentEntry.sys.id, {
-      sys: { id: designComponentEntry.sys.id, type: 'Link', linkType: 'Entry' },
+    assembliesRegistry.set(assemblyEntry.sys.id, {
+      sys: { id: assemblyEntry.sys.id, type: 'Link', linkType: 'Entry' },
     });
   });
 
   afterEach(() => {
-    designComponentsRegistry.clear();
+    assembliesRegistry.clear();
   });
 
-  it('should return the input node when its type is not a design component node type', () => {
+  it('should return the input node when its type is not an assembly node type', () => {
     const node: CompositionComponentNode = {
       type: 'block',
       data: {
@@ -141,16 +141,16 @@ describe('resolveDesignComponent', () => {
 
     const entityStore = null;
 
-    const result = resolveDesignComponent({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
   });
 
-  it('should return the input node when designComponentsRegistry does not have the componentId', () => {
+  it('should return the input node when assembliesRegistry does not have the componentId', () => {
     const node: CompositionComponentNode = {
-      type: DESIGN_COMPONENT_NODE_TYPE,
+      type: ASSEMBLY_NODE_TYPE,
       data: {
-        blockId: 'design-componentId',
+        blockId: 'assemblyId',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -162,17 +162,17 @@ describe('resolveDesignComponent', () => {
 
     const entityStore = null;
 
-    // Throws warning "Entry for design component with ID 'design-component-id' not found"
-    const result = resolveDesignComponent({ node, entityStore });
+    // Throws warning "Entry for assembly with ID 'assembly-id' not found"
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
   });
 
   it('should return the input node when entityStore does not have componentFields', () => {
     const node: CompositionComponentNode = {
-      type: DESIGN_COMPONENT_NODE_TYPE,
+      type: ASSEMBLY_NODE_TYPE,
       data: {
-        blockId: 'design-component-id',
+        blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -183,20 +183,20 @@ describe('resolveDesignComponent', () => {
     };
 
     const entityStore = new EditorModeEntityStore({
-      entities: [{ ...designComponentEntry, fields: {} }, ...assets] as Array<Entry | Asset>,
+      entities: [{ ...assemblyEntry, fields: {} }, ...assets] as Array<Entry | Asset>,
       locale: 'en-US',
     });
 
-    const result = resolveDesignComponent({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
   });
 
   it('should return the input node when entityStore is null', () => {
     const node: CompositionComponentNode = {
-      type: DESIGN_COMPONENT_NODE_TYPE,
+      type: ASSEMBLY_NODE_TYPE,
       data: {
-        blockId: 'design-component-id',
+        blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -208,34 +208,34 @@ describe('resolveDesignComponent', () => {
 
     const entityStore = null;
 
-    // Throws warning "Entry for design component with ID 'design-component-id' not found"
-    const result = resolveDesignComponent({ node, entityStore });
+    // Throws warning "Entry for assembly with ID 'assembly-id' not found"
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
   });
 
   // TODO: This tests is basically a plain snapshot test and missing specific assertions.
-  // Also it is testing almost completley the same as above for `deserializeDesignComponentNode`.
-  it('returns a deserialized design component node with unboundValues and props', () => {
-    const node = createDesignComponentNode({
+  // Also it is testing almost completley the same as above for `deserializeAssemblyNode`.
+  it('returns a deserialized assembly node with unboundValues and props', () => {
+    const node = createAssemblyNode({
       id: 'random-node-id',
       unboundValueKey: 'unbound_uuid1Experience',
       unboundValue: 'New year Eve',
     });
 
     const entityStore = new EditorModeEntityStore({
-      entities: [designComponentEntry, ...assets] as Array<Entry | Asset>,
+      entities: [assemblyEntry, ...assets] as Array<Entry | Asset>,
       locale: 'en-US',
     });
 
-    const result = resolveDesignComponent({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).not.toEqual(node);
     expect(result).toEqual({
-      type: DESIGN_COMPONENT_NODE_TYPE,
+      type: ASSEMBLY_NODE_TYPE,
       parentId: 'root',
       data: {
-        blockId: 'design-component-id',
+        blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -244,7 +244,7 @@ describe('resolveDesignComponent', () => {
       },
       children: [
         {
-          type: DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+          type: ASSEMBLY_BLOCK_NODE_TYPE,
           parentId: 'random-node-id',
           data: {
             blockId: 'contentful-container',
@@ -256,7 +256,7 @@ describe('resolveDesignComponent', () => {
           },
           children: [
             {
-              type: DESIGN_COMPONENT_BLOCK_NODE_TYPE,
+              type: ASSEMBLY_BLOCK_NODE_TYPE,
               parentId: expect.any(String),
               data: {
                 blockId: 'custom-component',
@@ -283,18 +283,18 @@ describe('resolveDesignComponent', () => {
     });
   });
 
-  it('returns a deserialized design component node with a bound value', () => {
-    const node = createDesignComponentNode({
+  it('returns a deserialized assembly node with a bound value', () => {
+    const node = createAssemblyNode({
       id: 'random-node-id',
       boundValueKey: 'bound_uuid1Experience',
     });
 
     const entityStore = new EditorModeEntityStore({
-      entities: [designComponentEntry, ...assets] as Array<Entry | Asset>,
+      entities: [assemblyEntry, ...assets] as Array<Entry | Asset>,
       locale: 'en-US',
     });
 
-    const result = resolveDesignComponent({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore });
 
     expect(result).not.toEqual(node);
     expect(result.children[0].children[0].data.props.text).toEqual({

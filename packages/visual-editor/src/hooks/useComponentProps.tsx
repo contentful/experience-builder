@@ -10,6 +10,7 @@ import {
   CONTENTFUL_CONTAINER_ID,
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
+  ASSEMBLY_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 import type {
   StyleProps,
@@ -47,8 +48,12 @@ export const useComponentProps = ({
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: PropsType = useMemo(() => {
-    // Don't enrich the design component wrapper node with props
-    if (!definition || node.type === DESIGN_COMPONENT_NODE_TYPE) {
+    // Don't enrich the assembly wrapper node with props
+    if (
+      !definition ||
+      node.type === DESIGN_COMPONENT_NODE_TYPE ||
+      node.type === ASSEMBLY_NODE_TYPE
+    ) {
       return {};
     }
 

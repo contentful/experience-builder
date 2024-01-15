@@ -13,7 +13,10 @@ import { EmptyEditorContainer } from '@components/EmptyContainer/EmptyContainer'
 import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
 import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
-import { DESIGN_COMPONENT_NODE_TYPES } from '@contentful/experience-builder-core/constants';
+import {
+  DESIGN_COMPONENT_NODE_TYPES,
+  ASSEMBLY_NODE_TYPES,
+} from '@contentful/experience-builder-core/constants';
 
 type DropzoneProps = {
   zoneId: string;
@@ -32,9 +35,9 @@ function isDropEnabled(
   draggingRootZone: boolean,
   isRootZone: boolean,
   draggingOverArea: boolean,
-  isDesignComponent: boolean
+  isAssembly: boolean
 ) {
-  if (isDesignComponent) {
+  if (isAssembly) {
     return false;
   }
 
@@ -102,7 +105,9 @@ export function Dropzone({
     return draggingParentIds[0] === zoneId;
   }, [userIsDragging, draggingParentIds, zoneId]);
 
-  const isDesignComponent = DESIGN_COMPONENT_NODE_TYPES.includes(node?.type || '');
+  const isAssembly =
+    DESIGN_COMPONENT_NODE_TYPES.includes(node?.type || '') ||
+    ASSEMBLY_NODE_TYPES.includes(node?.type || '');
 
   const draggingRootZone = draggedSourceId === ROOT_ID;
 
@@ -120,7 +125,7 @@ export function Dropzone({
     draggingRootZone,
     isRootZone,
     draggingOverArea,
-    isDesignComponent
+    isAssembly
   );
 
   if (!resolveDesignValue) {
@@ -141,9 +146,9 @@ export function Dropzone({
                 [styles.isEmpty]: isEmptyCanvas,
                 [styles.isRoot]: isRootZone,
                 [styles.hoveringRoot]: userIsDragging && hoveringRootZone,
-                [styles.isDragging]: userIsDragging && !isDesignComponent,
+                [styles.isDragging]: userIsDragging && !isAssembly,
                 [styles.isHovering]: hoveringOverZone && !userIsDragging,
-                [styles.isDestination]: isDestination && !isDesignComponent,
+                [styles.isDestination]: isDestination && !isAssembly,
               },
               className
             )}
