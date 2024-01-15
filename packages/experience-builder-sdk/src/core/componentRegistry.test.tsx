@@ -3,6 +3,7 @@ import { containerDefinition } from '@contentful/experience-builder-core';
 import {
   INTERNAL_EVENTS,
   CONTENTFUL_SECTION_ID,
+  ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import * as registry from './componentRegistry';
 import type { ComponentRegistration } from '@contentful/experience-builder-core/types';
@@ -163,7 +164,7 @@ describe('component registration', () => {
   });
 });
 
-describe('createDesignComponentRegistration', () => {
+describe('createAssemblyRegistration', () => {
   let existingComponentRegistration: ComponentRegistration;
   beforeEach(() => {
     existingComponentRegistration = {
@@ -173,7 +174,7 @@ describe('createDesignComponentRegistration', () => {
         name: 'Existing Definition',
         variables: {},
         children: true,
-        category: 'Design Components',
+        category: ASSEMBLY_DEFAULT_CATEGORY,
       },
     };
     registry.addComponentRegistration(existingComponentRegistration);
@@ -189,7 +190,7 @@ describe('createDesignComponentRegistration', () => {
     const component = jest.fn();
     const addComponentRegistrationMock = jest.spyOn(registry, 'addComponentRegistration');
 
-    const result = registry.createDesignComponentRegistration({ definitionId, component });
+    const result = registry.createAssemblyRegistration({ definitionId, component });
 
     expect(result).toBe(existingComponentRegistration);
     expect(addComponentRegistrationMock).not.toHaveBeenCalled();
@@ -200,16 +201,16 @@ describe('createDesignComponentRegistration', () => {
     const component = jest.fn();
     const addComponentRegistrationMock = jest.spyOn(registry, 'addComponentRegistration');
 
-    const result = registry.createDesignComponentRegistration({ definitionId, component });
+    const result = registry.createAssemblyRegistration({ definitionId, component });
 
     expect(result).toEqual({
       component,
       definition: {
         id: definitionId,
-        name: 'Design Component',
+        name: 'Component',
         variables: {},
         children: true,
-        category: 'Design Components',
+        category: ASSEMBLY_DEFAULT_CATEGORY,
       },
     });
     expect(addComponentRegistrationMock).toHaveBeenCalled();

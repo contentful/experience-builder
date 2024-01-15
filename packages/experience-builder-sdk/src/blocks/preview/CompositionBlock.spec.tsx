@@ -12,10 +12,10 @@ import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
 import { compositionEntry } from '../../../test/__fixtures__/composition';
 import {
-  createDesignComponentEntry,
-  defaultDesignComponentId,
-  designComponentGeneratedVariableName,
-} from '../../../test/__fixtures__/designComponent';
+  createAssemblyEntry,
+  defaultAssemblyId,
+  assemblyGeneratedVariableName,
+} from '../../../test/__fixtures__/assembly';
 import { EntityStore } from '@contentful/experience-builder-core';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 
@@ -120,17 +120,17 @@ describe('CompositionBlock', () => {
     expect(getByTestId('contentful-container')).toBeInTheDocument();
   });
 
-  it('renders design component node', () => {
+  it('renders assembly node', () => {
     const unboundValueKey = 'some-unbound-value-key';
-    const designComponentEntry = createDesignComponentEntry({
-      id: defaultDesignComponentId,
+    const assemblyEntry = createAssemblyEntry({
+      id: defaultAssemblyId,
       schemaVersion: '2023-09-28',
     });
     const experienceEntry = {
       ...compositionEntry,
       fields: {
         ...compositionEntry.fields,
-        usedComponents: [designComponentEntry],
+        usedComponents: [assemblyEntry],
         unboundValues: {
           [unboundValueKey]: {
             value: 'New year eve',
@@ -145,28 +145,28 @@ describe('CompositionBlock', () => {
       locale: 'en-US',
     });
 
-    const designComponentNode: CompositionNode = {
-      definitionId: defaultDesignComponentId,
+    const assemblyNode: CompositionNode = {
+      definitionId: defaultAssemblyId,
       variables: {
-        [designComponentGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },
+        [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },
       },
       children: [],
     };
 
     const { getByTestId, getByText } = render(
       <CompositionBlock
-        node={designComponentNode}
+        node={assemblyNode}
         dataSource={{}}
         locale="en-US"
         breakpoints={[]}
         entityStore={entityStore}
-        usedComponents={[designComponentEntry] as ExperienceEntry[]}
+        usedComponents={[assemblyEntry] as ExperienceEntry[]}
         unboundValues={experienceEntry.fields.unboundValues}
         resolveDesignValue={jest.fn()}
       />
     );
 
-    expect(getByTestId('design-component')).toBeInTheDocument();
+    expect(getByTestId('assembly')).toBeInTheDocument();
     expect(getByTestId('contentful-container')).toBeInTheDocument();
     expect(getByText('New year eve')).toBeInTheDocument();
   });
