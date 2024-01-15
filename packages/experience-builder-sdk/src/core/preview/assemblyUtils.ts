@@ -1,10 +1,10 @@
-import { checkIfDesignComponent, EntityStore } from '@contentful/experience-builder-core';
+import { checkIsAssembly, EntityStore } from '@contentful/experience-builder-core';
 import type {
   CompositionComponentPropValue,
   CompositionNode,
 } from '@contentful/experience-builder-core/types';
 
-export const deserializeDesignComponentNode = ({
+export const deserializeAssemblyNode = ({
   node,
   componentInstanceVariables,
 }: {
@@ -19,7 +19,7 @@ export const deserializeDesignComponentNode = ({
       const componentValueKey = variable.key;
       const instanceProperty = componentInstanceVariables[componentValueKey];
 
-      // For design component, we look up the variable in the design component instance and
+      // For assembly, we look up the variable in the assembly instance and
       // replace the componentValue with that one.
       if (instanceProperty?.type === 'UnboundValue') {
         variables[variableName] = {
@@ -36,7 +36,7 @@ export const deserializeDesignComponentNode = ({
   }
 
   const children: CompositionNode[] = node.children.map((child) =>
-    deserializeDesignComponentNode({
+    deserializeAssemblyNode({
       node: child,
       componentInstanceVariables,
     })
@@ -49,34 +49,34 @@ export const deserializeDesignComponentNode = ({
   };
 };
 
-export const resolveDesignComponent = ({
+export const resolveAssembly = ({
   node,
   entityStore,
 }: {
   node: CompositionNode;
   entityStore: EntityStore | undefined;
 }) => {
-  const isDesignComponent = checkIfDesignComponent({
+  const isAssembly = checkIsAssembly({
     componentId: node.definitionId,
     usedComponents: entityStore?.usedComponents,
   });
 
-  if (!isDesignComponent) {
+  if (!isAssembly) {
     return node;
   }
 
   const componentId = node.definitionId as string;
-  const designComponent = entityStore?.experienceEntryFields?.usedComponents?.find(
+  const assembly = entityStore?.experienceEntryFields?.usedComponents?.find(
     (component) => component.sys.id === componentId
   );
 
-  if (!designComponent || !('fields' in designComponent)) {
+  if (!assembly || !('fields' in assembly)) {
     return node;
   }
 
-  const componentFields = designComponent.fields;
+  const componentFields = assembly.fields;
 
-  const deserializedNode = deserializeDesignComponentNode({
+  const deserializedNode = deserializeAssemblyNode({
     node: {
       definitionId: node.definitionId,
       variables: {},

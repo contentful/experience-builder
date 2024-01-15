@@ -5,7 +5,7 @@ import {
 } from '@contentful/experience-builder-core/types';
 import React from 'react';
 
-export type DesignComponentProps<EditorMode = boolean> = EditorMode extends true
+export type AssemblyProps<EditorMode = boolean> = EditorMode extends true
   ? {
       children?: React.ReactNode;
       className?: string;
@@ -23,11 +23,11 @@ export type DesignComponentProps<EditorMode = boolean> = EditorMode extends true
   : // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Record<string, any>;
 
-const designComponentStyle = { display: 'contents' };
+const assemblyStyle = { display: 'contents' };
 
-// Feel free to do any magic as regards variable definitions for design components
+// Feel free to do any magic as regards variable definitions for assemblies
 // Or if this isn't necessary by the time we figure that part out, we can bid this part farewell
-export const DesignComponent: React.FC<DesignComponentProps> = (props) => {
+export const Assembly: React.FC<AssemblyProps> = (props) => {
   if (props.editorMode) {
     const { node } = props;
 
@@ -36,12 +36,12 @@ export const DesignComponent: React.FC<DesignComponentProps> = (props) => {
       ['data-cf-node-id']: node.data.id,
       ['data-cf-node-block-id']: node.data.blockId,
       ['data-cf-node-block-type']: node.type,
-      id: 'design-component',
+      id: 'assembly',
       className: props.className,
-      style: designComponentStyle,
+      style: assemblyStyle,
     });
   }
-  // Using a display contents so design component content/children
+  // Using a display contents so assembly content/children
   // can appear as if they are direct children of the div wrapper's parent
-  return <div data-test-id="design-component" {...props} style={designComponentStyle} />;
+  return <div data-test-id="assembly" {...props} style={assemblyStyle} />;
 };

@@ -17,20 +17,17 @@ import type {
   ResolveDesignValueType,
   StyleProps,
 } from '@contentful/experience-builder-core/types';
-import {
-  createDesignComponentRegistration,
-  getComponentRegistration,
-} from '../../core/componentRegistry';
+import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import {
   buildCfStyles,
-  checkIfDesignComponent,
+  checkIsAssembly,
   transformContentValue,
 } from '@contentful/experience-builder-core';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 
-import { resolveDesignComponent } from '../../core/preview/designComponentUtils';
-import { DesignComponent } from '../../components/DesignComponent';
+import { resolveAssembly } from '../../core/preview/assemblyUtils';
+import { Assembly } from '../../components/Assembly';
 
 type CompositionBlockProps = {
   node: CompositionNode;
@@ -53,35 +50,35 @@ export const CompositionBlock = ({
   resolveDesignValue,
   usedComponents,
 }: CompositionBlockProps) => {
-  const isDesignComponent = useMemo(
-    () => checkIfDesignComponent({ componentId: rawNode.definitionId, usedComponents }),
+  const isAssembly = useMemo(
+    () => checkIsAssembly({ componentId: rawNode.definitionId, usedComponents }),
     [rawNode.definitionId, usedComponents]
   );
 
   const node = useMemo(() => {
-    return isDesignComponent
-      ? resolveDesignComponent({
+    return isAssembly
+      ? resolveAssembly({
           node: rawNode,
           entityStore,
         })
       : rawNode;
-  }, [entityStore, isDesignComponent, rawNode]);
+  }, [entityStore, isAssembly, rawNode]);
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.definitionId as string);
 
-    if (isDesignComponent && !registration) {
-      return createDesignComponentRegistration({
+    if (isAssembly && !registration) {
+      return createAssemblyRegistration({
         definitionId: node.definitionId as string,
-        component: DesignComponent,
+        component: Assembly,
       });
     }
     return registration;
-  }, [isDesignComponent, node.definitionId]);
+  }, [isAssembly, node.definitionId]);
 
   const nodeProps = useMemo(() => {
-    // Don't enrich the design component wrapper node with props
-    if (!componentRegistration || isDesignComponent) {
+    // Don't enrich the assembly wrapper node with props
+    if (!componentRegistration || isAssembly) {
       return {};
     }
 
@@ -122,7 +119,7 @@ export const CompositionBlock = ({
     }, propMap);
   }, [
     componentRegistration,
-    isDesignComponent,
+    isAssembly,
     node.variables,
     resolveDesignValue,
     dataSource,

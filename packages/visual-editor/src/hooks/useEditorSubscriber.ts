@@ -24,12 +24,8 @@ import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { Entry } from 'contentful';
-import { DesignComponent } from '@contentful/experience-builder-components';
-import {
-  addComponentRegistration,
-  designComponentsRegistry,
-  setDesignComponents,
-} from '@/store/registries';
+import { Assembly } from '@contentful/experience-builder-components';
+import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { PostMessageMethods } from '@contentful/visual-sdk';
 import { useEntityStore } from '@/store/entityStore';
@@ -64,12 +60,12 @@ export function useEditorSubscriber() {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
   }, []);
 
-  // Either gets called when dataSource changed or designComponentsRegistry changed (manually)
+  // Either gets called when dataSource changed or assembliesRegistry changed (manually)
   const fetchMissingEntities = useCallback(
     async (newDataSource?: CompositionDataSource) => {
       const entityLinks = [
         ...Object.values(newDataSource ?? dataSource),
-        ...designComponentsRegistry.values(),
+        ...assembliesRegistry.values(),
       ];
       const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
       // Only continue and trigger rerendering when we need to fetch something and we're not fetching yet
@@ -139,20 +135,20 @@ export function useEditorSubscriber() {
             locale,
             changedNode,
             changedValueType,
-            designComponents,
+            assemblies,
           }: {
             tree: CompositionTree;
-            designComponents: Link<'Entry'>[];
+            assemblies: Link<'Entry'>[];
             locale: string;
             entitiesResolved?: boolean;
             changedNode?: CompositionComponentNode;
             changedValueType?: CompositionComponentPropValue['type'];
           } = payload;
 
-          // Make sure to first store the design components before setting the tree and thus triggering a rerender
-          if (designComponents) {
-            setDesignComponents(designComponents);
-            // If the designComponentEntry is not yet fetched, this will be done below by
+          // Make sure to first store the assemblies before setting the tree and thus triggering a rerender
+          if (assemblies) {
+            setAssemblies(assemblies);
+            // If the assemblyEntry is not yet fetched, this will be done below by
             // the imperative calls to fetchMissingEntities.
           }
 
@@ -186,37 +182,38 @@ export function useEditorSubscriber() {
           setLocale(locale);
           break;
         }
-        case INCOMING_EVENTS.DesignComponentsRegistered: {
-          const { designComponents }: { designComponents: ComponentRegistration['definition'][] } =
-            payload;
+        case INCOMING_EVENTS.DesignComponentsRegistered:
+        case INCOMING_EVENTS.AssembliesRegistered: {
+          const { assemblies }: { assemblies: ComponentRegistration['definition'][] } = payload;
 
-          designComponents.forEach((definition) => {
+          assemblies.forEach((definition) => {
             addComponentRegistration({
-              component: DesignComponent,
+              component: Assembly,
               definition,
             });
           });
           break;
         }
-        case INCOMING_EVENTS.DesignComponentsAdded: {
+        case INCOMING_EVENTS.DesignComponentsAdded:
+        case INCOMING_EVENTS.AssembliesAdded: {
           const {
-            designComponent,
-            designComponentDefinition,
+            assembly,
+            assemblyDefinition,
           }: {
-            designComponent: Entry;
-            designComponentDefinition?: ComponentRegistration['definition'];
+            assembly: Entry;
+            assemblyDefinition?: ComponentRegistration['definition'];
           } = payload;
-          entityStore.updateEntity(designComponent);
-          // Using a Map here to avoid setting state and rerending all existing design components when a new design component is added
+          entityStore.updateEntity(assembly);
+          // Using a Map here to avoid setting state and rerending all existing assemblies when a new assembly is added
           // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
           // of all bound and unbound values when new values are added
-          designComponentsRegistry.set(designComponent.sys.id, {
-            sys: { id: designComponent.sys.id, linkType: 'Entry', type: 'Link' },
+          assembliesRegistry.set(assembly.sys.id, {
+            sys: { id: assembly.sys.id, linkType: 'Entry', type: 'Link' },
           } as Link<'Entry'>);
-          if (designComponentDefinition) {
+          if (assemblyDefinition) {
             addComponentRegistration({
-              component: DesignComponent,
-              definition: designComponentDefinition,
+              component: Assembly,
+              definition: assemblyDefinition,
             });
           }
 
