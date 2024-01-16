@@ -48,15 +48,23 @@ export const usePlaceholderStyle = () => {
 
       if (destinationIndex > 0 && direction === 'vertical' && isRoot) {
         const childrenAbove = children.slice(0, destinationIndex);
-        clientY = childrenAbove.reduce(
-          (total, item) =>
+        clientY = childrenAbove.reduce((total, item) => {
+          const childrenMarginY = Array.from(item.children).reduce(
+            (childrenTotal, child) =>
+              childrenTotal +
+              parseInt(window.getComputedStyle(child).marginTop.replace('px', '')) +
+              parseInt(window.getComputedStyle(child).marginBottom.replace('px', '')),
+            0
+          );
+
+          return (
             total +
             item.clientHeight +
             parseInt(window.getComputedStyle(item).marginTop.replace('px', '')) +
-            parseInt(window.getComputedStyle(item).marginBottom.replace('px', '')),
-
-          0
-        );
+            parseInt(window.getComputedStyle(item).marginBottom.replace('px', '')) +
+            childrenMarginY
+          );
+        }, 0);
       }
 
       if (direction === 'vertical' && !isRoot) {
