@@ -183,6 +183,8 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.DesignComponentsRegistered:
+          // Event was deprecated and support will be discontinued with version 5
+          break;
         case INCOMING_EVENTS.AssembliesRegistered: {
           const { assemblies }: { assemblies: ComponentRegistration['definition'][] } = payload;
 
@@ -195,6 +197,8 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.DesignComponentsAdded:
+          // Event was deprecated and support will be discontinued with version 5
+          break;
         case INCOMING_EVENTS.AssembliesAdded: {
           const {
             assembly,
