@@ -172,10 +172,10 @@ export const createCompositionEntry = ({
   };
 };
 
-export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
-export const createAssemblyEntry = ({
+export const designComponentGeneratedVariableName = 'text_uuid1DesignComponent';
+export const createDesignComponentEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
-  id = 'assembly-id',
+  id = 'design-component-id',
 }: createCompositionEntryArgs & { id: string }) => {
   return {
     sys: {
@@ -220,7 +220,7 @@ export const createAssemblyEntry = ({
                 definitionId: 'custom-component',
                 variables: {
                   text: {
-                    key: assemblyGeneratedVariableName,
+                    key: designComponentGeneratedVariableName,
                     type: 'ComponentValue',
                   },
                 },
@@ -234,17 +234,17 @@ export const createAssemblyEntry = ({
       },
       dataSource: {},
       unboundValues: {
-        unbound_uuid1Assembly: {
+        unbound_uuid1DesignComponent: {
           value: 'custom component title',
         },
       },
       componentSettings: {
         variableDefinitions: {
-          [assemblyGeneratedVariableName]: {
+          [designComponentGeneratedVariableName]: {
             id: 'text',
             name: 'Text',
             type: 'Text',
-            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },
+            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1DesignComponent' },
             required: false,
           },
         },

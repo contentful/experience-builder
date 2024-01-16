@@ -135,9 +135,10 @@ export const usePlaceholderStyle = () => {
         height: direction === 'horizontal' ? '100%' : clientHeight,
         width: direction === 'horizontal' ? clientWidth : '100%',
         zIndex: 0,
-        backgroundColor: 'rgba(var(--exp-builder-blue300-rgb), 0.5)',
-        outline: '2px dashed var(--exp-builder-blue600)',
-        outlineOffset: '-2px',
+        opacity: 0.4,
+        backgroundColor: 'var(--exp-builder-blue200)',
+        outline: '1px dashed var(--exp-builder-blue600)',
+        outlineOffset: -1,
       });
     },
     [zones, updateStyle]

@@ -1,14 +1,14 @@
 import type { Entry } from 'contentful';
 import { compositionEntry } from '../../../test/__fixtures__/composition';
-import { createAssemblyEntry } from '../../../test/__fixtures__/assembly';
+import { createDesignComponentEntry } from '../../../test/__fixtures__/designComponent';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
 import type { CompositionNode } from '@contentful/experience-builder-core/types';
 import { EntityStore } from '@contentful/experience-builder-core';
-import { resolveAssembly } from './assemblyUtils';
+import { resolveDesignComponent } from './designComponentUtils';
 
-describe('resolveAssembly', () => {
-  it('should return the input node when it is not a assembly', () => {
+describe('resolveDesignComponent', () => {
+  it('should return the input node when it is not a design component', () => {
     const containerNode: CompositionNode = {
       definitionId: CONTENTFUL_CONTAINER_ID,
       variables: {},
@@ -20,7 +20,7 @@ describe('resolveAssembly', () => {
       locale: 'en-US',
     });
 
-    const result = resolveAssembly({ node: containerNode, entityStore });
+    const result = resolveDesignComponent({ node: containerNode, entityStore });
 
     expect(result).toBe(containerNode);
   });
@@ -34,14 +34,14 @@ describe('resolveAssembly', () => {
 
     const entityStore = undefined;
 
-    const result = resolveAssembly({ node: containerNode, entityStore });
+    const result = resolveDesignComponent({ node: containerNode, entityStore });
 
     expect(result).toBe(containerNode);
   });
 
   it('should return the input node when the corresponding component is not found in the entity store', () => {
-    const assemblyNode: CompositionNode = {
-      definitionId: 'assembly-id',
+    const designComponentNode: CompositionNode = {
+      definitionId: 'design-component-id',
       variables: {},
       children: [],
     };
@@ -52,19 +52,19 @@ describe('resolveAssembly', () => {
       locale: 'en-US',
     });
 
-    const result = resolveAssembly({ node: assemblyNode, entityStore });
+    const result = resolveDesignComponent({ node: designComponentNode, entityStore });
 
-    expect(result).toBe(assemblyNode);
+    expect(result).toBe(designComponentNode);
   });
-  it('should return a assembly node with children', () => {
-    const assemblyNode: CompositionNode = {
-      definitionId: 'assembly-id',
+  it('should return a design component node with children', () => {
+    const designComponentNode: CompositionNode = {
+      definitionId: 'design-component-id',
       variables: {},
       children: [],
     };
 
-    const assemblyEntry = createAssemblyEntry({
-      id: 'assembly-id',
+    const designComponentEntry = createDesignComponentEntry({
+      id: 'design-component-id',
       schemaVersion: '2023-09-28',
     });
 
@@ -73,22 +73,22 @@ describe('resolveAssembly', () => {
         ...compositionEntry,
         fields: {
           ...compositionEntry.fields,
-          usedComponents: [assemblyEntry],
+          usedComponents: [designComponentEntry],
         },
       } as unknown as Entry,
       entities: [...entries, ...assets],
       locale: 'en-US',
     });
 
-    const result = resolveAssembly({ node: assemblyNode, entityStore });
+    const result = resolveDesignComponent({ node: designComponentNode, entityStore });
 
     expect(result).toEqual({
-      ...assemblyNode,
-      children: assemblyEntry.fields.componentTree.children,
+      ...designComponentNode,
+      children: designComponentEntry.fields.componentTree.children,
     });
     expect(entityStore.unboundValues).toEqual({
       ...compositionEntry.fields.unboundValues,
-      ...assemblyEntry.fields.unboundValues,
+      ...designComponentEntry.fields.unboundValues,
     });
   });
 });

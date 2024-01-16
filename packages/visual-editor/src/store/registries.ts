@@ -7,16 +7,15 @@ import type {
 import {
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
-  ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 
 // Note: During development, the hot reloading might empty this and it
-// stays empty leading to not rendering assemblies. Ideally, this is
+// stays empty leading to not rendering design components. Ideally, this is
 // integrated into the state machine to keep track of its state.
-export const assembliesRegistry = new Map<string, Link<'Entry'>>([]);
-export const setAssemblies = (assemblies: Link<'Entry'>[]) => {
-  for (const assembly of assemblies) {
-    assembliesRegistry.set(assembly.sys.id, assembly);
+export const designComponentsRegistry = new Map<string, Link<'Entry'>>([]);
+export const setDesignComponents = (designComponents: Link<'Entry'>[]) => {
+  for (const designComponent of designComponents) {
+    designComponentsRegistry.set(designComponent.sys.id, designComponent);
   }
 };
 
@@ -33,7 +32,7 @@ export const addComponentRegistration = (componentRegistration: ComponentRegistr
   componentRegistry.set(componentRegistration.definition.id, componentRegistration);
 };
 
-export const createAssemblyRegistration = ({
+export const createDesignComponentRegistration = ({
   definitionId,
   definitionName,
   component,
@@ -50,10 +49,10 @@ export const createAssemblyRegistration = ({
 
   const definition = {
     id: definitionId,
-    name: definitionName || 'Component',
+    name: definitionName || 'Design Component',
     variables: {} as ComponentDefinition['variables'],
     children: true,
-    category: ASSEMBLY_DEFAULT_CATEGORY,
+    category: 'Design Components',
   };
 
   addComponentRegistration({ component, definition });
