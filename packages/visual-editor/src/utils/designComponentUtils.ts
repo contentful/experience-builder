@@ -9,19 +9,18 @@ import type {
 } from '@contentful/experience-builder-core/types';
 
 import {
+  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
   DESIGN_COMPONENT_NODE_TYPE,
-  ASSEMBLY_BLOCK_NODE_TYPE,
-  ASSEMBLY_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 import { generateRandomId } from '@contentful/experience-builder-core';
-import { assembliesRegistry } from '@/store/registries';
+import { designComponentsRegistry } from '@/store/registries';
 
-export const deserializeAssemblyNode = ({
+export const deserializeDesignComponentNode = ({
   node,
   nodeId,
   parentId,
-  assemblyDataSource,
-  assemblyUnboundValues,
+  designComponentDataSource,
+  designComponentUnboundValues,
   componentInstanceProps,
   componentInstanceUnboundValues,
   componentInstanceDataSource,
@@ -29,8 +28,8 @@ export const deserializeAssemblyNode = ({
   node: CompositionNode;
   nodeId: string;
   parentId?: string;
-  assemblyDataSource: CompositionDataSource;
-  assemblyUnboundValues: CompositionUnboundValues;
+  designComponentDataSource: CompositionDataSource;
+  designComponentUnboundValues: CompositionUnboundValues;
   componentInstanceProps: Record<string, CompositionComponentPropValue>;
   componentInstanceUnboundValues: CompositionUnboundValues;
   componentInstanceDataSource: CompositionDataSource;
@@ -45,7 +44,7 @@ export const deserializeAssemblyNode = ({
       const componentValueKey = variable.key;
       const instanceProperty = componentInstanceProps[componentValueKey];
 
-      // For assembly, we look up the value in the assembly instance and
+      // For design component, we look up the value in the design component instance and
       // replace the componentValue with that one.
       if (instanceProperty?.type === 'UnboundValue') {
         const componentInstanceValue = componentInstanceUnboundValues[instanceProperty.key];
@@ -66,15 +65,15 @@ export const deserializeAssemblyNode = ({
     }
   }
 
-  const isAssembly = assembliesRegistry.has(node.definitionId);
+  const isDesignComponent = designComponentsRegistry.has(node.definitionId);
 
   const children: CompositionComponentNode[] = node.children.map((child) =>
-    deserializeAssemblyNode({
+    deserializeDesignComponentNode({
       node: child,
       nodeId: generateRandomId(16),
       parentId: nodeId,
-      assemblyDataSource,
-      assemblyUnboundValues,
+      designComponentDataSource,
+      designComponentUnboundValues,
       componentInstanceProps,
       componentInstanceUnboundValues,
       componentInstanceDataSource,
@@ -82,8 +81,8 @@ export const deserializeAssemblyNode = ({
   );
 
   return {
-    // separate node type identifiers for assemblies and their blocks, so we can treat them differently in as much as we want
-    type: isAssembly ? ASSEMBLY_NODE_TYPE : ASSEMBLY_BLOCK_NODE_TYPE,
+    // separate node type identifiers for design components and their blocks, so we can treat them differently in as much as we want
+    type: isDesignComponent ? DESIGN_COMPONENT_NODE_TYPE : DESIGN_COMPONENT_BLOCK_NODE_TYPE,
     parentId,
     data: {
       id: nodeId,
@@ -97,41 +96,43 @@ export const deserializeAssemblyNode = ({
   };
 };
 
-export const resolveAssembly = ({
+export const resolveDesignComponent = ({
   node,
   entityStore,
 }: {
   node: CompositionComponentNode;
   entityStore: EntityStore | null;
 }) => {
-  if (node.type !== DESIGN_COMPONENT_NODE_TYPE && node.type !== ASSEMBLY_NODE_TYPE) {
+  if (node.type !== DESIGN_COMPONENT_NODE_TYPE) {
     return node;
   }
 
   const componentId = node.data.blockId as string;
-  const assembly = assembliesRegistry.get(componentId);
+  const designComponent = designComponentsRegistry.get(componentId);
 
-  if (!assembly) {
-    console.warn(`Link to assembly with ID '${componentId}' not found`, {
-      assembliesRegistry,
+  if (!designComponent) {
+    console.warn(`Link to design component with ID '${componentId}' not found`, {
+      designComponentsRegistry,
     });
     return node;
   }
 
-  const componentFields = entityStore?.getValue(assembly, ['fields']) as unknown as Composition;
+  const componentFields = entityStore?.getValue(designComponent, [
+    'fields',
+  ]) as unknown as Composition;
 
   if (!componentFields) {
-    console.warn(`Entry for assembly with ID '${componentId}' not found`, { entityStore });
+    console.warn(`Entry for design component with ID '${componentId}' not found`, { entityStore });
     return node;
   }
 
   if (!componentFields.componentTree?.children) {
-    console.warn(`Component tree for assembly with ID '${componentId}' not found`, {
+    console.warn(`Component tree for design component with ID '${componentId}' not found`, {
       componentFields,
     });
   }
 
-  const deserializedNode = deserializeAssemblyNode({
+  const deserializedNode = deserializeDesignComponentNode({
     node: {
       definitionId: node.data.blockId || '',
       variables: {},
@@ -139,8 +140,8 @@ export const resolveAssembly = ({
     },
     nodeId: node.data.id,
     parentId: node.parentId,
-    assemblyDataSource: {},
-    assemblyUnboundValues: componentFields.unboundValues,
+    designComponentDataSource: {},
+    designComponentUnboundValues: componentFields.unboundValues,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
     componentInstanceDataSource: node.data.dataSource,

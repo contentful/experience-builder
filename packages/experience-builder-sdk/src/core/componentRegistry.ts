@@ -8,7 +8,6 @@ import {
   INTERNAL_EVENTS,
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_SECTION_ID,
-  ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
 import {
@@ -182,7 +181,7 @@ export const addComponentRegistration = (componentRegistration: ComponentRegistr
   componentRegistry.set(componentRegistration.definition.id, componentRegistration);
 };
 
-export const createAssemblyRegistration = ({
+export const createDesignComponentRegistration = ({
   definitionId,
   definitionName,
   component,
@@ -199,10 +198,10 @@ export const createAssemblyRegistration = ({
 
   const definition = {
     id: definitionId,
-    name: definitionName || 'Component',
+    name: definitionName || 'Design Component',
     variables: {} as ComponentDefinition['variables'],
     children: true,
-    category: ASSEMBLY_DEFAULT_CATEGORY,
+    category: 'Design Components',
   };
 
   addComponentRegistration({ component, definition });

@@ -7,13 +7,10 @@ import type {
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
 import { builtInComponents } from '@/types/constants';
-import {
-  DESIGN_COMPONENT_NODE_TYPE,
-  ASSEMBLY_NODE_TYPE,
-} from '@contentful/experience-builder-core/constants';
-import { ContentfulContainer, Assembly } from '@contentful/experience-builder-components';
-import { resolveAssembly } from '@/utils/assemblyUtils';
-import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
+import { DESIGN_COMPONENT_NODE_TYPE } from '@contentful/experience-builder-core/constants';
+import { ContentfulContainer, DesignComponent } from '@contentful/experience-builder-components';
+import { resolveDesignComponent } from '@/utils/designComponentUtils';
+import { componentRegistry, createDesignComponentRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 
 interface ComponentParams {
@@ -26,11 +23,8 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
   const entityStore = useEntityStore((state) => state.entityStore);
 
   const node = useMemo(() => {
-    if (
-      (rawNode.type === DESIGN_COMPONENT_NODE_TYPE || rawNode.type === ASSEMBLY_NODE_TYPE) &&
-      areEntitiesFetched
-    ) {
-      return resolveAssembly({
+    if (rawNode.type === DESIGN_COMPONENT_NODE_TYPE && areEntitiesFetched) {
+      return resolveDesignComponent({
         node: rawNode,
         entityStore,
       });
@@ -42,13 +36,10 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
   const componentRegistration = useMemo(() => {
     const registration = componentRegistry.get(node.data.blockId as string);
 
-    if (
-      (node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE) &&
-      !registration
-    ) {
-      return createAssemblyRegistration({
+    if (node.type === DESIGN_COMPONENT_NODE_TYPE && !registration) {
+      return createDesignComponentRegistration({
         definitionId: node.data.blockId as string,
-        component: Assembly,
+        component: DesignComponent,
       }) as ComponentRegistration;
     } else if (!registration) {
       console.warn(`[exp-builder.sdk] Component registration not found for ${node.data.blockId}`);
@@ -69,8 +60,8 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
   const { editorMode, renderDropzone, ...componentProps } = props;
   const elementToRender = builtInComponents.includes(node.data.blockId || '') ? (
     <ContentfulContainer {...props} />
-  ) : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE ? (
-    // Assembly.tsx requires renderDropzone and editorMode as well
+  ) : node.type === DESIGN_COMPONENT_NODE_TYPE ? (
+    // DesignComponent.tsx requires renderDropzone and editorMode as well
     React.createElement(componentRegistration.component, props)
   ) : (
     React.createElement(componentRegistration.component, componentProps)

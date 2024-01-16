@@ -2,7 +2,6 @@ import type { HoveredElement } from '@contentful/experience-builder-core/types';
 import { sendMessage } from '@contentful/experience-builder-core';
 import {
   DESIGN_COMPONENT_NODE_TYPE,
-  ASSEMBLY_NODE_TYPE,
   OUTGOING_EVENTS,
 } from '@contentful/experience-builder-core/constants';
 
@@ -21,13 +20,12 @@ export class MouseOverHandler {
   };
 
   private getBoundingClientRect(element: Element) {
-    const isAssembly =
-      element.getAttribute('data-cf-node-block-type') === DESIGN_COMPONENT_NODE_TYPE ||
-      element.getAttribute('data-cf-node-block-type') === ASSEMBLY_NODE_TYPE;
-    if (!isAssembly) {
+    const isDesignComponent =
+      element.getAttribute('data-cf-node-block-type') === DESIGN_COMPONENT_NODE_TYPE;
+    if (!isDesignComponent) {
       return element.getBoundingClientRect();
     } else {
-      // As we use `display: contents` for assemblies, there is no real "block"
+      // As we use `display: contents` for design components, there is no real "block"
       // in the DOM and thus the browser fails to calculate the bounding rect.
       // Instead, we calculate it for each child and add it up:
       if (!element.firstElementChild) {
@@ -41,7 +39,7 @@ export class MouseOverHandler {
         fullHeight += nextChildRect.height;
         nextChild = nextChild.nextElementSibling;
       }
-      // The root of a assembly positions its first level containers vertically.
+      // The root of a design component positions its first level containers vertically.
       // So we just need to add up the height and use the remaining properties from the first child.
       return {
         left: firstChildRect.left,
