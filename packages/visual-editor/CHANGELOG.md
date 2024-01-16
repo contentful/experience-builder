@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.15](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.14...@contentful/experience-builder-visual-editor@0.0.2-alpha.15) (2024-01-16)
+
+### Bug Fixes
+
+- **experience-builder:** only accept new assembly event [SPA-1730] ([#260](https://github.com/contentful/experience-builder/issues/260)) ([3e37f15](https://github.com/contentful/experience-builder/commit/3e37f1518112c993456e08f74013c8a065b370fd))
+- **visual-editor:** change component outlines and dropzone backgrounds [ALT-273] [ALT-275] ([#257](https://github.com/contentful/experience-builder/issues/257)) ([1e47be7](https://github.com/contentful/experience-builder/commit/1e47be7051e53b49d219da73851705bf476592c1))
+- **visual-editor:** request components after DC is dropped to display them ([#258](https://github.com/contentful/experience-builder/issues/258)) ([94f630e](https://github.com/contentful/experience-builder/commit/94f630e275ea4d691975131a7baed24292cb34d3))
+
 ## [0.0.2-alpha.14](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.13...@contentful/experience-builder-visual-editor@0.0.2-alpha.14) (2024-01-16)
 
 **Note:** Version bump only for package @contentful/experience-builder-visual-editor

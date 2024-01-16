@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.13](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.12...@contentful/experience-builder-core@0.0.2-alpha.13) (2024-01-16)
+
+### Bug Fixes
+
+- **experience-builder:** only accept new assembly event [SPA-1730] ([#260](https://github.com/contentful/experience-builder-toolkit/issues/260)) ([3e37f15](https://github.com/contentful/experience-builder-toolkit/commit/3e37f1518112c993456e08f74013c8a065b370fd))
+
 ## [0.0.2-alpha.12](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.11...@contentful/experience-builder-core@0.0.2-alpha.12) (2024-01-16)
 
 **Note:** Version bump only for package @contentful/experience-builder-core
