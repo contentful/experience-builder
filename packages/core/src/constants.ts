@@ -36,9 +36,15 @@ export const INCOMING_EVENTS = {
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
-  /** @deprecated use `AssembliesAdded` instead. This will be removed in version 5. */
+  /**
+   * @deprecated use `AssembliesAdded` instead. This will be removed in version 5.
+   * In the meanwhile, the experience builder will send the old and the new event to support multiple SDK versions.
+   */
   DesignComponentsAdded: 'designComponentsAdded',
-  /** @deprecated use `AssembliesRegistered` instead. This will be removed in version 5. */
+  /**
+   * @deprecated use `AssembliesRegistered` instead. This will be removed in version 5.
+   * In the meanwhile, the experience builder will send the old and the new event to support multiple SDK versions.
+   */
   DesignComponentsRegistered: 'designComponentsRegistered',
   AssembliesAdded: 'assembliesAdded',
   AssembliesRegistered: 'assembliesRegistered',
