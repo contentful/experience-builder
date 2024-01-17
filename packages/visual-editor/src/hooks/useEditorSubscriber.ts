@@ -60,31 +60,34 @@ export function useEditorSubscriber() {
     }, 50);
   };
 
-  const refetchEntities = async (entities: Link<'Asset' | 'Entry'>[]) => {
-    console.log(`:::refetchEntities()`);
-    setEntitiesFetched(false);
-    setFetchingEntities(true);
-    const missingEntryIds = entities
-      .filter((entity) => entity.sys.linkType === 'Entry')
-      .map((entity) => entity.sys.id);
-    const missingAssetIds = entities
-      .filter((entity) => entity.sys.linkType === 'Asset')
-      .map((entity) => entity.sys.id);
-    try {
-      await entityStore.fetchEntities({
-        missingAssetIds,
-        missingEntryIds,
-        skipCache: true,
-      });
-      console.log(`[exp-builder.sdk] Finished refetching entities`);
-    } catch (error) {
-      console.error('[exp-builder.sdk] Failed refetching entities', error);
-      return;
-    } finally {
-      setEntitiesFetched(true);
-      setFetchingEntities(false);
-    }
-  };
+  const refetchEntities = useCallback(
+    async (entities: Link<'Asset' | 'Entry'>[]) => {
+      console.log(`:::refetchEntities()`);
+      setEntitiesFetched(false);
+      setFetchingEntities(true);
+      const missingEntryIds = entities
+        .filter((entity) => entity.sys.linkType === 'Entry')
+        .map((entity) => entity.sys.id);
+      const missingAssetIds = entities
+        .filter((entity) => entity.sys.linkType === 'Asset')
+        .map((entity) => entity.sys.id);
+      try {
+        await entityStore.fetchEntities({
+          missingAssetIds,
+          missingEntryIds,
+          skipCache: true,
+        });
+        console.log(`[exp-builder.sdk] Finished refetching entities`);
+      } catch (error) {
+        console.error('[exp-builder.sdk] Failed refetching entities', error);
+        return;
+      } finally {
+        setEntitiesFetched(true);
+        setFetchingEntities(false);
+      }
+    },
+    [entityStore, setEntitiesFetched]
+  );
 
   useEffect(() => {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
@@ -215,15 +218,10 @@ export function useEditorSubscriber() {
             setUnboundValues(unboundValues);
             await fetchMissingEntities(dataSource);
             await refetchEntities(forceRefetchEntities);
-            // Can i update only embed nodes.
-            // Update the tree when all necessary data is fetched and ready for rendering.
-            // actually I only need to update embed nodes, so I only want entities
-            // which are assemblies
+            // After assembly entries are fetched, we need to update the embed nodes
             updateEmbedNodesOfAssemblies(
               forceRefetchEntities.filter(isEntity).map((entity) => entity.sys.id)
             );
-            // updateTreeNode('root', tree.root);
-            // updateTree(tree);
             setLocale(locale);
           } else {
             const { dataSource, unboundValues } = getDataFromTree(tree);
@@ -348,9 +346,11 @@ export function useEditorSubscriber() {
     dataSource,
     areEntitiesFetched,
     fetchMissingEntities,
+    refetchEntities,
     setUnboundValues,
     unboundValues,
     updateTree,
+    updateEmbedNodesOfAssemblies,
   ]);
 
   /*
