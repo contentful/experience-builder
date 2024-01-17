@@ -11,7 +11,7 @@ import type {
 import { EntityStore } from '@contentful/visual-sdk';
 import { combineClasses } from '../../utils/combineClasses';
 
-export type ContentfulContainerProps<EditorMode = boolean> = EditorMode extends true
+export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = EditorMode extends true
   ? {
       children?: React.ReactNode;
       className?: string;
@@ -37,7 +37,9 @@ export type ContentfulContainerProps<EditorMode = boolean> = EditorMode extends 
       children?: React.ReactNode;
     };
 
-export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerProps> = (props) => {
+export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyperlinkProps> = (
+  props
+) => {
   const { cfHyperlink, cfOpenInNewTab, editorMode, className, children } = props;
 
   let anchorTagProps = {};

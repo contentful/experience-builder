@@ -46,6 +46,7 @@ function missingNodeAction({
   return {
     type: TreeAction.REPLACE_NODE,
     originalId: currentNode.children[index].data.id,
+    indexToReplace: index,
     node: child,
   };
 }
@@ -94,6 +95,8 @@ function compareNodes({
   originalTree,
   differences = [],
 }: CompareNodeParams): Array<TreeDiff | null> {
+  // In the end, this map contains the list of nodes that are not present
+  // in the updated tree and must be removed
   const map = new Map<string, number>();
 
   if (!currentNode || !updatedNode) {
@@ -133,6 +136,10 @@ function compareNodes({
         tree: originalTree,
         currentNode,
       });
+      if (diff?.type === TreeAction.REPLACE_NODE) {
+        // Remove it from the deletion map to avoid adding another REMOVE_NODE action
+        map.delete(diff.originalId);
+      }
       return differences.push(diff);
     }
 

@@ -14,19 +14,20 @@ export function updateNode(
   node.children.forEach((childNode) => updateNode(nodeId, updatedNode, childNode));
 }
 export function replaceNode(
-  nodeId: string,
+  indexToReplace: number,
   updatedNode: CompositionComponentNode,
   node: CompositionComponentNode
 ) {
-  if (node.data.id === nodeId) {
-    node.data = updatedNode.data;
-    node.type = updatedNode.type;
-    node.parentId = updatedNode.parentId;
-    node.children = updatedNode.children;
+  if (node.data.id === updatedNode.parentId) {
+    node.children = [
+      ...node.children.slice(0, indexToReplace),
+      updatedNode,
+      ...node.children.slice(indexToReplace + 1),
+    ];
     return;
   }
 
-  node.children.forEach((childNode) => updateNode(nodeId, updatedNode, childNode));
+  node.children.forEach((childNode) => replaceNode(indexToReplace, updatedNode, childNode));
 }
 
 export function reorderChildrenNodes(

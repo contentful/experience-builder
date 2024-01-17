@@ -75,7 +75,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
               addChildNode(diff.indexToAdd, diff.parentNodeId, diff.nodeToAdd, state.tree.root);
               break;
             case TreeAction.REPLACE_NODE:
-              replaceNode(diff.originalId, diff.node, state.tree.root);
+              replaceNode(diff.indexToReplace, diff.node, state.tree.root);
               break;
             case TreeAction.UPDATE_NODE:
               updateNode(diff.nodeId, diff.node, state.tree.root);
