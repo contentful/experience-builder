@@ -3,11 +3,12 @@ import React from 'react';
 import './ContentfulContainer.css';
 import { Flex } from '../Layout/Flex';
 import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink';
-import type { ContentfulContainerProps } from './ContentfulContainerAsHyperlink';
-import { Section } from '@components/Layout/Section';
+import type { ContentfulContainerAsHyperlinkProps } from './ContentfulContainerAsHyperlink';
 import { combineClasses } from '../../utils/combineClasses';
 
-export const ContentfulContainer: React.FC<ContentfulContainerProps> = (sectionProps) => {
+export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (
+  sectionProps
+) => {
   const { className, editorMode, children } = sectionProps;
 
   if (sectionProps.cfHyperlink) {
