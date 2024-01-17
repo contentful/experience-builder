@@ -54,17 +54,13 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
 
-  // Currently, assembly blocks are not editable (readonly) so
-  // we simply render that underlying component instead of making it draggable
-  if (isAssemblyBlock) {
-    return elementToRender;
-  }
-
   return (
     <DraggableComponent
       label={label || 'No Label Specified'}
       id={`draggable-${componentId}`}
       index={index}
+      isAssemblyBlock={isAssemblyBlock}
+      isDragDisabled={isAssemblyBlock}
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
       className={classNames({
@@ -73,9 +69,15 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
       })}
       onClick={(e) => {
         e.stopPropagation();
-        setSelectedNodeId(componentId);
+
+        if (isAssemblyBlock && !containsZone) {
+          // Readonly components in an assembly cannot be selected
+          return;
+        }
+        const nodeId = isAssemblyBlock ? parentSectionId : componentId;
+        setSelectedNodeId(nodeId);
         sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-          nodeId: componentId,
+          nodeId,
         });
       }}
       onMouseOver={(e) => {
