@@ -29,7 +29,7 @@ const DraggableContainer: React.FC<Props> = ({ id }) => {
       }}>
       <Droppable droppableId={`component-list`} isDropDisabled>
         {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
+          <div id={'chaseId'} {...provided.droppableProps} ref={provided.innerRef}>
             <Draggable draggableId={id} key={id} index={0}>
               {(provided, snapshot) => (
                 <div

@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { CSSProperties, ReactNode, SyntheticEvent } from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import classNames from 'classnames';
@@ -38,8 +39,8 @@ export const DraggableComponent = ({
 }) => {
   return (
     <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
-      {(provided, snapshot) => (
-        <div
+      {(provided, snapshot) => {
+        const Child = ( <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -60,8 +61,16 @@ export const DraggableComponent = ({
           onClick={onClick}>
           {!isSelected ? <div className={styles.overlay}>{label}</div> : null}
           {children}
-        </div>
-      )}
+        </div>)
+
+        // if(snapshot.isDragging) {
+        //   // do portal stuff
+        //   console.log("CREATE PROTAL", document.querySelector('#chaseId')!)
+        //   return ReactDOM.createPortal(Child, document.querySelector('#chaseId')!)
+        // }
+
+        return Child
+      }}
     </Draggable>
   );
 };
