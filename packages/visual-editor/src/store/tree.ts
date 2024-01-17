@@ -2,7 +2,6 @@ import type {
   Breakpoint,
   CompositionComponentNode,
   CompositionTree,
-  Link,
 } from '@contentful/experience-builder-core/types';
 import { ROOT_ID, TreeAction } from '@/types/constants';
 import { create } from 'zustand';
@@ -21,6 +20,7 @@ export interface TreeStore {
   tree: CompositionTree;
   breakpoints: Breakpoint[];
   updateTree: (tree: CompositionTree) => void;
+  updateTreeForced: (tree: CompositionTree) => void;
   updateEmbedNodesOfAssemblies: (assemblies: string[]) => void;
   addChild: (
     destinationIndex: number,
@@ -77,7 +77,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
           embedNodes
         );
 
-        for (let [nodeId, node] of embedNodes) {
+        for (const [nodeId, node] of embedNodes) {
           // Just need dumb clone via JSON.parse(JSON.stringify(node)) to
           // produce a new object with new referential equality
           // Keep in mind that structuredClone() won't work because the node
@@ -87,14 +87,19 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
       })
     );
   },
-  // updateTree: (tree) => {
-  //   console.info('::: updateTree!', tree);
-  //   set({
-  //     tree,
-  //     // here breakpoints MUST be updated, as we receive completely new tree with possibly new breakpoints
-  //     breakpoints: tree?.root?.data?.breakpoints || []
-  //   })
-  // },
+  /**
+   * Force updates entire tree. Usually shouldn't be used as updateTree()
+   * uses smart update algorithm based on diffs. But for troubleshooting
+   * you may want to force update the tree so leaving this in.
+   */
+  updateTreeForced: (tree) => {
+    console.info('::: updateTreeForced!', tree);
+    set({
+      tree,
+      // Breakpoints must be updated, as we receive completely new tree with possibly new breakpoints
+      breakpoints: tree?.root?.data?.breakpoints || [],
+    });
+  },
   updateTree: (tree) => {
     const currentTree = get().tree;
 
