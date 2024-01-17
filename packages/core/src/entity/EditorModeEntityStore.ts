@@ -56,12 +56,17 @@ export class EditorModeEntityStore extends EditorEntityStore {
   async fetchEntities({
     missingEntryIds,
     missingAssetIds,
+    skipCache = false,
   }: {
     missingEntryIds: string[];
     missingAssetIds: string[];
+    skipCache?: boolean;
   }) {
     // Entries and assets will be stored in entryMap and assetMap
-    await Promise.all([this.fetchEntries(missingEntryIds), this.fetchAssets(missingAssetIds)]);
+    await Promise.all([
+      this.fetchEntries(missingEntryIds, skipCache),
+      this.fetchAssets(missingAssetIds, skipCache),
+    ]);
   }
 
   getMissingEntityIds(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {

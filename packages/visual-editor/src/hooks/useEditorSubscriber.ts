@@ -35,7 +35,10 @@ export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
-  const updateTree = useTreeStore((state) => state.updateTree);
+  const { updateTree, updateEmbedNodesOfAssemblies } = useTreeStore((state) => ({
+    updateTree: state.updateTree,
+    updateEmbedNodesOfAssemblies: state.updateEmbedNodesOfAssemblies,
+  }));
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const setLocale = useEditorStore((state) => state.setLocale);
@@ -55,6 +58,32 @@ export function useEditorSubscriber() {
       // Received a hot reload message from webpack dev server -> reload the canvas
       window.location.reload();
     }, 50);
+  };
+
+  const refetchEntities = async (entities: Link<'Asset' | 'Entry'>[]) => {
+    console.log(`:::refetchEntities()`);
+    setEntitiesFetched(false);
+    setFetchingEntities(true);
+    const missingEntryIds = entities
+      .filter((entity) => entity.sys.linkType === 'Entry')
+      .map((entity) => entity.sys.id);
+    const missingAssetIds = entities
+      .filter((entity) => entity.sys.linkType === 'Asset')
+      .map((entity) => entity.sys.id);
+    try {
+      await entityStore.fetchEntities({
+        missingAssetIds,
+        missingEntryIds,
+        skipCache: true,
+      });
+      console.log(`[exp-builder.sdk] Finished refetching entities`);
+    } catch (error) {
+      console.error('[exp-builder.sdk] Failed refetching entities', error);
+      return;
+    } finally {
+      setEntitiesFetched(true);
+      setFetchingEntities(false);
+    }
   };
 
   useEffect(() => {
@@ -137,6 +166,7 @@ export function useEditorSubscriber() {
             changedNode,
             changedValueType,
             assemblies,
+            forceRefetchEntities,
           }: {
             tree: CompositionTree;
             assemblies: Link<'Entry'>[];
@@ -144,6 +174,7 @@ export function useEditorSubscriber() {
             entitiesResolved?: boolean;
             changedNode?: CompositionComponentNode;
             changedValueType?: CompositionComponentPropValue['type'];
+            forceRefetchEntities?: Link<'Asset' | 'Entry'>[];
           } = payload;
 
           // Make sure to first store the assemblies before setting the tree and thus triggering a rerender
@@ -153,6 +184,7 @@ export function useEditorSubscriber() {
             // the imperative calls to fetchMissingEntities.
           }
 
+          // Below are mutually exclusive cases
           if (changedNode) {
             /**
              * On single node updates, we want to skip the process of getting the data (datasource and unbound values)
@@ -171,16 +203,37 @@ export function useEditorSubscriber() {
                 ...changedNode.data.unboundValues,
               });
             }
+
+            // Update the tree when all necessary data is fetched and ready for rendering.
+            updateTree(tree);
+            setLocale(locale);
+          } else if (forceRefetchEntities) {
+            const isEntity = (link: Link<'Entry' | 'Asset'>) => link.sys.linkType === 'Entry';
+            // This happens when we need to update an assembly embed-node
+            const { dataSource, unboundValues } = getDataFromTree(tree);
+            setDataSource(dataSource);
+            setUnboundValues(unboundValues);
+            await fetchMissingEntities(dataSource);
+            await refetchEntities(forceRefetchEntities);
+            // Can i update only embed nodes.
+            // Update the tree when all necessary data is fetched and ready for rendering.
+            // actually I only need to update embed nodes, so I only want entities
+            // which are assemblies
+            updateEmbedNodesOfAssemblies(
+              forceRefetchEntities.filter(isEntity).map((entity) => entity.sys.id)
+            );
+            // updateTreeNode('root', tree.root);
+            // updateTree(tree);
+            setLocale(locale);
           } else {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
             await fetchMissingEntities(dataSource);
+            // Update the tree when all necessary data is fetched and ready for rendering.
+            updateTree(tree);
+            setLocale(locale);
           }
-
-          // Update the tree when all necessary data is fetched and ready for rendering.
-          updateTree(tree);
-          setLocale(locale);
           break;
         }
         case INCOMING_EVENTS.DesignComponentsRegistered:

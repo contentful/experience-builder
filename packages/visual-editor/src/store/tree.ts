@@ -2,6 +2,7 @@ import type {
   Breakpoint,
   CompositionComponentNode,
   CompositionTree,
+  Link,
 } from '@contentful/experience-builder-core/types';
 import { ROOT_ID, TreeAction } from '@/types/constants';
 import { create } from 'zustand';
@@ -14,11 +15,12 @@ import {
   updateNode,
 } from '@/utils/treeHelpers';
 import { getTreeDiffs } from '@/utils/getTreeDiff';
-
+import { treeVisit } from '@/utils/treeTraversal';
 export interface TreeStore {
   tree: CompositionTree;
   breakpoints: Breakpoint[];
   updateTree: (tree: CompositionTree) => void;
+  updateEmbedNodesOfAssemblies: (assemblies: string[]) => void;
   addChild: (
     destinationIndex: number,
     destinationParentId: string,
@@ -46,6 +48,52 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
     },
   },
   breakpoints: [],
+
+  updateEmbedNodesOfAssemblies: (assemblies) => {
+    if (!assemblies.length) return;
+    console.log(`:::updateEmbedNodesOfAssemblies()`);
+
+    set(
+      produce((draftState: TreeStore) => {
+        const currentTree = draftState.tree;
+        const embedNodes: Array<[string, CompositionComponentNode]> = [];
+
+        treeVisit(currentTree.root, (node) => {
+          if (node.type !== 'designComponent') return;
+          const { id, blockId } = node.data;
+
+          assemblies.forEach((assemblyId) => {
+            if (blockId !== assemblyId) return;
+            console.log(
+              `::: updateEmbedNodesOfAssemblies() found an embed node(${id}) for <embed block=${assemblyId}>`,
+              node
+            );
+            embedNodes.push([id, node]);
+          });
+        });
+        console.log(
+          `:::updateEmbedNodesOfAssemblies() found ${embedNodes.length} embed nodes to update`,
+          embedNodes
+        );
+
+        for (let [nodeId, node] of embedNodes) {
+          // Just need dumb clone via JSON.parse(JSON.stringify(node)) to
+          // produce a new object with new referential equality
+          // Keep in mind that structuredClone() won't work because the node
+          // has reference to Window somewhere in it's graph
+          updateNode(nodeId, cloneDeepAsPOJO(node), draftState.tree.root); // but this node, will be exactly the same in terms of data? :/
+        }
+      })
+    );
+  },
+  // updateTree: (tree) => {
+  //   console.info('::: updateTree!', tree);
+  //   set({
+  //     tree,
+  //     // here breakpoints MUST be updated, as we receive completely new tree with possibly new breakpoints
+  //     breakpoints: tree?.root?.data?.breakpoints || []
+  //   })
+  // },
   updateTree: (tree) => {
     const currentTree = get().tree;
 
@@ -111,3 +159,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
     );
   },
 }));
+
+function cloneDeepAsPOJO(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}

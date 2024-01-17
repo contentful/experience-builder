@@ -7,6 +7,12 @@ export function updateNode(
   node: CompositionComponentNode
 ) {
   if (node.data.id === nodeId) {
+    console.log(`:::updateNode() updating node.data`, {
+      oldData: node.data,
+      newData: updatedNode.data,
+      isShallowEqual: node.data === updatedNode.data,
+      isDeepEqual: isEqual(node.data, updatedNode.data),
+    });
     node.data = updatedNode.data;
     return;
   }
