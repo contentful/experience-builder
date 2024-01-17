@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.16](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.15...@contentful/experience-builder-visual-editor@0.0.2-alpha.16) (2024-01-17)
+
+### Bug Fixes
+
+- remove error regarding any type ([222e82c](https://github.com/contentful/experience-builder/commit/222e82cce6c25ad2c819c3aeb8f83a2a39e86efb))
+- remove the previous hotfix ([157dc57](https://github.com/contentful/experience-builder/commit/157dc57adfe85c42e725b62da8d0cb3a5a5a18ec))
+- replace original node with assembly node completely ([cfc55d3](https://github.com/contentful/experience-builder/commit/cfc55d305affd361ac82882c3c13350afae4c912))
+- update dropzone to consider children margins[ALT-282] ([5df13cc](https://github.com/contentful/experience-builder/commit/5df13cc9e24a7d38406617ab2c3bd4070a6c3103))
+
 ## [0.0.2-alpha.15](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.14...@contentful/experience-builder-visual-editor@0.0.2-alpha.15) (2024-01-16)
 
 ### Bug Fixes
