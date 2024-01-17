@@ -59,8 +59,9 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
       label={label || 'No Label Specified'}
       id={`draggable-${componentId}`}
       index={index}
-      isSelected={selectedNodeId === componentId}
+      isAssemblyBlock={isAssemblyBlock}
       isDragDisabled={isAssemblyBlock}
+      isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
       className={classNames({
         [styles.fullWidth]: isContainer && !wrapperProps.isFixedWidth,
@@ -70,10 +71,9 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
         e.stopPropagation();
 
         if (isAssemblyBlock && !containsZone) {
-          // Readonly components within assembly blocks cannot be selected
+          // Readonly components in an assembly cannot be selected
           return;
         }
-
         const nodeId = isAssemblyBlock ? parentSectionId : componentId;
         setSelectedNodeId(nodeId);
         sendMessage(OUTGOING_EVENTS.ComponentSelected, {

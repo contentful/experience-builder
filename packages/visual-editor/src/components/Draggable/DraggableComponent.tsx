@@ -8,6 +8,7 @@ export const DraggableComponent = ({
   children,
   id,
   index,
+  isAssemblyBlock = false,
   isSelected = false,
   onClick = () => null,
   onMouseDown = () => null,
@@ -26,6 +27,7 @@ export const DraggableComponent = ({
   children: ReactNode;
   id: string;
   index: number;
+  isAssemblyBlock?: boolean;
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
   onMouseDown?: (e: SyntheticEvent) => void;
@@ -45,6 +47,7 @@ export const DraggableComponent = ({
           {...provided.dragHandleProps}
           {...rest}
           className={classNames(styles.DraggableComponent, className, {
+            [styles.isAssemblyBlock]: isAssemblyBlock,
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,
             [styles.userIsDragging]: userIsDragging,
@@ -58,7 +61,14 @@ export const DraggableComponent = ({
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
           onClick={onClick}>
-          {!isSelected ? <div className={styles.overlay}>{label}</div> : null}
+          {!isSelected ? (
+            <div
+              className={classNames(styles.overlay, {
+                [styles.overlayAssembly]: isAssemblyBlock,
+              })}>
+              {label}
+            </div>
+          ) : null}
 
           {children}
         </div>
