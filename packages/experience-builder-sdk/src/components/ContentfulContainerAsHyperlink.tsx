@@ -8,7 +8,7 @@ import type {
   StyleProps,
 } from '@contentful/experience-builder-core/types';
 
-export type ContentfulContainerProps<EditorMode = boolean> = EditorMode extends true
+export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = EditorMode extends true
   ? {
       onMouseDown: MouseEventHandler<HTMLElement>;
       children?: React.ReactNode;
@@ -26,7 +26,7 @@ export type ContentfulContainerProps<EditorMode = boolean> = EditorMode extends 
       editorMode: EditorMode;
     };
 
-export const ContentfulContainerAsHyperlink = (props: ContentfulContainerProps) => {
+export const ContentfulContainerAsHyperlink = (props: ContentfulContainerAsHyperlinkProps) => {
   const { cfHyperlink, cfOpenInNewTab, children, editorMode, className } = props;
 
   let anchorTagProps = {};
