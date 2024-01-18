@@ -19,6 +19,7 @@ export const DraggableComponent = ({
   userIsDragging,
   style,
   className,
+  isContainer,
   isDragDisabled = false,
   ...rest
 }: {
@@ -34,6 +35,7 @@ export const DraggableComponent = ({
   onMouseUp?: (e: SyntheticEvent) => void;
   onMouseOver?: (e: SyntheticEvent) => void;
   onMouseOut?: (e: SyntheticEvent) => void;
+  isContainer: boolean;
   userIsDragging?: boolean;
   style?: CSSProperties;
   isDragDisabled?: boolean;
@@ -64,6 +66,7 @@ export const DraggableComponent = ({
           {!isSelected ? (
             <div
               className={classNames(styles.overlay, {
+                [styles.overlayContainer]: isContainer,
                 [styles.overlayAssembly]: isAssemblyBlock,
               })}>
               {label}

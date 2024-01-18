@@ -63,6 +63,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
       isDragDisabled={isAssemblyBlock}
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
+      isContainer={isContainer}
       className={classNames({
         [styles.fullWidth]: isContainer && !wrapperProps.isFixedWidth,
         [styles.fixedWidth]: isContainer && wrapperProps.isFixedWidth,
