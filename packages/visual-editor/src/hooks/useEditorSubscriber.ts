@@ -9,6 +9,7 @@ import {
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
   SCROLL_STATES,
+  PostMessageMethods,
 } from '@contentful/experience-builder-core/constants';
 import {
   CompositionTree,
@@ -27,7 +28,6 @@ import { Entry } from 'contentful';
 import { Assembly } from '@contentful/experience-builder-components';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
-import { PostMessageMethods } from '@contentful/visual-sdk';
 import { useEntityStore } from '@/store/entityStore';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
 
@@ -118,7 +118,7 @@ export function useEditorSubscriber() {
 
       const eventData = tryParseMessage(event);
       if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
-        // Expected message: This message is handled in the visual-sdk to store fetched entities
+        // Expected message: This message is handled in the EntityStore to store fetched entities
         return;
       }
       console.debug(

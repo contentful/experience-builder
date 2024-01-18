@@ -1,14 +1,12 @@
 import type { Asset, Entry } from 'contentful';
 import { describe, vi, expect, beforeEach, afterEach, it } from 'vitest';
-import assetJSON from '../__test__/fixtures/asset.json';
-import entryJSON from '../__test__/fixtures/entry.json';
-import { EditorEntityStore, PostMessageMethods } from './EditorEntityStore';
+import { asset } from '../test/__fixtures__/asset';
+import { entry } from '../test/__fixtures__/entry';
+import { EditorEntityStore } from './EditorEntityStore';
+import { PostMessageMethods } from '../constants';
 
 describe('EditorEntityStore', () => {
   const locale = 'en-US';
-
-  const asset = assetJSON as Asset;
-  const entry = entryJSON as Entry;
   const entities = [entry, asset];
 
   const editorAsset = {

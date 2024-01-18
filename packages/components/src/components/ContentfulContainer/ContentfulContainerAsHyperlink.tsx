@@ -8,7 +8,7 @@ import type {
   StyleProps,
 } from '@contentful/experience-builder-core/types';
 
-import { EntityStore } from '@contentful/visual-sdk';
+import { EntityStore } from '@contentful/experience-builder-core';
 import { combineClasses } from '../../utils/combineClasses';
 
 export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = EditorMode extends true

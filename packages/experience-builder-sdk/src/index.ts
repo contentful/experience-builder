@@ -40,4 +40,4 @@ export type {
   ExternalSDKMode,
   ComponentDefinition,
 } from '@contentful/experience-builder-core/types';
-export { EntityStore } from '@contentful/visual-sdk';
+export { EntityStore } from '@contentful/experience-builder-core';
