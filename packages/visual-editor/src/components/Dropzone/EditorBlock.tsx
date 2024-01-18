@@ -25,6 +25,8 @@ type VisualEditorBlockProps = {
   resolveDesignValue: ResolveDesignValueType;
   zoneId: string;
   parentSectionId: string;
+  isRootZone: boolean;
+  isHovering: boolean;
 };
 
 const EditorBlock: React.FC<VisualEditorBlockProps> = ({
@@ -35,6 +37,8 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   zoneId,
   parentSectionId,
   userIsDragging,
+  isRootZone,
+  isHovering,
 }) => {
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
@@ -62,11 +66,14 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
 
   return (
     <DraggableComponent
-      label={'No Label Specified'}
+      label={label}
       id={`draggable-${componentId}`}
       index={index}
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
+      isRootZone={isRootZone}
+      isContainer={isContainer}
+      isHovering={isHovering}
       className={classNames({
         [styles.fullWidth]: isContainer && !wrapperProps.isFixedWidth,
         [styles.fixedWidth]: isContainer && wrapperProps.isFixedWidth,

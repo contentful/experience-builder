@@ -3,10 +3,9 @@
   position: relative;
   transition: outline 0.2s;
   cursor: grab;
-  outline-offset: -20px;
-  outline: 20px solid transparent;
+  outline-offset: -2px;
+  outline: 2px solid transparent;
   min-width: 100px;
-  box-sizing: border-box;
 }
 
 .DraggableComponent > * {
@@ -24,16 +23,39 @@
 
 .overlay {
   position: absolute;
+  top: -13px;
+  left: 0px;
+  min-width: max-content;
+  min-height: 10px;
+  max-height: 10px;
+  color: var(--exp-builder-color-white);
+  padding: 4px 8px;
+  transition: all 0.2s;
+  font-family: var(--exp-builder-font-stack-primary);
+  z-index: 1;
+  font-size: 10px;
+  background-color: var(--exp-builder-gray500);
+  padding: 2px 6px 2px 5px;
+  color: white;
+  border-radius: 0 0 2px 0;
+  transition: opacity 0.2s;
+  opacity: 0;
+  font-weight: 500;
+}
+
+.overlayContainer {
+  position: absolute;
   top: 0px;
   left: 0px;
+  min-width: max-content;
+  min-height: 10px;
+  max-height: 10px;
   color: var(--exp-builder-color-white);
   padding: 4px 8px;
   transition: all 0.2s;
-  /* opacity: 0; */
   font-family: var(--exp-builder-font-stack-primary);
   z-index: 1;
-  top: 0;
-  font-size: 14px;
+  font-size: 10px;
   background-color: var(--exp-builder-gray500);
   padding: 2px 6px 2px 5px;
   color: white;
@@ -43,48 +65,27 @@
   font-weight: 500;
 }
 
-.overlayed {
-  position: absolute;
-  top: '20px';
-  left: '20px';
-  color: var(--exp-builder-color-white);
-  padding: 4px 8px;
-  transition: all 0.2s;
-  /* opacity: 0; */
-  font-family: var(--exp-builder-font-stack-primary);
-  z-index: 1;
-  top: 0;
-  font-size: 14px;
-  background-color: var(--exp-builder-gray500);
-  padding: 2px 6px 2px 5px;
-  color: white;
-  border-radius: 0 0 2px 0;
-  transition: opacity 0.2s;
-  opacity: 0;
-  font-weight: 500;
-}
-
-/* .DraggableComponent:hover .overlay {
+.DraggableComponent:hover > .overlay, .DraggableComponent:hover > .overlayContainer {
   opacity: 1;
-} */
+}
 
-/* .userIsDragging > .overlay {
+.userIsDragging > .overlay, .userIsDragging > .overlayContainer {
   opacity: 0 !important;
 }
 
 .userIsDragging {
   outline: 2px solid transparent !important;
-} */
+}
 
-/* .DraggableComponent:hover,
+.DraggableComponent:hover,
 .DraggableComponent:hover div[data-rfd-draggable-id] {
   outline: 2px dashed var(--exp-builder-gray500);
 }
 
-.DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)) > .overlay {
+/* .DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)) > .overlay {
   opacity: 1;
 } */
 
-/* .DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
+.DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
   outline: 2px solid var(--exp-builder-gray500);
-} */
+}

@@ -164,11 +164,11 @@ export function Dropzone({
             )}
             onMouseOver={(e) => {
               e.stopPropagation();
-              console.log('zoneId OVER', zoneId)
+              console.log('zoneId OVER', zoneId);
               setHoveringZone(zoneId);
             }}
             onMouseOut={() => {
-              console.log('zoneId OUT', zoneId)
+              console.log('zoneId OUT', zoneId);
               setHoveringZone('');
             }}
             {...rest}>
@@ -188,6 +188,8 @@ export function Dropzone({
                     draggingNewComponent={draggingNewComponent}
                     node={item}
                     resolveDesignValue={resolveDesignValue}
+                    isRootZone={isRootZone}
+                    isHovering={true}
                   />
                 );
               })

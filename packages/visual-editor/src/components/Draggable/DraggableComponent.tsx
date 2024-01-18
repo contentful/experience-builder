@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { CSSProperties, ReactNode, SyntheticEvent } from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import classNames from 'classnames';
@@ -19,6 +18,9 @@ export const DraggableComponent = ({
   userIsDragging,
   style,
   className,
+  isRootZone,
+  isContainer,
+  isHovering,
   isDragDisabled = false,
   ...rest
 }: {
@@ -28,6 +30,9 @@ export const DraggableComponent = ({
   id: string;
   index: number;
   isSelected?: boolean;
+  isRootZone: boolean;
+  isContainer: boolean;
+  isHovering: boolean;
   onClick?: (e: SyntheticEvent) => void;
   onMouseDown?: (e: SyntheticEvent) => void;
   onMouseUp?: (e: SyntheticEvent) => void;
@@ -37,31 +42,41 @@ export const DraggableComponent = ({
   style?: CSSProperties;
   isDragDisabled?: boolean;
 }) => {
+  console.log('ID', id);
+  console.log('IS CONTAINRER', isContainer);
+  console.log('ISHOVERING', isHovering);
   return (
     <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snapshot) => {
-        const Child = ( <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          {...rest}
-          className={classNames(styles.DraggableComponent, className, {
-            [styles.isDragging]: snapshot.isDragging,
-            [styles.isSelected]: isSelected,
-            [styles.userIsDragging]: userIsDragging,
-          })}
-          style={{
-            ...style,
-            ...provided.draggableProps.style,
-          }}
-          onMouseOver={onMouseOver}
-          onMouseOut={onMouseOut}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
-          onClick={onClick}>
-          {!isSelected ? <div className={styles.overlay}>{label}</div> : null}
-          {children}
-        </div>)
+        const Child = (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            {...rest}
+            className={classNames(styles.DraggableComponent, className, {
+              [styles.isDragging]: snapshot.isDragging,
+              [styles.isSelected]: isSelected,
+              [styles.userIsDragging]: userIsDragging,
+            })}
+            style={{
+              ...style,
+              ...provided.draggableProps.style,
+              position: 'relative',
+              zIndex: 1000,
+            }}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            onClick={onClick}>
+            {!isSelected && (
+              <div className={isContainer ? styles.overlayContainer : styles.overlay}>{label}</div>
+            )}
+            {/* {!isSelected ? <div className={styles.overlay}>{'VERY LONG LONG TEXT'}</div> : null} */}
+            {children}
+          </div>
+        );
 
         // if(snapshot.isDragging) {
         //   // do portal stuff
@@ -69,7 +84,7 @@ export const DraggableComponent = ({
         //   return ReactDOM.createPortal(Child, document.querySelector('#chaseId')!)
         // }
 
-        return Child
+        return Child;
       }}
     </Draggable>
   );
