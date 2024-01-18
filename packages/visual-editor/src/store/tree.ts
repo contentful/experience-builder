@@ -15,7 +15,10 @@ import {
 } from '@/utils/treeHelpers';
 import { getTreeDiffs } from '@/utils/getTreeDiff';
 import { treeVisit } from '@/utils/treeTraversal';
-import { ASSEMBLY_NODE_TYPE } from '@contentful/experience-builder-core/constants';
+import {
+  ASSEMBLY_NODE_TYPE,
+  DESIGN_COMPONENT_NODE_TYPE,
+} from '@contentful/experience-builder-core/constants';
 export interface TreeStore {
   tree: CompositionTree;
   breakpoints: Breakpoint[];
@@ -33,6 +36,10 @@ export interface TreeStore {
     sourceIndex: number
   ) => void;
 }
+
+const isAssemblyNode = (node: CompositionComponentNode) => {
+  return node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE;
+};
 
 export const useTreeStore = create<TreeStore>((set, get) => ({
   tree: {
@@ -60,7 +67,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
         const embedNodes: Array<[string, CompositionComponentNode]> = [];
 
         treeVisit(currentTree.root, (node) => {
-          if (node.type !== ASSEMBLY_NODE_TYPE) return;
+          if (!isAssemblyNode(node)) return;
           const { id, blockId } = node.data;
 
           assemblies.forEach((assemblyId) => {
