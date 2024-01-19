@@ -2,44 +2,98 @@ import open from 'open';
 import { EnvFileData } from './models.js';
 
 const baseUrl = process.env.BASE_URL || 'https://api.contentful.com';
-const contentLayoutType = 'DevLayout';
+const contentLayoutType = 'devLayout';
 
 export class CtflClient {
-  public space: { name: string; id: string } | undefined;
-  private authToken: string | undefined;
-  private accessToken: string = '';
-  private previewAccessToken: string = '';
+  public space?: { name: string; id: string };
+  public org?: { name: string; id: string };
+  public apiKey?: {
+    accessToken: string;
+    name: string;
+    previewKeyId: string;
+    previewAccessToken?: string;
+  };
+
+  public previewEnvironment?: {
+    name: string;
+    id: string;
+    url: string;
+  };
+
+  private authToken?: string;
   private authTokenCreatedFromApi = false;
 
   async createApiKeys() {
     //Create API key
-    type ApiKeyReturn = { accessToken: string; preview_api_key: { sys: { id: string } } };
-    const apiKeys = await this.apiCall<ApiKeyReturn>(`/spaces/${this.space?.id}/api_keys`, {
-      body: '{"name":"Experience Builder Dev Keys"}',
+    type ApiKeyReturn = {
+      accessToken: string;
+      name: string;
+      preview_api_key: { sys: { id: string } };
+    };
+    const apiKey = await this.apiCall<ApiKeyReturn>(`/spaces/${this.space?.id}/api_keys`, {
+      body: '{"name":"Experience Builder Keys"}',
       method: 'POST',
     }).then((val) => {
       return {
         accessToken: val.accessToken,
+        name: val.name,
         previewKeyId: val.preview_api_key.sys.id,
       };
     });
-    this.accessToken = apiKeys.accessToken;
+    this.apiKey = apiKey;
+    return apiKey;
+  }
 
-    //Get Preview Key
+  async getApiKeys() {
+    type ApiKeyReturn = {
+      items: { accessToken: string; preview_api_key: { sys: { id: string } }; name: string }[];
+    };
+    const apiKeys = await this.apiCall<ApiKeyReturn>(`/spaces/${this.space?.id}/api_keys`, {
+      method: 'GET',
+    }).then((val) => {
+      return val.items.map((item) => {
+        return {
+          accessToken: item.accessToken,
+          previewKeyId: item.preview_api_key.sys.id,
+          name: item.name,
+        };
+      });
+    });
+
+    return apiKeys;
+
+    // const apiKey = apiKeys.find((key) => key.name === 'Experience Builder Keys');
+
+    // if (!apiKey) {
+    //   return false;
+    // }
+
+    // // this.accessToken = apiKey;
+
+    // //Get Preview Key
+    // type PreviewKeyReturn = { accessToken: string };
+    // const previewKey = await this.apiCall<PreviewKeyReturn>(
+    //   `/spaces/${this.space?.id}/preview_api_keys/${apiKey.preview_api_key.sys.id}`,
+    //   {
+    //     method: 'GET',
+    //   }
+    // ).then((val) => {
+    //   return val.accessToken;
+    // });
+    // this.previewAccessToken = previewKey;
+  }
+
+  async getPreviewAccessToken(id: string) {
     type PreviewKeyReturn = { accessToken: string };
-    const previewKey = await this.apiCall<PreviewKeyReturn>(
-      `/spaces/${this.space?.id}/preview_api_keys/${apiKeys.previewKeyId}`,
+    const previewAccessToken = await this.apiCall<PreviewKeyReturn>(
+      `/spaces/${this.space?.id}/preview_api_keys/${id}`,
       {
-        headers: {
-          'content-type': 'application/vnd.contentful.management.v1+json',
-          authorization: `Bearer ${this.authToken as string}`,
-        },
         method: 'GET',
       }
     ).then((val) => {
       return val.accessToken;
     });
-    this.previewAccessToken = previewKey;
+    this.apiKey!.previewAccessToken = previewAccessToken;
   }
 
   async createContentEntry() {
@@ -254,6 +308,31 @@ export class CtflClient {
     });
   }
 
+  async getPreviewEnvironments() {
+    type PreviewEnvironmentsReturn = {
+      items: {
+        name: string;
+        sys: { id: string };
+        configurations: { contentType: string; url: string }[];
+      }[];
+    };
+    const previewEnvironments = await this.apiCall<PreviewEnvironmentsReturn>(
+      `/spaces/${this.space?.id}/preview_environments`,
+      {
+        method: 'GET',
+      }
+    ).then((val) => {
+      return val.items.map((item) => {
+        return {
+          name: item.name,
+          id: item.sys.id,
+          url: item.configurations[0].url,
+        };
+      });
+    });
+    return previewEnvironments;
+  }
+
   async createSpace(name: string, orgId: string) {
     type SpaceReturn = { name: string; sys: { id: string } };
     const space = await this.apiCall<SpaceReturn>('/spaces', {
@@ -321,8 +400,8 @@ export class CtflClient {
     return {
       environment: 'master',
       spaceId: this.space!.id,
-      accessToken: this.accessToken,
-      previewAccessToken: this.previewAccessToken,
+      accessToken: this.apiKey!.accessToken,
+      previewAccessToken: this.apiKey!.previewAccessToken!,
       typeId: contentLayoutType,
     };
   }
@@ -338,6 +417,19 @@ export class CtflClient {
       })
     );
     return orgs;
+  }
+
+  async getSpacesForOrg(orgId: string) {
+    type SpacesReturn = { items: { name: string; sys: { id: string } }[] };
+    const spaces = await this.apiCall<SpacesReturn>(`/organizations/${orgId}/spaces`).then((res) =>
+      res.items.map((item) => {
+        return {
+          name: item.name,
+          id: item.sys.id,
+        };
+      })
+    );
+    return spaces;
   }
 
   async setAuthToken(authToken: string, createdFromApi: boolean = false) {
