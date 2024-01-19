@@ -55,7 +55,5 @@ export const VisualEditorRoot = () => {
 
   if (!initialized) return null;
 
-  console.log('initialized');
-
   return <RootRenderer />;
 };

@@ -8,6 +8,7 @@ import { DragDropContext } from '@hello-pangea/dnd';
 import dragState from '@/utils/dragState';
 import React from 'react';
 import type { ReactNode } from 'react';
+import { pick } from 'lodash-es';
 
 type Props = {
   children: ReactNode;
@@ -19,7 +20,15 @@ export const DNDProvider = ({ children }: Props) => {
   const { onAddComponent, onMoveComponent } = useCanvasInteractions();
   const { onDragStartOrUpdate } = usePlaceholderStyle();
 
-  const dragStart = (start) => {
+  const isTestRun =
+    typeof window !== 'undefined' && Object.prototype.hasOwnProperty.call(window, 'Cypress');
+  console.log('isTestRun', isTestRun);
+
+  const dragStart = (event) => {
+    const start = isTestRun
+      ? pick(event.nativeEvent, ['mode', 'draggableId', 'type', 'source', 'destination'])
+      : event;
+    console.log('SDK > dragStart', start);
     onDragStartOrUpdate(start);
     setSelectedNodeId('');
     sendMessage(OUTGOING_EVENTS.ComponentSelected, {
@@ -27,12 +36,20 @@ export const DNDProvider = ({ children }: Props) => {
     });
   };
 
-  const dragUpdate = (update) => {
+  const dragUpdate = (event) => {
+    const update = isTestRun
+      ? pick(event.nativeEvent, ['mode', 'draggableId', 'type', 'source', 'destination'])
+      : event;
+    console.log('SDK > dragUpdate', update);
     updateItem(update);
     onDragStartOrUpdate(update);
   };
 
-  const dragEnd = (droppedItem) => {
+  const dragEnd = (event) => {
+    const droppedItem = isTestRun
+      ? pick(event.nativeEvent, ['mode', 'draggableId', 'type', 'source', 'destination'])
+      : event;
+    console.log('SDK > dragEnd', droppedItem);
     updateItem(undefined);
     dragState.reset();
 
@@ -51,10 +68,6 @@ export const DNDProvider = ({ children }: Props) => {
       onMoveComponent(droppedItem);
     }
   };
-
-  const isTestRun =
-    typeof window !== 'undefined' && Object.prototype.hasOwnProperty.call(window, 'Cypress');
-  console.log('isTestRun', isTestRun);
 
   return (
     <DragDropContext onDragUpdate={dragUpdate} onBeforeDragStart={dragStart} onDragEnd={dragEnd}>

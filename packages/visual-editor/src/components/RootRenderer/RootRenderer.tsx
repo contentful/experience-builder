@@ -32,8 +32,6 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
     if (onChange) onChange(tree);
   }, [tree, onChange]);
 
-  console.log(1);
-
   return (
     <DNDProvider>
       {dragItem && <DraggableContainer id={dragItem} />}
