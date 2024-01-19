@@ -7,7 +7,6 @@ import {
   OUTGOING_EVENTS,
   INTERNAL_EVENTS,
   CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
   ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import { ContentfulContainer } from '@contentful/experience-builder-components';
@@ -17,6 +16,7 @@ import {
   optionalBuiltInStyles,
   sendMessage,
   containerDefinition,
+  sectionDefinition,
 } from '@contentful/experience-builder-core';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
@@ -78,6 +78,10 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     component: ContentfulContainer,
     definition: containerDefinition,
   },
+  section: {
+    component: ContentfulContainer,
+    definition: sectionDefinition,
+  },
   button: enrichComponentDefinition({
     component: Components.Button,
     definition: Components.ButtonComponentDefinition,
@@ -102,6 +106,7 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
 
 // pre-filling with the default component registrations
 export const componentRegistry = new Map<string, ComponentRegistration>([
+  [DEFAULT_COMPONENT_REGISTRATIONS.section.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.section],
   [
     DEFAULT_COMPONENT_REGISTRATIONS.container.definition.id,
     DEFAULT_COMPONENT_REGISTRATIONS.container,
@@ -171,12 +176,7 @@ export const resetComponentRegistry = () => {
   }
 };
 
-export const getComponentRegistration = (id: string) => {
-  if (id === CONTENTFUL_SECTION_ID) {
-    return componentRegistry.get(CONTENTFUL_CONTAINER_ID);
-  }
-  return componentRegistry.get(id);
-};
+export const getComponentRegistration = (id: string) => componentRegistry.get(id);
 
 export const addComponentRegistration = (componentRegistration: ComponentRegistration) => {
   componentRegistry.set(componentRegistration.definition.id, componentRegistration);

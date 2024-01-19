@@ -155,7 +155,6 @@ export const CompositionBlock = ({
         })
       : null;
 
-  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
   if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
       <ContentfulContainer

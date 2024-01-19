@@ -299,7 +299,9 @@ export const optionalBuiltInStyles: Partial<
   },
 };
 
-export const containerBuiltInStyles = {
+export const containerBuiltInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+> = {
   ...builtInStyles,
   cfHeight: {
     displayName: 'Height',
@@ -307,5 +309,27 @@ export const containerBuiltInStyles = {
     group: 'style',
     description: 'The height of the section',
     defaultValue: 'auto',
-  } as ComponentDefinitionVariable<'Text'>,
+  },
+  cfMaxWidth: {
+    displayName: 'Max Width',
+    type: 'Text',
+    group: 'style',
+    description: 'The max-width of the section',
+    defaultValue: '960px',
+  },
+};
+
+const { cfWidth, cfMaxWidth, ...modifiedBuiltInStyles } = builtInStyles;
+
+export const sectionBuiltInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+> = {
+  ...modifiedBuiltInStyles,
+  cfHeight: {
+    displayName: 'Height',
+    type: 'Text',
+    group: 'style',
+    description: 'The height of the section',
+    defaultValue: 'auto',
+  },
 };

@@ -1,9 +1,10 @@
 import React from 'react';
-import { containerDefinition } from '@contentful/experience-builder-core';
+import { containerDefinition, sectionDefinition } from '@contentful/experience-builder-core';
 import {
   INTERNAL_EVENTS,
   CONTENTFUL_SECTION_ID,
   ASSEMBLY_DEFAULT_CATEGORY,
+  CONTENTFUL_CONTAINER_ID,
 } from '@contentful/experience-builder-core/constants';
 import * as registry from './componentRegistry';
 import type { ComponentRegistration } from '@contentful/experience-builder-core/types';
@@ -22,9 +23,15 @@ describe('component registration', () => {
       expect(registry.getComponentRegistration('random-str')).toBe(undefined);
     });
 
-    it('should return container when given a section id', () => {
-      expect(registry.getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition).toEqual(
+    it('should return container when given a container id', () => {
+      expect(registry.getComponentRegistration(CONTENTFUL_CONTAINER_ID)?.definition).toEqual(
         containerDefinition
+      );
+    });
+
+    it('should return section when given a section id', () => {
+      expect(registry.getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition).toEqual(
+        sectionDefinition
       );
     });
   });
