@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { CompositionComponentNode } from '@/types';
-import { getInsertionData } from '@/utils';
+import { generateRandomId, getInsertionData } from '@/utils';
 
 const dropReceiverChildNode: CompositionComponentNode = {
   type: 'block',
@@ -216,6 +216,14 @@ describe('getInsertionData', () => {
         node: dropReceiverNode,
         index: 1, // dropped as the new last child within the dropReceiverNode
       });
+    });
+  });
+
+  describe('generateRandomId', () => {
+    it('should generate a random id with the specified length', () => {
+      const id = generateRandomId(10);
+      console.log(id);
+      expect(id.length).toEqual(10);
     });
   });
 });
