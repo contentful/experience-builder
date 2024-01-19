@@ -21,10 +21,11 @@
   "scripts": {
     "dev": "tsc -w",
     "_prebuild": "npm uninstall -g && rimraf dist",
-    "_build": "tsc",
+    "prebuild": "rimraf dist",
+    "build": "tsc",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
-    "postbuild": "npm install -g",
+    "_postbuild": "npm install -g",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -41,7 +42,7 @@
     "@clack/prompts": "^0.7.0",
     "cross-spawn": "^7.0.3",
     "kleur": "^4.1.5",
-    "open": "^9.1.0",
+    "open": "^8.4.2",
     "yargs": "^17.7.2"
   }
 }

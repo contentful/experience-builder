@@ -1,6 +1,14 @@
 #! /usr/bin/env node
-
-import { confirm, intro, outro, select, spinner as Spinner, text, password } from '@clack/prompts';
+import {
+  confirm,
+  intro,
+  outro,
+  select,
+  spinner as Spinner,
+  text,
+  password,
+  log,
+} from '@clack/prompts';
 import yargs from 'yargs';
 import { CtflClient } from './ctflClient.js';
 import { allFrameworks } from './models.js';
@@ -82,11 +90,11 @@ async function init() {
       },
     })) as string;
 
-    const shouldCreateSpace = await confirm({
-      message: 'Create a Contentful space in your org for experience builder?',
+    const shouldSelectSpace = await confirm({
+      message: 'Would you like to select an existing space to use with Experience Builder?',
     });
 
-    if (shouldCreateSpace) {
+    if (shouldSelectSpace) {
       if (!args.token) {
         const confirmAnswer = await confirm({
           message:
@@ -121,11 +129,11 @@ async function init() {
       }
     }
 
-    if (shouldCreateSpace) {
+    if (shouldSelectSpace) {
       const orgs = await ctflClient.getOrgs();
 
-      const selectedOrg = await select<{ label: string; value: string }[], string>({
-        message: 'Select org to create space in.',
+      const selectedOrgId = await select<{ label: string; value: string }[], string>({
+        message: 'Select organization the space is in.',
         options: orgs.map((org) => {
           return {
             label: org.name,
@@ -134,28 +142,91 @@ async function init() {
         }),
       });
 
-      const spaceName = await text({
-        message: 'Enter a name for your space',
-        placeholder: 'my-eb-space',
-        validate(name) {
-          if (name.length === 0) return `Value is required!`;
-          //todo validate that space name is a valid one for CF
-        },
+      const selectedOrg = orgs.find((org) => org.id === selectedOrgId)!;
+      ctflClient.org = selectedOrg;
+
+      const spaces = await ctflClient.getSpacesForOrg(selectedOrgId as string);
+
+      const selectedSpaceId = await select<{ label: string; value: string }[], string>({
+        message: 'Select space to use.',
+        options: spaces.map((space) => {
+          return {
+            label: space.name,
+            value: space.id,
+          };
+        }),
       });
 
-      spinner.start('Creating space...');
+      const selectedSpace = spaces.find((space) => space.id === selectedSpaceId)!;
+      ctflClient.space = selectedSpace;
 
-      const space = await ctflClient.createSpace(spaceName as string, selectedOrg as string);
+      const apiKeys = await ctflClient.getApiKeys();
+      if (apiKeys.length === 0) {
+        spinner.start('No API keys are currently found, creating one.');
+        await ctflClient.createApiKeys();
+        spinner.stop('API key created!');
+      } else if (apiKeys.find((item) => item.name === 'Experience Builder Keys')) {
+        log.message('Using existing API key for Experience Builder.');
+        const selectedApiKey = apiKeys.find((apiKey) => apiKey.name === 'Experience Builder Keys')!;
+        ctflClient.apiKey = selectedApiKey;
+        await ctflClient.getPreviewAccessToken(selectedApiKey.previewKeyId);
+      } else {
+        const createNewOption = { label: 'Create new API key', value: 'create' };
+        const selectedApiKeyId = await select<{ label: string; value: string }[], string>({
+          message: 'Select API key to use.',
+          options: [
+            ...apiKeys.map((apiKey) => {
+              return {
+                label: apiKey.name,
+                value: apiKey.accessToken,
+              };
+            }),
+            createNewOption,
+          ],
+        });
 
-      await ctflClient.createPreviewEnvironment(variant.devPort);
+        if (selectedApiKeyId === createNewOption.value) {
+          spinner.start('Creating new API key.');
+          const apiKey = await ctflClient.createApiKeys();
+          await ctflClient.getPreviewAccessToken(apiKey.previewKeyId);
+          spinner.stop('API key created!');
+        } else {
+          const selectedApiKey = apiKeys.find((apiKey) => apiKey.accessToken === selectedApiKeyId)!;
+          ctflClient.apiKey = selectedApiKey;
+          await ctflClient.getPreviewAccessToken(selectedApiKey.previewKeyId);
+        }
+      }
 
-      await ctflClient.createContentLayoutType();
+      const previewEnvironments = await ctflClient.getPreviewEnvironments();
+      const ebPreviewEnvironment = previewEnvironments.find(
+        (item) => item.url === `http://localhost:${variant.devPort}`
+      );
+      if (previewEnvironments.length === 0 || !ebPreviewEnvironment) {
+        spinner.start(
+          'No preview environments for Experience Builder currently found, creating one.'
+        );
+        await ctflClient.createPreviewEnvironment(variant.devPort);
+        spinner.stop('Preview environment created!');
+      } else if (ebPreviewEnvironment) {
+        log.message('Using existing preview environment for Experience Builder.');
+        ctflClient.previewEnvironment = ebPreviewEnvironment;
+      }
 
-      await ctflClient.createContentEntry();
+      // if (!apiKeyFound) {
+      //   spinner.start('Existing API key for Experience Builder not found, creating one.');
 
-      await ctflClient.createApiKeys();
+      //   await ctflClient.createApiKeys();
 
-      spinner.stop(`Space ${space.name} created!`);
+      //   spinner.stop('API key created!');
+      // }
+
+      // await ctflClient.createPreviewEnvironment(variant.devPort);
+
+      // await ctflClient.createContentLayoutType();
+
+      // await ctflClient.createContentEntry();
+
+      // await ctflClient.createApiKeys();
     }
 
     const projectDir = fsClient.getProjectDir(projectName);
@@ -169,7 +240,7 @@ async function init() {
     spinner.stop('Done creating project and installing dependencies!');
 
     //copy env file
-    if (shouldCreateSpace && ctflClient) {
+    if (shouldSelectSpace && ctflClient) {
       fsClient.copyEnvFile(projectDir, ctflClient.getEnvFileData());
     }
 
@@ -183,10 +254,10 @@ async function init() {
 
     if (shouldCleanup) {
       fsClient.deleteDirectory(projectDir);
-      if (shouldCreateSpace && ctflClient?.space) {
-        await ctflClient.deleteSpace();
-        await ctflClient.deleteAuthToken();
-      }
+      // if (shouldSelectSpace && ctflClient?.space) {
+      // await ctflClient.deleteSpace();
+      await ctflClient.deleteAuthToken();
+      // }
     }
   } catch (e) {
     console.log(e);
