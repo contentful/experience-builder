@@ -3,7 +3,8 @@ import { CSSProperties, ReactNode, SyntheticEvent } from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import classNames from 'classnames';
 import styles from './styles.module.css';
-import { getTooltipPositions } from '@components/Draggable/canvasToolsUtils';
+import { Rect, getTooltipPositions } from '@components/Draggable/canvasToolsUtils';
+// import { css } from 'emotion';
 
 export const DraggableComponent = ({
   children,
@@ -17,6 +18,7 @@ export const DraggableComponent = ({
   onMouseOver = () => null,
   onMouseOut = () => null,
   label,
+  coordinates,
   userIsDragging,
   style,
   className,
@@ -36,18 +38,20 @@ export const DraggableComponent = ({
   onMouseUp?: (e: SyntheticEvent) => void;
   onMouseOver?: (e: SyntheticEvent) => void;
   onMouseOut?: (e: SyntheticEvent) => void;
+  coordinates: Rect;
   isContainer: boolean;
   userIsDragging?: boolean;
   style?: CSSProperties;
   isDragDisabled?: boolean;
 }) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
-  // const tooltipStyles = useMemo(() => {
-  //   const tooltipRect = tooltipRef.current?.getBoundingClientRect();
-  //   const newTooltipStyles = getTooltipPositions({ previewSize, tooltipRect, coordinates });
+  const tooltipStyles = useMemo(() => {
+    const tooltipRect = tooltipRef.current?.getBoundingClientRect();
+    const previewSize = '100%'; // This should be based on breakpoints
+    const newTooltipStyles = getTooltipPositions({ previewSize, tooltipRect, coordinates });
 
-  //   return css(newTooltipStyles);
-  // }, [coordinates, previewSize]);
+    // return css(newTooltipStyles);
+  }, [coordinates, previewSize]);
 
   return (
     <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
@@ -74,6 +78,7 @@ export const DraggableComponent = ({
           onClick={onClick}>
           {!isSelected ? (
             <div
+              ref={tooltipRef}
               className={classNames(styles.overlay, {
                 [styles.overlayContainer]: isContainer,
                 [styles.overlayAssembly]: isAssemblyBlock,
