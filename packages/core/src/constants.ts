@@ -116,3 +116,8 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',
 ];
+
+export enum PostMessageMethods {
+  REQUEST_ENTITIES = 'REQUEST_ENTITIES',
+  REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',
+}
