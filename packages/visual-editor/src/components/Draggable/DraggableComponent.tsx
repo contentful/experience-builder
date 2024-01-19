@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo, useRef } from 'react';
 import { CSSProperties, ReactNode, SyntheticEvent } from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import classNames from 'classnames';
 import styles from './styles.module.css';
+import { getTooltipPositions } from '@components/Draggable/canvasToolsUtils';
 
 export const DraggableComponent = ({
   children,
@@ -40,6 +41,14 @@ export const DraggableComponent = ({
   style?: CSSProperties;
   isDragDisabled?: boolean;
 }) => {
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  // const tooltipStyles = useMemo(() => {
+  //   const tooltipRect = tooltipRef.current?.getBoundingClientRect();
+  //   const newTooltipStyles = getTooltipPositions({ previewSize, tooltipRect, coordinates });
+
+  //   return css(newTooltipStyles);
+  // }, [coordinates, previewSize]);
+
   return (
     <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snapshot) => (

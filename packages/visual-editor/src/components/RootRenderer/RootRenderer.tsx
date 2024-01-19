@@ -31,8 +31,11 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const userIsDragging = !!dragItem;
   const breakpoints = useTreeStore((state) => state.breakpoints);
+  console.log('XB CURRENT BREAKPOINT', breakpoints);
 
   const { resolveDesignValue } = useBreakpoints(breakpoints);
+  console.log('XB CURRENT resolveDesignValue', resolveDesignValue);
+
   const tree = useTreeStore((state) => state.tree);
 
   const { onAddComponent, onMoveComponent } = useCanvasInteractions();
