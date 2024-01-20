@@ -8,7 +8,7 @@ export interface EmptyContainerProps {
   isHoveringOnRoot?: boolean;
 }
 
-export const EmptyEditorContainer = ({ isDragging }: EmptyContainerProps) => {
+export const EmptyContainer = ({ isDragging }: EmptyContainerProps) => {
   return (
     <div
       className={classNames(styles.container, {
