@@ -30,15 +30,19 @@ import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/s
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { useEntityStore } from '@/store/entityStore';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
+import { checkIsAssemblyEntry } from '@/utils/assemblyUtils';
 
 export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
-  const { updateTree, updateEmbedNodesOfAssemblies } = useTreeStore((state) => ({
-    updateTree: state.updateTree,
-    updateEmbedNodesOfAssemblies: state.updateEmbedNodesOfAssemblies,
-  }));
+  const { updateTree, updateEmbedNodesOfAssemblies, updateReferentNodesOfEntities } = useTreeStore(
+    (state) => ({
+      updateTree: state.updateTree,
+      updateEmbedNodesOfAssemblies: state.updateEmbedNodesOfAssemblies,
+      updateReferentNodesOfEntities: state.updateReferentNodesOfEntities,
+    })
+  );
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const setLocale = useEditorStore((state) => state.setLocale);
@@ -217,7 +221,7 @@ export function useEditorSubscriber() {
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
             await fetchMissingEntities(dataSource);
-            await refetchEntities(forceRefetchEntities);
+            // await refetchEntities(forceRefetchEntities);
             // After assembly entries are fetched, we need to update the embed nodes
             updateEmbedNodesOfAssemblies(
               forceRefetchEntities.filter(isEntity).map((entity) => entity.sys.id)
@@ -296,6 +300,12 @@ export function useEditorSubscriber() {
           const { entity } = payload;
           if (entity) {
             entityStore.updateEntity(entity);
+            if (checkIsAssemblyEntry(entity)) {
+              updateEmbedNodesOfAssemblies([entity.sys.id]);
+            } else {
+              // assume this is used as data source
+              updateReferentNodesOfEntities([entity.sys.id]);
+            }
           }
           break;
         }

@@ -19,12 +19,15 @@ import {
   ASSEMBLY_NODE_TYPE,
   DESIGN_COMPONENT_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
+import { intersection } from '@/utils/intersection';
+import { entityIdsOfDataSource } from '@/utils/other';
 export interface TreeStore {
   tree: CompositionTree;
   breakpoints: Breakpoint[];
   updateTree: (tree: CompositionTree) => void;
   updateTreeForced: (tree: CompositionTree) => void;
   updateEmbedNodesOfAssemblies: (assemblies: string[]) => void;
+  updateReferentNodesOfEntities: (entityIds: string[]) => void;
   addChild: (
     destinationIndex: number,
     destinationParentId: string,
@@ -94,6 +97,47 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
       })
     );
   },
+
+  updateReferentNodesOfEntities: (updatedEntities: string[]) => {
+    const isNodeAbleToUseDataSource = (node: CompositionComponentNode) => {
+      return Boolean(node.data.dataSource);
+    };
+
+    if (!updatedEntities.length) return;
+
+    console.log(`:::updateReferentNodesOfEntities(${updatedEntities.join(', ')})`);
+    set(
+      produce((draftState: TreeStore) => {
+        const currentTree = draftState.tree;
+        const referentNodes: Array<[string, CompositionComponentNode]> = [];
+        treeVisit(currentTree.root, (node) => {
+          if (!isNodeAbleToUseDataSource(node)) return;
+
+          const intersectElements = intersection(
+            updatedEntities,
+            entityIdsOfDataSource(node.data.dataSource)
+          );
+          if (intersectElements.length) {
+            console.log(
+              `:::updateReferentNodesOfEntities() found an referent node(${node.data.id}) for <${
+                node.data.blockId
+              } dataSourceIntersection=${intersectElements.join(', ')}>`,
+              node
+            );
+            referentNodes.push([node.data.id, node]);
+          }
+        });
+        console.log(
+          `:::updateReferentNodesOfEntities() found ${referentNodes.length} dataSource referent nodes to update`,
+          referentNodes
+        );
+        for (const [nodeId, node] of referentNodes) {
+          updateNode(nodeId, cloneDeepAsPOJO(node), draftState.tree.root);
+        }
+      })
+    );
+  },
+
   /**
    * Force updates entire tree. Usually shouldn't be used as updateTree()
    * uses smart update algorithm based on diffs. But for troubleshooting
@@ -125,6 +169,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
 
     // The current and updated tree are the same, no tree update required.
     if (!treeDiff.length) {
+      console.warn(`:::no tree diff found, skipping updateTree()`);
       return;
     }
 
