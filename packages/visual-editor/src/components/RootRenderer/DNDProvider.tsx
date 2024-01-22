@@ -22,13 +22,11 @@ export const DNDProvider = ({ children }: Props) => {
 
   const isTestRun =
     typeof window !== 'undefined' && Object.prototype.hasOwnProperty.call(window, 'Cypress');
-  console.log('isTestRun', isTestRun);
 
   const dragStart = (event) => {
     const start = isTestRun
       ? pick(event.nativeEvent, ['mode', 'draggableId', 'type', 'source', 'destination'])
       : event;
-    console.log('SDK > dragStart', start);
     onDragStartOrUpdate(start);
     setSelectedNodeId('');
     sendMessage(OUTGOING_EVENTS.ComponentSelected, {
@@ -40,7 +38,6 @@ export const DNDProvider = ({ children }: Props) => {
     const update = isTestRun
       ? pick(event.nativeEvent, ['mode', 'draggableId', 'type', 'source', 'destination'])
       : event;
-    console.log('SDK > dragUpdate', update);
     updateItem(update);
     onDragStartOrUpdate(update);
   };
@@ -49,7 +46,6 @@ export const DNDProvider = ({ children }: Props) => {
     const droppedItem = isTestRun
       ? pick(event.nativeEvent, ['mode', 'draggableId', 'type', 'source', 'destination'])
       : event;
-    console.log('SDK > dragEnd', droppedItem);
     updateItem(undefined);
     dragState.reset();
 
