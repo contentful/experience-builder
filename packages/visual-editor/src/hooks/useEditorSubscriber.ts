@@ -18,29 +18,28 @@ import {
   ComponentRegistration,
   Link,
   CompositionDataSource,
+  ManagementEntity,
 } from '@contentful/experience-builder-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { Entry } from 'contentful';
 import { Assembly } from '@contentful/experience-builder-components';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { useEntityStore } from '@/store/entityStore';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
-import { checkIsAssemblyEntry } from '@/utils/assemblyUtils';
 
 export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
-  const { updateTree, updateEmbedNodesOfAssemblies, updateReferentNodesOfEntities } = useTreeStore(
+  const { updateTree, updateEmbedNodesOfAssemblies, updateNodesByUpdatedEntity } = useTreeStore(
     (state) => ({
       updateTree: state.updateTree,
       updateEmbedNodesOfAssemblies: state.updateEmbedNodesOfAssemblies,
-      updateReferentNodesOfEntities: state.updateReferentNodesOfEntities,
+      updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
     })
   );
   const unboundValues = useEditorStore((state) => state.unboundValues);
@@ -260,7 +259,7 @@ export function useEditorSubscriber() {
             assembly,
             assemblyDefinition,
           }: {
-            assembly: Entry;
+            assembly: ManagementEntity;
             assemblyDefinition?: ComponentRegistration['definition'];
           } = payload;
           entityStore.updateEntity(assembly);
@@ -297,14 +296,19 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.UpdatedEntity: {
-          const { entity } = payload;
-          if (entity) {
-            entityStore.updateEntity(entity);
-            if (checkIsAssemblyEntry(entity)) {
-              updateEmbedNodesOfAssemblies([entity.sys.id]);
-            } else {
-              // assume this is used as data source
-              updateReferentNodesOfEntities([entity.sys.id]);
+          const { entity: updatedEntity, shouldRerender } = payload as {
+            entity: ManagementEntity;
+            shouldRerender?: boolean;
+          };
+          if (updatedEntity) {
+            const storedEntity = entityStore.entities.find(
+              (entity) => entity.sys.id === updatedEntity.sys.id
+            );
+            const didEntityChange = storedEntity?.sys.version == updatedEntity.sys.version;
+            entityStore.updateEntity(updatedEntity);
+            // We traverse the whole tree, so this is a opt-in feature to only use it when required.
+            if (shouldRerender && didEntityChange) {
+              updateNodesByUpdatedEntity(updatedEntity.sys.id);
             }
           }
           break;

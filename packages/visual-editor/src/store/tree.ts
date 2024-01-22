@@ -28,6 +28,7 @@ export interface TreeStore {
   updateTreeForced: (tree: CompositionTree) => void;
   updateEmbedNodesOfAssemblies: (assemblies: string[]) => void;
   updateReferentNodesOfEntities: (entityIds: string[]) => void;
+  updateNodesByUpdatedEntity: (entityId: string) => void;
   addChild: (
     destinationIndex: number,
     destinationParentId: string,
@@ -134,6 +135,26 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
         for (const [nodeId, node] of referentNodes) {
           updateNode(nodeId, cloneDeepAsPOJO(node), draftState.tree.root);
         }
+      })
+    );
+  },
+
+  updateNodesByUpdatedEntity: (entityId: string) => {
+    set(
+      produce((draftState: TreeStore) => {
+        treeVisit(draftState.tree.root, (node) => {
+          if (isAssemblyNode(node) && node.data.blockId === entityId) {
+            // Create a plain clone without references via `JSON.parse()` and `JSON.stringify()`.
+            // `structuredClone()` does not work because it appears to include a hidden reference.
+            updateNode(node.data.id, cloneDeepAsPOJO(node), draftState.tree.root);
+            return;
+          }
+          const dataSourceIds = Object.values(node.data.dataSource).map((link) => link.sys.id);
+          if (dataSourceIds.includes(entityId)) {
+            // Same reason as above to not use structuredClone()
+            updateNode(node.data.id, cloneDeepAsPOJO(node), draftState.tree.root);
+          }
+        });
       })
     );
   },
