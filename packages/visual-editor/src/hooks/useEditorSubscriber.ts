@@ -42,6 +42,7 @@ export function useEditorSubscriber() {
   const setUnboundValues = useEditorStore((state) => state.setUnboundValues);
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
+  const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
 
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
 
@@ -327,6 +328,9 @@ export function useEditorSubscriber() {
         /**
          * On scroll end, send new co-ordinates of selected node
          */
+        if (selectedNodeId) {
+          sendSelectedComponentCoordinates(selectedNodeId);
+        }
       }, 150);
     };
 
@@ -336,5 +340,5 @@ export function useEditorSubscriber() {
       window.removeEventListener('scroll', onScroll);
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [selectedNodeId]);
 }
