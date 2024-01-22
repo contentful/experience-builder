@@ -25,6 +25,7 @@ type VisualEditorBlockProps = {
   resolveDesignValue: ResolveDesignValueType;
   zoneId: string;
   parentSectionId: string;
+  onSectionHoverIdChange: (id: string) => void;
 };
 
 const EditorBlock: React.FC<VisualEditorBlockProps> = ({
@@ -35,6 +36,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   zoneId,
   parentSectionId,
   userIsDragging,
+  onSectionHoverIdChange,
 }) => {
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
@@ -84,10 +86,12 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
         e.stopPropagation();
         if (containsZone) {
           setHoveringSection(componentId);
-          console.log('hoveringSection zone', componentId);
+          console.log('HOVERING SECTION ZONE', componentId);
+          onSectionHoverIdChange(componentId);
         } else {
           setHoveringSection(parentSectionId);
-          console.log('hoveringSection parent', parentSectionId);
+          console.log('HOVERING SECTION PARENT', parentSectionId);
+          onSectionHoverIdChange(parentSectionId);
         }
         setHoveringZone(zoneId);
       }}

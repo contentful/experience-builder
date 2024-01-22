@@ -27,6 +27,7 @@ export const useZoneStore = create<Actions & State>()((set) => ({
   hoveringZone: '',
   sectionsWithZones: {},
   setHoveringZone(zoneId) {
+    console.log('ZONE ID', zoneId);
     set({
       hoveringZone: zoneId,
     });
