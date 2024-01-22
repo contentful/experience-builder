@@ -1,5 +1,6 @@
-import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
+import type { AssetFile, UnresolvedLink } from 'contentful';
 import { sendMessage } from '../communication/sendMessage';
+import { ManagementEntity } from '@/types';
 import { EditorEntityStore } from './EditorEntityStore';
 import { RequestedEntitiesMessage } from '../types';
 
@@ -10,7 +11,7 @@ const REQUEST_TIMEOUT = 10000;
 export class EditorModeEntityStore extends EditorEntityStore {
   public locale: string;
 
-  constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
+  constructor({ entities, locale }: { entities: Array<ManagementEntity>; locale: string }) {
     console.debug(
       `[exp-builder.sdk] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
       { entities }

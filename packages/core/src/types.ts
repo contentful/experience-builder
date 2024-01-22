@@ -370,6 +370,15 @@ export type ResolveDesignValueType = (
   variableName: string
 ) => CompositionVariableValueType;
 
+// The 'contentful' package only exposes CDA types while we received CMA ones in editor mode
+export type ManagementEntity = (Entry | Asset) & {
+  sys: {
+    id: string;
+    type: 'Entry' | 'Asset';
+    version: number;
+  };
+};
+
 export type RequestEntitiesMessage = {
   entityIds: string[];
   entityType: 'Asset' | 'Entry';
