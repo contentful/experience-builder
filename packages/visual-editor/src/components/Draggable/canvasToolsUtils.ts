@@ -1,51 +1,6 @@
-import type {
-  ComponentDefinition,
-  CompositionComponentNode,
-  CompositionComponentPropValue,
-  CompositionDataSource,
-  CompositionUnboundValues,
-  CompositionVariableValueType,
-  Link,
-} from '@contentful/experience-builder-core/types';
+import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
 import { ASSEMBLY_DEFAULT_CATEGORY } from '@contentful/experience-builder-core/constants';
 
-export type ExperienceDataSource = CompositionDataSource;
-export type ExperienceUnboundValues = CompositionUnboundValues;
-export type ExperienceProperty = CompositionComponentPropValue;
-export type ExperiencePropertyLiteral = CompositionVariableValueType;
-
-export type TreeNode = {
-  type: 'block' | 'string' | 'root' | 'assembly';
-  data: {
-    id: string;
-    blockId?: string; // will be undefined in case string node or if root component
-    props: CompositionComponentNode['data']['props'];
-    dataSource: ExperienceDataSource;
-    breakpoints?: Breakpoints;
-    unboundValues: ExperienceUnboundValues;
-  };
-  children: TreeNode[];
-  parentId?: string;
-  addChild: (node: TreeNode, index?: number) => void;
-  clone: () => TreeNode;
-  cloneDeepWithNewIds: (parentIdOverride?: string) => TreeNode;
-  replaceChild: (childId: string, replacement: TreeNode) => void;
-  removeChild: (childId: string) => void;
-  moveChild: (fromIndex: number, toIndex: number) => void;
-  updatePropValue: (
-    data: {
-      propName: string;
-    } & ExperienceProperty
-  ) => void;
-  updateDataSourceValue: (data: {
-    affectedUUID: string;
-    updatedData: Link<'Entry' | 'Asset'>;
-  }) => void;
-  updateUnboundValue: (data: { affectedUUID: string; value: ExperiencePropertyLiteral }) => void;
-  hasAssignedBinding: (propName: string) => boolean;
-  hasNonEmptyUnboundValue: (propName: string) => boolean;
-  getNumberOfNodes: () => number;
-};
 export type Breakpoints = Array<BreakpointItem>;
 
 export type Rect = {
@@ -110,8 +65,7 @@ export const getTooltipPositions = ({
   }
 
   const tooltipHeight = 18;
-  console.log('coordinates', coordinates);
-  console.log('tooltipHeight', tooltipHeight);
+
   /**
    * For elements with small heights, we don't want the tooltip covering the content in the element,
    * so we show the tooltip at the top or bottom.
@@ -143,25 +97,4 @@ export const getTooltipPositions = ({
   }
 
   return newTooltipStyles;
-};
-
-export const getParentNodes = (treeNode: TreeNode, nodeId: string): TreeNode[] | null => {
-  if (treeNode.data.id === nodeId) {
-    return [];
-  }
-
-  for (const childNode of treeNode.children) {
-    const result = getParentNodes(childNode, nodeId);
-
-    // 3 because we only want to render 3 parent nodes
-    if (result?.length === 3) {
-      return result;
-    }
-
-    if (Array.isArray(result)) {
-      return childNode.data.id === nodeId ? [] : [...result, childNode];
-    }
-  }
-
-  return null;
 };
