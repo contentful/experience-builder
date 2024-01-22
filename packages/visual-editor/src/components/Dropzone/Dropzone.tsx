@@ -102,8 +102,14 @@ export function Dropzone({
       return false;
     }
 
-    return draggingParentIds[0] === zoneId;
-  }, [userIsDragging, draggingParentIds, zoneId]);
+    console.log('zoneId', zoneId);
+    console.log('hoveringZone', hoveringZone);
+    console.log('hoveringSection', hoveringSection);
+    // console.log('draggingParentIds', draggingParentIds)
+    // console.log('tree', tree)
+    // return draggingParentIds[0] === zoneId;
+    return hoveringOverZone;
+  }, [userIsDragging, zoneId, hoveringZone, hoveringOverZone]);
 
   const isAssembly =
     DESIGN_COMPONENT_NODE_TYPES.includes(node?.type || '') ||

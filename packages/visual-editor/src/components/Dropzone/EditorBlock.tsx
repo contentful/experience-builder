@@ -82,11 +82,12 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
       }}
       onMouseOver={(e) => {
         e.stopPropagation();
-
         if (containsZone) {
           setHoveringSection(componentId);
+          console.log('hoveringSection zone', componentId);
         } else {
           setHoveringSection(parentSectionId);
+          console.log('hoveringSection parent', parentSectionId);
         }
         setHoveringZone(zoneId);
       }}
