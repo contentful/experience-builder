@@ -20,7 +20,7 @@ import type {
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import {
   buildCfStyles,
-  checkIsAssembly,
+  checkIsAssemblyNode,
   transformContentValue,
 } from '@contentful/experience-builder-core';
 import { useStyleTag } from '../../hooks/useStyleTag';
@@ -51,7 +51,7 @@ export const CompositionBlock = ({
   usedComponents,
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
-    () => checkIsAssembly({ componentId: rawNode.definitionId, usedComponents }),
+    () => checkIsAssemblyNode({ componentId: rawNode.definitionId, usedComponents }),
     [rawNode.definitionId, usedComponents]
   );
 
