@@ -16,6 +16,7 @@ type Props = {
 
 export const DNDProvider = ({ children }: Props) => {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
+  const draggedItem = useDraggedItemStore((state) => state.draggedItem);
   const updateItem = useDraggedItemStore((state) => state.updateItem);
   const { onAddComponent, onMoveComponent } = useCanvasInteractions();
   const { onDragStartOrUpdate } = usePlaceholderStyle();
@@ -49,12 +50,14 @@ export const DNDProvider = ({ children }: Props) => {
     updateItem(undefined);
     dragState.reset();
 
-    sendMessage(OUTGOING_EVENTS.MouseUp);
-
-    // User cancel drag
     if (!droppedItem.destination) {
-      sendMessage(OUTGOING_EVENTS.ComponentDragCanceled);
-      return;
+      if (!draggedItem?.destination) {
+        // User cancel drag
+        sendMessage(OUTGOING_EVENTS.ComponentDragCanceled);
+        return;
+      }
+      // Use the destination from the draggedItem (when clicking the canvas)
+      droppedItem.destination = draggedItem.destination;
     }
 
     // New component added to canvas

@@ -40,16 +40,10 @@ export const VisualEditorRoot = () => {
       });
     };
 
-    const onMouseUp = () => {
-      sendMessage(OUTGOING_EVENTS.MouseUp);
-    };
-
     document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
 
     return () => {
       document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
     };
   }, []);
 
