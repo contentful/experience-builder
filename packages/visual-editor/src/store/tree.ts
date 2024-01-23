@@ -58,7 +58,6 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
   breakpoints: [],
 
   updateNodesByUpdatedEntity: (entityId: string) => {
-    console.log(`:::updateNodesByUpdatedEntity(${entityId})`);
     set(
       produce((draftState: TreeStore) => {
         treeVisit(draftState.tree.root, (node) => {
@@ -83,7 +82,6 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
    * you may want to force update the tree so leaving this in.
    */
   updateTreeForced: (tree) => {
-    console.info('::: updateTreeForced!', tree);
     set({
       tree,
       // Breakpoints must be updated, as we receive completely new tree with possibly new breakpoints
@@ -108,7 +106,9 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
 
     // The current and updated tree are the same, no tree update required.
     if (!treeDiff.length) {
-      console.warn(`:::no tree diff found, skipping updateTree()`);
+      console.debug(
+        `[exp-builder.visual-editor] updateTree(): During smart-diffing no diffs. Skipping tree update.`
+      );
       return;
     }
 
