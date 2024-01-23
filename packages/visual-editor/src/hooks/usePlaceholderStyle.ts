@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { DragStart, DragUpdate } from '@hello-pangea/dnd';
 import { ROOT_ID } from '../types/constants';
 import { usePlaceholderStyleStore } from '@/store/placeholderStyle';
 import { useZoneStore } from '@/store/zone';
+import { DraggedItem } from '@/store/draggedItem';
 
 export const usePlaceholderStyle = () => {
   const queryAttr = 'data-rfd-drag-handle-draggable-id';
@@ -11,7 +11,7 @@ export const usePlaceholderStyle = () => {
   const zones = useZoneStore((state) => state.zones);
 
   const onDragStartOrUpdate = useCallback(
-    (draggedItem: DragStart & Partial<DragUpdate>) => {
+    (draggedItem: DraggedItem) => {
       const draggableId = draggedItem.draggableId;
       const destinationIndex = (draggedItem.destination || draggedItem.source).index;
       const droppableId = (draggedItem.destination || draggedItem.source).droppableId;
@@ -136,6 +136,13 @@ export const usePlaceholderStyle = () => {
         clientX = offsetLeft - translateValue;
       }
 
+      const shouldShowBackgroundColor =
+        !!draggedItem.source.droppableId.startsWith('component-list');
+
+      const backgroundColor = shouldShowBackgroundColor
+        ? 'rgba(var(--exp-builder-blue300-rgb), 0.5)'
+        : 'unset';
+
       updateStyle({
         position: 'absolute',
         top: clientY,
@@ -143,8 +150,7 @@ export const usePlaceholderStyle = () => {
         height: direction === 'horizontal' ? '100%' : clientHeight,
         width: direction === 'horizontal' ? clientWidth : '100%',
         zIndex: 0,
-        backgroundColor: 'rgba(var(--exp-builder-blue300-rgb), 0.5)',
-        outline: '2px dashed var(--exp-builder-blue600)',
+        backgroundColor,
         outlineOffset: '-2px',
       });
     },
