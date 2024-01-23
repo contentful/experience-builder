@@ -2,11 +2,7 @@ import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
 import { EntityStore } from '@contentful/experience-builder-core';
-import {
-  CF_STYLE_ATTRIBUTES,
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
-} from '@contentful/experience-builder-core/constants';
+import { CF_STYLE_ATTRIBUTES } from '@contentful/experience-builder-core/constants';
 import type {
   Breakpoint,
   CompositionDataSource,

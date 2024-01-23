@@ -7,7 +7,6 @@ import {
   isLinkToAsset,
 } from '@contentful/experience-builder-core';
 import {
-  CONTENTFUL_CONTAINER_ID,
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
@@ -26,7 +25,6 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { Dropzone } from '@components/Dropzone/Dropzone';
 import { useEntityStore } from '@/store/entityStore';
-import { CONTENTFUL_SECTION_ID } from '@contentful/experience-builder-core/constants';
 import { isContentfulStructureComponent } from '@contentful/experience-builder-core';
 
 type PropsType =
