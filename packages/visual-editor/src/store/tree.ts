@@ -19,15 +19,11 @@ import {
   ASSEMBLY_NODE_TYPE,
   DESIGN_COMPONENT_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
-import { intersection } from '@/utils/intersection';
-import { entityIdsOfDataSource } from '@/utils/other';
 export interface TreeStore {
   tree: CompositionTree;
   breakpoints: Breakpoint[];
   updateTree: (tree: CompositionTree) => void;
   updateTreeForced: (tree: CompositionTree) => void;
-  updateEmbedNodesOfAssemblies: (assemblies: string[]) => void;
-  updateReferentNodesOfEntities: (entityIds: string[]) => void;
   updateNodesByUpdatedEntity: (entityId: string) => void;
   addChild: (
     destinationIndex: number,
@@ -61,97 +57,19 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
   },
   breakpoints: [],
 
-  updateEmbedNodesOfAssemblies: (assemblies) => {
-    if (!assemblies.length) return;
-    console.log(`:::updateEmbedNodesOfAssemblies()`);
-
-    set(
-      produce((draftState: TreeStore) => {
-        const currentTree = draftState.tree;
-        const embedNodes: Array<[string, CompositionComponentNode]> = [];
-
-        treeVisit(currentTree.root, (node) => {
-          if (!isAssemblyNode(node)) return;
-          const { id, blockId } = node.data;
-
-          assemblies.forEach((assemblyId) => {
-            if (blockId !== assemblyId) return;
-            console.log(
-              `::: updateEmbedNodesOfAssemblies() found an embed node(${id}) for <embed block=${assemblyId}>`,
-              node
-            );
-            embedNodes.push([id, node]);
-          });
-        });
-        console.log(
-          `:::updateEmbedNodesOfAssemblies() found ${embedNodes.length} embed nodes to update`,
-          embedNodes
-        );
-
-        for (const [nodeId, node] of embedNodes) {
-          // Just need dumb clone via JSON.parse(JSON.stringify(node)) to
-          // produce a new object with new referential equality
-          // Keep in mind that structuredClone() won't work because the node
-          // has reference to Window somewhere in it's graph
-          updateNode(nodeId, cloneDeepAsPOJO(node), draftState.tree.root); // but this node, will be exactly the same in terms of data? :/
-        }
-      })
-    );
-  },
-
-  updateReferentNodesOfEntities: (updatedEntities: string[]) => {
-    const isNodeAbleToUseDataSource = (node: CompositionComponentNode) => {
-      return Boolean(node.data.dataSource);
-    };
-
-    if (!updatedEntities.length) return;
-
-    console.log(`:::updateReferentNodesOfEntities(${updatedEntities.join(', ')})`);
-    set(
-      produce((draftState: TreeStore) => {
-        const currentTree = draftState.tree;
-        const referentNodes: Array<[string, CompositionComponentNode]> = [];
-        treeVisit(currentTree.root, (node) => {
-          if (!isNodeAbleToUseDataSource(node)) return;
-
-          const intersectElements = intersection(
-            updatedEntities,
-            entityIdsOfDataSource(node.data.dataSource)
-          );
-          if (intersectElements.length) {
-            console.log(
-              `:::updateReferentNodesOfEntities() found an referent node(${node.data.id}) for <${
-                node.data.blockId
-              } dataSourceIntersection=${intersectElements.join(', ')}>`,
-              node
-            );
-            referentNodes.push([node.data.id, node]);
-          }
-        });
-        console.log(
-          `:::updateReferentNodesOfEntities() found ${referentNodes.length} dataSource referent nodes to update`,
-          referentNodes
-        );
-        for (const [nodeId, node] of referentNodes) {
-          updateNode(nodeId, cloneDeepAsPOJO(node), draftState.tree.root);
-        }
-      })
-    );
-  },
-
   updateNodesByUpdatedEntity: (entityId: string) => {
+    console.log(`:::updateNodesByUpdatedEntity(${entityId})`);
     set(
       produce((draftState: TreeStore) => {
         treeVisit(draftState.tree.root, (node) => {
           if (isAssemblyNode(node) && node.data.blockId === entityId) {
-            // Create a plain clone without references via `JSON.parse()` and `JSON.stringify()`.
-            // `structuredClone()` does not work because it appears to include a hidden reference.
+            // Cannot use `structuredClone()` as node is probably a Proxy object with weird references
             updateNode(node.data.id, cloneDeepAsPOJO(node), draftState.tree.root);
             return;
           }
           const dataSourceIds = Object.values(node.data.dataSource).map((link) => link.sys.id);
           if (dataSourceIds.includes(entityId)) {
-            // Same reason as above to not use structuredClone()
+            // Cannot use `structuredClone()` as node is probably a Proxy object with weird references
             updateNode(node.data.id, cloneDeepAsPOJO(node), draftState.tree.root);
           }
         });

@@ -35,13 +35,10 @@ export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
-  const { updateTree, updateEmbedNodesOfAssemblies, updateNodesByUpdatedEntity } = useTreeStore(
-    (state) => ({
-      updateTree: state.updateTree,
-      updateEmbedNodesOfAssemblies: state.updateEmbedNodesOfAssemblies,
-      updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
-    })
-  );
+  const { updateTree, updateNodesByUpdatedEntity } = useTreeStore((state) => ({
+    updateTree: state.updateTree,
+    updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
+  }));
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const setLocale = useEditorStore((state) => state.setLocale);
@@ -62,35 +59,6 @@ export function useEditorSubscriber() {
       window.location.reload();
     }, 50);
   };
-
-  const refetchEntities = useCallback(
-    async (entities: Link<'Asset' | 'Entry'>[]) => {
-      console.log(`:::refetchEntities()`);
-      setEntitiesFetched(false);
-      setFetchingEntities(true);
-      const missingEntryIds = entities
-        .filter((entity) => entity.sys.linkType === 'Entry')
-        .map((entity) => entity.sys.id);
-      const missingAssetIds = entities
-        .filter((entity) => entity.sys.linkType === 'Asset')
-        .map((entity) => entity.sys.id);
-      try {
-        await entityStore.fetchEntities({
-          missingAssetIds,
-          missingEntryIds,
-          skipCache: true,
-        });
-        console.log(`[exp-builder.sdk] Finished refetching entities`);
-      } catch (error) {
-        console.error('[exp-builder.sdk] Failed refetching entities', error);
-        return;
-      } finally {
-        setEntitiesFetched(true);
-        setFetchingEntities(false);
-      }
-    },
-    [entityStore, setEntitiesFetched]
-  );
 
   useEffect(() => {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
@@ -172,7 +140,6 @@ export function useEditorSubscriber() {
             changedNode,
             changedValueType,
             assemblies,
-            forceRefetchEntities,
           }: {
             tree: CompositionTree;
             assemblies: Link<'Entry'>[];
@@ -180,7 +147,6 @@ export function useEditorSubscriber() {
             entitiesResolved?: boolean;
             changedNode?: CompositionComponentNode;
             changedValueType?: CompositionComponentPropValue['type'];
-            forceRefetchEntities?: Link<'Asset' | 'Entry'>[];
           } = payload;
 
           // Make sure to first store the assemblies before setting the tree and thus triggering a rerender
@@ -212,19 +178,6 @@ export function useEditorSubscriber() {
 
             // Update the tree when all necessary data is fetched and ready for rendering.
             updateTree(tree);
-            setLocale(locale);
-          } else if (forceRefetchEntities) {
-            const isEntity = (link: Link<'Entry' | 'Asset'>) => link.sys.linkType === 'Entry';
-            // This happens when we need to update an assembly embed-node
-            const { dataSource, unboundValues } = getDataFromTree(tree);
-            setDataSource(dataSource);
-            setUnboundValues(unboundValues);
-            await fetchMissingEntities(dataSource);
-            // await refetchEntities(forceRefetchEntities);
-            // After assembly entries are fetched, we need to update the embed nodes
-            updateEmbedNodesOfAssemblies(
-              forceRefetchEntities.filter(isEntity).map((entity) => entity.sys.id)
-            );
             setLocale(locale);
           } else {
             const { dataSource, unboundValues } = getDataFromTree(tree);
@@ -303,8 +256,9 @@ export function useEditorSubscriber() {
           if (updatedEntity) {
             const storedEntity = entityStore.entities.find(
               (entity) => entity.sys.id === updatedEntity.sys.id
-            );
-            const didEntityChange = storedEntity?.sys.version == updatedEntity.sys.version;
+            ) as unknown as ManagementEntity | undefined;
+
+            const didEntityChange = storedEntity?.sys.version === updatedEntity.sys.version;
             entityStore.updateEntity(updatedEntity);
             // We traverse the whole tree, so this is a opt-in feature to only use it when required.
             if (shouldRerender && didEntityChange) {
@@ -360,11 +314,9 @@ export function useEditorSubscriber() {
     dataSource,
     areEntitiesFetched,
     fetchMissingEntities,
-    refetchEntities,
     setUnboundValues,
     unboundValues,
     updateTree,
-    updateEmbedNodesOfAssemblies,
     updateNodesByUpdatedEntity,
   ]);
 
