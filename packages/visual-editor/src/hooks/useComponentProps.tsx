@@ -26,6 +26,7 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { Dropzone } from '@components/Dropzone/Dropzone';
 import { useEntityStore } from '@/store/entityStore';
+import { CONTENTFUL_SECTION_ID } from '@contentful/experience-builder-core/constants';
 
 type PropsType =
   | StyleProps
@@ -145,14 +146,12 @@ export const useComponentProps = ({
     entityStore,
   ]);
 
-  const cfStyles = buildCfStyles(props);
-
   const editorWrapperProps = useMemo(() => {
     const wrapperProps = {
       isFixedWidth: false,
     };
 
-    if (node.data.blockId !== CONTENTFUL_CONTAINER_ID) {
+    if (![CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.data.blockId)) {
       return wrapperProps;
     }
 
@@ -168,7 +167,17 @@ export const useComponentProps = ({
     return wrapperProps;
   }, [node, props]);
 
+  const cfStyles = buildCfStyles(props);
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
+
+  // Use cfStyles to generate editor styles (discard margin, padding, background color)
+  const { margin, padding, backgroundColor, ...editorStyles } = cfStyles;
+  editorStyles.background = 'none';
+
+  const { className: editorWrapperClass } = useStyleTag({
+    styles: editorStyles,
+    nodeId: `editor-${node.data.id}`,
+  });
 
   const renderDropzone = (node: CompositionComponentNode, props?: Record<string, unknown>) => {
     return (
@@ -182,7 +191,7 @@ export const useComponentProps = ({
     );
   };
 
-  const defaultedProps: Record<string, unknown> = {
+  const componentProps = {
     className,
     editorMode: true,
     node,
@@ -190,13 +199,9 @@ export const useComponentProps = ({
     'data-cf-node-id': node.data.id,
     'data-cf-node-block-id': node.data.blockId,
     'data-cf-node-block-type': node.type,
-    // TODO: do we really need lodash just for this?
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+    ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  if (definition.children) {
-    defaultedProps.children = renderDropzone(node);
-  }
-
-  return [defaultedProps, editorWrapperProps] as [typeof defaultedProps, typeof editorWrapperProps];
+  return { props: componentProps, editorWrapperProps, editorWrapperClass };
 };

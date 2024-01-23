@@ -1,10 +1,10 @@
-#ContentfulContainer.defaultStyles {
+.ContentfulContainer {
   position: relative;
   display: flex;
   box-sizing: border-box;
 }
 
-#ContentfulContainer.defaultStyles::-webkit-scrollbar {
+.ContentfulContainer::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
 

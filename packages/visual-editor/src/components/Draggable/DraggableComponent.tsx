@@ -65,7 +65,7 @@ export const DraggableComponent = ({
   }, [coordinates]);
 
   return (
-    <div ref={draggableRef}>
+    <div className={classNames('Draggable', className)} ref={draggableRef}>
       <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
         {(provided, snapshot) => (
           <div

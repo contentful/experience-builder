@@ -58,7 +58,7 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
 
   const componentId = node.data.id;
 
-  const [props, editorWrapperProps] = useComponentProps({
+  const { props, editorWrapperProps, editorWrapperClass } = useComponentProps({
     node,
     areEntitiesFetched,
     resolveDesignValue,
@@ -81,6 +81,7 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
     node,
     componentId,
     elementToRender,
+    wrapperClass: editorWrapperClass,
     wrapperProps: editorWrapperProps,
     label: componentRegistration.definition.name,
   };

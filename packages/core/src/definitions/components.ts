@@ -1,6 +1,6 @@
 import type { ComponentDefinition } from '@/types';
 import * as Constants from '@/constants';
-import { containerBuiltInStyles, sectionBuiltInStyles } from './styles';
+import { builtInStyles, containerBuiltInStyles } from './styles';
 
 export const containerDefinition: ComponentDefinition = {
   id: Constants.CONTENTFUL_CONTAINER_ID,
@@ -16,6 +16,6 @@ export const sectionDefinition: ComponentDefinition = {
   name: Constants.CONTENTFUL_SECTION_NAME,
   category: Constants.CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
-  variables: sectionBuiltInStyles,
+  variables: builtInStyles,
   rootComponent: true,
 };
