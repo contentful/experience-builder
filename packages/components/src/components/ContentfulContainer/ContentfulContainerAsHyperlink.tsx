@@ -80,7 +80,7 @@ export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyper
   // return (
   //   <a
   //     id="ContentfulContainer"
-  //     className={combineClasses(className, 'cf-section-link')}
+  //     className={combineClasses(className, 'ContentfulContainer', 'cf-section-link')}
   //     href={cfHyperlink}
   //     {...anchorTagProps}
   //     onClick={stopPropagationInEditorMode}

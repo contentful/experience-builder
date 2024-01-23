@@ -315,6 +315,6 @@ export const containerBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The max-width of the section',
-    defaultValue: '960px',
+    defaultValue: '1192px',
   },
 };
