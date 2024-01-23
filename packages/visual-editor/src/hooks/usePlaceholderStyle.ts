@@ -136,8 +136,8 @@ export const usePlaceholderStyle = () => {
         clientX = offsetLeft - translateValue;
       }
 
-      const draggingNewComponent = !!draggedItem.source.droppableId.startsWith('component-list');
-      const shouldShowBackgroundColor = draggingNewComponent;
+      const shouldShowBackgroundColor =
+        !!draggedItem.source.droppableId.startsWith('component-list');
 
       const backgroundColor = shouldShowBackgroundColor
         ? 'rgba(var(--exp-builder-blue300-rgb), 0.5)'
