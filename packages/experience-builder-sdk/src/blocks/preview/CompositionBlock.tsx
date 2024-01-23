@@ -28,6 +28,7 @@ import { ContentfulContainer } from '@contentful/experience-builder-components';
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
+import { isContentfulStructureComponent } from '@contentful/experience-builder-core';
 
 type CompositionBlockProps = {
   node: CompositionNode;
@@ -155,7 +156,7 @@ export const CompositionBlock = ({
         })
       : null;
 
-  if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
+  if (isContentfulStructureComponent(node.definitionId)) {
     return (
       <ContentfulContainer
         editorMode={false}

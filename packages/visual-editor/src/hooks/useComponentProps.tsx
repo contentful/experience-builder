@@ -27,6 +27,7 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { Dropzone } from '@components/Dropzone/Dropzone';
 import { useEntityStore } from '@/store/entityStore';
 import { CONTENTFUL_SECTION_ID } from '@contentful/experience-builder-core/constants';
+import { isContentfulStructureComponent } from '@contentful/experience-builder-core';
 
 type PropsType =
   | StyleProps
@@ -151,7 +152,7 @@ export const useComponentProps = ({
       isFixedWidth: false,
     };
 
-    if (![CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.data.blockId)) {
+    if (!isContentfulStructureComponent(node.data.blockId)) {
       return wrapperProps;
     }
 
