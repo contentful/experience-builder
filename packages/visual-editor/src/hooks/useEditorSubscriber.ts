@@ -365,6 +365,7 @@ export function useEditorSubscriber() {
     unboundValues,
     updateTree,
     updateEmbedNodesOfAssemblies,
+    updateNodesByUpdatedEntity,
   ]);
 
   /*
