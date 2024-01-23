@@ -6,7 +6,7 @@ import { sendMessage } from '@contentful/experience-builder-core';
 import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 import { DragDropContext } from '@hello-pangea/dnd';
 import dragState from '@/utils/dragState';
-import React from 'react';
+import React, { useRef } from 'react';
 import type { ReactNode } from 'react';
 import { pick } from 'lodash-es';
 
@@ -19,6 +19,8 @@ export const DNDProvider = ({ children }: Props) => {
   const updateItem = useDraggedItemStore((state) => state.updateItem);
   const { onAddComponent, onMoveComponent } = useCanvasInteractions();
   const { onDragStartOrUpdate } = usePlaceholderStyle();
+  const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
+  const prevSelectedNodeId = useRef<string | null>(null);
 
   const isTestRun =
     typeof window !== 'undefined' && Object.prototype.hasOwnProperty.call(window, 'Cypress');
@@ -28,6 +30,9 @@ export const DNDProvider = ({ children }: Props) => {
       ? pick(event.nativeEvent, ['mode', 'draggableId', 'type', 'source', 'destination'])
       : event;
     onDragStartOrUpdate(start);
+    prevSelectedNodeId.current = selectedNodeId;
+
+    //Unselect the current node when dragging and remove the outline
     setSelectedNodeId('');
     sendMessage(OUTGOING_EVENTS.ComponentSelected, {
       nodeId: '',
@@ -54,6 +59,14 @@ export const DNDProvider = ({ children }: Props) => {
     // User cancel drag
     if (!droppedItem.destination) {
       sendMessage(OUTGOING_EVENTS.ComponentDragCanceled);
+      //select the previously selected node if drag was canceled
+      if (prevSelectedNodeId.current) {
+        setSelectedNodeId(prevSelectedNodeId.current);
+        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+          nodeId: prevSelectedNodeId.current,
+        });
+        prevSelectedNodeId.current = null;
+      }
       return;
     }
 
@@ -63,6 +76,12 @@ export const DNDProvider = ({ children }: Props) => {
     } else {
       onMoveComponent(droppedItem);
     }
+
+    // If a node was previously selected prior to dragging, re-select it
+    setSelectedNodeId(droppedItem.draggableId);
+    sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+      nodeId: droppedItem.draggableId,
+    });
   };
 
   return (

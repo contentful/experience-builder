@@ -57,7 +57,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   return (
     <DraggableComponent
       label={label || 'No Label Specified'}
-      id={`draggable-${componentId}`}
+      id={componentId}
       index={index}
       isAssemblyBlock={isAssemblyBlock}
       isDragDisabled={isAssemblyBlock}
@@ -75,10 +75,14 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
           return;
         }
         const nodeId = isAssemblyBlock ? parentSectionId : componentId;
-        setSelectedNodeId(nodeId);
-        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-          nodeId,
-        });
+
+        // Only select the node if the user intentionally clicked on it, but not when dragging
+        if (!userIsDragging) {
+          setSelectedNodeId(nodeId);
+          sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+            nodeId,
+          });
+        }
       }}
       onMouseOver={(e) => {
         e.stopPropagation();
