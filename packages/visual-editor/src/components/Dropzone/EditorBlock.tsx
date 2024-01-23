@@ -45,7 +45,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
     resolveDesignValue,
   });
 
-  useSelectedInstanceCoordinates({ node });
+  const coordinates = useSelectedInstanceCoordinates({ node });
 
   const sectionsWithZone = useZoneStore((state) => state.sectionsWithZones);
 
@@ -63,6 +63,8 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
       isDragDisabled={isAssemblyBlock}
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
+      isContainer={isContainer}
+      coordinates={coordinates}
       className={classNames({
         [styles.fullWidth]: isContainer && !wrapperProps.isFixedWidth,
         [styles.fixedWidth]: isContainer && wrapperProps.isFixedWidth,

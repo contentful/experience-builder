@@ -9,7 +9,7 @@ import { usePlaceholderStyleStore } from '@/store/placeholderStyle';
 import styles from './styles.module.css';
 import classNames from 'classnames';
 import { ROOT_ID } from '@/types/constants';
-import { EmptyEditorContainer } from '@components/EmptyContainer/EmptyContainer';
+import { EmptyContainer } from '@components/EmptyContainer/EmptyContainer';
 import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
 import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
@@ -161,7 +161,7 @@ export function Dropzone({
             }}
             {...rest}>
             {isEmptyCanvas ? (
-              <EmptyEditorContainer isDragging={isRootZone && userIsDragging} />
+              <EmptyContainer isDragging={isRootZone && userIsDragging} />
             ) : (
               content.map((item, i) => {
                 const componentId = item.data.id;
