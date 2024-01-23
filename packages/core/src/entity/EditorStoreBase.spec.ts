@@ -1,20 +1,17 @@
-import type { Asset, Entry } from 'contentful';
 import { describe, it, expect } from 'vitest';
-import assetJSON from '../__test__/fixtures/asset.json';
-import entryJSON from '../__test__/fixtures/entry.json';
-import { EntityStore } from './EntityStore';
+import { asset } from '../test/__fixtures__/asset';
+import { entry } from '../test/__fixtures__/entry';
+import { EntityStoreBase } from './EntityStoreBase';
 
 describe('EntityStore', () => {
   const locale = 'en-US';
 
-  const asset = assetJSON as Asset;
-  const entry = entryJSON as Entry;
   const entities = [entry, asset];
 
-  const createStore = () => new EntityStore({ entities, locale });
+  const createStore = () => new EntityStoreBase({ entities, locale });
 
   it('should create a new instance', () => {
-    const store = new EntityStore({ entities: [], locale });
+    const store = new EntityStoreBase({ entities: [], locale });
     expect(store).toBeDefined();
   });
 
@@ -26,7 +23,7 @@ describe('EntityStore', () => {
     const patchedAsset = { ...asset, sys: { ...asset.sys, id: '1' } };
     const patchedEntry = { ...entry, sys: { ...entry.sys, id: '1' } };
 
-    const store = new EntityStore({ entities: [patchedAsset, patchedEntry], locale });
+    const store = new EntityStoreBase({ entities: [patchedAsset, patchedEntry], locale });
 
     const [resolvedAsset, resolvedEntry] = await Promise.all([
       store.fetchAsset('1'),

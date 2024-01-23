@@ -1,6 +1,7 @@
-import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-sdk';
 import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
 import { sendMessage } from '../communication/sendMessage';
+import { EditorEntityStore } from './EditorEntityStore';
+import { RequestedEntitiesMessage } from '../types';
 
 // The default of 3s in the EditorEntityStore is sometimes timing out and
 // leads to not rendering bound content and assemblies.

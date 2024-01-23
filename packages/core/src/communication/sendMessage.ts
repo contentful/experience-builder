@@ -1,4 +1,4 @@
-import { PostMessageMethods } from '@contentful/visual-sdk';
+import { PostMessageMethods } from '@/constants';
 import { OutgoingEvent } from '@/types';
 
 export const sendMessage = (eventType: OutgoingEvent | PostMessageMethods, data?: unknown) => {

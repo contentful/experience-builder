@@ -1,22 +1,7 @@
 import type { Asset, Entry } from 'contentful';
-
-import { EntityStore } from './EntityStore';
-
-export type RequestEntitiesMessage = {
-  entityIds: string[];
-  entityType: 'Asset' | 'Entry';
-  locale: string;
-};
-
-export type RequestedEntitiesMessage = {
-  entities: Array<Entry | Asset>;
-  missingEntityIds?: string[];
-};
-
-export enum PostMessageMethods {
-  REQUEST_ENTITIES = 'REQUEST_ENTITIES',
-  REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',
-}
+import { EntityStoreBase } from './EntityStoreBase';
+import { PostMessageMethods } from '../constants';
+import { RequestEntitiesMessage, RequestedEntitiesMessage } from '../types';
 
 type SendMessage = (
   method: PostMessageMethods.REQUEST_ENTITIES,
@@ -31,7 +16,7 @@ type Subscribe = (
  * EntityStore which resolves entries and assets from the editor
  * over the sendMessage and subscribe functions.
  */
-export class EditorEntityStore extends EntityStore {
+export class EditorEntityStore extends EntityStoreBase {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private requestCache = new Map<string, Promise<any>>();
   private sendMessage: SendMessage;

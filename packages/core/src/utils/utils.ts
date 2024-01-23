@@ -1,5 +1,3 @@
-import { times } from 'lodash-es';
-import { random } from 'lodash-es';
 import {
   CompositionTree,
   CompositionComponentNode,
@@ -120,6 +118,9 @@ export const generateRandomId = (letterCount: number): string => {
   const LETTERS = 'abcdefghijklmnopqvwxyzABCDEFGHIJKLMNOPQVWXYZ';
   const NUMS = '0123456789';
   const ALNUM = NUMS + LETTERS;
+
+  const times = (n: number, callback: () => string) => Array.from({ length: n }, callback);
+  const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
   return times(letterCount, () => ALNUM[random(0, ALNUM.length - 1)]).join('');
 };

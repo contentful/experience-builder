@@ -9,6 +9,7 @@ import {
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
   SCROLL_STATES,
+  PostMessageMethods,
 } from '@contentful/experience-builder-core/constants';
 import {
   CompositionTree,
@@ -27,7 +28,6 @@ import { Entry } from 'contentful';
 import { Assembly } from '@contentful/experience-builder-components';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
-import { PostMessageMethods } from '@contentful/visual-sdk';
 import { useEntityStore } from '@/store/entityStore';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
 
@@ -42,6 +42,7 @@ export function useEditorSubscriber() {
   const setUnboundValues = useEditorStore((state) => state.setUnboundValues);
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
+  const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
 
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
 
@@ -118,7 +119,7 @@ export function useEditorSubscriber() {
 
       const eventData = tryParseMessage(event);
       if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
-        // Expected message: This message is handled in the visual-sdk to store fetched entities
+        // Expected message: This message is handled in the EntityStore to store fetched entities
         return;
       }
       console.debug(
@@ -327,6 +328,9 @@ export function useEditorSubscriber() {
         /**
          * On scroll end, send new co-ordinates of selected node
          */
+        if (selectedNodeId) {
+          sendSelectedComponentCoordinates(selectedNodeId);
+        }
       }, 150);
     };
 
@@ -336,5 +340,5 @@ export function useEditorSubscriber() {
       window.removeEventListener('scroll', onScroll);
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [selectedNodeId]);
 }
