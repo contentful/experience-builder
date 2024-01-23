@@ -258,7 +258,7 @@ export function useEditorSubscriber() {
               (entity) => entity.sys.id === updatedEntity.sys.id
             ) as unknown as ManagementEntity | undefined;
 
-            const didEntityChange = storedEntity?.sys.version === updatedEntity.sys.version;
+            const didEntityChange = storedEntity?.sys.version !== updatedEntity.sys.version;
             entityStore.updateEntity(updatedEntity);
             // We traverse the whole tree, so this is a opt-in feature to only use it when required.
             if (shouldRerender && didEntityChange) {
