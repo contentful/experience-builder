@@ -1,10 +1,10 @@
-.ContentfulContainer {
+.contentful-container {
   position: relative;
   display: flex;
   box-sizing: border-box;
 }
 
-.ContentfulContainer::-webkit-scrollbar {
+.contentful-container::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
 

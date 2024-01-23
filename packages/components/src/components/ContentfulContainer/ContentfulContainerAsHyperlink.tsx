@@ -40,18 +40,18 @@ export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyper
 ) => {
   const { cfHyperlink, cfOpenInNewTab, editorMode, className, children } = props;
 
-  let anchorTagProps = {};
-  if (cfOpenInNewTab) {
-    anchorTagProps = {
-      target: '_blank',
-      rel: 'noopener noreferrer',
-    };
-  }
-
   if (editorMode === false) {
+    let anchorTagProps = {};
+    if (cfOpenInNewTab) {
+      anchorTagProps = {
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      };
+    }
+
     return (
       <a
-        className={combineClasses(className, 'ContentfulContainer', 'cf-section-link')}
+        className={combineClasses(className, 'contentful-container', 'cf-section-link')}
         href={cfHyperlink}
         {...anchorTagProps}>
         {children}
@@ -71,23 +71,9 @@ export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyper
     ['data-cf-node-id']: node.data.id,
     ['data-cf-node-block-id']: node.data.blockId,
     ['data-cf-node-block-type']: node.type,
-    className: combineClasses(className, 'ContentfulContainer', 'cf-section-link'),
+    className: combineClasses(className, 'contentful-container', 'cf-section-link'),
     zoneId: node.data.id,
     WrapperComponent: 'a',
     onClick: stopPropagationInEditorMode,
   });
-
-  // return (
-  //   <a
-  //     id="ContentfulContainer"
-  //     className={combineClasses(className, 'ContentfulContainer', 'cf-section-link')}
-  //     href={cfHyperlink}
-  //     {...anchorTagProps}
-  //     onClick={stopPropagationInEditorMode}
-  //     data-cf-node-id={node.data.id}
-  //     data-cf-node-block-id={node.data.blockId}
-  //     data-cf-node-block-type={node.type}>
-  //     {renderDropzone(node)}
-  //   </a>
-  // );
 };

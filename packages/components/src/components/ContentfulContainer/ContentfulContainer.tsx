@@ -17,7 +17,7 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
     return (
       <Flex
         data-test-id="contentful-container"
-        className={combineClasses(className, 'ContentfulContainer')}>
+        className={combineClasses(className, 'contentful-container')}>
         {children}
       </Flex>
     );
@@ -31,7 +31,7 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
     ['data-cf-node-id']: node.data.id,
     ['data-cf-node-block-id']: node.data.blockId,
     ['data-cf-node-block-type']: node.type,
-    className: combineClasses(className, 'ContentfulContainer'),
+    className: combineClasses(className, 'contentful-container'),
     WrapperComponent: Flex,
   });
 };
