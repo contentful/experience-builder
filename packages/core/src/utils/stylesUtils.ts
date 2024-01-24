@@ -6,12 +6,7 @@ import {
   transformBorderStyle,
   transformFill,
 } from './transformers';
-import {
-  CSSProperties,
-  StyleProps,
-  CompositionComponentNode,
-  CompositionVariableValueType,
-} from '@/types';
+import { CSSProperties, StyleProps, CompositionVariableValueType } from '@/types';
 import { isContentfulStructureComponent } from './components';
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
