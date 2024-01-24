@@ -77,6 +77,8 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
   },
 
   /**
+   * NOTE: this is for debugging purposes only as it causes ugly canvas flash.
+   *
    * Force updates entire tree. Usually shouldn't be used as updateTree()
    * uses smart update algorithm based on diffs. But for troubleshooting
    * you may want to force update the tree so leaving this in.
@@ -107,7 +109,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
     // The current and updated tree are the same, no tree update required.
     if (!treeDiff.length) {
       console.debug(
-        `[exp-builder.visual-editor] updateTree(): During smart-diffing no diffs. Skipping tree update.`
+        `[exp-builder.visual-editor::updateTree()]: During smart-diffing no diffs. Skipping tree update.`
       );
       return;
     }
@@ -157,6 +159,8 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
   },
 }));
 
+// Serialize and deserialize an object again to remove all functions and references.
+// Some people refer to this as "Plain Old JavaScript Object" (POJO) as it solely contains plain data.
 function cloneDeepAsPOJO(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
