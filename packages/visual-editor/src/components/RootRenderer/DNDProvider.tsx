@@ -31,8 +31,6 @@ export const DNDProvider = ({ children }: Props) => {
   const isTestRun =
     typeof window !== 'undefined' && Object.prototype.hasOwnProperty.call(window, 'Cypress');
 
-  console.log({ isTestRun });
-
   const dragStart: OnBeforeDragStartResponder = (start) => {
     onDragStartOrUpdate(start);
     prevSelectedNodeId.current = selectedNodeId;
