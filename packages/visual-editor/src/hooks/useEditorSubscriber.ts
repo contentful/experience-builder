@@ -18,13 +18,13 @@ import {
   ComponentRegistration,
   Link,
   CompositionDataSource,
+  ManagementEntity,
 } from '@contentful/experience-builder-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { Entry } from 'contentful';
 import { Assembly } from '@contentful/experience-builder-components';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
@@ -35,7 +35,10 @@ export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
-  const updateTree = useTreeStore((state) => state.updateTree);
+  const { updateTree, updateNodesByUpdatedEntity } = useTreeStore((state) => ({
+    updateTree: state.updateTree,
+    updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
+  }));
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const setLocale = useEditorStore((state) => state.setLocale);
@@ -153,6 +156,7 @@ export function useEditorSubscriber() {
             // the imperative calls to fetchMissingEntities.
           }
 
+          // Below are mutually exclusive cases
           if (changedNode) {
             /**
              * On single node updates, we want to skip the process of getting the data (datasource and unbound values)
@@ -171,16 +175,19 @@ export function useEditorSubscriber() {
                 ...changedNode.data.unboundValues,
               });
             }
+
+            // Update the tree when all necessary data is fetched and ready for rendering.
+            updateTree(tree);
+            setLocale(locale);
           } else {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
             await fetchMissingEntities(dataSource);
+            // Update the tree when all necessary data is fetched and ready for rendering.
+            updateTree(tree);
+            setLocale(locale);
           }
-
-          // Update the tree when all necessary data is fetched and ready for rendering.
-          updateTree(tree);
-          setLocale(locale);
           break;
         }
         case INCOMING_EVENTS.DesignComponentsRegistered:
@@ -205,7 +212,7 @@ export function useEditorSubscriber() {
             assembly,
             assemblyDefinition,
           }: {
-            assembly: Entry;
+            assembly: ManagementEntity;
             assemblyDefinition?: ComponentRegistration['definition'];
           } = payload;
           entityStore.updateEntity(assembly);
@@ -242,9 +249,21 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.UpdatedEntity: {
-          const { entity } = payload;
-          if (entity) {
-            entityStore.updateEntity(entity);
+          const { entity: updatedEntity, shouldRerender } = payload as {
+            entity: ManagementEntity;
+            shouldRerender?: boolean;
+          };
+          if (updatedEntity) {
+            const storedEntity = entityStore.entities.find(
+              (entity) => entity.sys.id === updatedEntity.sys.id
+            ) as unknown as ManagementEntity | undefined;
+
+            const didEntityChange = storedEntity?.sys.version !== updatedEntity.sys.version;
+            entityStore.updateEntity(updatedEntity);
+            // We traverse the whole tree, so this is a opt-in feature to only use it when required.
+            if (shouldRerender && didEntityChange) {
+              updateNodesByUpdatedEntity(updatedEntity.sys.id);
+            }
           }
           break;
         }
@@ -298,6 +317,7 @@ export function useEditorSubscriber() {
     setUnboundValues,
     unboundValues,
     updateTree,
+    updateNodesByUpdatedEntity,
   ]);
 
   /*
