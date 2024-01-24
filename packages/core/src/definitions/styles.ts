@@ -303,13 +303,6 @@ export const containerBuiltInStyles: Partial<
   Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 > = {
   ...builtInStyles,
-  cfHeight: {
-    displayName: 'Height',
-    type: 'Text',
-    group: 'style',
-    description: 'The height of the section',
-    defaultValue: 'auto',
-  },
   cfMaxWidth: {
     displayName: 'Max Width',
     type: 'Text',

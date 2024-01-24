@@ -96,20 +96,14 @@ export const buildCfStyles = ({
  */
 export const calculateNodeDefaultHeight = ({
   blockId,
-  children,
   value,
 }: {
   blockId?: string;
-  children: CompositionComponentNode['children'];
   value: CompositionVariableValueType;
 }) => {
   if (!blockId || !isContentfulStructureComponent(blockId) || value !== 'auto') {
     return value;
   }
 
-  if (children.length) {
-    return '100%';
-  }
-
-  return '200px';
+  return '100%';
 };
