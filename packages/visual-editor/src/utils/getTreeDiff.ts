@@ -166,14 +166,19 @@ function compareNodes({
     });
   });
 
-  map.forEach((index) => {
+  map.forEach((index, key) => {
     // If the node count of the entire tree doesn't signify
     // a node was removed, don't add that as a diff
     if (!nodeRemoved) {
       return;
     }
     // Remaining nodes in the map are removed in the second tree
-    differences.push({ type: TreeAction.REMOVE_NODE, indexToRemove: index, parentNodeId });
+    differences.push({
+      type: TreeAction.REMOVE_NODE,
+      indexToRemove: index,
+      parentNodeId,
+      idToRemove: key,
+    });
   });
 
   return differences;

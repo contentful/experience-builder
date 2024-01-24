@@ -16,6 +16,7 @@ import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
 import {
   DESIGN_COMPONENT_NODE_TYPES,
   ASSEMBLY_NODE_TYPES,
+  CONTENTFUL_COLUMNS_ID,
 } from '@contentful/experience-builder-core/constants';
 
 type DropzoneProps = {
@@ -35,9 +36,14 @@ function isDropEnabled(
   draggingRootZone: boolean,
   isRootZone: boolean,
   draggingOverArea: boolean,
-  isAssembly: boolean
+  isAssembly: boolean,
+  blockId: string = ''
 ) {
   if (isAssembly) {
+    return false;
+  }
+
+  if (blockId === CONTENTFUL_COLUMNS_ID) {
     return false;
   }
 
@@ -125,7 +131,8 @@ export function Dropzone({
     draggingRootZone,
     isRootZone,
     draggingOverArea,
-    isAssembly
+    isAssembly,
+    node?.data.blockId
   );
 
   if (!resolveDesignValue) {
@@ -152,6 +159,7 @@ export function Dropzone({
               },
               className
             )}
+            node={node}
             onMouseOver={(e) => {
               e.stopPropagation();
               setHoveringZone(zoneId);

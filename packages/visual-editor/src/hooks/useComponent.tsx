@@ -11,10 +11,11 @@ import {
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
-import { ContentfulContainer, Assembly } from '@contentful/experience-builder-components';
+import { Assembly } from '@contentful/experience-builder-components';
 import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
+import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
 
 interface ComponentParams {
   node: CompositionComponentNode;
@@ -67,15 +68,13 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
 
   // Only pass editor props to built-in components
   const { editorMode, renderDropzone, ...componentProps } = props;
-  const elementToRender = builtInComponents.includes(node.data.blockId || '') ? (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <ContentfulContainer {...(props as any)} />
-  ) : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE ? (
-    // Assembly.tsx requires renderDropzone and editorMode as well
-    React.createElement(componentRegistration.component, props)
-  ) : (
-    React.createElement(componentRegistration.component, componentProps)
-  );
+  const elementToRender = builtInComponents.includes(node.data.blockId || '')
+    ? (dragProps?: NoWrapDraggableProps) =>
+        React.createElement(componentRegistration.component, { ...props, ...dragProps })
+    : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE
+    ? // Assembly.tsx requires renderDropzone and editorMode as well
+      () => React.createElement(componentRegistration.component, props)
+    : () => React.createElement(componentRegistration.component, componentProps);
 
   return {
     node,
