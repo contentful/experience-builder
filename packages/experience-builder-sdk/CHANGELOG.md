@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.17](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.16...@contentful/experience-builder@4.0.0-alpha.17) (2024-01-25)
+
+### Features
+
+- implement columns component with presets and custom options [ALT-43] ([#285](https://github.com/contentful/experience-builder/issues/285)) ([dd74a5f](https://github.com/contentful/experience-builder/commit/dd74a5f409c7b4d66722d0809eba43a3cf0e1cfd))
+
 # [4.0.0-alpha.16](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.15...@contentful/experience-builder@4.0.0-alpha.16) (2024-01-23)
 
 ### Bug Fixes

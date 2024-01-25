@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.18](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.17...@contentful/experience-builder-visual-editor@0.0.2-alpha.18) (2024-01-25)
+
+### Bug Fixes
+
+- allows re-parenting of components, however does not allow for new containers to be created ([0614fd7](https://github.com/contentful/experience-builder/commit/0614fd77c41c63790649a8de3bc5618357d51ce9))
+- recognize replacement by detaching assembly node with current child cound ([41d3be5](https://github.com/contentful/experience-builder/commit/41d3be5f1ca1d29bcc2b9377932467ce873dac05))
+- **visual-editor:** update dropzone and selected component logic [ALT-317] ([#283](https://github.com/contentful/experience-builder/issues/283)) ([edb4349](https://github.com/contentful/experience-builder/commit/edb434928ac79523cc5aede61ae6cdca3e44f04b))
+- **visual-sdk:** only show bg color of dropzone for components being dragged in ([#278](https://github.com/contentful/experience-builder/issues/278)) ([2895c16](https://github.com/contentful/experience-builder/commit/2895c16935ba9ac6ecc8638b0601f2d3eb48718e))
+
+### Features
+
+- Container default margin auto [ALT-326] ([#286](https://github.com/contentful/experience-builder/issues/286)) ([16c1acf](https://github.com/contentful/experience-builder/commit/16c1acf05a5553dd31a5ebb04ead6c0a7724de54))
+- implement columns component with presets and custom options [ALT-43] ([#285](https://github.com/contentful/experience-builder/issues/285)) ([dd74a5f](https://github.com/contentful/experience-builder/commit/dd74a5f409c7b4d66722d0809eba43a3cf0e1cfd))
+
 ## [0.0.2-alpha.17](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.16...@contentful/experience-builder-visual-editor@0.0.2-alpha.17) (2024-01-23)
 
 ### Bug Fixes
