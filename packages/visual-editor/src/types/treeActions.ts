@@ -22,6 +22,7 @@ export interface ReplaceNode extends DiffBase {
   type: TreeAction.REPLACE_NODE;
   originalId: string;
   node: CompositionComponentNode;
+  indexToReplace: number;
 }
 
 export interface UpdateNode extends DiffBase {

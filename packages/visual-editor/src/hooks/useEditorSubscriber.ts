@@ -9,6 +9,7 @@ import {
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
   SCROLL_STATES,
+  PostMessageMethods,
 } from '@contentful/experience-builder-core/constants';
 import {
   CompositionTree,
@@ -17,17 +18,16 @@ import {
   ComponentRegistration,
   Link,
   CompositionDataSource,
+  ManagementEntity,
 } from '@contentful/experience-builder-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { Entry } from 'contentful';
 import { Assembly } from '@contentful/experience-builder-components';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
-import { PostMessageMethods } from '@contentful/visual-sdk';
 import { useEntityStore } from '@/store/entityStore';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
 
@@ -35,13 +35,17 @@ export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
-  const updateTree = useTreeStore((state) => state.updateTree);
+  const { updateTree, updateNodesByUpdatedEntity } = useTreeStore((state) => ({
+    updateTree: state.updateTree,
+    updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
+  }));
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const setLocale = useEditorStore((state) => state.setLocale);
   const setUnboundValues = useEditorStore((state) => state.setUnboundValues);
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
+  const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
 
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
 
@@ -118,7 +122,7 @@ export function useEditorSubscriber() {
 
       const eventData = tryParseMessage(event);
       if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
-        // Expected message: This message is handled in the visual-sdk to store fetched entities
+        // Expected message: This message is handled in the EntityStore to store fetched entities
         return;
       }
       console.debug(
@@ -152,6 +156,7 @@ export function useEditorSubscriber() {
             // the imperative calls to fetchMissingEntities.
           }
 
+          // Below are mutually exclusive cases
           if (changedNode) {
             /**
              * On single node updates, we want to skip the process of getting the data (datasource and unbound values)
@@ -170,16 +175,19 @@ export function useEditorSubscriber() {
                 ...changedNode.data.unboundValues,
               });
             }
+
+            // Update the tree when all necessary data is fetched and ready for rendering.
+            updateTree(tree);
+            setLocale(locale);
           } else {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
             await fetchMissingEntities(dataSource);
+            // Update the tree when all necessary data is fetched and ready for rendering.
+            updateTree(tree);
+            setLocale(locale);
           }
-
-          // Update the tree when all necessary data is fetched and ready for rendering.
-          updateTree(tree);
-          setLocale(locale);
           break;
         }
         case INCOMING_EVENTS.DesignComponentsRegistered:
@@ -204,7 +212,7 @@ export function useEditorSubscriber() {
             assembly,
             assemblyDefinition,
           }: {
-            assembly: Entry;
+            assembly: ManagementEntity;
             assemblyDefinition?: ComponentRegistration['definition'];
           } = payload;
           entityStore.updateEntity(assembly);
@@ -220,10 +228,6 @@ export function useEditorSubscriber() {
               definition: assemblyDefinition,
             });
           }
-
-          //HACK: The node that is dropped doesn't identify as a designComponent,
-          //so we need to force a rerender to get a new tree, which correctly identifies the node as a designComponent
-          sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
 
           break;
         }
@@ -245,9 +249,21 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.UpdatedEntity: {
-          const { entity } = payload;
-          if (entity) {
-            entityStore.updateEntity(entity);
+          const { entity: updatedEntity, shouldRerender } = payload as {
+            entity: ManagementEntity;
+            shouldRerender?: boolean;
+          };
+          if (updatedEntity) {
+            const storedEntity = entityStore.entities.find(
+              (entity) => entity.sys.id === updatedEntity.sys.id
+            ) as unknown as ManagementEntity | undefined;
+
+            const didEntityChange = storedEntity?.sys.version !== updatedEntity.sys.version;
+            entityStore.updateEntity(updatedEntity);
+            // We traverse the whole tree, so this is a opt-in feature to only use it when required.
+            if (shouldRerender && didEntityChange) {
+              updateNodesByUpdatedEntity(updatedEntity.sys.id);
+            }
           }
           break;
         }
@@ -301,6 +317,7 @@ export function useEditorSubscriber() {
     setUnboundValues,
     unboundValues,
     updateTree,
+    updateNodesByUpdatedEntity,
   ]);
 
   /*
@@ -331,6 +348,9 @@ export function useEditorSubscriber() {
         /**
          * On scroll end, send new co-ordinates of selected node
          */
+        if (selectedNodeId) {
+          sendSelectedComponentCoordinates(selectedNodeId);
+        }
       }, 150);
     };
 
@@ -340,5 +360,5 @@ export function useEditorSubscriber() {
       window.removeEventListener('scroll', onScroll);
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [selectedNodeId]);
 }

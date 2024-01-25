@@ -9,8 +9,6 @@ export const OUTGOING_EVENTS = {
   DesignTokens: 'registerDesignTokens',
   HoveredSection: 'hoveredSection',
   MouseMove: 'mouseMove',
-  MouseUp: 'mouseUp',
-  MouseDown: 'mouseDown',
   NewHoveredElement: 'newHoveredElement',
   ComponentSelected: 'componentSelected',
   RegisteredComponents: 'registeredComponents',
@@ -116,3 +114,8 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',
 ];
+
+export enum PostMessageMethods {
+  REQUEST_ENTITIES = 'REQUEST_ENTITIES',
+  REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',
+}

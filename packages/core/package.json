@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-core",
-  "version": "0.0.2-alpha.13",
+  "version": "0.0.2-alpha.14",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -61,9 +61,7 @@
     "vitest": "^1.0.4"
   },
   "dependencies": {
-    "@contentful/rich-text-types": "^16.3.0",
-    "@contentful/visual-sdk": "../visual-sdk",
-    "lodash-es": "^4.17.21"
+    "@contentful/rich-text-types": "^16.3.0"
   },
   "peerDependencies": {
     "contentful": ">=10.6.0"

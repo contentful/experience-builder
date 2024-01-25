@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { InternalSDKMode, IncomingEvent } from '@/types';
-import { INCOMING_EVENTS } from '@/constants';
+import { INCOMING_EVENTS, PostMessageMethods } from '@/constants';
 import { supportedModes } from '@/utils';
-import { PostMessageMethods } from '@contentful/visual-sdk';
 
 export type VisualEditorMessagePayload = {
   source: string;
@@ -67,7 +66,7 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
   // check eventData.eventType
   const supportedEventTypes = Object.values(INCOMING_EVENTS);
   if (!supportedEventTypes.includes(eventData.eventType)) {
-    // Expected message: This message is handled in the visual-sdk to store fetched entities
+    // Expected message: This message is handled in the EntityStore to store fetched entities
     if (eventData.eventType !== PostMessageMethods.REQUESTED_ENTITIES) {
       throw new ParseError(
         `Field eventData.eventType must be one of the supported values: [${supportedEventTypes.join(

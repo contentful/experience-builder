@@ -1,7 +1,8 @@
 import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful';
-import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk';
 import { isExperienceEntry } from '@/utils';
 import type { Composition, CompositionUnboundValues, ExperienceEntry } from '@/types';
+import { EntityStoreBase } from './EntityStoreBase';
+import { get } from '@/utils/get';
 
 type EntityStoreArgs = {
   experienceEntry: ExperienceEntry | Entry;
@@ -9,7 +10,7 @@ type EntityStoreArgs = {
   locale: string;
 };
 
-export class EntityStore extends VisualSdkEntityStore {
+export class EntityStore extends EntityStoreBase {
   private _experienceEntry: Composition | undefined;
   private _unboundValues: CompositionUnboundValues | undefined;
 
@@ -89,20 +90,5 @@ export class EntityStore extends VisualSdkEntityStore {
     return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
       ? (fieldValue as AssetFile).url
       : fieldValue;
-  }
-}
-
-// Taken from visual-sdk. We need this when we already have the full entity instead of the link (preview & delivery)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function get<T>(obj: Record<string, any>, path: string[]): T | undefined {
-  if (!path.length) {
-    return obj as T;
-  }
-
-  try {
-    const [currentPath, ...nextPath] = path;
-    return get(obj[currentPath], nextPath);
-  } catch (err) {
-    return undefined;
   }
 }

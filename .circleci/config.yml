@@ -24,7 +24,8 @@ jobs:
       - vault/configure-lerna
       - run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
       - run: yarn build # This should not be needed, but without it it will not contain any files
-      - run: yarn lerna version --no-private --conventional-commits --conventional-prerelease --preid next --create-release github --yes
+      # Use the exact dependency version for local path specifiers. e.g. this avoids resolving `^0.0.2-alpha.15` to `0.0.2-dev-20240114T223125.0`
+      - run: yarn lerna version --exact --no-private --conventional-commits --conventional-prerelease --preid next --create-release github --yes
       - run: yarn lerna publish from-git --pre-dist-tag next --yes
 
 workflows:

@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-visual-editor",
-  "version": "0.0.2-alpha.15",
+  "version": "0.0.2-alpha.17",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -25,7 +25,6 @@
   "dependencies": {
     "@contentful/experience-builder-components": "file:../components",
     "@contentful/experience-builder-core": "file:../core",
-    "@contentful/visual-sdk": "../visual-sdk/",
     "@hello-pangea/dnd": "^16.3.0",
     "classnames": "^2.3.2",
     "contentful": "^10.6.14",

@@ -25,7 +25,6 @@
     "prepare": "husky install",
     "build": "lerna run build",
     "start": "lerna run --stream start",
-    "prepublish": "lerna run build",
     "prettier:check": "lerna run prettier:check",
     "cm": "git-cz"
   },

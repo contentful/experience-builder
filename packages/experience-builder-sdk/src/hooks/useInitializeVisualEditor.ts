@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { EntityStore } from '@contentful/visual-sdk';
+import { EntityStore } from '@contentful/experience-builder-core';
 import {
   componentRegistry,
   sendConnectedEventWithRegisteredComponents,

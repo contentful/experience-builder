@@ -2,7 +2,6 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
-import terser from '@rollup/plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import postcssImport from 'postcss-import';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
@@ -37,7 +36,6 @@ export default [
           'test',
         ],
       }),
-      terser(),
     ],
     external: [/node_modules\/(?!tslib.*)/],
   },
@@ -69,7 +67,6 @@ export default [
         NODE_ENV: 'production',
       }),
       typescript({ tsconfig: './tsconfig.json' }),
-      terser(),
     ],
     external: [],
   },

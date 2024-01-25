@@ -59,7 +59,7 @@ export default function useCanvasInteractions() {
     }
 
     onComponentMoved({
-      nodeId: draggableId.replace('draggable-', ''),
+      nodeId: draggableId,
       destinationIndex: destination.index,
       destinationParentId: destination.droppableId,
       sourceIndex: source.index,

@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.17](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.16...@contentful/experience-builder-visual-editor@0.0.2-alpha.17) (2024-01-23)
+
+### Bug Fixes
+
+- add dnd cypress stub [SPA-1712] ([#270](https://github.com/contentful/experience-builder/issues/270)) ([cb88716](https://github.com/contentful/experience-builder/commit/cb887160ae9a37c8be4cb38d12419e914c6f1be1))
+- add purple hover outline for assemblies [ALT-260] ([9d65eef](https://github.com/contentful/experience-builder/commit/9d65eef2ae81c3e8f191eab9aceb056a45f282b1))
+- adjust where the hover label goes for components and containers in xb ([5fbbe65](https://github.com/contentful/experience-builder/commit/5fbbe656be7f0f5b5fa0bfd4bbebf06a4e56b2e4))
+- allow clicking the canvas to drop a dragged component [ALT-283] ([#277](https://github.com/contentful/experience-builder/issues/277)) ([454c114](https://github.com/contentful/experience-builder/commit/454c114d0f3d47a2a6d2df724f17be07e6ac0ead))
+- show outline when hovering over readonly blocks in an assembly [ALT-260] ([d2331ea](https://github.com/contentful/experience-builder/commit/d2331ea0ec707a189d850c752b87297d92c192af))
+- **visual-editor:** reselect component after scroll ([#276](https://github.com/contentful/experience-builder/issues/276)) ([7fa6446](https://github.com/contentful/experience-builder/commit/7fa6446eed801dd2fe03c5627223bd815425be80))
+
+## [0.0.2-alpha.16](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.15...@contentful/experience-builder-visual-editor@0.0.2-alpha.16) (2024-01-17)
+
+### Bug Fixes
+
+- remove error regarding any type ([222e82c](https://github.com/contentful/experience-builder/commit/222e82cce6c25ad2c819c3aeb8f83a2a39e86efb))
+- remove the previous hotfix ([157dc57](https://github.com/contentful/experience-builder/commit/157dc57adfe85c42e725b62da8d0cb3a5a5a18ec))
+- replace original node with assembly node completely ([cfc55d3](https://github.com/contentful/experience-builder/commit/cfc55d305affd361ac82882c3c13350afae4c912))
+- update dropzone to consider children margins[ALT-282] ([5df13cc](https://github.com/contentful/experience-builder/commit/5df13cc9e24a7d38406617ab2c3bd4070a6c3103))
+
 ## [0.0.2-alpha.15](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.14...@contentful/experience-builder-visual-editor@0.0.2-alpha.15) (2024-01-16)
 
 ### Bug Fixes

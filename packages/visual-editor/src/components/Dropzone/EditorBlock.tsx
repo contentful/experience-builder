@@ -49,7 +49,7 @@ export const EditorBlock: React.FC<VisualEditorBlockProps> = ({
     renderDropzone,
   });
 
-  useSelectedInstanceCoordinates({ node });
+  const coordinates = useSelectedInstanceCoordinates({ node });
 
   const sectionsWithZone = useZoneStore((state) => state.sectionsWithZones);
 
@@ -58,29 +58,37 @@ export const EditorBlock: React.FC<VisualEditorBlockProps> = ({
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
 
-  // Currently, assembly blocks are not editable (readonly) so
-  // we simply render that underlying component instead of making it draggable
-  if (isAssemblyBlock) {
-    return elementToRender;
-  }
-
   return (
     <DraggableComponent
       label={label || 'No Label Specified'}
-      id={`draggable-${componentId}`}
+      id={componentId}
       index={index}
+      isAssemblyBlock={isAssemblyBlock}
+      isDragDisabled={isAssemblyBlock}
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
+      isContainer={isContainer}
+      coordinates={coordinates}
       className={classNames({
         [styles.fullWidth]: isContainer && !wrapperProps.isFixedWidth,
         [styles.fixedWidth]: isContainer && wrapperProps.isFixedWidth,
       })}
       onClick={(e) => {
         e.stopPropagation();
-        setSelectedNodeId(componentId);
-        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-          nodeId: componentId,
-        });
+
+        if (isAssemblyBlock && !containsZone) {
+          // Readonly components in an assembly cannot be selected
+          return;
+        }
+        const nodeId = isAssemblyBlock ? parentSectionId : componentId;
+
+        // Only select the node if the user intentionally clicked on it, but not when dragging
+        if (!userIsDragging) {
+          setSelectedNodeId(nodeId);
+          sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+            nodeId,
+          });
+        }
       }}
       onMouseOver={(e) => {
         e.stopPropagation();

@@ -3,9 +3,10 @@
  * NOTE!! The code commented here will be used in future. We commented it out to remove not yet fully unsupported parts
  */
 
-import type { ContentfulClientApi, Entry } from 'contentful';
-import type { EntityStore } from '@contentful/visual-sdk';
+import type { Asset, ContentfulClientApi, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
+import { EntityStoreBase } from './entity/EntityStoreBase';
+import { EntityStore } from './entity/EntityStore';
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
@@ -319,7 +320,7 @@ export interface HoveredElement {
 
 export interface DeprecatedExperienceStore {
   composition: Composition | undefined;
-  entityStore: EntityStore | undefined;
+  entityStore: EntityStoreBase | undefined;
   isLoading: boolean;
   children: Composition['componentTree']['children'];
   breakpoints: Composition['componentTree']['breakpoints'];
@@ -368,3 +369,21 @@ export type ResolveDesignValueType = (
   valuesByBreakpoint: ValuesByBreakpoint,
   variableName: string
 ) => CompositionVariableValueType;
+
+// The 'contentful' package only exposes CDA types while we received CMA ones in editor mode
+export type ManagementEntity = (Entry | Asset) & {
+  sys: {
+    version: number;
+  };
+};
+
+export type RequestEntitiesMessage = {
+  entityIds: string[];
+  entityType: 'Asset' | 'Entry';
+  locale: string;
+};
+
+export type RequestedEntitiesMessage = {
+  entities: Array<Entry | Asset>;
+  missingEntityIds?: string[];
+};

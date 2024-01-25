@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.16](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.15...@contentful/experience-builder@4.0.0-alpha.16) (2024-01-23)
+
+### Bug Fixes
+
+- allow clicking the canvas to drop a dragged component [ALT-283] ([#277](https://github.com/contentful/experience-builder/issues/277)) ([454c114](https://github.com/contentful/experience-builder/commit/454c114d0f3d47a2a6d2df724f17be07e6ac0ead))
+
+# [4.0.0-alpha.15](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.14...@contentful/experience-builder@4.0.0-alpha.15) (2024-01-17)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
 # [4.0.0-alpha.14](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.13...@contentful/experience-builder@4.0.0-alpha.14) (2024-01-16)
 
 **Note:** Version bump only for package @contentful/experience-builder

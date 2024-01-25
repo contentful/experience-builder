@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.14](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.13...@contentful/experience-builder-core@0.0.2-alpha.14) (2024-01-23)
+
+### Bug Fixes
+
+- allow clicking the canvas to drop a dragged component [ALT-283] ([#277](https://github.com/contentful/experience-builder-toolkit/issues/277)) ([454c114](https://github.com/contentful/experience-builder-toolkit/commit/454c114d0f3d47a2a6d2df724f17be07e6ac0ead))
+- **core:** remove lodash dep to get rid of weird reference errors ([#272](https://github.com/contentful/experience-builder-toolkit/issues/272)) ([5957b18](https://github.com/contentful/experience-builder-toolkit/commit/5957b183c943d060b30e6f9d260196e3c3d91203))
+
 ## [0.0.2-alpha.13](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.12...@contentful/experience-builder-core@0.0.2-alpha.13) (2024-01-16)
 
 ### Bug Fixes

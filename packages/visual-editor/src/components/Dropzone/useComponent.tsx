@@ -73,7 +73,7 @@ export const useComponent = ({
   });
 
   // Only pass editor props to built-in components
-  const { editorMode, ...componentProps } = props;
+  const { editorMode, renderDropzone: _renderDropzone, ...componentProps } = props;
   const elementToRender = builtInComponents.includes(node.data.blockId || '') ? (
     <ContentfulContainer {...(props as React.ComponentProps<typeof ContentfulContainer>)} />
   ) : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE ? (

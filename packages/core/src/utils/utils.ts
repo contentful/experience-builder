@@ -1,5 +1,3 @@
-import { times } from 'lodash-es';
-import { random } from 'lodash-es';
 import {
   CompositionTree,
   CompositionComponentNode,
@@ -7,7 +5,10 @@ import {
   CompositionDataSource,
   CompositionUnboundValues,
   ExperienceEntry,
+  ComponentDefinition,
 } from '@/types';
+import { Entry } from 'contentful';
+import { ASSEMBLY_DEFAULT_CATEGORY, DESIGN_COMPONENT_DEFAULT_CATEGORY } from '@/constants';
 
 export const getDataFromTree = (
   tree: CompositionTree
@@ -121,10 +122,13 @@ export const generateRandomId = (letterCount: number): string => {
   const NUMS = '0123456789';
   const ALNUM = NUMS + LETTERS;
 
+  const times = (n: number, callback: () => string) => Array.from({ length: n }, callback);
+  const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+
   return times(letterCount, () => ALNUM[random(0, ALNUM.length - 1)]).join('');
 };
 
-export const checkIsAssembly = ({
+export const checkIsAssemblyNode = ({
   componentId,
   usedComponents,
 }: {
@@ -135,3 +139,18 @@ export const checkIsAssembly = ({
 
   return usedComponents.some((usedComponent) => usedComponent.sys.id === componentId);
 };
+
+/** @deprecated use `checkIsAssemblyNode` instead. Will be removed with SDK v5. */
+export const checkIsAssembly = checkIsAssemblyNode;
+
+/**
+ * This check assumes that the entry is already ensured to be an experience, i.e. the
+ * content type of the entry is an experience type with the necessary annotations.
+ * */
+export const checkIsAssemblyEntry = (entry: Entry): boolean => {
+  return Boolean(entry.fields?.componentSettings);
+};
+
+export const checkIsAssemblyDefinition = (component?: ComponentDefinition) =>
+  component?.category === DESIGN_COMPONENT_DEFAULT_CATEGORY ||
+  component?.category === ASSEMBLY_DEFAULT_CATEGORY;

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.17](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.16...@contentful/experience-builder-components@0.0.2-alpha.17) (2024-01-23)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.16](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.15...@contentful/experience-builder-components@0.0.2-alpha.16) (2024-01-17)
+
+### Bug Fixes
+
+- use proper exported tyye in ContentfulContainer ([50d09ef](https://github.com/contentful/experience-builder-toolkit/commit/50d09ef81037d7a264fbed5f8fa4078cd2485340))
+
 ## [0.0.2-alpha.15](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.14...@contentful/experience-builder-components@0.0.2-alpha.15) (2024-01-16)
 
 **Note:** Version bump only for package @contentful/experience-builder-components

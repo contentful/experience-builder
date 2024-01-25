@@ -1,12 +1,12 @@
 import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 
-import { get } from './utils';
+import { get } from '../utils/get';
 
 /**
  * Base Store for entities
  * Can be extened for the different loading behaviours (editor, production, ..)
  */
-export class EntityStore {
+export class EntityStoreBase {
   protected locale: string;
   protected entryMap = new Map<string, Entry>();
   protected assetMap = new Map<string, Asset>();
