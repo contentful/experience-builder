@@ -26,17 +26,17 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 
-type PropsType =
+type ComponentProps =
   | StyleProps
   | Record<string, CompositionVariableValueType | Link<'Entry'> | Link<'Asset'>>;
 
-interface ComponentPropsParams {
+type UseComponentProps = {
   node: CompositionComponentNode;
   resolveDesignValue: ResolveDesignValueType;
   areEntitiesFetched: boolean;
   definition: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
-}
+};
 
 export const useComponentProps = ({
   node,
@@ -44,11 +44,11 @@ export const useComponentProps = ({
   resolveDesignValue,
   renderDropzone,
   definition,
-}: ComponentPropsParams) => {
+}: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
-  const props: PropsType = useMemo(() => {
+  const props: ComponentProps = useMemo(() => {
     // Don't enrich the assembly wrapper node with props
     if (
       !definition ||

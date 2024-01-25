@@ -18,7 +18,7 @@ import {
 } from '@contentful/experience-builder-core/constants';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 
-type VisualEditorBlockProps = {
+type EditorBlockProps = {
   node: CompositionComponentNode;
   index: number;
   userIsDragging: boolean;
@@ -29,7 +29,7 @@ type VisualEditorBlockProps = {
   parentSectionId: string;
 };
 
-export const EditorBlock: React.FC<VisualEditorBlockProps> = ({
+export const EditorBlock: React.FC<EditorBlockProps> = ({
   node: rawNode,
   resolveDesignValue,
   renderDropzone,
