@@ -68,7 +68,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The background color of the section',
-    defaultValue: 'rgba(255, 255, 255, 0)',
+    defaultValue: 'rgba(255, 255, 255, 1)',
   },
   cfWidth: {
     displayName: 'Width',

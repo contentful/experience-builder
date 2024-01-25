@@ -111,7 +111,7 @@ export class CtflClient {
                       },
                       cfBackgroundColor: {
                         type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'rgba(255, 255, 255, 0)' },
+                        valuesByBreakpoint: { desktop: 'rgba(255, 255, 255, 1)' },
                       },
                       cfWidth: {
                         type: 'DesignValue',
