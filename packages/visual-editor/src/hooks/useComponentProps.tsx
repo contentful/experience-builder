@@ -145,38 +145,28 @@ export const useComponentProps = ({
     entityStore,
   ]);
 
-  const editorWrapperProps = useMemo(() => {
-    const wrapperProps = {
-      isFixedWidth: false,
-    };
-
-    if (!isContentfulStructureComponent(node.data.blockId)) {
-      return wrapperProps;
-    }
-
-    const width = props['cfWidth'];
-
-    if (typeof width === 'number') {
-      wrapperProps.isFixedWidth = true;
-    }
-    if (typeof width === 'string') {
-      wrapperProps.isFixedWidth = !isNaN(Number(width.replace('px', '')));
-    }
-
-    return wrapperProps;
-  }, [node, props]);
-
   const cfStyles = buildCfStyles(props);
-  const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
+  const { height, width, maxWidth } = cfStyles;
 
-  // Use cfStyles to generate editor styles (discard margin, padding, background color)
-  const { margin, padding, backgroundColor, ...editorStyles } = cfStyles;
-  editorStyles.background = 'none';
+  // Create editor wrapper styles using the component height and width
+  const editorStyles = {
+    background: 'none',
+    margin: isContentfulStructureComponent(node.data.blockId) ? '0 auto' : '0',
+    height,
+    width,
+    maxWidth,
+  };
 
   const { className: editorWrapperClass } = useStyleTag({
     styles: editorStyles,
     nodeId: `editor-${node.data.id}`,
   });
+
+  // Set the component to be full width within the editor wrapper
+  cfStyles.width = '100%';
+  cfStyles.maxWidth = '100%';
+
+  const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
 
   const renderDropzone = (node: CompositionComponentNode, props?: Record<string, unknown>) => {
     return (
@@ -202,5 +192,5 @@ export const useComponentProps = ({
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { props: componentProps, editorWrapperProps, editorWrapperClass };
+  return { props: componentProps, editorWrapperClass };
 };

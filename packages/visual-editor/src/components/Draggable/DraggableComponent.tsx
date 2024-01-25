@@ -73,7 +73,7 @@ export const DraggableComponent = ({
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             {...rest}
-            className={classNames(styles.DraggableComponent, className, {
+            className={classNames(styles.DraggableComponent, {
               [styles.isAssemblyBlock]: isAssemblyBlock,
               [styles.isDragging]: snapshot.isDragging,
               [styles.isSelected]: isSelected,
