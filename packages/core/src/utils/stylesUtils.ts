@@ -5,6 +5,7 @@ import {
   transformBackgroundImage,
   transformBorderStyle,
   transformFill,
+  transformGridColumn,
 } from './transformers';
 import { CSSProperties, StyleProps, CompositionVariableValueType } from '@/types';
 import { isContentfulStructureComponent } from './components';
@@ -54,6 +55,7 @@ export const buildCfStyles = ({
   cfTextBold,
   cfTextItalic,
   cfTextUnderline,
+  cfColumnSpan,
 }: Partial<StyleProps>): CSSProperties => {
   return {
     margin: cfMargin,
@@ -62,6 +64,7 @@ export const buildCfStyles = ({
     width: transformWidthSizing({ value: cfWidth, cfMargin }),
     height: transformFill(cfHeight),
     maxWidth: cfMaxWidth,
+    ...transformGridColumn(cfColumnSpan),
     ...transformBorderStyle(cfBorder),
     gap: cfGap,
     ...transformAlignment(cfHorizontalAlignment, cfVerticalAlignment, cfFlexDirection),

@@ -1,8 +1,12 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
-import { EntityStore } from '@contentful/experience-builder-core';
-import { CF_STYLE_ATTRIBUTES } from '@contentful/experience-builder-core/constants';
+import { EntityStore, isContentfulStructureComponent } from '@contentful/experience-builder-core';
+import {
+  CF_STYLE_ATTRIBUTES,
+  CONTENTFUL_COLUMNS_ID,
+  CONTENTFUL_SINGLE_COLUMN_ID,
+} from '@contentful/experience-builder-core/constants';
 import type {
   Breakpoint,
   CompositionDataSource,
@@ -20,11 +24,13 @@ import {
   transformContentValue,
 } from '@contentful/experience-builder-core';
 import { useStyleTag } from '../../hooks/useStyleTag';
-import { ContentfulContainer } from '@contentful/experience-builder-components';
-
+import {
+  Columns,
+  ContentfulContainer,
+  SingleColumn,
+} from '@contentful/experience-builder-components';
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
-import { isContentfulStructureComponent } from '@contentful/experience-builder-core';
 
 type CompositionBlockProps = {
   node: CompositionNode;
@@ -161,6 +167,22 @@ export const CompositionBlock = ({
         className={className}>
         {children}
       </ContentfulContainer>
+    );
+  }
+
+  if (node.definitionId === CONTENTFUL_COLUMNS_ID) {
+    return (
+      <Columns editorMode={false} className={className}>
+        {children}
+      </Columns>
+    );
+  }
+
+  if (node.definitionId === CONTENTFUL_SINGLE_COLUMN_ID) {
+    return (
+      <SingleColumn editorMode={false} className={className}>
+        {children}
+      </SingleColumn>
     );
   }
 

@@ -9,7 +9,6 @@ import {
   CONTENTFUL_CONTAINER_ID,
   ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
-import { ContentfulContainer } from '@contentful/experience-builder-components';
 import {
   builtInStyles as builtInStyleDefinitions,
   designTokensRegistry,
@@ -17,6 +16,8 @@ import {
   sendMessage,
   containerDefinition,
   sectionDefinition,
+  columnsDefinition,
+  singleColumnDefinition,
 } from '@contentful/experience-builder-core';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
@@ -75,12 +76,20 @@ export const enrichComponentDefinition = ({
 
 const DEFAULT_COMPONENT_REGISTRATIONS = {
   container: {
-    component: ContentfulContainer,
+    component: Components.ContentfulContainer,
     definition: containerDefinition,
   },
   section: {
-    component: ContentfulContainer,
+    component: Components.ContentfulContainer,
     definition: sectionDefinition,
+  },
+  columns: {
+    component: Components.Columns,
+    definition: columnsDefinition,
+  },
+  singleColumn: {
+    component: Components.SingleColumn,
+    definition: singleColumnDefinition,
   },
   button: enrichComponentDefinition({
     component: Components.Button,
@@ -111,6 +120,11 @@ export const componentRegistry = new Map<string, ComponentRegistration>([
     DEFAULT_COMPONENT_REGISTRATIONS.container.definition.id,
     DEFAULT_COMPONENT_REGISTRATIONS.container,
   ],
+  [
+    DEFAULT_COMPONENT_REGISTRATIONS.singleColumn.definition.id,
+    DEFAULT_COMPONENT_REGISTRATIONS.singleColumn,
+  ],
+  [DEFAULT_COMPONENT_REGISTRATIONS.columns.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.columns],
   [DEFAULT_COMPONENT_REGISTRATIONS.button.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.button],
   [DEFAULT_COMPONENT_REGISTRATIONS.heading.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.heading],
   [DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.image],

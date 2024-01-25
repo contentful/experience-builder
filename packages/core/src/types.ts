@@ -232,6 +232,8 @@ export type StyleProps = {
   cfTextBold: boolean;
   cfTextItalic: boolean;
   cfTextUnderline: boolean;
+  cfColumns: string;
+  cfColumnSpan: string;
 };
 
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic

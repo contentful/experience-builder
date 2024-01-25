@@ -311,3 +311,100 @@ export const containerBuiltInStyles: Partial<
     defaultValue: '1192px',
   },
 };
+
+export const singleColumnBuiltInStyles = {
+  ...builtInStyles,
+  cfColumnSpan: {
+    type: 'Text',
+    defaultValue: '6',
+    group: 'style',
+  } as ComponentDefinitionVariable<'Text'>,
+  cfHeight: {
+    displayName: 'Height',
+    type: 'Text',
+    group: 'style',
+    description: 'The height of the section',
+    defaultValue: 'auto',
+  } as ComponentDefinitionVariable<'Text'>,
+};
+
+export const columnsBuiltInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+> = {
+  cfMargin: {
+    displayName: 'Margin',
+    type: 'Text',
+    group: 'style',
+    description: 'The margin of the section',
+    defaultValue: '0px',
+  },
+  cfPadding: {
+    displayName: 'Padding',
+    type: 'Text',
+    group: 'style',
+    description: 'The padding of the section',
+    defaultValue: '10px 10px 10px 10px',
+  },
+  cfBackgroundColor: {
+    displayName: 'Background',
+    type: 'Text',
+    group: 'style',
+    description: 'The background color of the section',
+    defaultValue: 'rgba(255, 255, 255, 0)',
+  },
+  cfBorder: {
+    displayName: 'Border',
+    type: 'Text',
+    group: 'style',
+    description: 'The border of the section',
+    defaultValue: '0px outside rgba(255, 255, 255, 1)',
+  },
+  cfBackgroundImageUrl: {
+    displayName: 'Background Image',
+    type: 'Text',
+    defaultValue: '',
+    description: 'Background image for section or container',
+  },
+  cfGap: {
+    displayName: 'Gap',
+    type: 'Text',
+    group: 'style',
+    description: 'The spacing between the elements of the section',
+    defaultValue: '10px',
+  },
+  cfBackgroundImageScaling: {
+    displayName: 'Image Scaling',
+    type: 'Text',
+    group: 'style',
+    description: 'Adjust background image to fit, fill or tile the container',
+    defaultValue: 'fit',
+    validations: {
+      in: [
+        {
+          value: 'fill',
+          displayName: 'Fill',
+        },
+        {
+          value: 'fit',
+          displayName: 'Fit',
+        },
+        {
+          value: 'tile',
+          displayName: 'Tile',
+        },
+      ],
+    },
+  },
+  cfBackgroundImageAlignment: {
+    displayName: 'Image Alignment',
+    type: 'Text',
+    group: 'style',
+    description: 'Align background image to the edges of the container',
+    defaultValue: 'left top',
+  },
+  cfColumns: {
+    type: 'Text',
+    defaultValue: '[6, 6]',
+    group: 'style',
+  },
+};
