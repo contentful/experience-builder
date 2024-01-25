@@ -54,14 +54,14 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The margin of the section',
-    defaultValue: '0px',
+    defaultValue: '0 0 0 0',
   },
   cfPadding: {
     displayName: 'Padding',
     type: 'Text',
     group: 'style',
     description: 'The padding of the section',
-    defaultValue: '0px',
+    defaultValue: '0 0 0 0',
   },
   cfBackgroundColor: {
     displayName: 'Background',
@@ -307,8 +307,15 @@ export const containerBuiltInStyles: Partial<
     displayName: 'Max Width',
     type: 'Text',
     group: 'style',
-    description: 'The max-width of the section',
+    description: 'The height of the section',
     defaultValue: '1192px',
+  },
+  cfMargin: {
+    displayName: 'Margin',
+    type: 'Text',
+    group: 'style',
+    description: 'The margin of the section',
+    defaultValue: '0 auto 0 auto',
   },
 };
 
