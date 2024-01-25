@@ -54,14 +54,14 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The margin of the section',
-    defaultValue: '0px',
+    defaultValue: '0 0 0 0',
   },
   cfPadding: {
     displayName: 'Padding',
     type: 'Text',
     group: 'style',
     description: 'The padding of the section',
-    defaultValue: '0px',
+    defaultValue: '0 0 0 0',
   },
   cfBackgroundColor: {
     displayName: 'Background',
@@ -299,7 +299,9 @@ export const optionalBuiltInStyles: Partial<
   },
 };
 
-export const containerBuiltInStyles = {
+export const containerBuiltInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+> = {
   ...builtInStyles,
   cfHeight: {
     displayName: 'Height',
@@ -307,7 +309,14 @@ export const containerBuiltInStyles = {
     group: 'style',
     description: 'The height of the section',
     defaultValue: 'auto',
-  } as ComponentDefinitionVariable<'Text'>,
+  },
+  cfMargin: {
+    displayName: 'Margin',
+    type: 'Text',
+    group: 'style',
+    description: 'The margin of the section',
+    defaultValue: '0 auto 0 auto',
+  },
 };
 
 export const singleColumnBuiltInStyles = {
