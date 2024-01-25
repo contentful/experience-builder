@@ -8,4 +8,12 @@ Please refer to our [our Wiki page](https://github.com/contentful/experience-bui
 
 ## Packages
 
-* [@contentful/experience-builder](https://github.com/contentful/experience-builder/tree/main/packages/experience-builder-sdk) - the SDK
+- [@contentful/experience-builder](https://github.com/contentful/experience-builder/tree/main/packages/experience-builder-sdk) - the SDK
+
+## Troubleshooting
+
+If you're `build` command is stuck and not finishing, try resetting the cache via:
+
+```
+npx nx reset
+```
