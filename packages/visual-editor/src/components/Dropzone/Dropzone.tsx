@@ -35,7 +35,6 @@ function isDropEnabled(
   hoveringOverSection: boolean,
   draggingRootZone: boolean,
   isRootZone: boolean,
-  draggingOverArea: boolean,
   isAssembly: boolean,
   blockId: string = ''
 ) {
@@ -122,7 +121,6 @@ export function Dropzone({
     hoveringOverSection,
     draggingRootZone,
     isRootZone,
-    draggingOverArea,
     isAssembly,
     node?.data.blockId
   );

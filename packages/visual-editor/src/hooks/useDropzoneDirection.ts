@@ -10,6 +10,7 @@ import type {
 import { useEffect } from 'react';
 import { useZoneStore } from '@/store/zone';
 
+// refactor to use isContentfulStructureComponent once https://github.com/contentful/experience-builder/pull/279 merges
 const isStructureComponent = (blockId: string) => {
   return [CONTENTFUL_COLUMNS_ID, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SINGLE_COLUMN_ID].includes(
     blockId

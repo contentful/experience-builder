@@ -59,7 +59,7 @@ export const VISUAL_EDITOR_EVENTS = {
 };
 
 export const VISUAL_EDITOR_CONTAINER_ID = 'cf-visual-editor';
-export const CONTENTFUL_SECTION_ID = 'cf-section'; // TODO: remove me once all customers are using 2023-09-28 schema version
+export const CONTENTFUL_SECTION_ID = 'contentful-section'; // TODO: remove me once all customers are using 2023-09-28 schema version
 export const CONTENTFUL_CONTAINER_ID = 'contentful-container';
 export const CONTENTFUL_COLUMNS_ID = 'contentful-columns';
 export const CONTENTFUL_SINGLE_COLUMN_ID = 'contentful-single-column';
