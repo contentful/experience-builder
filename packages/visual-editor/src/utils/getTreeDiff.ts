@@ -4,7 +4,6 @@ import {
 } from '@contentful/experience-builder-core/types';
 
 import { getItem } from './getItem';
-import { countNodes } from './treeHelpers';
 import { isEqual } from 'lodash-es';
 import { ROOT_ID, TreeAction } from '@/types/constants';
 import { TreeDiff } from '@/types/treeActions';
@@ -81,8 +80,6 @@ function matchingNodeAction({
 interface CompareNodeParams {
   currentNode?: CompositionComponentNode;
   updatedNode?: CompositionComponentNode;
-  currentNodeCount: number;
-  updatedNodeCount: number;
   originalTree: CompositionTree;
   differences: Array<TreeDiff | null>;
 }
@@ -90,8 +87,6 @@ interface CompareNodeParams {
 function compareNodes({
   currentNode,
   updatedNode,
-  currentNodeCount,
-  updatedNodeCount,
   originalTree,
   differences = [],
 }: CompareNodeParams): Array<TreeDiff | null> {
@@ -103,9 +98,12 @@ function compareNodes({
     return differences;
   }
 
-  const parentNodeId = updatedNode.data.id;
+  // On each tree level, consider only the children of the current node to differentiate between added, removed, or replaced case
+  const currentNodeCount = currentNode.children.length;
+  const updatedNodeCount = updatedNode.children.length;
   const nodeRemoved = currentNodeCount > updatedNodeCount;
   const nodeAdded = currentNodeCount < updatedNodeCount;
+  const parentNodeId = updatedNode.data.id;
   const isRoot = currentNode.data.id === ROOT_ID;
 
   /**
@@ -159,8 +157,6 @@ function compareNodes({
     compareNodes({
       currentNode: currentNode.children[originalIndex],
       updatedNode: child,
-      currentNodeCount: currentNodeCount,
-      updatedNodeCount: updatedNodeCount,
       originalTree,
       differences,
     });
@@ -186,14 +182,9 @@ export function getTreeDiffs(
 ): TreeDiff[] {
   const differences: TreeDiff[] = [];
 
-  const tree1Count = countNodes(tree1);
-  const tree2Count = countNodes(tree2);
-
   compareNodes({
     currentNode: tree1,
     updatedNode: tree2,
-    currentNodeCount: tree1Count,
-    updatedNodeCount: tree2Count,
     originalTree,
     differences,
   });
