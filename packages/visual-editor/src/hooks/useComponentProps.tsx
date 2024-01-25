@@ -7,7 +7,6 @@ import {
   isLinkToAsset,
 } from '@contentful/experience-builder-core';
 import {
-  CONTENTFUL_CONTAINER_ID,
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
@@ -26,6 +25,7 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { Dropzone } from '@components/Dropzone/Dropzone';
 import { useEntityStore } from '@/store/entityStore';
+import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
 
 type PropsType =
   | StyleProps
@@ -146,27 +146,25 @@ export const useComponentProps = ({
   ]);
 
   const cfStyles = buildCfStyles(props);
+  const { height, width, maxWidth } = cfStyles;
 
-  const editorWrapperProps = useMemo(() => {
-    const wrapperProps = {
-      isFixedWidth: false,
-    };
+  // Create editor wrapper styles using the component height and width
+  const editorStyles = {
+    background: 'none',
+    margin: node.data.blockId === CONTENTFUL_CONTAINER_ID ? '0 auto' : '0',
+    height,
+    width,
+    maxWidth,
+  };
 
-    if (node.data.blockId !== CONTENTFUL_CONTAINER_ID) {
-      return wrapperProps;
-    }
+  const { className: editorWrapperClass } = useStyleTag({
+    styles: editorStyles,
+    nodeId: `editor-${node.data.id}`,
+  });
 
-    const width = props['cfWidth'];
-
-    if (typeof width === 'number') {
-      wrapperProps.isFixedWidth = true;
-    }
-    if (typeof width === 'string') {
-      wrapperProps.isFixedWidth = !isNaN(Number(width.replace('px', '')));
-    }
-
-    return wrapperProps;
-  }, [node, props]);
+  // Set the component to be full width within the editor wrapper
+  cfStyles.width = '100%';
+  cfStyles.maxWidth = '100%';
 
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
 
@@ -182,7 +180,7 @@ export const useComponentProps = ({
     );
   };
 
-  const defaultedProps: Record<string, unknown> = {
+  const componentProps = {
     className,
     editorMode: true,
     node,
@@ -190,13 +188,9 @@ export const useComponentProps = ({
     'data-cf-node-id': node.data.id,
     'data-cf-node-block-id': node.data.blockId,
     'data-cf-node-block-type': node.type,
-    // TODO: do we really need lodash just for this?
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+    ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  if (definition.children) {
-    defaultedProps.children = renderDropzone(node);
-  }
-
-  return [defaultedProps, editorWrapperProps] as [typeof defaultedProps, typeof editorWrapperProps];
+  return { props: componentProps, editorWrapperClass };
 };

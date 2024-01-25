@@ -40,7 +40,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, wrapperProps, label, elementToRender } = useComponent({
+  const { node, componentId, editorWrapperClass, label, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
   });
@@ -65,10 +65,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
       userIsDragging={userIsDragging}
       isContainer={isContainer}
       coordinates={coordinates}
-      className={classNames({
-        [styles.fullWidth]: isContainer && !wrapperProps.isFixedWidth,
-        [styles.fixedWidth]: isContainer && wrapperProps.isFixedWidth,
-      })}
+      className={classNames(editorWrapperClass)}
       onClick={(e) => {
         e.stopPropagation();
 
