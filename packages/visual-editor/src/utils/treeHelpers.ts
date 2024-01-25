@@ -159,15 +159,3 @@ export function reorderChildNode(
     reorderChildNode(oldIndex, newIndex, parentNodeId, childNode)
   );
 }
-
-export function countNodes(node: CompositionComponentNode): number {
-  // Count the current node
-  let count = 1;
-
-  // Recursively count the children
-  node.children.forEach((child) => {
-    count += countNodes(child);
-  });
-
-  return count;
-}
