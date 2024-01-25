@@ -25,7 +25,6 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { Dropzone } from '@components/Dropzone/Dropzone';
 import { useEntityStore } from '@/store/entityStore';
-import { isContentfulStructureComponent } from '@contentful/experience-builder-core';
 
 type PropsType =
   | StyleProps
@@ -146,27 +145,16 @@ export const useComponentProps = ({
   ]);
 
   const cfStyles = buildCfStyles(props);
-  const { height, width, maxWidth } = cfStyles;
 
-  // Create editor wrapper styles using the component height and width
-  const editorStyles = {
-    background: 'none',
-    margin: isContentfulStructureComponent(node.data.blockId) ? '0 auto' : '0',
-    height,
-    width,
-    maxWidth,
-  };
+  // Separate the component styles from the editor wrapper styles
+  const { height, width, maxWidth, margin, ...componentStyles } = cfStyles;
 
   const { className: editorWrapperClass } = useStyleTag({
-    styles: editorStyles,
+    styles: { height, width, maxWidth, margin },
     nodeId: `editor-${node.data.id}`,
   });
 
-  // Set the component to be full width within the editor wrapper
-  cfStyles.width = '100%';
-  cfStyles.maxWidth = '100%';
-
-  const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
+  const { className } = useStyleTag({ styles: componentStyles, nodeId: node.data.id });
 
   const renderDropzone = (node: CompositionComponentNode, props?: Record<string, unknown>) => {
     return (
