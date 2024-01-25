@@ -28,8 +28,8 @@ export const SingleColumn: React.FC<SingleColumnProps> = (props) => {
   return (
     <div
       ref={innerRef}
-      {...(dragHandleProps as any)}
-      {...(draggableProps as any)}
+      {...dragHandleProps}
+      {...draggableProps}
       {...editorProps}
       className={combineClasses(
         wrapperClassName,

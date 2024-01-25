@@ -1,15 +1,21 @@
-import React, { forwardRef } from 'react';
+import React, { CSSProperties, forwardRef } from 'react';
 import './Columns.css';
 import { combineClasses } from '../../utils/combineClasses';
 import { ColumnsProps } from './ColumnTypes';
 
-const ColumnWrapper = forwardRef<HTMLDivElement, any>((props, ref) => {
+interface ColumnWrapperProps {
+  style?: CSSProperties;
+  children: React.ReactNode;
+  className?: string;
+}
+
+const ColumnWrapper = forwardRef<HTMLDivElement, ColumnWrapperProps>((props, ref) => {
   return (
     <div
       ref={ref}
       {...props}
       style={{
-        ...props.style,
+        ...(props.style || {}),
         display: 'grid',
         gridTemplateColumns: 'repeat(12, [col-start] 1fr)',
         gap: 10,
