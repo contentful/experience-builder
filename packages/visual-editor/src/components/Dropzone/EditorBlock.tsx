@@ -4,7 +4,7 @@ import { DraggableComponent } from '../Draggable/DraggableComponent';
 import { sendMessage } from '@contentful/experience-builder-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
-import { useComponent } from '@/hooks/useComponent';
+import { useComponent } from './useComponent';
 import { useZoneStore } from '@/store/zone';
 import classNames from 'classnames';
 import type {
@@ -16,6 +16,7 @@ import {
   ASSEMBLY_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
 } from '@contentful/experience-builder-core/constants';
+import type { RenderDropzoneFunction } from './Dropzone.types';
 
 type VisualEditorBlockProps = {
   node: CompositionComponentNode;
@@ -23,13 +24,15 @@ type VisualEditorBlockProps = {
   userIsDragging: boolean;
   draggingNewComponent: boolean | undefined;
   resolveDesignValue: ResolveDesignValueType;
+  renderDropzone: RenderDropzoneFunction;
   zoneId: string;
   parentSectionId: string;
 };
 
-const EditorBlock: React.FC<VisualEditorBlockProps> = ({
+export const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   node: rawNode,
   resolveDesignValue,
+  renderDropzone,
   draggingNewComponent,
   index,
   zoneId,
@@ -43,6 +46,7 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
   const { node, componentId, wrapperProps, label, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
+    renderDropzone,
   });
 
   useSelectedInstanceCoordinates({ node });
@@ -110,5 +114,3 @@ const EditorBlock: React.FC<VisualEditorBlockProps> = ({
     </DraggableComponent>
   );
 };
-
-export default EditorBlock;

@@ -15,13 +15,19 @@ import { ContentfulContainer, Assembly } from '@contentful/experience-builder-co
 import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
+import type { RenderDropzoneFunction } from './Dropzone.types';
 
-interface ComponentParams {
+type UseComponentProps = {
   node: CompositionComponentNode;
   resolveDesignValue: ResolveDesignValueType;
-}
+  renderDropzone: RenderDropzoneFunction;
+};
 
-export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentParams) => {
+export const useComponent = ({
+  node: rawNode,
+  resolveDesignValue,
+  renderDropzone,
+}: UseComponentProps) => {
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const entityStore = useEntityStore((state) => state.entityStore);
 
@@ -62,11 +68,12 @@ export const useComponent = ({ node: rawNode, resolveDesignValue }: ComponentPar
     node,
     areEntitiesFetched,
     resolveDesignValue,
+    renderDropzone,
     definition: componentRegistration.definition,
   });
 
   // Only pass editor props to built-in components
-  const { editorMode, renderDropzone, ...componentProps } = props;
+  const { editorMode, ...componentProps } = props;
   const elementToRender = builtInComponents.includes(node.data.blockId || '') ? (
     <ContentfulContainer {...(props as React.ComponentProps<typeof ContentfulContainer>)} />
   ) : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE ? (

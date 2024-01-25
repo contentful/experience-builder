@@ -1,4 +1,3 @@
-import React from 'react';
 import { useEditorStore } from '@/store/editor';
 import {
   buildCfStyles,
@@ -21,11 +20,11 @@ import type {
   Link,
 } from '@contentful/experience-builder-core/types';
 import { useMemo } from 'react';
-import { useStyleTag } from './useStyleTag';
+import { useStyleTag } from '../../hooks/useStyleTag';
 import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
-import { Dropzone } from '@components/Dropzone/Dropzone';
 import { useEntityStore } from '@/store/entityStore';
+import type { RenderDropzoneFunction } from './Dropzone.types';
 
 type PropsType =
   | StyleProps
@@ -36,12 +35,14 @@ interface ComponentPropsParams {
   resolveDesignValue: ResolveDesignValueType;
   areEntitiesFetched: boolean;
   definition: ComponentRegistration['definition'];
+  renderDropzone: RenderDropzoneFunction;
 }
 
 export const useComponentProps = ({
   node,
   areEntitiesFetched,
   resolveDesignValue,
+  renderDropzone,
   definition,
 }: ComponentPropsParams) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
@@ -169,18 +170,6 @@ export const useComponentProps = ({
   }, [node, props]);
 
   const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
-
-  const renderDropzone = (node: CompositionComponentNode, props?: Record<string, unknown>) => {
-    return (
-      <Dropzone
-        sectionId={node.data.id}
-        zoneId={node.data.id}
-        node={node}
-        resolveDesignValue={resolveDesignValue}
-        {...props}
-      />
-    );
-  };
 
   const defaultedProps: Record<string, unknown> = {
     className,

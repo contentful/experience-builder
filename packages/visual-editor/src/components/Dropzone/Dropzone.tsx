@@ -1,7 +1,10 @@
-import React, { ElementType, useEffect, useMemo } from 'react';
+import React, { ElementType, useCallback, useEffect, useMemo } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
-import EditorBlock from './EditorBlock';
+import type {
+  CompositionComponentNode,
+  ResolveDesignValueType,
+} from '@contentful/experience-builder-core/types';
+import { EditorBlock } from './EditorBlock';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
@@ -128,6 +131,22 @@ export function Dropzone({
     isAssembly
   );
 
+  // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
+  const renderDropzone = useCallback(
+    (node: CompositionComponentNode, props?: Record<string, unknown>) => {
+      return (
+        <Dropzone
+          sectionId={node.data.id}
+          zoneId={node.data.id}
+          node={node}
+          resolveDesignValue={resolveDesignValue}
+          {...props}
+        />
+      );
+    },
+    [resolveDesignValue]
+  );
+
   if (!resolveDesignValue) {
     return null;
   }
@@ -176,6 +195,7 @@ export function Dropzone({
                     draggingNewComponent={draggingNewComponent}
                     node={item}
                     resolveDesignValue={resolveDesignValue}
+                    renderDropzone={renderDropzone}
                   />
                 );
               })
