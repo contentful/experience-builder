@@ -1,4 +1,4 @@
-import React, { ElementType, useEffect, useMemo } from 'react';
+import React, { ElementType, useEffect } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
 import EditorBlock from './EditorBlock';
@@ -34,7 +34,6 @@ function isDropEnabled(
   hoveringOverSection: boolean,
   draggingRootZone: boolean,
   isRootZone: boolean,
-  draggingOverArea: boolean,
   isAssembly: boolean
 ) {
   if (isAssembly) {
@@ -57,7 +56,7 @@ function isDropEnabled(
     return isRootZone;
   }
 
-  return draggingOverArea;
+  return userIsDragging;
 }
 
 export function Dropzone({
@@ -97,14 +96,6 @@ export function Dropzone({
     addSectionWithZone(sectionId);
   }, [sectionId, addSectionWithZone]);
 
-  const draggingOverArea = useMemo(() => {
-    if (!userIsDragging) {
-      return false;
-    }
-
-    return draggingParentIds[0] === zoneId;
-  }, [userIsDragging, draggingParentIds, zoneId]);
-
   const isAssembly =
     DESIGN_COMPONENT_NODE_TYPES.includes(node?.type || '') ||
     ASSEMBLY_NODE_TYPES.includes(node?.type || '');
@@ -124,7 +115,6 @@ export function Dropzone({
     hoveringOverSection,
     draggingRootZone,
     isRootZone,
-    draggingOverArea,
     isAssembly
   );
 
@@ -132,8 +122,17 @@ export function Dropzone({
     return null;
   }
 
+  // Don't trigger the dropzone when it's the root because then the only hit boxes that show up will be root level zones
+  // Exception 1: If it comes from the component list (because we want the component list components to work for all zones
+  // Exception 2: If it's a child of a root level zone (because we want to be able to re-order root level containers)
+  const isNotDroppable =
+    zoneId === ROOT_ID && draggedSourceId !== 'component-list' && draggingParentIds.length !== 0;
+
   return (
-    <Droppable droppableId={droppableId} direction={direction} isDropDisabled={!dropEnabled}>
+    <Droppable
+      droppableId={droppableId}
+      direction={direction}
+      isDropDisabled={!dropEnabled || isNotDroppable}>
       {(provided, snapshot) => {
         return (
           <WrapperComponent

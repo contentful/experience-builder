@@ -14,11 +14,17 @@ import {
   updateNode,
 } from '@/utils/treeHelpers';
 import { getTreeDiffs } from '@/utils/getTreeDiff';
-
+import { treeVisit } from '@/utils/treeTraversal';
+import {
+  ASSEMBLY_NODE_TYPE,
+  DESIGN_COMPONENT_NODE_TYPE,
+} from '@contentful/experience-builder-core/constants';
 export interface TreeStore {
   tree: CompositionTree;
   breakpoints: Breakpoint[];
   updateTree: (tree: CompositionTree) => void;
+  updateTreeForced: (tree: CompositionTree) => void;
+  updateNodesByUpdatedEntity: (entityId: string) => void;
   addChild: (
     destinationIndex: number,
     destinationParentId: string,
@@ -30,6 +36,10 @@ export interface TreeStore {
     sourceIndex: number
   ) => void;
 }
+
+const isAssemblyNode = (node: CompositionComponentNode) => {
+  return node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE;
+};
 
 export const useTreeStore = create<TreeStore>((set, get) => ({
   tree: {
@@ -46,6 +56,40 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
     },
   },
   breakpoints: [],
+
+  updateNodesByUpdatedEntity: (entityId: string) => {
+    set(
+      produce((draftState: TreeStore) => {
+        treeVisit(draftState.tree.root, (node) => {
+          if (isAssemblyNode(node) && node.data.blockId === entityId) {
+            // Cannot use `structuredClone()` as node is probably a Proxy object with weird references
+            updateNode(node.data.id, cloneDeepAsPOJO(node), draftState.tree.root);
+            return;
+          }
+          const dataSourceIds = Object.values(node.data.dataSource).map((link) => link.sys.id);
+          if (dataSourceIds.includes(entityId)) {
+            // Cannot use `structuredClone()` as node is probably a Proxy object with weird references
+            updateNode(node.data.id, cloneDeepAsPOJO(node), draftState.tree.root);
+          }
+        });
+      })
+    );
+  },
+
+  /**
+   * NOTE: this is for debugging purposes only as it causes ugly canvas flash.
+   *
+   * Force updates entire tree. Usually shouldn't be used as updateTree()
+   * uses smart update algorithm based on diffs. But for troubleshooting
+   * you may want to force update the tree so leaving this in.
+   */
+  updateTreeForced: (tree) => {
+    set({
+      tree,
+      // Breakpoints must be updated, as we receive completely new tree with possibly new breakpoints
+      breakpoints: tree?.root?.data?.breakpoints || [],
+    });
+  },
   updateTree: (tree) => {
     const currentTree = get().tree;
 
@@ -64,6 +108,9 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
 
     // The current and updated tree are the same, no tree update required.
     if (!treeDiff.length) {
+      console.debug(
+        `[exp-builder.visual-editor::updateTree()]: During smart-diffing no diffs. Skipping tree update.`
+      );
       return;
     }
 
@@ -111,3 +158,9 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
     );
   },
 }));
+
+// Serialize and deserialize an object again to remove all functions and references.
+// Some people refer to this as "Plain Old JavaScript Object" (POJO) as it solely contains plain data.
+function cloneDeepAsPOJO(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
