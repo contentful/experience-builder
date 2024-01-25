@@ -128,7 +128,12 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
               updateNode(diff.nodeId, diff.node, state.tree.root);
               break;
             case TreeAction.REMOVE_NODE:
-              removeChildNode(diff.indexToRemove, diff.parentNodeId, state.tree.root);
+              removeChildNode(
+                diff.indexToRemove,
+                diff.idToRemove,
+                diff.parentNodeId,
+                state.tree.root
+              );
               break;
             case TreeAction.MOVE_NODE:
             case TreeAction.REORDER_NODE:

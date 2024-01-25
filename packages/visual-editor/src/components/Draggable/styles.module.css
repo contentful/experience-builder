@@ -6,6 +6,7 @@
   outline-offset: -2px;
   outline: 2px solid transparent;
   box-sizing: border-box;
+  display: flex;
 }
 
 .DraggableComponent > * {
@@ -51,7 +52,8 @@
   opacity: 1;
 } */
 
-.userIsDragging > .overlay, .userIsDragging > .overlayContainer {
+.userIsDragging > .overlay,
+.userIsDragging > .overlayContainer {
   opacity: 0 !important;
 }
 
@@ -74,7 +76,7 @@
 
 .isAssemblyBlock:hover,
 .isAssemblyBlock:hover div[data-rfd-draggable-id],
-.DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^="assembly"] {
+.DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^='assembly'] {
   outline: 2px dashed var(--exp-builder-purple600) !important;
 }
 
