@@ -8,6 +8,17 @@ import {
 } from '@/types';
 
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
+
+export const transformGridColumn = (span?: string): CSSProperties => {
+  if (!span) {
+    return {};
+  }
+
+  return {
+    gridColumn: `span ${span}`,
+  };
+};
+
 export const transformBorderStyle = (value?: string): CSSProperties => {
   if (!value) return {};
   const parts = value.split(' ');

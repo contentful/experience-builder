@@ -8,6 +8,7 @@ interface DiffBase {
 export interface RemoveNode extends DiffBase {
   type: TreeAction.REMOVE_NODE;
   indexToRemove: number;
+  idToRemove: string;
   parentNodeId: string;
 }
 
