@@ -64,7 +64,7 @@ export const getTooltipPositions = ({
     }
   }
 
-  const tooltipHeight = 18;
+  const tooltipHeight = tooltipRect.height === 0 ? 32 : tooltipRect.height;
 
   /**
    * For elements with small heights, we don't want the tooltip covering the content in the element,
@@ -76,7 +76,7 @@ export const getTooltipPositions = ({
      * else we show the tooltip at the bottom.
      */
     if (tooltipHeight < coordinates.top) {
-      newTooltipStyles['bottom'] = tooltipHeight;
+      newTooltipStyles['bottom'] = coordinates.height;
     } else {
       newTooltipStyles['top'] = coordinates.height;
     }

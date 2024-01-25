@@ -23,17 +23,18 @@
 
 .overlay {
   position: absolute;
+  display: flex;
+  align-items: center;
   min-width: max-content;
-  min-height: 10px;
-  max-height: 10px;
+  height: 24px;
   z-index: 1;
   font-family: var(--exp-builder-font-stack-primary);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 500;
   background-color: var(--exp-builder-gray500);
   color: var(--exp-builder-color-white);
   border-radius: 0 0 2px 0;
-  padding: 2px 2px 2px 2px;
+  padding: 4px 12px 4px 12px;
   transition: opacity 0.2s;
   opacity: 0;
   text-wrap: nowrap;
