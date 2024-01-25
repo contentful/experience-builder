@@ -37,7 +37,7 @@ export const DraggableComponent = ({
   onMouseUp?: (e: SyntheticEvent) => void;
   onMouseOver?: (e: SyntheticEvent) => void;
   onMouseOut?: (e: SyntheticEvent) => void;
-  coordinates: Rect;
+  coordinates: Rect | null;
   isContainer: boolean;
   userIsDragging?: boolean;
   style?: CSSProperties;
