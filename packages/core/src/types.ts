@@ -115,6 +115,7 @@ export type ComponentDefinition<
     Record<string, ComponentDefinitionVariable<T>>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
+  rootComponent?: boolean;
 };
 
 export type ComponentRegistration = {
@@ -231,6 +232,8 @@ export type StyleProps = {
   cfTextBold: boolean;
   cfTextItalic: boolean;
   cfTextUnderline: boolean;
+  cfColumns: string;
+  cfColumnSpan: string;
 };
 
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic
@@ -369,6 +372,13 @@ export type ResolveDesignValueType = (
   valuesByBreakpoint: ValuesByBreakpoint,
   variableName: string
 ) => CompositionVariableValueType;
+
+// The 'contentful' package only exposes CDA types while we received CMA ones in editor mode
+export type ManagementEntity = (Entry | Asset) & {
+  sys: {
+    version: number;
+  };
+};
 
 export type RequestEntitiesMessage = {
   entityIds: string[];

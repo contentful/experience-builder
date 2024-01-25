@@ -3,7 +3,10 @@ export { useExperienceBuilder, useFetchExperience, useFetchById, useFetchBySlug 
 export { defineComponents } from './core/componentRegistry';
 export {
   calculateNodeDefaultHeight,
+  /** @deprecated use `checkIsAssemblyNode` instead. Will be removed with SDK v5. */
   checkIsAssembly,
+  checkIsAssemblyNode,
+  checkIsAssemblyEntry,
   defineDesignTokens,
   supportedModes,
   VisualEditorMode,

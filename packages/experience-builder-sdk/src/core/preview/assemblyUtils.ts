@@ -1,4 +1,4 @@
-import { checkIsAssembly, EntityStore } from '@contentful/experience-builder-core';
+import { checkIsAssemblyNode, EntityStore } from '@contentful/experience-builder-core';
 import type {
   CompositionComponentPropValue,
   CompositionNode,
@@ -56,7 +56,7 @@ export const resolveAssembly = ({
   node: CompositionNode;
   entityStore: EntityStore | undefined;
 }) => {
-  const isAssembly = checkIsAssembly({
+  const isAssembly = checkIsAssemblyNode({
     componentId: node.definitionId,
     usedComponents: entityStore?.usedComponents,
   });

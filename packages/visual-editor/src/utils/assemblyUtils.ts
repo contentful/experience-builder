@@ -7,6 +7,7 @@ import type {
   CompositionComponentPropValue,
   Composition,
 } from '@contentful/experience-builder-core/types';
+import type { Entry } from 'contentful';
 
 import {
   DESIGN_COMPONENT_NODE_TYPE,
@@ -15,6 +16,10 @@ import {
 } from '@contentful/experience-builder-core/constants';
 import { generateRandomId } from '@contentful/experience-builder-core';
 import { assembliesRegistry } from '@/store/registries';
+
+export const checkIsAssemblyEntry = (entry: Entry): boolean => {
+  return Boolean(entry.fields?.componentSettings);
+};
 
 export const deserializeAssemblyNode = ({
   node,
