@@ -5,7 +5,6 @@
   cursor: grab;
   outline-offset: -2px;
   outline: 2px solid transparent;
-  min-width: 100px;
   box-sizing: border-box;
   display: flex;
 }
@@ -38,6 +37,7 @@
   padding: 2px 2px 2px 2px;
   transition: opacity 0.2s;
   opacity: 0;
+  text-wrap: nowrap;
 }
 
 .overlayContainer {

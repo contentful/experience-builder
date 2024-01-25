@@ -9,8 +9,6 @@ export const OUTGOING_EVENTS = {
   DesignTokens: 'registerDesignTokens',
   HoveredSection: 'hoveredSection',
   MouseMove: 'mouseMove',
-  MouseUp: 'mouseUp',
-  MouseDown: 'mouseDown',
   NewHoveredElement: 'newHoveredElement',
   ComponentSelected: 'componentSelected',
   RegisteredComponents: 'registeredComponents',

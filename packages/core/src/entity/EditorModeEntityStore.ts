@@ -10,7 +10,7 @@ const REQUEST_TIMEOUT = 10000;
 export class EditorModeEntityStore extends EditorEntityStore {
   public locale: string;
 
-  constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
+  constructor({ entities, locale }: { entities: Array<Asset | Entry>; locale: string }) {
     console.debug(
       `[exp-builder.sdk] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
       { entities }
@@ -56,12 +56,17 @@ export class EditorModeEntityStore extends EditorEntityStore {
   async fetchEntities({
     missingEntryIds,
     missingAssetIds,
+    skipCache = false,
   }: {
     missingEntryIds: string[];
     missingAssetIds: string[];
+    skipCache?: boolean;
   }) {
     // Entries and assets will be stored in entryMap and assetMap
-    await Promise.all([this.fetchEntries(missingEntryIds), this.fetchAssets(missingAssetIds)]);
+    await Promise.all([
+      this.fetchEntries(missingEntryIds, skipCache),
+      this.fetchAssets(missingAssetIds, skipCache),
+    ]);
   }
 
   getMissingEntityIds(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {
