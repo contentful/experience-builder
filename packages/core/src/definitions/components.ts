@@ -23,7 +23,6 @@ export const sectionDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: builtInStyles,
-  rootComponent: true,
 };
 
 export const containerDefinition: ComponentDefinition = {
@@ -32,7 +31,6 @@ export const containerDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: containerBuiltInStyles,
-  rootComponent: true,
 };
 
 export const columnsDefinition: ComponentDefinition = {
@@ -41,7 +39,6 @@ export const columnsDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: columnsBuiltInStyles,
-  rootComponent: true,
 };
 
 export const singleColumnDefinition: ComponentDefinition = {
@@ -50,5 +47,4 @@ export const singleColumnDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: singleColumnBuiltInStyles,
-  rootComponent: true,
 };
