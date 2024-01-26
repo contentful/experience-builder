@@ -1,4 +1,4 @@
-import React, { ElementType, useEffect, useMemo } from 'react';
+import React, { ElementType, useEffect, useMemo, useState } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
 import EditorBlock from './EditorBlock';
@@ -17,6 +17,7 @@ import {
   DESIGN_COMPONENT_NODE_TYPES,
   ASSEMBLY_NODE_TYPES,
 } from '@contentful/experience-builder-core/constants';
+import InferDirection from './InferDirection';
 
 type DropzoneProps = {
   zoneId: string;
@@ -115,7 +116,13 @@ export function Dropzone({
 
   const isEmptyCanvas = isRootZone && !content.length;
 
-  const direction = useDropzoneDirection({ resolveDesignValue, node, zoneId });
+  const [direction, setDirection] = useState<'horizontal' | 'vertical'>('vertical');
+
+  // const direction = useDropzoneDirection({ resolveDesignValue, node, zoneId });
+
+  const hasChildren = !!content.length;
+
+  const showDirectionChooser = !isRootZone && content.length === 1;
 
   const dropEnabled = isDropEnabled(
     isEmptyCanvas,
@@ -132,7 +139,40 @@ export function Dropzone({
     return null;
   }
 
-  return (
+  function getQuadrant(event: MouseEvent, element: HTMLElement): number {
+    const rect = element.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    if (x > rect.width / 2) {
+      if (y > rect.height / 2) {
+        return 4;
+      } else {
+        return 1;
+      }
+    } else {
+      if (y > rect.height / 2) {
+        return 3;
+      } else {
+        return 2;
+      }
+    }
+  }
+
+  // console.log('direction', direction);
+
+  return showDirectionChooser ? (
+    content.map((item, i) => {
+      return (
+        <InferDirection
+          key={`idid-${i}`}
+          zoneId={zoneId}
+          node={item}
+          resolveDesignValue={resolveDesignValue}
+        />
+      );
+    })
+  ) : (
     <Droppable droppableId={droppableId} direction={direction} isDropDisabled={!dropEnabled}>
       {(provided, snapshot) => {
         return (
@@ -152,36 +192,50 @@ export function Dropzone({
               },
               className
             )}
-            onMouseOver={(e) => {
+            onMouseOver={(e: React.MouseEvent<HTMLDivElement>) => {
               e.stopPropagation();
               setHoveringZone(zoneId);
             }}
             onMouseOut={() => {
               setHoveringZone('');
             }}
+            onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => {
+              // console.log({ target: e.target, e, rect: e.target.getBoundingClientRect() });
+              // const rect = e.target.getBoundingClientRect();
+              // const x = e.clientX - rect.left; //x position within the element.
+              // const y = e.clientY - rect.top; //y position within the element.
+              // console.log('Left? : ' + x + ' ; Top? : ' + y + '.');
+              if (showDirectionChooser && userIsDragging) {
+                const quadrant = getQuadrant(e.nativeEvent, e.currentTarget);
+                const isHorizontal = quadrant === 2 || quadrant === 3;
+                console.log({ isHorizontal, quadrant, showDirectionChooser });
+              }
+              // setDirection(quadrant === 2 || quadrant === 3 ? 'horizontal' : 'vertical');
+            }}
             {...rest}>
             {isEmptyCanvas ? (
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
             ) : (
-              content.map((item, i) => {
-                const componentId = item.data.id;
-
-                return (
-                  <EditorBlock
-                    index={i}
-                    parentSectionId={sectionId}
-                    zoneId={zoneId}
-                    key={componentId}
-                    userIsDragging={userIsDragging}
-                    draggingNewComponent={draggingNewComponent}
-                    node={item}
-                    resolveDesignValue={resolveDesignValue}
-                  />
-                );
-              })
+              <>
+                {content.map((item, i) => {
+                  const componentId = item.data.id;
+                  return (
+                    <EditorBlock
+                      index={i}
+                      parentSectionId={sectionId}
+                      zoneId={zoneId}
+                      key={componentId}
+                      userIsDragging={userIsDragging}
+                      draggingNewComponent={draggingNewComponent}
+                      node={item}
+                      resolveDesignValue={resolveDesignValue}
+                    />
+                  );
+                })}
+              </>
             )}
             {provided?.placeholder}
-            {snapshot?.isDraggingOver && !isEmptyCanvas && (
+            {snapshot?.isDraggingOver && !isEmptyCanvas && hasChildren && (
               <div data-ctfl-placeholder style={placeholderStyle} />
             )}
           </WrapperComponent>

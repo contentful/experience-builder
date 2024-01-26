@@ -111,6 +111,7 @@ export const usePlaceholderStyle = () => {
         const isEnd = destinationIndex === children.length;
 
         const destinationChild = children[index];
+        console.log({ destinationChild, index });
 
         const [offsetChild, offsetParent] = destinationChild
           ? [
@@ -136,6 +137,7 @@ export const usePlaceholderStyle = () => {
         clientX = offsetLeft - translateValue;
       }
 
+      //Only show background color when dragging from component list (not reordering)
       const shouldShowBackgroundColor =
         !!draggedItem.source.droppableId.startsWith('component-list');
 

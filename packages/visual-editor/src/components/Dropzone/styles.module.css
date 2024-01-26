@@ -8,6 +8,7 @@
   width: 100%;
   transition: outline 0.2s;
   min-height: 120px;
+  pointer-events: all;
 }
 
 .fixedWidth {

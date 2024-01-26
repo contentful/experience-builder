@@ -49,6 +49,7 @@ export const DNDProvider = ({ children }: Props) => {
       : event;
     updateItem(undefined);
     dragState.reset();
+    console.log({ dropResult });
 
     if (!droppedItem.destination) {
       if (!draggedItem?.destination) {
