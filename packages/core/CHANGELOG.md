@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.15](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.14...@contentful/experience-builder-core@0.0.2-alpha.15) (2024-01-25)
+
+### Features
+
+- Container default margin auto [ALT-326] ([#286](https://github.com/contentful/experience-builder-toolkit/issues/286)) ([16c1acf](https://github.com/contentful/experience-builder-toolkit/commit/16c1acf05a5553dd31a5ebb04ead6c0a7724de54))
+- implement columns component with presets and custom options [ALT-43] ([#285](https://github.com/contentful/experience-builder-toolkit/issues/285)) ([dd74a5f](https://github.com/contentful/experience-builder-toolkit/commit/dd74a5f409c7b4d66722d0809eba43a3cf0e1cfd))
+
 ## [0.0.2-alpha.14](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.13...@contentful/experience-builder-core@0.0.2-alpha.14) (2024-01-23)
 
 ### Bug Fixes

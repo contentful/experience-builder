@@ -1,4 +1,4 @@
-import React, { ElementType, useEffect, useMemo, useState } from 'react';
+import React, { ElementType, useEffect } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
 import EditorBlock from './EditorBlock';
@@ -16,8 +16,8 @@ import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
 import {
   DESIGN_COMPONENT_NODE_TYPES,
   ASSEMBLY_NODE_TYPES,
+  CONTENTFUL_COLUMNS_ID,
 } from '@contentful/experience-builder-core/constants';
-import InferDirection from './InferDirection';
 
 type DropzoneProps = {
   zoneId: string;
@@ -35,10 +35,14 @@ function isDropEnabled(
   hoveringOverSection: boolean,
   draggingRootZone: boolean,
   isRootZone: boolean,
-  draggingOverArea: boolean,
-  isAssembly: boolean
+  isAssembly: boolean,
+  blockId: string = ''
 ) {
   if (isAssembly) {
+    return false;
+  }
+
+  if (blockId === CONTENTFUL_COLUMNS_ID) {
     return false;
   }
 
@@ -58,7 +62,7 @@ function isDropEnabled(
     return isRootZone;
   }
 
-  return draggingOverArea;
+  return userIsDragging;
 }
 
 export function Dropzone({
@@ -98,14 +102,6 @@ export function Dropzone({
     addSectionWithZone(sectionId);
   }, [sectionId, addSectionWithZone]);
 
-  const draggingOverArea = useMemo(() => {
-    if (!userIsDragging) {
-      return false;
-    }
-
-    return draggingParentIds[0] === zoneId;
-  }, [userIsDragging, draggingParentIds, zoneId]);
-
   const isAssembly =
     DESIGN_COMPONENT_NODE_TYPES.includes(node?.type || '') ||
     ASSEMBLY_NODE_TYPES.includes(node?.type || '');
@@ -116,13 +112,7 @@ export function Dropzone({
 
   const isEmptyCanvas = isRootZone && !content.length;
 
-  const [direction, setDirection] = useState<'horizontal' | 'vertical'>('vertical');
-
-  // const direction = useDropzoneDirection({ resolveDesignValue, node, zoneId });
-
-  const hasChildren = !!content.length;
-
-  const showDirectionChooser = !isRootZone && content.length === 1;
+  const direction = useDropzoneDirection({ resolveDesignValue, node, zoneId });
 
   const dropEnabled = isDropEnabled(
     isEmptyCanvas,
@@ -131,49 +121,25 @@ export function Dropzone({
     hoveringOverSection,
     draggingRootZone,
     isRootZone,
-    draggingOverArea,
-    isAssembly
+    isAssembly,
+    node?.data.blockId
   );
 
   if (!resolveDesignValue) {
     return null;
   }
 
-  function getQuadrant(event: MouseEvent, element: HTMLElement): number {
-    const rect = element.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+  // Don't trigger the dropzone when it's the root because then the only hit boxes that show up will be root level zones
+  // Exception 1: If it comes from the component list (because we want the component list components to work for all zones
+  // Exception 2: If it's a child of a root level zone (because we want to be able to re-order root level containers)
+  const isNotDroppable =
+    zoneId === ROOT_ID && draggedSourceId !== 'component-list' && draggingParentIds.length !== 0;
 
-    if (x > rect.width / 2) {
-      if (y > rect.height / 2) {
-        return 4;
-      } else {
-        return 1;
-      }
-    } else {
-      if (y > rect.height / 2) {
-        return 3;
-      } else {
-        return 2;
-      }
-    }
-  }
-
-  // console.log('direction', direction);
-
-  return showDirectionChooser ? (
-    content.map((item, i) => {
-      return (
-        <InferDirection
-          key={`idid-${i}`}
-          zoneId={zoneId}
-          node={item}
-          resolveDesignValue={resolveDesignValue}
-        />
-      );
-    })
-  ) : (
-    <Droppable droppableId={droppableId} direction={direction} isDropDisabled={!dropEnabled}>
+  return (
+    <Droppable
+      droppableId={droppableId}
+      direction={direction}
+      isDropDisabled={!dropEnabled || isNotDroppable}>
       {(provided, snapshot) => {
         return (
           <WrapperComponent
@@ -192,50 +158,37 @@ export function Dropzone({
               },
               className
             )}
-            onMouseOver={(e: React.MouseEvent<HTMLDivElement>) => {
+            node={node}
+            onMouseOver={(e) => {
               e.stopPropagation();
               setHoveringZone(zoneId);
             }}
             onMouseOut={() => {
               setHoveringZone('');
             }}
-            onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => {
-              // console.log({ target: e.target, e, rect: e.target.getBoundingClientRect() });
-              // const rect = e.target.getBoundingClientRect();
-              // const x = e.clientX - rect.left; //x position within the element.
-              // const y = e.clientY - rect.top; //y position within the element.
-              // console.log('Left? : ' + x + ' ; Top? : ' + y + '.');
-              if (showDirectionChooser && userIsDragging) {
-                const quadrant = getQuadrant(e.nativeEvent, e.currentTarget);
-                const isHorizontal = quadrant === 2 || quadrant === 3;
-                console.log({ isHorizontal, quadrant, showDirectionChooser });
-              }
-              // setDirection(quadrant === 2 || quadrant === 3 ? 'horizontal' : 'vertical');
-            }}
             {...rest}>
             {isEmptyCanvas ? (
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
             ) : (
-              <>
-                {content.map((item, i) => {
-                  const componentId = item.data.id;
-                  return (
-                    <EditorBlock
-                      index={i}
-                      parentSectionId={sectionId}
-                      zoneId={zoneId}
-                      key={componentId}
-                      userIsDragging={userIsDragging}
-                      draggingNewComponent={draggingNewComponent}
-                      node={item}
-                      resolveDesignValue={resolveDesignValue}
-                    />
-                  );
-                })}
-              </>
+              content.map((item, i) => {
+                const componentId = item.data.id;
+
+                return (
+                  <EditorBlock
+                    index={i}
+                    parentSectionId={sectionId}
+                    zoneId={zoneId}
+                    key={componentId}
+                    userIsDragging={userIsDragging}
+                    draggingNewComponent={draggingNewComponent}
+                    node={item}
+                    resolveDesignValue={resolveDesignValue}
+                  />
+                );
+              })
             )}
             {provided?.placeholder}
-            {snapshot?.isDraggingOver && !isEmptyCanvas && hasChildren && (
+            {snapshot?.isDraggingOver && !isEmptyCanvas && (
               <div data-ctfl-placeholder style={placeholderStyle} />
             )}
           </WrapperComponent>
