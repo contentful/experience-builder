@@ -13,4 +13,4 @@ Please refer to our [our Wiki page](https://github.com/contentful/experience-bui
 ## Troubleshooting
 
 > [!WARNING]
-> If you're `build` command is stuck and not finishing, try resetting the cache via `npx nx reset`
+> If your `build` command is stuck and not finishing, try resetting the cache via `npx nx reset`
