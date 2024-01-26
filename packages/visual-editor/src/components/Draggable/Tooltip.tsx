@@ -4,7 +4,7 @@ import React, { useMemo, useRef } from 'react';
 import styles from './styles.module.css';
 
 interface Props {
-  coordinates: Rect;
+  coordinates: Rect | null;
   id: string;
   label: string;
   isContainer: boolean;

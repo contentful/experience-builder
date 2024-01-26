@@ -146,7 +146,7 @@ export const checkIsAssembly = checkIsAssemblyNode;
 /**
  * This check assumes that the entry is already ensured to be an experience, i.e. the
  * content type of the entry is an experience type with the necessary annotations.
- * */
+ **/
 export const checkIsAssemblyEntry = (entry: Entry): boolean => {
   return Boolean(entry.fields?.componentSettings);
 };
