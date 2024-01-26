@@ -1,9 +1,6 @@
 import React, { ElementType, useCallback, useEffect } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-import type {
-  CompositionComponentNode,
-  ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
 import { EditorBlock } from './EditorBlock';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
