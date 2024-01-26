@@ -21,6 +21,7 @@ import {
   ASSEMBLY_NODE_TYPES,
   CONTENTFUL_COLUMNS_ID,
 } from '@contentful/experience-builder-core/constants';
+import { RenderDropzoneFunction } from './Dropzone.types';
 
 type DropzoneProps = {
   zoneId: string;
@@ -129,8 +130,8 @@ export function Dropzone({
   );
 
   // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
-  const renderDropzone = useCallback(
-    (node: CompositionComponentNode, props?: Record<string, unknown>) => {
+  const renderDropzone: RenderDropzoneFunction = useCallback(
+    (node, props) => {
       return (
         <Dropzone
           sectionId={node.data.id}
