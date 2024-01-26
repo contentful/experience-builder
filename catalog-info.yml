@@ -1,0 +1,24 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: experience-builder
+  description: A monorepo for all NPM packages related to Experience Builder.
+  annotations:
+    circleci.com/project-slug: github/contentful/experience-builder
+    github.com/project-slug: contentful/experience-builder
+    contentful.com/ci-alert-slack: prd-experience-builder-alerts
+    backstage.io/source-location: url:https://github.com/contentful/experience-builder/
+spec:
+  type: library
+  lifecycle: production
+  owner: group:team-sparks
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: experience-builder-index
+spec:
+  type: url
+  targets:
+    - ./packages/experience-builder-sdk/catalog-info.yaml

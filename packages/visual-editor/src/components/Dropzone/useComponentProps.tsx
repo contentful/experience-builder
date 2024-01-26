@@ -6,7 +6,6 @@ import {
   isLinkToAsset,
 } from '@contentful/experience-builder-core';
 import {
-  CONTENTFUL_CONTAINER_ID,
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
@@ -148,30 +147,17 @@ export const useComponentProps = ({
 
   const cfStyles = buildCfStyles(props);
 
-  const editorWrapperProps = useMemo(() => {
-    const wrapperProps = {
-      isFixedWidth: false,
-    };
+  // Separate the component styles from the editor wrapper styles
+  const { height, width, maxWidth, margin, ...componentStyles } = cfStyles;
 
-    if (node.data.blockId !== CONTENTFUL_CONTAINER_ID) {
-      return wrapperProps;
-    }
+  const { className: editorWrapperClass } = useStyleTag({
+    styles: { height, width, maxWidth, margin },
+    nodeId: `editor-${node.data.id}`,
+  });
 
-    const width = props['cfWidth'];
+  const { className } = useStyleTag({ styles: componentStyles, nodeId: node.data.id });
 
-    if (typeof width === 'number') {
-      wrapperProps.isFixedWidth = true;
-    }
-    if (typeof width === 'string') {
-      wrapperProps.isFixedWidth = !isNaN(Number(width.replace('px', '')));
-    }
-
-    return wrapperProps;
-  }, [node, props]);
-
-  const { className } = useStyleTag({ styles: cfStyles, nodeId: node.data.id });
-
-  const defaultedProps: Record<string, unknown> = {
+  const componentProps = {
     className,
     editorMode: true,
     node,
@@ -179,13 +165,9 @@ export const useComponentProps = ({
     'data-cf-node-id': node.data.id,
     'data-cf-node-block-id': node.data.blockId,
     'data-cf-node-block-type': node.type,
-    // TODO: do we really need lodash just for this?
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+    ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  if (definition.children) {
-    defaultedProps.children = renderDropzone(node);
-  }
-
-  return [defaultedProps, editorWrapperProps] as [typeof defaultedProps, typeof editorWrapperProps];
+  return { props: componentProps, editorWrapperClass };
 };

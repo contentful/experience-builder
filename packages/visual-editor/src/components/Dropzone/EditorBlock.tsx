@@ -13,10 +13,12 @@ import type {
 } from '@contentful/experience-builder-core/types';
 import {
   CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_SINGLE_COLUMN_ID,
   ASSEMBLY_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
 } from '@contentful/experience-builder-core/constants';
-import type { RenderDropzoneFunction } from './Dropzone.types';
+import { DraggableChildComponent } from '@components/Draggable/DraggableChildComponent';
+import { RenderDropzoneFunction } from './Dropzone.types';
 
 type EditorBlockProps = {
   node: CompositionComponentNode;
@@ -43,7 +45,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, wrapperProps, label, elementToRender } = useComponent({
+  const { node, componentId, editorWrapperClass, label, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -58,6 +60,62 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
 
+  const onClick = (e: React.SyntheticEvent<Element, Event>) => {
+    e.stopPropagation();
+
+    if (isAssemblyBlock && !containsZone) {
+      // Readonly components in an assembly cannot be selected
+      return;
+    }
+    const nodeId = isAssemblyBlock ? parentSectionId : componentId;
+
+    // Only select the node if the user intentionally clicked on it, but not when dragging
+    if (!userIsDragging) {
+      setSelectedNodeId(nodeId);
+      sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+        nodeId,
+      });
+    }
+  };
+
+  const onMouseOver = (e: React.SyntheticEvent<Element, Event>) => {
+    e.stopPropagation();
+
+    if (containsZone) {
+      setHoveringSection(componentId);
+    } else {
+      setHoveringSection(parentSectionId);
+    }
+    setHoveringZone(zoneId);
+  };
+
+  const onMouseOut = () => {
+    setHoveringZone('');
+  };
+
+  if (node.data.blockId === CONTENTFUL_SINGLE_COLUMN_ID) {
+    return (
+      <DraggableChildComponent
+        elementToRender={elementToRender}
+        label={label || 'No Label Specified'}
+        id={`draggable-${componentId}`}
+        index={index}
+        isAssemblyBlock={isAssemblyBlock}
+        isDragDisabled={isAssemblyBlock}
+        isSelected={selectedNodeId === componentId}
+        userIsDragging={userIsDragging}
+        isContainer={isContainer}
+        coordinates={coordinates!}
+        onClick={onClick}
+        onMouseOver={onMouseOver}
+        onMouseOut={onMouseOut}
+        style={{
+          pointerEvents: userIsDragging && draggingNewComponent ? 'all' : undefined,
+        }}
+      />
+    );
+  }
+
   return (
     <DraggableComponent
       label={label || 'No Label Specified'}
@@ -68,45 +126,15 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
       isContainer={isContainer}
-      coordinates={coordinates}
-      className={classNames({
-        [styles.fullWidth]: isContainer && !wrapperProps.isFixedWidth,
-        [styles.fixedWidth]: isContainer && wrapperProps.isFixedWidth,
-      })}
-      onClick={(e) => {
-        e.stopPropagation();
-
-        if (isAssemblyBlock && !containsZone) {
-          // Readonly components in an assembly cannot be selected
-          return;
-        }
-        const nodeId = isAssemblyBlock ? parentSectionId : componentId;
-
-        // Only select the node if the user intentionally clicked on it, but not when dragging
-        if (!userIsDragging) {
-          setSelectedNodeId(nodeId);
-          sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-            nodeId,
-          });
-        }
-      }}
-      onMouseOver={(e) => {
-        e.stopPropagation();
-
-        if (containsZone) {
-          setHoveringSection(componentId);
-        } else {
-          setHoveringSection(parentSectionId);
-        }
-        setHoveringZone(zoneId);
-      }}
-      onMouseOut={() => {
-        setHoveringZone('');
-      }}
+      coordinates={coordinates!}
+      className={classNames(editorWrapperClass)}
+      onClick={onClick}
+      onMouseOver={onMouseOver}
+      onMouseOut={onMouseOut}
       style={{
         pointerEvents: userIsDragging && draggingNewComponent ? 'all' : undefined,
       }}>
-      {elementToRender}
+      {elementToRender()}
 
       {/* Hitboxes allow users to add a section between 2 components */}
       {userIsDragging && (

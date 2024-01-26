@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-visual-editor",
-  "version": "0.0.2-alpha.17",
+  "version": "0.0.2-alpha.18",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

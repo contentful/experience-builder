@@ -11,11 +11,12 @@ import {
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
-import { ContentfulContainer, Assembly } from '@contentful/experience-builder-components';
+import { Assembly } from '@contentful/experience-builder-components';
 import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
+import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
 
 type UseComponentProps = {
   node: CompositionComponentNode;
@@ -64,7 +65,7 @@ export const useComponent = ({
 
   const componentId = node.data.id;
 
-  const [props, editorWrapperProps] = useComponentProps({
+  const { props, editorWrapperClass } = useComponentProps({
     node,
     areEntitiesFetched,
     resolveDesignValue,
@@ -74,20 +75,19 @@ export const useComponent = ({
 
   // Only pass editor props to built-in components
   const { editorMode, renderDropzone: _renderDropzone, ...componentProps } = props;
-  const elementToRender = builtInComponents.includes(node.data.blockId || '') ? (
-    <ContentfulContainer {...(props as React.ComponentProps<typeof ContentfulContainer>)} />
-  ) : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE ? (
-    // Assembly.tsx requires renderDropzone and editorMode as well
-    React.createElement(componentRegistration.component, props)
-  ) : (
-    React.createElement(componentRegistration.component, componentProps)
-  );
+  const elementToRender = builtInComponents.includes(node.data.blockId || '')
+    ? (dragProps?: NoWrapDraggableProps) =>
+        React.createElement(componentRegistration.component, { ...props, ...dragProps })
+    : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE
+    ? // Assembly.tsx requires renderDropzone and editorMode as well
+      () => React.createElement(componentRegistration.component, props)
+    : () => React.createElement(componentRegistration.component, componentProps);
 
   return {
     node,
     componentId,
     elementToRender,
-    wrapperProps: editorWrapperProps,
+    editorWrapperClass,
     label: componentRegistration.definition.name,
   };
 };
