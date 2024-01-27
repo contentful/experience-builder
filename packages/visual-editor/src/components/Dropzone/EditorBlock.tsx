@@ -105,6 +105,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         isSelected={selectedNodeId === componentId}
         userIsDragging={userIsDragging}
         isContainer={isContainer}
+        blockId={node.data.blockId}
         coordinates={coordinates!}
         onClick={onClick}
         onMouseOver={onMouseOver}
@@ -126,6 +127,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
       isContainer={isContainer}
+      blockId={node.data.blockId}
       coordinates={coordinates!}
       className={classNames(editorWrapperClass)}
       onClick={onClick}

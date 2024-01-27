@@ -23,6 +23,7 @@ export type NoWrapDraggableProps = {
   onMouseDown: (e: SyntheticEvent<Element, Event>) => void;
   onMouseUp: (e: SyntheticEvent<Element, Event>) => void;
   onClick: (e: SyntheticEvent<Element, Event>) => void;
+  ['data-test-id']?: string;
 };
 
 type DraggableChildComponentProps = {
@@ -39,9 +40,11 @@ type DraggableChildComponentProps = {
   onMouseOut?: (e: SyntheticEvent) => void;
   coordinates: Rect | null;
   isContainer: boolean;
+  blockId: string;
   userIsDragging?: boolean;
   style?: CSSProperties;
   isDragDisabled?: boolean;
+  className?: string;
 };
 
 /**
@@ -70,7 +73,9 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     userIsDragging,
     style,
     isContainer,
+    blockId,
     isDragDisabled = false,
+    className,
   } = props;
 
   return (
@@ -78,9 +83,10 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
       {(provided, snapshot) =>
         elementToRender({
           ['data-ctfl-draggable-id']: id,
+          ['data-test-id']: `draggable-${blockId}`,
           innerRef: provided.innerRef,
           draggableProps: provided.draggableProps,
-          wrapperClassName: classNames(styles.DraggableComponent, {
+          wrapperClassName: classNames(styles.DraggableComponent, className, {
             [styles.isAssemblyBlock]: isAssemblyBlock,
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,

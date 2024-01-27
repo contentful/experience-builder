@@ -23,6 +23,7 @@ export const DraggableComponent = ({
   style,
   className,
   isContainer,
+  blockId,
   isDragDisabled = false,
   ...rest
 }: {
@@ -40,6 +41,7 @@ export const DraggableComponent = ({
   onMouseOut?: (e: SyntheticEvent) => void;
   coordinates: Rect | null;
   isContainer: boolean;
+  blockId: string;
   userIsDragging?: boolean;
   style?: CSSProperties;
   isDragDisabled?: boolean;
@@ -49,6 +51,7 @@ export const DraggableComponent = ({
       {(provided, snapshot) => (
         <div
           data-ctfl-draggable-id={id}
+          data-test-id={`draggable-${blockId}`}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
