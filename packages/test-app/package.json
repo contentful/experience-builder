@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "start": "vite",
     "prebuild": "rimraf dist",
     "build": "tsc && vite build",
     "build:vercel": "npm run build --prefix ../core && npm run build --prefix ../components && npm run build",

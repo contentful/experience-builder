@@ -1,0 +1,18 @@
+package:$1:
+  - packages/([^/]+)/.*
+
+configuration:
+  - .circleci/**/*
+  - .contentful/**/*
+  - .github/**/*
+  - .dependabot/**/*
+  - .eslintignore
+  - .eslintrc.js
+  - .gitignore
+  - .nvmrc
+  - .prettierrc
+  - lerna.json
+  - LICENSE
+  - nx.json
+  - tsconfig.base.json
+  - tsconfig.json
