@@ -6,7 +6,6 @@ import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoord
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from './useComponent';
 import { useZoneStore } from '@/store/zone';
-import classNames from 'classnames';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
@@ -107,6 +106,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         isContainer={isContainer}
         blockId={node.data.blockId}
         coordinates={coordinates!}
+        className={editorWrapperClass}
         onClick={onClick}
         onMouseOver={onMouseOver}
         onMouseOut={onMouseOut}
@@ -129,7 +129,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       isContainer={isContainer}
       blockId={node.data.blockId}
       coordinates={coordinates!}
-      className={classNames(editorWrapperClass)}
+      className={editorWrapperClass}
       onClick={onClick}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}

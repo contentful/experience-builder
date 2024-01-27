@@ -148,7 +148,7 @@ export const useComponentProps = ({
   const cfStyles = buildCfStyles(props);
 
   // Separate the component styles from the editor wrapper styles
-  const { height, width, maxWidth, margin, ...componentStyles } = cfStyles;
+  const { height, width, maxWidth = '100%', margin, ...componentStyles } = cfStyles;
 
   const { className: editorWrapperClass } = useStyleTag({
     styles: { height, width, maxWidth, margin },
