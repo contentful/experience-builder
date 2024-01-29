@@ -147,27 +147,50 @@ export const useComponentProps = ({
 
   const cfStyles = buildCfStyles(props);
 
-  // Separate the component styles from the editor wrapper styles
-  const { height, width, maxWidth, margin, ...componentStyles } = cfStyles;
+  // Separate the component styles from the editor wrapper styles for structure components
+  // TODO: Switch to using isContentfulStructureComponent() util from core
+  const shouldSplitEditorStyles = definition.children || definition.id === CONTENTFUL_CONTAINER_ID;
+
+  // Omit height, width and maxWidth from the component styles
+  const { height, width, maxWidth, ...componentStyles } = cfStyles;
+
+  // Create editor wrapper styles from the component styles
+  const editorWrapperStyles = {
+    margin: cfStyles.margin,
+    ...(shouldSplitEditorStyles && { height, width, maxWidth }),
+  };
+
+  // Omit margin from the component styles
+  const componentClassStyles = {
+    ...(shouldSplitEditorStyles ? componentStyles : cfStyles),
+    margin: 0,
+  };
 
   const { className: editorWrapperClass } = useStyleTag({
-    styles: { height, width, maxWidth, margin },
+    styles: editorWrapperStyles,
     nodeId: `editor-${node.data.id}`,
   });
 
-  const { className } = useStyleTag({ styles: componentStyles, nodeId: node.data.id });
+  const { className } = useStyleTag({
+    styles: componentClassStyles,
+    nodeId: node.data.id,
+  });
 
   const componentProps = {
     className,
     editorMode: true,
     node,
     renderDropzone,
-    'data-cf-node-id': node.data.id,
-    'data-cf-node-block-id': node.data.blockId,
-    'data-cf-node-block-type': node.type,
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { props: componentProps, editorWrapperClass };
+  const wrapperProps = {
+    className: editorWrapperClass,
+    'data-cf-node-id': node.data.id,
+    'data-cf-node-block-id': node.data.blockId,
+    'data-cf-node-block-type': node.type,
+  };
+
+  return { componentProps, wrapperProps };
 };
