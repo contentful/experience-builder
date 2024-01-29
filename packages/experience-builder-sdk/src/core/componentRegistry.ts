@@ -94,6 +94,9 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   heading: enrichComponentDefinition({
     component: Components.Heading,
     definition: Components.HeadingComponentDefinition,
+    options: {
+      wrapComponent: false,
+    },
   }),
   image: enrichComponentDefinition({
     component: Components.Image,

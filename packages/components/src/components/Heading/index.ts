@@ -7,14 +7,50 @@ export const HeadingComponentDefinition: ComponentDefinition = {
   id: 'heading',
   name: 'Heading',
   category: 'Contentful',
-  builtInStyles: ['cfMargin', 'cfPadding'],
+  builtInStyles: [
+    'cfMargin',
+    'cfPadding',
+    'cfFontWeight',
+    'cfLetterSpacing',
+    'cfTextAlign',
+    'cfTextColor',
+    'cfTextTransform',
+    'cfTextItalic',
+    'cfTextUnderline',
+    'cfHeight',
+    'cfWidth',
+    'cfMaxWidth',
+  ],
   thumbnailUrl: constants.thumbnails.heading,
   variables: {
+    // Built-in style variables with default values changed
+    cfFontSize: {
+      displayName: 'Font Size',
+      type: 'Text',
+      group: 'style',
+      description: 'The font size of the heading.',
+      defaultValue: '32px',
+    },
+    cfLineHeight: {
+      displayName: 'Line Height',
+      type: 'Text',
+      group: 'style',
+      description: 'The line height of the heading.',
+      defaultValue: '48px',
+    },
+    cfTextBold: {
+      displayName: 'Bold',
+      type: 'Boolean',
+      group: 'style',
+      description: 'The text bold of the heading.',
+      defaultValue: true,
+    },
+    // Component specific variables
     text: {
       displayName: 'text',
       type: 'Text',
       description: 'The text to display in the heading.',
-      defaultValue: 'Lorem ipsum',
+      defaultValue: 'Heading',
     },
     type: {
       displayName: 'Type',
@@ -32,14 +68,6 @@ export const HeadingComponentDefinition: ComponentDefinition = {
           { value: 'h6', displayName: 'H6' },
         ],
       },
-    },
-    classes: {
-      displayName: 'Classes',
-      description:
-        'Additional CSS classes to add to the component. Separate each class with a space.',
-      type: 'Text',
-      defaultValue: 'cf-heading',
-      group: 'style',
     },
   },
 };
