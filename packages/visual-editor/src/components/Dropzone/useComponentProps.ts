@@ -24,6 +24,7 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
+import { isContentfulStructureComponent } from '@contentful/experience-builder-core';
 
 type ComponentProps =
   | StyleProps
@@ -147,15 +148,34 @@ export const useComponentProps = ({
 
   const cfStyles = buildCfStyles(props);
 
-  // Separate the component styles from the editor wrapper styles
-  const { height, width, maxWidth = '100%', margin, ...componentStyles } = cfStyles;
+  // Separate the component styles from the editor wrapper styles for structure components
+  const shouldSplitEditorStyles =
+    definition.children || isContentfulStructureComponent(definition.id);
+
+  // Omit height, width and maxWidth from the component styles
+  const { height, width, maxWidth, ...componentStyles } = cfStyles;
+
+  // Create editor wrapper styles from the component styles
+  const editorWrapperStyles = {
+    margin: cfStyles.margin,
+    ...(shouldSplitEditorStyles && { height, width, maxWidth }),
+  };
+
+  // Omit margin from the component styles
+  const componentClassStyles = {
+    ...(shouldSplitEditorStyles ? componentStyles : cfStyles),
+    margin: 0,
+  };
 
   const { className: editorWrapperClass } = useStyleTag({
-    styles: { height, width, maxWidth, margin },
+    styles: editorWrapperStyles,
     nodeId: `editor-${node.data.id}`,
   });
 
-  const { className } = useStyleTag({ styles: componentStyles, nodeId: node.data.id });
+  const { className } = useStyleTag({
+    styles: componentClassStyles,
+    nodeId: node.data.id,
+  });
 
   const componentProps = {
     className,
