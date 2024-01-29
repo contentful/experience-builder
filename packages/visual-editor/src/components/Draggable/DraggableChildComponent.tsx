@@ -10,7 +10,7 @@ import styles from './styles.module.css';
 import { Rect } from '@components/Draggable/canvasToolsUtils';
 import Tooltip from './Tooltip';
 
-export interface NoWrapDraggableProps {
+export type NoWrapDraggableProps = {
   ['data-ctfl-draggable-id']: string;
   wrapperClassName: string;
   Tooltip: React.ReactNode;
@@ -23,9 +23,9 @@ export interface NoWrapDraggableProps {
   onMouseDown: (e: SyntheticEvent<Element, Event>) => void;
   onMouseUp: (e: SyntheticEvent<Element, Event>) => void;
   onClick: (e: SyntheticEvent<Element, Event>) => void;
-}
+};
 
-interface Props {
+type DraggableChildComponentProps = {
   label: string;
   elementToRender: (props: NoWrapDraggableProps) => JSX.Element;
   id: string;
@@ -37,12 +37,12 @@ interface Props {
   onMouseUp?: (e: SyntheticEvent) => void;
   onMouseOver?: (e: SyntheticEvent) => void;
   onMouseOut?: (e: SyntheticEvent) => void;
-  coordinates: Rect;
+  coordinates: Rect | null;
   isContainer: boolean;
   userIsDragging?: boolean;
   style?: CSSProperties;
   isDragDisabled?: boolean;
-}
+};
 
 /**
  * This component is meant to function the same as DraggableComponent except
@@ -53,7 +53,7 @@ interface Props {
  * This is helpful for `flex` or `grid` layouts. Currently used by the SingleColumn
  * component.
  */
-export const DraggableChildComponent: React.FC<Props> = (props) => {
+export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (props) => {
   const {
     elementToRender,
     id,
