@@ -20,6 +20,8 @@ export const HeadingComponentDefinition: ComponentDefinition = {
     'cfHeight',
     'cfWidth',
     'cfMaxWidth',
+    'cfBackgroundColor',
+    'cfBorder',
   ],
   thumbnailUrl: constants.thumbnails.heading,
   variables: {
