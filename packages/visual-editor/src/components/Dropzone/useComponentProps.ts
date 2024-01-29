@@ -182,12 +182,16 @@ export const useComponentProps = ({
     editorMode: true,
     node,
     renderDropzone,
-    'data-cf-node-id': node.data.id,
-    'data-cf-node-block-id': node.data.blockId,
-    'data-cf-node-block-type': node.type,
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { props: componentProps, editorWrapperClass };
+  const wrapperProps = {
+    className: editorWrapperClass,
+    'data-cf-node-id': node.data.id,
+    'data-cf-node-block-id': node.data.blockId,
+    'data-cf-node-block-type': node.type,
+  };
+
+  return { componentProps, wrapperProps };
 };
