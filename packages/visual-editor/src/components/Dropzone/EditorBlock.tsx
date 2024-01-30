@@ -6,7 +6,6 @@ import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoord
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from './useComponent';
 import { useZoneStore } from '@/store/zone';
-import classNames from 'classnames';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
@@ -45,7 +44,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, editorWrapperClass, label, elementToRender } = useComponent({
+  const { node, componentId, wrapperProps, label, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -106,6 +105,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         userIsDragging={userIsDragging}
         isContainer={isContainer}
         coordinates={coordinates!}
+        wrapperProps={wrapperProps}
         onClick={onClick}
         onMouseOver={onMouseOver}
         onMouseOut={onMouseOut}
@@ -127,7 +127,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       userIsDragging={userIsDragging}
       isContainer={isContainer}
       coordinates={coordinates!}
-      className={classNames(editorWrapperClass)}
+      wrapperProps={wrapperProps}
       onClick={onClick}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}

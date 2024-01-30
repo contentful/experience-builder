@@ -35,7 +35,6 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   dragItem: '',
   selectedNodeId: null,
   locale: null,
-  entityStore: undefined,
 
   setSelectedNodeId: (id: string) => {
     set({ selectedNodeId: id });
@@ -57,6 +56,7 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     if (locale === currentLocale) {
       return;
     }
+
     set({ locale });
   },
   initializeEditor({ componentRegistry: initialRegistry, designTokens, initialLocale }) {
