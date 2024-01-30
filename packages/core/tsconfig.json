@@ -12,6 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "noImplicitAny": false,
+    "noEmitOnError": true,
     "paths": {
       "@/*": ["./src/*"]
     }

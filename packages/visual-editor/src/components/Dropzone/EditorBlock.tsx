@@ -44,7 +44,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, editorWrapperClass, label, elementToRender } = useComponent({
+  const { node, componentId, wrapperProps, label, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -106,7 +106,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         isContainer={isContainer}
         blockId={node.data.blockId}
         coordinates={coordinates!}
-        className={editorWrapperClass}
+        wrapperProps={wrapperProps}
         onClick={onClick}
         onMouseOver={onMouseOver}
         onMouseOut={onMouseOut}
@@ -129,7 +129,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       isContainer={isContainer}
       blockId={node.data.blockId}
       coordinates={coordinates!}
-      className={editorWrapperClass}
+      wrapperProps={wrapperProps}
       onClick={onClick}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}

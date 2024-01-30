@@ -24,7 +24,6 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
-import { isContentfulStructureComponent } from '@contentful/experience-builder-core';
 
 type ComponentProps =
   | StyleProps
@@ -148,46 +147,47 @@ export const useComponentProps = ({
 
   const cfStyles = buildCfStyles(props);
 
-  // Separate the component styles from the editor wrapper styles for structure components
-  const shouldSplitEditorStyles =
-    definition.children || isContentfulStructureComponent(definition.id);
+  // Separate the component styles from the editor wrapper styles
+  const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
 
-  // Omit height, width and maxWidth from the component styles
-  const { height, width, maxWidth, ...componentStyles } = cfStyles;
-
-  // Create editor wrapper styles from the component styles
-  const editorWrapperStyles = {
-    margin: cfStyles.margin,
-    ...(shouldSplitEditorStyles && { height, width, maxWidth }),
-  };
-
-  // Omit margin from the component styles
-  const componentClassStyles = {
-    ...(shouldSplitEditorStyles ? componentStyles : cfStyles),
-    margin: 0,
-  };
-
-  const { className: editorWrapperClass } = useStyleTag({
-    styles: editorWrapperStyles,
+  // Styles that will be applied to the editor wrapper (draggable) element
+  const { className: wrapperClass } = useStyleTag({
+    styles: {
+      margin,
+      height,
+      width,
+      maxWidth,
+    },
     nodeId: `editor-${node.data.id}`,
   });
 
-  const { className } = useStyleTag({
-    styles: componentClassStyles,
+  // Styles that will be applied to the component element
+  const { className: componentClass } = useStyleTag({
+    styles: {
+      ...componentStyles,
+      margin: 0,
+      width: '100%',
+      height: '100%',
+      maxWidth: 'none',
+    },
     nodeId: node.data.id,
   });
 
-  const componentProps = {
-    className,
-    editorMode: true,
-    node,
-    renderDropzone,
+  const wrapperProps = {
+    className: wrapperClass,
     'data-cf-node-id': node.data.id,
     'data-cf-node-block-id': node.data.blockId,
     'data-cf-node-block-type': node.type,
+  };
+
+  const componentProps = {
+    className: componentClass,
+    editorMode: true,
+    node,
+    renderDropzone,
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { props: componentProps, editorWrapperClass };
+  return { componentProps, wrapperProps };
 };

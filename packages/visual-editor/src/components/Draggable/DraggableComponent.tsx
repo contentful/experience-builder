@@ -21,13 +21,13 @@ export const DraggableComponent = ({
   coordinates,
   userIsDragging,
   style,
-  className,
+  wrapperProps,
   isContainer,
   blockId,
   isDragDisabled = false,
   ...rest
 }: {
-  className?: string;
+  wrapperProps: Record<string, string>;
   label: string;
   children: ReactNode;
   id: string;
@@ -53,10 +53,11 @@ export const DraggableComponent = ({
           data-ctfl-draggable-id={id}
           data-test-id={`draggable-${blockId}`}
           ref={provided.innerRef}
+          {...wrapperProps}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           {...rest}
-          className={classNames(styles.DraggableComponent, className, {
+          className={classNames(styles.DraggableComponent, wrapperProps.className, {
             [styles.isAssemblyBlock]: isAssemblyBlock,
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,

@@ -28,6 +28,7 @@ export type NoWrapDraggableProps = {
 
 type DraggableChildComponentProps = {
   label: string;
+  wrapperProps: Record<string, string>;
   elementToRender: (props: NoWrapDraggableProps) => JSX.Element;
   id: string;
   index: number;
@@ -75,7 +76,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     isContainer,
     blockId,
     isDragDisabled = false,
-    className,
+    wrapperProps,
   } = props;
 
   return (
@@ -85,8 +86,9 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
           ['data-ctfl-draggable-id']: id,
           ['data-test-id']: `draggable-${blockId}`,
           innerRef: provided.innerRef,
+          ...wrapperProps,
           draggableProps: provided.draggableProps,
-          wrapperClassName: classNames(styles.DraggableComponent, className, {
+          wrapperClassName: classNames(styles.DraggableComponent, wrapperProps.className, {
             [styles.isAssemblyBlock]: isAssemblyBlock,
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,
