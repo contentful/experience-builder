@@ -26,7 +26,7 @@ export const DraggableComponent = ({
   isDragDisabled = false,
   ...rest
 }: {
-  wrapperProps: Record<string, string>;
+  wrapperProps: Record<string, string | undefined>;
   label: string;
   children: ReactNode;
   id: string;
