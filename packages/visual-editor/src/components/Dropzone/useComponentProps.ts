@@ -9,7 +9,6 @@ import {
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
-  CONTENTFUL_CONTAINER_ID,
 } from '@contentful/experience-builder-core/constants';
 import type {
   StyleProps,
