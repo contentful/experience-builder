@@ -28,7 +28,7 @@ export type NoWrapDraggableProps = {
 
 type DraggableChildComponentProps = {
   label: string;
-  wrapperProps: Record<string, string>;
+  wrapperProps: Record<string, string | undefined>;
   elementToRender: (props: NoWrapDraggableProps) => JSX.Element;
   id: string;
   index: number;
