@@ -111,7 +111,6 @@ export const usePlaceholderStyle = () => {
         const isEnd = destinationIndex === children.length;
 
         const destinationChild = children[index];
-        console.log({ destinationChild, index });
 
         const [offsetChild, offsetParent] = destinationChild
           ? [

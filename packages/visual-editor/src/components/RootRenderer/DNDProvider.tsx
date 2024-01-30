@@ -50,7 +50,6 @@ export const DNDProvider = ({ children }: Props) => {
   const dragEnd: OnDragEndResponder = (dropResult) => {
     updateItem(undefined);
     dragState.reset();
-    console.log({ dropResult });
 
     if (!dropResult.destination) {
       if (!draggedItem?.destination) {

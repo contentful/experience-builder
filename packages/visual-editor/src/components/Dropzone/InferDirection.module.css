@@ -1,0 +1,42 @@
+.inferredDirectionContainer {
+  padding: 0;
+  transition: 0.1s;
+  display: grid;
+  grid-template: 1px auto 1px / 1px auto 1px;
+  gap: 0px;
+}
+
+
+
+.itemLeft {
+  background-color: green;
+  grid-row: 1 / 4;
+  grid-column: 1 / 2;
+}
+
+.itemRight {
+  background-color: #5d799a;
+  grid-row: 1 / 4;
+  grid-column: 3 / 4;
+}
+
+.itemTop {
+  background-color: #779b57;
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+}
+
+.itemBottom {
+  background-color: #a6d7f7;
+  grid-row: 3 / 4;
+  grid-column: 2 / 3;
+}
+
+.itemMain {
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
+}
+
+.gridDragging {
+  grid-template: 100px 1fr 100px / 100px 1fr 100px;
+}

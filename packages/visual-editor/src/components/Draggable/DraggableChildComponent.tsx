@@ -47,7 +47,7 @@ type DraggableChildComponentProps = {
 /**
  * This component is meant to function the same as DraggableComponent except
  * with the difference that the draggable props are passed to the underlying
- * component. This removes an extra nexted `div` in editor mode that otherwise
+ * component. This removes an extra nested `div` in editor mode that otherwise
  * is not visible in delivery mode.
  *
  * This is helpful for `flex` or `grid` layouts. Currently used by the SingleColumn

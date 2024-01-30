@@ -1,4 +1,4 @@
-import React, { ElementType, useCallback, useEffect } from 'react';
+import React, { ElementType, useCallback, useEffect, useState } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
 import { EditorBlock } from './EditorBlock';
@@ -19,6 +19,7 @@ import {
   CONTENTFUL_COLUMNS_ID,
 } from '@contentful/experience-builder-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
+import InferDirection from './InferDirection';
 
 type DropzoneProps = {
   zoneId: string;
@@ -83,6 +84,9 @@ export function Dropzone({
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
   const addSectionWithZone = useZoneStore((state) => state.addSectionWithZone);
   const content = node?.children || tree.root?.children || [];
+  const [singleChildDirection, setSingleChildDirection] = useState<'vertical' | 'horizontal'>(
+    'horizontal'
+  );
 
   const droppableId = zoneId;
   const isRootZone = zoneId === ROOT_ID;
@@ -115,6 +119,8 @@ export function Dropzone({
 
   const direction = useDropzoneDirection({ resolveDesignValue, node, zoneId });
 
+  const showDirectionChooser = !isRootZone && content.length === 1;
+
   const dropEnabled = isDropEnabled(
     isEmptyCanvas,
     userIsDragging,
@@ -146,48 +152,134 @@ export function Dropzone({
     return null;
   }
 
+  // console.log(droppableId);
+
   // Don't trigger the dropzone when it's the root because then the only hit boxes that show up will be root level zones
   // Exception 1: If it comes from the component list (because we want the component list components to work for all zones
   // Exception 2: If it's a child of a root level zone (because we want to be able to re-order root level containers)
   const isNotDroppable =
     zoneId === ROOT_ID && draggedSourceId !== 'component-list' && draggingParentIds.length !== 0;
 
+  // return showDirectionChooser ? (
+  //   content.map((item, i) => {
+  //     return (
+  //       <InferDirection
+  //         node={item}
+  //         zoneId={zoneId}
+  //         key={i}
+  //         resolveDesignValue={resolveDesignValue}
+  //       />
+  //     );
+  //   })
+  // ) : (
+
+  // if (showDirectionChooser) {
+  //   return (
+  //     <InferDirection droppableId={droppableId} isDragging={userIsDragging} >
+  //       {content.map((item, i) => {
+  //         const componentId = item.data.id;
+  //         return (
+  //           <EditorBlock
+  //             index={i}
+  //             parentSectionId={sectionId}
+  //             zoneId={zoneId}
+  //             key={componentId}
+  //             userIsDragging={userIsDragging}
+  //             draggingNewComponent={draggingNewComponent}
+  //             node={item}
+  //             resolveDesignValue={resolveDesignValue}
+  //           />
+  //         );
+  //       })}
+  //     </InferDirection>
+  //   );
+  // }
+
   return (
     <Droppable
       droppableId={droppableId}
-      direction={direction}
-      isDropDisabled={!dropEnabled || isNotDroppable}>
-      {(provided, snapshot) => {
-        return (
-          <WrapperComponent
-            {...(provided || { droppableProps: {} }).droppableProps}
-            ref={provided?.innerRef}
-            id={droppableId}
-            className={classNames(
-              styles.container,
-              {
-                [styles.isEmpty]: isEmptyCanvas,
-                [styles.isRoot]: isRootZone,
-                [styles.hoveringRoot]: userIsDragging && hoveringRootZone,
-                [styles.isDragging]: userIsDragging && !isAssembly,
-                [styles.isHovering]: hoveringOverZone && !userIsDragging,
-                [styles.isDestination]: isDestination && !isAssembly,
-              },
-              className
-            )}
-            node={node}
-            onMouseOver={(e) => {
-              e.stopPropagation();
-              setHoveringZone(zoneId);
-            }}
-            onMouseOut={() => {
-              setHoveringZone('');
-            }}
-            {...rest}>
-            {isEmptyCanvas ? (
-              <EmptyContainer isDragging={isRootZone && userIsDragging} />
-            ) : (
-              content.map((item, i) => {
+      direction={showDirectionChooser ? singleChildDirection : direction}
+      isDropDisabled={!dropEnabled || isNotDroppable || !showDirectionChooser}>
+      {(provided, snapshot) => (
+        <WrapperComponent
+          data-wrapper="true"
+          {...(provided || { droppableProzps: {} }).droppableProps}
+          ref={provided?.innerRef}
+          id={droppableId}
+          style={{
+            pointerEvents: showDirectionChooser && 'all',
+            flexDirection: showDirectionChooser
+              ? singleChildDirection === 'vertical'
+                ? 'column'
+                : 'row'
+              : '',
+          }}
+          className={classNames(
+            styles.container,
+            {
+              [styles.isEmpty]: isEmptyCanvas,
+              [styles.isRoot]: isRootZone,
+              [styles.hoveringRoot]: userIsDragging && hoveringRootZone,
+              [styles.isDragging]: userIsDragging && !isAssembly,
+              [styles.isHovering]: hoveringOverZone && !userIsDragging,
+              [styles.isDestination]: isDestination && !isAssembly,
+            },
+            className
+          )}
+          // node={node}
+          onMouseOver={(e) => {
+            e.stopPropagation();
+            setHoveringZone(zoneId);
+          }}
+          onMouseOut={() => {
+            setHoveringZone('');
+          }}
+          onMouseMove={(e: React.MouseEvent) => {
+            if (showDirectionChooser && userIsDragging) {
+              const currentTarget = e.currentTarget as HTMLElement;
+              const queryStr = `[data-ctfl-draggable-id]`;
+              const element = currentTarget.querySelector(queryStr);
+              console.log({ queryStr });
+              if (element) {
+                const direction = getMousePosition(e.nativeEvent, element);
+                if (direction === 'left' || direction === 'right') {
+                  setSingleChildDirection('horizontal');
+                } else {
+                  setSingleChildDirection('vertical');
+                }
+                console.log(
+                  'direction',
+                  direction === 'left' || direction === 'right' ? 'horizontal' : 'vertical'
+                );
+                // console.log(e.currentTarget.style.flexDirection);
+              }
+            }
+          }}
+          {...rest}>
+          {isEmptyCanvas ? (
+            <EmptyContainer isDragging={isRootZone && userIsDragging} />
+          ) : showDirectionChooser ? (
+            <InferDirection isDragging={userIsDragging}>
+              {content.map((item, i) => {
+                const componentId = item.data.id;
+                return (
+                  <EditorBlock
+                    index={i}
+                    parentSectionId={sectionId}
+                    zoneId={zoneId}
+                    key={componentId}
+                    userIsDragging={userIsDragging}
+                    draggingNewComponent={draggingNewComponent}
+                    node={item}
+                    resolveDesignValue={resolveDesignValue}
+                    renderDropzone={renderDropzone}
+                  />
+                );
+              })}
+            </InferDirection>
+          ) : (
+            <>
+              {content.map((item, i) => {
                 const componentId = item.data.id;
 
                 return (
@@ -203,15 +295,61 @@ export function Dropzone({
                     renderDropzone={renderDropzone}
                   />
                 );
-              })
-            )}
-            {provided?.placeholder}
-            {snapshot?.isDraggingOver && !isEmptyCanvas && (
-              <div data-ctfl-placeholder style={placeholderStyle} />
-            )}
-          </WrapperComponent>
-        );
-      }}
+              })}
+              {provided?.placeholder}
+              {snapshot?.isDraggingOver && !isEmptyCanvas && !showDirectionChooser && (
+                <div data-ctfl-placeholder style={placeholderStyle} />
+              )}
+            </>
+          )}
+        </WrapperComponent>
+      )}
     </Droppable>
   );
+}
+
+function getDirection(event: MouseEvent, element: HTMLElement): number {
+  const rect = element.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  console.log({ x, y, rect });
+
+  if (x > rect.width / 2) {
+    if (y > rect.height / 2) {
+      return 4;
+    } else {
+      return 1;
+    }
+  } else {
+    if (y > rect.height / 2) {
+      return 3;
+    } else {
+      return 2;
+    }
+  }
+}
+
+function getMousePosition(event: MouseEvent, element: HTMLElement): string {
+  const rect = element.getBoundingClientRect();
+  const x = event.clientX; // - rect.left;
+  const y = event.clientY; // - rect.top;
+
+  if (x < rect.left) {
+    return 'left';
+    if (y > rect.height / 2) {
+      return 'below-right';
+    } else {
+      return 'above-right';
+    }
+  } else if (x > rect.right) {
+    return 'right';
+    if (y > rect.height / 2) {
+      return 'below-left';
+    } else {
+      return 'above-left';
+    }
+  } else {
+    return 'center';
+  }
 }
