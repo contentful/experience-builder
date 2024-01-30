@@ -23,7 +23,8 @@ jobs:
         github.ref_name == 'development' ||
         github.ref_name == 'next') &&
       !contains(github.event.head_commit.message, 'skip-release') &&
-      github.actor != 'dependabot[bot]'
+      github.actor != 'dependabot[bot]' &&
+      github.actor != 'contentful-automation[bot]'
     permissions:
       contents: write
     uses: ./.github/workflows/publish.yaml
