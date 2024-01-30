@@ -18,7 +18,6 @@ const ColumnWrapper = forwardRef<HTMLDivElement, ColumnWrapperProps>((props, ref
         ...(props.style || {}),
         display: 'grid',
         gridTemplateColumns: 'repeat(12, [col-start] 1fr)',
-        gap: 10,
       }}>
       {props.children}
     </div>
