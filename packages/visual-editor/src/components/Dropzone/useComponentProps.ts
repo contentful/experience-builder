@@ -135,7 +135,6 @@ export const useComponentProps = ({
     definition,
     node.data.props,
     node.data.blockId,
-    node.children,
     resolveDesignValue,
     dataSource,
     areEntitiesFetched,
