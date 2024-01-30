@@ -1,8 +1,4 @@
-import {
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SINGLE_COLUMN_ID,
-  CONTENTFUL_COLUMNS_ID,
-} from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COLUMNS_ID } from '@contentful/experience-builder-core/constants';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,

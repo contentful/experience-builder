@@ -1,9 +1,11 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
-import { EntityStore, isContentfulStructureComponent } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
+  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_SECTION_ID,
   CONTENTFUL_COLUMNS_ID,
   CONTENTFUL_SINGLE_COLUMN_ID,
 } from '@contentful/experience-builder-core/constants';
@@ -29,6 +31,7 @@ import {
   ContentfulContainer,
   SingleColumn,
 } from '@contentful/experience-builder-components';
+
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
 
@@ -158,7 +161,8 @@ export const CompositionBlock = ({
         })
       : null;
 
-  if (isContentfulStructureComponent(node.definitionId)) {
+  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
+  if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
     return (
       <ContentfulContainer
         editorMode={false}
