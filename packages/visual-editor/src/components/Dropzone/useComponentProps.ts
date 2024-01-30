@@ -148,26 +148,46 @@ export const useComponentProps = ({
   const cfStyles = buildCfStyles(props);
 
   // Separate the component styles from the editor wrapper styles
-  const { height, width, maxWidth, margin, ...componentStyles } = cfStyles;
+  const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
 
-  const { className: editorWrapperClass } = useStyleTag({
-    styles: { height, width, maxWidth, margin },
+  // Styles that will be applied to the editor wrapper (draggable) element
+  const { className: wrapperClass } = useStyleTag({
+    styles: {
+      margin,
+      height,
+      width,
+      maxWidth,
+    },
     nodeId: `editor-${node.data.id}`,
   });
 
-  const { className } = useStyleTag({ styles: componentStyles, nodeId: node.data.id });
+  // Styles that will be applied to the component element
+  const { className: componentClass } = useStyleTag({
+    styles: {
+      ...componentStyles,
+      margin: 0,
+      width: '100%',
+      height: '100%',
+      maxWidth: 'none',
+    },
+    nodeId: node.data.id,
+  });
 
-  const componentProps = {
-    className,
-    editorMode: true,
-    node,
-    renderDropzone,
+  const wrapperProps = {
+    className: wrapperClass,
     'data-cf-node-id': node.data.id,
     'data-cf-node-block-id': node.data.blockId,
     'data-cf-node-block-type': node.type,
+  };
+
+  const componentProps = {
+    className: componentClass,
+    editorMode: true,
+    node,
+    renderDropzone,
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { props: componentProps, editorWrapperClass };
+  return { componentProps, wrapperProps };
 };
