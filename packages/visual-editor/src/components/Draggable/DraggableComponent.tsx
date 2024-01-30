@@ -26,7 +26,7 @@ export const DraggableComponent = ({
   isDragDisabled = false,
   ...rest
 }: {
-  wrapperProps?: Record<string, any>;
+  wrapperProps: Record<string, string>;
   label: string;
   children: ReactNode;
   id: string;
@@ -54,7 +54,7 @@ export const DraggableComponent = ({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           {...rest}
-          className={classNames(styles.DraggableComponent, wrapperProps?.className, {
+          className={classNames(styles.DraggableComponent, wrapperProps.className, {
             [styles.isAssemblyBlock]: isAssemblyBlock,
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,
