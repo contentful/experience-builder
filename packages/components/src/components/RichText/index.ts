@@ -1,12 +1,17 @@
 import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
+import {
+  CONTENTFUL_DEFAULT_CATEGORY,
+  CONTENTFUL_RICH_TEXT_ID,
+  CONTENTFUL_RICH_TEXT_NAME,
+} from '@contentful/experience-builder-core/constants';
 import constants from '@/utils/constants';
 
 export * from './RichText';
 
 export const RichTextComponentDefinition: ComponentDefinition = {
-  id: 'richText',
-  name: 'RichText',
-  category: 'Contentful',
+  id: CONTENTFUL_RICH_TEXT_ID,
+  name: CONTENTFUL_RICH_TEXT_NAME,
+  category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: ['cfMargin', 'cfPadding'],
   thumbnailUrl: constants.thumbnails.richText,
   variables: {

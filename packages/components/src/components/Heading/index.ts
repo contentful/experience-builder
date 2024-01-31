@@ -1,12 +1,17 @@
 import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
+import {
+  CONTENTFUL_DEFAULT_CATEGORY,
+  CONTENTFUL_HEADING_ID,
+  CONTENTFUL_HEADING_NAME,
+} from '@contentful/experience-builder-core/constants';
 import constants from '@/utils/constants';
 
 export * from './Heading';
 
 export const HeadingComponentDefinition: ComponentDefinition = {
-  id: 'heading',
-  name: 'Heading',
-  category: 'Contentful',
+  id: CONTENTFUL_HEADING_ID,
+  name: CONTENTFUL_HEADING_NAME,
+  category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: [
     'cfMargin',
     'cfPadding',
