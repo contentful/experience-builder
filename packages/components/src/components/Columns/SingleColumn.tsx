@@ -44,9 +44,6 @@ export const SingleColumn: React.FC<SingleColumnProps> = (props) => {
       {isEmpty && <div className="cf-single-column-label">Column</div>}
       {renderDropzone(node, {
         ['data-test-id']: 'contentful-single-container',
-        ['data-cf-node-id']: node.data.id,
-        ['data-cf-node-block-id']: node.data.blockId,
-        ['data-cf-node-block-type']: node.type,
         id: 'ContentfulSingleColumn',
         className: combineClasses(className, 'defaultStyles'),
         WrapperComponent: Flex,
