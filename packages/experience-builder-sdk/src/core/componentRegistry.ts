@@ -123,6 +123,9 @@ export const componentRegistry = new Map<string, ComponentRegistration>([
     DEFAULT_COMPONENT_REGISTRATIONS.singleColumn,
   ],
   [DEFAULT_COMPONENT_REGISTRATIONS.columns.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.columns],
+]);
+
+export const optionalBuiltInComponents = new Map<string, ComponentRegistration>([
   [DEFAULT_COMPONENT_REGISTRATIONS.button.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.button],
   [DEFAULT_COMPONENT_REGISTRATIONS.heading.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.heading],
   [DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.image],
@@ -163,7 +166,10 @@ export const sendConnectedEventWithRegisteredComponents = () => {
  * @param componentRegistrations - ComponentRegistration[]
  * @returns void
  */
-export const defineComponents = (componentRegistrations: ComponentRegistration[]) => {
+export const defineComponents = (
+  componentRegistrations: ComponentRegistration[]
+  // options?: DefineComponentsOptions
+) => {
   for (const registration of componentRegistrations) {
     // Fill definitions with fallbacks values
     const enrichedComponentRegistration = enrichComponentDefinition(registration);

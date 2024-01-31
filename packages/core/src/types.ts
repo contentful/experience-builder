@@ -127,6 +127,10 @@ export type ComponentRegistration = {
   };
 };
 
+export type ComponentRegistrationOptions = {
+  enabledBuiltInComponents?: string[];
+};
+
 export type Binding = {
   spaceId: string;
   environmentId: string;
