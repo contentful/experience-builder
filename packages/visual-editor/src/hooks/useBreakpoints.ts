@@ -22,22 +22,23 @@ import { useCallback, useEffect, useState } from 'react';
  * and then decending by screen width. For mobile-first designs, the order would be ascending
  */
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
-  const [mediaQueryMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({});
-
   const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+  const [mediaQueryMatchers, currentQueryMatches] = mediaQueryMatcher(breakpoints);
+  const [mediaQueryMatches, setMediaQueryMatches] =
+    useState<Record<string, boolean>>(currentQueryMatches);
+
+  const activeBreakpointIndex = getActiveBreakpointIndex(
+    mediaQueryMatches,
+    fallbackBreakpointIndex
+  );
 
   // Register event listeners to update the media query states
   useEffect(() => {
-    const [mediaQueryMatchers, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
-    // Store the media query state in the beginning to initialise the state
-    setMediaQueryMatches(initialMediaQueryMatches);
-    const eventListeners = mediaQueryMatchers.map(({ id, signal }) => {
-      const onChange = () =>
-        setMediaQueryMatches((prev) => ({
-          ...prev,
-          [id]: signal.matches,
-        }));
-
+    const eventListeners = mediaQueryMatchers.map(({ signal }) => {
+      const onChange = () => {
+        const currentQueryMatches = mediaQueryMatcher(breakpoints)[1];
+        setMediaQueryMatches(currentQueryMatches);
+      };
       signal.addEventListener('change', onChange);
       return onChange;
     });
@@ -47,15 +48,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
         mediaQueryMatchers[index].signal.removeEventListener('change', eventListener);
       });
     };
-    // Only re-setup all listeners when the breakpoint definition changed
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [breakpoints]);
-
-  const activeBreakpointIndex = getActiveBreakpointIndex(
-    breakpoints,
-    mediaQueryMatches,
-    fallbackBreakpointIndex
-  );
+  }, [breakpoints, fallbackBreakpointIndex, mediaQueryMatchers, mediaQueryMatches]);
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
     (

@@ -232,9 +232,6 @@ export function useEditorSubscriber() {
 
           break;
         }
-        case INCOMING_EVENTS.CanvasResized: {
-          break;
-        }
         case INCOMING_EVENTS.HoverComponent: {
           const { hoveredNodeId } = payload;
           sendHoveredComponentCoordinates(hoveredNodeId);
@@ -290,6 +287,7 @@ export function useEditorSubscriber() {
           setDraggingOnCanvas(false);
           break;
         }
+        case INCOMING_EVENTS.CanvasResized:
         case INCOMING_EVENTS.SelectComponent: {
           const { selectedNodeId: nodeId } = payload;
           setSelectedNodeId(nodeId);
