@@ -17,7 +17,6 @@ export const HeadingComponentDefinition: ComponentDefinition = {
     'cfTextTransform',
     'cfTextItalic',
     'cfTextUnderline',
-    'cfHeight',
     'cfWidth',
     'cfMaxWidth',
     'cfBackgroundColor',
@@ -26,6 +25,13 @@ export const HeadingComponentDefinition: ComponentDefinition = {
   thumbnailUrl: constants.thumbnails.heading,
   variables: {
     // Built-in style variables with default values changed
+    cfHeight: {
+      displayName: 'Height',
+      type: 'Text',
+      group: 'style',
+      description: 'The height of the button.',
+      defaultValue: 'fit-content',
+    },
     cfFontSize: {
       displayName: 'Font Size',
       type: 'Text',

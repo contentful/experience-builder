@@ -109,6 +109,9 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   text: enrichComponentDefinition({
     component: Components.Text,
     definition: Components.TextComponentDefinition,
+    options: {
+      wrapComponent: false,
+    },
   }),
 } satisfies Record<string, ComponentRegistration>;
 

@@ -20,14 +20,25 @@ export const TextComponentDefinition: ComponentDefinition = {
     'cfTextBold',
     'cfTextItalic',
     'cfTextUnderline',
+    'cfBackgroundColor',
+    'cfBorder',
+    'cfWidth',
+    'cfMaxWidth',
   ],
   thumbnailUrl: constants.thumbnails.text,
   variables: {
+    cfHeight: {
+      displayName: 'Height',
+      type: 'Text',
+      group: 'style',
+      description: 'The height of the button.',
+      defaultValue: 'fit-content',
+    },
     value: {
       displayName: 'Value',
       description: 'The text to display. If not provided, children will be used instead.',
       type: 'Text',
-      defaultValue: 'Lorem ipsum',
+      defaultValue: 'Text',
     },
     as: {
       displayName: 'As',
@@ -47,12 +58,15 @@ export const TextComponentDefinition: ComponentDefinition = {
         ],
       },
     },
-    classes: {
-      displayName: 'Classes',
-      description: 'Additional CSS classes to apply to the component.',
+    url: {
+      displayName: 'URL',
       type: 'Text',
-      defaultValue: 'cf-text',
-      group: 'style',
+      defaultValue: '',
+    },
+    target: {
+      displayName: 'Target',
+      type: 'Text',
+      defaultValue: '',
     },
   },
 };
