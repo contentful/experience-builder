@@ -76,7 +76,6 @@ export const useComponentProps = ({
             variableName === 'cfHeight'
               ? calculateNodeDefaultHeight({
                   blockId: node.data.blockId,
-                  children: node.children,
                   value: valueByBreakpoint,
                 })
               : valueByBreakpoint;
@@ -136,7 +135,6 @@ export const useComponentProps = ({
     definition,
     node.data.props,
     node.data.blockId,
-    node.children,
     resolveDesignValue,
     dataSource,
     areEntitiesFetched,

@@ -36,7 +36,7 @@ const transformValuesBySizingOption = (sizingOption: SizingOptions, value: strin
   }
 
   if (sizingOption === 'fixed') {
-    return '200px';
+    return '100px';
   }
 
   if (sizingOption === 'fit') {
