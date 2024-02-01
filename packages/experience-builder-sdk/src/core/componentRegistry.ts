@@ -2,11 +2,12 @@ import * as Components from '@contentful/experience-builder-components';
 import type {
   ComponentRegistration,
   ComponentDefinition,
+  ComponentRegistrationOptions,
 } from '@contentful/experience-builder-core/types';
 import {
   OUTGOING_EVENTS,
   INTERNAL_EVENTS,
-  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_COMPONENTS,
   ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import {
@@ -39,7 +40,7 @@ const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinit
 };
 
 const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
-  if ([CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
+  if ([CONTENTFUL_COMPONENTS.container.id].includes(componentDefinition.id)) {
     return componentDefinition;
   }
 
@@ -144,6 +145,14 @@ export const componentRegistry = new Map<string, ComponentRegistration>([
   [DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.text],
 ]);
 
+export const optionalBuiltInComponents = [
+  DEFAULT_COMPONENT_REGISTRATIONS.button.definition.id,
+  DEFAULT_COMPONENT_REGISTRATIONS.heading.definition.id,
+  DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id,
+  DEFAULT_COMPONENT_REGISTRATIONS.richText.definition.id,
+  DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id,
+];
+
 export const sendRegisteredComponentsMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values());
@@ -174,7 +183,18 @@ export const sendConnectedEventWithRegisteredComponents = () => {
  * @param componentRegistrations - ComponentRegistration[]
  * @returns void
  */
-export const defineComponents = (componentRegistrations: ComponentRegistration[]) => {
+export const defineComponents = (
+  componentRegistrations: ComponentRegistration[],
+  options?: ComponentRegistrationOptions
+) => {
+  if (options?.enabledBuiltInComponents) {
+    for (const id of optionalBuiltInComponents) {
+      if (!options.enabledBuiltInComponents.includes(id)) {
+        componentRegistry.delete(id);
+      }
+    }
+  }
+
   for (const registration of componentRegistrations) {
     // Fill definitions with fallbacks values
     const enrichedComponentRegistration = enrichComponentDefinition(registration);
