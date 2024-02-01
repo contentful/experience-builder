@@ -80,23 +80,23 @@ export const CONTENTFUL_COMPONENTS = {
     name: 'Single Column',
   },
   button: {
-    id: 'contentful-button',
+    id: 'button',
     name: 'Button',
   },
   heading: {
-    id: 'contentful-heading',
+    id: 'heading',
     name: 'Heading',
   },
   image: {
-    id: 'contentful-image',
+    id: 'image',
     name: 'Image',
   },
   richText: {
-    id: 'contentful-richText',
+    id: 'richText',
     name: 'Rich Text',
   },
   text: {
-    id: 'contentful-text',
+    id: 'text',
     name: 'Text',
   },
 };
