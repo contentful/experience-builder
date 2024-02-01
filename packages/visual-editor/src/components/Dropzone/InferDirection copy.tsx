@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Droppable } from '@hello-pangea/dnd';
 
 interface InferDirectionProps extends React.PropsWithChildren {
+  droppableId: string;
   isDragging: boolean;
   className: string | undefined;
   innerRef?: (element?: HTMLElement | null | undefined) => void;
@@ -11,6 +12,7 @@ interface InferDirectionProps extends React.PropsWithChildren {
 
 const InferDirection: React.FC<InferDirectionProps> = ({
   isDragging,
+  droppableId,
   innerRef,
   className,
   // droppableId,
@@ -26,54 +28,52 @@ const InferDirection: React.FC<InferDirectionProps> = ({
   useEffect(() => {
     if (!isDragging) {
       setPosition(undefined);
-      setItemStyles({});
     }
   }, [isDragging]);
 
   const handleMouseOver = (e: React.MouseEvent) => {
-    // console.log('in handle');
+    console.log('in handle');
     if (isDragging) {
       const currentTarget = e.currentTarget as HTMLElement;
       const queryStr = `[data-ctfl-draggable-id]`;
       const element = currentTarget.querySelector(queryStr);
       if (element) {
         const direction = getMousePosition(e.nativeEvent, element);
-        console.log('postiion', position);
+        console.log('position in handle', position);
         setPosition(direction);
-        switch (direction) {
-          case 'left':
-            setItemStyles({
-              transform: 'translateX(50px)',
-            });
-            break;
-          case 'right':
-            setItemStyles({
-              transform: 'translateX(-50px)',
-            });
-            break;
-          case 'above':
-            setItemStyles({
-              transform: 'translateY(30px)',
-            });
-            break;
-          case 'below':
-            setItemStyles({
-              transform: 'translateY(-30px)',
-            });
-            break;
-          default:
-            setItemStyles({
-              transform: 'unset',
-            });
-            break;
-        }
+        // switch (direction) {
+        //   case 'left':
+        //     setItemStyles({
+        //       transform: 'translateX(50px)',
+        //     });
+        //     break;
+        //   case 'right':
+        //     setItemStyles({
+        //       transform: 'translateX(-50px)',
+        //     });
+        //     break;
+        //   case 'above':
+        //     setItemStyles({
+        //       transform: 'translateY(30px)',
+        //     });
+        //     break;
+        //   case 'below':
+        //     setItemStyles({
+        //       transform: 'translateY(-30px)',
+        //     });
+        //     break;
+        //   default:
+        //     setItemStyles({
+        //       transform: 'unset',
+        //     });
+        //     break;
+        // }
       }
     }
   };
 
   const handleMouseOut = () => {
     if (isDragging) {
-      setPosition(undefined);
       setItemStyles({});
     }
   };
@@ -86,21 +86,22 @@ const InferDirection: React.FC<InferDirectionProps> = ({
   return (
     <div
       className={classNames(styles.inferredDirectionContainer, className)}
-      ref={innerRef}
       onMouseMove={handleMouseOver}
-      onMouseOut={handleMouseOut}>
-      <div
-        className={classNames(styles.grid, styles[direction || ''], {
-          [styles.dragging]: isDragging,
-        })}>
-        <div className={classNames(styles.item, styles.itemMain)} style={itemStyles}>
-          {children}
-        </div>
-        {/* <div className={classNames(styles.item, styles.itemLeft)}>left</div>
-        <div className={classNames(styles.item, styles.itemRight)}>right</div>
-        <div className={classNames(styles.item, styles.itemAbove)}>above</div>
-        <div className={classNames(styles.item, styles.itemBelow)}>below</div> */}
-      </div>
+      onMouseOut={handleMouseOut}
+      style={{
+        pointerEvents: 'all', //isDragging ? 'all' : undefined,
+      }}>
+      <Droppable droppableId={droppableId} direction={direction}>
+        {(provided, source) => (
+          <div
+            ref={provided.innerRef}
+            className={classNames(styles.flexContainer, styles[position || ''])}
+            style={itemStyles}>
+            <div className={styles.childContainer}>{children}</div>
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </div>
   );
 };

@@ -1,33 +1,109 @@
 .inferredDirectionContainer {
-  padding: 0;
-  transition: 0.1s;
-  display: grid;
-  grid-template: 1px auto 1px / 1px auto 1px;
-  gap: 0px;
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  pointer-events: all;
 }
 
+/* .flexContainer {
+  position: relative;
+  display: flex;
+}
 
+.flexContainer.left, .flexContainer.right {
+  flex-direction: row;
+}
+
+.flexContainer.above, .flexContainer.below {
+  flex-direction: column;
+}
+
+.childContainer {
+  order: 2;
+}
+
+.hitbox {
+  background-color: var(--exp-builder-blue300); 
+  width: 0;
+  height: 0;
+  
+}
+
+.hitbox.left, .hitbox.right {
+  width: 100px; 
+  height: 100%;
+  transition: width 0.2s;
+}
+
+.hitbox.above, .hitbox.below {
+  width: 100%;
+  height: 70px;
+  transition: height 0.2s;
+}
+
+.hitbox.left, .hitbox.above {
+  order: 1;
+}
+
+.hitbox.right, .hitbox.below {
+  order: 3;
+}
+
+.childContainer {
+  transition: transform 0.1s;
+} */
+
+/* .inferredDirectionContainer {
+  padding: 0;
+  transition: 0.1s;
+  display: inline-grid;
+  grid-template-columns: 0px auto 0px;
+  grid-template-rows: 0px auto 0px;
+  gap: 0px;
+} */
+
+.inferredDirectionContainer.dragging {
+  grid-template-columns: 100px auto 100px;
+  grid-template-rows: 75px auto 75px;
+  /* grid-template: 100px 1fr 100px / 100px 1fr 100px; */
+}
+
+.inferredDirectionContainer.dragging > .item:hover {
+  /* outline: 2px solid var(--exp-builder-blue500); */
+  /* background-color: var(--exp-builder-blue100); */
+} 
+
+/* .grid {
+  display: inline-grid;
+  grid-template-columns: 0px auto 0px;
+  grid-template-rows: 0px auto 0px;
+}
+.grid.dragging {
+  grid-template-columns: 100px auto 100px;
+  grid-template-rows: 75px auto 75px;
+  display: inline-grid
+} */
+
+.item {
+  transition: transform 0.2s;
+}
 
 .itemLeft {
-  background-color: green;
   grid-row: 1 / 4;
   grid-column: 1 / 2;
 }
 
 .itemRight {
-  background-color: #5d799a;
   grid-row: 1 / 4;
   grid-column: 3 / 4;
 }
 
-.itemTop {
-  background-color: #779b57;
+.itemAbove {
   grid-row: 1 / 2;
   grid-column: 2 / 3;
 }
 
-.itemBottom {
-  background-color: #a6d7f7;
+.itemBelow {
   grid-row: 3 / 4;
   grid-column: 2 / 3;
 }
@@ -37,6 +113,11 @@
   grid-column: 2 / 3;
 }
 
-.gridDragging {
-  grid-template: 100px 1fr 100px / 100px 1fr 100px;
+.inferredDirectionContainer.dragging > .itemMain {
+  outline: none;
+}
+
+.inferredDirectionContainer.dragging > .itemMain:hover {
+  background-color: unset;
+  outline: none;
 }

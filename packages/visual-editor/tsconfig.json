@@ -13,7 +13,7 @@
     "baseUrl": ".",
     "rootDir": ".",
     "noImplicitAny": false,
-    "noEmitOnError": true,
+    "noEmitOnError": false,
     "paths": {
       "@components/*": ["./src/components/*"],
       "@/*": ["./src/*"]

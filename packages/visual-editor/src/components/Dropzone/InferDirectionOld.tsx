@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './InferDirection.module.css';
 import classNames from 'classnames';
-import { Droppable } from '@hello-pangea/dnd';
 
 interface InferDirectionProps extends React.PropsWithChildren {
   isDragging: boolean;
@@ -21,67 +20,59 @@ const InferDirection: React.FC<InferDirectionProps> = ({
   // zoneId,
 }) => {
   const [itemStyles, setItemStyles] = useState<React.CSSProperties>({});
-  const [position, setPosition] = useState<string>();
+  const [direction, setDirection] = useState<string>();
 
   useEffect(() => {
     if (!isDragging) {
-      setPosition(undefined);
-      setItemStyles({});
+      setDirection(undefined);
     }
   }, [isDragging]);
 
   const handleMouseOver = (e: React.MouseEvent) => {
-    // console.log('in handle');
     if (isDragging) {
       const currentTarget = e.currentTarget as HTMLElement;
       const queryStr = `[data-ctfl-draggable-id]`;
       const element = currentTarget.querySelector(queryStr);
       if (element) {
         const direction = getMousePosition(e.nativeEvent, element);
-        console.log('postiion', position);
-        setPosition(direction);
-        switch (direction) {
-          case 'left':
-            setItemStyles({
-              transform: 'translateX(50px)',
-            });
-            break;
-          case 'right':
-            setItemStyles({
-              transform: 'translateX(-50px)',
-            });
-            break;
-          case 'above':
-            setItemStyles({
-              transform: 'translateY(30px)',
-            });
-            break;
-          case 'below':
-            setItemStyles({
-              transform: 'translateY(-30px)',
-            });
-            break;
-          default:
-            setItemStyles({
-              transform: 'unset',
-            });
-            break;
-        }
+        console.log('direction', direction);
+        setDirection(direction);
+        // switch (direction) {
+        //   case 'left':
+        //     setItemStyles({
+        //       transform: 'translateX(50px)',
+        //     });
+        //     break;
+        //   case 'right':
+        //     setItemStyles({
+        //       transform: 'translateX(-50px)',
+        //     });
+        //     break;
+        //   case 'above':
+        //     setItemStyles({
+        //       transform: 'translateY(30px)',
+        //     });
+        //     break;
+        //   case 'below':
+        //     setItemStyles({
+        //       transform: 'translateY(-30px)',
+        //     });
+        //     break;
+        //   default:
+        //     setItemStyles({
+        //       transform: 'unset',
+        //     });
+        //     break;
+        // }
       }
     }
   };
 
   const handleMouseOut = () => {
     if (isDragging) {
-      setPosition(undefined);
       setItemStyles({});
     }
   };
-
-  // console.log('positiodddddn', position)
-  const direction = position === 'left' || position === 'right' ? 'horizontal' : 'vertical';
-
-  // console.log('direction', direction);
 
   return (
     <div
@@ -89,17 +80,8 @@ const InferDirection: React.FC<InferDirectionProps> = ({
       ref={innerRef}
       onMouseMove={handleMouseOver}
       onMouseOut={handleMouseOut}>
-      <div
-        className={classNames(styles.grid, styles[direction || ''], {
-          [styles.dragging]: isDragging,
-        })}>
-        <div className={classNames(styles.item, styles.itemMain)} style={itemStyles}>
-          {children}
-        </div>
-        {/* <div className={classNames(styles.item, styles.itemLeft)}>left</div>
-        <div className={classNames(styles.item, styles.itemRight)}>right</div>
-        <div className={classNames(styles.item, styles.itemAbove)}>above</div>
-        <div className={classNames(styles.item, styles.itemBelow)}>below</div> */}
+      <div className={classNames(styles.flexContainer, styles[direction || ''])} style={itemStyles}>
+        <div className={styles.childContainer}>{children}</div>
       </div>
     </div>
   );
