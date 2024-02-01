@@ -112,6 +112,9 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   richText: enrichComponentDefinition({
     component: Components.RichText,
     definition: Components.RichTextComponentDefinition,
+    options: {
+      wrapComponent: false,
+    },
   }),
   text: enrichComponentDefinition({
     component: Components.Text,
