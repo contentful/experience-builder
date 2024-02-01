@@ -1,4 +1,3 @@
-import React from 'react';
 import { useEditorStore } from '@/store/editor';
 import {
   buildCfStyles,
@@ -20,33 +19,35 @@ import type {
   Link,
 } from '@contentful/experience-builder-core/types';
 import { useMemo } from 'react';
-import { useStyleTag } from './useStyleTag';
+import { useStyleTag } from '../../hooks/useStyleTag';
 import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
-import { Dropzone } from '@components/Dropzone/Dropzone';
 import { useEntityStore } from '@/store/entityStore';
+import type { RenderDropzoneFunction } from './Dropzone.types';
 
-type PropsType =
+type ComponentProps =
   | StyleProps
   | Record<string, CompositionVariableValueType | Link<'Entry'> | Link<'Asset'>>;
 
-interface ComponentPropsParams {
+type UseComponentProps = {
   node: CompositionComponentNode;
   resolveDesignValue: ResolveDesignValueType;
   areEntitiesFetched: boolean;
   definition: ComponentRegistration['definition'];
-}
+  renderDropzone: RenderDropzoneFunction;
+};
 
 export const useComponentProps = ({
   node,
   areEntitiesFetched,
   resolveDesignValue,
+  renderDropzone,
   definition,
-}: ComponentPropsParams) => {
+}: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
-  const props: PropsType = useMemo(() => {
+  const props: ComponentProps = useMemo(() => {
     // Don't enrich the assembly wrapper node with props
     if (
       !definition ||
@@ -75,7 +76,6 @@ export const useComponentProps = ({
             variableName === 'cfHeight'
               ? calculateNodeDefaultHeight({
                   blockId: node.data.blockId,
-                  children: node.children,
                   value: valueByBreakpoint,
                 })
               : valueByBreakpoint;
@@ -135,7 +135,6 @@ export const useComponentProps = ({
     definition,
     node.data.props,
     node.data.blockId,
-    node.children,
     resolveDesignValue,
     dataSource,
     areEntitiesFetched,
@@ -147,38 +146,46 @@ export const useComponentProps = ({
   const cfStyles = buildCfStyles(props);
 
   // Separate the component styles from the editor wrapper styles
-  const { height, width, maxWidth, margin, ...componentStyles } = cfStyles;
+  const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
 
-  const { className: editorWrapperClass } = useStyleTag({
-    styles: { height, width, maxWidth, margin },
+  // Styles that will be applied to the editor wrapper (draggable) element
+  const { className: wrapperClass } = useStyleTag({
+    styles: {
+      margin,
+      height,
+      width,
+      maxWidth,
+    },
     nodeId: `editor-${node.data.id}`,
   });
 
-  const { className } = useStyleTag({ styles: componentStyles, nodeId: node.data.id });
+  // Styles that will be applied to the component element
+  const { className: componentClass } = useStyleTag({
+    styles: {
+      ...componentStyles,
+      margin: 0,
+      width: '100%',
+      height: '100%',
+      maxWidth: 'none',
+    },
+    nodeId: node.data.id,
+  });
 
-  const renderDropzone = (node: CompositionComponentNode, props?: Record<string, unknown>) => {
-    return (
-      <Dropzone
-        sectionId={node.data.id}
-        zoneId={node.data.id}
-        node={node}
-        resolveDesignValue={resolveDesignValue}
-        {...props}
-      />
-    );
-  };
-
-  const componentProps = {
-    className,
-    editorMode: true,
-    node,
-    renderDropzone,
+  const wrapperProps = {
+    className: wrapperClass,
     'data-cf-node-id': node.data.id,
     'data-cf-node-block-id': node.data.blockId,
     'data-cf-node-block-type': node.type,
+  };
+
+  const componentProps = {
+    className: componentClass,
+    editorMode: true,
+    node,
+    renderDropzone,
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { props: componentProps, editorWrapperClass };
+  return { componentProps, wrapperProps };
 };

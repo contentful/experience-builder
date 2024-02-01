@@ -1,7 +1,7 @@
-import React, { ElementType, useEffect } from 'react';
+import React, { ElementType, useCallback, useEffect } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
-import EditorBlock from './EditorBlock';
+import { EditorBlock } from './EditorBlock';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
@@ -18,6 +18,7 @@ import {
   ASSEMBLY_NODE_TYPES,
   CONTENTFUL_COLUMNS_ID,
 } from '@contentful/experience-builder-core/constants';
+import { RenderDropzoneFunction } from './Dropzone.types';
 
 type DropzoneProps = {
   zoneId: string;
@@ -125,6 +126,22 @@ export function Dropzone({
     node?.data.blockId
   );
 
+  // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
+  const renderDropzone: RenderDropzoneFunction = useCallback(
+    (node, props) => {
+      return (
+        <Dropzone
+          sectionId={node.data.id}
+          zoneId={node.data.id}
+          node={node}
+          resolveDesignValue={resolveDesignValue}
+          {...props}
+        />
+      );
+    },
+    [resolveDesignValue]
+  );
+
   if (!resolveDesignValue) {
     return null;
   }
@@ -183,6 +200,7 @@ export function Dropzone({
                     draggingNewComponent={draggingNewComponent}
                     node={item}
                     resolveDesignValue={resolveDesignValue}
+                    renderDropzone={renderDropzone}
                   />
                 );
               })

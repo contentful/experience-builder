@@ -10,6 +10,7 @@
     "outDir": "dist",
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
+    "noEmitOnError": true,
     "paths": {
       "@/*": ["./src/*"]
     }

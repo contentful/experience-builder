@@ -1,0 +1,23 @@
+name: 'dependabot approve-and-request-merge'
+
+on: pull_request_target
+
+jobs:
+  worker:
+    permissions:
+      contents: write
+      id-token: write
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Fetch Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+      - name: Auto-merge
+        # Don't auto-merge major version upgrades
+        if: ${{steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major'}}
+        uses: contentful/github-auto-merge@v1
+        with:
+          VAULT_URL: ${{ secrets.VAULT_URL }}

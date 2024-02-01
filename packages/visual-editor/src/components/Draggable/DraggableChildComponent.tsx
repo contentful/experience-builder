@@ -10,7 +10,7 @@ import styles from './styles.module.css';
 import { Rect } from '@components/Draggable/canvasToolsUtils';
 import Tooltip from './Tooltip';
 
-export interface NoWrapDraggableProps {
+export type NoWrapDraggableProps = {
   ['data-ctfl-draggable-id']: string;
   wrapperClassName: string;
   Tooltip: React.ReactNode;
@@ -23,10 +23,12 @@ export interface NoWrapDraggableProps {
   onMouseDown: (e: SyntheticEvent<Element, Event>) => void;
   onMouseUp: (e: SyntheticEvent<Element, Event>) => void;
   onClick: (e: SyntheticEvent<Element, Event>) => void;
-}
+  ['data-test-id']?: string;
+};
 
-interface Props {
+type DraggableChildComponentProps = {
   label: string;
+  wrapperProps: Record<string, string | undefined>;
   elementToRender: (props: NoWrapDraggableProps) => JSX.Element;
   id: string;
   index: number;
@@ -37,12 +39,14 @@ interface Props {
   onMouseUp?: (e: SyntheticEvent) => void;
   onMouseOver?: (e: SyntheticEvent) => void;
   onMouseOut?: (e: SyntheticEvent) => void;
-  coordinates: Rect;
+  coordinates: Rect | null;
   isContainer: boolean;
+  blockId: string;
   userIsDragging?: boolean;
   style?: CSSProperties;
   isDragDisabled?: boolean;
-}
+  className?: string;
+};
 
 /**
  * This component is meant to function the same as DraggableComponent except
@@ -53,7 +57,7 @@ interface Props {
  * This is helpful for `flex` or `grid` layouts. Currently used by the SingleColumn
  * component.
  */
-export const DraggableChildComponent: React.FC<Props> = (props) => {
+export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (props) => {
   const {
     elementToRender,
     id,
@@ -70,7 +74,9 @@ export const DraggableChildComponent: React.FC<Props> = (props) => {
     userIsDragging,
     style,
     isContainer,
+    blockId,
     isDragDisabled = false,
+    wrapperProps,
   } = props;
 
   return (
@@ -78,9 +84,11 @@ export const DraggableChildComponent: React.FC<Props> = (props) => {
       {(provided, snapshot) =>
         elementToRender({
           ['data-ctfl-draggable-id']: id,
+          ['data-test-id']: `draggable-${blockId}`,
           innerRef: provided.innerRef,
+          ...wrapperProps,
           draggableProps: provided.draggableProps,
-          wrapperClassName: classNames(styles.DraggableComponent, {
+          wrapperClassName: classNames(styles.DraggableComponent, wrapperProps.className, {
             [styles.isAssemblyBlock]: isAssemblyBlock,
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,

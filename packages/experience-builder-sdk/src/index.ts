@@ -14,9 +14,6 @@ export {
   fetchBySlug,
 } from '@contentful/experience-builder-core';
 export {
-  /**
-   * @deprecated Sections are deprecated and are replaced by Containers in the schema version "2023-09-28". Support for sections will be removed completely as soon as all customer data was migrated.
-   */
   CONTENTFUL_SECTION_ID,
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
