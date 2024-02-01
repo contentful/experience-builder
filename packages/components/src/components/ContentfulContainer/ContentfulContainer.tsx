@@ -5,6 +5,7 @@ import { Flex } from '../Layout/Flex';
 import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink';
 import type { ContentfulContainerAsHyperlinkProps } from './ContentfulContainerAsHyperlink';
 import { combineClasses } from '../../utils/combineClasses';
+import { CONTENTFUL_SECTION_ID } from '@contentful/experience-builder-core/constants';
 
 export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (props) => {
   const { className, editorMode, children, cfHyperlink } = props;
@@ -26,9 +27,26 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
   // Extract properties that are only available in editor mode
   const { renderDropzone, node } = props;
 
-  return renderDropzone(node, {
-    ['data-test-id']: 'contentful-container',
-    className: combineClasses(className, 'contentful-container'),
-    WrapperComponent: Flex,
-  });
+  const isEmpty = !node.children.length;
+
+  const renderDropzoneComponent = () => {
+    return renderDropzone(node, {
+      ['data-test-id']: 'contentful-container',
+      id: 'ContentfulContainer',
+      className: combineClasses(className, 'defaultStyles'),
+      WrapperComponent: Flex,
+    });
+  };
+
+  // Perform ternary so that we only render the wrapper div if the container is empty
+  return isEmpty ? (
+    <div className="cf-container-wrapper">
+      <div className="cf-container-label">
+        {node.data.blockId === CONTENTFUL_SECTION_ID ? 'Section' : 'Container'}
+      </div>
+      {renderDropzoneComponent()}
+    </div>
+  ) : (
+    renderDropzoneComponent()
+  );
 };
