@@ -77,7 +77,7 @@ export const useComponent = ({
   const { editorMode, renderDropzone: _renderDropzone, ...otherComponentProps } = componentProps;
   const elementToRender = builtInComponents.includes(node.data.blockId || '')
     ? (dragProps?: NoWrapDraggableProps) =>
-        React.createElement(componentRegistration.component, { ...componentProps, ...dragProps })
+        React.createElement(componentRegistration.component, { ...dragProps, ...componentProps })
     : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE
     ? // Assembly.tsx requires renderDropzone and editorMode as well
       () => React.createElement(componentRegistration.component, componentProps)
