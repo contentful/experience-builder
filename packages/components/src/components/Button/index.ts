@@ -1,7 +1,6 @@
 import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
 import {
-  CONTENTFUL_BUTTON_ID,
-  CONTENTFUL_BUTTON_NAME,
+  CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import constants from '@/utils/constants';
@@ -9,8 +8,8 @@ import constants from '@/utils/constants';
 export * from './Button';
 
 export const ButtonComponentDefinition: ComponentDefinition = {
-  id: CONTENTFUL_BUTTON_ID,
-  name: CONTENTFUL_BUTTON_NAME,
+  id: CONTENTFUL_COMPONENTS.button.id,
+  name: CONTENTFUL_COMPONENTS.button.name,
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: ['cfMargin', 'cfPadding'],
   thumbnailUrl: constants.thumbnails.button,

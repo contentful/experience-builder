@@ -2,7 +2,7 @@ import React from 'react';
 import { containerDefinition } from '@contentful/experience-builder-core';
 import {
   INTERNAL_EVENTS,
-  CONTENTFUL_SECTION_ID,
+  CONTENTFUL_COMPONENTS,
   ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import * as registry from './componentRegistry';
@@ -23,9 +23,9 @@ describe('component registration', () => {
     });
 
     it('should return container when given a section id', () => {
-      expect(registry.getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition).toEqual(
-        containerDefinition
-      );
+      expect(
+        registry.getComponentRegistration(CONTENTFUL_COMPONENTS.section.id)?.definition
+      ).toEqual(containerDefinition);
     });
   });
 

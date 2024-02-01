@@ -5,8 +5,7 @@ import type {
 } from '@contentful/experience-builder-core/types';
 
 import {
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
+  CONTENTFUL_COMPONENTS,
   ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 
@@ -23,8 +22,8 @@ export const setAssemblies = (assemblies: Link<'Entry'>[]) => {
 export const componentRegistry = new Map<string, ComponentRegistration>();
 
 export const getComponentRegistration = (id: string) => {
-  if (id === CONTENTFUL_SECTION_ID) {
-    return componentRegistry.get(CONTENTFUL_CONTAINER_ID);
+  if (id === CONTENTFUL_COMPONENTS.section.id) {
+    return componentRegistry.get(CONTENTFUL_COMPONENTS.container.id);
   }
   return componentRegistry.get(id);
 };

@@ -5,11 +5,7 @@ import { css } from 'emotion';
 import tokens from '@contentful/f36-tokens';
 import CompositionFallBackIcon from '@svg/composition/composition-fall-back-icon.svg';
 import { StyleInputBoolean, StyleInputNumber, StyleInputText } from './StyleInputFields';
-import {
-  CONTENTFUL_SECTION_ID,
-  CONTENTFUL_CONTAINER_ID,
-  ComponentDefinition,
-} from '@contentful/experience-builder';
+import { CONTENTFUL_COMPONENTS, ComponentDefinition } from '@contentful/experience-builder';
 import { StyleInputSelect } from './StyleInputFields/StyleInputSelect';
 import { SectionStyles } from './SectionStyles';
 
@@ -175,7 +171,9 @@ const StylesTab = ({ componentDefinition }: StylesTabProps) => {
     <>
       <Flex className={styles.wrapper} gap="spacingM" flexDirection="column" flexGrow="1">
         <SectionStyles selectedComponentDefinition={componentDefinition} />
-        {![CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id) && (
+        {![CONTENTFUL_COMPONENTS.section.id, CONTENTFUL_COMPONENTS.container.id].includes(
+          componentDefinition.id
+        ) && (
           <>
             {inputFields.length > 0 && (
               <Text

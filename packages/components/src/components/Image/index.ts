@@ -1,7 +1,6 @@
 import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
 import {
-  CONTENTFUL_IMAGE_ID,
-  CONTENTFUL_IMAGE_NAME,
+  CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import constants from '@/utils/constants';
@@ -9,8 +8,8 @@ import constants from '@/utils/constants';
 export * from './Image';
 
 export const ImageComponentDefinition: ComponentDefinition = {
-  id: CONTENTFUL_IMAGE_ID,
-  name: CONTENTFUL_IMAGE_NAME,
+  id: CONTENTFUL_COMPONENTS.image.id,
+  name: CONTENTFUL_COMPONENTS.image.name,
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: ['cfMargin', 'cfPadding'],
   thumbnailUrl: constants.thumbnails.image,

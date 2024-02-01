@@ -2,7 +2,7 @@ import React from 'react';
 
 import { fireEvent, render } from '@testing-library/react';
 
-import { CONTENTFUL_SECTION_ID } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
 import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
 import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink';
 
@@ -79,7 +79,7 @@ describe('ContentfulContainerAsHyperlink', () => {
       type: 'block',
       data: {
         id: 'test-node-id',
-        blockId: CONTENTFUL_SECTION_ID,
+        blockId: CONTENTFUL_COMPONENTS.section.id,
       },
     } as CompositionComponentNode;
 

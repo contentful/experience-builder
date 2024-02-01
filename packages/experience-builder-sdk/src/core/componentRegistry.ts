@@ -7,8 +7,7 @@ import type {
 import {
   OUTGOING_EVENTS,
   INTERNAL_EVENTS,
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
+  CONTENTFUL_COMPONENTS,
   ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import {
@@ -40,7 +39,7 @@ const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinit
 };
 
 const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
-  if ([CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
+  if ([CONTENTFUL_COMPONENTS.container.id].includes(componentDefinition.id)) {
     return componentDefinition;
   }
 
@@ -209,8 +208,8 @@ export const resetComponentRegistry = () => {
 };
 
 export const getComponentRegistration = (id: string) => {
-  if (id === CONTENTFUL_SECTION_ID) {
-    return componentRegistry.get(CONTENTFUL_CONTAINER_ID);
+  if (id === CONTENTFUL_COMPONENTS.section.id) {
+    return componentRegistry.get(CONTENTFUL_COMPONENTS.container.id);
   }
   return componentRegistry.get(id);
 };

@@ -13,7 +13,7 @@ import {
   CompositionComponentNode,
   CompositionVariableValueType,
 } from '@/types';
-import { CONTENTFUL_CONTAINER_ID } from '@/constants';
+import { CONTENTFUL_COMPONENTS } from '@/constants';
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 
@@ -106,7 +106,7 @@ export const calculateNodeDefaultHeight = ({
   children: CompositionComponentNode['children'];
   value: CompositionVariableValueType;
 }) => {
-  if (!blockId || CONTENTFUL_CONTAINER_ID !== blockId || value !== 'auto') {
+  if (!blockId || CONTENTFUL_COMPONENTS.container.id !== blockId || value !== 'auto') {
     return value;
   }
 

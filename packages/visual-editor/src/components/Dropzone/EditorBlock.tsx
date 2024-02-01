@@ -11,8 +11,7 @@ import type {
   ResolveDesignValueType,
 } from '@contentful/experience-builder-core/types';
 import {
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SINGLE_COLUMN_ID,
+  CONTENTFUL_COMPONENTS,
   ASSEMBLY_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
 } from '@contentful/experience-builder-core/constants';
@@ -54,7 +53,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
   const sectionsWithZone = useZoneStore((state) => state.sectionsWithZones);
 
-  const isContainer = node.data.blockId === CONTENTFUL_CONTAINER_ID;
+  const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
   const containsZone = sectionsWithZone[componentId];
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
@@ -92,7 +91,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     setHoveringZone('');
   };
 
-  if (node.data.blockId === CONTENTFUL_SINGLE_COLUMN_ID) {
+  if (node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id) {
     return (
       <DraggableChildComponent
         elementToRender={elementToRender}

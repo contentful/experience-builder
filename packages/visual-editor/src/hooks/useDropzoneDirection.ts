@@ -1,8 +1,4 @@
-import {
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SINGLE_COLUMN_ID,
-  CONTENTFUL_COLUMNS_ID,
-} from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
@@ -12,9 +8,11 @@ import { useZoneStore } from '@/store/zone';
 
 // refactor to use isContentfulStructureComponent once https://github.com/contentful/experience-builder/pull/279 merges
 const isStructureComponent = (blockId: string) => {
-  return [CONTENTFUL_COLUMNS_ID, CONTENTFUL_CONTAINER_ID, CONTENTFUL_SINGLE_COLUMN_ID].includes(
-    blockId
-  );
+  return [
+    CONTENTFUL_COMPONENTS.columns.id,
+    CONTENTFUL_COMPONENTS.container.id,
+    CONTENTFUL_COMPONENTS.singleColumn.id,
+  ].includes(blockId);
 };
 interface Params {
   resolveDesignValue: ResolveDesignValueType | undefined;
@@ -36,7 +34,7 @@ export const useDropzoneDirection = ({ resolveDesignValue, node, zoneId }: Param
         return 'vertical';
       }
 
-      if (node.data.blockId === CONTENTFUL_COLUMNS_ID) {
+      if (node.data.blockId === CONTENTFUL_COMPONENTS.columns.id) {
         return 'horizontal';
       }
 

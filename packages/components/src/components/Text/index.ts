@@ -1,16 +1,15 @@
 import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
 import {
+  CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
-  CONTENTFUL_TEXT_ID,
-  CONTENTFUL_TEXT_NAME,
 } from '@contentful/experience-builder-core/constants';
 import constants from '@/utils/constants';
 
 export * from './Text';
 
 export const TextComponentDefinition: ComponentDefinition = {
-  id: CONTENTFUL_TEXT_ID,
-  name: CONTENTFUL_TEXT_NAME,
+  id: CONTENTFUL_COMPONENTS.text.id,
+  name: CONTENTFUL_COMPONENTS.text.name,
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: [
     'cfMargin',

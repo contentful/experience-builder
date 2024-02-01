@@ -16,7 +16,7 @@ import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
 import {
   DESIGN_COMPONENT_NODE_TYPES,
   ASSEMBLY_NODE_TYPES,
-  CONTENTFUL_COLUMNS_ID,
+  CONTENTFUL_COMPONENTS,
 } from '@contentful/experience-builder-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
 
@@ -43,7 +43,7 @@ function isDropEnabled(
     return false;
   }
 
-  if (blockId === CONTENTFUL_COLUMNS_ID) {
+  if (blockId === CONTENTFUL_COMPONENTS.columns.id) {
     return false;
   }
 

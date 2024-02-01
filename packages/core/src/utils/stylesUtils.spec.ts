@@ -1,7 +1,7 @@
 import { CompositionComponentNode } from '@/types';
 import { calculateNodeDefaultHeight } from './stylesUtils';
 import { describe, it, expect } from 'vitest';
-import { CONTENTFUL_CONTAINER_ID } from '@/constants';
+import { CONTENTFUL_COMPONENTS } from '@/constants';
 
 describe('calculateNodeDefaultHeight', () => {
   it('should return value when blockId is undefined', () => {
@@ -34,7 +34,7 @@ describe('calculateNodeDefaultHeight', () => {
 
   it('should return defaultValue of "200px" when container is on "root" and has no children', () => {
     const result = calculateNodeDefaultHeight({
-      blockId: CONTENTFUL_CONTAINER_ID,
+      blockId: CONTENTFUL_COMPONENTS.container.id,
       children: [],
       value: 'auto',
     });
@@ -56,7 +56,7 @@ describe('calculateNodeDefaultHeight', () => {
     };
 
     const result = calculateNodeDefaultHeight({
-      blockId: CONTENTFUL_CONTAINER_ID,
+      blockId: CONTENTFUL_COMPONENTS.container.id,
       children: [childNode],
       value: 'auto',
     });
