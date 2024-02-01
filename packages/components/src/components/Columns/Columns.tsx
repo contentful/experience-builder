@@ -38,9 +38,8 @@ export const Columns: React.FC<ColumnsProps> = (props) => {
   const { node, renderDropzone } = props;
 
   return renderDropzone(node, {
-    ['data-test-id']: 'contentful-container',
-    id: 'ContentfulContainer',
-    className: combineClasses(className, 'defaultStyles'),
+    ['data-test-id']: 'contentful-columns',
+    className: className,
     WrapperComponent: ColumnWrapper,
   });
 };
