@@ -101,21 +101,21 @@ export const CONTENTFUL_COMPONENTS = {
   },
 };
 
-/** @deprecated will be replaced by CONTENTFUL_COMPONENTS.section.id in v5 */
+/** @deprecated use `CONTENTFUL_COMPONENTS.section.id` instead. This will be removed in version 4. */
 export const CONTENTFUL_SECTION_ID = CONTENTFUL_COMPONENTS.section.id;
-/** @deprecated will be replaced by CONTENTFUL_COMPONENTS.container.id in v5 */
+/** @deprecated use `CONTENTFUL_COMPONENTS.container.id` instead. This will be removed in version 4. */
 export const CONTENTFUL_CONTAINER_ID = CONTENTFUL_COMPONENTS.container.id;
-/** @deprecated will be replaced by CONTENTFUL_COMPONENTS.columns.id in v5 */
+/** @deprecated use `CONTENTFUL_COMPONENTS.columns.id` instead. This will be removed in version 4. */
 export const CONTENTFUL_COLUMNS_ID = CONTENTFUL_COMPONENTS.columns.id;
-/** @deprecated will be replaced by CONTENTFUL_COMPONENTS.singleColumn.id in v5 */
+/** @deprecated use `CONTENTFUL_COMPONENTS.singleColumn.id` instead. This will be removed in version 4. */
 export const CONTENTFUL_SINGLE_COLUMN_ID = CONTENTFUL_COMPONENTS.singleColumn.id;
-/** @deprecated will be replaced by CONTENTFUL_COMPONENTS.section.name in v5 */
+/** @deprecated use `CONTENTFUL_COMPONENTS.section.name` instead. This will be removed in version 4. */
 export const CONTENTFUL_SECTION_NAME = CONTENTFUL_COMPONENTS.section.name;
-/** @deprecated will be replaced by CONTENTFUL_COMPONENTS.columns.name in v5 */
+/** @deprecated use `CONTENTFUL_COMPONENTS.columns.name` instead. This will be removed in version 4. */
 export const CONTENTFUL_COLUMNS_NAME = CONTENTFUL_COMPONENTS.columns.name;
-/** @deprecated will be replaced by CONTENTFUL_COMPONENTS.singleColumn.name in v5 */
+/** @deprecated use `CONTENTFUL_COMPONENTS.singleColumn.name` instead. This will be removed in version 4. */
 export const CONTENTFUL_SINGLE_COLUMN_NAME = CONTENTFUL_COMPONENTS.singleColumn.name;
-/** @deprecated will be replaced by CONTENTFUL_COMPONENTS.container.name in v5 */
+/** @deprecated use `CONTENTFUL_COMPONENTS.container.name` instead. This will be removed in version 4. */
 export const CONTENTFUL_CONTAINER_NAME = CONTENTFUL_COMPONENTS.container.name;
 
 export const ASSEMBLY_NODE_TYPE = 'assembly';

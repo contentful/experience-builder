@@ -14,8 +14,9 @@ export {
   fetchBySlug,
 } from '@contentful/experience-builder-core';
 export {
+  /** @deprecated use `CONTENTFUL_COMPONENTS.section.id` instead. This will be removed in version 4. */
   CONTENTFUL_SECTION_ID,
-  /** @deprecated will be replaced by CONTENTFUL_COMPONENTS.container.id in v5 */
+  /** @deprecated use `CONTENTFUL_COMPONENTS.container.id` instead. This will be removed in version 4. */
   CONTENTFUL_CONTAINER_ID,
   CONTENTFUL_COMPONENTS,
   OUTGOING_EVENTS,
