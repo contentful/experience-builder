@@ -18,7 +18,6 @@ const ColumnWrapper = forwardRef<HTMLDivElement, ColumnWrapperProps>((props, ref
         ...(props.style || {}),
         display: 'grid',
         gridTemplateColumns: 'repeat(12, [col-start] 1fr)',
-        gap: 10,
       }}>
       {props.children}
     </div>
@@ -39,9 +38,8 @@ export const Columns: React.FC<ColumnsProps> = (props) => {
   const { node, renderDropzone } = props;
 
   return renderDropzone(node, {
-    ['data-test-id']: 'contentful-container',
-    id: 'ContentfulContainer',
-    className: combineClasses(className, 'defaultStyles'),
+    ['data-test-id']: 'contentful-columns',
+    className: className,
     WrapperComponent: ColumnWrapper,
   });
 };

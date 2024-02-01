@@ -1,7 +1,19 @@
 import type { ComponentDefinition } from '@/types';
-
 import { CONTENTFUL_COMPONENT_CATEGORY, CONTENTFUL_COMPONENTS } from '@/constants';
-import { columnsBuiltInStyles, containerBuiltInStyles, singleColumnBuiltInStyles } from './styles';
+import {
+  builtInStyles,
+  columnsBuiltInStyles,
+  containerBuiltInStyles,
+  singleColumnBuiltInStyles,
+} from './styles';
+
+export const sectionDefinition: ComponentDefinition = {
+  id: CONTENTFUL_COMPONENTS.section.id,
+  name: CONTENTFUL_COMPONENTS.section.name,
+  category: CONTENTFUL_COMPONENT_CATEGORY,
+  children: true,
+  variables: builtInStyles,
+};
 
 export const containerDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.container.id,
@@ -9,7 +21,6 @@ export const containerDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: containerBuiltInStyles,
-  rootComponent: true,
 };
 
 export const columnsDefinition: ComponentDefinition = {
@@ -18,7 +29,6 @@ export const columnsDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: columnsBuiltInStyles,
-  rootComponent: true,
 };
 
 export const singleColumnDefinition: ComponentDefinition = {
@@ -27,5 +37,4 @@ export const singleColumnDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: singleColumnBuiltInStyles,
-  rootComponent: true,
 };

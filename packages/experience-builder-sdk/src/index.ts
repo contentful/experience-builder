@@ -14,7 +14,6 @@ export {
   fetchBySlug,
 } from '@contentful/experience-builder-core';
 export {
-  /** @deprecated will be replaced by CONTENTFUL_COMPONENTS.section.id in v5 */
   CONTENTFUL_SECTION_ID,
   /** @deprecated will be replaced by CONTENTFUL_COMPONENTS.container.id in v5 */
   CONTENTFUL_CONTAINER_ID,

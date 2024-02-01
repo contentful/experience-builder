@@ -32,8 +32,7 @@ export const Assembly: React.FC<AssemblyProps> = (props) => {
     const { node } = props;
 
     return props.renderDropzone(node, {
-      ['data-test-id']: 'contentful-container',
-      id: 'assembly',
+      ['data-test-id']: 'contentful-assembly',
       className: props.className,
       style: assemblyStyle,
     });

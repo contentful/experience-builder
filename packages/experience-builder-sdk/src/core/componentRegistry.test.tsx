@@ -1,5 +1,5 @@
 import React from 'react';
-import { containerDefinition } from '@contentful/experience-builder-core';
+import { containerDefinition, sectionDefinition } from '@contentful/experience-builder-core';
 import {
   INTERNAL_EVENTS,
   CONTENTFUL_COMPONENTS,
@@ -22,10 +22,16 @@ describe('component registration', () => {
       expect(registry.getComponentRegistration('random-str')).toBe(undefined);
     });
 
-    it('should return container when given a section id', () => {
+    it('should return container when given a container id', () => {
+      expect(
+        registry.getComponentRegistration(CONTENTFUL_COMPONENTS.container.id)?.definition
+      ).toEqual(containerDefinition);
+    });
+
+    it('should return section when given a section id', () => {
       expect(
         registry.getComponentRegistration(CONTENTFUL_COMPONENTS.section.id)?.definition
-      ).toEqual(containerDefinition);
+      ).toEqual(sectionDefinition);
     });
   });
 

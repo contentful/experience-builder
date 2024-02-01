@@ -59,7 +59,6 @@ export const VISUAL_EDITOR_EVENTS = {
 };
 
 export const VISUAL_EDITOR_CONTAINER_ID = 'cf-visual-editor';
-
 export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component';
 export const CONTENTFUL_DEFAULT_CATEGORY = 'Contentful';
 
