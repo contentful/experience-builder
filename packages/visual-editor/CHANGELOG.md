@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.19](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.18...@contentful/experience-builder-visual-editor@0.0.2-alpha.19) (2024-02-01)
+
+### Bug Fixes
+
+- adjsut type for not defined coords ([1a34169](https://github.com/contentful/experience-builder/commit/1a341691caa65f27ec45861638620d31664bc9e0))
+- make React prop optional in other places as well ([81bf035](https://github.com/contentful/experience-builder/commit/81bf0355d1bb8fa48be2de7fa4572c31f686685c))
+- re-fetch entity store on locale change ([#300](https://github.com/contentful/experience-builder/issues/300)) ([2da61b6](https://github.com/contentful/experience-builder/commit/2da61b686d7059864e849d71b011cb53ac7a3281))
+- remove circular dep and bring related code in one place ([c6dc913](https://github.com/contentful/experience-builder/commit/c6dc913ab78cd68a8cf9cc74f9814f1fcec43eeb))
+- remove unused import ([8b48cbb](https://github.com/contentful/experience-builder/commit/8b48cbb3187f1848fb8b9831fa7c962e2af2cc82))
+- types in visual editor [] ([#313](https://github.com/contentful/experience-builder/issues/313)) ([21de9ae](https://github.com/contentful/experience-builder/commit/21de9aea921c97190e9115a8d0afb33b4a244937))
+- update Heading component built in styles [ALT-154] ([#296](https://github.com/contentful/experience-builder/issues/296)) ([b064bfc](https://github.com/contentful/experience-builder/commit/b064bfc16a158c2ff429105cb7b856326265e151))
+- update hover labels to be more like onclick labels ([6ba51c1](https://github.com/contentful/experience-builder/commit/6ba51c131887cec9681da36ad385680d7c03e8d3))
+- use casting to overcome type clash ([8dcc651](https://github.com/contentful/experience-builder/commit/8dcc65112fc3e068506c97216cac558657c68cb1))
+
+### Features
+
+- section component [ALT-205] ([#279](https://github.com/contentful/experience-builder/issues/279)) ([aea2ac8](https://github.com/contentful/experience-builder/commit/aea2ac899dbf12e9e62ac174d84b5171ce60dbdb))
+
 ## [0.0.2-alpha.18](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.17...@contentful/experience-builder-visual-editor@0.0.2-alpha.18) (2024-01-25)
 
 ### Bug Fixes

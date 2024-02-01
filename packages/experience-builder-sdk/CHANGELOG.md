@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.18](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.17...@contentful/experience-builder@4.0.0-alpha.18) (2024-02-01)
+
+### Bug Fixes
+
+- types in visual editor [] ([#313](https://github.com/contentful/experience-builder/issues/313)) ([d71c898](https://github.com/contentful/experience-builder/commit/d71c898e2fe32b45f0003c829171e18b555a347e))
+- update Heading component built in styles [ALT-154] ([#296](https://github.com/contentful/experience-builder/issues/296)) ([b064bfc](https://github.com/contentful/experience-builder/commit/b064bfc16a158c2ff429105cb7b856326265e151))
+
+### Features
+
+- section component [ALT-205] ([#279](https://github.com/contentful/experience-builder/issues/279)) ([aea2ac8](https://github.com/contentful/experience-builder/commit/aea2ac899dbf12e9e62ac174d84b5171ce60dbdb))
+- updates rich text component definition to hold default stylings rather than using css modules ([7ddf6ed](https://github.com/contentful/experience-builder/commit/7ddf6ed7748f383cdc6776ec68200c15500d16bf))
+
 # [4.0.0-alpha.17](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.16...@contentful/experience-builder@4.0.0-alpha.17) (2024-01-25)
 
 ### Features
