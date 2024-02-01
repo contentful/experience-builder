@@ -1,4 +1,4 @@
-import { CONTENTFUL_COLUMNS_ID } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
@@ -27,7 +27,7 @@ export const useDropzoneDirection = ({ resolveDesignValue, node, zoneId }: Param
         return 'vertical';
       }
 
-      if (node.data.blockId === CONTENTFUL_COLUMNS_ID) {
+      if (node.data.blockId === CONTENTFUL_COMPONENTS.columns.id) {
         return 'horizontal';
       }
 

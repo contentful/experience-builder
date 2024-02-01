@@ -1,12 +1,16 @@
 import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
+import {
+  CONTENTFUL_COMPONENTS,
+  CONTENTFUL_DEFAULT_CATEGORY,
+} from '@contentful/experience-builder-core/constants';
 import constants from '@/utils/constants';
 
 export * from './RichText';
 
 export const RichTextComponentDefinition: ComponentDefinition = {
-  id: 'richText',
-  name: 'RichText',
-  category: 'Contentful',
+  id: CONTENTFUL_COMPONENTS.richText.id,
+  name: CONTENTFUL_COMPONENTS.richText.name,
+  category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: [
     'cfMargin',
     'cfPadding',

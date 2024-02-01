@@ -1,12 +1,16 @@
 import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
+import {
+  CONTENTFUL_COMPONENTS,
+  CONTENTFUL_DEFAULT_CATEGORY,
+} from '@contentful/experience-builder-core/constants';
 import constants from '@/utils/constants';
 
 export * from './Button';
 
 export const ButtonComponentDefinition: ComponentDefinition = {
-  id: 'button',
-  name: 'Button',
-  category: 'Contentful',
+  id: CONTENTFUL_COMPONENTS.button.id,
+  name: CONTENTFUL_COMPONENTS.button.name,
+  category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: [
     'cfMargin',
     'cfMaxWidth',
