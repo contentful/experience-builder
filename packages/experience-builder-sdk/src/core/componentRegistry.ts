@@ -7,7 +7,6 @@ import {
   OUTGOING_EVENTS,
   INTERNAL_EVENTS,
   CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
   ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import {
@@ -16,6 +15,7 @@ import {
   optionalBuiltInStyles,
   sendMessage,
   containerDefinition,
+  sectionDefinition,
   columnsDefinition,
   singleColumnDefinition,
 } from '@contentful/experience-builder-core';
@@ -79,6 +79,10 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     component: Components.ContentfulContainer,
     definition: containerDefinition,
   },
+  section: {
+    component: Components.ContentfulContainer,
+    definition: sectionDefinition,
+  },
   columns: {
     component: Components.Columns,
     definition: columnsDefinition,
@@ -90,6 +94,9 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   button: enrichComponentDefinition({
     component: Components.Button,
     definition: Components.ButtonComponentDefinition,
+    options: {
+      wrapComponent: false,
+    },
   }),
   heading: enrichComponentDefinition({
     component: Components.Heading,
@@ -105,6 +112,9 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   richText: enrichComponentDefinition({
     component: Components.RichText,
     definition: Components.RichTextComponentDefinition,
+    options: {
+      wrapComponent: false,
+    },
   }),
   text: enrichComponentDefinition({
     component: Components.Text,
@@ -114,6 +124,7 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
 
 // pre-filling with the default component registrations
 export const componentRegistry = new Map<string, ComponentRegistration>([
+  [DEFAULT_COMPONENT_REGISTRATIONS.section.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.section],
   [
     DEFAULT_COMPONENT_REGISTRATIONS.container.definition.id,
     DEFAULT_COMPONENT_REGISTRATIONS.container,
@@ -188,12 +199,7 @@ export const resetComponentRegistry = () => {
   }
 };
 
-export const getComponentRegistration = (id: string) => {
-  if (id === CONTENTFUL_SECTION_ID) {
-    return componentRegistry.get(CONTENTFUL_CONTAINER_ID);
-  }
-  return componentRegistry.get(id);
-};
+export const getComponentRegistration = (id: string) => componentRegistry.get(id);
 
 export const addComponentRegistration = (componentRegistration: ComponentRegistration) => {
   componentRegistry.set(componentRegistration.definition.id, componentRegistration);

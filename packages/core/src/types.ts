@@ -115,7 +115,6 @@ export type ComponentDefinition<
     Record<string, ComponentDefinitionVariable<T>>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
-  rootComponent?: boolean;
 };
 
 export type ComponentRegistration = {

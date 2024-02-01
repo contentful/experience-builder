@@ -1,3 +1,4 @@
+export * from './components';
 export * from './domValues';
 export * from './validations';
 export * from './stylesUtils';

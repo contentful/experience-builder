@@ -89,7 +89,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The max-width of the section',
-    defaultValue: 'initial',
+    defaultValue: 'none',
   },
   cfFlexDirection: {
     displayName: 'Direction',
@@ -303,12 +303,12 @@ export const containerBuiltInStyles: Partial<
   Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
 > = {
   ...builtInStyles,
-  cfHeight: {
-    displayName: 'Height',
+  cfMaxWidth: {
+    displayName: 'Max Width',
     type: 'Text',
     group: 'style',
-    description: 'The height of the container',
-    defaultValue: 'auto',
+    description: 'The max-width of the section',
+    defaultValue: '1192px',
   },
   cfMargin: {
     displayName: 'Margin',
