@@ -6,42 +6,29 @@ import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink
 import type { ContentfulContainerAsHyperlinkProps } from './ContentfulContainerAsHyperlink';
 import { combineClasses } from '../../utils/combineClasses';
 
-export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (
-  sectionProps
-) => {
-  const { className, editorMode, children } = sectionProps;
+export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (props) => {
+  const { className, editorMode, children, cfHyperlink } = props;
 
-  if (sectionProps.cfHyperlink) {
-    return (
-      <ContentfulContainerAsHyperlink
-        className={className}
-        editorMode={editorMode}
-        cfHyperlink={sectionProps.cfHyperlink}
-        cfOpenInNewTab={sectionProps.cfOpenInNewTab}
-        {...sectionProps}>
-        {children}
-      </ContentfulContainerAsHyperlink>
-    );
+  if (cfHyperlink) {
+    return <ContentfulContainerAsHyperlink {...props}>{children}</ContentfulContainerAsHyperlink>;
   }
 
   if (editorMode === false) {
     return (
       <Flex
-        id="ContentfulContainer"
         data-test-id="contentful-container"
-        className={combineClasses(className, 'defaultStyles')}>
-        {(sectionProps as any).children}
+        className={combineClasses(className, 'contentful-container')}>
+        {children}
       </Flex>
     );
   }
 
-  const { renderDropzone, node } = sectionProps;
   // Extract properties that are only available in editor mode
+  const { renderDropzone, node } = props;
 
   return renderDropzone(node, {
     ['data-test-id']: 'contentful-container',
-    id: 'ContentfulContainer',
-    className: combineClasses(className, 'defaultStyles'),
+    className: combineClasses(className, 'contentful-container'),
     WrapperComponent: Flex,
   });
 };

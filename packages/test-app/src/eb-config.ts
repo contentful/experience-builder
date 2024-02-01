@@ -9,7 +9,7 @@ defineComponents([
       children: true,
       name: 'Children Enabled',
       category: 'Custom Components',
-      builtInStyles: ['cfMargin', 'cfPadding'],
+      builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
       variables: {
         heading: {
           displayName: 'Heading',
