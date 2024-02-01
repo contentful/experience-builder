@@ -51,7 +51,7 @@ export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyper
 
     return (
       <a
-        className={combineClasses(className, 'contentful-container', 'cf-section-link')}
+        className={combineClasses(className, 'contentful-container', 'contentful-container-link')}
         href={cfHyperlink}
         {...anchorTagProps}>
         {children}
@@ -68,7 +68,7 @@ export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyper
 
   return renderDropzone(node, {
     ['data-test-id']: 'contentful-container',
-    className: combineClasses(className, 'contentful-container', 'cf-section-link'),
+    className: combineClasses(className, 'contentful-container', 'contentful-container-link'),
     zoneId: node.data.id,
     WrapperComponent: 'a',
     onClick: stopPropagationInEditorMode,
