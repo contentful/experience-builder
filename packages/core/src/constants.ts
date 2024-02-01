@@ -80,23 +80,23 @@ export const CONTENTFUL_COMPONENTS = {
     name: 'Single Column',
   },
   button: {
-    id: 'button',
+    id: 'contentful-button',
     name: 'Button',
   },
   heading: {
-    id: 'heading',
+    id: 'contentful-heading',
     name: 'Heading',
   },
   image: {
-    id: 'image',
+    id: 'contentful-image',
     name: 'Image',
   },
   richText: {
-    id: 'richText',
+    id: 'contentful-richText',
     name: 'Rich Text',
   },
   text: {
-    id: 'text',
+    id: 'contentful-text',
     name: 'Text',
   },
 };
@@ -105,18 +105,6 @@ export const CONTENTFUL_COMPONENTS = {
 export const CONTENTFUL_SECTION_ID = CONTENTFUL_COMPONENTS.section.id;
 /** @deprecated use `CONTENTFUL_COMPONENTS.container.id` instead. This will be removed in version 4. */
 export const CONTENTFUL_CONTAINER_ID = CONTENTFUL_COMPONENTS.container.id;
-/** @deprecated use `CONTENTFUL_COMPONENTS.columns.id` instead. This will be removed in version 4. */
-export const CONTENTFUL_COLUMNS_ID = CONTENTFUL_COMPONENTS.columns.id;
-/** @deprecated use `CONTENTFUL_COMPONENTS.singleColumn.id` instead. This will be removed in version 4. */
-export const CONTENTFUL_SINGLE_COLUMN_ID = CONTENTFUL_COMPONENTS.singleColumn.id;
-/** @deprecated use `CONTENTFUL_COMPONENTS.section.name` instead. This will be removed in version 4. */
-export const CONTENTFUL_SECTION_NAME = CONTENTFUL_COMPONENTS.section.name;
-/** @deprecated use `CONTENTFUL_COMPONENTS.columns.name` instead. This will be removed in version 4. */
-export const CONTENTFUL_COLUMNS_NAME = CONTENTFUL_COMPONENTS.columns.name;
-/** @deprecated use `CONTENTFUL_COMPONENTS.singleColumn.name` instead. This will be removed in version 4. */
-export const CONTENTFUL_SINGLE_COLUMN_NAME = CONTENTFUL_COMPONENTS.singleColumn.name;
-/** @deprecated use `CONTENTFUL_COMPONENTS.container.name` instead. This will be removed in version 4. */
-export const CONTENTFUL_CONTAINER_NAME = CONTENTFUL_COMPONENTS.container.name;
 
 export const ASSEMBLY_NODE_TYPE = 'assembly';
 export const ASSEMBLY_DEFAULT_CATEGORY = 'Assemblies';
