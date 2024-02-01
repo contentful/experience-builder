@@ -28,9 +28,6 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
 
   return renderDropzone(node, {
     ['data-test-id']: 'contentful-container',
-    ['data-cf-node-id']: node.data.id,
-    ['data-cf-node-block-id']: node.data.blockId,
-    ['data-cf-node-block-type']: node.type,
     className: combineClasses(className, 'contentful-container'),
     WrapperComponent: Flex,
   });
