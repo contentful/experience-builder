@@ -94,6 +94,9 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   button: enrichComponentDefinition({
     component: Components.Button,
     definition: Components.ButtonComponentDefinition,
+    options: {
+      wrapComponent: false,
+    },
   }),
   heading: enrichComponentDefinition({
     component: Components.Heading,
