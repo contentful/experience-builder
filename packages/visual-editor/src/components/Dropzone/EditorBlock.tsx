@@ -55,6 +55,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const sectionsWithZone = useZoneStore((state) => state.sectionsWithZones);
 
   const isContainer = node.data.blockId === CONTENTFUL_CONTAINER_ID;
+  const isSingleColumn = node.data.blockId === CONTENTFUL_SINGLE_COLUMN_ID;
   const containsZone = sectionsWithZone[componentId];
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
@@ -100,7 +101,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         id={`draggable-${componentId}`}
         index={index}
         isAssemblyBlock={isAssemblyBlock}
-        isDragDisabled={isAssemblyBlock}
+        isDragDisabled={isSingleColumn}
         isSelected={selectedNodeId === componentId}
         userIsDragging={userIsDragging}
         isContainer={isContainer}
