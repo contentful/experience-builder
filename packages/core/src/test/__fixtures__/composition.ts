@@ -1,4 +1,4 @@
-import { CONTENTFUL_CONTAINER_ID, LATEST_SCHEMA_VERSION } from '@/constants';
+import { CONTENTFUL_COMPONENTS, LATEST_SCHEMA_VERSION } from '@/constants';
 import { Composition, ExperienceEntry, SchemaVersions } from '@/types';
 import { entityIds } from './entities';
 
@@ -213,7 +213,7 @@ export const createAssemblyEntry = ({
       componentTree: {
         children: [
           {
-            definitionId: CONTENTFUL_CONTAINER_ID,
+            definitionId: CONTENTFUL_COMPONENTS.container.id,
             variables: {},
             children: [
               {

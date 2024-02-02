@@ -3,7 +3,7 @@ import { useTreeStore } from '@/store/tree';
 import { ROOT_ID } from '@/types/constants';
 import { createTreeNode } from '@/utils/createTreeNode';
 import { onDrop } from '@/utils/onDrop';
-import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
 import { DropResult } from '@hello-pangea/dnd';
 
 export default function useCanvasInteractions() {
@@ -19,13 +19,13 @@ export default function useCanvasInteractions() {
     }
 
     const droppingOnRoot = destination.droppableId === ROOT_ID;
-    const isValidRootComponent = draggableId === CONTENTFUL_CONTAINER_ID;
+    const isValidRootComponent = draggableId === CONTENTFUL_COMPONENTS.container.id;
 
     let node = createTreeNode({ blockId: draggableId, parentId: destination.droppableId });
 
     if (droppingOnRoot && !isValidRootComponent) {
       const wrappingContainer = createTreeNode({
-        blockId: CONTENTFUL_CONTAINER_ID,
+        blockId: CONTENTFUL_COMPONENTS.container.id,
         parentId: destination.droppableId,
       });
       const childNode = createTreeNode({

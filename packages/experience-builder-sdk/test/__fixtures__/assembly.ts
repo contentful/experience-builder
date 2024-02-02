@@ -1,5 +1,5 @@
 import {
-  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_COMPONENTS,
   ASSEMBLY_NODE_TYPE,
   LATEST_SCHEMA_VERSION,
 } from '@contentful/experience-builder-core/constants';
@@ -56,7 +56,7 @@ export const createAssemblyEntry = ({
       componentTree: {
         children: [
           {
-            definitionId: CONTENTFUL_CONTAINER_ID,
+            definitionId: CONTENTFUL_COMPONENTS.container.id,
             variables: {},
             children: [
               {
