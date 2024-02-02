@@ -54,8 +54,8 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
   const sectionsWithZone = useZoneStore((state) => state.sectionsWithZones);
 
-  const isContainer = node.data.blockId === CONTENTFUL_CONTAINER_ID;
-  const isSingleColumn = node.data.blockId === CONTENTFUL_SINGLE_COLUMN_ID;
+  const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
+  const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
   const containsZone = sectionsWithZone[componentId];
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
