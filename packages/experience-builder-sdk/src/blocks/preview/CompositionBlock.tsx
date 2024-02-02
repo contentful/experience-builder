@@ -4,10 +4,7 @@ import { omit } from 'lodash-es';
 import { EntityStore } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
-  CONTENTFUL_COLUMNS_ID,
-  CONTENTFUL_SINGLE_COLUMN_ID,
+  CONTENTFUL_COMPONENTS,
 } from '@contentful/experience-builder-core/constants';
 import type {
   Breakpoint,
@@ -161,8 +158,11 @@ export const CompositionBlock = ({
         })
       : null;
 
-  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
-  if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
+  if (
+    [CONTENTFUL_COMPONENTS.container.id, CONTENTFUL_COMPONENTS.section.id].includes(
+      node.definitionId
+    )
+  ) {
     return (
       <ContentfulContainer
         editorMode={false}
@@ -174,7 +174,7 @@ export const CompositionBlock = ({
     );
   }
 
-  if (node.definitionId === CONTENTFUL_COLUMNS_ID) {
+  if (node.definitionId === CONTENTFUL_COMPONENTS.columns.id) {
     return (
       <Columns editorMode={false} className={className}>
         {children}
@@ -182,7 +182,7 @@ export const CompositionBlock = ({
     );
   }
 
-  if (node.definitionId === CONTENTFUL_SINGLE_COLUMN_ID) {
+  if (node.definitionId === CONTENTFUL_COMPONENTS.singleColumn.id) {
     return (
       <SingleColumn editorMode={false} className={className}>
         {children}

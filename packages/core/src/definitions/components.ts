@@ -1,15 +1,5 @@
 import type { ComponentDefinition } from '@/types';
-import {
-  CONTENTFUL_COLUMNS_ID,
-  CONTENTFUL_COLUMNS_NAME,
-  CONTENTFUL_COMPONENT_CATEGORY,
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_CONTAINER_NAME,
-  CONTENTFUL_SECTION_ID,
-  CONTENTFUL_SECTION_NAME,
-  CONTENTFUL_SINGLE_COLUMN_ID,
-  CONTENTFUL_SINGLE_COLUMN_NAME,
-} from '@/constants';
+import { CONTENTFUL_COMPONENT_CATEGORY, CONTENTFUL_COMPONENTS } from '@/constants';
 import {
   builtInStyles,
   columnsBuiltInStyles,
@@ -18,32 +8,32 @@ import {
 } from './styles';
 
 export const sectionDefinition: ComponentDefinition = {
-  id: CONTENTFUL_SECTION_ID,
-  name: CONTENTFUL_SECTION_NAME,
+  id: CONTENTFUL_COMPONENTS.section.id,
+  name: CONTENTFUL_COMPONENTS.section.name,
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: builtInStyles,
 };
 
 export const containerDefinition: ComponentDefinition = {
-  id: CONTENTFUL_CONTAINER_ID,
-  name: CONTENTFUL_CONTAINER_NAME,
+  id: CONTENTFUL_COMPONENTS.container.id,
+  name: CONTENTFUL_COMPONENTS.container.name,
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: containerBuiltInStyles,
 };
 
 export const columnsDefinition: ComponentDefinition = {
-  id: CONTENTFUL_COLUMNS_ID,
-  name: CONTENTFUL_COLUMNS_NAME,
+  id: CONTENTFUL_COMPONENTS.columns.id,
+  name: CONTENTFUL_COMPONENTS.columns.name,
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: columnsBuiltInStyles,
 };
 
 export const singleColumnDefinition: ComponentDefinition = {
-  id: CONTENTFUL_SINGLE_COLUMN_ID,
-  name: CONTENTFUL_SINGLE_COLUMN_NAME,
+  id: CONTENTFUL_COMPONENTS.singleColumn.id,
+  name: CONTENTFUL_COMPONENTS.singleColumn.name,
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: singleColumnBuiltInStyles,

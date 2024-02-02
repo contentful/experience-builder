@@ -1,6 +1,6 @@
 import { calculateNodeDefaultHeight } from './stylesUtils';
 import { describe, it, expect } from 'vitest';
-import { CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID } from '@/constants';
+import { CONTENTFUL_COMPONENTS } from '@/constants';
 
 describe('calculateNodeDefaultHeight', () => {
   it('should return value when blockId is undefined', () => {
@@ -29,7 +29,7 @@ describe('calculateNodeDefaultHeight', () => {
   });
 
   it('should return "100%" if block is a structure component with "auto" height', () => {
-    for (const blockId of [CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID]) {
+    for (const blockId of [CONTENTFUL_COMPONENTS.container.id, CONTENTFUL_COMPONENTS.section.id]) {
       const result = calculateNodeDefaultHeight({
         blockId,
         value: 'auto',

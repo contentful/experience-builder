@@ -2,7 +2,7 @@ import type { Entry } from 'contentful';
 import { compositionEntry } from '../../../test/__fixtures__/composition';
 import { createAssemblyEntry } from '../../../test/__fixtures__/assembly';
 import { assets, entries } from '../../../test/__fixtures__/entities';
-import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
 import type { CompositionNode } from '@contentful/experience-builder-core/types';
 import { EntityStore } from '@contentful/experience-builder-core';
 import { resolveAssembly } from './assemblyUtils';
@@ -10,7 +10,7 @@ import { resolveAssembly } from './assemblyUtils';
 describe('resolveAssembly', () => {
   it('should return the input node when it is not a assembly', () => {
     const containerNode: CompositionNode = {
-      definitionId: CONTENTFUL_CONTAINER_ID,
+      definitionId: CONTENTFUL_COMPONENTS.container.id,
       variables: {},
       children: [],
     };
@@ -27,7 +27,7 @@ describe('resolveAssembly', () => {
 
   it('should return the input node when the entity store is undefined', () => {
     const containerNode: CompositionNode = {
-      definitionId: CONTENTFUL_CONTAINER_ID,
+      definitionId: CONTENTFUL_COMPONENTS.container.id,
       variables: {},
       children: [],
     };
