@@ -546,4 +546,9 @@ export const columnsBuiltInStyles: Partial<
     defaultValue: '[6, 6]',
     group: 'style',
   },
+  cfWrapColumns: {
+    type: 'Text',
+    defaultValue: 'false',
+    group: 'style',
+  },
 };
