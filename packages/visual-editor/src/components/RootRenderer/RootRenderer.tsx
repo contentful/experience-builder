@@ -57,7 +57,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
         */}
         {userIsDragging && (
           <div
-            className={styles.hitboxLower}
+            className={styles.hitbox}
             onMouseOver={(e) => {
               e.stopPropagation();
               setHoveringSection(ROOT_ID);

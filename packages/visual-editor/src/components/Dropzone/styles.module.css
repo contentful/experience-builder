@@ -7,7 +7,6 @@
   outline: 2px solid transparent;
   width: 100%;
   transition: outline 0.2s;
-  min-height: 120px;
 }
 
 .fixedWidth {
@@ -21,17 +20,18 @@
 .pointerEvents {
   pointer-events: all;
 }
+
 .isEmpty {
   height: 200px;
 }
 
 .hitbox {
   position: absolute;
-  bottom: -18px;
+  bottom: -5px;
   width: 100%;
   z-index: 1;
   pointer-events: all !important;
-  height: 36px;
+  height: 10px;
 }
 
 .block {
@@ -40,17 +40,6 @@
 
 .isDragging {
   outline: 2px dashed var(--exp-builder-blue500);
-}
-
-.isHovering {
-  /* outline: 2px solid var(--exp-builder-gray800); */
-}
-
-.isHovering > .overlay {
-  /* opacity: 1; */
-}
-
-.isDestination {
 }
 
 .isDestination:not(.isRoot) {

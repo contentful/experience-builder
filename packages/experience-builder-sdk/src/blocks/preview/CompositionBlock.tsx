@@ -1,10 +1,14 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
-import { EntityStore } from '@contentful/experience-builder-core';
+import {
+  EntityStore,
+  isEmptyStructureWithRelativeHeight,
+} from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
+  EMPTY_CONTAINER_HEIGHT,
 } from '@contentful/experience-builder-core/constants';
 import type {
   Breakpoint,
@@ -131,6 +135,13 @@ export const CompositionBlock = ({
   ]);
 
   const cfStyles = buildCfStyles(nodeProps);
+
+  if (
+    isEmptyStructureWithRelativeHeight(node.children.length, node.definitionId, cfStyles.height)
+  ) {
+    cfStyles.minHeight = EMPTY_CONTAINER_HEIGHT;
+  }
+
   const { className } = useStyleTag({ styles: cfStyles });
 
   if (!componentRegistration) {

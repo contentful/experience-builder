@@ -7,8 +7,14 @@ import {
   transformFill,
   transformGridColumn,
 } from './transformers';
-import { CSSProperties, StyleProps, CompositionVariableValueType } from '@/types';
+import {
+  CSSProperties,
+  StyleProps,
+  CompositionVariableValueType,
+  CompositionComponentNode,
+} from '@/types';
 import { isContentfulStructureComponent } from './components';
+import { EMPTY_CONTAINER_HEIGHT } from '../constants';
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 
@@ -89,19 +95,25 @@ export const buildCfStyles = ({
 };
 /**
  * Container/section default behaviour:
- * Default height => height: '200px'
+ * Default height => height: EMPTY_CONTAINER_HEIGHT (120px)
  * If a container component has children => height: 'fit-content'
  */
 export const calculateNodeDefaultHeight = ({
   blockId,
+  children,
   value,
 }: {
   blockId?: string;
+  children: CompositionComponentNode['children'];
   value: CompositionVariableValueType;
 }) => {
   if (!blockId || !isContentfulStructureComponent(blockId) || value !== 'auto') {
     return value;
   }
 
-  return '100%';
+  if (children.length) {
+    return '100%';
+  }
+
+  return EMPTY_CONTAINER_HEIGHT;
 };
