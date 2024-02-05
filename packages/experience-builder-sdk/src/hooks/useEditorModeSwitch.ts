@@ -1,7 +1,10 @@
 import { useEffect, useRef } from 'react';
 import type { InternalSDKMode } from '@contentful/experience-builder-core/types';
-import { sendMessage } from '@contentful/experience-builder-core';
-import { doesMismatchMessageSchema, tryParseMessage } from '../utils/validation';
+import {
+  doesMismatchMessageSchema,
+  sendMessage,
+  tryParseMessage,
+} from '@contentful/experience-builder-core';
 import { INCOMING_EVENTS, OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 
 export const useEditorModeSwitch = ({
