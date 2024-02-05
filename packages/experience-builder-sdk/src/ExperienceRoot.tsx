@@ -3,6 +3,7 @@ import {
   VisualEditorMode,
   isDeprecatedExperience,
   supportedModes,
+  validateExperienceBuilderConfig,
 } from '@contentful/experience-builder-core';
 import { EntityStore } from '@contentful/experience-builder-core';
 import type {
@@ -10,7 +11,6 @@ import type {
   Experience,
   InternalSDKMode,
 } from '@contentful/experience-builder-core/types';
-import { validateExperienceBuilderConfig } from './utils/validation';
 import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPreviewDeliveryRoot';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
