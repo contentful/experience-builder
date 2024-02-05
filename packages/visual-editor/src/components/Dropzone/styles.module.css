@@ -9,6 +9,10 @@
   transition: outline 0.2s;
 }
 
+.isExpanded {
+  min-height: 80px;
+}
+
 .fixedWidth {
   width: fit-content;
 }

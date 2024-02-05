@@ -6,6 +6,7 @@ import { sendMessage } from '@contentful/experience-builder-core';
 import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 import {
   DragDropContext,
+  OnBeforeCaptureResponder,
   OnBeforeDragStartResponder,
   OnDragEndResponder,
   OnDragUpdateResponder,
@@ -22,6 +23,7 @@ type Props = {
 export const DNDProvider = ({ children }: Props) => {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
+  const setBeforeCapture = useDraggedItemStore((state) => state.setBeforeCapture);
   const updateItem = useDraggedItemStore((state) => state.updateItem);
   const { onAddComponent, onMoveComponent } = useCanvasInteractions();
   const { onDragStartOrUpdate } = usePlaceholderStyle();
@@ -42,12 +44,17 @@ export const DNDProvider = ({ children }: Props) => {
     });
   };
 
+  const beforeCapture: OnBeforeCaptureResponder = () => {
+    setBeforeCapture(true);
+  };
+
   const dragUpdate: OnDragUpdateResponder = (update) => {
     updateItem(update);
     onDragStartOrUpdate(update);
   };
 
   const dragEnd: OnDragEndResponder = (dropResult) => {
+    setBeforeCapture(false);
     updateItem(undefined);
     dragState.reset();
 
@@ -84,7 +91,11 @@ export const DNDProvider = ({ children }: Props) => {
   };
 
   return (
-    <DragDropContext onDragUpdate={dragUpdate} onBeforeDragStart={dragStart} onDragEnd={dragEnd}>
+    <DragDropContext
+      onBeforeCapture={beforeCapture}
+      onDragUpdate={dragUpdate}
+      onBeforeDragStart={dragStart}
+      onDragEnd={dragEnd}>
       {isTestRun ? (
         <TestDNDContainer
           onDragEnd={dragEnd}

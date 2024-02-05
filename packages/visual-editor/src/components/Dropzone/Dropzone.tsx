@@ -75,6 +75,7 @@ export function Dropzone({
   WrapperComponent = 'div',
   ...rest
 }: DropzoneProps) {
+  const isBeforeCapture = useDraggedItemStore((state) => state.isBeforeCapture);
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
   const tree = useTreeStore((state) => state.tree);
   const placeholderStyle = usePlaceholderStyleStore((state) => state.style);
@@ -172,6 +173,7 @@ export function Dropzone({
                 [styles.isDragging]: userIsDragging && !isAssembly,
                 [styles.isHovering]: hoveringOverZone && !userIsDragging,
                 [styles.isDestination]: isDestination && !isAssembly,
+                [styles.isExpanded]: isBeforeCapture,
               },
               className
             )}
