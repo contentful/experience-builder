@@ -8,9 +8,11 @@
   "author": "Contentful GmbH",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
+    "clean": "rimraf dist",
+    "predev": "npm run clean",
+    "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
     "prepare": "node ./bin/injectSDKVersion.cjs",
-    "prebuild": "rimraf dist && node ./bin/injectSDKVersion.cjs",
+    "prebuild": "npm run clean && node ./bin/injectSDKVersion.cjs",
     "build": "rollup -c rollup.config.mjs",
     "watch": "vite build --watch",
     "test": "NODE_ENV=test jest",

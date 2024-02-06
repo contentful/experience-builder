@@ -24,13 +24,13 @@ export default [
       }),
       resolve(),
       commonjs(),
-      typescript({ tsconfig: './tsconfig.json' }),
+      typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true }),
     ],
     external: [/node_modules/],
   },
   {
     input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
-    plugins: [dts()],
+    plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
   },
 ];
