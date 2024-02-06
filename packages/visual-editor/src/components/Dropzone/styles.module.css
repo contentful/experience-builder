@@ -31,11 +31,11 @@
 
 .hitbox {
   position: absolute;
-  bottom: -5px;
+  bottom: -10px;
   width: 100%;
   z-index: 1;
   pointer-events: all !important;
-  height: 10px;
+  height: 20px;
 }
 
 .block {
