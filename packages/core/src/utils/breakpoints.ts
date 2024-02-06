@@ -58,7 +58,7 @@ export const getActiveBreakpointIndex = (
     id,
     index,
     // The fallback breakpoint with wildcard query will always match
-    isMatch: mediaQueryMatches[id] ?? true,
+    isMatch: mediaQueryMatches[id] ?? index === fallbackBreakpointIndex,
   }));
 
   // Find the last breakpoint in the list that matches (desktop-first: the narrowest one)
