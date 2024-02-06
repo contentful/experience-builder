@@ -1,4 +1,4 @@
-const constants = {
+export const constants = {
   placeholderImage:
     'https://images.ctfassets.net/tofsejyzyo24/5owPX1vp6cXDZr7QOabwzT/d5580f5b4dbad3f74c87ce2f03efa581/Image_container.png',
   thumbnails: {
@@ -17,5 +17,3 @@ const constants = {
       'https://images.ctfassets.net/tofsejyzyo24/7cOHx0p0J1gUCFMPcoXnFg/73144735e3db345b101509bf707a56b1/Duplex.png',
   },
 };
-
-export default constants;
