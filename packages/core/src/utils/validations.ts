@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { InternalSDKMode, IncomingEvent } from '@/types';
+import { IncomingEvent } from '@/types';
 import { INCOMING_EVENTS, PostMessageMethods } from '@/constants';
-import { supportedModes } from '@/utils';
 
 export type VisualEditorMessagePayload = {
   source: string;

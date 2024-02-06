@@ -44,7 +44,7 @@ export const ExperienceRoot = ({
   const switchToEditorMode = useCallback(() => {
     console.debug(`[exp-builder.sdk] Switching to editor mode.`);
     setIsEditorMode(true);
-  }, [isEditorMode]);
+  }, []);
 
   validateExperienceBuilderConfig({
     locale,
