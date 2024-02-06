@@ -122,7 +122,6 @@ describe('useFetchExperience', () => {
         locale: localeCode,
       });
 
-      // expect(experience?.mode).toBe('preview');
       expect(experience?.entityStore).toMatchObject(entityStore);
     });
 
