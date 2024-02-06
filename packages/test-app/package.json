@@ -4,7 +4,7 @@
   "version": "0.0.1-pre-20231216T233830.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force",
     "start": "vite",
     "prebuild": "rimraf dist",
     "build": "tsc && vite build",

@@ -34,7 +34,7 @@
     "prebuild": "npm run clean",
     "build": "rollup -c ./rollup.config.mjs",
     "predev": "npm run clean",
-    "dev": "rollup -c ./rollup.dev.config.mjs --watch",
+    "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test": "vitest",
