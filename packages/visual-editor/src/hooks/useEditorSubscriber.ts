@@ -311,6 +311,7 @@ export function useEditorSubscriber() {
   }, [
     entityStore,
     setComponentId,
+    setDraggingOnCanvas,
     setDataSource,
     setLocale,
     setSelectedNodeId,
