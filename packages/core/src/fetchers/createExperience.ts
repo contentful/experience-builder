@@ -8,14 +8,14 @@ type createExperienceArgs = {
   referencedEntries: Array<Entry>;
   referencedAssets: Array<Asset>;
   locale: string;
-  mode: ExternalSDKMode;
+  /** @deprecated mode no longer needed */
+  mode?: ExternalSDKMode;
 };
 
 export const createExperience = ({
   experienceEntry,
   referencedAssets,
   referencedEntries,
-  mode,
   locale,
 }: createExperienceArgs): Experience<EntityStore> => {
   if (!isExperienceEntry(experienceEntry)) {
@@ -30,6 +30,5 @@ export const createExperience = ({
 
   return {
     entityStore,
-    mode,
   };
 };

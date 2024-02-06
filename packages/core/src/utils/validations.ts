@@ -59,7 +59,7 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
 
   if ('composability-app' !== eventData.source) {
     throw new ParseError(
-      `Field eventData.source must be equal to 'composability-app', instead of '${eventData.source}'`
+      `Field eventData.source must be equal to 'composability-app', instead of '${eventData.source}'`,
     );
   }
 
@@ -70,8 +70,8 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
     if (eventData.eventType !== PostMessageMethods.REQUESTED_ENTITIES) {
       throw new ParseError(
         `Field eventData.eventType must be one of the supported values: [${supportedEventTypes.join(
-          ', '
-        )}]`
+          ', ',
+        )}]`,
       );
     }
   }
@@ -81,24 +81,18 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
 
 export const validateExperienceBuilderConfig = ({
   locale,
-  mode,
+  isEditorMode,
 }: {
   locale: string;
-  mode: InternalSDKMode;
+  isEditorMode: boolean;
 }) => {
-  if (mode === 'editor') {
+  if (isEditorMode) {
     return;
-  }
-
-  if (!supportedModes.includes(mode)) {
-    throw new Error(
-      `Parameter "mode" contains unsupported value. Supported modes: ${supportedModes.join(',')}`
-    );
   }
 
   if (!locale) {
     throw new Error(
-      'Parameter "locale" is required for experience builder initialization outside of editor mode'
+      'Parameter "locale" is required for experience builder initialization outside of editor mode',
     );
   }
 };

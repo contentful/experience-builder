@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import type { InternalSDKMode } from '@contentful/experience-builder-core/types';
 import {
   doesMismatchMessageSchema,
   sendMessage,
@@ -7,21 +6,11 @@ import {
 } from '@contentful/experience-builder-core';
 import { INCOMING_EVENTS, OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 
-export const useEditorModeSwitch = ({
-  mode,
-  switchToEditorMode,
-}: {
-  mode: InternalSDKMode;
-  switchToEditorMode: () => void;
-}) => {
+export const useEditorModeSwitch = ({ switchToEditorMode }: { switchToEditorMode: () => void }) => {
   const hasConnectEventBeenSent = useRef(false);
 
-  // switch from preview mode to editor mode
+  // switch to editor mode
   useEffect(() => {
-    if (mode !== 'preview') {
-      return;
-    }
-
     const onMessage = (event: MessageEvent) => {
       if (doesMismatchMessageSchema(event)) {
         return;
@@ -47,5 +36,5 @@ export const useEditorModeSwitch = ({
         window.removeEventListener('message', onMessage);
       }
     };
-  }, [mode, switchToEditorMode]);
+  }, [switchToEditorMode]);
 };

@@ -22,7 +22,6 @@ const entityStore = new EntityStore({
 
 const experience: Experience<EntityStore> = {
   entityStore,
-  mode: 'preview',
 };
 
 describe('PreviewDeliveryRoot', () => {
@@ -56,7 +55,6 @@ describe('PreviewDeliveryRoot', () => {
 
     const experience: Experience<EntityStore> = {
       entityStore,
-      mode: 'preview',
     };
 
     const switchToEditorMode = jest.fn();
@@ -73,7 +71,7 @@ describe('PreviewDeliveryRoot', () => {
     );
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      `[exp-builder.sdk] Contenful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
+      `[exp-builder.sdk] Contentful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
   });
 

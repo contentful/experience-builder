@@ -9,20 +9,19 @@ import { useBreakpoints, useEditorModeSwitch } from '../../hooks';
 type DeliveryRootProps = {
   experience: Experience<EntityStore>;
   locale: string;
-  mode: InternalSDKMode;
+  /** @deprecated mode no longer required */
+  mode?: InternalSDKMode;
   switchToEditorMode: () => void;
 };
 
 export const PreviewDeliveryRoot = ({
   locale,
-  mode,
   switchToEditorMode,
   experience,
 }: DeliveryRootProps) => {
   const { entityStore } = experience;
 
   useEditorModeSwitch({
-    mode,
     switchToEditorMode,
   });
 
@@ -34,7 +33,7 @@ export const PreviewDeliveryRoot = ({
 
   if (!compatibleVersions.includes(entityStore.schemaVersion)) {
     console.warn(
-      `[exp-builder.sdk] Contenful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
+      `[exp-builder.sdk] Contentful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
     return null;
   }

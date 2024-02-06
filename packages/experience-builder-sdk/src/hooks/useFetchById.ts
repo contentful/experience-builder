@@ -5,23 +5,18 @@ import { useFetchByBase } from './useFetchByBase';
 import { fetchById } from '@contentful/experience-builder-core';
 
 export type UseFetchByIdArgs = {
-  mode: ExternalSDKMode;
+  /** @deprecated mode no longer used */
+  mode?: ExternalSDKMode;
   client: ContentfulClientApi<undefined>;
   id: string;
   experienceTypeId: string;
   localeCode: string;
 };
 
-export const useFetchById = ({
-  id,
-  localeCode,
-  client,
-  experienceTypeId,
-  mode,
-}: UseFetchByIdArgs) => {
+export const useFetchById = ({ id, localeCode, client, experienceTypeId }: UseFetchByIdArgs) => {
   const fetchMethod = useCallback(() => {
-    return fetchById({ id, localeCode, client, experienceTypeId, mode });
-  }, [id, localeCode, client, experienceTypeId, mode]);
+    return fetchById({ id, localeCode, client, experienceTypeId });
+  }, [id, localeCode, client, experienceTypeId]);
 
   return useFetchByBase(fetchMethod);
 };

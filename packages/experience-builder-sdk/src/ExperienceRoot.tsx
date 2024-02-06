@@ -2,15 +2,10 @@ import React, { useCallback, useState } from 'react';
 import {
   VisualEditorMode,
   isDeprecatedExperience,
-  supportedModes,
   validateExperienceBuilderConfig,
 } from '@contentful/experience-builder-core';
 import { EntityStore } from '@contentful/experience-builder-core';
-import type {
-  DeprecatedExperience,
-  Experience,
-  InternalSDKMode,
-} from '@contentful/experience-builder-core/types';
+import type { DeprecatedExperience, Experience } from '@contentful/experience-builder-core/types';
 import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPreviewDeliveryRoot';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
@@ -39,38 +34,24 @@ export const ExperienceRoot = ({
   slug,
   visualEditorMode = VisualEditorMode.LazyLoad,
 }: ExperienceRootProps) => {
-  const [mode, setMode] = useState<InternalSDKMode>(() => {
-    if (!experience) {
-      if (typeof window !== 'undefined' && window !== window.parent) {
-        return 'editor';
-      }
-      return 'delivery';
-    }
-
-    if (supportedModes.includes(experience.mode)) {
-      return experience.mode;
-    }
-
+  const [isEditorMode, setIsEditorMode] = useState(() => {
     if (inIframe()) {
-      return 'editor';
+      return true;
     }
-
-    throw new Error(
-      `Unsupported mode provided: ${experience.mode}. Supported values: ${supportedModes}`,
-    );
+    return false;
   });
 
   const switchToEditorMode = useCallback(() => {
-    console.debug(`[exp-builder.sdk] Switching from ${mode} to editor mode.`);
-    setMode('editor');
-  }, [mode]);
+    console.debug(`[exp-builder.sdk] Switching to editor mode.`);
+    setIsEditorMode(true);
+  }, [isEditorMode]);
 
   validateExperienceBuilderConfig({
     locale,
-    mode,
+    isEditorMode,
   });
 
-  if (mode === 'editor') {
+  if (isEditorMode) {
     const entityStore =
       experience && !isDeprecatedExperience(experience) ? experience.entityStore : undefined;
     return (
@@ -88,7 +69,6 @@ export const ExperienceRoot = ({
     return (
       <DeprecatedPreviewDeliveryRoot
         deprecatedExperience={experience as DeprecatedExperience}
-        mode={mode}
         switchToEditorMode={switchToEditorMode}
         locale={locale}
         slug={slug}
@@ -99,7 +79,6 @@ export const ExperienceRoot = ({
   return (
     <PreviewDeliveryRoot
       locale={locale}
-      mode={mode}
       switchToEditorMode={switchToEditorMode}
       experience={experience}
     />

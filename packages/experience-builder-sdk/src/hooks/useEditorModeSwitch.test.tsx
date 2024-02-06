@@ -24,23 +24,6 @@ describe('useEditorModeSwitch', () => {
     expect(sendMessage).toHaveBeenCalledWith(OUTGOING_EVENTS.Connected);
   });
 
-  it('should not send CONNECTED event in delivery mode', () => {
-    renderHook((props) => useEditorModeSwitch(props), {
-      initialProps: {
-        mode: 'delivery' as ExternalSDKMode,
-        switchToEditorMode: jest.fn() as () => void,
-      },
-    });
-
-    try {
-      waitFor(() => expect(sendMessage).toHaveBeenCalled(), { timeout: 50 });
-    } catch (e) {
-      // noop
-    }
-
-    expect(sendMessage).not.toHaveBeenCalled();
-  });
-
   it('should switch the mode to editor when it receives a REQUEST_EDITOR_MODE message', () => {
     const switchToEditorMode = jest.fn() as () => void;
 
