@@ -40,7 +40,7 @@
     "*.d.ts"
   ],
   "scripts": {
-    "dev:": "echo noop",
+    "dev": "echo noop",
     "clean": "rimraf ./dist",
     "prebuild": "npm run clean",
     "build": "tsup",
