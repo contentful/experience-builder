@@ -4,11 +4,13 @@ import {
   calculateNodeDefaultHeight,
   transformContentValue,
   isLinkToAsset,
+  isEmptyStructureWithRelativeHeight,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
+  EMPTY_CONTAINER_HEIGHT,
 } from '@contentful/experience-builder-core/constants';
 import type {
   StyleProps,
@@ -76,6 +78,7 @@ export const useComponentProps = ({
             variableName === 'cfHeight'
               ? calculateNodeDefaultHeight({
                   blockId: node.data.blockId,
+                  children: node.children,
                   value: valueByBreakpoint,
                 })
               : valueByBreakpoint;
@@ -134,6 +137,7 @@ export const useComponentProps = ({
   }, [
     definition,
     node.data.props,
+    node.children,
     node.data.blockId,
     resolveDesignValue,
     dataSource,
@@ -167,6 +171,9 @@ export const useComponentProps = ({
       width: '100%',
       height: '100%',
       maxWidth: 'none',
+      ...(isEmptyStructureWithRelativeHeight(node.children.length, node?.data.blockId, height) && {
+        minHeight: EMPTY_CONTAINER_HEIGHT,
+      }),
     },
     nodeId: node.data.id,
   });
