@@ -3,6 +3,7 @@ import { z } from 'zod';
 const schemaVersion = '2023-09-28' as const;
 
 const CompositionDataSourceSchema = z.record(
+  z.string(),
   z.union([
     z.object({
       sys: z.object({
@@ -55,6 +56,7 @@ const Breakpoint = z.object({
 });
 
 const CompositionUnboundValuesSchema = z.record(
+  z.string(),
   z.object({
     value: CompositionVariableValueTypeSchema,
   })
@@ -96,7 +98,7 @@ const localeWrapper = (fieldSchema: any) => z.record(z.string(), fieldSchema);
 export const ExperienceFieldsSchema = z.object({
   componentTree: localeWrapper(
     z.object({
-      breakpoints: z.array(Breakpoint),
+      breakpoints: z.array(Breakpoint).min(1, { message: 'At least one breakpoint is required' }),
       children: z.array(CompositionNodeSchema),
       schemaVersion: z.literal(schemaVersion),
     })

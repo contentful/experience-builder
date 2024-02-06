@@ -4,10 +4,9 @@ import { z } from 'zod';
 const VERSION_SCHEMAS = {
   '2023-09-28': Schema_2023_09_28,
 };
-
 export const validateExperienceFields = (
   experience: any,
-  schemaVersion: '2023-09-28'
+  schemaVersion: keyof typeof VERSION_SCHEMAS
 ): z.SafeParseReturnType<any, any> => {
   const schema = VERSION_SCHEMAS[schemaVersion];
 
