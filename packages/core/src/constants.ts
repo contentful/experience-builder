@@ -157,6 +157,8 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageAlignmentHorizontal',
 ];
 
+export const EMPTY_CONTAINER_HEIGHT = '120px';
+
 export enum PostMessageMethods {
   REQUEST_ENTITIES = 'REQUEST_ENTITIES',
   REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',

@@ -509,7 +509,7 @@ export const columnsBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The spacing between the elements of the columns',
-    defaultValue: '0 10px',
+    defaultValue: '10px 10px',
   },
   cfBackgroundImageScaling: {
     displayName: 'Image Scaling',
@@ -544,6 +544,16 @@ export const columnsBuiltInStyles: Partial<
   cfColumns: {
     type: 'Text',
     defaultValue: '[6, 6]',
+    group: 'style',
+  },
+  cfWrapColumns: {
+    type: 'Text',
+    defaultValue: 'false',
+    group: 'style',
+  },
+  cfWrapColumnsCount: {
+    type: 'Text',
+    defaultValue: '2',
     group: 'style',
   },
 };

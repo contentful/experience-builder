@@ -36,7 +36,6 @@ export {
   ASSEMBLY_NODE_TYPES,
   SCROLL_STATES,
 } from '@contentful/experience-builder-core/constants';
-export { tryParseMessage, doesMismatchMessageSchema } from './utils/validation';
 
 export type {
   InternalSDKMode,

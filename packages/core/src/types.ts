@@ -237,6 +237,8 @@ export type StyleProps = {
   cfTextUnderline: boolean;
   cfColumns: string;
   cfColumnSpan: string;
+  cfWrapColumns: string;
+  cfWrapColumnsCount: string;
 };
 
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic

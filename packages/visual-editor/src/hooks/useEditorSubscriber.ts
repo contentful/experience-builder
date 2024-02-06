@@ -48,6 +48,7 @@ export function useEditorSubscriber() {
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
 
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
+  const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
 
   const [isFetchingEntities, setFetchingEntities] = useState(false);
 
@@ -244,6 +245,7 @@ export function useEditorSubscriber() {
 
           if (!isDragging) {
             setComponentId('');
+            setDraggingOnCanvas(false);
             dragState.reset();
           }
           break;
@@ -285,6 +287,7 @@ export function useEditorSubscriber() {
         case INCOMING_EVENTS.ComponentDragEnded: {
           dragState.reset();
           setComponentId('');
+          setDraggingOnCanvas(false);
           break;
         }
         case INCOMING_EVENTS.SelectComponent: {
@@ -308,6 +311,7 @@ export function useEditorSubscriber() {
   }, [
     entityStore,
     setComponentId,
+    setDraggingOnCanvas,
     setDataSource,
     setLocale,
     setSelectedNodeId,
