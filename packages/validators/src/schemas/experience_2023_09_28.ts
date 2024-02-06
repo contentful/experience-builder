@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const SchemaVersionsSchema = z.enum(['2023-09-28', '2023-06-27', '2023-07-26', '2023-08-23']);
+const schemaVersion = '2023-09-28' as const;
 
 const CompositionDataSourceSchema = z.record(
   z.union([
@@ -91,18 +91,20 @@ const ExperienceComponentSettingsSchema = z.object({
   ),
 });
 
+const localeWrapper = (fieldSchema: any) => z.record(z.string(), fieldSchema);
+
 export const ExperienceFieldsSchema = z.object({
-  title: z.string(),
-  slug: z.string(),
-  componentTree: z.object({
-    breakpoints: z.array(Breakpoint),
-    children: z.array(CompositionNodeSchema),
-    schemaVersion: SchemaVersionsSchema,
-  }),
-  dataSource: CompositionDataSourceSchema,
-  unboundValues: CompositionUnboundValuesSchema,
-  usedComponents: z
-    .array(
+  componentTree: localeWrapper(
+    z.object({
+      breakpoints: z.array(Breakpoint),
+      children: z.array(CompositionNodeSchema),
+      schemaVersion: z.literal(schemaVersion),
+    })
+  ),
+  dataSource: localeWrapper(CompositionDataSourceSchema),
+  unboundValues: localeWrapper(CompositionUnboundValuesSchema),
+  usedComponents: localeWrapper(
+    z.array(
       z.object({
         sys: z.object({
           type: z.literal('Link'),
@@ -111,8 +113,8 @@ export const ExperienceFieldsSchema = z.object({
         }),
       })
     )
-    .optional(),
-  componentSettings: ExperienceComponentSettingsSchema.optional(),
+  ).optional(),
+  componentSettings: localeWrapper(ExperienceComponentSettingsSchema).optional(),
 });
 
 export type CompositionZod = z.infer<typeof ExperienceFieldsSchema>;
