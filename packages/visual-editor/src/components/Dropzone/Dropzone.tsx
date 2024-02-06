@@ -75,7 +75,7 @@ export function Dropzone({
   WrapperComponent = 'div',
   ...rest
 }: DropzoneProps) {
-  const isBeforeCapture = useDraggedItemStore((state) => state.isBeforeCapture);
+  const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
   const tree = useTreeStore((state) => state.tree);
   const placeholderStyle = usePlaceholderStyleStore((state) => state.style);
@@ -97,8 +97,6 @@ export function Dropzone({
 
   const isDestination = draggedDestinationId === zoneId;
   const hoveringOverSection = hoveringSection ? hoveringSection === sectionId : isRootZone;
-
-  const userIsDragging = !!draggedItem;
 
   useEffect(() => {
     addSectionWithZone(sectionId);
@@ -173,7 +171,7 @@ export function Dropzone({
                 [styles.isDragging]: userIsDragging && !isAssembly,
                 [styles.isHovering]: hoveringOverZone && !userIsDragging,
                 [styles.isDestination]: isDestination && !isAssembly,
-                [styles.isExpanded]: isBeforeCapture,
+                [styles.isExpanded]: userIsDragging,
               },
               className
             )}

@@ -22,7 +22,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
 
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
-  const userIsDragging = !!dragItem;
+  const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const breakpoints = useTreeStore((state) => state.breakpoints);
 
   const { resolveDesignValue } = useBreakpoints(breakpoints);

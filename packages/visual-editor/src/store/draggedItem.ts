@@ -8,21 +8,21 @@ export interface DraggedItemStore {
   setComponentId: (id: string) => void;
   draggedItem?: DraggedItem;
   updateItem: (item?: DraggedItem) => void;
-  isBeforeCapture: boolean;
-  setBeforeCapture: (isBeforeCapture?: boolean) => void;
+  isDraggingOnCanvas: boolean;
+  setDraggingOnCanvas: (isDraggingOnCanvas: boolean) => void;
 }
 
 export const useDraggedItemStore = create<DraggedItemStore>((set) => ({
   draggedItem: undefined,
   componentId: '',
-  isBeforeCapture: false,
+  isDraggingOnCanvas: false,
   setComponentId(id) {
     set({ componentId: id });
   },
   updateItem: (item) => {
     set({ draggedItem: item });
   },
-  setBeforeCapture: (isBeforeCapture) => {
-    set({ isBeforeCapture });
+  setDraggingOnCanvas: (isDraggingOnCanvas) => {
+    set({ isDraggingOnCanvas });
   },
 }));
