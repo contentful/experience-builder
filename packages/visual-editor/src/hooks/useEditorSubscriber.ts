@@ -361,7 +361,7 @@ export function useEditorSubscriber() {
     window.addEventListener('scroll', onScroll, { capture: true, passive: true });
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll, { capture: true });
       clearTimeout(timeoutId);
     };
   }, [selectedNodeId]);

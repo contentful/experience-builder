@@ -13,13 +13,17 @@
   "style": "./styles.css",
   "type": "module",
   "scripts": {
-    "prebuild": "rimraf dist && rimraf styles.css",
-    "build": "rollup -c rollup.config.mjs",
+    "clean": "rimraf dist && rimraf styles.css",
+    "predev": "npm run clean",
+    "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
+    "prebuild": "npm run clean",
+    "build": "rollup -c ./rollup.config.mjs",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test:component": "npx cypress run --component",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "depcruise": "depcruise src"
   },
   "author": "",
   "license": "MIT",

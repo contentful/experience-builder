@@ -27,6 +27,7 @@ export default [
       commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
+        noEmitOnError: process.env.DEV ? false : true,
         exclude: [
           'dist',
           'node_modules',
@@ -42,7 +43,7 @@ export default [
   {
     input: 'src/index.tsx',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
-    plugins: [dts()],
+    plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
     external: [/.css/],
   },
   {
@@ -66,7 +67,7 @@ export default [
       injectProcessEnv({
         NODE_ENV: 'production',
       }),
-      typescript({ tsconfig: './tsconfig.json' }),
+      typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true }),
     ],
     external: [],
   },

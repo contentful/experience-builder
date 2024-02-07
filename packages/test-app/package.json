@@ -4,7 +4,7 @@
   "version": "0.0.1-pre-20231216T233830.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force",
     "start": "vite",
     "prebuild": "rimraf dist",
     "build": "tsc && vite build",
@@ -13,7 +13,8 @@
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "depcruise": "depcruise src"
   },
   "dependencies": {
     "@contentful/experience-builder": "file:../experience-builder-sdk",
@@ -38,6 +39,7 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
+    "dependency-cruiser": "^16.2.0",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",

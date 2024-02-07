@@ -450,7 +450,12 @@ export const singleColumnBuiltInStyles: Partial<
     type: 'Text',
     defaultValue: '6',
     group: 'style',
-  } as ComponentDefinitionVariable<'Text'>,
+  },
+  cfColumnSpanLock: {
+    type: 'Text',
+    defaultValue: 'false',
+    group: 'style',
+  },
 };
 
 export const columnsBuiltInStyles: Partial<
@@ -543,7 +548,7 @@ export const columnsBuiltInStyles: Partial<
   },
   cfColumns: {
     type: 'Text',
-    defaultValue: '[6, 6]',
+    defaultValue: '[6,6]',
     group: 'style',
   },
   cfWrapColumns: {

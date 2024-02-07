@@ -40,6 +40,7 @@
     "*.d.ts"
   ],
   "scripts": {
+    "dev": "echo noop",
     "clean": "rimraf ./dist",
     "prebuild": "npm run clean",
     "build": "tsup",
@@ -50,7 +51,8 @@
     "release": "npm run build && auto shipit",
     "eject-ts": "zx scripts/eject-typescript.mjs",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "depcruise": "depcruise src"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.0.0",
