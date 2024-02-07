@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.20](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.19...@contentful/experience-builder@4.0.0-alpha.20) (2024-02-06)
+
+**Note:** Version bump only for package @contentful/experience-builder
+
 # [4.0.0-alpha.19](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.17...@contentful/experience-builder@4.0.0-alpha.19) (2024-02-01)
 
 ### Bug Fixes

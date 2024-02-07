@@ -561,4 +561,14 @@ export const columnsBuiltInStyles: Partial<
     defaultValue: '2',
     group: 'style',
   },
+  cfWrapColumns: {
+    type: 'Text',
+    defaultValue: 'false',
+    group: 'style',
+  },
+  cfWrapColumnsCount: {
+    type: 'Text',
+    defaultValue: '2',
+    group: 'style',
+  },
 };
