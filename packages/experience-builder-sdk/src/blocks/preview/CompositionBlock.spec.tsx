@@ -67,7 +67,7 @@ describe('CompositionBlock', () => {
           value2: { value: 1 },
         }}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
   });
 
@@ -88,7 +88,7 @@ describe('CompositionBlock', () => {
         usedComponents={[]}
         unboundValues={{}}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
 
     expect(getByTestId('contentful-container')).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe('CompositionBlock', () => {
         usedComponents={[]}
         unboundValues={{}}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
 
     expect(getByTestId('contentful-container')).toBeInTheDocument();
@@ -160,7 +160,7 @@ describe('CompositionBlock', () => {
         usedComponents={[assemblyEntry] as ExperienceEntry[]}
         unboundValues={experienceEntry.fields.unboundValues}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
 
     expect(getByTestId('assembly')).toBeInTheDocument();

@@ -51,22 +51,22 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   const activeBreakpointIndex = getActiveBreakpointIndex(
     breakpoints,
     mediaQueryMatches,
-    fallbackBreakpointIndex
+    fallbackBreakpointIndex,
   );
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
     (
       valuesByBreakpoint: ValuesByBreakpoint,
-      variableName: string
+      variableName: string,
     ): CompositionVariableValueType => {
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,
         activeBreakpointIndex,
-        variableName
+        variableName,
       );
     },
-    [activeBreakpointIndex, breakpoints]
+    [activeBreakpointIndex, breakpoints],
   );
 
   return { resolveDesignValue };

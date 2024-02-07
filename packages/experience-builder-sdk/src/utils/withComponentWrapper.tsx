@@ -39,7 +39,7 @@ export function withComponentWrapper<T extends object>(
   options: ComponentRegistration['options'] = {
     wrapComponent: true,
     wrapContainerTag: 'div',
-  }
+  },
 ) {
   const Wrapped = ({
     classes = '',

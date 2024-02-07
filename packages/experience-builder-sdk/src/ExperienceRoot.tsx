@@ -56,7 +56,7 @@ export const ExperienceRoot = ({
     }
 
     throw new Error(
-      `Unsupported mode provided: ${experience.mode}. Supported values: ${supportedModes}`
+      `Unsupported mode provided: ${experience.mode}. Supported values: ${supportedModes}`,
     );
   });
 
