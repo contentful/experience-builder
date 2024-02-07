@@ -16,10 +16,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Checkout all branches and tags, needed for publish
-      - name: 'Use NodeJS 18'
-        uses: actions/setup-node@v3
+      - name: 'Use NodeJS 20'
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20.11'
       - name: 'Authenticate with private NPM package'
         run: npm set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
       - name: Install dependencies
