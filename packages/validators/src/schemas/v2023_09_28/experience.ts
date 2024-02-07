@@ -131,5 +131,24 @@ export const ExperienceFieldsSchema = z.object({
   ).optional(),
   componentSettings: localeWrapper(ExperienceComponentSettingsSchema).optional(),
 });
+//.superRefine(
+//   (
+//     { componentSettings, usedComponents },
+//     refinementContext
+//   ) => {
+//     const localeKey = Object.keys(componentSettings ?? {})[0];
+//     console.log("componentSettings", componentSettings)
+//     if (!componentSettings || !usedComponents) {
+//       return;
+//     }
+//     if (componentSettings[localeKey] !== undefined && usedComponents[localeKey] === undefined) {
+//       refinementContext.addIssue({
+//         code: z.ZodIssueCode.custom,
+//         message: `'usedComponents' should be empty if 'componentSettings' is not empty`,
+//         path: ['fields', 'usedComponents', localeKey],
+//       });
+//     }
+//   }
+// );;
 
 export type CompositionZod = z.infer<typeof ExperienceFieldsSchema>;

@@ -1,5 +1,5 @@
-import { validateExperienceFields } from '../src/validators';
-import { experience, experiencePattern } from './fixtures/v2023_09_28';
+import { validateExperienceFields } from '../../src/validators';
+import { experience, experiencePattern } from '../fixtures/v2023_09_28';
 import { describe, it, expect } from 'vitest';
 import { SafeParseError, SafeParseSuccess, ZodInvalidUnionIssue } from 'zod';
 

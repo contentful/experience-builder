@@ -1,1 +1,1 @@
-export { ExperienceFieldsSchema as Schema_2023_09_28 } from './experience_2023_09_28';
+export { ExperienceFieldsSchema as Schema_2023_09_28 } from './v2023_09_28/experience';
