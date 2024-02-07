@@ -1,4 +1,4 @@
-import constants from '@/utils/constants';
+import { constants } from '@/utils/constants';
 import { Image } from './Image';
 import React from 'react';
 

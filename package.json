@@ -26,7 +26,8 @@
     "build": "lerna run build",
     "start": "lerna run --stream start",
     "prettier:check": "lerna run prettier:check",
-    "cm": "git-cz"
+    "cm": "git-cz",
+    "depcruise": "lerna run depcruise"
   },
   "dependencies": {},
   "devDependencies": {
