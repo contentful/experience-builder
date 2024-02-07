@@ -1,5 +1,5 @@
 import { validateExperienceFields } from '../src/validators';
-import { experience } from './fixtures/experience_2023_09_28';
+import { experience, experiencePattern } from './fixtures/v2023_09_28';
 import { describe, it, expect } from 'vitest';
 import { SafeParseError, SafeParseSuccess, ZodInvalidUnionIssue } from 'zod';
 
@@ -500,8 +500,8 @@ describe(`${schemaVersion} version`, () => {
 
   describe('componentSettings', () => {
     it('fails if variableDefinitions is missing', () => {
-      const updatedExperience = {
-        ...experience,
+      const updatedPattern = {
+        ...experiencePattern,
         fields: {
           ...experience.fields,
           componentSettings: {
@@ -509,8 +509,8 @@ describe(`${schemaVersion} version`, () => {
           },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
+      const result = validateExperienceFields(updatedPattern, schemaVersion) as SafeParseError<
+        typeof updatedPattern
       >;
 
       const expectedError = {
@@ -526,8 +526,8 @@ describe(`${schemaVersion} version`, () => {
     });
 
     it('fails if variable definition is invalid', () => {
-      const updatedExperience = {
-        ...experience,
+      const updatedPattern = {
+        ...experiencePattern,
         fields: {
           ...experience.fields,
           componentSettings: {
@@ -535,8 +535,8 @@ describe(`${schemaVersion} version`, () => {
           },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
+      const result = validateExperienceFields(updatedPattern, schemaVersion) as SafeParseError<
+        typeof updatedPattern
       >;
 
       const expectedError = {
@@ -551,25 +551,25 @@ describe(`${schemaVersion} version`, () => {
       expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
     });
 
-    it('fails if variable definition is missing a label', () => {
-      const updatedExperience = {
-        ...experience,
+    it('fails if variable definition is missing a displayName', () => {
+      const updatedPattern = {
+        ...experiencePattern,
         fields: {
           ...experience.fields,
           componentSettings: {
-            [locale]: { variableDefinitions: { var1: { type: 'DesignValue', defaultValue: '' } } },
+            [locale]: { variableDefinitions: { var1: { type: 'Text', defaultValue: '' } } },
           },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
+      const result = validateExperienceFields(updatedPattern, schemaVersion) as SafeParseError<
+        typeof updatedPattern
       >;
 
       const expectedError = {
         received: 'undefined',
         code: 'invalid_type',
         expected: 'string',
-        path: ['componentSettings', 'en-US', 'variableDefinitions', 'var1', 'label'],
+        path: ['componentSettings', 'en-US', 'variableDefinitions', 'var1', 'displayName'],
         message: 'Required',
       };
 
@@ -581,6 +581,15 @@ describe(`${schemaVersion} version`, () => {
   it('should validate the experience successfully', () => {
     const result = validateExperienceFields(experience, schemaVersion) as SafeParseSuccess<
       typeof experience
+    >;
+
+    expect(result.success).toBe(true);
+    expect(result.data).not.toBeUndefined();
+  });
+
+  it('should validate the pattern successfully', () => {
+    const result = validateExperienceFields(experiencePattern, schemaVersion) as SafeParseSuccess<
+      typeof experiencePattern
     >;
 
     expect(result.success).toBe(true);

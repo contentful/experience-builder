@@ -29,6 +29,17 @@ const CompositionVariableValueTypeSchema = z.union([
   z.record(z.unknown()),
 ]);
 
+export const ComponentDefinitionVariableTypeSchema = z.union([
+  z.literal('Text'),
+  z.literal('RichText'),
+  z.literal('Number'),
+  z.literal('Date'),
+  z.literal('Boolean'),
+  z.literal('Location'),
+  z.literal('Media'),
+  z.literal('Object'),
+]);
+
 const CompositionComponentPropValueSchema = z.union([
   z.object({
     type: z.literal('DesignValue'),
@@ -85,10 +96,12 @@ const CompositionComponentPropTypeSchema = z.enum([
 const ExperienceComponentSettingsSchema = z.object({
   variableDefinitions: z.record(
     z.object({
-      type: CompositionComponentPropTypeSchema,
-      label: z.string(),
-      description: z.string().optional(),
+      displayName: z.string(),
+      type: ComponentDefinitionVariableTypeSchema,
       defaultValue: CompositionComponentPropValueSchema,
+      description: z.string().optional(),
+      group: z.string().optional(),
+      validations: z.record(z.string()).optional(),
     })
   ),
 });
