@@ -77,7 +77,7 @@ export const CONTENTFUL_COMPONENTS = {
   },
   singleColumn: {
     id: 'contentful-single-column',
-    name: 'Single Column',
+    name: 'Column',
   },
   button: {
     id: 'button',
