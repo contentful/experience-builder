@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.21](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.20...@contentful/experience-builder@4.0.0-alpha.21) (2024-02-07)
+
+### Bug Fixes
+
+- smaller dropzone indicator and container height adjustments [ALT-356] ([#326](https://github.com/contentful/experience-builder/issues/326)) ([bf75c10](https://github.com/contentful/experience-builder/commit/bf75c10b13e3e165dac1f4d1d6a68deae1622078))
+- update Text component built in styles and add hyperlink options [ALT-358] ([#319](https://github.com/contentful/experience-builder/issues/319)) ([441e11e](https://github.com/contentful/experience-builder/commit/441e11ee04038a701220535d78cab621433ad483))
+
 # [4.0.0-alpha.20](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.19...@contentful/experience-builder@4.0.0-alpha.20) (2024-02-06)
 
 **Note:** Version bump only for package @contentful/experience-builder

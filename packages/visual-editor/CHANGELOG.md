@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.22](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.21...@contentful/experience-builder-visual-editor@0.0.2-alpha.22) (2024-02-07)
+
+### Bug Fixes
+
+- assume not matching breakpoints and initialise correctly in the effect ([96c734a](https://github.com/contentful/experience-builder/commit/96c734a4b73630e2fd6a45fc9c0ae7b0778edd2b))
+- properly remove event listener on scroll ([#345](https://github.com/contentful/experience-builder/issues/345)) ([da2514c](https://github.com/contentful/experience-builder/commit/da2514c29c3b45419d19aa00892ab39b97e979fa))
+- smaller dropzone indicator and container height adjustments [ALT-356] ([#326](https://github.com/contentful/experience-builder/issues/326)) ([bf75c10](https://github.com/contentful/experience-builder/commit/bf75c10b13e3e165dac1f4d1d6a68deae1622078))
+
+### Features
+
+- **components:** column gaps [ALT-279] ([#324](https://github.com/contentful/experience-builder/issues/324)) ([465bd53](https://github.com/contentful/experience-builder/commit/465bd539b2dadc831096c9fba9f89c98e3687a04))
+
 ## [0.0.2-alpha.21](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.20...@contentful/experience-builder-visual-editor@0.0.2-alpha.21) (2024-02-06)
 
 **Note:** Version bump only for package @contentful/experience-builder-visual-editor

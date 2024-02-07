@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.22](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.21...@contentful/experience-builder-storybook-addon@0.0.2-alpha.22) (2024-02-07)
+
+### Bug Fixes
+
+- smaller dropzone indicator and container height adjustments [ALT-356] ([#326](https://github.com/contentful/experience-builder-storybook/issues/326)) ([bf75c10](https://github.com/contentful/experience-builder-storybook/commit/bf75c10b13e3e165dac1f4d1d6a68deae1622078))
+
 ## [0.0.2-alpha.21](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.20...@contentful/experience-builder-storybook-addon@0.0.2-alpha.21) (2024-02-06)
 
 **Note:** Version bump only for package @contentful/experience-builder-storybook-addon

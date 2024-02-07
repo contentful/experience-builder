@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.19](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.18...@contentful/experience-builder-core@0.0.2-alpha.19) (2024-02-07)
+
+### Bug Fixes
+
+- assume not matching breakpoints and initialise correctly in the effect ([96c734a](https://github.com/contentful/experience-builder-toolkit/commit/96c734a4b73630e2fd6a45fc9c0ae7b0778edd2b))
+- merge conflict in columns style type ([905add3](https://github.com/contentful/experience-builder-toolkit/commit/905add3870c3e1d4390680c62b762cf03b09a2e6))
+- smaller dropzone indicator and container height adjustments [ALT-356] ([#326](https://github.com/contentful/experience-builder-toolkit/issues/326)) ([bf75c10](https://github.com/contentful/experience-builder-toolkit/commit/bf75c10b13e3e165dac1f4d1d6a68deae1622078))
+
+### Features
+
+- **components:** ability to lock a column span for columns component ([#344](https://github.com/contentful/experience-builder-toolkit/issues/344)) ([f01c907](https://github.com/contentful/experience-builder-toolkit/commit/f01c907639ca549a7da48dbfd6279ec2e813fead))
+- **components:** add new design value to track column wrap ([#338](https://github.com/contentful/experience-builder-toolkit/issues/338)) ([4707707](https://github.com/contentful/experience-builder-toolkit/commit/47077072b01a0fcb7ee3da2617a25362688bbbf7))
+- **components:** column gaps [ALT-279] ([#324](https://github.com/contentful/experience-builder-toolkit/issues/324)) ([465bd53](https://github.com/contentful/experience-builder-toolkit/commit/465bd539b2dadc831096c9fba9f89c98e3687a04))
+
 ## [0.0.2-alpha.18](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.17...@contentful/experience-builder-core@0.0.2-alpha.18) (2024-02-06)
 
 **Note:** Version bump only for package @contentful/experience-builder-core

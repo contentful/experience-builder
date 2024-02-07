@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.22](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.21...@contentful/experience-builder-components@0.0.2-alpha.22) (2024-02-07)
+
+### Bug Fixes
+
+- update Text component built in styles and add hyperlink options [ALT-358] ([#319](https://github.com/contentful/experience-builder-toolkit/issues/319)) ([441e11e](https://github.com/contentful/experience-builder-toolkit/commit/441e11ee04038a701220535d78cab621433ad483))
+
+### Features
+
+- adds background label for empty containers ([11d3f7c](https://github.com/contentful/experience-builder-toolkit/commit/11d3f7cf6de6b862e0c6780e20ed0e83869bc348))
+
 ## [0.0.2-alpha.21](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.20...@contentful/experience-builder-components@0.0.2-alpha.21) (2024-02-06)
 
 **Note:** Version bump only for package @contentful/experience-builder-components
