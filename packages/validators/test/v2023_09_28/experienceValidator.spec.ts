@@ -5,9 +5,9 @@ import { SafeParseError, SafeParseSuccess, ZodInvalidUnionIssue } from 'zod';
 
 const schemaVersion = '2023-09-28' as const;
 const locale = 'en-US';
-const requiredFields = ['componentTree', 'dataSource', 'unboundValues'] as const;
 
 describe(`${schemaVersion} version`, () => {
+  const requiredFields = ['componentTree', 'dataSource', 'unboundValues'] as const;
   requiredFields.forEach((field) => {
     it(`should return an error if ${field} is missing`, () => {
       const { [field]: _, ...rest } = experience.fields;
@@ -162,11 +162,75 @@ describe(`${schemaVersion} version`, () => {
           expect(result.error.issues[0]).toEqual(expectedError);
         })
       );
+      describe('variables name', () => {
+        it(`fails if name contains invalid characters`, () => {
+          const componentTree = experience.fields.componentTree[locale];
+          const child = {
+            definitionId: 'test',
+            variables: {
+              ['text&^:']: { type: 'DesignValue', value: 'test' },
+            },
+            children: [],
+          };
+          const updatedExperience = {
+            ...experience,
+            fields: {
+              ...experience.fields,
+              componentTree: { [locale]: { ...componentTree, children: [child] } },
+            },
+          };
+
+          const result = validateExperienceFields(
+            updatedExperience,
+            schemaVersion
+          ) as SafeParseError<typeof updatedExperience>;
+
+          const expectedError = {
+            code: 'invalid_string',
+            path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text&^:'],
+            message: 'Invalid',
+            validation: 'regex',
+          };
+          expect(result.success).toBe(false);
+          expect(result.error.issues[0] as ZodInvalidUnionIssue).toEqual(expectedError);
+        });
+        it(`fails if name exceeds the allowed character limit`, () => {
+          const componentTree = experience.fields.componentTree[locale];
+          const child = {
+            definitionId: 'test',
+            variables: {
+              ['text'.repeat(20)]: { type: 'DesignValue', value: 'test' },
+            },
+            children: [],
+          };
+          const updatedExperience = {
+            ...experience,
+            fields: {
+              ...experience.fields,
+              componentTree: { [locale]: { ...componentTree, children: [child] } },
+            },
+          };
+
+          const result = validateExperienceFields(
+            updatedExperience,
+            schemaVersion
+          ) as SafeParseError<typeof updatedExperience>;
+
+          const expectedError = {
+            code: 'invalid_string',
+            path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text'.repeat(20)],
+            message: 'Invalid',
+            validation: 'regex',
+          };
+          expect(result.success).toBe(false);
+          expect(result.error.issues[0] as ZodInvalidUnionIssue).toEqual(expectedError);
+        });
+      });
+
       describe('variables values', () => {
         describe('DesignValue', () => {
           it(`fails if 'valuesByBreakpoint' is not present`, () => {
             const componentTree = experience.fields.componentTree[locale];
-            // child includes all attributes except the one we want to test
             const child = {
               definitionId: 'test',
               variables: {

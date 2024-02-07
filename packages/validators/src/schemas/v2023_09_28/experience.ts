@@ -2,8 +2,10 @@ import { z } from 'zod';
 
 const schemaVersion = '2023-09-28' as const;
 
+const variableKeySchema = z.string().regex(/^[a-zA-Z0-9-_.]{1,64}$/);
+
 const CompositionDataSourceSchema = z.record(
-  z.string(),
+  variableKeySchema,
   z.union([
     z.object({
       sys: z.object({
@@ -29,15 +31,15 @@ const CompositionVariableValueTypeSchema = z.union([
   z.record(z.unknown()),
 ]);
 
-export const ComponentDefinitionVariableTypeSchema = z.union([
-  z.literal('Text'),
-  z.literal('RichText'),
-  z.literal('Number'),
-  z.literal('Date'),
-  z.literal('Boolean'),
-  z.literal('Location'),
-  z.literal('Media'),
-  z.literal('Object'),
+export const ComponentDefinitionVariableTypeSchema = z.enum([
+  'Text',
+  'RichText',
+  'Number',
+  'Date',
+  'Boolean',
+  'Location',
+  'Media',
+  'Object',
 ]);
 
 const CompositionComponentPropValueSchema = z.union([
@@ -67,7 +69,7 @@ const Breakpoint = z.object({
 });
 
 const CompositionUnboundValuesSchema = z.record(
-  z.string(),
+  variableKeySchema,
   z.object({
     value: CompositionVariableValueTypeSchema,
   })
@@ -75,7 +77,7 @@ const CompositionUnboundValuesSchema = z.record(
 
 const baseCompositionNodeSchema = z.object({
   definitionId: z.string(),
-  variables: z.record(CompositionComponentPropValueSchema),
+  variables: z.record(variableKeySchema, CompositionComponentPropValueSchema),
 });
 
 type CompositionNode = z.infer<typeof baseCompositionNodeSchema> & {
@@ -85,13 +87,6 @@ type CompositionNode = z.infer<typeof baseCompositionNodeSchema> & {
 const CompositionNodeSchema: z.ZodType<CompositionNode> = baseCompositionNodeSchema.extend({
   children: z.lazy(() => CompositionNodeSchema.array()),
 });
-
-const CompositionComponentPropTypeSchema = z.enum([
-  'BoundValue',
-  'UnboundValue',
-  'DesignValue',
-  'ComponentValue',
-]);
 
 const ExperienceComponentSettingsSchema = z.object({
   variableDefinitions: z.record(
