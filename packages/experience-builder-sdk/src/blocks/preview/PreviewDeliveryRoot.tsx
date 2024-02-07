@@ -1,29 +1,17 @@
 import React from 'react';
-
 import { EntityStore } from '@contentful/experience-builder-core';
-import type { Experience, InternalSDKMode } from '@contentful/experience-builder-core/types';
+import type { Experience } from '@contentful/experience-builder-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
-import { useBreakpoints, useEditorModeSwitch } from '../../hooks';
+import { useBreakpoints } from '../../hooks';
 
 type DeliveryRootProps = {
   experience: Experience<EntityStore>;
   locale: string;
-  /** @deprecated mode no longer required */
-  mode?: InternalSDKMode;
-  switchToEditorMode: () => void;
 };
 
-export const PreviewDeliveryRoot = ({
-  locale,
-  switchToEditorMode,
-  experience,
-}: DeliveryRootProps) => {
+export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) => {
   const { entityStore } = experience;
-
-  useEditorModeSwitch({
-    switchToEditorMode,
-  });
 
   const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? []);
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import {
   VisualEditorMode,
   isDeprecatedExperience,
@@ -9,6 +9,7 @@ import type { DeprecatedExperience, Experience } from '@contentful/experience-bu
 import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPreviewDeliveryRoot';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
+import { useDetectEditorMode } from './hooks/useDetectEditorMode';
 
 type ExperienceRootProps = {
   experience?: Experience<EntityStore> | DeprecatedExperience;
@@ -20,31 +21,13 @@ type ExperienceRootProps = {
   visualEditorMode?: VisualEditorMode;
 };
 
-function inIframe() {
-  try {
-    return window.self !== window.top;
-  } catch (e) {
-    return false;
-  }
-}
-
 export const ExperienceRoot = ({
   locale,
   experience,
   slug,
   visualEditorMode = VisualEditorMode.LazyLoad,
 }: ExperienceRootProps) => {
-  const [isEditorMode, setIsEditorMode] = useState(() => {
-    if (inIframe()) {
-      return true;
-    }
-    return false;
-  });
-
-  const switchToEditorMode = useCallback(() => {
-    console.debug(`[exp-builder.sdk] Switching to editor mode.`);
-    setIsEditorMode(true);
-  }, []);
+  const isEditorMode = useDetectEditorMode();
 
   validateExperienceBuilderConfig({
     locale,
@@ -69,18 +52,11 @@ export const ExperienceRoot = ({
     return (
       <DeprecatedPreviewDeliveryRoot
         deprecatedExperience={experience as DeprecatedExperience}
-        switchToEditorMode={switchToEditorMode}
         locale={locale}
         slug={slug}
       />
     );
   }
 
-  return (
-    <PreviewDeliveryRoot
-      locale={locale}
-      switchToEditorMode={switchToEditorMode}
-      experience={experience}
-    />
-  );
+  return <PreviewDeliveryRoot locale={locale} experience={experience} />;
 };

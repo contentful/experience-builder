@@ -30,16 +30,7 @@ describe('PreviewDeliveryRoot', () => {
   });
 
   it('returns null if experience is not fetched', () => {
-    const switchToEditorMode = jest.fn();
-
-    const { container } = render(
-      <PreviewDeliveryRoot
-        locale={locale}
-        mode="preview"
-        switchToEditorMode={switchToEditorMode}
-        experience={experience}
-      />,
-    );
+    const { container } = render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
 
     expect(container.childElementCount).toBe(0);
   });
@@ -57,18 +48,9 @@ describe('PreviewDeliveryRoot', () => {
       entityStore,
     };
 
-    const switchToEditorMode = jest.fn();
-
     const consoleWarnSpy = jest.spyOn(console, 'warn');
 
-    render(
-      <PreviewDeliveryRoot
-        locale={locale}
-        mode="preview"
-        switchToEditorMode={switchToEditorMode}
-        experience={experience}
-      />,
-    );
+    render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
       `[exp-builder.sdk] Contentful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
@@ -87,15 +69,8 @@ describe('PreviewDeliveryRoot', () => {
       },
     ]);
 
-    const switchToEditorMode = jest.fn();
-
     const { container, getByTestId } = render(
-      <PreviewDeliveryRoot
-        locale={locale}
-        mode="preview"
-        switchToEditorMode={switchToEditorMode}
-        experience={experience}
-      />,
+      <PreviewDeliveryRoot locale={locale} experience={experience} />,
     );
 
     expect(container.childElementCount).toBe(1);
