@@ -59,7 +59,7 @@ export const CompositionBlock = ({
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
     () => checkIsAssemblyNode({ componentId: rawNode.definitionId, usedComponents }),
-    [rawNode.definitionId, usedComponents]
+    [rawNode.definitionId, usedComponents],
   );
 
   const node = useMemo(() => {
@@ -171,7 +171,7 @@ export const CompositionBlock = ({
 
   if (
     [CONTENTFUL_COMPONENTS.container.id, CONTENTFUL_COMPONENTS.section.id].includes(
-      node.definitionId
+      node.definitionId,
     )
   ) {
     return (
@@ -207,6 +207,6 @@ export const CompositionBlock = ({
       ...omit(nodeProps, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
       className,
     },
-    children
+    children,
   );
 };

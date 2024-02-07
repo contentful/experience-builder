@@ -36,7 +36,7 @@ export const useExperienceBuilder = ({
       experienceTypeId,
       mode,
     }),
-    [mode, client, experienceTypeId]
+    [mode, client, experienceTypeId],
   );
 
   return {

@@ -180,7 +180,7 @@ describe('useFetchExperience', () => {
       await act(() => res.result.current.fetchBySlug({ experienceTypeId, slug, localeCode }));
     } catch (e) {
       expect((e as Error).message).toBe(
-        `More than one experience with identifier: ${JSON.stringify({ slug })} was found`
+        `More than one experience with identifier: ${JSON.stringify({ slug })} was found`,
       );
     }
 
@@ -195,11 +195,11 @@ describe('useFetchExperience', () => {
     try {
       await act(() =>
         // @ts-expect-error undefined is not alloed through types, but it can still happen if invoked from a plain js
-        res.result.current.fetchBySlug({ experienceTypeId: undefined, slug, localeCode })
+        res.result.current.fetchBySlug({ experienceTypeId: undefined, slug, localeCode }),
       );
     } catch (e) {
       expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided'
+        'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided',
       );
     }
 
@@ -214,13 +214,13 @@ describe('useFetchExperience', () => {
     try {
       await act(() =>
         // @ts-expect-error undefined is not alloed through types, but it can still happen if invoked from a plain js
-        res.result.current.fetchBySlug({ experienceTypeId, slug: undefined, localeCode })
+        res.result.current.fetchBySlug({ experienceTypeId, slug: undefined, localeCode }),
       );
     } catch (e) {
       expect((e as Error).message).toBe(
         `Failed to fetch experience entities. At least one identifier must be provided. Received: ${JSON.stringify(
-          {}
-        )}`
+          {},
+        )}`,
       );
     }
 
@@ -235,11 +235,11 @@ describe('useFetchExperience', () => {
     try {
       await act(() =>
         // @ts-expect-error undefined is not alloed through types, but it can still happen if invoked from a plain js
-        res.result.current.fetchBySlug({ experienceTypeId, slug, localeCode: undefined })
+        res.result.current.fetchBySlug({ experienceTypeId, slug, localeCode: undefined }),
       );
     } catch (e) {
       expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "locale" parameter was not provided'
+        'Failed to fetch experience entities. Required "locale" parameter was not provided',
       );
     }
 

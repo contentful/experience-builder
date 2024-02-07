@@ -168,7 +168,7 @@ export const sendRegisteredComponentsMessage = () => {
 export const sendConnectedEventWithRegisteredComponents = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
-    ({ definition }) => definition
+    ({ definition }) => definition,
   );
 
   sendMessage(OUTGOING_EVENTS.Connected, {
@@ -188,7 +188,7 @@ export const sendConnectedEventWithRegisteredComponents = () => {
  */
 export const defineComponents = (
   componentRegistrations: ComponentRegistration[],
-  options?: ComponentRegistrationOptions
+  options?: ComponentRegistrationOptions,
 ) => {
   if (options?.enabledBuiltInComponents) {
     for (const id of optionalBuiltInComponents) {
@@ -203,7 +203,7 @@ export const defineComponents = (
     const enrichedComponentRegistration = enrichComponentDefinition(registration);
     componentRegistry.set(
       enrichedComponentRegistration.definition.id,
-      enrichedComponentRegistration
+      enrichedComponentRegistration,
     );
   }
 

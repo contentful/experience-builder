@@ -39,7 +39,7 @@ describe('PreviewDeliveryRoot', () => {
         mode="preview"
         switchToEditorMode={switchToEditorMode}
         experience={experience}
-      />
+      />,
     );
 
     expect(container.childElementCount).toBe(0);
@@ -69,11 +69,11 @@ describe('PreviewDeliveryRoot', () => {
         mode="preview"
         switchToEditorMode={switchToEditorMode}
         experience={experience}
-      />
+      />,
     );
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      `[exp-builder.sdk] Contenful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`
+      `[exp-builder.sdk] Contenful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
   });
 
@@ -97,7 +97,7 @@ describe('PreviewDeliveryRoot', () => {
         mode="preview"
         switchToEditorMode={switchToEditorMode}
         experience={experience}
-      />
+      />,
     );
 
     expect(container.childElementCount).toBe(1);

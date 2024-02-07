@@ -101,7 +101,7 @@ describe('useFetchBySlug', () => {
 
     await waitFor(() => {
       expect(result.current.error?.message).toBe(
-        'No experience entry with slug: unknown-slug exists'
+        'No experience entry with slug: unknown-slug exists',
       );
     });
 
@@ -133,7 +133,7 @@ describe('useFetchBySlug', () => {
 
     await waitFor(() => {
       expect(result.current.error?.message).toBe(
-        `More than one experience with identifier: ${JSON.stringify({ slug })} was found`
+        `More than one experience with identifier: ${JSON.stringify({ slug })} was found`,
       );
       expect(result.current.isLoading).toBe(false);
       expect(clientMock.getEntries).toHaveBeenCalledTimes(1);
@@ -168,7 +168,7 @@ describe('useFetchBySlug', () => {
 
     await waitFor(() => {
       expect(result.current.error?.message).toBe(
-        'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided'
+        'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided',
       );
     });
 
@@ -191,7 +191,7 @@ describe('useFetchBySlug', () => {
 
     await waitFor(() => {
       expect(result.current.error?.message).toBe(
-        'Failed to fetch experience entities. Required "locale" parameter was not provided'
+        'Failed to fetch experience entities. Required "locale" parameter was not provided',
       );
       expect(result.current.isLoading).toBe(false);
     });

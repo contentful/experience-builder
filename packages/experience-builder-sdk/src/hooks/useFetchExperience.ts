@@ -56,7 +56,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
         setIsFetching(false);
       }
     },
-    [client, mode]
+    [client, mode],
   );
 
   /**
@@ -94,7 +94,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
         setIsFetching(false);
       }
     },
-    [client, mode]
+    [client, mode],
   );
 
   return {
