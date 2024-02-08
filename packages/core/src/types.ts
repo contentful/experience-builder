@@ -1,12 +1,8 @@
-/**
- * danv:
- * NOTE!! The code commented here will be used in future. We commented it out to remove not yet fully unsupported parts
- */
-
 import type { Asset, ContentfulClientApi, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
-import { EntityStoreBase } from './entity/EntityStoreBase';
 import { EntityStore } from './entity/EntityStore';
+
+// Types for experience entry fields (as fetched in the API) are infered by Zod schema in `@contentful/experiences-validators`
 import type {
   DataSource,
   UnboundValues,
@@ -17,8 +13,8 @@ import type {
   ComponentPropertyValue,
   PrimitiveValue,
   ComponentTree,
-  SchemaVersions,
 } from '@contentful/experiences-validators/types';
+// TODO: Remove references to 'Composition'
 export {
   DataSource as CompositionDataSource,
   UnboundValues as CompositionUnboundValues,
@@ -226,7 +222,7 @@ export type Composition = {
   componentTree: ComponentTree;
   dataSource: DataSource;
   unboundValues: UnboundValues;
-  usedComponents?: Array<Link<'Entry'> | ExperienceEntry>;
+  usedComponents?: UsedComponents | Array<ExperienceEntry>; // This will be either an array of Entry links or an array of resolved Experience entries
   componentSettings?: ComponentSettings;
 };
 
@@ -266,26 +262,6 @@ export interface HoveredElement {
   blockType: string | undefined;
   nodeId: string | undefined;
   blockId: string | undefined;
-}
-
-export interface DeprecatedExperienceStore {
-  composition: Composition | undefined;
-  entityStore: EntityStoreBase | undefined;
-  isLoading: boolean;
-  children: Composition['componentTree']['children'];
-  breakpoints: Composition['componentTree']['breakpoints'];
-  dataSource: Composition['dataSource'];
-  unboundValues: Composition['unboundValues'];
-  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined;
-  fetchBySlug: ({
-    experienceTypeId,
-    slug,
-    localeCode,
-  }: {
-    experienceTypeId: string;
-    slug: string;
-    localeCode: string;
-  }) => Promise<{ success: boolean; error?: Error }>;
 }
 
 export interface Experience<T extends EntityStore = EntityStore> {
