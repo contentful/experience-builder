@@ -33,4 +33,6 @@ jobs:
   upload-artifact-cleanup:
     if: ${{ always() }}
     needs: [install-build, check, publish]
+    permissions:
+      actions: write
     uses: ./.github/workflows/cleanup.yaml

@@ -24,13 +24,13 @@ describe('component registration', () => {
 
     it('should return container when given a container id', () => {
       expect(
-        registry.getComponentRegistration(CONTENTFUL_COMPONENTS.container.id)?.definition
+        registry.getComponentRegistration(CONTENTFUL_COMPONENTS.container.id)?.definition,
       ).toEqual(containerDefinition);
     });
 
     it('should return section when given a section id', () => {
       expect(
-        registry.getComponentRegistration(CONTENTFUL_COMPONENTS.section.id)?.definition
+        registry.getComponentRegistration(CONTENTFUL_COMPONENTS.section.id)?.definition,
       ).toEqual(sectionDefinition);
     });
   });
@@ -60,7 +60,7 @@ describe('component registration', () => {
       const componentRegistration = registry.getComponentRegistration(definitionId);
       expect(componentRegistration).toBeDefined();
       expect(window.dispatchEvent).toHaveBeenCalledWith(
-        new CustomEvent(INTERNAL_EVENTS.ComponentsRegistered)
+        new CustomEvent(INTERNAL_EVENTS.ComponentsRegistered),
       );
     });
 

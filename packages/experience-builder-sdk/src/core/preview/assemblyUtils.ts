@@ -39,7 +39,7 @@ export const deserializeAssemblyNode = ({
     deserializeAssemblyNode({
       node: child,
       componentInstanceVariables,
-    })
+    }),
   );
 
   return {
@@ -67,7 +67,7 @@ export const resolveAssembly = ({
 
   const componentId = node.definitionId as string;
   const assembly = entityStore?.experienceEntryFields?.usedComponents?.find(
-    (component) => component.sys.id === componentId
+    (component) => component.sys.id === componentId,
   );
 
   if (!assembly || !('fields' in assembly)) {

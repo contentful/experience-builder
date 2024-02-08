@@ -13,10 +13,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: 'Use NodeJS 18'
-        uses: actions/setup-node@v3
+      - name: 'Use NodeJS 20'
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20.11'
           cache: 'npm'
       - name: Restore Cypress Binary
         uses: actions/cache/restore@v3
