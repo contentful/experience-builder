@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.20](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.19...@contentful/experience-builder-core@0.0.2-alpha.20) (2024-02-08)
+
+### Bug Fixes
+
+- mobile falls back to tablet style for token-enabled props ([0e1aa02](https://github.com/contentful/experience-builder-toolkit/commit/0e1aa0214d69f7e388ee2b44e009570efe081e8a))
+
 ## [0.0.2-alpha.19](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.18...@contentful/experience-builder-core@0.0.2-alpha.19) (2024-02-07)
 
 ### Bug Fixes

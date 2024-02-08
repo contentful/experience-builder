@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.22](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.21...@contentful/experience-builder@4.0.0-alpha.22) (2024-02-08)
+
+### Bug Fixes
+
+- adjust code to latest prettier config ([94c546a](https://github.com/contentful/experience-builder/commit/94c546a3433b95828e7c1540722dcb092b0979e5))
+
 # [4.0.0-alpha.21](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.20...@contentful/experience-builder@4.0.0-alpha.21) (2024-02-07)
 
 ### Bug Fixes
