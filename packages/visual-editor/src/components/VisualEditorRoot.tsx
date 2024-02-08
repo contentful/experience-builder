@@ -11,11 +11,14 @@ import { useEditorStore } from '@/store/editor';
 export const VisualEditorRoot = () => {
   const initialized = useInitializeEditor();
   const locale = useEditorStore((state) => state.locale);
-
+  const entityStore = useEntityStore((state) => state.entityStore);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
 
   useEffect(() => {
     if (!locale) {
+      return;
+    }
+    if (entityStore.locale === locale) {
       return;
     }
 
