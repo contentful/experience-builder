@@ -32,6 +32,7 @@ import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/s
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { useEntityStore } from '@/store/entityStore';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
+import { UnresolvedLink } from 'contentful';
 
 export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
@@ -67,68 +68,104 @@ export function useEditorSubscriber() {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
   }, []);
 
-  // Either gets called when dataSource changed or assembliesRegistry changed (manually)
+  /**
+   * Fills up entityStore with entities from newDataSource and from the tree.
+   * Also manages "entity status" variables (areEntitiesFetched, isFetchingEntities)
+   */
   const fetchMissingEntities = useCallback(
     async (newDataSource: CompositionDataSource, tree: CompositionTree) => {
-      // TODO: this fallback to dataSource is not good
-      // TODO: ideally we should NOT call this without arguments.. as we're going to have stale dataSource and what good does it do?
-      const deepReferences: DeepReference[] = tree
-        ? gatherDeepReferencesFromTree(tree.root, newDataSource ?? dataSource)
-        : [];
+      // if we realize that there's nothing missing and nothing to fill-fetch before we do any async call,
+      // then we can simply return and not lock the EntityStore at all.
+      const START_FETCHING = (): true => {
+        setEntitiesFetched(false);
+        setFetchingEntities(true);
+        return true;
+      };
+      const END_FETCHING = (): true => {
+        setEntitiesFetched(true);
+        setFetchingEntities(false);
+        return true;
+      };
 
-      const entityLinks = [
-        ...Object.values(newDataSource ?? dataSource),
-        ...assembliesRegistry.values(),
+      // Prepare L1 entities and deepReferences
+      const entityLinksL1 = [
+        ...Object.values(newDataSource),
+        ...assembliesRegistry.values(), // we count assemblies here as "L1 entities", for convenience. Even though they're not headEntities.
       ];
-      const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
-      // Only continue and trigger rerendering when we need to fetch something and we're not fetching yet
-      if (!missingAssetIds.length && !missingEntryIds.length) {
-        setEntitiesFetched(true); // we're not yet inside of try catch
-        return;
-      }
-      setEntitiesFetched(false);
-      setFetchingEntities(true);
-      try {
-        // Await until the fetching is done to update the state variable at the right moment
-        await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
-        const referentLinks = deepReferences.map((reference) => {
+      const deepReferences = gatherDeepReferencesFromTree(tree.root, newDataSource);
+
+      const isIncompleteL1 = (entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]): boolean => {
+        const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
+        return Boolean(missingAssetIds.length) || Boolean(missingEntryIds.length);
+      };
+
+      /**
+       * PRECONDITION: all L1 entities are fetched
+       */
+      const isIncompleteL2 = (deepReferences: DeepReference[]): boolean => {
+        const extractReferent = (reference: DeepReference): Link<'Asset' | 'Entry'> | undefined => {
           const headEntity = entityStore.getEntityFromLink(reference.entityLink);
-          const referentLink = headEntity!.fields[reference.field] as Link<'Entry'> | Link<'Asset'>;
+          const referentLink = headEntity!.fields[reference.field] as
+            | Link<'Entry'>
+            | Link<'Asset'>
+            | undefined;
           return referentLink;
-        });
+        };
+        const referentLinks = deepReferences.map(extractReferent).filter(Boolean) as Link<
+          'Asset' | 'Entry'
+        >[];
+        const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
+        return Boolean(missingAssetIds.length) || Boolean(missingEntryIds.length);
+      };
 
-        const {
-          missingAssetIds: missingReferentAssetIds,
-          missingEntryIds: missingReferentEntryIds,
-        } = entityStore.getMissingEntityIds(referentLinks);
-        if (!missingReferentAssetIds.length && !missingReferentEntryIds.length) {
-          // those will be called anyways within `finally` block
-          // setEntitiesFetched(true);
-          // setFetchingEntities(false);
-          return;
-        }
+      /**
+       * POST_CONDITION: entityStore is has all L1 entities (aka headEntities)
+       */
+      const fillupL1 = async ({
+        entityLinksL1,
+      }: {
+        entityLinksL1: UnresolvedLink<'Entry' | 'Asset'>[];
+      }) => {
+        const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinksL1);
+        await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
+      };
 
-        // This will load L2 entities (referents)
-        await entityStore.fetchEntities({
-          missingAssetIds: missingReferentAssetIds,
-          missingEntryIds: missingReferentEntryIds,
-        });
+      /**
+       * PRECONDITION: all L1 entites are fetched
+       */
+      const fillupL2 = async ({ deepReferences }: { deepReferences: DeepReference[] }) => {
+        const extractReferent = (reference: DeepReference): Link<'Asset' | 'Entry'> | undefined => {
+          const headEntity = entityStore.getEntityFromLink(reference.entityLink);
+          const referentLink = headEntity!.fields[reference.field] as
+            | Link<'Entry'>
+            | Link<'Asset'>
+            | undefined;
+          return referentLink;
+        };
+        const referentLinks = deepReferences.map(extractReferent).filter(Boolean) as Link<
+          'Asset' | 'Entry'
+        >[];
+        const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
+        await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
+      };
 
-        console.debug('[exp-builder.sdk] Finished fetching entities', { entityStore, entityLinks });
+      try {
+        isIncompleteL1(entityLinksL1) && START_FETCHING() && (await fillupL1({ entityLinksL1 }));
+        isIncompleteL2(deepReferences) && START_FETCHING() && (await fillupL2({ deepReferences }));
       } catch (error) {
         console.error('[exp-builder.sdk] Failed fetching entities');
         console.error(error);
+        throw error; // TODO: The original catch didn't let's rethrow; for the moment throw to see if we have any errors
       } finally {
-        // Important to set this as it is the only state variable that triggers a rerendering
-        // of the components (changes inside the entityStore are not part of the state)
-        setEntitiesFetched(true);
-        setFetchingEntities(false);
+        END_FETCHING();
       }
     },
-    [dataSource, entityStore, setEntitiesFetched]
+    [
+      /* dataSource, */ entityStore,
+      setEntitiesFetched /* setFetchingEntities, assembliesRegistry */,
+    ]
   );
-  // When the tree was updated, we store the dataSource and
-  // afterward, this effect fetches the respective entities.
+
   /*
   // this effect has weirdest race condition where it comes with areEntitiesFetched=false and isFetchinEntities=false 
   // despite the call below made within fetchMissingEntities()
