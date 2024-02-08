@@ -2,16 +2,19 @@
   "name": "@contentful/experience-builder-components",
   "version": "0.0.2-alpha.23",
   "description": "A basic set of components to use with Experience Builder",
-  "homepage": "https://github.com/contentful/experience-builder-toolkit/tree/next/packages/components#readme",
+  "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/components#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder-toolkit.git"
+    "url": "git+https://github.com/contentful/experience-builder.git"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "style": "./styles.css",
   "type": "module",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
     "clean": "rimraf dist && rimraf styles.css",
     "predev": "npm run clean",

@@ -10,6 +10,9 @@
     "package.json",
     "dist/**/*.*"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
     "bundle": "npx watchify dist/index.cjs -o dist/bundle.js",
     "clean": "rimraf dist",
