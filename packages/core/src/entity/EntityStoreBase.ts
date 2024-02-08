@@ -1,6 +1,9 @@
 import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 
 import { get } from '../utils/get';
+import { isLink } from '../utils/isLink';
+import { parseDataSourcePathIntoFieldset } from '@/utils/schema';
+import { transformAssetFileToUrl } from './value-transformers';
 
 /**
  * Base Store for entities
@@ -27,16 +30,78 @@ export class EntityStoreBase {
     this.addEntity(entity);
   }
 
-  /**
-   * Resolves deep path like
-   */
   public getValueDeep(
-    entityLink: UnresolvedLink<'Entry' | 'Asset'>,
+    headLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'>,
     deepPath: string
   ): string | undefined {
-    throw new Error(`Virtual method "getValueDeep" is not implemented`);
+    const resolveFieldset = (
+      unresolvedFieldset: Array<[null, string, string?]>,
+      headEntity: Entry | Asset
+    ) => {
+      const resolvedFieldset: Array<[Entry | Asset, string, string?]> = [];
+      let entityToResolveFieldsFrom: Entry | Asset = headEntity;
+      for (let i = 0; i < unresolvedFieldset.length; i++) {
+        const isLeaf = i === unresolvedFieldset.length - 1; // with last row, we are not expecting a link, but a value
+        const row = unresolvedFieldset[i];
+        const [_, field, _localeQualifier] = row;
+        if (!entityToResolveFieldsFrom) {
+          throw new Error(
+            `Logic Error: Cannot resolve field ${field} of a fieldset as there is no entity to resolve it from.`
+          );
+        }
+        if (isLeaf) {
+          resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
+          return resolvedFieldset;
+        }
+
+        const fieldValue = get<string>(entityToResolveFieldsFrom, ['fields', field]) as
+          | UnresolvedLink<'Entry' | 'Asset'>
+          | undefined
+          | any;
+
+        if (undefined === fieldValue) {
+          throw new Error(`Cannot resolve field ${field} of a fieldset as it is not defined.`);
+        } else if (isLink(fieldValue)) {
+          let entity: Asset | Entry | undefined = this.getEntityFromLink(fieldValue);
+          if (entity === undefined) {
+            throw new Error(
+              `Logic Error: Cannot resolve field ${field} of a fieldset row [${JSON.stringify(
+                row
+              )}] as the link is broken. ${JSON.stringify({ link: fieldValue })}`
+            );
+          }
+          resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
+          entityToResolveFieldsFrom = entity; // we move up
+        } else {
+          throw new Error(
+            `LogicError: Invalid value of a field we consider a reference field. Cannot resolve field ${field} of a fieldset as it is not a link, neither undefined.`
+          );
+        }
+      }
+      return resolvedFieldset;
+    };
+
+    const headEntity = isLink(headLinkOrEntity)
+      ? this.getEntityFromLink(headLinkOrEntity)
+      : (headLinkOrEntity as Entry | Asset);
+
+    if (undefined === headEntity) {
+      return;
+    }
+
+    const unresolvedFieldset = parseDataSourcePathIntoFieldset(deepPath);
+    const resolvedFieldset = resolveFieldset(unresolvedFieldset, headEntity);
+    const [leafEntity, field, _localeQualifier] = resolvedFieldset[resolvedFieldset.length - 1];
+    const fieldValue = get<string>(leafEntity, ['fields', field]); // is allowed to be undefined (when non-required field not set; or even when field does NOT exist on the type)
+    return transformAssetFileToUrl(fieldValue);
   }
 
+  /**
+   * @deprecated in the base class this should be simply an abstract method
+   * @param entityLink
+   * @param path
+   * @returns
+   */
   public getValue(
     entityLink: UnresolvedLink<'Entry' | 'Asset'>,
     path: string[]
