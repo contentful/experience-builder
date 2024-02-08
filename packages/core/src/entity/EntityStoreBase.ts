@@ -27,6 +27,16 @@ export class EntityStoreBase {
     this.addEntity(entity);
   }
 
+  /**
+   * Resolves deep path like
+   */
+  public getValueDeep(
+    entityLink: UnresolvedLink<'Entry' | 'Asset'>,
+    deepPath: string
+  ): string | undefined {
+    throw new Error(`Virtual method "getValueDeep" is not implemented`);
+  }
+
   public getValue(
     entityLink: UnresolvedLink<'Entry' | 'Asset'>,
     path: string[]
@@ -42,6 +52,19 @@ export class EntityStoreBase {
     }
 
     return get<string>(entity, path);
+  }
+
+  public getEntityFromLink(link: UnresolvedLink<'Entry' | 'Asset'>) {
+    const resolvedEntity =
+      link.sys.linkType === 'Entry'
+        ? this.entryMap.get(link.sys.id)
+        : this.assetMap.get(link.sys.id);
+
+    if (!resolvedEntity || resolvedEntity.sys.type !== link.sys.linkType) {
+      console.warn(`Experience references unresolved entity: ${JSON.stringify(link)}`);
+      return;
+    }
+    return resolvedEntity;
   }
 
   protected getEntitiesFromMap(type: 'Entry' | 'Asset', ids: string[]) {
