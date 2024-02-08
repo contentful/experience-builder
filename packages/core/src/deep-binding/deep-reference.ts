@@ -5,7 +5,7 @@ import {
   DataSourceEntryValueType,
   ExperienceEntry,
 } from '@/types';
-import { parseDataSourcePathWithDeepBindings } from '@/utils/schema';
+import { isDeepPath, parseDataSourcePathWithL1DeepBindings } from '@/utils/schema';
 import { treeVisit } from '@/utils/treeTraversal';
 
 type DeepReferenceOpts = {
@@ -22,7 +22,7 @@ export class DeepReference {
 
   constructor({ path, dataSource }: DeepReferenceOpts) {
     const { key, field, referentField, referentLocaleQualifier } =
-      parseDataSourcePathWithDeepBindings(path);
+      parseDataSourcePathWithL1DeepBindings(path);
 
     this.entityId = dataSource[key].sys.id;
     this.entityLink = dataSource[key];
@@ -41,10 +41,6 @@ export class DeepReference {
 
   static from(opt: DeepReferenceOpts) {
     return new DeepReference(opt);
-  }
-
-  static isDeepPath(path: string) {
-    return path.includes('->');
   }
 }
 
@@ -76,7 +72,7 @@ export function gatherDeepReferencesFromComposition(
 
     for (const [, variableMapping] of Object.entries(node.variables)) {
       if (variableMapping.type !== 'BoundValue') continue;
-      if (!DeepReference.isDeepPath(variableMapping.path)) continue;
+      if (!isDeepPath(variableMapping.path)) continue;
 
       deepReferences.push(
         DeepReference.from({
@@ -100,7 +96,7 @@ export function gatherDeepReferencesFromTree(
 
     for (const [, variableMapping] of Object.entries(node.data.props)) {
       if (variableMapping.type !== 'BoundValue') continue;
-      if (!DeepReference.isDeepPath(variableMapping.path)) continue;
+      if (!isDeepPath(variableMapping.path)) continue;
 
       deepReferences.push(
         DeepReference.from({
