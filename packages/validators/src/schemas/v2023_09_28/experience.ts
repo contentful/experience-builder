@@ -2,36 +2,27 @@ import { z } from 'zod';
 
 const schemaVersion = '2023-09-28' as const;
 
-const variableKeySchema = z.string().regex(/^[a-zA-Z0-9-_.]{1,64}$/);
+const propertyKeySchema = z.string().regex(/^[a-zA-Z0-9-_.]{1,64}$/);
 
-const CompositionDataSourceSchema = z.record(
-  variableKeySchema,
-  z.union([
-    z.object({
-      sys: z.object({
-        type: z.literal('Link'),
-        id: z.string(),
-        linkType: z.literal('Entry'),
-      }),
+const DataSourceSchema = z.record(
+  propertyKeySchema,
+  z.object({
+    sys: z.object({
+      type: z.literal('Link'),
+      id: z.string(),
+      linkType: z.literal('Entry').or(z.literal('Asset')),
     }),
-    z.object({
-      sys: z.object({
-        type: z.literal('Link'),
-        id: z.string(),
-        linkType: z.literal('Asset'),
-      }),
-    }),
-  ])
+  })
 );
 
-const CompositionVariableValueTypeSchema = z.union([
+const PropertyValueTypeSchema = z.union([
   z.string(),
   z.boolean(),
   z.number(),
   z.record(z.unknown()),
 ]);
 
-export const ComponentDefinitionVariableTypeSchema = z.enum([
+export const ComponentDefinitionPropertyTypeSchema = z.enum([
   'Text',
   'RichText',
   'Number',
@@ -42,10 +33,10 @@ export const ComponentDefinitionVariableTypeSchema = z.enum([
   'Object',
 ]);
 
-const CompositionComponentPropValueSchema = z.union([
+const ComponentPropertyValueSchema = z.union([
   z.object({
     type: z.literal('DesignValue'),
-    valuesByBreakpoint: z.record(z.lazy(() => CompositionVariableValueTypeSchema)),
+    valuesByBreakpoint: z.record(z.lazy(() => PropertyValueTypeSchema)),
   }),
   z.object({
     type: z.literal('BoundValue'),
@@ -68,32 +59,32 @@ const Breakpoint = z.object({
   displayName: z.string(),
 });
 
-const CompositionUnboundValuesSchema = z.record(
-  variableKeySchema,
+const UnboundValuesSchema = z.record(
+  propertyKeySchema,
   z.object({
-    value: CompositionVariableValueTypeSchema,
+    value: PropertyValueTypeSchema,
   })
 );
 
-const baseCompositionNodeSchema = z.object({
+const baseComponentTreeNodeSchema = z.object({
   definitionId: z.string(),
-  variables: z.record(variableKeySchema, CompositionComponentPropValueSchema),
+  variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
 });
 
-type CompositionNode = z.infer<typeof baseCompositionNodeSchema> & {
-  children: CompositionNode[];
+export type ComponentTreeNode = z.infer<typeof baseComponentTreeNodeSchema> & {
+  children: ComponentTreeNode[];
 };
 
-const CompositionNodeSchema: z.ZodType<CompositionNode> = baseCompositionNodeSchema.extend({
-  children: z.lazy(() => CompositionNodeSchema.array()),
+const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> = baseComponentTreeNodeSchema.extend({
+  children: z.lazy(() => ComponentTreeNodeSchema.array()),
 });
 
-const ExperienceComponentSettingsSchema = z.object({
+const ComponentSettingsSchema = z.object({
   variableDefinitions: z.record(
     z.object({
       displayName: z.string(),
-      type: ComponentDefinitionVariableTypeSchema,
-      defaultValue: CompositionComponentPropValueSchema,
+      type: ComponentDefinitionPropertyTypeSchema,
+      defaultValue: ComponentPropertyValueSchema,
       description: z.string().optional(),
       group: z.string().optional(),
       validations: z.record(z.string()).optional(),
@@ -101,30 +92,30 @@ const ExperienceComponentSettingsSchema = z.object({
   ),
 });
 
+const UsedComponentsSchema = z.array(
+  z.object({
+    sys: z.object({
+      type: z.literal('Link'),
+      id: z.string(),
+      linkType: z.literal('Entry'),
+    }),
+  })
+);
+
 const localeWrapper = (fieldSchema: any) => z.record(z.string(), fieldSchema);
 
 export const ExperienceFieldsSchema = z.object({
   componentTree: localeWrapper(
     z.object({
-      breakpoints: z.array(Breakpoint).min(1, { message: 'At least one breakpoint is required' }),
-      children: z.array(CompositionNodeSchema),
+      breakpoints: z.array(Breakpoint).nonempty(),
+      children: z.array(ComponentTreeNodeSchema),
       schemaVersion: z.literal(schemaVersion),
     })
   ),
-  dataSource: localeWrapper(CompositionDataSourceSchema),
-  unboundValues: localeWrapper(CompositionUnboundValuesSchema),
-  usedComponents: localeWrapper(
-    z.array(
-      z.object({
-        sys: z.object({
-          type: z.literal('Link'),
-          id: z.string(),
-          linkType: z.literal('Entry'),
-        }),
-      })
-    )
-  ).optional(),
-  componentSettings: localeWrapper(ExperienceComponentSettingsSchema).optional(),
+  dataSource: localeWrapper(DataSourceSchema),
+  unboundValues: localeWrapper(UnboundValuesSchema),
+  usedComponents: localeWrapper(UsedComponentsSchema).optional(),
+  componentSettings: localeWrapper(ComponentSettingsSchema).optional(),
 });
 //.superRefine(
 //   (
@@ -146,4 +137,8 @@ export const ExperienceFieldsSchema = z.object({
 //   }
 // );;
 
-export type CompositionZod = z.infer<typeof ExperienceFieldsSchema>;
+export type ExperienceFields = z.infer<typeof ExperienceFieldsSchema>;
+export type DataSource = z.infer<typeof DataSourceSchema>;
+export type UnboundValues = z.infer<typeof UnboundValuesSchema>;
+export type UsedComponents = z.infer<typeof UsedComponentsSchema>;
+export type ComponentSettings = z.infer<typeof ComponentSettingsSchema>;

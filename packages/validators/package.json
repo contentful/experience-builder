@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "rimraf dist && rollup -c rollup.config.mjs",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "build": "rollup -c rollup.config.mjs",
     "preview": "vite preview",
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
