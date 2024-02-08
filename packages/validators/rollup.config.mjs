@@ -18,7 +18,11 @@ export default [
   {
     input: 'src/index.ts',
     output: [{ dir: 'dist', format: 'esm', preserveModules: true }],
-    plugins: [dts({ tsconfig: './tsconfig.json' })],
-    external: [/.css/],
+    plugins: [dts({ tsconfig: './tsconfig.json' })]
+  },
+  {
+    input: 'src/types.ts',
+    output: [{ dir: 'dist', format: 'esm', preserveModules: true }],
+    plugins: [dts({ tsconfig: './tsconfig.json' })]
   }
 ];

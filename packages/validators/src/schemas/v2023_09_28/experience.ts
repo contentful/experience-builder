@@ -1,6 +1,5 @@
 import { z } from 'zod';
-
-const schemaVersion = '2023-09-28' as const;
+import { SchemaVersions } from '../schemaVersions';
 
 const propertyKeySchema = z.string().regex(/^[a-zA-Z0-9-_.]{1,64}$/);
 
@@ -15,12 +14,9 @@ const DataSourceSchema = z.record(
   })
 );
 
-const PropertyValueTypeSchema = z.union([
-  z.string(),
-  z.boolean(),
-  z.number(),
-  z.record(z.unknown()),
-]);
+const PrimitiveValueSchema = z
+  .union([z.string(), z.boolean(), z.number(), z.record(z.any())])
+  .optional();
 
 export const ComponentDefinitionPropertyTypeSchema = z.enum([
   'Text',
@@ -33,10 +29,12 @@ export const ComponentDefinitionPropertyTypeSchema = z.enum([
   'Object',
 ]);
 
+const ValuesByBreakpointSchema = z.record(z.lazy(() => PrimitiveValueSchema));
+
 const ComponentPropertyValueSchema = z.union([
   z.object({
     type: z.literal('DesignValue'),
-    valuesByBreakpoint: z.record(z.lazy(() => PropertyValueTypeSchema)),
+    valuesByBreakpoint: ValuesByBreakpointSchema,
   }),
   z.object({
     type: z.literal('BoundValue'),
@@ -52,7 +50,9 @@ const ComponentPropertyValueSchema = z.union([
   }),
 ]);
 
-const Breakpoint = z.object({
+export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
+
+const BreakpointSchema = z.object({
   id: z.string(),
   query: z.string(),
   previewSize: z.string(),
@@ -62,7 +62,7 @@ const Breakpoint = z.object({
 const UnboundValuesSchema = z.record(
   propertyKeySchema,
   z.object({
-    value: PropertyValueTypeSchema,
+    value: PrimitiveValueSchema,
   })
 );
 
@@ -81,10 +81,11 @@ const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> = baseComponentTreeN
 
 const ComponentSettingsSchema = z.object({
   variableDefinitions: z.record(
+    propertyKeySchema,
     z.object({
       displayName: z.string(),
       type: ComponentDefinitionPropertyTypeSchema,
-      defaultValue: ComponentPropertyValueSchema,
+      defaultValue: ComponentPropertyValueSchema.optional(),
       description: z.string().optional(),
       group: z.string().optional(),
       validations: z.record(z.string()).optional(),
@@ -102,16 +103,16 @@ const UsedComponentsSchema = z.array(
   })
 );
 
+const ComponentTreeSchema = z.object({
+  breakpoints: z.array(BreakpointSchema),
+  children: z.array(ComponentTreeNodeSchema),
+  schemaVersion: SchemaVersions,
+});
+
 const localeWrapper = (fieldSchema: any) => z.record(z.string(), fieldSchema);
 
-export const ExperienceFieldsSchema = z.object({
-  componentTree: localeWrapper(
-    z.object({
-      breakpoints: z.array(Breakpoint).nonempty(),
-      children: z.array(ComponentTreeNodeSchema),
-      schemaVersion: z.literal(schemaVersion),
-    })
-  ),
+export const ExperienceFieldsCMAShapeSchema = z.object({
+  componentTree: localeWrapper(ComponentTreeSchema),
   dataSource: localeWrapper(DataSourceSchema),
   unboundValues: localeWrapper(UnboundValuesSchema),
   usedComponents: localeWrapper(UsedComponentsSchema).optional(),
@@ -137,8 +138,12 @@ export const ExperienceFieldsSchema = z.object({
 //   }
 // );;
 
-export type ExperienceFields = z.infer<typeof ExperienceFieldsSchema>;
+export type ExperienceFields = z.infer<typeof ExperienceFieldsCMAShapeSchema>;
 export type DataSource = z.infer<typeof DataSourceSchema>;
 export type UnboundValues = z.infer<typeof UnboundValuesSchema>;
 export type UsedComponents = z.infer<typeof UsedComponentsSchema>;
 export type ComponentSettings = z.infer<typeof ComponentSettingsSchema>;
+export type ValuesByBreakpoint = z.infer<typeof ValuesByBreakpointSchema>;
+export type Breakpoint = z.infer<typeof BreakpointSchema>;
+export type PrimitiveValue = z.infer<typeof PrimitiveValueSchema>;
+export type ComponentTree = z.infer<typeof ComponentTreeSchema>;
