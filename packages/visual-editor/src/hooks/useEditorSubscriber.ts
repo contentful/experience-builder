@@ -4,6 +4,8 @@ import {
   getDataFromTree,
   doesMismatchMessageSchema,
   tryParseMessage,
+  gatherDeepReferencesFromTree,
+  DeepReference,
 } from '@contentful/experience-builder-core';
 import {
   OUTGOING_EVENTS,
@@ -67,7 +69,13 @@ export function useEditorSubscriber() {
 
   // Either gets called when dataSource changed or assembliesRegistry changed (manually)
   const fetchMissingEntities = useCallback(
-    async (newDataSource?: CompositionDataSource) => {
+    async (newDataSource: CompositionDataSource, tree: CompositionTree) => {
+      // TODO: this fallback to dataSource is not good
+      // TODO: ideally we should NOT call this without arguments.. as we're going to have stale dataSource and what good does it do?
+      const deepReferences: DeepReference[] = tree
+        ? gatherDeepReferencesFromTree(tree.root, newDataSource ?? dataSource)
+        : [];
+
       const entityLinks = [
         ...Object.values(newDataSource ?? dataSource),
         ...assembliesRegistry.values(),
@@ -75,7 +83,7 @@ export function useEditorSubscriber() {
       const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
       // Only continue and trigger rerendering when we need to fetch something and we're not fetching yet
       if (!missingAssetIds.length && !missingEntryIds.length) {
-        setEntitiesFetched(true);
+        setEntitiesFetched(true); // we're not yet inside of try catch
         return;
       }
       setEntitiesFetched(false);
@@ -83,6 +91,29 @@ export function useEditorSubscriber() {
       try {
         // Await until the fetching is done to update the state variable at the right moment
         await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
+        const referentLinks = deepReferences.map((reference) => {
+          const headEntity = entityStore.getEntityFromLink(reference.entityLink);
+          const referentLink = headEntity!.fields[reference.field] as Link<'Entry'> | Link<'Asset'>;
+          return referentLink;
+        });
+
+        const {
+          missingAssetIds: missingReferentAssetIds,
+          missingEntryIds: missingReferentEntryIds,
+        } = entityStore.getMissingEntityIds(referentLinks);
+        if (!missingReferentAssetIds.length && !missingReferentEntryIds.length) {
+          // those will be called anyways within `finally` block
+          // setEntitiesFetched(true);
+          // setFetchingEntities(false);
+          return;
+        }
+
+        // This will load L2 entities (referents)
+        await entityStore.fetchEntities({
+          missingAssetIds: missingReferentAssetIds,
+          missingEntryIds: missingReferentEntryIds,
+        });
+
         console.debug('[exp-builder.sdk] Finished fetching entities', { entityStore, entityLinks });
       } catch (error) {
         console.error('[exp-builder.sdk] Failed fetching entities');
@@ -98,11 +129,17 @@ export function useEditorSubscriber() {
   );
   // When the tree was updated, we store the dataSource and
   // afterward, this effect fetches the respective entities.
+  /*
+  // this effect has weirdest race condition where it comes with areEntitiesFetched=false and isFetchinEntities=false 
+  // despite the call below made within fetchMissingEntities()
+  //       setEntitiesFetched(false);
+  //       setFetchingEntities(true);
+  // I disable it also, because it seems we don't need reactive wya to call fetchEntities()
   useEffect(() => {
     if (areEntitiesFetched || isFetchingEntities) return;
     fetchMissingEntities();
   }, [areEntitiesFetched, fetchMissingEntities, isFetchingEntities]);
-
+  */
   useEffect(() => {
     const onMessage = async (event: MessageEvent) => {
       let reason;
@@ -169,7 +206,7 @@ export function useEditorSubscriber() {
             if (changedValueType === 'BoundValue') {
               const newDataSource = { ...dataSource, ...changedNode.data.dataSource };
               setDataSource(newDataSource);
-              await fetchMissingEntities(newDataSource);
+              await fetchMissingEntities(newDataSource, tree);
             } else if (changedValueType === 'UnboundValue') {
               setUnboundValues({
                 ...unboundValues,
@@ -184,7 +221,7 @@ export function useEditorSubscriber() {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
-            await fetchMissingEntities(dataSource);
+            await fetchMissingEntities(dataSource, tree);
             // Update the tree when all necessary data is fetched and ready for rendering.
             updateTree(tree);
             setLocale(locale);
