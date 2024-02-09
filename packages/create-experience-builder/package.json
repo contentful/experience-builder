@@ -1,11 +1,11 @@
 {
-  "name": "create-experience-builder",
+  "name": "@contentful/create-experience-builder",
   "version": "0.0.2-alpha.5",
   "description": "A CLI tool to get up and running with Contentful Experience Builder quickly",
-  "homepage": "https://github.com/contentful/experience-builder-toolkit/tree/next/packages/create-experience-builder#readme",
+  "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-experience-builder#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder-toolkit.git"
+    "url": "git+https://github.com/contentful/experience-builder.git"
   },
   "type": "module",
   "main": "./dist/index.js",
@@ -18,6 +18,9 @@
     "bin/**/*.*",
     "templates/**/*.*"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
     "dev": "echo noop",
     "_prebuild": "npm uninstall -g && rimraf dist",

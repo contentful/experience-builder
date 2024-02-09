@@ -8,7 +8,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder-toolkit.git"
+    "url": "git+https://github.com/contentful/experience-builder.git"
   },
   "files": [
     "readme.md",
@@ -18,6 +18,9 @@
   "exports": {
     ".": "./dist/index.js",
     "./constants": "./dist/constants.js"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "typesVersions": {
     "*": {
