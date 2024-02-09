@@ -103,8 +103,41 @@ const UsedComponentsSchema = z.array(
   })
 );
 
+const validateBreakpoints = (value: Breakpoint[], ctx: z.RefinementCtx) => {
+  if (value[0].id !== 'desktop' || value[0].query !== '*') {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }`,
+      path: [...ctx.path, 0],
+    });
+  }
+  const queries = value.map((bp) => bp.query);
+  // sort updates queries array in place so we need to create a copy
+  const originalQueries = [...queries];
+  queries.sort((q1, q2) => {
+    if (q1 === '*') {
+      return -1;
+    }
+    if (q2 === '*') {
+      return 1;
+    }
+
+    const q1PixelValue = parseInt(q1.replace(/px|<|>/, ''));
+    const q2PixelValue = parseInt(q2.replace(/px|<|>/, ''));
+
+    return q1PixelValue > q2PixelValue ? -1 : 1;
+  });
+
+  if (originalQueries !== queries) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Breakpoints should be ordered from largest to smallest pixel value`,
+    });
+  }
+};
+
 const ComponentTreeSchema = z.object({
-  breakpoints: z.array(BreakpointSchema),
+  breakpoints: z.array(BreakpointSchema).nonempty().superRefine(validateBreakpoints),
   children: z.array(ComponentTreeNodeSchema),
   schemaVersion: SchemaVersions,
 });

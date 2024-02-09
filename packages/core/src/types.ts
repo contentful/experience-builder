@@ -2,7 +2,7 @@ import type { Asset, ContentfulClientApi, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
 import { EntityStore } from './entity/EntityStore';
 
-// Types for experience entry fields (as fetched in the API) are infered by Zod schema in `@contentful/experiences-validators`
+// Types for experience entry fields (as fetched in the API) are inferred by Zod schema in `@contentful/experiences-validators`
 import type {
   DataSource,
   UnboundValues,

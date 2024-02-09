@@ -84,6 +84,54 @@ describe(`${schemaVersion} version`, () => {
 
         expect(result.error.issues).toEqual(expectedErrors);
       });
+
+      it(`fails if desktop breakpoint is not first in the list`, () => {
+        const breakpoints = [
+          { id: 'tablet', query: '<1024px', previewSize: 'medium', displayName: 'Tablet' },
+          { id: 'mobile', query: '<768px', previewSize: 'small', displayName: 'Mobile' },
+          { id: 'desktop', query: '*', previewSize: 'large', displayName: 'Desktop' },
+        ];
+        const componentTree = experience.fields.componentTree[locale];
+        const updatedExperience = {
+          ...experience,
+          fields: {
+            ...experience.fields,
+            componentTree: { [locale]: { ...componentTree, breakpoints } },
+          },
+        };
+        const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
+          typeof updatedExperience
+        >;
+
+        expect(result.success).toBe(false);
+        expect(result.error.issues[0].message).toBe(
+          'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }'
+        );
+      });
+
+      it(`fails if breakpoints are not ordered from largest to smallest`, () => {
+        const breakpoints = [
+          { id: 'desktop', query: '*', previewSize: 'large', displayName: 'Desktop' },
+          { id: 'mobile', query: '<768px', previewSize: 'small', displayName: 'Mobile' },
+          { id: 'tablet', query: '<1024px', previewSize: 'medium', displayName: 'Tablet' },
+        ];
+        const componentTree = experience.fields.componentTree[locale];
+        const updatedExperience = {
+          ...experience,
+          fields: {
+            ...experience.fields,
+            componentTree: { [locale]: { ...componentTree, breakpoints } },
+          },
+        };
+        const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
+          typeof updatedExperience
+        >;
+
+        expect(result.success).toBe(false);
+        expect(result.error.issues[0].message).toBe(
+          'Breakpoints should be ordered from largest to smallest pixel value'
+        );
+      });
     });
 
     describe('schemaVersion', () => {
