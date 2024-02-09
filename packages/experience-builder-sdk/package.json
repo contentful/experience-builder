@@ -7,6 +7,9 @@
   "type": "module",
   "author": "Contentful GmbH",
   "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
     "clean": "rimraf dist",
     "predev": "npm run clean",
@@ -74,9 +77,6 @@
     "vite": "^4.3.9",
     "vite-plugin-dts": "^3.6.1",
     "vite-plugin-svgr": "^4.1.0"
-  },
-  "relativeDependencies": {
-    "@contentful/experience-builder-components": "../../../experience-builder-toolkit/packages/components"
   },
   "peerDependencies": {
     "contentful": ">=10.6.0",
