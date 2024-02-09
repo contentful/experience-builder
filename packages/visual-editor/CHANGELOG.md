@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.24](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.23...@contentful/experience-builder-visual-editor@0.0.2-alpha.24) (2024-02-09)
+
+**Note:** Version bump only for package @contentful/experience-builder-visual-editor
+
 ## [0.0.2-alpha.23](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.22...@contentful/experience-builder-visual-editor@0.0.2-alpha.23) (2024-02-08)
 
 **Note:** Version bump only for package @contentful/experience-builder-visual-editor
