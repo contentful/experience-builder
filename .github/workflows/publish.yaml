@@ -2,9 +2,6 @@ name: Publish packages
 
 on:
   workflow_call:
-    secrets:
-      NPM_TOKEN:
-        required: true
 
 jobs:
   publish:
@@ -20,11 +17,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.11'
-      - name: 'Authenticate with private NPM package'
-        run: npm set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
+      # Retrieve token from Vault and use in .npmrc for installing npm packages from the GitHub registry
+      # See https://contentful.atlassian.net/wiki/spaces/ENG/pages/4396155213/Migrating+to+GitHub+Packages+from+npmjs?focusedCommentId=4431282518
+      - name: 'Retrieve NPM Token from Vault'
+        id: vault
+        uses: hashicorp/vault-action@v2.4.3
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          role: ${{ github.event.repository.name }}-github-action
+          method: jwt
+          path: github-actions
+          exportEnv: false
+          secrets: |
+            secret/data/github/github_packages_read GITHUB_PACKAGES_READ_TOKEN | GITHUB_PACKAGES_READ_TOKEN ;
       - name: Install dependencies
         run: |
           npm ci
+        env:
+          GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_READ_TOKEN }}
       - name: Restore the build folders
         uses: actions/cache/restore@v3
         with:
