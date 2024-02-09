@@ -2,6 +2,9 @@ name: Publish packages
 
 on:
   workflow_call:
+    secrets:
+      VAULT_URL:
+        required: true
 
 jobs:
   publish:
