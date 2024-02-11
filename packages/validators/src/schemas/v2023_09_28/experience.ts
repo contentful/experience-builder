@@ -14,7 +14,13 @@ const DataSourceSchema = z.record(
   })
 );
 
-const PrimitiveValueSchema = z.union([z.string(), z.boolean(), z.number(), z.record(z.any())]);
+const PrimitiveValueSchema = z.union([
+  z.string(),
+  z.boolean(),
+  z.number(),
+  z.record(z.any(), z.any()),
+  z.undefined(),
+]);
 
 export const ComponentDefinitionPropertyTypeSchema = z.enum([
   'Text',
@@ -152,7 +158,7 @@ const componentSettingsRefinement = (value, ctx: z.RefinementCtx) => {
 };
 
 const ComponentTreeSchema = z.object({
-  breakpoints: z.array(BreakpointSchema).nonempty().superRefine(breakpointsRefinement),
+  breakpoints: z.array(BreakpointSchema).superRefine(breakpointsRefinement),
   children: z.array(ComponentTreeNodeSchema),
   schemaVersion: SchemaVersions,
 });

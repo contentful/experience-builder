@@ -72,7 +72,7 @@ export const createAssemblyEntry = ({
             ],
           },
         ],
-        breakpoints: [],
+        breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
         schemaVersion,
       },
       dataSource: {},

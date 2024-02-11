@@ -6,6 +6,7 @@ import {
   ComponentDefinitionVariable,
   CompositionVariableValueType,
 } from '@/types';
+import { Link } from 'contentful';
 
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
 
@@ -147,8 +148,8 @@ export const transformBackgroundImage = (
 };
 
 export const transformContentValue = (
-  value: CompositionVariableValueType,
-  variableDefinition: ComponentDefinitionVariable,
+  value: CompositionVariableValueType | Link<'Asset'>,
+  variableDefinition: ComponentDefinitionVariable
 ) => {
   if (variableDefinition.type === 'RichText') {
     return transformRichText(value);

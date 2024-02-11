@@ -54,7 +54,9 @@ describe(`${schemaVersion} version`, () => {
         >;
 
         expect(result.success).toBe(false);
-        expect(result.error.issues[0].message).toBe('Array must contain at least 1 element(s)');
+        expect(result.error.issues[0].message).toBe(
+          'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }',
+        );
       });
 
       it(`fails if any breakpoint attribute is missing`, () => {
@@ -470,28 +472,6 @@ describe(`${schemaVersion} version`, () => {
 
       expect(result.success).toBe(false);
       expect(result.error.issues[0].message).toBe('Expected object, received string');
-    });
-
-    it('fails if `value` attribute is not present', () => {
-      const updatedExperience = {
-        ...experience,
-        fields: {
-          ...experience.fields,
-          // key instead of value attribute
-          unboundValues: { [locale]: { uuid1: { key: 'test' } } },
-        },
-      };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
-      >;
-
-      const expectedError = {
-        code: 'invalid_union',
-        path: ['unboundValues', 'en-US', 'uuid1', 'value'],
-        message: 'Invalid input',
-      };
-      expect(result.success).toBe(false);
-      expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
     });
   });
 
