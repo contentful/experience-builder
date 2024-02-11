@@ -10,5 +10,5 @@ export type {
   ComponentTreeNode,
   PrimitiveValue,
   ComponentTree,
-} from './schemas/v2023_09_28/experience';
+} from './schemas/latest';
 export type { SchemaVersions } from './schemas/schemaVersions';
