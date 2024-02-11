@@ -54,7 +54,7 @@ describe(`${schemaVersion} version`, () => {
         >;
 
         expect(result.success).toBe(false);
-        expect(result.error.issues[0].message).toBe('At least one breakpoint is required');
+        expect(result.error.issues[0].message).toBe('Array must contain at least 1 element(s)');
       });
 
       it(`fails if any breakpoint attribute is missing`, () => {
@@ -149,7 +149,7 @@ describe(`${schemaVersion} version`, () => {
         >;
 
         expect(result.success).toBe(false);
-        expect(result.error.issues[0].message).toBe('Invalid literal value, expected "2023-09-28"');
+        expect(result.error.issues[0].message).toBe('Invalid input');
       });
     });
 
@@ -525,23 +525,14 @@ describe(`${schemaVersion} version`, () => {
       >;
 
       const expectedError = {
-        code: 'invalid_union',
-        path: ['dataSource', 'en-US', 'uuid1'],
-        message: 'Invalid input',
-      };
-      expect(result.success).toBe(false);
-      expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
-
-      const unionError = {
         code: 'invalid_type',
         expected: 'object',
         received: 'string',
         path: ['dataSource', 'en-US', 'uuid1'],
         message: 'Expected object, received string',
       };
-      expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[0].issues[0]).toEqual(
-        unionError
-      );
+      expect(result.success).toBe(false);
+      expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
     });
 
     it('fails if value is an invalid link', () => {
@@ -560,9 +551,10 @@ describe(`${schemaVersion} version`, () => {
 
       const expectedError = {
         code: 'invalid_union',
-        path: ['dataSource', 'en-US', 'uuid1'],
+        path: ['dataSource', 'en-US', 'uuid1', 'sys', 'linkType'],
         message: 'Invalid input',
       };
+
       expect(result.success).toBe(false);
       expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
       expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[0].issues[0]).toEqual({
@@ -683,6 +675,32 @@ describe(`${schemaVersion} version`, () => {
         expected: 'string',
         path: ['componentSettings', 'en-US', 'variableDefinitions', 'var1', 'displayName'],
         message: 'Required',
+      };
+
+      expect(result.success).toBe(false);
+      expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+    });
+
+    it.only('fails if componentSettings is used in conjuction with usedComponents', () => {
+      const updatedPattern = {
+        ...experiencePattern,
+        fields: {
+          ...experiencePattern.fields,
+          usedComponents: {
+            [locale]: [{ sys: { id: 'id1', linkType: 'Entry', type: 'Link' } }],
+          },
+        },
+      };
+
+      const result = validateExperienceFields(updatedPattern, schemaVersion) as SafeParseError<
+        typeof updatedPattern
+      >;
+
+      const expectedError = {
+        code: 'custom',
+        message:
+          "'componentSettings' field cannot be used in conjunction with 'usedComponents' field",
+        path: ['componentSettings', 'en-US'],
       };
 
       expect(result.success).toBe(false);

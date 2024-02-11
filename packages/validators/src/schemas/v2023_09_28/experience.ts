@@ -14,9 +14,7 @@ const DataSourceSchema = z.record(
   })
 );
 
-const PrimitiveValueSchema = z
-  .union([z.string(), z.boolean(), z.number(), z.record(z.any())])
-  .optional();
+const PrimitiveValueSchema = z.union([z.string(), z.boolean(), z.number(), z.record(z.any())]);
 
 export const ComponentDefinitionPropertyTypeSchema = z.enum([
   'Text',
@@ -103,8 +101,8 @@ const UsedComponentsSchema = z.array(
   })
 );
 
-const validateBreakpoints = (value: Breakpoint[], ctx: z.RefinementCtx) => {
-  if (value[0].id !== 'desktop' || value[0].query !== '*') {
+const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
+  if (!value.length || value[0].id !== 'desktop' || value[0].query !== '*') {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: `The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }`,
@@ -128,7 +126,7 @@ const validateBreakpoints = (value: Breakpoint[], ctx: z.RefinementCtx) => {
     return q1PixelValue > q2PixelValue ? -1 : 1;
   });
 
-  if (originalQueries !== queries) {
+  if (originalQueries.join('') !== queries.join('')) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: `Breakpoints should be ordered from largest to smallest pixel value`,
@@ -136,40 +134,40 @@ const validateBreakpoints = (value: Breakpoint[], ctx: z.RefinementCtx) => {
   }
 };
 
+const componentSettingsRefinement = (value, ctx: z.RefinementCtx) => {
+  const { componentSettings, usedComponents } = value as ExperienceFields;
+
+  if (!componentSettings || !usedComponents) {
+    return;
+  }
+  const localeKey = Object.keys(componentSettings ?? {})[0];
+
+  if (componentSettings[localeKey] !== undefined && usedComponents[localeKey] !== undefined) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `'componentSettings' field cannot be used in conjunction with 'usedComponents' field`,
+      path: ['componentSettings', localeKey],
+    });
+  }
+};
+
 const ComponentTreeSchema = z.object({
-  breakpoints: z.array(BreakpointSchema).nonempty().superRefine(validateBreakpoints),
+  breakpoints: z.array(BreakpointSchema).nonempty().superRefine(breakpointsRefinement),
   children: z.array(ComponentTreeNodeSchema),
   schemaVersion: SchemaVersions,
 });
 
 const localeWrapper = (fieldSchema: any) => z.record(z.string(), fieldSchema);
 
-export const ExperienceFieldsCMAShapeSchema = z.object({
-  componentTree: localeWrapper(ComponentTreeSchema),
-  dataSource: localeWrapper(DataSourceSchema),
-  unboundValues: localeWrapper(UnboundValuesSchema),
-  usedComponents: localeWrapper(UsedComponentsSchema).optional(),
-  componentSettings: localeWrapper(ComponentSettingsSchema).optional(),
-});
-//.superRefine(
-//   (
-//     { componentSettings, usedComponents },
-//     refinementContext
-//   ) => {
-//     const localeKey = Object.keys(componentSettings ?? {})[0];
-//     console.log("componentSettings", componentSettings)
-//     if (!componentSettings || !usedComponents) {
-//       return;
-//     }
-//     if (componentSettings[localeKey] !== undefined && usedComponents[localeKey] === undefined) {
-//       refinementContext.addIssue({
-//         code: z.ZodIssueCode.custom,
-//         message: `'usedComponents' should be empty if 'componentSettings' is not empty`,
-//         path: ['fields', 'usedComponents', localeKey],
-//       });
-//     }
-//   }
-// );;
+export const ExperienceFieldsCMAShapeSchema = z
+  .object({
+    componentTree: localeWrapper(ComponentTreeSchema),
+    dataSource: localeWrapper(DataSourceSchema),
+    unboundValues: localeWrapper(UnboundValuesSchema),
+    usedComponents: localeWrapper(UsedComponentsSchema).optional(),
+    componentSettings: localeWrapper(ComponentSettingsSchema).optional(),
+  })
+  .superRefine(componentSettingsRefinement);
 
 export type ExperienceFields = z.infer<typeof ExperienceFieldsCMAShapeSchema>;
 export type DataSource = z.infer<typeof DataSourceSchema>;
