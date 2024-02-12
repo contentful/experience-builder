@@ -63,16 +63,39 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
 
-    if (isAssemblyBlock && !containsZone) {
-      // Readonly components in an assembly cannot be selected
-      return;
+    let selectedAssemblyId: string | null = null;
+    let selectedAssemblyComponentId: string | null = null;
+
+    // if (isAssemblyBlock && !containsZone) {
+    //   // Readonly components in an assembly cannot be selected
+    //   return;
+    // }
+
+    if (isAssemblyBlock) {
+      // @ts-expect-error TODO adjust types
+      selectedAssemblyId = node.data.assembly.id;
+      // @ts-expect-error TODO adjust types
+      selectedAssemblyComponentId = node.data.assembly.componentId;
     }
+
     const nodeId = isAssemblyBlock ? parentSectionId : componentId;
 
     // Only select the node if the user intentionally clicked on it, but not when dragging
+
     if (!userIsDragging) {
-      setSelectedNodeId(nodeId);
+      setSelectedNodeId(
+        selectedAssemblyComponentId || nodeId,
+        // @ts-expect-error TODO adjust types
+        selectedAssemblyId && node.data.nodeLocation
+          ? // @ts-expect-error TODO adjust types
+            `${selectedAssemblyId}.${node.data.nodeLocation}`
+          : undefined
+      );
       sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+        assemblyId: selectedAssemblyId,
+        // @ts-expect-error TODO adjust types
+        nodeLocation: node.data.nodeLocation,
+        assemblyComponentId: selectedAssemblyComponentId,
         nodeId,
       });
     }

@@ -46,6 +46,9 @@ describe('deserializeAssemblyNode', () => {
       node,
       nodeId: 'random-node-id',
       parentId: 'root',
+      assemblyId: 'whatever',
+      assemblyComponentId: 'whatever',
+      nodeLocation: '0',
       assemblyDataSource: {},
       assemblyUnboundValues: assemblyEntry.fields.unboundValues,
       componentInstanceProps: {

@@ -59,7 +59,11 @@ export const FieldManualContentBinding = ({
 }: FieldManualContentBindingProps) => {
   const { manualValue, setManualValue } = useBindingContext();
 
-  const variableType = componentDefinition?.variables[propKey].type;
+  const variable = componentDefinition?.variables[propKey];
+
+  console.log({ variable });
+
+  const variableType = variable?.type;
 
   const toggleText = useMemo(() => {
     if (

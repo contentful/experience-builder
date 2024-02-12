@@ -24,8 +24,11 @@ export const checkIsAssemblyEntry = (entry: Entry): boolean => {
 export const deserializeAssemblyNode = ({
   node,
   nodeId,
+  nodeLocation,
   parentId,
   assemblyDataSource,
+  assemblyId,
+  assemblyComponentId,
   assemblyUnboundValues,
   componentInstanceProps,
   componentInstanceUnboundValues,
@@ -33,9 +36,12 @@ export const deserializeAssemblyNode = ({
 }: {
   node: CompositionNode;
   nodeId: string;
+  nodeLocation: string | null;
   parentId?: string;
   assemblyDataSource: CompositionDataSource;
   assemblyUnboundValues: CompositionUnboundValues;
+  assemblyId: string;
+  assemblyComponentId: string;
   componentInstanceProps: Record<string, CompositionComponentPropValue>;
   componentInstanceUnboundValues: CompositionUnboundValues;
   componentInstanceDataSource: CompositionDataSource;
@@ -73,12 +79,15 @@ export const deserializeAssemblyNode = ({
 
   const isAssembly = assembliesRegistry.has(node.definitionId);
 
-  const children: CompositionComponentNode[] = node.children.map((child) =>
+  const children: CompositionComponentNode[] = node.children.map((child, childIndex) =>
     deserializeAssemblyNode({
       node: child,
       nodeId: generateRandomId(16),
       parentId: nodeId,
+      nodeLocation: nodeLocation === null ? `${childIndex}` : nodeLocation + '/' + childIndex,
+      assemblyId,
       assemblyDataSource,
+      assemblyComponentId,
       assemblyUnboundValues,
       componentInstanceProps,
       componentInstanceUnboundValues,
@@ -92,6 +101,12 @@ export const deserializeAssemblyNode = ({
     parentId,
     data: {
       id: nodeId,
+      // @ts-expect-error TODO adjust type
+      assembly: {
+        id: assemblyId,
+        componentId: assemblyComponentId,
+      },
+      nodeLocation: nodeLocation,
       blockId: node.definitionId,
       props: childNodeVariable,
       dataSource,
@@ -142,9 +157,12 @@ export const resolveAssembly = ({
       variables: {},
       children: componentFields.componentTree?.children ?? [],
     },
+    nodeLocation: null,
     nodeId: node.data.id,
     parentId: node.parentId,
     assemblyDataSource: {},
+    assemblyId: assembly.sys.id,
+    assemblyComponentId: node.data.id,
     assemblyUnboundValues: componentFields.unboundValues,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
