@@ -45,7 +45,7 @@
     "husky": "^8.0.3",
     "lerna": "^8.0.2",
     "lint-staged": "^15.0.1",
-    "nx": "16.10.0",
+    "nx": "18.0.4",
     "nx-cloud": "latest",
     "prettier": "3.2.5"
   },
