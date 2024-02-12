@@ -68,7 +68,7 @@
     "@svgr/rollup": "^8.1.0",
     "@types/node": "^20.11.10",
     "@types/react": "^18.0.34",
-    "@vitejs/plugin-react": "^3.1.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "auto": "^10.3.0",
     "boxen": "^5.0.1",
     "dedent": "^1.5.1",
