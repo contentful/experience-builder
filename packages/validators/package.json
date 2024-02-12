@@ -6,6 +6,10 @@
   "module": "./dist/index.js",
   "types": "./dist/types.d.ts",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/experience-builder.git"
+  },
   "scripts": {
     "dev": "vite",
     "clean": "rimraf dist",
