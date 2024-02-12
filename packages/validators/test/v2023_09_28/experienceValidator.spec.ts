@@ -81,7 +81,7 @@ describe(`${schemaVersion} version`, () => {
             received: 'undefined',
             path: ['componentTree', 'en-US', 'breakpoints', 0, breakpointField],
             message: 'Required',
-          })
+          }),
         );
 
         expect(result.error.issues).toEqual(expectedErrors);
@@ -107,7 +107,7 @@ describe(`${schemaVersion} version`, () => {
 
         expect(result.success).toBe(false);
         expect(result.error.issues[0].message).toBe(
-          'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }'
+          'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }',
         );
       });
 
@@ -131,7 +131,7 @@ describe(`${schemaVersion} version`, () => {
 
         expect(result.success).toBe(false);
         expect(result.error.issues[0].message).toBe(
-          'Breakpoints should be ordered from largest to smallest pixel value'
+          'Breakpoints should be ordered from largest to smallest pixel value',
         );
       });
     });
@@ -198,7 +198,7 @@ describe(`${schemaVersion} version`, () => {
           };
           const result = validateExperienceFields(
             updatedExperience,
-            schemaVersion
+            schemaVersion,
           ) as SafeParseError<typeof updatedExperience>;
 
           const expectedError = {
@@ -210,7 +210,7 @@ describe(`${schemaVersion} version`, () => {
           };
           expect(result.success).toBe(false);
           expect(result.error.issues[0]).toEqual(expectedError);
-        })
+        }),
       );
       describe('variables name', () => {
         it(`fails if name contains invalid characters`, () => {
@@ -232,7 +232,7 @@ describe(`${schemaVersion} version`, () => {
 
           const result = validateExperienceFields(
             updatedExperience,
-            schemaVersion
+            schemaVersion,
           ) as SafeParseError<typeof updatedExperience>;
 
           const expectedError = {
@@ -263,7 +263,7 @@ describe(`${schemaVersion} version`, () => {
 
           const result = validateExperienceFields(
             updatedExperience,
-            schemaVersion
+            schemaVersion,
           ) as SafeParseError<typeof updatedExperience>;
 
           const expectedError = {
@@ -299,7 +299,7 @@ describe(`${schemaVersion} version`, () => {
 
             const result = validateExperienceFields(
               updatedExperience,
-              schemaVersion
+              schemaVersion,
             ) as SafeParseError<typeof updatedExperience>;
 
             const expectedError = {
@@ -319,7 +319,7 @@ describe(`${schemaVersion} version`, () => {
             };
             expect(result.success).toBe(false);
             expect(
-              (result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[0].issues[0]
+              (result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[0].issues[0],
             ).toEqual(expectedError);
           });
         });
@@ -345,7 +345,7 @@ describe(`${schemaVersion} version`, () => {
 
             const result = validateExperienceFields(
               updatedExperience,
-              schemaVersion
+              schemaVersion,
             ) as SafeParseError<typeof updatedExperience>;
 
             const expectedError = {
@@ -357,7 +357,7 @@ describe(`${schemaVersion} version`, () => {
             };
             expect(result.success).toBe(false);
             expect(
-              (result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[1].issues[0]
+              (result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[1].issues[0],
             ).toEqual(expectedError);
           });
         });
@@ -383,7 +383,7 @@ describe(`${schemaVersion} version`, () => {
 
             const result = validateExperienceFields(
               updatedExperience,
-              schemaVersion
+              schemaVersion,
             ) as SafeParseError<typeof updatedExperience>;
 
             const expectedError = {
@@ -395,7 +395,7 @@ describe(`${schemaVersion} version`, () => {
             };
             expect(result.success).toBe(false);
             expect(
-              (result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[2].issues[0]
+              (result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[2].issues[0],
             ).toEqual(expectedError);
           });
         });
@@ -421,7 +421,7 @@ describe(`${schemaVersion} version`, () => {
 
             const result = validateExperienceFields(
               updatedExperience,
-              schemaVersion
+              schemaVersion,
             ) as SafeParseError<typeof updatedExperience>;
 
             const expectedError = {
@@ -433,7 +433,7 @@ describe(`${schemaVersion} version`, () => {
             };
             expect(result.success).toBe(false);
             expect(
-              (result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[3].issues[0]
+              (result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[3].issues[0],
             ).toEqual(expectedError);
           });
         });
@@ -661,7 +661,7 @@ describe(`${schemaVersion} version`, () => {
       expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
     });
 
-    it.only('fails if componentSettings is used in conjuction with usedComponents', () => {
+    it('fails if componentSettings is used in conjuction with usedComponents', () => {
       const updatedPattern = {
         ...experiencePattern,
         fields: {
