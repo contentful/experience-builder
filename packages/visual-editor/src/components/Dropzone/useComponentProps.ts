@@ -56,7 +56,6 @@ export const useComponentProps = ({
       node.type === DESIGN_COMPONENT_NODE_TYPE ||
       node.type === ASSEMBLY_NODE_TYPE
     ) {
-      console.log(node);
       return {};
     }
 
@@ -194,12 +193,6 @@ export const useComponentProps = ({
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
-
-  if (node.data.assembly) {
-    componentProps[
-      'data-cf-assembly-block-id'
-    ] = `${node.data.assembly.id}.${node.data.nodeLocation}`;
-  }
 
   return { componentProps, wrapperProps };
 };

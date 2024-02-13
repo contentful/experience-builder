@@ -177,8 +177,8 @@ export type CompositionComponentNode = {
     assembly?: {
       id: string;
       componentId: string;
+      nodeLocation: string | null;
     };
-    nodeLocation?: string;
     props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>;
     dataSource: CompositionDataSource;
     unboundValues: CompositionUnboundValues;

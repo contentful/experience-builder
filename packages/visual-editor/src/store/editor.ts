@@ -18,13 +18,12 @@ export interface EditorStore {
   dataSource: CompositionDataSource;
   locale: string | null;
   selectedNodeId: string | null;
-  selectedAssemblyChildId: string | null;
   unboundValues: CompositionUnboundValues;
   // updaters
   setDataSource: (data: CompositionDataSource) => void;
   setUnboundValues: (values: CompositionUnboundValues) => void;
   setLocale: (locale: string) => void;
-  setSelectedNodeId: (id: string, assemblyChildId?: string) => void;
+  setSelectedNodeId: (id: string) => void;
 
   initializeEditor: (params: InitEditorParams) => void;
 }
@@ -35,12 +34,10 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   isDragging: false,
   dragItem: '',
   selectedNodeId: null,
-  selectedAssemblyChildId: null,
   locale: null,
 
-  setSelectedNodeId: (id: string, assemblyChildId?: string) => {
-    console.log('set selected node', id, assemblyChildId);
-    set({ selectedNodeId: id, selectedAssemblyChildId: assemblyChildId || null });
+  setSelectedNodeId: (id: string) => {
+    set({ selectedNodeId: id });
   },
   setDataSource(data) {
     const dataSource = get().dataSource;

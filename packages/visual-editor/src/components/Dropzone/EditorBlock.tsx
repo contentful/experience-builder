@@ -14,6 +14,7 @@ import {
   CONTENTFUL_COMPONENTS,
   ASSEMBLY_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
+  ASSEMBLY_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 import { DraggableChildComponent } from '@components/Draggable/DraggableChildComponent';
 import { RenderDropzoneFunction } from './Dropzone.types';
@@ -59,40 +60,31 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const containsZone = sectionsWithZone[componentId];
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
+  const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
 
-    let selectedAssemblyId: string | null = null;
-    let selectedAssemblyComponentId: string | null = null;
+    console.log({ node });
+
+    if (isAssembly) {
+      setSelectedNodeId(node.data.id);
+      sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+        nodeId: node.data.id,
+      });
+      return;
+    }
 
     // if (isAssemblyBlock && !containsZone) {
     //   // Readonly components in an assembly cannot be selected
     //   return;
     // }
 
-    if (isAssemblyBlock && node.data.assembly) {
-      selectedAssemblyId = node.data.assembly.id;
-      selectedAssemblyComponentId = node.data.assembly.componentId;
-    }
-
-    const nodeId = isAssemblyBlock ? parentSectionId : componentId;
-
-    // Only select the node if the user intentionally clicked on it, but not when dragging
-
     if (!userIsDragging) {
-      setSelectedNodeId(
-        selectedAssemblyComponentId || nodeId,
-
-        selectedAssemblyId && node.data.nodeLocation
-          ? `${selectedAssemblyId}.${node.data.nodeLocation}`
-          : undefined
-      );
+      setSelectedNodeId(node.data.id);
       sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-        assemblyId: selectedAssemblyId,
-        nodeLocation: node.data.nodeLocation,
-        assemblyComponentId: selectedAssemblyComponentId,
-        nodeId,
+        assembly: node.data.assembly,
+        nodeId: node.data.id,
       });
     }
   };

@@ -10,17 +10,14 @@ import { getElementCoordinates } from '@contentful/experience-builder-core';
  */
 export const useSelectedInstanceCoordinates = ({ node }: { node: CompositionComponentNode }) => {
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const selectedAssemblyChildId = useEditorStore((state) => state.selectedAssemblyChildId);
 
   useEffect(() => {
     if (selectedNodeId !== node.data.id) {
       return;
     }
-    // todo fix this timeout
-    setTimeout(() => {
-      sendSelectedComponentCoordinates(node.data.id, selectedAssemblyChildId || undefined);
-    }, 20);
-  }, [node, selectedAssemblyChildId, selectedNodeId]);
+
+    sendSelectedComponentCoordinates(node.data.id);
+  }, [node, selectedNodeId]);
 
   const selectedElement = node.data.id
     ? document.querySelector(`[data-cf-node-id="${selectedNodeId}"]`)

@@ -46,7 +46,6 @@ export function useEditorSubscriber() {
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const selectedAssemblyChildId = useEditorStore((state) => state.selectedAssemblyChildId);
 
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
@@ -292,10 +291,10 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.SelectComponent: {
-          const { selectedNodeId: nodeId, selectedAssemblyChildNodePath: assemblyChildId } =
-            payload;
-          setSelectedNodeId(nodeId, assemblyChildId);
-          sendSelectedComponentCoordinates(nodeId, assemblyChildId);
+          const { selectedNodeId: nodeId } = payload;
+          console.log({ nodeId });
+          setSelectedNodeId(nodeId);
+          sendSelectedComponentCoordinates(nodeId);
           break;
         }
         default:
@@ -355,7 +354,7 @@ export function useEditorSubscriber() {
          * On scroll end, send new co-ordinates of selected node
          */
         if (selectedNodeId) {
-          sendSelectedComponentCoordinates(selectedNodeId, selectedAssemblyChildId || undefined);
+          sendSelectedComponentCoordinates(selectedNodeId);
         }
       }, 150);
     };
