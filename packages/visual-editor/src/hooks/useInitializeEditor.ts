@@ -15,7 +15,13 @@ export const useInitializeEditor = () => {
   useEffect(() => {
     const onVisualEditorInitialize = (event) => {
       if (!event.detail) return;
-      const { componentRegistry, designTokens, locale: initialLocale, entities } = event.detail;
+      const {
+        componentRegistry,
+        designTokens,
+        locale: initialLocale,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        entities,
+      } = event.detail;
 
       initializeEditor({
         initialLocale,
@@ -23,7 +29,12 @@ export const useInitializeEditor = () => {
         designTokens,
       });
 
-      resetEntityStore(initialLocale, entities);
+      // TODO-AFTER-PR-APPROVAL:
+      // Here we temporarily disable "prefetching of entities"
+      // to force VisualEditor to start from an empty EntityStore
+      // so that we can exercise on-demand-entity-fetching mechanism (via REQUEST_ENTITIES message)
+      resetEntityStore(initialLocale, []);
+      // resetEntityStore(initialLocale, entities);
       setInitialized(true);
     };
 
