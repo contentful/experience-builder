@@ -4,6 +4,7 @@ import { omit } from 'lodash-es';
 import {
   EntityStore,
   isEmptyStructureWithRelativeHeight,
+  isDeepPath,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -89,6 +90,15 @@ export const CompositionBlock = ({
           acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
           break;
         case 'BoundValue': {
+          const variableDefinition = componentRegistration.definition.variables[variableName];
+          if (isDeepPath(variable.path)) {
+            const [, uuid] = variable.path.split('/');
+            const link = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
+            const boundValue = entityStore?.getValueDeep(link, variable.path);
+            const value = boundValue || variableDefinition.defaultValue;
+            acc[variableName] = transformContentValue(value, variableDefinition);
+            break;
+          }
           const [, uuid, ...path] = variable.path.split('/');
           const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
           let value = entityStore.getValue(binding, path.slice(0, -1));
@@ -102,7 +112,6 @@ export const CompositionBlock = ({
               value = foundAssetValue;
             }
           }
-          const variableDefinition = componentRegistration.definition.variables[variableName];
           acc[variableName] = transformContentValue(value, variableDefinition);
           break;
         }
