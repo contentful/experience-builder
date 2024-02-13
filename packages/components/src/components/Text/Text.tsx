@@ -93,6 +93,7 @@ export const Text: React.FC<TextProps> = ({
 
   const Tag = as;
 
+  console.log('text', value, children);
   const textAsTag = (
     <Tag
       className={combineClasses('cf-text', className)}
