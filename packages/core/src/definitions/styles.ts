@@ -452,8 +452,8 @@ export const singleColumnBuiltInStyles: Partial<
     group: 'style',
   },
   cfColumnSpanLock: {
-    type: 'Text',
-    defaultValue: 'false',
+    type: 'Boolean',
+    defaultValue: false,
     group: 'style',
   },
 };
@@ -552,8 +552,8 @@ export const columnsBuiltInStyles: Partial<
     group: 'style',
   },
   cfWrapColumns: {
-    type: 'Text',
-    defaultValue: 'false',
+    type: 'Boolean',
+    defaultValue: false,
     group: 'style',
   },
   cfWrapColumnsCount: {

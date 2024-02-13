@@ -237,8 +237,8 @@ export type StyleProps = {
   cfTextUnderline: boolean;
   cfColumns: string;
   cfColumnSpan: string;
-  cfColumnSpanLock: string;
-  cfWrapColumns: string;
+  cfColumnSpanLock: boolean;
+  cfWrapColumns: boolean;
   cfWrapColumnsCount: string;
 };
 
