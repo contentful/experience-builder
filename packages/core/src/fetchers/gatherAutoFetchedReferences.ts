@@ -26,7 +26,6 @@ export function gatherAutoFetchedReferents(
     console.log(`:::referenceField`, { linkField: referentEntity });
 
     if (!referentEntity) {
-      debugger;
       console.warn(
         `fetchReferencedEntities():: referentEntity is not found within refernece--field. Probably reference is simply not set.`
       );

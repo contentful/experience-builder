@@ -6,6 +6,11 @@ import { Asset, Entry } from 'contentful';
 export type UnresolvedFieldset = Array<[null, string, string?]>;
 export type Fieldset = Array<[Entry | Asset, string, string?]>;
 
+/**
+ * @deprecated Can we just use single method `parseDataSourcePathWithL1DeepBindings`?
+ * @param deepPath
+ * @returns
+ */
 export const parseDataSourcePathIntoFieldset = (deepPath: string): UnresolvedFieldset => {
   const regex = /^\/([^/]+)\/fields\/(.+)$/; // https://regex101.com/r/cFADIR/1
 
@@ -17,7 +22,7 @@ export const parseDataSourcePathIntoFieldset = (deepPath: string): UnresolvedFie
     );
   }
 
-  const [_match, _key, deepSegments] = matches;
+  const [, , /* _match*/ /* _key */ deepSegments] = matches;
 
   const segments = deepSegments.split('->');
   const fieldset: UnresolvedFieldset = segments.map((segment) => {
@@ -43,21 +48,21 @@ export const parseDataSourcePathWithL1DeepBindings = (
   referentLocaleQualifier: string | null;
 } => {
   // const regex = /^\/([^\/]+)\/fields\/([^-]+)->([^\/]+)\/(\S+)/;
-  const regex = /^\/([^\/]+)\/fields\/([^\/]+)(\/([~][^-]+))?->([^\/]+)(\/([~]\S+))?/;
+  const regex = /^\/([^/]+)\/fields\/([^/]+)(\/([~][^-]+))?->([^/]+)(\/([~]\S+))?/;
 
   const matches = path.match(regex);
   if (!matches) {
     throw new Error(`Cannot match path '${path}' with regex [${regex.toString()}]`);
   }
   const [
-    _,
-    key,
+    ,
+    /* _ */ key,
     field,
-    _optLocal,
-    optFieldLocaleQualifier,
+    ,
+    /* _optLocal */ optFieldLocaleQualifier,
     referentField,
-    _optReferentLocale,
-    optReferentLocaleQualifier,
+    ,
+    /* _optReferentLocale */ optReferentLocaleQualifier,
   ] = matches as string[];
 
   return {
