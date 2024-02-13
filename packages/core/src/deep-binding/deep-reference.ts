@@ -17,16 +17,18 @@ export class DeepReference {
   public entityId: string;
   public entityLink: DataSourceEntryValueType;
   public field: string;
+  public fieldLocaleQualifier: string | null;
   public referentField: string;
-  public referentLocaleQualifier: string;
+  public referentLocaleQualifier: string | null;
 
   constructor({ path, dataSource }: DeepReferenceOpts) {
-    const { key, field, referentField, referentLocaleQualifier } =
+    const { key, field, fieldLocaleQualifier, referentField, referentLocaleQualifier } =
       parseDataSourcePathWithL1DeepBindings(path);
 
     this.entityId = dataSource[key].sys.id;
     this.entityLink = dataSource[key];
     this.field = field;
+    this.fieldLocaleQualifier = fieldLocaleQualifier;
     this.referentField = referentField;
     this.referentLocaleQualifier = referentLocaleQualifier;
   }
@@ -34,11 +36,6 @@ export class DeepReference {
   get headEntityId() {
     return this.entityId;
   }
-
-  get fqid() {
-    return `cf://${this.entityId}/${this.field}->${this.referentField}/${this.referentLocaleQualifier}`;
-  }
-
   static from(opt: DeepReferenceOpts) {
     return new DeepReference(opt);
   }
