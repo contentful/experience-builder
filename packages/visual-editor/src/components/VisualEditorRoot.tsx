@@ -23,7 +23,7 @@ export const VisualEditorRoot = () => {
     }
 
     resetEntityStore(locale);
-  }, [locale, resetEntityStore]);
+  }, [locale, resetEntityStore, entityStore.locale]);
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
