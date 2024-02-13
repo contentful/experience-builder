@@ -292,7 +292,6 @@ export function useEditorSubscriber() {
         }
         case INCOMING_EVENTS.SelectComponent: {
           const { selectedNodeId: nodeId } = payload;
-          console.log({ nodeId });
           setSelectedNodeId(nodeId);
           sendSelectedComponentCoordinates(nodeId);
           break;
