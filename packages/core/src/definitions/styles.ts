@@ -315,7 +315,7 @@ export const containerBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The margin of the container',
-    defaultValue: '0 auto 0 auto',
+    defaultValue: '0 Auto 0 Auto',
   },
 };
 
@@ -466,7 +466,7 @@ export const columnsBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The margin of the columns',
-    defaultValue: '0 auto 0 auto',
+    defaultValue: '0 Auto 0 Auto',
   },
   cfWidth: {
     displayName: 'Width',
