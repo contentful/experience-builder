@@ -1,18 +1,12 @@
-import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
+import type { Asset, Entry, UnresolvedLink } from 'contentful';
 import { sendMessage } from '../communication/sendMessage';
 import { EditorEntityStore } from './EditorEntityStore';
 import { RequestedEntitiesMessage } from '../types';
-import { parseDataSourcePathIntoFieldset } from '@/utils/schema';
-import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
 
 // The default of 3s in the EditorEntityStore is sometimes timing out and
 // leads to not rendering bound content and assemblies.
 const REQUEST_TIMEOUT = 10000;
-
-const isLink = (
-  entity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset
-): entity is UnresolvedLink<'Entry' | 'Asset'> => entity?.sys?.type === 'Link';
 
 export class EditorModeEntityStore extends EditorEntityStore {
   public locale: string;

@@ -53,7 +53,8 @@ export function useEditorSubscriber() {
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
 
-  const [isFetchingEntities, setFetchingEntities] = useState(false);
+  // TODO: As we have disabled the useEffect, we can remove these states
+  const [, /* isFetchingEntities */ setFetchingEntities] = useState(false);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});

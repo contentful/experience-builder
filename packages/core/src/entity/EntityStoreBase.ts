@@ -43,7 +43,7 @@ export class EntityStoreBase {
       for (let i = 0; i < unresolvedFieldset.length; i++) {
         const isLeaf = i === unresolvedFieldset.length - 1; // with last row, we are not expecting a link, but a value
         const row = unresolvedFieldset[i];
-        const [_, field, _localeQualifier] = row;
+        const [, field, _localeQualifier] = row;
         if (!entityToResolveFieldsFrom) {
           throw new Error(
             `Logic Error: Cannot resolve field ${field} of a fieldset as there is no entity to resolve it from.`
@@ -54,11 +54,11 @@ export class EntityStoreBase {
           break;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const fieldValue = get<string>(entityToResolveFieldsFrom, ['fields', field]) as
           | UnresolvedLink<'Entry' | 'Asset'>
           | undefined
           | any;
-
         if (undefined === fieldValue) {
           // throw new Error(`Cannot resolve field ${field} of a fieldset as it is not defined.`);
           return {
@@ -67,7 +67,7 @@ export class EntityStoreBase {
             reason: `Cannot resolve field ${field} of a fieldset as it is not defined.`,
           };
         } else if (isLink(fieldValue)) {
-          let entity: Asset | Entry | undefined = this.getEntityFromLink(fieldValue);
+          const entity: Asset | Entry | undefined = this.getEntityFromLink(fieldValue);
           if (entity === undefined) {
             throw new Error(
               `Logic Error: Cannot resolve field ${field} of a fieldset row [${JSON.stringify(
@@ -109,7 +109,7 @@ export class EntityStoreBase {
     if (!isFullyResolved) {
       return undefined;
     }
-    const [leafEntity, field, _localeQualifier] = resolvedFieldset[resolvedFieldset.length - 1];
+    const [leafEntity, field /* localeQualifier */] = resolvedFieldset[resolvedFieldset.length - 1];
     const fieldValue = get<string>(leafEntity, ['fields', field]); // is allowed to be undefined (when non-required field not set; or even when field does NOT exist on the type)
     return transformAssetFileToUrl(fieldValue);
   }

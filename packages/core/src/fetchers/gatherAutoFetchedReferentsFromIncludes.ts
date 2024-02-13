@@ -28,7 +28,6 @@ export function gatherAutoFetchedReferentsFromIncludes(
     const linkToReferent = headEntry.fields[reference.field] as UnresolvedLink<'Asset' | 'Entry'>;
 
     if (!linkToReferent) {
-      debugger;
       console.warn(
         `fetchReferencedEntities():: link to referent not found within reference-field. Probably reference is simply not set.`
       );
