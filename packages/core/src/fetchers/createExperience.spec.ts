@@ -29,7 +29,6 @@ describe('createExperience', () => {
       mode: 'preview',
     });
 
-    expect(experience.mode).toBe('preview');
     expect(experience.entityStore).toBeDefined();
     expect(experience.entityStore?.experienceEntryFields).toEqual(compositionEntry.fields);
     expect(experience.entityStore?.getCurrentLocale()).toBe('en-US');

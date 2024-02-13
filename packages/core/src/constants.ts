@@ -21,6 +21,7 @@ export const OUTGOING_EVENTS = {
   UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
+  OutsideCanvasClick: 'outsideCanvasClick',
 };
 
 export const INCOMING_EVENTS = {

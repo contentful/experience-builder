@@ -12,6 +12,8 @@ import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { DNDProvider } from './DNDProvider';
+import { sendMessage } from '@contentful/experience-builder-core';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 
 interface Props {
   onChange?: (data: CompositionTree) => void;
@@ -31,6 +33,19 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   useEffect(() => {
     if (onChange) onChange(tree);
   }, [tree, onChange]);
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  const handleClickOutside = () => {
+    sendMessage(OUTGOING_EVENTS.OutsideCanvasClick, {
+      outsideCanvasClick: true,
+    });
+  };
 
   return (
     <DNDProvider>

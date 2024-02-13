@@ -183,6 +183,6 @@ export const containerBuiltInStyles = {
     type: 'Text',
     group: 'style',
     description: 'The height of the section',
-    defaultValue: 'auto',
+    defaultValue: 'Auto',
   } as ComponentDefinitionVariable<'Text'>,
 };
