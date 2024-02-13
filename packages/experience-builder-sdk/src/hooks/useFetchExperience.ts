@@ -8,14 +8,15 @@ import {
 import { Experience, ExternalSDKMode } from '@contentful/experience-builder-core/types';
 
 type useClientsideExperienceFetchersProps = {
-  mode: ExternalSDKMode;
+  /** @deprecated mode no longer required */
+  mode?: ExternalSDKMode;
   client: ContentfulClientApi<undefined>;
 };
 
 /**
  * @deprecated please use `useFetchBySlug` or `useFetchById` hooks instead
  */
-export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetchersProps) => {
+export const useFetchExperience = ({ client }: useClientsideExperienceFetchersProps) => {
   const [experience, setExperience] = useState<Experience<EntityStore> | undefined>(undefined);
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<Error>();
@@ -44,7 +45,6 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
           experienceTypeId,
           localeCode,
           slug,
-          mode,
         });
 
         setExperience(experience);
@@ -56,7 +56,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
         setIsFetching(false);
       }
     },
-    [client, mode],
+    [client],
   );
 
   /**
@@ -83,7 +83,6 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
           experienceTypeId,
           localeCode,
           id,
-          mode,
         });
 
         setExperience(experience);
@@ -94,7 +93,7 @@ export const useFetchExperience = ({ mode, client }: useClientsideExperienceFetc
         setIsFetching(false);
       }
     },
-    [client, mode],
+    [client],
   );
 
   return {

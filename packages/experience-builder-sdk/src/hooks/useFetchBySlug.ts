@@ -3,9 +3,11 @@ import type { ContentfulClientApi } from 'contentful';
 import type { ExternalSDKMode } from '@contentful/experience-builder-core/types';
 import { useFetchByBase } from './useFetchByBase';
 import { fetchBySlug } from '@contentful/experience-builder-core';
+import { useDetectEditorMode } from './useDetectEditorMode';
 
 export type UseFetchBySlugArgs = {
-  mode: ExternalSDKMode;
+  /** @deprecated mode no longer needed */
+  mode?: ExternalSDKMode;
   client: ContentfulClientApi<undefined>;
   slug: string;
   experienceTypeId: string;
@@ -17,11 +19,12 @@ export const useFetchBySlug = ({
   localeCode,
   client,
   experienceTypeId,
-  mode,
 }: UseFetchBySlugArgs) => {
-  const fetchMethod = useCallback(() => {
-    return fetchBySlug({ slug, localeCode, client, experienceTypeId, mode });
-  }, [slug, localeCode, client, experienceTypeId, mode]);
+  const isEditorMode = useDetectEditorMode();
 
-  return useFetchByBase(fetchMethod);
+  const fetchMethod = useCallback(() => {
+    return fetchBySlug({ slug, localeCode, client, experienceTypeId });
+  }, [slug, localeCode, client, experienceTypeId]);
+
+  return useFetchByBase(fetchMethod, isEditorMode);
 };

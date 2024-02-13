@@ -27,13 +27,13 @@ export async function fetchBySlug({
   experienceTypeId,
   slug,
   localeCode,
-  mode,
 }: {
   client: ContentfulClientApi<undefined>;
   experienceTypeId: string;
   slug: string;
   localeCode: string;
-  mode: ExternalSDKMode;
+  /** @deprecated mode no longer needed */
+  mode?: ExternalSDKMode;
 }) {
   let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
 
@@ -63,7 +63,6 @@ export async function fetchBySlug({
         referencedAssets: assets,
         referencedEntries: entries,
         locale: localeCode,
-        mode,
       });
 
       return experience;
