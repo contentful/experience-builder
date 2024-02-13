@@ -38,22 +38,34 @@ export const parseDataSourcePathWithL1DeepBindings = (
 ): {
   key: string;
   field: string;
+  fieldLocaleQualifier: string | null;
   referentField: string;
-  referentLocaleQualifier: string;
+  referentLocaleQualifier: string | null;
 } => {
-  const regex = /^\/([^\/]+)\/fields\/([^-]+)->([^\/]+)\/(\S+)/;
+  // const regex = /^\/([^\/]+)\/fields\/([^-]+)->([^\/]+)\/(\S+)/;
+  const regex = /^\/([^\/]+)\/fields\/([^\/]+)(\/([~][^-]+))?->([^\/]+)(\/([~]\S+))?/;
 
   const matches = path.match(regex);
   if (!matches) {
-    throw new Error(`Cannot match path with regex [${regex.toString()}]`);
+    throw new Error(`Cannot match path '${path}' with regex [${regex.toString()}]`);
   }
-  const [_, key, field, referentField, referentLocaleQualifier] = matches as string[];
+  const [
+    _,
+    key,
+    field,
+    _optLocal,
+    optFieldLocaleQualifier,
+    referentField,
+    _optReferentLocale,
+    optReferentLocaleQualifier,
+  ] = matches as string[];
 
   return {
     key,
     field,
+    fieldLocaleQualifier: optFieldLocaleQualifier || null,
     referentField,
-    referentLocaleQualifier,
+    referentLocaleQualifier: optReferentLocaleQualifier || null,
   };
 };
 
