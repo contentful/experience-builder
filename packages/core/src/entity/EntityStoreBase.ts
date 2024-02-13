@@ -51,7 +51,7 @@ export class EntityStoreBase {
         }
         if (isLeaf) {
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
-          return resolvedFieldset;
+          break;
         }
 
         const fieldValue = get<string>(entityToResolveFieldsFrom, ['fields', field]) as
@@ -60,25 +60,36 @@ export class EntityStoreBase {
           | any;
 
         if (undefined === fieldValue) {
-          throw new Error(`Cannot resolve field ${field} of a fieldset as it is not defined.`);
+          // throw new Error(`Cannot resolve field ${field} of a fieldset as it is not defined.`);
+          return {
+            resolvedFieldset,
+            isFullyResolved: false,
+            reason: `Cannot resolve field ${field} of a fieldset as it is not defined.`,
+          };
         } else if (isLink(fieldValue)) {
           let entity: Asset | Entry | undefined = this.getEntityFromLink(fieldValue);
           if (entity === undefined) {
             throw new Error(
               `Logic Error: Cannot resolve field ${field} of a fieldset row [${JSON.stringify(
                 row
-              )}] as the link is broken. ${JSON.stringify({ link: fieldValue })}`
+              )}] as linked entity not found in the EntityStore. ${JSON.stringify({
+                link: fieldValue,
+              })}`
             );
           }
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = entity; // we move up
         } else {
+          // TODO: Eg. when someone changed the schema and the field is not a link anymore, what should we return then?
           throw new Error(
             `LogicError: Invalid value of a field we consider a reference field. Cannot resolve field ${field} of a fieldset as it is not a link, neither undefined.`
           );
         }
       }
-      return resolvedFieldset;
+      return {
+        resolvedFieldset,
+        isFullyResolved: true,
+      };
     };
 
     const headEntity = isLink(headLinkOrEntity)
@@ -90,7 +101,14 @@ export class EntityStoreBase {
     }
 
     const unresolvedFieldset = parseDataSourcePathIntoFieldset(deepPath);
-    const resolvedFieldset = resolveFieldset(unresolvedFieldset, headEntity);
+
+    // The purpose here is to take this intermediate representation of the deep-path
+    // and to follow the links to the leaf-entity and field
+    // in case we can't follow till the end, we should signal that there was null-reference in the path
+    const { resolvedFieldset, isFullyResolved } = resolveFieldset(unresolvedFieldset, headEntity);
+    if (!isFullyResolved) {
+      return undefined;
+    }
     const [leafEntity, field, _localeQualifier] = resolvedFieldset[resolvedFieldset.length - 1];
     const fieldValue = get<string>(leafEntity, ['fields', field]); // is allowed to be undefined (when non-required field not set; or even when field does NOT exist on the type)
     return transformAssetFileToUrl(fieldValue);
