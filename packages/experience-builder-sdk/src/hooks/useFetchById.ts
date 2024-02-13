@@ -15,7 +15,7 @@ export type UseFetchByIdArgs = {
 };
 
 export const useFetchById = ({ id, localeCode, client, experienceTypeId }: UseFetchByIdArgs) => {
-  const isEditorMode = useDetectEditorMode();
+  const isEditorMode = useDetectEditorMode({ isClientSide: typeof window !== 'undefined' });
 
   const fetchMethod = useCallback(() => {
     return fetchById({ id, localeCode, client, experienceTypeId });
