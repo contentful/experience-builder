@@ -14,13 +14,6 @@ export const sendSelectedComponentCoordinates = (instanceId?: string, assemblyCh
     ? document.querySelector(`[data-cf-assembly-block-id="${assemblyChildId}"]`)
     : undefined;
 
-  if (selectedAssemblyChild) {
-    console.log(getElementCoordinates(selectedAssemblyChild), 'before');
-    // setTimeout(() => {
-    console.log(getElementCoordinates(selectedAssemblyChild), 'after', 'L O L');
-    // }, 200);
-  }
-
   // Finds the first parent that is a VisualEditorBlock
   let parent = selectedElement?.parentElement;
   while (parent) {

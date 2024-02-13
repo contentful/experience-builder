@@ -174,6 +174,11 @@ export type CompositionComponentNode = {
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
+    assembly?: {
+      id: string;
+      componentId: string;
+    };
+    nodeLocation?: string;
     props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>;
     dataSource: CompositionDataSource;
     unboundValues: CompositionUnboundValues;

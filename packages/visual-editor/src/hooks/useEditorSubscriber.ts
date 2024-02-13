@@ -295,7 +295,6 @@ export function useEditorSubscriber() {
           const { selectedNodeId: nodeId, selectedAssemblyChildNodePath: assemblyChildId } =
             payload;
           setSelectedNodeId(nodeId, assemblyChildId);
-          console.log('2');
           sendSelectedComponentCoordinates(nodeId, assemblyChildId);
           break;
         }
@@ -356,7 +355,6 @@ export function useEditorSubscriber() {
          * On scroll end, send new co-ordinates of selected node
          */
         if (selectedNodeId) {
-          console.log('3');
           sendSelectedComponentCoordinates(selectedNodeId, selectedAssemblyChildId || undefined);
         }
       }, 150);

@@ -195,11 +195,9 @@ export const useComponentProps = ({
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  // @ts-expect-error todo fix types
   if (node.data.assembly) {
     componentProps[
       'data-cf-assembly-block-id'
-      // @ts-expect-error todo fix types
     ] = `${node.data.assembly.id}.${node.data.nodeLocation}`;
   }
 

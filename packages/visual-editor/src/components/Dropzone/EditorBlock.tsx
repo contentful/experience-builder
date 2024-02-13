@@ -71,10 +71,8 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     //   return;
     // }
 
-    if (isAssemblyBlock) {
-      // @ts-expect-error TODO adjust types
+    if (isAssemblyBlock && node.data.assembly) {
       selectedAssemblyId = node.data.assembly.id;
-      // @ts-expect-error TODO adjust types
       selectedAssemblyComponentId = node.data.assembly.componentId;
     }
 
@@ -85,15 +83,13 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     if (!userIsDragging) {
       setSelectedNodeId(
         selectedAssemblyComponentId || nodeId,
-        // @ts-expect-error TODO adjust types
+
         selectedAssemblyId && node.data.nodeLocation
-          ? // @ts-expect-error TODO adjust types
-            `${selectedAssemblyId}.${node.data.nodeLocation}`
+          ? `${selectedAssemblyId}.${node.data.nodeLocation}`
           : undefined
       );
       sendMessage(OUTGOING_EVENTS.ComponentSelected, {
         assemblyId: selectedAssemblyId,
-        // @ts-expect-error TODO adjust types
         nodeLocation: node.data.nodeLocation,
         assemblyComponentId: selectedAssemblyComponentId,
         nodeId,

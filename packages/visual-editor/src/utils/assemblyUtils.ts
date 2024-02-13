@@ -101,12 +101,11 @@ export const deserializeAssemblyNode = ({
     parentId,
     data: {
       id: nodeId,
-      // @ts-expect-error TODO adjust type
       assembly: {
         id: assemblyId,
         componentId: assemblyComponentId,
       },
-      nodeLocation: nodeLocation,
+      nodeLocation: nodeLocation || undefined,
       blockId: node.definitionId,
       props: childNodeVariable,
       dataSource,
