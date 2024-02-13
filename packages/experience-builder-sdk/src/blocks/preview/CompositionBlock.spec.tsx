@@ -2,10 +2,7 @@ import React from 'react';
 
 import { render } from '@testing-library/react';
 
-import {
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
-} from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
 import type { CompositionNode, ExperienceEntry } from '@contentful/experience-builder-core/types';
 import { CompositionBlock } from './CompositionBlock';
@@ -70,13 +67,13 @@ describe('CompositionBlock', () => {
           value2: { value: 1 },
         }}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
   });
 
   it('renders section node', () => {
     const sectionNode: CompositionNode = {
-      definitionId: CONTENTFUL_SECTION_ID,
+      definitionId: CONTENTFUL_COMPONENTS.section.id,
       variables: {},
       children: [],
     };
@@ -91,7 +88,7 @@ describe('CompositionBlock', () => {
         usedComponents={[]}
         unboundValues={{}}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
 
     expect(getByTestId('contentful-container')).toBeInTheDocument();
@@ -99,7 +96,7 @@ describe('CompositionBlock', () => {
 
   it('renders container node', () => {
     const containerNode: CompositionNode = {
-      definitionId: CONTENTFUL_CONTAINER_ID,
+      definitionId: CONTENTFUL_COMPONENTS.container.id,
       variables: {},
       children: [],
     };
@@ -114,7 +111,7 @@ describe('CompositionBlock', () => {
         usedComponents={[]}
         unboundValues={{}}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
 
     expect(getByTestId('contentful-container')).toBeInTheDocument();
@@ -163,7 +160,7 @@ describe('CompositionBlock', () => {
         usedComponents={[assemblyEntry] as ExperienceEntry[]}
         unboundValues={experienceEntry.fields.unboundValues}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
 
     expect(getByTestId('assembly')).toBeInTheDocument();

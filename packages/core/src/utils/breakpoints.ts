@@ -1,5 +1,5 @@
 import { getDesignTokenRegistration } from '@/registries';
-import { Breakpoint, ValuesByBreakpoint } from '@/types';
+import { Breakpoint, CompositionVariableValueType, ValuesByBreakpoint } from '@/types';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
 
@@ -58,7 +58,7 @@ export const getActiveBreakpointIndex = (
     id,
     index,
     // The fallback breakpoint with wildcard query will always match
-    isMatch: mediaQueryMatches[id] ?? true,
+    isMatch: mediaQueryMatches[id] ?? index === fallbackBreakpointIndex,
   }));
 
   // Find the last breakpoint in the list that matches (desktop-first: the narrowest one)
@@ -95,25 +95,30 @@ export const getValueForBreakpoint = (
   activeBreakpointIndex: number,
   variableName: string
 ) => {
-  const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
-  const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id;
+  const eventuallyResolveDesignTokens = (value: CompositionVariableValueType) => {
+    // For some built-in design propertier, we support design tokens
+    if (builtInStylesWithDesignTokens.includes(variableName)) {
+      return getDesignTokenRegistration(value as string, variableName);
+    }
+    // For all other properties, we just return the breakpoint-specific value
+    return value;
+  };
+
   if (valuesByBreakpoint instanceof Object) {
     // Assume that the values are sorted by media query to apply the cascading CSS logic
     for (let index = activeBreakpointIndex; index >= 0; index--) {
       const breakpointId = breakpoints[index].id;
-      if (builtInStylesWithDesignTokens.includes(variableName)) {
-        const breakpointValue =
-          valuesByBreakpoint[breakpointId] || valuesByBreakpoint[fallbackBreakpointId];
-
-        return getDesignTokenRegistration(breakpointValue, variableName);
-      }
       if (valuesByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade
-        return valuesByBreakpoint[breakpointId];
+        return eventuallyResolveDesignTokens(valuesByBreakpoint[breakpointId]);
       }
     }
-    return valuesByBreakpoint[fallbackBreakpointId];
+    // If no breakpoint matched, we search and apply the fallback breakpoint
+    const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+    const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id;
+    return eventuallyResolveDesignTokens(valuesByBreakpoint[fallbackBreakpointId]);
   } else {
+    // Old design properties did not support breakpoints, keep for backward compatibility
     return valuesByBreakpoint;
   }
 };

@@ -115,7 +115,6 @@ export type ComponentDefinition<
     Record<string, ComponentDefinitionVariable<T>>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
-  rootComponent?: boolean;
 };
 
 export type ComponentRegistration = {
@@ -125,6 +124,10 @@ export type ComponentRegistration = {
     wrapComponent?: boolean;
     wrapContainerTag?: keyof JSX.IntrinsicElements;
   };
+};
+
+export type ComponentRegistrationOptions = {
+  enabledBuiltInComponents?: string[];
 };
 
 export type Binding = {
@@ -234,6 +237,9 @@ export type StyleProps = {
   cfTextUnderline: boolean;
   cfColumns: string;
   cfColumnSpan: string;
+  cfColumnSpanLock: string;
+  cfWrapColumns: string;
+  cfWrapColumnsCount: string;
 };
 
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic

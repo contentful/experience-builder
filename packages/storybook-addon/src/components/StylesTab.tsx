@@ -5,16 +5,13 @@ import { css } from 'emotion';
 import tokens from '@contentful/f36-tokens';
 import CompositionFallBackIcon from '@svg/composition/composition-fall-back-icon.svg';
 import { StyleInputBoolean, StyleInputNumber, StyleInputText } from './StyleInputFields';
-import {
-  CONTENTFUL_SECTION_ID,
-  CONTENTFUL_CONTAINER_ID,
-  ComponentDefinition,
-} from '@contentful/experience-builder';
+import { ComponentDefinition } from '@contentful/experience-builder';
 import { StyleInputSelect } from './StyleInputFields/StyleInputSelect';
 import { SectionStyles } from './SectionStyles';
 
 import { AffectedBreakpoints, BreakpointInheritanceTree } from './StyleSectionComponents';
 import { capitalizeFirstLetter } from '@/utils/strings';
+import { isContentfulStructureComponent } from '@contentful/experience-builder-core';
 
 const styles = {
   wrapper: css({
@@ -175,7 +172,7 @@ const StylesTab = ({ componentDefinition }: StylesTabProps) => {
     <>
       <Flex className={styles.wrapper} gap="spacingM" flexDirection="column" flexGrow="1">
         <SectionStyles selectedComponentDefinition={componentDefinition} />
-        {![CONTENTFUL_SECTION_ID, CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id) && (
+        {!isContentfulStructureComponent(componentDefinition.id) && (
           <>
             {inputFields.length > 0 && (
               <Text

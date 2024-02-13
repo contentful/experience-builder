@@ -60,7 +60,7 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
             locale,
             entities: initialEntities ?? [],
           },
-        })
+        }),
       );
     };
 

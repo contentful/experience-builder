@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.21](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-core@0.0.2-alpha.20...@contentful/experience-builder-core@0.0.2-alpha.21) (2024-02-09)
+
+**Note:** Version bump only for package @contentful/experience-builder-core
+
+## [0.0.2-alpha.20](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.19...@contentful/experience-builder-core@0.0.2-alpha.20) (2024-02-08)
+
+### Bug Fixes
+
+- mobile falls back to tablet style for token-enabled props ([0e1aa02](https://github.com/contentful/experience-builder-toolkit/commit/0e1aa0214d69f7e388ee2b44e009570efe081e8a))
+
+## [0.0.2-alpha.19](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.18...@contentful/experience-builder-core@0.0.2-alpha.19) (2024-02-07)
+
+### Bug Fixes
+
+- assume not matching breakpoints and initialise correctly in the effect ([96c734a](https://github.com/contentful/experience-builder-toolkit/commit/96c734a4b73630e2fd6a45fc9c0ae7b0778edd2b))
+- merge conflict in columns style type ([905add3](https://github.com/contentful/experience-builder-toolkit/commit/905add3870c3e1d4390680c62b762cf03b09a2e6))
+- smaller dropzone indicator and container height adjustments [ALT-356] ([#326](https://github.com/contentful/experience-builder-toolkit/issues/326)) ([bf75c10](https://github.com/contentful/experience-builder-toolkit/commit/bf75c10b13e3e165dac1f4d1d6a68deae1622078))
+
+### Features
+
+- **components:** ability to lock a column span for columns component ([#344](https://github.com/contentful/experience-builder-toolkit/issues/344)) ([f01c907](https://github.com/contentful/experience-builder-toolkit/commit/f01c907639ca549a7da48dbfd6279ec2e813fead))
+- **components:** add new design value to track column wrap ([#338](https://github.com/contentful/experience-builder-toolkit/issues/338)) ([4707707](https://github.com/contentful/experience-builder-toolkit/commit/47077072b01a0fcb7ee3da2617a25362688bbbf7))
+- **components:** column gaps [ALT-279] ([#324](https://github.com/contentful/experience-builder-toolkit/issues/324)) ([465bd53](https://github.com/contentful/experience-builder-toolkit/commit/465bd539b2dadc831096c9fba9f89c98e3687a04))
+
+## [0.0.2-alpha.18](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.17...@contentful/experience-builder-core@0.0.2-alpha.18) (2024-02-06)
+
+**Note:** Version bump only for package @contentful/experience-builder-core
+
+## [0.0.2-alpha.17](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.15...@contentful/experience-builder-core@0.0.2-alpha.17) (2024-02-01)
+
+### Bug Fixes
+
+- allow built-in components to be disabled [ALT-267] ([#321](https://github.com/contentful/experience-builder-toolkit/issues/321)) ([453225c](https://github.com/contentful/experience-builder-toolkit/commit/453225cf9c0813137441e1445754c4ed3aecd8bc))
+- make React prop optional in other places as well ([81bf035](https://github.com/contentful/experience-builder-toolkit/commit/81bf0355d1bb8fa48be2de7fa4572c31f686685c))
+
+### Features
+
+- **components:** built-in styles for columns [ALT-276, ALT-277] ([#316](https://github.com/contentful/experience-builder-toolkit/issues/316)) ([7a057c3](https://github.com/contentful/experience-builder-toolkit/commit/7a057c36e855b580262f5e368cbf5c037e8dc323))
+- section component [ALT-205] ([#279](https://github.com/contentful/experience-builder-toolkit/issues/279)) ([aea2ac8](https://github.com/contentful/experience-builder-toolkit/commit/aea2ac899dbf12e9e62ac174d84b5171ce60dbdb))
+
 ## [0.0.2-alpha.15](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-core@0.0.2-alpha.14...@contentful/experience-builder-core@0.0.2-alpha.15) (2024-01-25)
 
 ### Features

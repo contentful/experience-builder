@@ -10,10 +10,11 @@ import {
 import {
   CSSProperties,
   StyleProps,
-  CompositionComponentNode,
   CompositionVariableValueType,
+  CompositionComponentNode,
 } from '@/types';
-import { CONTENTFUL_CONTAINER_ID } from '@/constants';
+import { isContentfulStructureComponent } from './components';
+import { EMPTY_CONTAINER_HEIGHT } from '../constants';
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 
@@ -94,7 +95,7 @@ export const buildCfStyles = ({
 };
 /**
  * Container/section default behaviour:
- * Default height => height: '200px'
+ * Default height => height: EMPTY_CONTAINER_HEIGHT (120px)
  * If a container component has children => height: 'fit-content'
  */
 export const calculateNodeDefaultHeight = ({
@@ -106,7 +107,7 @@ export const calculateNodeDefaultHeight = ({
   children: CompositionComponentNode['children'];
   value: CompositionVariableValueType;
 }) => {
-  if (!blockId || CONTENTFUL_CONTAINER_ID !== blockId || value !== 'auto') {
+  if (!blockId || !isContentfulStructureComponent(blockId) || value !== 'auto') {
     return value;
   }
 
@@ -114,5 +115,5 @@ export const calculateNodeDefaultHeight = ({
     return '100%';
   }
 
-  return '200px';
+  return EMPTY_CONTAINER_HEIGHT;
 };

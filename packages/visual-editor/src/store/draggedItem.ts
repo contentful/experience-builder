@@ -8,15 +8,21 @@ export interface DraggedItemStore {
   setComponentId: (id: string) => void;
   draggedItem?: DraggedItem;
   updateItem: (item?: DraggedItem) => void;
+  isDraggingOnCanvas: boolean;
+  setDraggingOnCanvas: (isDraggingOnCanvas: boolean) => void;
 }
 
 export const useDraggedItemStore = create<DraggedItemStore>((set) => ({
   draggedItem: undefined,
   componentId: '',
+  isDraggingOnCanvas: false,
   setComponentId(id) {
     set({ componentId: id });
   },
   updateItem: (item) => {
     set({ draggedItem: item });
+  },
+  setDraggingOnCanvas: (isDraggingOnCanvas) => {
+    set({ isDraggingOnCanvas });
   },
 }));

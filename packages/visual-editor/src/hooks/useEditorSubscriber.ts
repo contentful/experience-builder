@@ -49,6 +49,7 @@ export function useEditorSubscriber() {
   const selectedAssemblyChildId = useEditorStore((state) => state.selectedAssemblyChildId);
 
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
+  const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
 
   const [isFetchingEntities, setFetchingEntities] = useState(false);
 
@@ -245,6 +246,7 @@ export function useEditorSubscriber() {
 
           if (!isDragging) {
             setComponentId('');
+            setDraggingOnCanvas(false);
             dragState.reset();
           }
           break;
@@ -286,6 +288,7 @@ export function useEditorSubscriber() {
         case INCOMING_EVENTS.ComponentDragEnded: {
           dragState.reset();
           setComponentId('');
+          setDraggingOnCanvas(false);
           break;
         }
         case INCOMING_EVENTS.SelectComponent: {
@@ -311,6 +314,7 @@ export function useEditorSubscriber() {
   }, [
     entityStore,
     setComponentId,
+    setDraggingOnCanvas,
     setDataSource,
     setLocale,
     setSelectedNodeId,
@@ -361,7 +365,7 @@ export function useEditorSubscriber() {
     window.addEventListener('scroll', onScroll, { capture: true, passive: true });
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll, { capture: true });
       clearTimeout(timeoutId);
     };
   }, [selectedNodeId]);

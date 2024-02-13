@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-visual-editor",
-  "version": "0.0.2-alpha.18",
+  "version": "0.0.2-alpha.24",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -10,17 +10,21 @@
     "package.json",
     "dist/**/*.*"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
+    "bundle": "npx watchify dist/index.cjs -o dist/bundle.js",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "build": "rollup -c ./rollup.config.mjs",
     "predev": "npm run clean",
-    "bundle": "npx watchify dist/index.cjs -o dist/bundle.js",
-    "dev": "rollup -c ./rollup.dev.config.mjs --watch",
+    "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "depcruise": "depcruise src"
   },
   "dependencies": {
     "@contentful/experience-builder-components": "file:../components",

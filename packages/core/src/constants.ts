@@ -21,6 +21,7 @@ export const OUTGOING_EVENTS = {
   UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
+  OutsideCanvasClick: 'outsideCanvasClick',
 };
 
 export const INCOMING_EVENTS = {
@@ -59,15 +60,53 @@ export const VISUAL_EDITOR_EVENTS = {
 };
 
 export const VISUAL_EDITOR_CONTAINER_ID = 'cf-visual-editor';
-export const CONTENTFUL_SECTION_ID = 'contentful-section'; // TODO: remove me once all customers are using 2023-09-28 schema version
-export const CONTENTFUL_CONTAINER_ID = 'contentful-container';
-export const CONTENTFUL_COLUMNS_ID = 'contentful-columns';
-export const CONTENTFUL_SINGLE_COLUMN_ID = 'contentful-single-column';
-export const CONTENTFUL_SECTION_NAME = 'Section'; // TODO: remove me once all customers are using 2023-09-28 schema version
-export const CONTENTFUL_COLUMNS_NAME = 'Columns';
-export const CONTENTFUL_SINGLE_COLUMN_NAME = 'Column';
-export const CONTENTFUL_CONTAINER_NAME = 'Container';
 export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component';
+export const CONTENTFUL_DEFAULT_CATEGORY = 'Contentful';
+
+export const CONTENTFUL_COMPONENTS = {
+  section: {
+    id: 'contentful-section',
+    name: 'Section',
+  },
+  container: {
+    id: 'contentful-container',
+    name: 'Container',
+  },
+  columns: {
+    id: 'contentful-columns',
+    name: 'Columns',
+  },
+  singleColumn: {
+    id: 'contentful-single-column',
+    name: 'Column',
+  },
+  button: {
+    id: 'button',
+    name: 'Button',
+  },
+  heading: {
+    id: 'heading',
+    name: 'Heading',
+  },
+  image: {
+    id: 'image',
+    name: 'Image',
+  },
+  richText: {
+    id: 'richText',
+    name: 'Rich Text',
+  },
+  text: {
+    id: 'text',
+    name: 'Text',
+  },
+};
+
+/** @deprecated use `CONTENTFUL_COMPONENTS.section.id` instead. This will be removed in version 4. */
+export const CONTENTFUL_SECTION_ID = CONTENTFUL_COMPONENTS.section.id;
+/** @deprecated use `CONTENTFUL_COMPONENTS.container.id` instead. This will be removed in version 4. */
+export const CONTENTFUL_CONTAINER_ID = CONTENTFUL_COMPONENTS.container.id;
+
 export const ASSEMBLY_NODE_TYPE = 'assembly';
 export const ASSEMBLY_DEFAULT_CATEGORY = 'Assemblies';
 export const ASSEMBLY_BLOCK_NODE_TYPE = 'assemblyBlock';
@@ -118,6 +157,8 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',
 ];
+
+export const EMPTY_CONTAINER_HEIGHT = '120px';
 
 export enum PostMessageMethods {
   REQUEST_ENTITIES = 'REQUEST_ENTITIES',

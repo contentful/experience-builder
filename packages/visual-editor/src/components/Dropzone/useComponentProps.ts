@@ -4,11 +4,13 @@ import {
   calculateNodeDefaultHeight,
   transformContentValue,
   isLinkToAsset,
+  isEmptyStructureWithRelativeHeight,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
+  EMPTY_CONTAINER_HEIGHT,
 } from '@contentful/experience-builder-core/constants';
 import type {
   StyleProps,
@@ -136,8 +138,8 @@ export const useComponentProps = ({
   }, [
     definition,
     node.data.props,
-    node.data.blockId,
     node.children,
+    node.data.blockId,
     resolveDesignValue,
     dataSource,
     areEntitiesFetched,
@@ -149,23 +151,46 @@ export const useComponentProps = ({
   const cfStyles = buildCfStyles(props);
 
   // Separate the component styles from the editor wrapper styles
-  const { height, width, maxWidth, margin, ...componentStyles } = cfStyles;
+  const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
 
-  const { className: editorWrapperClass } = useStyleTag({
-    styles: { height, width, maxWidth, margin },
+  // Styles that will be applied to the editor wrapper (draggable) element
+  const { className: wrapperClass } = useStyleTag({
+    styles: {
+      margin,
+      height,
+      width,
+      maxWidth,
+    },
     nodeId: `editor-${node.data.id}`,
   });
 
-  const { className } = useStyleTag({ styles: componentStyles, nodeId: node.data.id });
+  // Styles that will be applied to the component element
+  const { className: componentClass } = useStyleTag({
+    styles: {
+      ...componentStyles,
+      margin: 0,
+      width: '100%',
+      height: '100%',
+      maxWidth: 'none',
+      ...(isEmptyStructureWithRelativeHeight(node.children.length, node?.data.blockId, height) && {
+        minHeight: EMPTY_CONTAINER_HEIGHT,
+      }),
+    },
+    nodeId: node.data.id,
+  });
 
-  const componentProps = {
-    className,
-    editorMode: true,
-    node,
-    renderDropzone,
+  const wrapperProps = {
+    className: wrapperClass,
     'data-cf-node-id': node.data.id,
     'data-cf-node-block-id': node.data.blockId,
     'data-cf-node-block-type': node.type,
+  };
+
+  const componentProps = {
+    className: componentClass,
+    editorMode: true,
+    node,
+    renderDropzone,
     ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
@@ -178,5 +203,5 @@ export const useComponentProps = ({
     ] = `${node.data.assembly.id}.${node.data.nodeLocation}`;
   }
 
-  return { props: componentProps, editorWrapperClass };
+  return { componentProps, wrapperProps };
 };

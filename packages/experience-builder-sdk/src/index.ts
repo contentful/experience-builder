@@ -14,14 +14,14 @@ export {
   fetchBySlug,
 } from '@contentful/experience-builder-core';
 export {
-  /**
-   * @deprecated Sections are deprecated and are replaced by Containers in the schema version "2023-09-28". Support for sections will be removed completely as soon as all customer data was migrated.
-   */
+  /** @deprecated use `CONTENTFUL_COMPONENTS.section.id` instead. This will be removed in version 4. */
   CONTENTFUL_SECTION_ID,
+  /** @deprecated use `CONTENTFUL_COMPONENTS.container.id` instead. This will be removed in version 4. */
+  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_COMPONENTS,
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
   CONTENTFUL_COMPONENT_CATEGORY,
-  CONTENTFUL_CONTAINER_ID,
   LATEST_SCHEMA_VERSION,
   CF_STYLE_ATTRIBUTES,
   // We still need to expose those, so in the editor we can check for both to support older SDK versions
@@ -36,7 +36,6 @@ export {
   ASSEMBLY_NODE_TYPES,
   SCROLL_STATES,
 } from '@contentful/experience-builder-core/constants';
-export { tryParseMessage, doesMismatchMessageSchema } from './utils/validation';
 
 export type {
   InternalSDKMode,

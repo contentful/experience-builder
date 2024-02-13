@@ -11,12 +11,8 @@ import type {
 import { EntityStore } from '@contentful/experience-builder-core';
 import { combineClasses } from '../../utils/combineClasses';
 
-export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = EditorMode extends true
+export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = (EditorMode extends true
   ? {
-      children?: React.ReactNode;
-      className?: string;
-      cfHyperlink?: StyleProps['cfHyperlink'];
-      cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
       editorMode?: EditorMode;
       node: CompositionComponentNode;
       dataSource?: CompositionDataSource;
@@ -30,31 +26,32 @@ export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = EditorMo
       ) => React.ReactNode;
     }
   : {
-      className?: string;
-      cfHyperlink?: StyleProps['cfHyperlink'];
-      cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
       editorMode: EditorMode;
-      children?: React.ReactNode;
-    };
+    }) & {
+  children?: React.ReactNode;
+  className?: string;
+  cfHyperlink?: StyleProps['cfHyperlink'];
+  cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
+  WrapperComponent?: React.ElementType;
+};
 
 export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyperlinkProps> = (
   props
 ) => {
   const { cfHyperlink, cfOpenInNewTab, editorMode, className, children } = props;
 
-  let anchorTagProps = {};
-  if (cfOpenInNewTab) {
-    anchorTagProps = {
-      target: '_blank',
-      rel: 'noopener noreferrer',
-    };
-  }
-
   if (editorMode === false) {
+    let anchorTagProps = {};
+    if (cfOpenInNewTab) {
+      anchorTagProps = {
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      };
+    }
+
     return (
       <a
-        id="ContentfulContainer"
-        className={combineClasses(className, 'defaultStyles', 'cf-section-link')}
+        className={combineClasses(className, 'contentful-container', 'contentful-container-link')}
         href={cfHyperlink}
         {...anchorTagProps}>
         {children}
@@ -71,28 +68,9 @@ export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyper
 
   return renderDropzone(node, {
     ['data-test-id']: 'contentful-container',
-    ['data-cf-node-id']: node.data.id,
-    ['data-cf-node-block-id']: node.data.blockId,
-    ['data-cf-node-block-type']: node.type,
-    id: 'ContentfulContainer',
-    className: combineClasses(className, 'defaultStyles', 'cf-section-link'),
+    className: combineClasses(className, 'contentful-container', 'contentful-container-link'),
     zoneId: node.data.id,
     WrapperComponent: 'a',
     onClick: stopPropagationInEditorMode,
   });
-
-  // return (
-  //   <a
-  //     id="ContentfulContainer"
-  //     className={combineClasses(className, 'defaultStyles', 'cf-section-link')}
-  //     href={cfHyperlink}
-  //     {...anchorTagProps}
-  //     onClick={stopPropagationInEditorMode}
-  //     data-cf-node-id={node.data.id}
-  //     data-cf-node-block-id={node.data.blockId}
-  //     data-cf-node-block-type={node.type}>
-  //     {renderDropzone(node)}
-  //   </a>
-
-  // );
 };

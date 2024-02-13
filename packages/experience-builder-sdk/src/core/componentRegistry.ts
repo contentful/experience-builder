@@ -2,12 +2,12 @@ import * as Components from '@contentful/experience-builder-components';
 import type {
   ComponentRegistration,
   ComponentDefinition,
+  ComponentRegistrationOptions,
 } from '@contentful/experience-builder-core/types';
 import {
   OUTGOING_EVENTS,
   INTERNAL_EVENTS,
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
+  CONTENTFUL_COMPONENTS,
   ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import {
@@ -16,6 +16,7 @@ import {
   optionalBuiltInStyles,
   sendMessage,
   containerDefinition,
+  sectionDefinition,
   columnsDefinition,
   singleColumnDefinition,
 } from '@contentful/experience-builder-core';
@@ -39,7 +40,7 @@ const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinit
 };
 
 const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
-  if ([CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
+  if ([CONTENTFUL_COMPONENTS.container.id].includes(componentDefinition.id)) {
     return componentDefinition;
   }
 
@@ -79,6 +80,10 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     component: Components.ContentfulContainer,
     definition: containerDefinition,
   },
+  section: {
+    component: Components.ContentfulContainer,
+    definition: sectionDefinition,
+  },
   columns: {
     component: Components.Columns,
     definition: columnsDefinition,
@@ -90,10 +95,16 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   button: enrichComponentDefinition({
     component: Components.Button,
     definition: Components.ButtonComponentDefinition,
+    options: {
+      wrapComponent: false,
+    },
   }),
   heading: enrichComponentDefinition({
     component: Components.Heading,
     definition: Components.HeadingComponentDefinition,
+    options: {
+      wrapComponent: false,
+    },
   }),
   image: enrichComponentDefinition({
     component: Components.Image,
@@ -102,15 +113,22 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   richText: enrichComponentDefinition({
     component: Components.RichText,
     definition: Components.RichTextComponentDefinition,
+    options: {
+      wrapComponent: false,
+    },
   }),
   text: enrichComponentDefinition({
     component: Components.Text,
     definition: Components.TextComponentDefinition,
+    options: {
+      wrapComponent: false,
+    },
   }),
 } satisfies Record<string, ComponentRegistration>;
 
 // pre-filling with the default component registrations
 export const componentRegistry = new Map<string, ComponentRegistration>([
+  [DEFAULT_COMPONENT_REGISTRATIONS.section.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.section],
   [
     DEFAULT_COMPONENT_REGISTRATIONS.container.definition.id,
     DEFAULT_COMPONENT_REGISTRATIONS.container,
@@ -130,6 +148,14 @@ export const componentRegistry = new Map<string, ComponentRegistration>([
   [DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.text],
 ]);
 
+export const optionalBuiltInComponents = [
+  DEFAULT_COMPONENT_REGISTRATIONS.button.definition.id,
+  DEFAULT_COMPONENT_REGISTRATIONS.heading.definition.id,
+  DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id,
+  DEFAULT_COMPONENT_REGISTRATIONS.richText.definition.id,
+  DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id,
+];
+
 export const sendRegisteredComponentsMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values());
@@ -142,7 +168,7 @@ export const sendRegisteredComponentsMessage = () => {
 export const sendConnectedEventWithRegisteredComponents = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
-    ({ definition }) => definition
+    ({ definition }) => definition,
   );
 
   sendMessage(OUTGOING_EVENTS.Connected, {
@@ -160,13 +186,24 @@ export const sendConnectedEventWithRegisteredComponents = () => {
  * @param componentRegistrations - ComponentRegistration[]
  * @returns void
  */
-export const defineComponents = (componentRegistrations: ComponentRegistration[]) => {
+export const defineComponents = (
+  componentRegistrations: ComponentRegistration[],
+  options?: ComponentRegistrationOptions,
+) => {
+  if (options?.enabledBuiltInComponents) {
+    for (const id of optionalBuiltInComponents) {
+      if (!options.enabledBuiltInComponents.includes(id)) {
+        componentRegistry.delete(id);
+      }
+    }
+  }
+
   for (const registration of componentRegistrations) {
     // Fill definitions with fallbacks values
     const enrichedComponentRegistration = enrichComponentDefinition(registration);
     componentRegistry.set(
       enrichedComponentRegistration.definition.id,
-      enrichedComponentRegistration
+      enrichedComponentRegistration,
     );
   }
 
@@ -185,12 +222,7 @@ export const resetComponentRegistry = () => {
   }
 };
 
-export const getComponentRegistration = (id: string) => {
-  if (id === CONTENTFUL_SECTION_ID) {
-    return componentRegistry.get(CONTENTFUL_CONTAINER_ID);
-  }
-  return componentRegistry.get(id);
-};
+export const getComponentRegistration = (id: string) => componentRegistry.get(id);
 
 export const addComponentRegistration = (componentRegistration: ComponentRegistration) => {
   componentRegistry.set(componentRegistration.definition.id, componentRegistration);

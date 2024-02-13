@@ -12,6 +12,8 @@ import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { DNDProvider } from './DNDProvider';
+import { sendMessage } from '@contentful/experience-builder-core';
+import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 
 interface Props {
   onChange?: (data: CompositionTree) => void;
@@ -22,7 +24,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
 
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
-  const userIsDragging = !!dragItem;
+  const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const breakpoints = useTreeStore((state) => state.breakpoints);
 
   const { resolveDesignValue } = useBreakpoints(breakpoints);
@@ -31,6 +33,19 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   useEffect(() => {
     if (onChange) onChange(tree);
   }, [tree, onChange]);
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  const handleClickOutside = () => {
+    sendMessage(OUTGOING_EVENTS.OutsideCanvasClick, {
+      outsideCanvasClick: true,
+    });
+  };
 
   return (
     <DNDProvider>
@@ -57,7 +72,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
         */}
         {userIsDragging && (
           <div
-            className={styles.hitboxLower}
+            className={styles.hitbox}
             onMouseOver={(e) => {
               e.stopPropagation();
               setHoveringSection(ROOT_ID);

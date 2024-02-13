@@ -37,7 +37,6 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   selectedNodeId: null,
   selectedAssemblyChildId: null,
   locale: null,
-  entityStore: undefined,
 
   setSelectedNodeId: (id: string, assemblyChildId?: string) => {
     console.log('set selected node', id, assemblyChildId);
@@ -60,6 +59,7 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     if (locale === currentLocale) {
       return;
     }
+
     set({ locale });
   },
   initializeEditor({ componentRegistry: initialRegistry, designTokens, initialLocale }) {

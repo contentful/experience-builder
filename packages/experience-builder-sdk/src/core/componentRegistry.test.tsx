@@ -1,8 +1,8 @@
 import React from 'react';
-import { containerDefinition } from '@contentful/experience-builder-core';
+import { containerDefinition, sectionDefinition } from '@contentful/experience-builder-core';
 import {
   INTERNAL_EVENTS,
-  CONTENTFUL_SECTION_ID,
+  CONTENTFUL_COMPONENTS,
   ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
 import * as registry from './componentRegistry';
@@ -22,10 +22,16 @@ describe('component registration', () => {
       expect(registry.getComponentRegistration('random-str')).toBe(undefined);
     });
 
-    it('should return container when given a section id', () => {
-      expect(registry.getComponentRegistration(CONTENTFUL_SECTION_ID)?.definition).toEqual(
-        containerDefinition
-      );
+    it('should return container when given a container id', () => {
+      expect(
+        registry.getComponentRegistration(CONTENTFUL_COMPONENTS.container.id)?.definition,
+      ).toEqual(containerDefinition);
+    });
+
+    it('should return section when given a section id', () => {
+      expect(
+        registry.getComponentRegistration(CONTENTFUL_COMPONENTS.section.id)?.definition,
+      ).toEqual(sectionDefinition);
     });
   });
 
@@ -54,7 +60,7 @@ describe('component registration', () => {
       const componentRegistration = registry.getComponentRegistration(definitionId);
       expect(componentRegistration).toBeDefined();
       expect(window.dispatchEvent).toHaveBeenCalledWith(
-        new CustomEvent(INTERNAL_EVENTS.ComponentsRegistered)
+        new CustomEvent(INTERNAL_EVENTS.ComponentsRegistered),
       );
     });
 

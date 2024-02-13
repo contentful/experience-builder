@@ -34,7 +34,7 @@ export const PreviewDeliveryRoot = ({
 
   if (!compatibleVersions.includes(entityStore.schemaVersion)) {
     console.warn(
-      `[exp-builder.sdk] Contenful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`
+      `[exp-builder.sdk] Contenful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
     return null;
   }

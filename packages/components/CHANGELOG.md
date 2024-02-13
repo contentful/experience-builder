@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.24](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.23...@contentful/experience-builder-components@0.0.2-alpha.24) (2024-02-09)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.23](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.22...@contentful/experience-builder-components@0.0.2-alpha.23) (2024-02-08)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.22](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.21...@contentful/experience-builder-components@0.0.2-alpha.22) (2024-02-07)
+
+### Bug Fixes
+
+- update Text component built in styles and add hyperlink options [ALT-358] ([#319](https://github.com/contentful/experience-builder-toolkit/issues/319)) ([441e11e](https://github.com/contentful/experience-builder-toolkit/commit/441e11ee04038a701220535d78cab621433ad483))
+
+### Features
+
+- adds background label for empty containers ([11d3f7c](https://github.com/contentful/experience-builder-toolkit/commit/11d3f7cf6de6b862e0c6780e20ed0e83869bc348))
+
+## [0.0.2-alpha.21](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.20...@contentful/experience-builder-components@0.0.2-alpha.21) (2024-02-06)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.20](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.18...@contentful/experience-builder-components@0.0.2-alpha.20) (2024-02-01)
+
+### Bug Fixes
+
+- allow built-in components to be disabled [ALT-267] ([#321](https://github.com/contentful/experience-builder-toolkit/issues/321)) ([453225c](https://github.com/contentful/experience-builder-toolkit/commit/453225cf9c0813137441e1445754c4ed3aecd8bc))
+- remove [data-cf-node-*] attributes from components ([#315](https://github.com/contentful/experience-builder-toolkit/issues/315)) ([cc0833e](https://github.com/contentful/experience-builder-toolkit/commit/cc0833eb07f5d27c0ed696bef5c24cf0d258cbe0))
+- types in visual editor [] ([#313](https://github.com/contentful/experience-builder-toolkit/issues/313)) ([d71c898](https://github.com/contentful/experience-builder-toolkit/commit/d71c898e2fe32b45f0003c829171e18b555a347e))
+- update Heading component built in styles [ALT-154] ([#296](https://github.com/contentful/experience-builder-toolkit/issues/296)) ([b064bfc](https://github.com/contentful/experience-builder-toolkit/commit/b064bfc16a158c2ff429105cb7b856326265e151))
+- use https protocol for component thumnails ([217a108](https://github.com/contentful/experience-builder-toolkit/commit/217a108f86a3f66ccbce1ca3162403530bf18c06))
+
+### Features
+
+- **components:** built-in styles for columns [ALT-276, ALT-277] ([#316](https://github.com/contentful/experience-builder-toolkit/issues/316)) ([7a057c3](https://github.com/contentful/experience-builder-toolkit/commit/7a057c36e855b580262f5e368cbf5c037e8dc323))
+- section component [ALT-205] ([#279](https://github.com/contentful/experience-builder-toolkit/issues/279)) ([aea2ac8](https://github.com/contentful/experience-builder-toolkit/commit/aea2ac899dbf12e9e62ac174d84b5171ce60dbdb))
+- updates rich text component definition to hold default stylings rather than using css modules ([7ddf6ed](https://github.com/contentful/experience-builder-toolkit/commit/7ddf6ed7748f383cdc6776ec68200c15500d16bf))
+
 ## [0.0.2-alpha.18](https://github.com/contentful/experience-builder-toolkit/compare/@contentful/experience-builder-components@0.0.2-alpha.17...@contentful/experience-builder-components@0.0.2-alpha.18) (2024-01-25)
 
 ### Features

@@ -23,13 +23,17 @@ jobs:
         github.ref_name == 'development' ||
         github.ref_name == 'next') &&
       !contains(github.event.head_commit.message, 'skip-release') &&
-      github.actor != 'dependabot[bot]'
+      github.actor != 'dependabot[bot]' &&
+      github.actor != 'contentful-automation[bot]'
     permissions:
       contents: write
+      id-token: write
     uses: ./.github/workflows/publish.yaml
     secrets:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      VAULT_URL: ${{ secrets.VAULT_URL }}
   upload-artifact-cleanup:
     if: ${{ always() }}
     needs: [install-build, check, publish]
+    permissions:
+      actions: write
     uses: ./.github/workflows/cleanup.yaml

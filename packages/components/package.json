@@ -1,25 +1,32 @@
 {
   "name": "@contentful/experience-builder-components",
-  "version": "0.0.2-alpha.18",
+  "version": "0.0.2-alpha.24",
   "description": "A basic set of components to use with Experience Builder",
-  "homepage": "https://github.com/contentful/experience-builder-toolkit/tree/next/packages/components#readme",
+  "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/components#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder-toolkit.git"
+    "url": "git+https://github.com/contentful/experience-builder.git"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "style": "./styles.css",
   "type": "module",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
-    "prebuild": "rimraf dist && rimraf styles.css",
-    "build": "rollup -c rollup.config.mjs",
+    "clean": "rimraf dist && rimraf styles.css",
+    "predev": "npm run clean",
+    "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
+    "prebuild": "npm run clean",
+    "build": "rollup -c ./rollup.config.mjs",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test:component": "npx cypress run --component",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "depcruise": "depcruise src"
   },
   "author": "",
   "license": "MIT",

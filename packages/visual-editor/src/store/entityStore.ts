@@ -14,7 +14,6 @@ export interface EntityState {
 
 export const useEntityStore = create<EntityState>((set) => ({
   entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
-  areEntitesResolvedInParent: false,
   areEntitiesFetched: false,
 
   setEntitiesFetched(fetched) {
@@ -24,6 +23,9 @@ export const useEntityStore = create<EntityState>((set) => ({
     console.debug(
       `[exp-builder.sdk] Resetting entity store because the locale changed to '${locale}'.`
     );
-    set({ entityStore: new EditorModeEntityStore({ locale, entities }) });
+    set({
+      entityStore: new EditorModeEntityStore({ locale, entities }),
+      areEntitiesFetched: false,
+    });
   },
 }));

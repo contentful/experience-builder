@@ -65,7 +65,7 @@ export const useComponent = ({
 
   const componentId = node.data.id;
 
-  const { props, editorWrapperClass } = useComponentProps({
+  const { componentProps, wrapperProps } = useComponentProps({
     node,
     areEntitiesFetched,
     resolveDesignValue,
@@ -74,20 +74,20 @@ export const useComponent = ({
   });
 
   // Only pass editor props to built-in components
-  const { editorMode, renderDropzone: _renderDropzone, ...componentProps } = props;
+  const { editorMode, renderDropzone: _renderDropzone, ...otherComponentProps } = componentProps;
   const elementToRender = builtInComponents.includes(node.data.blockId || '')
     ? (dragProps?: NoWrapDraggableProps) =>
-        React.createElement(componentRegistration.component, { ...props, ...dragProps })
+        React.createElement(componentRegistration.component, { ...dragProps, ...componentProps })
     : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE
     ? // Assembly.tsx requires renderDropzone and editorMode as well
-      () => React.createElement(componentRegistration.component, props)
-    : () => React.createElement(componentRegistration.component, componentProps);
+      () => React.createElement(componentRegistration.component, componentProps)
+    : () => React.createElement(componentRegistration.component, otherComponentProps);
 
   return {
     node,
     componentId,
     elementToRender,
-    editorWrapperClass,
+    wrapperProps,
     label: componentRegistration.definition.name,
   };
 };

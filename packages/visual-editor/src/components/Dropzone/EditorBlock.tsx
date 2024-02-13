@@ -6,14 +6,12 @@ import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoord
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from './useComponent';
 import { useZoneStore } from '@/store/zone';
-import classNames from 'classnames';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
 } from '@contentful/experience-builder-core/types';
 import {
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SINGLE_COLUMN_ID,
+  CONTENTFUL_COMPONENTS,
   ASSEMBLY_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
 } from '@contentful/experience-builder-core/constants';
@@ -45,7 +43,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, editorWrapperClass, label, elementToRender } = useComponent({
+  const { node, componentId, wrapperProps, label, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -55,7 +53,9 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
   const sectionsWithZone = useZoneStore((state) => state.sectionsWithZones);
 
-  const isContainer = node.data.blockId === CONTENTFUL_CONTAINER_ID;
+  const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
+  const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
+
   const containsZone = sectionsWithZone[componentId];
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
@@ -116,7 +116,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     setHoveringZone('');
   };
 
-  if (node.data.blockId === CONTENTFUL_SINGLE_COLUMN_ID) {
+  if (node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id) {
     return (
       <DraggableChildComponent
         elementToRender={elementToRender}
@@ -124,11 +124,13 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         id={`draggable-${componentId}`}
         index={index}
         isAssemblyBlock={isAssemblyBlock}
-        isDragDisabled={isAssemblyBlock}
+        isDragDisabled={isSingleColumn}
         isSelected={selectedNodeId === componentId}
         userIsDragging={userIsDragging}
         isContainer={isContainer}
+        blockId={node.data.blockId}
         coordinates={coordinates!}
+        wrapperProps={wrapperProps}
         onClick={onClick}
         onMouseOver={onMouseOver}
         onMouseOut={onMouseOut}
@@ -149,8 +151,9 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
       isContainer={isContainer}
+      blockId={node.data.blockId}
       coordinates={coordinates!}
-      className={classNames(editorWrapperClass)}
+      wrapperProps={wrapperProps}
       onClick={onClick}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
