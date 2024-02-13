@@ -105,7 +105,7 @@ export const useComponentProps = ({
           }
 
           if (isDeepPath(variableMapping.path)) {
-            const [, uuid, ..._deepPathRemainder] = variableMapping.path.split('/');
+            const [, uuid] = variableMapping.path.split('/');
             const link = dataSource[uuid] as Link<'Entry' | 'Asset'>;
             const boundValue = entityStore?.getValueDeep(link, variableMapping.path);
             const value = boundValue || variableDefinition.defaultValue;
