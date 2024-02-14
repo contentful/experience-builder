@@ -11,7 +11,7 @@ const DataSourceSchema = z.record(
       id: z.string(),
       linkType: z.literal('Entry').or(z.literal('Asset')),
     }),
-  })
+  }),
 );
 
 const PrimitiveValueSchema = z.union([
@@ -57,8 +57,8 @@ const ComponentPropertyValueSchema = z.union([
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
 
 const BreakpointSchema = z.object({
-  id: z.string(),
-  query: z.string(),
+  id: propertyKeySchema,
+  query: z.string().regex(/^\*$|^<[0-9*]+px$/),
   previewSize: z.string(),
   displayName: z.string(),
 });
@@ -67,7 +67,7 @@ const UnboundValuesSchema = z.record(
   propertyKeySchema,
   z.object({
     value: PrimitiveValueSchema,
-  })
+  }),
 );
 
 const baseComponentTreeNodeSchema = z.object({
@@ -93,7 +93,7 @@ const ComponentSettingsSchema = z.object({
       description: z.string().optional(),
       group: z.string().optional(),
       validations: z.record(z.string()).optional(),
-    })
+    }),
   ),
 });
 
@@ -104,7 +104,7 @@ const UsedComponentsSchema = z.array(
       id: z.string(),
       linkType: z.literal('Entry'),
     }),
-  })
+  }),
 );
 
 const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
@@ -115,7 +115,10 @@ const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
       path: [...ctx.path, 0],
     });
   }
-  const queries = value.map((bp) => bp.query);
+  // Extract the queries boundary by removing the special characters around it
+  const queries = value.map((bp) =>
+    bp.query === '*' ? bp.query : parseInt(bp.query.replace(/px|<|>/, '')),
+  );
   // sort updates queries array in place so we need to create a copy
   const originalQueries = [...queries];
   queries.sort((q1, q2) => {
@@ -125,11 +128,7 @@ const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
     if (q2 === '*') {
       return 1;
     }
-
-    const q1PixelValue = parseInt(q1.replace(/px|<|>/, ''));
-    const q2PixelValue = parseInt(q2.replace(/px|<|>/, ''));
-
-    return q1PixelValue > q2PixelValue ? -1 : 1;
+    return q1 > q2 ? -1 : 1;
   });
 
   if (originalQueries.join('') !== queries.join('')) {
