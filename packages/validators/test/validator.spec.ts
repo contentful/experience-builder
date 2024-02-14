@@ -1,5 +1,5 @@
 import { validateExperienceFields } from '../src/validators';
-import { experience } from './fixtures/v2023_09_28/experience';
+import { experience } from './__fixtures__/v2023_09_28/experience';
 import { describe, it, expect } from 'vitest';
 import { SafeParseError, SafeParseSuccess } from 'zod';
 
