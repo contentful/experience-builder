@@ -95,7 +95,12 @@ export function useEditorSubscriber() {
       ];
       const deepReferences = gatherDeepReferencesFromTree(tree.root, newDataSource);
 
-      const isIncompleteL1 = (entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]): boolean => {
+      /**
+       * Checks only for _missing_ L1 entities
+       * WARNING: Does NOT check for entity staleness/versions. If an entity is stale, it will NOT be considered missing.
+       *          If ExperienceBuilder wants to update stale entities, it should post  `▼UPDATED_ENTITY` message to SDK.
+       */
+      const isMissingL1Entities = (entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]): boolean => {
         const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
         return Boolean(missingAssetIds.length) || Boolean(missingEntryIds.length);
       };
@@ -103,7 +108,7 @@ export function useEditorSubscriber() {
       /**
        * PRECONDITION: all L1 entities are fetched
        */
-      const isIncompleteL2 = (deepReferences: DeepReference[]): boolean => {
+      const isMissingL2Entities = (deepReferences: DeepReference[]): boolean => {
         const extractReferent = (reference: DeepReference): Link<'Asset' | 'Entry'> | undefined => {
           const headEntity = entityStore.getEntityFromLink(reference.entityLink);
           const referentLink = headEntity!.fields[reference.field] as
@@ -151,8 +156,12 @@ export function useEditorSubscriber() {
       };
 
       try {
-        isIncompleteL1(entityLinksL1) && START_FETCHING() && (await fillupL1({ entityLinksL1 }));
-        isIncompleteL2(deepReferences) && START_FETCHING() && (await fillupL2({ deepReferences }));
+        isMissingL1Entities(entityLinksL1) &&
+          START_FETCHING() &&
+          (await fillupL1({ entityLinksL1 }));
+        isMissingL2Entities(deepReferences) &&
+          START_FETCHING() &&
+          (await fillupL2({ deepReferences }));
       } catch (error) {
         console.error('[exp-builder.sdk] Failed fetching entities');
         console.error(error);
