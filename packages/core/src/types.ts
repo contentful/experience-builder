@@ -91,7 +91,7 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
 }
 
 export type ComponentDefinitionVariable<
-  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
+  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType
   // K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
 > =
   // T extends 'Link'
@@ -101,7 +101,7 @@ export type ComponentDefinitionVariable<
   /*:*/ ComponentDefinitionVariableBase<T>;
 
 export type ComponentDefinition<
-  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
+  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType
 > = {
   id: string;
   name: string;
@@ -244,7 +244,7 @@ export type DesignTokensDefinition = {
   spacing?: Record<string, string>;
   sizing?: Record<string, string>;
   color?: Record<string, string>;
-  border?: Record<string, { width: string; style: 'inside' | 'outside'; color: string }>;
+  border?: Record<string, { width: string; style: 'solid' | 'dashed' | 'dotted'; color: string }>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;
   letterSpacing?: Record<string, string>;
@@ -300,7 +300,7 @@ export interface DeprecatedExperience {
 
 export type ResolveDesignValueType = (
   valuesByBreakpoint: ValuesByBreakpoint,
-  variableName: string,
+  variableName: string
 ) => PrimitiveValue;
 
 // The 'contentful' package only exposes CDA types while we received CMA ones in editor mode
