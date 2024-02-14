@@ -54,10 +54,10 @@ export class EntityStoreBase {
           break;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const fieldValue = get<string>(entityToResolveFieldsFrom, ['fields', field]) as
           | UnresolvedLink<'Entry' | 'Asset'>
           | undefined
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           | any;
         if (undefined === fieldValue) {
           // throw new Error(`Cannot resolve field ${field} of a fieldset as it is not defined.`);
