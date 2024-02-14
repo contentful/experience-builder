@@ -2,7 +2,7 @@ import React from 'react';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { Document, BLOCKS } from '@contentful/rich-text-types';
 import { combineClasses } from '@/utils/combineClasses';
-
+import './RichText.css';
 export interface RichTextProps extends Omit<React.HTMLAttributes<HTMLElement>, 'value'> {
   /**
    * Renders the text in a specific HTML tag.

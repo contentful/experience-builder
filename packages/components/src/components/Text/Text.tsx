@@ -1,6 +1,6 @@
 import { combineClasses } from '@/utils/combineClasses';
 import React from 'react';
-
+import './Text.css';
 export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   /**
    * The URL to navigate to when the text is clicked. When provided, the text will be wrapped in an anchor tag.
