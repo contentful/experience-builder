@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.24](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.23...@contentful/experience-builder@4.0.0-alpha.24) (2024-02-14)
+
+### Bug Fixes
+
+- **experience-builder-sdk:** support ssr in nextjs pages router ([#370](https://github.com/contentful/experience-builder/issues/370)) ([22cde82](https://github.com/contentful/experience-builder/commit/22cde82de00eca82d3bf3ee41e2f459c7f08b0c3))
+
+### Features
+
+- **experience-builder-sdk:** allow delivery mode in editor ([#341](https://github.com/contentful/experience-builder/issues/341)) ([2a3551a](https://github.com/contentful/experience-builder/commit/2a3551ac20cabd8538c6bba198e580852f07059e))
+
 # [4.0.0-alpha.23](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.22...@contentful/experience-builder@4.0.0-alpha.23) (2024-02-09)
 
 **Note:** Version bump only for package @contentful/experience-builder

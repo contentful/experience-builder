@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.25](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.24...@contentful/experience-builder-visual-editor@0.0.2-alpha.25) (2024-02-14)
+
+### Features
+
+- clicking outside of the edited canvas sends post message to user interface ([6e35c29](https://github.com/contentful/experience-builder/commit/6e35c2904b33027302e83b1d90b8c674e2380527))
+
 ## [0.0.2-alpha.24](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.23...@contentful/experience-builder-visual-editor@0.0.2-alpha.24) (2024-02-09)
 
 **Note:** Version bump only for package @contentful/experience-builder-visual-editor
