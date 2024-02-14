@@ -25,13 +25,13 @@ export async function fetchById({
   experienceTypeId,
   id,
   localeCode,
-  mode,
 }: {
   client: ContentfulClientApi<undefined>;
   experienceTypeId: string;
   id: string;
   localeCode: string;
-  mode: ExternalSDKMode;
+  /** @deprecated mode no longer needed */
+  mode?: ExternalSDKMode;
 }) {
   let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
 
@@ -61,7 +61,6 @@ export async function fetchById({
         referencedAssets: assets,
         referencedEntries: entries,
         locale: localeCode,
-        mode,
       });
 
       return experience;

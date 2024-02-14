@@ -1,19 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import type {
-  DeprecatedExperience,
-  ExternalSDKMode,
-  InternalSDKMode,
-} from '@contentful/experience-builder-core/types';
+import type { DeprecatedExperience } from '@contentful/experience-builder-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
-import { useBreakpoints, useEditorModeSwitch, useFetchExperience } from '../../hooks';
+import { useBreakpoints, useFetchExperience } from '../../hooks';
 import { usePrevious } from '../../hooks/usePrevious';
 
 type DeprecatedPreviewDeliveryRootProps = {
   deprecatedExperience: DeprecatedExperience;
   locale: string;
-  mode: InternalSDKMode;
-  switchToEditorMode: () => void;
   slug?: string;
 };
 
@@ -23,24 +17,16 @@ type DeprecatedPreviewDeliveryRootProps = {
  */
 export const DeprecatedPreviewDeliveryRoot = ({
   locale,
-  mode,
-  switchToEditorMode,
   slug,
   deprecatedExperience,
 }: DeprecatedPreviewDeliveryRootProps) => {
   const attemptedToFetch = useRef<boolean>(false);
   const previousLocale = usePrevious(locale);
 
-  useEditorModeSwitch({
-    mode,
-    switchToEditorMode,
-  });
-
   const { experienceTypeId, client } = deprecatedExperience;
 
   const { fetchBySlug, experience, isFetching } = useFetchExperience({
     client,
-    mode: mode as ExternalSDKMode,
   });
 
   const entityStore = experience?.entityStore;

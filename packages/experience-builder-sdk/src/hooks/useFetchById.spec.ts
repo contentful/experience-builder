@@ -4,7 +4,6 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { compositionEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
 import type { ContentfulClientApi, Entry } from 'contentful';
-import type { ExternalSDKMode } from '@contentful/experience-builder-core/types';
 
 const experienceTypeId = 'layout';
 const localeCode = 'en-US';
@@ -30,7 +29,6 @@ describe('useFetchById', () => {
     const { result } = renderHook(useFetchById, {
       initialProps: {
         client: clientMock,
-        mode: 'preview' as ExternalSDKMode,
         id,
         experienceTypeId,
         localeCode,
@@ -47,7 +45,6 @@ describe('useFetchById', () => {
     const { result } = renderHook(useFetchById, {
       initialProps: {
         client: clientMock,
-        mode: 'preview' as ExternalSDKMode,
         id,
         experienceTypeId,
         localeCode,
@@ -62,7 +59,6 @@ describe('useFetchById', () => {
         entities: [...entries, ...assets],
         locale: localeCode,
       });
-      expect(store.experience?.mode).toBe('preview');
       expect(store.experience?.entityStore).toMatchObject(entityStore);
 
       expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
@@ -83,6 +79,7 @@ describe('useFetchById', () => {
 
       expect(store).toEqual({
         experience: store.experience,
+        isEditorMode: false,
         isLoading: false,
         error: undefined,
       });
@@ -93,7 +90,6 @@ describe('useFetchById', () => {
     clientMock.getEntries = jest.fn().mockResolvedValue({ items: [] });
     const initialProps: UseFetchByIdArgs = {
       client: clientMock,
-      mode: 'preview' as ExternalSDKMode,
       id: 'unknown-id',
       experienceTypeId,
       localeCode,
@@ -120,7 +116,6 @@ describe('useFetchById', () => {
   it('should return an error if experienceTypeId is not defined', async () => {
     const initialProps = {
       client: clientMock,
-      mode: 'preview' as ExternalSDKMode,
       id,
       localeCode,
       experienceTypeId: undefined,
@@ -145,7 +140,6 @@ describe('useFetchById', () => {
   it('should return an error if localeCode is not defined, then when localCode is provided, the error should be undefined', async () => {
     const initialProps: UseFetchByIdArgs = {
       client: clientMock,
-      mode: 'preview' as ExternalSDKMode,
       id,
       experienceTypeId,
       // @ts-expect-error undefined is not allowed through types, but it can still happen if invoked from plain js

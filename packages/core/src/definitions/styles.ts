@@ -82,7 +82,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The height of the section',
-    defaultValue: 'fill',
+    defaultValue: 'fit-content',
   },
   cfMaxWidth: {
     displayName: 'Max width',
@@ -315,7 +315,7 @@ export const containerBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The margin of the container',
-    defaultValue: '0 auto 0 auto',
+    defaultValue: '0 Auto 0 Auto',
   },
 };
 
@@ -452,8 +452,8 @@ export const singleColumnBuiltInStyles: Partial<
     group: 'style',
   },
   cfColumnSpanLock: {
-    type: 'Text',
-    defaultValue: 'false',
+    type: 'Boolean',
+    defaultValue: false,
     group: 'style',
   },
 };
@@ -466,7 +466,7 @@ export const columnsBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The margin of the columns',
-    defaultValue: '0 auto 0 auto',
+    defaultValue: '0 Auto 0 Auto',
   },
   cfWidth: {
     displayName: 'Width',
@@ -552,8 +552,8 @@ export const columnsBuiltInStyles: Partial<
     group: 'style',
   },
   cfWrapColumns: {
-    type: 'Text',
-    defaultValue: 'false',
+    type: 'Boolean',
+    defaultValue: false,
     group: 'style',
   },
   cfWrapColumnsCount: {

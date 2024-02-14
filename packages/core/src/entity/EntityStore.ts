@@ -14,14 +14,32 @@ export class EntityStore extends EntityStoreBase {
   private _experienceEntry: Composition | undefined;
   private _unboundValues: CompositionUnboundValues | undefined;
 
-  constructor({ experienceEntry, entities, locale }: EntityStoreArgs) {
-    super({ entities, locale });
+  constructor(json: string);
+  constructor({ experienceEntry, entities, locale }: EntityStoreArgs);
 
-    if (isExperienceEntry(experienceEntry)) {
-      this._experienceEntry = (experienceEntry as ExperienceEntry).fields;
-      this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
+  constructor(options: string | EntityStoreArgs) {
+    if (typeof options === 'string') {
+      const data = JSON.parse(options);
+      const { _experienceEntry, _unboundValues, locale, entryMap, assetMap } = data.entityStore;
+      super({
+        entities: [
+          ...(Object.values(entryMap) as Entry[]),
+          ...(Object.values(assetMap) as Asset[]),
+        ],
+        locale,
+      });
+      this._experienceEntry = _experienceEntry;
+      this._unboundValues = _unboundValues;
     } else {
-      throw new Error('Provided entry is not experience entry');
+      const { experienceEntry, entities, locale } = options;
+      super({ entities, locale });
+
+      if (isExperienceEntry(experienceEntry)) {
+        this._experienceEntry = (experienceEntry as ExperienceEntry).fields;
+        this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
+      } else {
+        throw new Error('Provided entry is not experience entry');
+      }
     }
   }
 
@@ -59,10 +77,10 @@ export class EntityStore extends EntityStoreBase {
 
   public getValue(
     entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
-    path: string[]
+    path: string[],
   ): string | undefined {
     const isLink = (
-      entity: typeof entityLinkOrEntity
+      entity: typeof entityLinkOrEntity,
     ): entity is UnresolvedLink<'Entry' | 'Asset'> => entityLinkOrEntity.sys.type === 'Link';
 
     let entity: Entry | Asset;
@@ -74,7 +92,7 @@ export class EntityStore extends EntityStoreBase {
 
       if (!resolvedEntity || resolvedEntity.sys.type !== entityLinkOrEntity.sys.linkType) {
         console.warn(
-          `Experience references unresolved entity: ${JSON.stringify(entityLinkOrEntity)}`
+          `Experience references unresolved entity: ${JSON.stringify(entityLinkOrEntity)}`,
         );
         return;
       }

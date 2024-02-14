@@ -1,3 +1,5 @@
+import { SDK_VERSION } from './sdkVersion';
+
 export { ExperienceRoot } from './ExperienceRoot';
 export { useExperienceBuilder, useFetchExperience, useFetchById, useFetchBySlug } from './hooks';
 export { defineComponents } from './core/componentRegistry';
@@ -12,6 +14,7 @@ export {
   VisualEditorMode,
   fetchById,
   fetchBySlug,
+  createExperience,
 } from '@contentful/experience-builder-core';
 export {
   /** @deprecated use `CONTENTFUL_COMPONENTS.section.id` instead. This will be removed in version 4. */
@@ -36,6 +39,13 @@ export {
   ASSEMBLY_NODE_TYPES,
   SCROLL_STATES,
 } from '@contentful/experience-builder-core/constants';
+
+// Simple state store to store a few things that are needed across the SDK
+if (typeof window !== 'undefined') {
+  window.__EB__ = {
+    sdkVersion: SDK_VERSION,
+  };
+}
 
 export type {
   InternalSDKMode,
