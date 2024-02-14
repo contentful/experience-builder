@@ -46,6 +46,28 @@ describe('dataSource', () => {
     expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
   });
 
+  it('fails if key is longer than 21 characters', () => {
+    const updatedExperience = {
+      ...experience,
+      fields: {
+        ...experience.fields,
+        dataSource: { [locale]: { ['uuid1'.repeat(5)]: 'invalidValue' } },
+      },
+    };
+    const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
+      typeof updatedExperience
+    >;
+
+    const expectedError = {
+      code: 'invalid_string',
+      path: ['dataSource', 'en-US', 'uuid1'.repeat(5)],
+      message: 'Invalid',
+      validation: 'regex',
+    };
+    expect(result.success).toBe(false);
+    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+  });
+
   it('fails if value is an invalid link', () => {
     const updatedExperience = {
       ...experience,

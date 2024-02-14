@@ -59,6 +59,31 @@ describe('componentSettings', () => {
     expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
   });
 
+  it('fails if variable definition key is longer than 86 characters', () => {
+    const updatedPattern = {
+      ...experiencePattern,
+      fields: {
+        ...experience.fields,
+        componentSettings: {
+          [locale]: { variableDefinitions: { ['variable1'.repeat(10)]: 'invalid' } },
+        },
+      },
+    };
+    const result = validateExperienceFields(updatedPattern, schemaVersion) as SafeParseError<
+      typeof updatedPattern
+    >;
+
+    const expectedError = {
+      code: 'invalid_string',
+      validation: 'regex',
+      path: ['componentSettings', 'en-US', 'variableDefinitions', 'variable1'.repeat(10)],
+      message: 'Invalid',
+    };
+
+    expect(result.success).toBe(false);
+    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+  });
+
   it('fails if variable definition is missing a displayName', () => {
     const updatedPattern = {
       ...experiencePattern,
