@@ -53,16 +53,24 @@ export class EntityStore extends EntityStoreBase {
     return this._experienceEntry?.usedComponents ?? [];
   }
 
-  public updateUnboundValues(unboundValues: CompositionUnboundValues) {
-    this._unboundValues = { ...(this._unboundValues ?? {}), ...unboundValues };
+  /**
+   * Extend the existing set of unbound values with the ones from the assembly definition.
+   * When creating a new assembly out of a container, the unbound value keys are copied and
+   * thus the existing and the added ones have colliding keys. In the case of overlapping value
+   * keys, the ones from the experience overrule the ones from the assembly definition as
+   * the latter one is certainly just a default value while the other one is from the actual instance.
+   * @param unboundValues set of unbound values defined in the assembly definition
+   */
+  public addAssemblyUnboundValues(unboundValues: CompositionUnboundValues) {
+    this._unboundValues = { ...unboundValues, ...(this._unboundValues ?? {}) };
   }
 
   public getValue(
     entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
-    path: string[]
+    path: string[],
   ): string | undefined {
     const isLink = (
-      entity: typeof entityLinkOrEntity
+      entity: typeof entityLinkOrEntity,
     ): entity is UnresolvedLink<'Entry' | 'Asset'> => entityLinkOrEntity.sys.type === 'Link';
 
     let entity: Entry | Asset;
@@ -74,7 +82,7 @@ export class EntityStore extends EntityStoreBase {
 
       if (!resolvedEntity || resolvedEntity.sys.type !== entityLinkOrEntity.sys.linkType) {
         console.warn(
-          `Experience references unresolved entity: ${JSON.stringify(entityLinkOrEntity)}`
+          `Experience references unresolved entity: ${JSON.stringify(entityLinkOrEntity)}`,
         );
         return;
       }

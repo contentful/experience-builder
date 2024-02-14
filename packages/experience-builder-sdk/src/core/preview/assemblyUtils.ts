@@ -85,7 +85,7 @@ export const resolveAssembly = ({
     componentInstanceVariables: node.variables,
   });
 
-  entityStore?.updateUnboundValues(componentFields.unboundValues);
+  entityStore?.addAssemblyUnboundValues(componentFields.unboundValues);
 
   return deserializedNode;
 };
