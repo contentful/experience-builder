@@ -156,12 +156,14 @@ export function useEditorSubscriber() {
       };
 
       try {
-        isMissingL1Entities(entityLinksL1) &&
-          START_FETCHING() &&
-          (await fillupL1({ entityLinksL1 }));
-        isMissingL2Entities(deepReferences) &&
-          START_FETCHING() &&
-          (await fillupL2({ deepReferences }));
+        if (isMissingL1Entities(entityLinksL1)) {
+          START_FETCHING();
+          await fillupL1({ entityLinksL1 });
+        }
+        if (isMissingL2Entities(deepReferences)) {
+          START_FETCHING();
+          await fillupL2({ deepReferences });
+        }
       } catch (error) {
         console.error('[exp-builder.sdk] Failed fetching entities');
         console.error(error);
