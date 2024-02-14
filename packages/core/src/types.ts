@@ -13,7 +13,7 @@ import type {
   ComponentPropertyValue,
   PrimitiveValue,
   ExperienceComponentTree,
-} from '@contentful/experiences-validators/types';
+} from '@contentful/experiences-validators';
 // TODO: Remove references to 'Composition'
 export {
   /** @deprecated the old type name will be replaced by ExperienceDataSource as of v5 */
@@ -35,7 +35,7 @@ export {
   ValuesByBreakpoint,
   Breakpoint,
   SchemaVersions,
-} from '@contentful/experiences-validators/types';
+} from '@contentful/experiences-validators';
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];

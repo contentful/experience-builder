@@ -11,18 +11,31 @@ export default [
         sourcemap: true,
       },
     ],
-    plugins: [nodeResolve(), typescript({ tsconfig: './tsconfig.json' })],
+    plugins: [
+      nodeResolve(),
+      typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true })
+    ],
     external: [/node_modules\/(?!tslib.*)/],
   },
   //typings
   {
     input: 'src/index.ts',
     output: [{ dir: 'dist', format: 'esm', preserveModules: true }],
-    plugins: [dts({ tsconfig: './tsconfig.json' })]
+    plugins: [
+      dts({
+        tsconfig: './tsconfig.json',
+        compilerOptions: { noEmitOnError: process.env.DEV ? false : true },
+      }),
+    ],
   },
   {
     input: 'src/types.ts',
     output: [{ dir: 'dist', format: 'esm', preserveModules: true }],
-    plugins: [dts({ tsconfig: './tsconfig.json' })]
+    plugins: [
+      dts({
+        tsconfig: './tsconfig.json',
+        compilerOptions: { noEmitOnError: process.env.DEV ? false : true },
+      }),
+    ],
   }
 ];

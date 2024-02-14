@@ -71,16 +71,15 @@ const UnboundValuesSchema = z.record(
   }),
 );
 
-const baseComponentTreeNodeSchema = z.object({
+// Use helper schema to define a recursive schema with its type correctly below
+const BaseComponentTreeNodeSchema = z.object({
   definitionId: z.string(),
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
 });
-
-export type ComponentTreeNode = z.infer<typeof baseComponentTreeNodeSchema> & {
+export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
   children: ComponentTreeNode[];
 };
-
-const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> = baseComponentTreeNodeSchema.extend({
+const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> = BaseComponentTreeNodeSchema.extend({
   children: z.lazy(() => ComponentTreeNodeSchema.array()),
 });
 

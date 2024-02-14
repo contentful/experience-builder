@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "types": "./dist/types.d.ts",
+  "types": "./dist/index.d.ts",
   "type": "module",
+  "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/validators#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/contentful/experience-builder.git"
@@ -21,10 +22,10 @@
   "files": [
     "dist/**/*.*"
   ],
-  "typesVersions": {
+  "exports": {
     "*": {
       "types": [
-        "./dist/types.d.ts"
+        "./dist/index.d.ts"
       ]
     }
   },
@@ -35,5 +36,8 @@
   },
   "dependencies": {
     "zod": "^3.22.4"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }

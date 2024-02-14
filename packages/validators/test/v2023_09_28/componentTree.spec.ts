@@ -158,44 +158,41 @@ describe('componentTree', () => {
       expect(result.error.issues[0].message).toBe('Expected array, received object');
     });
 
-    (
-      [
-        ['definitionId', 'string'],
-        ['variables', 'object'],
-        ['children', 'array'],
-      ] as const
-    ).map(([attribute, type]) =>
-      it(`fails if '${attribute}' is missing`, () => {
-        const componentTree = experience.fields.componentTree[locale];
-        // child includes all attributes except the one we want to test
-        const { [attribute]: _, ...child } = {
-          definitionId: 'test',
-          variables: {},
-          children: [],
-        };
+    it.each([
+      ['definitionId', 'string'],
+      ['variables', 'object'],
+      ['children', 'array'],
+    ] as const)(`fails if %s is missing`, ([attribute, type]) => {
+      const componentTree = experience.fields.componentTree[locale];
+      // child includes all attributes except the one we want to test
+      const { [attribute]: _, ...child } = {
+        definitionId: 'test',
+        variables: {},
+        children: [],
+      };
 
-        const updatedExperience = {
-          ...experience,
-          fields: {
-            ...experience.fields,
-            componentTree: { [locale]: { ...componentTree, children: [child] } },
-          },
-        };
-        const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-          typeof updatedExperience
-        >;
+      const updatedExperience = {
+        ...experience,
+        fields: {
+          ...experience.fields,
+          componentTree: { [locale]: { ...componentTree, children: [child] } },
+        },
+      };
+      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
+        typeof updatedExperience
+      >;
 
-        const expectedError = {
-          code: 'invalid_type',
-          expected: type,
-          received: 'undefined',
-          path: ['componentTree', 'en-US', 'children', 0, attribute],
-          message: 'Required',
-        };
-        expect(result.success).toBe(false);
-        expect(result.error.issues[0]).toEqual(expectedError);
-      }),
-    );
+      const expectedError = {
+        code: 'invalid_type',
+        expected: type,
+        received: 'undefined',
+        path: ['componentTree', 'en-US', 'children', 0, attribute],
+        message: 'Required',
+      };
+      expect(result.success).toBe(false);
+      expect(result.error.issues[0]).toEqual(expectedError);
+    });
+
     describe('variables name', () => {
       it(`fails if name contains invalid characters`, () => {
         const componentTree = experience.fields.componentTree[locale];

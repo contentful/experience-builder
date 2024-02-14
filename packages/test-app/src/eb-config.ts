@@ -1,4 +1,4 @@
-import { defineComponents, defineDesignTokens } from '@contentful/experience-builder';
+import { defineComponents } from '@contentful/experience-builder';
 import ComponentWithChildren from './components/ComponentWithChildren';
 
 defineComponents([
