@@ -149,7 +149,7 @@ export const transformBackgroundImage = (
 
 export const transformContentValue = (
   value: CompositionVariableValueType | Link<'Asset'>,
-  variableDefinition: ComponentDefinitionVariable
+  variableDefinition: ComponentDefinitionVariable,
 ) => {
   if (variableDefinition.type === 'RichText') {
     return transformRichText(value);

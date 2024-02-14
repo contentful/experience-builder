@@ -162,7 +162,7 @@ describe('componentTree', () => {
       ['definitionId', 'string'],
       ['variables', 'object'],
       ['children', 'array'],
-    ] as const)(`fails if %s is missing`, ([attribute, type]) => {
+    ] as const)(`fails if %s is missing`, (attribute, type) => {
       const componentTree = experience.fields.componentTree[locale];
       // child includes all attributes except the one we want to test
       const { [attribute]: _, ...child } = {
