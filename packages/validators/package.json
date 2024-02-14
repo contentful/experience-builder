@@ -1,6 +1,5 @@
 {
   "name": "@contentful/experiences-validators",
-  "private": true,
   "version": "0.0.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

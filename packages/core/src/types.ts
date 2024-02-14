@@ -4,24 +4,34 @@ import { EntityStore } from './entity/EntityStore';
 
 // Types for experience entry fields (as fetched in the API) are inferred by Zod schema in `@contentful/experiences-validators`
 import type {
-  DataSource,
-  UnboundValues,
-  ComponentSettings,
-  UsedComponents,
+  ExperienceDataSource,
+  ExperienceUnboundValues,
+  ExperienceComponentSettings,
+  ExperienceUsedComponents,
   ValuesByBreakpoint,
   Breakpoint,
   ComponentPropertyValue,
   PrimitiveValue,
-  ComponentTree,
+  ExperienceComponentTree,
 } from '@contentful/experiences-validators/types';
 // TODO: Remove references to 'Composition'
 export {
-  DataSource as CompositionDataSource,
-  UnboundValues as CompositionUnboundValues,
-  ComponentSettings as ExperienceComponentSettings,
+  /** @deprecated the old type name will be replaced by ExperienceDataSource as of v5 */
+  ExperienceDataSource as CompositionDataSource,
+  ExperienceDataSource,
+  /** @deprecated the old type name will be replaced by ExperienceUnboundValue as of v5 */
+  ExperienceUnboundValues as CompositionUnboundValues,
+  ExperienceUnboundValues,
+  ExperienceComponentSettings,
+  /** @deprecated the old type name will be replaced by ComponentPropertyValue as of v5 */
   ComponentPropertyValue as CompositionComponentPropValue,
+  ComponentPropertyValue,
+  /** @deprecated the old type name will be replaced by ExperienceNode as of v5 */
   ComponentTreeNode as CompositionNode,
+  ComponentTreeNode,
+  /** @deprecated the old type name will be replaced by PrimitiveValue as of v5 */
   PrimitiveValue as CompositionVariableValueType,
+  PrimitiveValue,
   ValuesByBreakpoint,
   Breakpoint,
   SchemaVersions,
@@ -144,8 +154,8 @@ export type CompositionComponentNode = {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
     props: Record<string, ComponentPropertyValue>;
-    dataSource: DataSource;
-    unboundValues: UnboundValues;
+    dataSource: ExperienceDataSource;
+    unboundValues: ExperienceUnboundValues;
     breakpoints: Breakpoint[];
   };
   children: CompositionComponentNode[];
@@ -219,11 +229,11 @@ export type ContainerStyleVariableName = keyof StyleProps;
 export type Composition = {
   title: string;
   slug: string;
-  componentTree: ComponentTree;
-  dataSource: DataSource;
-  unboundValues: UnboundValues;
-  usedComponents?: UsedComponents | Array<ExperienceEntry>; // This will be either an array of Entry links or an array of resolved Experience entries
-  componentSettings?: ComponentSettings;
+  componentTree: ExperienceComponentTree;
+  dataSource: ExperienceDataSource;
+  unboundValues: ExperienceUnboundValues;
+  usedComponents?: ExperienceUsedComponents | Array<ExperienceEntry>; // This will be either an array of Entry links or an array of resolved Experience entries
+  componentSettings?: ExperienceComponentSettings;
 };
 
 export type RecursiveDesignTokenDefinition = {
@@ -290,7 +300,7 @@ export interface DeprecatedExperience {
 
 export type ResolveDesignValueType = (
   valuesByBreakpoint: ValuesByBreakpoint,
-  variableName: string
+  variableName: string,
 ) => PrimitiveValue;
 
 // The 'contentful' package only exposes CDA types while we received CMA ones in editor mode

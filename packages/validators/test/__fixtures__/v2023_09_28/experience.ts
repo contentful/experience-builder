@@ -117,7 +117,7 @@ export const experience = {
               cfBackgroundColor: {
                 type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'rgba(184, 47, 47, 1)',
+                  desktop: '${color.Orange}',
                 },
               },
               cfWidth: {
@@ -260,7 +260,7 @@ export const experience = {
                   cfPadding: {
                     type: 'DesignValue',
                     valuesByBreakpoint: {
-                      desktop: '0 0 0 0',
+                      desktop: '${spacing.M} 0 ${spacing.M} 0',
                     },
                   },
                 },

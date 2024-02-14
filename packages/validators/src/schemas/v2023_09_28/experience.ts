@@ -175,11 +175,11 @@ export const ExperienceFieldsCMAShapeSchema = z
   .superRefine(componentSettingsRefinement);
 
 export type ExperienceFields = z.infer<typeof ExperienceFieldsCMAShapeSchema>;
-export type DataSource = z.infer<typeof DataSourceSchema>;
-export type UnboundValues = z.infer<typeof UnboundValuesSchema>;
-export type UsedComponents = z.infer<typeof UsedComponentsSchema>;
-export type ComponentSettings = z.infer<typeof ComponentSettingsSchema>;
+export type ExperienceDataSource = z.infer<typeof DataSourceSchema>;
+export type ExperienceUnboundValues = z.infer<typeof UnboundValuesSchema>;
+export type ExperienceUsedComponents = z.infer<typeof UsedComponentsSchema>;
+export type ExperienceComponentSettings = z.infer<typeof ComponentSettingsSchema>;
+export type ExperienceComponentTree = z.infer<typeof ComponentTreeSchema>;
 export type ValuesByBreakpoint = z.infer<typeof ValuesByBreakpointSchema>;
 export type Breakpoint = z.infer<typeof BreakpointSchema>;
 export type PrimitiveValue = z.infer<typeof PrimitiveValueSchema>;
-export type ComponentTree = z.infer<typeof ComponentTreeSchema>;
