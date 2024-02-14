@@ -34,10 +34,6 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
           node={childNode}
           locale={locale}
           entityStore={entityStore}
-          dataSource={entityStore.dataSource}
-          unboundValues={entityStore.unboundValues}
-          breakpoints={entityStore.breakpoints}
-          usedComponents={entityStore.usedComponents}
           resolveDesignValue={resolveDesignValue}
         />
       ))}

@@ -32,7 +32,7 @@ describe('resolveAssembly', () => {
       children: [],
     };
 
-    const entityStore = undefined;
+    const entityStore = {} as unknown as EntityStore;
 
     const result = resolveAssembly({ node: containerNode, entityStore });
 

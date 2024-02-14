@@ -80,11 +80,7 @@ export const DeprecatedPreviewDeliveryRoot = ({
           node={childNode}
           locale={locale}
           entityStore={entityStore}
-          dataSource={entityStore.dataSource}
-          unboundValues={entityStore.unboundValues}
-          breakpoints={entityStore.breakpoints}
           resolveDesignValue={resolveDesignValue}
-          usedComponents={entityStore.usedComponents}
         />
       ))}
     </>
