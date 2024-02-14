@@ -82,7 +82,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The height of the section',
-    defaultValue: 'fill',
+    defaultValue: 'fit-content',
   },
   cfMaxWidth: {
     displayName: 'Max width',
