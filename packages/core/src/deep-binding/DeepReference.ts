@@ -23,11 +23,13 @@ export class DeepReference {
   public fieldLocaleQualifier: string | null;
   public referentField: string;
   public referentLocaleQualifier: string | null;
+  public originalPath: string;
 
   constructor({ path, dataSource }: DeepReferenceOpts) {
     const { key, field, fieldLocaleQualifier, referentField, referentLocaleQualifier } =
       parseDataSourcePathWithL1DeepBindings(path);
 
+    this.originalPath = path;
     this.entityId = dataSource[key].sys.id;
     this.entityLink = dataSource[key];
     this.field = field;
