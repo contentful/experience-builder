@@ -44,6 +44,9 @@ export class DeepReference {
 export function gatherDeepReferencesFromExperienceEntry(
   experienceEntry: ExperienceEntry
 ): DeepReference[] {
+  const deepReferences: Array<DeepReference> = [];
+  const dataSource = experienceEntry.fields.dataSource;
+
   // We create "synthetic" node so that we have to make sure
   // to start with the root node which is
   // shaped consistently as rest of CompositionNodes
@@ -52,19 +55,8 @@ export function gatherDeepReferencesFromExperienceEntry(
     variables: {},
     children: experienceEntry.fields.componentTree.children,
   };
-  return gatherDeepReferencesFromComposition(
-    syntheticStartingNode,
-    experienceEntry.fields.dataSource
-  );
-}
 
-export function gatherDeepReferencesFromComposition(
-  startingNode: CompositionNode,
-  dataSource: CompositionDataSource
-): DeepReference[] {
-  const deepReferences: Array<DeepReference> = [];
-
-  treeVisit(startingNode, (node) => {
+  treeVisit(syntheticStartingNode, (node) => {
     if (!node.variables) return;
 
     for (const [, variableMapping] of Object.entries(node.variables)) {
@@ -82,6 +74,7 @@ export function gatherDeepReferencesFromComposition(
 
   return deepReferences;
 }
+
 export function gatherDeepReferencesFromTree(
   startingNode: CompositionComponentNode,
   dataSource: CompositionDataSource
