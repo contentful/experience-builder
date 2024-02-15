@@ -12,6 +12,7 @@ build
 .yarn
 dist
 reports
+coverage
 dist-ssr
 *.local
 .yarnrc.yml
@@ -37,3 +38,6 @@ tmp/
 
 # Ingore .nx local files
 .nx
+
+# Ingore .env local files
+.env
