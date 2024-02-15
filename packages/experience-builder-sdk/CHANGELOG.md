@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.25](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.24...@contentful/experience-builder@4.0.0-alpha.25) (2024-02-15)
+
+### Bug Fixes
+
+- instance values overrule default unbound values in preview mode ([2cc67cb](https://github.com/contentful/experience-builder/commit/2cc67cbfadad902d45c9f9fc5d5a8a4b4fcc7477))
+
+### Features
+
+- experience validator [SPA-1700] ([#348](https://github.com/contentful/experience-builder/issues/348)) ([3c856d0](https://github.com/contentful/experience-builder/commit/3c856d019213a1d8e86489028b18edec80830a20))
+
 # [4.0.0-alpha.24](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.23...@contentful/experience-builder@4.0.0-alpha.24) (2024-02-14)
 
 ### Bug Fixes
