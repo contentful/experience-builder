@@ -128,7 +128,8 @@ export function useEditorSubscriber() {
           }
 
           if (!isLink(maybeReferentLink)) {
-            // We expect field to be a link, but the field value is NOT a proper Link
+            // Scenario of "impostor referent", where one of the deepPath's segments is not a reference but some other type
+            // Under normal circumstance we expect field to be a Link, but it could be an "impostor"
             // eg. `Text` or `Number` or anything like that; could be due to CT changes or manual path creation via CMA
             return undefined;
           }
