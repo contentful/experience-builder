@@ -63,13 +63,13 @@ export class EntityStoreBase {
           return {
             resolvedFieldset,
             isFullyResolved: false,
-            reason: `Cannot resolve field ${field} of a fieldset as it is not defined.`,
+            reason: `Cannot resolve field Link<${entityToResolveFieldsFrom.sys.type}>(sys.id=${entityToResolveFieldsFrom.sys.id}).fields[${field}] as field value is not defined`,
           };
         } else if (isLink(fieldValue)) {
           const entity: Asset | Entry | undefined = this.getEntityFromLink(fieldValue);
           if (entity === undefined) {
             throw new Error(
-              `Logic Error: Cannot resolve field ${field} of a fieldset row [${JSON.stringify(
+              `Logic Error: Broken Precondition [by the time resolution of deep path happens all referents should be in EntityStore]: Cannot resolve field ${field} of a fieldset row [${JSON.stringify(
                 row
               )}] as linked entity not found in the EntityStore. ${JSON.stringify({
                 link: fieldValue,
@@ -104,8 +104,15 @@ export class EntityStoreBase {
     // The purpose here is to take this intermediate representation of the deep-path
     // and to follow the links to the leaf-entity and field
     // in case we can't follow till the end, we should signal that there was null-reference in the path
-    const { resolvedFieldset, isFullyResolved } = resolveFieldset(unresolvedFieldset, headEntity);
+    const { resolvedFieldset, isFullyResolved, reason } = resolveFieldset(
+      unresolvedFieldset,
+      headEntity
+    );
     if (!isFullyResolved) {
+      reason &&
+        console.debug(
+          `[exp-builder.sdk::EntityStoreBased::getValueDeep()] Deep path wasn't resolved till leaf node, falling back to undefined, because: ${reason}`
+        );
       return undefined;
     }
     const [leafEntity, field /* localeQualifier */] = resolvedFieldset[resolvedFieldset.length - 1];
