@@ -8,8 +8,8 @@ export function gatherAutoFetchedReferents(
   deepReferences: DeepReference[],
   entriesResponse: EntryCollection<EntrySkeletonType>
 ) {
-  const autofetchedReferentEntries: Entry[] = [];
-  const autofetchedReferentAssets: Asset[] = [];
+  const autoFetchedReferentEntries: Entry[] = [];
+  const autoFetchedReferentAssets: Asset[] = [];
 
   for (const reference of deepReferences) {
     const entry = entriesResponse.items.find((entry) => entry.sys.id === reference.entityId);
@@ -34,10 +34,10 @@ export function gatherAutoFetchedReferents(
 
     if (referentEntity.sys.type === 'Entry') {
       console.log(`:::autofetched entry:`, referentEntity);
-      autofetchedReferentEntries.push(referentEntity as Entry);
+      autoFetchedReferentEntries.push(referentEntity as Entry);
     } else if (referentEntity.sys.type === 'Asset') {
       console.log(`:::autofetched asset:`, referentEntity);
-      autofetchedReferentAssets.push(referentEntity as Asset);
+      autoFetchedReferentAssets.push(referentEntity as Asset);
     } else {
       throw new Error(
         `Cannot detect type of the referent entity (maybe it's merely a link) (${JSON.stringify({
@@ -46,5 +46,5 @@ export function gatherAutoFetchedReferents(
       );
     }
   }
-  return { autofetchedReferentAssets, autofetchedReferentEntries };
+  return { autoFetchedReferentAssets, autoFetchedReferentEntries };
 }
