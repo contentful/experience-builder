@@ -11,12 +11,8 @@ import {
   EMPTY_CONTAINER_HEIGHT,
 } from '@contentful/experience-builder-core/constants';
 import type {
-  Breakpoint,
-  CompositionDataSource,
   CompositionNode,
-  CompositionUnboundValues,
   CompositionVariableValueType,
-  ExperienceEntry,
   ResolveDesignValueType,
   StyleProps,
 } from '@contentful/experience-builder-core/types';
@@ -39,27 +35,23 @@ import { Assembly } from '../../components/Assembly';
 type CompositionBlockProps = {
   node: CompositionNode;
   locale: string;
-  dataSource: CompositionDataSource;
-  unboundValues: CompositionUnboundValues;
-  entityStore?: EntityStore;
-  breakpoints: Breakpoint[];
+  entityStore: EntityStore;
   resolveDesignValue: ResolveDesignValueType;
-  usedComponents: ExperienceEntry['fields']['usedComponents'];
 };
 
 export const CompositionBlock = ({
   node: rawNode,
   locale,
   entityStore,
-  dataSource,
-  unboundValues,
-  breakpoints,
   resolveDesignValue,
-  usedComponents,
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
-    () => checkIsAssemblyNode({ componentId: rawNode.definitionId, usedComponents }),
-    [rawNode.definitionId, usedComponents],
+    () =>
+      checkIsAssemblyNode({
+        componentId: rawNode.definitionId,
+        usedComponents: entityStore.usedComponents,
+      }),
+    [entityStore.usedComponents, rawNode.definitionId],
   );
 
   const node = useMemo(() => {
@@ -98,10 +90,10 @@ export const CompositionBlock = ({
           break;
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/');
-          const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-          let value = entityStore?.getValue(binding, path.slice(0, -1));
+          const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
+          let value = entityStore.getValue(binding, path.slice(0, -1));
           if (!value) {
-            const foundAssetValue = entityStore?.getValue(binding, [
+            const foundAssetValue = entityStore.getValue(binding, [
               ...path.slice(0, -2),
               'fields',
               'file',
@@ -116,7 +108,7 @@ export const CompositionBlock = ({
         }
         case 'UnboundValue': {
           const uuid = variable.key;
-          acc[variableName] = (entityStore?.unboundValues || unboundValues)[uuid]?.value;
+          acc[variableName] = entityStore.unboundValues[uuid]?.value;
           break;
         }
         default:
@@ -124,15 +116,7 @@ export const CompositionBlock = ({
       }
       return acc;
     }, propMap);
-  }, [
-    componentRegistration,
-    isAssembly,
-    node.variables,
-    resolveDesignValue,
-    dataSource,
-    entityStore,
-    unboundValues,
-  ]);
+  }, [componentRegistration, isAssembly, node.variables, resolveDesignValue, entityStore]);
 
   const cfStyles = buildCfStyles(nodeProps);
 
@@ -158,12 +142,8 @@ export const CompositionBlock = ({
               node={childNode}
               key={index}
               locale={locale}
-              dataSource={dataSource}
-              unboundValues={unboundValues}
               entityStore={entityStore}
-              breakpoints={breakpoints}
               resolveDesignValue={resolveDesignValue}
-              usedComponents={usedComponents}
             />
           );
         })

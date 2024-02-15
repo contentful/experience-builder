@@ -21,6 +21,13 @@ const TestComponent: React.FC<{ text: string }> = (props) => {
 };
 
 describe('CompositionBlock', () => {
+  const emptyEntityStore = {
+    breakpoints: [],
+    dataSource: {},
+    unboundValues: {},
+    usedComponents: [],
+  } as unknown as EntityStore;
+
   beforeEach(() => {
     defineComponents([
       {
@@ -57,15 +64,16 @@ describe('CompositionBlock', () => {
     render(
       <CompositionBlock
         node={mockCompositionComponentNode}
-        dataSource={{}}
         locale="en-US"
-        breakpoints={[]}
-        entityStore={undefined}
-        usedComponents={[]}
-        unboundValues={{
-          value1: { value: 'unboundValue1' },
-          value2: { value: 1 },
-        }}
+        entityStore={
+          {
+            ...emptyEntityStore,
+            unboundValues: {
+              value1: { value: 'unboundValue1' },
+              value2: { value: 1 },
+            },
+          } as unknown as EntityStore
+        }
         resolveDesignValue={jest.fn()}
       />,
     );
@@ -81,12 +89,8 @@ describe('CompositionBlock', () => {
     const { getByTestId } = render(
       <CompositionBlock
         node={sectionNode}
-        dataSource={{}}
         locale="en-US"
-        breakpoints={[]}
-        entityStore={undefined}
-        usedComponents={[]}
-        unboundValues={{}}
+        entityStore={emptyEntityStore}
         resolveDesignValue={jest.fn()}
       />,
     );
@@ -104,12 +108,8 @@ describe('CompositionBlock', () => {
     const { getByTestId } = render(
       <CompositionBlock
         node={containerNode}
-        dataSource={{}}
         locale="en-US"
-        breakpoints={[]}
-        entityStore={undefined}
-        usedComponents={[]}
-        unboundValues={{}}
+        entityStore={emptyEntityStore}
         resolveDesignValue={jest.fn()}
       />,
     );
@@ -153,12 +153,8 @@ describe('CompositionBlock', () => {
     const { getByTestId, getByText } = render(
       <CompositionBlock
         node={assemblyNode}
-        dataSource={{}}
         locale="en-US"
-        breakpoints={[]}
         entityStore={entityStore}
-        usedComponents={[assemblyEntry] as ExperienceEntry[]}
-        unboundValues={experienceEntry.fields.unboundValues}
         resolveDesignValue={jest.fn()}
       />,
     );
