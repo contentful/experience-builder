@@ -90,8 +90,8 @@ export const useComponentProps = ({
           };
         } else if (variableMapping.type === 'BoundValue') {
           if (!areEntitiesFetched) {
-            console.warn(
-              `[exp-builder.sdk::Dropzone::useComponentProps::'BoundValue'] Idle-cycle: as entities are not fetched(areEntitiesFetched=${areEntitiesFetched}), we cannot resolve bound values for ${variableName} so we just resolve them to default values.`
+            console.debug(
+              `[exp-builder.sdk::useComponentProps] Idle-cycle: as entities are not fetched(areEntitiesFetched=${areEntitiesFetched}), we cannot resolve bound values for ${variableName} so we just resolve them to default values.`
             );
 
             // Just forcing default value (if we're in idle-cycle, entities are missing)
