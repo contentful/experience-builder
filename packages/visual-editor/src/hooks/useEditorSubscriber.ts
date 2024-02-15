@@ -6,6 +6,7 @@ import {
   tryParseMessage,
   gatherDeepReferencesFromTree,
   DeepReference,
+  isLink,
 } from '@contentful/experience-builder-core';
 import {
   OUTGOING_EVENTS,
@@ -109,17 +110,33 @@ export function useEditorSubscriber() {
        * PRECONDITION: all L1 entities are fetched
        */
       const isMissingL2Entities = (deepReferences: DeepReference[]): boolean => {
+        /**
+         * Extracts referent from the path, using EntityStore as source of entities during the resolution path.
+         */
         const extractReferent = (reference: DeepReference): Link<'Asset' | 'Entry'> | undefined => {
           const headEntity = entityStore.getEntityFromLink(reference.entityLink);
-          const referentLink = headEntity!.fields[reference.field] as
+
+          const maybeReferentLink = headEntity!.fields[reference.field] as
             | Link<'Entry'>
             | Link<'Asset'>
-            | undefined;
-          return referentLink;
+            | undefined
+            | unknown;
+
+          if (undefined === maybeReferentLink) {
+            // field references nothing (or even field doesn't exist)
+            return undefined;
+          }
+
+          if (!isLink(maybeReferentLink)) {
+            // We expect field to be a link, but the field value is NOT a proper Link
+            // eg. `Text` or `Number` or anything like that; could be due to CT changes or manual path creation via CMA
+            return undefined;
+          }
+
+          return maybeReferentLink;
         };
-        const referentLinks = deepReferences.map(extractReferent).filter(Boolean) as Link<
-          'Asset' | 'Entry'
-        >[];
+
+        const referentLinks = deepReferences.map(extractReferent).filter(isLink);
         const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
         return Boolean(missingAssetIds.length) || Boolean(missingEntryIds.length);
       };
