@@ -35,18 +35,17 @@ export function gatherAutoFetchedReferentsFromIncludes(
     }
 
     if (linkToReferent.sys.linkType === 'Entry') {
-      const referentAsset = entriesResponse.includes?.Entry?.find(
+      const referentEntry = entriesResponse.includes?.Entry?.find(
         (entry) => entry.sys.id === linkToReferent.sys.id
       );
-      if (!referentAsset) {
+      if (!referentEntry) {
         throw new Error(
           `Logic Error: L1-referent was not found within includes (${JSON.stringify({
             linkToReferent,
           })})`
         );
       }
-      console.log(`:::autofetched via includes entry:`, referentAsset);
-      autofetchedReferentEntries.push(referentAsset as Entry);
+      autofetchedReferentEntries.push(referentEntry as Entry);
     } else if (linkToReferent.sys.linkType === 'Asset') {
       const referentEntity = entriesResponse.includes?.Asset?.find(
         (entry) => entry.sys.id === linkToReferent.sys.id
@@ -58,7 +57,6 @@ export function gatherAutoFetchedReferentsFromIncludes(
           })})`
         );
       }
-      console.log(`:::autofetched via includes asset:`, referentEntity);
       autofetchedReferentAssets.push(referentEntity as Asset);
     } else {
       throw new Error(
