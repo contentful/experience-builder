@@ -66,7 +66,7 @@ export class EntityStoreBase {
             reason: `Cannot resolve field Link<${entityToResolveFieldsFrom.sys.type}>(sys.id=${entityToResolveFieldsFrom.sys.id}).fields[${field}] as field value is not defined`,
           };
         } else if (isLink(fieldValue)) {
-          const entity: Asset | Entry | undefined = this.getEntityFromLink(fieldValue);
+          const entity = this.getEntityFromLink(fieldValue);
           if (entity === undefined) {
             throw new Error(
               `Logic Error: Broken Precondition [by the time resolution of deep path happens all referents should be in EntityStore]: Cannot resolve field ${field} of a fieldset row [${JSON.stringify(
@@ -143,7 +143,7 @@ export class EntityStoreBase {
     return get<string>(entity, path);
   }
 
-  public getEntityFromLink(link: UnresolvedLink<'Entry' | 'Asset'>) {
+  public getEntityFromLink(link: UnresolvedLink<'Entry' | 'Asset'>): Asset | Entry | undefined {
     const resolvedEntity =
       link.sys.linkType === 'Entry'
         ? this.entryMap.get(link.sys.id)
