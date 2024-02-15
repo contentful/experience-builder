@@ -1,1 +1,1 @@
-export * from './asset-file';
+export * from './TransformAssetFile';
