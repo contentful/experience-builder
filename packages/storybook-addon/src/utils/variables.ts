@@ -114,7 +114,7 @@ export const builtInStyles: Record<
     type: 'Text',
     group: 'style',
     description: 'The border of the section',
-    defaultValue: '0px',
+    defaultValue: '1px solid rgba(0,0,0,0)',
   },
   cfGap: {
     displayName: 'Gap',
