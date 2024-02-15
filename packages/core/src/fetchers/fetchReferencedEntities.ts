@@ -61,19 +61,19 @@ export const fetchReferencedEntities = async ({
     assetIds.length > 0 ? client.getAssets({ 'sys.id[in]': assetIds, locale }) : { items: [] },
   ])) as unknown as [MinimalEntryCollection, AssetCollection];
 
-  const { autofetchedReferentAssets, autofetchedReferentEntries } =
+  const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
     gatherAutoFetchedReferentsFromIncludes(deepReferences, entriesResponse);
 
   // Using client getEntries resolves all linked entry references, so we do not need to resolve entries in usedComponents
   const allResolvedEntries = [
     ...((entriesResponse.items ?? []) as Entry[]),
     ...((experienceEntry.fields.usedComponents as ExperienceEntry[]) || []),
-    ...autofetchedReferentEntries,
+    ...autoFetchedReferentEntries,
   ];
 
   const allResolvedAssets = [
     ...((assetsResponse.items ?? []) as Asset[]),
-    ...autofetchedReferentAssets,
+    ...autoFetchedReferentAssets,
   ];
 
   return {

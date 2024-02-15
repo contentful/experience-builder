@@ -12,8 +12,8 @@ export function gatherAutoFetchedReferentsFromIncludes(
   deepReferences: DeepReference[],
   entriesResponse: MinimalEntryCollection
 ) {
-  const autofetchedReferentEntries: Entry[] = [];
-  const autofetchedReferentAssets: Asset[] = [];
+  const autoFetchedReferentEntries: Entry[] = [];
+  const autoFetchedReferentAssets: Asset[] = [];
 
   for (const reference of deepReferences) {
     const headEntry = entriesResponse.items.find(
@@ -45,7 +45,7 @@ export function gatherAutoFetchedReferentsFromIncludes(
           })})`
         );
       }
-      autofetchedReferentEntries.push(referentEntry as Entry);
+      autoFetchedReferentEntries.push(referentEntry as Entry);
     } else if (linkToReferent.sys.linkType === 'Asset') {
       const referentEntity = entriesResponse.includes?.Asset?.find(
         (entry) => entry.sys.id === linkToReferent.sys.id
@@ -57,7 +57,7 @@ export function gatherAutoFetchedReferentsFromIncludes(
           })})`
         );
       }
-      autofetchedReferentAssets.push(referentEntity as Asset);
+      autoFetchedReferentAssets.push(referentEntity as Asset);
     } else {
       throw new Error(
         `Cannot detect linkType of the referent, maybe it's not even a link (${JSON.stringify({
@@ -67,5 +67,5 @@ export function gatherAutoFetchedReferentsFromIncludes(
     }
   } // for (reference of deepReferences)
 
-  return { autofetchedReferentAssets, autofetchedReferentEntries };
+  return { autoFetchedReferentAssets, autoFetchedReferentEntries };
 }
