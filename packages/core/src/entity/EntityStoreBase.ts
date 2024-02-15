@@ -2,7 +2,7 @@ import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 
 import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';
-import { parseDataSourcePathIntoFieldset } from '@/utils/schema';
+import { parseDataSourcePathIntoFieldset } from '@/utils/pathSchema';
 import { transformAssetFileToUrl } from './value-transformers';
 
 /**

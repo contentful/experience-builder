@@ -5,7 +5,7 @@ import {
   DataSourceEntryValueType,
   ExperienceEntry,
 } from '@/types';
-import { isDeepPath, parseDataSourcePathWithL1DeepBindings } from '@/utils/schema';
+import { isDeepPath, parseDataSourcePathWithL1DeepBindings } from '@/utils/pathSchema';
 import { treeVisit } from '@/utils/treeTraversal';
 
 type DeepReferenceOpts = {
