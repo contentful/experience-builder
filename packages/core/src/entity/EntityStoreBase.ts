@@ -31,7 +31,7 @@ export class EntityStoreBase {
   }
 
   public getValueDeep(
-    headLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'>,
+    headLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Asset | Entry,
     deepPath: string
   ): string | undefined {
     const resolveFieldset = (
