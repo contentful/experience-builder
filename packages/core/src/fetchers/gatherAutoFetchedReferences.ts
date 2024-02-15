@@ -23,7 +23,6 @@ export function gatherAutoFetchedReferents(
       | Entry
       | Asset
       | undefined;
-    console.log(`:::referenceField`, { linkField: referentEntity });
 
     if (!referentEntity) {
       console.warn(
@@ -33,10 +32,8 @@ export function gatherAutoFetchedReferents(
     }
 
     if (referentEntity.sys.type === 'Entry') {
-      console.log(`:::autofetched entry:`, referentEntity);
       autoFetchedReferentEntries.push(referentEntity as Entry);
     } else if (referentEntity.sys.type === 'Asset') {
-      console.log(`:::autofetched asset:`, referentEntity);
       autoFetchedReferentAssets.push(referentEntity as Asset);
     } else {
       throw new Error(
