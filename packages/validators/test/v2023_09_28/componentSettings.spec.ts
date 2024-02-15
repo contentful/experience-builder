@@ -59,13 +59,13 @@ describe('componentSettings', () => {
     expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
   });
 
-  it('fails if variable definition key is longer than 86 characters', () => {
+  it('fails if variable definition key is longer than 54 characters', () => {
     const updatedPattern = {
       ...experiencePattern,
       fields: {
         ...experience.fields,
         componentSettings: {
-          [locale]: { variableDefinitions: { ['variable1'.repeat(10)]: 'invalid' } },
+          [locale]: { variableDefinitions: { ['variable1'.repeat(7)]: 'invalid' } },
         },
       },
     };
@@ -76,7 +76,7 @@ describe('componentSettings', () => {
     const expectedError = {
       code: 'invalid_string',
       validation: 'regex',
-      path: ['componentSettings', 'en-US', 'variableDefinitions', 'variable1'.repeat(10)],
+      path: ['componentSettings', 'en-US', 'variableDefinitions', 'variable1'.repeat(7)],
       message: 'Invalid',
     };
 

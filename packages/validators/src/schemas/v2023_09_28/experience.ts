@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { SchemaVersions } from '../schemaVersions';
 
 const uuidKeySchema = z.string().regex(/^[a-zA-Z0-9-_]{1,21}$/);
-const propertyKeySchema = z.string().regex(/^[a-zA-Z0-9-_]{1,64}$/);
+const propertyKeySchema = z.string().regex(/^[a-zA-Z0-9-_]{1,32}$/);
 
 const DataSourceSchema = z.record(
   uuidKeySchema,
@@ -85,7 +85,7 @@ const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> = BaseComponentTreeN
 
 const ComponentSettingsSchema = z.object({
   variableDefinitions: z.record(
-    z.string().regex(/^[a-zA-Z0-9-_]{1,86}$/), // Here the key is <variableName>_<nanoid_id> so we need to allow for a longer length
+    z.string().regex(/^[a-zA-Z0-9-_]{1,54}$/), // Here the key is <variableName>_<nanoidId> so we need to allow for a longer length
     z.object({
       displayName: z.string(),
       type: ComponentDefinitionPropertyTypeSchema,

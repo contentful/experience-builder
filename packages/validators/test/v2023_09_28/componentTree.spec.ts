@@ -224,12 +224,12 @@ describe('componentTree', () => {
         expect(result.success).toBe(false);
         expect(result.error.issues[0] as ZodInvalidUnionIssue).toEqual(expectedError);
       });
-      it(`fails if name exceeds the allowed character limit`, () => {
+      it(`fails if name exceeds the allowed 32 character limit`, () => {
         const componentTree = experience.fields.componentTree[locale];
         const child = {
           definitionId: 'test',
           variables: {
-            ['text'.repeat(20)]: { type: 'DesignValue', value: 'test' },
+            ['text'.repeat(10)]: { type: 'DesignValue', value: 'test' },
           },
           children: [],
         };
@@ -247,7 +247,7 @@ describe('componentTree', () => {
 
         const expectedError = {
           code: 'invalid_string',
-          path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text'.repeat(20)],
+          path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text'.repeat(10)],
           message: 'Invalid',
           validation: 'regex',
         };
