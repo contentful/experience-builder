@@ -26,11 +26,10 @@ export const transformBorderStyle = (value?: string): CSSProperties => {
   // Just accept the passed value
   if (parts.length < 3) return { border: value };
   // Replace the second part always with `solid` and set the box sizing accordingly
-  const [borderSize, borderPlacement, ...borderColorParts] = parts;
+  const [borderSize, borderStyle, ...borderColorParts] = parts;
   const borderColor = borderColorParts.join(' ');
   return {
-    border: `${borderSize} solid ${borderColor}`,
-    boxSizing: borderPlacement === 'inside' ? 'border-box' : 'content-box',
+    border: `${borderSize} ${borderStyle} ${borderColor}`,
   };
 };
 
