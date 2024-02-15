@@ -1,1 +1,1 @@
-export * from './deep-reference';
+export * from './DeepReference';

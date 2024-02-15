@@ -1,5 +1,5 @@
 import { Entry, Asset, EntryCollection, EntrySkeletonType } from 'contentful';
-import { DeepReference } from '@/deep-binding/deep-reference';
+import { DeepReference } from '@/deep-binding/DeepReference';
 
 /**
  * Traverses deep-references and extracts referents (referent entities)

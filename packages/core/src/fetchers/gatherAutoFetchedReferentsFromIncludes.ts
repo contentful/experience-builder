@@ -1,5 +1,5 @@
 import { Entry, Asset, EntryCollection, EntrySkeletonType, UnresolvedLink } from 'contentful';
-import { DeepReference } from '@/deep-binding/deep-reference';
+import { DeepReference } from '@/deep-binding/DeepReference';
 export type MinimalEntryCollection = Pick<
   EntryCollection<EntrySkeletonType, 'WITHOUT_LINK_RESOLUTION'>,
   'items' | 'includes'
