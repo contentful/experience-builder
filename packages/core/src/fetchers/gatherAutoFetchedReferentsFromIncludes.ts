@@ -1,17 +1,30 @@
 import { Entry, Asset, EntryCollection, EntrySkeletonType, UnresolvedLink } from 'contentful';
 import { DeepReference } from '@/deep-binding/DeepReference';
+import { isLink } from '@/utils/isLink';
 export type MinimalEntryCollection = Pick<
   EntryCollection<EntrySkeletonType, 'WITHOUT_LINK_RESOLUTION'>,
   'items' | 'includes'
 >;
 
 /**
- * Traverses deep-references and extracts referents (referent entities)
+ * Traverses deep-references and extracts referents from valid deep-paths.
+ * The referents are received from the CDA/CPA response `.includes` field.
+ *
+ * In case deep-paths not resolving till the end, eg.:
+ *  - non-link referents: are ignored
+ *  - unset references:   are ignored
+ *
+ * Errors are thrown in case of deep-paths being correct,
+ * but referents not found. Because if we don't throw now, the EntityStore will
+ * be missing entities and upon rendering will not be able to render bindings.
  */
 export function gatherAutoFetchedReferentsFromIncludes(
   deepReferences: DeepReference[],
   entriesResponse: MinimalEntryCollection
-) {
+): {
+  autoFetchedReferentEntries: Entry[];
+  autoFetchedReferentAssets: Asset[];
+} {
   const autoFetchedReferentEntries: Entry[] = [];
   const autoFetchedReferentAssets: Asset[] = [];
 
@@ -21,15 +34,22 @@ export function gatherAutoFetchedReferentsFromIncludes(
     );
     if (!headEntry) {
       throw new Error(
-        `LogicError: When resolving deep-references could not find reference-entry ${reference.entityId}`
+        `LogicError: When resolving deep-references could not find headEntry (id=${reference.entityId})`
       );
     }
 
     const linkToReferent = headEntry.fields[reference.field] as UnresolvedLink<'Asset' | 'Entry'>;
 
-    if (!linkToReferent) {
-      console.warn(
-        `fetchReferencedEntities():: link to referent not found within reference-field. Probably reference is simply not set.`
+    if (undefined === linkToReferent) {
+      console.debug(
+        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Empty reference in headEntity. Probably reference is simply not set.`
+      );
+      continue;
+    }
+
+    if (!isLink(linkToReferent)) {
+      console.debug(
+        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Non-link value in headEntity. Probably broken path '${reference.originalPath}'`
       );
       continue;
     }
@@ -40,29 +60,29 @@ export function gatherAutoFetchedReferentsFromIncludes(
       );
       if (!referentEntry) {
         throw new Error(
-          `Logic Error: L1-referent was not found within includes (${JSON.stringify({
+          `Logic Error: L2-referent Entry was not found within .includes (${JSON.stringify({
             linkToReferent,
           })})`
         );
       }
       autoFetchedReferentEntries.push(referentEntry as Entry);
     } else if (linkToReferent.sys.linkType === 'Asset') {
-      const referentEntity = entriesResponse.includes?.Asset?.find(
+      const referentAsset = entriesResponse.includes?.Asset?.find(
         (entry) => entry.sys.id === linkToReferent.sys.id
       );
-      if (!referentEntity) {
+      if (!referentAsset) {
         throw new Error(
-          `Logic Error: L1-referent was not found within includes (${JSON.stringify({
+          `Logic Error: L2-referent Asset was not found within includes (${JSON.stringify({
             linkToReferent,
           })})`
         );
       }
-      autoFetchedReferentAssets.push(referentEntity as Asset);
+      autoFetchedReferentAssets.push(referentAsset as Asset);
     } else {
-      throw new Error(
-        `Cannot detect linkType of the referent, maybe it's not even a link (${JSON.stringify({
-          linkToReferent,
-        })})`
+      console.debug(
+        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Unhandled linkType :${JSON.stringify(
+          linkToReferent
+        )}`
       );
     }
   } // for (reference of deepReferences)
