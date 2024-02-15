@@ -110,7 +110,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The border of the section',
-    defaultValue: '0px outside rgba(255, 255, 255, 0)',
+    defaultValue: '1px solid rgba(0, 0, 0, 0)',
   },
   cfGap: {
     displayName: 'Gap',
@@ -401,7 +401,7 @@ export const singleColumnBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The border of the column',
-    defaultValue: '0px outside rgba(255, 255, 255, 0)',
+    defaultValue: '1px solid rgba(0, 0, 0, 0)',
   },
   cfGap: {
     displayName: 'Gap',
@@ -501,7 +501,7 @@ export const columnsBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The border of the columns',
-    defaultValue: '0px outside rgba(255, 255, 255, 0)',
+    defaultValue: '1px solid rgba(0, 0, 0, 0)',
   },
   cfBackgroundImageUrl: {
     displayName: 'Background Image',
