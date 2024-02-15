@@ -8,4 +8,5 @@ export * from './typeguards';
 export * from './supportedModes';
 export * from './breakpoints';
 export * from './isLinkToAsset';
+export * from './isLink';
 export * from './pathSchema';
