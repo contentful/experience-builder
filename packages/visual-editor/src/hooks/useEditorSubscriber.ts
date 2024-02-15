@@ -78,15 +78,13 @@ export function useEditorSubscriber() {
     async (newDataSource: CompositionDataSource, tree: CompositionTree) => {
       // if we realize that there's nothing missing and nothing to fill-fetch before we do any async call,
       // then we can simply return and not lock the EntityStore at all.
-      const START_FETCHING = (): true => {
+      const START_FETCHING = () => {
         setEntitiesFetched(false);
         setFetchingEntities(true);
-        return true;
       };
-      const END_FETCHING = (): true => {
+      const END_FETCHING = () => {
         setEntitiesFetched(true);
         setFetchingEntities(false);
-        return true;
       };
 
       // Prepare L1 entities and deepReferences
@@ -110,34 +108,9 @@ export function useEditorSubscriber() {
        * PRECONDITION: all L1 entities are fetched
        */
       const isMissingL2Entities = (deepReferences: DeepReference[]): boolean => {
-        /**
-         * Extracts referent from the path, using EntityStore as source of entities during the resolution path.
-         */
-        const extractReferent = (reference: DeepReference): Link<'Asset' | 'Entry'> | undefined => {
-          const headEntity = entityStore.getEntityFromLink(reference.entityLink);
-
-          const maybeReferentLink = headEntity!.fields[reference.field] as
-            | Link<'Entry'>
-            | Link<'Asset'>
-            | undefined
-            | unknown;
-
-          if (undefined === maybeReferentLink) {
-            // field references nothing (or even field doesn't exist)
-            return undefined;
-          }
-
-          if (!isLink(maybeReferentLink)) {
-            // Scenario of "impostor referent", where one of the deepPath's segments is not a reference but some other type
-            // Under normal circumstance we expect field to be a Link, but it could be an "impostor"
-            // eg. `Text` or `Number` or anything like that; could be due to CT changes or manual path creation via CMA
-            return undefined;
-          }
-
-          return maybeReferentLink;
-        };
-
-        const referentLinks = deepReferences.map(extractReferent).filter(isLink);
+        const referentLinks = deepReferences
+          .map((deepReference) => deepReference.extractReferent(entityStore))
+          .filter(isLink);
         const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
         return Boolean(missingAssetIds.length) || Boolean(missingEntryIds.length);
       };
@@ -158,17 +131,9 @@ export function useEditorSubscriber() {
        * PRECONDITION: all L1 entites are fetched
        */
       const fillupL2 = async ({ deepReferences }: { deepReferences: DeepReference[] }) => {
-        const extractReferent = (reference: DeepReference): Link<'Asset' | 'Entry'> | undefined => {
-          const headEntity = entityStore.getEntityFromLink(reference.entityLink);
-          const referentLink = headEntity!.fields[reference.field] as
-            | Link<'Entry'>
-            | Link<'Asset'>
-            | undefined;
-          return referentLink;
-        };
-        const referentLinks = deepReferences.map(extractReferent).filter(Boolean) as Link<
-          'Asset' | 'Entry'
-        >[];
+        const referentLinks = deepReferences
+          .map((deepReference) => deepReference.extractReferent(entityStore))
+          .filter(isLink);
         const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
         await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
       };
