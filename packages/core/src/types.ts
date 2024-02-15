@@ -1,12 +1,41 @@
-/**
- * danv:
- * NOTE!! The code commented here will be used in future. We commented it out to remove not yet fully unsupported parts
- */
-
 import type { Asset, ContentfulClientApi, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
-import { EntityStoreBase } from './entity/EntityStoreBase';
 import { EntityStore } from './entity/EntityStore';
+
+// Types for experience entry fields (as fetched in the API) are inferred by Zod schema in `@contentful/experiences-validators`
+import type {
+  ExperienceDataSource,
+  ExperienceUnboundValues,
+  ExperienceComponentSettings,
+  ExperienceUsedComponents,
+  ValuesByBreakpoint,
+  Breakpoint,
+  ComponentPropertyValue,
+  PrimitiveValue,
+  ExperienceComponentTree,
+} from '@contentful/experiences-validators';
+// TODO: Remove references to 'Composition'
+export {
+  /** @deprecated the old type name will be replaced by ExperienceDataSource as of v5 */
+  ExperienceDataSource as CompositionDataSource,
+  ExperienceDataSource,
+  /** @deprecated the old type name will be replaced by ExperienceUnboundValue as of v5 */
+  ExperienceUnboundValues as CompositionUnboundValues,
+  ExperienceUnboundValues,
+  ExperienceComponentSettings,
+  /** @deprecated the old type name will be replaced by ComponentPropertyValue as of v5 */
+  ComponentPropertyValue as CompositionComponentPropValue,
+  ComponentPropertyValue,
+  /** @deprecated the old type name will be replaced by ExperienceNode as of v5 */
+  ComponentTreeNode as CompositionNode,
+  ComponentTreeNode,
+  /** @deprecated the old type name will be replaced by PrimitiveValue as of v5 */
+  PrimitiveValue as CompositionVariableValueType,
+  PrimitiveValue,
+  ValuesByBreakpoint,
+  Breakpoint,
+  SchemaVersions,
+} from '@contentful/experiences-validators';
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
@@ -37,9 +66,6 @@ export type ComponentDefinitionVariableType =
   | 'Location'
   | 'Media'
   | 'Object';
-// | 'Link'
-// | 'Array'
-// export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
 
 export type VariableFormats = 'URL'; // | alphaNum | base64 | email | ipAddress
 
@@ -63,36 +89,6 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValue?: string | boolean | number | Record<any, any>; //todo: fix typings
 }
-
-// export interface ComponentDefinitionVariableLink extends ComponentDefinitionVariableBase<'Link'> {
-//   linkType: 'Entry' | 'Asset'
-// }
-
-// export interface ComponentDefinitionVariableArrayOfEntityLinks
-//   extends ComponentDefinitionVariableBase<'Array'> {
-//   items: {
-//     type: 'Link'
-//     linkType: 'Entry' | 'Asset'
-//   }
-// }
-
-// export interface ComponentDefinitionVariableArrayOfPrimitives
-//   extends ComponentDefinitionVariableBase<'Array'> {
-//   type: 'Array'
-// }
-
-// export interface ComponentDefinitionVariableArrayOfComponents {
-//   type: 'Array'
-//   items: {
-//     type: 'Component'
-//   }
-// }
-
-// export type ComponentDefinitionVariableArray<
-//   K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
-// > = K extends 'Link'
-//   ? ComponentDefinitionVariableArrayOfEntityLinks
-//   : ComponentDefinitionVariableArrayOfPrimitives
 
 export type ComponentDefinitionVariable<
   T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
@@ -144,23 +140,6 @@ export type BindingMapByBlockId = Record<string, BindingMap>;
 
 export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type CompositionVariableValueType = string | boolean | number | Record<any, any> | undefined; //todo: fix typings
-type CompositionComponentPropType =
-  | 'BoundValue'
-  | 'UnboundValue'
-  | 'DesignValue'
-  | 'ComponentValue';
-
-export type CompositionComponentPropValue<
-  T extends CompositionComponentPropType = CompositionComponentPropType,
-> = T extends 'DesignValue'
-  ? // The keys in valuesByBreakpoint are the breakpoint ids
-    { type: T; valuesByBreakpoint: Record<string, CompositionVariableValueType> }
-  : T extends 'BoundValue'
-    ? { type: T; path: string }
-    : { type: T; key: string };
-
 // TODO: add conditional typing magic to reduce the number of optionals
 export type CompositionComponentNode = {
   type:
@@ -174,9 +153,9 @@ export type CompositionComponentNode = {
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
-    props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>;
-    dataSource: CompositionDataSource;
-    unboundValues: CompositionUnboundValues;
+    props: Record<string, ComponentPropertyValue>;
+    dataSource: ExperienceDataSource;
+    unboundValues: ExperienceUnboundValues;
     breakpoints: Breakpoint[];
   };
   children: CompositionComponentNode[];
@@ -247,45 +226,13 @@ export type CSSProperties = React.CSSProperties;
 
 export type ContainerStyleVariableName = keyof StyleProps;
 
-// cda types
-export type CompositionNode = {
-  definitionId: string;
-  children: Array<CompositionNode>;
-  variables: Record<string, CompositionComponentPropValue>;
-};
-
-export type CompositionDataSource = Record<string, DataSourceEntryValueType>;
-export type CompositionUnboundValues = Record<string, { value: CompositionVariableValueType }>;
-
-export type Breakpoint = {
-  id: string;
-  query: string;
-  displayName: string;
-  previewSize: string;
-};
-
-export type SchemaVersions = '2023-09-28' | '2023-06-27' | '2023-07-26' | '2023-08-23';
-
-export type ExperienceComponentSettings = {
-  variableDefinitions: Record<
-    string,
-    Omit<ComponentDefinitionVariableBase<ComponentDefinitionVariableType>, 'defaultValue'> & {
-      defaultValue: CompositionComponentPropValue<'BoundValue' | 'UnboundValue'>;
-    }
-  >;
-};
-
 export type Composition = {
   title: string;
   slug: string;
-  componentTree: {
-    breakpoints: Array<Breakpoint>;
-    children: Array<CompositionNode>;
-    schemaVersion: SchemaVersions;
-  };
-  dataSource: CompositionDataSource;
-  unboundValues: CompositionUnboundValues;
-  usedComponents?: Array<Link<'Entry'> | ExperienceEntry>;
+  componentTree: ExperienceComponentTree;
+  dataSource: ExperienceDataSource;
+  unboundValues: ExperienceUnboundValues;
+  usedComponents?: ExperienceUsedComponents | Array<ExperienceEntry>; // This will be either an array of Entry links or an array of resolved Experience entries
   componentSettings?: ExperienceComponentSettings;
 };
 
@@ -327,26 +274,6 @@ export interface HoveredElement {
   blockId: string | undefined;
 }
 
-export interface DeprecatedExperienceStore {
-  composition: Composition | undefined;
-  entityStore: EntityStoreBase | undefined;
-  isLoading: boolean;
-  children: Composition['componentTree']['children'];
-  breakpoints: Composition['componentTree']['breakpoints'];
-  dataSource: Composition['dataSource'];
-  unboundValues: Composition['unboundValues'];
-  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined;
-  fetchBySlug: ({
-    experienceTypeId,
-    slug,
-    localeCode,
-  }: {
-    experienceTypeId: string;
-    slug: string;
-    localeCode: string;
-  }) => Promise<{ success: boolean; error?: Error }>;
-}
-
 export interface Experience<T extends EntityStore = EntityStore> {
   entityStore?: T;
   /** @deprecated mode no longer used */
@@ -371,14 +298,10 @@ export interface DeprecatedExperience {
   mode: InternalSDKMode;
 }
 
-export type ValuesByBreakpoint =
-  | Record<string, CompositionVariableValueType>
-  | CompositionVariableValueType;
-
 export type ResolveDesignValueType = (
   valuesByBreakpoint: ValuesByBreakpoint,
   variableName: string,
-) => CompositionVariableValueType;
+) => PrimitiveValue;
 
 // The 'contentful' package only exposes CDA types while we received CMA ones in editor mode
 export type ManagementEntity = (Entry | Asset) & {
