@@ -161,17 +161,6 @@ export function useEditorSubscriber() {
     ]
   );
 
-  /*
-  // this effect has weirdest race condition where it comes with areEntitiesFetched=false and isFetchinEntities=false 
-  // despite the call below made within fetchMissingEntities()
-  //       setEntitiesFetched(false);
-  //       setFetchingEntities(true);
-  // I disable it also, because it seems we don't need reactive wya to call fetchEntities()
-  useEffect(() => {
-    if (areEntitiesFetched || isFetchingEntities) return;
-    fetchMissingEntities();
-  }, [areEntitiesFetched, fetchMissingEntities, isFetchingEntities]);
-  */
   useEffect(() => {
     const onMessage = async (event: MessageEvent) => {
       let reason;
