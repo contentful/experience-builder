@@ -1,9 +1,6 @@
 import { onComponentDropped } from '@/communication/onComponentDrop';
 import { getItem } from './getItem';
-import type {
-  CompositionComponentNode,
-  CompositionTree,
-} from '@contentful/experience-builder-core/types';
+import type { CompositionComponentNode, CompositionTree } from '@contentful/experiences-core/types';
 import { generateId } from './generate-id';
 import { ROOT_ID } from '../types/constants';
 

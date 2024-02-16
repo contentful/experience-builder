@@ -3,14 +3,14 @@ import type {
   ComponentRegistration,
   CompositionComponentNode,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
 import { builtInComponents } from '@/types/constants';
 import {
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import { Assembly } from '@contentful/experience-builder-components';
 import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
@@ -79,9 +79,9 @@ export const useComponent = ({
     ? (dragProps?: NoWrapDraggableProps) =>
         React.createElement(componentRegistration.component, { ...dragProps, ...componentProps })
     : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE
-    ? // Assembly.tsx requires renderDropzone and editorMode as well
-      () => React.createElement(componentRegistration.component, componentProps)
-    : () => React.createElement(componentRegistration.component, otherComponentProps);
+      ? // Assembly.tsx requires renderDropzone and editorMode as well
+        () => React.createElement(componentRegistration.component, componentProps)
+      : () => React.createElement(componentRegistration.component, otherComponentProps);
 
   return {
     node,

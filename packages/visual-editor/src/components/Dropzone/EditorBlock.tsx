@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './styles.module.css';
 import { DraggableComponent } from '../Draggable/DraggableComponent';
-import { sendMessage } from '@contentful/experience-builder-core';
+import { sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from './useComponent';
@@ -9,12 +9,12 @@ import { useZoneStore } from '@/store/zone';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import {
   CONTENTFUL_COMPONENTS,
   ASSEMBLY_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import { DraggableChildComponent } from '@components/Draggable/DraggableChildComponent';
 import { RenderDropzoneFunction } from './Dropzone.types';
 

@@ -2,11 +2,8 @@ import {
   CONTENTFUL_COMPONENTS,
   ASSEMBLY_NODE_TYPE,
   LATEST_SCHEMA_VERSION,
-} from '@contentful/experience-builder-core/constants';
-import type {
-  CompositionComponentNode,
-  SchemaVersions,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/constants';
+import type { CompositionComponentNode, SchemaVersions } from '@contentful/experiences-core/types';
 
 type createAssemblyEntryArgs = {
   schemaVersion: SchemaVersions;

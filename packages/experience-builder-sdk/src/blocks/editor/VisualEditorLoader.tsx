@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { VisualEditorMode } from '@contentful/experience-builder-core';
+import { VisualEditorMode } from '@contentful/experiences-core';
 
 type VisualEditorLoaderProps = {
   visualEditorMode: VisualEditorMode;

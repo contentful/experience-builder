@@ -1,4 +1,4 @@
-import { CompositionComponentNode } from '@contentful/experience-builder-core/types';
+import { CompositionComponentNode } from '@contentful/experiences-core/types';
 import { generateId } from './generate-id';
 
 interface Params {

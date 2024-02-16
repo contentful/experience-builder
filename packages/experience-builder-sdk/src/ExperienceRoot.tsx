@@ -3,9 +3,9 @@ import {
   VisualEditorMode,
   isDeprecatedExperience,
   validateExperienceBuilderConfig,
-} from '@contentful/experience-builder-core';
-import { EntityStore } from '@contentful/experience-builder-core';
-import type { DeprecatedExperience, Experience } from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core';
+import { EntityStore } from '@contentful/experiences-core';
+import type { DeprecatedExperience, Experience } from '@contentful/experiences-core/types';
 import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPreviewDeliveryRoot';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 import VisualEditorRoot from './blocks/editor/VisualEditorRoot';

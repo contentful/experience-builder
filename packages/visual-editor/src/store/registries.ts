@@ -2,9 +2,9 @@ import type {
   ComponentRegistration,
   ComponentDefinition,
   Link,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 
-import { ASSEMBLY_DEFAULT_CATEGORY } from '@contentful/experience-builder-core/constants';
+import { ASSEMBLY_DEFAULT_CATEGORY } from '@contentful/experiences-core/constants';
 
 // Note: During development, the hot reloading might empty this and it
 // stays empty leading to not rendering assemblies. Ideally, this is

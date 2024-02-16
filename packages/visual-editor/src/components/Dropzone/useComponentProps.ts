@@ -5,13 +5,13 @@ import {
   transformContentValue,
   isLinkToAsset,
   isEmptyStructureWithRelativeHeight,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import type {
   StyleProps,
   CompositionVariableValueType,
@@ -19,7 +19,7 @@ import type {
   ResolveDesignValueType,
   ComponentRegistration,
   Link,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import { omit } from 'lodash-es';
@@ -72,7 +72,7 @@ export const useComponentProps = ({
         if (variableMapping.type === 'DesignValue') {
           const valueByBreakpoint = resolveDesignValue(
             variableMapping.valuesByBreakpoint,
-            variableName
+            variableName,
           );
           const designValue =
             variableName === 'cfHeight'
@@ -132,7 +132,7 @@ export const useComponentProps = ({
           };
         }
       },
-      {}
+      {},
     );
   }, [
     definition,

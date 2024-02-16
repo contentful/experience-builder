@@ -1,7 +1,4 @@
-import type {
-  CompositionComponentNode,
-  CompositionTree,
-} from '@contentful/experience-builder-core/types';
+import type { CompositionComponentNode, CompositionTree } from '@contentful/experiences-core/types';
 import { ROOT_ID } from '../types/constants';
 
 export type ItemSelector = {
@@ -10,7 +7,7 @@ export type ItemSelector = {
 
 function getItemFromTree(
   id: string,
-  node: CompositionComponentNode
+  node: CompositionComponentNode,
 ): CompositionComponentNode | undefined {
   // Check if the current node's id matches the search id
 
@@ -33,7 +30,7 @@ function getItemFromTree(
 
 export const getItem = (
   selector: ItemSelector,
-  tree: CompositionTree
+  tree: CompositionTree,
 ): CompositionComponentNode | undefined => {
   return getItemFromTree(selector.id, {
     type: 'block',
