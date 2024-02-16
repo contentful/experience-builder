@@ -32,7 +32,7 @@ The following components are available:
 ### Installation
 
 ```bash
-npm install @contentful/experience-builder-components
+npm install @contentful/experiences-components-react
 ```
 
 ### Register the components with Experience Builder
@@ -41,10 +41,10 @@ npm install @contentful/experience-builder-components
 
 In the section of code (usually the main App or Page components) where Experience Builder is configured, perform the following steps:
 
-Import the `useExperienceBuilderComponents` hook from the `@contentful/experience-builder-components` package:
+Import the `useExperienceBuilderComponents` hook from the `@contentful/experiences-components-react` package:
 
 ```jsx
-import { useExperienceBuilderComponents } from '@contentful/experience-builder-components';
+import { useExperienceBuilderComponents } from '@contentful/experiences-components-react';
 ```
 
 After the call to `useExperienceBuilder` (where you obtain the `defineComponents` method), pass in `defineComponents` to the `userExperienceBuilder` hook:
@@ -61,10 +61,10 @@ By default, the components are unstyled. This allows you to style the components
 
 ### Including default styles
 
-A set of optional, default styles are included with the components. To include them, import the `styles.css` file from the `@contentful/experience-builder-components` package:
+A set of optional, default styles are included with the components. To include them, import the `styles.css` file from the `@contentful/experiences-components-react` package:
 
 ```jsx
-import '@contentful/experience-builder-components/styles.css';
+import '@contentful/experiences-components-react/styles.css';
 ```
 
 ### Adding custom styles

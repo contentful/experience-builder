@@ -11,7 +11,7 @@ Has a default class of `cf-richtext`, which can be used to style the component.
 ## Usage
 
 ```tsx
-import { RichText } from '@contentful/experience-builder-components';
+import { RichText } from '@contentful/experiences-components-react';
 
 const MyPage = () => <RichText value={document} />;
 ```

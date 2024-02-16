@@ -31,7 +31,7 @@
     "depcruise": "depcruise src"
   },
   "dependencies": {
-    "@contentful/experience-builder-components": "file:../components",
+    "@contentful/experiences-components-react": "file:../components",
     "@contentful/experiences-core": "file:../core",
     "@contentful/experience-builder-visual-editor": "file:../visual-editor",
     "@contentful/rich-text-types": "^16.2.1",

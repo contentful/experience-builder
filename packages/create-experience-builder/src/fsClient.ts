@@ -20,7 +20,7 @@ export class FsClient {
 
     this.copyTemplateFiles(projectDir, templateDir, variant.srcDir);
 
-    const installEbLibsCommand = `npm i --prefix ${projectDir} @contentful/experience-builder @contentful/experience-builder-components`;
+    const installEbLibsCommand = `npm i --prefix ${projectDir} @contentful/experience-builder @contentful/experiences-components-react`;
 
     const ebLibStatus = await this.runCommand(installEbLibsCommand);
 
@@ -37,7 +37,7 @@ export class FsClient {
 VITE_SPACE_ID=${envFileData.spaceId}
 VITE_ACCESS_TOKEN=${envFileData.accessToken}
 VITE_PREVIEW_ACCESS_TOKEN=${envFileData.previewAccessToken}
-VITE_EB_TYPE_ID=${envFileData.typeId}`
+VITE_EB_TYPE_ID=${envFileData.typeId}`,
     );
   }
 
