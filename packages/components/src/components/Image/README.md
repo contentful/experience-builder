@@ -11,7 +11,7 @@ Has a default class of `cf-image`, which can be used to style the component.
 ## Usage
 
 ```tsx
-import { Image } from '@contentful/experience-builder-components';
+import { Image } from '@contentful/experiences-components-react';
 
 const MyPage = () => <Image src="https://mysite.com/assets/image.png" alt="My Image" />;
 ```
