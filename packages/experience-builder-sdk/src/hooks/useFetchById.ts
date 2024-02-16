@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import type { ContentfulClientApi } from 'contentful';
-import type { ExternalSDKMode } from '@contentful/experience-builder-core/types';
+import type { ExternalSDKMode } from '@contentful/experiences-core/types';
 import { useFetchByBase } from './useFetchByBase';
-import { fetchById } from '@contentful/experience-builder-core';
+import { fetchById } from '@contentful/experiences-core';
 import { useDetectEditorMode } from './useDetectEditorMode';
 
 export type UseFetchByIdArgs = {

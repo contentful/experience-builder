@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import type { DeprecatedExperience } from '@contentful/experience-builder-core/types';
+import type { DeprecatedExperience } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
 import { useBreakpoints, useFetchExperience } from '../../hooks';

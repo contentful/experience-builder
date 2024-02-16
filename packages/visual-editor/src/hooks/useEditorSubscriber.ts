@@ -4,13 +4,13 @@ import {
   getDataFromTree,
   doesMismatchMessageSchema,
   tryParseMessage,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
   SCROLL_STATES,
   PostMessageMethods,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import {
   CompositionTree,
   CompositionComponentNode,
@@ -19,7 +19,7 @@ import {
   Link,
   CompositionDataSource,
   ManagementEntity,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';
@@ -94,7 +94,7 @@ export function useEditorSubscriber() {
         setFetchingEntities(false);
       }
     },
-    [dataSource, entityStore, setEntitiesFetched]
+    [dataSource, entityStore, setEntitiesFetched],
   );
   // When the tree was updated, we store the dataSource and
   // afterward, this effect fetches the respective entities.
@@ -115,7 +115,7 @@ export function useEditorSubscriber() {
         } else {
           console.warn(
             `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
-            event
+            event,
           );
         }
         return;
@@ -128,7 +128,7 @@ export function useEditorSubscriber() {
       }
       console.debug(
         `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
-        eventData
+        eventData,
       );
 
       const { payload } = eventData;
@@ -257,7 +257,7 @@ export function useEditorSubscriber() {
           };
           if (updatedEntity) {
             const storedEntity = entityStore.entities.find(
-              (entity) => entity.sys.id === updatedEntity.sys.id
+              (entity) => entity.sys.id === updatedEntity.sys.id,
             ) as unknown as ManagementEntity | undefined;
 
             const didEntityChange = storedEntity?.sys.version !== updatedEntity.sys.version;
@@ -298,7 +298,7 @@ export function useEditorSubscriber() {
         }
         default:
           console.error(
-            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`
+            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`,
           );
       }
     };

@@ -1,7 +1,7 @@
 import React, { ErrorInfo, ReactElement } from 'react';
-import { sendMessage } from '@contentful/experience-builder-core';
+import { sendMessage } from '@contentful/experiences-core';
 import '../styles/ErrorBoundary.css';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 class ImportedComponentError extends Error {}
 

@@ -1,6 +1,6 @@
 import React, { ElementType, useCallback, useEffect } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
+import type { ResolveDesignValueType } from '@contentful/experiences-core/types';
 import { EditorBlock } from './EditorBlock';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
@@ -17,7 +17,7 @@ import {
   DESIGN_COMPONENT_NODE_TYPES,
   ASSEMBLY_NODE_TYPES,
   CONTENTFUL_COMPONENTS,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
 
 type DropzoneProps = {
@@ -37,7 +37,7 @@ function isDropEnabled(
   draggingRootZone: boolean,
   isRootZone: boolean,
   isAssembly: boolean,
-  blockId: string = ''
+  blockId: string = '',
 ) {
   if (isAssembly) {
     return false;
@@ -122,7 +122,7 @@ export function Dropzone({
     draggingRootZone,
     isRootZone,
     isAssembly,
-    node?.data.blockId
+    node?.data.blockId,
   );
 
   // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
@@ -138,7 +138,7 @@ export function Dropzone({
         />
       );
     },
-    [resolveDesignValue]
+    [resolveDesignValue],
   );
 
   if (!resolveDesignValue) {
@@ -173,7 +173,7 @@ export function Dropzone({
                 [styles.isDestination]: isDestination && !isAssembly,
                 [styles.isExpanded]: userIsDragging,
               },
-              className
+              className,
             )}
             node={node}
             onMouseOver={(e) => {

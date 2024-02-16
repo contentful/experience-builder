@@ -3,13 +3,13 @@ import type {
   ComponentRegistration,
   ComponentDefinition,
   ComponentRegistrationOptions,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import {
   OUTGOING_EVENTS,
   INTERNAL_EVENTS,
   CONTENTFUL_COMPONENTS,
   ASSEMBLY_DEFAULT_CATEGORY,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import {
   builtInStyles as builtInStyleDefinitions,
   designTokensRegistry,
@@ -19,7 +19,7 @@ import {
   sectionDefinition,
   columnsDefinition,
   singleColumnDefinition,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
 

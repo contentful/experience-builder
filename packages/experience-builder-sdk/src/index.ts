@@ -15,7 +15,7 @@ export {
   fetchById,
   fetchBySlug,
   createExperience,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 export {
   /** @deprecated use `CONTENTFUL_COMPONENTS.section.id` instead. This will be removed in version 4. */
   CONTENTFUL_SECTION_ID,
@@ -38,7 +38,7 @@ export {
   ASSEMBLY_NODE_TYPE,
   ASSEMBLY_NODE_TYPES,
   SCROLL_STATES,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 
 // Simple state store to store a few things that are needed across the SDK
 if (typeof window !== 'undefined') {
@@ -51,5 +51,5 @@ export type {
   InternalSDKMode,
   ExternalSDKMode,
   ComponentDefinition,
-} from '@contentful/experience-builder-core/types';
-export { EntityStore } from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core/types';
+export { EntityStore } from '@contentful/experiences-core';

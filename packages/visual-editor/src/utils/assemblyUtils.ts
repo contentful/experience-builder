@@ -1,4 +1,4 @@
-import { EntityStoreBase } from '@contentful/experience-builder-core';
+import { EntityStoreBase } from '@contentful/experiences-core';
 import type {
   CompositionNode,
   CompositionDataSource,
@@ -6,15 +6,15 @@ import type {
   CompositionComponentNode,
   CompositionComponentPropValue,
   Composition,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import type { Entry } from 'contentful';
 
 import {
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_BLOCK_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
-} from '@contentful/experience-builder-core/constants';
-import { generateRandomId } from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core/constants';
+import { generateRandomId } from '@contentful/experiences-core';
 import { assembliesRegistry } from '@/store/registries';
 
 export const checkIsAssemblyEntry = (entry: Entry): boolean => {
@@ -83,7 +83,7 @@ export const deserializeAssemblyNode = ({
       componentInstanceProps,
       componentInstanceUnboundValues,
       componentInstanceDataSource,
-    })
+    }),
   );
 
   return {

@@ -1,5 +1,5 @@
-import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
-import { ASSEMBLY_DEFAULT_CATEGORY } from '@contentful/experience-builder-core/constants';
+import type { ComponentDefinition } from '@contentful/experiences-core/types';
+import { ASSEMBLY_DEFAULT_CATEGORY } from '@contentful/experiences-core/constants';
 
 export type Breakpoints = Array<BreakpointItem>;
 

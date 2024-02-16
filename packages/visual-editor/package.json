@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@contentful/experience-builder-components": "file:../components",
-    "@contentful/experience-builder-core": "file:../core",
+    "@contentful/experiences-core": "file:../core",
     "@hello-pangea/dnd": "^16.3.0",
     "classnames": "^2.3.2",
     "contentful": "^10.6.14",

@@ -1,10 +1,10 @@
-import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
+import type { CompositionComponentNode } from '@contentful/experiences-core/types';
 import { isEqual } from 'lodash-es';
 
 export function updateNode(
   nodeId: string,
   updatedNode: CompositionComponentNode,
-  node: CompositionComponentNode
+  node: CompositionComponentNode,
 ) {
   if (node.data.id === nodeId) {
     node.data = updatedNode.data;
@@ -16,7 +16,7 @@ export function updateNode(
 export function replaceNode(
   indexToReplace: number,
   updatedNode: CompositionComponentNode,
-  node: CompositionComponentNode
+  node: CompositionComponentNode,
 ) {
   if (node.data.id === updatedNode.parentId) {
     node.children = [
@@ -33,7 +33,7 @@ export function replaceNode(
 export function reorderChildrenNodes(
   nodeId: string,
   updatedChildren: CompositionComponentNode[],
-  node: CompositionComponentNode
+  node: CompositionComponentNode,
 ) {
   if (node.data.id === nodeId) {
     node.children = updatedChildren;
@@ -47,11 +47,11 @@ export function addChildToNode(
   nodeId: string,
   oldChildren: CompositionComponentNode[],
   updatedChildren: CompositionComponentNode[],
-  node: CompositionComponentNode
+  node: CompositionComponentNode,
 ) {
   if (node.data.id !== nodeId) {
     node.children.forEach((childNode) =>
-      addChildToNode(nodeId, oldChildren, updatedChildren, childNode)
+      addChildToNode(nodeId, oldChildren, updatedChildren, childNode),
     );
   }
 
@@ -73,7 +73,7 @@ export function addChildToNode(
       oldChildren.length,
       node.data.id,
       updatedChildren[updatedChildren.length - 1],
-      node
+      node,
     );
   }
 }
@@ -82,7 +82,7 @@ export function removeChildNode(
   indexToRemove: number,
   nodeId: string,
   parentNodeId: string,
-  node: CompositionComponentNode
+  node: CompositionComponentNode,
 ) {
   if (node.data.id === parentNodeId) {
     const childIndex = node.children.findIndex((child) => child.data.id === nodeId);
@@ -92,7 +92,7 @@ export function removeChildNode(
   }
 
   node.children.forEach((childNode) =>
-    removeChildNode(indexToRemove, nodeId, parentNodeId, childNode)
+    removeChildNode(indexToRemove, nodeId, parentNodeId, childNode),
   );
 }
 
@@ -100,7 +100,7 @@ export function addChildNode(
   indexToAdd: number,
   parentNodeId: string,
   nodeToAdd: CompositionComponentNode,
-  node: CompositionComponentNode
+  node: CompositionComponentNode,
 ) {
   if (node.data.id === parentNodeId) {
     node.children = [
@@ -113,7 +113,7 @@ export function addChildNode(
   }
 
   node.children.forEach((childNode) =>
-    addChildNode(indexToAdd, parentNodeId, nodeToAdd, childNode)
+    addChildNode(indexToAdd, parentNodeId, nodeToAdd, childNode),
   );
 }
 
@@ -121,7 +121,7 @@ export function reorderChildNode(
   oldIndex: number,
   newIndex: number,
   parentNodeId: string,
-  node: CompositionComponentNode
+  node: CompositionComponentNode,
 ) {
   if (node.data.id === parentNodeId) {
     // Remove the child from the old position
@@ -133,6 +133,6 @@ export function reorderChildNode(
   }
 
   node.children.forEach((childNode) =>
-    reorderChildNode(oldIndex, newIndex, parentNodeId, childNode)
+    reorderChildNode(oldIndex, newIndex, parentNodeId, childNode),
   );
 }

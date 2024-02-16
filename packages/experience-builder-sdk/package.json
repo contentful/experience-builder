@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@contentful/experience-builder-components": "file:../components",
-    "@contentful/experience-builder-core": "file:../core",
+    "@contentful/experiences-core": "file:../core",
     "@contentful/experience-builder-visual-editor": "file:../visual-editor",
     "@contentful/rich-text-types": "^16.2.1",
     "classnames": "^2.3.2",

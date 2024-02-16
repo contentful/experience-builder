@@ -3,7 +3,7 @@ import { useTreeStore } from '@/store/tree';
 import { ROOT_ID } from '@/types/constants';
 import { createTreeNode } from '@/utils/createTreeNode';
 import { onDrop } from '@/utils/onDrop';
-import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { DropResult } from '@hello-pangea/dnd';
 
 export default function useCanvasInteractions() {

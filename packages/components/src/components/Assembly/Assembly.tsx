@@ -2,7 +2,7 @@ import {
   CompositionComponentNode,
   ResolveDesignValueType,
   StyleProps,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import React from 'react';
 
 export type AssemblyProps<EditorMode = boolean> = EditorMode extends true
@@ -17,7 +17,7 @@ export type AssemblyProps<EditorMode = boolean> = EditorMode extends true
       renderDropzone: (
         node: CompositionComponentNode,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        props?: Record<string, any>
+        props?: Record<string, any>,
       ) => React.ReactNode;
     }
   : // eslint-disable-next-line @typescript-eslint/no-explicit-any
