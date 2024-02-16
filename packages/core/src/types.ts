@@ -15,7 +15,7 @@ import type {
   ExperienceComponentTree,
 } from '@contentful/experiences-validators';
 // TODO: Remove references to 'Composition'
-export {
+export type {
   /** @deprecated the old type name will be replaced by ExperienceDataSource as of v5 */
   ExperienceDataSource as CompositionDataSource,
   ExperienceDataSource,
@@ -35,6 +35,10 @@ export {
   ValuesByBreakpoint,
   Breakpoint,
   SchemaVersions,
+  DesignValue,
+  UnboundValue,
+  BoundValue,
+  ComponentValue,
 } from '@contentful/experiences-validators';
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;
