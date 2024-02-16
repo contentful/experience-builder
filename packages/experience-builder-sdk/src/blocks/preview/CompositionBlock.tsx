@@ -5,24 +5,24 @@ import {
   EntityStore,
   isEmptyStructureWithRelativeHeight,
   isDeepPath,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
   EMPTY_CONTAINER_HEIGHT,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import type {
   CompositionNode,
   CompositionVariableValueType,
   ResolveDesignValueType,
   StyleProps,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import {
   buildCfStyles,
   checkIsAssemblyNode,
   transformContentValue,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import {
   Columns,

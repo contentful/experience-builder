@@ -1,6 +1,6 @@
-import { sendMessage } from '@contentful/experience-builder-core';
-import { CompositionComponentNode } from '@contentful/experience-builder-core/types';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import { sendMessage } from '@contentful/experiences-core';
+import { CompositionComponentNode } from '@contentful/experiences-core/types';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 export const onComponentDropped = ({
   node,

@@ -7,13 +7,13 @@ import {
   gatherDeepReferencesFromTree,
   DeepReference,
   isLink,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
   SCROLL_STATES,
   PostMessageMethods,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import {
   CompositionTree,
   CompositionComponentNode,
@@ -22,7 +22,7 @@ import {
   Link,
   CompositionDataSource,
   ManagementEntity,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';

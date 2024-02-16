@@ -1,6 +1,6 @@
 import React from 'react';
-import { EntityStore } from '@contentful/experience-builder-core';
-import type { Experience } from '@contentful/experience-builder-core/types';
+import { EntityStore } from '@contentful/experiences-core';
+import type { Experience } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
 import { useBreakpoints } from '../../hooks';
