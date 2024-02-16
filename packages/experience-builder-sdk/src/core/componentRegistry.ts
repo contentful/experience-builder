@@ -1,4 +1,4 @@
-import * as Components from '@contentful/experience-builder-components';
+import * as Components from '@contentful/experiences-components-react';
 import type {
   ComponentRegistration,
   ComponentDefinition,

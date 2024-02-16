@@ -24,7 +24,7 @@ import {
   Columns,
   ContentfulContainer,
   SingleColumn,
-} from '@contentful/experience-builder-components';
+} from '@contentful/experiences-components-react';
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
