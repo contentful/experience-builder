@@ -92,12 +92,25 @@ const ComponentSettingsSchema = z.object({
   variableDefinitions: z.record(
     z.string().regex(/^[a-zA-Z0-9-_]{1,54}$/), // Here the key is <variableName>_<nanoidId> so we need to allow for a longer length
     z.object({
-      displayName: z.string(),
+      displayName: z.string().optional(),
       type: ComponentDefinitionPropertyTypeSchema,
-      defaultValue: ComponentPropertyValueSchema.optional(),
+      defaultValue: PrimitiveValueSchema.or(ComponentPropertyValueSchema).optional(),
       description: z.string().optional(),
       group: z.string().optional(),
-      validations: z.record(z.string()).optional(),
+      validations: z
+        .object({
+          required: z.boolean().optional(),
+          format: z.literal('URL').optional(),
+          in: z
+            .array(
+              z.object({
+                value: z.union([z.string(), z.number()]),
+                displayName: z.string().optional(),
+              }),
+            )
+            .optional(),
+        })
+        .optional(),
     }),
   ),
 });

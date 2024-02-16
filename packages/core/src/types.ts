@@ -15,7 +15,7 @@ import type {
   ExperienceComponentTree,
 } from '@contentful/experiences-validators';
 // TODO: Remove references to 'Composition'
-export {
+export type {
   /** @deprecated the old type name will be replaced by ExperienceDataSource as of v5 */
   ExperienceDataSource as CompositionDataSource,
   ExperienceDataSource,

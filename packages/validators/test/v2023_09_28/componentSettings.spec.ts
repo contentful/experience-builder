@@ -84,32 +84,6 @@ describe('componentSettings', () => {
     expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
   });
 
-  it('fails if variable definition is missing a displayName', () => {
-    const updatedPattern = {
-      ...experiencePattern,
-      fields: {
-        ...experience.fields,
-        componentSettings: {
-          [locale]: { variableDefinitions: { var1: { type: 'Text', defaultValue: '' } } },
-        },
-      },
-    };
-    const result = validateExperienceFields(updatedPattern, schemaVersion) as SafeParseError<
-      typeof updatedPattern
-    >;
-
-    const expectedError = {
-      received: 'undefined',
-      code: 'invalid_type',
-      expected: 'string',
-      path: ['componentSettings', 'en-US', 'variableDefinitions', 'var1', 'displayName'],
-      message: 'Required',
-    };
-
-    expect(result.success).toBe(false);
-    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
-  });
-
   it('fails if componentSettings is used in conjuction with usedComponents', () => {
     const updatedPattern = {
       ...experiencePattern,
