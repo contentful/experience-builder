@@ -35,6 +35,10 @@ export {
   ValuesByBreakpoint,
   Breakpoint,
   SchemaVersions,
+  DesignValue,
+  UnboundValue,
+  BoundValue,
+  ComponentValue,
 } from '@contentful/experiences-validators';
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;

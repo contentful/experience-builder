@@ -36,23 +36,28 @@ export const ComponentDefinitionPropertyTypeSchema = z.enum([
 
 const ValuesByBreakpointSchema = z.record(z.lazy(() => PrimitiveValueSchema));
 
+const DesignValueSchema = z.object({
+  type: z.literal('DesignValue'),
+  valuesByBreakpoint: ValuesByBreakpointSchema,
+});
+const BoundValueSchema = z.object({
+  type: z.literal('BoundValue'),
+  path: z.string(),
+});
+const UnboundValueSchema = z.object({
+  type: z.literal('UnboundValue'),
+  key: z.string(),
+});
+const ComponentValueSchema = z.object({
+  type: z.literal('ComponentValue'),
+  key: z.string(),
+});
+
 const ComponentPropertyValueSchema = z.union([
-  z.object({
-    type: z.literal('DesignValue'),
-    valuesByBreakpoint: ValuesByBreakpointSchema,
-  }),
-  z.object({
-    type: z.literal('BoundValue'),
-    path: z.string(),
-  }),
-  z.object({
-    type: z.literal('UnboundValue'),
-    key: z.string(),
-  }),
-  z.object({
-    type: z.literal('ComponentValue'),
-    key: z.string(),
-  }),
+  DesignValueSchema,
+  BoundValueSchema,
+  UnboundValueSchema,
+  ComponentValueSchema,
 ]);
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
@@ -183,3 +188,7 @@ export type ExperienceComponentTree = z.infer<typeof ComponentTreeSchema>;
 export type ValuesByBreakpoint = z.infer<typeof ValuesByBreakpointSchema>;
 export type Breakpoint = z.infer<typeof BreakpointSchema>;
 export type PrimitiveValue = z.infer<typeof PrimitiveValueSchema>;
+export type DesignValue = z.infer<typeof DesignValueSchema>;
+export type BoundValue = z.infer<typeof BoundValueSchema>;
+export type UnboundValue = z.infer<typeof UnboundValueSchema>;
+export type ComponentValue = z.infer<typeof ComponentValueSchema>;

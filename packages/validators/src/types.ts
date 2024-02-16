@@ -10,5 +10,9 @@ export type {
   ComponentPropertyValue,
   ComponentTreeNode,
   PrimitiveValue,
+  DesignValue,
+  UnboundValue,
+  BoundValue,
+  ComponentValue,
 } from './schemas/latest';
 export type { SchemaVersions } from './schemas/schemaVersions';
