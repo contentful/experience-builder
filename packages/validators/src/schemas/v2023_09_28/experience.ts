@@ -36,23 +36,28 @@ export const ComponentDefinitionPropertyTypeSchema = z.enum([
 
 const ValuesByBreakpointSchema = z.record(z.lazy(() => PrimitiveValueSchema));
 
+const DesignValueSchema = z.object({
+  type: z.literal('DesignValue'),
+  valuesByBreakpoint: ValuesByBreakpointSchema,
+});
+const BoundValueSchema = z.object({
+  type: z.literal('BoundValue'),
+  path: z.string(),
+});
+const UnboundValueSchema = z.object({
+  type: z.literal('UnboundValue'),
+  key: z.string(),
+});
+const ComponentValueSchema = z.object({
+  type: z.literal('ComponentValue'),
+  key: z.string(),
+});
+
 const ComponentPropertyValueSchema = z.union([
-  z.object({
-    type: z.literal('DesignValue'),
-    valuesByBreakpoint: ValuesByBreakpointSchema,
-  }),
-  z.object({
-    type: z.literal('BoundValue'),
-    path: z.string(),
-  }),
-  z.object({
-    type: z.literal('UnboundValue'),
-    key: z.string(),
-  }),
-  z.object({
-    type: z.literal('ComponentValue'),
-    key: z.string(),
-  }),
+  DesignValueSchema,
+  BoundValueSchema,
+  UnboundValueSchema,
+  ComponentValueSchema,
 ]);
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
@@ -87,12 +92,25 @@ const ComponentSettingsSchema = z.object({
   variableDefinitions: z.record(
     z.string().regex(/^[a-zA-Z0-9-_]{1,54}$/), // Here the key is <variableName>_<nanoidId> so we need to allow for a longer length
     z.object({
-      displayName: z.string(),
+      displayName: z.string().optional(),
       type: ComponentDefinitionPropertyTypeSchema,
-      defaultValue: ComponentPropertyValueSchema.optional(),
+      defaultValue: PrimitiveValueSchema.or(ComponentPropertyValueSchema).optional(),
       description: z.string().optional(),
       group: z.string().optional(),
-      validations: z.record(z.string()).optional(),
+      validations: z
+        .object({
+          required: z.boolean().optional(),
+          format: z.literal('URL').optional(),
+          in: z
+            .array(
+              z.object({
+                value: z.union([z.string(), z.number()]),
+                displayName: z.string().optional(),
+              }),
+            )
+            .optional(),
+        })
+        .optional(),
     }),
   ),
 });
@@ -183,3 +201,7 @@ export type ExperienceComponentTree = z.infer<typeof ComponentTreeSchema>;
 export type ValuesByBreakpoint = z.infer<typeof ValuesByBreakpointSchema>;
 export type Breakpoint = z.infer<typeof BreakpointSchema>;
 export type PrimitiveValue = z.infer<typeof PrimitiveValueSchema>;
+export type DesignValue = z.infer<typeof DesignValueSchema>;
+export type BoundValue = z.infer<typeof BoundValueSchema>;
+export type UnboundValue = z.infer<typeof UnboundValueSchema>;
+export type ComponentValue = z.infer<typeof ComponentValueSchema>;
