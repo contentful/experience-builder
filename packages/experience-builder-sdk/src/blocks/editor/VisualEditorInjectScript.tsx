@@ -16,7 +16,7 @@ const version = '@0.0.1-pre-20231213T210727.0';
  *
  * TODO: Reconsider unpkg
  */
-const scriptUrl = `https://unpkg.com/@contentful/experience-builder-visual-editor${version}/dist/renderApp.js`;
+const scriptUrl = `https://unpkg.com/@contentful/experiences-visual-editor-react${version}/dist/renderApp.js`;
 
 /**
  * This component injects the visual editor script into the page
