@@ -6,15 +6,15 @@ import {
   transformBorderStyle,
   transformFill,
   transformGridColumn,
-} from './transformers';
+} from './styleTransformers';
 import {
   CSSProperties,
   StyleProps,
   CompositionVariableValueType,
   CompositionComponentNode,
 } from '@/types';
-import { isContentfulStructureComponent } from './components';
-import { EMPTY_CONTAINER_HEIGHT } from '../constants';
+import { isContentfulStructureComponent } from '../components';
+import { EMPTY_CONTAINER_HEIGHT } from '../../constants';
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 
@@ -25,7 +25,7 @@ export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeI
       (acc, [key, value]) =>
         `${acc}
         ${toCSSAttribute(key)}: ${value};`,
-      ''
+      '',
     );
 
   const className = `cfstyles-${nodeId ? nodeId : md5(stylesStr)}`;
@@ -79,7 +79,7 @@ export const buildCfStyles = ({
     ...transformBackgroundImage(
       cfBackgroundImageUrl,
       cfBackgroundImageScaling,
-      cfBackgroundImageAlignment
+      cfBackgroundImageAlignment,
     ),
     fontSize: cfFontSize,
     fontWeight: cfTextBold ? 'bold' : cfFontWeight,
