@@ -1,5 +1,4 @@
 import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types';
-
 import { ComponentDefinitionVariable, CompositionVariableValueType } from '@/types';
 import { Link } from 'contentful';
 
