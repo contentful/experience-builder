@@ -40,7 +40,7 @@ describe('componentTree', () => {
 
       expect(result.success).toBe(false);
       expect(result.error.issues[0].message).toBe(
-        'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }',
+        'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }'
       );
     });
 
@@ -66,7 +66,7 @@ describe('componentTree', () => {
           received: 'undefined',
           path: ['componentTree', 'en-US', 'breakpoints', 0, breakpointField],
           message: 'Required',
-        }),
+        })
       );
 
       expect(result.error.issues).toEqual(expectedErrors);
@@ -92,7 +92,7 @@ describe('componentTree', () => {
 
       expect(result.success).toBe(false);
       expect(result.error.issues[0].message).toBe(
-        'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }',
+        'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }'
       );
     });
 
@@ -116,7 +116,7 @@ describe('componentTree', () => {
 
       expect(result.success).toBe(false);
       expect(result.error.issues[0].message).toBe(
-        'Breakpoints should be ordered from largest to smallest pixel value',
+        'Breakpoints should be ordered from largest to smallest pixel value'
       );
     });
   });
@@ -218,7 +218,7 @@ describe('componentTree', () => {
         const expectedError = {
           code: 'invalid_string',
           path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text&^:'],
-          message: 'Invalid',
+          message: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/',
           validation: 'regex',
         };
         expect(result.success).toBe(false);
@@ -248,7 +248,7 @@ describe('componentTree', () => {
         const expectedError = {
           code: 'invalid_string',
           path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text'.repeat(10)],
-          message: 'Invalid',
+          message: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/',
           validation: 'regex',
         };
         expect(result.success).toBe(false);
@@ -278,7 +278,7 @@ describe('componentTree', () => {
 
           const result = validateExperienceFields(
             updatedExperience,
-            schemaVersion,
+            schemaVersion
           ) as SafeParseError<typeof updatedExperience>;
 
           const expectedError = {
@@ -298,7 +298,7 @@ describe('componentTree', () => {
           };
           expect(result.success).toBe(false);
           expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[0].issues[0]).toEqual(
-            expectedError,
+            expectedError
           );
         });
       });
@@ -324,7 +324,7 @@ describe('componentTree', () => {
 
           const result = validateExperienceFields(
             updatedExperience,
-            schemaVersion,
+            schemaVersion
           ) as SafeParseError<typeof updatedExperience>;
 
           const expectedError = {
@@ -336,7 +336,7 @@ describe('componentTree', () => {
           };
           expect(result.success).toBe(false);
           expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[1].issues[0]).toEqual(
-            expectedError,
+            expectedError
           );
         });
       });
@@ -362,7 +362,7 @@ describe('componentTree', () => {
 
           const result = validateExperienceFields(
             updatedExperience,
-            schemaVersion,
+            schemaVersion
           ) as SafeParseError<typeof updatedExperience>;
 
           const expectedError = {
@@ -374,7 +374,7 @@ describe('componentTree', () => {
           };
           expect(result.success).toBe(false);
           expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[2].issues[0]).toEqual(
-            expectedError,
+            expectedError
           );
         });
       });
@@ -400,7 +400,7 @@ describe('componentTree', () => {
 
           const result = validateExperienceFields(
             updatedExperience,
-            schemaVersion,
+            schemaVersion
           ) as SafeParseError<typeof updatedExperience>;
 
           const expectedError = {
@@ -412,7 +412,7 @@ describe('componentTree', () => {
           };
           expect(result.success).toBe(false);
           expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[3].issues[0]).toEqual(
-            expectedError,
+            expectedError
           );
         });
       });

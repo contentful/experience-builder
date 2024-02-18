@@ -61,7 +61,31 @@ describe('dataSource', () => {
     const expectedError = {
       code: 'invalid_string',
       path: ['dataSource', 'en-US', 'uuid1'.repeat(5)],
-      message: 'Invalid',
+      message: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/',
+      validation: 'regex',
+    };
+    expect(result.success).toBe(false);
+    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+  });
+
+  it('fails if key contains invalid characters', () => {
+    const updatedExperience = {
+      ...experience,
+      fields: {
+        ...experience.fields,
+        dataSource: {
+          [locale]: { 'uuid1!$*': { sys: { id: '123', linkType: 'Entry', type: 'Link' } } },
+        },
+      },
+    };
+    const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
+      typeof updatedExperience
+    >;
+
+    const expectedError = {
+      code: 'invalid_string',
+      path: ['dataSource', 'en-US', 'uuid1!$*'],
+      message: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/',
       validation: 'regex',
     };
     expect(result.success).toBe(false);
@@ -83,26 +107,13 @@ describe('dataSource', () => {
     >;
 
     const expectedError = {
-      code: 'invalid_union',
+      code: 'invalid_enum_value',
       path: ['dataSource', 'en-US', 'uuid1', 'sys', 'linkType'],
-      message: 'Invalid input',
+      message: "Invalid enum value. Expected 'Entry' | 'Asset', received 'Invalid'",
+      options: ['Entry', 'Asset'],
     };
 
     expect(result.success).toBe(false);
     expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
-    expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[0].issues[0]).toEqual({
-      received: 'Invalid',
-      code: 'invalid_literal',
-      expected: 'Entry',
-      path: ['dataSource', 'en-US', 'uuid1', 'sys', 'linkType'],
-      message: 'Invalid literal value, expected "Entry"',
-    });
-    expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[1].issues[0]).toEqual({
-      received: 'Invalid',
-      code: 'invalid_literal',
-      expected: 'Asset',
-      path: ['dataSource', 'en-US', 'uuid1', 'sys', 'linkType'],
-      message: 'Invalid literal value, expected "Asset"',
-    });
   });
 });
