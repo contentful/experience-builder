@@ -28,7 +28,7 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 import { Asset, AssetFile } from 'contentful';
-import { BoundComponentPropertyTypes } from '@contentful/experience-builder-core/src/types';
+import { BoundComponentPropertyTypes } from '@contentful/experience-builder-core/types';
 
 type ComponentProps =
   | StyleProps
