@@ -1,6 +1,6 @@
 import { ZodIssueCode, ZodIssue, z } from 'zod';
 
-type ContentfulError = {
+export type ContentfulError = {
   details: string;
   min?: number | bigint;
   max?: number | bigint;

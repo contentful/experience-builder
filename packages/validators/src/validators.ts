@@ -1,27 +1,34 @@
 import { Schema_2023_09_28 } from './schemas';
 import { z } from 'zod';
+import { ContentfulError, zodToContentfulError } from './utils/zodToContentfulError';
 
 const VERSION_SCHEMAS = {
   '2023-09-28': Schema_2023_09_28,
 };
+
+interface ValidatorReturnValue {
+  success: boolean;
+  errors?: ContentfulError[];
+}
+
 export const validateExperienceFields = (
   experience: any,
   schemaVersion: keyof typeof VERSION_SCHEMAS
-): z.SafeParseReturnType<any, any> => {
+): ValidatorReturnValue => {
   const schema = VERSION_SCHEMAS[schemaVersion];
 
   if (!schema) {
     return {
       success: false,
-      error: new z.ZodError([
+      errors: [
         {
-          code: z.ZodIssueCode.invalid_literal,
-          expected: '2023-09-28',
-          received: schemaVersion,
+          name: 'in',
+          expected: ['2023-09-28'],
+          value: schemaVersion,
           path: ['fields', 'componentTree', 'schemaVersion'],
-          message: 'Unsupported schema version',
+          details: 'Unsupported schema version',
         },
-      ]),
+      ],
     };
   }
 
@@ -33,5 +40,14 @@ export const validateExperienceFields = (
     componentSettings: experience.fields.componentSettings,
   };
 
-  return schema.safeParse(fieldsToValidate);
+  const result = schema.safeParse(fieldsToValidate);
+  if (!result.success) {
+    return {
+      success: result.success,
+      errors: result.error.issues.map(zodToContentfulError),
+    };
+  }
+  return {
+    success: true,
+  };
 };
