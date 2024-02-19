@@ -5,8 +5,10 @@ import { assets, entries } from '../test/__fixtures__/entities';
 import { describe, it, expect, vi, Mock } from 'vitest';
 
 const mockClient = {
-  getEntries: vi.fn(),
   getAssets: vi.fn(),
+  withoutLinkResolution: {
+    getEntries: vi.fn(),
+  },
 } as unknown as ContentfulClientApi<undefined>;
 
 describe('fetchReferencedEntities', () => {
@@ -57,7 +59,7 @@ describe('fetchReferencedEntities', () => {
   it('should fetch referenced entities', async () => {
     (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
 
-    (mockClient.getEntries as Mock).mockResolvedValue({ items: entries });
+    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
 
     const res = await fetchReferencedEntities({
       client: mockClient,
@@ -70,7 +72,7 @@ describe('fetchReferencedEntities', () => {
       'sys.id[in]': assets.map((asset) => asset.sys.id),
     });
 
-    expect(mockClient.getEntries).toHaveBeenCalledWith({
+    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledWith({
       locale: 'en-US',
       'sys.id[in]': entries.map((entry) => entry.sys.id),
     });
