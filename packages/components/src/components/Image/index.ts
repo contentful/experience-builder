@@ -20,8 +20,12 @@ export const ImageComponentDefinition: ComponentDefinition = {
     },
     src: {
       displayName: 'Image Src',
-      type: 'Text',
+      type: 'Number',
       defaultValue: constants.placeholderImage,
+    },
+    image: {
+      displayName: 'Image',
+      type: 'Media',
     },
     width: {
       displayName: 'Width',

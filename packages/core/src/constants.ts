@@ -164,3 +164,5 @@ export enum PostMessageMethods {
   REQUEST_ENTITIES = 'REQUEST_ENTITIES',
   REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',
 }
+
+export const SupportedImageFormats = ['jpg', 'png', 'webp', 'gif', 'avif'] as const;

@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
-import type { UnresolvedLink } from 'contentful';
+import type { Asset, AssetFile, UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
 import {
   EntityStore,
   isEmptyStructureWithRelativeHeight,
+  transformImageAsset,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -11,6 +12,7 @@ import {
   EMPTY_CONTAINER_HEIGHT,
 } from '@contentful/experience-builder-core/constants';
 import type {
+  BoundComponentPropertyTypes,
   CompositionNode,
   CompositionVariableValueType,
   ResolveDesignValueType,
@@ -91,19 +93,36 @@ export const CompositionBlock = ({
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/');
           const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-          let value = entityStore.getValue(binding, path.slice(0, -1));
-          if (!value) {
-            const foundAssetValue = entityStore.getValue(binding, [
-              ...path.slice(0, -2),
-              'fields',
-              'file',
-            ]);
-            if (foundAssetValue) {
-              value = foundAssetValue;
+          const isMediaType =
+            componentRegistration.definition.variables[variableName]?.type === 'Media';
+
+          let value: BoundComponentPropertyTypes;
+
+          if (isMediaType && binding.sys.linkType === 'Asset') {
+            const asset = entityStore.getEntryOrAsset(binding) as Asset;
+            value = transformImageAsset(asset.fields.file as AssetFile, '100vw', 60, 'jpg');
+          } else {
+            value = entityStore.getValue(binding, path.slice(0, -1));
+            if (value) {
+              value =
+                typeof value == 'object' && (value as AssetFile).url && !isMediaType
+                  ? (value as AssetFile).url
+                  : value;
+            } else {
+              const foundAssetValue = entityStore.getValue(binding, [
+                ...path.slice(0, -2),
+                'fields',
+                'file',
+              ]);
+              if (foundAssetValue) {
+                value = foundAssetValue;
+              }
             }
+            const variableDefinition = componentRegistration.definition.variables[variableName];
+            value = transformContentValue(value, variableDefinition) as any;
           }
-          const variableDefinition = componentRegistration.definition.variables[variableName];
-          acc[variableName] = transformContentValue(value, variableDefinition);
+
+          acc[variableName] = value;
           break;
         }
         case 'UnboundValue': {

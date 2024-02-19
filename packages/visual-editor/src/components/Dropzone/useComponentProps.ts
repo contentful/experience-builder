@@ -5,6 +5,7 @@ import {
   transformContentValue,
   isLinkToAsset,
   isEmptyStructureWithRelativeHeight,
+  transformImageAsset,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -26,6 +27,8 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
+import { Asset, AssetFile } from 'contentful';
+import { BoundComponentPropertyTypes } from '@contentful/experience-builder-core/src/types';
 
 type ComponentProps =
   | StyleProps
@@ -72,7 +75,7 @@ export const useComponentProps = ({
         if (variableMapping.type === 'DesignValue') {
           const valueByBreakpoint = resolveDesignValue(
             variableMapping.valuesByBreakpoint,
-            variableName
+            variableName,
           );
           const designValue =
             variableName === 'cfHeight'
@@ -88,13 +91,22 @@ export const useComponentProps = ({
             [variableName]: designValue,
           };
         } else if (variableMapping.type === 'BoundValue') {
+          const isMediaType = definition.variables[variableName]?.type === 'Media';
+
           // // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
-          let boundValue: string | Link<'Asset'> | undefined = areEntitiesFetched
-            ? entityStore.getValue(binding, path.slice(0, -1))
-            : undefined;
+          let boundValue: BoundComponentPropertyTypes;
+
+          if (isMediaType && binding.sys.linkType === 'Asset') {
+            const asset = entityStore.getEntryOrAsset(binding) as Asset;
+            boundValue = transformImageAsset(asset.fields.file as AssetFile, '100vw', 60, 'jpg');
+          } else {
+            boundValue = areEntitiesFetched
+              ? entityStore.getValue(binding, path.slice(0, -1))
+              : undefined;
+          }
           // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
           // If no 'boundValue' is found, we also attempt to extract the value associated with the second-to-last item in the path.
           // If successful, it means we have identified the linked asset.
@@ -109,9 +121,9 @@ export const useComponentProps = ({
             }
           }
 
-          if (typeof boundValue === 'object' && boundValue.sys?.linkType === 'Asset') {
-            boundValue = entityStore?.getValue(boundValue, ['fields', 'file']);
-          }
+          // if (typeof boundValue === 'object' && boundValue.sys?.linkType === 'Asset') {
+          //   boundValue = entityStore?.getValue(boundValue, ['fields', 'file']);
+          // }
 
           const value = boundValue || variableDefinition.defaultValue;
 
@@ -132,7 +144,7 @@ export const useComponentProps = ({
           };
         }
       },
-      {}
+      {},
     );
   }, [
     definition,

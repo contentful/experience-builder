@@ -83,10 +83,7 @@ export class EntityStore extends EntityStoreBase {
     this._unboundValues = { ...unboundValues, ...(this._unboundValues ?? {}) };
   }
 
-  public getValue(
-    entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
-    path: string[],
-  ): string | undefined {
+  public getEntryOrAsset(entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset) {
     const isLink = (
       entity: typeof entityLinkOrEntity,
     ): entity is UnresolvedLink<'Entry' | 'Asset'> => entityLinkOrEntity.sys.type === 'Link';
@@ -108,6 +105,18 @@ export class EntityStore extends EntityStoreBase {
     } else {
       // We already have the complete entity in preview & delivery (resolved by the CMA client)
       entity = entityLinkOrEntity;
+    }
+    return entity;
+  }
+
+  public getValue(
+    entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
+    path: string[],
+  ): string | undefined {
+    const entity = this.getEntryOrAsset(entityLinkOrEntity);
+
+    if (!entity) {
+      return;
     }
 
     const fieldValue = get<string>(entity, path);

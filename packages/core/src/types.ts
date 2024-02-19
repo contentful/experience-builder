@@ -1,4 +1,4 @@
-import type { Asset, ContentfulClientApi, Entry } from 'contentful';
+import type { Asset, AssetFile, ContentfulClientApi, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
 import { EntityStore } from './entity/EntityStore';
 
@@ -95,7 +95,7 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
 }
 
 export type ComponentDefinitionVariable<
-  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType
+  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
   // K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
 > =
   // T extends 'Link'
@@ -105,7 +105,7 @@ export type ComponentDefinitionVariable<
   /*:*/ ComponentDefinitionVariableBase<T>;
 
 export type ComponentDefinition<
-  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType
+  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
 > = {
   id: string;
   name: string;
@@ -304,7 +304,7 @@ export interface DeprecatedExperience {
 
 export type ResolveDesignValueType = (
   valuesByBreakpoint: ValuesByBreakpoint,
-  variableName: string
+  variableName: string,
 ) => PrimitiveValue;
 
 // The 'contentful' package only exposes CDA types while we received CMA ones in editor mode
@@ -323,4 +323,22 @@ export type RequestEntitiesMessage = {
 export type RequestedEntitiesMessage = {
   entities: Array<Entry | Asset>;
   missingEntityIds?: string[];
+};
+
+//All the possible types that can be returned to a component prop
+export type BoundComponentPropertyTypes =
+  | string
+  | number
+  | boolean
+  | AssetFile
+  | Record<string, AssetFile | undefined>
+  | Document
+  | OptimizedImageAsset
+  | undefined;
+
+export type OptimizedImageAsset = {
+  url: string;
+  srcSet?: string[];
+  sizes?: string;
+  file: AssetFile;
 };

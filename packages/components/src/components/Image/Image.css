@@ -1,3 +1,4 @@
 .cf-image {
-  max-width: var(--cf-max-width-full);
+  height: 100%;
+  width: 100%;
 }
