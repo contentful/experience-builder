@@ -114,9 +114,6 @@ export class EditorEntityStore extends EntityStoreBase {
         }
       );
 
-      // TODO-AFTER-PR-APPROVAL: Revert this temporary stubbing which allows debugging and stepping through during PR
-      const timeout = undefined;
-      /*
       const timeout = setTimeout(() => {
         reject(
           new Error(`Request for entities timed out ${this.timeoutDuration}ms} for ${cacheId}`)
@@ -127,7 +124,6 @@ export class EditorEntityStore extends EntityStoreBase {
 
         unsubscribe();
       }, this.timeoutDuration);
-      */
 
       this.sendMessage(PostMessageMethods.REQUEST_ENTITIES, {
         entityIds: missing,
