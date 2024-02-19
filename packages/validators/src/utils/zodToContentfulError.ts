@@ -1,17 +1,27 @@
 import { ZodIssueCode, ZodIssue, z } from 'zod';
 
-export type ContentfulError = {
+export enum CodeNames {
+  Type = 'type',
+  Required = 'required',
+  Unexpected = 'unexpected',
+  Regex = 'regex',
+  In = 'in',
+  Size = 'size',
+  Custom = 'custom',
+}
+
+export type ContentfulErrorDetails = {
   details: string;
   min?: number | bigint;
   max?: number | bigint;
-  name: string;
-  path: string[];
+  name: (typeof CodeNames)[keyof typeof CodeNames];
+  path: (string | number)[];
   value?: string;
   expected?: (string | number)[];
 };
 
-const convertInvalidType = (issue: z.ZodInvalidTypeIssue): ContentfulError => {
-  const name = issue.received === 'undefined' ? 'required' : 'type';
+const convertInvalidType = (issue: z.ZodInvalidTypeIssue): ContentfulErrorDetails => {
+  const name = issue.received === 'undefined' ? CodeNames.Required : CodeNames.Type;
   const details =
     issue.received === 'undefined'
       ? `The property "${issue.path.slice(-1)}" is required here`
@@ -20,72 +30,71 @@ const convertInvalidType = (issue: z.ZodInvalidTypeIssue): ContentfulError => {
   return {
     details: details,
     name: name,
-    path: issue.path.map(String),
+    path: issue.path,
     value: issue.received.toString(),
   };
 };
 
-const convertUnrecognizedKeys = (issue: z.ZodUnrecognizedKeysIssue): ContentfulError => {
+const convertUnrecognizedKeys = (issue: z.ZodUnrecognizedKeysIssue): ContentfulErrorDetails => {
   return {
     details: issue.message || `The properties ${issue.keys.join(', ')} are not expected`,
-    name: 'unexpected',
-    path: issue.path.map(String),
+    name: CodeNames.Unexpected,
+    path: issue.path,
   };
 };
 
-const convertInvalidString = (issue: z.ZodInvalidStringIssue): ContentfulError => {
+const convertInvalidString = (issue: z.ZodInvalidStringIssue): ContentfulErrorDetails => {
   return {
-    details: issue.message || '',
-    name: issue.validation === 'regex' ? 'regex' : 'unexpected',
-    path: issue.path.map(String),
-    value: issue.message || '',
+    details: issue.message || 'Invalid string',
+    name: issue.validation === 'regex' ? CodeNames.Regex : CodeNames.Unexpected,
+    path: issue.path,
   };
 };
-const convertInvalidEnumValue = (issue: z.ZodInvalidEnumValueIssue): ContentfulError => {
+const convertInvalidEnumValue = (issue: z.ZodInvalidEnumValueIssue): ContentfulErrorDetails => {
   return {
     details: issue.message || 'Value must be one of expected values',
-    name: 'in',
-    path: issue.path.map(String),
+    name: CodeNames.In,
+    path: issue.path,
     value: issue.received.toString(),
     expected: issue.options,
   };
 };
-const convertInvalidLiteral = (issue: z.ZodInvalidLiteralIssue): ContentfulError => {
+const convertInvalidLiteral = (issue: z.ZodInvalidLiteralIssue): ContentfulErrorDetails => {
   return {
     details: issue.message || 'Value must be one of expected values',
-    name: 'in',
-    path: issue.path.map(String),
+    name: CodeNames.In,
+    path: issue.path,
     value: issue.received as string,
     expected: [issue.expected as string],
   };
 };
 
-const convertTooBig = (issue: z.ZodTooBigIssue): ContentfulError => {
+const convertTooBig = (issue: z.ZodTooBigIssue): ContentfulErrorDetails => {
   return {
     details: issue.message || `Size should be at most ${issue.maximum}`,
-    name: 'size',
-    path: issue.path.map(String),
+    name: CodeNames.Size,
+    path: issue.path,
     max: issue.maximum,
   };
 };
 
-const convertTooSmall = (issue: z.ZodTooSmallIssue): ContentfulError => {
+const convertTooSmall = (issue: z.ZodTooSmallIssue): ContentfulErrorDetails => {
   return {
     details: issue.message || `Size should be at least ${issue.minimum}`,
-    name: 'size',
-    path: issue.path.map(String),
+    name: CodeNames.Size,
+    path: issue.path,
     min: issue.minimum,
   };
 };
-const defaultConversion = (issue: ZodIssue): ContentfulError => {
+const defaultConversion = (issue: ZodIssue): ContentfulErrorDetails => {
   return {
     details: issue.message || 'An unexpected error occurred',
-    name: 'unexpected',
+    name: CodeNames.Custom,
     path: issue.path.map(String),
   };
 };
 
-export const zodToContentfulError = (issue: ZodIssue): ContentfulError => {
+export const zodToContentfulError = (issue: ZodIssue): ContentfulErrorDetails => {
   switch (issue.code) {
     case ZodIssueCode.invalid_type:
       return convertInvalidType(issue);

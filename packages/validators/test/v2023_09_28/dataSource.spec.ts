@@ -1,7 +1,6 @@
 import { validateExperienceFields } from '../../src/validators';
 import { experience } from '../__fixtures__/v2023_09_28';
 import { describe, it, expect } from 'vitest';
-import { SafeParseError, ZodInvalidUnionIssue } from 'zod';
 
 const schemaVersion = '2023-09-28' as const;
 const locale = 'en-US';
@@ -15,12 +14,16 @@ describe('dataSource', () => {
         dataSource: { [locale]: [] },
       },
     };
-    const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-      typeof updatedExperience
-    >;
+    const result = validateExperienceFields(updatedExperience, schemaVersion);
 
     expect(result.success).toBe(false);
-    expect(result.error.issues[0].message).toBe('Expected object, received array');
+    const expectedError = {
+      name: 'type',
+      value: 'array',
+      path: ['dataSource', 'en-US'],
+      details: 'The type of "en-US" is incorrect, expected type: object',
+    };
+    expect(result.errors).toEqual([expectedError]);
   });
 
   it('fails if value is not an object', () => {
@@ -31,19 +34,16 @@ describe('dataSource', () => {
         dataSource: { [locale]: { uuid1: 'invalidValue' } },
       },
     };
-    const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-      typeof updatedExperience
-    >;
+    const result = validateExperienceFields(updatedExperience, schemaVersion);
 
     const expectedError = {
-      code: 'invalid_type',
-      expected: 'object',
-      received: 'string',
+      name: 'type',
+      value: 'string',
       path: ['dataSource', 'en-US', 'uuid1'],
-      message: 'Expected object, received string',
+      details: 'The type of "uuid1" is incorrect, expected type: object',
     };
     expect(result.success).toBe(false);
-    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+    expect(result.errors).toEqual([expectedError]);
   });
 
   it('fails if key is longer than 21 characters', () => {
@@ -51,21 +51,18 @@ describe('dataSource', () => {
       ...experience,
       fields: {
         ...experience.fields,
-        dataSource: { [locale]: { ['uuid1'.repeat(5)]: 'invalidValue' } },
+        dataSource: { [locale]: { ['uuid1'.repeat(5)]: {} } },
       },
     };
-    const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-      typeof updatedExperience
-    >;
+    const result = validateExperienceFields(updatedExperience, schemaVersion);
 
     const expectedError = {
-      code: 'invalid_string',
+      name: 'regex',
       path: ['dataSource', 'en-US', 'uuid1'.repeat(5)],
-      message: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/',
-      validation: 'regex',
+      details: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/',
     };
     expect(result.success).toBe(false);
-    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+    expect(result.errors?.[0]).toEqual(expectedError);
   });
 
   it('fails if key contains invalid characters', () => {
@@ -78,18 +75,15 @@ describe('dataSource', () => {
         },
       },
     };
-    const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-      typeof updatedExperience
-    >;
+    const result = validateExperienceFields(updatedExperience, schemaVersion);
 
     const expectedError = {
-      code: 'invalid_string',
+      name: 'regex',
       path: ['dataSource', 'en-US', 'uuid1!$*'],
-      message: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/',
-      validation: 'regex',
+      details: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/',
     };
     expect(result.success).toBe(false);
-    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+    expect(result.errors?.[0]).toEqual(expectedError);
   });
 
   it('fails if value is an invalid link', () => {
@@ -102,18 +96,16 @@ describe('dataSource', () => {
         },
       },
     };
-    const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-      typeof updatedExperience
-    >;
+    const result = validateExperienceFields(updatedExperience, schemaVersion);
 
     const expectedError = {
-      code: 'invalid_enum_value',
+      name: 'in',
+      expected: ['Entry', 'Asset'],
       path: ['dataSource', 'en-US', 'uuid1', 'sys', 'linkType'],
-      message: "Invalid enum value. Expected 'Entry' | 'Asset', received 'Invalid'",
-      options: ['Entry', 'Asset'],
+      details: "Invalid enum value. Expected 'Entry' | 'Asset', received 'Invalid'",
+      value: 'Invalid',
     };
-
     expect(result.success).toBe(false);
-    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+    expect(result.errors?.[0]).toEqual(expectedError);
   });
 });

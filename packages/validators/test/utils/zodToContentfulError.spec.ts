@@ -52,7 +52,6 @@ describe('zodToContentfulError', () => {
       expect(result).toEqual({
         name: 'unexpected',
         path: ['fields', 'componentTree', 'schemaVersion'],
-        value: 'Invalid string',
         details: 'Invalid string',
       });
     });
@@ -67,7 +66,6 @@ describe('zodToContentfulError', () => {
       expect(result).toEqual({
         name: 'regex',
         path: ['fields', 'componentTree', 'schemaVersion'],
-        value: 'Invalid string',
         details: 'Invalid string',
       });
     });

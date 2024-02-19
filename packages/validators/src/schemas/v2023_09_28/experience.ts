@@ -6,7 +6,7 @@ const uuidKeySchema = z
   .regex(/^[a-zA-Z0-9-_]{1,21}$/, { message: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/' });
 const propertyKeySchema = z
   .string()
-  .regex(/^[a-zA-Z0-9-_]{1,32}$/, { message: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/' });
+  .regex(/^[a-zA-Z0-9-_]{1,32}$/, { message: 'Does not match /^[a-zA-Z0-9-_]{1,32}$/' });
 
 const DataSourceSchema = z.record(
   uuidKeySchema,
@@ -40,22 +40,30 @@ export const ComponentDefinitionPropertyTypeSchema = z.enum([
 
 const ValuesByBreakpointSchema = z.record(z.lazy(() => PrimitiveValueSchema));
 
-const DesignValueSchema = z.object({
-  type: z.literal('DesignValue'),
-  valuesByBreakpoint: ValuesByBreakpointSchema,
-});
-const BoundValueSchema = z.object({
-  type: z.literal('BoundValue'),
-  path: z.string(),
-});
-const UnboundValueSchema = z.object({
-  type: z.literal('UnboundValue'),
-  key: z.string(),
-});
-const ComponentValueSchema = z.object({
-  type: z.literal('ComponentValue'),
-  key: z.string(),
-});
+const DesignValueSchema = z
+  .object({
+    type: z.literal('DesignValue'),
+    valuesByBreakpoint: ValuesByBreakpointSchema,
+  })
+  .strict();
+const BoundValueSchema = z
+  .object({
+    type: z.literal('BoundValue'),
+    path: z.string(),
+  })
+  .strict();
+const UnboundValueSchema = z
+  .object({
+    type: z.literal('UnboundValue'),
+    key: z.string(),
+  })
+  .strict();
+const ComponentValueSchema = z
+  .object({
+    type: z.literal('ComponentValue'),
+    key: z.string(),
+  })
+  .strict();
 
 const ComponentPropertyValueSchema = z.union([
   DesignValueSchema,
@@ -66,12 +74,14 @@ const ComponentPropertyValueSchema = z.union([
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
 
-const BreakpointSchema = z.object({
-  id: propertyKeySchema,
-  query: z.string().regex(/^\*$|^<[0-9*]+px$/),
-  previewSize: z.string(),
-  displayName: z.string(),
-});
+const BreakpointSchema = z
+  .object({
+    id: propertyKeySchema,
+    query: z.string().regex(/^\*$|^<[0-9*]+px$/),
+    previewSize: z.string(),
+    displayName: z.string(),
+  })
+  .strict();
 
 const UnboundValuesSchema = z.record(
   uuidKeySchema,
@@ -134,7 +144,6 @@ const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: `The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }`,
-      path: [...ctx.path, 0],
     });
   }
   // Extract the queries boundary by removing the special characters around it
@@ -178,11 +187,13 @@ const componentSettingsRefinement = (value, ctx: z.RefinementCtx) => {
   }
 };
 
-const ComponentTreeSchema = z.object({
-  breakpoints: z.array(BreakpointSchema).superRefine(breakpointsRefinement),
-  children: z.array(ComponentTreeNodeSchema),
-  schemaVersion: SchemaVersions,
-});
+const ComponentTreeSchema = z
+  .object({
+    breakpoints: z.array(BreakpointSchema).superRefine(breakpointsRefinement),
+    children: z.array(ComponentTreeNodeSchema),
+    schemaVersion: SchemaVersions,
+  })
+  .strict();
 
 const localeWrapper = (fieldSchema: any) => z.record(z.string(), fieldSchema);
 

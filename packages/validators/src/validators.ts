@@ -1,32 +1,50 @@
 import { Schema_2023_09_28 } from './schemas';
-import { z } from 'zod';
-import { ContentfulError, zodToContentfulError } from './utils/zodToContentfulError';
+import {
+  ContentfulErrorDetails,
+  zodToContentfulError,
+  CodeNames,
+} from './utils/zodToContentfulError';
+
+import { type SchemaVersions } from './types';
 
 const VERSION_SCHEMAS = {
   '2023-09-28': Schema_2023_09_28,
 };
 
-interface ValidatorReturnValue {
+type ValidatorReturnValue = {
   success: boolean;
-  errors?: ContentfulError[];
-}
+  errors?: ContentfulErrorDetails[];
+};
 
+/**
+ *
+ * @param experience The experience entry to validate
+ * @param schemaVersionOverride Optional override for the schema version to validate against. By default the schema version is read from the experience entry
+ * @returns object with success property and optional errors array
+ */
 export const validateExperienceFields = (
   experience: any,
-  schemaVersion: keyof typeof VERSION_SCHEMAS
+  schemaVersionOverride?: SchemaVersions
 ): ValidatorReturnValue => {
-  const schema = VERSION_SCHEMAS[schemaVersion];
+  let schemaVersion;
+  if (experience.fields.componentTree) {
+    const locale = Object.keys(experience.fields.componentTree)[0];
+    schemaVersion = experience.fields.componentTree[locale].schemaVersion;
+  }
+  const schema = VERSION_SCHEMAS[schemaVersionOverride || schemaVersion];
 
   if (!schema) {
     return {
       success: false,
       errors: [
         {
-          name: 'in',
+          name: schemaVersion ? CodeNames.In : CodeNames.Required,
           expected: ['2023-09-28'],
           value: schemaVersion,
           path: ['fields', 'componentTree', 'schemaVersion'],
-          details: 'Unsupported schema version',
+          details: schemaVersion
+            ? 'Unsupported schema version'
+            : 'The property "schemaVersion" is required here',
         },
       ],
     };
@@ -47,7 +65,5 @@ export const validateExperienceFields = (
       errors: result.error.issues.map(zodToContentfulError),
     };
   }
-  return {
-    success: true,
-  };
+  return { success: true };
 };
