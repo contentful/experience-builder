@@ -15,7 +15,6 @@ describe('useFetchBySlug', () => {
   beforeEach(() => {
     clientMock = {
       getEntries: jest.fn().mockImplementation((_query) => {
-        console.info('getEntries', _query);
         // { content_type: 'layout', locale: 'en-US', 'fields.slug': 'hello-world' }
         return Promise.resolve({ items: [compositionEntry] });
       }),
@@ -23,7 +22,6 @@ describe('useFetchBySlug', () => {
       withoutLinkResolution: {
         getEntries: jest.fn().mockImplementation((_query) => {
           // { 'sys.id[in]': [ 'entry1', 'entry2' ], locale: 'en-US' }
-          console.info('withoutLinkResolution.getEntries', _query);
           return Promise.resolve({ items: entries });
         }),
       },
@@ -154,7 +152,8 @@ describe('useFetchBySlug', () => {
 
     await waitFor(() => {
       expect(result.current.error).toBeUndefined();
-      expect(clientMock.getEntries).toHaveBeenCalledTimes(2);
+      expect(clientMock.getEntries).toHaveBeenCalledTimes(1);
+      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenCalledTimes(1);
     });
   });
 
