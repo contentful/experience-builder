@@ -110,6 +110,7 @@ describe('useFetchExperience', () => {
     expect(store).toEqual({
       experience: undefined,
       isFetching: false,
+      error: undefined,
       fetchBySlug: store.fetchBySlug,
       fetchById: store.fetchById,
     });
@@ -127,7 +128,8 @@ describe('useFetchExperience', () => {
         locale: localeCode,
       });
 
-      expect(experience?.entityStore).toMatchObject(entityStore);
+      expect(experience).toHaveProperty('entityStore');
+      expect(experience!.entityStore).toMatchObject(entityStore);
     });
 
     expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
@@ -136,7 +138,7 @@ describe('useFetchExperience', () => {
       locale: localeCode,
     });
 
-    expect(clientMock.getEntries).toHaveBeenNthCalledWith(2, {
+    expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {
       'sys.id[in]': entries.map((entry) => entry.sys.id),
       locale: localeCode,
     });
