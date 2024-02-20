@@ -14,14 +14,19 @@ let clientMock: ContentfulClientApi<undefined>;
 describe('useFetchBySlug', () => {
   beforeEach(() => {
     clientMock = {
-      getEntries: jest.fn().mockImplementation((data) => {
-        if ('sys.id[in]' in data) {
-          return Promise.resolve({ items: entries });
-        }
-
+      getEntries: jest.fn().mockImplementation((_query) => {
+        console.info('getEntries', _query);
+        // { content_type: 'layout', locale: 'en-US', 'fields.slug': 'hello-world' }
         return Promise.resolve({ items: [compositionEntry] });
       }),
       getAssets: jest.fn().mockResolvedValue({ items: assets }),
+      withoutLinkResolution: {
+        getEntries: jest.fn().mockImplementation((_query) => {
+          // { 'sys.id[in]': [ 'entry1', 'entry2' ], locale: 'en-US' }
+          console.info('withoutLinkResolution.getEntries', _query);
+          return Promise.resolve({ items: entries });
+        }),
+      },
     } as unknown as ContentfulClientApi<undefined>;
   });
 
@@ -51,6 +56,12 @@ describe('useFetchBySlug', () => {
       },
     });
 
+    expect(result.current).toEqual({
+      error: undefined,
+      experience: undefined,
+      isLoading: true,
+    });
+
     const entityStore = new EntityStore({
       experienceEntry: compositionEntry as unknown as Entry,
       entities: [...entries, ...assets],
@@ -66,7 +77,7 @@ describe('useFetchBySlug', () => {
         locale: localeCode,
       });
 
-      expect(clientMock.getEntries).toHaveBeenNthCalledWith(2, {
+      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {
         'sys.id[in]': entries.map((entry) => entry.sys.id),
         locale: localeCode,
       });
