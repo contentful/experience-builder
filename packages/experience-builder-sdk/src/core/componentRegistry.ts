@@ -110,6 +110,10 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     component: Components.Image,
     definition: Components.ImageComponentDefinition,
   }),
+  mediaImage: enrichComponentDefinition({
+    component: Components.MediaImage,
+    definition: Components.MediaImageComponentDefinition,
+  }),
   richText: enrichComponentDefinition({
     component: Components.RichText,
     definition: Components.RichTextComponentDefinition,
@@ -141,6 +145,10 @@ export const componentRegistry = new Map<string, ComponentRegistration>([
   [DEFAULT_COMPONENT_REGISTRATIONS.button.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.button],
   [DEFAULT_COMPONENT_REGISTRATIONS.heading.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.heading],
   [DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.image],
+  [
+    DEFAULT_COMPONENT_REGISTRATIONS.mediaImage.definition.id,
+    DEFAULT_COMPONENT_REGISTRATIONS.mediaImage,
+  ],
   [
     DEFAULT_COMPONENT_REGISTRATIONS.richText.definition.id,
     DEFAULT_COMPONENT_REGISTRATIONS.richText,
