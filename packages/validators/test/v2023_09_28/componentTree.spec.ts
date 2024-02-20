@@ -43,7 +43,7 @@ describe('componentTree', () => {
       expect(result.success).toBe(false);
       expect(error?.name).toBe('custom');
       expect(error?.details).toBe(
-        'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }'
+        'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }',
       );
     });
 
@@ -66,7 +66,7 @@ describe('componentTree', () => {
           value: 'undefined',
           path: ['componentTree', 'en-US', 'breakpoints', 0, breakpointField],
           details: `The property "${breakpointField}" is required here`,
-        })
+        }),
       );
 
       expect(result.success).toBe(false);
@@ -157,7 +157,7 @@ describe('componentTree', () => {
       expect(result.success).toBe(false);
       expect(error?.name).toBe('custom');
       expect(error?.details).toBe(
-        'Breakpoints should be ordered from largest to smallest pixel value'
+        'Breakpoints should be ordered from largest to smallest pixel value',
       );
     });
   });
@@ -333,9 +333,8 @@ describe('componentTree', () => {
           const result = validateExperienceFields(updatedExperience, schemaVersion);
 
           const expectedError = {
-            code: 'invalid_type',
-            expected: 'object',
-            received: 'undefined',
+            details: 'The property "valuesByBreakpoint" is required here',
+            name: 'required',
             path: [
               'componentTree',
               'en-US',
@@ -345,7 +344,7 @@ describe('componentTree', () => {
               'text',
               'valuesByBreakpoint',
             ],
-            message: 'Required',
+            value: 'undefined',
           };
           expect(result.success).toBe(false);
           expect(result.errors).toEqual([expectedError]);
@@ -374,11 +373,10 @@ describe('componentTree', () => {
           const result = validateExperienceFields(updatedExperience, schemaVersion);
 
           const expectedError = {
-            code: 'invalid_type',
-            expected: 'string',
-            received: 'undefined',
+            details: 'The property "path" is required here',
+            name: 'required',
             path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text', 'path'],
-            message: 'Required',
+            value: 'undefined',
           };
           expect(result.success).toBe(false);
           expect(result.errors).toEqual([expectedError]);
@@ -407,11 +405,10 @@ describe('componentTree', () => {
           const result = validateExperienceFields(updatedExperience, schemaVersion);
 
           const expectedError = {
-            code: 'invalid_type',
-            expected: 'string',
-            received: 'undefined',
+            details: 'The property "key" is required here',
+            name: 'required',
             path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text', 'key'],
-            message: 'Required',
+            value: 'undefined',
           };
           expect(result.success).toBe(false);
           expect(result.errors).toEqual([expectedError]);
@@ -440,11 +437,10 @@ describe('componentTree', () => {
           const result = validateExperienceFields(updatedExperience, schemaVersion);
 
           const expectedError = {
-            code: 'invalid_type',
-            expected: 'string',
-            received: 'undefined',
+            details: 'The property "key" is required here',
+            name: 'required',
             path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text', 'key'],
-            message: 'Required',
+            value: 'undefined',
           };
           expect(result.success).toBe(false);
           expect(result.errors).toEqual([expectedError]);

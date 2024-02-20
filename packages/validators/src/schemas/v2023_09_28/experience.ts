@@ -16,7 +16,7 @@ const DataSourceSchema = z.record(
       id: z.string(),
       linkType: z.enum(['Entry', 'Asset']),
     }),
-  })
+  }),
 );
 
 const PrimitiveValueSchema = z.union([
@@ -65,7 +65,7 @@ const ComponentValueSchema = z
   })
   .strict();
 
-const ComponentPropertyValueSchema = z.union([
+const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
   DesignValueSchema,
   BoundValueSchema,
   UnboundValueSchema,
@@ -87,7 +87,7 @@ const UnboundValuesSchema = z.record(
   uuidKeySchema,
   z.object({
     value: PrimitiveValueSchema,
-  })
+  }),
 );
 
 // Use helper schema to define a recursive schema with its type correctly below
@@ -120,12 +120,12 @@ const ComponentSettingsSchema = z.object({
               z.object({
                 value: z.union([z.string(), z.number()]),
                 displayName: z.string().optional(),
-              })
+              }),
             )
             .optional(),
         })
         .optional(),
-    })
+    }),
   ),
 });
 
@@ -136,7 +136,7 @@ const UsedComponentsSchema = z.array(
       id: z.string(),
       linkType: z.literal('Entry'),
     }),
-  })
+  }),
 );
 
 const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
@@ -148,7 +148,7 @@ const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
   }
   // Extract the queries boundary by removing the special characters around it
   const queries = value.map((bp) =>
-    bp.query === '*' ? bp.query : parseInt(bp.query.replace(/px|<|>/, ''))
+    bp.query === '*' ? bp.query : parseInt(bp.query.replace(/px|<|>/, '')),
   );
   // sort updates queries array in place so we need to create a copy
   const originalQueries = [...queries];
