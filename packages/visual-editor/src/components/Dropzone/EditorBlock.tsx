@@ -66,16 +66,15 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     e.stopPropagation();
 
     if (!userIsDragging) {
+      setSelectedNodeId(node.data.id);
       // if it is the assembly directly we just want to select it as a normal component
       if (isAssembly) {
-        setSelectedNodeId(node.data.id);
         sendMessage(OUTGOING_EVENTS.ComponentSelected, {
           nodeId: node.data.id,
         });
         return;
       }
 
-      setSelectedNodeId(node.data.id);
       sendMessage(OUTGOING_EVENTS.ComponentSelected, {
         assembly: node.data.assembly,
         nodeId: node.data.id,

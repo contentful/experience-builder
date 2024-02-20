@@ -7,9 +7,7 @@ import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
  */
 export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   if (!instanceId) return;
-  let selectedElement = instanceId
-    ? document.querySelector(`[data-cf-node-id="${instanceId}"]`)
-    : undefined;
+  let selectedElement = document.querySelector(`[data-cf-node-id="${instanceId}"]`);
 
   let selectedAssemblyChild: Element | null | undefined = undefined;
 
@@ -17,9 +15,7 @@ export const sendSelectedComponentCoordinates = (instanceId?: string) => {
 
   if (nodeLocation) {
     selectedAssemblyChild = selectedElement;
-    selectedElement = instanceId
-      ? document.querySelector(`[data-cf-node-id="${rootNodeId}"]`)
-      : undefined;
+    selectedElement = document.querySelector(`[data-cf-node-id="${rootNodeId}"]`);
   }
 
   // Finds the first parent that is a VisualEditorBlock
