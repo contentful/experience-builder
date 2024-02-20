@@ -46,6 +46,9 @@ describe('deserializeAssemblyNode', () => {
       node,
       nodeId: 'random-node-id',
       parentId: 'root',
+      assemblyId: 'whatever',
+      assemblyComponentId: 'whatever',
+      nodeLocation: '0',
       assemblyDataSource: {},
       assemblyUnboundValues: assemblyEntry.fields.unboundValues,
       componentInstanceProps: {
@@ -64,6 +67,11 @@ describe('deserializeAssemblyNode', () => {
       type: ASSEMBLY_NODE_TYPE,
       parentId: 'root',
       data: {
+        assembly: {
+          componentId: 'whatever',
+          id: 'whatever',
+          nodeLocation: '0',
+        },
         blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
@@ -76,6 +84,11 @@ describe('deserializeAssemblyNode', () => {
           type: ASSEMBLY_BLOCK_NODE_TYPE,
           parentId: 'random-node-id',
           data: {
+            assembly: {
+              componentId: 'whatever',
+              id: 'whatever',
+              nodeLocation: '0_0',
+            },
             blockId: 'contentful-container',
             id: expect.any(String),
             props: {},
@@ -88,6 +101,11 @@ describe('deserializeAssemblyNode', () => {
               type: ASSEMBLY_BLOCK_NODE_TYPE,
               parentId: expect.any(String),
               data: {
+                assembly: {
+                  componentId: 'whatever',
+                  id: 'whatever',
+                  nodeLocation: '0_0_0',
+                },
                 blockId: 'custom-component',
                 id: expect.any(String),
                 props: { text: { key: 'unbound_uuid1Experience', type: 'UnboundValue' } },
@@ -172,6 +190,11 @@ describe('resolveAssembly', () => {
     const node: CompositionComponentNode = {
       type: ASSEMBLY_NODE_TYPE,
       data: {
+        assembly: {
+          componentId: 'random-node-id',
+          id: 'assembly-id',
+          nodeLocation: null,
+        },
         blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
@@ -196,6 +219,11 @@ describe('resolveAssembly', () => {
     const node: CompositionComponentNode = {
       type: ASSEMBLY_NODE_TYPE,
       data: {
+        assembly: {
+          componentId: 'random-node-id',
+          id: 'assembly-id',
+          nodeLocation: null,
+        },
         blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
@@ -235,6 +263,11 @@ describe('resolveAssembly', () => {
       type: ASSEMBLY_NODE_TYPE,
       parentId: 'root',
       data: {
+        assembly: {
+          componentId: 'random-node-id',
+          id: 'assembly-id',
+          nodeLocation: null,
+        },
         blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
@@ -247,6 +280,11 @@ describe('resolveAssembly', () => {
           type: ASSEMBLY_BLOCK_NODE_TYPE,
           parentId: 'random-node-id',
           data: {
+            assembly: {
+              componentId: 'random-node-id',
+              id: 'assembly-id',
+              nodeLocation: '0',
+            },
             blockId: 'contentful-container',
             id: expect.any(String),
             props: {},
@@ -259,6 +297,11 @@ describe('resolveAssembly', () => {
               type: ASSEMBLY_BLOCK_NODE_TYPE,
               parentId: expect.any(String),
               data: {
+                assembly: {
+                  componentId: 'random-node-id',
+                  id: 'assembly-id',
+                  nodeLocation: '0_0',
+                },
                 blockId: 'custom-component',
                 id: expect.any(String),
                 props: {
