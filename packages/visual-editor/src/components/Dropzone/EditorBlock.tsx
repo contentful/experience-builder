@@ -14,6 +14,7 @@ import {
   CONTENTFUL_COMPONENTS,
   ASSEMBLY_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
+  ASSEMBLY_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 import { DraggableChildComponent } from '@components/Draggable/DraggableChildComponent';
 import { RenderDropzoneFunction } from './Dropzone.types';
@@ -59,21 +60,24 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const containsZone = sectionsWithZone[componentId];
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
+  const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
 
-    if (isAssemblyBlock && !containsZone) {
-      // Readonly components in an assembly cannot be selected
-      return;
-    }
-    const nodeId = isAssemblyBlock ? parentSectionId : componentId;
-
-    // Only select the node if the user intentionally clicked on it, but not when dragging
     if (!userIsDragging) {
-      setSelectedNodeId(nodeId);
+      setSelectedNodeId(node.data.id);
+      // if it is the assembly directly we just want to select it as a normal component
+      if (isAssembly) {
+        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+          nodeId: node.data.id,
+        });
+        return;
+      }
+
       sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-        nodeId,
+        assembly: node.data.assembly,
+        nodeId: node.data.id,
       });
     }
   };
