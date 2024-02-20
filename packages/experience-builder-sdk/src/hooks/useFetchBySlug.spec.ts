@@ -58,6 +58,7 @@ describe('useFetchBySlug', () => {
       error: undefined,
       experience: undefined,
       isLoading: true,
+      isEditorMode: false,
     });
 
     const entityStore = new EntityStore({
