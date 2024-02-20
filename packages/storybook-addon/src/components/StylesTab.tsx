@@ -5,7 +5,7 @@ import { css } from 'emotion';
 import tokens from '@contentful/f36-tokens';
 import CompositionFallBackIcon from '@svg/composition/composition-fall-back-icon.svg';
 import { StyleInputBoolean, StyleInputNumber, StyleInputText } from './StyleInputFields';
-import { ComponentDefinition } from '@contentful/experience-builder';
+import { ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { StyleInputSelect } from './StyleInputFields/StyleInputSelect';
 import { SectionStyles } from './SectionStyles';
 

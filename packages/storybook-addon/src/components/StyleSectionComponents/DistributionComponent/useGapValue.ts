@@ -1,4 +1,4 @@
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { useState, useCallback, useEffect } from 'react';
 import { SpacingValueRegexp } from '../constants';
 import { ensureHasMeasureUnit } from '../utils';
@@ -42,7 +42,7 @@ export const useGapValue = ({ gap }: UseGapValueProps) => {
         rowGap: value,
       });
     },
-    [gapBufferValue]
+    [gapBufferValue],
   );
   const onColumnGapValueChange = useCallback(
     (value: any) => {
@@ -51,7 +51,7 @@ export const useGapValue = ({ gap }: UseGapValueProps) => {
         columnGap: value,
       });
     },
-    [gapBufferValue]
+    [gapBufferValue],
   );
 
   const onRowGapBlur = useCallback(() => {

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { ContentfulConfigProviderContext } from '../utils/ContentfulConfigProvider';
-import { ExternalSDKMode } from '@contentful/experience-builder';
+import { ExternalSDKMode } from '@contentful/experiences-sdk-react';
 
 export const useContentfulConfig = () => {
   const context = useContext(ContentfulConfigProviderContext)!;

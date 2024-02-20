@@ -5,7 +5,7 @@ import CompositionFallBackIcon from '@svg/composition/composition-fall-back-icon
 import { css } from 'emotion';
 import tokens from '@contentful/f36-tokens';
 
-import { ComponentDefinition } from '@contentful/experience-builder';
+import { ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { VariableIcon } from './VariableIcon';
 import { FieldContentBindingTrigger } from './FieldContentBindingTrigger';
 
@@ -65,7 +65,7 @@ const ContentTab: React.FC<ContentTabProps> = ({ componentDefinition }) => {
   }
 
   const isBindingAllowed = Object.entries(componentDefinition.variables).some(
-    ([, variableData]) => variableData.group !== 'style'
+    ([, variableData]) => variableData.group !== 'style',
   );
 
   return (
@@ -120,7 +120,7 @@ const ContentTab: React.FC<ContentTabProps> = ({ componentDefinition }) => {
                   />
                 </Flex>
               );
-            }
+            },
           )}
         </Box>
       )}

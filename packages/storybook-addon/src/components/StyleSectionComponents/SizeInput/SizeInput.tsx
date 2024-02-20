@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { Flex, Text } from '@contentful/f36-components';
 import { css } from 'emotion';
 import tokens from '@contentful/f36-tokens';

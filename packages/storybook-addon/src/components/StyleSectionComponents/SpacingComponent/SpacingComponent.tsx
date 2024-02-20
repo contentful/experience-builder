@@ -1,5 +1,5 @@
 import React, { KeyboardEventHandler } from 'react';
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { MarginGrid } from './MarginGrid';
 import { PaddingGrid } from './PaddingGrid';
 

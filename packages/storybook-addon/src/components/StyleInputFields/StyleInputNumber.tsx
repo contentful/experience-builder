@@ -1,4 +1,4 @@
-import { ComponentDefinitionVariableBase } from '@contentful/experience-builder/dist/types';
+import { ComponentDefinitionVariableBase } from '@contentful/experiences-sdk-react/dist/types';
 import { FormControl, TextInput } from '@contentful/f36-components';
 import { css } from 'emotion';
 import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
