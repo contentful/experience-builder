@@ -14,12 +14,12 @@ let clientMock: ContentfulClientApi<undefined>;
 describe('useFetchById', () => {
   beforeEach(() => {
     clientMock = {
-      getEntries: jest.fn().mockImplementation((data) => {
+      getEntries: jest.fn().mockImplementation(() => {
         return Promise.resolve({ items: [compositionEntry] });
       }),
       getAssets: jest.fn().mockResolvedValue({ items: assets }),
       withoutLinkResolution: {
-        getEntries: jest.fn().mockImplementation((data) => {
+        getEntries: jest.fn().mockImplementation(() => {
           return Promise.resolve({ items: entries });
         }),
       },
