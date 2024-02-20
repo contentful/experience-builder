@@ -82,7 +82,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The height of the section',
-    defaultValue: 'fill',
+    defaultValue: 'fit-content',
   },
   cfMaxWidth: {
     displayName: 'Max width',
@@ -110,7 +110,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The border of the section',
-    defaultValue: '0px outside rgba(255, 255, 255, 0)',
+    defaultValue: '1px solid rgba(0, 0, 0, 0)',
   },
   cfGap: {
     displayName: 'Gap',
@@ -315,7 +315,7 @@ export const containerBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The margin of the container',
-    defaultValue: '0 auto 0 auto',
+    defaultValue: '0 Auto 0 Auto',
   },
 };
 
@@ -401,7 +401,7 @@ export const singleColumnBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The border of the column',
-    defaultValue: '0px outside rgba(255, 255, 255, 0)',
+    defaultValue: '1px solid rgba(0, 0, 0, 0)',
   },
   cfGap: {
     displayName: 'Gap',
@@ -452,8 +452,8 @@ export const singleColumnBuiltInStyles: Partial<
     group: 'style',
   },
   cfColumnSpanLock: {
-    type: 'Text',
-    defaultValue: 'false',
+    type: 'Boolean',
+    defaultValue: false,
     group: 'style',
   },
 };
@@ -466,7 +466,7 @@ export const columnsBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The margin of the columns',
-    defaultValue: '0 auto 0 auto',
+    defaultValue: '0 Auto 0 Auto',
   },
   cfWidth: {
     displayName: 'Width',
@@ -501,7 +501,7 @@ export const columnsBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The border of the columns',
-    defaultValue: '0px outside rgba(255, 255, 255, 0)',
+    defaultValue: '1px solid rgba(0, 0, 0, 0)',
   },
   cfBackgroundImageUrl: {
     displayName: 'Background Image',
@@ -552,8 +552,8 @@ export const columnsBuiltInStyles: Partial<
     group: 'style',
   },
   cfWrapColumns: {
-    type: 'Text',
-    defaultValue: 'false',
+    type: 'Boolean',
+    defaultValue: false,
     group: 'style',
   },
   cfWrapColumnsCount: {

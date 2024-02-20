@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-core",
-  "version": "0.0.2-alpha.21",
+  "version": "0.0.2-alpha.23",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -65,6 +65,7 @@
     "vitest": "^1.0.4"
   },
   "dependencies": {
+    "@contentful/experiences-validators": "file:../validators",
     "@contentful/rich-text-types": "^16.3.0"
   },
   "peerDependencies": {

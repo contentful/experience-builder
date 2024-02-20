@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.25](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.24...@contentful/experience-builder@4.0.0-alpha.25) (2024-02-15)
+
+### Bug Fixes
+
+- instance values overrule default unbound values in preview mode ([2cc67cb](https://github.com/contentful/experience-builder/commit/2cc67cbfadad902d45c9f9fc5d5a8a4b4fcc7477))
+
+### Features
+
+- experience validator [SPA-1700] ([#348](https://github.com/contentful/experience-builder/issues/348)) ([3c856d0](https://github.com/contentful/experience-builder/commit/3c856d019213a1d8e86489028b18edec80830a20))
+
+# [4.0.0-alpha.24](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.23...@contentful/experience-builder@4.0.0-alpha.24) (2024-02-14)
+
+### Bug Fixes
+
+- **experience-builder-sdk:** support ssr in nextjs pages router ([#370](https://github.com/contentful/experience-builder/issues/370)) ([22cde82](https://github.com/contentful/experience-builder/commit/22cde82de00eca82d3bf3ee41e2f459c7f08b0c3))
+
+### Features
+
+- **experience-builder-sdk:** allow delivery mode in editor ([#341](https://github.com/contentful/experience-builder/issues/341)) ([2a3551a](https://github.com/contentful/experience-builder/commit/2a3551ac20cabd8538c6bba198e580852f07059e))
+
 # [4.0.0-alpha.23](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder@4.0.0-alpha.22...@contentful/experience-builder@4.0.0-alpha.23) (2024-02-09)
 
 **Note:** Version bump only for package @contentful/experience-builder

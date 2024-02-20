@@ -114,7 +114,7 @@ export const builtInStyles: Record<
     type: 'Text',
     group: 'style',
     description: 'The border of the section',
-    defaultValue: '0px',
+    defaultValue: '1px solid rgba(0,0,0,0)',
   },
   cfGap: {
     displayName: 'Gap',
@@ -183,6 +183,6 @@ export const containerBuiltInStyles = {
     type: 'Text',
     group: 'style',
     description: 'The height of the section',
-    defaultValue: 'auto',
+    defaultValue: 'Auto',
   } as ComponentDefinitionVariable<'Text'>,
 };

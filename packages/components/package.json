@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-components",
-  "version": "0.0.2-alpha.24",
+  "version": "0.0.2-alpha.26",
   "description": "A basic set of components to use with Experience Builder",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/components#readme",
   "repository": {
@@ -56,12 +56,12 @@
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
-    "eslint-plugin-storybook": "^0.6.13",
+    "eslint-plugin-storybook": "^0.8.0",
     "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^5.0.1",
-    "rollup": "^3.29.1",
+    "rollup": "^4.12.0",
     "rollup-plugin-dts": "^6.0.2",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-ts": "^3.4.5",

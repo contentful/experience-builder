@@ -18,7 +18,7 @@ const compositionFields: Composition = {
         children: [],
       },
     ],
-    breakpoints: [],
+    breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
     schemaVersion: '2023-06-27',
   },
   dataSource: {
@@ -137,7 +137,7 @@ export const createCompositionEntry = ({
             children: [],
           },
         ],
-        breakpoints: [],
+        breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
         schemaVersion,
       },
       dataSource: {
@@ -229,7 +229,8 @@ export const createAssemblyEntry = ({
             ],
           },
         ],
-        breakpoints: [],
+
+        breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
         schemaVersion,
       },
       dataSource: {},

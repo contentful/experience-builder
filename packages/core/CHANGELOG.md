@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.23](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-core@0.0.2-alpha.22...@contentful/experience-builder-core@0.0.2-alpha.23) (2024-02-15)
+
+### Bug Fixes
+
+- instance values overrule default unbound values in preview mode ([2cc67cb](https://github.com/contentful/experience-builder/commit/2cc67cbfadad902d45c9f9fc5d5a8a4b4fcc7477))
+
+### Features
+
+- experience validator [SPA-1700] ([#348](https://github.com/contentful/experience-builder/issues/348)) ([3c856d0](https://github.com/contentful/experience-builder/commit/3c856d019213a1d8e86489028b18edec80830a20))
+
+## [0.0.2-alpha.22](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-core@0.0.2-alpha.21...@contentful/experience-builder-core@0.0.2-alpha.22) (2024-02-14)
+
+### Bug Fixes
+
+- adjust auto to Auto so that the design tab is consistent throughout ([81c7f50](https://github.com/contentful/experience-builder/commit/81c7f5071e79e4f7e24df908f5c9ccca8b935b1c))
+- **experience-builder-sdk:** support ssr in nextjs pages router ([#370](https://github.com/contentful/experience-builder/issues/370)) ([22cde82](https://github.com/contentful/experience-builder/commit/22cde82de00eca82d3bf3ee41e2f459c7f08b0c3))
+- set default cfHeight to fit-content [ALT-448] ([#373](https://github.com/contentful/experience-builder/issues/373)) ([67fb7d8](https://github.com/contentful/experience-builder/commit/67fb7d87d51979077a00194ae6ad85e505964db7))
+
+### Features
+
+- clicking outside of the edited canvas sends post message to user interface ([6e35c29](https://github.com/contentful/experience-builder/commit/6e35c2904b33027302e83b1d90b8c674e2380527))
+- **components:** column locking [ALT-357] ([#371](https://github.com/contentful/experience-builder/issues/371)) ([36fb2ec](https://github.com/contentful/experience-builder/commit/36fb2ecd00bf7c1263ba5627243a9e574e927e22))
+- **experience-builder-sdk:** allow delivery mode in editor ([#341](https://github.com/contentful/experience-builder/issues/341)) ([2a3551a](https://github.com/contentful/experience-builder/commit/2a3551ac20cabd8538c6bba198e580852f07059e))
+
 ## [0.0.2-alpha.21](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-core@0.0.2-alpha.20...@contentful/experience-builder-core@0.0.2-alpha.21) (2024-02-09)
 
 **Note:** Version bump only for package @contentful/experience-builder-core

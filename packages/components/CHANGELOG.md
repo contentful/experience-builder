@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.26](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.25...@contentful/experience-builder-components@0.0.2-alpha.26) (2024-02-15)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.25](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.24...@contentful/experience-builder-components@0.0.2-alpha.25) (2024-02-14)
+
+### Bug Fixes
+
+- **components:** line breaks for text built-ins [ALT-307] ([#372](https://github.com/contentful/experience-builder/issues/372)) ([068a105](https://github.com/contentful/experience-builder/commit/068a105a38370c350c846ece151ab5f426e8d22a))
+
 ## [0.0.2-alpha.24](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.23...@contentful/experience-builder-components@0.0.2-alpha.24) (2024-02-09)
 
 **Note:** Version bump only for package @contentful/experience-builder-components
