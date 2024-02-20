@@ -41,3 +41,4 @@ tmp/
 
 # Ingore .env local files
 .env
+.npmrc
