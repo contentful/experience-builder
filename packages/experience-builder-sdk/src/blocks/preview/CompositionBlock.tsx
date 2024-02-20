@@ -93,8 +93,8 @@ export const CompositionBlock = ({
           const variableDefinition = componentRegistration.definition.variables[variableName];
           if (isDeepPath(variable.path)) {
             const [, uuid] = variable.path.split('/');
-            const link = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-            const boundValue = entityStore?.getValueDeep(link, variable.path);
+            const link = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
+            const boundValue = entityStore.getValueDeep(link, variable.path);
             const value = boundValue || variableDefinition.defaultValue;
             acc[variableName] = transformContentValue(value, variableDefinition);
             break;
