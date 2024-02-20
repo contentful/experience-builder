@@ -1,7 +1,7 @@
 import {
   ComponentDefinitionVariable,
   ContainerStyleVariableName,
-} from '@contentful/experience-builder/dist/types';
+} from '@contentful/experiences-sdk-react/dist/types';
 
 export const builtInStyles: Record<
   ContainerStyleVariableName,

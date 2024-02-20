@@ -1,4 +1,4 @@
-# @contentful/experience-builder
+# @contentful/experiences-sdk-react
 
 Experience builder SDK by [Contentful](https://www.contentful.com/).
 
@@ -9,7 +9,7 @@ Please find more information about this sdk [on our Wiki page](https://github.co
 ## Installation
 
 ```
-npm install @contentful/experience-builder
+npm install @contentful/experiences-sdk-react
 ```
 
 ## Example Component:
@@ -38,7 +38,7 @@ import {
   defineDesignTokens,
   ExperienceRoot,
   useFetchBySlug,
-} from '@contentful/experience-builder';
+} from '@contentful/experiences-sdk-react';
 
 import { createClient } from 'contentful';
 

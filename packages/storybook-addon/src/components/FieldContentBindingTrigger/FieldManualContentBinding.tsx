@@ -10,7 +10,7 @@ import {
 import React, { useMemo, useState } from 'react';
 import tokens from '@contentful/f36-tokens';
 import { Document } from '@contentful/rich-text-types';
-import { CONTENTFUL_COMPONENTS, ComponentDefinition } from '@contentful/experience-builder';
+import { CONTENTFUL_COMPONENTS, ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { css } from 'emotion';
 import { useBindingContext } from './FieldContentBindingContext';
 
@@ -86,7 +86,7 @@ export const FieldManualContentBinding = ({
                   <Select.Option value={validation.value} key={`${validation.value}-${index}`}>
                     {validation.displayName || validation.value}
                   </Select.Option>
-                )
+                ),
               )}
             </Select>
           </FormControl>

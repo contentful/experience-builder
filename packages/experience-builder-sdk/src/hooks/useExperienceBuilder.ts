@@ -42,7 +42,7 @@ export const useExperienceBuilder = ({
      *
      * @example
      *
-     * import { useFetchExperience } from '@contentful/experience-builder'
+     * import { useFetchExperience } from '@contentful/experiences-sdk-react'
      *
      * const { fetchBySlug, fetchById, experience, isFetching } = useFetchExperience({ client, mode })
      */
@@ -52,7 +52,7 @@ export const useExperienceBuilder = ({
      *
      * @example
      *
-     * import { defineComponents } from '@contentful/experience-builder'
+     * import { defineComponents } from '@contentful/experiences-sdk-react'
      */
     defineComponents,
   };
