@@ -13,6 +13,10 @@
   min-height: 80px;
 }
 
+.isExpanded:not(.isRoot) {
+  padding: 40px;
+}
+
 .fixedWidth {
   width: fit-content;
 }
