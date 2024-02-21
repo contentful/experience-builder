@@ -148,7 +148,7 @@ export function useEditorSubscriber() {
           await fillupL2({ deepReferences });
         }
       } catch (error) {
-        console.error('[exp-builder.sdk] Failed fetching entities');
+        console.error('[experiences-sdk-react] Failed fetching entities');
         console.error(error);
         throw error; // TODO: The original catch didn't let's rethrow; for the moment throw to see if we have any errors
       } finally {
@@ -172,7 +172,7 @@ export function useEditorSubscriber() {
           reloadApp();
         } else {
           console.warn(
-            `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
+            `[experiences-sdk-react::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
             event,
           );
         }
@@ -185,7 +185,7 @@ export function useEditorSubscriber() {
         return;
       }
       console.debug(
-        `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
+        `[experiences-sdk-react::onMessage] Received message [${eventData.eventType}]`,
         eventData,
       );
 
@@ -360,7 +360,7 @@ export function useEditorSubscriber() {
         }
         default:
           console.error(
-            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`,
+            `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`,
           );
       }
     };

@@ -14,7 +14,6 @@ import {
   ASSEMBLY_BLOCK_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
 } from '@contentful/experiences-core/constants';
-import { generateRandomId } from '@contentful/experiences-core';
 import { assembliesRegistry } from '@/store/registries';
 
 export const checkIsAssemblyEntry = (entry: Entry): boolean => {

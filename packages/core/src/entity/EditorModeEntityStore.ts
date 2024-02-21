@@ -12,7 +12,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
   public locale: string;
   constructor({ entities, locale }: { entities: Array<Asset | Entry>; locale: string }) {
     console.debug(
-      `[exp-builder.sdk] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
+      `[experiences-sdk-react] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
       { entities },
     );
 

@@ -21,7 +21,7 @@ export const useEntityStore = create<EntityState>((set) => ({
   },
   resetEntityStore(locale, entities = []) {
     console.debug(
-      `[exp-builder.sdk] Resetting entity store because the locale changed to '${locale}'.`,
+      `[experiences-sdk-react] Resetting entity store because the locale changed to '${locale}'.`,
     );
     set({
       entityStore: new EditorModeEntityStore({ locale, entities }),

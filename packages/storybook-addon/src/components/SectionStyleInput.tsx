@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
-
-// import { SECTION_STYLE_ATTRIBUTE_KEY } from '@contentful/experiences-sdk-react/dist/types';
 import { BackgroundColorInput, BorderInput, DefaultInput } from './StyleSectionComponents';
 import { Button, Flex, Text } from '@contentful/f36-components';
 import { HorizontalRuleIcon, PlusIcon } from '@contentful/f36-icons';

@@ -60,7 +60,9 @@ export const useComponent = ({
         component: Assembly,
       }) as ComponentRegistration;
     } else if (!registration) {
-      console.warn(`[exp-builder.sdk] Component registration not found for ${node.data.blockId}`);
+      console.warn(
+        `[experiences-sdk-react] Component registration not found for ${node.data.blockId}`,
+      );
     }
     return registration as ComponentRegistration;
   }, [node]);

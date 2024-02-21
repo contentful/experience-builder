@@ -111,7 +111,7 @@ export abstract class EntityStoreBase {
     if (!isFullyResolved) {
       reason &&
         console.debug(
-          `[exp-builder.sdk::EntityStoreBased::getValueDeep()] Deep path wasn't resolved till leaf node, falling back to undefined, because: ${reason}`,
+          `[experiences-sdk-react::EntityStoreBased::getValueDeep()] Deep path wasn't resolved till leaf node, falling back to undefined, because: ${reason}`,
         );
       return undefined;
     }

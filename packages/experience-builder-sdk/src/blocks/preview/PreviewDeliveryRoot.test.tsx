@@ -53,7 +53,7 @@ describe('PreviewDeliveryRoot', () => {
     render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      `[exp-builder.sdk] Contentful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
+      `[experiences-sdk-react] Contentful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
   });
 
