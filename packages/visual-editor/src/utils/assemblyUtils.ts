@@ -14,7 +14,6 @@ import {
   ASSEMBLY_BLOCK_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
-import { generateRandomId } from '@contentful/experience-builder-core';
 import { assembliesRegistry } from '@/store/registries';
 
 export const checkIsAssemblyEntry = (entry: Entry): boolean => {
@@ -24,8 +23,11 @@ export const checkIsAssemblyEntry = (entry: Entry): boolean => {
 export const deserializeAssemblyNode = ({
   node,
   nodeId,
+  nodeLocation,
   parentId,
   assemblyDataSource,
+  assemblyId,
+  assemblyComponentId,
   assemblyUnboundValues,
   componentInstanceProps,
   componentInstanceUnboundValues,
@@ -33,9 +35,12 @@ export const deserializeAssemblyNode = ({
 }: {
   node: CompositionNode;
   nodeId: string;
+  nodeLocation: string | null;
   parentId?: string;
   assemblyDataSource: CompositionDataSource;
   assemblyUnboundValues: CompositionUnboundValues;
+  assemblyId: string;
+  assemblyComponentId: string;
   componentInstanceProps: Record<string, CompositionComponentPropValue>;
   componentInstanceUnboundValues: CompositionUnboundValues;
   componentInstanceDataSource: CompositionDataSource;
@@ -73,18 +78,23 @@ export const deserializeAssemblyNode = ({
 
   const isAssembly = assembliesRegistry.has(node.definitionId);
 
-  const children: CompositionComponentNode[] = node.children.map((child) =>
-    deserializeAssemblyNode({
+  const children: CompositionComponentNode[] = node.children.map((child, childIndex) => {
+    const newNodeLocation =
+      nodeLocation === null ? `${childIndex}` : nodeLocation + '_' + childIndex;
+    return deserializeAssemblyNode({
       node: child,
-      nodeId: generateRandomId(16),
+      nodeId: `${assemblyComponentId}---${newNodeLocation}`,
       parentId: nodeId,
+      nodeLocation: newNodeLocation,
+      assemblyId,
       assemblyDataSource,
+      assemblyComponentId,
       assemblyUnboundValues,
       componentInstanceProps,
       componentInstanceUnboundValues,
       componentInstanceDataSource,
-    })
-  );
+    });
+  });
 
   return {
     // separate node type identifiers for assemblies and their blocks, so we can treat them differently in as much as we want
@@ -92,6 +102,11 @@ export const deserializeAssemblyNode = ({
     parentId,
     data: {
       id: nodeId,
+      assembly: {
+        id: assemblyId,
+        componentId: assemblyComponentId,
+        nodeLocation: nodeLocation || null,
+      },
       blockId: node.definitionId,
       props: childNodeVariable,
       dataSource,
@@ -142,9 +157,12 @@ export const resolveAssembly = ({
       variables: {},
       children: componentFields.componentTree?.children ?? [],
     },
+    nodeLocation: null,
     nodeId: node.data.id,
     parentId: node.parentId,
     assemblyDataSource: {},
+    assemblyId: assembly.sys.id,
+    assemblyComponentId: node.data.id,
     assemblyUnboundValues: componentFields.unboundValues,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
