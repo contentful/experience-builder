@@ -47,6 +47,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
+    userIsDragging,
   });
 
   const coordinates = useSelectedInstanceCoordinates({ node });
