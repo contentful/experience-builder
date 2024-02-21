@@ -181,7 +181,7 @@ export const useComponentProps = ({
       }),
       ...(userIsDragging &&
         isContentfulStructureComponent(node?.data.blockId, [CONTENTFUL_COMPONENTS.columns.id]) && {
-          padding: addExtraDropzonePadding(componentStyles.padding as string),
+          padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),
         }),
     },
     nodeId: node.data.id,
