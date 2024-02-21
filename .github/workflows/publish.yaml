@@ -70,9 +70,10 @@ jobs:
             git push origin
             git checkout development
             git rebase next
-            git push origin
+            git push origin -f
           elif [ ${{ github.ref_name }} = next ]; then
             git checkout development
             git rebase next
-            git push origin
+            # Someone might have merged something into development in the meanwhile. This avoid the error: "the tip of your current branch is behind"
+            git push origin -f
           fi
