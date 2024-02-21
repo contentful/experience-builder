@@ -36,8 +36,12 @@ const convertInvalidType = (issue: z.ZodInvalidTypeIssue): ContentfulErrorDetail
 };
 
 const convertUnrecognizedKeys = (issue: z.ZodUnrecognizedKeysIssue): ContentfulErrorDetails => {
+  const missingProperties = issue.keys.map((k) => `"${k}"`).join(', ');
   return {
-    details: issue.message || `The properties ${issue.keys.join(', ')} are not expected`,
+    details:
+      issue.keys.length > 1
+        ? `The properties ${missingProperties} are not expected`
+        : `The property ${missingProperties} is not expected`,
     name: CodeNames.Unexpected,
     path: issue.path,
   };

@@ -95,7 +95,7 @@ describe('componentTree', () => {
       const expectedErrors = {
         name: 'unexpected',
         path: ['componentTree', 'en-US', 'breakpoints', 0],
-        details: "Unrecognized key(s) in object: 'extraAttr'",
+        details: 'The property "extraAttr" is not expected',
       };
 
       expect(result.success).toBe(false);
@@ -198,7 +198,7 @@ describe('componentTree', () => {
     const error = result.errors?.[0];
     expect(result.success).toBe(false);
     expect(error?.name).toBe('unexpected');
-    expect(error?.details).toBe("Unrecognized key(s) in object: 'extraAttr'");
+    expect(error?.details).toBe('The property "extraAttr" is not expected');
   });
 
   describe('children', () => {
