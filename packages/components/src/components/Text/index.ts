@@ -29,7 +29,6 @@ export const TextComponentDefinition: ComponentDefinition = {
     'cfWidth',
     'cfMaxWidth',
   ],
-  thumbnailUrl: constants.thumbnails.text,
   variables: {
     cfHeight: {
       displayName: 'Height',

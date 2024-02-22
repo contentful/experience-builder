@@ -21,7 +21,6 @@ export const ButtonComponentDefinition: ComponentDefinition = {
     'cfLineHeight',
     'cfBorder',
   ],
-  thumbnailUrl: constants.thumbnails.button,
   variables: {
     cfFontSize: {
       displayName: 'Font Size',

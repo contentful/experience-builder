@@ -3,7 +3,7 @@ import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
-import { constants } from '@/utils/constants';
+import { placeholderImage } from '@/utils/constants';
 
 export * from './Image';
 
@@ -12,7 +12,6 @@ export const ImageComponentDefinition: ComponentDefinition = {
   name: CONTENTFUL_COMPONENTS.image.name,
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: ['cfMargin', 'cfPadding'],
-  thumbnailUrl: constants.thumbnails.image,
   variables: {
     alt: {
       displayName: 'Alt',
@@ -21,7 +20,7 @@ export const ImageComponentDefinition: ComponentDefinition = {
     src: {
       displayName: 'Image Src',
       type: 'Text',
-      defaultValue: constants.placeholderImage,
+      defaultValue: placeholderImage,
     },
     width: {
       displayName: 'Width',

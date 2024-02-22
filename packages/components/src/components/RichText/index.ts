@@ -21,7 +21,6 @@ export const RichTextComponentDefinition: ComponentDefinition = {
     'cfBackgroundColor',
     'cfBorder',
   ],
-  thumbnailUrl: constants.thumbnails.richText,
   variables: {
     // Built-in style variables with default values changed
     cfLineHeight: {

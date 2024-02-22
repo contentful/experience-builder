@@ -26,7 +26,6 @@ export const HeadingComponentDefinition: ComponentDefinition = {
     'cfBackgroundColor',
     'cfBorder',
   ],
-  thumbnailUrl: constants.thumbnails.heading,
   variables: {
     // Built-in style variables with default values changed
     cfHeight: {
