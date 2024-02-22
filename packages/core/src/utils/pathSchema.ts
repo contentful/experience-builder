@@ -65,7 +65,7 @@ const parseDeepPath = (deepPathCandidate: string): DeepPathParsed | null => {
   // /uuid123/fields/mainStory/~locale/fields/cover/~locale/fields/title/~locale
   // First turn string into array of segments
   //      ['', 'uuid123', 'fields', 'mainStory', '~locale', 'fields', 'cover', '~locale', 'fields', 'title', '~locale']
-  // Then group segments into chunks, where each non-initial chunk starts with 'fields'
+  // Then group segments into intermediate represenatation - chunks, where each non-initial chunk starts with 'fields'
   //      [
   //        [ "", "uuid123" ],
   //        [ "fields", "mainStory", "~locale" ],
@@ -77,19 +77,14 @@ const parseDeepPath = (deepPathCandidate: string): DeepPathParsed | null => {
 
   const isValidInitialChunk = (initialChunk: string[]) => {
     // must have start with '' and have at least 2 segments, second non-empty
-    if (initialChunk.length !== 2) return false;
-    if (initialChunk[0] !== '') return false;
-    if (initialChunk[1].length === 0) return false;
-    return true;
+    // eg. /-_432uuid123123
+    return /^\/([^/^~]+)$/.test(initialChunk.join('/'));
   };
 
   const isValidFieldChunk = (fieldChunk: string[]) => {
     // must start with 'fields' and have at least 3 segments, second non-empty and last segment must be '~locale'
-    if (fieldChunk.length !== 3) return false;
-    if (fieldChunk[0] !== 'fields') return false;
-    if (fieldChunk[1].length === 0) return false;
-    if (fieldChunk[2] !== '~locale') return false;
-    return true;
+    // eg. fields/-32234mainStory/~locale
+    return /^fields\/[^/^~]+\/~locale$/.test(fieldChunk.join('/'));
   };
 
   const deepPathSegments = deepPathCandidate.split('/');
@@ -113,7 +108,7 @@ const parseDeepPath = (deepPathCandidate: string): DeepPathParsed | null => {
 
   return {
     key: initialChunk[1], // pick uuid from initial chunk ['','uuid123'],
-    fields: fieldChunks.map((fieldChunk) => fieldChunk[1]), // pick field from each field chunk eg. ['fields','mainStory', '~locale']
+    fields: fieldChunks.map((fieldChunk) => fieldChunk[1]), // pick  only fieldName eg. from  ['fields','mainStory', '~locale'] we pick `mainStory`
   };
 };
 
@@ -125,12 +120,12 @@ const chunkSegments = (
   let currentChunk: string[] = [];
 
   const isSegmentBeginningOfChunk = (segment: string) => segment === startNextChunkOnElementEqualTo;
-  const isInitialElement = (segmentIndex: number) => segmentIndex === 0;
   const excludeEmptyChunks = (chunk: string[]) => chunk.length > 0;
 
   for (let i = 0; i < segments.length; i++) {
+    const isInitialElement = i === 0;
     const segment = segments[i];
-    if (isInitialElement(i)) {
+    if (isInitialElement) {
       currentChunk = [segment];
     } else if (isSegmentBeginningOfChunk(segment)) {
       chunks.push(currentChunk);
