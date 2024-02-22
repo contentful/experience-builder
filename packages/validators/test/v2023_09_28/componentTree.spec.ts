@@ -276,17 +276,17 @@ describe('componentTree', () => {
         const expectedError = {
           name: 'regex',
           path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text&^:'],
-          details: 'Does not match /^[a-zA-Z0-9-_]{1,32}$/',
+          details: 'Does not match /^[a-zA-Z0-9-_]{1,54}$/',
         };
         expect(result.success).toBe(false);
         expect(result.errors).toEqual([expectedError]);
       });
-      it(`fails if name exceeds the allowed 32 character limit`, () => {
+      it(`fails if name exceeds the allowed 54 character limit`, () => {
         const componentTree = experience.fields.componentTree[locale];
         const child = {
           definitionId: 'test',
           variables: {
-            ['text'.repeat(10)]: { type: 'UnboundValue', key: 'test' },
+            ['text'.repeat(20)]: { type: 'UnboundValue', key: 'test' },
           },
           children: [],
         };
@@ -302,8 +302,8 @@ describe('componentTree', () => {
 
         const expectedError = {
           name: 'regex',
-          path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text'.repeat(10)],
-          details: 'Does not match /^[a-zA-Z0-9-_]{1,32}$/',
+          path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text'.repeat(20)],
+          details: 'Does not match /^[a-zA-Z0-9-_]{1,54}$/',
         };
         expect(result.success).toBe(false);
         expect(result.errors).toEqual([expectedError]);
