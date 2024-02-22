@@ -77,42 +77,41 @@ export class DeepReference {
 }
 
 export function gatherDeepReferencesFromExperienceEntry(
-  experienceEntry: ExperienceEntry
+  experienceEntry: ExperienceEntry,
 ): DeepReference[] {
   const deepReferences: Array<DeepReference> = [];
   const dataSource = experienceEntry.fields.dataSource;
+  const { children } = experienceEntry.fields.componentTree;
 
-  // We create "synthetic" node so that we have to make sure
-  // to start with the root node which is
-  // shaped consistently as rest of CompositionNodes
-  const syntheticStartingNode: CompositionNode = {
-    definitionId: 'root',
-    variables: {},
-    children: experienceEntry.fields.componentTree.children,
-  };
+  treeVisit(
+    {
+      definitionId: 'root',
+      variables: {},
+      children,
+    } as CompositionNode,
+    (node) => {
+      if (!node.variables) return;
 
-  treeVisit(syntheticStartingNode, (node) => {
-    if (!node.variables) return;
+      for (const [, variableMapping] of Object.entries(node.variables)) {
+        if (variableMapping.type !== 'BoundValue') continue;
+        if (!isDeepPath(variableMapping.path)) continue;
 
-    for (const [, variableMapping] of Object.entries(node.variables)) {
-      if (variableMapping.type !== 'BoundValue') continue;
-      if (!isDeepPath(variableMapping.path)) continue;
-
-      deepReferences.push(
-        DeepReference.from({
-          path: variableMapping.path,
-          dataSource,
-        })
-      );
-    }
-  });
+        deepReferences.push(
+          DeepReference.from({
+            path: variableMapping.path,
+            dataSource,
+          }),
+        );
+      }
+    },
+  );
 
   return deepReferences;
 }
 
 export function gatherDeepReferencesFromTree(
   startingNode: CompositionComponentNode,
-  dataSource: CompositionDataSource
+  dataSource: CompositionDataSource,
 ): DeepReference[] {
   const deepReferences: Array<DeepReference> = [];
 
@@ -127,7 +126,7 @@ export function gatherDeepReferencesFromTree(
         DeepReference.from({
           path: variableMapping.path,
           dataSource,
-        })
+        }),
       );
     }
   });
