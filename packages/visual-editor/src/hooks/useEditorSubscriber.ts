@@ -78,11 +78,11 @@ export function useEditorSubscriber() {
     async (newDataSource: CompositionDataSource, tree: CompositionTree) => {
       // if we realize that there's nothing missing and nothing to fill-fetch before we do any async call,
       // then we can simply return and not lock the EntityStore at all.
-      const START_FETCHING = () => {
+      const startFetching = () => {
         setEntitiesFetched(false);
         setFetchingEntities(true);
       };
-      const END_FETCHING = () => {
+      const endFetching = () => {
         setEntitiesFetched(true);
         setFetchingEntities(false);
       };
@@ -140,11 +140,11 @@ export function useEditorSubscriber() {
 
       try {
         if (isMissingL1Entities(entityLinksL1)) {
-          START_FETCHING();
+          startFetching();
           await fillupL1({ entityLinksL1 });
         }
         if (isMissingL2Entities(deepReferences)) {
-          START_FETCHING();
+          startFetching();
           await fillupL2({ deepReferences });
         }
       } catch (error) {
@@ -152,13 +152,13 @@ export function useEditorSubscriber() {
         console.error(error);
         throw error; // TODO: The original catch didn't let's rethrow; for the moment throw to see if we have any errors
       } finally {
-        END_FETCHING();
+        endFetching();
       }
     },
     [
       /* dataSource, */ entityStore,
       setEntitiesFetched /* setFetchingEntities, assembliesRegistry */,
-    ]
+    ],
   );
 
   useEffect(() => {
@@ -173,7 +173,7 @@ export function useEditorSubscriber() {
         } else {
           console.warn(
             `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
-            event
+            event,
           );
         }
         return;
@@ -186,7 +186,7 @@ export function useEditorSubscriber() {
       }
       console.debug(
         `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
-        eventData
+        eventData,
       );
 
       const { payload } = eventData;
@@ -315,7 +315,7 @@ export function useEditorSubscriber() {
           };
           if (updatedEntity) {
             const storedEntity = entityStore.entities.find(
-              (entity) => entity.sys.id === updatedEntity.sys.id
+              (entity) => entity.sys.id === updatedEntity.sys.id,
             ) as unknown as ManagementEntity | undefined;
 
             const didEntityChange = storedEntity?.sys.version !== updatedEntity.sys.version;
@@ -356,7 +356,7 @@ export function useEditorSubscriber() {
         }
         default:
           console.error(
-            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`
+            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`,
           );
       }
     };
