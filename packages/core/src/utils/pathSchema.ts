@@ -28,9 +28,7 @@ export const parseDataSourcePathWithL1DeepBindings = (
 ): {
   key: string;
   field: string;
-  fieldLocaleQualifier: string | null;
   referentField: string;
-  referentLocaleQualifier: string | null;
 } => {
   const parsedPath = parseDeepPath(path);
 
@@ -42,9 +40,6 @@ export const parseDataSourcePathWithL1DeepBindings = (
     key: parsedPath.key,
     field: parsedPath.fields[0],
     referentField: parsedPath.fields[1],
-    // probaly I don't need this
-    fieldLocaleQualifier: '~locale',
-    referentLocaleQualifier: '~locale',
   };
 };
 

@@ -20,22 +20,17 @@ export class DeepReference {
   public entityId: string;
   public entityLink: DataSourceEntryValueType;
   public field: string;
-  public fieldLocaleQualifier: string | null;
   public referentField: string;
-  public referentLocaleQualifier: string | null;
   public originalPath: string;
 
   constructor({ path, dataSource }: DeepReferenceOpts) {
-    const { key, field, fieldLocaleQualifier, referentField, referentLocaleQualifier } =
-      parseDataSourcePathWithL1DeepBindings(path);
+    const { key, field, referentField } = parseDataSourcePathWithL1DeepBindings(path);
 
     this.originalPath = path;
     this.entityId = dataSource[key].sys.id;
     this.entityLink = dataSource[key];
     this.field = field;
-    this.fieldLocaleQualifier = fieldLocaleQualifier;
     this.referentField = referentField;
-    this.referentLocaleQualifier = referentLocaleQualifier;
   }
 
   get headEntityId() {
