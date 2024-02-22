@@ -1,12 +1,12 @@
 import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
 import { constants } from '@/utils/constants';
-
+import { CONTENTFUL_DEFAULT_CATEGORY } from '@contentful/experience-builder-core/constants';
 export * from './MediaImage';
 
 export const MediaImageComponentDefinition: ComponentDefinition = {
   id: 'media-image',
   name: 'MediaImage',
-  category: 'Media',
+  category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: ['cfMargin', 'cfPadding'],
   thumbnailUrl: constants.thumbnails.image,
   variables: {
