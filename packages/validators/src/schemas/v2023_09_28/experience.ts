@@ -4,9 +4,15 @@ import { SchemaVersions } from '../schemaVersions';
 const uuidKeySchema = z
   .string()
   .regex(/^[a-zA-Z0-9-_]{1,21}$/, { message: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/' });
+
+/**
+ * Property keys for imported components have a limit of 32 characters (to be implemented) while
+ * property keys for patterns have a limit of 54 characters (<32-char-variabl-name>_<21-char-nanoid-id>).
+ * Because we cannot distinguish between the two in the componentTree, we will use the larger limit for both.
+ */
 const propertyKeySchema = z
   .string()
-  .regex(/^[a-zA-Z0-9-_]{1,32}$/, { message: 'Does not match /^[a-zA-Z0-9-_]{1,32}$/' });
+  .regex(/^[a-zA-Z0-9-_]{1,54}$/, { message: 'Does not match /^[a-zA-Z0-9-_]{1,54}$/' });
 
 const DataSourceSchema = z.record(
   uuidKeySchema,
