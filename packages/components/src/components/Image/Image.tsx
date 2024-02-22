@@ -1,27 +1,47 @@
 import { OptimizedImageAsset } from '@contentful/experience-builder-core/types';
 import React from 'react';
 import './Image.css';
+import { constants } from '@/utils/constants';
 
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  image?: OptimizedImageAsset;
+  image?: OptimizedImageAsset | string;
 }
 
 export const Image: React.FC<ImageProps> = ({ className, src, image, ...props }) => {
-  if (!image) {
-    return null;
+  console.log({ image, src, props });
+  if (!image && !src) {
+    return (
+      <div className="cf-no-image-wrapper">
+        <img
+          data-id="no-img"
+          src={constants.placeholderImage}
+          className={'cf-image ' + className}
+          {...props}
+        />
+      </div>
+    );
   }
 
-  console.log('Image values', { image, src });
+  if (typeof image === 'string') {
+    return (
+      <img data-id="image-string" src={image} className={'cf-image ' + className} {...props} />
+    );
+  }
 
-  return (
-    <img
-      src={image.url}
-      srcSet={image.srcSet?.length ? image.srcSet?.join(', ') : undefined}
-      sizes={image.sizes ? image.sizes : undefined}
-      className={'cf-image'}
-      {...props}
-    />
-  );
+  if (image) {
+    return (
+      <img
+        data-id="image-object"
+        src={image.url}
+        srcSet={image.srcSet?.length ? image.srcSet?.join(', ') : undefined}
+        sizes={image.sizes ? image.sizes : undefined}
+        className={'cf-image ' + className}
+        {...props}
+      />
+    );
+  }
+
+  if (src) {
+    return <img src={src} className={'cf-image ' + className} {...props} />;
+  }
 };
-
-// //images.flinkly.com/81ib4cnp1lvz/2q8YsBYvy6q1xkUv…59l/ddaaadabc5ca039cca163e81b308cfdc/highfive.png

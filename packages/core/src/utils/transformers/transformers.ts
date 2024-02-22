@@ -1,6 +1,5 @@
 import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types';
-import { ComponentDefinitionVariable, CompositionVariableValueType } from '@/types';
-import { Link } from 'contentful';
+import { ComponentDefinitionVariable, CompositionVariableValueType, Link } from '@/types';
 
 export const transformContentValue = (
   value: CompositionVariableValueType | Link<'Asset'>,

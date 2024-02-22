@@ -133,6 +133,13 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfWidth',
   'cfMaxWidth',
   'cfHeight',
+  'cfImageFormat',
+  'cfImageHeight',
+  'cfImageObjectFit',
+  'cfImageObjectPosition',
+  'cfImageQuality',
+  'cfImageSizes',
+  'cfImageWidth',
   'cfFlexDirection',
   'cfFlexWrap',
   'cfBorder',
@@ -165,4 +172,11 @@ export enum PostMessageMethods {
   REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',
 }
 
-export const SupportedImageFormats = ['jpg', 'png', 'webp', 'gif', 'avif'] as const;
+export const SUPPORTED_IMAGE_FORMATS = ['jpg', 'png', 'webp', 'gif', 'avif'] as const;
+export const SUPPORTED_IMAGE_OBJECT_FIT = [
+  'fill',
+  'contain',
+  'cover',
+  'none',
+  'scale-down',
+] as const;

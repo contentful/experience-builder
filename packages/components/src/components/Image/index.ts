@@ -11,26 +11,26 @@ export const ImageComponentDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.image.id,
   name: CONTENTFUL_COMPONENTS.image.name,
   category: CONTENTFUL_DEFAULT_CATEGORY,
-  builtInStyles: ['cfMargin', 'cfPadding'],
+  builtInStyles: [
+    'cfMargin',
+    'cfPadding',
+    'cfImageWidth',
+    'cfImageHeight',
+    'cfImageFormat',
+    'cfImageObjectFit',
+    'cfImageObjectPosition',
+    'cfImageQuality',
+    'cfImageSizes',
+  ],
   thumbnailUrl: constants.thumbnails.image,
   variables: {
     alt: {
       displayName: 'Alt',
       type: 'Text',
     },
-    src: {
-      displayName: 'Image Src',
-      type: 'Number',
-      defaultValue: constants.placeholderImage,
-    },
     image: {
       displayName: 'Image',
       type: 'Media',
-    },
-    width: {
-      displayName: 'Width',
-      type: 'Number',
-      group: 'style',
     },
     classes: {
       displayName: 'Classes',

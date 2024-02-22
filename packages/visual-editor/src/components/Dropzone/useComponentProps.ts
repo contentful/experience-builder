@@ -12,6 +12,7 @@ import {
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
+  SUPPORTED_IMAGE_FORMATS,
 } from '@contentful/experience-builder-core/constants';
 import type {
   StyleProps,
@@ -19,7 +20,6 @@ import type {
   CompositionComponentNode,
   ResolveDesignValueType,
   ComponentRegistration,
-  Link,
 } from '@contentful/experience-builder-core/types';
 import { useMemo } from 'react';
 import { useStyleTag } from '../../hooks/useStyleTag';
@@ -28,7 +28,7 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 import { Asset, AssetFile } from 'contentful';
-import { BoundComponentPropertyTypes } from '@contentful/experience-builder-core/types';
+import { BoundComponentPropertyTypes, Link } from '@contentful/experience-builder-core/types';
 
 type ComponentProps =
   | StyleProps
@@ -93,7 +93,7 @@ export const useComponentProps = ({
         } else if (variableMapping.type === 'BoundValue') {
           const isMediaType = definition.variables[variableName]?.type === 'Media';
 
-          // // take value from the datasource for both bound and unbound value types
+          // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
@@ -101,7 +101,36 @@ export const useComponentProps = ({
 
           if (isMediaType && binding.sys.linkType === 'Asset') {
             const asset = entityStore.getEntryOrAsset(binding) as Asset;
-            boundValue = transformImageAsset(asset.fields.file as AssetFile, '100vw', 60, 'jpg');
+
+            const format = resolveDesignValue(
+              node.data.props['cfImageFormat'].type === 'DesignValue'
+                ? node.data.props['cfImageFormat'].valuesByBreakpoint
+                : {},
+              'cfImageFormat',
+            );
+            const quality = resolveDesignValue(
+              node.data.props['cfImageQuality'].type === 'DesignValue'
+                ? node.data.props['cfImageQuality'].valuesByBreakpoint
+                : {},
+              'cfImageQuality',
+            );
+            const sizes = resolveDesignValue(
+              node.data.props['cfImageSizes'].type === 'DesignValue'
+                ? node.data.props['cfImageSizes'].valuesByBreakpoint
+                : {},
+              'cfImageSizes',
+            );
+
+            try {
+              boundValue = transformImageAsset(
+                asset.fields.file as AssetFile,
+                sizes as string,
+                Number(quality),
+                format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+              );
+            } catch (error) {
+              console.error('Error transforming image asset', error);
+            }
           } else {
             boundValue = areEntitiesFetched
               ? entityStore.getValue(binding, path.slice(0, -1))

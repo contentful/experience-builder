@@ -109,6 +109,7 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   image: enrichComponentDefinition({
     component: Components.Image,
     definition: Components.ImageComponentDefinition,
+    options: { wrapComponent: false },
   }),
   richText: enrichComponentDefinition({
     component: Components.RichText,

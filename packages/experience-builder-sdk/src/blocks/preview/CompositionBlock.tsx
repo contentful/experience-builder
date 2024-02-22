@@ -10,6 +10,7 @@ import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
   EMPTY_CONTAINER_HEIGHT,
+  SUPPORTED_IMAGE_FORMATS,
 } from '@contentful/experience-builder-core/constants';
 import type {
   BoundComponentPropertyTypes,
@@ -100,7 +101,34 @@ export const CompositionBlock = ({
 
           if (isMediaType && binding.sys.linkType === 'Asset') {
             const asset = entityStore.getEntryOrAsset(binding) as Asset;
-            value = transformImageAsset(asset.fields.file as AssetFile, '100vw', 60, 'jpg');
+            const format = resolveDesignValue(
+              node.variables['cfImageFormat'].type === 'DesignValue'
+                ? node.variables['cfImageFormat'].valuesByBreakpoint
+                : {},
+              'cfImageFormat',
+            );
+            const quality = resolveDesignValue(
+              node.variables['cfImageQuality'].type === 'DesignValue'
+                ? node.variables['cfImageQuality'].valuesByBreakpoint
+                : {},
+              'cfImageQuality',
+            );
+            const sizes = resolveDesignValue(
+              node.variables['cfImageSizes'].type === 'DesignValue'
+                ? node.variables['cfImageSizes'].valuesByBreakpoint
+                : {},
+              'cfImageSizes',
+            );
+            try {
+              value = transformImageAsset(
+                asset.fields.file as AssetFile,
+                sizes as string,
+                Number(quality),
+                format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+              );
+            } catch (error) {
+              console.error('Error transforming image asset', error);
+            }
           } else {
             value = entityStore.getValue(binding, path.slice(0, -1));
             if (value) {
@@ -119,7 +147,7 @@ export const CompositionBlock = ({
               }
             }
             const variableDefinition = componentRegistration.definition.variables[variableName];
-            value = transformContentValue(value, variableDefinition) as any;
+            value = transformContentValue(value, variableDefinition);
           }
 
           acc[variableName] = value;

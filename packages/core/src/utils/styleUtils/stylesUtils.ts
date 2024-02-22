@@ -14,7 +14,7 @@ import {
   CompositionComponentNode,
 } from '@/types';
 import { isContentfulStructureComponent } from '../components';
-import { EMPTY_CONTAINER_HEIGHT } from '../../constants';
+import { EMPTY_CONTAINER_HEIGHT, SUPPORTED_IMAGE_OBJECT_FIT } from '../../constants';
 
 const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 
@@ -53,6 +53,10 @@ export const buildCfStyles = ({
   cfBackgroundImageScaling,
   cfFontSize,
   cfFontWeight,
+  cfImageHeight,
+  cfImageObjectFit,
+  cfImageObjectPosition,
+  cfImageWidth,
   cfLineHeight,
   cfLetterSpacing,
   cfTextColor,
@@ -67,8 +71,8 @@ export const buildCfStyles = ({
     margin: cfMargin,
     padding: cfPadding,
     backgroundColor: cfBackgroundColor,
-    width: transformWidthSizing({ value: cfWidth, cfMargin }),
-    height: transformFill(cfHeight),
+    width: transformWidthSizing({ value: cfWidth || cfImageWidth, cfMargin }),
+    height: transformFill(cfHeight || cfImageHeight),
     maxWidth: cfMaxWidth,
     ...transformGridColumn(cfColumnSpan),
     ...transformBorderStyle(cfBorder),
@@ -91,6 +95,8 @@ export const buildCfStyles = ({
     textTransform: cfTextTransform,
     textDecoration: cfTextUnderline ? 'underline' : 'none',
     boxSizing: 'border-box',
+    objectFit: cfImageObjectFit as (typeof SUPPORTED_IMAGE_OBJECT_FIT)[number],
+    objectPosition: cfImageObjectPosition,
   };
 };
 /**

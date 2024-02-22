@@ -1,11 +1,11 @@
-import { SupportedImageFormats } from '@/constants';
+import { SUPPORTED_IMAGE_FORMATS } from '@/constants';
 import { OptimizedImageAsset } from '@/types';
 import { AssetFile } from 'contentful';
 
 interface AssetFileWithRequiredImage extends AssetFile {
   details: Required<AssetFile['details']>;
 }
-type ValidFormats = (typeof SupportedImageFormats)[number];
+type ValidFormats = (typeof SUPPORTED_IMAGE_FORMATS)[number];
 
 const MAX_WIDTH_ALLOWED = 4000;
 
@@ -59,8 +59,8 @@ export const transformImageAsset = (
     if (quality < 0 || quality > 100) {
       throw Error('Quality must be between 0 and 100');
     }
-    if (format && !SupportedImageFormats.includes(format)) {
-      throw Error(`Format must be one of ${SupportedImageFormats.join(', ')}`);
+    if (format && !SUPPORTED_IMAGE_FORMATS.includes(format)) {
+      throw Error(`Format must be one of ${SUPPORTED_IMAGE_FORMATS.join(', ')}`);
     }
     return true;
   }

@@ -1,6 +1,7 @@
 import type { Asset, AssetFile, ContentfulClientApi, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
 import { EntityStore } from './entity/EntityStore';
+import { Document as RichTextDocument } from '@contentful/rich-text-types';
 
 // Types for experience entry fields (as fetched in the API) are inferred by Zod schema in `@contentful/experiences-validators`
 import type {
@@ -207,6 +208,26 @@ export type StyleProps = {
     | 'center center'
     | 'center bottom';
   cfHyperlink: string;
+  cfImageFormat: string;
+  cfImageHeight: string;
+  cfImageObjectFit: string;
+  cfImageObjectPosition:
+    | 'left'
+    | 'right'
+    | 'top'
+    | 'bottom'
+    | 'left top'
+    | 'left center'
+    | 'left bottom'
+    | 'right top'
+    | 'right center'
+    | 'right bottom'
+    | 'center top'
+    | 'center center'
+    | 'center bottom';
+  cfImageQuality: string;
+  cfImageSizes: string;
+  cfImageWidth: string;
   cfOpenInNewTab: boolean;
   cfFontSize: string;
   cfFontWeight: string;
@@ -332,13 +353,21 @@ export type BoundComponentPropertyTypes =
   | boolean
   | AssetFile
   | Record<string, AssetFile | undefined>
-  | Document
+  | RichTextDocument
+  | OptimizedBackgroundImageAsset
   | OptimizedImageAsset
+  | Link<'Asset'>
   | undefined;
 
 export type OptimizedImageAsset = {
   url: string;
   srcSet?: string[];
   sizes?: string;
+  file: AssetFile;
+};
+
+export type OptimizedBackgroundImageAsset = {
+  url: string;
+  srcSet?: string[];
   file: AssetFile;
 };
