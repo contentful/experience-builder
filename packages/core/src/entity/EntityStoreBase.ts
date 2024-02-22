@@ -9,7 +9,7 @@ import { transformAssetFileToUrl } from './value-transformers';
  * Base Store for entities
  * Can be extened for the different loading behaviours (editor, production, ..)
  */
-export class EntityStoreBase {
+export abstract class EntityStoreBase {
   protected locale: string;
   protected entryMap = new Map<string, Entry>();
   protected assetMap = new Map<string, Asset>();
@@ -32,11 +32,11 @@ export class EntityStoreBase {
 
   public getValueDeep(
     headLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Asset | Entry,
-    deepPath: string
+    deepPath: string,
   ): string | undefined {
     const resolveFieldset = (
       unresolvedFieldset: Array<[null, string, string?]>,
-      headEntity: Entry | Asset
+      headEntity: Entry | Asset,
     ) => {
       const resolvedFieldset: Array<[Entry | Asset, string, string?]> = [];
       let entityToResolveFieldsFrom: Entry | Asset = headEntity;
@@ -46,7 +46,7 @@ export class EntityStoreBase {
         const [, field, _localeQualifier] = row;
         if (!entityToResolveFieldsFrom) {
           throw new Error(
-            `Logic Error: Cannot resolve field ${field} of a fieldset as there is no entity to resolve it from.`
+            `Logic Error: Cannot resolve field ${field} of a fieldset as there is no entity to resolve it from.`,
           );
         }
         if (isLeaf) {
@@ -56,7 +56,7 @@ export class EntityStoreBase {
 
         const fieldValue = get<string | UnresolvedLink<'Entry' | 'Asset'>>(
           entityToResolveFieldsFrom,
-          ['fields', field]
+          ['fields', field],
         );
 
         if (undefined === fieldValue) {
@@ -70,10 +70,10 @@ export class EntityStoreBase {
           if (entity === undefined) {
             throw new Error(
               `Logic Error: Broken Precondition [by the time resolution of deep path happens all referents should be in EntityStore]: Cannot resolve field ${field} of a fieldset row [${JSON.stringify(
-                row
+                row,
               )}] as linked entity not found in the EntityStore. ${JSON.stringify({
                 link: fieldValue,
-              })}`
+              })}`,
             );
           }
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
@@ -81,7 +81,7 @@ export class EntityStoreBase {
         } else {
           // TODO: Eg. when someone changed the schema and the field is not a link anymore, what should we return then?
           throw new Error(
-            `LogicError: Invalid value of a field we consider a reference field. Cannot resolve field ${field} of a fieldset as it is not a link, neither undefined.`
+            `LogicError: Invalid value of a field we consider a reference field. Cannot resolve field ${field} of a fieldset as it is not a link, neither undefined.`,
           );
         }
       }
@@ -106,12 +106,12 @@ export class EntityStoreBase {
     // in case we can't follow till the end, we should signal that there was null-reference in the path
     const { resolvedFieldset, isFullyResolved, reason } = resolveFieldset(
       unresolvedFieldset,
-      headEntity
+      headEntity,
     );
     if (!isFullyResolved) {
       reason &&
         console.debug(
-          `[exp-builder.sdk::EntityStoreBased::getValueDeep()] Deep path wasn't resolved till leaf node, falling back to undefined, because: ${reason}`
+          `[exp-builder.sdk::EntityStoreBased::getValueDeep()] Deep path wasn't resolved till leaf node, falling back to undefined, because: ${reason}`,
         );
       return undefined;
     }
@@ -128,14 +128,14 @@ export class EntityStoreBase {
    */
   public getValue(
     entityLink: UnresolvedLink<'Entry' | 'Asset'>,
-    path: string[]
+    path: string[],
   ): string | undefined {
     const entity = this.getEntity(entityLink.sys.linkType, entityLink.sys.id);
 
     if (!entity) {
       // TODO: move to `debug` utils once it is extracted
       console.warn(
-        `Unresolved entity reference: ${entityLink.sys.linkType} with ID ${entityLink.sys.id}`
+        `Unresolved entity reference: ${entityLink.sys.linkType} with ID ${entityLink.sys.id}`,
       );
       return;
     }
