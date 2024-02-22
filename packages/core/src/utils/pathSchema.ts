@@ -24,7 +24,7 @@ export const parseDataSourcePathIntoFieldset = (path: string): UnresolvedFieldse
  * @returns
  */
 export const parseDataSourcePathWithL1DeepBindings = (
-  path: string
+  path: string,
 ): {
   key: string;
   field: string;
@@ -35,8 +35,6 @@ export const parseDataSourcePathWithL1DeepBindings = (
   const parsedPath = parseDeepPath(path);
 
   if (null === parsedPath) {
-    // Does it throw on non-deep bindings?
-    // I think it should support non-deep bindings... too.. no? where is it used?
     throw new Error(`Cannot parse path '${path}' as deep path`);
   }
 
@@ -126,7 +124,7 @@ const parseDeepPath = (deepPathCandidate: string): DeepPathParsed | null => {
 
 const chunkSegments = (
   segments: string[],
-  { startNextChunkOnElementEqualTo }: { startNextChunkOnElementEqualTo: string }
+  { startNextChunkOnElementEqualTo }: { startNextChunkOnElementEqualTo: string },
 ): Array<string[]> => {
   const chunks: Array<string[]> = [];
   let currentChunk: string[] = [];
