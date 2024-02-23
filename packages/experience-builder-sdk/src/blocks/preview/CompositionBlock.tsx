@@ -1,20 +1,16 @@
 import React, { useMemo } from 'react';
-import type { Asset, AssetFile, UnresolvedLink } from 'contentful';
+import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
 import {
   EntityStore,
   isEmptyStructureWithRelativeHeight,
-  transformBackgroundImageAsset,
-  transformImageAsset,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
   EMPTY_CONTAINER_HEIGHT,
-  SUPPORTED_IMAGE_FORMATS,
 } from '@contentful/experience-builder-core/constants';
 import type {
-  BoundComponentPropertyTypes,
   CompositionNode,
   CompositionVariableValueType,
   ResolveDesignValueType,
@@ -24,7 +20,7 @@ import { createAssemblyRegistration, getComponentRegistration } from '../../core
 import {
   buildCfStyles,
   checkIsAssemblyNode,
-  transformContentValue,
+  transformBoundContentValue,
 } from '@contentful/experience-builder-core';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import {
@@ -95,99 +91,91 @@ export const CompositionBlock = ({
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/');
           const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-          const isMediaType =
-            componentRegistration.definition.variables[variableName]?.type === 'Media';
+          // const isMediaType =
+          //   componentRegistration.definition.variables[variableName]?.type === 'Media';
 
-          let value: BoundComponentPropertyTypes;
+          // let value: BoundComponentPropertyTypes;
 
-          if (isMediaType && binding.sys.linkType === 'Asset' && variableName === 'cfImageAsset') {
-            const asset = entityStore.getEntryOrAsset(binding) as Asset;
-            const format = resolveDesignValue(
-              node.variables['cfImageFormat']?.type === 'DesignValue'
-                ? node.variables['cfImageFormat'].valuesByBreakpoint
-                : {},
-              'cfImageFormat',
-            );
-            const quality = resolveDesignValue(
-              node.variables['cfImageQuality']?.type === 'DesignValue'
-                ? node.variables['cfImageQuality'].valuesByBreakpoint
-                : {},
-              'cfImageQuality',
-            );
-            const sizes = resolveDesignValue(
-              node.variables['cfImageSizes']?.type === 'DesignValue'
-                ? node.variables['cfImageSizes'].valuesByBreakpoint
-                : {},
-              'cfImageSizes',
-            );
-            try {
-              value = transformImageAsset(
-                asset.fields.file as AssetFile,
-                sizes as string,
-                Number(quality),
-                format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-              );
-            } catch (error) {
-              console.error('Error transforming image asset', error);
-            }
-            acc[variableName] = value;
-          } else if (
-            isMediaType &&
-            binding.sys.linkType === 'Asset' &&
-            variableName === 'cfBackgroundImageUrl'
-          ) {
-            const asset = entityStore.getEntryOrAsset(binding) as Asset;
-            const format = resolveDesignValue(
-              node.variables['cfImageFormat']?.type === 'DesignValue'
-                ? node.variables['cfImageFormat'].valuesByBreakpoint
-                : {},
-              'cfImageFormat',
-            );
-            const quality = resolveDesignValue(
-              node.variables['cfImageQuality']?.type === 'DesignValue'
-                ? node.variables['cfImageQuality'].valuesByBreakpoint
-                : {},
-              'cfImageQuality',
-            );
-            // const width = resolveDesignValue(
-            //   node.variables['cfImageWidth'].type === 'DesignValue'
-            //     ? node.variables['cfImageWidth'].valuesByBreakpoint
-            //     : {},
-            //   'cfImageWidth',
-            // );
+          // if (isMediaType && binding.sys.linkType === 'Asset' && variableName === 'cfImageAsset') {
+          //   const asset = entityStore.getEntryOrAsset(binding) as Asset;
+          //   const format = resolveDesignValue(
+          //     node.variables['cfImageFormat']?.type === 'DesignValue'
+          //       ? node.variables['cfImageFormat'].valuesByBreakpoint
+          //       : {},
+          //     'cfImageFormat',
+          //   );
+          //   const quality = resolveDesignValue(
+          //     node.variables['cfImageQuality']?.type === 'DesignValue'
+          //       ? node.variables['cfImageQuality'].valuesByBreakpoint
+          //       : {},
+          //     'cfImageQuality',
+          //   );
+          //   const sizes = resolveDesignValue(
+          //     node.variables['cfImageSizes']?.type === 'DesignValue'
+          //       ? node.variables['cfImageSizes'].valuesByBreakpoint
+          //       : {},
+          //     'cfImageSizes',
+          //   );
+          //   try {
+          //     value = transformImageAsset(
+          //       asset.fields.file as AssetFile,
+          //       sizes as string,
+          //       Number(quality),
+          //       format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+          //     );
+          //   } catch (error) {
+          //     console.error('Error transforming image asset', error);
+          //   }
+          //   acc[variableName] = value;
+          // } else if (
+          //   isMediaType &&
+          //   binding.sys.linkType === 'Asset' &&
+          //   variableName === 'cfBackgroundImageUrl'
+          // ) {
+          //   const asset = entityStore.getEntryOrAsset(binding) as Asset;
+          //   const format = resolveDesignValue(
+          //     node.variables['cfImageFormat']?.type === 'DesignValue'
+          //       ? node.variables['cfImageFormat'].valuesByBreakpoint
+          //       : {},
+          //     'cfImageFormat',
+          //   );
+          //   const quality = resolveDesignValue(
+          //     node.variables['cfImageQuality']?.type === 'DesignValue'
+          //       ? node.variables['cfImageQuality'].valuesByBreakpoint
+          //       : {},
+          //     'cfImageQuality',
+          //   );
+          //   // const width = resolveDesignValue(
+          //   //   node.variables['cfImageWidth'].type === 'DesignValue'
+          //   //     ? node.variables['cfImageWidth'].valuesByBreakpoint
+          //   //     : {},
+          //   //   'cfImageWidth',
+          //   // );
 
-            try {
-              value = transformBackgroundImageAsset(
-                asset.fields.file as AssetFile,
-                Number(500),
-                Number(quality),
-                format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-              );
-            } catch (error) {
-              console.error('Error transforming background image asset', error);
-            }
-            acc[variableName] = value;
-          } else {
-            value = entityStore.getValue(binding, path.slice(0, -1));
-            if (value) {
-              value =
-                typeof value == 'object' && (value as AssetFile).url && !isMediaType
-                  ? (value as AssetFile).url
-                  : value;
-            } else {
-              const foundAssetValue = entityStore.getValue(binding, [
-                ...path.slice(0, -2),
-                'fields',
-                'file',
-              ]);
-              if (foundAssetValue) {
-                value = foundAssetValue;
-              }
-            }
-            const variableDefinition = componentRegistration.definition.variables[variableName];
-            value = transformContentValue(value, variableDefinition);
-            acc[variableName] = value;
-          }
+          //   try {
+          //     value = transformBackgroundImageAsset(
+          //       asset.fields.file as AssetFile,
+          //       Number(500),
+          //       Number(quality),
+          //       format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+          //     );
+          //   } catch (error) {
+          //     console.error('Error transforming background image asset', error);
+          //   }
+          //   acc[variableName] = value;
+          // } else {
+          const variableDefinition = componentRegistration.definition.variables[variableName];
+          const value = transformBoundContentValue(
+            node.variables,
+            entityStore,
+            binding,
+            resolveDesignValue,
+            variableName,
+            variableDefinition,
+            path,
+          );
+          acc[variableName] = value;
+          // }
 
           break;
         }

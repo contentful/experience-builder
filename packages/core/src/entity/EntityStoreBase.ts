@@ -29,19 +29,45 @@ export class EntityStoreBase {
 
   public getValue(
     entityLink: UnresolvedLink<'Entry' | 'Asset'>,
-    path: string[]
+    path: string[],
   ): string | undefined {
     const entity = this.getEntity(entityLink.sys.linkType, entityLink.sys.id);
 
     if (!entity) {
       // TODO: move to `debug` utils once it is extracted
       console.warn(
-        `Unresolved entity reference: ${entityLink.sys.linkType} with ID ${entityLink.sys.id}`
+        `Unresolved entity reference: ${entityLink.sys.linkType} with ID ${entityLink.sys.id}`,
       );
       return;
     }
 
     return get<string>(entity, path);
+  }
+
+  public getEntryOrAsset(entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset) {
+    const isLink = (
+      entity: typeof entityLinkOrEntity,
+    ): entity is UnresolvedLink<'Entry' | 'Asset'> => entityLinkOrEntity.sys.type === 'Link';
+
+    let entity: Entry | Asset;
+    if (isLink(entityLinkOrEntity)) {
+      const resolvedEntity =
+        entityLinkOrEntity.sys.linkType === 'Entry'
+          ? this.entryMap.get(entityLinkOrEntity.sys.id)
+          : this.assetMap.get(entityLinkOrEntity.sys.id);
+
+      if (!resolvedEntity || resolvedEntity.sys.type !== entityLinkOrEntity.sys.linkType) {
+        console.warn(
+          `Experience references unresolved entity: ${JSON.stringify(entityLinkOrEntity)}`,
+        );
+        return;
+      }
+      entity = resolvedEntity;
+    } else {
+      // We already have the complete entity in preview & delivery (resolved by the CMA client)
+      entity = entityLinkOrEntity;
+    }
+    return entity;
   }
 
   protected getEntitiesFromMap(type: 'Entry' | 'Asset', ids: string[]) {

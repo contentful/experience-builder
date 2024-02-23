@@ -2,18 +2,15 @@ import { useEditorStore } from '@/store/editor';
 import {
   buildCfStyles,
   calculateNodeDefaultHeight,
-  transformContentValue,
   isLinkToAsset,
   isEmptyStructureWithRelativeHeight,
-  transformImageAsset,
-  transformBackgroundImageAsset,
+  transformBoundContentValue,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
-  SUPPORTED_IMAGE_FORMATS,
 } from '@contentful/experience-builder-core/constants';
 import type {
   StyleProps,
@@ -92,7 +89,7 @@ export const useComponentProps = ({
             [variableName]: designValue,
           };
         } else if (variableMapping.type === 'BoundValue') {
-          const isMediaType = definition.variables[variableName]?.type === 'Media';
+          // const isMediaType = definition.variables[variableName]?.type === 'Media';
 
           // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/');
@@ -100,88 +97,100 @@ export const useComponentProps = ({
 
           let boundValue: BoundComponentPropertyTypes;
 
-          if (isMediaType && binding.sys.linkType === 'Asset' && variableName === 'cfImageAsset') {
-            const asset = entityStore.getEntryOrAsset(binding) as Asset;
+          // if (isMediaType && binding.sys.linkType === 'Asset' && variableName === 'cfImageAsset') {
+          //   const asset = entityStore.getEntryOrAsset(binding) as Asset;
 
-            const format = resolveDesignValue(
-              node.data.props['cfImageFormat']?.type === 'DesignValue'
-                ? node.data.props['cfImageFormat'].valuesByBreakpoint
-                : {},
-              'cfImageFormat',
-            );
-            const quality = resolveDesignValue(
-              node.data.props['cfImageQuality']?.type === 'DesignValue'
-                ? node.data.props['cfImageQuality'].valuesByBreakpoint
-                : {},
-              'cfImageQuality',
-            );
+          //   const format = resolveDesignValue(
+          //     node.data.props['cfImageFormat']?.type === 'DesignValue'
+          //       ? node.data.props['cfImageFormat'].valuesByBreakpoint
+          //       : {},
+          //     'cfImageFormat',
+          //   );
+          //   const quality = resolveDesignValue(
+          //     node.data.props['cfImageQuality']?.type === 'DesignValue'
+          //       ? node.data.props['cfImageQuality'].valuesByBreakpoint
+          //       : {},
+          //     'cfImageQuality',
+          //   );
 
-            const sizes = resolveDesignValue(
-              node.data.props['cfImageSizes']?.type === 'DesignValue'
-                ? node.data.props['cfImageSizes'].valuesByBreakpoint
-                : {},
-              'cfImageSizes',
-            );
+          //   const sizes = resolveDesignValue(
+          //     node.data.props['cfImageSizes']?.type === 'DesignValue'
+          //       ? node.data.props['cfImageSizes'].valuesByBreakpoint
+          //       : {},
+          //     'cfImageSizes',
+          //   );
 
-            try {
-              boundValue = transformImageAsset(
-                asset.fields.file as AssetFile,
-                sizes as string,
-                Number(quality),
-                format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-              );
-            } catch (error) {
-              console.error('Error transforming image asset', error);
-            }
-            return {
-              ...acc,
-              [variableName]: boundValue,
-            };
-          } else if (
-            isMediaType &&
-            binding.sys.linkType === 'Asset' &&
-            variableName === 'cfBackgroundImageUrl'
-          ) {
-            const asset = entityStore.getEntryOrAsset(binding) as Asset;
-            const format = resolveDesignValue(
-              node.data.props['cfImageFormat']?.type === 'DesignValue'
-                ? node.data.props['cfImageFormat'].valuesByBreakpoint
-                : {},
-              'cfImageFormat',
-            );
-            const quality = resolveDesignValue(
-              node.data.props['cfImageQuality']?.type === 'DesignValue'
-                ? node.data.props['cfImageQuality'].valuesByBreakpoint
-                : {},
-              'cfImageQuality',
-            );
+          //   try {
+          //     boundValue = transformImageAsset(
+          //       asset.fields.file as AssetFile,
+          //       sizes as string,
+          //       Number(quality),
+          //       format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+          //     );
+          //   } catch (error) {
+          //     console.error('Error transforming image asset', error);
+          //   }
+          //   return {
+          //     ...acc,
+          //     [variableName]: boundValue,
+          //   };
+          // } else if (
+          //   isMediaType &&
+          //   binding.sys.linkType === 'Asset' &&
+          //   variableName === 'cfBackgroundImageUrl'
+          // ) {
+          //   const asset = entityStore.getEntryOrAsset(binding) as Asset;
+          //   const format = resolveDesignValue(
+          //     node.data.props['cfImageFormat']?.type === 'DesignValue'
+          //       ? node.data.props['cfImageFormat'].valuesByBreakpoint
+          //       : {},
+          //     'cfImageFormat',
+          //   );
+          //   const quality = resolveDesignValue(
+          //     node.data.props['cfImageQuality']?.type === 'DesignValue'
+          //       ? node.data.props['cfImageQuality'].valuesByBreakpoint
+          //       : {},
+          //     'cfImageQuality',
+          //   );
 
-            // const width = resolveDesignValue(
-            //   node.data.props['cfImageWidth'].type === 'DesignValue'
-            //     ? node.data.props['cfImageWidth'].valuesByBreakpoint
-            //     : {},
-            //   'cfImageWidth',
-            // );
+          //   // const width = resolveDesignValue(
+          //   //   node.data.props['cfImageWidth'].type === 'DesignValue'
+          //   //     ? node.data.props['cfImageWidth'].valuesByBreakpoint
+          //   //     : {},
+          //   //   'cfImageWidth',
+          //   // );
 
-            try {
-              boundValue = transformBackgroundImageAsset(
-                asset.fields.file as AssetFile,
-                Number(500),
-                Number(quality),
-                format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-              );
-            } catch (error) {
-              console.error('Error transforming background image asset', error);
-            }
-            return {
-              ...acc,
-              [variableName]: boundValue,
-            };
-          } else {
-            boundValue = areEntitiesFetched
-              ? entityStore.getValue(binding, path.slice(0, -1))
-              : undefined;
-          }
+          //   try {
+          //     boundValue = transformBackgroundImageAsset(
+          //       asset.fields.file as AssetFile,
+          //       Number(500),
+          //       Number(quality),
+          //       format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+          //     );
+          //   } catch (error) {
+          //     console.error('Error transforming background image asset', error);
+          //   }
+          //   return {
+          //     ...acc,
+          //     [variableName]: boundValue,
+          //   };
+          // } else {
+          //   boundValue = areEntitiesFetched
+          //     ? entityStore.getValue(binding, path.slice(0, -1))
+          //     : undefined;
+          // }
+
+          const variableDefinition = definition.variables[variableName];
+          boundValue = transformBoundContentValue(
+            node.data.props,
+            entityStore,
+            binding,
+            resolveDesignValue,
+            variableName,
+            variableDefinition,
+            path,
+          );
+
           // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
           // If no 'boundValue' is found, we also attempt to extract the value associated with the second-to-last item in the path.
           // If successful, it means we have identified the linked asset.
@@ -200,7 +209,7 @@ export const useComponentProps = ({
 
           return {
             ...acc,
-            [variableName]: transformContentValue(value, variableDefinition),
+            [variableName]: value,
           };
         } else {
           const value = getUnboundValues({

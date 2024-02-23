@@ -2,14 +2,14 @@ import { SUPPORTED_IMAGE_FORMATS } from '@/constants';
 import { OptimizedImageAsset } from '@/types';
 import { AssetFile } from 'contentful';
 
+type ValidFormats = (typeof SUPPORTED_IMAGE_FORMATS)[number];
 interface AssetFileWithRequiredImage extends AssetFile {
   details: Required<AssetFile['details']>;
 }
-type ValidFormats = (typeof SUPPORTED_IMAGE_FORMATS)[number];
 
 const MAX_WIDTH_ALLOWED = 4000;
 
-export const transformImageAsset = (
+export const getOptimizedImageAsset = (
   file: AssetFile,
   sizes?: string,
   quality: number = 100,

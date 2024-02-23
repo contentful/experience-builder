@@ -1,41 +1,30 @@
-import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types';
-import { ComponentDefinitionVariable, CompositionVariableValueType, Link } from '@/types';
+import {
+  BoundComponentPropertyTypes,
+  ComponentDefinitionVariable,
+  ComponentTreeNode,
+  ResolveDesignValueType,
+} from '@/types';
+import { transformRichText } from './transformRichText';
+import { transformMedia } from './media/transformMedia';
+import { EntityStoreBase } from '@/entity';
+import { UnresolvedLink } from 'contentful';
+import { getBoundValue } from './getBoundValue';
 
-export const transformContentValue = (
-  value: CompositionVariableValueType | Link<'Asset'>,
+export const transformBoundContentValue = (
+  variables: ComponentTreeNode['variables'],
+  entityStore: EntityStoreBase,
+  binding: UnresolvedLink<'Entry' | 'Asset'>,
+  resolveDesignValue: ResolveDesignValueType,
+  variableName: string,
   variableDefinition: ComponentDefinitionVariable,
-) => {
-  if (variableDefinition.type === 'RichText') {
-    return transformRichText(value);
+  path: string[],
+): BoundComponentPropertyTypes => {
+  switch (variableDefinition.type) {
+    case 'Media':
+      return transformMedia(variables, entityStore, binding, resolveDesignValue, variableName);
+    case 'RichText':
+      return transformRichText(entityStore, binding, path);
+    default:
+      return getBoundValue(entityStore, binding, path);
   }
-  return value;
-};
-
-export const transformRichText = (
-  value: CompositionVariableValueType,
-): RichTextDocument | undefined => {
-  if (typeof value === 'string') {
-    return {
-      data: {},
-      content: [
-        {
-          nodeType: BLOCKS.PARAGRAPH,
-          data: {},
-          content: [
-            {
-              data: {},
-              nodeType: 'text',
-              value: value,
-              marks: [],
-            },
-          ],
-        },
-      ],
-      nodeType: BLOCKS.DOCUMENT,
-    };
-  }
-  if (typeof value === 'object' && value.nodeType === BLOCKS.DOCUMENT) {
-    return value as RichTextDocument;
-  }
-  return undefined;
 };

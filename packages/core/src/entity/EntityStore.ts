@@ -83,31 +83,31 @@ export class EntityStore extends EntityStoreBase {
     this._unboundValues = { ...unboundValues, ...(this._unboundValues ?? {}) };
   }
 
-  public getEntryOrAsset(entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset) {
-    const isLink = (
-      entity: typeof entityLinkOrEntity,
-    ): entity is UnresolvedLink<'Entry' | 'Asset'> => entityLinkOrEntity.sys.type === 'Link';
+  // public getEntryOrAsset(entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset) {
+  //   const isLink = (
+  //     entity: typeof entityLinkOrEntity,
+  //   ): entity is UnresolvedLink<'Entry' | 'Asset'> => entityLinkOrEntity.sys.type === 'Link';
 
-    let entity: Entry | Asset;
-    if (isLink(entityLinkOrEntity)) {
-      const resolvedEntity =
-        entityLinkOrEntity.sys.linkType === 'Entry'
-          ? this.entryMap.get(entityLinkOrEntity.sys.id)
-          : this.assetMap.get(entityLinkOrEntity.sys.id);
+  //   let entity: Entry | Asset;
+  //   if (isLink(entityLinkOrEntity)) {
+  //     const resolvedEntity =
+  //       entityLinkOrEntity.sys.linkType === 'Entry'
+  //         ? this.entryMap.get(entityLinkOrEntity.sys.id)
+  //         : this.assetMap.get(entityLinkOrEntity.sys.id);
 
-      if (!resolvedEntity || resolvedEntity.sys.type !== entityLinkOrEntity.sys.linkType) {
-        console.warn(
-          `Experience references unresolved entity: ${JSON.stringify(entityLinkOrEntity)}`,
-        );
-        return;
-      }
-      entity = resolvedEntity;
-    } else {
-      // We already have the complete entity in preview & delivery (resolved by the CMA client)
-      entity = entityLinkOrEntity;
-    }
-    return entity;
-  }
+  //     if (!resolvedEntity || resolvedEntity.sys.type !== entityLinkOrEntity.sys.linkType) {
+  //       console.warn(
+  //         `Experience references unresolved entity: ${JSON.stringify(entityLinkOrEntity)}`,
+  //       );
+  //       return;
+  //     }
+  //     entity = resolvedEntity;
+  //   } else {
+  //     // We already have the complete entity in preview & delivery (resolved by the CMA client)
+  //     entity = entityLinkOrEntity;
+  //   }
+  //   return entity;
+  // }
 
   public getValue(
     entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,

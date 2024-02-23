@@ -9,7 +9,7 @@ type ValidFormats = (typeof SUPPORTED_IMAGE_FORMATS)[number];
 
 const MAX_WIDTH_ALLOWED = 4000;
 
-export const transformBackgroundImageAsset = (
+export const getOptimizedBackgroundImageAsset = (
   file: AssetFile,
   width: number,
   quality: number = 100,
