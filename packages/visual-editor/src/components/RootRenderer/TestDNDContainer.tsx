@@ -29,7 +29,6 @@ const TestDNDContainer: React.FC<TestDNDContainerProps> = ({
       type: draggedItem.type,
       source: draggedItem.source,
     };
-    console.log('dragStart', start);
     onBeforeDragStart(start);
   };
 

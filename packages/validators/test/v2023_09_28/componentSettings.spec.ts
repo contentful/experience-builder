@@ -17,20 +17,17 @@ describe('componentSettings', () => {
         },
       },
     };
-    const result = validateExperienceFields(updatedPattern, schemaVersion) as SafeParseError<
-      typeof updatedPattern
-    >;
+    const result = validateExperienceFields(updatedPattern, schemaVersion);
 
     const expectedError = {
-      received: 'undefined',
-      code: 'invalid_type',
-      expected: 'object',
+      details: 'The property "variableDefinitions" is required here',
+      name: 'required',
       path: ['componentSettings', 'en-US', 'variableDefinitions'],
-      message: 'Required',
+      value: 'undefined',
     };
 
     expect(result.success).toBe(false);
-    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+    expect(result.errors).toEqual([expectedError]);
   });
 
   it('fails if variable definition is invalid', () => {
@@ -43,20 +40,17 @@ describe('componentSettings', () => {
         },
       },
     };
-    const result = validateExperienceFields(updatedPattern, schemaVersion) as SafeParseError<
-      typeof updatedPattern
-    >;
+    const result = validateExperienceFields(updatedPattern, schemaVersion);
 
     const expectedError = {
-      received: 'string',
-      code: 'invalid_type',
-      expected: 'object',
+      details: 'The type of "var1" is incorrect, expected type: object',
+      name: 'type',
       path: ['componentSettings', 'en-US', 'variableDefinitions', 'var1'],
-      message: 'Expected object, received string',
+      value: 'string',
     };
 
     expect(result.success).toBe(false);
-    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+    expect(result.errors).toEqual([expectedError]);
   });
 
   it('fails if variable definition key is longer than 54 characters', () => {
@@ -65,23 +59,20 @@ describe('componentSettings', () => {
       fields: {
         ...experience.fields,
         componentSettings: {
-          [locale]: { variableDefinitions: { ['variable1'.repeat(7)]: 'invalid' } },
+          [locale]: { variableDefinitions: { ['variable1'.repeat(7)]: {} } },
         },
       },
     };
-    const result = validateExperienceFields(updatedPattern, schemaVersion) as SafeParseError<
-      typeof updatedPattern
-    >;
+    const result = validateExperienceFields(updatedPattern, schemaVersion);
 
     const expectedError = {
-      code: 'invalid_string',
-      validation: 'regex',
+      details: 'Invalid',
+      name: 'regex',
       path: ['componentSettings', 'en-US', 'variableDefinitions', 'variable1'.repeat(7)],
-      message: 'Invalid',
     };
 
     expect(result.success).toBe(false);
-    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+    expect(result.errors?.[0]).toEqual(expectedError);
   });
 
   it('fails if componentSettings is used in conjuction with usedComponents', () => {
@@ -95,18 +86,16 @@ describe('componentSettings', () => {
       },
     };
 
-    const result = validateExperienceFields(updatedPattern, schemaVersion) as SafeParseError<
-      typeof updatedPattern
-    >;
+    const result = validateExperienceFields(updatedPattern, schemaVersion);
 
     const expectedError = {
-      code: 'custom',
-      message:
+      name: 'custom',
+      details:
         "'componentSettings' field cannot be used in conjunction with 'usedComponents' field",
       path: ['componentSettings', 'en-US'],
     };
 
     expect(result.success).toBe(false);
-    expect(result.error.issues[0]).toEqual(expect.objectContaining(expectedError));
+    expect(result.errors).toEqual([expectedError]);
   });
 });

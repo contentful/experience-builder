@@ -17,12 +17,13 @@ describe('componentTree', () => {
           componentTree: { [locale]: { ...componentTree, breakpoints: undefined } },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
-      >;
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
 
       expect(result.success).toBe(false);
-      expect(result.error.issues[0].message).toBe('Required');
+      const error = result.errors?.[0];
+
+      expect(error?.name).toBe('required');
+      expect(error?.details).toBe(`The property "breakpoints" is required here`);
     });
 
     it(`fails if breakpoints is empty`, () => {
@@ -34,18 +35,20 @@ describe('componentTree', () => {
           componentTree: { [locale]: { ...componentTree, breakpoints: [] } },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
-      >;
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
 
       expect(result.success).toBe(false);
-      expect(result.error.issues[0].message).toBe(
+      const error = result.errors?.[0];
+
+      expect(result.success).toBe(false);
+      expect(error?.name).toBe('custom');
+      expect(error?.details).toBe(
         'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }',
       );
     });
 
     it(`fails if any breakpoint attribute is missing`, () => {
-      const breakpoint = { invalidAttribute: 'invalid' };
+      const breakpoint = {};
       const componentTree = experience.fields.componentTree[locale];
       const updatedExperience = {
         ...experience,
@@ -54,22 +57,49 @@ describe('componentTree', () => {
           componentTree: { [locale]: { ...componentTree, breakpoints: [breakpoint] } },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
-      >;
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
 
       expect(result.success).toBe(false);
       const expectedErrors = ['id', 'query', 'previewSize', 'displayName'].map(
         (breakpointField) => ({
-          code: 'invalid_type',
-          expected: 'string',
-          received: 'undefined',
+          name: 'required',
+          value: 'undefined',
           path: ['componentTree', 'en-US', 'breakpoints', 0, breakpointField],
-          message: 'Required',
+          details: `The property "${breakpointField}" is required here`,
         }),
       );
 
-      expect(result.error.issues).toEqual(expectedErrors);
+      expect(result.success).toBe(false);
+      expect(result.errors).toEqual(expectedErrors);
+    });
+
+    it(`fails if any breakpoint includes unexpected attribute`, () => {
+      const breakpoint = {
+        id: 'desktop',
+        query: '*',
+        previewSize: 'large',
+        displayName: 'Desktop',
+        extraAttr: 'unrecognised',
+      };
+      const componentTree = experience.fields.componentTree[locale];
+      const updatedExperience = {
+        ...experience,
+        fields: {
+          ...experience.fields,
+          componentTree: { [locale]: { ...componentTree, breakpoints: [breakpoint] } },
+        },
+      };
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
+
+      expect(result.success).toBe(false);
+      const expectedErrors = {
+        name: 'unexpected',
+        path: ['componentTree', 'en-US', 'breakpoints', 0],
+        details: 'The property "extraAttr" is not expected',
+      };
+
+      expect(result.success).toBe(false);
+      expect(result.errors).toEqual([expectedErrors]);
     });
 
     it(`fails if desktop breakpoint is not first in the list`, () => {
@@ -86,14 +116,23 @@ describe('componentTree', () => {
           componentTree: { [locale]: { ...componentTree, breakpoints } },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
-      >;
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
 
+      const expectedErrors = [
+        {
+          details:
+            'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }',
+          name: 'custom',
+          path: ['componentTree', 'en-US', 'breakpoints'],
+        },
+        {
+          details: 'Breakpoints should be ordered from largest to smallest pixel value',
+          name: 'custom',
+          path: ['componentTree', 'en-US', 'breakpoints'],
+        },
+      ];
       expect(result.success).toBe(false);
-      expect(result.error.issues[0].message).toBe(
-        'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }',
-      );
+      expect(result.errors).toEqual(expectedErrors);
     });
 
     it(`fails if breakpoints are not ordered from largest to smallest`, () => {
@@ -110,12 +149,14 @@ describe('componentTree', () => {
           componentTree: { [locale]: { ...componentTree, breakpoints } },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
-      >;
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
 
       expect(result.success).toBe(false);
-      expect(result.error.issues[0].message).toBe(
+      const error = result.errors?.[0];
+
+      expect(result.success).toBe(false);
+      expect(error?.name).toBe('custom');
+      expect(error?.details).toBe(
         'Breakpoints should be ordered from largest to smallest pixel value',
       );
     });
@@ -131,13 +172,33 @@ describe('componentTree', () => {
           componentTree: { [locale]: { ...componentTree, schemaVersion: undefined } },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
-      >;
+      const result = validateExperienceFields(updatedExperience);
 
       expect(result.success).toBe(false);
-      expect(result.error.issues[0].message).toBe('Invalid input');
+      const error = result.errors?.[0];
+      console.log(result.errors);
+
+      expect(result.success).toBe(false);
+      expect(error?.name).toBe('required');
+      expect(error?.details).toBe('The property "schemaVersion" is required here');
     });
+  });
+  it(`fails if unrecognised attribute is provided`, () => {
+    const componentTree = experience.fields.componentTree[locale];
+    const updatedExperience = {
+      ...experience,
+      fields: {
+        ...experience.fields,
+        componentTree: { [locale]: { ...componentTree, extraAttr: 'unrecognised' } },
+      },
+    };
+    const result = validateExperienceFields(updatedExperience, schemaVersion);
+
+    expect(result.success).toBe(false);
+    const error = result.errors?.[0];
+    expect(result.success).toBe(false);
+    expect(error?.name).toBe('unexpected');
+    expect(error?.details).toBe('The property "extraAttr" is not expected');
   });
 
   describe('children', () => {
@@ -150,12 +211,14 @@ describe('componentTree', () => {
           componentTree: { [locale]: { ...componentTree, children: {} } },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
-      >;
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
 
       expect(result.success).toBe(false);
-      expect(result.error.issues[0].message).toBe('Expected array, received object');
+      const error = result.errors?.[0];
+      expect(result.success).toBe(false);
+      expect(error?.name).toBe('type');
+      expect(error?.path).toEqual(['componentTree', 'en-US', 'children']);
+      expect(error?.details).toBe('The type of "children" is incorrect, expected type: array');
     });
 
     it.each([
@@ -178,19 +241,16 @@ describe('componentTree', () => {
           componentTree: { [locale]: { ...componentTree, children: [child] } },
         },
       };
-      const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-        typeof updatedExperience
-      >;
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
 
       const expectedError = {
-        code: 'invalid_type',
-        expected: type,
-        received: 'undefined',
+        name: 'required',
+        value: 'undefined',
         path: ['componentTree', 'en-US', 'children', 0, attribute],
-        message: 'Required',
+        details: `The property "${attribute}" is required here`,
       };
       expect(result.success).toBe(false);
-      expect(result.error.issues[0]).toEqual(expectedError);
+      expect(result.errors).toEqual([expectedError]);
     });
 
     describe('variables name', () => {
@@ -199,7 +259,7 @@ describe('componentTree', () => {
         const child = {
           definitionId: 'test',
           variables: {
-            ['text&^:']: { type: 'DesignValue', value: 'test' },
+            ['text&^:']: { type: 'DesignValue', valuesByBreakpoint: { desktop: 'bold' } },
           },
           children: [],
         };
@@ -211,25 +271,22 @@ describe('componentTree', () => {
           },
         };
 
-        const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-          typeof updatedExperience
-        >;
+        const result = validateExperienceFields(updatedExperience, schemaVersion);
 
         const expectedError = {
-          code: 'invalid_string',
+          name: 'regex',
           path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text&^:'],
-          message: 'Invalid',
-          validation: 'regex',
+          details: 'Does not match /^[a-zA-Z0-9-_]{1,54}$/',
         };
         expect(result.success).toBe(false);
-        expect(result.error.issues[0] as ZodInvalidUnionIssue).toEqual(expectedError);
+        expect(result.errors).toEqual([expectedError]);
       });
-      it(`fails if name exceeds the allowed 32 character limit`, () => {
+      it(`fails if name exceeds the allowed 54 character limit`, () => {
         const componentTree = experience.fields.componentTree[locale];
         const child = {
           definitionId: 'test',
           variables: {
-            ['text'.repeat(10)]: { type: 'DesignValue', value: 'test' },
+            ['text'.repeat(20)]: { type: 'UnboundValue', key: 'test' },
           },
           children: [],
         };
@@ -241,18 +298,15 @@ describe('componentTree', () => {
           },
         };
 
-        const result = validateExperienceFields(updatedExperience, schemaVersion) as SafeParseError<
-          typeof updatedExperience
-        >;
+        const result = validateExperienceFields(updatedExperience, schemaVersion);
 
         const expectedError = {
-          code: 'invalid_string',
-          path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text'.repeat(10)],
-          message: 'Invalid',
-          validation: 'regex',
+          name: 'regex',
+          path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text'.repeat(20)],
+          details: 'Does not match /^[a-zA-Z0-9-_]{1,54}$/',
         };
         expect(result.success).toBe(false);
-        expect(result.error.issues[0] as ZodInvalidUnionIssue).toEqual(expectedError);
+        expect(result.errors).toEqual([expectedError]);
       });
     });
 
@@ -276,15 +330,11 @@ describe('componentTree', () => {
             },
           };
 
-          const result = validateExperienceFields(
-            updatedExperience,
-            schemaVersion,
-          ) as SafeParseError<typeof updatedExperience>;
+          const result = validateExperienceFields(updatedExperience, schemaVersion);
 
           const expectedError = {
-            code: 'invalid_type',
-            expected: 'object',
-            received: 'undefined',
+            details: 'The property "valuesByBreakpoint" is required here',
+            name: 'required',
             path: [
               'componentTree',
               'en-US',
@@ -294,12 +344,10 @@ describe('componentTree', () => {
               'text',
               'valuesByBreakpoint',
             ],
-            message: 'Required',
+            value: 'undefined',
           };
           expect(result.success).toBe(false);
-          expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[0].issues[0]).toEqual(
-            expectedError,
-          );
+          expect(result.errors).toEqual([expectedError]);
         });
       });
       describe('BoundValue', () => {
@@ -322,22 +370,16 @@ describe('componentTree', () => {
             },
           };
 
-          const result = validateExperienceFields(
-            updatedExperience,
-            schemaVersion,
-          ) as SafeParseError<typeof updatedExperience>;
+          const result = validateExperienceFields(updatedExperience, schemaVersion);
 
           const expectedError = {
-            code: 'invalid_type',
-            expected: 'string',
-            received: 'undefined',
+            details: 'The property "path" is required here',
+            name: 'required',
             path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text', 'path'],
-            message: 'Required',
+            value: 'undefined',
           };
           expect(result.success).toBe(false);
-          expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[1].issues[0]).toEqual(
-            expectedError,
-          );
+          expect(result.errors).toEqual([expectedError]);
         });
       });
       describe('UnboundValue', () => {
@@ -360,22 +402,16 @@ describe('componentTree', () => {
             },
           };
 
-          const result = validateExperienceFields(
-            updatedExperience,
-            schemaVersion,
-          ) as SafeParseError<typeof updatedExperience>;
+          const result = validateExperienceFields(updatedExperience, schemaVersion);
 
           const expectedError = {
-            code: 'invalid_type',
-            expected: 'string',
-            received: 'undefined',
+            details: 'The property "key" is required here',
+            name: 'required',
             path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text', 'key'],
-            message: 'Required',
+            value: 'undefined',
           };
           expect(result.success).toBe(false);
-          expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[2].issues[0]).toEqual(
-            expectedError,
-          );
+          expect(result.errors).toEqual([expectedError]);
         });
       });
       describe('ComponentValue', () => {
@@ -398,22 +434,16 @@ describe('componentTree', () => {
             },
           };
 
-          const result = validateExperienceFields(
-            updatedExperience,
-            schemaVersion,
-          ) as SafeParseError<typeof updatedExperience>;
+          const result = validateExperienceFields(updatedExperience, schemaVersion);
 
           const expectedError = {
-            code: 'invalid_type',
-            expected: 'string',
-            received: 'undefined',
+            details: 'The property "key" is required here',
+            name: 'required',
             path: ['componentTree', 'en-US', 'children', 0, 'variables', 'text', 'key'],
-            message: 'Required',
+            value: 'undefined',
           };
           expect(result.success).toBe(false);
-          expect((result.error.issues[0] as ZodInvalidUnionIssue).unionErrors[3].issues[0]).toEqual(
-            expectedError,
-          );
+          expect(result.errors).toEqual([expectedError]);
         });
       });
     });

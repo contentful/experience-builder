@@ -3,6 +3,7 @@ import type { CompositionComponentNode } from '@contentful/experience-builder-co
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import { useEditorStore } from '@/store/editor';
 import { getElementCoordinates } from '@contentful/experience-builder-core';
+
 /**
  * This hook gets the element co-ordinates of a specified element in the DOM
  * and sends the DOM Rect to the client app

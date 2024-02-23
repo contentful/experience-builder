@@ -1,8 +1,18 @@
 import { z } from 'zod';
 import { SchemaVersions } from '../schemaVersions';
 
-const uuidKeySchema = z.string().regex(/^[a-zA-Z0-9-_]{1,21}$/);
-const propertyKeySchema = z.string().regex(/^[a-zA-Z0-9-_]{1,32}$/);
+const uuidKeySchema = z
+  .string()
+  .regex(/^[a-zA-Z0-9-_]{1,21}$/, { message: 'Does not match /^[a-zA-Z0-9-_]{1,21}$/' });
+
+/**
+ * Property keys for imported components have a limit of 32 characters (to be implemented) while
+ * property keys for patterns have a limit of 54 characters (<32-char-variabl-name>_<21-char-nanoid-id>).
+ * Because we cannot distinguish between the two in the componentTree, we will use the larger limit for both.
+ */
+const propertyKeySchema = z
+  .string()
+  .regex(/^[a-zA-Z0-9-_]{1,54}$/, { message: 'Does not match /^[a-zA-Z0-9-_]{1,54}$/' });
 
 const DataSourceSchema = z.record(
   uuidKeySchema,
@@ -10,7 +20,7 @@ const DataSourceSchema = z.record(
     sys: z.object({
       type: z.literal('Link'),
       id: z.string(),
-      linkType: z.literal('Entry').or(z.literal('Asset')),
+      linkType: z.enum(['Entry', 'Asset']),
     }),
   }),
 );
@@ -36,24 +46,32 @@ export const ComponentDefinitionPropertyTypeSchema = z.enum([
 
 const ValuesByBreakpointSchema = z.record(z.lazy(() => PrimitiveValueSchema));
 
-const DesignValueSchema = z.object({
-  type: z.literal('DesignValue'),
-  valuesByBreakpoint: ValuesByBreakpointSchema,
-});
-const BoundValueSchema = z.object({
-  type: z.literal('BoundValue'),
-  path: z.string(),
-});
-const UnboundValueSchema = z.object({
-  type: z.literal('UnboundValue'),
-  key: z.string(),
-});
-const ComponentValueSchema = z.object({
-  type: z.literal('ComponentValue'),
-  key: z.string(),
-});
+const DesignValueSchema = z
+  .object({
+    type: z.literal('DesignValue'),
+    valuesByBreakpoint: ValuesByBreakpointSchema,
+  })
+  .strict();
+const BoundValueSchema = z
+  .object({
+    type: z.literal('BoundValue'),
+    path: z.string(),
+  })
+  .strict();
+const UnboundValueSchema = z
+  .object({
+    type: z.literal('UnboundValue'),
+    key: z.string(),
+  })
+  .strict();
+const ComponentValueSchema = z
+  .object({
+    type: z.literal('ComponentValue'),
+    key: z.string(),
+  })
+  .strict();
 
-const ComponentPropertyValueSchema = z.union([
+const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
   DesignValueSchema,
   BoundValueSchema,
   UnboundValueSchema,
@@ -62,12 +80,14 @@ const ComponentPropertyValueSchema = z.union([
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
 
-const BreakpointSchema = z.object({
-  id: propertyKeySchema,
-  query: z.string().regex(/^\*$|^<[0-9*]+px$/),
-  previewSize: z.string(),
-  displayName: z.string(),
-});
+const BreakpointSchema = z
+  .object({
+    id: propertyKeySchema,
+    query: z.string().regex(/^\*$|^<[0-9*]+px$/),
+    previewSize: z.string(),
+    displayName: z.string(),
+  })
+  .strict();
 
 const UnboundValuesSchema = z.record(
   uuidKeySchema,
@@ -130,7 +150,6 @@ const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: `The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }`,
-      path: [...ctx.path, 0],
     });
   }
   // Extract the queries boundary by removing the special characters around it
@@ -174,11 +193,13 @@ const componentSettingsRefinement = (value, ctx: z.RefinementCtx) => {
   }
 };
 
-const ComponentTreeSchema = z.object({
-  breakpoints: z.array(BreakpointSchema).superRefine(breakpointsRefinement),
-  children: z.array(ComponentTreeNodeSchema),
-  schemaVersion: SchemaVersions,
-});
+const ComponentTreeSchema = z
+  .object({
+    breakpoints: z.array(BreakpointSchema).superRefine(breakpointsRefinement),
+    children: z.array(ComponentTreeNodeSchema),
+    schemaVersion: SchemaVersions,
+  })
+  .strict();
 
 const localeWrapper = (fieldSchema: any) => z.record(z.string(), fieldSchema);
 

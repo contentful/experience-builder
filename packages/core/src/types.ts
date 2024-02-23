@@ -158,6 +158,11 @@ export type CompositionComponentNode = {
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
+    assembly?: {
+      id: string;
+      componentId: string;
+      nodeLocation: string | null;
+    };
     props: Record<string, ComponentPropertyValue>;
     dataSource: ExperienceDataSource;
     unboundValues: ExperienceUnboundValues;
