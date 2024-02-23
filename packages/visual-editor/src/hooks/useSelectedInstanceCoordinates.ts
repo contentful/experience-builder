@@ -17,8 +17,8 @@ export const useSelectedInstanceCoordinates = ({ node }: { node: CompositionComp
     }
 
     setTimeout(() => {
-      sendSelectedComponentCoordinates(node.data.id), 2000;
-    });
+      sendSelectedComponentCoordinates(node.data.id);
+    }, 200);
   }, [node, selectedNodeId]);
 
   const selectedElement = node.data.id
