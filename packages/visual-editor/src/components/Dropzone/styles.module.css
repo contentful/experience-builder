@@ -12,12 +12,9 @@
 .container:not(.isRoot) {
   outline-offset: -1px;
 }
-.isRoot {
-  flex: 1;
-}
-
+.isRoot,
 .isEmpty {
-  height: 200px;
+  flex: 1;
 }
 
 .hitbox {

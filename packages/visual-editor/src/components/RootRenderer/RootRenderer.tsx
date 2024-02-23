@@ -28,7 +28,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const draggingNewComponent = !!draggableSourceId?.startsWith(COMPONENT_LIST_ID);
   const containerRef = useRef<HTMLDivElement>(null);
   const { resolveDesignValue } = useBreakpoints(breakpoints);
-  const [minHeight, setMinHeight] = useState(0);
+  const [containerStyles, setContainerStyles] = useState<CSSProperties>({});
   const tree = useTreeStore((state) => state.tree);
 
   useEffect(() => {
@@ -62,8 +62,23 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
       }
     }
 
-    setMinHeight(window.innerHeight - siblingHeight - DRAGGABLE_HEIGHT);
+    if (!siblingHeight) {
+      /**
+       * DRAGGABLE_HEIGHT is subtracted here due to an uninteded scrolling effect
+       * when dragging a new component onto the canvas
+       *
+       * The DRAGGABLE_HEIGHT is then added as margin bottom to offset this value
+       * so that visually there is no difference to the user.
+       */
+      setContainerStyles({
+        minHeight: `${window.innerHeight - DRAGGABLE_HEIGHT}px`,
+      });
+      return;
+    }
 
+    setContainerStyles({
+      minHeight: `${window.innerHeight - siblingHeight}px`,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef.current]);
 
@@ -71,10 +86,6 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
     handleResizeCanvas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef.current]);
-
-  const containerStyles: CSSProperties = {
-    minHeight: `${minHeight}px`,
-  };
 
   return (
     <DNDProvider>
