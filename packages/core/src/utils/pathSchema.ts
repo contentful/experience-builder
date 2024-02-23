@@ -51,7 +51,11 @@ export const parseDataSourcePathWithL1DeepBindings = (
  * @returns
  */
 export const isDeepPath = (deepPathCandidate: string): boolean => {
-  return parseDeepPath(deepPathCandidate) !== null;
+  const deepPathParsed = parseDeepPath(deepPathCandidate);
+  if (!deepPathParsed) {
+    return false;
+  }
+  return deepPathParsed.fields.length > 1;
 };
 
 type DeepPathParsed = {
