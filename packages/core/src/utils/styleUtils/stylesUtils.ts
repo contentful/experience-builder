@@ -16,7 +16,14 @@ import {
 import { isContentfulStructureComponent } from '../components';
 import { EMPTY_CONTAINER_HEIGHT, SUPPORTED_IMAGE_OBJECT_FIT } from '../../constants';
 
-const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+const toCSSAttribute = (key: string) => {
+  let val = key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+
+  // Remove the number from the end of the key to allow for overrides on style properties
+  val = val.replace(/\d+$/, '');
+
+  return val;
+};
 
 export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
   const stylesStr = Object.entries(styles)
@@ -100,7 +107,7 @@ export const buildCfStyles = ({
   };
 };
 /**
- * Container/section default behaviour:
+ * Container/section default behavior:
  * Default height => height: EMPTY_CONTAINER_HEIGHT (120px)
  * If a container component has children => height: 'fit-content'
  */

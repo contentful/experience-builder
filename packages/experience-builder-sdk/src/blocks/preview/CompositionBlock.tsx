@@ -4,6 +4,7 @@ import { omit } from 'lodash-es';
 import {
   EntityStore,
   isEmptyStructureWithRelativeHeight,
+  transformBackgroundImageAsset,
   transformImageAsset,
 } from '@contentful/experience-builder-core';
 import {
@@ -99,7 +100,11 @@ export const CompositionBlock = ({
 
           let value: BoundComponentPropertyTypes;
 
-          if (isMediaType && binding.sys.linkType === 'Asset') {
+          if (
+            isMediaType &&
+            binding.sys.linkType === 'Asset' &&
+            variableName !== 'cfBackgroundImageUrl'
+          ) {
             const asset = entityStore.getEntryOrAsset(binding) as Asset;
             const format = resolveDesignValue(
               node.variables['cfImageFormat'].type === 'DesignValue'
@@ -128,6 +133,41 @@ export const CompositionBlock = ({
               );
             } catch (error) {
               console.error('Error transforming image asset', error);
+            }
+          } else if (
+            isMediaType &&
+            binding.sys.linkType === 'Asset' &&
+            variableName === 'cfBackgroundImageUrl'
+          ) {
+            const asset = entityStore.getEntryOrAsset(binding) as Asset;
+            const format = resolveDesignValue(
+              node.variables['cfImageFormat'].type === 'DesignValue'
+                ? node.variables['cfImageFormat'].valuesByBreakpoint
+                : {},
+              'cfImageFormat',
+            );
+            const quality = resolveDesignValue(
+              node.variables['cfImageQuality'].type === 'DesignValue'
+                ? node.variables['cfImageQuality'].valuesByBreakpoint
+                : {},
+              'cfImageQuality',
+            );
+            // const width = resolveDesignValue(
+            //   node.variables['cfImageWidth'].type === 'DesignValue'
+            //     ? node.variables['cfImageWidth'].valuesByBreakpoint
+            //     : {},
+            //   'cfImageWidth',
+            // );
+
+            try {
+              value = transformBackgroundImageAsset(
+                asset.fields.file as AssetFile,
+                Number(500),
+                Number(quality),
+                format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+              );
+            } catch (error) {
+              console.error('Error transforming background image asset', error);
             }
           } else {
             value = entityStore.getValue(binding, path.slice(0, -1));

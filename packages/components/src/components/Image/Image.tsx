@@ -8,7 +8,6 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 }
 
 export const Image: React.FC<ImageProps> = ({ className, src, image, ...props }) => {
-  console.log({ image, src, props });
   if (!image && !src) {
     return (
       <div className="cf-no-image-wrapper">

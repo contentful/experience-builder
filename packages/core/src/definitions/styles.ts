@@ -1,7 +1,7 @@
 import { ComponentDefinitionVariable, ContainerStyleVariableName } from '@/types';
 
 export const builtInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
 > = {
   cfVerticalAlignment: {
     validations: {
@@ -121,7 +121,7 @@ export const builtInStyles: Partial<
   },
   cfBackgroundImageUrl: {
     displayName: 'Background Image',
-    type: 'Text',
+    type: 'Media',
     defaultValue: '',
     description: 'Background image for section or container',
   },
@@ -163,6 +163,26 @@ export const builtInStyles: Partial<
       format: 'URL',
     },
     description: 'hyperlink for section or container',
+  },
+  cfImageFormat: {
+    displayName: 'Image Format',
+    type: 'Text',
+    group: 'style',
+    description: 'The format of the image',
+  },
+  cfImageQuality: {
+    displayName: 'Image Quality',
+    type: 'Text',
+    group: 'style',
+    description: 'Quality of the image (percentage) if the image format supports it',
+    defaultValue: '100',
+  },
+  cfImageWidth: {
+    displayName: 'Image Width',
+    type: 'Text',
+    group: 'style',
+    description: 'The width of the image',
+    defaultValue: '500px',
   },
   cfOpenInNewTab: {
     displayName: 'Hyperlink behaviour',
@@ -368,7 +388,7 @@ export const containerBuiltInStyles: Partial<
 };
 
 export const singleColumnBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
 > = {
   cfVerticalAlignment: {
     validations: {
@@ -460,7 +480,7 @@ export const singleColumnBuiltInStyles: Partial<
   },
   cfBackgroundImageUrl: {
     displayName: 'Background Image',
-    type: 'Text',
+    type: 'Media',
     defaultValue: '',
     description: 'Background image for section or container',
   },
@@ -507,7 +527,7 @@ export const singleColumnBuiltInStyles: Partial<
 };
 
 export const columnsBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
 > = {
   cfMargin: {
     displayName: 'Margin',
@@ -553,7 +573,7 @@ export const columnsBuiltInStyles: Partial<
   },
   cfBackgroundImageUrl: {
     displayName: 'Background Image',
-    type: 'Text',
+    type: 'Media',
     defaultValue: '',
     description: 'Background image for section or container',
   },

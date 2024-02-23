@@ -6,6 +6,7 @@ import {
   isLinkToAsset,
   isEmptyStructureWithRelativeHeight,
   transformImageAsset,
+  transformBackgroundImageAsset,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -99,7 +100,11 @@ export const useComponentProps = ({
 
           let boundValue: BoundComponentPropertyTypes;
 
-          if (isMediaType && binding.sys.linkType === 'Asset') {
+          if (
+            isMediaType &&
+            binding.sys.linkType === 'Asset' &&
+            variableName !== 'cfBackgroundImageUrl'
+          ) {
             const asset = entityStore.getEntryOrAsset(binding) as Asset;
 
             const format = resolveDesignValue(
@@ -114,6 +119,7 @@ export const useComponentProps = ({
                 : {},
               'cfImageQuality',
             );
+
             const sizes = resolveDesignValue(
               node.data.props['cfImageSizes'].type === 'DesignValue'
                 ? node.data.props['cfImageSizes'].valuesByBreakpoint
@@ -130,6 +136,42 @@ export const useComponentProps = ({
               );
             } catch (error) {
               console.error('Error transforming image asset', error);
+            }
+          } else if (
+            isMediaType &&
+            binding.sys.linkType === 'Asset' &&
+            variableName === 'cfBackgroundImageUrl'
+          ) {
+            const asset = entityStore.getEntryOrAsset(binding) as Asset;
+            const format = resolveDesignValue(
+              node.data.props['cfImageFormat'].type === 'DesignValue'
+                ? node.data.props['cfImageFormat'].valuesByBreakpoint
+                : {},
+              'cfImageFormat',
+            );
+            const quality = resolveDesignValue(
+              node.data.props['cfImageQuality'].type === 'DesignValue'
+                ? node.data.props['cfImageQuality'].valuesByBreakpoint
+                : {},
+              'cfImageQuality',
+            );
+
+            const width = resolveDesignValue(
+              node.data.props['cfImageWidth'].type === 'DesignValue'
+                ? node.data.props['cfImageWidth'].valuesByBreakpoint
+                : {},
+              'cfImageWidth',
+            );
+
+            try {
+              boundValue = transformBackgroundImageAsset(
+                asset.fields.file as AssetFile,
+                Number(500),
+                Number(quality),
+                format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+              );
+            } catch (error) {
+              console.error('Error transforming background image asset', error);
             }
           } else {
             boundValue = areEntitiesFetched

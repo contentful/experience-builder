@@ -27,17 +27,12 @@ export const ImageComponentDefinition: ComponentDefinition = {
     alt: {
       displayName: 'Alt',
       type: 'Text',
+      description: 'Alternative text for the image',
     },
     image: {
       displayName: 'Image',
       type: 'Media',
-    },
-    classes: {
-      displayName: 'Classes',
-      description: 'Additional CSS classes to apply to the component.',
-      type: 'Text',
-      defaultValue: 'cf-image',
-      group: 'style',
+      description: 'Image to display',
     },
   },
 };
