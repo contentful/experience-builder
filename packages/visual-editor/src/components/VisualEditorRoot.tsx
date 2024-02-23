@@ -10,7 +10,7 @@ import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
 import { CTFL_ZONE_ID } from '@/types/constants';
 
-const findNearestDropzone = (element: HTMLElement) => {
+const findNearestDropzone = (element: HTMLElement): string | null => {
   const zoneId = element.getAttribute(CTFL_ZONE_ID);
 
   if (!element.parentElement) {
