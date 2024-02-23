@@ -12,6 +12,9 @@
 .container:not(.isRoot) {
   outline-offset: -1px;
 }
+.isRoot {
+  flex: 1;
+}
 
 .isEmpty {
   height: 200px;
@@ -26,15 +29,11 @@
   height: 20px;
 }
 
-.isDragging {
+.isDragging:not(.isRoot) {
   outline: 2px dashed var(--exp-builder-blue500);
 }
 
 .isDestination:not(.isRoot) {
   outline: 2px dashed var(--exp-builder-blue500);
   background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
-}
-
-.isDestination.isRoot {
-  outline: 2px dashed var(--exp-builder-blue500);
 }

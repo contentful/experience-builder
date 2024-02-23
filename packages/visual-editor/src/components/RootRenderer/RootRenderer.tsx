@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { CSSProperties, useCallback, useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { Dropzone } from '../Dropzone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
 import type { CompositionTree } from '@contentful/experience-builder-core/types';
 
-import { COMPONENT_LIST_ID, ROOT_ID } from '@/types/constants';
+import { COMPONENT_LIST_ID, DRAGGABLE_HEIGHT, ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import styles from './render.module.css';
@@ -26,8 +26,9 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const breakpoints = useTreeStore((state) => state.breakpoints);
   const draggableSourceId = useDraggedItemStore((state) => state.draggedItem?.source.droppableId);
   const draggingNewComponent = !!draggableSourceId?.startsWith(COMPONENT_LIST_ID);
-
+  const containerRef = useRef<HTMLDivElement>(null);
   const { resolveDesignValue } = useBreakpoints(breakpoints);
+  const [minHeight, setMinHeight] = useState(0);
   const tree = useTreeStore((state) => state.tree);
 
   useEffect(() => {
@@ -47,11 +48,39 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
     });
   };
 
+  const handleResizeCanvas = useCallback(() => {
+    const parentElement = containerRef.current?.parentElement;
+    if (!parentElement) {
+      return;
+    }
+
+    let siblingHeight = 0;
+
+    for (const child of parentElement.children) {
+      if (!child.hasAttribute('data-ctfl-root')) {
+        siblingHeight += child.getBoundingClientRect().height;
+      }
+    }
+
+    setMinHeight(window.innerHeight - siblingHeight - DRAGGABLE_HEIGHT);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [containerRef.current]);
+
+  useEffect(() => {
+    handleResizeCanvas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [containerRef.current]);
+
+  const containerStyles: CSSProperties = {
+    minHeight: `${minHeight}px`,
+  };
+
   return (
     <DNDProvider>
       {dragItem && <DraggableContainer id={dragItem} />}
 
-      <div className={styles.container}>
+      <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
         {/* 
           This hitbox is required so that users can
           add sections to the top of the document.

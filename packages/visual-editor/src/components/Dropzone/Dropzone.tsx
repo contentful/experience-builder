@@ -116,6 +116,7 @@ export function Dropzone({
                 [styles.isEmpty]: isEmptyCanvas,
                 [styles.isDragging]: userIsDragging && !isAssembly,
                 [styles.isDestination]: isDestination && !isAssembly,
+                [styles.isRoot]: isRootZone,
               },
               className,
             )}
