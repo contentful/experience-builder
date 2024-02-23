@@ -69,6 +69,7 @@ export const VisualEditorRoot = () => {
     return () => {
       document.removeEventListener('mousemove', onMouseMove);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!initialized) return null;
