@@ -3,7 +3,6 @@ import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
-import { constants } from '@/utils/constants';
 
 export * from './Heading';
 
@@ -26,7 +25,6 @@ export const HeadingComponentDefinition: ComponentDefinition = {
     'cfBackgroundColor',
     'cfBorder',
   ],
-  thumbnailUrl: constants.thumbnails.heading,
   variables: {
     // Built-in style variables with default values changed
     cfHeight: {
