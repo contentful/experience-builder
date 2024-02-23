@@ -14,6 +14,7 @@ export const ImageComponentDefinition: ComponentDefinition = {
   builtInStyles: [
     'cfMargin',
     'cfPadding',
+    'cfImageAsset',
     'cfImageWidth',
     'cfImageHeight',
     'cfImageFormat',
@@ -28,11 +29,6 @@ export const ImageComponentDefinition: ComponentDefinition = {
       displayName: 'Alt',
       type: 'Text',
       description: 'Alternative text for the image',
-    },
-    image: {
-      displayName: 'Image',
-      type: 'Media',
-      description: 'Image to display',
     },
   },
 };

@@ -100,26 +100,22 @@ export const CompositionBlock = ({
 
           let value: BoundComponentPropertyTypes;
 
-          if (
-            isMediaType &&
-            binding.sys.linkType === 'Asset' &&
-            variableName !== 'cfBackgroundImageUrl'
-          ) {
+          if (isMediaType && binding.sys.linkType === 'Asset' && variableName === 'cfImageAsset') {
             const asset = entityStore.getEntryOrAsset(binding) as Asset;
             const format = resolveDesignValue(
-              node.variables['cfImageFormat'].type === 'DesignValue'
+              node.variables['cfImageFormat']?.type === 'DesignValue'
                 ? node.variables['cfImageFormat'].valuesByBreakpoint
                 : {},
               'cfImageFormat',
             );
             const quality = resolveDesignValue(
-              node.variables['cfImageQuality'].type === 'DesignValue'
+              node.variables['cfImageQuality']?.type === 'DesignValue'
                 ? node.variables['cfImageQuality'].valuesByBreakpoint
                 : {},
               'cfImageQuality',
             );
             const sizes = resolveDesignValue(
-              node.variables['cfImageSizes'].type === 'DesignValue'
+              node.variables['cfImageSizes']?.type === 'DesignValue'
                 ? node.variables['cfImageSizes'].valuesByBreakpoint
                 : {},
               'cfImageSizes',
@@ -134,6 +130,7 @@ export const CompositionBlock = ({
             } catch (error) {
               console.error('Error transforming image asset', error);
             }
+            acc[variableName] = value;
           } else if (
             isMediaType &&
             binding.sys.linkType === 'Asset' &&
@@ -141,13 +138,13 @@ export const CompositionBlock = ({
           ) {
             const asset = entityStore.getEntryOrAsset(binding) as Asset;
             const format = resolveDesignValue(
-              node.variables['cfImageFormat'].type === 'DesignValue'
+              node.variables['cfImageFormat']?.type === 'DesignValue'
                 ? node.variables['cfImageFormat'].valuesByBreakpoint
                 : {},
               'cfImageFormat',
             );
             const quality = resolveDesignValue(
-              node.variables['cfImageQuality'].type === 'DesignValue'
+              node.variables['cfImageQuality']?.type === 'DesignValue'
                 ? node.variables['cfImageQuality'].valuesByBreakpoint
                 : {},
               'cfImageQuality',
@@ -169,6 +166,7 @@ export const CompositionBlock = ({
             } catch (error) {
               console.error('Error transforming background image asset', error);
             }
+            acc[variableName] = value;
           } else {
             value = entityStore.getValue(binding, path.slice(0, -1));
             if (value) {
@@ -188,9 +186,9 @@ export const CompositionBlock = ({
             }
             const variableDefinition = componentRegistration.definition.variables[variableName];
             value = transformContentValue(value, variableDefinition);
+            acc[variableName] = value;
           }
 
-          acc[variableName] = value;
           break;
         }
         case 'UnboundValue': {
@@ -268,10 +266,14 @@ export const CompositionBlock = ({
     );
   }
 
+  //List explicit style props that will end up being passed to the component
+  const stylesToKeep = ['cfImageAsset'];
+  const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
+
   return React.createElement(
     component,
     {
-      ...omit(nodeProps, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+      ...omit(nodeProps, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab']),
       className,
     },
     children,

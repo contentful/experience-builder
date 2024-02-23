@@ -133,6 +133,7 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfWidth',
   'cfMaxWidth',
   'cfHeight',
+  'cfImageAsset',
   'cfImageFormat',
   'cfImageHeight',
   'cfImageObjectFit',

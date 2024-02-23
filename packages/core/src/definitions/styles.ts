@@ -130,7 +130,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'Adjust background image to fit, fill or tile the container',
-    defaultValue: 'fit',
+    defaultValue: 'fill',
     validations: {
       in: [
         {
@@ -171,18 +171,18 @@ export const builtInStyles: Partial<
     description: 'The format of the image',
   },
   cfImageQuality: {
-    displayName: 'Image Quality',
+    displayName: 'Image Sizes',
     type: 'Text',
     group: 'style',
     description: 'Quality of the image (percentage) if the image format supports it',
     defaultValue: '100',
   },
-  cfImageWidth: {
-    displayName: 'Image Width',
+  cfImageSizes: {
+    displayName: 'Image Sizes',
     type: 'Text',
     group: 'style',
-    description: 'The width of the image',
-    defaultValue: '500px',
+    description: 'Hint to browser on the expected width of the image',
+    defaultValue: '100vw',
   },
   cfOpenInNewTab: {
     displayName: 'Hyperlink behaviour',
@@ -193,7 +193,7 @@ export const builtInStyles: Partial<
 };
 
 export const optionalBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
 > = {
   cfFontSize: {
     displayName: 'Font Size',
@@ -224,6 +224,11 @@ export const optionalBuiltInStyles: Partial<
     group: 'style',
     description: 'The font weight of the element',
     defaultValue: '400',
+  },
+  cfImageAsset: {
+    displayName: 'Image',
+    type: 'Media',
+    description: 'Image to display',
   },
   cfImageFormat: {
     displayName: 'Image Format',
@@ -368,7 +373,7 @@ export const optionalBuiltInStyles: Partial<
 };
 
 export const containerBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
 > = {
   ...builtInStyles,
   cfMaxWidth: {
@@ -489,7 +494,7 @@ export const singleColumnBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'Adjust background image to fit, fill or tile the column',
-    defaultValue: 'fit',
+    defaultValue: 'fill',
     validations: {
       in: [
         {
@@ -589,7 +594,7 @@ export const columnsBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'Adjust background image to fit, fill or tile the columns',
-    defaultValue: 'fit',
+    defaultValue: 'fill',
     validations: {
       in: [
         {

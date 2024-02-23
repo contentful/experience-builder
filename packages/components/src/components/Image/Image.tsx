@@ -4,11 +4,12 @@ import './Image.css';
 import { constants } from '@/utils/constants';
 
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  image?: OptimizedImageAsset | string;
+  cfImageAsset?: OptimizedImageAsset | string;
 }
 
-export const Image: React.FC<ImageProps> = ({ className, src, image, ...props }) => {
-  if (!image && !src) {
+export const Image: React.FC<ImageProps> = ({ className, src, cfImageAsset, ...props }) => {
+  console.log('Image', { className, src, cfImageAsset, props });
+  if (!cfImageAsset && !src) {
     return (
       <div className="cf-no-image-wrapper">
         <img
@@ -21,19 +22,24 @@ export const Image: React.FC<ImageProps> = ({ className, src, image, ...props })
     );
   }
 
-  if (typeof image === 'string') {
+  if (typeof cfImageAsset === 'string') {
     return (
-      <img data-id="image-string" src={image} className={'cf-image ' + className} {...props} />
+      <img
+        data-id="image-string"
+        src={cfImageAsset}
+        className={'cf-image ' + className}
+        {...props}
+      />
     );
   }
 
-  if (image) {
+  if (cfImageAsset) {
     return (
       <img
         data-id="image-object"
-        src={image.url}
-        srcSet={image.srcSet?.length ? image.srcSet?.join(', ') : undefined}
-        sizes={image.sizes ? image.sizes : undefined}
+        src={cfImageAsset.url}
+        srcSet={cfImageAsset.srcSet?.length ? cfImageAsset.srcSet?.join(', ') : undefined}
+        sizes={cfImageAsset.sizes ? cfImageAsset.sizes : undefined}
         className={'cf-image ' + className}
         {...props}
       />

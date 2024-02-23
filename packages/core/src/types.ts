@@ -191,7 +191,7 @@ export type StyleProps = {
   cfFlexWrap: 'nowrap' | 'wrap';
   cfBorder: string;
   cfGap: string;
-  cfBackgroundImageUrl: string;
+  cfBackgroundImageUrl: OptimizedBackgroundImageAsset | string;
   cfBackgroundImageScaling: 'fit' | 'fill' | 'tile';
   cfBackgroundImageAlignment:
     | 'left'
@@ -208,6 +208,7 @@ export type StyleProps = {
     | 'center center'
     | 'center bottom';
   cfHyperlink: string;
+  cfImageAsset: OptimizedImageAsset | string;
   cfImageFormat: string;
   cfImageHeight: string;
   cfImageObjectFit: string;
@@ -363,6 +364,8 @@ export type OptimizedImageAsset = {
   url: string;
   srcSet?: string[];
   sizes?: string;
+  quality?: number;
+  format?: string;
   file: AssetFile;
 };
 

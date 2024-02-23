@@ -100,28 +100,24 @@ export const useComponentProps = ({
 
           let boundValue: BoundComponentPropertyTypes;
 
-          if (
-            isMediaType &&
-            binding.sys.linkType === 'Asset' &&
-            variableName !== 'cfBackgroundImageUrl'
-          ) {
+          if (isMediaType && binding.sys.linkType === 'Asset' && variableName === 'cfImageAsset') {
             const asset = entityStore.getEntryOrAsset(binding) as Asset;
 
             const format = resolveDesignValue(
-              node.data.props['cfImageFormat'].type === 'DesignValue'
+              node.data.props['cfImageFormat']?.type === 'DesignValue'
                 ? node.data.props['cfImageFormat'].valuesByBreakpoint
                 : {},
               'cfImageFormat',
             );
             const quality = resolveDesignValue(
-              node.data.props['cfImageQuality'].type === 'DesignValue'
+              node.data.props['cfImageQuality']?.type === 'DesignValue'
                 ? node.data.props['cfImageQuality'].valuesByBreakpoint
                 : {},
               'cfImageQuality',
             );
 
             const sizes = resolveDesignValue(
-              node.data.props['cfImageSizes'].type === 'DesignValue'
+              node.data.props['cfImageSizes']?.type === 'DesignValue'
                 ? node.data.props['cfImageSizes'].valuesByBreakpoint
                 : {},
               'cfImageSizes',
@@ -137,6 +133,10 @@ export const useComponentProps = ({
             } catch (error) {
               console.error('Error transforming image asset', error);
             }
+            return {
+              ...acc,
+              [variableName]: boundValue,
+            };
           } else if (
             isMediaType &&
             binding.sys.linkType === 'Asset' &&
@@ -144,24 +144,24 @@ export const useComponentProps = ({
           ) {
             const asset = entityStore.getEntryOrAsset(binding) as Asset;
             const format = resolveDesignValue(
-              node.data.props['cfImageFormat'].type === 'DesignValue'
+              node.data.props['cfImageFormat']?.type === 'DesignValue'
                 ? node.data.props['cfImageFormat'].valuesByBreakpoint
                 : {},
               'cfImageFormat',
             );
             const quality = resolveDesignValue(
-              node.data.props['cfImageQuality'].type === 'DesignValue'
+              node.data.props['cfImageQuality']?.type === 'DesignValue'
                 ? node.data.props['cfImageQuality'].valuesByBreakpoint
                 : {},
               'cfImageQuality',
             );
 
-            const width = resolveDesignValue(
-              node.data.props['cfImageWidth'].type === 'DesignValue'
-                ? node.data.props['cfImageWidth'].valuesByBreakpoint
-                : {},
-              'cfImageWidth',
-            );
+            // const width = resolveDesignValue(
+            //   node.data.props['cfImageWidth'].type === 'DesignValue'
+            //     ? node.data.props['cfImageWidth'].valuesByBreakpoint
+            //     : {},
+            //   'cfImageWidth',
+            // );
 
             try {
               boundValue = transformBackgroundImageAsset(
@@ -173,6 +173,10 @@ export const useComponentProps = ({
             } catch (error) {
               console.error('Error transforming background image asset', error);
             }
+            return {
+              ...acc,
+              [variableName]: boundValue,
+            };
           } else {
             boundValue = areEntitiesFetched
               ? entityStore.getValue(binding, path.slice(0, -1))
@@ -191,10 +195,6 @@ export const useComponentProps = ({
               boundValue = maybeBoundAsset;
             }
           }
-
-          // if (typeof boundValue === 'object' && boundValue.sys?.linkType === 'Asset') {
-          //   boundValue = entityStore?.getValue(boundValue, ['fields', 'file']);
-          // }
 
           const value = boundValue || variableDefinition.defaultValue;
 
@@ -268,12 +268,16 @@ export const useComponentProps = ({
     'data-cf-node-block-type': node.type,
   };
 
+  //List explicit style props that will end up being passed to the component
+  const stylesToKeep = ['cfImageAsset'];
+  const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
+
   const componentProps = {
     className: componentClass,
     editorMode: true,
     node,
     renderDropzone,
-    ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+    ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab']),
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
