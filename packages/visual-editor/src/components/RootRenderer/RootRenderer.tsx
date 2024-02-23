@@ -4,10 +4,9 @@ import { Dropzone } from '../Dropzone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
 import type { CompositionTree } from '@contentful/experience-builder-core/types';
 
-import { ROOT_ID } from '@/types/constants';
+import { COMPONENT_LIST_ID, ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { useZoneStore } from '@/store/zone';
 import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
@@ -23,9 +22,10 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   useEditorSubscriber();
 
   const dragItem = useDraggedItemStore((state) => state.componentId);
-  const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const breakpoints = useTreeStore((state) => state.breakpoints);
+  const draggableSourceId = useDraggedItemStore((state) => state.draggedItem?.source.droppableId);
+  const draggingNewComponent = !!draggableSourceId?.startsWith(COMPONENT_LIST_ID);
 
   const { resolveDesignValue } = useBreakpoints(breakpoints);
   const tree = useTreeStore((state) => state.tree);
@@ -56,28 +56,16 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
           This hitbox is required so that users can
           add sections to the top of the document.
         */}
-        {userIsDragging && (
-          <div
-            className={styles.hitbox}
-            onMouseOver={(e) => {
-              e.stopPropagation();
-              setHoveringSection(ROOT_ID);
-            }}
-          />
+        {userIsDragging && draggingNewComponent && (
+          <div className={styles.hitbox} data-ctfl-zone-id={ROOT_ID} />
         )}
-        <Dropzone sectionId={ROOT_ID} zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
+        <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
         {/* 
           This hitbox is required so that users can
           add sections to the bottom of the document.
         */}
-        {userIsDragging && (
-          <div
-            className={styles.hitbox}
-            onMouseOver={(e) => {
-              e.stopPropagation();
-              setHoveringSection(ROOT_ID);
-            }}
-          />
+        {userIsDragging && draggingNewComponent && (
+          <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />
         )}
       </div>
     </DNDProvider>

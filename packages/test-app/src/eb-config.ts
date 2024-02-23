@@ -9,6 +9,7 @@ defineComponents([
       children: true,
       name: 'Children Enabled',
       category: 'Custom Components',
+      description: 'my description',
       builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
       variables: {
         heading: {

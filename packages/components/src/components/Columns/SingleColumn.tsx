@@ -34,7 +34,7 @@ export const SingleColumn: React.FC<SingleColumnProps> = (props) => {
       className={combineClasses(
         wrapperClassName,
         'cf-single-column-wrapper',
-        isEmpty ? 'cf-single-column-empty' : ''
+        isEmpty ? 'cf-single-column-empty' : '',
       )}
       style={{
         ...style,
@@ -44,7 +44,7 @@ export const SingleColumn: React.FC<SingleColumnProps> = (props) => {
       {isEmpty && <div className="cf-single-column-label">Column</div>}
       {renderDropzone(node, {
         ['data-test-id']: 'contentful-single-column',
-        className,
+        className: combineClasses('cf-single-column', className),
         WrapperComponent: Flex,
       })}
     </div>

@@ -1,5 +1,4 @@
 import useCanvasInteractions from '@/hooks/useCanvasInteractions';
-import { usePlaceholderStyle } from '@/hooks/usePlaceholderStyle';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { useEditorStore } from '@/store/editor';
 import { sendMessage } from '@contentful/experience-builder-core';
@@ -26,15 +25,13 @@ export const DNDProvider = ({ children }: Props) => {
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
   const updateItem = useDraggedItemStore((state) => state.updateItem);
   const { onAddComponent, onMoveComponent } = useCanvasInteractions();
-  const { onDragStartOrUpdate } = usePlaceholderStyle();
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
   const prevSelectedNodeId = useRef<string | null>(null);
 
   const isTestRun =
     typeof window !== 'undefined' && Object.prototype.hasOwnProperty.call(window, 'Cypress');
 
-  const dragStart: OnBeforeDragStartResponder = (start) => {
-    onDragStartOrUpdate(start);
+  const dragStart: OnBeforeDragStartResponder = () => {
     prevSelectedNodeId.current = selectedNodeId;
 
     //Unselect the current node when dragging and remove the outline
@@ -50,7 +47,6 @@ export const DNDProvider = ({ children }: Props) => {
 
   const dragUpdate: OnDragUpdateResponder = (update) => {
     updateItem(update);
-    onDragStartOrUpdate(update);
   };
 
   const dragEnd: OnDragEndResponder = (dropResult) => {

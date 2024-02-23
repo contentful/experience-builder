@@ -9,20 +9,8 @@
   transition: outline 0.2s;
 }
 
-.isExpanded {
-  min-height: 80px;
-}
-
-.fixedWidth {
-  width: fit-content;
-}
-
-.fullWidth {
-  width: 100%;
-}
-
-.pointerEvents {
-  pointer-events: all;
+.container:not(.isRoot) {
+  outline-offset: -1px;
 }
 
 .isEmpty {
@@ -38,10 +26,6 @@
   height: 20px;
 }
 
-.block {
-  pointer-events: none;
-}
-
 .isDragging {
   outline: 2px dashed var(--exp-builder-blue500);
 }
@@ -49,4 +33,8 @@
 .isDestination:not(.isRoot) {
   outline: 2px dashed var(--exp-builder-blue500);
   background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
+}
+
+.isDestination.isRoot {
+  outline: 2px dashed var(--exp-builder-blue500);
 }
