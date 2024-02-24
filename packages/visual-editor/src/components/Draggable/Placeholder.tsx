@@ -15,40 +15,47 @@ interface PlaceholderProps extends PlaceholderParams {
   id: string;
 }
 
+/**
+ * Calculate the size and position of the dropzone indicator
+ * when dragging a new component onto the canvas
+ */
 const calcNewComponentStyles = (params: CalcStylesParams): CSSProperties => {
   const { destinationIndex, elementIndex, dropzoneElementId, id, direction, totalIndexes } = params;
 
   const isEnd = destinationIndex === totalIndexes && elementIndex === totalIndexes - 1;
+  const isHorizontal = direction === 'horizontal';
+  const isRightAlign = isHorizontal && isEnd;
+  const isBottomAlign = !isHorizontal && isEnd;
 
-  const dropzoneElement = document.querySelector(`[data-rfd-droppable-id="${dropzoneElementId}"]`);
+  const dropzone = document.querySelector(`[data-rfd-droppable-id="${dropzoneElementId}"]`);
   const element = document.querySelector(`[data-ctfl-draggable-id="${id}"]`);
 
-  if (!dropzoneElement || !element) {
+  if (!dropzone || !element) {
     return emptyStyles;
   }
 
-  const { width, height } = dropzoneElement.getBoundingClientRect();
+  const elementSizes = element.getBoundingClientRect();
+  const dropzoneSizes = dropzone.getBoundingClientRect();
 
-  if (direction === 'horizontal') {
-    const top = (height - element.getBoundingClientRect().height) / 2;
+  const width = isHorizontal ? DRAGGABLE_WIDTH : dropzoneSizes.width;
+  const height = isHorizontal ? dropzoneSizes.height : DRAGGABLE_HEIGHT;
+  const top = isHorizontal ? -(height - elementSizes.height) / 2 : -height;
+  const left = isHorizontal ? -width : -(width - elementSizes.width) / 2;
 
-    if (isEnd) {
-      return { width: DRAGGABLE_WIDTH, height, top: -top, right: -DRAGGABLE_WIDTH };
-    }
-
-    return { width: DRAGGABLE_WIDTH, height, top: -top, left: -DRAGGABLE_WIDTH };
-  }
-
-  const left = (width - element.getBoundingClientRect().width) / 2;
-  const top = -DRAGGABLE_HEIGHT;
-
-  if (isEnd) {
-    return { width, height: DRAGGABLE_HEIGHT, bottom: -DRAGGABLE_HEIGHT, left: -left };
-  }
-
-  return { width, height: DRAGGABLE_HEIGHT, top, left: -left };
+  return {
+    width,
+    height,
+    top: !isBottomAlign ? top : 'unset',
+    right: isRightAlign ? -width : 'unset',
+    bottom: isBottomAlign ? -height : 'unset',
+    left: !isRightAlign ? left : 'unset',
+  };
 };
 
+/**
+ * Calculate the size and position of the dropzone indicator
+ * when moving an existing component on the canvas
+ */
 const calcMovementStyles = (params: CalcStylesParams): CSSProperties => {
   const {
     destinationIndex,
@@ -64,54 +71,37 @@ const calcMovementStyles = (params: CalcStylesParams): CSSProperties => {
   } = params;
 
   const isEnd = destinationIndex === totalIndexes && elementIndex === totalIndexes - 1;
-  const isEmptyZone = totalIndexes === 0;
-
+  const isHorizontal = direction === 'horizontal';
   const isSameZone = destinationId === sourceId;
-  const dropzoneElement = document.querySelector(`[data-rfd-droppable-id="${dropzoneElementId}"]`);
-  const draggableElement = document.querySelector(`[data-rfd-draggable-id="${draggableId}"]`);
+  const isBelowSourceIndex = destinationIndex > sourceIndex;
+  const isRightAlign = isHorizontal && (isEnd || (isSameZone && isBelowSourceIndex));
+  const isBottomAlign = !isHorizontal && (isEnd || (isSameZone && isBelowSourceIndex));
+
+  const dropzone = document.querySelector(`[data-rfd-droppable-id="${dropzoneElementId}"]`);
+  const draggable = document.querySelector(`[data-rfd-draggable-id="${draggableId}"]`);
   const element = document.querySelector(`[data-ctfl-draggable-id="${id}"]`);
 
-  if (!dropzoneElement || !element || !draggableElement) {
+  if (!dropzone || !element || !draggable) {
     return emptyStyles;
   }
 
-  const dropzoneSizes = dropzoneElement.getBoundingClientRect();
-
-  const draggableSizes = draggableElement.getBoundingClientRect();
   const elementSizes = element.getBoundingClientRect();
+  const dropzoneSizes = dropzone.getBoundingClientRect();
+  const draggableSizes = draggable.getBoundingClientRect();
 
-  if (direction === 'horizontal') {
-    const width = draggableSizes.width;
-    const height = dropzoneSizes.height;
-    const top = (dropzoneSizes.height - elementSizes.height) / 2;
+  const width = isHorizontal ? draggableSizes.width : dropzoneSizes.width;
+  const height = isHorizontal ? dropzoneSizes.height : draggableSizes.height;
+  const top = isHorizontal ? -(height - elementSizes.height) / 2 : -height;
+  const left = isHorizontal ? -width : -(width - elementSizes.width) / 2;
 
-    if (isSameZone && destinationIndex > sourceIndex) {
-      return { width, height, top: -top, right: -width };
-    }
-    if (isEnd) {
-      return { width, height, top: -top, right: -width };
-    }
-
-    return { width, height, top: -top, left: -width };
-  }
-
-  const width = dropzoneSizes.width;
-  const height = draggableSizes.height;
-  const top = -height;
-  const left = (dropzoneSizes.width - elementSizes.width) / 2;
-
-  if (isEmptyZone) {
-    return { width, height, bottom: -height, left: -left };
-  }
-  if (isSameZone && destinationIndex > sourceIndex) {
-    return { width, height, bottom: -height, left: -left };
-  }
-
-  if (isEnd) {
-    return { width, height, bottom: -height, left: -left };
-  }
-
-  return { width, height, top, left: -left };
+  return {
+    width,
+    height,
+    top: !isBottomAlign ? top : 'unset',
+    right: isRightAlign ? -width : 'unset',
+    bottom: isBottomAlign ? -height : 'unset',
+    left: !isRightAlign ? left : 'unset',
+  };
 };
 
 interface CalcStylesParams extends PlaceholderProps {

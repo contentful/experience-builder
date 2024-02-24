@@ -14,11 +14,11 @@ const findNearestDropzone = (element: HTMLElement): string | null => {
   const zoneId = element.getAttribute(CTFL_ZONE_ID);
 
   if (!element.parentElement) {
-    return '';
+    return null;
   }
 
   if (element.tagName === 'BODY') {
-    return '';
+    return null;
   }
 
   return zoneId ?? findNearestDropzone(element.parentElement);

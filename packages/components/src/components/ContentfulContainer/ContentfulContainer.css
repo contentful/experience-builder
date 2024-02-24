@@ -15,8 +15,6 @@
 
 .cf-container-wrapper {
   position: relative;
-  /* outline-offset: -1px;
-  outline: 2px solid var(--exp-builder-gray400); */
   width: 100%;
 }
 

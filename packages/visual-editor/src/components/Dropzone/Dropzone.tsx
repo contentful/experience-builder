@@ -92,10 +92,7 @@ export function Dropzone({
     const draggingParentIds = getZoneParents(draggedSourceId || '');
 
     if (!draggingParentIds.length) {
-      if (isRootZone) {
-        return true;
-      }
-      return false;
+      return isRootZone;
     }
 
     return isHoveringZone && !isRootZone;
