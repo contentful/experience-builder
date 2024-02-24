@@ -7,14 +7,19 @@
   outline: 2px solid transparent;
   width: 100%;
   transition: outline 0.2s;
+  pointer-events: all;
 }
 
 .container:not(.isRoot) {
   outline-offset: -1px;
 }
 .isRoot,
-.isEmpty {
+.isEmptyCanvas {
   flex: 1;
+}
+
+.isEmptyZone {
+  min-height: 80px;
 }
 
 .hitbox {

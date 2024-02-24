@@ -110,10 +110,11 @@ export function Dropzone({
             className={classNames(
               styles.container,
               {
-                [styles.isEmpty]: isEmptyCanvas,
+                [styles.isEmptyCanvas]: isEmptyCanvas,
                 [styles.isDragging]: userIsDragging && !isAssembly,
                 [styles.isDestination]: isDestination && !isAssembly,
                 [styles.isRoot]: isRootZone,
+                [styles.isEmptyZone]: !content.length,
               },
               className,
             )}
