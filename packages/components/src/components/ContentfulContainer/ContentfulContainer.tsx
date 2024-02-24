@@ -33,7 +33,7 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
     return renderDropzone(node, {
       ['data-test-id']: 'contentful-container',
       id: 'ContentfulContainer',
-      className: combineClasses(className, 'defaultStyles'),
+      className: combineClasses('contentful-container', className),
       WrapperComponent: Flex,
     });
   };
