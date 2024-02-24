@@ -15,8 +15,6 @@ export const ImageComponentDefinition: ComponentDefinition = {
     'cfMargin',
     'cfPadding',
     'cfImageAsset',
-    'cfImageWidth',
-    'cfImageHeight',
     'cfImageFormat',
     'cfImageObjectFit',
     'cfImageObjectPosition',
@@ -25,6 +23,20 @@ export const ImageComponentDefinition: ComponentDefinition = {
   ],
   thumbnailUrl: constants.thumbnails.image,
   variables: {
+    cfHeight: {
+      displayName: 'Image Height',
+      type: 'Text',
+      group: 'style',
+      description: 'The height of the image',
+      defaultValue: '100%',
+    },
+    cfWidth: {
+      displayName: 'Image Width',
+      type: 'Text',
+      group: 'style',
+      description: 'The width of the image',
+      defaultValue: '500px',
+    },
     alt: {
       displayName: 'Alt',
       type: 'Text',

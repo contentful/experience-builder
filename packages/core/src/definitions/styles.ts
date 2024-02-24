@@ -236,13 +236,6 @@ export const optionalBuiltInStyles: Partial<
     group: 'style',
     description: 'The format of the image',
   },
-  cfImageHeight: {
-    displayName: 'Image Height',
-    type: 'Text',
-    group: 'style',
-    description: 'The height of the image',
-    defaultValue: '100%',
-  },
   cfImageObjectFit: {
     displayName: 'Image Fit',
     type: 'Text',
@@ -270,13 +263,6 @@ export const optionalBuiltInStyles: Partial<
     group: 'style',
     description: 'Hint to browser on the expected width of the image',
     defaultValue: '100vw',
-  },
-  cfImageWidth: {
-    displayName: 'Image Width',
-    type: 'Text',
-    group: 'style',
-    description: 'The width of the image',
-    defaultValue: '500px',
   },
   cfLineHeight: {
     displayName: 'Line Height',
