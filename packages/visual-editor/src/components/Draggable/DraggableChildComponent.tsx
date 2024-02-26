@@ -18,10 +18,6 @@ export type NoWrapDraggableProps = {
   draggableProps: DraggableProvidedDraggableProps;
   dragHandleProps: DraggableProvidedDragHandleProps;
   style: CSSProperties;
-  onMouseOver: (e: SyntheticEvent<Element, Event>) => void;
-  onMouseOut: (e: SyntheticEvent<Element, Event>) => void;
-  onMouseDown: (e: SyntheticEvent<Element, Event>) => void;
-  onMouseUp: (e: SyntheticEvent<Element, Event>) => void;
   onClick: (e: SyntheticEvent<Element, Event>) => void;
   ['data-test-id']?: string;
 };
@@ -34,11 +30,8 @@ type DraggableChildComponentProps = {
   index: number;
   isAssemblyBlock?: boolean;
   isSelected?: boolean;
+  isBeingDragged?: boolean;
   onClick?: (e: SyntheticEvent) => void;
-  onMouseDown?: (e: SyntheticEvent) => void;
-  onMouseUp?: (e: SyntheticEvent) => void;
-  onMouseOver?: (e: SyntheticEvent) => void;
-  onMouseOut?: (e: SyntheticEvent) => void;
   coordinates: Rect | null;
   isContainer: boolean;
   blockId: string;
@@ -65,10 +58,6 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     isAssemblyBlock = false,
     isSelected = false,
     onClick = () => null,
-    onMouseDown = () => null,
-    onMouseUp = () => null,
-    onMouseOver = () => null,
-    onMouseOut = () => null,
     label,
     coordinates,
     userIsDragging,
@@ -99,10 +88,6 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
             ...style,
             ...provided.draggableProps.style,
           },
-          onMouseOver,
-          onMouseOut,
-          onMouseDown,
-          onMouseUp,
           onClick,
           Tooltip: (
             <Tooltip

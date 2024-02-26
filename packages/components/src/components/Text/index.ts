@@ -3,7 +3,6 @@ import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
-import { constants } from '@/utils/constants';
 
 export * from './Text';
 
@@ -29,7 +28,6 @@ export const TextComponentDefinition: ComponentDefinition = {
     'cfWidth',
     'cfMaxWidth',
   ],
-  thumbnailUrl: constants.thumbnails.text,
   variables: {
     cfHeight: {
       displayName: 'Height',

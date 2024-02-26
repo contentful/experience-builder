@@ -1,5 +1,5 @@
 .DraggableComponent {
-  pointer-events: auto;
+  pointer-events: all;
   position: relative;
   transition: outline 0.2s;
   cursor: grab;
@@ -14,8 +14,11 @@
 }
 
 .isDragging {
-  background: #abc7e510;
   overflow: hidden;
+}
+
+.isDragging * {
+  pointer-events: none !important;
 }
 
 .isSelected {
