@@ -25,7 +25,6 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
-import { Asset, AssetFile } from 'contentful';
 import { BoundComponentPropertyTypes, Link } from '@contentful/experience-builder-core/types';
 
 type ComponentProps =
