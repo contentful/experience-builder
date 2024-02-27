@@ -27,7 +27,7 @@ export const BackgroundImageInput = ({
   return (
     <Flex flexDirection="column">
       <Text color="gray500" fontWeight="fontWeightNormal" className={styles.label}>
-        Background Image
+        Background image
       </Text>
       <Flex flexDirection="column" gap="spacingS">
         {!!backgroundImageScaling && (
