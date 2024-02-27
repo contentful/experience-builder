@@ -8,7 +8,7 @@ export function getOptimizedImageUrl(
   if (width) {
     params.append('w', width.toString());
   }
-  if (quality && quality > 0 && quality !== 100) {
+  if (quality && quality > 0 && quality < 100) {
     params.append('q', quality.toString());
   }
   if (format) {

@@ -11,6 +11,15 @@ describe('getImageUrl', () => {
     expect(result).toBe('//example.com/image.jpg?w=200&q=80&fm=webp');
   });
 
+  it('when quality is below 0, quality should not be added to the url', () => {
+    const url = '//example.com/image.jpg';
+    const width = 200;
+    const quality = -1;
+    const format = 'webp';
+    const result = getOptimizedImageUrl(url, width, quality, format);
+    expect(result).toBe('//example.com/image.jpg?w=200&fm=webp');
+  });
+
   it('when quality is 0, quality should not be added to the url', () => {
     const url = '//example.com/image.jpg';
     const width = 200;
@@ -24,6 +33,15 @@ describe('getImageUrl', () => {
     const url = '//example.com/image.jpg';
     const width = 200;
     const quality = 100;
+    const format = 'webp';
+    const result = getOptimizedImageUrl(url, width, quality, format);
+    expect(result).toBe('//example.com/image.jpg?w=200&fm=webp');
+  });
+
+  it('when quality is above 100, quality should not be added to the url', () => {
+    const url = '//example.com/image.jpg';
+    const width = 200;
+    const quality = 101;
     const format = 'webp';
     const result = getOptimizedImageUrl(url, width, quality, format);
     expect(result).toBe('//example.com/image.jpg?w=200&fm=webp');

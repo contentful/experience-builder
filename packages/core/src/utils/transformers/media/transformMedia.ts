@@ -48,6 +48,7 @@ export const transformMedia = (
         Number(quality),
         format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
       );
+      return value;
     } catch (error) {
       console.error('Error transforming image asset', error);
     }
@@ -59,12 +60,11 @@ export const transformMedia = (
         Number(quality),
         format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
       );
+      return value;
     } catch (error) {
       console.error('Error transforming image asset', error);
     }
   } else {
     return getBoundValue(entityStore, binding, []);
   }
-
-  return value;
 };
