@@ -45,7 +45,7 @@ export const ButtonComponentDefinition: ComponentDefinition = {
       defaultValue: 'rgba(255, 255, 255, 1)',
     },
     cfBackgroundColor: {
-      displayName: 'Background Color',
+      displayName: 'Background color',
       type: 'Text',
       group: 'style',
       description: 'The background color of the button.',

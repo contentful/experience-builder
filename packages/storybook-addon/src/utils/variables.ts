@@ -68,7 +68,7 @@ export const builtInStyles: Record<
     defaultValue: '0px',
   },
   cfBackgroundColor: {
-    displayName: 'Background',
+    displayName: 'Background color',
     type: 'Text',
     group: 'style',
     description: 'The background color of the section',
@@ -124,7 +124,7 @@ export const builtInStyles: Record<
     defaultValue: '0px',
   },
   cfBackgroundImageUrl: {
-    displayName: 'Background Image',
+    displayName: 'Background image',
     type: 'Text',
     defaultValue: '',
     description: 'Background image for section or container',

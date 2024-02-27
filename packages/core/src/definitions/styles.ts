@@ -64,7 +64,7 @@ export const builtInStyles: Partial<
     defaultValue: '0 0 0 0',
   },
   cfBackgroundColor: {
-    displayName: 'Background',
+    displayName: 'Background color',
     type: 'Text',
     group: 'style',
     description: 'The background color of the section',
@@ -120,7 +120,7 @@ export const builtInStyles: Partial<
     defaultValue: '0px',
   },
   cfBackgroundImageUrl: {
-    displayName: 'Background Image',
+    displayName: 'Background image',
     type: 'Text',
     defaultValue: '',
     description: 'Background image for section or container',
@@ -376,7 +376,7 @@ export const singleColumnBuiltInStyles: Partial<
     defaultValue: '0 0 0 0',
   },
   cfBackgroundColor: {
-    displayName: 'Background',
+    displayName: 'Background color',
     type: 'Text',
     group: 'style',
     description: 'The background color of the column',
@@ -411,7 +411,7 @@ export const singleColumnBuiltInStyles: Partial<
     defaultValue: '0px',
   },
   cfBackgroundImageUrl: {
-    displayName: 'Background Image',
+    displayName: 'Background image',
     type: 'Text',
     defaultValue: '',
     description: 'Background image for section or container',
@@ -504,7 +504,7 @@ export const columnsBuiltInStyles: Partial<
     defaultValue: '1px solid rgba(0, 0, 0, 0)',
   },
   cfBackgroundImageUrl: {
-    displayName: 'Background Image',
+    displayName: 'Background image',
     type: 'Text',
     defaultValue: '',
     description: 'Background image for section or container',
