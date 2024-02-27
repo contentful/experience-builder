@@ -91,79 +91,7 @@ export const CompositionBlock = ({
         case 'BoundValue': {
           const [, uuid, ...path] = variable.path.split('/');
           const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-          // const isMediaType =
-          //   componentRegistration.definition.variables[variableName]?.type === 'Media';
 
-          // let value: BoundComponentPropertyTypes;
-
-          // if (isMediaType && binding.sys.linkType === 'Asset' && variableName === 'cfImageAsset') {
-          //   const asset = entityStore.getEntryOrAsset(binding) as Asset;
-          //   const format = resolveDesignValue(
-          //     node.variables['cfImageFormat']?.type === 'DesignValue'
-          //       ? node.variables['cfImageFormat'].valuesByBreakpoint
-          //       : {},
-          //     'cfImageFormat',
-          //   );
-          //   const quality = resolveDesignValue(
-          //     node.variables['cfImageQuality']?.type === 'DesignValue'
-          //       ? node.variables['cfImageQuality'].valuesByBreakpoint
-          //       : {},
-          //     'cfImageQuality',
-          //   );
-          //   const sizes = resolveDesignValue(
-          //     node.variables['cfImageSizes']?.type === 'DesignValue'
-          //       ? node.variables['cfImageSizes'].valuesByBreakpoint
-          //       : {},
-          //     'cfImageSizes',
-          //   );
-          //   try {
-          //     value = transformImageAsset(
-          //       asset.fields.file as AssetFile,
-          //       sizes as string,
-          //       Number(quality),
-          //       format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-          //     );
-          //   } catch (error) {
-          //     console.error('Error transforming image asset', error);
-          //   }
-          //   acc[variableName] = value;
-          // } else if (
-          //   isMediaType &&
-          //   binding.sys.linkType === 'Asset' &&
-          //   variableName === 'cfBackgroundImageUrl'
-          // ) {
-          //   const asset = entityStore.getEntryOrAsset(binding) as Asset;
-          //   const format = resolveDesignValue(
-          //     node.variables['cfImageFormat']?.type === 'DesignValue'
-          //       ? node.variables['cfImageFormat'].valuesByBreakpoint
-          //       : {},
-          //     'cfImageFormat',
-          //   );
-          //   const quality = resolveDesignValue(
-          //     node.variables['cfImageQuality']?.type === 'DesignValue'
-          //       ? node.variables['cfImageQuality'].valuesByBreakpoint
-          //       : {},
-          //     'cfImageQuality',
-          //   );
-          //   // const width = resolveDesignValue(
-          //   //   node.variables['cfImageWidth'].type === 'DesignValue'
-          //   //     ? node.variables['cfImageWidth'].valuesByBreakpoint
-          //   //     : {},
-          //   //   'cfImageWidth',
-          //   // );
-
-          //   try {
-          //     value = transformBackgroundImageAsset(
-          //       asset.fields.file as AssetFile,
-          //       Number(500),
-          //       Number(quality),
-          //       format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-          //     );
-          //   } catch (error) {
-          //     console.error('Error transforming background image asset', error);
-          //   }
-          //   acc[variableName] = value;
-          // } else {
           const variableDefinition = componentRegistration.definition.variables[variableName];
           const value = transformBoundContentValue(
             node.variables,
@@ -175,8 +103,6 @@ export const CompositionBlock = ({
             path,
           );
           acc[variableName] = value;
-          // }
-
           break;
         }
         case 'UnboundValue': {
