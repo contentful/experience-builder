@@ -1,6 +1,7 @@
 import { SUPPORTED_IMAGE_FORMATS } from '@/constants';
 import { OptimizedImageAsset } from '@/types';
 import { AssetFile } from 'contentful';
+import { getOptimizedImageUrl } from './getOptimizedImageUrl';
 
 type ValidFormats = (typeof SUPPORTED_IMAGE_FORMATS)[number];
 interface AssetFileWithRequiredImage extends AssetFile {
@@ -25,19 +26,21 @@ export const getOptimizedImageAsset = (
     Math.ceil((index + 1) * (maxWidth / numOfParts)),
   );
   const srcSet = sizes
-    ? widthParts.map(
-        (width) =>
-          `${url}?w=${width}${quality > 0 && quality !== 100 ? `&q=${quality}` : ''}${format ? `&fm=${format}` : ''} ${width}w`,
-      )
+    ? widthParts.map((width) => `${getOptimizedImageUrl(url, width, quality, format)} ${width}w`)
     : [];
 
-  if (file.details.image.width > MAX_WIDTH_ALLOWED) {
-    srcSet.push(
-      `${url}?${quality > 0 && quality !== 100 ? `&q=${quality}` : ''}${format ? `&fm=${format}` : ''} ${file.details.image.width}w`,
-    );
+  const intrinsicImageWidth = file.details.image.width;
+
+  if (intrinsicImageWidth > MAX_WIDTH_ALLOWED) {
+    srcSet.push(`${getOptimizedImageUrl(url, undefined, quality, format)} ${intrinsicImageWidth}w`);
   }
 
-  const returnedUrl = `${url}?${file.details.image.width > 2000 ? `w=2000` : ''}${quality > 0 && quality !== 100 ? `&q=${quality}` : ''}`;
+  const returnedUrl = getOptimizedImageUrl(
+    url,
+    file.details.image.width > 2000 ? 2000 : undefined,
+    quality,
+    format,
+  );
 
   const optimizedImageAsset: OptimizedImageAsset = {
     url: returnedUrl,

@@ -1,1 +1,1 @@
-export * from './transformers';
+export * from './transformBoundContentValue';

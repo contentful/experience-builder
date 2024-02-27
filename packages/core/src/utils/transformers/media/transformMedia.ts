@@ -4,6 +4,7 @@ import { BoundComponentPropertyTypes, ComponentTreeNode, ResolveDesignValueType 
 import { Asset, AssetFile, UnresolvedLink } from 'contentful';
 import { getOptimizedBackgroundImageAsset } from './getOptimizedBackgroundImageAsset';
 import { getOptimizedImageAsset } from './getOptimizedImageAsset';
+import { getBoundValue } from '../getBoundValue';
 
 export const transformMedia = (
   variables: ComponentTreeNode['variables'],
@@ -33,6 +34,11 @@ export const transformMedia = (
     'cfImageSizes',
   );
 
+  const width = resolveDesignValue(
+    variables['cfWidth']?.type === 'DesignValue' ? variables['cfWidth'].valuesByBreakpoint : {},
+    'cfWidth',
+  );
+
   //TODO: this will be better served by injectable type transformers instead of if statement
   if (variableName === 'cfImageAsset') {
     try {
@@ -42,6 +48,7 @@ export const transformMedia = (
         Number(quality),
         format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
       );
+      return value;
     } catch (error) {
       console.error('Error transforming image asset', error);
     }
@@ -49,14 +56,15 @@ export const transformMedia = (
     try {
       value = getOptimizedBackgroundImageAsset(
         asset.fields.file as AssetFile,
-        Number(500),
+        width as string,
         Number(quality),
         format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-      ).url;
+      );
+      return value;
     } catch (error) {
       console.error('Error transforming image asset', error);
     }
+  } else {
+    return getBoundValue(entityStore, binding, []);
   }
-
-  return value;
 };

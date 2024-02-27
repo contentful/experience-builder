@@ -1,5 +1,6 @@
 import { SUPPORTED_IMAGE_FORMATS } from '@/constants';
 import { OptimizedBackgroundImageAsset } from '@/types';
+import { getOptimizedImageUrl } from './getOptimizedImageUrl';
 import { AssetFile } from 'contentful';
 
 interface AssetFileWithRequiredImage extends AssetFile {
@@ -7,11 +8,11 @@ interface AssetFileWithRequiredImage extends AssetFile {
 }
 type ValidFormats = (typeof SUPPORTED_IMAGE_FORMATS)[number];
 
-const MAX_WIDTH_ALLOWED = 4000;
+const MAX_WIDTH_ALLOWED = 2000;
 
 export const getOptimizedBackgroundImageAsset = (
   file: AssetFile,
-  width: number,
+  widthStyle: string,
   quality: number = 100,
   format?: ValidFormats,
 ): OptimizedBackgroundImageAsset => {
@@ -19,32 +20,18 @@ export const getOptimizedBackgroundImageAsset = (
     throw Error('Invalid parameters');
   }
   const url = file.url;
-  // const maxWidth = Math.min(file.details.image.width, MAX_WIDTH_ALLOWED);
-  // const numOfParts = Math.max(2, Math.ceil(maxWidth / 500));
-  // const widthParts = Array.from({ length: numOfParts }, (_, index) =>
-  //   Math.ceil((index + 1) * (maxWidth / numOfParts)),
-  // );
-  const srcSet = [
-    `url(${url}?w=${width}${quality > 0 && quality !== 100 ? `&q=${quality}` : ''}${format ? `&fm=${format}` : ''}) 1x`,
-    `url(${url}?w=${width * 2}${quality > 0 && quality !== 100 ? `&q=${quality}` : ''}${format ? `&fm=${format}` : ''}) 2x`,
-  ];
-  // const srcSet = sizes
-  //   ? widthParts.map(
-  //       (width) =>
-  //         `${url}?w=${width}${quality > 0 && quality !== 100 ? `&q=${quality}` : ''}${format ? `&fm=${format}` : ''} ${width}w`,
-  //     )
-  //   : [];
 
-  // if (file.details.image.width > MAX_WIDTH_ALLOWED) {
-  //   srcSet.push(
-  //     `${url}?${quality > 0 && quality !== 100 ? `&q=${quality}` : ''}${format ? `&fm=${format}` : ''} ${file.details.image.width}w`,
-  //   );
-  // }
+  const { width1x, width2x } = getWidths(widthStyle, file);
 
-  const returnedUrl = `${url}?${file.details.image.width > 2000 ? `w=2000` : ''}${quality > 0 && quality !== 100 ? `&q=${quality}` : ''}`;
+  const imageUrl1x = getOptimizedImageUrl(url, width1x, quality, format);
+  const imageUrl2x = getOptimizedImageUrl(url, width2x, quality, format);
+
+  const srcSet = [`url(${imageUrl1x}) 1x`, `url(${imageUrl2x}) 2x`];
+
+  const returnedUrlImageUrl = getOptimizedImageUrl(url, width2x, quality, format);
 
   const optimizedBackgroundImageAsset: OptimizedBackgroundImageAsset = {
-    url: returnedUrl,
+    url: returnedUrlImageUrl,
     srcSet,
     file,
   };
@@ -68,3 +55,16 @@ export const getOptimizedBackgroundImageAsset = (
     return true;
   }
 };
+
+function getWidths(widthStyle: string, file: AssetFileWithRequiredImage) {
+  let width1x = 0;
+  let width2x = 0;
+  const intrinsicImageWidth = file.details.image.width;
+  if (widthStyle.endsWith('px')) {
+    width1x = Math.min(Number(widthStyle.replace('px', '')), intrinsicImageWidth);
+  } else {
+    width1x = Math.min(MAX_WIDTH_ALLOWED, intrinsicImageWidth);
+  }
+  width2x = Math.min(width1x * 2, intrinsicImageWidth);
+  return { width1x, width2x };
+}
