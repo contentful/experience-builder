@@ -64,7 +64,7 @@ export const builtInStyles: Partial<
     defaultValue: '0 0 0 0',
   },
   cfBackgroundColor: {
-    displayName: 'Background',
+    displayName: 'Background color',
     type: 'Text',
     group: 'style',
     description: 'The background color of the section',
@@ -120,13 +120,13 @@ export const builtInStyles: Partial<
     defaultValue: '0px',
   },
   cfBackgroundImageUrl: {
-    displayName: 'Background Image',
+    displayName: 'Background image',
     type: 'Text',
     defaultValue: '',
     description: 'Background image for section or container',
   },
   cfBackgroundImageScaling: {
-    displayName: 'Image Scaling',
+    displayName: 'Image scaling',
     type: 'Text',
     group: 'style',
     description: 'Adjust background image to fit, fill or tile the container',
@@ -149,7 +149,7 @@ export const builtInStyles: Partial<
     },
   },
   cfBackgroundImageAlignment: {
-    displayName: 'Image Alignment',
+    displayName: 'Image alignment',
     type: 'Text',
     group: 'style',
     description: 'Align background image to the edges of the container',
@@ -376,7 +376,7 @@ export const singleColumnBuiltInStyles: Partial<
     defaultValue: '0 0 0 0',
   },
   cfBackgroundColor: {
-    displayName: 'Background',
+    displayName: 'Background color',
     type: 'Text',
     group: 'style',
     description: 'The background color of the column',
@@ -411,13 +411,13 @@ export const singleColumnBuiltInStyles: Partial<
     defaultValue: '0px',
   },
   cfBackgroundImageUrl: {
-    displayName: 'Background Image',
+    displayName: 'Background image',
     type: 'Text',
     defaultValue: '',
     description: 'Background image for section or container',
   },
   cfBackgroundImageScaling: {
-    displayName: 'Image Scaling',
+    displayName: 'Image scaling',
     type: 'Text',
     group: 'style',
     description: 'Adjust background image to fit, fill or tile the column',
@@ -440,7 +440,7 @@ export const singleColumnBuiltInStyles: Partial<
     },
   },
   cfBackgroundImageAlignment: {
-    displayName: 'Image Alignment',
+    displayName: 'Image alignment',
     type: 'Text',
     group: 'style',
     description: 'Align background image to the edges of the column',
@@ -490,7 +490,7 @@ export const columnsBuiltInStyles: Partial<
     defaultValue: '10px 10px 10px 10px',
   },
   cfBackgroundColor: {
-    displayName: 'Background',
+    displayName: 'Background color',
     type: 'Text',
     group: 'style',
     description: 'The background color of the columns',
@@ -504,7 +504,7 @@ export const columnsBuiltInStyles: Partial<
     defaultValue: '1px solid rgba(0, 0, 0, 0)',
   },
   cfBackgroundImageUrl: {
-    displayName: 'Background Image',
+    displayName: 'Background image',
     type: 'Text',
     defaultValue: '',
     description: 'Background image for section or container',
@@ -517,7 +517,7 @@ export const columnsBuiltInStyles: Partial<
     defaultValue: '10px 10px',
   },
   cfBackgroundImageScaling: {
-    displayName: 'Image Scaling',
+    displayName: 'Image scaling',
     type: 'Text',
     group: 'style',
     description: 'Adjust background image to fit, fill or tile the columns',
@@ -540,7 +540,7 @@ export const columnsBuiltInStyles: Partial<
     },
   },
   cfBackgroundImageAlignment: {
-    displayName: 'Image Alignment',
+    displayName: 'Image alignment',
     type: 'Text',
     group: 'style',
     description: 'Align background image to the edges of the columns',
