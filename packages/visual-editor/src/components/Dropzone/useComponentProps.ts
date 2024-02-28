@@ -73,7 +73,7 @@ export const useComponentProps = ({
         if (variableMapping.type === 'DesignValue') {
           const valueByBreakpoint = resolveDesignValue(
             variableMapping.valuesByBreakpoint,
-            variableName
+            variableName,
           );
           const designValue =
             variableName === 'cfHeight'
@@ -91,7 +91,7 @@ export const useComponentProps = ({
         } else if (variableMapping.type === 'BoundValue') {
           if (!areEntitiesFetched) {
             console.debug(
-              `[exp-builder.sdk::useComponentProps] Idle-cycle: as entities are not fetched(areEntitiesFetched=${areEntitiesFetched}), we cannot resolve bound values for ${variableName} so we just resolve them to default values.`
+              `[exp-builder.sdk::useComponentProps] Idle-cycle: as entities are not fetched(areEntitiesFetched=${areEntitiesFetched}), we cannot resolve bound values for ${variableName} so we just resolve them to default values.`,
             );
 
             // Just forcing default value (if we're in idle-cycle, entities are missing)
@@ -99,7 +99,7 @@ export const useComponentProps = ({
               ...acc,
               [variableName]: transformContentValue(
                 variableDefinition.defaultValue,
-                variableDefinition
+                variableDefinition,
               ),
             };
           }
@@ -159,7 +159,7 @@ export const useComponentProps = ({
           };
         }
       },
-      {}
+      {},
     );
   }, [
     definition,
@@ -181,12 +181,20 @@ export const useComponentProps = ({
 
   // Styles that will be applied to the editor wrapper (draggable) element
   const { className: wrapperClass } = useStyleTag({
-    styles: {
-      margin,
-      height,
-      width,
-      maxWidth,
-    },
+    styles:
+      // To ensure that assembly nodes are rendered like they are rendered in
+      // the assembly editor, we need to use a normal block instead of a flex box.
+      node.type === ASSEMBLY_NODE_TYPE
+        ? {
+            display: 'block !important',
+            width: '100%',
+          }
+        : {
+            margin,
+            maxWidth,
+            width,
+            height,
+          },
     nodeId: `editor-${node.data.id}`,
   });
 

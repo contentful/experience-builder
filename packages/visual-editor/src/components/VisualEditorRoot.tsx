@@ -7,11 +7,28 @@ import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 import { useInitializeEditor } from '@/hooks/useInitializeEditor';
 import { useEntityStore } from '@/store/entityStore';
 import { useEditorStore } from '@/store/editor';
+import { useZoneStore } from '@/store/zone';
+import { CTFL_ZONE_ID } from '@/types/constants';
+
+const findNearestDropzone = (element: HTMLElement): string | null => {
+  const zoneId = element.getAttribute(CTFL_ZONE_ID);
+
+  if (!element.parentElement) {
+    return null;
+  }
+
+  if (element.tagName === 'BODY') {
+    return null;
+  }
+
+  return zoneId ?? findNearestDropzone(element.parentElement);
+};
 
 export const VisualEditorRoot = () => {
   const initialized = useInitializeEditor();
   const locale = useEditorStore((state) => state.locale);
   const entityStore = useEntityStore((state) => state.entityStore);
+  const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
 
   useEffect(() => {
@@ -27,6 +44,14 @@ export const VisualEditorRoot = () => {
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+
+      const zoneId = findNearestDropzone(target);
+
+      if (zoneId) {
+        setHoveringZone(zoneId);
+      }
+
       if ((e.target as HTMLElement)?.id === 'item') {
         return;
       }
@@ -48,6 +73,7 @@ export const VisualEditorRoot = () => {
     return () => {
       document.removeEventListener('mousemove', onMouseMove);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!initialized) return null;

@@ -3,7 +3,6 @@ import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
-import { constants } from '@/utils/constants';
 
 export * from './Button';
 
@@ -21,7 +20,6 @@ export const ButtonComponentDefinition: ComponentDefinition = {
     'cfLineHeight',
     'cfBorder',
   ],
-  thumbnailUrl: constants.thumbnails.button,
   variables: {
     cfFontSize: {
       displayName: 'Font Size',
@@ -45,7 +43,7 @@ export const ButtonComponentDefinition: ComponentDefinition = {
       defaultValue: 'rgba(255, 255, 255, 1)',
     },
     cfBackgroundColor: {
-      displayName: 'Background Color',
+      displayName: 'Background color',
       type: 'Text',
       group: 'style',
       description: 'The background color of the button.',

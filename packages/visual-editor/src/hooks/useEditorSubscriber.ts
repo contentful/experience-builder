@@ -339,6 +339,7 @@ export function useEditorSubscriber() {
         }
         case INCOMING_EVENTS.ComponentDragStarted: {
           dragState.updateIsDragStartedOnParent(true);
+          setDraggingOnCanvas(true);
           setComponentId(payload.id || '');
           break;
         }
