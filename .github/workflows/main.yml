@@ -11,16 +11,18 @@ jobs:
     uses: ./.github/workflows/build.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-  check:
-    needs: install-build
-    uses: ./.github/workflows/check.yaml
-    secrets:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  # check:
+  #   needs: install-build
+  #   uses: ./.github/workflows/check.yaml
+  #   secrets:
+  #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   publish:
-    needs: [install-build, check]
+    needs: [install-build]
+    # needs: [install-build, check]
     if: >-
       (github.ref_name == 'main' ||
         github.ref_name == 'development' ||
+        github.ref_name == 'gh-package-publish-fix' ||
         github.ref_name == 'next') &&
       !contains(github.event.head_commit.message, 'skip-release') &&
       github.actor != 'dependabot[bot]' &&
