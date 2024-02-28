@@ -17,12 +17,17 @@
   position: relative;
 }
 
+.cf-single-column {
+  pointer-events: all;
+}
+
 .cf-single-column-empty {
   /* position: relative; */
   border: 2px solid var(--exp-builder-gray400);
 }
 
 .cf-single-column-label {
+  pointer-events: none;
   position: absolute;
   z-index: -1;
   top: 0;
@@ -35,4 +40,5 @@
   font-family: var(--exp-builder-font-stack-primary);
   font-size: 12px;
   color: var(--exp-builder-gray400);
+  z-index: 100;
 }

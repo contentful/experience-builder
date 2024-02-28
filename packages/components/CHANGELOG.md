@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.31](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.30...@contentful/experience-builder-components@0.0.2-alpha.31) (2024-02-28)
+
+### Bug Fixes
+
+- revise built-in component thumbnail urls [ALT-459] ([#413](https://github.com/contentful/experience-builder/issues/413)) ([56ab7cd](https://github.com/contentful/experience-builder/commit/56ab7cd7add426526a5ed650c3aa27b34316b466))
+- update background related fields to have display names of Background image and Background color ([84aecb4](https://github.com/contentful/experience-builder/commit/84aecb4cfcd4a51a29c9444d02686fa35254f30a))
+- **visual-editor:** canvas usability and placeholders [ALT-449] ([#414](https://github.com/contentful/experience-builder/issues/414)) ([f338605](https://github.com/contentful/experience-builder/commit/f338605f709007bd67cb49f7e236b9b7e5019977))
+
+## [0.0.2-alpha.30](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.29...@contentful/experience-builder-components@0.0.2-alpha.30) (2024-02-26)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.29](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.28...@contentful/experience-builder-components@0.0.2-alpha.29) (2024-02-22)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.28](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.27...@contentful/experience-builder-components@0.0.2-alpha.28) (2024-02-21)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.27](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.26...@contentful/experience-builder-components@0.0.2-alpha.27) (2024-02-16)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.26](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.25...@contentful/experience-builder-components@0.0.2-alpha.26) (2024-02-15)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.25](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.24...@contentful/experience-builder-components@0.0.2-alpha.25) (2024-02-14)
+
+### Bug Fixes
+
+- **components:** line breaks for text built-ins [ALT-307] ([#372](https://github.com/contentful/experience-builder/issues/372)) ([068a105](https://github.com/contentful/experience-builder/commit/068a105a38370c350c846ece151ab5f426e8d22a))
+
 ## [0.0.2-alpha.24](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.23...@contentful/experience-builder-components@0.0.2-alpha.24) (2024-02-09)
 
 **Note:** Version bump only for package @contentful/experience-builder-components

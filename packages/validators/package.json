@@ -1,0 +1,46 @@
+{
+  "name": "@contentful/experiences-validators",
+  "version": "0.0.1-alpha.3",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/validators#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/experience-builder.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "build": "rollup -c rollup.config.mjs",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "files": [
+    "dist/**/*.*"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js",
+      "types": [
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vitest": "^1.2.2"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
+}

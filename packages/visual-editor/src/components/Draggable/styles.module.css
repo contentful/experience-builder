@@ -1,5 +1,5 @@
 .DraggableComponent {
-  pointer-events: auto;
+  pointer-events: all;
   position: relative;
   transition: outline 0.2s;
   cursor: grab;
@@ -7,6 +7,8 @@
   outline: 2px solid transparent;
   box-sizing: border-box;
   display: flex;
+  /* Especially, avoid horizontal overflow as this breaks the overall canvas scrolling */
+  overflow: hidden;
 }
 
 .DraggableComponent > * {
@@ -14,8 +16,11 @@
 }
 
 .isDragging {
-  background: #abc7e510;
   overflow: hidden;
+}
+
+.isDragging * {
+  pointer-events: none !important;
 }
 
 .isSelected {

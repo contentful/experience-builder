@@ -6,9 +6,15 @@ import {
 } from '@contentful/experience-builder-core';
 import { INCOMING_EVENTS, OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
 
-export const useDetectEditorMode = () => {
-  //Assume we are in editor mode initially if we are in iframe
-  const [isEditorMode, setIsEditorMode] = useState(inIframe());
+type UseDetectEditorModeArgs = {
+  /** If running from a known client side only situation (ie: useFetchBySlug),
+   * set this to true to kick in editor mode check sooner (which avoids a render cycle) */
+  isClientSide?: boolean;
+};
+
+export const useDetectEditorMode = ({ isClientSide = false }: UseDetectEditorModeArgs = {}) => {
+  const [mounted, setMounted] = useState(false);
+  const [isEditorMode, setIsEditorMode] = useState(isClientSide ? inIframe() : false);
   const receivedMessage = useRef(false);
 
   useEffect(() => {
@@ -29,21 +35,27 @@ export const useDetectEditorMode = () => {
       }
     };
 
-    //Double check if we are in editor mode by listening to postMessage events
-    if (typeof window !== 'undefined' && !window.__EB__?.isEditorMode) {
-      window.addEventListener('message', onMessage);
-      sendMessage(OUTGOING_EVENTS.Connected);
+    //Only run check after component is mounted on the client to avoid hydration ssr issues
+    if (mounted) {
+      setIsEditorMode(inIframe());
+      //Double check if we are in editor mode by listening to postMessage events
+      if (typeof window !== 'undefined' && !window.__EB__?.isEditorMode) {
+        window.addEventListener('message', onMessage);
+        sendMessage(OUTGOING_EVENTS.Connected);
 
-      setTimeout(() => {
-        if (!receivedMessage.current) {
-          // if message is not received back in time, set editorMode back to false
-          setIsEditorMode(false);
-        }
-      }, 100);
+        setTimeout(() => {
+          if (!receivedMessage.current) {
+            // if message is not received back in time, set editorMode back to false
+            setIsEditorMode(false);
+          }
+        }, 100);
+      }
+    } else {
+      setMounted(true);
     }
+
     return () => window.removeEventListener('message', onMessage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mounted]);
 
   return isEditorMode;
 };

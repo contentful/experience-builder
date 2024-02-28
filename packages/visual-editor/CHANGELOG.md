@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.31](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.30...@contentful/experience-builder-visual-editor@0.0.2-alpha.31) (2024-02-28)
+
+### Bug Fixes
+
+- **visual-editor:** canvas usability and placeholders [ALT-449] ([#414](https://github.com/contentful/experience-builder/issues/414)) ([f338605](https://github.com/contentful/experience-builder/commit/f338605f709007bd67cb49f7e236b9b7e5019977))
+- wrap assembly with correct container styles ([222cd37](https://github.com/contentful/experience-builder/commit/222cd3721e47135e16d2ef52e16baedb982135a4))
+
+### Reverts
+
+- dont overwrite assembly block height manually ([117d59c](https://github.com/contentful/experience-builder/commit/117d59c76ec9c6664fb416c1f6a5f8a46562664e))
+
+## [0.0.2-alpha.30](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.29...@contentful/experience-builder-visual-editor@0.0.2-alpha.30) (2024-02-26)
+
+**Note:** Version bump only for package @contentful/experience-builder-visual-editor
+
+## [0.0.2-alpha.29](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.28...@contentful/experience-builder-visual-editor@0.0.2-alpha.29) (2024-02-22)
+
+**Note:** Version bump only for package @contentful/experience-builder-visual-editor
+
+## [0.0.2-alpha.28](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.27...@contentful/experience-builder-visual-editor@0.0.2-alpha.28) (2024-02-21)
+
+**Note:** Version bump only for package @contentful/experience-builder-visual-editor
+
+## [0.0.2-alpha.27](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.26...@contentful/experience-builder-visual-editor@0.0.2-alpha.27) (2024-02-16)
+
+**Note:** Version bump only for package @contentful/experience-builder-visual-editor
+
+## [0.0.2-alpha.26](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.25...@contentful/experience-builder-visual-editor@0.0.2-alpha.26) (2024-02-15)
+
+**Note:** Version bump only for package @contentful/experience-builder-visual-editor
+
+## [0.0.2-alpha.25](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.24...@contentful/experience-builder-visual-editor@0.0.2-alpha.25) (2024-02-14)
+
+### Features
+
+- clicking outside of the edited canvas sends post message to user interface ([6e35c29](https://github.com/contentful/experience-builder/commit/6e35c2904b33027302e83b1d90b8c674e2380527))
+
 ## [0.0.2-alpha.24](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.23...@contentful/experience-builder-visual-editor@0.0.2-alpha.24) (2024-02-09)
 
 **Note:** Version bump only for package @contentful/experience-builder-visual-editor

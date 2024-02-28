@@ -54,11 +54,11 @@ export const resolveAssembly = ({
   entityStore,
 }: {
   node: CompositionNode;
-  entityStore: EntityStore | undefined;
+  entityStore: EntityStore;
 }) => {
   const isAssembly = checkIsAssemblyNode({
     componentId: node.definitionId,
-    usedComponents: entityStore?.usedComponents,
+    usedComponents: entityStore.usedComponents,
   });
 
   if (!isAssembly) {
@@ -66,7 +66,7 @@ export const resolveAssembly = ({
   }
 
   const componentId = node.definitionId as string;
-  const assembly = entityStore?.experienceEntryFields?.usedComponents?.find(
+  const assembly = entityStore.experienceEntryFields?.usedComponents?.find(
     (component) => component.sys.id === componentId,
   );
 
@@ -85,7 +85,7 @@ export const resolveAssembly = ({
     componentInstanceVariables: node.variables,
   });
 
-  entityStore?.updateUnboundValues(componentFields.unboundValues);
+  entityStore.addAssemblyUnboundValues(componentFields.unboundValues);
 
   return deserializedNode;
 };

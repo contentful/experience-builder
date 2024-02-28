@@ -14,6 +14,7 @@ export {
   VisualEditorMode,
   fetchById,
   fetchBySlug,
+  createExperience,
 } from '@contentful/experience-builder-core';
 export {
   /** @deprecated use `CONTENTFUL_COMPONENTS.section.id` instead. This will be removed in version 4. */

@@ -72,7 +72,7 @@ export const createAssemblyEntry = ({
             ],
           },
         ],
-        breakpoints: [],
+        breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
         schemaVersion,
       },
       dataSource: {},
@@ -84,7 +84,7 @@ export const createAssemblyEntry = ({
       componentSettings: {
         variableDefinitions: {
           [assemblyGeneratedVariableName]: {
-            id: 'text',
+            displayName: 'Text',
             name: 'Text',
             type: 'Text',
             defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },

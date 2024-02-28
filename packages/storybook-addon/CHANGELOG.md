@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.31](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.30...@contentful/experience-builder-storybook-addon@0.0.2-alpha.31) (2024-02-28)
+
+### Bug Fixes
+
+- update background related fields to have display names of Background image and Background color ([84aecb4](https://github.com/contentful/experience-builder-storybook/commit/84aecb4cfcd4a51a29c9444d02686fa35254f30a))
+
+## [0.0.2-alpha.30](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.29...@contentful/experience-builder-storybook-addon@0.0.2-alpha.30) (2024-02-26)
+
+**Note:** Version bump only for package @contentful/experience-builder-storybook-addon
+
+## [0.0.2-alpha.29](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.28...@contentful/experience-builder-storybook-addon@0.0.2-alpha.29) (2024-02-22)
+
+**Note:** Version bump only for package @contentful/experience-builder-storybook-addon
+
+## [0.0.2-alpha.28](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.27...@contentful/experience-builder-storybook-addon@0.0.2-alpha.28) (2024-02-21)
+
+**Note:** Version bump only for package @contentful/experience-builder-storybook-addon
+
+## [0.0.2-alpha.27](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.26...@contentful/experience-builder-storybook-addon@0.0.2-alpha.27) (2024-02-16)
+
+**Note:** Version bump only for package @contentful/experience-builder-storybook-addon
+
+## [0.0.2-alpha.26](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.25...@contentful/experience-builder-storybook-addon@0.0.2-alpha.26) (2024-02-15)
+
+**Note:** Version bump only for package @contentful/experience-builder-storybook-addon
+
+## [0.0.2-alpha.25](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.24...@contentful/experience-builder-storybook-addon@0.0.2-alpha.25) (2024-02-14)
+
+### Bug Fixes
+
+- adjust auto to Auto so that the design tab is consistent throughout ([81c7f50](https://github.com/contentful/experience-builder-storybook/commit/81c7f5071e79e4f7e24df908f5c9ccca8b935b1c))
+
 ## [0.0.2-alpha.24](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.23...@contentful/experience-builder-storybook-addon@0.0.2-alpha.24) (2024-02-09)
 
 **Note:** Version bump only for package @contentful/experience-builder-storybook-addon

@@ -20,7 +20,7 @@ export const useFetchBySlug = ({
   client,
   experienceTypeId,
 }: UseFetchBySlugArgs) => {
-  const isEditorMode = useDetectEditorMode();
+  const isEditorMode = useDetectEditorMode({ isClientSide: typeof window !== 'undefined' });
 
   const fetchMethod = useCallback(() => {
     return fetchBySlug({ slug, localeCode, client, experienceTypeId });

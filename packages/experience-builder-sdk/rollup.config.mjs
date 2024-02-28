@@ -4,6 +4,7 @@ import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import postcss from 'rollup-plugin-postcss';
 import postcssImport from 'postcss-import';
+import nodeExternals from 'rollup-plugin-node-externals';
 
 export default [
   {
@@ -16,6 +17,7 @@ export default [
       },
     ],
     plugins: [
+      nodeExternals(),
       postcss({
         plugins: [postcssImport()],
         inject(cssVariableName) {
@@ -26,7 +28,6 @@ export default [
       commonjs(),
       typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true }),
     ],
-    external: [/node_modules/],
   },
   {
     input: 'src/index.ts',

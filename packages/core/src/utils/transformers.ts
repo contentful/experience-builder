@@ -6,6 +6,7 @@ import {
   ComponentDefinitionVariable,
   CompositionVariableValueType,
 } from '@/types';
+import { Link } from 'contentful';
 
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
 
@@ -25,18 +26,17 @@ export const transformBorderStyle = (value?: string): CSSProperties => {
   // Just accept the passed value
   if (parts.length < 3) return { border: value };
   // Replace the second part always with `solid` and set the box sizing accordingly
-  const [borderSize, borderPlacement, ...borderColorParts] = parts;
+  const [borderSize, borderStyle, ...borderColorParts] = parts;
   const borderColor = borderColorParts.join(' ');
   return {
-    border: `${borderSize} solid ${borderColor}`,
-    boxSizing: borderPlacement === 'inside' ? 'border-box' : 'content-box',
+    border: `${borderSize} ${borderStyle} ${borderColor}`,
   };
 };
 
 export const transformAlignment = (
   cfHorizontalAlignment?: string,
   cfVerticalAlignment?: string,
-  cfFlexDirection = 'column'
+  cfFlexDirection = 'column',
 ): CSSProperties =>
   cfFlexDirection === 'row'
     ? {
@@ -72,10 +72,10 @@ interface CSSPropertiesForBackground extends CSSProperties {
 export const transformBackgroundImage = (
   cfBackgroundImageUrl: string | null | undefined,
   cfBackgroundImageScaling?: StyleProps['cfBackgroundImageScaling'],
-  cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment']
+  cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment'],
 ): CSSPropertiesForBackground | undefined => {
   const matchBackgroundSize = (
-    backgroundImageScaling?: StyleProps['cfBackgroundImageScaling']
+    backgroundImageScaling?: StyleProps['cfBackgroundImageScaling'],
   ): 'cover' | 'contain' | undefined => {
     if ('fill' === backgroundImageScaling) return 'cover';
     if ('fit' === backgroundImageScaling) return 'contain';
@@ -83,7 +83,7 @@ export const transformBackgroundImage = (
   };
 
   const matchBackgroundPosition = (
-    cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment']
+    cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment'],
   ): CSSPropertiesForBackground['backgroundPosition'] | undefined => {
     if (!cfBackgroundImageAlignment) {
       return undefined;
@@ -147,8 +147,8 @@ export const transformBackgroundImage = (
 };
 
 export const transformContentValue = (
-  value: CompositionVariableValueType,
-  variableDefinition: ComponentDefinitionVariable
+  value: CompositionVariableValueType | Link<'Asset'>,
+  variableDefinition: ComponentDefinitionVariable,
 ) => {
   if (variableDefinition.type === 'RichText') {
     return transformRichText(value);
@@ -157,7 +157,7 @@ export const transformContentValue = (
 };
 
 export const transformRichText = (
-  value: CompositionVariableValueType
+  value: CompositionVariableValueType,
 ): RichTextDocument | undefined => {
   if (typeof value === 'string') {
     return {
@@ -208,7 +208,7 @@ export const transformWidthSizing = ({
    * The value may instead be a string such as `min-content` or `max-content`. In
    * that case we don't want to use calc and instead return the raw value.
    */
-  if (CSS.supports('width', calcValue)) {
+  if (typeof window !== 'undefined' && CSS.supports('width', calcValue)) {
     return calcValue;
   }
 

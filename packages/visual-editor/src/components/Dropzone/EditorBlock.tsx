@@ -1,11 +1,10 @@
 import React from 'react';
 import styles from './styles.module.css';
 import { DraggableComponent } from '../Draggable/DraggableComponent';
-import { sendMessage } from '@contentful/experience-builder-core';
+import { isContentfulStructureComponent, sendMessage } from '@contentful/experience-builder-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from './useComponent';
-import { useZoneStore } from '@/store/zone';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
@@ -14,19 +13,23 @@ import {
   CONTENTFUL_COMPONENTS,
   ASSEMBLY_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
+  ASSEMBLY_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 import { DraggableChildComponent } from '@components/Draggable/DraggableChildComponent';
 import { RenderDropzoneFunction } from './Dropzone.types';
+import { PlaceholderParams } from '@components/Draggable/Placeholder';
+import { ROOT_ID } from '@/types/constants';
 
 type EditorBlockProps = {
+  placeholder: PlaceholderParams;
   node: CompositionComponentNode;
   index: number;
   userIsDragging: boolean;
   draggingNewComponent: boolean | undefined;
+  draggingRootZone: boolean | undefined;
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   zoneId: string;
-  parentSectionId: string;
 };
 
 export const EditorBlock: React.FC<EditorBlockProps> = ({
@@ -36,11 +39,10 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   draggingNewComponent,
   index,
   zoneId,
-  parentSectionId,
+  draggingRootZone,
   userIsDragging,
+  placeholder,
 }) => {
-  const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
-  const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
   const { node, componentId, wrapperProps, label, elementToRender } = useComponent({
@@ -52,46 +54,33 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
   const coordinates = useSelectedInstanceCoordinates({ node });
 
-  const sectionsWithZone = useZoneStore((state) => state.sectionsWithZones);
-
   const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
   const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
-
-  const containsZone = sectionsWithZone[componentId];
-
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
+  const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
+  const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
+  const isRootComponent = zoneId === ROOT_ID;
+
+  const disableRootHitbox = isRootComponent && !draggingRootZone && !draggingNewComponent;
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
 
-    if (isAssemblyBlock && !containsZone) {
-      // Readonly components in an assembly cannot be selected
-      return;
-    }
-    const nodeId = isAssemblyBlock ? parentSectionId : componentId;
-
-    // Only select the node if the user intentionally clicked on it, but not when dragging
     if (!userIsDragging) {
-      setSelectedNodeId(nodeId);
+      setSelectedNodeId(node.data.id);
+      // if it is the assembly directly we just want to select it as a normal component
+      if (isAssembly) {
+        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+          nodeId: node.data.id,
+        });
+        return;
+      }
+
       sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-        nodeId,
+        assembly: node.data.assembly,
+        nodeId: node.data.id,
       });
     }
-  };
-
-  const onMouseOver = (e: React.SyntheticEvent<Element, Event>) => {
-    e.stopPropagation();
-
-    if (containsZone) {
-      setHoveringSection(componentId);
-    } else {
-      setHoveringSection(parentSectionId);
-    }
-    setHoveringZone(zoneId);
-  };
-
-  const onMouseOut = () => {
-    setHoveringZone('');
   };
 
   if (node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id) {
@@ -99,7 +88,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       <DraggableChildComponent
         elementToRender={elementToRender}
         label={label || 'No Label Specified'}
-        id={`draggable-${componentId}`}
+        id={componentId}
         index={index}
         isAssemblyBlock={isAssemblyBlock}
         isDragDisabled={isSingleColumn}
@@ -110,17 +99,13 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         coordinates={coordinates!}
         wrapperProps={wrapperProps}
         onClick={onClick}
-        onMouseOver={onMouseOver}
-        onMouseOut={onMouseOut}
-        style={{
-          pointerEvents: userIsDragging && draggingNewComponent ? 'all' : undefined,
-        }}
       />
     );
   }
 
   return (
     <DraggableComponent
+      placeholder={placeholder}
       label={label || 'No Label Specified'}
       id={componentId}
       index={index}
@@ -132,24 +117,12 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       blockId={node.data.blockId}
       coordinates={coordinates!}
       wrapperProps={wrapperProps}
-      onClick={onClick}
-      onMouseOver={onMouseOver}
-      onMouseOut={onMouseOut}
-      style={{
-        pointerEvents: userIsDragging && draggingNewComponent ? 'all' : undefined,
-      }}>
+      onClick={onClick}>
       {elementToRender()}
 
-      {/* Hitboxes allow users to add a section between 2 components */}
-      {userIsDragging && (
-        <div
-          className={styles.hitbox}
-          onMouseOver={(e) => {
-            e.stopPropagation();
-            setHoveringZone(zoneId);
-            setHoveringSection(parentSectionId);
-          }}
-        />
+      {/* Hitbox to add block between 2 blocks */}
+      {isStructureComponent && userIsDragging && !disableRootHitbox && (
+        <div data-ctfl-zone-id={zoneId} className={styles.hitbox} />
       )}
     </DraggableComponent>
   );

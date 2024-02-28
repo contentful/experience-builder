@@ -3,7 +3,6 @@ import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
 } from '@contentful/experience-builder-core/constants';
-import { constants } from '@/utils/constants';
 
 export * from './RichText';
 
@@ -21,7 +20,6 @@ export const RichTextComponentDefinition: ComponentDefinition = {
     'cfBackgroundColor',
     'cfBorder',
   ],
-  thumbnailUrl: constants.thumbnails.richText,
   variables: {
     // Built-in style variables with default values changed
     cfLineHeight: {
