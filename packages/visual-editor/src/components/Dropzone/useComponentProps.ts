@@ -11,7 +11,6 @@ import {
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
-  ASSEMBLY_BLOCK_NODE_TYPE,
 } from '@contentful/experience-builder-core/constants';
 import type {
   StyleProps,
@@ -38,18 +37,6 @@ type UseComponentProps = {
   areEntitiesFetched: boolean;
   definition: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
-};
-
-/**
- * This function makes use of the custom constructed node id in `assemblyUtils.ts`.
- * For assembly blockes, the node id uses the following pattern:
- * > `${assemblyComponentId}---${newNodeLocation}`
- *
- * If the parentId is defined but doesn't contain `---`, we assume that this is a block
- * living on the top level of the assembly node.
- */
-const isTopLevelAssemblyBlock = (node: CompositionComponentNode) => {
-  return node.type === ASSEMBLY_BLOCK_NODE_TYPE && node.parentId && !node.parentId.includes('---');
 };
 
 export const useComponentProps = ({
@@ -179,9 +166,7 @@ export const useComponentProps = ({
             margin,
             maxWidth,
             width,
-            // For top-level assembly blocks (container/ section), we don't want to apply
-            // the default 100% as this breaks the size of an assembly inside a column.
-            height: isTopLevelAssemblyBlock(node) ? 'auto' : height,
+            height,
           },
     nodeId: `editor-${node.data.id}`,
   });
