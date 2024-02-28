@@ -83,38 +83,41 @@ export const CompositionBlock = ({
 
     const propMap: Record<string, CompositionVariableValueType> = {};
 
-    return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
-      switch (variable.type) {
-        case 'DesignValue':
-          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
-          break;
-        case 'BoundValue': {
-          const [, uuid, ...path] = variable.path.split('/');
-          const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
+    return Object.entries(componentRegistration.definition.variables).reduce(
+      (acc, [variableName, variableDefinition]) => {
+        const variable = node.variables[variableName];
+        switch (variable.type) {
+          case 'DesignValue':
+            acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
+            break;
+          case 'BoundValue': {
+            const [, uuid, ...path] = variable.path.split('/');
+            const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
 
-          const variableDefinition = componentRegistration.definition.variables[variableName];
-          const value = transformBoundContentValue(
-            node.variables,
-            entityStore,
-            binding,
-            resolveDesignValue,
-            variableName,
-            variableDefinition,
-            path,
-          );
-          acc[variableName] = value;
-          break;
+            const value = transformBoundContentValue(
+              node.variables,
+              entityStore,
+              binding,
+              resolveDesignValue,
+              variableName,
+              variableDefinition,
+              path,
+            );
+            acc[variableName] = value;
+            break;
+          }
+          case 'UnboundValue': {
+            const uuid = variable.key;
+            acc[variableName] = entityStore.unboundValues[uuid]?.value;
+            break;
+          }
+          default:
+            break;
         }
-        case 'UnboundValue': {
-          const uuid = variable.key;
-          acc[variableName] = entityStore.unboundValues[uuid]?.value;
-          break;
-        }
-        default:
-          break;
-      }
-      return acc;
-    }, propMap);
+        return acc;
+      },
+      propMap,
+    );
   }, [componentRegistration, isAssembly, node.variables, resolveDesignValue, entityStore]);
 
   const cfStyles = buildCfStyles(nodeProps);

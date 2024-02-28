@@ -25,7 +25,7 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
-import { BoundComponentPropertyTypes, Link } from '@contentful/experience-builder-core/types';
+import { Link } from '@contentful/experience-builder-core/types';
 
 type ComponentProps =
   | StyleProps
@@ -88,99 +88,12 @@ export const useComponentProps = ({
             [variableName]: designValue,
           };
         } else if (variableMapping.type === 'BoundValue') {
-          // const isMediaType = definition.variables[variableName]?.type === 'Media';
-
           // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
-          let boundValue: BoundComponentPropertyTypes;
-
-          // if (isMediaType && binding.sys.linkType === 'Asset' && variableName === 'cfImageAsset') {
-          //   const asset = entityStore.getEntryOrAsset(binding) as Asset;
-
-          //   const format = resolveDesignValue(
-          //     node.data.props['cfImageFormat']?.type === 'DesignValue'
-          //       ? node.data.props['cfImageFormat'].valuesByBreakpoint
-          //       : {},
-          //     'cfImageFormat',
-          //   );
-          //   const quality = resolveDesignValue(
-          //     node.data.props['cfImageQuality']?.type === 'DesignValue'
-          //       ? node.data.props['cfImageQuality'].valuesByBreakpoint
-          //       : {},
-          //     'cfImageQuality',
-          //   );
-
-          //   const sizes = resolveDesignValue(
-          //     node.data.props['cfImageSizes']?.type === 'DesignValue'
-          //       ? node.data.props['cfImageSizes'].valuesByBreakpoint
-          //       : {},
-          //     'cfImageSizes',
-          //   );
-
-          //   try {
-          //     boundValue = transformImageAsset(
-          //       asset.fields.file as AssetFile,
-          //       sizes as string,
-          //       Number(quality),
-          //       format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-          //     );
-          //   } catch (error) {
-          //     console.error('Error transforming image asset', error);
-          //   }
-          //   return {
-          //     ...acc,
-          //     [variableName]: boundValue,
-          //   };
-          // } else if (
-          //   isMediaType &&
-          //   binding.sys.linkType === 'Asset' &&
-          //   variableName === 'cfBackgroundImageUrl'
-          // ) {
-          //   const asset = entityStore.getEntryOrAsset(binding) as Asset;
-          //   const format = resolveDesignValue(
-          //     node.data.props['cfImageFormat']?.type === 'DesignValue'
-          //       ? node.data.props['cfImageFormat'].valuesByBreakpoint
-          //       : {},
-          //     'cfImageFormat',
-          //   );
-          //   const quality = resolveDesignValue(
-          //     node.data.props['cfImageQuality']?.type === 'DesignValue'
-          //       ? node.data.props['cfImageQuality'].valuesByBreakpoint
-          //       : {},
-          //     'cfImageQuality',
-          //   );
-
-          //   // const width = resolveDesignValue(
-          //   //   node.data.props['cfImageWidth'].type === 'DesignValue'
-          //   //     ? node.data.props['cfImageWidth'].valuesByBreakpoint
-          //   //     : {},
-          //   //   'cfImageWidth',
-          //   // );
-
-          //   try {
-          //     boundValue = transformBackgroundImageAsset(
-          //       asset.fields.file as AssetFile,
-          //       Number(500),
-          //       Number(quality),
-          //       format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-          //     );
-          //   } catch (error) {
-          //     console.error('Error transforming background image asset', error);
-          //   }
-          //   return {
-          //     ...acc,
-          //     [variableName]: boundValue,
-          //   };
-          // } else {
-          //   boundValue = areEntitiesFetched
-          //     ? entityStore.getValue(binding, path.slice(0, -1))
-          //     : undefined;
-          // }
-
           const variableDefinition = definition.variables[variableName];
-          boundValue = transformBoundContentValue(
+          let boundValue = transformBoundContentValue(
             node.data.props,
             entityStore,
             binding,
