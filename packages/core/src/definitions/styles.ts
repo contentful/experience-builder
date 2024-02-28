@@ -241,7 +241,7 @@ export const optionalBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The height of the image',
-    defaultValue: 'Auto',
+    defaultValue: '100%',
   },
   cfImageObjectFit: {
     displayName: 'Image Fit',
