@@ -1,4 +1,5 @@
 import { ComponentDefinitionVariable, ContainerStyleVariableName } from '@/types';
+import { DEFAULT_IMAGE_WIDTH } from '../constants';
 
 export const builtInStyles: Partial<
   Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
@@ -164,26 +165,6 @@ export const builtInStyles: Partial<
     },
     description: 'hyperlink for section or container',
   },
-  cfImageFormat: {
-    displayName: 'Image Format',
-    type: 'Text',
-    group: 'style',
-    description: 'The format of the image',
-  },
-  cfImageQuality: {
-    displayName: 'Image Sizes',
-    type: 'Text',
-    group: 'style',
-    description: 'Quality of the image (percentage) if the image format supports it',
-    defaultValue: '100',
-  },
-  cfImageSizes: {
-    displayName: 'Image Sizes',
-    type: 'Text',
-    group: 'style',
-    description: 'Hint to browser on the expected width of the image',
-    defaultValue: '500px',
-  },
   cfOpenInNewTab: {
     displayName: 'Hyperlink behaviour',
     type: 'Boolean',
@@ -269,14 +250,14 @@ export const optionalBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'Hint to browser on the expected width of the image',
-    defaultValue: '500px',
+    defaultValue: DEFAULT_IMAGE_WIDTH,
   },
   cfImageWidth: {
     displayName: 'Image Width',
     type: 'Text',
     group: 'style',
     description: 'The width of the image',
-    defaultValue: '500px',
+    defaultValue: DEFAULT_IMAGE_WIDTH,
   },
   cfLineHeight: {
     displayName: 'Line Height',
