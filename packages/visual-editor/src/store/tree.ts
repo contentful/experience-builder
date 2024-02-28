@@ -10,6 +10,7 @@ import {
   addChildNode,
   removeChildNode,
   reorderChildNode,
+  reparentChildNode,
   replaceNode,
   updateNode,
 } from '@/utils/treeHelpers';
@@ -28,12 +29,18 @@ export interface TreeStore {
   addChild: (
     destinationIndex: number,
     destinationParentId: string,
-    node: CompositionComponentNode
+    node: CompositionComponentNode,
   ) => void;
   reorderChildren: (
     destinationIndex: number,
     destinationParentId: string,
-    sourceIndex: number
+    sourceIndex: number,
+  ) => void;
+  reparentChild: (
+    destinationIndex: number,
+    destinationParentId: string,
+    sourceIndex: number,
+    sourceParentId: string,
   ) => void;
 }
 
@@ -72,7 +79,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
             updateNode(node.data.id, cloneDeepAsPOJO(node), draftState.tree.root);
           }
         });
-      })
+      }),
     );
   },
 
@@ -109,7 +116,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
     // The current and updated tree are the same, no tree update required.
     if (!treeDiff.length) {
       console.debug(
-        `[exp-builder.visual-editor::updateTree()]: During smart-diffing no diffs. Skipping tree update.`
+        `[exp-builder.visual-editor::updateTree()]: During smart-diffing no diffs. Skipping tree update.`,
       );
       return;
     }
@@ -132,7 +139,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
                 diff.indexToRemove,
                 diff.idToRemove,
                 diff.parentNodeId,
-                state.tree.root
+                state.tree.root,
               );
               break;
             case TreeAction.MOVE_NODE:
@@ -145,21 +152,34 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
         });
 
         state.breakpoints = tree?.root?.data?.breakpoints || [];
-      })
+      }),
     );
   },
   addChild: (index, parentId, node) => {
     set(
       produce((state: TreeStore) => {
         addChildNode(index, parentId, node, state.tree.root);
-      })
+      }),
     );
   },
   reorderChildren: (destinationIndex, destinationParentId, sourceIndex) => {
     set(
       produce((state: TreeStore) => {
         reorderChildNode(sourceIndex, destinationIndex, destinationParentId, state.tree.root);
-      })
+      }),
+    );
+  },
+  reparentChild: (destinationIndex, destinationParentId, sourceIndex, sourceParentId) => {
+    set(
+      produce((state: TreeStore) => {
+        reparentChildNode(
+          sourceIndex,
+          destinationIndex,
+          sourceParentId,
+          destinationParentId,
+          state.tree.root,
+        );
+      }),
     );
   },
 }));
