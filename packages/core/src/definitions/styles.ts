@@ -182,7 +182,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'Hint to browser on the expected width of the image',
-    defaultValue: '100vw',
+    defaultValue: '500px',
   },
   cfOpenInNewTab: {
     displayName: 'Hyperlink behaviour',
@@ -241,7 +241,7 @@ export const optionalBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The height of the image',
-    defaultValue: '100%',
+    defaultValue: 'Auto',
   },
   cfImageObjectFit: {
     displayName: 'Image Fit',
@@ -269,7 +269,7 @@ export const optionalBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'Hint to browser on the expected width of the image',
-    defaultValue: '100vw',
+    defaultValue: '500px',
   },
   cfImageWidth: {
     displayName: 'Image Width',
