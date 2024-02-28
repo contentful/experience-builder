@@ -7,6 +7,8 @@
   outline: 2px solid transparent;
   box-sizing: border-box;
   display: flex;
+  /* Especially, avoid horizontal overflow as this breaks the overall canvas scrolling */
+  overflow: hidden;
 }
 
 .DraggableComponent > * {
