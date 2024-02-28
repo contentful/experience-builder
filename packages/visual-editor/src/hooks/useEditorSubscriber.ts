@@ -94,7 +94,7 @@ export function useEditorSubscriber() {
         setFetchingEntities(false);
       }
     },
-    [dataSource, entityStore, setEntitiesFetched]
+    [dataSource, entityStore, setEntitiesFetched],
   );
   // When the tree was updated, we store the dataSource and
   // afterward, this effect fetches the respective entities.
@@ -115,7 +115,7 @@ export function useEditorSubscriber() {
         } else {
           console.warn(
             `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
-            event
+            event,
           );
         }
         return;
@@ -128,7 +128,7 @@ export function useEditorSubscriber() {
       }
       console.debug(
         `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
-        eventData
+        eventData,
       );
 
       const { payload } = eventData;
@@ -257,7 +257,7 @@ export function useEditorSubscriber() {
           };
           if (updatedEntity) {
             const storedEntity = entityStore.entities.find(
-              (entity) => entity.sys.id === updatedEntity.sys.id
+              (entity) => entity.sys.id === updatedEntity.sys.id,
             ) as unknown as ManagementEntity | undefined;
 
             const didEntityChange = storedEntity?.sys.version !== updatedEntity.sys.version;
@@ -281,6 +281,7 @@ export function useEditorSubscriber() {
         }
         case INCOMING_EVENTS.ComponentDragStarted: {
           dragState.updateIsDragStartedOnParent(true);
+          setDraggingOnCanvas(true);
           setComponentId(payload.id || '');
           break;
         }
@@ -298,7 +299,7 @@ export function useEditorSubscriber() {
         }
         default:
           console.error(
-            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`
+            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`,
           );
       }
     };

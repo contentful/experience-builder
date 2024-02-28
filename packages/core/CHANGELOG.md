@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.28](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-core@0.0.2-alpha.27...@contentful/experience-builder-core@0.0.2-alpha.28) (2024-02-28)
+
+### Bug Fixes
+
+- update background related fields to have display names of Background image and Background color ([84aecb4](https://github.com/contentful/experience-builder/commit/84aecb4cfcd4a51a29c9444d02686fa35254f30a))
+- **visual-editor:** canvas usability and placeholders [ALT-449] ([#414](https://github.com/contentful/experience-builder/issues/414)) ([f338605](https://github.com/contentful/experience-builder/commit/f338605f709007bd67cb49f7e236b9b7e5019977))
+
+## [0.0.2-alpha.27](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-core@0.0.2-alpha.26...@contentful/experience-builder-core@0.0.2-alpha.27) (2024-02-26)
+
+**Note:** Version bump only for package @contentful/experience-builder-core
+
 ## [0.0.2-alpha.26](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-core@0.0.2-alpha.25...@contentful/experience-builder-core@0.0.2-alpha.26) (2024-02-22)
 
 **Note:** Version bump only for package @contentful/experience-builder-core
