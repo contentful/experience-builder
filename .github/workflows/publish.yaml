@@ -48,7 +48,7 @@ jobs:
             packages/*/build
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Authenticate with private GH package
-        run: echo "//npm.pkg.github.com/:_authToken=\${GITHUB_TOKEN}\n@contentful:registry=https://npm.pkg.github.com" > ~/.npmrc
+        run: echo "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ~/.npmrc
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
       - name: 'Version and publish'
