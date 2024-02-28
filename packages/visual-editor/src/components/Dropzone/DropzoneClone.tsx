@@ -1,4 +1,4 @@
-import React, { ElementType, useCallback } from 'react';
+import React, { ElementType } from 'react';
 import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
@@ -15,6 +15,7 @@ type DropzoneProps = {
   resolveDesignValue?: ResolveDesignValueType;
   className?: string;
   WrapperComponent?: ElementType | string;
+  renderDropzone: RenderDropzoneFunction;
 };
 
 export function DropzoneClone({
@@ -23,27 +24,13 @@ export function DropzoneClone({
   resolveDesignValue,
   className,
   WrapperComponent = 'div',
+  renderDropzone,
   ...rest
 }: DropzoneProps) {
   const tree = useTreeStore((state) => state.tree);
   const content = node?.children || tree.root?.children || [];
 
   const isRootZone = zoneId === ROOT_ID;
-
-  // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
-  const renderClonedDropzone: RenderDropzoneFunction = useCallback(
-    (node, props) => {
-      return (
-        <DropzoneClone
-          zoneId={node.data.id}
-          node={node}
-          resolveDesignValue={resolveDesignValue}
-          {...props}
-        />
-      );
-    },
-    [resolveDesignValue],
-  );
 
   if (!resolveDesignValue) {
     return null;
@@ -69,7 +56,7 @@ export function DropzoneClone({
             key={componentId}
             node={item}
             resolveDesignValue={resolveDesignValue}
-            renderDropzone={renderClonedDropzone}
+            renderDropzone={renderDropzone}
           />
         );
       })}

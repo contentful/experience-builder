@@ -81,6 +81,7 @@ export function Dropzone({
           zoneId={node.data.id}
           node={node}
           resolveDesignValue={resolveDesignValue}
+          renderDropzone={renderClonedDropzone}
           {...props}
         />
       );
