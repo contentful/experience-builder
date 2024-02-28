@@ -72,7 +72,7 @@ export const useComponentProps = ({
         if (variableMapping.type === 'DesignValue') {
           const valueByBreakpoint = resolveDesignValue(
             variableMapping.valuesByBreakpoint,
-            variableName
+            variableName,
           );
           const designValue =
             variableName === 'cfHeight'
@@ -132,7 +132,7 @@ export const useComponentProps = ({
           };
         }
       },
-      {}
+      {},
     );
   }, [
     definition,
@@ -154,12 +154,20 @@ export const useComponentProps = ({
 
   // Styles that will be applied to the editor wrapper (draggable) element
   const { className: wrapperClass } = useStyleTag({
-    styles: {
-      margin,
-      height,
-      width,
-      maxWidth,
-    },
+    styles:
+      // To ensure that assembly nodes are rendered like they are rendered in
+      // the assembly editor, we need to use a normal block instead of a flex box.
+      node.type === ASSEMBLY_NODE_TYPE
+        ? {
+            display: 'block !important',
+            width: '100%',
+          }
+        : {
+            margin,
+            maxWidth,
+            width,
+            height,
+          },
     nodeId: `editor-${node.data.id}`,
   });
 
