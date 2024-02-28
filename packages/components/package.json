@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-components",
-  "version": "0.0.2-alpha.29",
+  "version": "0.0.2-alpha.31",
   "description": "A basic set of components to use with Experience Builder",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/components#readme",
   "repository": {
@@ -50,7 +50,7 @@
     "@storybook/react-vite": "^7.4.1",
     "@storybook/testing-library": "^0.2.0",
     "@types/react": "^18.2.21",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@vitejs/plugin-react": "^4.0.4",
     "cypress": "^13.1.0",
     "eslint": "^8.49.0",

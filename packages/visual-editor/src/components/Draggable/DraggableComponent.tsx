@@ -5,34 +5,28 @@ import classNames from 'classnames';
 import styles from './styles.module.css';
 import { Rect } from '@components/Draggable/canvasToolsUtils';
 import Tooltip from './Tooltip';
+import Placeholder, { PlaceholderParams } from './Placeholder';
 
-export const DraggableComponent = ({
-  children,
-  id,
-  index,
-  isAssemblyBlock = false,
-  isSelected = false,
-  onClick = () => null,
-  onMouseDown = () => null,
-  onMouseUp = () => null,
-  onMouseOver = () => null,
-  onMouseOut = () => null,
-  label,
-  coordinates,
-  userIsDragging,
-  style,
-  wrapperProps,
-  isContainer,
-  blockId,
-  isDragDisabled = false,
-  ...rest
-}: {
+function getStyle(style, snapshot) {
+  if (!snapshot.isDropAnimating) {
+    return style;
+  }
+  return {
+    ...style,
+    // cannot be 0, but make it super tiny
+    transitionDuration: `0.001s`,
+  };
+}
+
+interface DraggableComponentProps {
+  placeholder: PlaceholderParams;
   wrapperProps: Record<string, string | undefined>;
   label: string;
   children: ReactNode;
   id: string;
   index: number;
   isAssemblyBlock?: boolean;
+  isBeingDragged?: boolean;
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
   onMouseDown?: (e: SyntheticEvent) => void;
@@ -45,6 +39,25 @@ export const DraggableComponent = ({
   userIsDragging?: boolean;
   style?: CSSProperties;
   isDragDisabled?: boolean;
+}
+
+export const DraggableComponent: React.FC<DraggableComponentProps> = ({
+  children,
+  id,
+  index,
+  isAssemblyBlock = false,
+  isSelected = false,
+  onClick = () => null,
+  label,
+  coordinates,
+  userIsDragging,
+  style,
+  wrapperProps,
+  isContainer,
+  blockId,
+  isDragDisabled = false,
+  placeholder,
+  ...rest
 }) => {
   return (
     <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
@@ -65,12 +78,8 @@ export const DraggableComponent = ({
           })}
           style={{
             ...style,
-            ...provided.draggableProps.style,
+            ...getStyle(provided.draggableProps.style, snapshot),
           }}
-          onMouseOver={onMouseOver}
-          onMouseOut={onMouseOut}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
           onClick={onClick}>
           <Tooltip
             id={id}
@@ -79,7 +88,7 @@ export const DraggableComponent = ({
             isContainer={isContainer}
             label={label}
           />
-
+          <Placeholder {...placeholder} id={id} />
           {children}
         </div>
       )}

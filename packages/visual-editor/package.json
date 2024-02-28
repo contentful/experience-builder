@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experience-builder-visual-editor",
-  "version": "0.0.2-alpha.29",
+  "version": "0.0.2-alpha.31",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -48,8 +48,8 @@
     "@types/lodash-es": "^4.17.12",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
     "browserify-livereload": "^1.0.10",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
