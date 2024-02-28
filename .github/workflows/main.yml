@@ -35,7 +35,8 @@ jobs:
       VAULT_URL: ${{ secrets.VAULT_URL }}
   upload-artifact-cleanup:
     if: ${{ always() }}
-    needs: [install-build, check, publish]
+    # needs: [install-build, check, publish]
+    needs: [install-build, publish]
     permissions:
       actions: write
     uses: ./.github/workflows/cleanup.yaml
