@@ -2,6 +2,7 @@ import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/const
 
 export const DRAGGABLE_HEIGHT = 40;
 export const DRAGGABLE_WIDTH = 50;
+export const DRAG_PADDING = 10;
 
 export const ROOT_ID = 'root';
 export const COMPONENT_LIST_ID = 'component-list';

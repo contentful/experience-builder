@@ -28,7 +28,7 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
-import { DRAGGABLE_WIDTH } from '../../types/constants';
+import { DRAG_PADDING } from '../../types/constants';
 
 type ComponentProps =
   | StyleProps
@@ -188,7 +188,8 @@ export const useComponentProps = ({
         minHeight: EMPTY_CONTAINER_HEIGHT,
       }),
       ...(userIsDragging &&
-        isContentfulStructureComponent(node?.data.blockId, [CONTENTFUL_COMPONENTS.columns.id]) && {
+        isContentfulStructureComponent(node?.data.blockId) &&
+        node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
           padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),
         }),
     },
@@ -220,8 +221,8 @@ const addExtraDropzonePadding = (padding: string) =>
     .map((value) => {
       if (value.endsWith('px')) {
         const parsedValue = parseInt(value.replace(/px$/, ''), 10);
-        return (parsedValue < DRAGGABLE_WIDTH ? DRAGGABLE_WIDTH : parsedValue) + 'px';
+        return (parsedValue < DRAG_PADDING ? DRAG_PADDING : parsedValue) + 'px';
       }
-      return `${DRAGGABLE_WIDTH}px`;
+      return `${DRAG_PADDING}px`;
     })
     .join(' ');

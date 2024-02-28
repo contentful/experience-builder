@@ -1,21 +1,14 @@
 import { CONTENTFUL_COMPONENTS } from '../constants';
 
-const allStructureComponents = [
+const structureComponents = new Set([
   CONTENTFUL_COMPONENTS.section.id,
   CONTENTFUL_COMPONENTS.columns.id,
   CONTENTFUL_COMPONENTS.container.id,
   CONTENTFUL_COMPONENTS.singleColumn.id,
-];
+]);
 
-export const isContentfulStructureComponent = (
-  componentId?: string,
-  excludeStructureIds?: string[],
-) => {
-  const searchIds = excludeStructureIds
-    ? allStructureComponents.filter((id) => !excludeStructureIds?.includes(id))
-    : allStructureComponents;
-  return searchIds.includes(componentId ?? '');
-};
+export const isContentfulStructureComponent = (componentId?: string) =>
+  structureComponents.has(componentId ?? '');
 
 export const isEmptyStructureWithRelativeHeight = (
   children: number,
