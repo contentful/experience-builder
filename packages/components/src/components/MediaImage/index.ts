@@ -1,5 +1,5 @@
 import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
-import { constants } from '@/utils/constants';
+import { placeholderImage } from '@/utils/constants';
 import { CONTENTFUL_DEFAULT_CATEGORY } from '@contentful/experience-builder-core/constants';
 export * from './MediaImage';
 
@@ -8,7 +8,6 @@ export const MediaImageComponentDefinition: ComponentDefinition = {
   name: 'MediaImage',
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: ['cfMargin', 'cfPadding'],
-  thumbnailUrl: constants.thumbnails.image,
   variables: {
     alt: {
       displayName: 'Alt',
@@ -17,7 +16,7 @@ export const MediaImageComponentDefinition: ComponentDefinition = {
     src: {
       displayName: 'Image Media Src',
       type: 'Media',
-      defaultValue: constants.placeholderImage,
+      defaultValue: placeholderImage,
     },
     width: {
       displayName: 'Width',
