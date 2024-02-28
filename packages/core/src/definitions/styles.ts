@@ -1,5 +1,5 @@
 import { ComponentDefinitionVariable, ContainerStyleVariableName } from '@/types';
-import { DEFAULT_IMAGE_WIDTH } from '../constants';
+import { DEFAULT_IMAGE_WIDTH } from '@/constants';
 
 export const builtInStyles: Partial<
   Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
