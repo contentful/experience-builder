@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.31](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.30...@contentful/experience-builder-storybook-addon@0.0.2-alpha.31) (2024-02-28)
+
+### Bug Fixes
+
+- update background related fields to have display names of Background image and Background color ([84aecb4](https://github.com/contentful/experience-builder-storybook/commit/84aecb4cfcd4a51a29c9444d02686fa35254f30a))
+
+## [0.0.2-alpha.30](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.29...@contentful/experience-builder-storybook-addon@0.0.2-alpha.30) (2024-02-26)
+
+**Note:** Version bump only for package @contentful/experience-builder-storybook-addon
+
 ## [0.0.2-alpha.29](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.28...@contentful/experience-builder-storybook-addon@0.0.2-alpha.29) (2024-02-22)
 
 **Note:** Version bump only for package @contentful/experience-builder-storybook-addon

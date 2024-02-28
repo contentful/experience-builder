@@ -68,7 +68,7 @@ export const builtInStyles: Record<
     defaultValue: '0px',
   },
   cfBackgroundColor: {
-    displayName: 'Background',
+    displayName: 'Background color',
     type: 'Text',
     group: 'style',
     description: 'The background color of the section',
@@ -124,13 +124,13 @@ export const builtInStyles: Record<
     defaultValue: '0px',
   },
   cfBackgroundImageUrl: {
-    displayName: 'Background Image',
+    displayName: 'Background image',
     type: 'Text',
     defaultValue: '',
     description: 'Background image for section or container',
   },
   cfBackgroundImageScaling: {
-    displayName: 'Image Scaling',
+    displayName: 'Image scaling',
     type: 'Text',
     group: 'style',
     description: 'Adjust background image to fit, fill or tile the container',
@@ -153,7 +153,7 @@ export const builtInStyles: Record<
     },
   },
   cfBackgroundImageAlignment: {
-    displayName: 'Image Alignment',
+    displayName: 'Image alignment',
     type: 'Text',
     group: 'style',
     description: 'Align background image to the edges of the container',

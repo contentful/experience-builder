@@ -290,7 +290,7 @@ export const experiencePattern = {
       'en-US': {
         variableDefinitions: {
           cfBackgroundImageUrl_AtBrirchNbwfpkWlSfTD6: {
-            displayName: 'Background Image',
+            displayName: 'Background image',
             type: 'Text',
             defaultValue: {
               key: '36j5IQjr3FKEQ4Yvyd034',
