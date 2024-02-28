@@ -73,7 +73,7 @@ export function Dropzone({
     },
     [resolveDesignValue],
   );
-  // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
+
   const renderClonedDropzone: RenderDropzoneFunction = useCallback(
     (node, props) => {
       return (
