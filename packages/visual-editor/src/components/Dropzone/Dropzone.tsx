@@ -18,6 +18,8 @@ import {
   CONTENTFUL_COMPONENTS,
 } from '@contentful/experience-builder-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
+import { EditorBlockClone } from './EditorBlockClone';
+import { DropzoneClone } from './DropzoneClone';
 
 type DropzoneProps = {
   zoneId: string;
@@ -71,6 +73,20 @@ export function Dropzone({
     },
     [resolveDesignValue],
   );
+  // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
+  const renderClonedDropzone: RenderDropzoneFunction = useCallback(
+    (node, props) => {
+      return (
+        <DropzoneClone
+          zoneId={node.data.id}
+          node={node}
+          resolveDesignValue={resolveDesignValue}
+          {...props}
+        />
+      );
+    },
+    [resolveDesignValue],
+  );
 
   if (!resolveDesignValue) {
     return null;
@@ -99,7 +115,19 @@ export function Dropzone({
   };
 
   return (
-    <Droppable droppableId={zoneId} direction={direction} isDropDisabled={!isDropzoneEnabled()}>
+    <Droppable
+      droppableId={zoneId}
+      direction={direction}
+      isDropDisabled={!isDropzoneEnabled()}
+      renderClone={(provided, snapshot, rubic) => (
+        <EditorBlockClone
+          node={content[rubic.source.index]}
+          resolveDesignValue={resolveDesignValue}
+          provided={provided}
+          snapshot={snapshot}
+          renderDropzone={renderClonedDropzone}
+        />
+      )}>
       {(provided, snapshot) => {
         return (
           <WrapperComponent
