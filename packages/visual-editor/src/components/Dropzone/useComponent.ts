@@ -22,12 +22,14 @@ type UseComponentProps = {
   node: CompositionComponentNode;
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
+  userIsDragging: boolean;
 };
 
 export const useComponent = ({
   node: rawNode,
   resolveDesignValue,
   renderDropzone,
+  userIsDragging,
 }: UseComponentProps) => {
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const entityStore = useEntityStore((state) => state.entityStore);
@@ -71,6 +73,7 @@ export const useComponent = ({
     resolveDesignValue,
     renderDropzone,
     definition: componentRegistration.definition,
+    userIsDragging,
   });
 
   // Only pass editor props to built-in components
@@ -79,9 +82,9 @@ export const useComponent = ({
     ? (dragProps?: NoWrapDraggableProps) =>
         React.createElement(componentRegistration.component, { ...dragProps, ...componentProps })
     : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE
-    ? // Assembly.tsx requires renderDropzone and editorMode as well
-      () => React.createElement(componentRegistration.component, componentProps)
-    : () => React.createElement(componentRegistration.component, otherComponentProps);
+      ? // Assembly.tsx requires renderDropzone and editorMode as well
+        () => React.createElement(componentRegistration.component, componentProps)
+      : () => React.createElement(componentRegistration.component, otherComponentProps);
 
   return {
     node,

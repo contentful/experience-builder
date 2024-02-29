@@ -5,12 +5,14 @@ import {
   transformContentValue,
   isLinkToAsset,
   isEmptyStructureWithRelativeHeight,
+  isContentfulStructureComponent,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
+  CONTENTFUL_COMPONENTS,
 } from '@contentful/experience-builder-core/constants';
 import type {
   StyleProps,
@@ -26,6 +28,7 @@ import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
+import { DRAG_PADDING } from '../../types/constants';
 
 type ComponentProps =
   | StyleProps
@@ -37,6 +40,7 @@ type UseComponentProps = {
   areEntitiesFetched: boolean;
   definition: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
+  userIsDragging: boolean;
 };
 
 export const useComponentProps = ({
@@ -45,6 +49,7 @@ export const useComponentProps = ({
   resolveDesignValue,
   renderDropzone,
   definition,
+  userIsDragging,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
@@ -182,6 +187,11 @@ export const useComponentProps = ({
       ...(isEmptyStructureWithRelativeHeight(node.children.length, node?.data.blockId, height) && {
         minHeight: EMPTY_CONTAINER_HEIGHT,
       }),
+      ...(userIsDragging &&
+        isContentfulStructureComponent(node?.data.blockId) &&
+        node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
+          padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),
+        }),
     },
     nodeId: node.data.id,
   });
@@ -204,3 +214,15 @@ export const useComponentProps = ({
 
   return { componentProps, wrapperProps };
 };
+
+const addExtraDropzonePadding = (padding: string) =>
+  padding
+    .split(' ')
+    .map((value) => {
+      if (value.endsWith('px')) {
+        const parsedValue = parseInt(value.replace(/px$/, ''), 10);
+        return (parsedValue < DRAG_PADDING ? DRAG_PADDING : parsedValue) + 'px';
+      }
+      return `${DRAG_PADDING}px`;
+    })
+    .join(' ');
