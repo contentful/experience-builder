@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './styles.module.css';
 import { DraggableComponent } from '../Draggable/DraggableComponent';
 import { isContentfulStructureComponent, sendMessage } from '@contentful/experience-builder-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
@@ -19,6 +18,7 @@ import { DraggableChildComponent } from '@components/Draggable/DraggableChildCom
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { PlaceholderParams } from '@components/Draggable/Placeholder';
 import { ROOT_ID } from '@/types/constants';
+import Hitboxes from './Hitboxes';
 
 type EditorBlockProps = {
   placeholder: PlaceholderParams;
@@ -26,7 +26,6 @@ type EditorBlockProps = {
   index: number;
   userIsDragging: boolean;
   draggingNewComponent: boolean | undefined;
-  draggingRootZone: boolean | undefined;
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   zoneId: string;
@@ -39,7 +38,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   draggingNewComponent,
   index,
   zoneId,
-  draggingRootZone,
   userIsDragging,
   placeholder,
 }) => {
@@ -61,7 +59,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const isRootComponent = zoneId === ROOT_ID;
 
-  const disableRootHitbox = isRootComponent && !draggingRootZone && !draggingNewComponent;
+  const enableRootHitboxes = isRootComponent && !draggingNewComponent;
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
@@ -85,21 +83,30 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
   if (node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id) {
     return (
-      <DraggableChildComponent
-        elementToRender={elementToRender}
-        label={label || 'No Label Specified'}
-        id={componentId}
-        index={index}
-        isAssemblyBlock={isAssemblyBlock}
-        isDragDisabled={isSingleColumn}
-        isSelected={selectedNodeId === componentId}
-        userIsDragging={userIsDragging}
-        isContainer={isContainer}
-        blockId={node.data.blockId}
-        coordinates={coordinates!}
-        wrapperProps={wrapperProps}
-        onClick={onClick}
-      />
+      <>
+        <DraggableChildComponent
+          elementToRender={elementToRender}
+          label={label || 'No Label Specified'}
+          id={componentId}
+          index={index}
+          isAssemblyBlock={isAssemblyBlock}
+          isDragDisabled={isSingleColumn}
+          isSelected={selectedNodeId === componentId}
+          userIsDragging={userIsDragging}
+          isContainer={isContainer}
+          blockId={node.data.blockId}
+          coordinates={coordinates!}
+          wrapperProps={wrapperProps}
+          onClick={onClick}
+        />
+        {isStructureComponent && userIsDragging && (
+          <Hitboxes
+            parentZoneId={zoneId}
+            zoneId={componentId}
+            enableRootHitboxes={enableRootHitboxes}
+          />
+        )}
+      </>
     );
   }
 
@@ -119,10 +126,12 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       wrapperProps={wrapperProps}
       onClick={onClick}>
       {elementToRender()}
-
-      {/* Hitbox to add block between 2 blocks */}
-      {isStructureComponent && userIsDragging && !disableRootHitbox && (
-        <div data-ctfl-zone-id={zoneId} className={styles.hitbox} />
+      {isStructureComponent && userIsDragging && (
+        <Hitboxes
+          parentZoneId={zoneId}
+          zoneId={componentId}
+          enableRootHitboxes={enableRootHitboxes}
+        />
       )}
     </DraggableComponent>
   );

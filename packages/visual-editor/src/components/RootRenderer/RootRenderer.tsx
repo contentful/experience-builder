@@ -108,6 +108,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
           <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />
         )}
       </div>
+      <div data-ctfl-hitboxes />
     </DNDProvider>
   );
 };

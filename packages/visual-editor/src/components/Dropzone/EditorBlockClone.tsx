@@ -12,6 +12,7 @@ import {
   ASSEMBLY_BLOCK_NODE_TYPE,
   CONTENTFUL_COMPONENTS,
 } from '@contentful/experience-builder-core/constants';
+import { useDraggedItemStore } from '@/store/draggedItem';
 
 function getStyle(style = {}, snapshot?: DraggableStateSnapshot) {
   if (!snapshot?.isDropAnimating) {
@@ -39,10 +40,13 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
   provided,
   renderDropzone,
 }) => {
+  const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
+
   const { node, wrapperProps, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
+    userIsDragging,
   });
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
