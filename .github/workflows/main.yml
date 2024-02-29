@@ -17,6 +17,7 @@ jobs:
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   publish:
+    needs: [install-build, check]
     if: >-
       (github.ref_name == 'main' ||
         github.ref_name == 'development' ||
