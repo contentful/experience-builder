@@ -7,7 +7,7 @@ import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import styles from './styles.module.css';
 import classNames from 'classnames';
-import { COMPONENT_LIST_ID, ROOT_ID } from '@/types/constants';
+import { ROOT_ID } from '@/types/constants';
 import { EmptyContainer } from '@components/EmptyContainer/EmptyContainer';
 import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
