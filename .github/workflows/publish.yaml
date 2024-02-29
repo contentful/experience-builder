@@ -47,6 +47,10 @@ jobs:
             packages/*/dist
             packages/*/build
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Authenticate with private GH package
+        run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
+        env:
+          GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
       - name: 'Version and publish'
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
@@ -55,7 +59,7 @@ jobs:
           git config user.email "${{ github.actor}}@users.noreply.github.com"
 
           if [ ${{ github.ref_name }} = development ]; then
-            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid dev-$(date +%Y%m%dT%H%M%S) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
+            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
           elif [ ${{ github.ref_name }} = next ]; then
             npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid alpha --yes --no-private --dist-tag latest
           else
