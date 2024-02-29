@@ -48,14 +48,14 @@ jobs:
             packages/*/build
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Authenticate with private GH package
-        run: echo "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ~/.npmrc
+        run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-          limit-access-to-actor: true
+      # - name: Setup upterm session
+      #   uses: lhotari/action-upterm@v1
+      #   with:
+      #     ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+      #     limit-access-to-actor: true
       - name: 'Version and publish'
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
