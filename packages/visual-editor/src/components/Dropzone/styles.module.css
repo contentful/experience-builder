@@ -34,6 +34,4 @@
 .hitbox {
   position: fixed;
   pointer-events: all !important;
-  background-color: red;
-  border: 1px solid black;
 }
