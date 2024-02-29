@@ -20,6 +20,9 @@ export const ButtonComponentDefinition: ComponentDefinition = {
     'cfLineHeight',
     'cfBorder',
   ],
+  tooltip: {
+    description: 'A button that can be used to trigger an action or navigate to a different page.',
+  },
   variables: {
     cfFontSize: {
       displayName: 'Font Size',
