@@ -51,11 +51,6 @@ jobs:
         run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
-      # - name: Setup upterm session
-      #   uses: lhotari/action-upterm@v1
-      #   with:
-      #     ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-      #     limit-access-to-actor: true
       - name: 'Version and publish'
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
@@ -65,8 +60,6 @@ jobs:
 
           if [ ${{ github.ref_name }} = development ]; then
             npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
-          elif [ ${{ github.ref_name }} = gh-package-publish-fix ]; then
-            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes --allowBranch='gh-package-publish-fix'
           elif [ ${{ github.ref_name }} = next ]; then
             npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid alpha --yes --no-private --dist-tag latest
           else
