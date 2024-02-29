@@ -22,6 +22,9 @@ export const ImageComponentDefinition: ComponentDefinition = {
     'cfImageQuality',
     'cfImageSizes',
   ],
+  tooltip: {
+    description: 'Click and drop onto the canvas to upload an image or bind an existing asset.',
+  },
   variables: {
     alt: {
       displayName: 'Alt',
