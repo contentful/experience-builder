@@ -1,6 +1,11 @@
 import { ExperienceEntry } from '@/types';
-import { ContentfulClientApi, Entry, Asset } from 'contentful';
+import { ContentfulClientApi, Entry, Asset, AssetCollection } from 'contentful';
 import { isExperienceEntry } from '@/utils';
+import { DeepReference, gatherDeepReferencesFromExperienceEntry } from '@/deep-binding';
+import {
+  MinimalEntryCollection,
+  gatherAutoFetchedReferentsFromIncludes,
+} from './gatherAutoFetchedReferentsFromIncludes';
 
 type FetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;
@@ -30,6 +35,9 @@ export const fetchReferencedEntities = async ({
       'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema'
     );
   }
+  const deepReferences: Array<DeepReference> = gatherDeepReferencesFromExperienceEntry(
+    experienceEntry as ExperienceEntry
+  );
 
   const entryIds: string[] = [];
   const assetIds: string[] = [];
@@ -46,19 +54,30 @@ export const fetchReferencedEntities = async ({
     }
   }
 
-  const [entriesResponse, assetsResponse] = await Promise.all([
-    entryIds.length > 0 ? client.getEntries({ 'sys.id[in]': entryIds, locale }) : { items: [] },
+  const [entriesResponse, assetsResponse] = (await Promise.all([
+    entryIds.length > 0
+      ? client.withoutLinkResolution.getEntries({ 'sys.id[in]': entryIds, locale })
+      : { items: [], includes: [] },
     assetIds.length > 0 ? client.getAssets({ 'sys.id[in]': assetIds, locale }) : { items: [] },
-  ]);
+  ])) as unknown as [MinimalEntryCollection, AssetCollection];
+
+  const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
+    gatherAutoFetchedReferentsFromIncludes(deepReferences, entriesResponse);
 
   // Using client getEntries resolves all linked entry references, so we do not need to resolve entries in usedComponents
   const allResolvedEntries = [
     ...((entriesResponse.items ?? []) as Entry[]),
     ...((experienceEntry.fields.usedComponents as ExperienceEntry[]) || []),
+    ...autoFetchedReferentEntries,
+  ];
+
+  const allResolvedAssets = [
+    ...((assetsResponse.items ?? []) as Asset[]),
+    ...autoFetchedReferentAssets,
   ];
 
   return {
     entries: allResolvedEntries as Entry[],
-    assets: (assetsResponse.items ?? []) as Asset[],
+    assets: allResolvedAssets as Asset[],
   };
 };

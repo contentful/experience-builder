@@ -1,13 +1,32 @@
 import { ContentfulClientApi, Entry } from 'contentful';
-import { fetchReferencedEntities } from './fetchReferencedEntities';
 import { compositionEntry } from '../test/__fixtures__/composition';
 import { assets, entries } from '../test/__fixtures__/entities';
-import { describe, it, expect, vi, Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
+import { gatherDeepReferencesFromExperienceEntry } from '@/deep-binding/DeepReference';
+import { fetchReferencedEntities } from './fetchReferencedEntities';
 
 const mockClient = {
-  getEntries: vi.fn(),
   getAssets: vi.fn(),
+  withoutLinkResolution: {
+    getEntries: vi.fn(),
+  },
 } as unknown as ContentfulClientApi<undefined>;
+
+vi.mock('@/deep-binding/DeepReference', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('@/deep-binding/DeepReference')>();
+  return {
+    ...mod,
+    // don't mock return values here using vi.fn().mockReturnValue([])
+    // but mock them in the test cases, as mock-restore will not restore the return values
+    gatherDeepReferencesFromExperienceEntry: vi.fn(),
+  };
+});
+
+beforeEach(() => {
+  vi.restoreAllMocks();
+
+  (gatherDeepReferencesFromExperienceEntry as Mock).mockReturnValue([]);
+});
 
 describe('fetchReferencedEntities', () => {
   it('should throw an error if client has not been provided', async () => {
@@ -57,7 +76,9 @@ describe('fetchReferencedEntities', () => {
   it('should fetch referenced entities', async () => {
     (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
 
-    (mockClient.getEntries as Mock).mockResolvedValue({ items: entries });
+    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
+
+    (gatherDeepReferencesFromExperienceEntry as Mock).mockReturnValue([]);
 
     const res = await fetchReferencedEntities({
       client: mockClient,
@@ -70,7 +91,7 @@ describe('fetchReferencedEntities', () => {
       'sys.id[in]': assets.map((asset) => asset.sys.id),
     });
 
-    expect(mockClient.getEntries).toHaveBeenCalledWith({
+    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledWith({
       locale: 'en-US',
       'sys.id[in]': entries.map((entry) => entry.sys.id),
     });
@@ -79,5 +100,23 @@ describe('fetchReferencedEntities', () => {
       assets,
       entries,
     });
+  });
+});
+
+describe('fetchReferencedEntities handling deep-references', () => {
+  it('should call gatherDeepReferencesFromExperienceEntry()', async () => {
+    (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
+
+    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
+
+    (gatherDeepReferencesFromExperienceEntry as Mock).mockReturnValue([]);
+    fetchReferencedEntities({
+      client: mockClient,
+      experienceEntry: compositionEntry,
+      locale: 'en-US',
+    });
+
+    expect(gatherDeepReferencesFromExperienceEntry).toHaveBeenCalledOnce();
+    expect(gatherDeepReferencesFromExperienceEntry).toHaveBeenCalledWith(compositionEntry);
   });
 });

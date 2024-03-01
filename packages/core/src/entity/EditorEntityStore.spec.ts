@@ -2,8 +2,10 @@ import type { Asset, Entry } from 'contentful';
 import { describe, vi, expect, beforeEach, afterEach, it } from 'vitest';
 import { asset } from '../test/__fixtures__/asset';
 import { entry } from '../test/__fixtures__/entry';
-import { EditorEntityStore } from './EditorEntityStore';
+import { EditorEntityStore as AbstractEditorEntityStore } from './EditorEntityStore';
 import { PostMessageMethods } from '../constants';
+
+class EditorEntityStore extends AbstractEditorEntityStore {}
 
 describe('EditorEntityStore', () => {
   const locale = 'en-US';
@@ -33,7 +35,7 @@ describe('EditorEntityStore', () => {
   function resolveEntries(
     id: string,
     entityType: 'Asset' | 'Entry',
-    entities: Array<Entry | Asset>
+    entities: Array<Entry | Asset>,
   ) {
     // First it calls sendMessage to request the entity
     expect(sendMessage).toHaveBeenCalledTimes(1);
@@ -47,7 +49,7 @@ describe('EditorEntityStore', () => {
     expect(subscribe).toHaveBeenCalledTimes(1);
     expect(subscribe).toHaveBeenCalledWith(
       PostMessageMethods.REQUESTED_ENTITIES,
-      expect.any(Function)
+      expect.any(Function),
     );
 
     // Let it resolve
