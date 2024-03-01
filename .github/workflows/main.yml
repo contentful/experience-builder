@@ -21,7 +21,6 @@ jobs:
     if: >-
       (github.ref_name == 'main' ||
         github.ref_name == 'development' ||
-        github.ref_name == 'fix/deep-binding-spa1738' ||
         github.ref_name == 'next') &&
       !contains(github.event.head_commit.message, 'skip-release') &&
       github.actor != 'dependabot[bot]' &&
