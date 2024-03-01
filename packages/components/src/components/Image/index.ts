@@ -37,5 +37,19 @@ export const ImageComponentDefinition: ComponentDefinition = {
       defaultValue: 'cf-image',
       group: 'style',
     },
+    cfImageAssetOptions: {
+      displayName: 'Image Options',
+      description: 'Experimenting with options for the image component.',
+      type: 'Object',
+      group: 'style',
+      defaultValue: {
+        width: '400px',
+        height: '100%',
+        objectFit: 'fit',
+        objectPosition: 'center center',
+        quality: 100,
+        sizes: '400px',
+      },
+    },
   },
 };

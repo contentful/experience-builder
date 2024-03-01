@@ -232,6 +232,14 @@ export type StyleProps = {
   cfColumnSpanLock: boolean;
   cfWrapColumns: boolean;
   cfWrapColumnsCount: string;
+  cfImageAssetOptions: {
+    width: string;
+    height: string;
+    objectFit: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down';
+    objectPosition: string;
+    quality: number;
+    sizes: string;
+  };
 };
 
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic
