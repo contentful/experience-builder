@@ -110,10 +110,6 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     component: Components.Image,
     definition: Components.ImageComponentDefinition,
   }),
-  mediaImage: enrichComponentDefinition({
-    component: Components.MediaImage,
-    definition: Components.MediaImageComponentDefinition,
-  }),
   richText: enrichComponentDefinition({
     component: Components.RichText,
     definition: Components.RichTextComponentDefinition,
