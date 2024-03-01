@@ -70,13 +70,13 @@ jobs:
 
           if [ ${{ github.ref_name }} = main ]; then
             git checkout next
-            git rebase main
+            git merge main
             git push origin
             git checkout development
-            git rebase next
+            git merge next
             git push origin
           elif [ ${{ github.ref_name }} = next ]; then
             git checkout development
-            git rebase next
+            git merge next
             git push origin
           fi
