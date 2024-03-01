@@ -29,12 +29,9 @@ export const useInitializeEditor = () => {
         designTokens,
       });
 
-      // TODO-AFTER-PR-APPROVAL:
-      // Here we temporarily disable "prefetching of entities"
-      // to force VisualEditor to start from an empty EntityStore
-      // so that we can exercise on-demand-entity-fetching mechanism (via REQUEST_ENTITIES message)
-      resetEntityStore(initialLocale, []);
-      // resetEntityStore(initialLocale, entities);
+      // if entities is set to [], then everything will still work as EntityStore will
+      // request entities on demand via ▲REQUEST_ENTITY
+      resetEntityStore(initialLocale, entities);
       setInitialized(true);
     };
 
