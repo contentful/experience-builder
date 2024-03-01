@@ -89,16 +89,9 @@ export const getItem = (
   });
 };
 
-export const getItemDepthFromTree = (selector: ItemSelector, tree: CompositionTree): number => {
-  return findDepthById(
-    {
-      type: 'block',
-      data: {
-        id: ROOT_ID,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any,
-      children: tree.root.children,
-    },
-    selector.id,
-  );
+export const getItemDepthFromNode = (
+  selector: ItemSelector,
+  node: CompositionComponentNode,
+): number => {
+  return findDepthById(node, selector.id);
 };
