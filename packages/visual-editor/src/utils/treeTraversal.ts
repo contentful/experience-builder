@@ -7,7 +7,7 @@ type NodeWithChildren<T> = {
  */
 export function treeVisit<T extends NodeWithChildren<T>>(
   initialNode: T,
-  onNode: (node: T, index: number, depth: number) => void
+  onNode: (node: T, index: number, depth: number) => void,
 ) {
   // returns last used index
   const _treeVisit = (currentNode: T, currentIndex: number, currentDepth: number): number => {
@@ -38,7 +38,7 @@ export function treeVisit<T extends NodeWithChildren<T>>(
  */
 export function treeMap<T extends NodeWithChildren<T>, U>(
   node: T,
-  onNode: (node: T) => Omit<U, 'children'>
+  onNode: (node: T) => Omit<U, 'children'>,
 ): U {
   // Copy children in case of onNode removing it as we pass the node by reference
   const children = [...node.children];

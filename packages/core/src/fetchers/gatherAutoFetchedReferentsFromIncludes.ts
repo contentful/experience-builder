@@ -20,7 +20,7 @@ export type MinimalEntryCollection = Pick<
  */
 export function gatherAutoFetchedReferentsFromIncludes(
   deepReferences: DeepReference[],
-  entriesResponse: MinimalEntryCollection
+  entriesResponse: MinimalEntryCollection,
 ): {
   autoFetchedReferentEntries: Entry[];
   autoFetchedReferentAssets: Asset[];
@@ -30,11 +30,11 @@ export function gatherAutoFetchedReferentsFromIncludes(
 
   for (const reference of deepReferences) {
     const headEntry = entriesResponse.items.find(
-      (entry) => entry.sys.id === reference.headEntityId
+      (entry) => entry.sys.id === reference.headEntityId,
     );
     if (!headEntry) {
       throw new Error(
-        `LogicError: When resolving deep-references could not find headEntry (id=${reference.entityId})`
+        `LogicError: When resolving deep-references could not find headEntry (id=${reference.entityId})`,
       );
     }
 
@@ -42,47 +42,47 @@ export function gatherAutoFetchedReferentsFromIncludes(
 
     if (undefined === linkToReferent) {
       console.debug(
-        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Empty reference in headEntity. Probably reference is simply not set.`
+        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Empty reference in headEntity. Probably reference is simply not set.`,
       );
       continue;
     }
 
     if (!isLink(linkToReferent)) {
       console.debug(
-        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Non-link value in headEntity. Probably broken path '${reference.originalPath}'`
+        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Non-link value in headEntity. Probably broken path '${reference.originalPath}'`,
       );
       continue;
     }
 
     if (linkToReferent.sys.linkType === 'Entry') {
       const referentEntry = entriesResponse.includes?.Entry?.find(
-        (entry) => entry.sys.id === linkToReferent.sys.id
+        (entry) => entry.sys.id === linkToReferent.sys.id,
       );
       if (!referentEntry) {
         throw new Error(
           `Logic Error: L2-referent Entry was not found within .includes (${JSON.stringify({
             linkToReferent,
-          })})`
+          })})`,
         );
       }
       autoFetchedReferentEntries.push(referentEntry as Entry);
     } else if (linkToReferent.sys.linkType === 'Asset') {
       const referentAsset = entriesResponse.includes?.Asset?.find(
-        (entry) => entry.sys.id === linkToReferent.sys.id
+        (entry) => entry.sys.id === linkToReferent.sys.id,
       );
       if (!referentAsset) {
         throw new Error(
           `Logic Error: L2-referent Asset was not found within includes (${JSON.stringify({
             linkToReferent,
-          })})`
+          })})`,
         );
       }
       autoFetchedReferentAssets.push(referentAsset as Asset);
     } else {
       console.debug(
         `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Unhandled linkType :${JSON.stringify(
-          linkToReferent
-        )}`
+          linkToReferent,
+        )}`,
       );
     }
   } // for (reference of deepReferences)

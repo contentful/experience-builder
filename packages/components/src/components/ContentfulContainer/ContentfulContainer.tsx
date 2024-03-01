@@ -40,7 +40,7 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
 
   // Perform ternary so that we only render the wrapper div if the container is empty
   return isEmpty ? (
-    <div className="cf-container-wrapper">
+    <div className="cf-container-wrapper" data-ctfl-draggable-id={node.data.id}>
       <div className="cf-container-label">
         {node.data.blockId === CONTENTFUL_SECTION_ID ? 'Section' : 'Container'}
       </div>

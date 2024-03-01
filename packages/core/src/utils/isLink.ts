@@ -1,7 +1,7 @@
 import { Asset, Entry, UnresolvedLink } from 'contentful';
 
 export const isLink = (
-  maybeLink: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset | string | unknown
+  maybeLink: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset | string | unknown,
 ): maybeLink is UnresolvedLink<'Entry' | 'Asset'> => {
   if (maybeLink === null) return false;
   if (typeof maybeLink !== 'object') return false;
