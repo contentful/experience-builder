@@ -27,6 +27,7 @@ const findNearestDropzone = (element: HTMLElement): string | null => {
 export const VisualEditorRoot = () => {
   const initialized = useInitializeEditor();
   const locale = useEditorStore((state) => state.locale);
+  const entityStore = useEntityStore((state) => state.entityStore);
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
 
@@ -34,9 +35,12 @@ export const VisualEditorRoot = () => {
     if (!locale) {
       return;
     }
+    if (entityStore.locale === locale) {
+      return;
+    }
 
     resetEntityStore(locale);
-  }, [locale, resetEntityStore]);
+  }, [locale, resetEntityStore, entityStore.locale]);
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {

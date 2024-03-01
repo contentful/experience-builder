@@ -1,7 +1,8 @@
-import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
+import type { Asset, Entry, UnresolvedLink } from 'contentful';
 import { sendMessage } from '../communication/sendMessage';
 import { EditorEntityStore } from './EditorEntityStore';
 import { RequestedEntitiesMessage } from '../types';
+import { transformAssetFileToUrl } from './value-transformers';
 
 // The default of 3s in the EditorEntityStore is sometimes timing out and
 // leads to not rendering bound content and assemblies.
@@ -9,11 +10,10 @@ const REQUEST_TIMEOUT = 10000;
 
 export class EditorModeEntityStore extends EditorEntityStore {
   public locale: string;
-
   constructor({ entities, locale }: { entities: Array<Asset | Entry>; locale: string }) {
     console.debug(
       `[exp-builder.sdk] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
-      { entities }
+      { entities },
     );
 
     const subscribe = (method: unknown, cb: (payload: RequestedEntitiesMessage) => void) => {
@@ -84,15 +84,11 @@ export class EditorModeEntityStore extends EditorEntityStore {
 
   getValue(
     entityLink: UnresolvedLink<'Entry' | 'Asset'> | undefined,
-    path: string[]
+    path: string[],
   ): string | undefined {
     if (!entityLink || !entityLink.sys) return;
 
     const fieldValue = super.getValue(entityLink, path);
-
-    // walk around to render asset files
-    return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
-      ? (fieldValue as AssetFile).url
-      : fieldValue;
+    return transformAssetFileToUrl(fieldValue);
   }
 }
