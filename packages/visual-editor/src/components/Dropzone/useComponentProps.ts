@@ -6,6 +6,7 @@ import {
   isLinkToAsset,
   isEmptyStructureWithRelativeHeight,
   isContentfulStructureComponent,
+  isDeepPath,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -96,6 +97,32 @@ export const useComponentProps = ({
             [variableName]: designValue,
           };
         } else if (variableMapping.type === 'BoundValue') {
+          if (!areEntitiesFetched) {
+            console.debug(
+              `[exp-builder.sdk::useComponentProps] Idle-cycle: as entities are not fetched(areEntitiesFetched=${areEntitiesFetched}), we cannot resolve bound values for ${variableName} so we just resolve them to default values.`,
+            );
+
+            // Just forcing default value (if we're in idle-cycle, entities are missing)
+            return {
+              ...acc,
+              [variableName]: transformContentValue(
+                variableDefinition.defaultValue,
+                variableDefinition,
+              ),
+            };
+          }
+
+          if (isDeepPath(variableMapping.path)) {
+            const [, uuid] = variableMapping.path.split('/');
+            const link = dataSource[uuid] as Link<'Entry' | 'Asset'>;
+            const boundValue = entityStore?.getValueDeep(link, variableMapping.path);
+            const value = boundValue || variableDefinition.defaultValue;
+            return {
+              ...acc,
+              [variableName]: transformContentValue(value, variableDefinition),
+            };
+          }
+
           // // take value from the datasource for both bound and unbound value types
           const [, uuid, ...path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;

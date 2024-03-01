@@ -25,6 +25,9 @@ export const HeadingComponentDefinition: ComponentDefinition = {
     'cfBackgroundColor',
     'cfBorder',
   ],
+  tooltip: {
+    description: 'Click and drop to add a heading for your experience.',
+  },
   variables: {
     // Built-in style variables with default values changed
     cfHeight: {

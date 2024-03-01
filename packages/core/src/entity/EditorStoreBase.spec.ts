@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { asset } from '../test/__fixtures__/asset';
 import { entry } from '../test/__fixtures__/entry';
-import { EntityStoreBase } from './EntityStoreBase';
+import { EntityStoreBase as AbstractEntityStoreBase } from './EntityStoreBase';
+class EntityStoreBase extends AbstractEntityStoreBase {}
 
 describe('EntityStore', () => {
   const locale = 'en-US';
@@ -42,13 +43,13 @@ describe('EntityStore', () => {
         store.getValue({ sys: { id: entry.sys.id, linkType: 'Entry', type: 'Link' } }, [
           'fields',
           'title',
-        ])
+        ]),
       ).toEqual(entry.fields.title);
       expect(
         store.getValue({ sys: { id: asset.sys.id, linkType: 'Asset', type: 'Link' } }, [
           'fields',
           'title',
-        ])
+        ]),
       ).toEqual(asset.fields.title);
     });
 
@@ -57,7 +58,7 @@ describe('EntityStore', () => {
         createStore().getValue({ sys: { id: 'test', linkType: 'Entry', type: 'Link' } }, [
           'fields',
           'title',
-        ])
+        ]),
       ).toBeUndefined();
     });
 
@@ -66,7 +67,7 @@ describe('EntityStore', () => {
         createStore().getValue({ sys: { id: entry.sys.id, linkType: 'Entry', type: 'Link' } }, [
           'fields',
           'description',
-        ])
+        ]),
       ).toBeUndefined();
     });
 
@@ -75,7 +76,7 @@ describe('EntityStore', () => {
         createStore().getValue({ sys: { id: entry.sys.id, linkType: 'Asset', type: 'Link' } }, [
           'fields',
           'title',
-        ])
+        ]),
       ).toBeUndefined();
     });
   });

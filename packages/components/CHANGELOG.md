@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.33](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.32...@contentful/experience-builder-components@0.0.2-alpha.33) (2024-03-01)
+
+**Note:** Version bump only for package @contentful/experience-builder-components
+
+## [0.0.2-alpha.32](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.31...@contentful/experience-builder-components@0.0.2-alpha.32) (2024-02-29)
+
+### Features
+
+- adds tooltip defn for heading, text, richtext, button, and image ([887b753](https://github.com/contentful/experience-builder/commit/887b753415d0e6450545e541d8ddfef81fd71e6d))
+
 ## [0.0.2-alpha.31](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-components@0.0.2-alpha.30...@contentful/experience-builder-components@0.0.2-alpha.31) (2024-02-28)
 
 ### Bug Fixes

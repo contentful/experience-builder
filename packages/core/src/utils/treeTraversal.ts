@@ -2,9 +2,6 @@ type NodeWithChildren<T> = {
   children: T[];
 };
 
-/**
- * @deprecated in favor of one in 'core' package
- */
 export function treeVisit<T extends NodeWithChildren<T>>(
   initialNode: T,
   onNode: (node: T, index: number, depth: number) => void,
@@ -34,7 +31,6 @@ export function treeVisit<T extends NodeWithChildren<T>>(
  *
  * You can map each node to whatever you want, but shouldn't
  * modify the structure of the tree from the mapping function.
- * @deprecated in favor of one in 'core' package
  */
 export function treeMap<T extends NodeWithChildren<T>, U>(
   node: T,
