@@ -142,10 +142,6 @@ export const componentRegistry = new Map<string, ComponentRegistration>([
   [DEFAULT_COMPONENT_REGISTRATIONS.heading.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.heading],
   [DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.image],
   [
-    DEFAULT_COMPONENT_REGISTRATIONS.mediaImage.definition.id,
-    DEFAULT_COMPONENT_REGISTRATIONS.mediaImage,
-  ],
-  [
     DEFAULT_COMPONENT_REGISTRATIONS.richText.definition.id,
     DEFAULT_COMPONENT_REGISTRATIONS.richText,
   ],
