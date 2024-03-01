@@ -168,6 +168,8 @@ export const CF_STYLE_ATTRIBUTES = [
 
 export const EMPTY_CONTAINER_HEIGHT = '80px';
 
+export const DEFAULT_IMAGE_WIDTH = '500px';
+
 export enum PostMessageMethods {
   REQUEST_ENTITIES = 'REQUEST_ENTITIES',
   REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',

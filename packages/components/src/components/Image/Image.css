@@ -1,0 +1,9 @@
+.cf-no-image-wrapper {
+  position: relative;
+  border: 1px solid var(--exp-builder-gray200);
+}
+
+.cf-no-image-wrapper img {
+  width: 500px;
+  height: 100%;
+}

@@ -1,6 +1,7 @@
 import { OptimizedImageAsset } from '@contentful/experience-builder-core/types';
 import React from 'react';
 import { placeholderImage } from '@/utils/constants';
+import './Image.css';
 
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   cfImageAsset?: OptimizedImageAsset | string;
