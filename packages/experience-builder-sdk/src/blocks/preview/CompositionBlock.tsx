@@ -86,6 +86,7 @@ export const CompositionBlock = ({
     return Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variable = node.variables[variableName];
+        if (!variable) return acc;
         switch (variable.type) {
           case 'DesignValue':
             acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
