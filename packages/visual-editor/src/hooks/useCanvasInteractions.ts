@@ -9,6 +9,7 @@ import { DropResult } from '@hello-pangea/dnd';
 export default function useCanvasInteractions() {
   const tree = useTreeStore((state) => state.tree);
   const reorderChildren = useTreeStore((state) => state.reorderChildren);
+  const reparentChild = useTreeStore((state) => state.reparentChild);
   const addChild = useTreeStore((state) => state.addChild);
 
   const onAddComponent = (droppedItem: DropResult) => {
@@ -56,6 +57,10 @@ export default function useCanvasInteractions() {
 
     if (destination.droppableId === source.droppableId) {
       reorderChildren(destination.index, destination.droppableId, source.index);
+    }
+
+    if (destination.droppableId !== source.droppableId) {
+      reparentChild(destination.index, destination.droppableId, source.index, source.droppableId);
     }
 
     onComponentMoved({

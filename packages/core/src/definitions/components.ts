@@ -13,6 +13,10 @@ export const sectionDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: builtInStyles,
+  tooltip: {
+    description:
+      'Create a new full width section of your experience by dragging this element onto the canvas. Elements and patterns can be added into a section.',
+  },
 };
 
 export const containerDefinition: ComponentDefinition = {
@@ -21,6 +25,10 @@ export const containerDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: containerBuiltInStyles,
+  tooltip: {
+    description:
+      'Create a new area or pattern within your page layout by dragging a container onto the canvas. Elements and patterns can be added into a container.',
+  },
 };
 
 export const columnsDefinition: ComponentDefinition = {
@@ -29,6 +37,10 @@ export const columnsDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: columnsBuiltInStyles,
+  tooltip: {
+    description:
+      'Add columns to a container to create your desired layout and ensure that the experience is responsive across different screen sizes.',
+  },
 };
 
 export const singleColumnDefinition: ComponentDefinition = {

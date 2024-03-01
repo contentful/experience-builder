@@ -12,6 +12,9 @@ export const ImageComponentDefinition: ComponentDefinition = {
   name: CONTENTFUL_COMPONENTS.image.name,
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: ['cfMargin', 'cfPadding'],
+  tooltip: {
+    description: 'Click and drop onto the canvas to upload an image or bind an existing asset.',
+  },
   variables: {
     alt: {
       displayName: 'Alt',

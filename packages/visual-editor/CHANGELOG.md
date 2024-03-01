@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.32](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.31...@contentful/experience-builder-visual-editor@0.0.2-alpha.32) (2024-02-29)
+
+### Bug Fixes
+
+- **canvas-interactions:** prevent draggables from flying off mouse cursor ([#434](https://github.com/contentful/experience-builder/issues/434)) ([9fe8e6d](https://github.com/contentful/experience-builder/commit/9fe8e6d181181d84dd73922fced233e47232923f))
+- hide overflow on draggable component to fix scrolling ([5c3b9f4](https://github.com/contentful/experience-builder/commit/5c3b9f48fef58cc8668972be2325a513a21287d6))
+
 ## [0.0.2-alpha.31](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.30...@contentful/experience-builder-visual-editor@0.0.2-alpha.31) (2024-02-28)
 
 ### Bug Fixes
