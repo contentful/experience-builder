@@ -1,7 +1,7 @@
 import { OptimizedImageAsset } from '@contentful/experience-builder-core/types';
 import React from 'react';
-import './Image.css';
 import { placeholderImage } from '@/utils/constants';
+import './Image.css';
 
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   cfImageAsset?: OptimizedImageAsset | string;
@@ -9,11 +9,7 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 
 export const Image: React.FC<ImageProps> = ({ className = '', src, cfImageAsset, ...props }) => {
   if (!cfImageAsset && !src) {
-    return (
-      <div className="cf-no-image-wrapper">
-        <img src={placeholderImage} className={'cf-image ' + className} {...props} />
-      </div>
-    );
+    return <img src={placeholderImage} className={'cf-image cf-no-image' + className} {...props} />;
   }
 
   if (typeof cfImageAsset === 'string') {

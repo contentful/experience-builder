@@ -12,6 +12,7 @@ export const transformMedia = (
   binding: UnresolvedLink<'Entry' | 'Asset'>,
   resolveDesignValue: ResolveDesignValueType,
   variableName: string,
+  path: string[],
 ) => {
   let value: BoundComponentPropertyTypes;
   const asset = entityStore.getEntryOrAsset(binding) as Asset;
@@ -65,6 +66,6 @@ export const transformMedia = (
       console.error('Error transforming image asset', error);
     }
   } else {
-    return getBoundValue(entityStore, binding, []);
+    return getBoundValue(entityStore, binding, path);
   }
 };

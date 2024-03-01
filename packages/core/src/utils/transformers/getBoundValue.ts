@@ -17,5 +17,4 @@ export const getBoundValue = (
     }
   }
   return value;
-  // const variableDefinition = componentRegistration.definition.variables[variableName];
 };
