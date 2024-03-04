@@ -1,4 +1,4 @@
-import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
+import type { CompositionComponentNode } from '@contentful/experiences-core/types';
 import { isEqual } from 'lodash-es';
 import { getChildFromTree } from './getItem';
 

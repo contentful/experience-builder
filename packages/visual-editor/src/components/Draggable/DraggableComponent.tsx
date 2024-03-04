@@ -10,7 +10,7 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import {
   ComponentDefinition,
   ComponentDefinitionVariableType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 
 function getStyle(style, snapshot) {
   if (!snapshot.isDropAnimating) {

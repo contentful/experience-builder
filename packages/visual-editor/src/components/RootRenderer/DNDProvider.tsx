@@ -1,8 +1,8 @@
 import useCanvasInteractions from '@/hooks/useCanvasInteractions';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { useEditorStore } from '@/store/editor';
-import { sendMessage } from '@contentful/experience-builder-core';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import { sendMessage } from '@contentful/experiences-core';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import {
   DragDropContext,
   OnBeforeCaptureResponder,

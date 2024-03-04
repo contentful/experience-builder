@@ -12,7 +12,7 @@ import Tooltip from './Tooltip';
 import {
   ComponentDefinition,
   ComponentDefinitionVariableType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 
 export type NoWrapDraggableProps = {
   ['data-ctfl-draggable-id']: string;

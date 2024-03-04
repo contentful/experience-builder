@@ -4,7 +4,7 @@ import { useComponent } from './useComponent';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
 import { useDraggedItemStore } from '@/store/draggedItem';

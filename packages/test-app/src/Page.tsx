@@ -1,8 +1,8 @@
 import './eb-config';
 import { useParams } from 'react-router-dom';
-import '@contentful/experience-builder-components/styles.css';
+import '@contentful/experiences-components-react/styles.css';
 import './styles.css';
-import { ExperienceRoot, useFetchBySlug } from '@contentful/experience-builder';
+import { ExperienceRoot, useFetchBySlug } from '@contentful/experiences-sdk-react';
 import { useContentfulClient } from './hooks/useContentfulClient';
 import { useContentfulConfig } from './hooks/useContentfulConfig';
 

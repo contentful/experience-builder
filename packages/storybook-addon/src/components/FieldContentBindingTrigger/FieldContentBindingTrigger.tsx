@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentDefinition } from '@contentful/experience-builder';
+import { ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { Flex, IconButton, TextLink, Text } from '@contentful/f36-components';
 import { MoreVerticalTrimmedIcon, PlusCircleIcon } from '@contentful/f36-icons';
 import { useMemo, useCallback } from 'react';
@@ -110,7 +110,7 @@ const FieldContentBindingTriggerWithoutContext = ({
 
   const showBindingMenu = !isEqual(
     manualValue,
-    componentDefinition?.variables[propKey].defaultValue
+    componentDefinition?.variables[propKey].defaultValue,
   );
 
   const renderTriggerNode = useCallback(
@@ -136,7 +136,7 @@ const FieldContentBindingTriggerWithoutContext = ({
           Add content
         </TextLink>
       ),
-    [showBindingMenu, togglePopover]
+    [showBindingMenu, togglePopover],
   );
 
   return (

@@ -1,8 +1,5 @@
 import { useMemo } from 'react';
-import type {
-  DeprecatedExperience,
-  ExternalSDKMode,
-} from '@contentful/experience-builder-core/types';
+import type { DeprecatedExperience, ExternalSDKMode } from '@contentful/experiences-core/types';
 import type { ContentfulClientApi } from 'contentful';
 import { defineComponents } from '../core/componentRegistry';
 
@@ -45,7 +42,7 @@ export const useExperienceBuilder = ({
      *
      * @example
      *
-     * import { useFetchExperience } from '@contentful/experience-builder'
+     * import { useFetchExperience } from '@contentful/experiences-sdk-react'
      *
      * const { fetchBySlug, fetchById, experience, isFetching } = useFetchExperience({ client, mode })
      */
@@ -55,7 +52,7 @@ export const useExperienceBuilder = ({
      *
      * @example
      *
-     * import { defineComponents } from '@contentful/experience-builder'
+     * import { defineComponents } from '@contentful/experiences-sdk-react'
      */
     defineComponents,
   };

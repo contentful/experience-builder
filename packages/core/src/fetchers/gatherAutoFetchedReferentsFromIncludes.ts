@@ -42,14 +42,14 @@ export function gatherAutoFetchedReferentsFromIncludes(
 
     if (undefined === linkToReferent) {
       console.debug(
-        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Empty reference in headEntity. Probably reference is simply not set.`,
+        `[experiences-sdk-react::gatherAutoFetchedReferentsFromIncludes] Empty reference in headEntity. Probably reference is simply not set.`,
       );
       continue;
     }
 
     if (!isLink(linkToReferent)) {
       console.debug(
-        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Non-link value in headEntity. Probably broken path '${reference.originalPath}'`,
+        `[experiences-sdk-react::gatherAutoFetchedReferentsFromIncludes] Non-link value in headEntity. Probably broken path '${reference.originalPath}'`,
       );
       continue;
     }
@@ -80,7 +80,7 @@ export function gatherAutoFetchedReferentsFromIncludes(
       autoFetchedReferentAssets.push(referentAsset as Asset);
     } else {
       console.debug(
-        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Unhandled linkType :${JSON.stringify(
+        `[experiences-sdk-react::gatherAutoFetchedReferentsFromIncludes] Unhandled linkType :${JSON.stringify(
           linkToReferent,
         )}`,
       );

@@ -6,7 +6,7 @@ export const sendMessage = (eventType: OutgoingEvent | PostMessageMethods, data?
     return;
   }
 
-  console.debug(`[exp-builder.sdk::sendMessage] Sending message [${eventType}]`, {
+  console.debug(`[experiences-sdk-react::sendMessage] Sending message [${eventType}]`, {
     source: 'customer-app',
     eventType,
     payload: data,
@@ -18,6 +18,6 @@ export const sendMessage = (eventType: OutgoingEvent | PostMessageMethods, data?
       eventType,
       payload: data,
     },
-    '*'
+    '*',
   );
 };

@@ -3,15 +3,15 @@ import type {
   ComponentRegistration,
   CompositionComponentNode,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
 import { builtInComponents } from '@/types/constants';
 import {
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
-} from '@contentful/experience-builder-core/constants';
-import { Assembly } from '@contentful/experience-builder-components';
+} from '@contentful/experiences-core/constants';
+import { Assembly } from '@contentful/experiences-components-react';
 import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
@@ -60,7 +60,9 @@ export const useComponent = ({
         component: Assembly,
       }) as ComponentRegistration;
     } else if (!registration) {
-      console.warn(`[exp-builder.sdk] Component registration not found for ${node.data.blockId}`);
+      console.warn(
+        `[experiences-sdk-react] Component registration not found for ${node.data.blockId}`,
+      );
     }
     return registration as ComponentRegistration;
   }, [node]);

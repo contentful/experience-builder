@@ -2,7 +2,7 @@ import type {
   Breakpoint,
   CompositionComponentNode,
   CompositionTree,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { ROOT_ID, TreeAction } from '@/types/constants';
 import { create } from 'zustand';
 import { produce } from 'immer';
@@ -19,7 +19,7 @@ import { treeVisit } from '@/utils/treeTraversal';
 import {
   ASSEMBLY_NODE_TYPE,
   DESIGN_COMPONENT_NODE_TYPE,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 export interface TreeStore {
   tree: CompositionTree;
   breakpoints: Breakpoint[];
