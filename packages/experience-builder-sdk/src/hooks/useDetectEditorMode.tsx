@@ -3,8 +3,8 @@ import {
   doesMismatchMessageSchema,
   sendMessage,
   tryParseMessage,
-} from '@contentful/experience-builder-core';
-import { INCOMING_EVENTS, OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core';
+import { INCOMING_EVENTS, OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 type UseDetectEditorModeArgs = {
   /** If running from a known client side only situation (ie: useFetchBySlug),

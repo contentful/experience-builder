@@ -1,4 +1,4 @@
-import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 
 export const DRAGGABLE_HEIGHT = 30;
 export const DRAGGABLE_WIDTH = 50;

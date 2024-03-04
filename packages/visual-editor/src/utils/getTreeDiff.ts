@@ -1,7 +1,4 @@
-import {
-  CompositionComponentNode,
-  CompositionTree,
-} from '@contentful/experience-builder-core/types';
+import { CompositionComponentNode, CompositionTree } from '@contentful/experiences-core/types';
 
 import { getItem } from './getItem';
 import { isEqual } from 'lodash-es';
@@ -183,7 +180,7 @@ function compareNodes({
 export function getTreeDiffs(
   tree1: CompositionComponentNode,
   tree2: CompositionComponentNode,
-  originalTree: CompositionTree
+  originalTree: CompositionTree,
 ): TreeDiff[] {
   const differences: TreeDiff[] = [];
 

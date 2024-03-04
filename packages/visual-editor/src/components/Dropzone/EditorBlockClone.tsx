@@ -4,14 +4,14 @@ import { useComponent } from './useComponent';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
 import classNames from 'classnames';
 import {
   ASSEMBLY_BLOCK_NODE_TYPE,
   CONTENTFUL_COMPONENTS,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import { useDraggedItemStore } from '@/store/draggedItem';
 
 function getStyle(style = {}, snapshot?: DraggableStateSnapshot) {

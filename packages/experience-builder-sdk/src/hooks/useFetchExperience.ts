@@ -4,8 +4,8 @@ import {
   EntityStore,
   fetchBySlug as fetchBySlugCore,
   fetchById as fetchByIdCore,
-} from '@contentful/experience-builder-core';
-import { Experience, ExternalSDKMode } from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core';
+import { Experience, ExternalSDKMode } from '@contentful/experiences-core/types';
 
 type useClientsideExperienceFetchersProps = {
   /** @deprecated mode no longer required */

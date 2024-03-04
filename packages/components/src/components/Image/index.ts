@@ -1,8 +1,8 @@
-import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
+import type { ComponentDefinition } from '@contentful/experiences-core/types';
 import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import { placeholderImage } from '@/utils/constants';
 
 export * from './Image';

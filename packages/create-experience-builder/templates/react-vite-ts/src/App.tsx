@@ -1,11 +1,11 @@
 import { createClient } from 'contentful';
-import { useExperienceBuilder, ExperienceRoot } from '@contentful/experience-builder';
-import { useExperienceBuilderComponents } from '@contentful/experience-builder-components';
+import { useExperienceBuilder, ExperienceRoot } from '@contentful/experiences-sdk-react';
+import { useExperienceBuilderComponents } from '@contentful/experiences-components-react';
 import './App.css';
-import { ExternalSDKMode } from '@contentful/experience-builder/dist/types';
+import { ExternalSDKMode } from '@contentful/experiences-sdk-react/dist/types';
 
 // Import the styles for the default components
-import '@contentful/experience-builder-components/styles.css';
+import '@contentful/experiences-components-react/styles.css';
 
 const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
 

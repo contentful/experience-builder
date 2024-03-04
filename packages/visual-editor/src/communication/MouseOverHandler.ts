@@ -1,10 +1,10 @@
-import type { HoveredElement } from '@contentful/experience-builder-core/types';
-import { sendMessage } from '@contentful/experience-builder-core';
+import type { HoveredElement } from '@contentful/experiences-core/types';
+import { sendMessage } from '@contentful/experiences-core';
 import {
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   OUTGOING_EVENTS,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 
 export class MouseOverHandler {
   private currentHoveredElementId: string | null = null;
@@ -54,7 +54,7 @@ export class MouseOverHandler {
 
   private getFullCoordinates = (element: HTMLElement) => {
     const validChildren = Array.from(element.children).filter(
-      (child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block'
+      (child) => child instanceof HTMLElement && child.dataset.cfNodeBlockType === 'block',
     );
 
     const { left, top, width, height } = this.getBoundingClientRect(element);
@@ -77,7 +77,7 @@ export class MouseOverHandler {
   };
 
   private getClosestComponentInformation = (
-    element: HTMLElement | null
+    element: HTMLElement | null,
   ): [HTMLElement | null, HoveredElement] | undefined => {
     let target = element;
 
@@ -146,7 +146,7 @@ export class MouseOverHandler {
         };
         const parentChildrenElements = parentHTMLElement.children;
         parentSectionIndex = Array.from(parentChildrenElements).findIndex(
-          (child) => child === hoveredElement
+          (child) => child === hoveredElement,
         );
         break;
       }

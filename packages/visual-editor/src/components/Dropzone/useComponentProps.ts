@@ -7,14 +7,14 @@ import {
   isEmptyStructureWithRelativeHeight,
   isContentfulStructureComponent,
   isDeepPath,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
   CONTENTFUL_COMPONENTS,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import type {
   StyleProps,
   CompositionVariableValueType,
@@ -22,7 +22,7 @@ import type {
   ResolveDesignValueType,
   ComponentRegistration,
   Link,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import { omit } from 'lodash-es';
@@ -99,7 +99,7 @@ export const useComponentProps = ({
         } else if (variableMapping.type === 'BoundValue') {
           if (!areEntitiesFetched) {
             console.debug(
-              `[exp-builder.sdk::useComponentProps] Idle-cycle: as entities are not fetched(areEntitiesFetched=${areEntitiesFetched}), we cannot resolve bound values for ${variableName} so we just resolve them to default values.`,
+              `[experiences-sdk-react::useComponentProps] Idle-cycle: as entities are not fetched(areEntitiesFetched=${areEntitiesFetched}), we cannot resolve bound values for ${variableName} so we just resolve them to default values.`,
             );
 
             // Just forcing default value (if we're in idle-cycle, entities are missing)

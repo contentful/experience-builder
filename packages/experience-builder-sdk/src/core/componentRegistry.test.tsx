@@ -1,12 +1,12 @@
 import React from 'react';
-import { containerDefinition, sectionDefinition } from '@contentful/experience-builder-core';
+import { containerDefinition, sectionDefinition } from '@contentful/experiences-core';
 import {
   INTERNAL_EVENTS,
   CONTENTFUL_COMPONENTS,
   ASSEMBLY_DEFAULT_CATEGORY,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import * as registry from './componentRegistry';
-import type { ComponentRegistration } from '@contentful/experience-builder-core/types';
+import type { ComponentRegistration } from '@contentful/experiences-core/types';
 
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>;

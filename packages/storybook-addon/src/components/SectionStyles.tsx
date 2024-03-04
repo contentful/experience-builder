@@ -1,9 +1,9 @@
 import React from 'react';
-import { ComponentDefinition } from '@contentful/experience-builder';
+import { ComponentDefinition } from '@contentful/experiences-sdk-react';
 import {
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,
-} from '@contentful/experience-builder/dist/types';
+} from '@contentful/experiences-sdk-react/dist/types';
 import { Flex, Text } from '@contentful/f36-components';
 import {
   AlignmentInput,
