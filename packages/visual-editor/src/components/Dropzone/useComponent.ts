@@ -91,6 +91,6 @@ export const useComponent = ({
     componentId,
     elementToRender,
     wrapperProps,
-    label: componentRegistration.definition.name,
+    definition: componentRegistration.definition,
   };
 };

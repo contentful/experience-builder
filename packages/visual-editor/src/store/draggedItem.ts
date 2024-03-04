@@ -5,10 +5,17 @@ export type DraggedItem = DragStart & Partial<DragUpdate>;
 
 export interface DraggedItemStore {
   componentId: string;
-  setComponentId: (id: string) => void;
   draggedItem?: DraggedItem;
-  updateItem: (item?: DraggedItem) => void;
   isDraggingOnCanvas: boolean;
+  onBeforeCaptureId: string;
+  mouseX: number;
+  mouseY: number;
+
+  // actions
+  setComponentId: (id: string) => void;
+  updateItem: (item?: DraggedItem) => void;
+  setOnBeforeCaptureId: (draggableId: string) => void;
+  setMousePosition: (x: number, y: number) => void;
   setDraggingOnCanvas: (isDraggingOnCanvas: boolean) => void;
 }
 
@@ -16,6 +23,9 @@ export const useDraggedItemStore = create<DraggedItemStore>((set) => ({
   draggedItem: undefined,
   componentId: '',
   isDraggingOnCanvas: false,
+  onBeforeCaptureId: '',
+  mouseX: 0,
+  mouseY: 0,
   setComponentId(id) {
     set({ componentId: id });
   },
@@ -24,5 +34,11 @@ export const useDraggedItemStore = create<DraggedItemStore>((set) => ({
   },
   setDraggingOnCanvas: (isDraggingOnCanvas) => {
     set({ isDraggingOnCanvas });
+  },
+  setOnBeforeCaptureId: (onBeforeCaptureId) => {
+    set({ onBeforeCaptureId });
+  },
+  setMousePosition(x, y) {
+    set({ mouseX: x, mouseY: y });
   },
 }));

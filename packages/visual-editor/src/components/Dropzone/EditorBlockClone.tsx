@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import styles from '../Draggable/styles.module.css';
 import { useComponent } from './useComponent';
 import type {
@@ -7,17 +7,13 @@ import type {
 } from '@contentful/experience-builder-core/types';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
-import classNames from 'classnames';
-import {
-  ASSEMBLY_BLOCK_NODE_TYPE,
-  CONTENTFUL_COMPONENTS,
-} from '@contentful/experience-builder-core/constants';
 import { useDraggedItemStore } from '@/store/draggedItem';
 
-function getStyle(style = {}, snapshot?: DraggableStateSnapshot) {
+function getStyle(style: CSSProperties = {}, snapshot?: DraggableStateSnapshot) {
   if (!snapshot?.isDropAnimating) {
     return style;
   }
+
   return {
     ...style,
     // cannot be 0, but make it super tiny
@@ -42,19 +38,12 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
 }) => {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
 
-  const { node, wrapperProps, elementToRender } = useComponent({
+  const { definition, wrapperProps } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
     userIsDragging,
   });
-
-  const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
-  const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
-
-  if (isSingleColumn) {
-    return elementToRender();
-  }
 
   return (
     <div
@@ -62,12 +51,9 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
       {...wrapperProps}
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
-      className={classNames(styles.DraggableComponent, wrapperProps.className, {
-        [styles.isAssemblyBlock]: isAssemblyBlock,
-        [styles.isDragging]: snapshot?.isDragging,
-      })}
+      className={styles.componentCard}
       style={getStyle(provided?.draggableProps.style, snapshot)}>
-      {elementToRender()}
+      {definition.name}
     </div>
   );
 };

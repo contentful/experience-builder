@@ -9,6 +9,7 @@ import { useEntityStore } from '@/store/entityStore';
 import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
 import { CTFL_ZONE_ID } from '@/types/constants';
+import { useDraggedItemStore } from '@/store/draggedItem';
 
 const findNearestDropzone = (element: HTMLElement): string | null => {
   const zoneId = element.getAttribute(CTFL_ZONE_ID);
@@ -27,6 +28,7 @@ const findNearestDropzone = (element: HTMLElement): string | null => {
 export const VisualEditorRoot = () => {
   const initialized = useInitializeEditor();
   const locale = useEditorStore((state) => state.locale);
+  const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
   const entityStore = useEntityStore((state) => state.entityStore);
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
@@ -44,6 +46,8 @@ export const VisualEditorRoot = () => {
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
+      setMousePosition(e.clientX, e.clientY);
+
       const target = e.target as HTMLElement;
 
       const zoneId = findNearestDropzone(target);

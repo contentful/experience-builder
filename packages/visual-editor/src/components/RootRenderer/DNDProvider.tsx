@@ -22,6 +22,7 @@ type Props = {
 export const DNDProvider = ({ children }: Props) => {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
+  const setOnBeforeCaptureId = useDraggedItemStore((state) => state.setOnBeforeCaptureId);
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
   const updateItem = useDraggedItemStore((state) => state.updateItem);
   const { onAddComponent, onMoveComponent } = useCanvasInteractions();
@@ -41,8 +42,9 @@ export const DNDProvider = ({ children }: Props) => {
     });
   };
 
-  const beforeCapture: OnBeforeCaptureResponder = () => {
+  const beforeCapture: OnBeforeCaptureResponder = ({ draggableId }) => {
     setDraggingOnCanvas(true);
+    setOnBeforeCaptureId(draggableId);
   };
 
   const dragUpdate: OnDragUpdateResponder = (update) => {
@@ -51,6 +53,7 @@ export const DNDProvider = ({ children }: Props) => {
 
   const dragEnd: OnDragEndResponder = (dropResult) => {
     setDraggingOnCanvas(false);
+    setOnBeforeCaptureId('');
     updateItem(undefined);
     dragState.reset();
 

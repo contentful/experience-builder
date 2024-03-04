@@ -30,7 +30,6 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 import { DRAG_PADDING } from '../../types/constants';
-import { useDraggedItemStore } from '@/store/draggedItem';
 
 type ComponentProps =
   | StyleProps
@@ -55,8 +54,6 @@ export const useComponentProps = ({
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
-  const newComponentId = useDraggedItemStore((state) => state.componentId);
-  const isDraggingNewCompont = !!newComponentId;
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: ComponentProps = useMemo(() => {
     // Don't enrich the assembly wrapper node with props
@@ -218,7 +215,6 @@ export const useComponentProps = ({
         minHeight: EMPTY_CONTAINER_HEIGHT,
       }),
       ...(userIsDragging &&
-        isDraggingNewCompont &&
         isContentfulStructureComponent(node?.data.blockId) &&
         node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
           padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),

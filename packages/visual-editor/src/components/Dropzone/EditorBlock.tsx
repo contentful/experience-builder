@@ -43,7 +43,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 }) => {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, wrapperProps, label, elementToRender } = useComponent({
+  const { node, componentId, wrapperProps, definition, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -86,7 +86,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       <>
         <DraggableChildComponent
           elementToRender={elementToRender}
-          label={label || 'No Label Specified'}
           id={componentId}
           index={index}
           isAssemblyBlock={isAssemblyBlock}
@@ -98,6 +97,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
           coordinates={coordinates!}
           wrapperProps={wrapperProps}
           onClick={onClick}
+          definition={definition}
         />
         {isStructureComponent && userIsDragging && (
           <Hitboxes
@@ -113,7 +113,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   return (
     <DraggableComponent
       placeholder={placeholder}
-      label={label || 'No Label Specified'}
+      definition={definition}
       id={componentId}
       index={index}
       isAssemblyBlock={isAssemblyBlock}
