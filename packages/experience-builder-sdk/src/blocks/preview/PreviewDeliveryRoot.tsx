@@ -11,7 +11,7 @@ type DeliveryRootProps = {
 };
 
 export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) => {
-  const { entityStore } = experience;
+  const { entityStore, valueService } = experience;
 
   const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? []);
 
@@ -33,6 +33,7 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
           key={index}
           node={childNode}
           locale={locale}
+          valueService={valueService}
           entityStore={entityStore}
           resolveDesignValue={resolveDesignValue}
         />
