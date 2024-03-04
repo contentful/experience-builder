@@ -1,7 +1,4 @@
-import type {
-  CompositionComponentNode,
-  CompositionTree,
-} from '@contentful/experience-builder-core/types';
+import type { CompositionComponentNode, CompositionTree } from '@contentful/experiences-core/types';
 import { ROOT_ID } from '../types/constants';
 
 export type ItemSelector = {
@@ -29,6 +26,26 @@ function getItemFromTree(
 
   // If the node is not found in this branch of the tree, return undefined
   return undefined;
+}
+
+function findDepthById(
+  node: CompositionComponentNode,
+  id: string,
+  currentDepth: number = 1,
+): number {
+  if (node.data.id === id) {
+    return currentDepth;
+  }
+
+  // If the node has children, check each one
+  for (const child of node.children) {
+    const childDepth = findDepthById(child, id, currentDepth + 1);
+    if (childDepth !== -1) {
+      return childDepth; // Found the node in a child
+    }
+  }
+
+  return -1; // Node not found in this branch
 }
 
 export const getChildFromTree = (
@@ -67,4 +84,11 @@ export const getItem = (
     } as any,
     children: tree.root.children,
   });
+};
+
+export const getItemDepthFromNode = (
+  selector: ItemSelector,
+  node: CompositionComponentNode,
+): number => {
+  return findDepthById(node, selector.id);
 };

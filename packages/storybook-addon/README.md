@@ -19,7 +19,7 @@ options translate to a different UI for their editors.
 ### Installation
 
 ```bash
-npm install @contentful/experience-builder-storybook-addon
+npm install @contentful/experiences-storybook-addon
 ```
 
 ### Enabling the Plugin
@@ -34,7 +34,7 @@ const config: StorybookConfig = {
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    '@contentful/experience-builder-storybook-addon', // <- add storybook plugin here
+    '@contentful/experiences-storybook-addon', // <- add storybook plugin here
   ],
   // ... additional config
 };

@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { sendMessage } from '@contentful/experience-builder-core';
+import { sendMessage } from '@contentful/experiences-core';
 import dragState from '@/utils/dragState';
 import { RootRenderer } from './RootRenderer/RootRenderer';
 import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useInitializeEditor } from '@/hooks/useInitializeEditor';
 import { useEntityStore } from '@/store/entityStore';
 import { useEditorStore } from '@/store/editor';

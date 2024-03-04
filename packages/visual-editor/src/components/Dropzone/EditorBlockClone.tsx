@@ -4,14 +4,15 @@ import { useComponent } from './useComponent';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
 import classNames from 'classnames';
 import {
   ASSEMBLY_BLOCK_NODE_TYPE,
   CONTENTFUL_COMPONENTS,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
+import { useDraggedItemStore } from '@/store/draggedItem';
 
 function getStyle(style = {}, snapshot?: DraggableStateSnapshot) {
   if (!snapshot?.isDropAnimating) {
@@ -39,10 +40,13 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
   provided,
   renderDropzone,
 }) => {
+  const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
+
   const { node, wrapperProps, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
+    userIsDragging,
   });
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { EntityStore } from '@contentful/experience-builder-core';
-import type { Experience } from '@contentful/experience-builder-core/types';
+import { EntityStore } from '@contentful/experiences-core';
+import type { Experience } from '@contentful/experiences-core/types';
 
 export const useFetchByBase = (
   fetchMethod: () => Promise<Experience<EntityStore> | undefined>,

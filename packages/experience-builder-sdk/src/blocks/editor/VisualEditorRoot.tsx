@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { EntityStore, VisualEditorMode } from '@contentful/experience-builder-core';
+import { EntityStore, VisualEditorMode } from '@contentful/experiences-core';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { useInitializeVisualEditor } from '../../hooks/useInitializeVisualEditor';
 

@@ -7,13 +7,13 @@ import {
   gatherDeepReferencesFromTree,
   DeepReference,
   isLink,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
   SCROLL_STATES,
   PostMessageMethods,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import {
   CompositionTree,
   CompositionComponentNode,
@@ -22,13 +22,13 @@ import {
   Link,
   CompositionDataSource,
   ManagementEntity,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { Assembly } from '@contentful/experience-builder-components';
+import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { useEntityStore } from '@/store/entityStore';
@@ -148,7 +148,7 @@ export function useEditorSubscriber() {
           await fillupL2({ deepReferences });
         }
       } catch (error) {
-        console.error('[exp-builder.sdk] Failed fetching entities');
+        console.error('[experiences-sdk-react] Failed fetching entities');
         console.error(error);
         throw error; // TODO: The original catch didn't let's rethrow; for the moment throw to see if we have any errors
       } finally {
@@ -172,7 +172,7 @@ export function useEditorSubscriber() {
           reloadApp();
         } else {
           console.warn(
-            `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
+            `[experiences-sdk-react::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
             event,
           );
         }
@@ -185,7 +185,7 @@ export function useEditorSubscriber() {
         return;
       }
       console.debug(
-        `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
+        `[experiences-sdk-react::onMessage] Received message [${eventData.eventType}]`,
         eventData,
       );
 
@@ -341,6 +341,9 @@ export function useEditorSubscriber() {
           dragState.updateIsDragStartedOnParent(true);
           setDraggingOnCanvas(true);
           setComponentId(payload.id || '');
+          sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+            nodeId: '',
+          });
           break;
         }
         case INCOMING_EVENTS.ComponentDragEnded: {
@@ -357,7 +360,7 @@ export function useEditorSubscriber() {
         }
         default:
           console.error(
-            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`,
+            `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`,
           );
       }
     };

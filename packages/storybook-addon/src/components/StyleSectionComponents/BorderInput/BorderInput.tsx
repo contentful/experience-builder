@@ -1,6 +1,6 @@
 import { Flex, Select, TextInput } from '@contentful/f36-components';
 import React, { useState } from 'react';
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { BORDER_STYLE_OPTIONS, LengthRegExp } from '../constants';
 import { ColorInput } from '../BackgroundColorInput/ColorInput';
 import { useBorderConstituents } from './useBorderConstituents';

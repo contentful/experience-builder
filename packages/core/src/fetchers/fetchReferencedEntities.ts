@@ -20,23 +20,23 @@ export const fetchReferencedEntities = async ({
 }: FetchReferencedEntitiesArgs) => {
   if (!client) {
     throw new Error(
-      'Failed to fetch experience entities. Required "client" parameter was not provided'
+      'Failed to fetch experience entities. Required "client" parameter was not provided',
     );
   }
 
   if (!locale) {
     throw new Error(
-      'Failed to fetch experience entities. Required "locale" parameter was not provided'
+      'Failed to fetch experience entities. Required "locale" parameter was not provided',
     );
   }
 
   if (!isExperienceEntry(experienceEntry)) {
     throw new Error(
-      'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema'
+      'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema',
     );
   }
   const deepReferences: Array<DeepReference> = gatherDeepReferencesFromExperienceEntry(
-    experienceEntry as ExperienceEntry
+    experienceEntry as ExperienceEntry,
   );
 
   const entryIds: string[] = [];

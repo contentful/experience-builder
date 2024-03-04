@@ -39,7 +39,7 @@ describe('fetchReferencedEntities', () => {
       });
     } catch (e) {
       expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "client" parameter was not provided'
+        'Failed to fetch experience entities. Required "client" parameter was not provided',
       );
     }
   });
@@ -54,7 +54,7 @@ describe('fetchReferencedEntities', () => {
       });
     } catch (e) {
       expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "locale" parameter was not provided'
+        'Failed to fetch experience entities. Required "locale" parameter was not provided',
       );
     }
   });
@@ -68,7 +68,7 @@ describe('fetchReferencedEntities', () => {
       });
     } catch (e) {
       expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema'
+        'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema',
       );
     }
   });

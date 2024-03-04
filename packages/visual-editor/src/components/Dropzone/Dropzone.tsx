@@ -1,13 +1,13 @@
 import React, { ElementType, useCallback } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
+import type { ResolveDesignValueType } from '@contentful/experiences-core/types';
 import { EditorBlock } from './EditorBlock';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import styles from './styles.module.css';
 import classNames from 'classnames';
-import { COMPONENT_LIST_ID, ROOT_ID } from '@/types/constants';
+import { ROOT_ID } from '@/types/constants';
 import { EmptyContainer } from '@components/EmptyContainer/EmptyContainer';
 import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
@@ -16,7 +16,7 @@ import {
   DESIGN_COMPONENT_NODE_TYPES,
   ASSEMBLY_NODE_TYPES,
   CONTENTFUL_COMPONENTS,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
@@ -39,6 +39,7 @@ export function Dropzone({
 }: DropzoneProps) {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
+  const newComponentId = useDraggedItemStore((state) => state.componentId);
   const hoveringZone = useZoneStore((state) => state.hoveringZone);
   const tree = useTreeStore((state) => state.tree);
   const content = node?.children || tree.root?.children || [];
@@ -48,11 +49,10 @@ export function Dropzone({
   const draggedSourceId = draggedItem && draggedItem.source.droppableId;
   const draggedDestinationId = draggedItem && draggedItem.destination?.droppableId;
 
-  const isDraggingNewComponent = !!draggedSourceId?.startsWith(COMPONENT_LIST_ID);
+  const isDraggingNewComponent = !!newComponentId;
   const isHoveringZone = hoveringZone === zoneId;
   const isRootZone = zoneId === ROOT_ID;
   const isDestination = draggedDestinationId === zoneId;
-  const isDraggingRootZone = draggedSourceId === ROOT_ID;
   const isEmptyCanvas = isRootZone && !content.length;
 
   const isAssembly =
@@ -164,7 +164,6 @@ export function Dropzone({
                       dropzoneElementId: zoneId,
                       direction,
                     }}
-                    draggingRootZone={isDraggingRootZone}
                     index={i}
                     zoneId={zoneId}
                     key={componentId}

@@ -12,8 +12,8 @@ export class EditorModeEntityStore extends EditorEntityStore {
   public locale: string;
   constructor({ entities, locale }: { entities: Array<Asset | Entry>; locale: string }) {
     console.debug(
-      `[exp-builder.sdk] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
-      { entities }
+      `[experiences-sdk-react] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
+      { entities },
     );
 
     const subscribe = (method: unknown, cb: (payload: RequestedEntitiesMessage) => void) => {
@@ -84,7 +84,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
 
   getValue(
     entityLink: UnresolvedLink<'Entry' | 'Asset'> | undefined,
-    path: string[]
+    path: string[],
   ): string | undefined {
     if (!entityLink || !entityLink.sys) return;
 

@@ -1,4 +1,4 @@
-import { CONTENTFUL_COMPONENTS, ComponentDefinition } from '@contentful/experience-builder';
+import { CONTENTFUL_COMPONENTS, ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { builtInStyles } from './variables';
 
 const cloneObject = <T>(targetObject: T): T => {

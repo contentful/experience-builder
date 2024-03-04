@@ -2,9 +2,9 @@ import type {
   Composition,
   ExperienceEntry,
   SchemaVersions,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { entityIds } from './entities';
-import { LATEST_SCHEMA_VERSION } from '@contentful/experience-builder-core/constants';
+import { LATEST_SCHEMA_VERSION } from '@contentful/experiences-core/constants';
 
 const compositionFields: Composition = {
   title: 'Test Composition',
