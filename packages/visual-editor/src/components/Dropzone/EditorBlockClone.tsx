@@ -66,6 +66,7 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
         [styles.isAssemblyBlock]: isAssemblyBlock,
         [styles.isDragging]: snapshot?.isDragging,
       })}
+      data-ctfl-dragging-element
       style={getStyle(provided?.draggableProps.style, snapshot)}>
       {elementToRender()}
     </div>

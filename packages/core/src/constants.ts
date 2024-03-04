@@ -21,6 +21,8 @@ export const OUTGOING_EVENTS = {
   UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
+  ComponentMoveStarted: 'componentMoveStarted',
+  ComponentMoveEnded: 'componentMoveEnded',
   OutsideCanvasClick: 'outsideCanvasClick',
 };
 
@@ -31,6 +33,7 @@ export const INCOMING_EVENTS = {
   ComponentDragCanceled: 'componentDragCanceled',
   ComponentDragStarted: 'componentDragStarted',
   ComponentDragEnded: 'componentDragEnded',
+  ComponentMoveEnded: 'componentMoveEnded',
   CanvasResized: 'canvasResized',
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
@@ -48,6 +51,7 @@ export const INCOMING_EVENTS = {
   AssembliesAdded: 'assembliesAdded',
   AssembliesRegistered: 'assembliesRegistered',
   InitEditor: 'initEditor',
+  MouseMove: 'mouseMove',
 };
 
 export const INTERNAL_EVENTS = {
