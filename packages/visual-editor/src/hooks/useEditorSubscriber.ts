@@ -32,7 +32,7 @@ import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { useEntityStore } from '@/store/entityStore';
-import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
+import { simulateComponentMove, simulateMouseEvent } from '@/utils/simulateMouseEvent';
 import { UnresolvedLink } from 'contentful';
 
 export function useEditorSubscriber() {
@@ -356,6 +356,18 @@ export function useEditorSubscriber() {
           const { selectedNodeId: nodeId } = payload;
           setSelectedNodeId(nodeId);
           sendSelectedComponentCoordinates(nodeId);
+          break;
+        }
+        case INCOMING_EVENTS.MouseMove: {
+          const { mouseX, mouseY } = payload;
+
+          simulateComponentMove(mouseX, mouseY, '[data-ctfl-dragging-element]');
+          break;
+        }
+        case INCOMING_EVENTS.ComponentMoveEnded: {
+          const { mouseX, mouseY } = payload;
+
+          simulateComponentMove(mouseX, mouseY, '[data-ctfl-dragging-element]', 'mouseup');
           break;
         }
         default:
