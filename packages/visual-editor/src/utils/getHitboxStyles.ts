@@ -1,5 +1,5 @@
 import { DRAGGABLE_HEIGHT, DRAGGABLE_WIDTH, HITBOX, HitboxDirection } from '@/types/constants';
-import { CSSProperties } from '@contentful/experience-builder-core/types';
+import { CSSProperties } from '@contentful/experiences-core/types';
 
 const { WIDTH, HEIGHT, INITIAL_OFFSET, OFFSET_INCREMENT, MIN_HEIGHT, MIN_DEPTH_HEIGHT, DEEP_ZONE } =
   HITBOX;

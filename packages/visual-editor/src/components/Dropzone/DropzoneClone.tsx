@@ -1,5 +1,5 @@
 import React, { ElementType } from 'react';
-import type { ResolveDesignValueType } from '@contentful/experience-builder-core/types';
+import type { ResolveDesignValueType } from '@contentful/experiences-core/types';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
 import styles from './styles.module.css';
