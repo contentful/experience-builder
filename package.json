@@ -29,7 +29,6 @@
     "cm": "git-cz",
     "depcruise": "lerna run depcruise"
   },
-  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^18.0.0",
     "@commitlint/config-conventional": "^18.0.0",
@@ -45,7 +44,7 @@
     "husky": "^9.0.10",
     "lerna": "^8.0.2",
     "lint-staged": "^15.0.1",
-    "nx": "18.0.4",
+    "nx": "^18.0.4",
     "nx-cloud": "latest",
     "prettier": "3.2.5"
   },

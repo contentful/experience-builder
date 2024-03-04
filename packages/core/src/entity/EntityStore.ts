@@ -1,9 +1,10 @@
-import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful';
+import type { Asset, Entry, UnresolvedLink } from 'contentful';
 import { isExperienceEntry } from '@/utils';
 import type { Composition, CompositionUnboundValues, ExperienceEntry } from '@/types';
 import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';
-
+import { transformAssetFileToUrl } from './value-transformers';
+import { isLink } from '@/utils/isLink';
 type EntityStoreArgs = {
   experienceEntry: ExperienceEntry | Entry;
   entities: Array<Entry | Asset>;
@@ -87,17 +88,13 @@ export class EntityStore extends EntityStoreBase {
     entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
     path: string[],
   ): string | undefined {
-    const entity = this.getEntryOrAsset(entityLinkOrEntity);
-
-    if (!entity) {
+    const entity = isLink(entityLinkOrEntity)
+      ? this.getEntityFromLink(entityLinkOrEntity)
+      : (entityLinkOrEntity as Entry | Asset);
+    if (entity === undefined) {
       return;
     }
-
     const fieldValue = get<string>(entity, path);
-
-    // walk around to render asset files
-    return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
-      ? (fieldValue as AssetFile).url
-      : fieldValue;
+    return transformAssetFileToUrl(fieldValue);
   }
 }

@@ -1,14 +1,15 @@
 import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types';
 import { getBoundValue } from './getBoundValue';
-import { EntityStoreBase } from '@/entity';
-import { UnresolvedLink } from 'contentful';
+// import { EntityStoreBase } from '@/entity';
+import { Asset, Entry } from 'contentful';
 
 export const transformRichText = (
-  entityStore: EntityStoreBase,
-  binding: UnresolvedLink<'Entry' | 'Asset'>,
-  path: string[],
+  entryOrAsset: Entry | Asset,
+  // entityStore: EntityStoreBase,
+  // binding: UnresolvedLink<'Entry' | 'Asset'>,
+  path,
 ): RichTextDocument | undefined => {
-  const value = getBoundValue(entityStore, binding, path);
+  const value = getBoundValue(entryOrAsset, path);
   if (typeof value === 'string') {
     return {
       data: {},

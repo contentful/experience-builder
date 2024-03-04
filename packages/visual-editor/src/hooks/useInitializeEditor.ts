@@ -15,7 +15,13 @@ export const useInitializeEditor = () => {
   useEffect(() => {
     const onVisualEditorInitialize = (event) => {
       if (!event.detail) return;
-      const { componentRegistry, designTokens, locale: initialLocale, entities } = event.detail;
+      const {
+        componentRegistry,
+        designTokens,
+        locale: initialLocale,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        entities,
+      } = event.detail;
 
       initializeEditor({
         initialLocale,
@@ -23,6 +29,8 @@ export const useInitializeEditor = () => {
         designTokens,
       });
 
+      // if entities is set to [], then everything will still work as EntityStore will
+      // request entities on demand via ▲REQUEST_ENTITY
       resetEntityStore(initialLocale, entities);
       setInitialized(true);
     };

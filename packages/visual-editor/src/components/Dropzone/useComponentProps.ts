@@ -5,12 +5,14 @@ import {
   isLinkToAsset,
   isEmptyStructureWithRelativeHeight,
   transformBoundContentValue,
+  isContentfulStructureComponent,
 } from '@contentful/experience-builder-core';
 import {
   CF_STYLE_ATTRIBUTES,
   DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
+  CONTENTFUL_COMPONENTS,
 } from '@contentful/experience-builder-core/constants';
 import type {
   StyleProps,
@@ -26,6 +28,8 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 import { Link } from '@contentful/experience-builder-core/types';
+import { DRAG_PADDING } from '../../types/constants';
+import { useDraggedItemStore } from '@/store/draggedItem';
 
 type ComponentProps =
   | StyleProps
@@ -37,6 +41,7 @@ type UseComponentProps = {
   areEntitiesFetched: boolean;
   definition: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
+  userIsDragging: boolean;
 };
 
 export const useComponentProps = ({
@@ -45,9 +50,12 @@ export const useComponentProps = ({
   resolveDesignValue,
   renderDropzone,
   definition,
+  userIsDragging,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
+  const newComponentId = useDraggedItemStore((state) => state.componentId);
+  const isDraggingNewCompont = !!newComponentId;
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: ComponentProps = useMemo(() => {
     // Don't enrich the assembly wrapper node with props
@@ -88,8 +96,22 @@ export const useComponentProps = ({
             [variableName]: designValue,
           };
         } else if (variableMapping.type === 'BoundValue') {
-          // take value from the datasource for both bound and unbound value types
-          const [, uuid, ...path] = variableMapping.path.split('/');
+          // if (!areEntitiesFetched) {
+          //   console.debug(
+          //     `[exp-builder.sdk::useComponentProps] Idle-cycle: as entities are not fetched(areEntitiesFetched=${areEntitiesFetched}), we cannot resolve bound values for ${variableName} so we just resolve them to default values.`,
+          //   );
+
+          //   // Just forcing default value (if we're in idle-cycle, entities are missing)
+          //   return {
+          //     ...acc,
+          //     [variableName]: transformContentValue(
+          //       variableDefinition.defaultValue,
+          //       variableDefinition,
+          //     ),
+          //   };
+          // }
+
+          const [, uuid, path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
           const variableDefinition = definition.variables[variableName];
@@ -100,7 +122,7 @@ export const useComponentProps = ({
             resolveDesignValue,
             variableName,
             variableDefinition,
-            path,
+            variableMapping.path,
           );
 
           // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
@@ -109,7 +131,7 @@ export const useComponentProps = ({
 
           if (!boundValue) {
             const maybeBoundAsset = areEntitiesFetched
-              ? entityStore.getValue(binding, path.slice(0, -2))
+              ? entityStore.getValue(binding, path.split('/').slice(0, -2))
               : undefined;
 
             if (isLinkToAsset(maybeBoundAsset)) {
@@ -186,6 +208,12 @@ export const useComponentProps = ({
       ...(isEmptyStructureWithRelativeHeight(node.children.length, node?.data.blockId, height) && {
         minHeight: EMPTY_CONTAINER_HEIGHT,
       }),
+      ...(userIsDragging &&
+        isDraggingNewCompont &&
+        isContentfulStructureComponent(node?.data.blockId) &&
+        node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
+          padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),
+        }),
     },
     nodeId: node.data.id,
   });
@@ -212,3 +240,15 @@ export const useComponentProps = ({
 
   return { componentProps, wrapperProps };
 };
+
+const addExtraDropzonePadding = (padding: string) =>
+  padding
+    .split(' ')
+    .map((value) => {
+      if (value.endsWith('px')) {
+        const parsedValue = parseInt(value.replace(/px$/, ''), 10);
+        return (parsedValue < DRAG_PADDING ? DRAG_PADDING : parsedValue) + 'px';
+      }
+      return `${DRAG_PADDING}px`;
+    })
+    .join(' ');

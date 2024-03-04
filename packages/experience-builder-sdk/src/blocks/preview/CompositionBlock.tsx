@@ -92,7 +92,7 @@ export const CompositionBlock = ({
             acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
             break;
           case 'BoundValue': {
-            const [, uuid, ...path] = variable.path.split('/');
+            const [, uuid] = variable.path.split('/');
             const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
 
             const value = transformBoundContentValue(
@@ -102,7 +102,7 @@ export const CompositionBlock = ({
               resolveDesignValue,
               variableName,
               variableDefinition,
-              path,
+              variable.path,
             );
             acc[variableName] = value;
             break;

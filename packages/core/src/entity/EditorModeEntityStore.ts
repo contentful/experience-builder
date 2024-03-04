@@ -3,6 +3,7 @@ import { sendMessage } from '../communication/sendMessage';
 import { EditorEntityStore } from './EditorEntityStore';
 import { RequestedEntitiesMessage } from '../types';
 import { get } from '@/utils/get';
+import { transformAssetFileToUrl } from './value-transformers';
 
 // The default of 3s in the EditorEntityStore is sometimes timing out and
 // leads to not rendering bound content and assemblies.
@@ -10,7 +11,6 @@ const REQUEST_TIMEOUT = 10000;
 
 export class EditorModeEntityStore extends EditorEntityStore {
   public locale: string;
-
   constructor({ entities, locale }: { entities: Array<Asset | Entry>; locale: string }) {
     console.debug(
       `[exp-builder.sdk] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
@@ -87,7 +87,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
     entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
     path: string[],
   ): string | undefined {
-    const entity = this.getEntryOrAsset(entityLinkOrEntity);
+    const entity = this.getEntryOrAsset(entityLinkOrEntity, path.join('/'));
 
     if (!entity) {
       return;
@@ -99,5 +99,7 @@ export class EditorModeEntityStore extends EditorEntityStore {
     return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
       ? (fieldValue as AssetFile).url
       : fieldValue;
+    // const fieldValue = super.getValue(entityLink, path);
+    return transformAssetFileToUrl(fieldValue);
   }
 }

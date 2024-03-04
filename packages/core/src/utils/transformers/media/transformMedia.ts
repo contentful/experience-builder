@@ -1,21 +1,22 @@
 import { SUPPORTED_IMAGE_FORMATS } from '@/constants';
-import { EntityStoreBase } from '@/entity';
+// import { EntityStoreBase } from '@/entity';
 import { BoundComponentPropertyTypes, ComponentTreeNode, ResolveDesignValueType } from '@/types';
-import { Asset, AssetFile, UnresolvedLink } from 'contentful';
+import { Asset, AssetFile } from 'contentful';
 import { getOptimizedBackgroundImageAsset } from './getOptimizedBackgroundImageAsset';
 import { getOptimizedImageAsset } from './getOptimizedImageAsset';
 import { getBoundValue } from '../getBoundValue';
 
 export const transformMedia = (
+  asset: Asset,
   variables: ComponentTreeNode['variables'],
-  entityStore: EntityStoreBase,
-  binding: UnresolvedLink<'Entry' | 'Asset'>,
+  // entityStore: EntityStoreBase,
+  // binding: UnresolvedLink<'Entry' | 'Asset'>,
   resolveDesignValue: ResolveDesignValueType,
   variableName: string,
-  path: string[],
+  path: string,
 ) => {
   let value: BoundComponentPropertyTypes;
-  const asset = entityStore.getEntryOrAsset(binding) as Asset;
+  // const asset = entityStore.getEntryOrAsset(binding) as Asset;
   const format = resolveDesignValue(
     variables['cfImageFormat']?.type === 'DesignValue'
       ? variables['cfImageFormat'].valuesByBreakpoint
@@ -66,6 +67,7 @@ export const transformMedia = (
       console.error('Error transforming image asset', error);
     }
   } else {
-    return getBoundValue(entityStore, binding, path);
+    // return getBoundValue(asset, entityStore, binding, path);
+    return getBoundValue(asset, path);
   }
 };

@@ -22,15 +22,6 @@
   min-height: 80px;
 }
 
-.hitbox {
-  position: absolute;
-  bottom: -10px;
-  width: 100%;
-  z-index: 1;
-  pointer-events: all !important;
-  height: 20px;
-}
-
 .isDragging:not(.isRoot) {
   outline: 2px dashed var(--exp-builder-blue500);
 }
@@ -38,4 +29,9 @@
 .isDestination:not(.isRoot) {
   outline: 2px dashed var(--exp-builder-blue500);
   background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
+}
+
+.hitbox {
+  position: fixed;
+  pointer-events: all !important;
 }

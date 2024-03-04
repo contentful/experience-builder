@@ -31,6 +31,26 @@ function getItemFromTree(
   return undefined;
 }
 
+function findDepthById(
+  node: CompositionComponentNode,
+  id: string,
+  currentDepth: number = 1,
+): number {
+  if (node.data.id === id) {
+    return currentDepth;
+  }
+
+  // If the node has children, check each one
+  for (const child of node.children) {
+    const childDepth = findDepthById(child, id, currentDepth + 1);
+    if (childDepth !== -1) {
+      return childDepth; // Found the node in a child
+    }
+  }
+
+  return -1; // Node not found in this branch
+}
+
 export const getChildFromTree = (
   parentId: string,
   index: number,
@@ -67,4 +87,11 @@ export const getItem = (
     } as any,
     children: tree.root.children,
   });
+};
+
+export const getItemDepthFromNode = (
+  selector: ItemSelector,
+  node: CompositionComponentNode,
+): number => {
+  return findDepthById(node, selector.id);
 };
