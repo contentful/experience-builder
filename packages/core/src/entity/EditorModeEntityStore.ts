@@ -99,7 +99,6 @@ export class EditorModeEntityStore extends EditorEntityStore {
     return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
       ? (fieldValue as AssetFile).url
       : fieldValue;
-    // const fieldValue = super.getValue(entityLink, path);
     return transformAssetFileToUrl(fieldValue);
   }
 }
