@@ -17,15 +17,7 @@
   overflow: hidden;
 }
 
-.isBeingDragged {
-  width: 50px !important;
-  height: 30px !important;
-  background-color: red;
-  pointer-events: none !important;
-}
-
-.isDragging *,
-.isBeingDragged * {
+.isDragging * {
   pointer-events: none !important;
 }
 
@@ -94,17 +86,4 @@
 
 .isAssemblyBlock:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
   outline: 2px solid var(--exp-builder-purple600) !important;
-}
-
-.componentCard {
-  background-color: #fff;
-  border: 1px solid #cfd9e0;
-  border-radius: 6px;
-  color: #111b2b;
-  font-family: var(--exp-builder-font-stack-primary);
-  font-size: 0.875rem;
-  font-weight: 400;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

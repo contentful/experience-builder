@@ -37,6 +37,5 @@ export default function useCenterDraggablePosition({ draggableId, draggableRef }
     el.style.top = top;
     el.style.width = `${width}px`;
     el.style.height = `${height}px`;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draggableRef, draggableId, isDraggingOnCanvas, draggingId]);
 }
