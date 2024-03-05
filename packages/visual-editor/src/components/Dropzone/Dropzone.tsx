@@ -94,7 +94,7 @@ export function Dropzone({
   }
 
   /**
-   * Dropzone Rules
+   * The Rules of Dropzones
    *
    * 1. A dropzone is disabled unless the mouse is hovering over it
    *
