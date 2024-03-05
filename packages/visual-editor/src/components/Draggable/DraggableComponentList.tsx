@@ -1,6 +1,13 @@
-import { COMPONENT_LIST_ID, DRAGGABLE_HEIGHT, DRAGGABLE_WIDTH } from '@/types/constants';
+import useCenterDraggablePosition from '@/hooks/useCenterDraggablePosition';
+import { useDraggedItemStore } from '@/store/draggedItem';
+import {
+  COMPONENT_LIST_ID,
+  DRAGGABLE_HEIGHT,
+  DRAGGABLE_WIDTH,
+  NEW_COMPONENT_ID,
+} from '@/types/constants';
 import { Draggable, Droppable } from '@hello-pangea/dnd';
-import React from 'react';
+import React, { CSSProperties, useRef } from 'react';
 
 interface Props {
   id: string;
@@ -18,6 +25,19 @@ function getStyle(style, snapshot) {
 }
 
 const DraggableContainer: React.FC<Props> = ({ id }) => {
+  const ref = useRef<HTMLElement | undefined | null>(null);
+  const mouseX = useDraggedItemStore((state) => state.mouseX);
+  const mouseY = useDraggedItemStore((state) => state.mouseY);
+
+  // const [coordinates, setCoordinates] = useState({ top: 0, left: 0 });
+
+  // const coordinateSetCount = useRef(0);
+
+  useCenterDraggablePosition({
+    draggableId: id,
+    draggableRef: ref,
+  });
+
   return (
     <div
       id={COMPONENT_LIST_ID}
@@ -34,17 +54,23 @@ const DraggableContainer: React.FC<Props> = ({ id }) => {
             <Draggable draggableId={id} key={id} index={0}>
               {(provided, snapshot) => (
                 <div
-                  id="item"
-                  ref={provided.innerRef}
+                  id={NEW_COMPONENT_ID}
+                  data-ctfl-dragging-element
+                  ref={(node) => {
+                    provided.innerRef(node);
+                    ref.current = node;
+                  }}
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
                   style={{
-                    ...getStyle(provided.draggableProps.style, snapshot),
+                    ...getStyle(provided.draggableProps.style as CSSProperties, snapshot),
                     width: DRAGGABLE_WIDTH,
                     height: DRAGGABLE_HEIGHT,
+                    backgroundColor: 'red',
                     pointerEvents: 'none',
-                  }}
-                />
+                  }}>
+                  {mouseX}, {mouseY}
+                </div>
               )}
             </Draggable>
             {provided.placeholder}
