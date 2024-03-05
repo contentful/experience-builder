@@ -26,7 +26,7 @@ export const HeadingComponentDefinition: ComponentDefinition = {
     'cfBorder',
   ],
   tooltip: {
-    description: 'Click and drop to add a heading for your experience.',
+    description: 'Drop onto the canvas to add a heading.',
   },
   variables: {
     // Built-in style variables with default values changed
