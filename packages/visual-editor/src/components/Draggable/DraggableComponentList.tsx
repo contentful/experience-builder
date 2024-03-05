@@ -1,5 +1,4 @@
 import useCenterDraggablePosition from '@/hooks/useCenterDraggablePosition';
-import { useDraggedItemStore } from '@/store/draggedItem';
 import {
   COMPONENT_LIST_ID,
   DRAGGABLE_HEIGHT,
@@ -26,12 +25,6 @@ function getStyle(style, snapshot) {
 
 const DraggableContainer: React.FC<Props> = ({ id }) => {
   const ref = useRef<HTMLElement | undefined | null>(null);
-  const mouseX = useDraggedItemStore((state) => state.mouseX);
-  const mouseY = useDraggedItemStore((state) => state.mouseY);
-
-  // const [coordinates, setCoordinates] = useState({ top: 0, left: 0 });
-
-  // const coordinateSetCount = useRef(0);
 
   useCenterDraggablePosition({
     draggableId: id,
@@ -66,11 +59,9 @@ const DraggableContainer: React.FC<Props> = ({ id }) => {
                     ...getStyle(provided.draggableProps.style as CSSProperties, snapshot),
                     width: DRAGGABLE_WIDTH,
                     height: DRAGGABLE_HEIGHT,
-                    backgroundColor: 'red',
                     pointerEvents: 'none',
-                  }}>
-                  {mouseX}, {mouseY}
-                </div>
+                  }}
+                />
               )}
             </Draggable>
             {provided.placeholder}
