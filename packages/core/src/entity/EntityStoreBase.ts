@@ -69,13 +69,11 @@ export abstract class EntityStoreBase {
         } else if (isLink(fieldValue)) {
           const entity = this.getEntityFromLink(fieldValue);
           if (entity === undefined) {
-            throw new Error(
-              `Logic Error: Broken Precondition [by the time resolution of deep path happens all referents should be in EntityStore]: Cannot resolve field ${field} of a fieldset row [${JSON.stringify(
-                row,
-              )}] as linked entity not found in the EntityStore. ${JSON.stringify({
-                link: fieldValue,
-              })}`,
-            );
+            return {
+              resolvedFieldset,
+              isFullyResolved: false,
+              reason: `Field reference Link (sys.id=${fieldValue.sys.id}) not found in the EntityStore, waiting...`,
+            };
           }
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = entity; // we move up
@@ -116,11 +114,8 @@ export abstract class EntityStoreBase {
           );
         return undefined;
       }
-      // const [leafEntity, field /* localeQualifier */] = resolvedFieldset[resolvedFieldset.length - 1];
       const [leafEntity] = resolvedFieldset[resolvedFieldset.length - 1];
       return leafEntity;
-      // const fieldValue = get<string>(leafEntity, ['fields', field]); // is allowed to be undefined (when non-required field not set; or even when field does NOT exist on the type)
-      // return transformAssetFileToUrl(fieldValue);
     } else {
       let entity: Entry | Asset;
       if (isLink(linkOrEntryOrAsset)) {
