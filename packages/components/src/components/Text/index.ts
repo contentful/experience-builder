@@ -29,7 +29,7 @@ export const TextComponentDefinition: ComponentDefinition = {
     'cfMaxWidth',
   ],
   tooltip: {
-    description: 'Click and drop onto the canvas to add plain text or bind existing content.',
+    description: 'Drop onto the canvas to add plain text.',
   },
   variables: {
     cfHeight: {

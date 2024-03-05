@@ -13,7 +13,7 @@ export const ImageComponentDefinition: ComponentDefinition = {
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: ['cfMargin', 'cfPadding'],
   tooltip: {
-    description: 'Click and drop onto the canvas to upload an image or bind an existing asset.',
+    description: 'Drop onto the canvas to upload an image.',
   },
   variables: {
     alt: {
