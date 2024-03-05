@@ -31,7 +31,7 @@ export default function useCenterDraggablePosition({ draggableId, draggableRef }
 
     const left = `${mouseX - width / 2}px`;
     const top = `${mouseY - height / 2}px`;
-    console.log('setting', left, top, mouseX, mouseY, width, height);
+
     el.style.position = 'fixed';
     el.style.left = left;
     el.style.top = top;

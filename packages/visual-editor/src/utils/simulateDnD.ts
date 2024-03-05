@@ -47,8 +47,6 @@ class SimulateDnD extends DragState {
       clientY: coordY - window.scrollY,
     };
 
-    console.log('simming', eventName);
-
     if (!this.draggingElement) {
       return;
     }
