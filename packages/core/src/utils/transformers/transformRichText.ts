@@ -1,12 +1,9 @@
 import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types';
 import { getBoundValue } from './getBoundValue';
-// import { EntityStoreBase } from '@/entity';
 import { Asset, Entry } from 'contentful';
 
 export const transformRichText = (
   entryOrAsset: Entry | Asset,
-  // entityStore: EntityStoreBase,
-  // binding: UnresolvedLink<'Entry' | 'Asset'>,
   path,
 ): RichTextDocument | undefined => {
   const value = getBoundValue(entryOrAsset, path);
