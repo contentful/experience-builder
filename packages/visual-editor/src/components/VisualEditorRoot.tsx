@@ -7,7 +7,7 @@ import { useInitializeEditor } from '@/hooks/useInitializeEditor';
 import { useEntityStore } from '@/store/entityStore';
 import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
-import { CTFL_DRAGGABLE_ID, CTFL_ZONE_ID, NEW_COMPONENT_ID } from '@/types/constants';
+import { CTFL_ZONE_ID, NEW_COMPONENT_ID } from '@/types/constants';
 import { useDraggedItemStore } from '@/store/draggedItem';
 
 const findNearestDropzone = (element: HTMLElement): string | null => {
