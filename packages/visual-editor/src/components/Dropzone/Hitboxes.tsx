@@ -65,13 +65,14 @@ const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, enableRootHitboxes })
           isVertical ? HitboxDirection.SELF_VERTICAL : HitboxDirection.SELF_HORIZONTAL,
         )}
       />
-      {showRootHitboxes ? (
+      {showRootHitboxes && (
         <div
           data-ctfl-zone-id={parentZoneId}
           className={styles.hitbox}
           style={getStyles(HitboxDirection.BOTTOM)}
         />
-      ) : (
+      )}
+      {!isRoot && (
         <>
           <div
             data-ctfl-zone-id={parentZoneId}

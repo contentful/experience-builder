@@ -9,6 +9,9 @@
   display: flex;
 }
 
+.DraggableClone {
+  outline: 2px solid var(--exp-builder-blue500);
+}
 .DraggableComponent > * {
   pointer-events: none;
 }

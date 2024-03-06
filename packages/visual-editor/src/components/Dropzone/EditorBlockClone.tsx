@@ -64,10 +64,15 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
       {...wrapperProps}
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
-      className={classNames(styles.DraggableComponent, wrapperProps.className, {
-        [styles.isAssemblyBlock]: isAssemblyBlock,
-        [styles.isDragging]: snapshot?.isDragging,
-      })}
+      className={classNames(
+        styles.DraggableComponent,
+        wrapperProps.className,
+        styles.DraggableClone,
+        {
+          [styles.isAssemblyBlock]: isAssemblyBlock,
+          [styles.isDragging]: snapshot?.isDragging,
+        },
+      )}
       style={getStyle(provided?.draggableProps.style, snapshot)}>
       {elementToRender()}
     </div>
