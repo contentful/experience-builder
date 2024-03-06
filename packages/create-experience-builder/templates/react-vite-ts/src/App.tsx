@@ -1,11 +1,13 @@
 import { createClient } from 'contentful';
-import { useExperienceBuilder, ExperienceRoot } from '@contentful/experiences-sdk-react';
-import { useExperienceBuilderComponents } from '@contentful/experiences-components-react';
+import { EntityStore, ExperienceRoot, fetchBySlug } from '@contentful/experiences-sdk-react';
 import './App.css';
 import { ExternalSDKMode } from '@contentful/experiences-sdk-react/dist/types';
 
 // Import the styles for the default components
 import '@contentful/experiences-components-react/styles.css';
+import { useEffect, useState } from 'react';
+import { Experience } from '@contentful/experiences-core/types';
+import React from 'react';
 
 const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
 
@@ -28,14 +30,23 @@ function App() {
       : import.meta.env.VITE_ACCESS_TOKEN,
   });
 
-  const { experience, defineComponents } = useExperienceBuilder({
-    experienceTypeId,
-    client,
-    mode,
-  });
+  const [experience, setExperience] = useState<Experience<EntityStore>>();
 
-  // Register optional default components
-  useExperienceBuilderComponents(defineComponents);
+  useEffect(() => {
+    const fetchData = async () => {
+      const experience = await fetchBySlug({
+        client,
+        experienceTypeId,
+        slug: 'homePage',
+        localeCode: 'en-US',
+        mode,
+      });
+
+      setExperience(experience);
+    };
+
+    fetchData();
+  }, [client, mode]);
 
   // Load your experience with slug 'homePage'
   return <ExperienceRoot slug={'homePage'} experience={experience} locale={'en-US'} />;

@@ -9,13 +9,12 @@ import { useContentfulConfig } from './hooks/useContentfulConfig';
 export default function Page() {
   const { slug = 'homePage' } = useParams<{ slug: string }>();
   const localeCode = 'en-US';
-  const { mode, config } = useContentfulConfig();
+  const { config } = useContentfulConfig();
   const { client } = useContentfulClient();
 
   const { experience, error, isLoading } = useFetchBySlug({
     slug,
     localeCode,
-    mode,
     client,
     experienceTypeId: config.experienceTypeId,
   });

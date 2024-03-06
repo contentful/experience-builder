@@ -1,13 +1,10 @@
 import { useCallback } from 'react';
 import type { ContentfulClientApi } from 'contentful';
-import type { ExternalSDKMode } from '@contentful/experiences-core/types';
 import { useFetchByBase } from './useFetchByBase';
 import { fetchBySlug } from '@contentful/experiences-core';
 import { useDetectEditorMode } from './useDetectEditorMode';
 
 export type UseFetchBySlugArgs = {
-  /** @deprecated mode no longer needed */
-  mode?: ExternalSDKMode;
   client: ContentfulClientApi<undefined>;
   slug: string;
   experienceTypeId: string;

@@ -1,14 +1,14 @@
-import React, { useEffect, useRef } from 'react';
-import type { DeprecatedExperience } from '@contentful/experiences-core/types';
+import React, { useEffect, useState } from 'react';
+import type { DeprecatedExperience, Experience } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
-import { useBreakpoints, useFetchExperience } from '../../hooks';
-import { usePrevious } from '../../hooks/usePrevious';
+import { useBreakpoints } from '../../hooks';
+import { EntityStore, fetchBySlug } from '@contentful/experiences-core';
 
 type DeprecatedPreviewDeliveryRootProps = {
   deprecatedExperience: DeprecatedExperience;
   locale: string;
-  slug?: string;
+  slug: string;
 };
 
 /**
@@ -20,45 +20,25 @@ export const DeprecatedPreviewDeliveryRoot = ({
   slug,
   deprecatedExperience,
 }: DeprecatedPreviewDeliveryRootProps) => {
-  const attemptedToFetch = useRef<boolean>(false);
-  const previousLocale = usePrevious(locale);
-
   const { experienceTypeId, client } = deprecatedExperience;
-
-  const { fetchBySlug, experience, isFetching } = useFetchExperience({
-    client,
-  });
-
-  const entityStore = experience?.entityStore;
+  const [experience, setExperience] = useState<Experience<EntityStore>>();
 
   useEffect(() => {
-    // TODO: Test it, it is crucial
-    // will make it fetch on each locale change as well as if experience entry hasn't been fetched yet at least once
-    const shouldFetch =
-      (client && !entityStore && !attemptedToFetch.current) || previousLocale !== locale;
-    // this useEffect is meant to trigger fetching for the first time if it hasn't been done earlier
-    // if not yet fetched and not fetchin at the moment
-    if (shouldFetch && !isFetching && slug) {
-      attemptedToFetch.current = true;
-      fetchBySlug({
+    const fetchExperience = async () => {
+      const experience = await fetchBySlug({
+        client,
         experienceTypeId,
         localeCode: locale,
         slug,
-      }).catch(() => {
-        // noop
       });
-    }
-  }, [
-    experienceTypeId,
-    entityStore,
-    isFetching,
-    fetchBySlug,
-    client,
-    slug,
-    locale,
-    previousLocale,
-  ]);
 
+      setExperience(experience);
+    };
+
+    fetchExperience();
+  }, [client, experienceTypeId, locale, slug]);
+
+  const entityStore = experience?.entityStore;
   const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? []);
 
   if (!entityStore?.experienceEntryFields || !entityStore?.schemaVersion) {

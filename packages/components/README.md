@@ -47,7 +47,7 @@ Import the `useExperienceBuilderComponents` hook from the `@contentful/experienc
 import { useExperienceBuilderComponents } from '@contentful/experiences-components-react';
 ```
 
-After the call to `useExperienceBuilder` (where you obtain the `defineComponents` method), pass in `defineComponents` to the `userExperienceBuilder` hook:
+After the call to `fetchBySlug` or '`fetchById` (where you obtain the `defineComponents` method), pass in `defineComponents` to the `userExperienceBuilder` hook:
 
 ```jsx
 useExperienceBuilderComponents(defineComponents);

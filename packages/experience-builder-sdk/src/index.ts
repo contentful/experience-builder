@@ -1,7 +1,7 @@
 import { SDK_VERSION } from './sdkVersion';
 
 export { ExperienceRoot } from './ExperienceRoot';
-export { useExperienceBuilder, useFetchExperience, useFetchById, useFetchBySlug } from './hooks';
+export { useFetchById, useFetchBySlug } from './hooks';
 export { defineComponents } from './core/componentRegistry';
 export {
   calculateNodeDefaultHeight,
