@@ -53,6 +53,7 @@ export function useEditorSubscriber() {
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
   const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
+  const setScrollY = useDraggedItemStore((state) => state.setScrollY);
 
   // TODO: As we have disabled the useEffect, we can remove these states
   const [, /* isFetchingEntities */ setFetchingEntities] = useState(false);
@@ -413,6 +414,7 @@ export function useEditorSubscriber() {
     let isScrolling = false;
 
     const onScroll = () => {
+      setScrollY(window.scrollY);
       if (isScrolling === false) {
         sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.Start);
       }
@@ -445,5 +447,5 @@ export function useEditorSubscriber() {
       window.removeEventListener('scroll', onScroll, { capture: true });
       clearTimeout(timeoutId);
     };
-  }, [selectedNodeId]);
+  }, [selectedNodeId, setScrollY]);
 }

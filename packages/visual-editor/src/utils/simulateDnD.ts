@@ -23,6 +23,7 @@ class SimulateDnD extends DragState {
     if (!this.draggingElement) {
       this.draggingElement = document.querySelector(`[${CTFL_DRAGGING_ELEMENT}]`);
     }
+
     this.simulateMouseEvent(coordX, coordY);
   }
 
@@ -48,7 +49,7 @@ class SimulateDnD extends DragState {
       pageX: 0,
       pageY: 0,
       clientX: coordX,
-      clientY: coordY - window.scrollY,
+      clientY: coordY,
     };
 
     const event = new MouseEvent(eventName, options);

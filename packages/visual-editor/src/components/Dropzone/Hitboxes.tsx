@@ -17,6 +17,7 @@ interface Props {
 const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, enableRootHitboxes }) => {
   const tree = useTreeStore((state) => state.tree);
   const isDraggingOnCanvas = useDraggedItemStore((state) => state.isDraggingOnCanvas);
+  const scrollY = useDraggedItemStore((state) => state.scrollY);
   const zoneDepth = useMemo(
     () => getItemDepthFromNode({ id: parentZoneId }, tree.root),
     [tree, parentZoneId],
@@ -52,8 +53,8 @@ const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, enableRootHitboxes })
   const showRootHitboxes = isRoot && enableRootHitboxes;
 
   const getStyles = useCallback(
-    (direction: HitboxDirection) => getHitboxStyles({ direction, zoneDepth, domRect }),
-    [zoneDepth, domRect],
+    (direction: HitboxDirection) => getHitboxStyles({ direction, zoneDepth, domRect, scrollY }),
+    [zoneDepth, domRect, scrollY],
   );
 
   const ActiveHitboxes = (
