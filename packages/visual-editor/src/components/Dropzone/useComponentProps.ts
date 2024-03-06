@@ -10,7 +10,6 @@ import {
 } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
-  DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
   CONTENTFUL_COMPONENTS,
@@ -57,11 +56,7 @@ export const useComponentProps = ({
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: ComponentProps = useMemo(() => {
     // Don't enrich the assembly wrapper node with props
-    if (
-      !definition ||
-      node.type === DESIGN_COMPONENT_NODE_TYPE ||
-      node.type === ASSEMBLY_NODE_TYPE
-    ) {
+    if (!definition || node.type === ASSEMBLY_NODE_TYPE) {
       return {};
     }
 

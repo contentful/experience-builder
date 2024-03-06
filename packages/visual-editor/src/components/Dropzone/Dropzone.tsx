@@ -12,11 +12,7 @@ import { EmptyContainer } from '@components/EmptyContainer/EmptyContainer';
 import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
 import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
-import {
-  DESIGN_COMPONENT_NODE_TYPES,
-  ASSEMBLY_NODE_TYPES,
-  CONTENTFUL_COMPONENTS,
-} from '@contentful/experiences-core/constants';
+import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
@@ -55,9 +51,7 @@ export function Dropzone({
   const isDestination = draggedDestinationId === zoneId;
   const isEmptyCanvas = isRootZone && !content.length;
 
-  const isAssembly =
-    DESIGN_COMPONENT_NODE_TYPES.includes(node?.type || '') ||
-    ASSEMBLY_NODE_TYPES.includes(node?.type || '');
+  const isAssembly = ASSEMBLY_NODE_TYPES.includes(node?.type || '');
 
   // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
   const renderDropzone: RenderDropzoneFunction = useCallback(

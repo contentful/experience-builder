@@ -5,7 +5,7 @@ import { Flex } from '../Layout/Flex';
 import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink';
 import type { ContentfulContainerAsHyperlinkProps } from './ContentfulContainerAsHyperlink';
 import { combineClasses } from '../../utils/combineClasses';
-import { CONTENTFUL_SECTION_ID } from '@contentful/experiences-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 
 export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (props) => {
   const { className, editorMode, children, cfHyperlink } = props;
@@ -42,7 +42,7 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
   return isEmpty ? (
     <div className="cf-container-wrapper" data-ctfl-draggable-id={node.data.id}>
       <div className="cf-container-label">
-        {node.data.blockId === CONTENTFUL_SECTION_ID ? 'Section' : 'Container'}
+        {node.data.blockId === CONTENTFUL_COMPONENTS.section.id ? 'Section' : 'Container'}
       </div>
       {renderDropzoneComponent()}
     </div>
