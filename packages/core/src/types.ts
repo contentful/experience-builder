@@ -1,4 +1,4 @@
-import type { Asset, ContentfulClientApi, Entry } from 'contentful';
+import type { Asset, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
 import { EntityStore } from './entity/EntityStore';
 

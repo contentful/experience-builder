@@ -1,4 +1,4 @@
-import type { Experience, ExperienceEntry } from '@/types';
+import type { ExperienceEntry } from '@/types';
 import { Entry } from 'contentful';
 
 export const isExperienceEntry = (entry: ExperienceEntry | Entry): entry is ExperienceEntry => {
