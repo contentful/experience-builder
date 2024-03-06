@@ -6,7 +6,7 @@ import {
   NEW_COMPONENT_ID,
 } from '@/types/constants';
 import { Draggable, Droppable } from '@hello-pangea/dnd';
-import React, { CSSProperties, useRef } from 'react';
+import React, { useRef } from 'react';
 
 interface Props {
   id: string;
