@@ -45,3 +45,8 @@ export enum HitboxDirection {
   SELF_VERTICAL,
   SELF_HORIZONTAL,
 }
+
+export enum DraggablePosition {
+  CENTERED,
+  MOUSE_POSITION,
+}
