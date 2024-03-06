@@ -289,26 +289,6 @@ export interface HoveredElement {
 
 export interface Experience<T extends EntityStore = EntityStore> {
   entityStore?: T;
-  /** @deprecated mode no longer used */
-  mode?: InternalSDKMode;
-}
-
-/**
- * @deprecated please use `Experience` instead
- */
-export interface DeprecatedExperience {
-  /**
-   * @deprecated please don't use
-   */
-  client: ContentfulClientApi<undefined>;
-  /**
-   * @deprecated please don't use
-   */
-  experienceTypeId: string;
-  /**
-   * @deprecated please don't use
-   */
-  mode: InternalSDKMode;
 }
 
 export type ResolveDesignValueType = (
