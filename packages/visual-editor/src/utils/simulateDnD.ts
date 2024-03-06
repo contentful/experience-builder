@@ -37,6 +37,10 @@ class SimulateDnD extends DragState {
   }
 
   private simulateMouseEvent(coordX: number, coordY: number, eventName = 'mousemove') {
+    if (!this.draggingElement) {
+      return;
+    }
+
     const options = {
       bubbles: true,
       cancelable: true,
@@ -46,10 +50,6 @@ class SimulateDnD extends DragState {
       clientX: coordX,
       clientY: coordY - window.scrollY,
     };
-
-    if (!this.draggingElement) {
-      return;
-    }
 
     const event = new MouseEvent(eventName, options);
     this.draggingElement.dispatchEvent(event);

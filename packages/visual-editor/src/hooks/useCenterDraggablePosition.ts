@@ -11,17 +11,9 @@ export default function useCenterDraggablePosition({ draggableId, draggableRef }
   const draggingId = useDraggedItemStore((state) => state.onBeforeCaptureId);
 
   useEffect(() => {
-    if (!isDraggingOnCanvas) {
-      return;
-    }
-
-    if (draggingId !== draggableId) {
-      return;
-    }
-
     const el: HTMLElement | undefined | null = draggableRef?.current;
 
-    if (!el) {
+    if (!isDraggingOnCanvas || draggingId !== draggableId || !el) {
       return;
     }
 

@@ -56,7 +56,7 @@ const DraggableContainer: React.FC<Props> = ({ id }) => {
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
                   style={{
-                    ...getStyle(provided.draggableProps.style as CSSProperties, snapshot),
+                    ...getStyle(provided.draggableProps.style, snapshot),
                     width: DRAGGABLE_WIDTH,
                     height: DRAGGABLE_HEIGHT,
                     pointerEvents: 'none',
