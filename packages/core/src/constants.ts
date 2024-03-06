@@ -176,10 +176,3 @@ export enum PostMessageMethods {
 }
 
 export const SUPPORTED_IMAGE_FORMATS = ['jpg', 'png', 'webp', 'gif', 'avif'] as const;
-export const SUPPORTED_IMAGE_OBJECT_FIT = [
-  'fill',
-  'contain',
-  'cover',
-  'none',
-  'scale-down',
-] as const;

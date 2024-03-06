@@ -229,7 +229,7 @@ export const optionalBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'Specify how an image should fit its container',
-    defaultValue: 'fill',
+    defaultValue: 'none',
   },
   cfImageObjectPosition: {
     displayName: 'Image Position',

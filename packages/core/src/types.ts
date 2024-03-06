@@ -220,7 +220,7 @@ export type StyleProps = {
   cfImageAsset: OptimizedImageAsset | string;
   cfImageFormat: string;
   cfImageHeight: string;
-  cfImageObjectFit: string;
+  cfImageObjectFit: 'none' | 'contain' | 'cover';
   cfImageObjectPosition:
     | 'left'
     | 'right'
