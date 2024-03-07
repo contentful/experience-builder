@@ -10,7 +10,9 @@ import {
   ComponentDefinition,
   ComponentDefinitionVariableType,
 } from '@contentful/experiences-core/types';
-import useCenterDraggablePosition from '@/hooks/useCenterDraggablePosition';
+import useDraggablePosition from '@/hooks/useDraggablePosition';
+import { DraggablePosition } from '@/types/constants';
+import { useDraggedItemStore } from '@/store/draggedItem';
 
 function getStyle(style, snapshot) {
   if (!snapshot.isDropAnimating) {
@@ -63,11 +65,13 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   definition,
   ...rest
 }) => {
-  const ref = useRef<HTMLElement | undefined | null>(null);
+  const ref = useRef<HTMLElement | null>(null);
+  const setDomRect = useDraggedItemStore((state) => state.setDomRect);
 
-  useCenterDraggablePosition({
+  useDraggablePosition({
     draggableId: id,
     draggableRef: ref,
+    position: DraggablePosition.MOUSE_POSITION,
   });
 
   return (
@@ -93,6 +97,14 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
           style={{
             ...style,
             ...getStyle(provided.draggableProps.style, snapshot),
+          }}
+          onMouseDown={(e) => {
+            if (isDragDisabled) {
+              return;
+            }
+
+            e.stopPropagation();
+            setDomRect(e.currentTarget.getBoundingClientRect());
           }}
           onClick={onClick}>
           <Tooltip

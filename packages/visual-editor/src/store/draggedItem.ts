@@ -10,22 +10,28 @@ export interface DraggedItemStore {
   onBeforeCaptureId: string;
   mouseX: number;
   mouseY: number;
+  scrollY: number;
+  domRect?: DOMRect;
 
   // actions
   setComponentId: (id: string) => void;
   updateItem: (item?: DraggedItem) => void;
   setOnBeforeCaptureId: (draggableId: string) => void;
   setMousePosition: (x: number, y: number) => void;
+  setScrollY: (y: number) => void;
   setDraggingOnCanvas: (isDraggingOnCanvas: boolean) => void;
+  setDomRect: (domRect?: DOMRect) => void;
 }
 
 export const useDraggedItemStore = create<DraggedItemStore>((set) => ({
   draggedItem: undefined,
+  domRect: undefined,
   componentId: '',
   isDraggingOnCanvas: false,
   onBeforeCaptureId: '',
   mouseX: 0,
   mouseY: 0,
+  scrollY: 0,
   setComponentId(id) {
     set({ componentId: id });
   },
@@ -40,5 +46,11 @@ export const useDraggedItemStore = create<DraggedItemStore>((set) => ({
   },
   setMousePosition(x, y) {
     set({ mouseX: x, mouseY: y });
+  },
+  setDomRect(domRect) {
+    set({ domRect });
+  },
+  setScrollY(y) {
+    set({ scrollY: y });
   },
 }));

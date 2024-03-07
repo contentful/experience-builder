@@ -59,7 +59,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const isRootComponent = zoneId === ROOT_ID;
 
-  const enableRootHitboxes = isRootComponent && !draggingNewComponent;
+  const enableRootHitboxes = isRootComponent && !!draggingNewComponent;
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();

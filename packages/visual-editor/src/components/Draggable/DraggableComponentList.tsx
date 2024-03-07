@@ -1,8 +1,9 @@
-import useCenterDraggablePosition from '@/hooks/useCenterDraggablePosition';
+import useDraggablePosition from '@/hooks/useDraggablePosition';
 import {
   COMPONENT_LIST_ID,
   DRAGGABLE_HEIGHT,
   DRAGGABLE_WIDTH,
+  DraggablePosition,
   NEW_COMPONENT_ID,
 } from '@/types/constants';
 import { Draggable, Droppable } from '@hello-pangea/dnd';
@@ -24,11 +25,12 @@ function getStyle(style, snapshot) {
 }
 
 const DraggableContainer: React.FC<Props> = ({ id }) => {
-  const ref = useRef<HTMLElement | undefined | null>(null);
+  const ref = useRef<HTMLElement | null>(null);
 
-  useCenterDraggablePosition({
+  useDraggablePosition({
     draggableId: id,
     draggableRef: ref,
+    position: DraggablePosition.CENTERED,
   });
 
   return (
