@@ -25,7 +25,7 @@ export const ExperienceRoot = ({
   });
 
   if (isEditorMode) {
-    const entityStore = experience ? experience.entityStore : undefined;
+    const entityStore = experience?.entityStore;
     return (
       <VisualEditorRoot
         visualEditorMode={visualEditorMode}
