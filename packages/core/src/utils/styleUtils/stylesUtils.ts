@@ -14,7 +14,7 @@ import {
   CompositionComponentNode,
 } from '@/types';
 import { isContentfulStructureComponent } from '../components';
-import { EMPTY_CONTAINER_HEIGHT, SUPPORTED_IMAGE_OBJECT_FIT } from '../../constants';
+import { EMPTY_CONTAINER_HEIGHT } from '../../constants';
 
 const toCSSAttribute = (key: string) => {
   let val = key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
