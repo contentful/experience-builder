@@ -1,44 +1,38 @@
+import React from 'react';
 import { createClient } from 'contentful';
-import { useExperienceBuilder, ExperienceRoot } from '@contentful/experiences-sdk-react';
-import { useExperienceBuilderComponents } from '@contentful/experiences-components-react';
+import { useFetchBySlug, ExperienceRoot } from '@contentful/experiences-sdk-react';
 import './App.css';
-import { ExternalSDKMode } from '@contentful/experiences-sdk-react/dist/types';
 
 // Import the styles for the default components
 import '@contentful/experiences-components-react/styles.css';
 
-const experienceTypeId = import.meta.env.VITE_EB_TYPE_ID || 'layout';
+const experienceTypeId = import.meta.env.VITE_CTFL_EXPERIENCE_TYPE_ID; //Content type id for the experience
+const localeCode = 'en-US'; //Locale code for the experience (could be dynamic)
+
+const client = createClient({
+  // your space id
+  space: import.meta.env.VITE_CTFL_SPACE_ID,
+  // your environment id
+  environment: import.meta.env.VITE_CTFL_ENV_ID,
+  // Supported values: 'preview.contentful.com' or 'cdn.contentful.com',
+  host: import.meta.env.VITE_CTFL_API_HOST,
+  // needs to be access token if host = 'cdn.contentful.com' and preview token if 'preview.contentful.com'
+  accessToken: import.meta.env.VITE_CTFL_ACCESS_TOKEN,
+});
 
 function App() {
-  // Assume we are in editor mode if loaded in an iframe
-  const isEditor = window.self !== window.top;
-
-  // Run in preview mode if the url contains isPreview=true
-  const isPreview = window.location.search.includes('isPreview=true');
-
-  const mode = (isEditor || isPreview ? 'preview' : 'delivery') as ExternalSDKMode;
-
-  // Create a Contentful client
-  const client = createClient({
-    space: import.meta.env.VITE_SPACE_ID || '',
-    environment: import.meta.env.VITE_ENVIRONMENT_ID || 'master',
-    host: isPreview ? 'preview.contentful.com' : 'cdn.contentful.com',
-    accessToken: isPreview
-      ? import.meta.env.VITE_PREVIEW_ACCESS_TOKEN
-      : import.meta.env.VITE_ACCESS_TOKEN,
-  });
-
-  const { experience, defineComponents } = useExperienceBuilder({
-    experienceTypeId,
+  const { experience, isLoading, error } = useFetchBySlug({
     client,
-    mode,
+    slug: 'homePage', //Could be fetched from the url,
+    experienceTypeId,
+    localeCode,
   });
 
-  // Register optional default components
-  useExperienceBuilderComponents(defineComponents);
+  // handle loading and error states
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
-  // Load your experience with slug 'homePage'
-  return <ExperienceRoot slug={'homePage'} experience={experience} locale={'en-US'} />;
+  return <ExperienceRoot experience={experience} locale={localeCode} />;
 }
 
 export default App;

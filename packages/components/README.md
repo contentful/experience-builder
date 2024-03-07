@@ -9,7 +9,6 @@ This folder contains the source code for the default/example components that can
 - [Components](#components)
 - [Getting started](#getting-started)
   * [Installation](#installation)
-  * [Register the components with Experience Builder](#register-the-components-with-experience-builder)
 - [Styling](#styling)
   * [Including default styles](#including-default-styles)
   * [Adding custom styles](#adding-custom-styles)
@@ -34,26 +33,6 @@ The following components are available:
 ```bash
 npm install @contentful/experiences-components-react
 ```
-
-### Register the components with Experience Builder
-
-> This guide assumes you already have Experience Builder configured in your application and space. If you don't, please contact your Contentful representative for instructions on how to do so.
-
-In the section of code (usually the main App or Page components) where Experience Builder is configured, perform the following steps:
-
-Import the `useExperienceBuilderComponents` hook from the `@contentful/experiences-components-react` package:
-
-```jsx
-import { useExperienceBuilderComponents } from '@contentful/experiences-components-react';
-```
-
-After the call to `useExperienceBuilder` (where you obtain the `defineComponents` method), pass in `defineComponents` to the `userExperienceBuilder` hook:
-
-```jsx
-useExperienceBuilderComponents(defineComponents);
-```
-
-All of the components will now be available for use in your experiences.
 
 ## Styling
 

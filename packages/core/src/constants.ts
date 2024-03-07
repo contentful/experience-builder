@@ -38,16 +38,6 @@ export const INCOMING_EVENTS = {
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
-  /**
-   * @deprecated use `AssembliesAdded` instead. This will be removed in version 5.
-   * In the meanwhile, the experience builder will send the old and the new event to support multiple SDK versions.
-   */
-  DesignComponentsAdded: 'designComponentsAdded',
-  /**
-   * @deprecated use `AssembliesRegistered` instead. This will be removed in version 5.
-   * In the meanwhile, the experience builder will send the old and the new event to support multiple SDK versions.
-   */
-  DesignComponentsRegistered: 'designComponentsRegistered',
   AssembliesAdded: 'assembliesAdded',
   AssembliesRegistered: 'assembliesRegistered',
   InitEditor: 'initEditor',
@@ -106,27 +96,10 @@ export const CONTENTFUL_COMPONENTS = {
   },
 };
 
-/** @deprecated use `CONTENTFUL_COMPONENTS.section.id` instead. This will be removed in version 4. */
-export const CONTENTFUL_SECTION_ID = CONTENTFUL_COMPONENTS.section.id;
-/** @deprecated use `CONTENTFUL_COMPONENTS.container.id` instead. This will be removed in version 4. */
-export const CONTENTFUL_CONTAINER_ID = CONTENTFUL_COMPONENTS.container.id;
-
 export const ASSEMBLY_NODE_TYPE = 'assembly';
 export const ASSEMBLY_DEFAULT_CATEGORY = 'Assemblies';
 export const ASSEMBLY_BLOCK_NODE_TYPE = 'assemblyBlock';
 export const ASSEMBLY_NODE_TYPES = [ASSEMBLY_NODE_TYPE, ASSEMBLY_BLOCK_NODE_TYPE];
-
-/** @deprecated use `ASSEMBLY_NODE_TYPE` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_NODE_TYPE = 'designComponent';
-/** @deprecated use `ASSEMBLY_DEFAULT_CATEGORY` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_DEFAULT_CATEGORY = 'Design Components';
-/** @deprecated use `ASSEMBLY_BLOCK_NODE_TYPE` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_BLOCK_NODE_TYPE = 'designComponentBlock';
-/** @deprecated use `ASSEMBLY_NODE_TYPES` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_NODE_TYPES = [
-  DESIGN_COMPONENT_NODE_TYPE,
-  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
-];
 export const LATEST_SCHEMA_VERSION = '2023-09-28';
 export const CF_STYLE_ATTRIBUTES = [
   'cfHorizontalAlignment',
