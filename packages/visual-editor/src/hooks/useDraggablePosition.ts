@@ -3,7 +3,7 @@ import { DraggablePosition } from '@/types/constants';
 import { MutableRefObject, useEffect } from 'react';
 
 interface Params {
-  draggableRef: MutableRefObject<HTMLElement | null | undefined>;
+  draggableRef: MutableRefObject<HTMLElement | null>;
   draggableId: string;
   position: DraggablePosition;
 }
@@ -14,7 +14,7 @@ export default function useDraggablePosition({ draggableId, draggableRef, positi
   const preDragDomRect = useDraggedItemStore((state) => state.domRect);
 
   useEffect(() => {
-    const el: HTMLElement | undefined | null = draggableRef?.current;
+    const el: HTMLElement | null = draggableRef?.current;
 
     if (!isDraggingOnCanvas || draggingId !== draggableId || !el) {
       return;
