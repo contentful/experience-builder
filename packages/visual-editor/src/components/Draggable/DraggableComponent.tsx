@@ -65,7 +65,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   definition,
   ...rest
 }) => {
-  const ref = useRef<HTMLElement | undefined | null>(null);
+  const ref = useRef<HTMLElement | null>(null);
   const setDomRect = useDraggedItemStore((state) => state.setDomRect);
 
   useDraggablePosition({

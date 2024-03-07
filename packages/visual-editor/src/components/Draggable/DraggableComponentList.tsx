@@ -25,7 +25,7 @@ function getStyle(style, snapshot) {
 }
 
 const DraggableContainer: React.FC<Props> = ({ id }) => {
-  const ref = useRef<HTMLElement | undefined | null>(null);
+  const ref = useRef<HTMLElement | null>(null);
 
   useDraggablePosition({
     draggableId: id,
