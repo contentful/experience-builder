@@ -1,9 +1,9 @@
 import type { ComponentDefinition } from '@/types';
 import { CONTENTFUL_COMPONENT_CATEGORY, CONTENTFUL_COMPONENTS } from '@/constants';
 import {
-  builtInStyles,
   columnsBuiltInStyles,
   containerBuiltInStyles,
+  sectionBuiltInStyles,
   singleColumnBuiltInStyles,
 } from './styles';
 
@@ -12,7 +12,7 @@ export const sectionDefinition: ComponentDefinition = {
   name: CONTENTFUL_COMPONENTS.section.name,
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
-  variables: builtInStyles,
+  variables: sectionBuiltInStyles,
   tooltip: {
     description:
       'Create a new full width section of your experience by dragging this element onto the canvas. Elements and patterns can be added into a section.',

@@ -353,6 +353,13 @@ export const optionalBuiltInStyles: Partial<
   },
 };
 
+export const sectionBuiltInStyles: Partial<
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
+> = {
+  ...builtInStyles,
+  cfImageSizes: optionalBuiltInStyles.cfImageSizes,
+};
+
 export const containerBuiltInStyles: Partial<
   Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
 > = {
@@ -371,6 +378,7 @@ export const containerBuiltInStyles: Partial<
     description: 'The margin of the container',
     defaultValue: '0 Auto 0 Auto',
   },
+  cfImageSizes: optionalBuiltInStyles.cfImageSizes,
 };
 
 export const singleColumnBuiltInStyles: Partial<
@@ -510,6 +518,7 @@ export const singleColumnBuiltInStyles: Partial<
     defaultValue: false,
     group: 'style',
   },
+  cfImageSizes: optionalBuiltInStyles.cfImageSizes,
 };
 
 export const columnsBuiltInStyles: Partial<
@@ -615,4 +624,5 @@ export const columnsBuiltInStyles: Partial<
     defaultValue: '2',
     group: 'style',
   },
+  cfImageSizes: optionalBuiltInStyles.cfImageSizes,
 };
