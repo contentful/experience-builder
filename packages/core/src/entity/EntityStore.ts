@@ -102,9 +102,7 @@ export class EntityStore extends EntityStoreBase {
     return {
       _experienceEntry: this._experienceEntry,
       _unboundValues: this._unboundValues,
-      locale: this.locale,
-      entryMap: Object.fromEntries(this.entryMap.entries()),
-      assetMap: Object.fromEntries(this.assetMap.entries()),
+      ...super.toJSON(),
     };
   }
 }
