@@ -292,6 +292,10 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.CanvasResized: {
+          const { selectedNodeId } = payload;
+          if (selectedNodeId) {
+            sendSelectedComponentCoordinates(selectedNodeId);
+          }
           break;
         }
         case INCOMING_EVENTS.HoverComponent: {
