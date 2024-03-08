@@ -7,15 +7,9 @@
   --cf-color-white: #fff;
   --cf-color-black: #000;
   --cf-color-gray100: #f7f9fa;
-  --cf-color-gray200: #e7ebee;
-  --cf-color-gray300: #cfd9e0;
   --cf-color-gray400: #aec1cc;
-  --cf-color-gray500: #67728a;
   --cf-color-gray100-rgb: 247, 249, 250;
-  --cf-color-gray200-rgb: 231, 235, 238;
-  --cf-color-gray300-rgb: 207, 217, 224;
   --cf-color-gray400-rgb: 174, 193, 204;
-  --cf-color-gray500-rgb: 103, 114, 138;
 
   /* spacing */
   --cf-spacing-0: 0rem; /* 0px */
