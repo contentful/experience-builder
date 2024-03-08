@@ -71,7 +71,7 @@
   opacity: 0 !important;
 }
 
-.userIsDragging::before {
+.userIsDragging:before {
   outline: 2px solid transparent !important;
 }
 
