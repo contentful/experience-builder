@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { sendMessage } from '@contentful/experiences-core';
-import dragState from '@/utils/dragState';
 import { RootRenderer } from './RootRenderer/RootRenderer';
-import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
+import SimulateDnD from '@/utils/simulateDnD';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useInitializeEditor } from '@/hooks/useInitializeEditor';
 import { useEntityStore } from '@/store/entityStore';
 import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
-import { CTFL_ZONE_ID } from '@/types/constants';
+import { CTFL_ZONE_ID, NEW_COMPONENT_ID } from '@/types/constants';
+import { useDraggedItemStore } from '@/store/draggedItem';
 
 const findNearestDropzone = (element: HTMLElement): string | null => {
   const zoneId = element.getAttribute(CTFL_ZONE_ID);
@@ -27,6 +27,7 @@ const findNearestDropzone = (element: HTMLElement): string | null => {
 export const VisualEditorRoot = () => {
   const initialized = useInitializeEditor();
   const locale = useEditorStore((state) => state.locale);
+  const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
   const entityStore = useEntityStore((state) => state.entityStore);
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
@@ -44,6 +45,8 @@ export const VisualEditorRoot = () => {
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
+      setMousePosition(e.clientX, e.clientY);
+
       const target = e.target as HTMLElement;
 
       const zoneId = findNearestDropzone(target);
@@ -52,15 +55,15 @@ export const VisualEditorRoot = () => {
         setHoveringZone(zoneId);
       }
 
-      if ((e.target as HTMLElement)?.id === 'item') {
+      if (!SimulateDnD.isDragging) {
         return;
       }
 
-      if (!dragState.isDragStart) {
+      if (target.id === NEW_COMPONENT_ID) {
         return;
       }
 
-      simulateMouseEvent(e.pageX, e.pageY);
+      SimulateDnD.updateDrag(e.clientX, e.clientY);
 
       sendMessage(OUTGOING_EVENTS.MouseMove, {
         clientX: e.pageX,

@@ -1,10 +1,6 @@
 import type { HoveredElement } from '@contentful/experiences-core/types';
 import { sendMessage } from '@contentful/experiences-core';
-import {
-  DESIGN_COMPONENT_NODE_TYPE,
-  ASSEMBLY_NODE_TYPE,
-  OUTGOING_EVENTS,
-} from '@contentful/experiences-core/constants';
+import { ASSEMBLY_NODE_TYPE, OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 export class MouseOverHandler {
   private currentHoveredElementId: string | null = null;
@@ -21,9 +17,7 @@ export class MouseOverHandler {
   };
 
   private getBoundingClientRect(element: Element) {
-    const isAssembly =
-      element.getAttribute('data-cf-node-block-type') === DESIGN_COMPONENT_NODE_TYPE ||
-      element.getAttribute('data-cf-node-block-type') === ASSEMBLY_NODE_TYPE;
+    const isAssembly = element.getAttribute('data-cf-node-block-type') === ASSEMBLY_NODE_TYPE;
     if (!isAssembly) {
       return element.getBoundingClientRect();
     } else {

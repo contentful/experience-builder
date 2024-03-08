@@ -1,30 +1,20 @@
 import React from 'react';
-import {
-  VisualEditorMode,
-  isDeprecatedExperience,
-  validateExperienceBuilderConfig,
-} from '@contentful/experiences-core';
+import { VisualEditorMode, validateExperienceBuilderConfig } from '@contentful/experiences-core';
 import { EntityStore } from '@contentful/experiences-core';
-import type { DeprecatedExperience, Experience } from '@contentful/experiences-core/types';
-import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPreviewDeliveryRoot';
+import type { Experience } from '@contentful/experiences-core/types';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
 import { useDetectEditorMode } from './hooks/useDetectEditorMode';
 
 type ExperienceRootProps = {
-  experience?: Experience<EntityStore> | DeprecatedExperience;
+  experience?: Experience<EntityStore>;
   locale: string;
-  /**
-   * @deprecated
-   */
-  slug?: string;
   visualEditorMode?: VisualEditorMode;
 };
 
 export const ExperienceRoot = ({
   locale,
   experience,
-  slug,
   visualEditorMode = VisualEditorMode.LazyLoad,
 }: ExperienceRootProps) => {
   const isEditorMode = useDetectEditorMode();
@@ -35,8 +25,7 @@ export const ExperienceRoot = ({
   });
 
   if (isEditorMode) {
-    const entityStore =
-      experience && !isDeprecatedExperience(experience) ? experience.entityStore : undefined;
+    const entityStore = experience?.entityStore;
     return (
       <VisualEditorRoot
         visualEditorMode={visualEditorMode}
@@ -47,16 +36,6 @@ export const ExperienceRoot = ({
   }
 
   if (!experience) return null;
-
-  if (isDeprecatedExperience(experience)) {
-    return (
-      <DeprecatedPreviewDeliveryRoot
-        deprecatedExperience={experience as DeprecatedExperience}
-        locale={locale}
-        slug={slug}
-      />
-    );
-  }
 
   return <PreviewDeliveryRoot locale={locale} experience={experience} />;
 };

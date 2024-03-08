@@ -6,8 +6,10 @@ export const DRAG_PADDING = 4;
 
 export const ROOT_ID = 'root';
 export const COMPONENT_LIST_ID = 'component-list';
+export const NEW_COMPONENT_ID = 'ctfl-new-draggable';
 export const CTFL_ZONE_ID = 'data-ctfl-zone-id';
 export const CTFL_DRAGGABLE_ID = 'data-ctfl-draggable-id';
+export const CTFL_DRAGGING_ELEMENT = 'data-ctfl-dragging-element';
 
 export const HITBOX = {
   WIDTH: 80,
@@ -42,4 +44,9 @@ export enum HitboxDirection {
   BOTTOM,
   SELF_VERTICAL,
   SELF_HORIZONTAL,
+}
+
+export enum DraggablePosition {
+  CENTERED,
+  MOUSE_POSITION,
 }

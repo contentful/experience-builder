@@ -97,4 +97,14 @@ export class EntityStore extends EntityStoreBase {
     const fieldValue = get<string>(entity, path);
     return transformAssetFileToUrl(fieldValue);
   }
+
+  public toJSON() {
+    return {
+      _experienceEntry: this._experienceEntry,
+      _unboundValues: this._unboundValues,
+      locale: this.locale,
+      entryMap: Object.fromEntries(this.entryMap.entries()),
+      assetMap: Object.fromEntries(this.assetMap.entries()),
+    };
+  }
 }

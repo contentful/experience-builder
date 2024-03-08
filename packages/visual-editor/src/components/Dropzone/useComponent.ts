@@ -7,10 +7,7 @@ import type {
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
 import { builtInComponents } from '@/types/constants';
-import {
-  DESIGN_COMPONENT_NODE_TYPE,
-  ASSEMBLY_NODE_TYPE,
-} from '@contentful/experiences-core/constants';
+import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
 import { Assembly } from '@contentful/experiences-components-react';
 import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
@@ -35,10 +32,7 @@ export const useComponent = ({
   const entityStore = useEntityStore((state) => state.entityStore);
 
   const node = useMemo(() => {
-    if (
-      (rawNode.type === DESIGN_COMPONENT_NODE_TYPE || rawNode.type === ASSEMBLY_NODE_TYPE) &&
-      areEntitiesFetched
-    ) {
+    if (rawNode.type === ASSEMBLY_NODE_TYPE && areEntitiesFetched) {
       return resolveAssembly({
         node: rawNode,
         entityStore,
@@ -51,10 +45,7 @@ export const useComponent = ({
   const componentRegistration = useMemo(() => {
     const registration = componentRegistry.get(node.data.blockId as string);
 
-    if (
-      (node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE) &&
-      !registration
-    ) {
+    if (node.type === ASSEMBLY_NODE_TYPE && !registration) {
       return createAssemblyRegistration({
         definitionId: node.data.blockId as string,
         component: Assembly,
@@ -83,7 +74,7 @@ export const useComponent = ({
   const elementToRender = builtInComponents.includes(node.data.blockId || '')
     ? (dragProps?: NoWrapDraggableProps) =>
         React.createElement(componentRegistration.component, { ...dragProps, ...componentProps })
-    : node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE
+    : node.type === ASSEMBLY_NODE_TYPE
       ? // Assembly.tsx requires renderDropzone and editorMode as well
         () => React.createElement(componentRegistration.component, componentProps)
       : () => React.createElement(componentRegistration.component, otherComponentProps);
@@ -93,6 +84,6 @@ export const useComponent = ({
     componentId,
     elementToRender,
     wrapperProps,
-    label: componentRegistration.definition.name,
+    definition: componentRegistration.definition,
   };
 };

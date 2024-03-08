@@ -8,9 +8,7 @@ import type {
   Composition,
 } from '@contentful/experiences-core/types';
 import type { Entry } from 'contentful';
-
 import {
-  DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_BLOCK_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
 } from '@contentful/experiences-core/constants';
@@ -124,7 +122,7 @@ export const resolveAssembly = ({
   node: CompositionComponentNode;
   entityStore: EntityStoreBase | null;
 }) => {
-  if (node.type !== DESIGN_COMPONENT_NODE_TYPE && node.type !== ASSEMBLY_NODE_TYPE) {
+  if (node.type !== ASSEMBLY_NODE_TYPE) {
     return node;
   }
 

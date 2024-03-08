@@ -21,7 +21,7 @@ export const ButtonComponentDefinition: ComponentDefinition = {
     'cfBorder',
   ],
   tooltip: {
-    description: 'A button that can be used to trigger an action or navigate to a different page.',
+    description: 'Drop onto the canvas to add button that can be used to trigger an action.',
   },
   variables: {
     cfFontSize: {

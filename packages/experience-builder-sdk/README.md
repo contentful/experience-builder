@@ -81,14 +81,12 @@ const Home = () => {
   // You could pull these values from your router, state, etc...
   const localeCode = 'en-US';  // the initial locale to use
   const slug = 'homePage'; // the slug of the experience to fetch
-  const mode = 'delivery'; // 'delivery' or 'preview'
   const experienceTypeId = 'layout'; // the content id of the experience to fetch
 
   // 3. Fetch the experience
   const { experience, error, isLoading } = useFetchBySlug({
     client,
     slug,
-    mode,
     experienceTypeId,
     localeCode,
   });

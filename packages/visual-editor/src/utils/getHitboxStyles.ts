@@ -8,6 +8,7 @@ interface Params {
   direction: HitboxDirection;
   domRect?: DOMRect;
   zoneDepth: number;
+  scrollY: number;
 }
 
 const calcOffsetDepth = (depth: number) => {
@@ -33,7 +34,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
       return {
         width,
         height: HEIGHT,
-        top: top - calcOffsetDepth(zoneDepth),
+        top: top - calcOffsetDepth(zoneDepth) - scrollY,
         left,
         zIndex: 100 + zoneDepth,
       };
@@ -41,7 +42,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
       return {
         width,
         height: HEIGHT,
-        top: bottom + calcOffsetDepth(zoneDepth),
+        top: bottom + calcOffsetDepth(zoneDepth) - scrollY,
         left,
         zIndex: 100 + zoneDepth,
       };
@@ -50,7 +51,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
         width: WIDTH,
         height: height - HEIGHT,
         left: left - calcOffsetDepth(zoneDepth) - WIDTH / 2,
-        top: top + HEIGHT / 2,
+        top: top + HEIGHT / 2 - scrollY,
         zIndex: 100 + zoneDepth,
       };
     case HitboxDirection.RIGHT:
@@ -58,7 +59,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
         width: WIDTH,
         height: height - HEIGHT,
         left: right - calcOffsetDepth(zoneDepth) - WIDTH / 2,
-        top: top + HEIGHT / 2,
+        top: top + HEIGHT / 2 - scrollY,
         zIndex: 100 + zoneDepth,
       };
     case HitboxDirection.SELF_VERTICAL: {
@@ -71,7 +72,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
         width,
         height: selfHeight,
         left,
-        top: top + height / 2 - selfHeight / 2,
+        top: top + height / 2 - selfHeight / 2 - scrollY,
         zIndex: 1000 + zoneDepth,
       };
     }
@@ -83,7 +84,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
         width: width - DRAGGABLE_WIDTH * 2,
         height,
         left: left + (DRAGGABLE_WIDTH * 2) / 2,
-        top,
+        top: top - scrollY,
         zIndex: 1000 + zoneDepth,
       };
     }

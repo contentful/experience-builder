@@ -12,11 +12,7 @@ import { EmptyContainer } from '@components/EmptyContainer/EmptyContainer';
 import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
 import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
-import {
-  DESIGN_COMPONENT_NODE_TYPES,
-  ASSEMBLY_NODE_TYPES,
-  CONTENTFUL_COMPONENTS,
-} from '@contentful/experiences-core/constants';
+import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
@@ -55,9 +51,7 @@ export function Dropzone({
   const isDestination = draggedDestinationId === zoneId;
   const isEmptyCanvas = isRootZone && !content.length;
 
-  const isAssembly =
-    DESIGN_COMPONENT_NODE_TYPES.includes(node?.type || '') ||
-    ASSEMBLY_NODE_TYPES.includes(node?.type || '');
+  const isAssembly = ASSEMBLY_NODE_TYPES.includes(node?.type || '');
 
   // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
   const renderDropzone: RenderDropzoneFunction = useCallback(
@@ -93,12 +87,29 @@ export function Dropzone({
     return null;
   }
 
-  // Don't trigger the dropzone when it's the root because then the only hit boxes that show up will be root level zones
-  // Exception 1: If it comes from the component list (because we want the component list components to work for all zones
-  // Exception 2: If it's a child of a root level zone (because we want to be able to re-order root level containers)
-
+  /**
+   * The Rules of Dropzones
+   *
+   * 1. A dropzone is disabled unless the mouse is hovering over it
+   *
+   * 2. Dragging a new component onto the canvas has no addtional rules
+   * besides rule #1
+   *
+   * 3. Dragging a component that is a direct descendant of the root
+   * (parentId === ROOT_ID) then only the Root Dropzone is enabled
+   *
+   * 4. Dragging a nested component (parentId !== ROOT_ID) then the Root
+   * Dropzone is disabled, all other Dropzones follow rule #1
+   *
+   * 5. Assemblies and the SingleColumn component are always disabled
+   *
+   */
   const isDropzoneEnabled = () => {
     if (node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id) {
+      return false;
+    }
+
+    if (isAssembly) {
       return false;
     }
 
