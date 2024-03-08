@@ -3,20 +3,10 @@
   position: relative;
   transition: outline 0.2s;
   cursor: grab;
-  box-sizing: border-box;
-  display: flex;
-}
-
-.DraggableComponent:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
   outline-offset: -2px;
   outline: 2px solid transparent;
-  z-index: 1;
+  box-sizing: border-box;
+  display: flex;
 }
 
 .DraggableComponent > * {
@@ -31,7 +21,7 @@
   pointer-events: none !important;
 }
 
-.isSelected:before {
+.isSelected {
   outline: 2px solid transparent !important;
 }
 
@@ -71,7 +61,7 @@
   opacity: 0 !important;
 }
 
-.userIsDragging::before {
+.userIsDragging {
   outline: 2px solid transparent !important;
 }
 
@@ -79,24 +69,21 @@
   opacity: 1;
 }
 
-.DraggableComponent:hover:before {
+.DraggableComponent:hover,
+.DraggableComponent:hover div[data-rfd-draggable-id] {
   outline: 2px dashed var(--exp-builder-gray500);
 }
 
-.DraggableComponent:hover div[data-rfd-draggable-id]:before {
-  outline: 2px dashed var(--exp-builder-gray500);
-}
-
-.DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)):before {
+.DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
   outline: 2px solid var(--exp-builder-gray500);
 }
 
-.isAssemblyBlock:hover:before,
-.isAssemblyBlock:hover div[data-rfd-draggable-id]:before,
-.DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^='assembly']:before {
+.isAssemblyBlock:hover,
+.isAssemblyBlock:hover div[data-rfd-draggable-id],
+.DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^='assembly'] {
   outline: 2px dashed var(--exp-builder-purple600) !important;
 }
 
-.isAssemblyBlock:hover:not(:has(div[data-rfd-draggable-id]:hover)):before {
+.isAssemblyBlock:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
   outline: 2px solid var(--exp-builder-purple600) !important;
 }

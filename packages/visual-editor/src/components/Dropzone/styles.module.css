@@ -3,23 +3,16 @@
   margin-right: auto;
   position: relative;
   height: 100%;
+  outline-offset: -2px;
+  outline: 2px solid transparent;
   width: 100%;
+  transition: outline 0.2s;
   pointer-events: all;
 }
 
-.container:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  outline-offset: -2px;
-  outline: 2px solid transparent;
-  z-index: 1;
-  transition: outline 0.2s;
+.container:not(.isRoot) {
+  outline-offset: -1px;
 }
-
 .isRoot,
 .isEmptyCanvas {
   flex: 1;
@@ -38,15 +31,11 @@
   height: 20px;
 }
 
-.isDragging:not(.isRoot):before {
+.isDragging:not(.isRoot) {
   outline: 2px dashed var(--exp-builder-blue500);
 }
 
 .isDestination:not(.isRoot) {
-  background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
-  background-image: none !important;
-}
-
-.isDestination:not(.isRoot):before {
   outline: 2px dashed var(--exp-builder-blue500);
+  background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
 }
