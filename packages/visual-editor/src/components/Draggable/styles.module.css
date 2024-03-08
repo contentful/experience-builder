@@ -91,9 +91,9 @@
 .isAssemblyBlock:hover:before,
 .isAssemblyBlock:hover div[data-rfd-draggable-id]:before,
 .DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^='assembly']:before {
-  outline: 2px dashed var(--exp-builder-purple600) !important;
+  outline: 2px dashed var(--exp-builder-purple600);
 }
 
 .isAssemblyBlock:hover:not(:has(div[data-rfd-draggable-id]:hover)):before {
-  outline: 2px solid var(--exp-builder-purple600) !important;
+  outline: 2px solid var(--exp-builder-purple600);
 }
