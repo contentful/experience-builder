@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.3](https://github.com/contentful/experience-builder/compare/@contentful/experiences-sdk-react@0.0.1-alpha.2...@contentful/experiences-sdk-react@0.0.1-alpha.3) (2024-03-08)
+
+### Bug Fixes
+
+- address pr comments ([5d91d47](https://github.com/contentful/experience-builder/commit/5d91d47e45130bb56070412b704236bdd5c80a59))
+
 ## 0.0.1-alpha.2 (2024-03-04)
 
 ### Bug Fixes

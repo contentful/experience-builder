@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.3](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.2...@contentful/experiences-core@0.0.1-alpha.3) (2024-03-08)
+
+### Bug Fixes
+
+- **experiences:** proper handling of reparenting off canvas ([#460](https://github.com/contentful/experience-builder/issues/460)) ([9808cfc](https://github.com/contentful/experience-builder/commit/9808cfcdae03ad6c3fee7e3bb9278db06e179467))
+- unused import lint errors ([1f8338d](https://github.com/contentful/experience-builder/commit/1f8338d325d403fa9667dc5ee867e44bb8186d68))
+- update component tooltips to use component term instead of elements ([25db0e2](https://github.com/contentful/experience-builder/commit/25db0e2936eba1ea00a8ab0d5ae4318488243558))
+
+### Features
+
+- added toJSON function in entity store ([#467](https://github.com/contentful/experience-builder/issues/467)) ([7f9a504](https://github.com/contentful/experience-builder/commit/7f9a504dd0169851b77a1aa127f0839426dd3362))
+
 ## 0.0.1-alpha.2 (2024-03-04)
 
 ### Bug Fixes

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.3](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.2...@contentful/experiences-visual-editor-react@0.0.1-alpha.3) (2024-03-08)
+
+### Bug Fixes
+
+- **canvas-interactions:** disable dropzones that are assemblies [ALT-552] ([#465](https://github.com/contentful/experience-builder/issues/465)) ([ad87950](https://github.com/contentful/experience-builder/commit/ad87950ab27457e585839a171a157816cd43bac3))
+- **canvas-interactions:** more precise coordinates while dragging [ALT-506] ([#463](https://github.com/contentful/experience-builder/issues/463)) ([f312e05](https://github.com/contentful/experience-builder/commit/f312e05e3ce8e13fc747f4e82d5718c283a75242))
+- **canvas-interactions:** update dropzone indicator colors ([#472](https://github.com/contentful/experience-builder/issues/472)) ([aadea9e](https://github.com/contentful/experience-builder/commit/aadea9e47d52739d41ac9508e3110f2698501065))
+- **experiences:** proper handling of reparenting off canvas ([#460](https://github.com/contentful/experience-builder/issues/460)) ([9808cfc](https://github.com/contentful/experience-builder/commit/9808cfcdae03ad6c3fee7e3bb9278db06e179467))
+- **visual-editor:** component re-select on breakpoint change ([#473](https://github.com/contentful/experience-builder/issues/473)) ([14d60f5](https://github.com/contentful/experience-builder/commit/14d60f580bfa1f64c0bdee7d007b9ed8bee8f3b8))
+
 ## 0.0.1-alpha.2 (2024-03-04)
 
 ### Bug Fixes
