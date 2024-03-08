@@ -9,7 +9,7 @@
   pointer-events: all;
 }
 
-.container:before {
+.container:not(.isRoot):before {
   content: "";
   position: absolute;
   top: 0;
@@ -36,8 +36,9 @@
 }
 
 .isDestination:not(.isRoot) {
-  background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
   background-image: none !important;
+  background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
+  z-index: 100;
 }
 
 .isDestination:not(.isRoot):before {
