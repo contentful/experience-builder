@@ -27,7 +27,9 @@ describe('Image', () => {
 
   it('renders default image when no src or cfImageAsset are specified', () => {
     cy.mount(<Image />);
-    cy.get('img').invoke('attr', 'src').should('eq', placeholderImage);
+    cy.get('.cf-no-image').should('exist');
+    cy.get('.cf-no-image img').should('exist');
+    cy.get('.cf-no-image svg').should('exist');
   });
 
   it('renders at the proper width', () => {
@@ -50,7 +52,7 @@ describe('Image', () => {
     cy.get('img').invoke('attr', 'srcset').should('eq', file.srcSet!.join(', '));
   });
 
-  it.only('when cfImageAsset is an object, it should set the sizes of the image tag to the sizes of the object', () => {
+  it('when cfImageAsset is an object, it should set the sizes of the image tag to the sizes of the object', () => {
     cy.mount(<Image cfImageAsset={file} />);
     cy.get('img').invoke('attr', 'sizes').should('eq', file.sizes);
   });
