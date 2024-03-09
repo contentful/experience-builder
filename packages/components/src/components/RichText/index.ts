@@ -1,8 +1,8 @@
-import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
+import type { ComponentDefinition } from '@contentful/experiences-core/types';
 import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 
 export * from './RichText';
 
@@ -21,8 +21,7 @@ export const RichTextComponentDefinition: ComponentDefinition = {
     'cfBorder',
   ],
   tooltip: {
-    description:
-      'Click and drop onto the canvas to add text with Rich text formatting options or bind existing content.',
+    description: 'Drop onto the canvas to add text with Rich text formatting options.',
   },
   variables: {
     // Built-in style variables with default values changed

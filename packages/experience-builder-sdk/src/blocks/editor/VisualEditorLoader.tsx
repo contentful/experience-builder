@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { VisualEditorMode } from '@contentful/experience-builder-core';
+import { VisualEditorMode } from '@contentful/experiences-core';
 
 type VisualEditorLoaderProps = {
   visualEditorMode: VisualEditorMode;
@@ -19,7 +19,7 @@ export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({ visualEd
 
       // VisualEditorMode.LazyLoad:
       default:
-        import('@contentful/experience-builder-visual-editor').then((module) => {
+        import('@contentful/experiences-visual-editor-react').then((module) => {
           setVisualEditor(() => module.default);
         });
     }

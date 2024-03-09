@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.3](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.2...@contentful/experiences-visual-editor-react@0.0.1-alpha.3) (2024-03-08)
+
+### Bug Fixes
+
+- **canvas-interactions:** disable dropzones that are assemblies [ALT-552] ([#465](https://github.com/contentful/experience-builder/issues/465)) ([ad87950](https://github.com/contentful/experience-builder/commit/ad87950ab27457e585839a171a157816cd43bac3))
+- **canvas-interactions:** more precise coordinates while dragging [ALT-506] ([#463](https://github.com/contentful/experience-builder/issues/463)) ([f312e05](https://github.com/contentful/experience-builder/commit/f312e05e3ce8e13fc747f4e82d5718c283a75242))
+- **canvas-interactions:** update dropzone indicator colors ([#472](https://github.com/contentful/experience-builder/issues/472)) ([aadea9e](https://github.com/contentful/experience-builder/commit/aadea9e47d52739d41ac9508e3110f2698501065))
+- **experiences:** proper handling of reparenting off canvas ([#460](https://github.com/contentful/experience-builder/issues/460)) ([9808cfc](https://github.com/contentful/experience-builder/commit/9808cfcdae03ad6c3fee7e3bb9278db06e179467))
+- **visual-editor:** component re-select on breakpoint change ([#473](https://github.com/contentful/experience-builder/issues/473)) ([14d60f5](https://github.com/contentful/experience-builder/commit/14d60f580bfa1f64c0bdee7d007b9ed8bee8f3b8))
+
+## 0.0.1-alpha.2 (2024-03-04)
+
+### Bug Fixes
+
+- add dnd cypress stub [SPA-1712] ([#270](https://github.com/contentful/experience-builder/issues/270)) ([cb88716](https://github.com/contentful/experience-builder/commit/cb887160ae9a37c8be4cb38d12419e914c6f1be1))
+- add missing script-inject dep to required packages ([ba16c1b](https://github.com/contentful/experience-builder/commit/ba16c1bc89b17457496ddceed055bb96eb755e54))
+- add purple hover outline for assemblies [ALT-260] ([9d65eef](https://github.com/contentful/experience-builder/commit/9d65eef2ae81c3e8f191eab9aceb056a45f282b1))
+- adjsut type for not defined coords ([1a34169](https://github.com/contentful/experience-builder/commit/1a341691caa65f27ec45861638620d31664bc9e0))
+- adjust where the hover label goes for components and containers in xb ([5fbbe65](https://github.com/contentful/experience-builder/commit/5fbbe656be7f0f5b5fa0bfd4bbebf06a4e56b2e4))
+- allow built-in components to be disabled [ALT-267] ([#321](https://github.com/contentful/experience-builder/issues/321)) ([453225c](https://github.com/contentful/experience-builder/commit/453225cf9c0813137441e1445754c4ed3aecd8bc))
+- allow clicking the canvas to drop a dragged component [ALT-283] ([#277](https://github.com/contentful/experience-builder/issues/277)) ([454c114](https://github.com/contentful/experience-builder/commit/454c114d0f3d47a2a6d2df724f17be07e6ac0ead))
+- allows re-parenting of components, however does not allow for new containers to be created ([0614fd7](https://github.com/contentful/experience-builder/commit/0614fd77c41c63790649a8de3bc5618357d51ce9))
+- assume not matching breakpoints and initialise correctly in the effect ([96c734a](https://github.com/contentful/experience-builder/commit/96c734a4b73630e2fd6a45fc9c0ae7b0778edd2b))
+- build scripts with new entity store ([be0349a](https://github.com/contentful/experience-builder/commit/be0349a7beaed235d2ac0e8b930e4fd4adf42166))
+- **canvas-interactions:** prevent draggables from flying off mouse cursor ([#434](https://github.com/contentful/experience-builder/issues/434)) ([9fe8e6d](https://github.com/contentful/experience-builder/commit/9fe8e6d181181d84dd73922fced233e47232923f))
+- cleanup remanining new imports under experience-builder since the pr was up ([4fe1b43](https://github.com/contentful/experience-builder/commit/4fe1b436d5ac40d0a90595bb37acaa91fa4ad99f))
+- design tokens in visual editor [ALT-200] ([#222](https://github.com/contentful/experience-builder/issues/222)) ([f4ffc8b](https://github.com/contentful/experience-builder/commit/f4ffc8b7d5e726f1c0eb6252daca4147070fba52))
+- entity store issues with design components ([28446d8](https://github.com/contentful/experience-builder/commit/28446d85695b3a6d5847c7309de544074be2dacc))
+- **experience-builder:** only accept new assembly event [SPA-1730] ([#260](https://github.com/contentful/experience-builder/issues/260)) ([3e37f15](https://github.com/contentful/experience-builder/commit/3e37f1518112c993456e08f74013c8a065b370fd))
+- fix lodash deps ([a7cba34](https://github.com/contentful/experience-builder/commit/a7cba342e1c92bfef8dccc7ae027326955d8b741))
+- handle missing linkType property ([#237](https://github.com/contentful/experience-builder/issues/237)) ([1827d96](https://github.com/contentful/experience-builder/commit/1827d960f0a53412e1e39b06e265f7e1511e54f5))
+- hide overflow on draggable component to fix scrolling ([5c3b9f4](https://github.com/contentful/experience-builder/commit/5c3b9f48fef58cc8668972be2325a513a21287d6))
+- make React prop optional in other places as well ([81bf035](https://github.com/contentful/experience-builder/commit/81bf0355d1bb8fa48be2de7fa4572c31f686685c))
+- properly remove event listener on scroll ([#345](https://github.com/contentful/experience-builder/issues/345)) ([da2514c](https://github.com/contentful/experience-builder/commit/da2514c29c3b45419d19aa00892ab39b97e979fa))
+- re-fetch entity store on locale change ([#300](https://github.com/contentful/experience-builder/issues/300)) ([2da61b6](https://github.com/contentful/experience-builder/commit/2da61b686d7059864e849d71b011cb53ac7a3281))
+- recognize replacement by detaching assembly node with current child cound ([41d3be5](https://github.com/contentful/experience-builder/commit/41d3be5f1ca1d29bcc2b9377932467ce873dac05))
+- remove circular dep and bring related code in one place ([c6dc913](https://github.com/contentful/experience-builder/commit/c6dc913ab78cd68a8cf9cc74f9814f1fcec43eeb))
+- remove error regarding any type ([222e82c](https://github.com/contentful/experience-builder/commit/222e82cce6c25ad2c819c3aeb8f83a2a39e86efb))
+- remove the previous hotfix ([157dc57](https://github.com/contentful/experience-builder/commit/157dc57adfe85c42e725b62da8d0cb3a5a5a18ec))
+- remove unused import ([8b48cbb](https://github.com/contentful/experience-builder/commit/8b48cbb3187f1848fb8b9831fa7c962e2af2cc82))
+- replace original node with assembly node completely ([cfc55d3](https://github.com/contentful/experience-builder/commit/cfc55d305affd361ac82882c3c13350afae4c912))
+- show outline when hovering over readonly blocks in an assembly [ALT-260] ([d2331ea](https://github.com/contentful/experience-builder/commit/d2331ea0ec707a189d850c752b87297d92c192af))
+- smaller dropzone indicator and container height adjustments [ALT-356] ([#326](https://github.com/contentful/experience-builder/issues/326)) ([bf75c10](https://github.com/contentful/experience-builder/commit/bf75c10b13e3e165dac1f4d1d6a68deae1622078))
+- tests and linting ([c1e2e05](https://github.com/contentful/experience-builder/commit/c1e2e05ec7b1fcca14ec364f83944eae201cc1d8))
+- types in visual editor [] ([#313](https://github.com/contentful/experience-builder/issues/313)) ([21de9ae](https://github.com/contentful/experience-builder/commit/21de9aea921c97190e9115a8d0afb33b4a244937))
+- update dropzone to consider children margins[ALT-282] ([5df13cc](https://github.com/contentful/experience-builder/commit/5df13cc9e24a7d38406617ab2c3bd4070a6c3103))
+- update Heading component built in styles [ALT-154] ([#296](https://github.com/contentful/experience-builder/issues/296)) ([b064bfc](https://github.com/contentful/experience-builder/commit/b064bfc16a158c2ff429105cb7b856326265e151))
+- update hover labels to be more like onclick labels ([6ba51c1](https://github.com/contentful/experience-builder/commit/6ba51c131887cec9681da36ad385680d7c03e8d3))
+- use casting to overcome type clash ([8dcc651](https://github.com/contentful/experience-builder/commit/8dcc65112fc3e068506c97216cac558657c68cb1))
+- use named exports vs default for lodash ([aa3c91a](https://github.com/contentful/experience-builder/commit/aa3c91a045078a598f9eb640922948da1d36fb4d))
+- **visual-editor:** canvas interactions flickering on changes [ALT-241] ([#240](https://github.com/contentful/experience-builder/issues/240)) ([6ccea0f](https://github.com/contentful/experience-builder/commit/6ccea0f6e2b3e58852ee4e137ead35678831f84d)), closes [#243](https://github.com/contentful/experience-builder/issues/243) [#242](https://github.com/contentful/experience-builder/issues/242) [#244](https://github.com/contentful/experience-builder/issues/244) [#249](https://github.com/contentful/experience-builder/issues/249)
+- **visual-editor:** canvas usability and placeholders [ALT-449] ([#414](https://github.com/contentful/experience-builder/issues/414)) ([f338605](https://github.com/contentful/experience-builder/commit/f338605f709007bd67cb49f7e236b9b7e5019977))
+- **visual-editor:** change component outlines and dropzone backgrounds [ALT-273] [ALT-275] ([#257](https://github.com/contentful/experience-builder/issues/257)) ([1e47be7](https://github.com/contentful/experience-builder/commit/1e47be7051e53b49d219da73851705bf476592c1))
+- **visual-editor:** enable dropzones on custom components ([#253](https://github.com/contentful/experience-builder/issues/253)) ([b0d87c0](https://github.com/contentful/experience-builder/commit/b0d87c02d4343e8c0ec79daf00edee2d3e07bad9))
+- **visual-editor:** properly handle when drag operations are canceled ([#242](https://github.com/contentful/experience-builder/issues/242)) ([e5e99e8](https://github.com/contentful/experience-builder/commit/e5e99e891d05991e90d69d5788b236c9adbb038d))
+- **visual-editor:** remove error around passing editor props to normal elements ([#231](https://github.com/contentful/experience-builder/issues/231)) ([4024a68](https://github.com/contentful/experience-builder/commit/4024a68b3da06919ae777c15e7d25a8a40d6c263))
+- **visual-editor:** render assembly nodes by passing the required props [ALT-255] ([#245](https://github.com/contentful/experience-builder/issues/245)) ([6d2dd5a](https://github.com/contentful/experience-builder/commit/6d2dd5a64337e13ac84c0014da2c03e519f7f78b))
+- **visual-editor:** request components after DC is dropped to display them ([#258](https://github.com/contentful/experience-builder/issues/258)) ([94f630e](https://github.com/contentful/experience-builder/commit/94f630e275ea4d691975131a7baed24292cb34d3))
+- **visual-editor:** reselect component after scroll ([#276](https://github.com/contentful/experience-builder/issues/276)) ([7fa6446](https://github.com/contentful/experience-builder/commit/7fa6446eed801dd2fe03c5627223bd815425be80))
+- **visual-editor:** update dropzone and selected component logic [ALT-317] ([#283](https://github.com/contentful/experience-builder/issues/283)) ([edb4349](https://github.com/contentful/experience-builder/commit/edb434928ac79523cc5aede61ae6cdca3e44f04b))
+- **visual-sdk:** only show bg color of dropzone for components being dragged in ([#278](https://github.com/contentful/experience-builder/issues/278)) ([2895c16](https://github.com/contentful/experience-builder/commit/2895c16935ba9ac6ecc8638b0601f2d3eb48718e))
+- wrap assembly with correct container styles ([222cd37](https://github.com/contentful/experience-builder/commit/222cd3721e47135e16d2ef52e16baedb982135a4))
+
+### Features
+
+- add useFetchBySlug, useFetchById hooks and plain js fetchBySlug and fetchById methods ([#206](https://github.com/contentful/experience-builder/issues/206)) ([9e9b72f](https://github.com/contentful/experience-builder/commit/9e9b72f2af18bc2aaf1f6ede429ad6e5d971d3a8))
+- clicking outside of the edited canvas sends post message to user interface ([6e35c29](https://github.com/contentful/experience-builder/commit/6e35c2904b33027302e83b1d90b8c674e2380527))
+- **components:** built-in styles for columns [ALT-276, ALT-277] ([#316](https://github.com/contentful/experience-builder/issues/316)) ([7a057c3](https://github.com/contentful/experience-builder/commit/7a057c36e855b580262f5e368cbf5c037e8dc323))
+- **components:** column gaps [ALT-279] ([#324](https://github.com/contentful/experience-builder/issues/324)) ([465bd53](https://github.com/contentful/experience-builder/commit/465bd539b2dadc831096c9fba9f89c98e3687a04))
+- Container default margin auto [ALT-326] ([#286](https://github.com/contentful/experience-builder/issues/286)) ([16c1acf](https://github.com/contentful/experience-builder/commit/16c1acf05a5553dd31a5ebb04ead6c0a7724de54))
+- implement columns component with presets and custom options [ALT-43] ([#285](https://github.com/contentful/experience-builder/issues/285)) ([dd74a5f](https://github.com/contentful/experience-builder/commit/dd74a5f409c7b4d66722d0809eba43a3cf0e1cfd))
+- implement design components with hybrid editor ([9601a9b](https://github.com/contentful/experience-builder/commit/9601a9b2365e63a4068d895cc72ffa3ccd46d10d))
+- section component [ALT-205] ([#279](https://github.com/contentful/experience-builder/issues/279)) ([aea2ac8](https://github.com/contentful/experience-builder/commit/aea2ac899dbf12e9e62ac174d84b5171ce60dbdb))
+
+### Reverts
+
+- dont overwrite assembly block height manually ([117d59c](https://github.com/contentful/experience-builder/commit/117d59c76ec9c6664fb416c1f6a5f8a46562664e))
+
 ## [0.0.2-alpha.33](https://github.com/contentful/experience-builder/compare/@contentful/experience-builder-visual-editor@0.0.2-alpha.32...@contentful/experience-builder-visual-editor@0.0.2-alpha.33) (2024-03-01)
 
 **Note:** Version bump only for package @contentful/experience-builder-visual-editor

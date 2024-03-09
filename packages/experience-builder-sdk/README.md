@@ -1,4 +1,4 @@
-# @contentful/experience-builder
+# @contentful/experiences-sdk-react
 
 Experience builder SDK by [Contentful](https://www.contentful.com/).
 
@@ -9,7 +9,7 @@ Please find more information about this sdk [on our Wiki page](https://github.co
 ## Installation
 
 ```
-npm install @contentful/experience-builder
+npm install @contentful/experiences-sdk-react
 ```
 
 ## Example Component:
@@ -38,7 +38,7 @@ import {
   defineDesignTokens,
   ExperienceRoot,
   useFetchBySlug,
-} from '@contentful/experience-builder';
+} from '@contentful/experiences-sdk-react';
 
 import { createClient } from 'contentful';
 
@@ -81,14 +81,12 @@ const Home = () => {
   // You could pull these values from your router, state, etc...
   const localeCode = 'en-US';  // the initial locale to use
   const slug = 'homePage'; // the slug of the experience to fetch
-  const mode = 'delivery'; // 'delivery' or 'preview'
   const experienceTypeId = 'layout'; // the content id of the experience to fetch
 
   // 3. Fetch the experience
   const { experience, error, isLoading } = useFetchBySlug({
     client,
     slug,
-    mode,
     experienceTypeId,
     localeCode,
   });

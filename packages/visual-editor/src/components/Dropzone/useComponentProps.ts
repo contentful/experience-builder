@@ -4,32 +4,30 @@ import {
   calculateNodeDefaultHeight,
   isLinkToAsset,
   isEmptyStructureWithRelativeHeight,
-  transformBoundContentValue,
   isContentfulStructureComponent,
-} from '@contentful/experience-builder-core';
+  transformBoundContentValue,
+} from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
-  DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
   CONTENTFUL_COMPONENTS,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import type {
   StyleProps,
   CompositionVariableValueType,
   CompositionComponentNode,
   ResolveDesignValueType,
   ComponentRegistration,
-} from '@contentful/experience-builder-core/types';
+  Link,
+} from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
-import { Link } from '@contentful/experience-builder-core/types';
 import { DRAG_PADDING } from '../../types/constants';
-import { useDraggedItemStore } from '@/store/draggedItem';
 
 type ComponentProps =
   | StyleProps
@@ -54,16 +52,10 @@ export const useComponentProps = ({
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
-  const newComponentId = useDraggedItemStore((state) => state.componentId);
-  const isDraggingNewCompont = !!newComponentId;
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: ComponentProps = useMemo(() => {
     // Don't enrich the assembly wrapper node with props
-    if (
-      !definition ||
-      node.type === DESIGN_COMPONENT_NODE_TYPE ||
-      node.type === ASSEMBLY_NODE_TYPE
-    ) {
+    if (!definition || node.type === ASSEMBLY_NODE_TYPE) {
       return {};
     }
 
@@ -96,21 +88,6 @@ export const useComponentProps = ({
             [variableName]: designValue,
           };
         } else if (variableMapping.type === 'BoundValue') {
-          // if (!areEntitiesFetched) {
-          //   console.debug(
-          //     `[exp-builder.sdk::useComponentProps] Idle-cycle: as entities are not fetched(areEntitiesFetched=${areEntitiesFetched}), we cannot resolve bound values for ${variableName} so we just resolve them to default values.`,
-          //   );
-
-          //   // Just forcing default value (if we're in idle-cycle, entities are missing)
-          //   return {
-          //     ...acc,
-          //     [variableName]: transformContentValue(
-          //       variableDefinition.defaultValue,
-          //       variableDefinition,
-          //     ),
-          //   };
-          // }
-
           const [, uuid, path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
@@ -209,7 +186,6 @@ export const useComponentProps = ({
         minHeight: EMPTY_CONTAINER_HEIGHT,
       }),
       ...(userIsDragging &&
-        isDraggingNewCompont &&
         isContentfulStructureComponent(node?.data.blockId) &&
         node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
           padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),

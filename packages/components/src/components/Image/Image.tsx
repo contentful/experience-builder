@@ -1,4 +1,4 @@
-import { OptimizedImageAsset } from '@contentful/experience-builder-core/types';
+import { OptimizedImageAsset } from '@contentful/experiences-core/types';
 import React from 'react';
 import { placeholderImage } from '@/utils/constants';
 import './Image.css';

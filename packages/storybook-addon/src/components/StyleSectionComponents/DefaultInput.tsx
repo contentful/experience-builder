@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInput } from '@contentful/f36-components';
 import { useVariableState } from '@/hooks/useVariableState';
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 
 type DefaultInputProps = {
   variableDefinition: ComponentDefinitionVariable<'Text'>;

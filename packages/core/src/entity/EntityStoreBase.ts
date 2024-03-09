@@ -3,7 +3,6 @@ import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';
 import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema';
-// import { transformAssetFileToUrl } from './value-transformers';
 
 /**
  * Base Store for entities

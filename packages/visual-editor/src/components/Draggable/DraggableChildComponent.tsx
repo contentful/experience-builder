@@ -9,6 +9,10 @@ import classNames from 'classnames';
 import styles from './styles.module.css';
 import { Rect } from '@components/Draggable/canvasToolsUtils';
 import Tooltip from './Tooltip';
+import {
+  ComponentDefinition,
+  ComponentDefinitionVariableType,
+} from '@contentful/experiences-core/types';
 
 export type NoWrapDraggableProps = {
   ['data-ctfl-draggable-id']: string;
@@ -23,14 +27,12 @@ export type NoWrapDraggableProps = {
 };
 
 type DraggableChildComponentProps = {
-  label: string;
   wrapperProps: Record<string, string | undefined>;
   elementToRender: (props: NoWrapDraggableProps) => JSX.Element;
   id: string;
   index: number;
   isAssemblyBlock?: boolean;
   isSelected?: boolean;
-  isBeingDragged?: boolean;
   onClick?: (e: SyntheticEvent) => void;
   coordinates: Rect | null;
   isContainer: boolean;
@@ -39,6 +41,7 @@ type DraggableChildComponentProps = {
   style?: CSSProperties;
   isDragDisabled?: boolean;
   className?: string;
+  definition: ComponentDefinition<ComponentDefinitionVariableType>;
 };
 
 /**
@@ -58,7 +61,6 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     isAssemblyBlock = false,
     isSelected = false,
     onClick = () => null,
-    label,
     coordinates,
     userIsDragging,
     style,
@@ -66,6 +68,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     blockId,
     isDragDisabled = false,
     wrapperProps,
+    definition,
   } = props;
 
   return (
@@ -95,7 +98,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
               coordinates={coordinates}
               isAssemblyBlock={isAssemblyBlock}
               isContainer={isContainer}
-              label={label}
+              label={definition.name || 'No label specified'}
             />
           ),
         })

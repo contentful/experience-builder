@@ -1,7 +1,7 @@
 import React from 'react';
 import { ColorInput } from './ColorInput';
 import { useVariableState } from '@/hooks/useVariableState';
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 
 type BackgroundColorInputProps = {
   variableDefinition: ComponentDefinitionVariable<'Text'>;

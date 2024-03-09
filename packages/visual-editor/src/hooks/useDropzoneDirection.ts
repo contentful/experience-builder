@@ -1,11 +1,11 @@
-import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { useEffect } from 'react';
 import { useZoneStore } from '@/store/zone';
-import { isContentfulStructureComponent } from '@contentful/experience-builder-core';
+import { isContentfulStructureComponent } from '@contentful/experiences-core';
 
 interface Params {
   resolveDesignValue: ResolveDesignValueType | undefined;

@@ -89,6 +89,7 @@ export abstract class EditorEntityStore extends EntityStoreBase {
       return openRequest;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const newPromise = new Promise((resolve, reject) => {
       const unsubscribe = this.subscribe(
         PostMessageMethods.REQUESTED_ENTITIES,

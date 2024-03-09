@@ -1,19 +1,19 @@
 import React from 'react';
 import { DraggableComponent } from '../Draggable/DraggableComponent';
-import { isContentfulStructureComponent, sendMessage } from '@contentful/experience-builder-core';
+import { isContentfulStructureComponent, sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from './useComponent';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import {
   CONTENTFUL_COMPONENTS,
   ASSEMBLY_BLOCK_NODE_TYPE,
   OUTGOING_EVENTS,
   ASSEMBLY_NODE_TYPE,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import { DraggableChildComponent } from '@components/Draggable/DraggableChildComponent';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { PlaceholderParams } from '@components/Draggable/Placeholder';
@@ -43,7 +43,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 }) => {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, wrapperProps, label, elementToRender } = useComponent({
+  const { node, componentId, wrapperProps, definition, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -59,7 +59,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const isRootComponent = zoneId === ROOT_ID;
 
-  const enableRootHitboxes = isRootComponent && !draggingNewComponent;
+  const enableRootHitboxes = isRootComponent && !!draggingNewComponent;
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
@@ -86,7 +86,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       <>
         <DraggableChildComponent
           elementToRender={elementToRender}
-          label={label || 'No Label Specified'}
           id={componentId}
           index={index}
           isAssemblyBlock={isAssemblyBlock}
@@ -98,6 +97,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
           coordinates={coordinates!}
           wrapperProps={wrapperProps}
           onClick={onClick}
+          definition={definition}
         />
         {isStructureComponent && userIsDragging && (
           <Hitboxes
@@ -113,7 +113,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   return (
     <DraggableComponent
       placeholder={placeholder}
-      label={label || 'No Label Specified'}
+      definition={definition}
       id={componentId}
       index={index}
       isAssemblyBlock={isAssemblyBlock}

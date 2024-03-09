@@ -1,4 +1,4 @@
-import type { Asset, AssetFile, ContentfulClientApi, Entry } from 'contentful';
+import type { Asset, AssetFile, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
 import { EntityStore } from './entity/EntityStore';
 import { Document as RichTextDocument } from '@contentful/rich-text-types';
@@ -311,26 +311,6 @@ export interface HoveredElement {
 
 export interface Experience<T extends EntityStore = EntityStore> {
   entityStore?: T;
-  /** @deprecated mode no longer used */
-  mode?: InternalSDKMode;
-}
-
-/**
- * @deprecated please use `Experience` instead
- */
-export interface DeprecatedExperience {
-  /**
-   * @deprecated please don't use
-   */
-  client: ContentfulClientApi<undefined>;
-  /**
-   * @deprecated please don't use
-   */
-  experienceTypeId: string;
-  /**
-   * @deprecated please don't use
-   */
-  mode: InternalSDKMode;
 }
 
 export type ResolveDesignValueType = (

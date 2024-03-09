@@ -1,8 +1,8 @@
-import { checkIsAssemblyNode, EntityStore } from '@contentful/experience-builder-core';
+import { checkIsAssemblyNode, EntityStore } from '@contentful/experiences-core';
 import type {
   CompositionComponentPropValue,
   CompositionNode,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 
 export const deserializeAssemblyNode = ({
   node,

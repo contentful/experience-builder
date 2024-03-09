@@ -9,12 +9,9 @@ import { assets } from '../../test/__fixtures__/entities';
 import {
   ASSEMBLY_BLOCK_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
-} from '@contentful/experience-builder-core/constants';
-import type {
-  CompositionComponentNode,
-  CompositionNode,
-} from '@contentful/experience-builder-core/types';
-import { EditorModeEntityStore } from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core/constants';
+import type { CompositionComponentNode, CompositionNode } from '@contentful/experiences-core/types';
+import { EditorModeEntityStore } from '@contentful/experiences-core';
 import { deserializeAssemblyNode, resolveAssembly } from './assemblyUtils';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { assembliesRegistry } from '@/store/registries';

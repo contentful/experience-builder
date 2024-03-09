@@ -15,7 +15,7 @@ export const sectionDefinition: ComponentDefinition = {
   variables: sectionBuiltInStyles,
   tooltip: {
     description:
-      'Create a new full width section of your experience by dragging this element onto the canvas. Elements and patterns can be added into a section.',
+      'Create a new full width section of your experience by dragging this component onto the canvas. Other components and patterns can be added into a section.',
   },
 };
 
@@ -27,7 +27,7 @@ export const containerDefinition: ComponentDefinition = {
   variables: containerBuiltInStyles,
   tooltip: {
     description:
-      'Create a new area or pattern within your page layout by dragging a container onto the canvas. Elements and patterns can be added into a container.',
+      'Create a new area or pattern within your page layout by dragging a container onto the canvas. Other components and patterns can be added into a container.',
   },
 };
 

@@ -1,4 +1,4 @@
-import { CompositionComponentNode } from '@contentful/experience-builder-core/types';
+import { CompositionComponentNode } from '@contentful/experiences-core/types';
 import { CSSProperties, SyntheticEvent } from 'react';
 
 interface ColumnsBaseProps {
@@ -13,7 +13,7 @@ interface ColumnsEditorModeProps extends ColumnsBaseProps {
   node: CompositionComponentNode;
   renderDropzone: (
     node: CompositionComponentNode,
-    props?: Record<string, unknown>
+    props?: Record<string, unknown>,
   ) => React.ReactNode;
 }
 
@@ -26,7 +26,7 @@ interface SingleColumnEditorModeProps extends ColumnsBaseProps {
   node: CompositionComponentNode;
   renderDropzone: (
     node: CompositionComponentNode,
-    props?: Record<string, unknown>
+    props?: Record<string, unknown>,
   ) => React.ReactNode;
   cfColumnSpan: string;
 

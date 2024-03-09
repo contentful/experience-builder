@@ -1,4 +1,4 @@
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { ChangeEventHandler, FocusEventHandler, useCallback, useEffect, useState } from 'react';
 import { SpacingValueRegexp } from '../constants';
 import { ensureHasMeasureUnit } from '../utils';
@@ -82,7 +82,7 @@ export const useSpacingValue = ({ variableName, variableDefinition }: UseSpacing
         }
       }
     },
-    [variableName, spacingBufferValue, savedSpacingMap, setSpacingValue]
+    [variableName, spacingBufferValue, savedSpacingMap, setSpacingValue],
   );
 
   const onValueChange: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -96,7 +96,7 @@ export const useSpacingValue = ({ variableName, variableDefinition }: UseSpacing
         });
       }
     },
-    [spacingBufferValue, variableName]
+    [spacingBufferValue, variableName],
   );
 
   return { onBlur, onValueChange, spacingBufferValue };

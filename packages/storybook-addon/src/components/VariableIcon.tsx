@@ -3,7 +3,7 @@ import CompositionTextIcon from '@svg/composition/composition-icon-text.svg';
 import CompositionLocationIcon from '@svg/composition/composition-icon-location.svg';
 import CompositionDateIcon from '@svg/composition/composition-icon-date.svg';
 import CompositionCodeIcon from '@svg/composition/composition-icon-code.svg';
-import { ComponentDefinitionVariableType } from '@contentful/experience-builder';
+import { ComponentDefinitionVariableType } from '@contentful/experiences-sdk-react';
 import { css } from 'emotion';
 import tokens from '@contentful/f36-tokens';
 

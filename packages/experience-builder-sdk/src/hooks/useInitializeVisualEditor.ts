@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experiences-core';
 import {
   componentRegistry,
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
 } from '../core/componentRegistry';
-import {
-  INTERNAL_EVENTS,
-  VISUAL_EDITOR_EVENTS,
-} from '@contentful/experience-builder-core/constants';
-import { designTokensRegistry } from '@contentful/experience-builder-core';
+import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
+import { designTokensRegistry } from '@contentful/experiences-core';
 
 type InitializeVisualEditorParams = {
   initialLocale: string;

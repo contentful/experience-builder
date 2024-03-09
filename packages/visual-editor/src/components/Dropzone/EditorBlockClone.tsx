@@ -1,23 +1,24 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import styles from '../Draggable/styles.module.css';
 import { useComponent } from './useComponent';
 import type {
   CompositionComponentNode,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
-import classNames from 'classnames';
+import { useDraggedItemStore } from '@/store/draggedItem';
 import {
   ASSEMBLY_BLOCK_NODE_TYPE,
   CONTENTFUL_COMPONENTS,
-} from '@contentful/experience-builder-core/constants';
-import { useDraggedItemStore } from '@/store/draggedItem';
+} from '@contentful/experiences-core/constants';
+import classNames from 'classnames';
 
-function getStyle(style = {}, snapshot?: DraggableStateSnapshot) {
+function getStyle(style: CSSProperties = {}, snapshot?: DraggableStateSnapshot) {
   if (!snapshot?.isDropAnimating) {
     return style;
   }
+
   return {
     ...style,
     // cannot be 0, but make it super tiny
@@ -59,13 +60,19 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
   return (
     <div
       ref={provided?.innerRef}
+      data-ctfl-dragging-element
       {...wrapperProps}
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
-      className={classNames(styles.DraggableComponent, wrapperProps.className, {
-        [styles.isAssemblyBlock]: isAssemblyBlock,
-        [styles.isDragging]: snapshot?.isDragging,
-      })}
+      className={classNames(
+        styles.DraggableComponent,
+        wrapperProps.className,
+        styles.DraggableClone,
+        {
+          [styles.isAssemblyBlock]: isAssemblyBlock,
+          [styles.isDragging]: snapshot?.isDragging,
+        },
+      )}
       style={getStyle(provided?.draggableProps.style, snapshot)}>
       {elementToRender()}
     </div>

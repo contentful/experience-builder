@@ -1,8 +1,8 @@
-import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
+import type { ComponentDefinition } from '@contentful/experiences-core/types';
 import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 
 export * from './Image';
 
@@ -23,7 +23,7 @@ export const ImageComponentDefinition: ComponentDefinition = {
     'cfImageSizes',
   ],
   tooltip: {
-    description: 'Click and drop onto the canvas to upload an image or bind an existing asset.',
+    description: 'Drop onto the canvas to upload an image.',
   },
   variables: {
     alt: {

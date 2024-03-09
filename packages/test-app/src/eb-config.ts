@@ -1,4 +1,4 @@
-import { defineComponents } from '@contentful/experience-builder';
+import { defineComponents } from '@contentful/experiences-sdk-react';
 import ComponentWithChildren from './components/ComponentWithChildren';
 
 defineComponents([

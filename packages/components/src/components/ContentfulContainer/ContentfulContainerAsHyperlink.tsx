@@ -6,9 +6,9 @@ import type {
   CompositionDataSource,
   CompositionUnboundValues,
   StyleProps,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experiences-core';
 import { combineClasses } from '../../utils/combineClasses';
 
 export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = (EditorMode extends true
@@ -22,7 +22,7 @@ export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = (EditorM
       areEntitiesFetched?: boolean;
       renderDropzone: (
         node: CompositionComponentNode,
-        props?: Record<string, any>
+        props?: Record<string, any>,
       ) => React.ReactNode;
     }
   : {
@@ -36,7 +36,7 @@ export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = (EditorM
 };
 
 export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyperlinkProps> = (
-  props
+  props,
 ) => {
   const { cfHyperlink, cfOpenInNewTab, editorMode, className, children } = props;
 
