@@ -1,11 +1,7 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
-import {
-  EntityStore,
-  isEmptyStructureWithRelativeHeight,
-  isDeepPath,
-} from '@contentful/experiences-core';
+import { EntityStore, isEmptyStructureWithRelativeHeight } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
