@@ -6,7 +6,7 @@ import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema'
 
 /**
  * Base Store for entities
- * Can be extened for the different loading behaviours (editor, production, ..)
+ * Can be extended for the different loading behaviours (editor, production, ..)
  */
 export abstract class EntityStoreBase {
   protected locale: string;
@@ -31,110 +31,29 @@ export abstract class EntityStoreBase {
 
   public getEntryOrAsset(
     linkOrEntryOrAsset: UnresolvedLink<'Entry' | 'Asset'> | Asset | Entry,
-    // link: UnresolvedLink<'Entry' | 'Asset'>,
     path: string,
   ): Entry | Asset | undefined {
-    const resolveFieldset = (
-      unresolvedFieldset: Array<[null, string, string?]>,
-      headEntry: Entry | Asset,
-    ) => {
-      const resolvedFieldset: Array<[Entry | Asset, string, string?]> = [];
-      let entityToResolveFieldsFrom: Entry | Asset = headEntry;
-      for (let i = 0; i < unresolvedFieldset.length; i++) {
-        const isLeaf = i === unresolvedFieldset.length - 1; // with last row, we are not expecting a link, but a value
-        const row = unresolvedFieldset[i];
-        const [, field, _localeQualifier] = row;
-        if (!entityToResolveFieldsFrom) {
-          throw new Error(
-            `Logic Error: Cannot resolve field ${field} of a fieldset as there is no entity to resolve it from.`,
-          );
-        }
-        if (isLeaf) {
-          resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
-          break;
-        }
-
-        const fieldValue = get<string | UnresolvedLink<'Entry' | 'Asset'>>(
-          entityToResolveFieldsFrom,
-          ['fields', field],
-        );
-
-        if (undefined === fieldValue) {
-          return {
-            resolvedFieldset,
-            isFullyResolved: false,
-            reason: `Cannot resolve field Link<${entityToResolveFieldsFrom.sys.type}>(sys.id=${entityToResolveFieldsFrom.sys.id}).fields[${field}] as field value is not defined`,
-          };
-        } else if (isLink(fieldValue)) {
-          const entity = this.getEntityFromLink(fieldValue);
-          if (entity === undefined) {
-            return {
-              resolvedFieldset,
-              isFullyResolved: false,
-              reason: `Field reference Link (sys.id=${fieldValue.sys.id}) not found in the EntityStore, waiting...`,
-            };
-          }
-          resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
-          entityToResolveFieldsFrom = entity; // we move up
-        } else {
-          // TODO: Eg. when someone changed the schema and the field is not a link anymore, what should we return then?
-          throw new Error(
-            `LogicError: Invalid value of a field we consider a reference field. Cannot resolve field ${field} of a fieldset as it is not a link, neither undefined.`,
-          );
-        }
-      }
-      return {
-        resolvedFieldset,
-        isFullyResolved: true,
-      };
-    };
-
     if (isDeepPath(path)) {
-      const headEntity = isLink(linkOrEntryOrAsset)
-        ? this.getEntityFromLink(linkOrEntryOrAsset)
-        : (linkOrEntryOrAsset as Entry | Asset);
-
-      if (undefined === headEntity) {
+      return this.getDeepEntry(linkOrEntryOrAsset, path);
+    }
+    let entity: Entry | Asset;
+    if (isLink(linkOrEntryOrAsset)) {
+      const resolvedEntity =
+        linkOrEntryOrAsset.sys.linkType === 'Entry'
+          ? this.entryMap.get(linkOrEntryOrAsset.sys.id)
+          : this.assetMap.get(linkOrEntryOrAsset.sys.id);
+      if (!resolvedEntity || resolvedEntity.sys.type !== linkOrEntryOrAsset.sys.linkType) {
+        console.warn(
+          `Experience references unresolved entity: ${JSON.stringify(linkOrEntryOrAsset)}`,
+        );
         return;
       }
-      const unresolvedFieldset = parseDataSourcePathIntoFieldset(path);
-
-      // The purpose here is to take this intermediate representation of the deep-path
-      // and to follow the links to the leaf-entity and field
-      // in case we can't follow till the end, we should signal that there was null-reference in the path
-      const { resolvedFieldset, isFullyResolved, reason } = resolveFieldset(
-        unresolvedFieldset,
-        headEntity,
-      );
-      if (!isFullyResolved) {
-        reason &&
-          console.debug(
-            `[exp-builder.sdk::EntityStoreBased::getValueDeep()] Deep path wasn't resolved till leaf node, falling back to undefined, because: ${reason}`,
-          );
-        return undefined;
-      }
-      const [leafEntity] = resolvedFieldset[resolvedFieldset.length - 1];
-      return leafEntity;
+      entity = resolvedEntity;
     } else {
-      let entity: Entry | Asset;
-      if (isLink(linkOrEntryOrAsset)) {
-        const resolvedEntity =
-          linkOrEntryOrAsset.sys.linkType === 'Entry'
-            ? this.entryMap.get(linkOrEntryOrAsset.sys.id)
-            : this.assetMap.get(linkOrEntryOrAsset.sys.id);
-        if (!resolvedEntity || resolvedEntity.sys.type !== linkOrEntryOrAsset.sys.linkType) {
-          console.warn(
-            `Experience references unresolved entity: ${JSON.stringify(linkOrEntryOrAsset)}`,
-          );
-          return;
-        }
-        entity = resolvedEntity;
-      } else {
-        // We already have the complete entity in preview & delivery (resolved by the CMA client)
-        entity = linkOrEntryOrAsset;
-      }
-      return entity;
+      // We already have the complete entity in preview & delivery (resolved by the CMA client)
+      entity = linkOrEntryOrAsset;
     }
+    return entity;
   }
 
   /**
@@ -205,7 +124,7 @@ export abstract class EntityStoreBase {
     if (missing.length) {
       // TODO: move to `debug` utils once it is extracted
       console.warn(`Asset "${id}" is not in the store`);
-      return undefined;
+      return;
     }
 
     return resolved[0] as Asset;
@@ -223,7 +142,7 @@ export abstract class EntityStoreBase {
     if (missing.length) {
       // TODO: move to `debug` utils once it is extracted
       console.warn(`Entry "${id}" is not in the store`);
-      return undefined;
+      return;
     }
 
     return resolved[0] as Entry;
@@ -235,6 +154,92 @@ export abstract class EntityStoreBase {
       throw new Error(`Missing assets in the store (${missing.join(',')})`);
     }
     return resolved as Entry[];
+  }
+
+  private getDeepEntry(
+    linkOrEntryOrAsset: UnresolvedLink<'Entry' | 'Asset'> | Asset | Entry,
+    path: string,
+  ): Entry | Asset | undefined {
+    const resolveFieldset = (
+      unresolvedFieldset: Array<[null, string, string?]>,
+      headEntry: Entry | Asset,
+    ) => {
+      const resolvedFieldset: Array<[Entry | Asset, string, string?]> = [];
+      let entityToResolveFieldsFrom: Entry | Asset = headEntry;
+      for (let i = 0; i < unresolvedFieldset.length; i++) {
+        const isLeaf = i === unresolvedFieldset.length - 1; // with last row, we are not expecting a link, but a value
+        const row = unresolvedFieldset[i];
+        const [, field, _localeQualifier] = row;
+        if (!entityToResolveFieldsFrom) {
+          throw new Error(
+            `Logic Error: Cannot resolve field ${field} of a fieldset as there is no entity to resolve it from.`,
+          );
+        }
+        if (isLeaf) {
+          resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
+          break;
+        }
+
+        const fieldValue = get<string | UnresolvedLink<'Entry' | 'Asset'>>(
+          entityToResolveFieldsFrom,
+          ['fields', field],
+        );
+
+        if (undefined === fieldValue) {
+          return {
+            resolvedFieldset,
+            isFullyResolved: false,
+            reason: `Cannot resolve field Link<${entityToResolveFieldsFrom.sys.type}>(sys.id=${entityToResolveFieldsFrom.sys.id}).fields[${field}] as field value is not defined`,
+          };
+        } else if (isLink(fieldValue)) {
+          const entity = this.getEntityFromLink(fieldValue);
+          if (entity === undefined) {
+            return {
+              resolvedFieldset,
+              isFullyResolved: false,
+              reason: `Field reference Link (sys.id=${fieldValue.sys.id}) not found in the EntityStore, waiting...`,
+            };
+          }
+          resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
+          entityToResolveFieldsFrom = entity; // we move up
+        } else {
+          // TODO: Eg. when someone changed the schema and the field is not a link anymore, what should we return then?
+          throw new Error(
+            `LogicError: Invalid value of a field we consider a reference field. Cannot resolve field ${field} of a fieldset as it is not a link, neither undefined.`,
+          );
+        }
+      }
+      return {
+        resolvedFieldset,
+        isFullyResolved: true,
+      };
+    };
+
+    const headEntity = isLink(linkOrEntryOrAsset)
+      ? this.getEntityFromLink(linkOrEntryOrAsset)
+      : (linkOrEntryOrAsset as Entry | Asset);
+
+    if (undefined === headEntity) {
+      return;
+    }
+    const unresolvedFieldset = parseDataSourcePathIntoFieldset(path);
+
+    // The purpose here is to take this intermediate representation of the deep-path
+    // and to follow the links to the leaf-entity and field
+    // in case we can't follow till the end, we should signal that there was null-reference in the path
+    const { resolvedFieldset, isFullyResolved, reason } = resolveFieldset(
+      unresolvedFieldset,
+      headEntity,
+    );
+    if (!isFullyResolved) {
+      reason &&
+        console.debug(
+          `[exp-builder.sdk::EntityStoreBased::getValueDeep()] Deep path wasn't resolved till leaf node, falling back to undefined, because: ${reason}`,
+        );
+      return;
+    }
+    const [leafEntity] = resolvedFieldset[resolvedFieldset.length - 1];
+    return leafEntity;
   }
 
   private isAsset(entity: Entry | Asset): entity is Asset {
