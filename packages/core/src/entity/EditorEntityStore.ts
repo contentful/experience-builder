@@ -5,18 +5,18 @@ import { RequestEntitiesMessage, RequestedEntitiesMessage } from '../types';
 
 type SendMessage = (
   method: PostMessageMethods.REQUEST_ENTITIES,
-  params: RequestEntitiesMessage
+  params: RequestEntitiesMessage,
 ) => void;
 type Subscribe = (
   method: PostMessageMethods.REQUESTED_ENTITIES,
-  cb: (message: RequestedEntitiesMessage) => void
+  cb: (message: RequestedEntitiesMessage) => void,
 ) => VoidFunction;
 
 /**
  * EntityStore which resolves entries and assets from the editor
  * over the sendMessage and subscribe functions.
  */
-export class EditorEntityStore extends EntityStoreBase {
+export abstract class EditorEntityStore extends EntityStoreBase {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private requestCache = new Map<string, Promise<any>>();
   private sendMessage: SendMessage;
@@ -57,17 +57,17 @@ export class EditorEntityStore extends EntityStoreBase {
   private async fetchEntity(
     type: 'Asset',
     ids: string[],
-    skipCache: boolean
+    skipCache: boolean,
   ): Promise<Array<Asset>>;
   private async fetchEntity(
     type: 'Entry',
     ids: string[],
-    skipCache: boolean
+    skipCache: boolean,
   ): Promise<Array<Entry>>;
   private async fetchEntity(
     type: 'Asset' | 'Entry',
     ids: string[],
-    skipCache: boolean = false
+    skipCache: boolean = false,
   ): Promise<Array<Entry> | Array<Asset>> {
     let missing: string[];
     if (!skipCache) {
@@ -89,6 +89,7 @@ export class EditorEntityStore extends EntityStoreBase {
       return openRequest;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const newPromise = new Promise((resolve, reject) => {
       const unsubscribe = this.subscribe(
         PostMessageMethods.REQUESTED_ENTITIES,
@@ -107,15 +108,15 @@ export class EditorEntityStore extends EntityStoreBase {
             unsubscribe();
           } else {
             console.warn(
-              'Unexpected entities received in REQUESTED_ENTITIES. Ignoring this response.'
+              'Unexpected entities received in REQUESTED_ENTITIES. Ignoring this response.',
             );
           }
-        }
+        },
       );
 
       const timeout = setTimeout(() => {
         reject(
-          new Error(`Request for entities timed out ${this.timeoutDuration}ms} for ${cacheId}`)
+          new Error(`Request for entities timed out ${this.timeoutDuration}ms} for ${cacheId}`),
         );
 
         this.cleanupPromise(cacheId);

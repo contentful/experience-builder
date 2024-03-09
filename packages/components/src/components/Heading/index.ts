@@ -1,8 +1,8 @@
-import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
+import type { ComponentDefinition } from '@contentful/experiences-core/types';
 import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 
 export * from './Heading';
 
@@ -26,7 +26,7 @@ export const HeadingComponentDefinition: ComponentDefinition = {
     'cfBorder',
   ],
   tooltip: {
-    description: 'Click and drop to add a heading for your experience.',
+    description: 'Drop onto the canvas to add a heading.',
   },
   variables: {
     // Built-in style variables with default values changed

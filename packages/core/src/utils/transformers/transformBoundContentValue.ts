@@ -7,7 +7,7 @@ import {
 import { transformRichText } from './transformRichText';
 import { transformMedia } from './media/transformMedia';
 import { EntityStoreBase } from '@/entity';
-import { UnresolvedLink } from 'contentful';
+import { Asset, UnresolvedLink } from 'contentful';
 import { getBoundValue } from './getBoundValue';
 
 export const transformBoundContentValue = (
@@ -17,21 +17,23 @@ export const transformBoundContentValue = (
   resolveDesignValue: ResolveDesignValueType,
   variableName: string,
   variableDefinition: ComponentDefinitionVariable,
-  path: string[],
+  path: string,
 ): BoundComponentPropertyTypes => {
+  const entityOrAsset = entityStore.getEntryOrAsset(binding, path);
+  if (!entityOrAsset) return;
+
   switch (variableDefinition.type) {
     case 'Media':
       return transformMedia(
+        entityOrAsset as Asset,
         variables,
-        entityStore,
-        binding,
         resolveDesignValue,
         variableName,
         path,
       );
     case 'RichText':
-      return transformRichText(entityStore, binding, path);
+      return transformRichText(entityOrAsset, path);
     default:
-      return getBoundValue(entityStore, binding, path);
+      return getBoundValue(entityOrAsset, path);
   }
 };

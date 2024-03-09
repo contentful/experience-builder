@@ -7,17 +7,23 @@ import { assets, entries } from '../test/__fixtures__/entities';
 import { describe, beforeEach, it, expect, vi, Mock } from 'vitest';
 
 const mockClient = {
-  getEntries: vi.fn(),
   getAssets: vi.fn(),
+  getEntries: vi.fn(),
+  withoutLinkResolution: {
+    getEntries: vi.fn(),
+  },
 } as unknown as ContentfulClientApi<undefined>;
 
 describe('fetchExperience', () => {
   beforeEach(() => {
+    // used by fetchExperience()->fetchExperienceEntry()
     (mockClient.getEntries as Mock).mockResolvedValueOnce({
       items: [compositionEntry],
     });
+
+    // used by fetchExperience()->fetchReferencedEntities()
     (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
-    (mockClient.getEntries as Mock).mockResolvedValue({ items: entries });
+    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
   });
 
   it('should call fetchExperienceEntry and fetchReferencedEntities with given parameters', async () => {

@@ -1,4 +1,4 @@
-import type { CompositionVariableValueType } from '@contentful/experience-builder';
+import type { CompositionVariableValueType } from '@contentful/experiences-sdk-react';
 import { useArgs } from '@storybook/manager-api';
 import { useCallback } from 'react';
 
@@ -13,7 +13,7 @@ export function useCompositionCanvasSubscriber() {
     ({ variableName, value }: { variableName: string; value: any }) => {
       updateArgs({ [variableName]: value });
     },
-    [_, updateArgs]
+    [_, updateArgs],
   );
 
   return {

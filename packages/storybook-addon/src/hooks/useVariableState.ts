@@ -1,4 +1,4 @@
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 type UseVariableStateProps = {
@@ -28,7 +28,7 @@ export const useVariableState = ({ variableDefinition, variableName }: UseVariab
       if (!value) return;
       _setValue(value);
     },
-    [variableName]
+    [variableName],
   );
 
   return [value, setValue, initialValue] as const;

@@ -1,5 +1,5 @@
 import { useFetchById, UseFetchByIdArgs } from './useFetchById';
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experiences-core';
 import { renderHook, waitFor } from '@testing-library/react';
 import { compositionEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
@@ -14,14 +14,15 @@ let clientMock: ContentfulClientApi<undefined>;
 describe('useFetchById', () => {
   beforeEach(() => {
     clientMock = {
-      getEntries: jest.fn().mockImplementation((data) => {
-        if ('sys.id[in]' in data) {
-          return Promise.resolve({ items: entries });
-        }
-
+      getEntries: jest.fn().mockImplementation(() => {
         return Promise.resolve({ items: [compositionEntry] });
       }),
       getAssets: jest.fn().mockResolvedValue({ items: assets }),
+      withoutLinkResolution: {
+        getEntries: jest.fn().mockImplementation(() => {
+          return Promise.resolve({ items: entries });
+        }),
+      },
     } as unknown as ContentfulClientApi<undefined>;
   });
 
@@ -67,7 +68,7 @@ describe('useFetchById', () => {
         locale: localeCode,
       });
 
-      expect(clientMock.getEntries).toHaveBeenNthCalledWith(2, {
+      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {
         'sys.id[in]': entries.map((entry) => entry.sys.id),
         locale: localeCode,
       });

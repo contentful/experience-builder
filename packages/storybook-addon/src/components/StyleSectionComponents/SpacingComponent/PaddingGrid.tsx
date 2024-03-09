@@ -2,7 +2,7 @@ import React, { KeyboardEventHandler } from 'react';
 import { styles } from './styles';
 import { css, cx } from 'emotion';
 import { TextInput } from '@contentful/f36-components';
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { useSpacingValue } from './useSpacingValue';
 
 type PaddingGridProps = {
@@ -25,7 +25,7 @@ export const PaddingGrid = ({ padding, onKeyUp, standalone = false }: PaddingGri
     <div
       className={cx(
         standalone ? styles.paddingGridStandalone : styles.paddingGrid,
-        css({ gridArea: 'paddingGrid' })
+        css({ gridArea: 'paddingGrid' }),
       )}>
       <div className={cx(styles.cellWithText, css({ gridArea: 'text' }))}>Padding</div>
       <div className={css({ gridArea: 'paddingTop' })}>

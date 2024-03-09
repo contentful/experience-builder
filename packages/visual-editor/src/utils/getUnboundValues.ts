@@ -2,7 +2,7 @@ import { get } from 'lodash-es';
 import type {
   CompositionUnboundValues,
   CompositionVariableValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 
 export const getUnboundValues = ({
   key,

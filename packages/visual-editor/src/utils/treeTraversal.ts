@@ -2,9 +2,12 @@ type NodeWithChildren<T> = {
   children: T[];
 };
 
+/**
+ * @deprecated in favor of one in 'core' package
+ */
 export function treeVisit<T extends NodeWithChildren<T>>(
   initialNode: T,
-  onNode: (node: T, index: number, depth: number) => void
+  onNode: (node: T, index: number, depth: number) => void,
 ) {
   // returns last used index
   const _treeVisit = (currentNode: T, currentIndex: number, currentDepth: number): number => {
@@ -31,10 +34,11 @@ export function treeVisit<T extends NodeWithChildren<T>>(
  *
  * You can map each node to whatever you want, but shouldn't
  * modify the structure of the tree from the mapping function.
+ * @deprecated in favor of one in 'core' package
  */
 export function treeMap<T extends NodeWithChildren<T>, U>(
   node: T,
-  onNode: (node: T) => Omit<U, 'children'>
+  onNode: (node: T) => Omit<U, 'children'>,
 ): U {
   // Copy children in case of onNode removing it as we pass the node by reference
   const children = [...node.children];

@@ -1,6 +1,6 @@
 {
-  "name": "@contentful/experience-builder-storybook-addon",
-  "version": "0.0.2-alpha.31",
+  "name": "@contentful/experiences-storybook-addon",
+  "version": "0.0.1-alpha.3",
   "description": "Develop Contentful experience builder components with storybook",
   "keywords": [
     "storybook-addons",
@@ -116,8 +116,8 @@
   },
   "dependencies": {
     "@contentful/app-sdk": "^4.23.1",
-    "@contentful/experience-builder": "file:../experience-builder-sdk",
-    "@contentful/experience-builder-components": "file:../components",
+    "@contentful/experiences-components-react": "file:../components",
+    "@contentful/experiences-sdk-react": "file:../experiences-sdk-react",
     "@contentful/f36-components": "^4.52.1",
     "@contentful/f36-tokens": "^4.0.2",
     "@contentful/f36-workbench": "^4.21.0",

@@ -21,11 +21,6 @@
   pointer-events: all;
 }
 
-.cf-single-column-empty {
-  /* position: relative; */
-  border: 2px solid var(--exp-builder-gray400);
-}
-
 .cf-single-column-label {
   pointer-events: none;
   position: absolute;

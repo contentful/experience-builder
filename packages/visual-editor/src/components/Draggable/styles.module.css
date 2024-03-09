@@ -9,6 +9,9 @@
   display: flex;
 }
 
+.DraggableClone {
+  outline: 2px solid var(--exp-builder-blue500);
+}
 .DraggableComponent > * {
   pointer-events: none;
 }
@@ -52,10 +55,6 @@
   background-color: var(--exp-builder-purple600);
 }
 
-/* .DraggableComponent:hover .overlay {
-  opacity: 1;
-} */
-
 .userIsDragging > .overlay,
 .userIsDragging > .overlayContainer {
   opacity: 0 !important;
@@ -81,9 +80,9 @@
 .isAssemblyBlock:hover,
 .isAssemblyBlock:hover div[data-rfd-draggable-id],
 .DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^='assembly'] {
-  outline: 2px dashed var(--exp-builder-purple600) !important;
+  outline: 2px dashed var(--exp-builder-purple600);
 }
 
 .isAssemblyBlock:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
-  outline: 2px solid var(--exp-builder-purple600) !important;
+  outline: 2px solid var(--exp-builder-purple600);
 }

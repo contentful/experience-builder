@@ -1,33 +1,30 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
-import {
-  EntityStore,
-  isEmptyStructureWithRelativeHeight,
-} from '@contentful/experience-builder-core';
+import { EntityStore, isEmptyStructureWithRelativeHeight } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
   EMPTY_CONTAINER_HEIGHT,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import type {
   CompositionNode,
   CompositionVariableValueType,
   ResolveDesignValueType,
   StyleProps,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import {
   buildCfStyles,
   checkIsAssemblyNode,
   transformBoundContentValue,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import {
   Columns,
   ContentfulContainer,
   SingleColumn,
-} from '@contentful/experience-builder-components';
+} from '@contentful/experiences-components-react';
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
@@ -92,7 +89,7 @@ export const CompositionBlock = ({
             acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
             break;
           case 'BoundValue': {
-            const [, uuid, ...path] = variable.path.split('/');
+            const [, uuid] = variable.path.split('/');
             const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
 
             const value = transformBoundContentValue(
@@ -102,7 +99,7 @@ export const CompositionBlock = ({
               resolveDesignValue,
               variableName,
               variableDefinition,
-              path,
+              variable.path,
             );
             acc[variableName] = value;
             break;

@@ -1,5 +1,5 @@
 import { useFetchBySlug, UseFetchBySlugArgs } from './useFetchBySlug';
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experiences-core';
 import { renderHook, waitFor } from '@testing-library/react';
 import { compositionEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
@@ -14,14 +14,17 @@ let clientMock: ContentfulClientApi<undefined>;
 describe('useFetchBySlug', () => {
   beforeEach(() => {
     clientMock = {
-      getEntries: jest.fn().mockImplementation((data) => {
-        if ('sys.id[in]' in data) {
-          return Promise.resolve({ items: entries });
-        }
-
+      getEntries: jest.fn().mockImplementation((_query) => {
+        // { content_type: 'layout', locale: 'en-US', 'fields.slug': 'hello-world' }
         return Promise.resolve({ items: [compositionEntry] });
       }),
       getAssets: jest.fn().mockResolvedValue({ items: assets }),
+      withoutLinkResolution: {
+        getEntries: jest.fn().mockImplementation((_query) => {
+          // { 'sys.id[in]': [ 'entry1', 'entry2' ], locale: 'en-US' }
+          return Promise.resolve({ items: entries });
+        }),
+      },
     } as unknown as ContentfulClientApi<undefined>;
   });
 
@@ -51,6 +54,13 @@ describe('useFetchBySlug', () => {
       },
     });
 
+    expect(result.current).toEqual({
+      error: undefined,
+      experience: undefined,
+      isLoading: true,
+      isEditorMode: false,
+    });
+
     const entityStore = new EntityStore({
       experienceEntry: compositionEntry as unknown as Entry,
       entities: [...entries, ...assets],
@@ -66,7 +76,7 @@ describe('useFetchBySlug', () => {
         locale: localeCode,
       });
 
-      expect(clientMock.getEntries).toHaveBeenNthCalledWith(2, {
+      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {
         'sys.id[in]': entries.map((entry) => entry.sys.id),
         locale: localeCode,
       });
@@ -143,7 +153,8 @@ describe('useFetchBySlug', () => {
 
     await waitFor(() => {
       expect(result.current.error).toBeUndefined();
-      expect(clientMock.getEntries).toHaveBeenCalledTimes(2);
+      expect(clientMock.getEntries).toHaveBeenCalledTimes(1);
+      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenCalledTimes(1);
     });
   });
 

@@ -2,9 +2,9 @@ import React from 'react';
 
 import { render } from '@testing-library/react';
 
-import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
-import type { CompositionNode, ExperienceEntry } from '@contentful/experience-builder-core/types';
+import type { CompositionNode, ExperienceEntry } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
 import { compositionEntry } from '../../../test/__fixtures__/composition';
@@ -13,7 +13,7 @@ import {
   defaultAssemblyId,
   assemblyGeneratedVariableName,
 } from '../../../test/__fixtures__/assembly';
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experiences-core';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 
 const TestComponent: React.FC<{ text: string }> = (props) => {

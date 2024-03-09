@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.9](https://github.com/contentful/experience-builder/compare/@contentful/create-experience-builder@0.0.2-alpha.8...@contentful/create-experience-builder@0.0.2-alpha.9) (2024-03-08)
+
+### Bug Fixes
+
+- address pr comments ([5d91d47](https://github.com/contentful/experience-builder/commit/5d91d47e45130bb56070412b704236bdd5c80a59))
+
+## [0.0.2-alpha.8](https://github.com/contentful/experience-builder/compare/@contentful/create-experience-builder@0.0.2-alpha.7...@contentful/create-experience-builder@0.0.2-alpha.8) (2024-03-04)
+
+**Note:** Version bump only for package @contentful/create-experience-builder
+
 ## [0.0.2-alpha.7](https://github.com/contentful/experience-builder/compare/@contentful/create-experience-builder@0.0.2-alpha.6...@contentful/create-experience-builder@0.0.2-alpha.7) (2024-02-21)
 
 **Note:** Version bump only for package @contentful/create-experience-builder

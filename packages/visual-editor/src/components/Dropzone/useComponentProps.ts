@@ -4,28 +4,30 @@ import {
   calculateNodeDefaultHeight,
   isLinkToAsset,
   isEmptyStructureWithRelativeHeight,
+  isContentfulStructureComponent,
   transformBoundContentValue,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
-  DESIGN_COMPONENT_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
-} from '@contentful/experience-builder-core/constants';
+  CONTENTFUL_COMPONENTS,
+} from '@contentful/experiences-core/constants';
 import type {
   StyleProps,
   CompositionVariableValueType,
   CompositionComponentNode,
   ResolveDesignValueType,
   ComponentRegistration,
-} from '@contentful/experience-builder-core/types';
+  Link,
+} from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
-import { Link } from '@contentful/experience-builder-core/types';
+import { DRAG_PADDING } from '../../types/constants';
 
 type ComponentProps =
   | StyleProps
@@ -37,6 +39,7 @@ type UseComponentProps = {
   areEntitiesFetched: boolean;
   definition: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
+  userIsDragging: boolean;
 };
 
 export const useComponentProps = ({
@@ -45,17 +48,14 @@ export const useComponentProps = ({
   resolveDesignValue,
   renderDropzone,
   definition,
+  userIsDragging,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: ComponentProps = useMemo(() => {
     // Don't enrich the assembly wrapper node with props
-    if (
-      !definition ||
-      node.type === DESIGN_COMPONENT_NODE_TYPE ||
-      node.type === ASSEMBLY_NODE_TYPE
-    ) {
+    if (!definition || node.type === ASSEMBLY_NODE_TYPE) {
       return {};
     }
 
@@ -88,8 +88,7 @@ export const useComponentProps = ({
             [variableName]: designValue,
           };
         } else if (variableMapping.type === 'BoundValue') {
-          // take value from the datasource for both bound and unbound value types
-          const [, uuid, ...path] = variableMapping.path.split('/');
+          const [, uuid, path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
           const variableDefinition = definition.variables[variableName];
@@ -100,7 +99,7 @@ export const useComponentProps = ({
             resolveDesignValue,
             variableName,
             variableDefinition,
-            path,
+            variableMapping.path,
           );
 
           // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
@@ -109,7 +108,7 @@ export const useComponentProps = ({
 
           if (!boundValue) {
             const maybeBoundAsset = areEntitiesFetched
-              ? entityStore.getValue(binding, path.slice(0, -2))
+              ? entityStore.getValue(binding, path.split('/').slice(0, -2))
               : undefined;
 
             if (isLinkToAsset(maybeBoundAsset)) {
@@ -186,6 +185,11 @@ export const useComponentProps = ({
       ...(isEmptyStructureWithRelativeHeight(node.children.length, node?.data.blockId, height) && {
         minHeight: EMPTY_CONTAINER_HEIGHT,
       }),
+      ...(userIsDragging &&
+        isContentfulStructureComponent(node?.data.blockId) &&
+        node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
+          padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),
+        }),
     },
     nodeId: node.data.id,
   });
@@ -212,3 +216,15 @@ export const useComponentProps = ({
 
   return { componentProps, wrapperProps };
 };
+
+const addExtraDropzonePadding = (padding: string) =>
+  padding
+    .split(' ')
+    .map((value) => {
+      if (value.endsWith('px')) {
+        const parsedValue = parseInt(value.replace(/px$/, ''), 10);
+        return (parsedValue < DRAG_PADDING ? DRAG_PADDING : parsedValue) + 'px';
+      }
+      return `${DRAG_PADDING}px`;
+    })
+    .join(' ');

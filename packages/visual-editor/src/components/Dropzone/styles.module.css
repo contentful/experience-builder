@@ -6,7 +6,10 @@
   outline-offset: -2px;
   outline: 2px solid transparent;
   width: 100%;
-  transition: outline 0.2s;
+  background-color: transparent;
+  transition:
+    outline 0.2s,
+    background-color 0.2s;
   pointer-events: all;
 }
 
@@ -22,20 +25,22 @@
   min-height: 80px;
 }
 
-.hitbox {
-  position: absolute;
-  bottom: -10px;
-  width: 100%;
-  z-index: 1;
-  pointer-events: all !important;
-  height: 20px;
-}
-
 .isDragging:not(.isRoot) {
-  outline: 2px dashed var(--exp-builder-blue500);
+  outline: 2px dashed var(--exp-builder-gray300);
 }
 
 .isDestination:not(.isRoot) {
-  outline: 2px dashed var(--exp-builder-blue500);
+  outline: 2px dashed var(--exp-builder-blue400);
   background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
+  z-index: 100;
+}
+
+.hitbox {
+  position: fixed;
+  pointer-events: all !important;
+}
+
+.hitbox {
+  position: fixed;
+  pointer-events: all !important;
 }

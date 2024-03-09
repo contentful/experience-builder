@@ -2,7 +2,7 @@ import React, { CSSProperties, useCallback, useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { Dropzone } from '../Dropzone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
-import type { CompositionTree } from '@contentful/experience-builder-core/types';
+import type { CompositionTree } from '@contentful/experiences-core/types';
 
 import { COMPONENT_LIST_ID, DRAGGABLE_HEIGHT, ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
@@ -11,8 +11,8 @@ import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { DNDProvider } from './DNDProvider';
-import { sendMessage } from '@contentful/experience-builder-core';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import { sendMessage } from '@contentful/experiences-core';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 interface Props {
   onChange?: (data: CompositionTree) => void;
@@ -108,6 +108,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
           <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />
         )}
       </div>
+      <div data-ctfl-hitboxes />
     </DNDProvider>
   );
 };

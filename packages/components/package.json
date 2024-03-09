@@ -1,7 +1,7 @@
 {
-  "name": "@contentful/experience-builder-components",
-  "version": "0.0.2-alpha.31",
-  "description": "A basic set of components to use with Experience Builder",
+  "name": "@contentful/experiences-components-react",
+  "version": "0.0.1-alpha.3",
+  "description": "A basic set of components to use with Studio Experiences",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/components#readme",
   "repository": {
     "type": "git",
@@ -76,7 +76,7 @@
     "react-dom": ">=17.0.0"
   },
   "dependencies": {
-    "@contentful/experience-builder-core": "file:../core",
+    "@contentful/experiences-core": "file:../core",
     "@contentful/rich-text-react-renderer": "^15.17.2",
     "postcss-import": "^15.1.0",
     "style-inject": "^0.3.0"

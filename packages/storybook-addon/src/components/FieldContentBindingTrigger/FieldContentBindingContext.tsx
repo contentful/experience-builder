@@ -1,6 +1,6 @@
-import React, { PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
+import React, { PropsWithChildren, useContext, useEffect, useState } from 'react';
 
-import { ComponentDefinition } from '@contentful/experience-builder';
+import { ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { useArgs } from '@storybook/manager-api';
 
 export type UnboundValues = {
