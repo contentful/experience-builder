@@ -61,7 +61,7 @@ export const EmptyContainer = ({ isDragging }: EmptyContainerProps) => {
         />
       </svg>
 
-      <span className={styles.label}>Add elements to begin</span>
+      <span className={styles.label}>Add components to begin</span>
     </div>
   );
 };
