@@ -1,8 +1,8 @@
 import { defineDesignTokens } from '@contentful/experiences-core';
 import type {
   ComponentRegistration,
-  CompositionDataSource,
-  CompositionUnboundValues,
+  ExperienceDataSource,
+  ExperienceUnboundValues,
   DesignTokensDefinition,
 } from '@contentful/experiences-core/types';
 import { create } from 'zustand';
@@ -15,13 +15,13 @@ export interface InitEditorParams {
   initialLocale: string;
 }
 export interface EditorStore {
-  dataSource: CompositionDataSource;
+  dataSource: ExperienceDataSource;
   locale: string | null;
   selectedNodeId: string | null;
-  unboundValues: CompositionUnboundValues;
+  unboundValues: ExperienceUnboundValues;
   // updaters
-  setDataSource: (data: CompositionDataSource) => void;
-  setUnboundValues: (values: CompositionUnboundValues) => void;
+  setDataSource: (data: ExperienceDataSource) => void;
+  setUnboundValues: (values: ExperienceUnboundValues) => void;
   setLocale: (locale: string) => void;
   setSelectedNodeId: (id: string) => void;
 

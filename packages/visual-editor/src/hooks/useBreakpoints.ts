@@ -1,7 +1,7 @@
 import type {
   ValuesByBreakpoint,
   Breakpoint,
-  CompositionVariableValueType,
+  PrimitiveValue,
   ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
 import {
@@ -58,10 +58,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   );
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
-    (
-      valuesByBreakpoint: ValuesByBreakpoint,
-      variableName: string,
-    ): CompositionVariableValueType => {
+    (valuesByBreakpoint: ValuesByBreakpoint, variableName: string): PrimitiveValue => {
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,

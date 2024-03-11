@@ -2,9 +2,9 @@
 import React, { RefObject } from 'react';
 
 import type {
-  CompositionComponentNode,
-  CompositionDataSource,
-  CompositionUnboundValues,
+  ExperienceTreeNode,
+  ExperienceDataSource,
+  ExperienceUnboundValues,
   StyleProps,
 } from '@contentful/experiences-core/types';
 
@@ -14,16 +14,13 @@ import { combineClasses } from '../../utils/combineClasses';
 export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = (EditorMode extends true
   ? {
       editorMode?: EditorMode;
-      node: CompositionComponentNode;
-      dataSource?: CompositionDataSource;
-      unboundValues?: CompositionUnboundValues;
+      node: ExperienceTreeNode;
+      dataSource?: ExperienceDataSource;
+      unboundValues?: ExperienceUnboundValues;
       resolveDesignValue?: any;
       entityStore?: RefObject<EntityStore>;
       areEntitiesFetched?: boolean;
-      renderDropzone: (
-        node: CompositionComponentNode,
-        props?: Record<string, any>,
-      ) => React.ReactNode;
+      renderDropzone: (node: ExperienceTreeNode, props?: Record<string, any>) => React.ReactNode;
     }
   : {
       editorMode: EditorMode;

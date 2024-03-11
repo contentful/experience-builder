@@ -16,8 +16,8 @@ import {
 } from '@contentful/experiences-core/constants';
 import type {
   StyleProps,
-  CompositionVariableValueType,
-  CompositionComponentNode,
+  PrimitiveValue,
+  ExperienceTreeNode,
   ResolveDesignValueType,
   ComponentRegistration,
   Link,
@@ -30,12 +30,10 @@ import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 import { DRAG_PADDING } from '../../types/constants';
 
-type ComponentProps =
-  | StyleProps
-  | Record<string, CompositionVariableValueType | Link<'Entry'> | Link<'Asset'>>;
+type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
 type UseComponentProps = {
-  node: CompositionComponentNode;
+  node: ExperienceTreeNode;
   resolveDesignValue: ResolveDesignValueType;
   areEntitiesFetched: boolean;
   definition: ComponentRegistration['definition'];

@@ -148,8 +148,9 @@ export type BindingMapByBlockId = Record<string, BindingMap>;
 
 export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>;
 
-// TODO: add conditional typing magic to reduce the number of optionals
-export type CompositionComponentNode = {
+/** Type of a single node of the experience tree exchanged via postMessage between the SDK and Contentful Web app */
+export type ExperienceTreeNode = {
+  // TODO: add conditional typing magic to reduce the number of optionals
   type:
     | 'block'
     | 'root'
@@ -171,13 +172,18 @@ export type CompositionComponentNode = {
     unboundValues: ExperienceUnboundValues;
     breakpoints: Breakpoint[];
   };
-  children: CompositionComponentNode[];
+  children: ExperienceTreeNode[];
   parentId?: string;
 };
+/** @deprecated use ExperienceTreeNode instead */
+export type CompositionComponentNode = ExperienceTreeNode;
 
-export type CompositionTree = {
-  root: CompositionComponentNode;
+/** Type of the tree data structure exchanged via postMessage between the SDK and Contentful Web app */
+export type ExperienceTree = {
+  root: ExperienceTreeNode;
 };
+/** @deprecated use ExperienceTree instead */
+export type CompositionTree = ExperienceTree;
 
 export type ExternalSDKMode = 'preview' | 'delivery';
 export type InternalSDKMode = ExternalSDKMode | 'editor';
@@ -239,7 +245,7 @@ export type CSSProperties = React.CSSProperties;
 
 export type ContainerStyleVariableName = keyof StyleProps;
 
-export type Composition = {
+export type ExperienceFields = {
   title: string;
   slug: string;
   componentTree: ExperienceComponentTree;
@@ -248,6 +254,9 @@ export type Composition = {
   usedComponents?: ExperienceUsedComponents | Array<ExperienceEntry>; // This will be either an array of Entry links or an array of resolved Experience entries
   componentSettings?: ExperienceComponentSettings;
 };
+
+/** @deprecated use ExperienceFields instead */
+export type Composition = ExperienceFields;
 
 export type RecursiveDesignTokenDefinition = {
   [key: string]: string | RecursiveDesignTokenDefinition;
@@ -264,11 +273,15 @@ export type DesignTokensDefinition = {
   textColor?: Record<string, string>;
 } & RecursiveDesignTokenDefinition;
 
+/** Type of experience entry JSON data structure as returned by CPA/CDA */
 export type ExperienceEntry = {
   sys: Entry['sys'];
-  fields: Composition;
+  fields: ExperienceFields;
   metadata: Entry['metadata'];
 };
+
+/** @deprecated use ExperienceEntry instead */
+export type CompositionEntry = ExperienceEntry;
 
 export interface RawCoordinates {
   left: number;
