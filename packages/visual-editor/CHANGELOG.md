@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.4](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.3...@contentful/experiences-visual-editor-react@0.0.1-alpha.4) (2024-03-12)
+
+### Bug Fixes
+
+- empty state canvas now says add components to begin ([14a39d8](https://github.com/contentful/experience-builder/commit/14a39d82b20c19b8a4bc5466dd74675968930288))
+
 ## [0.0.1-alpha.3](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.2...@contentful/experiences-visual-editor-react@0.0.1-alpha.3) (2024-03-08)
 
 ### Bug Fixes
