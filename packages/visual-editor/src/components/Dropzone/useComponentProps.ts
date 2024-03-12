@@ -125,7 +125,7 @@ export const useComponentProps = ({
         } else {
           const value = getUnboundValues({
             key: variableMapping.key,
-            fallback: variableDefinition.defaultValue,
+            fallback: variableDefinition.defaultValue as CompositionVariableValueType,
             unboundValues: unboundValues || {},
           });
 

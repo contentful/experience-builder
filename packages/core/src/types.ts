@@ -113,14 +113,12 @@ export type ComponentDefinitionVariable<
   T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
 > = ComponentDefinitionVariableBase<T>;
 
-export type ComponentDefinition<
-  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
-> = {
+export type ComponentDefinition = {
   id: string;
   name: string;
   category?: string;
   thumbnailUrl?: string;
-  variables: Record<string, ComponentDefinitionVariable<T>>;
+  variables: Partial<VariableDefinitions> & Record<string, ComponentDefinitionVariable>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
   tooltip?: {

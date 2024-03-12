@@ -6,10 +6,7 @@ import styles from './styles.module.css';
 import { Rect } from '@components/Draggable/canvasToolsUtils';
 import Tooltip from './Tooltip';
 import Placeholder, { PlaceholderParams } from './Placeholder';
-import {
-  ComponentDefinition,
-  ComponentDefinitionVariableType,
-} from '@contentful/experiences-core/types';
+import { ComponentDefinition } from '@contentful/experiences-core/types';
 import useDraggablePosition from '@/hooks/useDraggablePosition';
 import { DraggablePosition } from '@/types/constants';
 import { useDraggedItemStore } from '@/store/draggedItem';
@@ -44,7 +41,7 @@ interface DraggableComponentProps {
   userIsDragging?: boolean;
   style?: CSSProperties;
   isDragDisabled?: boolean;
-  definition: ComponentDefinition<ComponentDefinitionVariableType>;
+  definition: ComponentDefinition;
 }
 
 export const DraggableComponent: React.FC<DraggableComponentProps> = ({
