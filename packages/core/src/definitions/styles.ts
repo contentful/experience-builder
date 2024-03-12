@@ -1,7 +1,7 @@
-import { VariableTypeMap } from '@/types';
 import { DEFAULT_IMAGE_WIDTH } from '@/constants';
+import { VariableDefinitions } from '../types';
 
-export const builtInStyles: Partial<VariableTypeMap> = {
+export const builtInStyles: Partial<VariableDefinitions> = {
   cfVerticalAlignment: {
     validations: {
       in: [
@@ -178,7 +178,7 @@ export const builtInStyles: Partial<VariableTypeMap> = {
   },
 };
 
-export const optionalBuiltInStyles: Partial<VariableTypeMap> = {
+export const optionalBuiltInStyles: Partial<VariableDefinitions> = {
   cfFontSize: {
     displayName: 'Font Size',
     type: 'Text',
@@ -322,7 +322,7 @@ export const optionalBuiltInStyles: Partial<VariableTypeMap> = {
   },
 };
 
-export const containerBuiltInStyles: Partial<VariableTypeMap> = {
+export const containerBuiltInStyles: Partial<VariableDefinitions> = {
   ...builtInStyles,
   cfMaxWidth: {
     displayName: 'Max Width',
@@ -340,7 +340,7 @@ export const containerBuiltInStyles: Partial<VariableTypeMap> = {
   },
 };
 
-export const singleColumnBuiltInStyles: Partial<VariableTypeMap> = {
+export const singleColumnBuiltInStyles: Partial<VariableDefinitions> = {
   cfVerticalAlignment: {
     validations: {
       in: [
@@ -477,7 +477,7 @@ export const singleColumnBuiltInStyles: Partial<VariableTypeMap> = {
   },
 };
 
-export const columnsBuiltInStyles: Partial<VariableTypeMap> = {
+export const columnsBuiltInStyles: Partial<VariableDefinitions> = {
   cfMargin: {
     displayName: 'Margin',
     type: 'Text',

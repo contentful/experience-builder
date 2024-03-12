@@ -111,13 +111,7 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
 
 export type ComponentDefinitionVariable<
   T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
-  // K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
-> =
-  // T extends 'Link'
-  // ? ComponentDefinitionVariableLink
-  // : T extends 'Array'
-  // ? { items: { type: K } } & ComponentDefinitionVariableArray<K>
-  /*:*/ ComponentDefinitionVariableBase<T>;
+> = ComponentDefinitionVariableBase<T>;
 
 export type ComponentDefinition<
   T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
@@ -126,7 +120,7 @@ export type ComponentDefinition<
   name: string;
   category?: string;
   thumbnailUrl?: string;
-  variables: Partial<VariableTypeMap> & Record<string, ComponentDefinitionVariable<T>>;
+  variables: Record<string, ComponentDefinitionVariable<T>>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
   tooltip?: {
@@ -251,52 +245,12 @@ export type StyleProps = {
   cfWrapColumnsCount: string;
 };
 
-export type VariableType = {
-  cfHorizontalAlignment: 'Text';
-  cfVerticalAlignment: 'Text';
-  cfMargin: 'Text';
-  cfPadding: 'Text';
-  cfBackgroundColor: 'Text';
-  cfWidth: 'Text';
-  cfMaxWidth: 'Text';
-  cfHeight: 'Text';
-  cfFlexDirection: 'Text';
-  cfFlexWrap: 'Text';
-  cfBorder: 'Text';
-  cfGap: 'Text';
-  cfBackgroundImageUrl: 'Media';
-  cfBackgroundImageScaling: 'Text';
-  cfBackgroundImageAlignment: 'Text';
-  cfBackgroundTargetSize: 'Text';
-  cfHyperlink: 'Text';
-  cfImageAsset: 'Media';
-  cfImageOptions: 'ImageOptions';
-  cfOpenInNewTab: 'Boolean';
-  cfFontSize: 'Text';
-  cfFontWeight: 'Text';
-  cfLineHeight: 'Text';
-  cfLetterSpacing: 'Text';
-  cfTextColor: 'Text';
-  cfTextAlign: 'Text';
-  cfTextTransform: 'Text';
-  cfTextBold: 'Boolean';
-  cfTextItalic: 'Boolean';
-  cfTextUnderline: 'Boolean';
-  cfColumns: 'Text';
-  cfColumnSpan: 'Text';
-  cfColumnSpanLock: 'Boolean';
-  cfWrapColumns: 'Boolean';
-  cfWrapColumnsCount: 'Text';
-};
-
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic
 export type CSSProperties = React.CSSProperties;
 
 export type ContainerStyleVariableName = keyof StyleProps;
 
-export type VariableTypeMap = {
-  [K in ContainerStyleVariableName]: ComponentDefinitionVariable<VariableType[K]>;
-};
+export type VariableDefinitions = Record<keyof StyleProps, ComponentDefinitionVariable>;
 
 export type Composition = {
   title: string;
