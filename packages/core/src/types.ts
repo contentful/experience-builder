@@ -73,20 +73,6 @@ export type ComponentDefinitionVariableType =
   | 'Object'
   | 'ImageOptions';
 
-type DefaultValue<T> = T extends 'Text'
-  ? string
-  : T extends 'RichText'
-    ? string
-    : T extends 'Number'
-      ? number
-      : T extends 'Boolean'
-        ? boolean
-        : T extends 'ImageOptions'
-          ? ImageOptions
-          : T extends 'Object'
-            ? Record<string, unknown>
-            : unknown;
-
 export type VariableFormats = 'URL'; // | alphaNum | base64 | email | ipAddress
 
 export type ValidationOption<T extends ComponentDefinitionVariableType> = {
@@ -106,19 +92,29 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
   group?: 'style' | 'content';
   description?: string;
   displayName?: string;
-  defaultValue?: DefaultValue<T>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  defaultValue?: string | boolean | number | Record<any, any> | ImageOptions; //todo: fix typings
 }
 
 export type ComponentDefinitionVariable<
   T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
-> = ComponentDefinitionVariableBase<T>;
+  // K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
+> =
+  // T extends 'Link'
+  // ? ComponentDefinitionVariableLink
+  // : T extends 'Array'
+  // ? { items: { type: K } } & ComponentDefinitionVariableArray<K>
+  /*:*/ ComponentDefinitionVariableBase<T>;
 
-export type ComponentDefinition = {
+export type ComponentDefinition<
+  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
+> = {
   id: string;
   name: string;
   category?: string;
   thumbnailUrl?: string;
-  variables: Partial<VariableDefinitions> & Record<string, ComponentDefinitionVariable>;
+  variables: Partial<Record<ContainerStyleVariableName, ComponentDefinitionVariable<T>>> &
+    Record<string, ComponentDefinitionVariable<T>>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
   tooltip?: {
@@ -241,56 +237,6 @@ export type StyleProps = {
   cfColumnSpanLock: boolean;
   cfWrapColumns: boolean;
   cfWrapColumnsCount: string;
-};
-
-type TextVariables =
-  | 'cfHorizontalAlignment'
-  | 'cfVerticalAlignment'
-  | 'cfMargin'
-  | 'cfPadding'
-  | 'cfBackgroundColor'
-  | 'cfWidth'
-  | 'cfMaxWidth'
-  | 'cfHeight'
-  | 'cfFlexDirection'
-  | 'cfFlexWrap'
-  | 'cfBorder'
-  | 'cfGap'
-  | 'cfBackgroundImageScaling'
-  | 'cfBackgroundImageAlignment'
-  | 'cfBackgroundTargetSize'
-  | 'cfHyperlink'
-  | 'cfFontSize'
-  | 'cfFontWeight'
-  | 'cfLineHeight'
-  | 'cfLetterSpacing'
-  | 'cfTextColor'
-  | 'cfTextAlign'
-  | 'cfTextTransform'
-  | 'cfColumns'
-  | 'cfColumnSpan'
-  | 'cfWrapColumnsCount';
-
-type BooleanVariables =
-  | 'cfOpenInNewTab'
-  | 'cfTextBold'
-  | 'cfTextItalic'
-  | 'cfTextUnderline'
-  | 'cfColumnSpanLock'
-  | 'cfWrapColumns';
-
-type MediaVariables = 'cfBackgroundImageUrl' | 'cfImageAsset';
-
-export type VariableDefinitions = {
-  [K in ContainerStyleVariableName]: K extends TextVariables
-    ? ComponentDefinitionVariable<'Text'>
-    : K extends BooleanVariables
-      ? ComponentDefinitionVariable<'Boolean'>
-      : K extends MediaVariables
-        ? ComponentDefinitionVariable<'Media'>
-        : K extends 'cfImageOptions'
-          ? ComponentDefinitionVariable<'ImageOptions'>
-          : unknown;
 };
 
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic

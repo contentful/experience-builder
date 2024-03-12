@@ -3,7 +3,6 @@ import type {
   ComponentRegistration,
   ComponentDefinition,
   ComponentRegistrationOptions,
-  VariableDefinitions,
 } from '@contentful/experiences-core/types';
 import {
   OUTGOING_EVENTS,

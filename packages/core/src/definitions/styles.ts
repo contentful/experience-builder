@@ -1,7 +1,12 @@
 import { DEFAULT_IMAGE_WIDTH } from '@/constants';
-import { VariableDefinitions } from '../types';
+import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../types';
 
-export const builtInStyles: Partial<VariableDefinitions> = {
+export const builtInStyles: Partial<
+  Record<
+    ContainerStyleVariableName,
+    ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media' | 'ImageOptions'>
+  >
+> = {
   cfVerticalAlignment: {
     validations: {
       in: [
@@ -178,7 +183,12 @@ export const builtInStyles: Partial<VariableDefinitions> = {
   },
 };
 
-export const optionalBuiltInStyles: Partial<VariableDefinitions> = {
+export const optionalBuiltInStyles: Partial<
+  Record<
+    ContainerStyleVariableName,
+    ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media' | 'ImageOptions'>
+  >
+> = {
   cfFontSize: {
     displayName: 'Font Size',
     type: 'Text',
@@ -322,7 +332,12 @@ export const optionalBuiltInStyles: Partial<VariableDefinitions> = {
   },
 };
 
-export const containerBuiltInStyles: Partial<VariableDefinitions> = {
+export const containerBuiltInStyles: Partial<
+  Record<
+    ContainerStyleVariableName,
+    ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media' | 'ImageOptions'>
+  >
+> = {
   ...builtInStyles,
   cfMaxWidth: {
     displayName: 'Max Width',
@@ -340,7 +355,12 @@ export const containerBuiltInStyles: Partial<VariableDefinitions> = {
   },
 };
 
-export const singleColumnBuiltInStyles: Partial<VariableDefinitions> = {
+export const singleColumnBuiltInStyles: Partial<
+  Record<
+    ContainerStyleVariableName,
+    ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media' | 'ImageOptions'>
+  >
+> = {
   cfVerticalAlignment: {
     validations: {
       in: [
@@ -477,7 +497,12 @@ export const singleColumnBuiltInStyles: Partial<VariableDefinitions> = {
   },
 };
 
-export const columnsBuiltInStyles: Partial<VariableDefinitions> = {
+export const columnsBuiltInStyles: Partial<
+  Record<
+    ContainerStyleVariableName,
+    ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media' | 'ImageOptions'>
+  >
+> = {
   cfMargin: {
     displayName: 'Margin',
     type: 'Text',

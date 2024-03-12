@@ -9,7 +9,10 @@ import classNames from 'classnames';
 import styles from './styles.module.css';
 import { Rect } from '@components/Draggable/canvasToolsUtils';
 import Tooltip from './Tooltip';
-import { ComponentDefinition } from '@contentful/experiences-core/types';
+import {
+  ComponentDefinition,
+  ComponentDefinitionVariableType,
+} from '@contentful/experiences-core/types';
 
 export type NoWrapDraggableProps = {
   ['data-ctfl-draggable-id']: string;
@@ -38,7 +41,7 @@ type DraggableChildComponentProps = {
   style?: CSSProperties;
   isDragDisabled?: boolean;
   className?: string;
-  definition: ComponentDefinition;
+  definition: ComponentDefinition<ComponentDefinitionVariableType>;
 };
 
 /**
