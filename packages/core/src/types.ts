@@ -71,7 +71,8 @@ export type ComponentDefinitionVariableType =
   | 'Location'
   | 'Media'
   | 'Object'
-  | 'ImageOptions';
+  | 'ImageOptions'
+  | 'BackgroundImageOptions';
 
 export type VariableFormats = 'URL'; // | alphaNum | base64 | email | ipAddress
 
@@ -201,26 +202,11 @@ export type StyleProps = {
   cfFlexWrap: 'nowrap' | 'wrap';
   cfBorder: string;
   cfGap: string;
-  cfBackgroundImageUrl: OptimizedBackgroundImageAsset | string;
-  cfBackgroundImageScaling: 'fit' | 'fill' | 'tile';
-  cfBackgroundImageAlignment:
-    | 'left'
-    | 'right'
-    | 'top'
-    | 'bottom'
-    | 'left top'
-    | 'left center'
-    | 'left bottom'
-    | 'right top'
-    | 'right center'
-    | 'right bottom'
-    | 'center top'
-    | 'center center'
-    | 'center bottom';
-  cfBackgroundTargetSize: string;
   cfHyperlink: string;
   cfImageAsset: OptimizedImageAsset | string;
   cfImageOptions: ImageOptions;
+  cfBackgroundImageUrl: OptimizedBackgroundImageAsset | string;
+  cfBackgroundImageOptions: BackgroundImageOptions;
   cfOpenInNewTab: boolean;
   cfFontSize: string;
   cfFontWeight: string;
@@ -371,5 +357,30 @@ export type ImageOptions = {
   objectFit: ImageObjectFitOption;
   objectPosition: ImageObjectPositionOption;
   quality: string;
-  sizes: string;
+  targetSize: string;
+};
+
+export type BackgroundImageScalingOption = 'fit' | 'fill' | 'tile';
+
+export type BackgroundImageAlignmentOption =
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'left top'
+  | 'left center'
+  | 'left bottom'
+  | 'right top'
+  | 'right center'
+  | 'right bottom'
+  | 'center top'
+  | 'center center'
+  | 'center bottom';
+
+export type BackgroundImageOptions = {
+  format?: string;
+  scaling: BackgroundImageScalingOption;
+  alignment: BackgroundImageAlignmentOption;
+  quality: string;
+  targetSize: string;
 };

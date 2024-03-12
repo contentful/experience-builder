@@ -1,4 +1,10 @@
-import { StyleProps, CSSProperties, OptimizedBackgroundImageAsset } from '@/types';
+import {
+  StyleProps,
+  CSSProperties,
+  OptimizedBackgroundImageAsset,
+  BackgroundImageScalingOption,
+  BackgroundImageAlignmentOption,
+} from '@/types';
 
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
 
@@ -64,29 +70,26 @@ interface CSSPropertiesForBackground extends CSSProperties {
 
 export const transformBackgroundImage = (
   cfBackgroundImageUrl: string | OptimizedBackgroundImageAsset | null | undefined,
-  cfBackgroundImageScaling?: StyleProps['cfBackgroundImageScaling'],
-  cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment'],
+  cfBackgroundImageOptions?: StyleProps['cfBackgroundImageOptions'],
 ): CSSPropertiesForBackground | undefined => {
   const matchBackgroundSize = (
-    backgroundImageScaling?: StyleProps['cfBackgroundImageScaling'],
+    scaling?: BackgroundImageScalingOption,
   ): 'cover' | 'contain' | undefined => {
-    if ('fill' === backgroundImageScaling) return 'cover';
-    if ('fit' === backgroundImageScaling) return 'contain';
+    if ('fill' === scaling) return 'cover';
+    if ('fit' === scaling) return 'contain';
     return undefined;
   };
 
   const matchBackgroundPosition = (
-    cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment'],
+    alignment?: BackgroundImageAlignmentOption,
   ): CSSPropertiesForBackground['backgroundPosition'] | undefined => {
-    if (!cfBackgroundImageAlignment) {
+    if (!alignment) {
       return undefined;
     }
-    if ('string' !== typeof cfBackgroundImageAlignment) {
+    if ('string' !== typeof alignment) {
       return undefined;
     }
-    let [horizontalAlignment, verticalAlignment] = cfBackgroundImageAlignment
-      .trim()
-      .split(/\s+/, 2);
+    let [horizontalAlignment, verticalAlignment] = alignment.trim().split(/\s+/, 2);
 
     // Special case for handling single values
     // for backwards compatibility with single values 'right','left', 'center', 'top','bottom'
@@ -145,9 +148,9 @@ export const transformBackgroundImage = (
   return {
     backgroundImage,
     backgroundImage2: backgroundImageSet,
-    backgroundRepeat: cfBackgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat',
-    backgroundPosition: matchBackgroundPosition(cfBackgroundImageAlignment),
-    backgroundSize: matchBackgroundSize(cfBackgroundImageScaling),
+    backgroundRepeat: cfBackgroundImageOptions?.scaling === 'tile' ? 'repeat' : 'no-repeat',
+    backgroundPosition: matchBackgroundPosition(cfBackgroundImageOptions?.alignment),
+    backgroundSize: matchBackgroundSize(cfBackgroundImageOptions?.scaling),
   };
 };
 
