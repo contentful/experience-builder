@@ -1,4 +1,4 @@
-import { CompositionComponentNode } from '@contentful/experiences-core/types';
+import { ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { generateId } from './generate-id';
 
 interface Params {
@@ -7,7 +7,7 @@ interface Params {
 }
 
 export const createTreeNode = ({ blockId, parentId }: Params) => {
-  const node: CompositionComponentNode = {
+  const node: ExperienceTreeNode = {
     type: 'block',
     data: {
       id: generateId(blockId),

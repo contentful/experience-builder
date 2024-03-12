@@ -1,4 +1,4 @@
-import { CompositionComponentNode } from '@/types';
+import { ExperienceTreeNode } from '@/types';
 import { calculateNodeDefaultHeight } from './stylesUtils';
 import { describe, it, expect } from 'vitest';
 import { CONTENTFUL_COMPONENTS, EMPTY_CONTAINER_HEIGHT } from '@/constants';
@@ -43,7 +43,7 @@ describe('calculateNodeDefaultHeight', () => {
   });
 
   it('should return "100%" when container has a non-container child', () => {
-    const childNode: CompositionComponentNode = {
+    const childNode: ExperienceTreeNode = {
       type: 'block',
       data: {
         id: 'block1',

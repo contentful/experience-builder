@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
-import type { CompositionNode, ExperienceEntry } from '@contentful/experiences-core/types';
+import type { ComponentTreeNode, ExperienceEntry } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
 import { compositionEntry } from '../../../test/__fixtures__/composition';
@@ -52,7 +52,7 @@ describe('CompositionBlock', () => {
   });
 
   it('renders the custom component node', () => {
-    const mockCompositionComponentNode: CompositionNode = {
+    const mockExperienceTreeNode: ComponentTreeNode = {
       definitionId: 'custom-component',
       variables: {
         text: { type: 'UnboundValue', key: 'value1' },
@@ -63,7 +63,7 @@ describe('CompositionBlock', () => {
     // Render the component with the initial text
     render(
       <CompositionBlock
-        node={mockCompositionComponentNode}
+        node={mockExperienceTreeNode}
         locale="en-US"
         entityStore={
           {
@@ -80,7 +80,7 @@ describe('CompositionBlock', () => {
   });
 
   it('renders section node', () => {
-    const sectionNode: CompositionNode = {
+    const sectionNode: ComponentTreeNode = {
       definitionId: CONTENTFUL_COMPONENTS.section.id,
       variables: {},
       children: [],
@@ -99,7 +99,7 @@ describe('CompositionBlock', () => {
   });
 
   it('renders container node', () => {
-    const containerNode: CompositionNode = {
+    const containerNode: ComponentTreeNode = {
       definitionId: CONTENTFUL_COMPONENTS.container.id,
       variables: {},
       children: [],
@@ -142,7 +142,7 @@ describe('CompositionBlock', () => {
       locale: 'en-US',
     });
 
-    const assemblyNode: CompositionNode = {
+    const assemblyNode: ComponentTreeNode = {
       definitionId: defaultAssemblyId,
       variables: {
         [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },

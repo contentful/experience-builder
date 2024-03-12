@@ -3,14 +3,14 @@ import { render } from '@testing-library/react';
 import { EntityStore } from '@contentful/experiences-core';
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
 import type { Experience } from '@contentful/experiences-core/types';
-import { createCompositionEntry } from '../../../test/__fixtures__/composition';
+import { createExperienceEntry } from '../../../test/__fixtures__/composition';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import type { Entry } from 'contentful';
 import { compatibleVersions } from '../../constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
 
 const locale = 'en-US';
-const compositionEntry = createCompositionEntry({
+const compositionEntry = createExperienceEntry({
   schemaVersion: '2023-09-28',
 });
 
@@ -36,7 +36,7 @@ describe('PreviewDeliveryRoot', () => {
   });
 
   it('throws an error if experience the schema version is not compatible', () => {
-    const experienceEntryMock = createCompositionEntry({ schemaVersion: '2023-06-27' });
+    const experienceEntryMock = createExperienceEntry({ schemaVersion: '2023-06-27' });
 
     const entityStore = new EntityStore({
       experienceEntry: experienceEntryMock as unknown as Entry,

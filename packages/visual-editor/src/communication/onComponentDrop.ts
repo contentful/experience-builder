@@ -1,5 +1,5 @@
 import { sendMessage } from '@contentful/experiences-core';
-import { CompositionComponentNode } from '@contentful/experiences-core/types';
+import { ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 export const onComponentDropped = ({
@@ -9,7 +9,7 @@ export const onComponentDropped = ({
   parentType,
   parentId,
 }: {
-  node: CompositionComponentNode;
+  node: ExperienceTreeNode;
   index?: number;
   parentType?: string;
   parentBlockId?: string;

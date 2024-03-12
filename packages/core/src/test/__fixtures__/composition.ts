@@ -1,8 +1,8 @@
 import { CONTENTFUL_COMPONENTS, LATEST_SCHEMA_VERSION } from '@/constants';
-import { Composition, ExperienceEntry, SchemaVersions } from '@/types';
+import { ExperienceEntry, SchemaVersions } from '@/types';
 import { entityIds } from './entities';
 
-const compositionFields: Composition = {
+const compositionFields: ExperienceEntry['fields'] = {
   title: 'Test Composition',
   slug: 'test',
   componentTree: {
@@ -81,16 +81,16 @@ export const compositionEntry: ExperienceEntry = {
     },
   },
   metadata: { tags: [] },
-  fields: compositionFields as Composition,
+  fields: compositionFields as ExperienceEntry['fields'],
 };
 
-type createCompositionEntryArgs = {
+type createExperienceEntryArgs = {
   schemaVersion: SchemaVersions;
 };
 
-export const createCompositionEntry = ({
+export const createExperienceEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
-}: createCompositionEntryArgs): ExperienceEntry => {
+}: createExperienceEntryArgs): ExperienceEntry => {
   return {
     sys: {
       id: 'composition-id',
@@ -176,7 +176,7 @@ export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
 export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = 'assembly-id',
-}: createCompositionEntryArgs & { id: string }) => {
+}: createExperienceEntryArgs & { id: string }) => {
   return {
     sys: {
       id,
