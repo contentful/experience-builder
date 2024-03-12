@@ -15,12 +15,12 @@ import {
   PostMessageMethods,
 } from '@contentful/experiences-core/constants';
 import {
-  CompositionTree,
-  CompositionComponentNode,
-  CompositionComponentPropValue,
+  ExperienceTree,
+  ExperienceTreeNode,
+  ComponentPropertyValue,
   ComponentRegistration,
   Link,
-  CompositionDataSource,
+  ExperienceDataSource,
   ManagementEntity,
 } from '@contentful/experiences-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
@@ -76,7 +76,7 @@ export function useEditorSubscriber() {
    * Also manages "entity status" variables (areEntitiesFetched, isFetchingEntities)
    */
   const fetchMissingEntities = useCallback(
-    async (newDataSource: CompositionDataSource, tree: CompositionTree) => {
+    async (newDataSource: ExperienceDataSource, tree: ExperienceTree) => {
       // if we realize that there's nothing missing and nothing to fill-fetch before we do any async call,
       // then we can simply return and not lock the EntityStore at all.
       const startFetching = () => {
@@ -193,7 +193,7 @@ export function useEditorSubscriber() {
       const { payload } = eventData;
 
       switch (eventData.eventType) {
-        case INCOMING_EVENTS.CompositionUpdated: {
+        case INCOMING_EVENTS.ExperienceUpdated: {
           const {
             tree,
             locale,
@@ -201,12 +201,12 @@ export function useEditorSubscriber() {
             changedValueType,
             assemblies,
           }: {
-            tree: CompositionTree;
+            tree: ExperienceTree;
             assemblies: Link<'Entry'>[];
             locale: string;
             entitiesResolved?: boolean;
-            changedNode?: CompositionComponentNode;
-            changedValueType?: CompositionComponentPropValue['type'];
+            changedNode?: ExperienceTreeNode;
+            changedValueType?: ComponentPropertyValue['type'];
           } = payload;
 
           // Make sure to first store the assemblies before setting the tree and thus triggering a rerender

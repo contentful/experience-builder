@@ -3,13 +3,13 @@ import { compositionEntry } from '../../../test/__fixtures__/composition';
 import { createAssemblyEntry } from '../../../test/__fixtures__/assembly';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
-import type { CompositionNode } from '@contentful/experiences-core/types';
+import type { ComponentTreeNode } from '@contentful/experiences-core/types';
 import { EntityStore } from '@contentful/experiences-core';
 import { resolveAssembly } from './assemblyUtils';
 
 describe('resolveAssembly', () => {
   it('should return the input node when it is not a assembly', () => {
-    const containerNode: CompositionNode = {
+    const containerNode: ComponentTreeNode = {
       definitionId: CONTENTFUL_COMPONENTS.container.id,
       variables: {},
       children: [],
@@ -26,7 +26,7 @@ describe('resolveAssembly', () => {
   });
 
   it('should return the input node when the entity store is undefined', () => {
-    const containerNode: CompositionNode = {
+    const containerNode: ComponentTreeNode = {
       definitionId: CONTENTFUL_COMPONENTS.container.id,
       variables: {},
       children: [],
@@ -40,7 +40,7 @@ describe('resolveAssembly', () => {
   });
 
   it('should return the input node when the corresponding component is not found in the entity store', () => {
-    const assemblyNode: CompositionNode = {
+    const assemblyNode: ComponentTreeNode = {
       definitionId: 'assembly-id',
       variables: {},
       children: [],
@@ -57,7 +57,7 @@ describe('resolveAssembly', () => {
     expect(result).toBe(assemblyNode);
   });
   it('should return a assembly node with children', () => {
-    const assemblyNode: CompositionNode = {
+    const assemblyNode: ComponentTreeNode = {
       definitionId: 'assembly-id',
       variables: {},
       children: [],

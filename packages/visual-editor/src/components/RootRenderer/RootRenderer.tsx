@@ -2,7 +2,7 @@ import React, { CSSProperties, useCallback, useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { Dropzone } from '../Dropzone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
-import type { CompositionTree } from '@contentful/experiences-core/types';
+import type { ExperienceTree } from '@contentful/experiences-core/types';
 
 import { COMPONENT_LIST_ID, DRAGGABLE_HEIGHT, ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
@@ -15,7 +15,7 @@ import { sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 interface Props {
-  onChange?: (data: CompositionTree) => void;
+  onChange?: (data: ExperienceTree) => void;
 }
 
 export const RootRenderer: React.FC<Props> = ({ onChange }) => {

@@ -1,4 +1,4 @@
-import type { CompositionComponentNode } from '@contentful/experiences-core/types';
+import type { ExperienceTreeNode } from '@contentful/experiences-core/types';
 
 type WithCtflProps<Props> = Props & {
   id: string;
@@ -21,7 +21,7 @@ export type ComponentConfig<
   defaultProps?: DefaultProps;
 };
 
-export type ComponentData = CompositionComponentNode;
+export type ComponentData = ExperienceTreeNode;
 
 export interface Dropzone {
   direction: 'horizontal' | 'vertical';

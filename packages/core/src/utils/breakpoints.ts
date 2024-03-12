@@ -1,5 +1,5 @@
 import { getDesignTokenRegistration } from '@/registries';
-import { Breakpoint, CompositionVariableValueType, ValuesByBreakpoint } from '@/types';
+import { Breakpoint, PrimitiveValue, ValuesByBreakpoint } from '@/types';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
 
@@ -21,7 +21,7 @@ const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
 // Remove this helper when upgrading to TypeScript 5.0 - https://github.com/microsoft/TypeScript/issues/48829
 const findLast = <T>(
   array: Array<T>,
-  predicate: Parameters<Array<T>['find']>[0]
+  predicate: Parameters<Array<T>['find']>[0],
 ): T | undefined => {
   return array.reverse().find(predicate);
 };
@@ -44,14 +44,14 @@ export const mediaQueryMatcher = (breakpoints: Breakpoint[]) => {
 
   return [mediaQueryMatchers, mediaQueryMatches] as [
     typeof mediaQueryMatchers,
-    typeof mediaQueryMatches
+    typeof mediaQueryMatches,
   ];
 };
 
 export const getActiveBreakpointIndex = (
   breakpoints: Breakpoint[],
   mediaQueryMatches: Record<string, boolean>,
-  fallbackBreakpointIndex: number
+  fallbackBreakpointIndex: number,
 ) => {
   // The breakpoints are ordered (desktop-first: descending by screen width)
   const breakpointsWithMatches = breakpoints.map(({ id }, index) => ({
@@ -71,7 +71,7 @@ export const getFallbackBreakpointIndex = (breakpoints: Breakpoint[]) => {
   // If there is none, we just take the first one in the list.
   return Math.max(
     breakpoints.findIndex(({ query }) => query === '*'),
-    0
+    0,
   );
 };
 
@@ -93,9 +93,9 @@ export const getValueForBreakpoint = (
   valuesByBreakpoint: ValuesByBreakpoint,
   breakpoints: Breakpoint[],
   activeBreakpointIndex: number,
-  variableName: string
+  variableName: string,
 ) => {
-  const eventuallyResolveDesignTokens = (value: CompositionVariableValueType) => {
+  const eventuallyResolveDesignTokens = (value: PrimitiveValue) => {
     // For some built-in design propertier, we support design tokens
     if (builtInStylesWithDesignTokens.includes(variableName)) {
       return getDesignTokenRegistration(value as string, variableName);

@@ -7,12 +7,7 @@ import {
   transformFill,
   transformGridColumn,
 } from './transformers';
-import {
-  CSSProperties,
-  StyleProps,
-  CompositionVariableValueType,
-  CompositionComponentNode,
-} from '@/types';
+import { CSSProperties, StyleProps, PrimitiveValue, ExperienceTreeNode } from '@/types';
 import { isContentfulStructureComponent } from './components';
 import { EMPTY_CONTAINER_HEIGHT } from '../constants';
 
@@ -25,7 +20,7 @@ export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeI
       (acc, [key, value]) =>
         `${acc}
         ${toCSSAttribute(key)}: ${value};`,
-      ''
+      '',
     );
 
   const className = `cfstyles-${nodeId ? nodeId : md5(stylesStr)}`;
@@ -79,7 +74,7 @@ export const buildCfStyles = ({
     ...transformBackgroundImage(
       cfBackgroundImageUrl,
       cfBackgroundImageScaling,
-      cfBackgroundImageAlignment
+      cfBackgroundImageAlignment,
     ),
     fontSize: cfFontSize,
     fontWeight: cfTextBold ? 'bold' : cfFontWeight,
@@ -104,8 +99,8 @@ export const calculateNodeDefaultHeight = ({
   value,
 }: {
   blockId?: string;
-  children: CompositionComponentNode['children'];
-  value: CompositionVariableValueType;
+  children: ExperienceTreeNode['children'];
+  value: PrimitiveValue;
 }) => {
   if (!blockId || !isContentfulStructureComponent(blockId) || value !== 'auto') {
     return value;
