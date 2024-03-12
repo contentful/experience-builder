@@ -1,4 +1,4 @@
-import { Schema_2023_09_28 } from './schemas';
+import { Schema_2023_09_28, ComponentDefinitionSchema } from './schemas';
 import {
   ContentfulErrorDetails,
   zodToContentfulError,
@@ -24,7 +24,7 @@ type ValidatorReturnValue = {
  */
 export const validateExperienceFields = (
   experience: any,
-  schemaVersionOverride?: SchemaVersions
+  schemaVersionOverride?: SchemaVersions,
 ): ValidatorReturnValue => {
   let schemaVersion;
   if (experience.fields.componentTree) {
@@ -66,4 +66,8 @@ export const validateExperienceFields = (
     };
   }
   return { success: true };
+};
+
+export const validateComponentRegistration = (registration) => {
+  return ComponentDefinitionSchema.safeParse(registration);
 };
