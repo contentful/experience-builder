@@ -20,6 +20,7 @@ import {
   columnsDefinition,
   singleColumnDefinition,
 } from '@contentful/experiences-core';
+import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
 
@@ -165,6 +166,17 @@ export const sendRegisteredComponentsMessage = () => {
   });
 };
 
+export const runRegisteredComponentValidations = () => {
+  Array.from(componentRegistry.values()).map(({ definition }) => {
+    const validation = validateComponentDefinition(definition);
+    if (!validation.success) {
+      throw new Error(
+        `Invalid component definition for component '${definition.name}'. Failed with errors: \n${JSON.stringify(validation.errors, null, 2)}`,
+      );
+    }
+  });
+};
+
 export const sendConnectedEventWithRegisteredComponents = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
@@ -201,6 +213,7 @@ export const defineComponents = (
   for (const registration of componentRegistrations) {
     // Fill definitions with fallbacks values
     const enrichedComponentRegistration = enrichComponentDefinition(registration);
+
     componentRegistry.set(
       enrichedComponentRegistration.definition.id,
       enrichedComponentRegistration,

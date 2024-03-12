@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { SchemaVersions } from '../schemaVersions';
+import { DefinitionPropertyTypeSchema, DefinitionPropertyKeySchema } from '../componentDefinition';
 
 const uuidKeySchema = z
   .string()
@@ -31,17 +32,6 @@ const PrimitiveValueSchema = z.union([
   z.number(),
   z.record(z.any(), z.any()),
   z.undefined(),
-]);
-
-export const ComponentDefinitionPropertyTypeSchema = z.enum([
-  'Text',
-  'RichText',
-  'Number',
-  'Date',
-  'Boolean',
-  'Location',
-  'Media',
-  'Object',
 ]);
 
 const ValuesByBreakpointSchema = z.record(z.lazy(() => PrimitiveValueSchema));
@@ -98,7 +88,7 @@ const UnboundValuesSchema = z.record(
 
 // Use helper schema to define a recursive schema with its type correctly below
 const BaseComponentTreeNodeSchema = z.object({
-  definitionId: z.string(),
+  definitionId: DefinitionPropertyKeySchema,
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
 });
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
@@ -113,7 +103,7 @@ const ComponentSettingsSchema = z.object({
     z.string().regex(/^[a-zA-Z0-9-_]{1,54}$/), // Here the key is <variableName>_<nanoidId> so we need to allow for a longer length
     z.object({
       displayName: z.string().optional(),
-      type: ComponentDefinitionPropertyTypeSchema,
+      type: DefinitionPropertyTypeSchema,
       defaultValue: PrimitiveValueSchema.or(ComponentPropertyValueSchema).optional(),
       description: z.string().optional(),
       group: z.string().optional(),
