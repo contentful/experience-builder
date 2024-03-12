@@ -36,12 +36,6 @@
 }
 
 .isDestination:not(.isRoot):before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
   transition: outline 0.2s, background-color 0.2s;
   outline: 2px dashed var(--exp-builder-blue400);
   background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
