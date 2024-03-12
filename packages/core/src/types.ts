@@ -243,12 +243,60 @@ export type StyleProps = {
   cfWrapColumnsCount: string;
 };
 
+type TextVariables =
+  | 'cfHorizontalAlignment'
+  | 'cfVerticalAlignment'
+  | 'cfMargin'
+  | 'cfPadding'
+  | 'cfBackgroundColor'
+  | 'cfWidth'
+  | 'cfMaxWidth'
+  | 'cfHeight'
+  | 'cfFlexDirection'
+  | 'cfFlexWrap'
+  | 'cfBorder'
+  | 'cfGap'
+  | 'cfBackgroundImageScaling'
+  | 'cfBackgroundImageAlignment'
+  | 'cfBackgroundTargetSize'
+  | 'cfHyperlink'
+  | 'cfFontSize'
+  | 'cfFontWeight'
+  | 'cfLineHeight'
+  | 'cfLetterSpacing'
+  | 'cfTextColor'
+  | 'cfTextAlign'
+  | 'cfTextTransform'
+  | 'cfColumns'
+  | 'cfColumnSpan'
+  | 'cfWrapColumnsCount';
+
+type BooleanVariables =
+  | 'cfOpenInNewTab'
+  | 'cfTextBold'
+  | 'cfTextItalic'
+  | 'cfTextUnderline'
+  | 'cfColumnSpanLock'
+  | 'cfWrapColumns';
+
+type MediaVariables = 'cfBackgroundImageUrl' | 'cfImageAsset';
+
+export type VariableDefinitions = {
+  [K in ContainerStyleVariableName]: K extends TextVariables
+    ? ComponentDefinitionVariable<'Text'>
+    : K extends BooleanVariables
+      ? ComponentDefinitionVariable<'Boolean'>
+      : K extends MediaVariables
+        ? ComponentDefinitionVariable<'Media'>
+        : K extends 'cfImageOptions'
+          ? ComponentDefinitionVariable<'ImageOptions'>
+          : unknown;
+};
+
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic
 export type CSSProperties = React.CSSProperties;
 
 export type ContainerStyleVariableName = keyof StyleProps;
-
-export type VariableDefinitions = Record<keyof StyleProps, ComponentDefinitionVariable>;
 
 export type Composition = {
   title: string;
