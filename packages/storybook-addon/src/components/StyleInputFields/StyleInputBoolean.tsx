@@ -1,7 +1,7 @@
 import { ComponentDefinitionVariableBase } from '@contentful/experiences-sdk-react/dist/types';
 import { FormControl, Switch } from '@contentful/f36-components';
 import { css } from 'emotion';
-import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
+import { useExperienceCanvasSubscriber } from '@/context/useExperienceCanvasSubscriber';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 
@@ -19,7 +19,7 @@ const styles = {
 
 export const StyleInputBoolean = ({ name, displayName, defaultValue }: StyleInputBooleanProps) => {
   const [value, setValue] = useState<boolean>(false);
-  const { onDesignValueChanged } = useCompositionCanvasSubscriber();
+  const { onDesignValueChanged } = useExperienceCanvasSubscriber();
 
   const handleSwitchChange = (value: boolean) => {
     setValue(value);

@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Grid, Select, Text, TextInput } from '@contentful/f36-components';
 import { useVariableState } from '@/hooks/useVariableState';
 import { styles } from './styles';
-import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
+import { useExperienceCanvasSubscriber } from '@/context/useExperienceCanvasSubscriber';
 import { EMPTY_CONTAINER_HEIGHT } from '@contentful/experiences-core/constants';
 
 const heightVariableName = 'cfHeight';
@@ -67,7 +67,7 @@ export const SizeSelector = ({ variableName, variableDefinition, label }: SizeSe
     return valueFromState;
   }, [valueFromState, variableName]);
 
-  const { onDesignValueChanged } = useCompositionCanvasSubscriber();
+  const { onDesignValueChanged } = useExperienceCanvasSubscriber();
 
   const selectedOption: SizingOptions | undefined = useMemo(() => {
     if (value === 'fill') {

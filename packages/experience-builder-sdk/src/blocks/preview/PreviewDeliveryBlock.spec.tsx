@@ -5,9 +5,9 @@ import { render } from '@testing-library/react';
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
 import type { ComponentTreeNode, ExperienceEntry } from '@contentful/experiences-core/types';
-import { CompositionBlock } from './CompositionBlock';
+import { PreviewDeliveryBlock } from './PreviewDeliveryBlock';
 import type { Entry } from 'contentful';
-import { compositionEntry } from '../../../test/__fixtures__/composition';
+import { experienceEntry as experienceEntryFixture } from '../../../test/__fixtures__/experience';
 import {
   createAssemblyEntry,
   defaultAssemblyId,
@@ -20,7 +20,7 @@ const TestComponent: React.FC<{ text: string }> = (props) => {
   return <div {...props}>{props.text}</div>;
 };
 
-describe('CompositionBlock', () => {
+describe('PreviewDeliveryBlock', () => {
   const emptyEntityStore = {
     breakpoints: [],
     dataSource: {},
@@ -62,7 +62,7 @@ describe('CompositionBlock', () => {
 
     // Render the component with the initial text
     render(
-      <CompositionBlock
+      <PreviewDeliveryBlock
         node={mockExperienceTreeNode}
         locale="en-US"
         entityStore={
@@ -87,7 +87,7 @@ describe('CompositionBlock', () => {
     };
 
     const { getByTestId } = render(
-      <CompositionBlock
+      <PreviewDeliveryBlock
         node={sectionNode}
         locale="en-US"
         entityStore={emptyEntityStore}
@@ -106,7 +106,7 @@ describe('CompositionBlock', () => {
     };
 
     const { getByTestId } = render(
-      <CompositionBlock
+      <PreviewDeliveryBlock
         node={containerNode}
         locale="en-US"
         entityStore={emptyEntityStore}
@@ -124,9 +124,9 @@ describe('CompositionBlock', () => {
       schemaVersion: '2023-09-28',
     });
     const experienceEntry = {
-      ...compositionEntry,
+      ...experienceEntryFixture,
       fields: {
-        ...compositionEntry.fields,
+        ...experienceEntryFixture.fields,
         usedComponents: [assemblyEntry],
         unboundValues: {
           [unboundValueKey]: {
@@ -151,7 +151,7 @@ describe('CompositionBlock', () => {
     };
 
     const { getByTestId, getByText } = render(
-      <CompositionBlock
+      <PreviewDeliveryBlock
         node={assemblyNode}
         locale="en-US"
         entityStore={entityStore}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
-import { CompositionBlock } from './CompositionBlock';
+import { PreviewDeliveryBlock } from './PreviewDeliveryBlock';
 import { compatibleVersions } from '../../constants';
 import { useBreakpoints } from '../../hooks';
 
@@ -21,7 +21,7 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
 
   if (!compatibleVersions.includes(entityStore.schemaVersion)) {
     console.warn(
-      `[experiences-sdk-react] Contentful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
+      `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
     return null;
   }
@@ -29,7 +29,7 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
   return (
     <>
       {entityStore.experienceEntryFields.componentTree.children.map((childNode, index) => (
-        <CompositionBlock
+        <PreviewDeliveryBlock
           key={index}
           node={childNode}
           locale={locale}

@@ -14,7 +14,7 @@ import { css } from 'emotion';
 import tokens from '@contentful/f36-tokens';
 import { isEqual } from 'lodash';
 import { ContentBindingPopover } from './ContentBindingPopover';
-import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
+import { useExperienceCanvasSubscriber } from '@/context/useExperienceCanvasSubscriber';
 import { useArgs } from '@storybook/manager-api';
 
 const styles = {
@@ -83,7 +83,7 @@ const FieldContentBindingTriggerWithoutContext = ({
 
   const [args] = useArgs();
 
-  const { onUnboundValuesChanged } = useCompositionCanvasSubscriber();
+  const { onUnboundValuesChanged } = useExperienceCanvasSubscriber();
 
   const isSaveButtonDisabled = useMemo(() => {
     const savedManualValue = args[propKey];

@@ -32,9 +32,9 @@ const RichTextFieldEditor = ({
   value: Document;
   setValue: (doc: Document) => void;
 }) => {
-  const compositionFieldSDK = false;
+  const experienceFieldSDK = false;
 
-  if (!compositionFieldSDK) return <div />;
+  if (!experienceFieldSDK) return <div />;
 
   return null;
 

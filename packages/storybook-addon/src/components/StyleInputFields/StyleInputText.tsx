@@ -1,7 +1,7 @@
 import { ComponentDefinitionVariableBase } from '@contentful/experiences-sdk-react/dist/types';
 import { FormControl, TextInput } from '@contentful/f36-components';
 import { css } from 'emotion';
-import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
+import { useExperienceCanvasSubscriber } from '@/context/useExperienceCanvasSubscriber';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 
@@ -19,7 +19,7 @@ const styles = {
 
 export const StyleInputText = ({ name, displayName, defaultValue }: StyleInputTextProps) => {
   const [value, setValue] = useState<string>('');
-  const { onDesignValueChanged } = useCompositionCanvasSubscriber();
+  const { onDesignValueChanged } = useExperienceCanvasSubscriber();
 
   const handleInputChange = (value: string) => {
     setValue(value);

@@ -1,6 +1,6 @@
 import React from 'react';
 import './button.css';
-import { CompositionComponent } from 'src/types/composition';
+import { ExperienceComponent } from 'src/types/experience';
 
 interface ButtonProps {
   /**
@@ -28,7 +28,7 @@ interface ButtonProps {
 /**
  * Primary UI component for user interaction
  */
-export const Button: CompositionComponent<ButtonProps> = ({
+export const Button: ExperienceComponent<ButtonProps> = ({
   primary = false,
   size = 'medium',
   backgroundColor,

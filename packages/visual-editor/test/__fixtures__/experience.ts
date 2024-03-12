@@ -2,8 +2,8 @@ import type { ExperienceEntry, SchemaVersions } from '@contentful/experiences-co
 import { entityIds } from './entities';
 import { LATEST_SCHEMA_VERSION } from '@contentful/experiences-core/constants';
 
-const compositionFields: ExperienceEntry['fields'] = {
-  title: 'Test Composition',
+const experienceFields: ExperienceEntry['fields'] = {
+  title: 'Test Experience',
   slug: 'test',
   componentTree: {
     children: [
@@ -51,9 +51,9 @@ const compositionFields: ExperienceEntry['fields'] = {
   },
 };
 
-export const compositionEntry: ExperienceEntry = {
+export const experienceEntry: ExperienceEntry = {
   sys: {
-    id: 'composition-id',
+    id: 'experience-id',
     type: 'Entry',
     contentType: {
       sys: {
@@ -81,7 +81,7 @@ export const compositionEntry: ExperienceEntry = {
     },
   },
   metadata: { tags: [] },
-  fields: compositionFields,
+  fields: experienceFields,
 };
 
 type createExperienceEntryArgs = {
@@ -93,7 +93,7 @@ export const createExperienceEntry = ({
 }: createExperienceEntryArgs): ExperienceEntry => {
   return {
     sys: {
-      id: 'composition-id',
+      id: 'experience-id',
       type: 'Entry',
       contentType: {
         sys: {
@@ -122,7 +122,7 @@ export const createExperienceEntry = ({
     },
     metadata: { tags: [] },
     fields: {
-      title: 'Test Composition',
+      title: 'Test Experience',
       slug: 'test',
       componentTree: {
         children: [

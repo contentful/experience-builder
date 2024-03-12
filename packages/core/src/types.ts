@@ -14,7 +14,6 @@ import type {
   PrimitiveValue,
   ExperienceComponentTree,
 } from '@contentful/experiences-validators';
-// TODO: Remove references to 'Composition'
 export type {
   ExperienceDataSource,
   ExperienceUnboundValues,

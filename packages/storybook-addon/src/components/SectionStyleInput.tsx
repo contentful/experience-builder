@@ -5,7 +5,7 @@ import { Button, Flex, Text } from '@contentful/f36-components';
 import { HorizontalRuleIcon, PlusIcon } from '@contentful/f36-icons';
 import { css } from 'emotion';
 import { ContainerStyleVariableName } from '@contentful/experiences-sdk-react/dist/types';
-import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
+import { useExperienceCanvasSubscriber } from '@/context/useExperienceCanvasSubscriber';
 
 const styles = {
   expandButton: css({
@@ -38,7 +38,7 @@ export const SectionStyleInput = ({
   displayName?: string;
   variableDefinition: ComponentDefinitionVariable<'Text'>;
 }) => {
-  const { onDesignValueChanged } = useCompositionCanvasSubscriber();
+  const { onDesignValueChanged } = useExperienceCanvasSubscriber();
 
   const variableSectionMetadata = (SECTION_STYLE_COMPONENT_MAP as any)[variableName] as
     | StyleComponentDefinition

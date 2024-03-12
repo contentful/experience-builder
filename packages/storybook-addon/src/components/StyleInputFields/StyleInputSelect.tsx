@@ -4,7 +4,7 @@ import {
 } from '@contentful/experiences-sdk-react/dist/types';
 import { FormControl, Select } from '@contentful/f36-components';
 import { css } from 'emotion';
-import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
+import { useExperienceCanvasSubscriber } from '@/context/useExperienceCanvasSubscriber';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 
@@ -28,7 +28,7 @@ export const StyleInputSelect = <T extends string | number>({
   options,
 }: StyleInputSelectProps<T>) => {
   const [value, setValue] = useState<string>('');
-  const { onDesignValueChanged } = useCompositionCanvasSubscriber();
+  const { onDesignValueChanged } = useExperienceCanvasSubscriber();
 
   const handleInputChange = (value: string) => {
     setValue(value);

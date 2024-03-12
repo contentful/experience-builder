@@ -3,19 +3,19 @@ import { render } from '@testing-library/react';
 import { EntityStore } from '@contentful/experiences-core';
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
 import type { Experience } from '@contentful/experiences-core/types';
-import { createExperienceEntry } from '../../../test/__fixtures__/composition';
+import { createExperienceEntry } from '../../../test/__fixtures__/experience';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import type { Entry } from 'contentful';
 import { compatibleVersions } from '../../constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
 
 const locale = 'en-US';
-const compositionEntry = createExperienceEntry({
+const experienceEntry = createExperienceEntry({
   schemaVersion: '2023-09-28',
 });
 
 const entityStore = new EntityStore({
-  experienceEntry: compositionEntry as unknown as Entry,
+  experienceEntry: experienceEntry as unknown as Entry,
   entities: [...entries, ...assets],
   locale,
 });
@@ -53,11 +53,11 @@ describe('PreviewDeliveryRoot', () => {
     render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      `[experiences-sdk-react] Contentful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
+      `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
   });
 
-  it('renders the composition block', () => {
+  it('renders the experience block', () => {
     defineComponents([
       {
         component: () => <div data-test-id="component-1">Component 1</div>,

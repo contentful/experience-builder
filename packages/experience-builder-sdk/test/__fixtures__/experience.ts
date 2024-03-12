@@ -1,9 +1,9 @@
-import { CONTENTFUL_COMPONENTS, LATEST_SCHEMA_VERSION } from '@/constants';
-import { ExperienceEntry, SchemaVersions } from '@/types';
+import type { ExperienceEntry, SchemaVersions } from '@contentful/experiences-core/types';
 import { entityIds } from './entities';
+import { LATEST_SCHEMA_VERSION } from '@contentful/experiences-core/constants';
 
-const compositionFields: ExperienceEntry['fields'] = {
-  title: 'Test Composition',
+const experienceFields: ExperienceEntry['fields'] = {
+  title: 'Test experience',
   slug: 'test',
   componentTree: {
     children: [
@@ -51,9 +51,9 @@ const compositionFields: ExperienceEntry['fields'] = {
   },
 };
 
-export const compositionEntry: ExperienceEntry = {
+export const experienceEntry: ExperienceEntry = {
   sys: {
-    id: 'composition-id',
+    id: 'experience-id',
     type: 'Entry',
     contentType: {
       sys: {
@@ -81,7 +81,7 @@ export const compositionEntry: ExperienceEntry = {
     },
   },
   metadata: { tags: [] },
-  fields: compositionFields as ExperienceEntry['fields'],
+  fields: experienceFields,
 };
 
 type createExperienceEntryArgs = {
@@ -93,7 +93,7 @@ export const createExperienceEntry = ({
 }: createExperienceEntryArgs): ExperienceEntry => {
   return {
     sys: {
-      id: 'composition-id',
+      id: 'experience-id',
       type: 'Entry',
       contentType: {
         sys: {
@@ -122,7 +122,7 @@ export const createExperienceEntry = ({
     },
     metadata: { tags: [] },
     fields: {
-      title: 'Test Composition',
+      title: 'Test experience',
       slug: 'test',
       componentTree: {
         children: [
@@ -166,88 +166,6 @@ export const createExperienceEntry = ({
       unboundValues: {
         uuid1: {
           value: 'test',
-        },
-      },
-    },
-  };
-};
-
-export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
-export const createAssemblyEntry = ({
-  schemaVersion = LATEST_SCHEMA_VERSION,
-  id = 'assembly-id',
-}: createExperienceEntryArgs & { id: string }) => {
-  return {
-    sys: {
-      id,
-      type: 'Entry',
-      contentType: {
-        sys: {
-          id: 'layout',
-          type: 'Link',
-          linkType: 'ContentType',
-        },
-      },
-      createdAt: '2023-06-27T00:00:00.000Z',
-      updatedAt: '2023-06-27T00:00:00.000Z',
-      revision: 1,
-      space: {
-        sys: {
-          type: 'Link',
-          linkType: 'Space',
-          id: 'cfexampleSpace',
-        },
-      },
-      environment: {
-        sys: {
-          type: 'Link',
-          linkType: 'Environment',
-          id: 'cfexampleEnvironment',
-        },
-      },
-    },
-    metadata: { tags: [] },
-    fields: {
-      title: 'Test Composition',
-      slug: 'test',
-      componentTree: {
-        children: [
-          {
-            definitionId: CONTENTFUL_COMPONENTS.container.id,
-            variables: {},
-            children: [
-              {
-                definitionId: 'custom-component',
-                variables: {
-                  text: {
-                    key: assemblyGeneratedVariableName,
-                    type: 'ComponentValue',
-                  },
-                },
-                children: [],
-              },
-            ],
-          },
-        ],
-
-        breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
-        schemaVersion,
-      },
-      dataSource: {},
-      unboundValues: {
-        unbound_uuid1Assembly: {
-          value: 'custom component title',
-        },
-      },
-      componentSettings: {
-        variableDefinitions: {
-          [assemblyGeneratedVariableName]: {
-            id: 'text',
-            name: 'Text',
-            type: 'Text',
-            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },
-            required: false,
-          },
         },
       },
     },

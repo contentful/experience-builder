@@ -129,7 +129,7 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfTextUnderline',
   // For backwards compatibility
   // we need to keep those in this constant array
-  // so that omit() in <VisualEditorBlock> and <CompositionBlock>
+  // so that omit() in <VisualEditorBlock> and <PreviewDeliveryBlock>
   // can filter them out and not pass as props
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',

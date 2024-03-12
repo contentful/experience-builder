@@ -48,7 +48,7 @@ export const createAssemblyEntry = ({
     },
     metadata: { tags: [] },
     fields: {
-      title: 'Test Composition',
+      title: 'Test Experience',
       slug: 'test',
       componentTree: {
         children: [

@@ -33,19 +33,19 @@ import {
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
 
-type CompositionBlockProps = {
+type PreviewDeliveryBlockProps = {
   node: ComponentTreeNode;
   locale: string;
   entityStore: EntityStore;
   resolveDesignValue: ResolveDesignValueType;
 };
 
-export const CompositionBlock = ({
+export const PreviewDeliveryBlock = ({
   node: rawNode,
   locale,
   entityStore,
   resolveDesignValue,
-}: CompositionBlockProps) => {
+}: PreviewDeliveryBlockProps) => {
   const isAssembly = useMemo(
     () =>
       checkIsAssemblyNode({
@@ -147,7 +147,7 @@ export const CompositionBlock = ({
     componentRegistration.definition.children === true
       ? node.children.map((childNode: ComponentTreeNode, index) => {
           return (
-            <CompositionBlock
+            <PreviewDeliveryBlock
               node={childNode}
               key={index}
               locale={locale}
