@@ -1,5 +1,5 @@
 import {
-  CompositionComponentNode,
+  ExperienceTreeNode,
   ResolveDesignValueType,
   StyleProps,
 } from '@contentful/experiences-core/types';
@@ -12,10 +12,10 @@ export type AssemblyProps<EditorMode = boolean> = EditorMode extends true
       cfHyperlink?: StyleProps['cfHyperlink'];
       cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
       editorMode?: EditorMode;
-      node: CompositionComponentNode;
+      node: ExperienceTreeNode;
       resolveDesignValue?: ResolveDesignValueType;
       renderDropzone: (
-        node: CompositionComponentNode,
+        node: ExperienceTreeNode,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         props?: Record<string, any>,
       ) => React.ReactNode;

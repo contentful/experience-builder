@@ -1,4 +1,4 @@
-import { CompositionComponentNode } from '@contentful/experiences-core/types';
+import { ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { CSSProperties, SyntheticEvent } from 'react';
 
 interface ColumnsBaseProps {
@@ -10,11 +10,8 @@ interface ColumnsBaseProps {
 interface ColumnsEditorModeProps extends ColumnsBaseProps {
   editorMode: true;
   cfColumns: string;
-  node: CompositionComponentNode;
-  renderDropzone: (
-    node: CompositionComponentNode,
-    props?: Record<string, unknown>,
-  ) => React.ReactNode;
+  node: ExperienceTreeNode;
+  renderDropzone: (node: ExperienceTreeNode, props?: Record<string, unknown>) => React.ReactNode;
 }
 
 interface ColumnsDeliveryModeProps extends ColumnsBaseProps {
@@ -23,11 +20,8 @@ interface ColumnsDeliveryModeProps extends ColumnsBaseProps {
 
 interface SingleColumnEditorModeProps extends ColumnsBaseProps {
   editorMode: true;
-  node: CompositionComponentNode;
-  renderDropzone: (
-    node: CompositionComponentNode,
-    props?: Record<string, unknown>,
-  ) => React.ReactNode;
+  node: ExperienceTreeNode;
+  renderDropzone: (node: ExperienceTreeNode, props?: Record<string, unknown>) => React.ReactNode;
   cfColumnSpan: string;
 
   wrapperClassName: string;

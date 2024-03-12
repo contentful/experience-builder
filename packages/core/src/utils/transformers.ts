@@ -1,11 +1,6 @@
 import { BLOCKS, Document as RichTextDocument } from '@contentful/rich-text-types';
 
-import {
-  StyleProps,
-  CSSProperties,
-  ComponentDefinitionVariable,
-  CompositionVariableValueType,
-} from '@/types';
+import { StyleProps, CSSProperties, ComponentDefinitionVariable, PrimitiveValue } from '@/types';
 import { Link } from 'contentful';
 
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
@@ -147,7 +142,7 @@ export const transformBackgroundImage = (
 };
 
 export const transformContentValue = (
-  value: CompositionVariableValueType | Link<'Asset'>,
+  value: PrimitiveValue | Link<'Asset'>,
   variableDefinition: ComponentDefinitionVariable,
 ) => {
   if (variableDefinition.type === 'RichText') {
@@ -156,9 +151,7 @@ export const transformContentValue = (
   return value;
 };
 
-export const transformRichText = (
-  value: CompositionVariableValueType,
-): RichTextDocument | undefined => {
+export const transformRichText = (value: PrimitiveValue): RichTextDocument | undefined => {
   if (typeof value === 'string') {
     return {
       data: {},

@@ -310,13 +310,6 @@ export const containerBuiltInStyles: Partial<
     description: 'The max-width of the section',
     defaultValue: '1192px',
   },
-  cfMargin: {
-    displayName: 'Margin',
-    type: 'Text',
-    group: 'style',
-    description: 'The margin of the container',
-    defaultValue: '0 Auto 0 Auto',
-  },
 };
 
 export const singleColumnBuiltInStyles: Partial<
@@ -466,7 +459,7 @@ export const columnsBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The margin of the columns',
-    defaultValue: '0 Auto 0 Auto',
+    defaultValue: '0 0 0 0',
   },
   cfWidth: {
     displayName: 'Width',

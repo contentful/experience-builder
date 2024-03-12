@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import type { CompositionComponentNode } from '@contentful/experiences-core/types';
+import type { ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import { useEditorStore } from '@/store/editor';
 import { getElementCoordinates } from '@contentful/experiences-core';
@@ -7,7 +7,7 @@ import { getElementCoordinates } from '@contentful/experiences-core';
  * This hook gets the element co-ordinates of a specified element in the DOM
  * and sends the DOM Rect to the client app
  */
-export const useSelectedInstanceCoordinates = ({ node }: { node: CompositionComponentNode }) => {
+export const useSelectedInstanceCoordinates = ({ node }: { node: ExperienceTreeNode }) => {
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
 
   useEffect(() => {
