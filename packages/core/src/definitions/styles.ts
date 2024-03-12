@@ -1,9 +1,7 @@
-import { ComponentDefinitionVariable, ContainerStyleVariableName } from '@/types';
+import { VariableTypeMap } from '@/types';
 import { DEFAULT_IMAGE_WIDTH } from '@/constants';
 
-export const builtInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
-> = {
+export const builtInStyles: Partial<VariableTypeMap> = {
   cfVerticalAlignment: {
     validations: {
       in: [
@@ -156,6 +154,13 @@ export const builtInStyles: Partial<
     description: 'Align background image to the edges of the container',
     defaultValue: 'left top',
   },
+  cfBackgroundTargetSize: {
+    displayName: 'Background target image width',
+    type: 'Text',
+    group: 'style',
+    description: 'Hint to browser on the expected width of the background image',
+    defaultValue: DEFAULT_IMAGE_WIDTH,
+  },
   cfHyperlink: {
     displayName: 'Hyperlink',
     type: 'Text',
@@ -173,9 +178,7 @@ export const builtInStyles: Partial<
   },
 };
 
-export const optionalBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
-> = {
+export const optionalBuiltInStyles: Partial<VariableTypeMap> = {
   cfFontSize: {
     displayName: 'Font Size',
     type: 'Text',
@@ -211,53 +214,19 @@ export const optionalBuiltInStyles: Partial<
     type: 'Media',
     description: 'Image to display',
   },
-  cfImageFormat: {
-    displayName: 'Image Format',
-    type: 'Text',
+  cfImageOptions: {
+    displayName: 'Image Options',
+    description: 'Experimenting with options for the image component.',
+    type: 'ImageOptions',
     group: 'style',
-    description: 'The format of the image',
-  },
-  cfImageHeight: {
-    displayName: 'Image Height',
-    type: 'Text',
-    group: 'style',
-    description: 'The height of the image',
-    defaultValue: '100%',
-  },
-  cfImageObjectFit: {
-    displayName: 'Image Fit',
-    type: 'Text',
-    group: 'style',
-    description: 'Specify how an image should fit its container',
-    defaultValue: 'none',
-  },
-  cfImageObjectPosition: {
-    displayName: 'Image Position',
-    type: 'Text',
-    group: 'style',
-    description: 'Specifies alignment of the replaced images content object within the its box',
-    defaultValue: 'center center',
-  },
-  cfImageQuality: {
-    displayName: 'Image Sizes',
-    type: 'Text',
-    group: 'style',
-    description: 'Quality of the image (percentage) if the image format supports it',
-    defaultValue: '100',
-  },
-  cfImageSizes: {
-    displayName: 'Image Sizes',
-    type: 'Text',
-    group: 'style',
-    description: 'Hint to browser on the expected width of the image',
-    defaultValue: DEFAULT_IMAGE_WIDTH,
-  },
-  cfImageWidth: {
-    displayName: 'Image Width',
-    type: 'Text',
-    group: 'style',
-    description: 'The width of the image',
-    defaultValue: DEFAULT_IMAGE_WIDTH,
+    defaultValue: {
+      width: DEFAULT_IMAGE_WIDTH,
+      height: '100%',
+      objectFit: 'initial',
+      objectPosition: 'center center',
+      quality: '100',
+      sizes: DEFAULT_IMAGE_WIDTH,
+    },
   },
   cfLineHeight: {
     displayName: 'Line Height',
@@ -353,16 +322,7 @@ export const optionalBuiltInStyles: Partial<
   },
 };
 
-export const sectionBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
-> = {
-  ...builtInStyles,
-  cfImageSizes: optionalBuiltInStyles.cfImageSizes,
-};
-
-export const containerBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
-> = {
+export const containerBuiltInStyles: Partial<VariableTypeMap> = {
   ...builtInStyles,
   cfMaxWidth: {
     displayName: 'Max Width',
@@ -378,12 +338,9 @@ export const containerBuiltInStyles: Partial<
     description: 'The margin of the container',
     defaultValue: '0 Auto 0 Auto',
   },
-  cfImageSizes: optionalBuiltInStyles.cfImageSizes,
 };
 
-export const singleColumnBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
-> = {
+export const singleColumnBuiltInStyles: Partial<VariableTypeMap> = {
   cfVerticalAlignment: {
     validations: {
       in: [
@@ -518,12 +475,9 @@ export const singleColumnBuiltInStyles: Partial<
     defaultValue: false,
     group: 'style',
   },
-  cfImageSizes: optionalBuiltInStyles.cfImageSizes,
 };
 
-export const columnsBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
-> = {
+export const columnsBuiltInStyles: Partial<VariableTypeMap> = {
   cfMargin: {
     displayName: 'Margin',
     type: 'Text',
@@ -624,5 +578,4 @@ export const columnsBuiltInStyles: Partial<
     defaultValue: '2',
     group: 'style',
   },
-  cfImageSizes: optionalBuiltInStyles.cfImageSizes,
 };

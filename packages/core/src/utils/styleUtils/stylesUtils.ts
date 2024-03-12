@@ -60,10 +60,7 @@ export const buildCfStyles = ({
   cfBackgroundImageScaling,
   cfFontSize,
   cfFontWeight,
-  cfImageHeight,
-  cfImageObjectFit,
-  cfImageObjectPosition,
-  cfImageWidth,
+  cfImageOptions,
   cfLineHeight,
   cfLetterSpacing,
   cfTextColor,
@@ -78,8 +75,8 @@ export const buildCfStyles = ({
     margin: cfMargin,
     padding: cfPadding,
     backgroundColor: cfBackgroundColor,
-    width: transformWidthSizing({ value: cfWidth || cfImageWidth, cfMargin }),
-    height: transformFill(cfHeight || cfImageHeight),
+    width: transformWidthSizing({ value: cfWidth || cfImageOptions?.width, cfMargin }),
+    height: transformFill(cfHeight || cfImageOptions?.height),
     maxWidth: cfMaxWidth,
     ...transformGridColumn(cfColumnSpan),
     ...transformBorderStyle(cfBorder),
@@ -102,8 +99,8 @@ export const buildCfStyles = ({
     textTransform: cfTextTransform,
     textDecoration: cfTextUnderline ? 'underline' : 'none',
     boxSizing: 'border-box',
-    objectFit: cfImageObjectFit,
-    objectPosition: cfImageObjectPosition,
+    objectFit: cfImageOptions?.objectFit,
+    objectPosition: cfImageOptions?.objectPosition,
   };
 };
 /**

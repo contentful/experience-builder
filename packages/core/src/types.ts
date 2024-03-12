@@ -70,7 +70,22 @@ export type ComponentDefinitionVariableType =
   | 'Boolean'
   | 'Location'
   | 'Media'
-  | 'Object';
+  | 'Object'
+  | 'ImageOptions';
+
+type DefaultValue<T> = T extends 'Text'
+  ? string
+  : T extends 'RichText'
+    ? string
+    : T extends 'Number'
+      ? number
+      : T extends 'Boolean'
+        ? boolean
+        : T extends 'ImageOptions'
+          ? ImageOptions
+          : T extends 'Object'
+            ? Record<string, unknown>
+            : unknown;
 
 export type VariableFormats = 'URL'; // | alphaNum | base64 | email | ipAddress
 
@@ -91,8 +106,7 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
   group?: 'style' | 'content';
   description?: string;
   displayName?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  defaultValue?: string | boolean | number | Record<any, any>; //todo: fix typings
+  defaultValue?: DefaultValue<T>;
 }
 
 export type ComponentDefinitionVariable<
@@ -112,8 +126,7 @@ export type ComponentDefinition<
   name: string;
   category?: string;
   thumbnailUrl?: string;
-  variables: Partial<Record<ContainerStyleVariableName, ComponentDefinitionVariable<T>>> &
-    Record<string, ComponentDefinitionVariable<T>>;
+  variables: Partial<VariableTypeMap> & Record<string, ComponentDefinitionVariable<T>>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
   tooltip?: {
@@ -216,28 +229,10 @@ export type StyleProps = {
     | 'center top'
     | 'center center'
     | 'center bottom';
+  cfBackgroundTargetSize: string;
   cfHyperlink: string;
   cfImageAsset: OptimizedImageAsset | string;
-  cfImageFormat: string;
-  cfImageHeight: string;
-  cfImageObjectFit: 'none' | 'contain' | 'cover';
-  cfImageObjectPosition:
-    | 'left'
-    | 'right'
-    | 'top'
-    | 'bottom'
-    | 'left top'
-    | 'left center'
-    | 'left bottom'
-    | 'right top'
-    | 'right center'
-    | 'right bottom'
-    | 'center top'
-    | 'center center'
-    | 'center bottom';
-  cfImageQuality: string;
-  cfImageSizes: string;
-  cfImageWidth: string;
+  cfImageOptions: ImageOptions;
   cfOpenInNewTab: boolean;
   cfFontSize: string;
   cfFontWeight: string;
@@ -256,10 +251,52 @@ export type StyleProps = {
   cfWrapColumnsCount: string;
 };
 
+export type VariableType = {
+  cfHorizontalAlignment: 'Text';
+  cfVerticalAlignment: 'Text';
+  cfMargin: 'Text';
+  cfPadding: 'Text';
+  cfBackgroundColor: 'Text';
+  cfWidth: 'Text';
+  cfMaxWidth: 'Text';
+  cfHeight: 'Text';
+  cfFlexDirection: 'Text';
+  cfFlexWrap: 'Text';
+  cfBorder: 'Text';
+  cfGap: 'Text';
+  cfBackgroundImageUrl: 'Media';
+  cfBackgroundImageScaling: 'Text';
+  cfBackgroundImageAlignment: 'Text';
+  cfBackgroundTargetSize: 'Text';
+  cfHyperlink: 'Text';
+  cfImageAsset: 'Media';
+  cfImageOptions: 'ImageOptions';
+  cfOpenInNewTab: 'Boolean';
+  cfFontSize: 'Text';
+  cfFontWeight: 'Text';
+  cfLineHeight: 'Text';
+  cfLetterSpacing: 'Text';
+  cfTextColor: 'Text';
+  cfTextAlign: 'Text';
+  cfTextTransform: 'Text';
+  cfTextBold: 'Boolean';
+  cfTextItalic: 'Boolean';
+  cfTextUnderline: 'Boolean';
+  cfColumns: 'Text';
+  cfColumnSpan: 'Text';
+  cfColumnSpanLock: 'Boolean';
+  cfWrapColumns: 'Boolean';
+  cfWrapColumnsCount: 'Text';
+};
+
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic
 export type CSSProperties = React.CSSProperties;
 
 export type ContainerStyleVariableName = keyof StyleProps;
+
+export type VariableTypeMap = {
+  [K in ContainerStyleVariableName]: ComponentDefinitionVariable<VariableType[K]>;
+};
 
 export type Composition = {
   title: string;
@@ -362,4 +399,31 @@ export type OptimizedBackgroundImageAsset = {
   url: string;
   srcSet?: string[];
   file: AssetFile;
+};
+
+export type ImageObjectFitOption = 'initial' | 'contain' | 'cover' | 'none';
+
+export type ImageObjectPositionOption =
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'left top'
+  | 'left center'
+  | 'left bottom'
+  | 'right top'
+  | 'right center'
+  | 'right bottom'
+  | 'center top'
+  | 'center center'
+  | 'center bottom';
+
+export type ImageOptions = {
+  format?: string;
+  width: string;
+  height: string;
+  objectFit: ImageObjectFitOption;
+  objectPosition: ImageObjectPositionOption;
+  quality: string;
+  sizes: string;
 };
