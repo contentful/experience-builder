@@ -16,21 +16,11 @@ import type {
 } from '@contentful/experiences-validators';
 // TODO: Remove references to 'Composition'
 export type {
-  /** @deprecated the old type name will be replaced by ExperienceDataSource as of v5 */
-  ExperienceDataSource as CompositionDataSource,
   ExperienceDataSource,
-  /** @deprecated the old type name will be replaced by ExperienceUnboundValue as of v5 */
-  ExperienceUnboundValues as CompositionUnboundValues,
   ExperienceUnboundValues,
   ExperienceComponentSettings,
-  /** @deprecated the old type name will be replaced by ComponentPropertyValue as of v5 */
-  ComponentPropertyValue as CompositionComponentPropValue,
   ComponentPropertyValue,
-  /** @deprecated the old type name will be replaced by ExperienceNode as of v5 */
-  ComponentTreeNode as CompositionNode,
   ComponentTreeNode,
-  /** @deprecated the old type name will be replaced by PrimitiveValue as of v5 */
-  PrimitiveValue as CompositionVariableValueType,
   PrimitiveValue,
   ValuesByBreakpoint,
   Breakpoint,
@@ -175,15 +165,10 @@ export type ExperienceTreeNode = {
   children: ExperienceTreeNode[];
   parentId?: string;
 };
-/** @deprecated use ExperienceTreeNode instead */
-export type CompositionComponentNode = ExperienceTreeNode;
-
 /** Type of the tree data structure exchanged via postMessage between the SDK and Contentful Web app */
 export type ExperienceTree = {
   root: ExperienceTreeNode;
 };
-/** @deprecated use ExperienceTree instead */
-export type CompositionTree = ExperienceTree;
 
 export type ExternalSDKMode = 'preview' | 'delivery';
 export type InternalSDKMode = ExternalSDKMode | 'editor';
@@ -255,9 +240,6 @@ export type ExperienceFields = {
   componentSettings?: ExperienceComponentSettings;
 };
 
-/** @deprecated use ExperienceFields instead */
-export type Composition = ExperienceFields;
-
 export type RecursiveDesignTokenDefinition = {
   [key: string]: string | RecursiveDesignTokenDefinition;
 };
@@ -279,9 +261,6 @@ export type ExperienceEntry = {
   fields: ExperienceFields;
   metadata: Entry['metadata'];
 };
-
-/** @deprecated use ExperienceEntry instead */
-export type CompositionEntry = ExperienceEntry;
 
 export interface RawCoordinates {
   left: number;

@@ -7,12 +7,7 @@ import {
   transformFill,
   transformGridColumn,
 } from './transformers';
-import {
-  CSSProperties,
-  StyleProps,
-  CompositionVariableValueType,
-  ExperienceTreeNode,
-} from '@/types';
+import { CSSProperties, StyleProps, PrimitiveValue, ExperienceTreeNode } from '@/types';
 import { isContentfulStructureComponent } from './components';
 import { EMPTY_CONTAINER_HEIGHT } from '../constants';
 
@@ -105,7 +100,7 @@ export const calculateNodeDefaultHeight = ({
 }: {
   blockId?: string;
   children: ExperienceTreeNode['children'];
-  value: CompositionVariableValueType;
+  value: PrimitiveValue;
 }) => {
   if (!blockId || !isContentfulStructureComponent(blockId) || value !== 'auto') {
     return value;
