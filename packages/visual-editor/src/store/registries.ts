@@ -4,15 +4,15 @@ import type {
   Link,
 } from '@contentful/experiences-core/types';
 
-import { ASSEMBLY_DEFAULT_CATEGORY } from '@contentful/experiences-core/constants';
+import { PATTERN_DEFAULT_CATEGORY } from '@contentful/experiences-core/constants';
 
 // Note: During development, the hot reloading might empty this and it
-// stays empty leading to not rendering assemblies. Ideally, this is
+// stays empty leading to not rendering patterns. Ideally, this is
 // integrated into the state machine to keep track of its state.
-export const assembliesRegistry = new Map<string, Link<'Entry'>>([]);
-export const setAssemblies = (assemblies: Link<'Entry'>[]) => {
-  for (const assembly of assemblies) {
-    assembliesRegistry.set(assembly.sys.id, assembly);
+export const patternsRegistry = new Map<string, Link<'Entry'>>([]);
+export const setPatterns = (patterns: Link<'Entry'>[]) => {
+  for (const pattern of patterns) {
+    patternsRegistry.set(pattern.sys.id, pattern);
   }
 };
 
@@ -24,7 +24,7 @@ export const addComponentRegistration = (componentRegistration: ComponentRegistr
   componentRegistry.set(componentRegistration.definition.id, componentRegistration);
 };
 
-export const createAssemblyRegistration = ({
+export const createPatternRegistration = ({
   definitionId,
   definitionName,
   component,
@@ -44,7 +44,7 @@ export const createAssemblyRegistration = ({
     name: definitionName || 'Component',
     variables: {} as ComponentDefinition['variables'],
     children: true,
-    category: ASSEMBLY_DEFAULT_CATEGORY,
+    category: PATTERN_DEFAULT_CATEGORY,
   };
 
   addComponentRegistration({ component, definition });

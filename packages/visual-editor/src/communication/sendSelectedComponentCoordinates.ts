@@ -9,12 +9,12 @@ export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   if (!instanceId) return;
   let selectedElement = document.querySelector(`[data-cf-node-id="${instanceId}"]`);
 
-  let selectedAssemblyChild: Element | null | undefined = undefined;
+  let selectedPatternChild: Element | null | undefined = undefined;
 
   const [rootNodeId, nodeLocation] = instanceId.split('---');
 
   if (nodeLocation) {
-    selectedAssemblyChild = selectedElement;
+    selectedPatternChild = selectedElement;
     selectedElement = document.querySelector(`[data-cf-node-id="${rootNodeId}"]`);
   }
 
@@ -30,8 +30,8 @@ export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   if (selectedElement) {
     sendMessage(OUTGOING_EVENTS.UpdateSelectedComponentCoordinates, {
       selectedNodeCoordinates: getElementCoordinates(selectedElement),
-      selectedAssemblyChildCoordinates: selectedAssemblyChild
-        ? getElementCoordinates(selectedAssemblyChild)
+      selectedPatternChildCoordinates: selectedPatternChild
+        ? getElementCoordinates(selectedPatternChild)
         : null,
       parentCoordinates: parent ? getElementCoordinates(parent) : null,
     });

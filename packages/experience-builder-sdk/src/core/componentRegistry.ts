@@ -8,7 +8,7 @@ import {
   OUTGOING_EVENTS,
   INTERNAL_EVENTS,
   CONTENTFUL_COMPONENTS,
-  ASSEMBLY_DEFAULT_CATEGORY,
+  PATTERN_DEFAULT_CATEGORY,
 } from '@contentful/experiences-core/constants';
 import {
   builtInStyles as builtInStyleDefinitions,
@@ -228,7 +228,7 @@ export const addComponentRegistration = (componentRegistration: ComponentRegistr
   componentRegistry.set(componentRegistration.definition.id, componentRegistration);
 };
 
-export const createAssemblyRegistration = ({
+export const createPatternRegistration = ({
   definitionId,
   definitionName,
   component,
@@ -248,7 +248,7 @@ export const createAssemblyRegistration = ({
     name: definitionName || 'Component',
     variables: {} as ComponentDefinition['variables'],
     children: true,
-    category: ASSEMBLY_DEFAULT_CATEGORY,
+    category: PATTERN_DEFAULT_CATEGORY,
   };
 
   addComponentRegistration({ component, definition });

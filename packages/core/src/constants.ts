@@ -40,6 +40,8 @@ export const INCOMING_EVENTS = {
   UpdatedEntity: 'updatedEntity',
   AssembliesAdded: 'assembliesAdded',
   AssembliesRegistered: 'assembliesRegistered',
+  PatternsAdded: 'patternsAdded',
+  PatternsRegistered: 'patternsRegistered',
   InitEditor: 'initEditor',
   MouseMove: 'mouseMove',
 };
@@ -96,10 +98,18 @@ export const CONTENTFUL_COMPONENTS = {
   },
 };
 
+// @deprecated to be removed once Web app is updated
 export const ASSEMBLY_NODE_TYPE = 'assembly';
+// @deprecated to be removed once Web app is updated
 export const ASSEMBLY_DEFAULT_CATEGORY = 'Assemblies';
+// @deprecated to be removed once Web app is updated
 export const ASSEMBLY_BLOCK_NODE_TYPE = 'assemblyBlock';
+// @deprecated to be removed once Web app is updated
 export const ASSEMBLY_NODE_TYPES = [ASSEMBLY_NODE_TYPE, ASSEMBLY_BLOCK_NODE_TYPE];
+export const PATTERN_NODE_TYPE = 'pattern';
+export const PATTERN_DEFAULT_CATEGORY = 'Patterns';
+export const PATTERN_BLOCK_NODE_TYPE = 'patternBlock';
+export const PATTERN_NODE_TYPES = [PATTERN_NODE_TYPE, PATTERN_BLOCK_NODE_TYPE];
 export const LATEST_SCHEMA_VERSION = '2023-09-28';
 export const CF_STYLE_ATTRIBUTES = [
   'cfHorizontalAlignment',

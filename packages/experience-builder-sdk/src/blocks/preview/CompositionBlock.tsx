@@ -17,10 +17,10 @@ import type {
   ResolveDesignValueType,
   StyleProps,
 } from '@contentful/experiences-core/types';
-import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
+import { createPatternRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import {
   buildCfStyles,
-  checkIsAssemblyNode,
+  checkIsPatternNode,
   transformContentValue,
 } from '@contentful/experiences-core';
 import { useStyleTag } from '../../hooks/useStyleTag';
@@ -30,8 +30,8 @@ import {
   SingleColumn,
 } from '@contentful/experiences-components-react';
 
-import { resolveAssembly } from '../../core/preview/assemblyUtils';
-import { Assembly } from '../../components/Assembly';
+import { resolvePattern } from '../../core/preview/patternUtils';
+import { Pattern } from '../../components/Pattern';
 
 type CompositionBlockProps = {
   node: ComponentTreeNode;
@@ -46,9 +46,9 @@ export const CompositionBlock = ({
   entityStore,
   resolveDesignValue,
 }: CompositionBlockProps) => {
-  const isAssembly = useMemo(
+  const isPattern = useMemo(
     () =>
-      checkIsAssemblyNode({
+      checkIsPatternNode({
         componentId: rawNode.definitionId,
         usedComponents: entityStore.usedComponents,
       }),
@@ -56,29 +56,29 @@ export const CompositionBlock = ({
   );
 
   const node = useMemo(() => {
-    return isAssembly
-      ? resolveAssembly({
+    return isPattern
+      ? resolvePattern({
           node: rawNode,
           entityStore,
         })
       : rawNode;
-  }, [entityStore, isAssembly, rawNode]);
+  }, [entityStore, isPattern, rawNode]);
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.definitionId as string);
 
-    if (isAssembly && !registration) {
-      return createAssemblyRegistration({
+    if (isPattern && !registration) {
+      return createPatternRegistration({
         definitionId: node.definitionId as string,
-        component: Assembly,
+        component: Pattern,
       });
     }
     return registration;
-  }, [isAssembly, node.definitionId]);
+  }, [isPattern, node.definitionId]);
 
   const nodeProps = useMemo(() => {
-    // Don't enrich the assembly wrapper node with props
-    if (!componentRegistration || isAssembly) {
+    // Don't enrich the pattern wrapper node with props
+    if (!componentRegistration || isPattern) {
       return {};
     }
 
@@ -125,7 +125,7 @@ export const CompositionBlock = ({
       }
       return acc;
     }, propMap);
-  }, [componentRegistration, isAssembly, node.variables, resolveDesignValue, entityStore]);
+  }, [componentRegistration, isPattern, node.variables, resolveDesignValue, entityStore]);
 
   const cfStyles = buildCfStyles(nodeProps);
 

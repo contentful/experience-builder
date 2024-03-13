@@ -27,8 +27,8 @@ import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedCo
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { Assembly } from '@contentful/experiences-components-react';
-import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
+import { Pattern } from '@contentful/experiences-components-react';
+import { addComponentRegistration, patternsRegistry, setPatterns } from '@/store/registries';
 import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { useEntityStore } from '@/store/entityStore';
 import SimulateDnD from '@/utils/simulateDnD';
@@ -91,7 +91,7 @@ export function useEditorSubscriber() {
       // Prepare L1 entities and deepReferences
       const entityLinksL1 = [
         ...Object.values(newDataSource),
-        ...assembliesRegistry.values(), // we count assemblies here as "L1 entities", for convenience. Even though they're not headEntities.
+        ...patternsRegistry.values(), // we count patterns here as "L1 entities", for convenience. Even though they're not headEntities.
       ];
       const deepReferences = gatherDeepReferencesFromTree(tree.root, newDataSource);
 
@@ -156,10 +156,7 @@ export function useEditorSubscriber() {
         endFetching();
       }
     },
-    [
-      /* dataSource, */ entityStore,
-      setEntitiesFetched /* setFetchingEntities, assembliesRegistry */,
-    ],
+    [/* dataSource, */ entityStore, setEntitiesFetched /* setFetchingEntities, patternsRegistry */],
   );
 
   useEffect(() => {
@@ -199,20 +196,20 @@ export function useEditorSubscriber() {
             locale,
             changedNode,
             changedValueType,
-            assemblies,
+            patterns,
           }: {
             tree: ExperienceTree;
-            assemblies: Link<'Entry'>[];
+            patterns: Link<'Entry'>[];
             locale: string;
             entitiesResolved?: boolean;
             changedNode?: ExperienceTreeNode;
             changedValueType?: ComponentPropertyValue['type'];
           } = payload;
 
-          // Make sure to first store the assemblies before setting the tree and thus triggering a rerender
-          if (assemblies) {
-            setAssemblies(assemblies);
-            // If the assemblyEntry is not yet fetched, this will be done below by
+          // Make sure to first store the patterns before setting the tree and thus triggering a rerender
+          if (patterns) {
+            setPatterns(patterns);
+            // If the patternEntry is not yet fetched, this will be done below by
             // the imperative calls to fetchMissingEntities.
           }
 
@@ -255,7 +252,7 @@ export function useEditorSubscriber() {
 
           assemblies.forEach((definition) => {
             addComponentRegistration({
-              component: Assembly,
+              component: Pattern,
               definition,
             });
           });
@@ -270,16 +267,51 @@ export function useEditorSubscriber() {
             assemblyDefinition?: ComponentRegistration['definition'];
           } = payload;
           entityStore.updateEntity(assembly);
-          // Using a Map here to avoid setting state and rerending all existing assemblies when a new assembly is added
+          // Using a Map here to avoid setting state and rerending all existing patterns when a new assembly is added
           // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
           // of all bound and unbound values when new values are added
-          assembliesRegistry.set(assembly.sys.id, {
+          patternsRegistry.set(assembly.sys.id, {
             sys: { id: assembly.sys.id, linkType: 'Entry', type: 'Link' },
           } as Link<'Entry'>);
           if (assemblyDefinition) {
             addComponentRegistration({
-              component: Assembly,
+              component: Pattern,
               definition: assemblyDefinition,
+            });
+          }
+
+          break;
+        }
+        case INCOMING_EVENTS.PatternsRegistered: {
+          const { patterns }: { patterns: ComponentRegistration['definition'][] } = payload;
+
+          patterns.forEach((definition) => {
+            addComponentRegistration({
+              component: Pattern,
+              definition,
+            });
+          });
+          break;
+        }
+        case INCOMING_EVENTS.PatternsAdded: {
+          const {
+            pattern,
+            patternDefinition,
+          }: {
+            pattern: ManagementEntity;
+            patternDefinition?: ComponentRegistration['definition'];
+          } = payload;
+          entityStore.updateEntity(pattern);
+          // Using a Map here to avoid setting state and rerending all existing patterns when a new pattern is added
+          // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
+          // of all bound and unbound values when new values are added
+          patternsRegistry.set(pattern.sys.id, {
+            sys: { id: pattern.sys.id, linkType: 'Entry', type: 'Link' },
+          } as Link<'Entry'>);
+          if (patternDefinition) {
+            addComponentRegistration({
+              component: Pattern,
+              definition: patternDefinition,
             });
           }
 

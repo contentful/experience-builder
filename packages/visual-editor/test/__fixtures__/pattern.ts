@@ -1,22 +1,22 @@
 import {
   CONTENTFUL_COMPONENTS,
-  ASSEMBLY_NODE_TYPE,
+  PATTERN_NODE_TYPE,
   LATEST_SCHEMA_VERSION,
 } from '@contentful/experiences-core/constants';
 import type { ExperienceTreeNode, SchemaVersions } from '@contentful/experiences-core/types';
 
-type createAssemblyEntryArgs = {
+type createPatternEntryArgs = {
   schemaVersion: SchemaVersions;
   id: string;
 };
 
-export const defaultAssemblyId = 'assembly-id';
+export const defaultPatternId = 'pattern-id';
 
-export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
-export const createAssemblyEntry = ({
+export const patternGeneratedVariableName = 'text_uuid1Pattern';
+export const createPatternEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
-  id = defaultAssemblyId,
-}: createAssemblyEntryArgs) => {
+  id = defaultPatternId,
+}: createPatternEntryArgs) => {
   return {
     sys: {
       id,
@@ -60,7 +60,7 @@ export const createAssemblyEntry = ({
                 definitionId: 'custom-component',
                 variables: {
                   text: {
-                    key: assemblyGeneratedVariableName,
+                    key: patternGeneratedVariableName,
                     type: 'ComponentValue',
                   },
                 },
@@ -74,17 +74,17 @@ export const createAssemblyEntry = ({
       },
       dataSource: {},
       unboundValues: {
-        unbound_uuid1Assembly: {
+        unbound_uuid1Pattern: {
           value: 'custom component title',
         },
       },
       componentSettings: {
         variableDefinitions: {
-          [assemblyGeneratedVariableName]: {
+          [patternGeneratedVariableName]: {
             id: 'text',
             name: 'Text',
             type: 'Text',
-            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },
+            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Pattern' },
             required: false,
           },
         },
@@ -93,7 +93,7 @@ export const createAssemblyEntry = ({
   };
 };
 
-type createAssemblyNodeArgs = {
+type createPatternNodeArgs = {
   id: string;
   blockId?: string;
   unboundValue?: string;
@@ -101,15 +101,15 @@ type createAssemblyNodeArgs = {
   boundValueKey?: string;
 };
 
-export const createAssemblyNode = ({
+export const createPatternNode = ({
   id,
-  blockId = defaultAssemblyId,
+  blockId = defaultPatternId,
   unboundValue = 'New year Eve',
   unboundValueKey = undefined,
   boundValueKey = undefined,
-}: createAssemblyNodeArgs): ExperienceTreeNode => {
+}: createPatternNodeArgs): ExperienceTreeNode => {
   const node: ExperienceTreeNode = {
-    type: ASSEMBLY_NODE_TYPE,
+    type: PATTERN_NODE_TYPE,
     data: {
       blockId,
       id,
@@ -122,7 +122,7 @@ export const createAssemblyNode = ({
     parentId: 'root',
   };
   if (unboundValueKey) {
-    node.data.props[assemblyGeneratedVariableName] = {
+    node.data.props[patternGeneratedVariableName] = {
       type: 'UnboundValue',
       key: unboundValueKey,
     };
@@ -130,7 +130,7 @@ export const createAssemblyNode = ({
       [unboundValueKey]: { value: unboundValue },
     };
   } else if (boundValueKey) {
-    node.data.props[assemblyGeneratedVariableName] = {
+    node.data.props[patternGeneratedVariableName] = {
       type: 'BoundValue',
       path: `/${boundValueKey}/fields/someFieldId/~locale`,
     };

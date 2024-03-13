@@ -8,7 +8,7 @@ import {
   ComponentDefinition,
 } from '@/types';
 import { Entry } from 'contentful';
-import { ASSEMBLY_DEFAULT_CATEGORY } from '@/constants';
+import { PATTERN_DEFAULT_CATEGORY } from '@/constants';
 
 export const getDataFromTree = (
   tree: ExperienceTree,
@@ -128,7 +128,7 @@ export const generateRandomId = (letterCount: number): string => {
   return times(letterCount, () => ALNUM[random(0, ALNUM.length - 1)]).join('');
 };
 
-export const checkIsAssemblyNode = ({
+export const checkIsPatternNode = ({
   componentId,
   usedComponents,
 }: {
@@ -140,16 +140,22 @@ export const checkIsAssemblyNode = ({
   return usedComponents.some((usedComponent) => usedComponent.sys.id === componentId);
 };
 
-/** @deprecated use `checkIsAssemblyNode` instead. Will be removed with SDK v5. */
-export const checkIsAssembly = checkIsAssemblyNode;
-
 /**
  * This check assumes that the entry is already ensured to be an experience, i.e. the
  * content type of the entry is an experience type with the necessary annotations.
  **/
-export const checkIsAssemblyEntry = (entry: Entry): boolean => {
+export const checkIsPatternEntry = (entry: Entry): boolean => {
   return Boolean(entry.fields?.componentSettings);
 };
 
-export const checkIsAssemblyDefinition = (component?: ComponentDefinition) =>
-  component?.category === ASSEMBLY_DEFAULT_CATEGORY;
+export const checkIsPatternDefinition = (component?: ComponentDefinition) =>
+  component?.category === PATTERN_DEFAULT_CATEGORY;
+
+/** @deprecated use `checkIsPatternNode` instead. */
+export const checkIsAssembly = checkIsPatternNode;
+/** @deprecated use `checkIsPatternNode` instead. */
+export const checkIsAssemblyNode = checkIsPatternNode;
+/** @deprecated use `checkIsPatternEntry` instead. */
+export const checkIsAssemblyEntry = checkIsPatternEntry;
+/** @deprecated use `checkIsPatternDefinition` instead. */
+export const checkIsAssemblyDefinition = checkIsPatternDefinition;

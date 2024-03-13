@@ -16,7 +16,7 @@ import {
 } from '@/utils/treeHelpers';
 import { getTreeDiffs } from '@/utils/getTreeDiff';
 import { treeVisit } from '@/utils/treeTraversal';
-import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
+import { PATTERN_NODE_TYPE } from '@contentful/experiences-core/constants';
 export interface TreeStore {
   tree: ExperienceTree;
   breakpoints: Breakpoint[];
@@ -41,8 +41,8 @@ export interface TreeStore {
   ) => void;
 }
 
-const isAssemblyNode = (node: ExperienceTreeNode) => {
-  return node.type === ASSEMBLY_NODE_TYPE;
+const isPatternNode = (node: ExperienceTreeNode) => {
+  return node.type === PATTERN_NODE_TYPE;
 };
 
 export const useTreeStore = create<TreeStore>((set, get) => ({
@@ -65,7 +65,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
     set(
       produce((draftState: TreeStore) => {
         treeVisit(draftState.tree.root, (node) => {
-          if (isAssemblyNode(node) && node.data.blockId === entityId) {
+          if (isPatternNode(node) && node.data.blockId === entityId) {
             // Cannot use `structuredClone()` as node is probably a Proxy object with weird references
             updateNode(node.data.id, cloneDeepAsPOJO(node), draftState.tree.root);
             return;

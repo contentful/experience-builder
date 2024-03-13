@@ -145,14 +145,22 @@ export type ExperienceTreeNode = {
     | 'block'
     | 'root'
     | 'editorRoot'
-    | 'designComponent'
-    | 'designComponentBlock'
+    | 'pattern'
+    | 'patternBlock'
+    // @deprecated to be removed once Web app is updated
     | 'assembly'
+    // @deprecated to be removed once Web app is updated
     | 'assemblyBlock';
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
+    // @deprecated to be removed once Web app is updated
     assembly?: {
+      id: string;
+      componentId: string;
+      nodeLocation: string | null;
+    };
+    pattern?: {
       id: string;
       componentId: string;
       nodeLocation: string | null;

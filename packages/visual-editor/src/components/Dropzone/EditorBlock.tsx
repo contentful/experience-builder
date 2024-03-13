@@ -10,9 +10,9 @@ import type {
 } from '@contentful/experiences-core/types';
 import {
   CONTENTFUL_COMPONENTS,
-  ASSEMBLY_BLOCK_NODE_TYPE,
+  PATTERN_NODE_TYPE,
   OUTGOING_EVENTS,
-  ASSEMBLY_NODE_TYPE,
+  PATTERN_BLOCK_NODE_TYPE,
 } from '@contentful/experiences-core/constants';
 import { DraggableChildComponent } from '@components/Draggable/DraggableChildComponent';
 import { RenderDropzoneFunction } from './Dropzone.types';
@@ -54,8 +54,8 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
   const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
   const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
-  const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
-  const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
+  const isPatternBlock = node.type === PATTERN_BLOCK_NODE_TYPE;
+  const isPattern = node.type === PATTERN_NODE_TYPE;
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const isRootComponent = zoneId === ROOT_ID;
 
@@ -66,8 +66,8 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
     if (!userIsDragging) {
       setSelectedNodeId(node.data.id);
-      // if it is the assembly directly we just want to select it as a normal component
-      if (isAssembly) {
+      // if it is the pattern directly we just want to select it as a normal component
+      if (isPattern) {
         sendMessage(OUTGOING_EVENTS.ComponentSelected, {
           nodeId: node.data.id,
         });
@@ -76,6 +76,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
       sendMessage(OUTGOING_EVENTS.ComponentSelected, {
         assembly: node.data.assembly,
+        pattern: node.data.pattern,
         nodeId: node.data.id,
       });
     }
@@ -88,7 +89,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
           elementToRender={elementToRender}
           id={componentId}
           index={index}
-          isAssemblyBlock={isAssemblyBlock}
+          isPatternBlock={isPatternBlock}
           isDragDisabled={isSingleColumn}
           isSelected={selectedNodeId === componentId}
           userIsDragging={userIsDragging}
@@ -116,8 +117,8 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       definition={definition}
       id={componentId}
       index={index}
-      isAssemblyBlock={isAssemblyBlock}
-      isDragDisabled={isAssemblyBlock}
+      isPatternBlock={isPatternBlock}
+      isDragDisabled={isPatternBlock}
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
       isContainer={isContainer}

@@ -8,25 +8,18 @@ import type {
   ExperienceFields,
 } from '@contentful/experiences-core/types';
 import type { Entry } from 'contentful';
-import {
-  ASSEMBLY_BLOCK_NODE_TYPE,
-  ASSEMBLY_NODE_TYPE,
-} from '@contentful/experiences-core/constants';
-import { assembliesRegistry } from '@/store/registries';
+import { PATTERN_BLOCK_NODE_TYPE, PATTERN_NODE_TYPE } from '@contentful/experiences-core/constants';
+import { patternsRegistry } from '@/store/registries';
 
-export const checkIsAssemblyEntry = (entry: Entry): boolean => {
-  return Boolean(entry.fields?.componentSettings);
-};
-
-export const deserializeAssemblyNode = ({
+export const deserializePatternNode = ({
   node,
   nodeId,
   nodeLocation,
   parentId,
-  assemblyDataSource,
-  assemblyId,
-  assemblyComponentId,
-  assemblyUnboundValues,
+  patternDataSource,
+  patternId,
+  patternComponentId,
+  patternUnboundValues,
   componentInstanceProps,
   componentInstanceUnboundValues,
   componentInstanceDataSource,
@@ -35,10 +28,10 @@ export const deserializeAssemblyNode = ({
   nodeId: string;
   nodeLocation: string | null;
   parentId?: string;
-  assemblyDataSource: ExperienceDataSource;
-  assemblyUnboundValues: ExperienceUnboundValues;
-  assemblyId: string;
-  assemblyComponentId: string;
+  patternDataSource: ExperienceDataSource;
+  patternUnboundValues: ExperienceUnboundValues;
+  patternId: string;
+  patternComponentId: string;
   componentInstanceProps: Record<string, ComponentPropertyValue>;
   componentInstanceUnboundValues: ExperienceUnboundValues;
   componentInstanceDataSource: ExperienceDataSource;
@@ -53,7 +46,7 @@ export const deserializeAssemblyNode = ({
       const componentValueKey = variable.key;
       const instanceProperty = componentInstanceProps[componentValueKey];
 
-      // For assembly, we look up the value in the assembly instance and
+      // For pattern, we look up the value in the pattern instance and
       // replace the componentValue with that one.
       if (instanceProperty?.type === 'UnboundValue') {
         const componentInstanceValue = componentInstanceUnboundValues[instanceProperty.key];
@@ -74,20 +67,20 @@ export const deserializeAssemblyNode = ({
     }
   }
 
-  const isAssembly = assembliesRegistry.has(node.definitionId);
+  const isPattern = patternsRegistry.has(node.definitionId);
 
   const children: ExperienceTreeNode[] = node.children.map((child, childIndex) => {
     const newNodeLocation =
       nodeLocation === null ? `${childIndex}` : nodeLocation + '_' + childIndex;
-    return deserializeAssemblyNode({
+    return deserializePatternNode({
       node: child,
-      nodeId: `${assemblyComponentId}---${newNodeLocation}`,
+      nodeId: `${patternComponentId}---${newNodeLocation}`,
       parentId: nodeId,
       nodeLocation: newNodeLocation,
-      assemblyId,
-      assemblyDataSource,
-      assemblyComponentId,
-      assemblyUnboundValues,
+      patternId,
+      patternDataSource,
+      patternComponentId,
+      patternUnboundValues,
       componentInstanceProps,
       componentInstanceUnboundValues,
       componentInstanceDataSource,
@@ -95,14 +88,14 @@ export const deserializeAssemblyNode = ({
   });
 
   return {
-    // separate node type identifiers for assemblies and their blocks, so we can treat them differently in as much as we want
-    type: isAssembly ? ASSEMBLY_NODE_TYPE : ASSEMBLY_BLOCK_NODE_TYPE,
+    // separate node type identifiers for patterns and their blocks, so we can treat them differently in as much as we want
+    type: isPattern ? PATTERN_NODE_TYPE : PATTERN_BLOCK_NODE_TYPE,
     parentId,
     data: {
       id: nodeId,
-      assembly: {
-        id: assemblyId,
-        componentId: assemblyComponentId,
+      pattern: {
+        id: patternId,
+        componentId: patternComponentId,
         nodeLocation: nodeLocation || null,
       },
       blockId: node.definitionId,
@@ -115,43 +108,41 @@ export const deserializeAssemblyNode = ({
   };
 };
 
-export const resolveAssembly = ({
+export const resolvePattern = ({
   node,
   entityStore,
 }: {
   node: ExperienceTreeNode;
   entityStore: EntityStoreBase | null;
 }) => {
-  if (node.type !== ASSEMBLY_NODE_TYPE) {
+  if (node.type !== PATTERN_NODE_TYPE) {
     return node;
   }
 
   const componentId = node.data.blockId as string;
-  const assembly = assembliesRegistry.get(componentId);
+  const pattern = patternsRegistry.get(componentId);
 
-  if (!assembly) {
-    console.warn(`Link to assembly with ID '${componentId}' not found`, {
-      assembliesRegistry,
+  if (!pattern) {
+    console.warn(`Link to pattern with ID '${componentId}' not found`, {
+      patternsRegistry,
     });
     return node;
   }
 
-  const componentFields = entityStore?.getValue(assembly, [
-    'fields',
-  ]) as unknown as ExperienceFields;
+  const componentFields = entityStore?.getValue(pattern, ['fields']) as unknown as ExperienceFields;
 
   if (!componentFields) {
-    console.warn(`Entry for assembly with ID '${componentId}' not found`, { entityStore });
+    console.warn(`Entry for pattern with ID '${componentId}' not found`, { entityStore });
     return node;
   }
 
   if (!componentFields.componentTree?.children) {
-    console.warn(`Component tree for assembly with ID '${componentId}' not found`, {
+    console.warn(`Component tree for pattern with ID '${componentId}' not found`, {
       componentFields,
     });
   }
 
-  const deserializedNode = deserializeAssemblyNode({
+  const deserializedNode = deserializePatternNode({
     node: {
       definitionId: node.data.blockId || '',
       variables: {},
@@ -160,10 +151,10 @@ export const resolveAssembly = ({
     nodeLocation: null,
     nodeId: node.data.id,
     parentId: node.parentId,
-    assemblyDataSource: {},
-    assemblyId: assembly.sys.id,
-    assemblyComponentId: node.data.id,
-    assemblyUnboundValues: componentFields.unboundValues,
+    patternDataSource: {},
+    patternId: pattern.sys.id,
+    patternComponentId: node.data.id,
+    patternUnboundValues: componentFields.unboundValues,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
     componentInstanceDataSource: node.data.dataSource,

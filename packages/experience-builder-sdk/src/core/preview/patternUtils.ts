@@ -1,7 +1,7 @@
-import { checkIsAssemblyNode, EntityStore } from '@contentful/experiences-core';
+import { checkIsPatternNode, EntityStore } from '@contentful/experiences-core';
 import type { ComponentPropertyValue, ComponentTreeNode } from '@contentful/experiences-core/types';
 
-export const deserializeAssemblyNode = ({
+export const deserializePatternNode = ({
   node,
   componentInstanceVariables,
 }: {
@@ -16,7 +16,7 @@ export const deserializeAssemblyNode = ({
       const componentValueKey = variable.key;
       const instanceProperty = componentInstanceVariables[componentValueKey];
 
-      // For assembly, we look up the variable in the assembly instance and
+      // For pattern, we look up the variable in the pattern instance and
       // replace the componentValue with that one.
       if (instanceProperty?.type === 'UnboundValue') {
         variables[variableName] = {
@@ -33,7 +33,7 @@ export const deserializeAssemblyNode = ({
   }
 
   const children: ComponentTreeNode[] = node.children.map((child) =>
-    deserializeAssemblyNode({
+    deserializePatternNode({
       node: child,
       componentInstanceVariables,
     }),
@@ -46,34 +46,34 @@ export const deserializeAssemblyNode = ({
   };
 };
 
-export const resolveAssembly = ({
+export const resolvePattern = ({
   node,
   entityStore,
 }: {
   node: ComponentTreeNode;
   entityStore: EntityStore;
 }) => {
-  const isAssembly = checkIsAssemblyNode({
+  const isPattern = checkIsPatternNode({
     componentId: node.definitionId,
     usedComponents: entityStore.usedComponents,
   });
 
-  if (!isAssembly) {
+  if (!isPattern) {
     return node;
   }
 
   const componentId = node.definitionId as string;
-  const assembly = entityStore.experienceEntryFields?.usedComponents?.find(
+  const pattern = entityStore.experienceEntryFields?.usedComponents?.find(
     (component) => component.sys.id === componentId,
   );
 
-  if (!assembly || !('fields' in assembly)) {
+  if (!pattern || !('fields' in pattern)) {
     return node;
   }
 
-  const componentFields = assembly.fields;
+  const componentFields = pattern.fields;
 
-  const deserializedNode = deserializeAssemblyNode({
+  const deserializedNode = deserializePatternNode({
     node: {
       definitionId: node.definitionId,
       variables: {},
@@ -82,7 +82,7 @@ export const resolveAssembly = ({
     componentInstanceVariables: node.variables,
   });
 
-  entityStore.addAssemblyUnboundValues(componentFields.unboundValues);
+  entityStore.addPatternUnboundValues(componentFields.unboundValues);
 
   return deserializedNode;
 };

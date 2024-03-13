@@ -62,7 +62,7 @@
   opacity: 0;
 }
 
-.overlayAssembly {
+.overlayPattern {
   background-color: var(--exp-builder-purple600);
 }
 
@@ -88,12 +88,12 @@
   outline: 2px solid var(--exp-builder-gray500);
 }
 
-.isAssemblyBlock:hover:before,
-.isAssemblyBlock:hover div[data-rfd-draggable-id]:before,
-.DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^='assembly']:before {
+.isPatternBlock:hover:before,
+.isPatternBlock:hover div[data-rfd-draggable-id]:before,
+.DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^='pattern']:before {
   outline: 2px dashed var(--exp-builder-purple600);
 }
 
-.isAssemblyBlock:hover:not(:has(div[data-rfd-draggable-id]:hover)):before {
+.isPatternBlock:hover:not(:has(div[data-rfd-draggable-id]:hover)):before {
   outline: 2px solid var(--exp-builder-purple600);
 }

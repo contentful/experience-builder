@@ -172,10 +172,10 @@ export const createExperienceEntry = ({
   };
 };
 
-export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
-export const createAssemblyEntry = ({
+export const patternGeneratedVariableName = 'text_uuid1Pattern';
+export const createPatternEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
-  id = 'assembly-id',
+  id = 'pattern-id',
 }: createExperienceEntryArgs & { id: string }) => {
   return {
     sys: {
@@ -220,7 +220,7 @@ export const createAssemblyEntry = ({
                 definitionId: 'custom-component',
                 variables: {
                   text: {
-                    key: assemblyGeneratedVariableName,
+                    key: patternGeneratedVariableName,
                     type: 'ComponentValue',
                   },
                 },
@@ -235,17 +235,17 @@ export const createAssemblyEntry = ({
       },
       dataSource: {},
       unboundValues: {
-        unbound_uuid1Assembly: {
+        unbound_uuid1Pattern: {
           value: 'custom component title',
         },
       },
       componentSettings: {
         variableDefinitions: {
-          [assemblyGeneratedVariableName]: {
+          [patternGeneratedVariableName]: {
             id: 'text',
             name: 'Text',
             type: 'Text',
-            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },
+            defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Pattern' },
             required: false,
           },
         },

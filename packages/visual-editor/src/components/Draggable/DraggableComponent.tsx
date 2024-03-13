@@ -31,7 +31,7 @@ interface DraggableComponentProps {
   children: ReactNode;
   id: string;
   index: number;
-  isAssemblyBlock?: boolean;
+  isPatternBlock?: boolean;
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
   onMouseDown?: (e: SyntheticEvent) => void;
@@ -51,7 +51,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   children,
   id,
   index,
-  isAssemblyBlock = false,
+  isPatternBlock = false,
   isSelected = false,
   onClick = () => null,
   coordinates,
@@ -89,7 +89,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
           {...provided.dragHandleProps}
           {...rest}
           className={classNames(styles.DraggableComponent, wrapperProps.className, {
-            [styles.isAssemblyBlock]: isAssemblyBlock,
+            [styles.isPatternBlock]: isPatternBlock,
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,
             [styles.userIsDragging]: userIsDragging,
@@ -110,7 +110,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
           <Tooltip
             id={id}
             coordinates={coordinates}
-            isAssemblyBlock={isAssemblyBlock}
+            isPatternBlock={isPatternBlock}
             isContainer={isContainer}
             label={definition.name || 'No label specified'}
           />

@@ -5,4 +5,4 @@ export * from './Text';
 export * from './Image';
 export * from './ContentfulContainer';
 export * from './Columns';
-export * from './Assembly';
+export * from './Pattern';

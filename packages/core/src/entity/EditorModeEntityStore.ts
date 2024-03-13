@@ -5,7 +5,7 @@ import { RequestedEntitiesMessage } from '../types';
 import { transformAssetFileToUrl } from './value-transformers';
 
 // The default of 3s in the EditorEntityStore is sometimes timing out and
-// leads to not rendering bound content and assemblies.
+// leads to not rendering bound content and patterns.
 const REQUEST_TIMEOUT = 10000;
 
 export class EditorModeEntityStore extends EditorEntityStore {

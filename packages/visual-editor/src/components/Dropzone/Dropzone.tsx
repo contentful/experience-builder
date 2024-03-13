@@ -12,7 +12,7 @@ import { EmptyContainer } from '@components/EmptyContainer/EmptyContainer';
 import { getZoneParents } from '@/utils/zone';
 import { useZoneStore } from '@/store/zone';
 import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
-import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
+import { PATTERN_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
@@ -51,7 +51,7 @@ export function Dropzone({
   const isDestination = draggedDestinationId === zoneId;
   const isEmptyCanvas = isRootZone && !content.length;
 
-  const isAssembly = ASSEMBLY_NODE_TYPES.includes(node?.type || '');
+  const isPattern = PATTERN_NODE_TYPES.includes(node?.type || '');
 
   // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
   const renderDropzone: RenderDropzoneFunction = useCallback(
@@ -101,7 +101,7 @@ export function Dropzone({
    * 4. Dragging a nested component (parentId !== ROOT_ID) then the Root
    * Dropzone is disabled, all other Dropzones follow rule #1
    *
-   * 5. Assemblies and the SingleColumn component are always disabled
+   * 5. Patterns and the SingleColumn component are always disabled
    *
    */
   const isDropzoneEnabled = () => {
@@ -109,7 +109,7 @@ export function Dropzone({
       return false;
     }
 
-    if (isAssembly) {
+    if (isPattern) {
       return false;
     }
 
@@ -151,8 +151,8 @@ export function Dropzone({
               styles.container,
               {
                 [styles.isEmptyCanvas]: isEmptyCanvas,
-                [styles.isDragging]: userIsDragging && !isAssembly,
-                [styles.isDestination]: isDestination && !isAssembly,
+                [styles.isDragging]: userIsDragging && !isPattern,
+                [styles.isDestination]: isDestination && !isPattern,
                 [styles.isRoot]: isRootZone,
                 [styles.isEmptyZone]: !content.length,
               },

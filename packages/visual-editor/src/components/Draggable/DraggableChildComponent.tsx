@@ -31,7 +31,7 @@ type DraggableChildComponentProps = {
   elementToRender: (props: NoWrapDraggableProps) => JSX.Element;
   id: string;
   index: number;
-  isAssemblyBlock?: boolean;
+  isPatternBlock?: boolean;
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
   coordinates: Rect | null;
@@ -58,7 +58,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     elementToRender,
     id,
     index,
-    isAssemblyBlock = false,
+    isPatternBlock = false,
     isSelected = false,
     onClick = () => null,
     coordinates,
@@ -81,7 +81,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
           ...wrapperProps,
           draggableProps: provided.draggableProps,
           wrapperClassName: classNames(styles.DraggableComponent, wrapperProps.className, {
-            [styles.isAssemblyBlock]: isAssemblyBlock,
+            [styles.isPatternBlock]: isPatternBlock,
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,
             [styles.userIsDragging]: userIsDragging,
@@ -96,7 +96,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
             <Tooltip
               id={id}
               coordinates={coordinates}
-              isAssemblyBlock={isAssemblyBlock}
+              isPatternBlock={isPatternBlock}
               isContainer={isContainer}
               label={definition.name || 'No label specified'}
             />

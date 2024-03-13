@@ -7,10 +7,10 @@ import type {
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
 import { builtInComponents } from '@/types/constants';
-import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
-import { Assembly } from '@contentful/experiences-components-react';
-import { resolveAssembly } from '@/utils/assemblyUtils';
-import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
+import { PATTERN_NODE_TYPE } from '@contentful/experiences-core/constants';
+import { Pattern } from '@contentful/experiences-components-react';
+import { resolvePattern } from '@/utils/patternUtils';
+import { componentRegistry, createPatternRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
@@ -32,8 +32,8 @@ export const useComponent = ({
   const entityStore = useEntityStore((state) => state.entityStore);
 
   const node = useMemo(() => {
-    if (rawNode.type === ASSEMBLY_NODE_TYPE && areEntitiesFetched) {
-      return resolveAssembly({
+    if (rawNode.type === PATTERN_NODE_TYPE && areEntitiesFetched) {
+      return resolvePattern({
         node: rawNode,
         entityStore,
       });
@@ -45,10 +45,10 @@ export const useComponent = ({
   const componentRegistration = useMemo(() => {
     const registration = componentRegistry.get(node.data.blockId as string);
 
-    if (node.type === ASSEMBLY_NODE_TYPE && !registration) {
-      return createAssemblyRegistration({
+    if (node.type === PATTERN_NODE_TYPE && !registration) {
+      return createPatternRegistration({
         definitionId: node.data.blockId as string,
-        component: Assembly,
+        component: Pattern,
       }) as ComponentRegistration;
     } else if (!registration) {
       console.warn(
@@ -74,8 +74,8 @@ export const useComponent = ({
   const elementToRender = builtInComponents.includes(node.data.blockId || '')
     ? (dragProps?: NoWrapDraggableProps) =>
         React.createElement(componentRegistration.component, { ...dragProps, ...componentProps })
-    : node.type === ASSEMBLY_NODE_TYPE
-      ? // Assembly.tsx requires renderDropzone and editorMode as well
+    : node.type === PATTERN_NODE_TYPE
+      ? // Pattern.tsx requires renderDropzone and editorMode as well
         () => React.createElement(componentRegistration.component, componentProps)
       : () => React.createElement(componentRegistration.component, otherComponentProps);
 

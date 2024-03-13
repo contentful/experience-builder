@@ -10,7 +10,7 @@ import {
 } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
-  ASSEMBLY_NODE_TYPE,
+  PATTERN_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
   CONTENTFUL_COMPONENTS,
 } from '@contentful/experiences-core/constants';
@@ -53,8 +53,8 @@ export const useComponentProps = ({
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: ComponentProps = useMemo(() => {
-    // Don't enrich the assembly wrapper node with props
-    if (!definition || node.type === ASSEMBLY_NODE_TYPE) {
+    // Don't enrich the pattern wrapper node with props
+    if (!definition || node.type === PATTERN_NODE_TYPE) {
       return {};
     }
 
@@ -180,9 +180,9 @@ export const useComponentProps = ({
   // Styles that will be applied to the editor wrapper (draggable) element
   const { className: wrapperClass } = useStyleTag({
     styles:
-      // To ensure that assembly nodes are rendered like they are rendered in
-      // the assembly editor, we need to use a normal block instead of a flex box.
-      node.type === ASSEMBLY_NODE_TYPE
+      // To ensure that pattern nodes are rendered like they are rendered in
+      // the pattern editor, we need to use a normal block instead of a flex box.
+      node.type === PATTERN_NODE_TYPE
         ? {
             display: 'block !important',
             width: '100%',

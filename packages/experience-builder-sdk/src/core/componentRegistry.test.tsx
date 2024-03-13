@@ -3,7 +3,7 @@ import { containerDefinition, sectionDefinition } from '@contentful/experiences-
 import {
   INTERNAL_EVENTS,
   CONTENTFUL_COMPONENTS,
-  ASSEMBLY_DEFAULT_CATEGORY,
+  PATTERN_DEFAULT_CATEGORY,
 } from '@contentful/experiences-core/constants';
 import * as registry from './componentRegistry';
 import type { ComponentRegistration } from '@contentful/experiences-core/types';
@@ -170,7 +170,7 @@ describe('component registration', () => {
   });
 });
 
-describe('createAssemblyRegistration', () => {
+describe('createPatternRegistration', () => {
   let existingComponentRegistration: ComponentRegistration;
   beforeEach(() => {
     existingComponentRegistration = {
@@ -180,7 +180,7 @@ describe('createAssemblyRegistration', () => {
         name: 'Existing Definition',
         variables: {},
         children: true,
-        category: ASSEMBLY_DEFAULT_CATEGORY,
+        category: PATTERN_DEFAULT_CATEGORY,
       },
     };
     registry.addComponentRegistration(existingComponentRegistration);
@@ -196,7 +196,7 @@ describe('createAssemblyRegistration', () => {
     const component = jest.fn();
     const addComponentRegistrationMock = jest.spyOn(registry, 'addComponentRegistration');
 
-    const result = registry.createAssemblyRegistration({ definitionId, component });
+    const result = registry.createPatternRegistration({ definitionId, component });
 
     expect(result).toBe(existingComponentRegistration);
     expect(addComponentRegistrationMock).not.toHaveBeenCalled();
@@ -207,7 +207,7 @@ describe('createAssemblyRegistration', () => {
     const component = jest.fn();
     const addComponentRegistrationMock = jest.spyOn(registry, 'addComponentRegistration');
 
-    const result = registry.createAssemblyRegistration({ definitionId, component });
+    const result = registry.createPatternRegistration({ definitionId, component });
 
     expect(result).toEqual({
       component,
@@ -216,7 +216,7 @@ describe('createAssemblyRegistration', () => {
         name: 'Component',
         variables: {},
         children: true,
-        category: ASSEMBLY_DEFAULT_CATEGORY,
+        category: PATTERN_DEFAULT_CATEGORY,
       },
     });
     expect(addComponentRegistrationMock).toHaveBeenCalled();

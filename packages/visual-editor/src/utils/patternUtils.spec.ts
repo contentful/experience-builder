@@ -1,55 +1,52 @@
 import { Asset, Entry } from 'contentful';
 import {
-  createAssemblyEntry,
-  createAssemblyNode,
-  assemblyGeneratedVariableName,
-} from '../../test/__fixtures__/assembly';
+  createPatternEntry,
+  createPatternNode,
+  patternGeneratedVariableName,
+} from '../../test/__fixtures__/pattern';
 import { assets } from '../../test/__fixtures__/entities';
 
-import {
-  ASSEMBLY_BLOCK_NODE_TYPE,
-  ASSEMBLY_NODE_TYPE,
-} from '@contentful/experiences-core/constants';
+import { PATTERN_NODE_TYPE, PATTERN_BLOCK_NODE_TYPE } from '@contentful/experiences-core/constants';
 import type { ExperienceTreeNode, ComponentTreeNode } from '@contentful/experiences-core/types';
 import { EditorModeEntityStore } from '@contentful/experiences-core';
-import { deserializeAssemblyNode, resolveAssembly } from './assemblyUtils';
+import { deserializePatternNode, resolvePattern } from './patternUtils';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { assembliesRegistry } from '@/store/registries';
+import { patternsRegistry } from '@/store/registries';
 
-const assemblyEntry = createAssemblyEntry({
-  id: 'assembly-id',
+const patternEntry = createPatternEntry({
+  id: 'pattern-id',
   schemaVersion: '2023-09-28',
 });
 
-describe('deserializeAssemblyNode', () => {
+describe('deserializePatternNode', () => {
   beforeEach(() => {
-    assembliesRegistry.set(assemblyEntry.sys.id, {
-      sys: { id: assemblyEntry.sys.id, type: 'Link', linkType: 'Entry' },
+    patternsRegistry.set(patternEntry.sys.id, {
+      sys: { id: patternEntry.sys.id, type: 'Link', linkType: 'Entry' },
     });
   });
 
   afterEach(() => {
-    assembliesRegistry.clear();
+    patternsRegistry.clear();
   });
 
   it('should correctly deserialize a simple ComponentTreeNode with no variables or children', () => {
     const node: ComponentTreeNode = {
-      definitionId: 'assembly-id',
+      definitionId: 'pattern-id',
       variables: {},
-      children: assemblyEntry.fields.componentTree.children as ComponentTreeNode['children'],
+      children: patternEntry.fields.componentTree.children as ComponentTreeNode['children'],
     };
 
-    const result = deserializeAssemblyNode({
+    const result = deserializePatternNode({
       node,
       nodeId: 'random-node-id',
       parentId: 'root',
-      assemblyId: 'whatever',
-      assemblyComponentId: 'whatever',
+      patternId: 'whatever',
+      patternComponentId: 'whatever',
       nodeLocation: '0',
-      assemblyDataSource: {},
-      assemblyUnboundValues: assemblyEntry.fields.unboundValues,
+      patternDataSource: {},
+      patternUnboundValues: patternEntry.fields.unboundValues,
       componentInstanceProps: {
-        [assemblyGeneratedVariableName]: {
+        [patternGeneratedVariableName]: {
           type: 'UnboundValue',
           key: 'unbound_uuid1Experience',
         },
@@ -61,15 +58,15 @@ describe('deserializeAssemblyNode', () => {
     });
 
     expect(result).toEqual({
-      type: ASSEMBLY_NODE_TYPE,
+      type: PATTERN_NODE_TYPE,
       parentId: 'root',
       data: {
-        assembly: {
+        pattern: {
           componentId: 'whatever',
           id: 'whatever',
           nodeLocation: '0',
         },
-        blockId: 'assembly-id',
+        blockId: 'pattern-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -78,10 +75,10 @@ describe('deserializeAssemblyNode', () => {
       },
       children: [
         {
-          type: ASSEMBLY_BLOCK_NODE_TYPE,
+          type: PATTERN_NODE_TYPE,
           parentId: 'random-node-id',
           data: {
-            assembly: {
+            pattern: {
               componentId: 'whatever',
               id: 'whatever',
               nodeLocation: '0_0',
@@ -95,10 +92,10 @@ describe('deserializeAssemblyNode', () => {
           },
           children: [
             {
-              type: ASSEMBLY_BLOCK_NODE_TYPE,
+              type: PATTERN_BLOCK_NODE_TYPE,
               parentId: expect.any(String),
               data: {
-                assembly: {
+                pattern: {
                   componentId: 'whatever',
                   id: 'whatever',
                   nodeLocation: '0_0_0',
@@ -123,18 +120,18 @@ describe('deserializeAssemblyNode', () => {
   });
 });
 
-describe('resolveAssembly', () => {
+describe('resolvePattern', () => {
   beforeEach(() => {
-    assembliesRegistry.set(assemblyEntry.sys.id, {
-      sys: { id: assemblyEntry.sys.id, type: 'Link', linkType: 'Entry' },
+    patternsRegistry.set(patternEntry.sys.id, {
+      sys: { id: patternEntry.sys.id, type: 'Link', linkType: 'Entry' },
     });
   });
 
   afterEach(() => {
-    assembliesRegistry.clear();
+    patternsRegistry.clear();
   });
 
-  it('should return the input node when its type is not an assembly node type', () => {
+  it('should return the input node when its type is not an pattern node type', () => {
     const node: ExperienceTreeNode = {
       type: 'block',
       data: {
@@ -156,16 +153,16 @@ describe('resolveAssembly', () => {
 
     const entityStore = null;
 
-    const result = resolveAssembly({ node, entityStore });
+    const result = resolvePattern({ node, entityStore });
 
     expect(result).toEqual(node);
   });
 
-  it('should return the input node when assembliesRegistry does not have the componentId', () => {
+  it('should return the input node when patternsRegistry does not have the componentId', () => {
     const node: ExperienceTreeNode = {
-      type: ASSEMBLY_NODE_TYPE,
+      type: PATTERN_NODE_TYPE,
       data: {
-        blockId: 'assemblyId',
+        blockId: 'patternId',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -177,22 +174,22 @@ describe('resolveAssembly', () => {
 
     const entityStore = null;
 
-    // Throws warning "Entry for assembly with ID 'assembly-id' not found"
-    const result = resolveAssembly({ node, entityStore });
+    // Throws warning "Entry for pattern with ID 'pattern-id' not found"
+    const result = resolvePattern({ node, entityStore });
 
     expect(result).toEqual(node);
   });
 
   it('should return the input node when entityStore does not have componentFields', () => {
     const node: ExperienceTreeNode = {
-      type: ASSEMBLY_NODE_TYPE,
+      type: PATTERN_NODE_TYPE,
       data: {
-        assembly: {
+        pattern: {
           componentId: 'random-node-id',
-          id: 'assembly-id',
+          id: 'pattern-id',
           nodeLocation: null,
         },
-        blockId: 'assembly-id',
+        blockId: 'pattern-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -203,25 +200,25 @@ describe('resolveAssembly', () => {
     };
 
     const entityStore = new EditorModeEntityStore({
-      entities: [{ ...assemblyEntry, fields: {} }, ...assets] as Array<Entry | Asset>,
+      entities: [{ ...patternEntry, fields: {} }, ...assets] as Array<Entry | Asset>,
       locale: 'en-US',
     });
 
-    const result = resolveAssembly({ node, entityStore });
+    const result = resolvePattern({ node, entityStore });
 
     expect(result).toEqual(node);
   });
 
   it('should return the input node when entityStore is null', () => {
     const node: ExperienceTreeNode = {
-      type: ASSEMBLY_NODE_TYPE,
+      type: PATTERN_NODE_TYPE,
       data: {
-        assembly: {
+        pattern: {
           componentId: 'random-node-id',
-          id: 'assembly-id',
+          id: 'pattern-id',
           nodeLocation: null,
         },
-        blockId: 'assembly-id',
+        blockId: 'pattern-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -233,39 +230,39 @@ describe('resolveAssembly', () => {
 
     const entityStore = null;
 
-    // Throws warning "Entry for assembly with ID 'assembly-id' not found"
-    const result = resolveAssembly({ node, entityStore });
+    // Throws warning "Entry for pattern with ID 'pattern-id' not found"
+    const result = resolvePattern({ node, entityStore });
 
     expect(result).toEqual(node);
   });
 
   // TODO: This tests is basically a plain snapshot test and missing specific assertions.
-  // Also it is testing almost completley the same as above for `deserializeAssemblyNode`.
-  it('returns a deserialized assembly node with unboundValues and props', () => {
-    const node = createAssemblyNode({
+  // Also it is testing almost completley the same as above for `deserializePatternNode`.
+  it('returns a deserialized pattern node with unboundValues and props', () => {
+    const node = createPatternNode({
       id: 'random-node-id',
       unboundValueKey: 'unbound_uuid1Experience',
       unboundValue: 'New year Eve',
     });
 
     const entityStore = new EditorModeEntityStore({
-      entities: [assemblyEntry, ...assets] as Array<Entry | Asset>,
+      entities: [patternEntry, ...assets] as Array<Entry | Asset>,
       locale: 'en-US',
     });
 
-    const result = resolveAssembly({ node, entityStore });
+    const result = resolvePattern({ node, entityStore });
 
     expect(result).not.toEqual(node);
     expect(result).toEqual({
-      type: ASSEMBLY_NODE_TYPE,
+      type: PATTERN_NODE_TYPE,
       parentId: 'root',
       data: {
-        assembly: {
+        pattern: {
           componentId: 'random-node-id',
-          id: 'assembly-id',
+          id: 'pattern-id',
           nodeLocation: null,
         },
-        blockId: 'assembly-id',
+        blockId: 'pattern-id',
         id: 'random-node-id',
         props: {},
         dataSource: {},
@@ -274,12 +271,12 @@ describe('resolveAssembly', () => {
       },
       children: [
         {
-          type: ASSEMBLY_BLOCK_NODE_TYPE,
+          type: PATTERN_BLOCK_NODE_TYPE,
           parentId: 'random-node-id',
           data: {
-            assembly: {
+            pattern: {
               componentId: 'random-node-id',
-              id: 'assembly-id',
+              id: 'pattern-id',
               nodeLocation: '0',
             },
             blockId: 'contentful-container',
@@ -291,12 +288,12 @@ describe('resolveAssembly', () => {
           },
           children: [
             {
-              type: ASSEMBLY_BLOCK_NODE_TYPE,
+              type: PATTERN_BLOCK_NODE_TYPE,
               parentId: expect.any(String),
               data: {
-                assembly: {
+                pattern: {
                   componentId: 'random-node-id',
-                  id: 'assembly-id',
+                  id: 'pattern-id',
                   nodeLocation: '0_0',
                 },
                 blockId: 'custom-component',
@@ -323,18 +320,18 @@ describe('resolveAssembly', () => {
     });
   });
 
-  it('returns a deserialized assembly node with a bound value', () => {
-    const node = createAssemblyNode({
+  it('returns a deserialized pattern node with a bound value', () => {
+    const node = createPatternNode({
       id: 'random-node-id',
       boundValueKey: 'bound_uuid1Experience',
     });
 
     const entityStore = new EditorModeEntityStore({
-      entities: [assemblyEntry, ...assets] as Array<Entry | Asset>,
+      entities: [patternEntry, ...assets] as Array<Entry | Asset>,
       locale: 'en-US',
     });
 
-    const result = resolveAssembly({ node, entityStore });
+    const result = resolvePattern({ node, entityStore });
 
     expect(result).not.toEqual(node);
     expect(result.children[0].children[0].data.props.text).toEqual({

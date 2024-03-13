@@ -9,10 +9,10 @@ import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
 import { compositionEntry } from '../../../test/__fixtures__/composition';
 import {
-  createAssemblyEntry,
-  defaultAssemblyId,
-  assemblyGeneratedVariableName,
-} from '../../../test/__fixtures__/assembly';
+  createPatternEntry,
+  defaultPatternId,
+  patternGeneratedVariableName,
+} from '../../../test/__fixtures__/pattern';
 import { EntityStore } from '@contentful/experiences-core';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 
@@ -117,17 +117,17 @@ describe('CompositionBlock', () => {
     expect(getByTestId('contentful-container')).toBeInTheDocument();
   });
 
-  it('renders assembly node', () => {
+  it('renders pattern node', () => {
     const unboundValueKey = 'some-unbound-value-key';
-    const assemblyEntry = createAssemblyEntry({
-      id: defaultAssemblyId,
+    const patternEntry = createPatternEntry({
+      id: defaultPatternId,
       schemaVersion: '2023-09-28',
     });
     const experienceEntry = {
       ...compositionEntry,
       fields: {
         ...compositionEntry.fields,
-        usedComponents: [assemblyEntry],
+        usedComponents: [patternEntry],
         unboundValues: {
           [unboundValueKey]: {
             value: 'New year eve',
@@ -142,24 +142,24 @@ describe('CompositionBlock', () => {
       locale: 'en-US',
     });
 
-    const assemblyNode: ComponentTreeNode = {
-      definitionId: defaultAssemblyId,
+    const patternNode: ComponentTreeNode = {
+      definitionId: defaultPatternId,
       variables: {
-        [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },
+        [patternGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },
       },
       children: [],
     };
 
     const { getByTestId, getByText } = render(
       <CompositionBlock
-        node={assemblyNode}
+        node={patternNode}
         locale="en-US"
         entityStore={entityStore}
         resolveDesignValue={jest.fn()}
       />,
     );
 
-    expect(getByTestId('assembly')).toBeInTheDocument();
+    expect(getByTestId('pattern')).toBeInTheDocument();
     expect(getByTestId('contentful-container')).toBeInTheDocument();
     expect(getByText('New year eve')).toBeInTheDocument();
   });

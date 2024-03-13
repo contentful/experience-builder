@@ -8,10 +8,10 @@ interface Props {
   id: string;
   label: string;
   isContainer: boolean;
-  isAssemblyBlock: boolean;
+  isPatternBlock: boolean;
 }
 
-const Tooltip: React.FC<Props> = ({ coordinates, id, label, isAssemblyBlock, isContainer }) => {
+const Tooltip: React.FC<Props> = ({ coordinates, id, label, isPatternBlock, isContainer }) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   const previewSize = '100%'; // This should be based on breakpoints and added to usememo dependency array
@@ -40,7 +40,7 @@ const Tooltip: React.FC<Props> = ({ coordinates, id, label, isAssemblyBlock, isC
       style={tooltipStyles}
       className={classNames(styles.overlay, {
         [styles.overlayContainer]: isContainer,
-        [styles.overlayAssembly]: isAssemblyBlock,
+        [styles.overlayPattern]: isPatternBlock,
       })}>
       {label}
     </div>
