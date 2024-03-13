@@ -8,8 +8,8 @@ import {
   EMPTY_CONTAINER_HEIGHT,
 } from '@contentful/experiences-core/constants';
 import type {
-  CompositionNode,
-  CompositionVariableValueType,
+  ComponentTreeNode,
+  PrimitiveValue,
   ResolveDesignValueType,
   StyleProps,
 } from '@contentful/experiences-core/types';
@@ -30,7 +30,7 @@ import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
 
 type CompositionBlockProps = {
-  node: CompositionNode;
+  node: ComponentTreeNode;
   locale: string;
   entityStore: EntityStore;
   resolveDesignValue: ResolveDesignValueType;
@@ -78,7 +78,7 @@ export const CompositionBlock = ({
       return {};
     }
 
-    const propMap: Record<string, CompositionVariableValueType> = {};
+    const propMap: Record<string, PrimitiveValue> = {};
 
     return Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
@@ -136,7 +136,7 @@ export const CompositionBlock = ({
 
   const children =
     componentRegistration.definition.children === true
-      ? node.children.map((childNode: CompositionNode, index) => {
+      ? node.children.map((childNode: ComponentTreeNode, index) => {
           return (
             <CompositionBlock
               node={childNode}

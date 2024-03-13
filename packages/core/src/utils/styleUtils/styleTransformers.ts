@@ -150,7 +150,6 @@ export const transformBackgroundImage = (
     backgroundSize: matchBackgroundSize(cfBackgroundImageScaling),
   };
 };
-
 export const transformWidthSizing = ({
   value,
   cfMargin,

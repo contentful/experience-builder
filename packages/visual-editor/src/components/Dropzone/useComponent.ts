@@ -1,7 +1,7 @@
 import React from 'react';
 import type {
   ComponentRegistration,
-  CompositionComponentNode,
+  ExperienceTreeNode,
   ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
@@ -16,7 +16,7 @@ import type { RenderDropzoneFunction } from './Dropzone.types';
 import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
 
 type UseComponentProps = {
-  node: CompositionComponentNode;
+  node: ExperienceTreeNode;
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;

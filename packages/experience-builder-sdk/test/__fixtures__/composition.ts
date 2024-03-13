@@ -1,12 +1,8 @@
-import type {
-  Composition,
-  ExperienceEntry,
-  SchemaVersions,
-} from '@contentful/experiences-core/types';
+import type { ExperienceEntry, SchemaVersions } from '@contentful/experiences-core/types';
 import { entityIds } from './entities';
 import { LATEST_SCHEMA_VERSION } from '@contentful/experiences-core/constants';
 
-const compositionFields: Composition = {
+const compositionFields: ExperienceEntry['fields'] = {
   title: 'Test Composition',
   slug: 'test',
   componentTree: {
@@ -88,13 +84,13 @@ export const compositionEntry: ExperienceEntry = {
   fields: compositionFields,
 };
 
-type createCompositionEntryArgs = {
+type createExperienceEntryArgs = {
   schemaVersion: SchemaVersions;
 };
 
-export const createCompositionEntry = ({
+export const createExperienceEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
-}: createCompositionEntryArgs): ExperienceEntry => {
+}: createExperienceEntryArgs): ExperienceEntry => {
   return {
     sys: {
       id: 'composition-id',

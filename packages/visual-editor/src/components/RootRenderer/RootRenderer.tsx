@@ -2,7 +2,7 @@ import React, { CSSProperties, useCallback, useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { Dropzone } from '../Dropzone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
-import type { CompositionTree } from '@contentful/experiences-core/types';
+import type { ExperienceTree } from '@contentful/experiences-core/types';
 
 import { COMPONENT_LIST_ID, DRAGGABLE_HEIGHT, ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
@@ -13,9 +13,10 @@ import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { DNDProvider } from './DNDProvider';
 import { sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
+import { useEditorStore } from '@/store/editor';
 
 interface Props {
-  onChange?: (data: CompositionTree) => void;
+  onChange?: (data: ExperienceTree) => void;
 }
 
 export const RootRenderer: React.FC<Props> = ({ onChange }) => {
@@ -24,6 +25,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const breakpoints = useTreeStore((state) => state.breakpoints);
+  const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const draggableSourceId = useDraggedItemStore((state) => state.draggedItem?.source.droppableId);
   const draggingNewComponent = !!draggableSourceId?.startsWith(COMPONENT_LIST_ID);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -31,22 +33,27 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const [containerStyles, setContainerStyles] = useState<CSSProperties>({});
   const tree = useTreeStore((state) => state.tree);
 
-  useEffect(() => {
-    if (onChange) onChange(tree);
-  }, [tree, onChange]);
+  const handleClickOutside = useCallback(
+    (e: MouseEvent) => {
+      const element = e.target as HTMLElement;
 
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
+      const isRoot = element.getAttribute('data-ctfl-zone-id') === ROOT_ID;
+      const clickedOnCanvas = element.closest(`[data-ctfl-root]`);
 
-  const handleClickOutside = () => {
-    sendMessage(OUTGOING_EVENTS.OutsideCanvasClick, {
-      outsideCanvasClick: true,
-    });
-  };
+      if (clickedOnCanvas && !isRoot) {
+        return;
+      }
+
+      sendMessage(OUTGOING_EVENTS.OutsideCanvasClick, {
+        outsideCanvasClick: true,
+      });
+      sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+        selectedId: '',
+      });
+      setSelectedNodeId('');
+    },
+    [setSelectedNodeId],
+  );
 
   const handleResizeCanvas = useCallback(() => {
     const parentElement = containerRef.current?.parentElement;
@@ -81,6 +88,17 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef.current]);
+
+  useEffect(() => {
+    if (onChange) onChange(tree);
+  }, [tree, onChange]);
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [handleClickOutside]);
 
   useEffect(() => {
     handleResizeCanvas();

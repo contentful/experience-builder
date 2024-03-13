@@ -1,11 +1,11 @@
-import type { CompositionComponentNode } from '@contentful/experiences-core/types';
+import type { ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { isEqual } from 'lodash-es';
 import { getChildFromTree } from './getItem';
 
 export function updateNode(
   nodeId: string,
-  updatedNode: CompositionComponentNode,
-  node: CompositionComponentNode,
+  updatedNode: ExperienceTreeNode,
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === nodeId) {
     node.data = updatedNode.data;
@@ -16,8 +16,8 @@ export function updateNode(
 }
 export function replaceNode(
   indexToReplace: number,
-  updatedNode: CompositionComponentNode,
-  node: CompositionComponentNode,
+  updatedNode: ExperienceTreeNode,
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === updatedNode.parentId) {
     node.children = [
@@ -33,8 +33,8 @@ export function replaceNode(
 
 export function reorderChildrenNodes(
   nodeId: string,
-  updatedChildren: CompositionComponentNode[],
-  node: CompositionComponentNode,
+  updatedChildren: ExperienceTreeNode[],
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === nodeId) {
     node.children = updatedChildren;
@@ -46,9 +46,9 @@ export function reorderChildrenNodes(
 
 export function addChildToNode(
   nodeId: string,
-  oldChildren: CompositionComponentNode[],
-  updatedChildren: CompositionComponentNode[],
-  node: CompositionComponentNode,
+  oldChildren: ExperienceTreeNode[],
+  updatedChildren: ExperienceTreeNode[],
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id !== nodeId) {
     node.children.forEach((childNode) =>
@@ -83,7 +83,7 @@ export function removeChildNode(
   indexToRemove: number,
   nodeId: string,
   parentNodeId: string,
-  node: CompositionComponentNode,
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === parentNodeId) {
     const childIndex = node.children.findIndex((child) => child.data.id === nodeId);
@@ -100,8 +100,8 @@ export function removeChildNode(
 export function addChildNode(
   indexToAdd: number,
   parentNodeId: string,
-  nodeToAdd: CompositionComponentNode,
-  node: CompositionComponentNode,
+  nodeToAdd: ExperienceTreeNode,
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === parentNodeId) {
     node.children = [
@@ -122,7 +122,7 @@ export function reorderChildNode(
   oldIndex: number,
   newIndex: number,
   parentNodeId: string,
-  node: CompositionComponentNode,
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === parentNodeId) {
     // Remove the child from the old position
@@ -143,7 +143,7 @@ export function reparentChildNode(
   newIndex: number,
   sourceNodeId: string,
   destinationNodeId: string,
-  node: CompositionComponentNode,
+  node: ExperienceTreeNode,
 ) {
   const nodeToMove = getChildFromTree(sourceNodeId, oldIndex, node);
 

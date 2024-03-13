@@ -1,17 +1,14 @@
 import { checkIsAssemblyNode, EntityStore } from '@contentful/experiences-core';
-import type {
-  CompositionComponentPropValue,
-  CompositionNode,
-} from '@contentful/experiences-core/types';
+import type { ComponentPropertyValue, ComponentTreeNode } from '@contentful/experiences-core/types';
 
 export const deserializeAssemblyNode = ({
   node,
   componentInstanceVariables,
 }: {
-  node: CompositionNode;
-  componentInstanceVariables: CompositionNode['variables'];
-}): CompositionNode => {
-  const variables: Record<string, CompositionComponentPropValue> = {};
+  node: ComponentTreeNode;
+  componentInstanceVariables: ComponentTreeNode['variables'];
+}): ComponentTreeNode => {
+  const variables: Record<string, ComponentPropertyValue> = {};
 
   for (const [variableName, variable] of Object.entries(node.variables)) {
     variables[variableName] = variable;
@@ -35,7 +32,7 @@ export const deserializeAssemblyNode = ({
     }
   }
 
-  const children: CompositionNode[] = node.children.map((child) =>
+  const children: ComponentTreeNode[] = node.children.map((child) =>
     deserializeAssemblyNode({
       node: child,
       componentInstanceVariables,
@@ -53,7 +50,7 @@ export const resolveAssembly = ({
   node,
   entityStore,
 }: {
-  node: CompositionNode;
+  node: ComponentTreeNode;
   entityStore: EntityStore;
 }) => {
   const isAssembly = checkIsAssemblyNode({

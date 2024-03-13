@@ -1,11 +1,11 @@
 import { EntityStoreBase } from '@contentful/experiences-core';
 import type {
-  CompositionNode,
-  CompositionDataSource,
-  CompositionUnboundValues,
-  CompositionComponentNode,
-  CompositionComponentPropValue,
-  Composition,
+  ComponentTreeNode,
+  ExperienceDataSource,
+  ExperienceUnboundValues,
+  ExperienceTreeNode,
+  ComponentPropertyValue,
+  ExperienceFields,
 } from '@contentful/experiences-core/types';
 import type { Entry } from 'contentful';
 import {
@@ -31,21 +31,21 @@ export const deserializeAssemblyNode = ({
   componentInstanceUnboundValues,
   componentInstanceDataSource,
 }: {
-  node: CompositionNode;
+  node: ComponentTreeNode;
   nodeId: string;
   nodeLocation: string | null;
   parentId?: string;
-  assemblyDataSource: CompositionDataSource;
-  assemblyUnboundValues: CompositionUnboundValues;
+  assemblyDataSource: ExperienceDataSource;
+  assemblyUnboundValues: ExperienceUnboundValues;
   assemblyId: string;
   assemblyComponentId: string;
-  componentInstanceProps: Record<string, CompositionComponentPropValue>;
-  componentInstanceUnboundValues: CompositionUnboundValues;
-  componentInstanceDataSource: CompositionDataSource;
-}): CompositionComponentNode => {
-  const childNodeVariable: Record<string, CompositionComponentPropValue> = {};
-  const dataSource: CompositionDataSource = {};
-  const unboundValues: CompositionUnboundValues = {};
+  componentInstanceProps: Record<string, ComponentPropertyValue>;
+  componentInstanceUnboundValues: ExperienceUnboundValues;
+  componentInstanceDataSource: ExperienceDataSource;
+}): ExperienceTreeNode => {
+  const childNodeVariable: Record<string, ComponentPropertyValue> = {};
+  const dataSource: ExperienceDataSource = {};
+  const unboundValues: ExperienceUnboundValues = {};
 
   for (const [variableName, variable] of Object.entries(node.variables)) {
     childNodeVariable[variableName] = variable;
@@ -76,7 +76,7 @@ export const deserializeAssemblyNode = ({
 
   const isAssembly = assembliesRegistry.has(node.definitionId);
 
-  const children: CompositionComponentNode[] = node.children.map((child, childIndex) => {
+  const children: ExperienceTreeNode[] = node.children.map((child, childIndex) => {
     const newNodeLocation =
       nodeLocation === null ? `${childIndex}` : nodeLocation + '_' + childIndex;
     return deserializeAssemblyNode({
@@ -119,7 +119,7 @@ export const resolveAssembly = ({
   node,
   entityStore,
 }: {
-  node: CompositionComponentNode;
+  node: ExperienceTreeNode;
   entityStore: EntityStoreBase | null;
 }) => {
   if (node.type !== ASSEMBLY_NODE_TYPE) {
@@ -136,7 +136,9 @@ export const resolveAssembly = ({
     return node;
   }
 
-  const componentFields = entityStore?.getValue(assembly, ['fields']) as unknown as Composition;
+  const componentFields = entityStore?.getValue(assembly, [
+    'fields',
+  ]) as unknown as ExperienceFields;
 
   if (!componentFields) {
     console.warn(`Entry for assembly with ID '${componentId}' not found`, { entityStore });
