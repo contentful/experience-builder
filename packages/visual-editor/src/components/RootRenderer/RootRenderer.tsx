@@ -33,35 +33,27 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const [containerStyles, setContainerStyles] = useState<CSSProperties>({});
   const tree = useTreeStore((state) => state.tree);
 
-  useEffect(() => {
-    if (onChange) onChange(tree);
-  }, [tree, onChange]);
+  const handleClickOutside = useCallback(
+    (e: MouseEvent) => {
+      const element = e.target as HTMLElement;
 
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
+      const isRoot = element.getAttribute('data-ctfl-zone-id') === ROOT_ID;
+      const clickedOnCanvas = element.closest(`[data-ctfl-root]`);
 
-  const handleClickOutside = (e: MouseEvent) => {
-    const element = e.target as HTMLElement;
+      if (clickedOnCanvas && !isRoot) {
+        return;
+      }
 
-    const isRoot = element.getAttribute('data-ctfl-zone-id') === ROOT_ID;
-    const clickedOnCanvas = element.closest(`[data-ctfl-root]`);
-
-    if (clickedOnCanvas && !isRoot) {
-      return;
-    }
-
-    sendMessage(OUTGOING_EVENTS.OutsideCanvasClick, {
-      outsideCanvasClick: true,
-    });
-    sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-      selectedId: '',
-    });
-    setSelectedNodeId('');
-  };
+      sendMessage(OUTGOING_EVENTS.OutsideCanvasClick, {
+        outsideCanvasClick: true,
+      });
+      sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+        selectedId: '',
+      });
+      setSelectedNodeId('');
+    },
+    [setSelectedNodeId],
+  );
 
   const handleResizeCanvas = useCallback(() => {
     const parentElement = containerRef.current?.parentElement;
@@ -96,6 +88,17 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef.current]);
+
+  useEffect(() => {
+    if (onChange) onChange(tree);
+  }, [tree, onChange]);
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [handleClickOutside]);
 
   useEffect(() => {
     handleResizeCanvas();
