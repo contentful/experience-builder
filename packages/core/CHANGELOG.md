@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.5](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.4...@contentful/experiences-core@0.0.1-alpha.5) (2024-03-13)
+
+### Bug Fixes
+
+- hover outlines and default border style [ALT-323] ([#476](https://github.com/contentful/experience-builder/issues/476)) ([0378c6d](https://github.com/contentful/experience-builder/commit/0378c6d7499e9bdea6bedd632a9444dcde712984))
+
 ## [0.0.1-alpha.4](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.3...@contentful/experiences-core@0.0.1-alpha.4) (2024-03-12)
 
 ### Bug Fixes
