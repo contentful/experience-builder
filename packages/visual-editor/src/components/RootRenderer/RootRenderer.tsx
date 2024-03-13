@@ -42,9 +42,21 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
     };
   }, []);
 
-  const handleClickOutside = () => {
+  const handleClickOutside = (e: MouseEvent) => {
+    const element = e.target as HTMLElement;
+
+    const isRoot = element.getAttribute('data-ctfl-zone-id') === ROOT_ID;
+    const clickedOnCanvas = element.closest(`[data-ctfl-root]`);
+
+    if (clickedOnCanvas && !isRoot) {
+      return;
+    }
+
     sendMessage(OUTGOING_EVENTS.OutsideCanvasClick, {
       outsideCanvasClick: true,
+    });
+    sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+      selectedId: '',
     });
   };
 

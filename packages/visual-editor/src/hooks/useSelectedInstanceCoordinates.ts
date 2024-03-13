@@ -15,9 +15,11 @@ export const useSelectedInstanceCoordinates = ({ node }: { node: ExperienceTreeN
       return;
     }
 
+    // Allows the drop animation to finish before
+    // calculating the components coordinates
     setTimeout(() => {
       sendSelectedComponentCoordinates(node.data.id);
-    }, 200);
+    }, 10);
   }, [node, selectedNodeId]);
 
   const selectedElement = node.data.id
