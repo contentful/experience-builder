@@ -191,7 +191,7 @@ export const optionalBuiltInStyles: VariableDefinitions = {
       objectFit: 'initial',
       objectPosition: 'center center',
       quality: '100',
-      sizes: DEFAULT_IMAGE_WIDTH,
+      targetSize: DEFAULT_IMAGE_WIDTH,
     },
   },
   cfBackgroundImageUrl: {
