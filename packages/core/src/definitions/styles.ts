@@ -208,7 +208,7 @@ export const optionalBuiltInStyles: VariableDefinitions = {
       scaling: 'fill',
       alignment: 'left top',
       quality: '100',
-      targetSize: DEFAULT_IMAGE_WIDTH,
+      targetSize: '2000px',
     },
   },
   cfLineHeight: {
