@@ -17,6 +17,7 @@
   outline-offset: -2px;
   outline: 2px solid transparent;
   z-index: 1;
+  pointer-events: none;
 }
 
 .DraggableClone:before {
@@ -28,7 +29,7 @@
   pointer-events: none !important;
 }
 
-.DraggableComponent > * {
+.DraggableComponent:not(.userIsDragging) :not(.DraggableComponent) {
   pointer-events: none;
 }
 
