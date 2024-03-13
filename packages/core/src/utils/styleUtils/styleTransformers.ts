@@ -77,17 +77,14 @@ export const transformBackgroundImage = (
   ): 'cover' | 'contain' | undefined => {
     if ('fill' === scaling) return 'cover';
     if ('fit' === scaling) return 'contain';
-    return undefined;
+    return;
   };
 
   const matchBackgroundPosition = (
     alignment?: BackgroundImageAlignmentOption,
   ): CSSPropertiesForBackground['backgroundPosition'] | undefined => {
-    if (!alignment) {
-      return undefined;
-    }
-    if ('string' !== typeof alignment) {
-      return undefined;
+    if (!alignment || 'string' !== typeof alignment) {
+      return;
     }
     let [horizontalAlignment, verticalAlignment] = alignment.trim().split(/\s+/, 2);
 
@@ -131,7 +128,7 @@ export const transformBackgroundImage = (
   };
 
   if (!cfBackgroundImageUrl) {
-    return undefined;
+    return;
   }
 
   let backgroundImage: string;
@@ -161,7 +158,7 @@ export const transformWidthSizing = ({
   value: string | undefined;
   cfMargin: string | undefined;
 }) => {
-  if (!value || !cfMargin) return undefined;
+  if (!value || !cfMargin) return;
 
   const transformedValue = transformFill(value);
   const marginValues = cfMargin.split(' ');
