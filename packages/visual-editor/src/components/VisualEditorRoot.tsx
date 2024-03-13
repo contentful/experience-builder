@@ -10,20 +10,6 @@ import { useZoneStore } from '@/store/zone';
 import { CTFL_ZONE_ID, NEW_COMPONENT_ID } from '@/types/constants';
 import { useDraggedItemStore } from '@/store/draggedItem';
 
-const findNearestDropzone = (element: HTMLElement): string | null => {
-  const zoneId = element.getAttribute(CTFL_ZONE_ID);
-
-  if (!element.parentElement) {
-    return null;
-  }
-
-  if (element.tagName === 'BODY') {
-    return null;
-  }
-
-  return zoneId ?? findNearestDropzone(element.parentElement);
-};
-
 export const VisualEditorRoot = () => {
   const initialized = useInitializeEditor();
   const locale = useEditorStore((state) => state.locale);
@@ -48,8 +34,7 @@ export const VisualEditorRoot = () => {
       setMousePosition(e.clientX, e.clientY);
 
       const target = e.target as HTMLElement;
-
-      const zoneId = findNearestDropzone(target);
+      const zoneId = target.closest(`[${CTFL_ZONE_ID}]`)?.getAttribute(CTFL_ZONE_ID);
 
       if (zoneId) {
         setHoveringZone(zoneId);
