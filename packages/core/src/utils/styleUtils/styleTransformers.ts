@@ -72,12 +72,9 @@ export const transformBackgroundImage = (
   cfBackgroundImageUrl: string | OptimizedBackgroundImageAsset | null | undefined,
   cfBackgroundImageOptions?: StyleProps['cfBackgroundImageOptions'],
 ): CSSPropertiesForBackground | undefined => {
-  const matchBackgroundSize = (
-    scaling?: BackgroundImageScalingOption,
-  ): 'cover' | 'contain' | undefined => {
+  const matchBackgroundSize = (scaling?: BackgroundImageScalingOption) => {
     if ('fill' === scaling) return 'cover';
     if ('fit' === scaling) return 'contain';
-    return;
   };
 
   const matchBackgroundPosition = (
