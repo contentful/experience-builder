@@ -13,6 +13,7 @@ import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { DNDProvider } from './DNDProvider';
 import { sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
+import { useEditorStore } from '@/store/editor';
 
 interface Props {
   onChange?: (data: ExperienceTree) => void;
@@ -24,6 +25,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const breakpoints = useTreeStore((state) => state.breakpoints);
+  const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const draggableSourceId = useDraggedItemStore((state) => state.draggedItem?.source.droppableId);
   const draggingNewComponent = !!draggableSourceId?.startsWith(COMPONENT_LIST_ID);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,6 +60,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
     sendMessage(OUTGOING_EVENTS.ComponentSelected, {
       selectedId: '',
     });
+    setSelectedNodeId('');
   };
 
   const handleResizeCanvas = useCallback(() => {
