@@ -12,7 +12,7 @@ export const CTFL_DRAGGABLE_ID = 'data-ctfl-draggable-id';
 export const CTFL_DRAGGING_ELEMENT = 'data-ctfl-dragging-element';
 
 export const HITBOX = {
-  WIDTH: 80,
+  WIDTH: 70,
   HEIGHT: 20,
   INITIAL_OFFSET: 10,
   OFFSET_INCREMENT: 8,
