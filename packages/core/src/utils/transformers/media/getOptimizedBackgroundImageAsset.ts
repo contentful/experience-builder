@@ -1,5 +1,5 @@
 import { SUPPORTED_IMAGE_FORMATS } from '@/constants';
-import { OptimizedBackgroundImageAsset } from '@/types';
+import { OptimizedImageAsset } from '@/types';
 import { getOptimizedImageUrl } from './getOptimizedImageUrl';
 import { AssetFile } from 'contentful';
 
@@ -15,7 +15,7 @@ export const getOptimizedBackgroundImageAsset = (
   widthStyle: string,
   quality: number = 100,
   format?: ValidFormats,
-): OptimizedBackgroundImageAsset => {
+): OptimizedImageAsset => {
   if (!validateParams(file, quality, format)) {
     throw Error('Invalid parameters');
   }
@@ -28,15 +28,13 @@ export const getOptimizedBackgroundImageAsset = (
 
   const srcSet = [`url(${imageUrl1x}) 1x`, `url(${imageUrl2x}) 2x`];
 
-  const returnedUrlImageUrl = getOptimizedImageUrl(url, width2x, quality, format);
+  const returnedUrl = getOptimizedImageUrl(url, width2x, quality, format);
 
-  const optimizedBackgroundImageAsset: OptimizedBackgroundImageAsset = {
-    url: returnedUrlImageUrl,
+  return {
+    url: returnedUrl,
     srcSet,
     file,
   };
-
-  return optimizedBackgroundImageAsset;
 
   function validateParams(
     file: AssetFile,

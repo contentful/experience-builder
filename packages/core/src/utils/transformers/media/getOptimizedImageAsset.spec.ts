@@ -100,11 +100,6 @@ describe('transformImageAsset', () => {
     expect(() => getOptimizedImageAsset(file)).toThrowError('No image in file asset to transform');
   });
 
-  it('when sizes is passed, the sizes should be on the return object', () => {
-    const result = getOptimizedImageAsset(file, '500px');
-    expect(result.sizes).toEqual('500px');
-  });
-
   it('when quality is passed, the quality should be on the srcSet urls', () => {
     const result = getOptimizedImageAsset(file, '500px', 50);
     expect(result.srcSet).toEqual([`${file.url}?w=400&q=50 400w`, `${file.url}?w=800&q=50 800w`]);

@@ -11,7 +11,6 @@ describe('Image', () => {
       asset: {
         url: `${placeholderImage}?w=500`,
         srcSet: [`${placeholderImage}?w=125 125w`, `${placeholderImage}?w=250 250w`],
-        sizes: '250px',
         file: {
           url: placeholderImage,
           details: { size: 1234567, image: { width: 800, height: 450 } },
@@ -67,9 +66,7 @@ describe('Image', () => {
 
   it('when cfImage is an object, it should set the sizes of the image tag to the sizes of the object', () => {
     cy.mount(<Image cfImage={options} />);
-    cy.get('img')
-      .invoke('attr', 'sizes')
-      .should('eq', (options.asset as OptimizedImageAsset).sizes);
+    cy.get('img').invoke('attr', 'sizes').should('eq', options.targetSize);
   });
 
   it('additional props should be passed to the image', () => {

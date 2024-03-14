@@ -323,15 +323,6 @@ export type BoundComponentPropertyTypes =
 export type OptimizedImageAsset = {
   url: string;
   srcSet?: string[];
-  sizes?: string;
-  quality?: number;
-  format?: string;
-  file: AssetFile;
-};
-
-export type OptimizedBackgroundImageAsset = {
-  url: string;
-  srcSet?: string[];
   file: AssetFile;
 };
 
@@ -381,7 +372,7 @@ export type BackgroundImageAlignmentOption =
   | 'center bottom';
 
 export type BackgroundImageOptions = {
-  asset?: OptimizedBackgroundImageAsset | string;
+  asset?: OptimizedImageAsset | string;
   format?: string;
   scaling: BackgroundImageScalingOption;
   alignment: BackgroundImageAlignmentOption;

@@ -34,7 +34,7 @@ export const Image: React.FC<ImageProps> = ({ className = '', src, cfImage, ...p
       <img
         src={cfImage.asset.url}
         srcSet={cfImage.asset.srcSet?.length ? cfImage.asset.srcSet?.join(', ') : undefined}
-        sizes={cfImage.asset.sizes ? cfImage.asset.sizes : undefined}
+        sizes={cfImage.targetSize}
         className={'cf-image ' + className}
         {...props}
       />

@@ -42,14 +42,11 @@ export const getOptimizedImageAsset = (
     format,
   );
 
-  const optimizedImageAsset: OptimizedImageAsset = {
+  return {
     url: returnedUrl,
     srcSet,
-    sizes,
     file,
   };
-
-  return optimizedImageAsset;
 
   function validateParams(
     file: AssetFile,
