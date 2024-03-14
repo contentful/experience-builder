@@ -141,18 +141,18 @@ export class CtflClient {
                         type: 'DesignValue',
                         valuesByBreakpoint: { desktop: '0px' },
                       },
-                      // cfBackgroundImageUrl: {
-                      //   type: 'UnboundValue',
-                      //   key: 'yZ0T3Qbr7ZO8CUSJvMF8R',
-                      // },
-                      // cfBackgroundImageScaling: {
-                      //   type: 'DesignValue',
-                      //   valuesByBreakpoint: { desktop: 'fit' },
-                      // },
-                      // cfBackgroundImageAlignment: {
-                      //   type: 'DesignValue',
-                      //   valuesByBreakpoint: { desktop: 'left top' },
-                      // },
+                      cfBackgroundImage: {
+                        type: 'UnboundValue',
+                        key: 'yZ0T3Qbr7ZO8CUSJvMF8R',
+                        valuesByBreakpoint: {
+                          desktop: {
+                            scaling: 'fill',
+                            alignment: 'left top',
+                            quality: '100',
+                            targetSize: '2000px',
+                          },
+                        },
+                      },
                       cfHyperlink: {
                         type: 'UnboundValue',
                         key: 'XFjLtoeKIQFBAegSpmkSu',
