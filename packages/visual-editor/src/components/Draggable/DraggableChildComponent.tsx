@@ -95,6 +95,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
           Tooltip: (
             <Tooltip
               id={id}
+              isSelected={isSelected}
               coordinates={coordinates}
               isAssemblyBlock={isAssemblyBlock}
               isContainer={isContainer}

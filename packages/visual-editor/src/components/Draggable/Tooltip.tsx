@@ -9,9 +9,17 @@ interface Props {
   label: string;
   isContainer: boolean;
   isAssemblyBlock: boolean;
+  isSelected: boolean;
 }
 
-const Tooltip: React.FC<Props> = ({ coordinates, id, label, isAssemblyBlock, isContainer }) => {
+const Tooltip: React.FC<Props> = ({
+  coordinates,
+  id,
+  label,
+  isAssemblyBlock,
+  isContainer,
+  isSelected,
+}) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   const previewSize = '100%'; // This should be based on breakpoints and added to usememo dependency array
@@ -41,7 +49,8 @@ const Tooltip: React.FC<Props> = ({ coordinates, id, label, isAssemblyBlock, isC
       className={classNames(styles.overlay, {
         [styles.overlayContainer]: isContainer,
         [styles.overlayAssembly]: isAssemblyBlock,
-      })}>
+      })}
+      aria-hidden={!isSelected}>
       {label}
     </div>
   );

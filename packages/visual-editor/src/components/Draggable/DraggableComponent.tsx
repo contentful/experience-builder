@@ -112,6 +112,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
             coordinates={coordinates}
             isAssemblyBlock={isAssemblyBlock}
             isContainer={isContainer}
+            isSelected={isSelected}
             label={definition.name || 'No label specified'}
           />
           <Placeholder {...placeholder} id={id} />
