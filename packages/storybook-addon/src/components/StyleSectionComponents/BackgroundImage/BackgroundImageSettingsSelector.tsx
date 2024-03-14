@@ -14,7 +14,7 @@ const backgroundImageScalingVariableName = 'cfBackgroundImageScaling';
 const backgroundImageAlignmentVariableName = 'cfBackgroundImageAlignment';
 
 type BackgroundImageSettingsSelectorProps = {
-  variableDefinition?: ComponentDefinitionVariable<'Text'>;
+  variableDefinition?: ComponentDefinitionVariable<'Media'>;
   variableName:
     | typeof backgroundImageScalingVariableName
     | typeof backgroundImageAlignmentVariableName;

@@ -125,7 +125,7 @@ export const builtInStyles: Record<
   },
   cfBackgroundImageUrl: {
     displayName: 'Background image',
-    type: 'Text',
+    type: 'Media',
     defaultValue: '',
     description: 'Background image for section or container',
   },
