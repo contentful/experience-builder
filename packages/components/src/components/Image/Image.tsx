@@ -1,13 +1,13 @@
-import { OptimizedImageAsset } from '@contentful/experiences-core/types';
+import { ImageOptions } from '@contentful/experiences-core/types';
 import React from 'react';
 import './Image.css';
 
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  cfImageAsset?: OptimizedImageAsset | string;
+  cfImage?: ImageOptions;
 }
 
-export const Image: React.FC<ImageProps> = ({ className = '', src, cfImageAsset, ...props }) => {
-  if (!cfImageAsset && !src) {
+export const Image: React.FC<ImageProps> = ({ className = '', src, cfImage, ...props }) => {
+  if (!cfImage || (!cfImage.asset && !src)) {
     return (
       <div className="cf-no-image">
         <img
@@ -25,16 +25,16 @@ export const Image: React.FC<ImageProps> = ({ className = '', src, cfImageAsset,
     );
   }
 
-  if (typeof cfImageAsset === 'string') {
-    return <img src={cfImageAsset} className={'cf-image ' + className} {...props} />;
+  if (typeof cfImage.asset === 'string') {
+    return <img src={cfImage.asset} className={'cf-image ' + className} {...props} />;
   }
 
-  if (cfImageAsset) {
+  if (cfImage.asset) {
     return (
       <img
-        src={cfImageAsset.url}
-        srcSet={cfImageAsset.srcSet?.length ? cfImageAsset.srcSet?.join(', ') : undefined}
-        sizes={cfImageAsset.sizes ? cfImageAsset.sizes : undefined}
+        src={cfImage.asset.url}
+        srcSet={cfImage.asset.srcSet?.length ? cfImage.asset.srcSet?.join(', ') : undefined}
+        sizes={cfImage.asset.sizes ? cfImage.asset.sizes : undefined}
         className={'cf-image ' + className}
         {...props}
       />

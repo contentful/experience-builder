@@ -35,7 +35,7 @@ export class CtflClient {
           authorization: `Bearer ${this.authToken as string}`,
         },
         method: 'GET',
-      }
+      },
     ).then((val) => {
       return val.accessToken;
     });
@@ -141,18 +141,18 @@ export class CtflClient {
                         type: 'DesignValue',
                         valuesByBreakpoint: { desktop: '0px' },
                       },
-                      cfBackgroundImageUrl: {
-                        type: 'UnboundValue',
-                        key: 'yZ0T3Qbr7ZO8CUSJvMF8R',
-                      },
-                      cfBackgroundImageScaling: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'fit' },
-                      },
-                      cfBackgroundImageAlignment: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'left top' },
-                      },
+                      // cfBackgroundImageUrl: {
+                      //   type: 'UnboundValue',
+                      //   key: 'yZ0T3Qbr7ZO8CUSJvMF8R',
+                      // },
+                      // cfBackgroundImageScaling: {
+                      //   type: 'DesignValue',
+                      //   valuesByBreakpoint: { desktop: 'fit' },
+                      // },
+                      // cfBackgroundImageAlignment: {
+                      //   type: 'DesignValue',
+                      //   valuesByBreakpoint: { desktop: 'left top' },
+                      // },
                       cfHyperlink: {
                         type: 'UnboundValue',
                         key: 'XFjLtoeKIQFBAegSpmkSu',
@@ -196,7 +196,7 @@ export class CtflClient {
             },
           },
         }),
-      }
+      },
     ).then((val) => val.sys.id);
 
     //Publish entry
@@ -207,7 +207,7 @@ export class CtflClient {
         headers: {
           'x-contentful-version': '1',
         },
-      }
+      },
     );
   }
 
@@ -221,7 +221,7 @@ export class CtflClient {
         },
         body: '{"name":"DevLayout","fields":[{"id":"title","name":"Title","type":"Symbol","required":true,"localized":false,"validations":[]},{"id":"slug","name":"Slug","type":"Symbol","required":true,"localized":false,"validations":[{"unique":true}]},{"id":"componentTree","name":"Component Tree","type":"Object","required":true,"localized":false,"validations":[]},{"id":"dataSource","name":"Data Source","type":"Object","required":true,"localized":false,"validations":[]},{"id":"unboundValues","name":"Unbound Values","type":"Object","required":true,"localized":false,"validations":[]}],"description":"","metadata":{"annotations":{"ContentTypeField":{"dataSource":[{"sys":{"id":"Contentful:ExperienceBuilderField","type":"Link","linkType":"Annotation"},"parameters":{"purpose":"dataSource"}}],"unboundValues":[{"sys":{"id":"Contentful:ExperienceBuilderField","type":"Link","linkType":"Annotation"},"parameters":{"purpose":"unboundValues"}}],"componentTree":[{"sys":{"id":"Contentful:ExperienceBuilderField","type":"Link","linkType":"Annotation"},"parameters":{"purpose":"componentTree"}}]}}},"displayField":"title"}',
         method: 'PUT',
-      }
+      },
     );
 
     // Publish Content Type
@@ -233,7 +233,7 @@ export class CtflClient {
         },
         method: 'PUT',
         body: null,
-      }
+      },
     );
   }
 
@@ -280,13 +280,13 @@ export class CtflClient {
     if (this.authToken && this.authTokenCreatedFromApi) {
       type KeysReturn = { items: { sys: { id: string; redactedValue: string } }[] };
       const keys: { id: string; redactedValue: string }[] = await this.apiCall<KeysReturn>(
-        `/users/me/access_tokens?revokedAt`
+        `/users/me/access_tokens?revokedAt`,
       ).then((data) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         data.items.map((item: any) => ({
           id: item.sys.id,
           redactedValue: item.sys.redactedValue,
-        }))
+        })),
       );
 
       const keyToRevoke = keys.find((key) => this.authToken!.endsWith(key.redactedValue));
@@ -335,7 +335,7 @@ export class CtflClient {
           name: item.name,
           id: item.sys.id,
         };
-      })
+      }),
     );
     return orgs;
   }

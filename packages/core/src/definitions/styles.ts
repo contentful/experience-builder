@@ -2,12 +2,7 @@ import { DEFAULT_IMAGE_WIDTH } from '@/constants';
 import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../types';
 
 type VariableDefinitions = Partial<
-  Record<
-    ContainerStyleVariableName,
-    ComponentDefinitionVariable<
-      'Text' | 'Boolean' | 'Media' | 'ImageOptions' | 'BackgroundImageOptions'
-    >
-  >
+  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media'>>
 >;
 
 export const builtInStyles: VariableDefinitions = {
@@ -175,16 +170,10 @@ export const optionalBuiltInStyles: VariableDefinitions = {
     description: 'The font weight of the element',
     defaultValue: '400',
   },
-  cfImageAsset: {
+  cfImage: {
     displayName: 'Image',
     type: 'Media',
     description: 'Image to display',
-  },
-  cfImageOptions: {
-    displayName: 'Image options',
-    description: 'Experimenting with options for the image component.',
-    type: 'ImageOptions',
-    group: 'style',
     defaultValue: {
       width: DEFAULT_IMAGE_WIDTH,
       height: '100%',
@@ -194,16 +183,10 @@ export const optionalBuiltInStyles: VariableDefinitions = {
       targetSize: DEFAULT_IMAGE_WIDTH,
     },
   },
-  cfBackgroundImageUrl: {
+  cfBackgroundImage: {
     displayName: 'Background image',
     type: 'Media',
     description: 'Background image for component',
-  },
-  cfBackgroundImageOptions: {
-    displayName: 'Background image options',
-    description: 'Experimenting with options for the background image component.',
-    type: 'BackgroundImageOptions',
-    group: 'style',
     defaultValue: {
       scaling: 'fill',
       alignment: 'left top',
@@ -307,14 +290,12 @@ export const optionalBuiltInStyles: VariableDefinitions = {
 
 export const sectionBuiltInStyles: VariableDefinitions = {
   ...builtInStyles,
-  cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
-  cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
+  cfBackgroundImage: optionalBuiltInStyles.cfBackgroundImage,
 };
 
 export const containerBuiltInStyles: VariableDefinitions = {
   ...builtInStyles,
-  cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
-  cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
+  cfBackgroundImage: optionalBuiltInStyles.cfBackgroundImage,
   cfMaxWidth: {
     displayName: 'Max Width',
     type: 'Text',
@@ -332,8 +313,7 @@ export const containerBuiltInStyles: VariableDefinitions = {
 };
 
 export const singleColumnBuiltInStyles: VariableDefinitions = {
-  cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
-  cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
+  cfBackgroundImage: optionalBuiltInStyles.cfBackgroundImage,
   cfVerticalAlignment: {
     validations: {
       in: [
@@ -435,8 +415,7 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
 };
 
 export const columnsBuiltInStyles: VariableDefinitions = {
-  cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
-  cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
+  cfBackgroundImage: optionalBuiltInStyles.cfBackgroundImage,
   cfMargin: {
     displayName: 'Margin',
     type: 'Text',

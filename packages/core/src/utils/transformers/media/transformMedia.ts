@@ -1,7 +1,6 @@
 import { SUPPORTED_IMAGE_FORMATS } from '@/constants';
 import {
   BackgroundImageOptions,
-  BoundComponentPropertyTypes,
   ComponentTreeNode,
   ImageOptions,
   ResolveDesignValueType,
@@ -18,49 +17,51 @@ export const transformMedia = (
   variableName: string,
   path: string,
 ) => {
-  let value: BoundComponentPropertyTypes;
-
   //TODO: this will be better served by injectable type transformers instead of if statement
-  if (variableName === 'cfImageAsset') {
-    const options = resolveDesignValue(
-      variables['cfImageOptions']?.type === 'DesignValue'
-        ? variables['cfImageOptions'].valuesByBreakpoint
-        : {},
-      'cfImageOptions',
-    ) as ImageOptions;
+  if (variableName === 'cfImage') {
+    const { valuesByBreakpoint } = variables[variableName];
+
+    const options = resolveDesignValue(valuesByBreakpoint ?? {}, variableName) as ImageOptions;
+
     try {
-      value = getOptimizedImageAsset(
-        asset.fields.file as AssetFile,
-        options.targetSize as string,
-        Number(options.quality),
-        options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-      );
-      return value;
+      return {
+        ...options,
+        asset: getOptimizedImageAsset(
+          asset.fields.file as AssetFile,
+          options.targetSize as string,
+          Number(options.quality),
+          options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+        ),
+      };
     } catch (error) {
       console.error('Error transforming image asset', error);
     }
     return;
   }
 
-  if (variableName === 'cfBackgroundImageUrl') {
+  if (variableName === 'cfBackgroundImage') {
     const width = resolveDesignValue(
       variables['cfWidth']?.type === 'DesignValue' ? variables['cfWidth'].valuesByBreakpoint : {},
       'cfWidth',
     );
+
+    const { valuesByBreakpoint } = variables[variableName];
+
     const options = resolveDesignValue(
-      variables['cfBackgroundImageOptions']?.type === 'DesignValue'
-        ? variables['cfBackgroundImageOptions'].valuesByBreakpoint
-        : {},
-      'cfBackgroundImageOptions',
+      valuesByBreakpoint ?? {},
+      variableName,
     ) as BackgroundImageOptions;
+
     try {
-      value = getOptimizedBackgroundImageAsset(
-        asset.fields.file as AssetFile,
-        width as string,
-        Number(options.quality),
-        options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-      );
-      return value;
+      return {
+        ...options,
+        asset: getOptimizedBackgroundImageAsset(
+          asset.fields.file as AssetFile,
+          width as string,
+          Number(options.quality),
+          options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+        ),
+      };
     } catch (error) {
       console.error('Error transforming image asset', error);
     }

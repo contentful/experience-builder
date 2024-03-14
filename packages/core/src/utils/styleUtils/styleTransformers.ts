@@ -1,9 +1,8 @@
 import {
-  StyleProps,
   CSSProperties,
-  OptimizedBackgroundImageAsset,
   BackgroundImageScalingOption,
   BackgroundImageAlignmentOption,
+  BackgroundImageOptions,
 } from '@/types';
 
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
@@ -69,8 +68,7 @@ interface CSSPropertiesForBackground extends CSSProperties {
 }
 
 export const transformBackgroundImage = (
-  cfBackgroundImageUrl: string | OptimizedBackgroundImageAsset | null | undefined,
-  cfBackgroundImageOptions?: StyleProps['cfBackgroundImageOptions'],
+  cfBackgroundImage?: BackgroundImageOptions,
 ): CSSPropertiesForBackground | undefined => {
   const matchBackgroundSize = (scaling?: BackgroundImageScalingOption) => {
     if ('fill' === scaling) return 'cover';
@@ -124,27 +122,27 @@ export const transformBackgroundImage = (
     return `${horizontalAlignment} ${verticalAlignment}` as CSSPropertiesForBackground['backgroundPosition'];
   };
 
-  if (!cfBackgroundImageUrl) {
+  if (!cfBackgroundImage || !cfBackgroundImage.asset) {
     return;
   }
 
   let backgroundImage: string;
   let backgroundImageSet: string | undefined;
 
-  if (typeof cfBackgroundImageUrl === 'string') {
-    backgroundImage = `url(${cfBackgroundImageUrl})`;
+  if (typeof cfBackgroundImage.asset === 'string') {
+    backgroundImage = `url(${cfBackgroundImage.asset})`;
   } else {
-    const imgSet = cfBackgroundImageUrl.srcSet?.join(',');
-    backgroundImage = `url(${cfBackgroundImageUrl.url})`;
+    const imgSet = cfBackgroundImage.asset.srcSet?.join(',');
+    backgroundImage = `url(${cfBackgroundImage.asset.url})`;
     backgroundImageSet = `image-set(${imgSet})`;
   }
 
   return {
     backgroundImage,
     backgroundImage2: backgroundImageSet,
-    backgroundRepeat: cfBackgroundImageOptions?.scaling === 'tile' ? 'repeat' : 'no-repeat',
-    backgroundPosition: matchBackgroundPosition(cfBackgroundImageOptions?.alignment),
-    backgroundSize: matchBackgroundSize(cfBackgroundImageOptions?.scaling),
+    backgroundRepeat: cfBackgroundImage?.scaling === 'tile' ? 'repeat' : 'no-repeat',
+    backgroundPosition: matchBackgroundPosition(cfBackgroundImage?.alignment),
+    backgroundSize: matchBackgroundSize(cfBackgroundImage?.scaling),
   };
 };
 

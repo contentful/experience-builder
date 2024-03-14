@@ -152,22 +152,22 @@ export const experiencePattern = {
                   desktop: '0px 0px',
                 },
               },
-              cfBackgroundImageUrl: {
-                key: 'cfBackgroundImageUrl_AtBrirchNbwfpkWlSfTD6',
-                type: 'ComponentValue',
-              },
-              cfBackgroundImageScaling: {
-                type: 'DesignValue',
-                valuesByBreakpoint: {
-                  desktop: 'fit',
-                },
-              },
-              cfBackgroundImageAlignment: {
-                type: 'DesignValue',
-                valuesByBreakpoint: {
-                  desktop: 'left top',
-                },
-              },
+              // cfBackgroundImageUrl: {
+              //   key: 'cfBackgroundImageUrl_AtBrirchNbwfpkWlSfTD6',
+              //   type: 'ComponentValue',
+              // },
+              // cfBackgroundImageScaling: {
+              //   type: 'DesignValue',
+              //   valuesByBreakpoint: {
+              //     desktop: 'fit',
+              //   },
+              // },
+              // cfBackgroundImageAlignment: {
+              //   type: 'DesignValue',
+              //   valuesByBreakpoint: {
+              //     desktop: 'left top',
+              //   },
+              // },
               cfHyperlink: {
                 key: 'cfHyperlink_AtBrirchNbwfpkWlSfTD6',
                 type: 'ComponentValue',

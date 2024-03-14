@@ -42,6 +42,8 @@ export const ComponentDefinitionPropertyTypeSchema = z.enum([
   'Location',
   'Media',
   'Object',
+  'ImageOptions',
+  'BackgroundImageOptions',
 ]);
 
 const ValuesByBreakpointSchema = z.record(z.lazy(() => PrimitiveValueSchema));
@@ -56,18 +58,21 @@ const BoundValueSchema = z
   .object({
     type: z.literal('BoundValue'),
     path: z.string(),
+    valuesByBreakpoint: z.optional(ValuesByBreakpointSchema),
   })
   .strict();
 const UnboundValueSchema = z
   .object({
     type: z.literal('UnboundValue'),
     key: z.string(),
+    valuesByBreakpoint: z.optional(ValuesByBreakpointSchema),
   })
   .strict();
 const ComponentValueSchema = z
   .object({
     type: z.literal('ComponentValue'),
     key: z.string(),
+    valuesByBreakpoint: z.optional(ValuesByBreakpointSchema),
   })
   .strict();
 

@@ -1,22 +1,31 @@
 import { placeholderImage } from '@/utils/constants';
 import { Image } from './Image';
 import React from 'react';
-import { OptimizedImageAsset } from '@contentful/experiences-core/types';
+import { ImageOptions, OptimizedImageAsset } from '@contentful/experiences-core/types';
 
-let file: OptimizedImageAsset;
+let options: ImageOptions;
 
 describe('Image', () => {
   beforeEach(() => {
-    file = {
-      url: `${placeholderImage}?w=500`,
-      srcSet: [`${placeholderImage}?w=125 125w`, `${placeholderImage}?w=250 250w`],
-      sizes: '250px',
-      file: {
-        url: placeholderImage,
-        details: { size: 1234567, image: { width: 800, height: 450 } },
-        fileName: 'myImage.jpeg',
-        contentType: 'image/jpeg',
+    options = {
+      asset: {
+        url: `${placeholderImage}?w=500`,
+        srcSet: [`${placeholderImage}?w=125 125w`, `${placeholderImage}?w=250 250w`],
+        sizes: '250px',
+        file: {
+          url: placeholderImage,
+          details: { size: 1234567, image: { width: 800, height: 450 } },
+          fileName: 'myImage.jpeg',
+          contentType: 'image/jpeg',
+        },
       },
+      width: '500px',
+      height: '500px',
+      objectFit: 'initial',
+      objectPosition: 'center center',
+      quality: '100',
+      format: 'jpg',
+      targetSize: '500px',
     };
   });
 
@@ -25,7 +34,7 @@ describe('Image', () => {
     cy.get('img').invoke('attr', 'src').should('eq', placeholderImage);
   });
 
-  it('renders default image when no src or cfImageAsset are specified', () => {
+  it('renders default image when no src or cfImage are specified', () => {
     cy.mount(<Image />);
     cy.get('.cf-no-image').should('exist');
     cy.get('.cf-no-image img').should('exist');
@@ -37,24 +46,30 @@ describe('Image', () => {
     cy.get('img').invoke('attr', 'width').should('eq', '300');
   });
 
-  it('when cfImageAsset is a string, it should be used as the src', () => {
-    cy.mount(<Image cfImageAsset={placeholderImage} />);
+  it('when cfImage is a string, it should be used as the src', () => {
+    cy.mount(<Image cfImage={options} />);
     cy.get('img').invoke('attr', 'src').should('eq', placeholderImage);
   });
 
-  it('when cfImageAsset is an object, it should set the src as the url of the object as a fallback', () => {
-    cy.mount(<Image cfImageAsset={file} />);
-    cy.get('img').invoke('attr', 'src').should('eq', file.url);
+  it('when cfImage is an object, it should set the src as the url of the object as a fallback', () => {
+    cy.mount(<Image cfImage={options} />);
+    cy.get('img')
+      .invoke('attr', 'src')
+      .should('eq', (options.asset as OptimizedImageAsset).url);
   });
 
-  it('when cfImageAsset is an object, it should set the srcSet of the image tag to the srcSet of the object', () => {
-    cy.mount(<Image cfImageAsset={file} />);
-    cy.get('img').invoke('attr', 'srcset').should('eq', file.srcSet!.join(', '));
+  it('when cfImage is an object, it should set the srcSet of the image tag to the srcSet of the object', () => {
+    cy.mount(<Image cfImage={options} />);
+    cy.get('img')
+      .invoke('attr', 'srcset')
+      .should('eq', (options.asset as OptimizedImageAsset).srcSet!.join(', '));
   });
 
-  it('when cfImageAsset is an object, it should set the sizes of the image tag to the sizes of the object', () => {
-    cy.mount(<Image cfImageAsset={file} />);
-    cy.get('img').invoke('attr', 'sizes').should('eq', file.sizes);
+  it('when cfImage is an object, it should set the sizes of the image tag to the sizes of the object', () => {
+    cy.mount(<Image cfImage={options} />);
+    cy.get('img')
+      .invoke('attr', 'sizes')
+      .should('eq', (options.asset as OptimizedImageAsset).sizes);
   });
 
   it('additional props should be passed to the image', () => {

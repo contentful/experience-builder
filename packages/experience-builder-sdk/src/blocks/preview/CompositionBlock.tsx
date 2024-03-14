@@ -182,7 +182,7 @@ export const CompositionBlock = ({
   }
 
   //List explicit style props that will end up being passed to the component
-  const stylesToKeep = ['cfImageAsset'];
+  const stylesToKeep = ['cfImage'];
   const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
 
   return React.createElement(

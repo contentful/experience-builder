@@ -70,9 +70,7 @@ export type ComponentDefinitionVariableType =
   | 'Boolean'
   | 'Location'
   | 'Media'
-  | 'Object'
-  | 'ImageOptions'
-  | 'BackgroundImageOptions';
+  | 'Object';
 
 export type VariableFormats = 'URL'; // | alphaNum | base64 | email | ipAddress
 
@@ -209,10 +207,8 @@ export type StyleProps = {
   cfBorder: string;
   cfGap: string;
   cfHyperlink: string;
-  cfImageAsset: OptimizedImageAsset | string;
-  cfImageOptions: ImageOptions;
-  cfBackgroundImageUrl: OptimizedBackgroundImageAsset | string;
-  cfBackgroundImageOptions: BackgroundImageOptions;
+  cfImage: ImageOptions;
+  cfBackgroundImage: BackgroundImageOptions;
   cfOpenInNewTab: boolean;
   cfFontSize: string;
   cfFontWeight: string;
@@ -319,8 +315,8 @@ export type BoundComponentPropertyTypes =
   | AssetFile
   | Record<string, AssetFile | undefined>
   | RichTextDocument
-  | OptimizedBackgroundImageAsset
-  | OptimizedImageAsset
+  | ImageOptions
+  | BackgroundImageOptions
   | Link<'Asset'>
   | undefined;
 
@@ -357,6 +353,7 @@ export type ImageObjectPositionOption =
   | 'center bottom';
 
 export type ImageOptions = {
+  asset?: OptimizedImageAsset | string;
   format?: string;
   width: string;
   height: string;
@@ -384,6 +381,7 @@ export type BackgroundImageAlignmentOption =
   | 'center bottom';
 
 export type BackgroundImageOptions = {
+  asset?: OptimizedBackgroundImageAsset | string;
   format?: string;
   scaling: BackgroundImageScalingOption;
   alignment: BackgroundImageAlignmentOption;
