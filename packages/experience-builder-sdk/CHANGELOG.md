@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.6](https://github.com/contentful/experience-builder/compare/@contentful/experiences-sdk-react@0.0.1-alpha.5...@contentful/experiences-sdk-react@0.0.1-alpha.6) (2024-03-14)
+
+### Bug Fixes
+
+- remove unecessary exports from experience-builder-sdk ([175a3fe](https://github.com/contentful/experience-builder/commit/175a3fe5e399869d0d1819275711ed8c0230d4a8))
+
 ## [0.0.1-alpha.5](https://github.com/contentful/experience-builder/compare/@contentful/experiences-sdk-react@0.0.1-alpha.4...@contentful/experiences-sdk-react@0.0.1-alpha.5) (2024-03-13)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react
