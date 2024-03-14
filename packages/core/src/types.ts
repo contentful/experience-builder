@@ -13,6 +13,7 @@ import type {
   ComponentPropertyValue,
   PrimitiveValue,
   ExperienceComponentTree,
+  ComponentDefinitionPropertyType,
 } from '@contentful/experiences-validators';
 export type {
   ExperienceDataSource,
@@ -28,6 +29,7 @@ export type {
   UnboundValue,
   BoundValue,
   ComponentValue,
+  ComponentDefinitionPropertyType as ComponentDefinitionVariableType,
 } from '@contentful/experiences-validators';
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;
@@ -50,30 +52,20 @@ export interface Link<T extends string> {
   };
 }
 
-export type ComponentDefinitionVariableType =
-  | 'Text'
-  | 'RichText'
-  | 'Number'
-  | 'Date'
-  | 'Boolean'
-  | 'Location'
-  | 'Media'
-  | 'Object';
-
 export type VariableFormats = 'URL'; // | alphaNum | base64 | email | ipAddress
 
-export type ValidationOption<T extends ComponentDefinitionVariableType> = {
+export type ValidationOption<T extends ComponentDefinitionPropertyType> = {
   value: T extends 'Text' ? string : T extends 'Number' ? number : never;
   displayName?: string;
 };
 
-export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionVariableType> = {
+export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionPropertyType> = {
   required?: boolean;
   in?: ValidationOption<T>[];
   format?: VariableFormats;
 };
 
-export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVariableType> {
+export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionPropertyType> {
   type: T;
   validations?: ComponentDefinitionVariableValidation<T>;
   group?: 'style' | 'content';
@@ -84,7 +76,7 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
 }
 
 export type ComponentDefinitionVariable<
-  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
+  T extends ComponentDefinitionPropertyType = ComponentDefinitionPropertyType,
   // K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
 > =
   // T extends 'Link'
@@ -94,7 +86,7 @@ export type ComponentDefinitionVariable<
   /*:*/ ComponentDefinitionVariableBase<T>;
 
 export type ComponentDefinition<
-  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType,
+  T extends ComponentDefinitionPropertyType = ComponentDefinitionPropertyType,
 > = {
   id: string;
   name: string;

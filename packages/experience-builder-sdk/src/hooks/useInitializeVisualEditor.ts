@@ -4,6 +4,7 @@ import {
   componentRegistry,
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
+  runRegisteredComponentValidations,
 } from '../core/componentRegistry';
 import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
 import { designTokensRegistry } from '@contentful/experiences-core';
@@ -23,12 +24,14 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
   // InternalEvents.COMPONENTS_REGISTERED is triggered by defineComponents function
   useEffect(() => {
     if (!hasConnectEventBeenSent.current) {
+      runRegisteredComponentValidations();
       // sending CONNECT but with the registered components now
       sendConnectedEventWithRegisteredComponents();
       hasConnectEventBeenSent.current = true;
     }
 
     const onComponentsRegistered = () => {
+      runRegisteredComponentValidations();
       sendRegisteredComponentsMessage();
     };
 

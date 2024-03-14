@@ -68,6 +68,13 @@ export const validateExperienceFields = (
   return { success: true };
 };
 
-export const validateComponentRegistration = (registration) => {
-  return ComponentDefinitionSchema.safeParse(registration);
+export const validateComponentDefinition = (definition): ValidatorReturnValue => {
+  const result = ComponentDefinitionSchema.safeParse(definition);
+  if (!result.success) {
+    return {
+      success: false,
+      errors: result.error.issues.map(zodToContentfulError),
+    };
+  }
+  return { success: true };
 };

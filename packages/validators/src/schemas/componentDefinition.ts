@@ -11,32 +11,22 @@ export const DefinitionPropertyTypeSchema = z.enum([
   'Object',
 ]);
 
-export const DefinitionPropertyKeySchema = z.string().regex(/^[a-zA-Z0-9-_]{1,32}$/);
+export const DefinitionPropertyKeySchema = z
+  .string()
+  .regex(/^[a-zA-Z0-9-_]{1,32}$/, { message: 'Attribute needs to match: /^[a-zA-Z0-9-_]{1,32}$/' });
 
 export const ComponentDefinitionSchema = z.object({
-  definitionId: DefinitionPropertyKeySchema,
+  id: DefinitionPropertyKeySchema,
   variables: z.record(
     DefinitionPropertyKeySchema,
     z.object({
+      // TODO - extend with definition of validations and defaultValue
       displayName: z.string().optional(),
       type: DefinitionPropertyTypeSchema,
-      defaultValue: z.any().optional(),
       description: z.string().optional(),
       group: z.string().optional(),
-      validations: z
-        .object({
-          required: z.boolean().optional(),
-          format: z.literal('URL').optional(),
-          in: z
-            .array(
-              z.object({
-                value: z.union([z.string(), z.number()]),
-                displayName: z.string().optional(),
-              }),
-            )
-            .optional(),
-        })
-        .optional(),
     }),
   ),
 });
+
+export type ComponentDefinitionPropertyType = z.infer<typeof DefinitionPropertyTypeSchema>;

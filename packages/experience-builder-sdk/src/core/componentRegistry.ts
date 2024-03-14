@@ -20,9 +20,21 @@ import {
   columnsDefinition,
   singleColumnDefinition,
 } from '@contentful/experiences-core';
-import { validateCompoenentRegistration } from '@contentful/experiences-validators';
+import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
+
+export class InvalidComponentDefinitionError extends Error {
+  definition: ComponentDefinition;
+  errors: any;
+
+  constructor(message: string, definition: ComponentDefinition, errors: any) {
+    super(message);
+    this.name = 'InvalidComponentDefinitionError';
+    this.definition = definition;
+    this.errors = errors;
+  }
+}
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -166,6 +178,19 @@ export const sendRegisteredComponentsMessage = () => {
   });
 };
 
+export const runRegisteredComponentValidations = () => {
+  Array.from(componentRegistry.values()).map(({ definition }) => {
+    const validation = validateComponentDefinition(definition);
+    if (!validation.success) {
+      throw new InvalidComponentDefinitionError(
+        `Invalid component definition for component '${definition.name}'. Failed with errors: \n${JSON.stringify(validation.errors, null, 2)}`,
+        definition,
+        validation.errors,
+      );
+    }
+  });
+};
+
 export const sendConnectedEventWithRegisteredComponents = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
@@ -202,13 +227,7 @@ export const defineComponents = (
   for (const registration of componentRegistrations) {
     // Fill definitions with fallbacks values
     const enrichedComponentRegistration = enrichComponentDefinition(registration);
-    const validation = validateCompoenentRegistration(enrichedComponentRegistration);
-    if (!validation.success) {
-      console.error(
-        `Component registration failed: ${validation.errors?.map((e) => e.details).join(', ')}`,
-      );
-      return;
-    }
+
     componentRegistry.set(
       enrichedComponentRegistration.definition.id,
       enrichedComponentRegistration,

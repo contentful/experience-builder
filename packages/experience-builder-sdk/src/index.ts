@@ -2,7 +2,7 @@ import { SDK_VERSION } from './sdkVersion';
 
 export { ExperienceRoot } from './ExperienceRoot';
 export { useFetchById, useFetchBySlug } from './hooks';
-export { defineComponents } from './core/componentRegistry';
+export { defineComponents, InvalidComponentDefinitionError } from './core/componentRegistry';
 export {
   calculateNodeDefaultHeight,
   /** @deprecated use `checkIsAssemblyNode` instead. Will be removed with SDK v5. */
