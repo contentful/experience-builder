@@ -8,7 +8,7 @@
 }
 
 .DraggableComponent:before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   right: 0;
@@ -17,22 +17,24 @@
   outline-offset: -2px;
   outline: 2px solid transparent;
   z-index: 1;
+  pointer-events: none;
 }
 
 .DraggableClone:before {
   outline: 2px solid var(--exp-builder-blue500);
 }
 
-.DraggableComponent > * {
+.DraggableClone,
+.DraggableClone * {
+  pointer-events: none !important;
+}
+
+.DraggableComponent:not(.userIsDragging) :not(.DraggableComponent) {
   pointer-events: none;
 }
 
 .isDragging {
   overflow: hidden;
-}
-
-.isDragging * {
-  pointer-events: none !important;
 }
 
 .isSelected:before {

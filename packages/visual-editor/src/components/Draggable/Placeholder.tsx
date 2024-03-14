@@ -15,6 +15,61 @@ interface PlaceholderProps extends PlaceholderParams {
   id: string;
 }
 
+const calcOffsetLeft = (
+  parentElement: Element | null,
+  placeholderWidth: number,
+  nodeWidth: number,
+) => {
+  if (!parentElement) {
+    return 0;
+  }
+
+  const alignItems = window.getComputedStyle(parentElement).alignItems;
+
+  if (alignItems === 'center') {
+    return -(placeholderWidth - nodeWidth) / 2;
+  }
+
+  if (alignItems === 'end') {
+    return -placeholderWidth + nodeWidth + 2;
+  }
+
+  return 0;
+};
+
+const calcOffsetTop = (
+  parentElement: Element | null,
+  placeholderHeight: number,
+  nodeHeight: number,
+) => {
+  if (!parentElement) {
+    return 0;
+  }
+
+  const alignItems = window.getComputedStyle(parentElement).alignItems;
+
+  if (alignItems === 'center') {
+    return -(placeholderHeight - nodeHeight) / 2;
+  }
+
+  if (alignItems === 'end') {
+    return -placeholderHeight + nodeHeight + 2;
+  }
+
+  return 0;
+};
+
+const getPaddingOffset = (element: Element): [number, number] => {
+  const paddingLeft = parseFloat(window.getComputedStyle(element).paddingLeft);
+  const paddingRight = parseFloat(window.getComputedStyle(element).paddingRight);
+  const paddingTop = parseFloat(window.getComputedStyle(element).paddingTop);
+  const paddingBottom = parseFloat(window.getComputedStyle(element).paddingBottom);
+
+  const horizontalOffset = paddingLeft + paddingRight;
+  const verticalOffset = paddingTop + paddingBottom;
+
+  return [horizontalOffset, verticalOffset];
+};
 /**
  * Calculate the size and position of the dropzone indicator
  * when dragging a new component onto the canvas
@@ -37,10 +92,16 @@ const calcNewComponentStyles = (params: CalcStylesParams): CSSProperties => {
   const elementSizes = element.getBoundingClientRect();
   const dropzoneSizes = dropzone.getBoundingClientRect();
 
-  const width = isHorizontal ? DRAGGABLE_WIDTH : dropzoneSizes.width;
-  const height = isHorizontal ? dropzoneSizes.height : DRAGGABLE_HEIGHT;
-  const top = isHorizontal ? -(height - elementSizes.height) / 2 : -height;
-  const left = isHorizontal ? -width : -(width - elementSizes.width) / 2;
+  const [horizontalPadding, verticalPadding] = getPaddingOffset(dropzone);
+
+  const width = isHorizontal ? DRAGGABLE_WIDTH : dropzoneSizes.width - horizontalPadding;
+  const height = isHorizontal ? dropzoneSizes.height - verticalPadding : DRAGGABLE_HEIGHT;
+  const top = isHorizontal
+    ? calcOffsetTop(element.parentElement, height, elementSizes.height)
+    : -height;
+  const left = isHorizontal
+    ? -width
+    : calcOffsetLeft(element.parentElement, width, elementSizes.width);
 
   return {
     width,
@@ -89,10 +150,16 @@ const calcMovementStyles = (params: CalcStylesParams): CSSProperties => {
   const dropzoneSizes = dropzone.getBoundingClientRect();
   const draggableSizes = draggable.getBoundingClientRect();
 
-  const width = isHorizontal ? draggableSizes.width : dropzoneSizes.width;
-  const height = isHorizontal ? dropzoneSizes.height : draggableSizes.height;
-  const top = isHorizontal ? -(height - elementSizes.height) / 2 : -height;
-  const left = isHorizontal ? -width : -(width - elementSizes.width) / 2;
+  const [horizontalPadding, verticalPadding] = getPaddingOffset(dropzone);
+
+  const width = isHorizontal ? draggableSizes.width : dropzoneSizes.width - horizontalPadding;
+  const height = isHorizontal ? dropzoneSizes.height - verticalPadding : draggableSizes.height;
+  const top = isHorizontal
+    ? calcOffsetTop(element.parentElement, height, elementSizes.height)
+    : -height;
+  const left = isHorizontal
+    ? -width
+    : calcOffsetLeft(element.parentElement, width, elementSizes.width);
 
   return {
     width,
