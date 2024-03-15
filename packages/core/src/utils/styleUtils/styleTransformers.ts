@@ -122,19 +122,21 @@ export const transformBackgroundImage = (
     return `${horizontalAlignment} ${verticalAlignment}` as CSSPropertiesForBackground['backgroundPosition'];
   };
 
-  if (!cfBackgroundImage || !cfBackgroundImage.asset) {
+  if (!cfBackgroundImage) {
     return;
   }
 
-  let backgroundImage: string;
+  let backgroundImage: string | undefined;
   let backgroundImageSet: string | undefined;
 
-  if (typeof cfBackgroundImage.asset === 'string') {
-    backgroundImage = `url(${cfBackgroundImage.asset})`;
-  } else {
+  if (cfBackgroundImage.asset) {
     const imgSet = cfBackgroundImage.asset.srcSet?.join(',');
     backgroundImage = `url(${cfBackgroundImage.asset.url})`;
     backgroundImageSet = `image-set(${imgSet})`;
+  } else if (cfBackgroundImage.url) {
+    backgroundImage = `url(${cfBackgroundImage.url})`;
+  } else {
+    return;
   }
 
   return {

@@ -20,6 +20,8 @@ import type {
   ResolveDesignValueType,
   ComponentRegistration,
   Link,
+  BackgroundImageOptions,
+  ImageOptions,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useStyleTag } from '../../hooks/useStyleTag';
@@ -122,18 +124,37 @@ export const useComponentProps = ({
             ...acc,
             [variableName]: value,
           };
-        } else {
+        }
+
+        // For unbound Media type, we need to merge the valuesByBreakpoint with the url
+        if (variableDefinition.type === 'Media' && variableMapping.valuesByBreakpoint) {
           const value = getUnboundValues({
             key: variableMapping.key,
-            fallback: variableDefinition.defaultValue,
             unboundValues: unboundValues || {},
           });
-
+          const valueByBreakpoint = resolveDesignValue(
+            variableMapping.valuesByBreakpoint,
+            variableName,
+          ) as ImageOptions | BackgroundImageOptions;
           return {
             ...acc,
-            [variableName]: value,
+            [variableName]: {
+              ...valueByBreakpoint,
+              ...(value ? { url: value } : {}),
+            },
           };
         }
+
+        const value = getUnboundValues({
+          key: variableMapping.key,
+          fallback: variableDefinition.defaultValue,
+          unboundValues: unboundValues || {},
+        });
+
+        return {
+          ...acc,
+          [variableName]: value,
+        };
       },
       {},
     );

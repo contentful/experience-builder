@@ -10,8 +10,8 @@ export const getUnboundValues = ({
   unboundValues,
 }: {
   key: string;
-  fallback: CompositionVariableValueType;
   unboundValues: CompositionUnboundValues;
+  fallback?: CompositionVariableValueType;
 }): CompositionVariableValueType => {
   const lodashPath = `${key}.value`;
 

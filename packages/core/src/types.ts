@@ -326,7 +326,7 @@ export type OptimizedImageAsset = {
   file: AssetFile;
 };
 
-export type ImageObjectFitOption = 'initial' | 'contain' | 'cover' | 'none';
+export type ImageObjectFitOption = 'contain' | 'cover' | 'none';
 
 export type ImageObjectPositionOption =
   | 'left'
@@ -344,7 +344,8 @@ export type ImageObjectPositionOption =
   | 'center bottom';
 
 export type ImageOptions = {
-  asset?: OptimizedImageAsset | string;
+  asset?: OptimizedImageAsset;
+  url?: string;
   format?: string;
   width: string;
   height: string;
@@ -372,7 +373,8 @@ export type BackgroundImageAlignmentOption =
   | 'center bottom';
 
 export type BackgroundImageOptions = {
-  asset?: OptimizedImageAsset | string;
+  asset?: OptimizedImageAsset;
+  url?: string;
   format?: string;
   scaling: BackgroundImageScalingOption;
   alignment: BackgroundImageAlignmentOption;

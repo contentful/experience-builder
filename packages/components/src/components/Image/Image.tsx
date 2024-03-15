@@ -7,7 +7,7 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 }
 
 export const Image: React.FC<ImageProps> = ({ className = '', src, cfImage, ...props }) => {
-  if (!cfImage || (!cfImage.asset && !src)) {
+  if (!cfImage || (!cfImage.asset && !cfImage.url && !src)) {
     return (
       <div className="cf-no-image">
         <img
@@ -25,10 +25,6 @@ export const Image: React.FC<ImageProps> = ({ className = '', src, cfImage, ...p
     );
   }
 
-  if (typeof cfImage.asset === 'string') {
-    return <img src={cfImage.asset} className={'cf-image ' + className} {...props} />;
-  }
-
   if (cfImage.asset) {
     return (
       <img
@@ -39,6 +35,10 @@ export const Image: React.FC<ImageProps> = ({ className = '', src, cfImage, ...p
         {...props}
       />
     );
+  }
+
+  if (cfImage.url) {
+    return <img src={cfImage.url} className={'cf-image ' + className} {...props} />;
   }
 
   if (src) {

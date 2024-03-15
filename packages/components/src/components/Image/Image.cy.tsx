@@ -20,7 +20,7 @@ describe('Image', () => {
       },
       width: '500px',
       height: '500px',
-      objectFit: 'initial',
+      objectFit: 'contain',
       objectPosition: 'center center',
       quality: '100',
       format: 'jpg',

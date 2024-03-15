@@ -20,9 +20,7 @@ export const transformMedia = (
   //TODO: this will be better served by injectable type transformers instead of if statement
   if (variableName === 'cfImage') {
     const { valuesByBreakpoint } = variables[variableName];
-
     const options = resolveDesignValue(valuesByBreakpoint ?? {}, variableName) as ImageOptions;
-
     try {
       return {
         ...options,
@@ -44,14 +42,11 @@ export const transformMedia = (
       variables['cfWidth']?.type === 'DesignValue' ? variables['cfWidth'].valuesByBreakpoint : {},
       'cfWidth',
     );
-
     const { valuesByBreakpoint } = variables[variableName];
-
     const options = resolveDesignValue(
       valuesByBreakpoint ?? {},
       variableName,
     ) as BackgroundImageOptions;
-
     try {
       return {
         ...options,
