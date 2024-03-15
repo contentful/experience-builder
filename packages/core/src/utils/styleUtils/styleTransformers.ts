@@ -1,4 +1,10 @@
-import { StyleProps, CSSProperties, OptimizedBackgroundImageAsset } from '@/types';
+import {
+  StyleProps,
+  CSSProperties,
+  OptimizedBackgroundImageAsset,
+  BackgroundImageScalingOption,
+  BackgroundImageAlignmentOption,
+} from '@/types';
 
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
 
@@ -64,29 +70,20 @@ interface CSSPropertiesForBackground extends CSSProperties {
 
 export const transformBackgroundImage = (
   cfBackgroundImageUrl: string | OptimizedBackgroundImageAsset | null | undefined,
-  cfBackgroundImageScaling?: StyleProps['cfBackgroundImageScaling'],
-  cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment'],
+  cfBackgroundImageOptions?: StyleProps['cfBackgroundImageOptions'],
 ): CSSPropertiesForBackground | undefined => {
-  const matchBackgroundSize = (
-    backgroundImageScaling?: StyleProps['cfBackgroundImageScaling'],
-  ): 'cover' | 'contain' | undefined => {
-    if ('fill' === backgroundImageScaling) return 'cover';
-    if ('fit' === backgroundImageScaling) return 'contain';
-    return undefined;
+  const matchBackgroundSize = (scaling?: BackgroundImageScalingOption) => {
+    if ('fill' === scaling) return 'cover';
+    if ('fit' === scaling) return 'contain';
   };
 
   const matchBackgroundPosition = (
-    cfBackgroundImageAlignment?: StyleProps['cfBackgroundImageAlignment'],
+    alignment?: BackgroundImageAlignmentOption,
   ): CSSPropertiesForBackground['backgroundPosition'] | undefined => {
-    if (!cfBackgroundImageAlignment) {
-      return undefined;
+    if (!alignment || 'string' !== typeof alignment) {
+      return;
     }
-    if ('string' !== typeof cfBackgroundImageAlignment) {
-      return undefined;
-    }
-    let [horizontalAlignment, verticalAlignment] = cfBackgroundImageAlignment
-      .trim()
-      .split(/\s+/, 2);
+    let [horizontalAlignment, verticalAlignment] = alignment.trim().split(/\s+/, 2);
 
     // Special case for handling single values
     // for backwards compatibility with single values 'right','left', 'center', 'top','bottom'
@@ -128,7 +125,7 @@ export const transformBackgroundImage = (
   };
 
   if (!cfBackgroundImageUrl) {
-    return undefined;
+    return;
   }
 
   let backgroundImage: string;
@@ -145,9 +142,9 @@ export const transformBackgroundImage = (
   return {
     backgroundImage,
     backgroundImage2: backgroundImageSet,
-    backgroundRepeat: cfBackgroundImageScaling === 'tile' ? 'repeat' : 'no-repeat',
-    backgroundPosition: matchBackgroundPosition(cfBackgroundImageAlignment),
-    backgroundSize: matchBackgroundSize(cfBackgroundImageScaling),
+    backgroundRepeat: cfBackgroundImageOptions?.scaling === 'tile' ? 'repeat' : 'no-repeat',
+    backgroundPosition: matchBackgroundPosition(cfBackgroundImageOptions?.alignment),
+    backgroundSize: matchBackgroundSize(cfBackgroundImageOptions?.scaling),
   };
 };
 export const transformWidthSizing = ({
@@ -157,7 +154,7 @@ export const transformWidthSizing = ({
   value: string | undefined;
   cfMargin: string | undefined;
 }) => {
-  if (!value || !cfMargin) return undefined;
+  if (!value || !cfMargin) return;
 
   const transformedValue = transformFill(value);
   const marginValues = cfMargin.split(' ');

@@ -1,5 +1,11 @@
 import { SUPPORTED_IMAGE_FORMATS } from '@/constants';
-import { BoundComponentPropertyTypes, ComponentTreeNode, ResolveDesignValueType } from '@/types';
+import {
+  BackgroundImageOptions,
+  BoundComponentPropertyTypes,
+  ComponentTreeNode,
+  ImageOptions,
+  ResolveDesignValueType,
+} from '@/types';
 import { Asset, AssetFile } from 'contentful';
 import { getOptimizedBackgroundImageAsset } from './getOptimizedBackgroundImageAsset';
 import { getOptimizedImageAsset } from './getOptimizedImageAsset';
@@ -13,57 +19,68 @@ export const transformMedia = (
   path: string,
 ) => {
   let value: BoundComponentPropertyTypes;
-  const format = resolveDesignValue(
-    variables['cfImageFormat']?.type === 'DesignValue'
-      ? variables['cfImageFormat'].valuesByBreakpoint
-      : {},
-    'cfImageFormat',
-  );
-  const quality = resolveDesignValue(
-    variables['cfImageQuality']?.type === 'DesignValue'
-      ? variables['cfImageQuality'].valuesByBreakpoint
-      : {},
-    'cfImageQuality',
-  );
-  const sizes = resolveDesignValue(
-    variables['cfImageSizes']?.type === 'DesignValue'
-      ? variables['cfImageSizes'].valuesByBreakpoint
-      : {},
-    'cfImageSizes',
-  );
-
-  const width = resolveDesignValue(
-    variables['cfWidth']?.type === 'DesignValue' ? variables['cfWidth'].valuesByBreakpoint : {},
-    'cfWidth',
-  );
 
   //TODO: this will be better served by injectable type transformers instead of if statement
   if (variableName === 'cfImageAsset') {
+    const optionsVariableName = 'cfImageOptions';
+    const options = resolveDesignValue(
+      variables[optionsVariableName]?.type === 'DesignValue'
+        ? variables[optionsVariableName].valuesByBreakpoint
+        : {},
+      optionsVariableName,
+    ) as ImageOptions | undefined;
+    if (!options) {
+      console.error(
+        `Error transforming image asset: Required variable [${optionsVariableName}] missing from component definition`,
+      );
+      return;
+    }
     try {
       value = getOptimizedImageAsset(
         asset.fields.file as AssetFile,
-        sizes as string,
-        Number(quality),
-        format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+        options.targetSize as string,
+        Number(options.quality),
+        options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
       );
       return value;
     } catch (error) {
       console.error('Error transforming image asset', error);
     }
-  } else if (variableName === 'cfBackgroundImageUrl') {
+    return;
+  }
+
+  if (variableName === 'cfBackgroundImageUrl') {
+    const width = resolveDesignValue(
+      variables['cfWidth']?.type === 'DesignValue' ? variables['cfWidth'].valuesByBreakpoint : {},
+      'cfWidth',
+    );
+    const optionsVariableName = 'cfBackgroundImageOptions';
+    const options = resolveDesignValue(
+      variables[optionsVariableName]?.type === 'DesignValue'
+        ? variables[optionsVariableName].valuesByBreakpoint
+        : {},
+      optionsVariableName,
+    ) as BackgroundImageOptions | undefined;
+    if (!options) {
+      console.error(
+        `Error transforming image asset: Required variable [${optionsVariableName}] missing from component definition`,
+      );
+      return;
+    }
     try {
       value = getOptimizedBackgroundImageAsset(
         asset.fields.file as AssetFile,
         width as string,
-        Number(quality),
-        format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+        Number(options.quality),
+        options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
       );
       return value;
     } catch (error) {
       console.error('Error transforming image asset', error);
     }
-  } else {
-    // return getBoundValue(asset, entityStore, binding, path);
-    return getBoundValue(asset, path);
+    return;
   }
+
+  // return getBoundValue(asset, entityStore, binding, path);
+  return getBoundValue(asset, path);
 };

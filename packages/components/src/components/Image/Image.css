@@ -1,14 +1,20 @@
 .cf-no-image {
   position: relative;
+}
+
+.cf-no-image img {
+  background-color: var(--cf-color-gray100);
+  outline-offset: -2px;
+  outline: 2px solid rgba(var(--cf-color-gray400-rgb), 0.5);
+}
+
+[data-ctfl-draggable-id] .cf-no-image {
   width: 100%;
   height: 100%;
 }
 
-.cf-no-image img {
+[data-ctfl-draggable-id] .cf-no-image img {
   width: 100%;
-  background-color: var(--cf-color-gray100);
-  outline-offset: -2px;
-  outline: 2px solid rgba(var(--cf-color-gray400-rgb), 0.5);
 }
 
 .cf-no-image svg {

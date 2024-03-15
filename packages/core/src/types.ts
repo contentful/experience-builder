@@ -191,44 +191,11 @@ export type StyleProps = {
   cfFlexWrap: 'nowrap' | 'wrap';
   cfBorder: string;
   cfGap: string;
-  cfBackgroundImageUrl: OptimizedBackgroundImageAsset | string;
-  cfBackgroundImageScaling: 'fit' | 'fill' | 'tile';
-  cfBackgroundImageAlignment:
-    | 'left'
-    | 'right'
-    | 'top'
-    | 'bottom'
-    | 'left top'
-    | 'left center'
-    | 'left bottom'
-    | 'right top'
-    | 'right center'
-    | 'right bottom'
-    | 'center top'
-    | 'center center'
-    | 'center bottom';
   cfHyperlink: string;
   cfImageAsset: OptimizedImageAsset | string;
-  cfImageFormat: string;
-  cfImageHeight: string;
-  cfImageObjectFit: 'none' | 'contain' | 'cover';
-  cfImageObjectPosition:
-    | 'left'
-    | 'right'
-    | 'top'
-    | 'bottom'
-    | 'left top'
-    | 'left center'
-    | 'left bottom'
-    | 'right top'
-    | 'right center'
-    | 'right bottom'
-    | 'center top'
-    | 'center center'
-    | 'center bottom';
-  cfImageQuality: string;
-  cfImageSizes: string;
-  cfImageWidth: string;
+  cfImageOptions: ImageOptions;
+  cfBackgroundImageUrl: OptimizedBackgroundImageAsset | string;
+  cfBackgroundImageOptions: BackgroundImageOptions;
   cfOpenInNewTab: boolean;
   cfFontSize: string;
   cfFontWeight: string;
@@ -354,4 +321,56 @@ export type OptimizedBackgroundImageAsset = {
   url: string;
   srcSet?: string[];
   file: AssetFile;
+};
+
+export type ImageObjectFitOption = 'contain' | 'cover' | 'none';
+
+export type ImageObjectPositionOption =
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'left top'
+  | 'left center'
+  | 'left bottom'
+  | 'right top'
+  | 'right center'
+  | 'right bottom'
+  | 'center top'
+  | 'center center'
+  | 'center bottom';
+
+export type ImageOptions = {
+  format?: string;
+  width: string;
+  height: string;
+  objectFit: ImageObjectFitOption;
+  objectPosition: ImageObjectPositionOption;
+  quality: string;
+  targetSize: string;
+};
+
+export type BackgroundImageScalingOption = 'fit' | 'fill' | 'tile';
+
+export type BackgroundImageAlignmentOption =
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'left top'
+  | 'left center'
+  | 'left bottom'
+  | 'right top'
+  | 'right center'
+  | 'right bottom'
+  | 'center top'
+  | 'center center'
+  | 'center bottom';
+
+export type BackgroundImageOptions = {
+  format?: string;
+  scaling: BackgroundImageScalingOption;
+  alignment: BackgroundImageAlignmentOption;
+  quality: string;
+  targetSize: string;
 };

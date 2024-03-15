@@ -111,20 +111,13 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfMaxWidth',
   'cfHeight',
   'cfImageAsset',
-  'cfImageFormat',
-  'cfImageHeight',
-  'cfImageObjectFit',
-  'cfImageObjectPosition',
-  'cfImageQuality',
-  'cfImageSizes',
-  'cfImageWidth',
+  'cfImageOptions',
+  'cfBackgroundImageUrl',
+  'cfBackgroundImageOptions',
   'cfFlexDirection',
   'cfFlexWrap',
   'cfBorder',
   'cfGap',
-  'cfBackgroundImageUrl',
-  'cfBackgroundImageScaling',
-  'cfBackgroundImageAlignment',
   'cfFontSize',
   'cfFontWeight',
   'cfLineHeight',
@@ -139,6 +132,8 @@ export const CF_STYLE_ATTRIBUTES = [
   // we need to keep those in this constant array
   // so that omit() in <VisualEditorBlock> and <CompositionBlock>
   // can filter them out and not pass as props
+  'cfBackgroundImageScaling',
+  'cfBackgroundImageAlignment',
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',
 ];
