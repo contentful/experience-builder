@@ -7,6 +7,7 @@ import {
   gatherDeepReferencesFromTree,
   DeepReference,
   isLink,
+  EditorModeEntityStore,
 } from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
@@ -49,6 +50,7 @@ export function useEditorSubscriber() {
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
+  const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
 
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
@@ -76,7 +78,11 @@ export function useEditorSubscriber() {
    * Also manages "entity status" variables (areEntitiesFetched, isFetchingEntities)
    */
   const fetchMissingEntities = useCallback(
-    async (newDataSource: ExperienceDataSource, tree: ExperienceTree) => {
+    async (
+      entityStore: EditorModeEntityStore,
+      newDataSource: ExperienceDataSource,
+      tree: ExperienceTree,
+    ) => {
       // if we realize that there's nothing missing and nothing to fill-fetch before we do any async call,
       // then we can simply return and not lock the EntityStore at all.
       const startFetching = () => {
@@ -156,10 +162,7 @@ export function useEditorSubscriber() {
         endFetching();
       }
     },
-    [
-      /* dataSource, */ entityStore,
-      setEntitiesFetched /* setFetchingEntities, assembliesRegistry */,
-    ],
+    [setEntitiesFetched /* setFetchingEntities, assembliesRegistry */],
   );
 
   useEffect(() => {
@@ -216,6 +219,12 @@ export function useEditorSubscriber() {
             // the imperative calls to fetchMissingEntities.
           }
 
+          let newEntityStore = entityStore;
+          if (entityStore.locale !== locale) {
+            newEntityStore = resetEntityStore(locale);
+            setLocale(locale);
+          }
+
           // Below are mutually exclusive cases
           if (changedNode) {
             /**
@@ -228,26 +237,21 @@ export function useEditorSubscriber() {
             if (changedValueType === 'BoundValue') {
               const newDataSource = { ...dataSource, ...changedNode.data.dataSource };
               setDataSource(newDataSource);
-              await fetchMissingEntities(newDataSource, tree);
+              await fetchMissingEntities(newEntityStore, newDataSource, tree);
             } else if (changedValueType === 'UnboundValue') {
               setUnboundValues({
                 ...unboundValues,
                 ...changedNode.data.unboundValues,
               });
             }
-
-            // Update the tree when all necessary data is fetched and ready for rendering.
-            updateTree(tree);
-            setLocale(locale);
           } else {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
-            await fetchMissingEntities(dataSource, tree);
-            // Update the tree when all necessary data is fetched and ready for rendering.
-            updateTree(tree);
-            setLocale(locale);
+            await fetchMissingEntities(newEntityStore, dataSource, tree);
           }
+          // Update the tree when all necessary data is fetched and ready for rendering.
+          updateTree(tree);
           break;
         }
         case INCOMING_EVENTS.AssembliesRegistered: {
@@ -402,6 +406,7 @@ export function useEditorSubscriber() {
     updateTree,
     updateNodesByUpdatedEntity,
     setMousePosition,
+    resetEntityStore,
   ]);
 
   /*
