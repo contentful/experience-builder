@@ -22,12 +22,19 @@ export const transformMedia = (
 
   //TODO: this will be better served by injectable type transformers instead of if statement
   if (variableName === 'cfImageAsset') {
+    const optionsVariableName = 'cfImageOptions';
     const options = resolveDesignValue(
-      variables['cfImageOptions']?.type === 'DesignValue'
-        ? variables['cfImageOptions'].valuesByBreakpoint
+      variables[optionsVariableName]?.type === 'DesignValue'
+        ? variables[optionsVariableName].valuesByBreakpoint
         : {},
-      'cfImageOptions',
-    ) as ImageOptions;
+      optionsVariableName,
+    ) as ImageOptions | undefined;
+    if (!options) {
+      console.error(
+        `Error transforming image asset: Required variable [${optionsVariableName}] missing from component definition`,
+      );
+      return;
+    }
     try {
       value = getOptimizedImageAsset(
         asset.fields.file as AssetFile,
@@ -47,12 +54,19 @@ export const transformMedia = (
       variables['cfWidth']?.type === 'DesignValue' ? variables['cfWidth'].valuesByBreakpoint : {},
       'cfWidth',
     );
+    const optionsVariableName = 'cfBackgroundImageOptions';
     const options = resolveDesignValue(
-      variables['cfBackgroundImageOptions']?.type === 'DesignValue'
-        ? variables['cfBackgroundImageOptions'].valuesByBreakpoint
+      variables[optionsVariableName]?.type === 'DesignValue'
+        ? variables[optionsVariableName].valuesByBreakpoint
         : {},
-      'cfBackgroundImageOptions',
-    ) as BackgroundImageOptions;
+      optionsVariableName,
+    ) as BackgroundImageOptions | undefined;
+    if (!options) {
+      console.error(
+        `Error transforming image asset: Required variable [${optionsVariableName}] missing from component definition`,
+      );
+      return;
+    }
     try {
       value = getOptimizedBackgroundImageAsset(
         asset.fields.file as AssetFile,

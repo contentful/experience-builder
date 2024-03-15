@@ -339,7 +339,7 @@ export type OptimizedBackgroundImageAsset = {
   file: AssetFile;
 };
 
-export type ImageObjectFitOption = 'initial' | 'contain' | 'cover' | 'none';
+export type ImageObjectFitOption = 'contain' | 'cover' | 'none';
 
 export type ImageObjectPositionOption =
   | 'left'

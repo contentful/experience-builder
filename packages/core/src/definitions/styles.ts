@@ -188,7 +188,7 @@ export const optionalBuiltInStyles: VariableDefinitions = {
     defaultValue: {
       width: DEFAULT_IMAGE_WIDTH,
       height: '100%',
-      objectFit: 'initial',
+      objectFit: 'none',
       objectPosition: 'center center',
       quality: '100',
       targetSize: DEFAULT_IMAGE_WIDTH,
