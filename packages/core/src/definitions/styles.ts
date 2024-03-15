@@ -182,7 +182,6 @@ export const optionalBuiltInStyles: VariableDefinitions = {
   },
   cfImageOptions: {
     displayName: 'Image options',
-    description: 'Experimenting with options for the image component.',
     type: 'ImageOptions',
     group: 'style',
     defaultValue: {
@@ -201,7 +200,6 @@ export const optionalBuiltInStyles: VariableDefinitions = {
   },
   cfBackgroundImageOptions: {
     displayName: 'Background image options',
-    description: 'Experimenting with options for the background image component.',
     type: 'BackgroundImageOptions',
     group: 'style',
     defaultValue: {
