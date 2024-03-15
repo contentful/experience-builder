@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.5](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.4...@contentful/experiences-core@0.0.1-alpha.5) (2024-03-13)
+
+### Bug Fixes
+
+- hover outlines and default border style [ALT-323] ([#476](https://github.com/contentful/experience-builder/issues/476)) ([0378c6d](https://github.com/contentful/experience-builder/commit/0378c6d7499e9bdea6bedd632a9444dcde712984))
+
+## [0.0.1-alpha.4](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.3...@contentful/experiences-core@0.0.1-alpha.4) (2024-03-12)
+
+### Bug Fixes
+
+- **components:** change default of structure component margins to 0 ([#479](https://github.com/contentful/experience-builder/issues/479)) ([756eadb](https://github.com/contentful/experience-builder/commit/756eadbd8ed64f4b0b9018e6a16799960d9f0ae2))
+- moving to json to its base class ([#471](https://github.com/contentful/experience-builder/issues/471)) ([9d276bb](https://github.com/contentful/experience-builder/commit/9d276bb87557623c7e9a8597a26a6ac50657e65b))
+
+### Features
+
+- remove deprecated types altogether ([49c9858](https://github.com/contentful/experience-builder/commit/49c9858d7b4207c3cf0748566dcb0c09958e42e3))
+
 ## [0.0.1-alpha.3](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.2...@contentful/experiences-core@0.0.1-alpha.3) (2024-03-08)
 
 ### Bug Fixes

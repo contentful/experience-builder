@@ -3,7 +3,7 @@ import {
   ASSEMBLY_NODE_TYPE,
   LATEST_SCHEMA_VERSION,
 } from '@contentful/experiences-core/constants';
-import type { CompositionComponentNode, SchemaVersions } from '@contentful/experiences-core/types';
+import type { ExperienceTreeNode, SchemaVersions } from '@contentful/experiences-core/types';
 
 type createAssemblyEntryArgs = {
   schemaVersion: SchemaVersions;
@@ -107,8 +107,8 @@ export const createAssemblyNode = ({
   unboundValue = 'New year Eve',
   unboundValueKey = undefined,
   boundValueKey = undefined,
-}: createAssemblyNodeArgs): CompositionComponentNode => {
-  const node: CompositionComponentNode = {
+}: createAssemblyNodeArgs): ExperienceTreeNode => {
+  const node: ExperienceTreeNode = {
     type: ASSEMBLY_NODE_TYPE,
     data: {
       blockId,

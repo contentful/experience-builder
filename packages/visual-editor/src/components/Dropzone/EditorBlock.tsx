@@ -5,7 +5,7 @@ import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoord
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from './useComponent';
 import type {
-  CompositionComponentNode,
+  ExperienceTreeNode,
   ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
 import {
@@ -22,7 +22,7 @@ import Hitboxes from './Hitboxes';
 
 type EditorBlockProps = {
   placeholder: PlaceholderParams;
-  node: CompositionComponentNode;
+  node: ExperienceTreeNode;
   index: number;
   userIsDragging: boolean;
   draggingNewComponent: boolean | undefined;
@@ -99,7 +99,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
           onClick={onClick}
           definition={definition}
         />
-        {isStructureComponent && userIsDragging && (
+        {isStructureComponent && !isSingleColumn && userIsDragging && (
           <Hitboxes
             parentZoneId={zoneId}
             zoneId={componentId}
@@ -126,7 +126,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       wrapperProps={wrapperProps}
       onClick={onClick}>
       {elementToRender()}
-      {isStructureComponent && userIsDragging && (
+      {isStructureComponent && !isSingleColumn && userIsDragging && (
         <Hitboxes
           parentZoneId={zoneId}
           zoneId={componentId}

@@ -3,16 +3,33 @@
   position: relative;
   transition: outline 0.2s;
   cursor: grab;
-  outline-offset: -2px;
-  outline: 2px solid transparent;
   box-sizing: border-box;
   display: flex;
 }
 
-.DraggableClone {
+.DraggableComponent:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  outline-offset: -2px;
+  outline: 2px solid transparent;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.DraggableClone:before {
   outline: 2px solid var(--exp-builder-blue500);
 }
-.DraggableComponent > * {
+
+.DraggableClone,
+.DraggableClone * {
+  pointer-events: none !important;
+}
+
+.DraggableComponent:not(.userIsDragging) :not(.DraggableComponent) {
   pointer-events: none;
 }
 
@@ -20,11 +37,7 @@
   overflow: hidden;
 }
 
-.isDragging * {
-  pointer-events: none !important;
-}
-
-.isSelected {
+.isSelected:before {
   outline: 2px solid transparent !important;
 }
 
@@ -60,7 +73,7 @@
   opacity: 0 !important;
 }
 
-.userIsDragging {
+.userIsDragging:before {
   outline: 2px solid transparent !important;
 }
 
@@ -68,21 +81,21 @@
   opacity: 1;
 }
 
-.DraggableComponent:hover,
-.DraggableComponent:hover div[data-rfd-draggable-id] {
+.DraggableComponent:hover:before,
+.DraggableComponent:hover div[data-rfd-draggable-id]:before {
   outline: 2px dashed var(--exp-builder-gray500);
 }
 
-.DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
+.DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)):before {
   outline: 2px solid var(--exp-builder-gray500);
 }
 
-.isAssemblyBlock:hover,
-.isAssemblyBlock:hover div[data-rfd-draggable-id],
-.DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^='assembly'] {
+.isAssemblyBlock:hover:before,
+.isAssemblyBlock:hover div[data-rfd-draggable-id]:before,
+.DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^='assembly']:before {
   outline: 2px dashed var(--exp-builder-purple600);
 }
 
-.isAssemblyBlock:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
+.isAssemblyBlock:hover:not(:has(div[data-rfd-draggable-id]:hover)):before {
   outline: 2px solid var(--exp-builder-purple600);
 }

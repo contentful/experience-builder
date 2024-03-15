@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.7](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.6...@contentful/experiences-visual-editor-react@0.0.1-alpha.7) (2024-03-15)
+
+### Bug Fixes
+
+- **canvas-interactions:** do not render hitboxes for single column ([#488](https://github.com/contentful/experience-builder/issues/488)) ([a26b0c6](https://github.com/contentful/experience-builder/commit/a26b0c602515c09378f02f175b0dd1760ab56b00))
+- fix for locale switcher ([#491](https://github.com/contentful/experience-builder/issues/491)) ([c9e9c82](https://github.com/contentful/experience-builder/commit/c9e9c821df8070e03a4493ce5c6ab4fd2576da58))
+
+## [0.0.1-alpha.6](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.5...@contentful/experiences-visual-editor-react@0.0.1-alpha.6) (2024-03-14)
+
+### Bug Fixes
+
+- **canvas-interactions:** proper placeholders based on padding and flex direction [ALT-505] ([#485](https://github.com/contentful/experience-builder/issues/485)) ([32345e6](https://github.com/contentful/experience-builder/commit/32345e6f8e92e61af6deba939ba623145a7219ea))
+- **canvas-interactions:** properly clear deselected component on canvas [] ([#484](https://github.com/contentful/experience-builder/issues/484)) ([10798c8](https://github.com/contentful/experience-builder/commit/10798c8a6ebbbeaa032c76240bf2f6e0b44bf069))
+
+## [0.0.1-alpha.5](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.4...@contentful/experiences-visual-editor-react@0.0.1-alpha.5) (2024-03-13)
+
+### Bug Fixes
+
+- **canvas-interactions:** selecting a component not working in nextjs app-router ([#481](https://github.com/contentful/experience-builder/issues/481)) ([a44a6ae](https://github.com/contentful/experience-builder/commit/a44a6ae44efc956f5df03247240ab1b63f5a8aa7))
+- hover outlines and default border style [ALT-323] ([#476](https://github.com/contentful/experience-builder/issues/476)) ([0378c6d](https://github.com/contentful/experience-builder/commit/0378c6d7499e9bdea6bedd632a9444dcde712984))
+
+## [0.0.1-alpha.4](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.3...@contentful/experiences-visual-editor-react@0.0.1-alpha.4) (2024-03-12)
+
+### Bug Fixes
+
+- empty state canvas now says add components to begin ([14a39d8](https://github.com/contentful/experience-builder/commit/14a39d82b20c19b8a4bc5466dd74675968930288))
+
 ## [0.0.1-alpha.3](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.2...@contentful/experiences-visual-editor-react@0.0.1-alpha.3) (2024-03-08)
 
 ### Bug Fixes

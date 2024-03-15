@@ -1,14 +1,11 @@
-import type { CompositionComponentNode, CompositionTree } from '@contentful/experiences-core/types';
+import type { ExperienceTreeNode, ExperienceTree } from '@contentful/experiences-core/types';
 import { ROOT_ID } from '../types/constants';
 
 export type ItemSelector = {
   id: string;
 };
 
-function getItemFromTree(
-  id: string,
-  node: CompositionComponentNode,
-): CompositionComponentNode | undefined {
+function getItemFromTree(id: string, node: ExperienceTreeNode): ExperienceTreeNode | undefined {
   // Check if the current node's id matches the search id
 
   if (node.data.id === id) {
@@ -28,11 +25,7 @@ function getItemFromTree(
   return undefined;
 }
 
-function findDepthById(
-  node: CompositionComponentNode,
-  id: string,
-  currentDepth: number = 1,
-): number {
+function findDepthById(node: ExperienceTreeNode, id: string, currentDepth: number = 1): number {
   if (node.data.id === id) {
     return currentDepth;
   }
@@ -51,8 +44,8 @@ function findDepthById(
 export const getChildFromTree = (
   parentId: string,
   index: number,
-  node: CompositionComponentNode,
-): CompositionComponentNode | undefined => {
+  node: ExperienceTreeNode,
+): ExperienceTreeNode | undefined => {
   // Check if the current node's id matches the search id
 
   if (node.data.id === parentId) {
@@ -74,8 +67,8 @@ export const getChildFromTree = (
 
 export const getItem = (
   selector: ItemSelector,
-  tree: CompositionTree,
-): CompositionComponentNode | undefined => {
+  tree: ExperienceTree,
+): ExperienceTreeNode | undefined => {
   return getItemFromTree(selector.id, {
     type: 'block',
     data: {
@@ -86,9 +79,6 @@ export const getItem = (
   });
 };
 
-export const getItemDepthFromNode = (
-  selector: ItemSelector,
-  node: CompositionComponentNode,
-): number => {
+export const getItemDepthFromNode = (selector: ItemSelector, node: ExperienceTreeNode): number => {
   return findDepthById(node, selector.id);
 };

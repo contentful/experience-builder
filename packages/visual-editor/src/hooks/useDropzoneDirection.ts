@@ -1,6 +1,6 @@
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import type {
-  CompositionComponentNode,
+  ExperienceTreeNode,
   ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
 import { useEffect } from 'react';
@@ -9,7 +9,7 @@ import { isContentfulStructureComponent } from '@contentful/experiences-core';
 
 interface Params {
   resolveDesignValue: ResolveDesignValueType | undefined;
-  node: CompositionComponentNode | undefined;
+  node: ExperienceTreeNode | undefined;
   zoneId: string;
 }
 

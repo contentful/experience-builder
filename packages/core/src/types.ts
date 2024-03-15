@@ -17,21 +17,11 @@ import type {
 } from '@contentful/experiences-validators';
 // TODO: Remove references to 'Composition'
 export type {
-  /** @deprecated the old type name will be replaced by ExperienceDataSource as of v5 */
-  ExperienceDataSource as CompositionDataSource,
   ExperienceDataSource,
-  /** @deprecated the old type name will be replaced by ExperienceUnboundValue as of v5 */
-  ExperienceUnboundValues as CompositionUnboundValues,
   ExperienceUnboundValues,
   ExperienceComponentSettings,
-  /** @deprecated the old type name will be replaced by ComponentPropertyValue as of v5 */
-  ComponentPropertyValue as CompositionComponentPropValue,
   ComponentPropertyValue,
-  /** @deprecated the old type name will be replaced by ExperienceNode as of v5 */
-  ComponentTreeNode as CompositionNode,
   ComponentTreeNode,
-  /** @deprecated the old type name will be replaced by PrimitiveValue as of v5 */
-  PrimitiveValue as CompositionVariableValueType,
   PrimitiveValue,
   ValuesByBreakpoint,
   Breakpoint,
@@ -157,8 +147,9 @@ export type BindingMapByBlockId = Record<string, BindingMap>;
 
 export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>;
 
-// TODO: add conditional typing magic to reduce the number of optionals
-export type CompositionComponentNode = {
+/** Type of a single node of the experience tree exchanged via postMessage between the SDK and Contentful Web app */
+export type ExperienceTreeNode = {
+  // TODO: add conditional typing magic to reduce the number of optionals
   type:
     | 'block'
     | 'root'
@@ -180,12 +171,12 @@ export type CompositionComponentNode = {
     unboundValues: ExperienceUnboundValues;
     breakpoints: Breakpoint[];
   };
-  children: CompositionComponentNode[];
+  children: ExperienceTreeNode[];
   parentId?: string;
 };
-
-export type CompositionTree = {
-  root: CompositionComponentNode;
+/** Type of the tree data structure exchanged via postMessage between the SDK and Contentful Web app */
+export type ExperienceTree = {
+  root: ExperienceTreeNode;
 };
 
 export type ExternalSDKMode = 'preview' | 'delivery';
@@ -236,7 +227,7 @@ export type CSSProperties = React.CSSProperties;
 
 export type ContainerStyleVariableName = keyof StyleProps;
 
-export type Composition = {
+export type ExperienceFields = {
   title: string;
   slug: string;
   componentTree: ExperienceComponentTree;
@@ -261,9 +252,10 @@ export type DesignTokensDefinition = {
   textColor?: Record<string, string>;
 } & RecursiveDesignTokenDefinition;
 
+/** Type of experience entry JSON data structure as returned by CPA/CDA */
 export type ExperienceEntry = {
   sys: Entry['sys'];
-  fields: Composition;
+  fields: ExperienceFields;
   metadata: Entry['metadata'];
 };
 

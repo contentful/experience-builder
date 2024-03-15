@@ -2,7 +2,7 @@ import React, { CSSProperties } from 'react';
 import styles from '../Draggable/styles.module.css';
 import { useComponent } from './useComponent';
 import type {
-  CompositionComponentNode,
+  ExperienceTreeNode,
   ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
 import { RenderDropzoneFunction } from './Dropzone.types';
@@ -27,7 +27,7 @@ function getStyle(style: CSSProperties = {}, snapshot?: DraggableStateSnapshot) 
 }
 
 type EditorBlockCloneProps = {
-  node: CompositionComponentNode;
+  node: ExperienceTreeNode;
   resolveDesignValue: ResolveDesignValueType;
   provided?: DraggableProvided;
   snapshot?: DraggableStateSnapshot;

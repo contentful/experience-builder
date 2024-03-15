@@ -118,7 +118,7 @@ export const builtInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The border of the section',
-    defaultValue: '1px solid rgba(0, 0, 0, 0)',
+    defaultValue: '0px solid rgba(0, 0, 0, 0)',
   },
   cfGap: {
     displayName: 'Gap',
@@ -322,13 +322,6 @@ export const containerBuiltInStyles: VariableDefinitions = {
     description: 'The max-width of the section',
     defaultValue: '1192px',
   },
-  cfMargin: {
-    displayName: 'Margin',
-    type: 'Text',
-    group: 'style',
-    description: 'The margin of the container',
-    defaultValue: '0 Auto 0 Auto',
-  },
 };
 
 export const singleColumnBuiltInStyles: VariableDefinitions = {
@@ -413,7 +406,7 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The border of the column',
-    defaultValue: '1px solid rgba(0, 0, 0, 0)',
+    defaultValue: '0px solid rgba(0, 0, 0, 0)',
   },
   cfGap: {
     displayName: 'Gap',
@@ -442,7 +435,7 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The margin of the columns',
-    defaultValue: '0 Auto 0 Auto',
+    defaultValue: '0 0 0 0',
   },
   cfWidth: {
     displayName: 'Width',
@@ -477,7 +470,7 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The border of the columns',
-    defaultValue: '1px solid rgba(0, 0, 0, 0)',
+    defaultValue: '0px solid rgba(0, 0, 0, 0)',
   },
   cfGap: {
     displayName: 'Gap',

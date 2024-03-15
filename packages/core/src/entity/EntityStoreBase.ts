@@ -253,4 +253,12 @@ export abstract class EntityStoreBase {
 
     return this.entryMap.get(id);
   }
+
+  public toJSON() {
+    return {
+      entryMap: Object.fromEntries(this.entryMap),
+      assetMap: Object.fromEntries(this.assetMap),
+      locale: this.locale,
+    };
+  }
 }
