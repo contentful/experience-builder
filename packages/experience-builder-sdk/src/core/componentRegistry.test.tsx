@@ -221,4 +221,53 @@ describe('createAssemblyRegistration', () => {
     });
     expect(addComponentRegistrationMock).toHaveBeenCalled();
   });
+  describe('runRegisteredComponentValidations', () => {
+    let existingComponentRegistration: ComponentRegistration;
+    beforeEach(() => {
+      existingComponentRegistration = {
+        component: jest.fn(),
+        definition: {
+          id: 'existing-definition-id',
+          name: 'Existing Definition',
+          variables: {},
+          children: true,
+          category: ASSEMBLY_DEFAULT_CATEGORY,
+        },
+      };
+      registry.addComponentRegistration(existingComponentRegistration);
+    });
+
+    afterEach(() => {
+      registry.resetComponentRegistry();
+      jest.restoreAllMocks();
+    });
+
+    it('throws and error if component definition is invalid', () => {
+      const invalidComponentRegistration = {
+        component: jest.fn(),
+        definition: {
+          id: 'definition-id'.repeat(10),
+          name: 'Invalid Component',
+          variables: {},
+          children: true,
+          category: ASSEMBLY_DEFAULT_CATEGORY,
+        },
+      };
+      registry.addComponentRegistration(invalidComponentRegistration);
+      const errors = [
+        {
+          details: 'Property needs to match: /^[a-zA-Z0-9-_]{1,32}$/',
+          name: 'regex',
+          path: ['id'],
+        },
+      ];
+      const error = new Error(
+        `Invalid component definition for component 'Invalid Component'. Failed with errors: \n${JSON.stringify(errors, null, 2)}`,
+      );
+      expect(() => registry.runRegisteredComponentValidations()).toThrow(error);
+    });
+    it('does not throw an error if no component definition is invalid', () => {
+      expect(() => registry.runRegisteredComponentValidations()).not.toThrow(new Error());
+    });
+  });
 });

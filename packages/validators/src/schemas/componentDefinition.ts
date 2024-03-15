@@ -13,7 +13,7 @@ export const DefinitionPropertyTypeSchema = z.enum([
 
 export const DefinitionPropertyKeySchema = z
   .string()
-  .regex(/^[a-zA-Z0-9-_]{1,32}$/, { message: 'Attribute needs to match: /^[a-zA-Z0-9-_]{1,32}$/' });
+  .regex(/^[a-zA-Z0-9-_]{1,32}$/, { message: 'Property needs to match: /^[a-zA-Z0-9-_]{1,32}$/' });
 
 export const ComponentDefinitionSchema = z.object({
   id: DefinitionPropertyKeySchema,
