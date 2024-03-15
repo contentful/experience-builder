@@ -152,20 +152,16 @@ export const experiencePattern = {
                   desktop: '0px 0px',
                 },
               },
-              cfBackgroundImageUrl: {
-                key: 'cfBackgroundImageUrl_AtBrirchNbwfpkWlSfTD6',
+              cfBackgroundImage: {
+                key: 'cfBackgroundImage_AtBrirchNbwfpkWlSfTD6',
                 type: 'ComponentValue',
-              },
-              cfBackgroundImageScaling: {
-                type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'fit',
-                },
-              },
-              cfBackgroundImageAlignment: {
-                type: 'DesignValue',
-                valuesByBreakpoint: {
-                  desktop: 'left top',
+                  desktop: {
+                    scaling: 'fill',
+                    alignment: 'left top',
+                    quality: '100',
+                    targetSize: '2000px',
+                  },
                 },
               },
               cfHyperlink: {
@@ -289,12 +285,20 @@ export const experiencePattern = {
     componentSettings: {
       'en-US': {
         variableDefinitions: {
-          cfBackgroundImageUrl_AtBrirchNbwfpkWlSfTD6: {
+          cfBackgroundImage_AtBrirchNbwfpkWlSfTD6: {
             displayName: 'Background image',
             type: 'Text',
             defaultValue: {
               key: '36j5IQjr3FKEQ4Yvyd034',
               type: 'UnboundValue',
+              valuesByBreakpoint: {
+                desktop: {
+                  scaling: 'fill',
+                  alignment: 'left top',
+                  quality: '100',
+                  targetSize: '2000px',
+                },
+              },
             },
             description: 'Background image for section or container',
           },

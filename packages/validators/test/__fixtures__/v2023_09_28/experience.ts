@@ -162,20 +162,16 @@ export const experience = {
                   desktop: '0px 0px',
                 },
               },
-              cfBackgroundImageUrl: {
+              cfBackgroundImage: {
                 type: 'UnboundValue',
                 key: '36j5IQjr3FKEQ4Yvyd034',
-              },
-              cfBackgroundImageScaling: {
-                type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'fit',
-                },
-              },
-              cfBackgroundImageAlignment: {
-                type: 'DesignValue',
-                valuesByBreakpoint: {
-                  desktop: 'left top',
+                  desktop: {
+                    scaling: 'fill',
+                    alignment: 'left top',
+                    quality: '100',
+                    targetSize: '2000px',
+                  },
                 },
               },
               cfHyperlink: {
