@@ -60,9 +60,7 @@ export type ComponentDefinitionVariableType =
   | 'Boolean'
   | 'Location'
   | 'Media'
-  | 'Object'
-  | 'ImageOptions'
-  | 'BackgroundImageOptions';
+  | 'Object';
 
 export type VariableFormats = 'URL'; // | alphaNum | base64 | email | ipAddress
 

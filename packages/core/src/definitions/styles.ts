@@ -4,9 +4,7 @@ import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../type
 type VariableDefinitions = Partial<
   Record<
     ContainerStyleVariableName,
-    ComponentDefinitionVariable<
-      'Text' | 'Boolean' | 'Media' | 'ImageOptions' | 'BackgroundImageOptions'
-    >
+    ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media' | 'Object'>
   >
 >;
 
@@ -182,7 +180,7 @@ export const optionalBuiltInStyles: VariableDefinitions = {
   },
   cfImageOptions: {
     displayName: 'Image options',
-    type: 'ImageOptions',
+    type: 'Object',
     group: 'style',
     defaultValue: {
       width: DEFAULT_IMAGE_WIDTH,
@@ -200,7 +198,7 @@ export const optionalBuiltInStyles: VariableDefinitions = {
   },
   cfBackgroundImageOptions: {
     displayName: 'Background image options',
-    type: 'BackgroundImageOptions',
+    type: 'Object',
     group: 'style',
     defaultValue: {
       scaling: 'fill',
