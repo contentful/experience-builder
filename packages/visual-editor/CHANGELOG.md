@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.7](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.6...@contentful/experiences-visual-editor-react@0.0.1-alpha.7) (2024-03-15)
+
+### Bug Fixes
+
+- **canvas-interactions:** do not render hitboxes for single column ([#488](https://github.com/contentful/experience-builder/issues/488)) ([a26b0c6](https://github.com/contentful/experience-builder/commit/a26b0c602515c09378f02f175b0dd1760ab56b00))
+- fix for locale switcher ([#491](https://github.com/contentful/experience-builder/issues/491)) ([c9e9c82](https://github.com/contentful/experience-builder/commit/c9e9c821df8070e03a4493ce5c6ab4fd2576da58))
+
 ## [0.0.1-alpha.6](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.5...@contentful/experiences-visual-editor-react@0.0.1-alpha.6) (2024-03-14)
 
 ### Bug Fixes
