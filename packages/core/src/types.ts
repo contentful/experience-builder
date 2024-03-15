@@ -83,14 +83,8 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
   group?: 'style' | 'content';
   description?: string;
   displayName?: string;
-  defaultValue?:
-    | string
-    | boolean
-    | number
-    | ImageOptions
-    | BackgroundImageOptions
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    | Record<any, any>; //todo: fix typings
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  defaultValue?: string | boolean | number | Record<any, any>; //todo: fix typings
 }
 
 export type ComponentDefinitionVariable<
