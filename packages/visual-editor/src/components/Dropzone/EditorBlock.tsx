@@ -99,7 +99,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
           onClick={onClick}
           definition={definition}
         />
-        {isStructureComponent && userIsDragging && (
+        {isStructureComponent && !isSingleColumn && userIsDragging && (
           <Hitboxes
             parentZoneId={zoneId}
             zoneId={componentId}
@@ -126,7 +126,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       wrapperProps={wrapperProps}
       onClick={onClick}>
       {elementToRender()}
-      {isStructureComponent && userIsDragging && (
+      {isStructureComponent && !isSingleColumn && userIsDragging && (
         <Hitboxes
           parentZoneId={zoneId}
           zoneId={componentId}
