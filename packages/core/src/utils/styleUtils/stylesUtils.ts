@@ -6,12 +6,19 @@ import {
   transformBorderStyle,
   transformFill,
   transformGridColumn,
-} from './transformers';
+} from './styleTransformers';
+import { isContentfulStructureComponent } from '../components';
+import { EMPTY_CONTAINER_HEIGHT } from '../../constants';
 import { CSSProperties, StyleProps, PrimitiveValue, ExperienceTreeNode } from '@/types';
-import { isContentfulStructureComponent } from './components';
-import { EMPTY_CONTAINER_HEIGHT } from '../constants';
 
-const toCSSAttribute = (key: string) => key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+const toCSSAttribute = (key: string) => {
+  let val = key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+
+  // Remove the number from the end of the key to allow for overrides on style properties
+  val = val.replace(/\d+$/, '');
+
+  return val;
+};
 
 export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
   const stylesStr = Object.entries(styles)
@@ -44,10 +51,10 @@ export const buildCfStyles = ({
   cfBorder,
   cfGap,
   cfBackgroundImageUrl,
-  cfBackgroundImageAlignment,
-  cfBackgroundImageScaling,
+  cfBackgroundImageOptions,
   cfFontSize,
   cfFontWeight,
+  cfImageOptions,
   cfLineHeight,
   cfLetterSpacing,
   cfTextColor,
@@ -62,8 +69,8 @@ export const buildCfStyles = ({
     margin: cfMargin,
     padding: cfPadding,
     backgroundColor: cfBackgroundColor,
-    width: transformWidthSizing({ value: cfWidth, cfMargin }),
-    height: transformFill(cfHeight),
+    width: transformWidthSizing({ value: cfWidth || cfImageOptions?.width, cfMargin }),
+    height: transformFill(cfHeight || cfImageOptions?.height),
     maxWidth: cfMaxWidth,
     ...transformGridColumn(cfColumnSpan),
     ...transformBorderStyle(cfBorder),
@@ -71,11 +78,7 @@ export const buildCfStyles = ({
     ...transformAlignment(cfHorizontalAlignment, cfVerticalAlignment, cfFlexDirection),
     flexDirection: cfFlexDirection,
     flexWrap: cfFlexWrap,
-    ...transformBackgroundImage(
-      cfBackgroundImageUrl,
-      cfBackgroundImageScaling,
-      cfBackgroundImageAlignment,
-    ),
+    ...transformBackgroundImage(cfBackgroundImageUrl, cfBackgroundImageOptions),
     fontSize: cfFontSize,
     fontWeight: cfTextBold ? 'bold' : cfFontWeight,
     fontStyle: cfTextItalic ? 'italic' : 'normal',
@@ -86,10 +89,12 @@ export const buildCfStyles = ({
     textTransform: cfTextTransform,
     textDecoration: cfTextUnderline ? 'underline' : 'none',
     boxSizing: 'border-box',
+    objectFit: cfImageOptions?.objectFit,
+    objectPosition: cfImageOptions?.objectPosition,
   };
 };
 /**
- * Container/section default behaviour:
+ * Container/section default behavior:
  * Default height => height: EMPTY_CONTAINER_HEIGHT (120px)
  * If a container component has children => height: 'fit-content'
  */

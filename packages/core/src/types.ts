@@ -1,6 +1,7 @@
-import type { Asset, Entry } from 'contentful';
+import type { Asset, AssetFile, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
 import { EntityStore } from './entity/EntityStore';
+import { Document as RichTextDocument } from '@contentful/rich-text-types';
 
 // Types for experience entry fields (as fetched in the API) are inferred by Zod schema in `@contentful/experiences-validators`
 import type {
@@ -190,23 +191,11 @@ export type StyleProps = {
   cfFlexWrap: 'nowrap' | 'wrap';
   cfBorder: string;
   cfGap: string;
-  cfBackgroundImageUrl: string;
-  cfBackgroundImageScaling: 'fit' | 'fill' | 'tile';
-  cfBackgroundImageAlignment:
-    | 'left'
-    | 'right'
-    | 'top'
-    | 'bottom'
-    | 'left top'
-    | 'left center'
-    | 'left bottom'
-    | 'right top'
-    | 'right center'
-    | 'right bottom'
-    | 'center top'
-    | 'center center'
-    | 'center bottom';
   cfHyperlink: string;
+  cfImageAsset: OptimizedImageAsset | string;
+  cfImageOptions: ImageOptions;
+  cfBackgroundImageUrl: OptimizedBackgroundImageAsset | string;
+  cfBackgroundImageOptions: BackgroundImageOptions;
   cfOpenInNewTab: boolean;
   cfFontSize: string;
   cfFontWeight: string;
@@ -304,4 +293,84 @@ export type RequestEntitiesMessage = {
 export type RequestedEntitiesMessage = {
   entities: Array<Entry | Asset>;
   missingEntityIds?: string[];
+};
+
+//All the possible types that can be returned to a component prop
+export type BoundComponentPropertyTypes =
+  | string
+  | number
+  | boolean
+  | AssetFile
+  | Record<string, AssetFile | undefined>
+  | RichTextDocument
+  | OptimizedBackgroundImageAsset
+  | OptimizedImageAsset
+  | Link<'Asset'>
+  | undefined;
+
+export type OptimizedImageAsset = {
+  url: string;
+  srcSet?: string[];
+  sizes?: string;
+  quality?: number;
+  format?: string;
+  file: AssetFile;
+};
+
+export type OptimizedBackgroundImageAsset = {
+  url: string;
+  srcSet?: string[];
+  file: AssetFile;
+};
+
+export type ImageObjectFitOption = 'contain' | 'cover' | 'none';
+
+export type ImageObjectPositionOption =
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'left top'
+  | 'left center'
+  | 'left bottom'
+  | 'right top'
+  | 'right center'
+  | 'right bottom'
+  | 'center top'
+  | 'center center'
+  | 'center bottom';
+
+export type ImageOptions = {
+  format?: string;
+  width: string;
+  height: string;
+  objectFit: ImageObjectFitOption;
+  objectPosition: ImageObjectPositionOption;
+  quality: string;
+  targetSize: string;
+};
+
+export type BackgroundImageScalingOption = 'fit' | 'fill' | 'tile';
+
+export type BackgroundImageAlignmentOption =
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'left top'
+  | 'left center'
+  | 'left bottom'
+  | 'right top'
+  | 'right center'
+  | 'right bottom'
+  | 'center top'
+  | 'center center'
+  | 'center bottom';
+
+export type BackgroundImageOptions = {
+  format?: string;
+  scaling: BackgroundImageScalingOption;
+  alignment: BackgroundImageAlignmentOption;
+  quality: string;
+  targetSize: string;
 };

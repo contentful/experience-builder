@@ -24,7 +24,7 @@ type ValidatorReturnValue = {
  */
 export const validateExperienceFields = (
   experience: any,
-  schemaVersionOverride?: SchemaVersions
+  schemaVersionOverride?: SchemaVersions,
 ): ValidatorReturnValue => {
   let schemaVersion;
   if (experience.fields.componentTree) {

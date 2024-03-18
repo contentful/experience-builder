@@ -1,11 +1,7 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
-import {
-  EntityStore,
-  isEmptyStructureWithRelativeHeight,
-  isDeepPath,
-} from '@contentful/experiences-core';
+import { EntityStore, isEmptyStructureWithRelativeHeight } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
@@ -21,7 +17,7 @@ import { createAssemblyRegistration, getComponentRegistration } from '../../core
 import {
   buildCfStyles,
   checkIsAssemblyNode,
-  transformContentValue,
+  transformBoundContentValue,
 } from '@contentful/experiences-core';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import {
@@ -84,47 +80,42 @@ export const CompositionBlock = ({
 
     const propMap: Record<string, PrimitiveValue> = {};
 
-    return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
-      switch (variable.type) {
-        case 'DesignValue':
-          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
-          break;
-        case 'BoundValue': {
-          const variableDefinition = componentRegistration.definition.variables[variableName];
-          if (isDeepPath(variable.path)) {
+    return Object.entries(componentRegistration.definition.variables).reduce(
+      (acc, [variableName, variableDefinition]) => {
+        const variable = node.variables[variableName];
+        if (!variable) return acc;
+        switch (variable.type) {
+          case 'DesignValue':
+            acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
+            break;
+          case 'BoundValue': {
             const [, uuid] = variable.path.split('/');
-            const link = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-            const boundValue = entityStore.getValueDeep(link, variable.path);
-            const value = boundValue || variableDefinition.defaultValue;
-            acc[variableName] = transformContentValue(value, variableDefinition);
+            const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
+
+            const value = transformBoundContentValue(
+              node.variables,
+              entityStore,
+              binding,
+              resolveDesignValue,
+              variableName,
+              variableDefinition,
+              variable.path,
+            );
+            acc[variableName] = value;
             break;
           }
-          const [, uuid, ...path] = variable.path.split('/');
-          const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-          let value = entityStore.getValue(binding, path.slice(0, -1));
-          if (!value) {
-            const foundAssetValue = entityStore.getValue(binding, [
-              ...path.slice(0, -2),
-              'fields',
-              'file',
-            ]);
-            if (foundAssetValue) {
-              value = foundAssetValue;
-            }
+          case 'UnboundValue': {
+            const uuid = variable.key;
+            acc[variableName] = entityStore.unboundValues[uuid]?.value;
+            break;
           }
-          acc[variableName] = transformContentValue(value, variableDefinition);
-          break;
+          default:
+            break;
         }
-        case 'UnboundValue': {
-          const uuid = variable.key;
-          acc[variableName] = entityStore.unboundValues[uuid]?.value;
-          break;
-        }
-        default:
-          break;
-      }
-      return acc;
-    }, propMap);
+        return acc;
+      },
+      propMap,
+    );
   }, [componentRegistration, isAssembly, node.variables, resolveDesignValue, entityStore]);
 
   const cfStyles = buildCfStyles(nodeProps);
@@ -190,10 +181,14 @@ export const CompositionBlock = ({
     );
   }
 
+  //List explicit style props that will end up being passed to the component
+  const stylesToKeep = ['cfImageAsset'];
+  const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
+
   return React.createElement(
     component,
     {
-      ...omit(nodeProps, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+      ...omit(nodeProps, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab']),
       className,
     },
     children,
