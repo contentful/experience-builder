@@ -190,6 +190,7 @@ export type StyleProps = {
   cfFlexDirection: 'row' | 'column';
   cfFlexWrap: 'nowrap' | 'wrap';
   cfBorder: string;
+  cfBorderRadius: string;
   cfGap: string;
   cfHyperlink: string;
   cfImageAsset: OptimizedImageAsset | string;

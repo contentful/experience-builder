@@ -146,6 +146,12 @@ export const experiencePattern = {
                   desktop: '0px outside rgba(255, 255, 255, 0)',
                 },
               },
+              cfBorderRadius: {
+                type: 'DesignValue',
+                valuesByBreakpoint: {
+                  desktop: '6px',
+                },
+              },
               cfGap: {
                 type: 'DesignValue',
                 valuesByBreakpoint: {
