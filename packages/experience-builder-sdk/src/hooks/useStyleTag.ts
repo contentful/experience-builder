@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 
 import { buildStyleTag } from '@contentful/experiences-core';
 import type { CSSProperties } from '@contentful/experiences-core/types';
@@ -13,16 +13,19 @@ import type { CSSProperties } from '@contentful/experiences-core/types';
  * In preview/delivery mode the styles don't change oftem so we're using the md5 hash of the content of the tag
  */
 export const useStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
-  const [className, setClassName] = useState('');
-
-  useEffect(() => {
+  const [className, styleRule] = useMemo((): string[] => {
     if (Object.keys(styles).length === 0) {
-      return;
+      return [''];
     }
 
-    const [className, styleRule] = buildStyleTag({ styles, nodeId });
+    return buildStyleTag({ styles, nodeId });
+  }, [styles, nodeId]);
 
-    setClassName(className);
+  // Once our React support allows it (>=18), this should be implemented with useInsertionEffect.
+  useLayoutEffect(() => {
+    if (!className || !styleRule) {
+      return;
+    }
 
     const existingTag = document.querySelector(`[data-cf-styles="${className}"]`);
 
@@ -40,7 +43,7 @@ export const useStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?
     styleTag.dataset['cfStyles'] = className;
 
     document.head.appendChild(styleTag).innerHTML = styleRule;
-  }, [styles, nodeId]);
+  }, [className, nodeId, styleRule]);
 
   return { className };
 };
