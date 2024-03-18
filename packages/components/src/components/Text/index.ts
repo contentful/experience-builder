@@ -25,6 +25,7 @@ export const TextComponentDefinition: ComponentDefinition = {
     'cfTextUnderline',
     'cfBackgroundColor',
     'cfBorder',
+    'cfBorderRadius',
     'cfWidth',
     'cfMaxWidth',
   ],

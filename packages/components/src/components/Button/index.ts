@@ -19,6 +19,7 @@ export const ButtonComponentDefinition: ComponentDefinition = {
     'cfTextBold',
     'cfLineHeight',
     'cfBorder',
+    'cfBorderRadius',
   ],
   tooltip: {
     description: 'Drop onto the canvas to add button that can be used to trigger an action.',

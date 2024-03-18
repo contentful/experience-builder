@@ -117,6 +117,7 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfFlexDirection',
   'cfFlexWrap',
   'cfBorder',
+  'cfBorderRadius',
   'cfGap',
   'cfFontSize',
   'cfFontWeight',

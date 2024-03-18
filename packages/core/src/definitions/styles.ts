@@ -118,6 +118,13 @@ export const builtInStyles: VariableDefinitions = {
     description: 'The border of the section',
     defaultValue: '0px solid rgba(0, 0, 0, 0)',
   },
+  cfBorderRadius: {
+    displayName: 'Border Radius',
+    type: 'Text',
+    group: 'style',
+    description: 'The border radius of the section',
+    defaultValue: '0px',
+  },
   cfGap: {
     displayName: 'Gap',
     type: 'Text',
@@ -404,6 +411,13 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
     description: 'The border of the column',
     defaultValue: '0px solid rgba(0, 0, 0, 0)',
   },
+  cfBorderRadius: {
+    displayName: 'Border Radius',
+    type: 'Text',
+    group: 'style',
+    description: 'The border radius of the column',
+    defaultValue: '0px',
+  },
   cfGap: {
     displayName: 'Gap',
     type: 'Text',
@@ -467,6 +481,13 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     group: 'style',
     description: 'The border of the columns',
     defaultValue: '0px solid rgba(0, 0, 0, 0)',
+  },
+  cfBorderRadius: {
+    displayName: 'Border Radius',
+    type: 'Text',
+    group: 'style',
+    description: 'The border radius of the columns',
+    defaultValue: '0px',
   },
   cfGap: {
     displayName: 'Gap',
