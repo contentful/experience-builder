@@ -110,13 +110,14 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfWidth',
   'cfMaxWidth',
   'cfHeight',
+  'cfImageAsset',
+  'cfImageOptions',
+  'cfBackgroundImageUrl',
+  'cfBackgroundImageOptions',
   'cfFlexDirection',
   'cfFlexWrap',
   'cfBorder',
   'cfGap',
-  'cfBackgroundImageUrl',
-  'cfBackgroundImageScaling',
-  'cfBackgroundImageAlignment',
   'cfFontSize',
   'cfFontWeight',
   'cfLineHeight',
@@ -131,13 +132,19 @@ export const CF_STYLE_ATTRIBUTES = [
   // we need to keep those in this constant array
   // so that omit() in <VisualEditorBlock> and <CompositionBlock>
   // can filter them out and not pass as props
+  'cfBackgroundImageScaling',
+  'cfBackgroundImageAlignment',
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',
 ];
 
 export const EMPTY_CONTAINER_HEIGHT = '80px';
 
+export const DEFAULT_IMAGE_WIDTH = '500px';
+
 export enum PostMessageMethods {
   REQUEST_ENTITIES = 'REQUEST_ENTITIES',
   REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',
 }
+
+export const SUPPORTED_IMAGE_FORMATS = ['jpg', 'png', 'webp', 'gif', 'avif'] as const;

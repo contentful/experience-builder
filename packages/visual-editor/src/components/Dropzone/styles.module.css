@@ -49,3 +49,8 @@
   position: fixed;
   pointer-events: all !important;
 }
+
+.hitbox {
+  position: fixed;
+  pointer-events: all !important;
+}

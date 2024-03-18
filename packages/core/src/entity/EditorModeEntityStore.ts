@@ -1,7 +1,8 @@
-import type { Asset, Entry, UnresolvedLink } from 'contentful';
+import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
 import { sendMessage } from '../communication/sendMessage';
 import { EditorEntityStore } from './EditorEntityStore';
 import { RequestedEntitiesMessage } from '../types';
+import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
 
 // The default of 3s in the EditorEntityStore is sometimes timing out and
@@ -82,13 +83,22 @@ export class EditorModeEntityStore extends EditorEntityStore {
     return { missingEntryIds, missingAssetIds };
   }
 
-  getValue(
-    entityLink: UnresolvedLink<'Entry' | 'Asset'> | undefined,
+  public getValue(
+    entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
     path: string[],
   ): string | undefined {
-    if (!entityLink || !entityLink.sys) return;
+    const entity = this.getEntryOrAsset(entityLinkOrEntity, path.join('/'));
 
-    const fieldValue = super.getValue(entityLink, path);
+    if (!entity) {
+      return;
+    }
+
+    const fieldValue = get<string>(entity, path);
+
+    // walk around to render asset files
+    return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
+      ? (fieldValue as AssetFile).url
+      : fieldValue;
     return transformAssetFileToUrl(fieldValue);
   }
 }

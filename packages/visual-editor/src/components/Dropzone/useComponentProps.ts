@@ -2,11 +2,10 @@ import { useEditorStore } from '@/store/editor';
 import {
   buildCfStyles,
   calculateNodeDefaultHeight,
-  transformContentValue,
   isLinkToAsset,
   isEmptyStructureWithRelativeHeight,
   isContentfulStructureComponent,
-  isDeepPath,
+  transformBoundContentValue,
 } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -87,46 +86,27 @@ export const useComponentProps = ({
             [variableName]: designValue,
           };
         } else if (variableMapping.type === 'BoundValue') {
-          if (!areEntitiesFetched) {
-            console.debug(
-              `[experiences-sdk-react::useComponentProps] Idle-cycle: as entities are not fetched(areEntitiesFetched=${areEntitiesFetched}), we cannot resolve bound values for ${variableName} so we just resolve them to default values.`,
-            );
-
-            // Just forcing default value (if we're in idle-cycle, entities are missing)
-            return {
-              ...acc,
-              [variableName]: transformContentValue(
-                variableDefinition.defaultValue,
-                variableDefinition,
-              ),
-            };
-          }
-
-          if (isDeepPath(variableMapping.path)) {
-            const [, uuid] = variableMapping.path.split('/');
-            const link = dataSource[uuid] as Link<'Entry' | 'Asset'>;
-            const boundValue = entityStore?.getValueDeep(link, variableMapping.path);
-            const value = boundValue || variableDefinition.defaultValue;
-            return {
-              ...acc,
-              [variableName]: transformContentValue(value, variableDefinition),
-            };
-          }
-
-          // // take value from the datasource for both bound and unbound value types
-          const [, uuid, ...path] = variableMapping.path.split('/');
+          const [, uuid, path] = variableMapping.path.split('/');
           const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
-          let boundValue: string | Link<'Asset'> | undefined = areEntitiesFetched
-            ? entityStore.getValue(binding, path.slice(0, -1))
-            : undefined;
+          const variableDefinition = definition.variables[variableName];
+          let boundValue = transformBoundContentValue(
+            node.data.props,
+            entityStore,
+            binding,
+            resolveDesignValue,
+            variableName,
+            variableDefinition,
+            variableMapping.path,
+          );
+
           // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
           // If no 'boundValue' is found, we also attempt to extract the value associated with the second-to-last item in the path.
           // If successful, it means we have identified the linked asset.
 
           if (!boundValue) {
             const maybeBoundAsset = areEntitiesFetched
-              ? entityStore.getValue(binding, path.slice(0, -2))
+              ? entityStore.getValue(binding, path.split('/').slice(0, -2))
               : undefined;
 
             if (isLinkToAsset(maybeBoundAsset)) {
@@ -134,15 +114,11 @@ export const useComponentProps = ({
             }
           }
 
-          if (typeof boundValue === 'object' && boundValue.sys?.linkType === 'Asset') {
-            boundValue = entityStore?.getValue(boundValue, ['fields', 'file']);
-          }
-
           const value = boundValue || variableDefinition.defaultValue;
 
           return {
             ...acc,
-            [variableName]: transformContentValue(value, variableDefinition),
+            [variableName]: value,
           };
         } else {
           const value = getUnboundValues({
@@ -223,12 +199,16 @@ export const useComponentProps = ({
     'data-cf-node-block-type': node.type,
   };
 
+  //List explicit style props that will end up being passed to the component
+  const stylesToKeep = ['cfImageAsset'];
+  const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
+
   const componentProps = {
     className: componentClass,
     editorMode: true,
     node,
     renderDropzone,
-    ...omit(props, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+    ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab']),
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 

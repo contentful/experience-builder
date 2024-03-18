@@ -1,7 +1,7 @@
 {
   "name": "@contentful/experiences-components-react",
   "version": "0.0.1-alpha.5",
-  "description": "A basic set of components to use with Experience Builder",
+  "description": "A basic set of components to use with Studio Experiences",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/components#readme",
   "repository": {
     "type": "git",
@@ -68,7 +68,8 @@
     "storybook": "^7.4.1",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9"
+    "vite": "^4.4.9",
+    "vite-plugin-svgr": "^4.1.0"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
