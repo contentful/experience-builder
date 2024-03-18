@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.8](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.7...@contentful/experiences-visual-editor-react@0.0.1-alpha.8) (2024-03-18)
+
+- feat!(components): image component and background image use ctfl asset api for optimized images ([dbcbac0](https://github.com/contentful/experience-builder/commit/dbcbac0f6e195a00206ec6a1eb94a2dc20af904a))
+
+### BREAKING CHANGES
+
+- Any existing experiences that have a background image with a structural component will need to reset their image positioning values.
+
 ## [0.0.1-alpha.7](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.6...@contentful/experiences-visual-editor-react@0.0.1-alpha.7) (2024-03-15)
 
 ### Bug Fixes

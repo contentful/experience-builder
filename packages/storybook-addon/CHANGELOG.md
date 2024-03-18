@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.6](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.5...@contentful/experiences-storybook-addon@0.0.1-alpha.6) (2024-03-18)
+
+**Note:** Version bump only for package @contentful/experiences-storybook-addon
+
 ## [0.0.1-alpha.5](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.4...@contentful/experiences-storybook-addon@0.0.1-alpha.5) (2024-03-13)
 
 **Note:** Version bump only for package @contentful/experiences-storybook-addon

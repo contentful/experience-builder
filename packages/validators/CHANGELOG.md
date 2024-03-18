@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.4](https://github.com/contentful/experience-builder/compare/@contentful/experiences-validators@0.0.1-alpha.3...@contentful/experiences-validators@0.0.1-alpha.4) (2024-03-18)
+
+### Bug Fixes
+
+- update background related fields to have display names of Background image and Background color ([84aecb4](https://github.com/contentful/experience-builder/commit/84aecb4cfcd4a51a29c9444d02686fa35254f30a))
+
+- feat!(components): image component and background image use ctfl asset api for optimized images ([dbcbac0](https://github.com/contentful/experience-builder/commit/dbcbac0f6e195a00206ec6a1eb94a2dc20af904a))
+
+### BREAKING CHANGES
+
+- Any existing experiences that have a background image with a structural component will need to reset their image positioning values.
+
 ## [0.0.1-alpha.3](https://github.com/contentful/experience-builder/compare/@contentful/experiences-validators@0.0.1-alpha.2...@contentful/experiences-validators@0.0.1-alpha.3) (2024-02-22)
 
 ### Bug Fixes
