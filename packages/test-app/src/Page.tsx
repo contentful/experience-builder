@@ -12,6 +12,7 @@ export default function Page() {
   const { config } = useContentfulConfig();
   const { client } = useContentfulClient();
 
+  console.log('slug', slug);
   const { experience, error, isLoading } = useFetchBySlug({
     slug,
     localeCode,
