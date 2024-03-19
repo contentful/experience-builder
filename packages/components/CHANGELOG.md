@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.7](https://github.com/contentful/experience-builder/compare/@contentful/experiences-components-react@0.0.1-alpha.6...@contentful/experiences-components-react@0.0.1-alpha.7) (2024-03-19)
+
+### Features
+
+- add borderRadius definition to structure components ([b2117a7](https://github.com/contentful/experience-builder/commit/b2117a703ae8b5ed603e27b481f4764b6e830a1c))
+- adds border radius for built in components ([79bb49b](https://github.com/contentful/experience-builder/commit/79bb49b01e1ee6e89e8ef2d24b342aa0b3047c8c))
+
 ## [0.0.1-alpha.6](https://github.com/contentful/experience-builder/compare/@contentful/experiences-components-react@0.0.1-alpha.5...@contentful/experiences-components-react@0.0.1-alpha.6) (2024-03-18)
 
 - feat!(components): image component and background image use ctfl asset api for optimized images ([dbcbac0](https://github.com/contentful/experience-builder/commit/dbcbac0f6e195a00206ec6a1eb94a2dc20af904a))

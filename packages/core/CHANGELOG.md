@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.7](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.6...@contentful/experiences-core@0.0.1-alpha.7) (2024-03-19)
+
+### Bug Fixes
+
+- extend validators to validate component registration on editor mode ([f0dda61](https://github.com/contentful/experience-builder/commit/f0dda6178e3b81ecdcd2b1d530b854117fdd6df0))
+
+### Features
+
+- add borderRadius definition to structure components ([b2117a7](https://github.com/contentful/experience-builder/commit/b2117a703ae8b5ed603e27b481f4764b6e830a1c))
+
 ## [0.0.1-alpha.6](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.5...@contentful/experiences-core@0.0.1-alpha.6) (2024-03-18)
 
 - feat!(components): image component and background image use ctfl asset api for optimized images ([dbcbac0](https://github.com/contentful/experience-builder/commit/dbcbac0f6e195a00206ec6a1eb94a2dc20af904a))

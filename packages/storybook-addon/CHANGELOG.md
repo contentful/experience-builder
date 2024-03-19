@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.7](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.6...@contentful/experiences-storybook-addon@0.0.1-alpha.7) (2024-03-19)
+
+### Features
+
+- add borderRadius definition to structure components ([b2117a7](https://github.com/contentful/experience-builder-storybook/commit/b2117a703ae8b5ed603e27b481f4764b6e830a1c))
+
 ## [0.0.1-alpha.6](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.5...@contentful/experiences-storybook-addon@0.0.1-alpha.6) (2024-03-18)
 
 **Note:** Version bump only for package @contentful/experiences-storybook-addon
