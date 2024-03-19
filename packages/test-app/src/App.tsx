@@ -1,9 +1,9 @@
-import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Page from './Page';
 // import SpaceSelector from './components/SpaceSelector';
 import { ContentfulConfigProvider } from './utils/ContentfulConfigProvider';
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: '/',
     element: <Page />,
