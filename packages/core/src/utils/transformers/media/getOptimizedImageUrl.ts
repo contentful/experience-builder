@@ -4,6 +4,10 @@ export function getOptimizedImageUrl(
   quality?: number,
   format?: string,
 ) {
+  if (url.startsWith('//')) {
+    url = 'https:' + url;
+  }
+
   const params = new URLSearchParams();
   if (width) {
     params.append('w', width.toString());

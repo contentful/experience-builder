@@ -17,34 +17,37 @@ describe('transformImageAsset', () => {
   it('when width of image is 250, should return a srcSet with 2 parts', () => {
     file.details.image!.width = 250;
     const result = getOptimizedImageAsset(file, '500px');
-    expect(result.srcSet).toEqual([`${file.url}?w=125 125w`, `${file.url}?w=250 250w`]);
+    expect(result.srcSet).toEqual([`https:${file.url}?w=125 125w`, `https:${file.url}?w=250 250w`]);
   });
 
   it('when width of image is 500, should return a srcSet with 2 parts', () => {
     file.details.image!.width = 500;
     const result = getOptimizedImageAsset(file, '500px');
-    expect(result.srcSet).toEqual([`${file.url}?w=250 250w`, `${file.url}?w=500 500w`]);
+    expect(result.srcSet).toEqual([`https:${file.url}?w=250 250w`, `https:${file.url}?w=500 500w`]);
   });
 
   it('when width of image is 525, should return a srcSet with 2 parts', () => {
     file.details.image!.width = 525;
     const result = getOptimizedImageAsset(file, '500px');
-    expect(result.srcSet).toEqual([`${file.url}?w=263 263w`, `${file.url}?w=525 525w`]);
+    expect(result.srcSet).toEqual([`https:${file.url}?w=263 263w`, `https:${file.url}?w=525 525w`]);
   });
 
   it('when width of image is 1000, should return a srcSet with 2 parts', () => {
     file.details.image!.width = 1000;
     const result = getOptimizedImageAsset(file, '500px');
-    expect(result.srcSet).toEqual([`${file.url}?w=500 500w`, `${file.url}?w=1000 1000w`]);
+    expect(result.srcSet).toEqual([
+      `https:${file.url}?w=500 500w`,
+      `https:${file.url}?w=1000 1000w`,
+    ]);
   });
 
   it('when width of image is 1500, should return a srcSet with 3 parts', () => {
     file.details.image!.width = 1500;
     const result = getOptimizedImageAsset(file, '500px');
     expect(result.srcSet).toEqual([
-      `${file.url}?w=500 500w`,
-      `${file.url}?w=1000 1000w`,
-      `${file.url}?w=1500 1500w`,
+      `https:${file.url}?w=500 500w`,
+      `https:${file.url}?w=1000 1000w`,
+      `https:${file.url}?w=1500 1500w`,
     ]);
   });
 
@@ -52,14 +55,14 @@ describe('transformImageAsset', () => {
     file.details.image!.width = 4000;
     const result = getOptimizedImageAsset(file, '500px');
     expect(result.srcSet).toEqual([
-      `${file.url}?w=500 500w`,
-      `${file.url}?w=1000 1000w`,
-      `${file.url}?w=1500 1500w`,
-      `${file.url}?w=2000 2000w`,
-      `${file.url}?w=2500 2500w`,
-      `${file.url}?w=3000 3000w`,
-      `${file.url}?w=3500 3500w`,
-      `${file.url}?w=4000 4000w`,
+      `https:${file.url}?w=500 500w`,
+      `https:${file.url}?w=1000 1000w`,
+      `https:${file.url}?w=1500 1500w`,
+      `https:${file.url}?w=2000 2000w`,
+      `https:${file.url}?w=2500 2500w`,
+      `https:${file.url}?w=3000 3000w`,
+      `https:${file.url}?w=3500 3500w`,
+      `https:${file.url}?w=4000 4000w`,
     ]);
   });
 
@@ -67,15 +70,15 @@ describe('transformImageAsset', () => {
     file.details.image!.width = 5000;
     const result = getOptimizedImageAsset(file, '500px');
     expect(result.srcSet).toEqual([
-      `${file.url}?w=500 500w`,
-      `${file.url}?w=1000 1000w`,
-      `${file.url}?w=1500 1500w`,
-      `${file.url}?w=2000 2000w`,
-      `${file.url}?w=2500 2500w`,
-      `${file.url}?w=3000 3000w`,
-      `${file.url}?w=3500 3500w`,
-      `${file.url}?w=4000 4000w`,
-      `${file.url} 5000w`,
+      `https:${file.url}?w=500 500w`,
+      `https:${file.url}?w=1000 1000w`,
+      `https:${file.url}?w=1500 1500w`,
+      `https:${file.url}?w=2000 2000w`,
+      `https:${file.url}?w=2500 2500w`,
+      `https:${file.url}?w=3000 3000w`,
+      `https:${file.url}?w=3500 3500w`,
+      `https:${file.url}?w=4000 4000w`,
+      `https:${file.url} 5000w`,
     ]);
   });
 
@@ -87,12 +90,12 @@ describe('transformImageAsset', () => {
   it('the url should have a width limit of 2000 and quality of 80 when the image width is larger than 2000', () => {
     file.details.image!.width = 2500;
     const result = getOptimizedImageAsset(file, '500px', 80);
-    expect(result.url).toEqual(`${file.url}?w=2000&q=80`);
+    expect(result.url).toEqual(`https:${file.url}?w=2000&q=80`);
   });
 
   it('the url should have no width limit and quality of 80 when the image width is 800', () => {
     const result = getOptimizedImageAsset(file, '500px', 80);
-    expect(result.url).toEqual(`${file.url}?q=80`);
+    expect(result.url).toEqual(`https:${file.url}?q=80`);
   });
 
   it('when there is no file on the asset, should throw an error', () => {
@@ -107,17 +110,20 @@ describe('transformImageAsset', () => {
 
   it('when quality is passed, the quality should be on the srcSet urls', () => {
     const result = getOptimizedImageAsset(file, '500px', 50);
-    expect(result.srcSet).toEqual([`${file.url}?w=400&q=50 400w`, `${file.url}?w=800&q=50 800w`]);
+    expect(result.srcSet).toEqual([
+      `https:${file.url}?w=400&q=50 400w`,
+      `https:${file.url}?w=800&q=50 800w`,
+    ]);
   });
 
   it('when quality is 0, the quality should not be on the srcSet urls', () => {
     const result = getOptimizedImageAsset(file, '500px', 0);
-    expect(result.srcSet).toEqual([`${file.url}?w=400 400w`, `${file.url}?w=800 800w`]);
+    expect(result.srcSet).toEqual([`https:${file.url}?w=400 400w`, `https:${file.url}?w=800 800w`]);
   });
 
   it('when quality is 100, the quality should not be on the srcSet urls', () => {
     const result = getOptimizedImageAsset(file, '500px', 100);
-    expect(result.srcSet).toEqual([`${file.url}?w=400 400w`, `${file.url}?w=800 800w`]);
+    expect(result.srcSet).toEqual([`https:${file.url}?w=400 400w`, `https:${file.url}?w=800 800w`]);
   });
 
   it('when quality is less than 0, should throw an error', () => {
@@ -135,8 +141,8 @@ describe('transformImageAsset', () => {
   it('when format is passed, the format should be on the srcSet urls', () => {
     const result = getOptimizedImageAsset(file, '500px', undefined, 'webp');
     expect(result.srcSet).toEqual([
-      `${file.url}?w=400&fm=webp 400w`,
-      `${file.url}?w=800&fm=webp 800w`,
+      `https:${file.url}?w=400&fm=webp 400w`,
+      `https:${file.url}?w=800&fm=webp 800w`,
     ]);
   });
 
