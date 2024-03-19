@@ -24,6 +24,7 @@ export const HeadingComponentDefinition: ComponentDefinition = {
     'cfMaxWidth',
     'cfBackgroundColor',
     'cfBorder',
+    'cfBorderRadius',
   ],
   tooltip: {
     description: 'Drop onto the canvas to add a heading.',
