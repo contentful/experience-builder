@@ -51,8 +51,8 @@ export const useComponent = ({
         component: Assembly,
       }) as ComponentRegistration;
     } else if (!registration) {
-      console.warn(
-        `[experiences-sdk-react] Component registration not found for ${node.data.blockId}`,
+      throw Error(
+        `Component registration not found for component with id: "${node.data.blockId}". The component might of been removed. To proceed, remove the component manually from the layers tab.`,
       );
     }
     return registration as ComponentRegistration;
