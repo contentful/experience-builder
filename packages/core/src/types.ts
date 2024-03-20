@@ -337,7 +337,7 @@ export type ImageOptions = {
   format?: string;
   width: string;
   height: string;
-  objectFit: ImageObjectFitOption;
+  objectFit?: ImageObjectFitOption;
   objectPosition: ImageObjectPositionOption;
   quality: string;
   targetSize: string;

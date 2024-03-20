@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.8](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.7...@contentful/experiences-core@0.0.1-alpha.8) (2024-03-20)
+
+### Bug Fixes
+
+- convert protocol agnostic image asset url to https [ALT-639] ([#499](https://github.com/contentful/experience-builder/issues/499)) ([4503cb2](https://github.com/contentful/experience-builder/commit/4503cb21914d85583ee9c05ca17c657958a4d494))
+
 ## [0.0.1-alpha.7](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.6...@contentful/experiences-core@0.0.1-alpha.7) (2024-03-19)
 
 ### Bug Fixes
