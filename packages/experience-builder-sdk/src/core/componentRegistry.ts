@@ -281,10 +281,12 @@ export const maintainBasicComponentIdsWithoutPrefix = () => {
   optionalBuiltInComponents.forEach((id) => {
     if (componentRegistry.has(id) && id.startsWith('contentful-')) {
       const registeredComponent = componentRegistry.get(id)!;
-      const newRegisteredComponent = { ...registeredComponent };
-      newRegisteredComponent.definition.name = newRegisteredComponent.definition.name + '[OLD]';
+      const definition = registeredComponent.definition;
+      const newDefinition = cloneObject(definition);
+      newDefinition.name = newDefinition.name + '[OLD]';
       const newId = id.replace('contentful-', '');
-      newRegisteredComponent.definition.id = newId;
+      newDefinition.id = newId;
+      const newRegisteredComponent = { ...registeredComponent, definition: newDefinition };
       componentRegistry.set(newId, newRegisteredComponent);
     }
   });
