@@ -28,7 +28,7 @@ export default [
   //typings
   {
     input: 'src/index.ts',
-    output: [{ dir: 'dist', format: 'esm', preserveModules: true }],
+    output: [{ dir: 'dist', format: 'esm' }],
     plugins: [
       dts({
         tsconfig: './tsconfig.json',
@@ -38,7 +38,7 @@ export default [
   },
   {
     input: 'src/types.ts',
-    output: [{ dir: 'dist', format: 'esm', preserveModules: true }],
+    output: [{ dir: 'dist', format: 'esm' }],
     plugins: [
       dts({
         tsconfig: './tsconfig.json',
