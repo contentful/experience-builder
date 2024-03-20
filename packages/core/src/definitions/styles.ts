@@ -193,7 +193,7 @@ export const optionalBuiltInStyles: VariableDefinitions = {
       width: DEFAULT_IMAGE_WIDTH,
       height: '100%',
       objectPosition: 'center center',
-      quality: '100',
+      quality: '80%',
       targetSize: DEFAULT_IMAGE_WIDTH,
     },
   },
