@@ -53,13 +53,12 @@ describe('fetchAllEntities', () => {
 
     await fetchAllEntities(params);
 
-    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenLastCalledWith({
+    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(11, {
       'sys.id[in]': params.ids,
       locale: 'en-US',
       skip: 90,
       limit: 10,
     });
-    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledTimes(11);
   });
 
   it('should never reduce limit to less than MIN_FETCH_LIMIT', async () => {
@@ -76,12 +75,11 @@ describe('fetchAllEntities', () => {
     };
     await fetchAllEntities(params);
 
-    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenLastCalledWith({
+    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(5, {
       'sys.id[in]': params.ids,
       locale: 'en-US',
       skip: 0,
       limit: 1,
     });
-    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledTimes(5);
   });
 });

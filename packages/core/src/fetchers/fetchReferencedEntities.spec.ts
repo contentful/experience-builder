@@ -73,7 +73,7 @@ describe('fetchReferencedEntities', () => {
     }
   });
 
-  it.only('should fetch referenced entities', async () => {
+  it('should fetch referenced entities', async () => {
     (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
 
     (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });

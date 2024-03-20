@@ -77,6 +77,8 @@ describe('useFetchBySlug', () => {
       });
 
       expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {
+        limit: 100,
+        skip: 0,
         'sys.id[in]': entries.map((entry) => entry.sys.id),
         locale: localeCode,
       });
