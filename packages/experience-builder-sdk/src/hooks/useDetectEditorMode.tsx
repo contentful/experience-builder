@@ -10,9 +10,12 @@ type UseDetectEditorModeArgs = {
   /** If running from a known client side only situation (ie: useFetchBySlug),
    * set this to true to kick in editor mode check sooner (which avoids a render cycle) */
   isClientSide?: boolean;
+  spaceId?: string;
 };
 
-export const useDetectEditorMode = ({ isClientSide = false }: UseDetectEditorModeArgs = {}) => {
+export const useDetectEditorMode = (
+  { isClientSide = false, spaceId }: UseDetectEditorModeArgs = { spaceId: '' },
+) => {
   const [mounted, setMounted] = useState(false);
   const [isEditorMode, setIsEditorMode] = useState(isClientSide ? inIframe() : false);
   const receivedMessage = useRef(false);
@@ -25,7 +28,7 @@ export const useDetectEditorMode = ({ isClientSide = false }: UseDetectEditorMod
       const eventData = tryParseMessage(event);
 
       if (eventData.eventType === INCOMING_EVENTS.RequestEditorMode) {
-        setIsEditorMode(true);
+        setIsEditorMode(eventData.payload.currentSpaceId === spaceId);
         receivedMessage.current = true;
         if (typeof window !== 'undefined') {
           //Once we definitely know that we are in editor mode, we set this flag so future postMessage connect calls are not made

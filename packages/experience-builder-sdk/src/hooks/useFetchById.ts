@@ -9,12 +9,23 @@ export type UseFetchByIdArgs = {
   id: string;
   experienceTypeId: string;
   localeCode: string;
+  spaceId?: string;
 };
 
-export const useFetchById = ({ id, localeCode, client, experienceTypeId }: UseFetchByIdArgs) => {
-  const isEditorMode = useDetectEditorMode({ isClientSide: typeof window !== 'undefined' });
+export const useFetchById = ({
+  id,
+  localeCode,
+  client,
+  experienceTypeId,
+  spaceId,
+}: UseFetchByIdArgs) => {
+  const isEditorMode = useDetectEditorMode({
+    isClientSide: typeof window !== 'undefined',
+    spaceId,
+  });
 
   const fetchMethod = useCallback(() => {
+    console.log('fetch method');
     return fetchById({ id, localeCode, client, experienceTypeId });
   }, [id, localeCode, client, experienceTypeId]);
 

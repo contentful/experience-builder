@@ -35,6 +35,8 @@ export async function fetchById({
 }) {
   let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
 
+  console.log('fetch by id');
+
   try {
     experienceEntry = await fetchExperienceEntry({
       client,
@@ -56,6 +58,8 @@ export async function fetchById({
         locale: localeCode,
       });
 
+      console.log('hallo');
+
       const experience = createExperience({
         experienceEntry,
         referencedAssets: assets,
@@ -68,6 +72,7 @@ export async function fetchById({
       handleError(errorMessagesWhileFetching.experienceReferences, error);
     }
   } catch (error) {
+    console.log({ error });
     handleError(errorMessagesWhileFetching.experience, error);
   }
 }

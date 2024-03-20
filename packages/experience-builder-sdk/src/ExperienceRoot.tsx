@@ -10,14 +10,16 @@ type ExperienceRootProps = {
   experience?: Experience<EntityStore>;
   locale: string;
   visualEditorMode?: VisualEditorMode;
+  spaceId: string;
 };
 
 export const ExperienceRoot = ({
   locale,
   experience,
+  spaceId,
   visualEditorMode = VisualEditorMode.LazyLoad,
 }: ExperienceRootProps) => {
-  const isEditorMode = useDetectEditorMode();
+  const isEditorMode = useDetectEditorMode({ spaceId });
 
   validateExperienceBuilderConfig({
     locale,
