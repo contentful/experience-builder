@@ -13,10 +13,11 @@ const MAX_WIDTH_ALLOWED = 4000;
 export const getOptimizedImageAsset = (
   file: AssetFile,
   sizes?: string,
-  quality: number = 100,
+  quality: string = '100%',
   format?: ValidFormats,
 ): OptimizedImageAsset => {
-  if (!validateParams(file, quality, format)) {
+  const qualityNumber = Number(quality.replace('%', ''));
+  if (!validateParams(file, qualityNumber, format)) {
     throw Error('Invalid parameters');
   }
   const url = file.url;
@@ -26,19 +27,23 @@ export const getOptimizedImageAsset = (
     Math.ceil((index + 1) * (maxWidth / numOfParts)),
   );
   const srcSet = sizes
-    ? widthParts.map((width) => `${getOptimizedImageUrl(url, width, quality, format)} ${width}w`)
+    ? widthParts.map(
+        (width) => `${getOptimizedImageUrl(url, width, qualityNumber, format)} ${width}w`,
+      )
     : [];
 
   const intrinsicImageWidth = file.details.image.width;
 
   if (intrinsicImageWidth > MAX_WIDTH_ALLOWED) {
-    srcSet.push(`${getOptimizedImageUrl(url, undefined, quality, format)} ${intrinsicImageWidth}w`);
+    srcSet.push(
+      `${getOptimizedImageUrl(url, undefined, qualityNumber, format)} ${intrinsicImageWidth}w`,
+    );
   }
 
   const returnedUrl = getOptimizedImageUrl(
     url,
     file.details.image.width > 2000 ? 2000 : undefined,
-    quality,
+    qualityNumber,
     format,
   );
 
