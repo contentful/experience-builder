@@ -84,6 +84,8 @@ describe('useFetchBySlug', () => {
       });
 
       expect(clientMock.getAssets).toHaveBeenCalledWith({
+        limit: 100,
+        skip: 0,
         'sys.id[in]': assets.map((asset) => asset.sys.id),
         locale: localeCode,
       });
