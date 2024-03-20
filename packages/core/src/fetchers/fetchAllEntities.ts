@@ -1,6 +1,6 @@
 import { ContentfulClientApi, Entry } from 'contentful';
 
-const MIN_FETCH_LIMIT = 10;
+const MIN_FETCH_LIMIT = 1;
 
 const fetchEntities = async ({
   entityType,
@@ -15,7 +15,7 @@ const fetchEntities = async ({
     return client.getAssets({ ...query });
   }
 
-  return client.getEntries({ ...query });
+  return client.withoutLinkResolution.getEntries({ ...query });
 };
 
 export const fetchAllEntities = async ({
@@ -36,14 +36,20 @@ export const fetchAllEntities = async ({
   responseItems?: Entry[];
 }) => {
   try {
-    if (!ids.length) {
+    if (!ids.length || !client) {
       return {
         items: [],
       };
     }
 
     const query = { 'sys.id[in]': ids, locale, limit, skip };
+
     const response = await fetchEntities({ entityType, client, query });
+
+    if (!response) {
+      return responseItems;
+    }
+
     responseItems.push(...(response.items as Entry[]));
 
     if (skip + limit < response.total) {
@@ -61,11 +67,10 @@ export const fetchAllEntities = async ({
     return {
       items: responseItems,
     };
-  } catch (e) {
+  } catch (error) {
     if (
-      e instanceof Error &&
-      e.name === 'BadRequest' &&
-      e.message.includes('size too big') &&
+      error instanceof Error &&
+      error.message.includes('size too big') &&
       limit > MIN_FETCH_LIMIT
     ) {
       const newLimit = Math.max(MIN_FETCH_LIMIT, Math.floor(limit / 2));
@@ -80,8 +85,6 @@ export const fetchAllEntities = async ({
       });
     }
 
-    return {
-      items: responseItems,
-    };
+    return error;
   }
 };

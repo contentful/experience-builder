@@ -73,7 +73,7 @@ describe('fetchReferencedEntities', () => {
     }
   });
 
-  it('should fetch referenced entities', async () => {
+  it.only('should fetch referenced entities', async () => {
     (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
 
     (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
@@ -87,6 +87,8 @@ describe('fetchReferencedEntities', () => {
     });
 
     expect(mockClient.getAssets).toHaveBeenCalledWith({
+      limit: 100,
+      skip: 0,
       locale: 'en-US',
       'sys.id[in]': assets.map((asset) => asset.sys.id),
     });
@@ -94,6 +96,8 @@ describe('fetchReferencedEntities', () => {
     expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledWith({
       locale: 'en-US',
       'sys.id[in]': entries.map((entry) => entry.sys.id),
+      limit: 100,
+      skip: 0,
     });
 
     expect(res).toEqual({
