@@ -191,6 +191,6 @@ export const CompositionBlock = ({
       ...omit(nodeProps, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab']),
       className,
     },
-    children,
+    children ?? (typeof nodeProps.children === 'string' ? nodeProps.children : null),
   );
 };
