@@ -47,7 +47,9 @@ export const fetchAllEntities = async ({
     const response = await fetchEntities({ entityType, client, query });
 
     if (!response) {
-      return responseItems;
+      return {
+        items: responseItems,
+      };
     }
 
     responseItems.push(...(response.items as Entry[]));
