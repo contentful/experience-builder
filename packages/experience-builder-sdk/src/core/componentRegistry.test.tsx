@@ -4,6 +4,7 @@ import {
   INTERNAL_EVENTS,
   CONTENTFUL_COMPONENTS,
   ASSEMBLY_DEFAULT_CATEGORY,
+  OUTGOING_EVENTS,
 } from '@contentful/experiences-core/constants';
 import * as registry from './componentRegistry';
 import type { ComponentRegistration } from '@contentful/experiences-core/types';
@@ -35,7 +36,7 @@ describe('component registration', () => {
     });
   });
 
-  describe('defineComponents (many at once)', () => {
+  describe('defineComponents', () => {
     it('should emit the registered components event', () => {
       jest.spyOn(window, 'dispatchEvent');
 
@@ -269,5 +270,71 @@ describe('createAssemblyRegistration', () => {
     it('does not throw an error if no component definition is invalid', () => {
       expect(() => registry.runRegisteredComponentValidations()).not.toThrow(new Error());
     });
+  });
+});
+
+describe('sendRegisteredComponentsMessage', () => {
+  beforeEach(() => {
+    jest.spyOn(window, 'postMessage');
+    jest.spyOn(window, 'dispatchEvent');
+  });
+
+  afterEach(() => {
+    registry.resetComponentRegistry();
+  });
+
+  it('should only send component definitions', () => {
+    registry.sendRegisteredComponentsMessage();
+
+    expect(window.postMessage).toHaveBeenCalledWith(
+      {
+        source: 'customer-app',
+        eventType: OUTGOING_EVENTS.RegisteredComponents,
+        payload: {
+          definitions: Array.from(registry.componentRegistry.values()).map(
+            (registration) => registration.definition,
+          ),
+        },
+      },
+      '*',
+    );
+
+    const definitionId = 'TestComponent';
+    registry.defineComponents([
+      {
+        component: TestComponent,
+        definition: {
+          id: definitionId,
+          name: 'TestComponent',
+          builtInStyles: [],
+          variables: {
+            isChecked: {
+              type: 'Boolean',
+            },
+          },
+        },
+      },
+    ]);
+
+    registry.sendRegisteredComponentsMessage();
+
+    expect(window.postMessage).toHaveBeenCalledWith(
+      {
+        source: 'customer-app',
+        eventType: OUTGOING_EVENTS.RegisteredComponents,
+        payload: {
+          definitions: Array.from(registry.componentRegistry.values()).map(
+            (registration) => registration.definition,
+          ),
+        },
+      },
+      '*',
+    );
+
+    for (const call of (window.postMessage as jest.Mock).mock.calls) {
+      for (const definition of call[0].payload.definitions) {
+        expect(definition).not.toHaveProperty('component');
+      }
+    }
   });
 });
