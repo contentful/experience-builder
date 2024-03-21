@@ -231,6 +231,7 @@ export type DesignTokensDefinition = {
   sizing?: Record<string, string>;
   color?: Record<string, string>;
   border?: Record<string, { width: string; style: 'solid' | 'dashed' | 'dotted'; color: string }>;
+  borderRadius?: Record<string, string>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;
   letterSpacing?: Record<string, string>;
