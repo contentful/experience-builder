@@ -71,7 +71,7 @@ export const transformMedia = (
       value = getOptimizedBackgroundImageAsset(
         asset.fields.file as AssetFile,
         width as string,
-        Number(options.quality),
+        options.quality,
         options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
       );
       return value;

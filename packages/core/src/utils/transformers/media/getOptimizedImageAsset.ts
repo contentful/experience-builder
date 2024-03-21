@@ -1,12 +1,7 @@
-import { SUPPORTED_IMAGE_FORMATS } from '@/constants';
 import { OptimizedImageAsset } from '@/types';
 import { AssetFile } from 'contentful';
 import { getOptimizedImageUrl } from './getOptimizedImageUrl';
-
-type ValidFormats = (typeof SUPPORTED_IMAGE_FORMATS)[number];
-interface AssetFileWithRequiredImage extends AssetFile {
-  details: Required<AssetFile['details']>;
-}
+import { ValidFormats, validateParams } from './mediaUtils';
 
 const MAX_WIDTH_ALLOWED = 4000;
 
@@ -55,21 +50,4 @@ export const getOptimizedImageAsset = (
   };
 
   return optimizedImageAsset;
-
-  function validateParams(
-    file: AssetFile,
-    quality: number,
-    format?: ValidFormats,
-  ): file is AssetFileWithRequiredImage {
-    if (!file.details.image) {
-      throw Error('No image in file asset to transform');
-    }
-    if (quality < 0 || quality > 100) {
-      throw Error('Quality must be between 0 and 100');
-    }
-    if (format && !SUPPORTED_IMAGE_FORMATS.includes(format)) {
-      throw Error(`Format must be one of ${SUPPORTED_IMAGE_FORMATS.join(', ')}`);
-    }
-    return true;
-  }
 };

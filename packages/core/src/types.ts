@@ -364,6 +364,6 @@ export type BackgroundImageOptions = {
   format?: string;
   scaling: BackgroundImageScalingOption;
   alignment: BackgroundImageAlignmentOption;
-  quality: string;
+  quality?: string;
   targetSize: string;
 };
