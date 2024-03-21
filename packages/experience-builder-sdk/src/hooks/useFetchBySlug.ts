@@ -9,6 +9,7 @@ export type UseFetchBySlugArgs = {
   slug: string;
   experienceTypeId: string;
   localeCode: string;
+  hyperlinkPattern?: string;
 };
 
 export const useFetchBySlug = ({
@@ -16,6 +17,7 @@ export const useFetchBySlug = ({
   localeCode,
   client,
   experienceTypeId,
+  hyperlinkPattern,
 }: UseFetchBySlugArgs) => {
   const isEditorMode = useDetectEditorMode({ isClientSide: typeof window !== 'undefined' });
 
@@ -23,5 +25,7 @@ export const useFetchBySlug = ({
     return fetchBySlug({ slug, localeCode, client, experienceTypeId });
   }, [slug, localeCode, client, experienceTypeId]);
 
-  return useFetchByBase(fetchMethod, isEditorMode);
+  const fetchResult = useFetchByBase(fetchMethod, isEditorMode);
+
+  return { ...fetchResult, experience: { ...fetchResult.experience, hyperlinkPattern } };
 };

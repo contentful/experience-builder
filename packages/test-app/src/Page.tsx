@@ -19,6 +19,8 @@ export default function Page() {
     experienceTypeId: config.experienceTypeId,
   });
 
+  console.log({ experience }, 'inner');
+
   if (isLoading) return <div>Loading...</div>;
 
   if (error) return <div>{error.message}</div>;

@@ -26,6 +26,8 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
     return null;
   }
 
+  // TODO MAKE HYPERLINK PATTERN WORK IN DELIVERY
+
   return (
     <>
       {entityStore.experienceEntryFields.componentTree.children.map((childNode, index) => (

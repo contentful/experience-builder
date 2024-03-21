@@ -33,6 +33,7 @@ type CompositionBlockProps = {
   node: ComponentTreeNode;
   locale: string;
   entityStore: EntityStore;
+  hyperlinkPattern?: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
 };
 
@@ -40,6 +41,7 @@ export const CompositionBlock = ({
   node: rawNode,
   locale,
   entityStore,
+  hyperlinkPattern,
   resolveDesignValue,
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
