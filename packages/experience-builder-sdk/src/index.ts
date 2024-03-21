@@ -2,7 +2,7 @@ import { SDK_VERSION } from './sdkVersion';
 
 export { ExperienceRoot } from './ExperienceRoot';
 export { useFetchById, useFetchBySlug } from './hooks';
-export { defineComponents } from './core/componentRegistry';
+export { defineComponents, maintainBasicComponentIdsWithoutPrefix } from './core/componentRegistry';
 export {
   defineDesignTokens,
   VisualEditorMode,
