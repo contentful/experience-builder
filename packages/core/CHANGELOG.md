@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.9](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.8...@contentful/experiences-core@0.0.1-alpha.9) (2024-03-21)
+
+### Bug Fixes
+
+- change image object fit to default to undefined instead of none ([#502](https://github.com/contentful/experience-builder/issues/502)) ([46a7e94](https://github.com/contentful/experience-builder/commit/46a7e9474dec15ef1ea30111f28619c09d5a9f3c))
+- fetch all referenced entities ([#507](https://github.com/contentful/experience-builder/issues/507)) ([099dcd6](https://github.com/contentful/experience-builder/commit/099dcd66884ea43edc5ff954dfe5a1f82b11df42))
+
+### Features
+
+- add borderRadius type for design tokens ([09c12eb](https://github.com/contentful/experience-builder/commit/09c12eb3de0cf683d65a3a4ad0522ba7a3f4d673))
+
 ## [0.0.1-alpha.8](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.7...@contentful/experiences-core@0.0.1-alpha.8) (2024-03-20)
 
 ### Bug Fixes

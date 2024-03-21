@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.11](https://github.com/contentful/experience-builder/compare/@contentful/experiences-sdk-react@0.0.1-alpha.10...@contentful/experiences-sdk-react@0.0.1-alpha.11) (2024-03-21)
+
+### Bug Fixes
+
+- allow children variable on components with no children nodes [ALT-636] ([#509](https://github.com/contentful/experience-builder/issues/509)) ([bf8aea4](https://github.com/contentful/experience-builder/commit/bf8aea487f4f700ff0915b49667bb026986f4f4d))
+- fetch all referenced entities ([#507](https://github.com/contentful/experience-builder/issues/507)) ([099dcd6](https://github.com/contentful/experience-builder/commit/099dcd66884ea43edc5ff954dfe5a1f82b11df42))
+
 ## [0.0.1-alpha.10](https://github.com/contentful/experience-builder/compare/@contentful/experiences-sdk-react@0.0.1-alpha.9...@contentful/experiences-sdk-react@0.0.1-alpha.10) (2024-03-20)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react
