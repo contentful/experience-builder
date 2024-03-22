@@ -269,3 +269,25 @@ export const createAssemblyRegistration = ({
 
   return componentRegistry.get(definitionId);
 };
+
+/**
+ * @deprecated This method is used to maintain the basic component ids (without the prefix 'contentful-') in order to be compatible
+ * with experiences created with an older alpha version of the SDK. Components in these experiences should be migrated to use
+ * the components with the 'contentful-' prefix. To do so, load the experience in the editor, and replace any older basic components
+ * (marked with [OLD] in the UI) with the new components (without the [OLD]). This method (and functionality for the older components)
+ * will be removed in the next major release.
+ */
+export const maintainBasicComponentIdsWithoutPrefix = () => {
+  optionalBuiltInComponents.forEach((id) => {
+    if (componentRegistry.has(id) && id.startsWith('contentful-')) {
+      const registeredComponent = componentRegistry.get(id)!;
+      const definition = registeredComponent.definition;
+      const newDefinition = cloneObject(definition);
+      newDefinition.name = newDefinition.name + '[OLD]';
+      const newId = id.replace('contentful-', '');
+      newDefinition.id = newId;
+      const newRegisteredComponent = { ...registeredComponent, definition: newDefinition };
+      componentRegistry.set(newId, newRegisteredComponent);
+    }
+  });
+};

@@ -339,8 +339,8 @@ export type ImageOptions = {
   width: string;
   height: string;
   objectFit?: ImageObjectFitOption;
-  objectPosition: ImageObjectPositionOption;
-  quality: string;
+  objectPosition?: ImageObjectPositionOption;
+  quality?: string;
   targetSize: string;
 };
 
@@ -365,6 +365,6 @@ export type BackgroundImageOptions = {
   format?: string;
   scaling: BackgroundImageScalingOption;
   alignment: BackgroundImageAlignmentOption;
-  quality: string;
+  quality?: string;
   targetSize: string;
 };

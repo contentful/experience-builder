@@ -192,8 +192,6 @@ export const optionalBuiltInStyles: VariableDefinitions = {
     defaultValue: {
       width: DEFAULT_IMAGE_WIDTH,
       height: '100%',
-      objectPosition: 'center center',
-      quality: '100',
       targetSize: DEFAULT_IMAGE_WIDTH,
     },
   },
@@ -209,7 +207,6 @@ export const optionalBuiltInStyles: VariableDefinitions = {
     defaultValue: {
       scaling: 'fill',
       alignment: 'left top',
-      quality: '100',
       targetSize: '2000px',
     },
   },
