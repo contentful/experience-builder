@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.13](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.12...@contentful/experiences-visual-editor-react@0.0.1-alpha.13) (2024-03-22)
+
+**Note:** Version bump only for package @contentful/experiences-visual-editor-react
+
 ## [0.0.1-alpha.12](https://github.com/contentful/experience-builder/compare/@contentful/experiences-visual-editor-react@0.0.1-alpha.11...@contentful/experiences-visual-editor-react@0.0.1-alpha.12) (2024-03-22)
 
 - feat(experiences-sdk-react)!: update basic component IDs with contentful prefix (#508) ([0e28c45](https://github.com/contentful/experience-builder/commit/0e28c45e589422574caab08c44bc6099a5cbdb42)), closes [#508](https://github.com/contentful/experience-builder/issues/508)

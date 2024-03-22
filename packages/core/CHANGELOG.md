@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.11](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.10...@contentful/experiences-core@0.0.1-alpha.11) (2024-03-22)
+
+### Reverts
+
+- Revert "fix: fetch all referenced entities (#507)" (#515) ([2b376f6](https://github.com/contentful/experience-builder/commit/2b376f6f1b6ab63e46c3f62affea0621af33e698)), closes [#507](https://github.com/contentful/experience-builder/issues/507) [#515](https://github.com/contentful/experience-builder/issues/515)
+
 ## [0.0.1-alpha.10](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.9...@contentful/experiences-core@0.0.1-alpha.10) (2024-03-22)
 
 ### Bug Fixes

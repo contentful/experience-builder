@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.13](https://github.com/contentful/experience-builder/compare/@contentful/experiences-sdk-react@0.0.1-alpha.12...@contentful/experiences-sdk-react@0.0.1-alpha.13) (2024-03-22)
+
+### Bug Fixes
+
+- do not attempt to send components via postMessage ([#510](https://github.com/contentful/experience-builder/issues/510)) ([f0b1498](https://github.com/contentful/experience-builder/commit/f0b1498b56d6c0be5aaeefbbf18ee5e7919e704a))
+
+### Reverts
+
+- Revert "fix: fetch all referenced entities (#507)" (#515) ([2b376f6](https://github.com/contentful/experience-builder/commit/2b376f6f1b6ab63e46c3f62affea0621af33e698)), closes [#507](https://github.com/contentful/experience-builder/issues/507) [#515](https://github.com/contentful/experience-builder/issues/515)
+
 ## [0.0.1-alpha.12](https://github.com/contentful/experience-builder/compare/@contentful/experiences-sdk-react@0.0.1-alpha.11...@contentful/experiences-sdk-react@0.0.1-alpha.12) (2024-03-22)
 
 - feat(experiences-sdk-react)!: update basic component IDs with contentful prefix (#508) ([0e28c45](https://github.com/contentful/experience-builder/commit/0e28c45e589422574caab08c44bc6099a5cbdb42)), closes [#508](https://github.com/contentful/experience-builder/issues/508)
