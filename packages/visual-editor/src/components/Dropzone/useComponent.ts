@@ -1,6 +1,5 @@
 import React from 'react';
 import type {
-  ComponentRegistration,
   ExperienceTreeNode,
   ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
@@ -43,19 +42,21 @@ export const useComponent = ({
   }, [areEntitiesFetched, rawNode, entityStore]);
 
   const componentRegistration = useMemo(() => {
-    const registration = componentRegistry.get(node.data.blockId as string);
+    let registration = componentRegistry.get(node.data.blockId as string);
 
     if (node.type === ASSEMBLY_NODE_TYPE && !registration) {
-      return createAssemblyRegistration({
+      registration = createAssemblyRegistration({
         definitionId: node.data.blockId as string,
         component: Assembly,
-      }) as ComponentRegistration;
-    } else if (!registration) {
+      });
+    }
+
+    if (!registration) {
       throw Error(
         `Component registration not found for component with id: "${node.data.blockId}". The component might of been removed. To proceed, remove the component manually from the layers tab.`,
       );
     }
-    return registration as ComponentRegistration;
+    return registration;
   }, [node]);
 
   const componentId = node.data.id;
