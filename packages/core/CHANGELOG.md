@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.10](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.9...@contentful/experiences-core@0.0.1-alpha.10) (2024-03-22)
+
+### Bug Fixes
+
+- **core:** expect image quality to be a string with a percentage [ALT-643] ([#504](https://github.com/contentful/experience-builder/issues/504)) ([e9e0345](https://github.com/contentful/experience-builder/commit/e9e03455b2a0b5ed1d0cd4eeea09f84fc2e42179))
+
+- feat(experiences-sdk-react)!: update basic component IDs with contentful prefix (#508) ([0e28c45](https://github.com/contentful/experience-builder/commit/0e28c45e589422574caab08c44bc6099a5cbdb42)), closes [#508](https://github.com/contentful/experience-builder/issues/508)
+
+### BREAKING CHANGES
+
+- Any existing experiences using the basic components will need to be updated. To
+  do so, import and run the `maintainBasicComponentIdsWithoutPrefix` method and
+  run it early on in your application (before the first `ExperienceRoot` is
+  rendered) like so:
+
+```tsx
+import { maintainBasicComponentIdsWithoutPrefix } from '@contentful/experiences-sdk-react';
+maintainBasicComponentIdsWithoutPrefix();
+```
+
+This will register a set of the basic components with the older ids and allow
+your experiences to continue to work. To migrate to the new components, replace
+any of the components marked with "[OLD]" in the editor with their newer
+counterparts (without the '[OLD]').
+
+The `maintainBasicComponentIdsWithoutPrefix` is meant to help older experiences
+built on a early alpha release to migrate and will be removed in the next major
+release.
+
 ## [0.0.1-alpha.9](https://github.com/contentful/experience-builder/compare/@contentful/experiences-core@0.0.1-alpha.8...@contentful/experiences-core@0.0.1-alpha.9) (2024-03-21)
 
 ### Bug Fixes
