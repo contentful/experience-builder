@@ -60,8 +60,6 @@ jobs:
 
           if [ ${{ github.ref_name }} = development ]; then
             npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
-          elif [ ${{ github.ref_name }} = media-asset-changes ]; then
-            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes --allowBranch media-asset-changes
           elif [ ${{ github.ref_name }} = next ]; then
             npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid alpha --yes --no-private --dist-tag latest
           else
