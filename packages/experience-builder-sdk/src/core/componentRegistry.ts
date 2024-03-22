@@ -160,7 +160,9 @@ export const optionalBuiltInComponents = [
 
 export const sendRegisteredComponentsMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
-  const registeredDefinitions = Array.from(componentRegistry.values());
+  const registeredDefinitions = Array.from(componentRegistry.values()).map(
+    ({ definition }) => definition,
+  );
 
   sendMessage(OUTGOING_EVENTS.RegisteredComponents, {
     definitions: registeredDefinitions,
