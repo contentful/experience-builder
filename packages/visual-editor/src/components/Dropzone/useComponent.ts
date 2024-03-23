@@ -42,11 +42,11 @@ export const useComponent = ({
   }, [areEntitiesFetched, rawNode, entityStore]);
 
   const componentRegistration = useMemo(() => {
-    let registration = componentRegistry.get(node.data.blockId as string);
+    let registration = componentRegistry.get(node.data.blockId!);
 
     if (node.type === ASSEMBLY_NODE_TYPE && !registration) {
       registration = createAssemblyRegistration({
-        definitionId: node.data.blockId as string,
+        definitionId: node.data.blockId!,
         component: Assembly,
       });
     }
