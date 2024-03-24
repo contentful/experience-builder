@@ -52,9 +52,21 @@ jobs:
         run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
+      # We only want to publish if there are changes to any package. Since the lerna --force-publish flag publishes even if there are no changes
+      # we check if there are changes to the packages first, and if not, we exit early
+      - name: Changed Packages Check
+        id: changed_packages
+        run: |
+          echo "CHANGED_PACKAGES<<EOF" >> $GITHUB_OUTPUT
+          echo "CHANGED_PACKAGES=$(npx lerna changed --conventional-commits --json)" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Skip Publish if no changes
+        if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES == '' }}
+        run: echo "No changes to packages to publish, skipping publish step"
       - name: 'Version and publish'
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
+        if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES != '' }}
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor}}@users.noreply.github.com"
