@@ -42,7 +42,7 @@ jobs:
       - name: List components folder
         run: ls -la packages/components
       - name: Save Build folders        
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: |
             packages/components/styles.css
