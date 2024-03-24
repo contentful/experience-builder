@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: 'Use NodeJS 20'
         uses: actions/setup-node@v4
         with:
           node-version: '20.11'
           cache: 'npm'
       - name: Restore Cypress Binary
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: restore-cypress
         with:
           path: ~/.cache/Cypress
@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Restore the build folders
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: |
             packages/components/styles.css
