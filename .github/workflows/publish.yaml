@@ -21,6 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.11'
+          cache: 'npm'
       # Retrieve token from Vault and use in .npmrc for installing npm packages from the GitHub registry
       # See https://contentful.atlassian.net/wiki/spaces/ENG/pages/4396155213/Migrating+to+GitHub+Packages+from+npmjs?focusedCommentId=4431282518
       - name: 'Retrieve NPM Token from Vault'
