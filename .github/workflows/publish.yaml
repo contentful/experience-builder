@@ -66,6 +66,8 @@ jobs:
       - name: 'Version and publish'
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
+          # GH_TOKEN needed by lerna to create releases on github
+          GH_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
         if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES != '' }}
         run: |
           git config user.name "${{ github.actor }}"
