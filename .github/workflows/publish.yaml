@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
       # We only want to publish if there are changes to any package. Since the lerna --force-publish flag publishes even if there are no changes
       # we check if there are changes to the packages first, and if not, we exit early
-      - name: Changed Packages Check
+      - name: Changed packages check
         id: changed_packages
         run: |
           echo "CHANGED_PACKAGES<<EOF" >> $GITHUB_OUTPUT
@@ -72,24 +72,28 @@ jobs:
           git config user.email "${{ github.actor}}@users.noreply.github.com"
 
           if [ ${{ github.ref_name }} = development ]; then
-            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
+            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
           elif [ ${{ github.ref_name }} = next ]; then
-            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid alpha --yes --no-private --dist-tag latest
+            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --force-publish --preid beta --yes --no-private --dist-tag next
           else
-            npx lerna publish --conventional-commits --conventional-graduate --yes --no-private --create-release github --dist-tag latest
+            npx lerna publish --conventional-commits --conventional-graduate --force-publish --yes --no-private --create-release github --dist-tag latest
           fi
-
-          # merge upstream package version changes to next/dev 
-
+      - name: 'Merge changes downstream'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
           if [ ${{ github.ref_name }} = main ]; then
             git checkout next
+            git pull
             git rebase main
             git push origin
             git checkout development
+            git pull
             git rebase next
             git push origin
           elif [ ${{ github.ref_name }} = next ]; then
             git checkout development
+            git pull
             git rebase next
             git push origin
           fi
