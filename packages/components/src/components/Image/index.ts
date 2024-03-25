@@ -10,7 +10,7 @@ export const ImageComponentDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.image.id,
   name: CONTENTFUL_COMPONENTS.image.name,
   category: CONTENTFUL_DEFAULT_CATEGORY,
-  builtInStyles: ['cfMargin', 'cfPadding', 'cfImageAsset', 'cfImageOptions'],
+  builtInStyles: ['cfMargin', 'cfPadding', 'cfImageAsset', 'cfImageOptions', 'cfBorderRadius'],
   tooltip: {
     description: 'Drop onto the canvas to upload an image.',
   },
