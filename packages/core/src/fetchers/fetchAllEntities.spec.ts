@@ -20,9 +20,19 @@ describe('fetchAllEntries', () => {
   });
 
   it('should fetch all entities', async () => {
-    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({
-      items: testEntries,
-      total: 100,
+    (mockClient.withoutLinkResolution.getEntries as Mock).mockImplementation((query) => {
+      const { limit, skip } = query;
+      const result = {
+        items: [...testEntries.slice(skip, skip + limit)],
+        includes: {
+          Entry: [createEntry('some-entry-id'), createEntry(`some-entry-id-${skip}`)],
+          Asset: [],
+        },
+        skip,
+        limit,
+        total: testEntries.length,
+      };
+      return result;
     });
 
     const params = {
@@ -33,17 +43,25 @@ describe('fetchAllEntries', () => {
       limit: 20,
     };
 
-    await fetchAllEntries(params);
+    const result = await fetchAllEntries(params);
 
     expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledTimes(5);
+    expect(result.includes.Entry).toHaveLength(6);
+    expect(result.includes.Asset).toHaveLength(0);
   });
 
   it('should reduce limit and refetch all entities if response error is gotten', async () => {
     (mockClient.withoutLinkResolution.getEntries as Mock)
       .mockRejectedValueOnce(new Error('Response size too big'))
-      .mockResolvedValue({
-        items: testEntries,
-        total: 100,
+      .mockImplementation((query) => {
+        const { limit, skip } = query;
+        const result = {
+          items: [...testEntries.slice(skip, skip + limit)],
+          skip,
+          limit,
+          total: testEntries.length,
+        };
+        return result;
       });
 
     const params = {
@@ -97,9 +115,15 @@ describe('fetchAllAssets', () => {
   });
 
   it('should fetch all assets', async () => {
-    (mockClient.getAssets as Mock).mockResolvedValue({
-      items: testAssets,
-      total: 100,
+    (mockClient.getAssets as Mock).mockImplementation((query) => {
+      const { limit, skip } = query;
+      const result = {
+        items: [...testAssets.slice(skip, skip + limit)],
+        skip,
+        limit,
+        total: testAssets.length,
+      };
+      return result;
     });
 
     const params = {
@@ -118,9 +142,15 @@ describe('fetchAllAssets', () => {
   it('should reduce limit and refetch all entities if response error is gotten', async () => {
     (mockClient.getAssets as Mock)
       .mockRejectedValueOnce(new Error('Response size too big'))
-      .mockResolvedValue({
-        items: testAssets,
-        total: 100,
+      .mockImplementation((query) => {
+        const { limit, skip } = query;
+        const result = {
+          items: [...testAssets.slice(skip, skip + limit)],
+          skip,
+          limit,
+          total: testAssets.length,
+        };
+        return result;
       });
 
     const params = {

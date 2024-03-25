@@ -49,6 +49,15 @@ export const fetchAllEntries = async ({
     responseIncludes?.Entry?.push(...(includes?.Entry || []));
     responseIncludes?.Asset?.push(...(includes?.Asset || []));
 
+    // E.g Total entries = 99
+    // First fetch => { skip: 0, limit: 50, total: 99 } => 50 Entries fetched in Page 0
+    // Total Entries fetched = 50, 49 remaining
+
+    // 0(skip) + 50(limit) < 99(total) => Fetch again
+    // Second fetch => { skip: 50, limit: 50, total: 99 } => 49 Entries fetched in Page 1
+    // Total Entries fetched = 50(Page 0) + 49(Page 1) = 99, 0 remaining
+
+    // 50(skip) + 50(limit) > 99(total) => Stop fetching
     if (skip + limit < responseTotal) {
       return await fetchAllEntries({
         client,
