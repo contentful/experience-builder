@@ -1,4 +1,5 @@
-import { ContentfulClientApi, Entry } from 'contentful';
+import { ContentfulClientApi, Entry, EntryCollection } from 'contentful';
+import { MinimalEntryCollection } from './gatherAutoFetchedReferentsFromIncludes';
 
 const MIN_FETCH_LIMIT = 1;
 
@@ -39,6 +40,7 @@ export const fetchAllEntities = async ({
     if (!ids.length || !client) {
       return {
         items: [],
+        ...(entityType === 'Entry' && { includes: [] }),
       };
     }
 
@@ -49,6 +51,7 @@ export const fetchAllEntities = async ({
     if (!response) {
       return {
         items: responseItems,
+        ...(entityType === 'Entry' && { includes: [] }),
       };
     }
 
@@ -68,6 +71,7 @@ export const fetchAllEntities = async ({
 
     return {
       items: responseItems,
+      ...(entityType === 'Entry' && { includes: (response as MinimalEntryCollection).includes }),
     };
   } catch (error) {
     if (
