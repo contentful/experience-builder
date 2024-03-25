@@ -1,4 +1,4 @@
-import { ContentfulClientApi, Entry, EntryCollection } from 'contentful';
+import { ContentfulClientApi, Entry } from 'contentful';
 import { MinimalEntryCollection } from './gatherAutoFetchedReferentsFromIncludes';
 
 const MIN_FETCH_LIMIT = 1;
