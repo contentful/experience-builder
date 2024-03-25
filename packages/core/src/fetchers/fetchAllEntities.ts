@@ -1,27 +1,92 @@
-import { ContentfulClientApi, Entry } from 'contentful';
+import { Asset, ContentfulClientApi, Entry } from 'contentful';
 import { MinimalEntryCollection } from './gatherAutoFetchedReferentsFromIncludes';
 
 const MIN_FETCH_LIMIT = 1;
-
-const fetchEntities = async ({
-  entityType,
+export const fetchAllEntries = async ({
   client,
-  query,
+  ids,
+  locale,
+  skip = 0,
+  limit = 100,
+  responseItems = [],
+  responseIncludes = { Entry: [], Asset: [] },
 }: {
-  entityType: 'Entry' | 'Asset';
   client: ContentfulClientApi<undefined>;
-  query: { 'sys.id[in]': string[]; locale: string; limit: number; skip: number };
+  ids: string[];
+  locale: string;
+  skip?: number;
+  limit?: number;
+  responseItems?: Entry[];
+  responseIncludes?: MinimalEntryCollection['includes'];
 }) => {
-  if (entityType === 'Asset') {
-    return client.getAssets({ ...query });
-  }
+  try {
+    if (!client) {
+      throw new Error(
+        'Failed to fetch experience entities. Required "client" parameter was not provided',
+      );
+    }
 
-  return client.withoutLinkResolution.getEntries({ ...query });
+    if (!ids.length) {
+      return {
+        items: [],
+        includes: {
+          Entry: [],
+          Asset: [],
+        },
+      };
+    }
+
+    const query = { 'sys.id[in]': ids, locale, limit, skip };
+
+    const {
+      items,
+      includes,
+      total: responseTotal,
+    } = await client.withoutLinkResolution.getEntries({ ...query });
+
+    responseItems.push(...(items as Entry[]));
+    responseIncludes?.Entry?.push(...(includes?.Entry || []));
+    responseIncludes?.Asset?.push(...(includes?.Asset || []));
+
+    if (skip + limit < responseTotal) {
+      await fetchAllEntries({
+        client,
+        ids,
+        locale,
+        skip: skip + limit,
+        limit,
+        responseItems,
+        responseIncludes,
+      });
+    }
+
+    return {
+      items: responseItems,
+      includes: responseIncludes,
+    };
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message.includes('size too big') &&
+      limit > MIN_FETCH_LIMIT
+    ) {
+      const newLimit = Math.max(MIN_FETCH_LIMIT, Math.floor(limit / 2));
+      return fetchAllEntries({
+        client,
+        ids,
+        locale,
+        skip,
+        limit: newLimit,
+        responseItems,
+      });
+    }
+
+    throw error;
+  }
 };
 
-export const fetchAllEntities = async ({
+export const fetchAllAssets = async ({
   client,
-  entityType,
   ids,
   locale,
   skip = 0,
@@ -29,38 +94,32 @@ export const fetchAllEntities = async ({
   responseItems = [],
 }: {
   client: ContentfulClientApi<undefined>;
-  entityType: 'Entry' | 'Asset';
   ids: string[];
   locale: string;
   skip?: number;
   limit?: number;
-  responseItems?: Entry[];
+  responseItems?: Asset[];
 }) => {
   try {
-    if (!ids.length || !client) {
-      return {
-        items: [],
-        ...(entityType === 'Entry' && { includes: [] }),
-      };
+    if (!client) {
+      throw new Error(
+        'Failed to fetch experience entities. Required "client" parameter was not provided',
+      );
+    }
+
+    if (!ids.length) {
+      return { items: [] };
     }
 
     const query = { 'sys.id[in]': ids, locale, limit, skip };
 
-    const response = await fetchEntities({ entityType, client, query });
+    const { items, total: responseTotal } = await client.getAssets({ ...query });
 
-    if (!response) {
-      return {
-        items: responseItems,
-        ...(entityType === 'Entry' && { includes: [] }),
-      };
-    }
+    responseItems.push(...(items as Asset[]));
 
-    responseItems.push(...(response.items as Entry[]));
-
-    if (skip + limit < response.total) {
-      await fetchAllEntities({
+    if (skip + limit < responseTotal) {
+      await fetchAllAssets({
         client,
-        entityType,
         ids,
         locale,
         skip: skip + limit,
@@ -71,7 +130,6 @@ export const fetchAllEntities = async ({
 
     return {
       items: responseItems,
-      ...(entityType === 'Entry' && { includes: (response as MinimalEntryCollection).includes }),
     };
   } catch (error) {
     if (
@@ -80,9 +138,8 @@ export const fetchAllEntities = async ({
       limit > MIN_FETCH_LIMIT
     ) {
       const newLimit = Math.max(MIN_FETCH_LIMIT, Math.floor(limit / 2));
-      return fetchAllEntities({
+      return fetchAllAssets({
         client,
-        entityType,
         ids,
         locale,
         skip,
@@ -91,6 +148,6 @@ export const fetchAllEntities = async ({
       });
     }
 
-    return error;
+    throw error;
   }
 };

@@ -6,7 +6,7 @@ import {
   MinimalEntryCollection,
   gatherAutoFetchedReferentsFromIncludes,
 } from './gatherAutoFetchedReferentsFromIncludes';
-import { fetchAllEntities } from './fetchAllEntities';
+import { fetchAllEntries, fetchAllAssets } from './fetchAllEntities';
 
 type FetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;
@@ -56,8 +56,8 @@ export const fetchReferencedEntities = async ({
   }
 
   const [entriesResponse, assetsResponse] = (await Promise.all([
-    fetchAllEntities({ client, entityType: 'Entry', ids: entryIds, locale }),
-    fetchAllEntities({ client, entityType: 'Asset', ids: assetIds, locale }),
+    fetchAllEntries({ client, ids: entryIds, locale }),
+    fetchAllAssets({ client, ids: assetIds, locale }),
   ])) as unknown as [MinimalEntryCollection, AssetCollection];
 
   const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
