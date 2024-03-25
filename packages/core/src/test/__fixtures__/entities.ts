@@ -1,8 +1,6 @@
 import { Asset, AssetFile, Entry } from 'contentful';
-import { merge } from 'lodash.merge';
+import merge from 'lodash.merge';
 import type { PartialDeep } from 'type-fest';
-
-export type Override<T extends object> = PartialDeep<T>;
 
 export const entityIds = {
   ENTRY1: 'entry1',
