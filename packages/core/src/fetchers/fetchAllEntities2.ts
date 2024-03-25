@@ -26,6 +26,7 @@ export type FetchAllEntitiesOpts = {
   ids: string[];
   entityType: 'Entry' | 'Asset';
   locale: string;
+  limit?: number;
 };
 
 type FetchAllEntitiesImplOpts = {
@@ -55,6 +56,7 @@ export const fetchAllEntities = async ({
   ids,
   entityType,
   locale,
+  limit = DEFAULT_FETCH_LIMIT,
 }: FetchAllEntitiesOpts): Promise<EntryCollection | AssetCollection> => {
   const responseItems: Array<UnresolvedEntry | Asset> = [];
   const responseAssetsFromIncludes: Asset[] = [];
@@ -76,7 +78,7 @@ export const fetchAllEntities = async ({
   const fetchAllEntitiesImpl = async ({
     skip,
     ids,
-    limit = 100,
+    limit,
   }: {
     skip: number;
     ids: string[];
@@ -140,7 +142,7 @@ export const fetchAllEntities = async ({
   await fetchAllEntitiesWithFetchLimitDownsizing({
     ids,
     skip: 0,
-    limit: DEFAULT_FETCH_LIMIT,
+    limit,
   });
 
   // Deduplicate included assets and entries
