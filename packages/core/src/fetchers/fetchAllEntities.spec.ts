@@ -1,4 +1,4 @@
-import { entries } from '../test/__fixtures__/entities';
+import { entries, generateEntries } from '../test/__fixtures__/entities';
 import { fetchAllEntities } from './fetchAllEntities2';
 
 import { describe, afterEach, it, expect, vi, Mock } from 'vitest';
@@ -7,7 +7,10 @@ import { ContentfulClientApi } from 'contentful';
 const mockClient = {
   getAssets: vi.fn(),
   withoutLinkResolution: {
-    getEntries: vi.fn(),
+    getEntries: vi.fn().mockImplementation(() => {
+      debugger;
+      throw new Error(`mock implementation`);
+    }),
   },
 } as unknown as ContentfulClientApi<undefined>;
 
@@ -17,9 +20,22 @@ describe('fetchAllEntities', () => {
   });
 
   it('should fetch all entities', async () => {
-    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({
-      items: [...entries],
-      total: 100,
+    let entries = generateEntries(100);
+    (mockClient.withoutLinkResolution.getEntries as Mock).mockImplementation((query) => {
+      const { limit, skip } = query;
+      console.log(`getEntries() returns:`, {
+        items: `[${skip}, ${skip + limit})`,
+        total: entries.length,
+        skip,
+        limit,
+      });
+      const result = {
+        items: [...entries.slice(skip, skip + limit)],
+        skip,
+        limit,
+        total: entries.length,
+      };
+      return result;
     });
 
     const params = {
@@ -36,11 +52,25 @@ describe('fetchAllEntities', () => {
   });
 
   it('should reduce limit and refetch all entities if response error is gotten', async () => {
+    let entries = generateEntries(100);
+
     (mockClient.withoutLinkResolution.getEntries as Mock)
       .mockRejectedValueOnce(new Error('Response size too big'))
-      .mockResolvedValue({
-        items: [...entries],
-        total: 100,
+      .mockImplementation((query) => {
+        const { limit, skip } = query;
+        console.log(`getEntries() returns:`, {
+          items: `[${skip}, ${skip + limit})`,
+          total: entries.length,
+          skip,
+          limit,
+        });
+        const result = {
+          items: [...entries.slice(skip, skip + limit)],
+          skip,
+          limit,
+          total: entries.length,
+        };
+        return result;
       });
 
     const params = {
