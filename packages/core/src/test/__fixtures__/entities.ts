@@ -5,6 +5,20 @@ export const entityIds = {
   ENTRY2: 'entry2',
   ASSET1: 'asset1',
 };
+
+export const generateEntries = (count: number): Entry[] => {
+  const result: Entry[] = [];
+  for (let i = 0; i < count; i++) {
+    const entry = structuredClone(entries[0]);
+    const idstr = String(i).padStart(2, '0');
+
+    entry.sys.id = `entry${idstr}`;
+    entry.fields.title = `Entry ${idstr}`;
+    result.push(entry);
+  }
+  return result;
+};
+
 export const entries: Entry[] = [
   {
     sys: {
