@@ -1,5 +1,6 @@
 import { Asset, ContentfulClientApi, Entry } from 'contentful';
 import { MinimalEntryCollection } from './gatherAutoFetchedReferentsFromIncludes';
+import { uniqBy } from 'lodash-es';
 
 const MIN_FETCH_LIMIT = 1;
 export const fetchAllEntries = async ({
@@ -49,7 +50,7 @@ export const fetchAllEntries = async ({
     responseIncludes?.Asset?.push(...(includes?.Asset || []));
 
     if (skip + limit < responseTotal) {
-      await fetchAllEntries({
+      return await fetchAllEntries({
         client,
         ids,
         locale,
@@ -60,9 +61,15 @@ export const fetchAllEntries = async ({
       });
     }
 
+    const dedupedEntries = uniqBy(responseIncludes?.Entry, (entry) => entry.sys.id);
+    const dedupedAssets = uniqBy(responseIncludes?.Asset, (asset) => asset.sys.id);
+
     return {
       items: responseItems,
-      includes: responseIncludes,
+      includes: {
+        Entry: dedupedEntries,
+        Asset: dedupedAssets,
+      },
     };
   } catch (error) {
     if (
@@ -118,7 +125,7 @@ export const fetchAllAssets = async ({
     responseItems.push(...(items as Asset[]));
 
     if (skip + limit < responseTotal) {
-      await fetchAllAssets({
+      return await fetchAllAssets({
         client,
         ids,
         locale,
