@@ -6,7 +6,7 @@ import {
   MinimalEntryCollection,
   gatherAutoFetchedReferentsFromIncludes,
 } from './gatherAutoFetchedReferentsFromIncludes';
-import { fetchAllEntities } from './fetchAllEntities';
+import { fetchAllEntities } from './fetchAllEntities2';
 
 type FetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;

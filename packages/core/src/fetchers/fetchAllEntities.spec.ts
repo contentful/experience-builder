@@ -1,5 +1,5 @@
 import { entries } from '../test/__fixtures__/entities';
-import { fetchAllEntities } from './fetchAllEntities';
+import { fetchAllEntities } from './fetchAllEntities2';
 
 import { describe, afterEach, it, expect, vi, Mock } from 'vitest';
 import { ContentfulClientApi } from 'contentful';
