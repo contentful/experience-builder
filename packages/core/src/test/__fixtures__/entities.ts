@@ -1,5 +1,8 @@
 import { Asset, AssetFile, Entry } from 'contentful';
-import { merge } from 'lodash-es';
+import { merge } from 'lodash.merge';
+import type { PartialDeep } from 'type-fest';
+
+export type Override<T extends object> = PartialDeep<T>;
 
 export const entityIds = {
   ENTRY1: 'entry1',
@@ -121,7 +124,7 @@ export const assets: Asset[] = [
 ];
 
 export const entities: Array<Entry | Asset> = [...entries, ...assets];
-export const createEntry = (id: string, overrides?: Override<Entry>): Entry => {
+export const createEntry = (id: string, overrides?: PartialDeep<Entry>): Entry => {
   return merge(
     {
       sys: {
@@ -162,7 +165,7 @@ export const createEntry = (id: string, overrides?: Override<Entry>): Entry => {
   );
 };
 
-export const createAsset = (id: string, overrides?: Override<Entry>): Entry => {
+export const createAsset = (id: string, overrides?: PartialDeep<Asset>): Asset => {
   return merge(
     {
       sys: {
