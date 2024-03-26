@@ -60,31 +60,26 @@ jobs:
           echo "CHANGED_PACKAGES<<EOF" >> $GITHUB_OUTPUT
           echo "CHANGED_PACKAGES=$(npx lerna changed --conventional-commits --json)" >> "$GITHUB_OUTPUT"
           echo "EOF" >> $GITHUB_OUTPUT
-      # - name: Skip Publish if no changes
-      #   if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES == '' }}
-      #   run: echo "No changes to packages to publish, skipping publish step"
-      # - name: 'Version and publish'
-      #   env:
-      #     GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
-      #     # GH_TOKEN needed by lerna to create releases on github
-      #     GH_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
-      #   if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES != '' }}
-      #   run: |
-      #     git config user.name "${{ github.actor }}"
-      #     git config user.email "${{ github.actor}}@users.noreply.github.com"
+      - name: Skip Publish if no changes
+        if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES == '' }}
+        run: echo "No changes to packages to publish, skipping publish step"
+      - name: 'Version and publish'
+        env:
+          GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
+          # GH_TOKEN needed by lerna to create releases on github
+          GH_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
+        if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES != '' }}
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor}}@users.noreply.github.com"
 
-      #     if [ ${{ github.ref_name }} = development ]; then
-      #       npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
-      #     elif [ ${{ github.ref_name }} = next ]; then
-      #       npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --force-publish --preid beta --yes --no-private --dist-tag next
-      #     else
-      #       npx lerna publish --conventional-commits --conventional-graduate --force-publish --yes --no-private --create-release github --dist-tag latest
-      #     fi
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-          limit-access-to-actor: true
+          if [ ${{ github.ref_name }} = development ]; then
+            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
+          elif [ ${{ github.ref_name }} = next ]; then
+            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --force-publish --preid beta --yes --no-private --dist-tag next
+          else
+            npx lerna publish --conventional-commits --conventional-graduate --force-publish --yes --no-private --create-release github --dist-tag latest
+          fi
       - name: 'Merge changes downstream'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
