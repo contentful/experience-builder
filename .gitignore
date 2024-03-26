@@ -35,8 +35,6 @@ vite.config.ts.timestamp-*
 tmp/
 
 .vercel
-# Ignore built styles.css file in packages/components
-/packages/components/styles.css
 
 # Ingore .nx local files
 .nx
