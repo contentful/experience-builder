@@ -10,13 +10,12 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "style": "./styles.css",
   "type": "module",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
   "scripts": {
-    "clean": "rimraf dist && rimraf styles.css",
+    "clean": "rimraf dist",
     "predev": "npm run clean",
     "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
     "prebuild": "npm run clean",
@@ -32,7 +31,6 @@
   "license": "MIT",
   "files": [
     "readme.md",
-    "styles.css",
     "package.json",
     "dist/**/*.*"
   ],
