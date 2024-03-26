@@ -46,8 +46,17 @@ describe('fetchAllEntries', () => {
     const result = await fetchAllEntries(params);
 
     expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledTimes(5);
+    // Five pages will return those values of `includes.Entry[]`:
+    // Page 1 : `some-entry-id` , `some-entry-id-0`
+    // Page 2: `some-entry-id` , `some-entry-id-20`
+    // Page 3: `some-entry-id` , `some-entry-id-40`
+    // Page 4: `some-entry-id` , `some-entry-id-60`
+    // Page 5: `some-entry-id` , `some-entry-id-80`
+    // But the `result.includes.Entry` is expected to only return unique entries
+    // And there are only 6 uniques, as duplicates of `some-entry-id` are not returned or counted
     expect(result.includes.Entry).toHaveLength(6);
     expect(result.includes.Asset).toHaveLength(0);
+    expect(result.items).toHaveLength(100);
   });
 
   it('should reduce limit and refetch all entities if response error is gotten', async () => {
@@ -72,7 +81,7 @@ describe('fetchAllEntries', () => {
       limit: 20,
     };
 
-    await fetchAllEntries(params);
+    const result = await fetchAllEntries(params);
 
     expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(11, {
       'sys.id[in]': params.ids,
@@ -80,6 +89,7 @@ describe('fetchAllEntries', () => {
       skip: 90,
       limit: 10,
     });
+    expect(result.items).toHaveLength(100);
   });
 
   it('should never reduce limit to less than MIN_FETCH_LIMIT', async () => {
@@ -134,9 +144,10 @@ describe('fetchAllAssets', () => {
       limit: 20,
     };
 
-    await fetchAllAssets(params);
+    const result = await fetchAllAssets(params);
 
     expect(mockClient.getAssets).toHaveBeenCalledTimes(5);
+    expect(result.items).toHaveLength(100);
   });
 
   it('should reduce limit and refetch all entities if response error is gotten', async () => {
@@ -161,7 +172,7 @@ describe('fetchAllAssets', () => {
       limit: 20,
     };
 
-    await fetchAllAssets(params);
+    const result = await fetchAllAssets(params);
 
     expect(mockClient.getAssets).toHaveBeenNthCalledWith(11, {
       'sys.id[in]': params.ids,
@@ -169,6 +180,7 @@ describe('fetchAllAssets', () => {
       skip: 90,
       limit: 10,
     });
+    expect(result.items).toHaveLength(100);
   });
 
   it('should never reduce limit to less than MIN_FETCH_LIMIT', async () => {
