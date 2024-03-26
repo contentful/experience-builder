@@ -8,7 +8,7 @@ const structureComponents = new Set([
 ]);
 
 export const isContentfulStructureComponent = (componentId?: string) =>
-  structureComponents.has(componentId ?? '');
+  structureComponents.has(componentId ?? '') || componentId === CONTENTFUL_COMPONENTS.divider.id;
 
 export const isEmptyStructureWithRelativeHeight = (
   children: number,

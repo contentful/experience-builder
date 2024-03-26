@@ -1,0 +1,1 @@
+export { ContentfulDivider } from './ContentfulDivider';
