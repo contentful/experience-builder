@@ -148,7 +148,7 @@ export const useComponentProps = ({
     entityStore,
   ]);
 
-  const cfStyles = buildCfStyles(props);
+  const cfStyles = buildCfStyles(props, node.data.blockId);
 
   // Separate the component styles from the editor wrapper styles
   const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
@@ -185,6 +185,7 @@ export const useComponentProps = ({
       }),
       ...(userIsDragging &&
         isContentfulStructureComponent(node?.data.blockId) &&
+        node?.data.blockId !== CONTENTFUL_COMPONENTS.divider.id &&
         node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
           padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),
         }),
