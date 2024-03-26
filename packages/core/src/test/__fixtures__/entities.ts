@@ -1,4 +1,6 @@
 import { Asset, AssetFile, Entry } from 'contentful';
+import merge from 'lodash.merge';
+import type { PartialDeep } from 'type-fest';
 
 export const entityIds = {
   ENTRY1: 'entry1',
@@ -120,3 +122,77 @@ export const assets: Asset[] = [
 ];
 
 export const entities: Array<Entry | Asset> = [...entries, ...assets];
+export const createEntry = (id: string, overrides?: PartialDeep<Entry>): Entry => {
+  return merge(
+    {
+      sys: {
+        id,
+        type: 'Entry',
+        contentType: {
+          sys: {
+            id: 'bar',
+            type: 'Link',
+            linkType: 'ContentType',
+          },
+        },
+        createdAt: '2020-01-01T00:00:00.000Z',
+        updatedAt: '2020-01-01T00:00:00.000Z',
+        revision: 10,
+        space: {
+          sys: {
+            type: 'Link',
+            linkType: 'Space',
+            id: 'cfexampleapi',
+          },
+        },
+        environment: {
+          sys: {
+            id: 'master',
+            type: 'Link',
+            linkType: 'Environment',
+          },
+        },
+        locale: 'en-US',
+      },
+      fields: {},
+      metadata: {
+        tags: [],
+      },
+    },
+    overrides,
+  );
+};
+
+export const createAsset = (id: string, overrides?: PartialDeep<Asset>): Asset => {
+  return merge(
+    {
+      sys: {
+        id,
+        type: 'Asset',
+        createdAt: '2020-01-01T00:00:00.000Z',
+        updatedAt: '2020-01-01T00:00:00.000Z',
+        revision: 10,
+        space: {
+          sys: {
+            type: 'Link',
+            linkType: 'Space',
+            id: 'cfexampleapi',
+          },
+        },
+        environment: {
+          sys: {
+            id: 'master',
+            type: 'Link',
+            linkType: 'Environment',
+          },
+        },
+        locale: 'en-US',
+      },
+      fields: {},
+      metadata: {
+        tags: [],
+      },
+    },
+    overrides,
+  );
+};
