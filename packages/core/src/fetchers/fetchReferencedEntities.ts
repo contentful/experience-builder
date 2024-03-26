@@ -6,6 +6,7 @@ import {
   MinimalEntryCollection,
   gatherAutoFetchedReferentsFromIncludes,
 } from './gatherAutoFetchedReferentsFromIncludes';
+import { fetchAllEntries, fetchAllAssets } from './fetchAllEntities';
 
 type FetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;
@@ -55,10 +56,8 @@ export const fetchReferencedEntities = async ({
   }
 
   const [entriesResponse, assetsResponse] = (await Promise.all([
-    entryIds.length > 0
-      ? client.withoutLinkResolution.getEntries({ 'sys.id[in]': entryIds, locale })
-      : { items: [], includes: [] },
-    assetIds.length > 0 ? client.getAssets({ 'sys.id[in]': assetIds, locale }) : { items: [] },
+    fetchAllEntries({ client, ids: entryIds, locale }),
+    fetchAllAssets({ client, ids: assetIds, locale }),
   ])) as unknown as [MinimalEntryCollection, AssetCollection];
 
   const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
@@ -66,7 +65,7 @@ export const fetchReferencedEntities = async ({
 
   // Using client getEntries resolves all linked entry references, so we do not need to resolve entries in usedComponents
   const allResolvedEntries = [
-    ...((entriesResponse.items ?? []) as Entry[]),
+    ...((entriesResponse?.items ?? []) as Entry[]),
     ...((experienceEntry.fields.usedComponents as ExperienceEntry[]) || []),
     ...autoFetchedReferentEntries,
   ];

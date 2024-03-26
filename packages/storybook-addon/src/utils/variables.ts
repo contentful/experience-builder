@@ -116,13 +116,6 @@ export const builtInStyles: Record<
     description: 'The border of the section',
     defaultValue: '1px solid rgba(0,0,0,0)',
   },
-  cfBorderRadius: {
-    displayName: 'Border radius',
-    type: 'Text',
-    group: 'style',
-    description: 'The border radius of the section',
-    defaultValue: '0px',
-  },
   cfGap: {
     displayName: 'Gap',
     type: 'Text',

@@ -20,7 +20,7 @@ jobs:
           node-version: '20.11'
           cache: 'npm'
       - name: Restore Cypress Binary
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: restore-cypress
         with:
           path: ~/.cache/Cypress
@@ -32,7 +32,7 @@ jobs:
         run: npm ci
       - name: Save Cypress Binary
         if: steps.restore-cypress.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: ~/.cache/Cypress
           key: cypress-${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
@@ -42,7 +42,7 @@ jobs:
       - name: List components folder
         run: ls -la packages/components
       - name: Save Build folders        
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: |
             packages/components/styles.css

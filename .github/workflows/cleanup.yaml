@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Restore the build folders
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: |
             packages/components/styles.css
@@ -18,7 +18,7 @@ jobs:
             packages/*/build
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Save build folder to artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: built-assets
           if-no-files-found: error
