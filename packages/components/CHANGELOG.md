@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1](https://github.com/contentful/experience-builder/compare/v0.0.1-beta.1...v0.0.1) (2024-03-26)
+
+**Note:** Version bump only for package @contentful/experiences-components-react
+
 ## [0.0.1-beta.1](https://github.com/contentful/experience-builder/compare/v0.0.1-beta.0...v0.0.1-beta.1) (2024-03-26)
 
 - fix(components)!: removing styles.css file from components (#526) ([5113a1a](https://github.com/contentful/experience-builder/commit/5113a1a24e0cced9df49563595f6f4ac74452c49)), closes [#526](https://github.com/contentful/experience-builder/issues/526)
