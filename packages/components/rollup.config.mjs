@@ -31,19 +31,6 @@ export default [
     external: [/node_modules\/(?!tslib.*)/],
   },
   {
-    input: 'src/styles.ts',
-    output: [
-      {
-        file: './styles.css',
-      },
-    ],
-    plugins: [
-      postcss({
-        extract: true,
-      }),
-    ],
-  },
-  {
     input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
     plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
