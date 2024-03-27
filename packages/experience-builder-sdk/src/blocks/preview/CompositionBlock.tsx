@@ -126,7 +126,11 @@ export const CompositionBlock = ({
     cfStyles.minHeight = EMPTY_CONTAINER_HEIGHT;
   }
 
-  const { className } = useStyleTag({ styles: cfStyles });
+  const { className: runtimeClassname } = useStyleTag({ styles: cfStyles });
+
+  // @ts-expect-error - cfSsrClassName is not part of the ComponentTreeNode type
+  // it is a plain string
+  const className = (node.variables.cfSsrClassName as string) ?? runtimeClassname;
 
   if (!componentRegistration) {
     return null;
