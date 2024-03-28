@@ -94,6 +94,10 @@ export const CONTENTFUL_COMPONENTS = {
     id: 'contentful-text',
     name: 'Text',
   },
+  divider: {
+    id: 'contentful-divider',
+    name: 'Divider',
+  },
 };
 
 export const ASSEMBLY_NODE_TYPE = 'assembly';

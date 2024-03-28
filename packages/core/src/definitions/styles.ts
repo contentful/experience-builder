@@ -326,6 +326,45 @@ export const containerBuiltInStyles: VariableDefinitions = {
   },
 };
 
+export const dividerBuiltInStyles: VariableDefinitions = {
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
+  cfMargin: {
+    displayName: 'Margin',
+    type: 'Text',
+    group: 'style',
+    description: 'The margin of the divider',
+    defaultValue: '20px 0px 20px 0px',
+  },
+  cfWidth: {
+    displayName: 'Width',
+    type: 'Text',
+    group: 'style',
+    description: 'The width of the divider',
+    defaultValue: 'fill',
+  },
+  cfHeight: {
+    displayName: 'Height',
+    type: 'Text',
+    group: 'style',
+    description: 'The height of the divider',
+    defaultValue: '2px',
+  },
+  cfMaxWidth: {
+    displayName: 'Max width',
+    type: 'Text',
+    group: 'style',
+    description: 'The max-width of the divider',
+    defaultValue: 'none',
+  },
+  cfBackgroundColor: {
+    displayName: 'Background color',
+    type: 'Text',
+    group: 'style',
+    description: 'The background color of the divider',
+    defaultValue: 'rgba(0, 0, 0, 1)',
+  },
+};
+
 export const singleColumnBuiltInStyles: VariableDefinitions = {
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
