@@ -17,6 +17,7 @@ reports
 coverage
 dist-ssr
 *.local
+*.local.*
 .yarnrc.yml
 vite.config.ts.timestamp-*
 

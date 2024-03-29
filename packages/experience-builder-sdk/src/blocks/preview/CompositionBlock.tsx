@@ -118,7 +118,7 @@ export const CompositionBlock = ({
     );
   }, [componentRegistration, isAssembly, node.variables, resolveDesignValue, entityStore]);
 
-  const cfStyles = buildCfStyles(nodeProps);
+  const cfStyles = buildCfStyles(nodeProps, node.definitionId);
 
   if (
     isEmptyStructureWithRelativeHeight(node.children.length, node.definitionId, cfStyles.height)

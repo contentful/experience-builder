@@ -23,6 +23,7 @@ import {
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
+import { dividerDefinition } from '@contentful/experiences-core';
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -126,6 +127,13 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
       wrapComponent: false,
     },
   }),
+  divider: {
+    component: Components.ContentfulDivider,
+    definition: dividerDefinition,
+    options: {
+      wrapComponent: false,
+    },
+  },
 } satisfies Record<string, ComponentRegistration>;
 
 // pre-filling with the default component registrations
@@ -148,6 +156,7 @@ export const componentRegistry = new Map<string, ComponentRegistration>([
     DEFAULT_COMPONENT_REGISTRATIONS.richText,
   ],
   [DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.text],
+  [DEFAULT_COMPONENT_REGISTRATIONS.divider.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.divider],
 ]);
 
 export const optionalBuiltInComponents = [
