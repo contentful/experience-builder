@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.0...v1.0.1-beta.0) (2024-03-29)
+
+### Bug Fixes
+
+- **storybook-plugin:** working with the latest SDK on storybook v7 ([#531](https://github.com/contentful/experience-builder/issues/531)) ([8bbe30f](https://github.com/contentful/experience-builder/commit/8bbe30f0ff17c62bbfee7776e330dd7065d2f497))
+
+### Features
+
+- adds divider structure component ([be2ae10](https://github.com/contentful/experience-builder/commit/be2ae1066b5674a69f41ede1d1aba69bc3a653a4))
+
 # [1.0.0](https://github.com/contentful/experience-builder/compare/v0.0.1...v1.0.0) (2024-03-26)
 
 **Note:** Version bump only for package @contentful/experience
