@@ -28,12 +28,25 @@ export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   }
 
   if (selectedElement) {
-    sendMessage(OUTGOING_EVENTS.UpdateSelectedComponentCoordinates, {
-      selectedNodeCoordinates: getElementCoordinates(selectedElement),
-      selectedAssemblyChildCoordinates: selectedAssemblyChild
-        ? getElementCoordinates(selectedAssemblyChild)
-        : null,
-      parentCoordinates: parent ? getElementCoordinates(parent) : null,
-    });
+    const sendUpdateSelectedComponentCoordinates = () => {
+      sendMessage(OUTGOING_EVENTS.UpdateSelectedComponentCoordinates, {
+        selectedNodeCoordinates: getElementCoordinates(selectedElement!),
+        selectedAssemblyChildCoordinates: selectedAssemblyChild
+          ? getElementCoordinates(selectedAssemblyChild)
+          : null,
+        parentCoordinates: parent ? getElementCoordinates(parent) : null,
+      });
+    };
+
+    const childImage = selectedElement.querySelector('img');
+    if (childImage) {
+      const handleImageLoad = () => {
+        sendUpdateSelectedComponentCoordinates();
+        childImage.removeEventListener('load', handleImageLoad);
+      };
+      childImage.addEventListener('load', handleImageLoad);
+    }
+
+    sendUpdateSelectedComponentCoordinates();
   }
 };
