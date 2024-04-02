@@ -262,6 +262,7 @@ export interface HoveredElement {
 }
 
 export interface Experience<T extends EntityStore = EntityStore> {
+  hyperlinkPattern?: string;
   entityStore?: T;
 }
 

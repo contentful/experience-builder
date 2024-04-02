@@ -1,5 +1,6 @@
 import { defineComponents } from '@contentful/experiences-sdk-react';
 import ComponentWithChildren from './components/ComponentWithChildren';
+import { LinkComponent } from './components/LinkComponent';
 
 defineComponents([
   {
@@ -20,6 +21,23 @@ defineComponents([
     },
     options: {
       wrapComponent: false,
+    },
+  },
+  {
+    component: LinkComponent,
+    definition: {
+      id: 'link-component',
+      name: 'Link Component',
+      variables: {
+        href: {
+          displayName: 'Href',
+          type: 'Hyperlink',
+        },
+        text: {
+          displayName: 'Text',
+          type: 'Text',
+        },
+      },
     },
   },
 ]);
