@@ -120,7 +120,7 @@ export const useComponentProps = ({
             ...acc,
             [variableName]: value,
           };
-        } else {
+        } else if (variableMapping.type === 'UnboundValue') {
           const value = getUnboundValues({
             key: variableMapping.key,
             fallback: variableDefinition.defaultValue,
@@ -131,6 +131,8 @@ export const useComponentProps = ({
             ...acc,
             [variableName]: value,
           };
+        } else {
+          return { ...acc };
         }
       },
       {},
