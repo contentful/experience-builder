@@ -95,13 +95,17 @@ export const useComponentProps = ({
           console.log({ node, variableMapping });
           // @ts-expect-error todo adjust types
           const binding = dataSource[variableMapping.linkTargetKey];
-          // @ts-expect-error todo adjust types
-          const hyperlinEntry = entityStore.getEntryOrAsset(binding, variableMapping.linkTargetKey);
+
+          const hyperlinkEntry = entityStore.getEntryOrAsset(
+            binding,
+            // @ts-expect-error todo adjust types
+            variableMapping.linkTargetKey,
+          );
           return {
             ...acc,
             [variableName]: resolveHyperlinkPattern(
-              hyperlinkPattern || HYPERLINK_DEFAULT_PATTERN,
-              hyperlinEntry as Entry,
+              definition.hyperlinkPattern || hyperlinkPattern || HYPERLINK_DEFAULT_PATTERN,
+              hyperlinkEntry as Entry,
               locale,
             ),
           };
@@ -156,6 +160,9 @@ export const useComponentProps = ({
       {},
     );
   }, [
+    hyperlinkPattern,
+    node,
+    locale,
     definition,
     node.data.props,
     node.children,
