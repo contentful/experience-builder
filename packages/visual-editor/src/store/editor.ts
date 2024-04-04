@@ -20,8 +20,6 @@ export interface EditorStore {
   hyperLinkPattern?: string;
   setHyperLinkPattern: (pattern: string) => void;
   locale: string | null;
-  experienceEntry: Entry | null;
-  setExperienceEntry: (entry: Entry | null) => void;
   selectedNodeId: string | null;
   unboundValues: ExperienceUnboundValues;
   // updaters
@@ -40,13 +38,9 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   isDragging: false,
   dragItem: '',
   selectedNodeId: null,
-  experienceEntry: null,
   locale: null,
   setHyperLinkPattern: (pattern: string) => {
     set({ hyperLinkPattern: pattern });
-  },
-  setExperienceEntry: (entry: Entry | null) => {
-    set({ experienceEntry: entry });
   },
   setSelectedNodeId: (id: string) => {
     set({ selectedNodeId: id });

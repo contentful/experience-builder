@@ -5,18 +5,16 @@ import { Entry } from 'contentful';
 
 type VisualEditorLoaderProps = {
   visualEditorMode: VisualEditorMode;
-  experienceEntry: Entry | null;
   experience?: Experience<EntityStore>;
 };
 
 export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({
   visualEditorMode,
-  experienceEntry,
+
   experience,
 }) => {
   const [VisualEditor, setVisualEditor] = useState<React.ComponentType<{
     experience?: Experience<EntityStore>;
-    experienceEntry?: Entry | null;
   }> | null>(null);
 
   useEffect(() => {
@@ -38,7 +36,7 @@ export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({
 
   if (!VisualEditor) return null;
 
-  return <VisualEditor experience={experience} experienceEntry={experienceEntry} />;
+  return <VisualEditor experience={experience} />;
 };
 
 export default VisualEditorLoader;

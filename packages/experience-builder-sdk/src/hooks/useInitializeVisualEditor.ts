@@ -8,7 +8,6 @@ import {
 } from '../core/componentRegistry';
 import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
 import { designTokensRegistry } from '@contentful/experiences-core';
-import { Entry } from 'contentful';
 
 type InitializeVisualEditorParams = {
   initialLocale: string;
@@ -17,32 +16,9 @@ type InitializeVisualEditorParams = {
 
 export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) => {
   const { initialLocale, initialEntities } = params;
-  const [experienceEntry, setExperienceEntry] = useState<null | Entry>(null);
   const [locale, setLocale] = useState<string>(initialLocale);
 
   const hasConnectEventBeenSent = useRef(false);
-
-  useEffect(() => {
-    const onMessage = (e: any) => {
-      try {
-        const parsedData = JSON.parse(e.data);
-        if (parsedData.eventType === 'requestEditorMode') {
-          setExperienceEntry(parsedData.payload?.experienceEntry);
-        }
-      } catch (e) {
-        // ignore for now
-      }
-    };
-    if (typeof window !== 'undefined' && !experienceEntry) {
-      window.addEventListener('message', onMessage);
-    }
-
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('message', onMessage);
-      }
-    };
-  }, [experienceEntry]);
 
   // sends component definitions to the web app
   // InternalEvents.COMPONENTS_REGISTERED is triggered by defineComponents function
@@ -93,6 +69,4 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
       window.removeEventListener(VISUAL_EDITOR_EVENTS.Ready, onVisualEditorReady);
     };
   }, [locale, initialEntities]);
-
-  return experienceEntry;
 };
