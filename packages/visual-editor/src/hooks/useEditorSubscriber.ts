@@ -39,10 +39,13 @@ export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
-  const { updateTree, updateNodesByUpdatedEntity } = useTreeStore((state) => ({
-    updateTree: state.updateTree,
-    updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
-  }));
+  const { updateTree, updateTreeNodeCoordinates, updateNodesByUpdatedEntity } = useTreeStore(
+    (state) => ({
+      updateTree: state.updateTree,
+      updateTreeNodeCoordinates: state.updateTreeNodeCoordinates,
+      updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
+    }),
+  );
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const setLocale = useEditorStore((state) => state.setLocale);
@@ -252,6 +255,14 @@ export function useEditorSubscriber() {
           }
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
+
+          const start = performance.now();
+          updateTreeNodeCoordinates();
+          const end = performance.now();
+          console.log(
+            `[DEBUG] updateTreeNodeCoordinates | Execution time: ${end - start} milliseconds`,
+          );
+
           break;
         }
         case INCOMING_EVENTS.AssembliesRegistered: {
@@ -404,6 +415,7 @@ export function useEditorSubscriber() {
     setUnboundValues,
     unboundValues,
     updateTree,
+    updateTreeNodeCoordinates,
     updateNodesByUpdatedEntity,
     setMousePosition,
     resetEntityStore,

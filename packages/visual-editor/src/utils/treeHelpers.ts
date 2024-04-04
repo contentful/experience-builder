@@ -1,6 +1,7 @@
 import type { ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { isEqual } from 'lodash-es';
 import { getChildFromTree } from './getItem';
+import { getElementCoordinates } from '@contentful/experiences-core';
 
 export function updateNode(
   nodeId: string,
@@ -14,6 +15,7 @@ export function updateNode(
 
   node.children.forEach((childNode) => updateNode(nodeId, updatedNode, childNode));
 }
+
 export function replaceNode(
   indexToReplace: number,
   updatedNode: ExperienceTreeNode,
@@ -153,4 +155,41 @@ export function reparentChildNode(
 
   removeChildNode(oldIndex, nodeToMove.data.id, sourceNodeId, node);
   addChildNode(newIndex, destinationNodeId, nodeToMove, node);
+}
+
+// export function updateNodeCoordinates(node: ExperienceTreeNode) {
+//   if (node.data.id !== 'root') {
+//     const element = document.querySelector(`[data-cf-node-id="${node.data.id}"]`);
+//     if (element) {
+//       node.data.coords = getElementCoordinates(element);
+//     }
+//   }
+//   node.children.forEach((childNode) => updateNodeCoordinates(childNode));
+// }
+
+// function getNodePosition(node: ExperienceTreeNode) {
+//   const element = document.querySelector(`[data-cf-node-id="${node.data.id}"]`);
+//   return getElementCoordinates(element);
+// }
+
+export function updateNodeCoordinates(node: ExperienceTreeNode): Record<string, DOMRect> {
+  let coordinates: Record<string, DOMRect> = {};
+
+  if (node.data.id !== 'root') {
+    const element = document.querySelector(`[data-cf-node-id="${node.data.id}"]`);
+    if (element) {
+      // const start = performance.now();
+      coordinates[node.data.id] = getElementCoordinates(element);
+      // const end = performance.now();
+      // console.log(
+      //   `[DEBUG] getElementCoordinates | took ${end - start}ms for node ${node.data.id}`, // ${JSON.stringify(coordinates[node.data.id])}
+      // );
+    }
+  }
+
+  node.children.forEach((childNode) => {
+    coordinates = { ...coordinates, ...updateNodeCoordinates(childNode) };
+  });
+
+  return coordinates;
 }

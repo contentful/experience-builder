@@ -13,6 +13,7 @@ import {
   reparentChildNode,
   replaceNode,
   updateNode,
+  updateNodeCoordinates,
 } from '@/utils/treeHelpers';
 import { getTreeDiffs } from '@/utils/getTreeDiff';
 import { treeVisit } from '@/utils/treeTraversal';
@@ -22,6 +23,7 @@ export interface TreeStore {
   breakpoints: Breakpoint[];
   updateTree: (tree: ExperienceTree) => void;
   updateTreeForced: (tree: ExperienceTree) => void;
+  updateTreeNodeCoordinates: () => void;
   updateNodesByUpdatedEntity: (entityId: string) => void;
   addChild: (
     destinationIndex: number,
@@ -49,7 +51,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
   tree: {
     root: {
       children: [],
-      type: 'root',
+      type: 'root' as const,
       data: {
         breakpoints: [],
         dataSource: {},
@@ -149,6 +151,18 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
         });
 
         state.breakpoints = tree?.root?.data?.breakpoints || [];
+      }),
+    );
+  },
+  updateTreeNodeCoordinates: () => {
+    set(
+      produce((state: TreeStore) => {
+        const coordinates = updateNodeCoordinates(state.tree.root);
+        console.log(
+          `[DEBUG] updateTreeNodeCoordinates | Calculated positions for ${Object.keys(coordinates).length} components:`,
+          coordinates,
+        );
+        return coordinates;
       }),
     );
   },
