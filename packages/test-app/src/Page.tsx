@@ -17,7 +17,7 @@ export default function Page() {
     localeCode,
     client,
     experienceTypeId: config.experienceTypeId,
-    hyperlinkPattern: '/{locale}/',
+    hyperlinkPattern: '/{locale}/{entry.fields.slug}',
   });
 
   console.log({ experience }, 'inner');

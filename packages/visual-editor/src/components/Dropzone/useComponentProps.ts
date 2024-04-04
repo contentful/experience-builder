@@ -6,6 +6,7 @@ import {
   isEmptyStructureWithRelativeHeight,
   isContentfulStructureComponent,
   transformBoundContentValue,
+  resolveHyperlinkPattern,
 } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -28,8 +29,11 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 import { DRAG_PADDING } from '../../types/constants';
+import { Entry } from 'contentful';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
+
+const HYPERLINK_DEFAULT_PATTERN = `/{locale}/{entry.fields.slug}/`;
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -49,6 +53,9 @@ export const useComponentProps = ({
   userIsDragging,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
+  const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
+  const experienceEntry = useEditorStore((state) => state.experienceEntry);
+  const locale = useEditorStore((state) => state.locale);
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: ComponentProps = useMemo(() => {
@@ -84,6 +91,20 @@ export const useComponentProps = ({
           return {
             ...acc,
             [variableName]: designValue,
+          }; // @ts-expect-error todo adjust types
+        } else if (variableMapping.type === 'HyperlinkValue') {
+          console.log({ node, variableMapping });
+          // @ts-expect-error todo adjust types
+          const binding = dataSource[variableMapping.linkTargetKey];
+          // @ts-expect-error todo adjust types
+          const hyperlinEntry = entityStore.getEntryOrAsset(binding, variableMapping.linkTargetKey);
+          return {
+            ...acc,
+            [variableName]: resolveHyperlinkPattern(
+              hyperlinkPattern || HYPERLINK_DEFAULT_PATTERN,
+              hyperlinEntry as Entry,
+              locale,
+            ),
           };
         } else if (variableMapping.type === 'BoundValue') {
           const [, uuid, path] = variableMapping.path.split('/');

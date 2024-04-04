@@ -331,6 +331,7 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.RequestEditorMode: {
+          console.log({ payload }, 'REQUEST EDITOR MODE');
           break;
         }
         case INCOMING_EVENTS.ComponentDragCanceled: {

@@ -9,12 +9,26 @@ import { CTFL_ZONE_ID, NEW_COMPONENT_ID } from '@/types/constants';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import type { Experience } from '@contentful/experiences-core/types';
 import { useEditorStore } from '@/store/editor';
+import { Entry } from 'contentful';
 
-export const VisualEditorRoot = ({ experience }: { experience?: Experience<EntityStore> }) => {
+export const VisualEditorRoot = ({
+  experience,
+  experienceEntry,
+}: {
+  experience?: Experience<EntityStore>;
+  experienceEntry?: Entry | null;
+}) => {
   const initialized = useInitializeEditor();
   const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
+  const setExperienceEntry = useEditorStore((state) => state.setExperienceEntry);
   const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
+
+  useEffect(() => {
+    if (experienceEntry) {
+      setExperienceEntry(experienceEntry);
+    }
+  }, [experienceEntry]);
 
   useEffect(() => {
     if (experience?.hyperlinkPattern) {
