@@ -35,7 +35,7 @@ export function addLocale(str: string, locale: string): string {
   return str;
 }
 
-function getTemplateValue(
+export function getTemplateValue(
   ctx: { entry: Entry; locale: string },
   path: string,
 ): string | (() => string) {
@@ -47,7 +47,7 @@ function getTemplateValue(
     : retrievedValue;
 }
 
-function buildTemplate({
+export function buildTemplate({
   template,
   context,
 }: {
