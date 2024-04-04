@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.2-beta.1](https://github.com/contentful/experience-builder/compare/v1.0.2-beta.0...v1.0.2-beta.1) (2024-04-04)
+
+### Bug Fixes
+
+- **components:** rich text formatting [ALT-585] ([#533](https://github.com/contentful/experience-builder/issues/533)) ([865608d](https://github.com/contentful/experience-builder/commit/865608d26d3a7f63c188c71f81d86ecabea12cbc))
+- **visual-editor:** select component when image loads [ALT-646] ([#537](https://github.com/contentful/experience-builder/issues/537)) ([95a9c92](https://github.com/contentful/experience-builder/commit/95a9c9200035f06a943e9c1688757cafccbcb400))
+
+### Features
+
+- [SPA-1774] add hyperlink value to schema ([#540](https://github.com/contentful/experience-builder/issues/540)) ([5ce6203](https://github.com/contentful/experience-builder/commit/5ce6203f013fe5dde25d98ba64fa3714cc0565c0))
+
 ## [1.0.2-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.1...v1.0.2-beta.0) (2024-04-04)
 
 **Note:** Version bump only for package @contentful/experience
