@@ -48,6 +48,13 @@ const BoundValueSchema = z
     path: z.string(),
   })
   .strict();
+const HyperlinkValueSchema = z
+  .object({
+    type: z.literal('HyperlinkValue'),
+    linkTargetKey: z.string(),
+    overrides: z.object({}).optional(),
+  })
+  .strict();
 const UnboundValueSchema = z
   .object({
     type: z.literal('UnboundValue'),
@@ -65,6 +72,7 @@ const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
   DesignValueSchema,
   BoundValueSchema,
   UnboundValueSchema,
+  HyperlinkValueSchema,
   ComponentValueSchema,
 ]);
 
