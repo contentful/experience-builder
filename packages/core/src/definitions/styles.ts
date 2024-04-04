@@ -4,7 +4,7 @@ import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../type
 type VariableDefinitions = Partial<
   Record<
     ContainerStyleVariableName,
-    ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media' | 'Object'>
+    ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media' | 'Object' | 'Hyperlink'>
   >
 >;
 
@@ -134,7 +134,7 @@ export const builtInStyles: VariableDefinitions = {
   },
   cfHyperlink: {
     displayName: 'Hyperlink',
-    type: 'Text',
+    type: 'Hyperlink',
     defaultValue: '',
     validations: {
       format: 'URL',

@@ -42,7 +42,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   placeholder,
 }) => {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
-
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
   const { node, componentId, wrapperProps, definition, elementToRender } = useComponent({
     node: rawNode,

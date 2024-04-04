@@ -17,7 +17,6 @@ type InitializeVisualEditorParams = {
 export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) => {
   const { initialLocale, initialEntities } = params;
   const [locale, setLocale] = useState<string>(initialLocale);
-
   const hasConnectEventBeenSent = useRef(false);
 
   // sends component definitions to the web app
