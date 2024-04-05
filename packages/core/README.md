@@ -1,6 +1,6 @@
 # @contentful/experiences-core
 
-This package provides core internal functionality for the Experiences SDK.
+This package provides core internal functionality for the [Experiences SDK](https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/).
 
 ## Documentation
 
