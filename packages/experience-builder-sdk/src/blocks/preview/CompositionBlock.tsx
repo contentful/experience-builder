@@ -1,7 +1,11 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
-import { EntityStore, isEmptyStructureWithRelativeHeight } from '@contentful/experiences-core';
+import {
+  EntityStore,
+  isEmptyStructureWithRelativeHeight,
+  resolveHyperlinkPattern,
+} from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
@@ -28,6 +32,10 @@ import {
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
+import { Entry } from 'contentful';
+
+// todo to globale place
+const HYPERLINK_DEFAULT_PATTERN = `/{locale}/{entry.fields.slug}/`;
 
 type CompositionBlockProps = {
   node: ComponentTreeNode;
@@ -104,6 +112,28 @@ export const CompositionBlock = ({
               variable.path,
             );
             acc[variableName] = value;
+            break;
+          }
+          // @ts-expect-error todo adjust types
+          case 'HyperlinkValue': {
+            // @ts-expect-error todo adjust types
+            const binding = entityStore.dataSource[variable.linkTargetKey];
+            const hyperlinkEntry = entityStore.getEntryOrAsset(
+              binding,
+              // @ts-expect-error todo adjust types
+              variable.linkTargetKey,
+            );
+
+            const value = resolveHyperlinkPattern(
+              componentRegistration.definition.hyperlinkPattern ||
+                hyperlinkPattern ||
+                HYPERLINK_DEFAULT_PATTERN,
+              hyperlinkEntry as Entry,
+              locale,
+            );
+            if (value) {
+              acc[variableName] = value;
+            }
             break;
           }
           case 'UnboundValue': {

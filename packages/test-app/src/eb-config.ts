@@ -28,7 +28,7 @@ defineComponents([
     definition: {
       id: 'link-component-custom',
       name: 'Link Component with custom link',
-      hyperlinkPattern: 'test.com/{locale}',
+      hyperlinkPattern: 'https://test.com/{locale}',
       variables: {
         href: {
           displayName: 'Href',

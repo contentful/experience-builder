@@ -33,6 +33,7 @@ import { Entry } from 'contentful';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
+// todo to globale place
 const HYPERLINK_DEFAULT_PATTERN = `/{locale}/{entry.fields.slug}/`;
 
 type UseComponentProps = {
