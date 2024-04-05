@@ -93,7 +93,6 @@ export const useComponentProps = ({
             [variableName]: designValue,
           }; // @ts-expect-error todo adjust types
         } else if (variableMapping.type === 'HyperlinkValue') {
-          console.log({ node, variableMapping });
           // @ts-expect-error todo adjust types
           const binding = dataSource[variableMapping.linkTargetKey];
 
@@ -165,14 +164,10 @@ export const useComponentProps = ({
     node,
     locale,
     definition,
-    node.data.props,
-    node.children,
-    node.data.blockId,
     resolveDesignValue,
     dataSource,
     areEntitiesFetched,
     unboundValues,
-    node.type,
     entityStore,
   ]);
 
