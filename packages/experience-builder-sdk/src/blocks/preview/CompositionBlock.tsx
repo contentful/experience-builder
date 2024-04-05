@@ -114,15 +114,10 @@ export const CompositionBlock = ({
             acc[variableName] = value;
             break;
           }
-          // @ts-expect-error todo adjust types
+
           case 'HyperlinkValue': {
-            // @ts-expect-error todo adjust types
             const binding = entityStore.dataSource[variable.linkTargetKey];
-            const hyperlinkEntry = entityStore.getEntryOrAsset(
-              binding,
-              // @ts-expect-error todo adjust types
-              variable.linkTargetKey,
-            );
+            const hyperlinkEntry = entityStore.getEntryOrAsset(binding, variable.linkTargetKey);
 
             const value = resolveHyperlinkPattern(
               componentRegistration.definition.hyperlinkPattern ||

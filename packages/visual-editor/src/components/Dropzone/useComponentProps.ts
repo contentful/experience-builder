@@ -91,14 +91,12 @@ export const useComponentProps = ({
           return {
             ...acc,
             [variableName]: designValue,
-          }; // @ts-expect-error todo adjust types
+          };
         } else if (variableMapping.type === 'HyperlinkValue') {
-          // @ts-expect-error todo adjust types
           const binding = dataSource[variableMapping.linkTargetKey];
 
           const hyperlinkEntry = entityStore.getEntryOrAsset(
             binding,
-            // @ts-expect-error todo adjust types
             variableMapping.linkTargetKey,
           );
           return {
