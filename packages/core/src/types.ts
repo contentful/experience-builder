@@ -232,6 +232,7 @@ export type DesignTokensDefinition = {
   sizing?: Record<string, string>;
   color?: Record<string, string>;
   border?: Record<string, { width: string; style: 'solid' | 'dashed' | 'dotted'; color: string }>;
+  borderRadius?: Record<string, string>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;
   letterSpacing?: Record<string, string>;
@@ -339,9 +340,9 @@ export type ImageOptions = {
   format?: string;
   width: string;
   height: string;
-  objectFit: ImageObjectFitOption;
-  objectPosition: ImageObjectPositionOption;
-  quality: string;
+  objectFit?: ImageObjectFitOption;
+  objectPosition?: ImageObjectPositionOption;
+  quality?: string;
   targetSize: string;
 };
 
@@ -366,6 +367,6 @@ export type BackgroundImageOptions = {
   format?: string;
   scaling: BackgroundImageScalingOption;
   alignment: BackgroundImageAlignmentOption;
-  quality: string;
+  quality?: string;
   targetSize: string;
 };

@@ -23,6 +23,7 @@ import {
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
+import { dividerDefinition } from '@contentful/experiences-core';
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -126,6 +127,13 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
       wrapComponent: false,
     },
   }),
+  divider: {
+    component: Components.ContentfulDivider,
+    definition: dividerDefinition,
+    options: {
+      wrapComponent: false,
+    },
+  },
 } satisfies Record<string, ComponentRegistration>;
 
 // pre-filling with the default component registrations
@@ -148,6 +156,7 @@ export const componentRegistry = new Map<string, ComponentRegistration>([
     DEFAULT_COMPONENT_REGISTRATIONS.richText,
   ],
   [DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.text],
+  [DEFAULT_COMPONENT_REGISTRATIONS.divider.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.divider],
 ]);
 
 export const optionalBuiltInComponents = [
@@ -160,7 +169,9 @@ export const optionalBuiltInComponents = [
 
 export const sendRegisteredComponentsMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
-  const registeredDefinitions = Array.from(componentRegistry.values());
+  const registeredDefinitions = Array.from(componentRegistry.values()).map(
+    ({ definition }) => definition,
+  );
 
   sendMessage(OUTGOING_EVENTS.RegisteredComponents, {
     definitions: registeredDefinitions,
@@ -268,4 +279,26 @@ export const createAssemblyRegistration = ({
   addComponentRegistration({ component, definition });
 
   return componentRegistry.get(definitionId);
+};
+
+/**
+ * @deprecated This method is used to maintain the basic component ids (without the prefix 'contentful-') in order to be compatible
+ * with experiences created with an older alpha version of the SDK. Components in these experiences should be migrated to use
+ * the components with the 'contentful-' prefix. To do so, load the experience in the editor, and replace any older basic components
+ * (marked with [OLD] in the UI) with the new components (without the [OLD]). This method (and functionality for the older components)
+ * will be removed in the next major release.
+ */
+export const maintainBasicComponentIdsWithoutPrefix = () => {
+  optionalBuiltInComponents.forEach((id) => {
+    if (componentRegistry.has(id) && id.startsWith('contentful-')) {
+      const registeredComponent = componentRegistry.get(id)!;
+      const definition = registeredComponent.definition;
+      const newDefinition = cloneObject(definition);
+      newDefinition.name = newDefinition.name + '[OLD]';
+      const newId = id.replace('contentful-', '');
+      newDefinition.id = newId;
+      const newRegisteredComponent = { ...registeredComponent, definition: newDefinition };
+      componentRegistry.set(newId, newRegisteredComponent);
+    }
+  });
 };

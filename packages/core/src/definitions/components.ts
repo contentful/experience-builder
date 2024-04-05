@@ -1,10 +1,15 @@
 import type { ComponentDefinition } from '@/types';
-import { CONTENTFUL_COMPONENT_CATEGORY, CONTENTFUL_COMPONENTS } from '@/constants';
+import {
+  CONTENTFUL_COMPONENT_CATEGORY,
+  CONTENTFUL_COMPONENTS,
+  CONTENTFUL_DEFAULT_CATEGORY,
+} from '@/constants';
 import {
   columnsBuiltInStyles,
   containerBuiltInStyles,
   sectionBuiltInStyles,
   singleColumnBuiltInStyles,
+  dividerBuiltInStyles,
 } from './styles';
 
 export const sectionDefinition: ComponentDefinition = {
@@ -49,4 +54,15 @@ export const singleColumnDefinition: ComponentDefinition = {
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: singleColumnBuiltInStyles,
+};
+
+export const dividerDefinition: ComponentDefinition = {
+  id: CONTENTFUL_COMPONENTS.divider.id,
+  name: CONTENTFUL_COMPONENTS.divider.name,
+  category: CONTENTFUL_DEFAULT_CATEGORY,
+  children: false,
+  variables: dividerBuiltInStyles,
+  tooltip: {
+    description: 'Drop onto the canvas to add a divider.',
+  },
 };

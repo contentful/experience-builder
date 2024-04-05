@@ -17,6 +17,7 @@ reports
 coverage
 dist-ssr
 *.local
+*.local.*
 .yarnrc.yml
 vite.config.ts.timestamp-*
 
@@ -35,8 +36,6 @@ vite.config.ts.timestamp-*
 tmp/
 
 .vercel
-# Ignore built styles.css file in packages/components
-/packages/components/styles.css
 
 # Ingore .nx local files
 .nx

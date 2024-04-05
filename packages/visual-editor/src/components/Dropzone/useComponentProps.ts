@@ -144,7 +144,7 @@ export const useComponentProps = ({
             ...acc,
             [variableName]: value,
           };
-        } else {
+        } else if (variableMapping.type === 'UnboundValue') {
           const value = getUnboundValues({
             key: variableMapping.key,
             fallback: variableDefinition.defaultValue,
@@ -155,6 +155,8 @@ export const useComponentProps = ({
             ...acc,
             [variableName]: value,
           };
+        } else {
+          return { ...acc };
         }
       },
       {},
@@ -171,7 +173,7 @@ export const useComponentProps = ({
     entityStore,
   ]);
 
-  const cfStyles = buildCfStyles(props);
+  const cfStyles = buildCfStyles(props, node.data.blockId);
 
   // Separate the component styles from the editor wrapper styles
   const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
@@ -208,6 +210,7 @@ export const useComponentProps = ({
       }),
       ...(userIsDragging &&
         isContentfulStructureComponent(node?.data.blockId) &&
+        node?.data.blockId !== CONTENTFUL_COMPONENTS.divider.id &&
         node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
           padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),
         }),

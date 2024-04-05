@@ -75,24 +75,28 @@ export const CONTENTFUL_COMPONENTS = {
     name: 'Column',
   },
   button: {
-    id: 'button',
+    id: 'contentful-button',
     name: 'Button',
   },
   heading: {
-    id: 'heading',
+    id: 'contentful-heading',
     name: 'Heading',
   },
   image: {
-    id: 'image',
+    id: 'contentful-image',
     name: 'Image',
   },
   richText: {
-    id: 'richText',
+    id: 'contentful-richText',
     name: 'Rich Text',
   },
   text: {
-    id: 'text',
+    id: 'contentful-text',
     name: 'Text',
+  },
+  divider: {
+    id: 'contentful-divider',
+    name: 'Divider',
   },
 };
 

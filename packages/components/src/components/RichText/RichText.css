@@ -1,3 +1,11 @@
 .cf-richtext {
   white-space: pre-line;
 }
+
+.cf-richtext > *:first-child {
+  margin-top: 0;
+}
+
+.cf-richtext > *:last-child {
+  margin-bottom: 0;
+}

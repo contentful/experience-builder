@@ -2,7 +2,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Page from './Page';
 // import SpaceSelector from './components/SpaceSelector';
 import { ContentfulConfigProvider } from './utils/ContentfulConfigProvider';
-import { useEffect } from 'react';
+import { maintainBasicComponentIdsWithoutPrefix } from '@contentful/experiences-sdk-react';
+
+maintainBasicComponentIdsWithoutPrefix();
 
 const router = createBrowserRouter([
   {

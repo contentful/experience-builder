@@ -8,6 +8,7 @@ type VariableDefinitions = Partial<
   >
 >;
 
+// These styles get added to every component, user custom or contentful provided
 export const builtInStyles: VariableDefinitions = {
   cfVerticalAlignment: {
     validations: {
@@ -118,13 +119,6 @@ export const builtInStyles: VariableDefinitions = {
     description: 'The border of the section',
     defaultValue: '0px solid rgba(0, 0, 0, 0)',
   },
-  cfBorderRadius: {
-    displayName: 'Border Radius',
-    type: 'Text',
-    group: 'style',
-    description: 'The border radius of the section',
-    defaultValue: '0px',
-  },
   cfGap: {
     displayName: 'Gap',
     type: 'Text',
@@ -192,9 +186,6 @@ export const optionalBuiltInStyles: VariableDefinitions = {
     defaultValue: {
       width: DEFAULT_IMAGE_WIDTH,
       height: '100%',
-      objectFit: 'none',
-      objectPosition: 'center center',
-      quality: '100',
       targetSize: DEFAULT_IMAGE_WIDTH,
     },
   },
@@ -210,9 +201,15 @@ export const optionalBuiltInStyles: VariableDefinitions = {
     defaultValue: {
       scaling: 'fill',
       alignment: 'left top',
-      quality: '100',
       targetSize: '2000px',
     },
+  },
+  cfBorderRadius: {
+    displayName: 'Border Radius',
+    type: 'Text',
+    group: 'style',
+    description: 'The border radius of the section',
+    defaultValue: '0px',
   },
   cfLineHeight: {
     displayName: 'Line Height',
@@ -310,12 +307,14 @@ export const optionalBuiltInStyles: VariableDefinitions = {
 
 export const sectionBuiltInStyles: VariableDefinitions = {
   ...builtInStyles,
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
   cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
 };
 
 export const containerBuiltInStyles: VariableDefinitions = {
   ...builtInStyles,
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
   cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
   cfMaxWidth: {
@@ -327,7 +326,47 @@ export const containerBuiltInStyles: VariableDefinitions = {
   },
 };
 
+export const dividerBuiltInStyles: VariableDefinitions = {
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
+  cfMargin: {
+    displayName: 'Margin',
+    type: 'Text',
+    group: 'style',
+    description: 'The margin of the divider',
+    defaultValue: '20px 0px 20px 0px',
+  },
+  cfWidth: {
+    displayName: 'Width',
+    type: 'Text',
+    group: 'style',
+    description: 'The width of the divider',
+    defaultValue: 'fill',
+  },
+  cfHeight: {
+    displayName: 'Height',
+    type: 'Text',
+    group: 'style',
+    description: 'The height of the divider',
+    defaultValue: '2px',
+  },
+  cfMaxWidth: {
+    displayName: 'Max width',
+    type: 'Text',
+    group: 'style',
+    description: 'The max-width of the divider',
+    defaultValue: 'none',
+  },
+  cfBackgroundColor: {
+    displayName: 'Background color',
+    type: 'Text',
+    group: 'style',
+    description: 'The background color of the divider',
+    defaultValue: 'rgba(0, 0, 0, 1)',
+  },
+};
+
 export const singleColumnBuiltInStyles: VariableDefinitions = {
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
   cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
   cfVerticalAlignment: {
@@ -411,13 +450,6 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
     description: 'The border of the column',
     defaultValue: '0px solid rgba(0, 0, 0, 0)',
   },
-  cfBorderRadius: {
-    displayName: 'Border Radius',
-    type: 'Text',
-    group: 'style',
-    description: 'The border radius of the column',
-    defaultValue: '0px',
-  },
   cfGap: {
     displayName: 'Gap',
     type: 'Text',
@@ -438,6 +470,7 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
 };
 
 export const columnsBuiltInStyles: VariableDefinitions = {
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
   cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
   cfMargin: {
@@ -481,13 +514,6 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     group: 'style',
     description: 'The border of the columns',
     defaultValue: '0px solid rgba(0, 0, 0, 0)',
-  },
-  cfBorderRadius: {
-    displayName: 'Border Radius',
-    type: 'Text',
-    group: 'style',
-    description: 'The border radius of the columns',
-    defaultValue: '0px',
   },
   cfGap: {
     displayName: 'Gap',

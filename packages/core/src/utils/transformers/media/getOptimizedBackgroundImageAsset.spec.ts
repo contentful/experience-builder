@@ -68,18 +68,18 @@ describe('transformImageAsset', () => {
     ]);
   });
 
-  it('when quality is 0, should return urls without quality', () => {
+  it('when quality is 0%, should return urls without quality', () => {
     file.details.image!.width = 4000;
-    const result = getOptimizedBackgroundImageAsset(file, '', 0);
+    const result = getOptimizedBackgroundImageAsset(file, '', '0%');
     expect(result.srcSet).toEqual([
       `url(https:${file.url}?w=2000) 1x`,
       `url(https:${file.url}?w=4000) 2x`,
     ]);
   });
 
-  it('when quality is 100, should return urls without quality', () => {
+  it('when quality is 100%, should return urls without quality', () => {
     file.details.image!.width = 4000;
-    const result = getOptimizedBackgroundImageAsset(file, '', 100);
+    const result = getOptimizedBackgroundImageAsset(file, '', '100%');
     expect(result.srcSet).toEqual([
       `url(https:${file.url}?w=2000) 1x`,
       `url(https:${file.url}?w=4000) 2x`,
@@ -88,7 +88,7 @@ describe('transformImageAsset', () => {
 
   it('when quality is provided, should return urls with quality', () => {
     file.details.image!.width = 4000;
-    const result = getOptimizedBackgroundImageAsset(file, '', 80);
+    const result = getOptimizedBackgroundImageAsset(file, '', '80%');
     expect(result.srcSet).toEqual([
       `url(https:${file.url}?w=2000&q=80) 1x`,
       `url(https:${file.url}?w=4000&q=80) 2x`,
@@ -97,7 +97,7 @@ describe('transformImageAsset', () => {
 
   it('when format is provided, should return urls with format', () => {
     file.details.image!.width = 4000;
-    const result = getOptimizedBackgroundImageAsset(file, '', 80, 'webp');
+    const result = getOptimizedBackgroundImageAsset(file, '', '80%', 'webp');
     expect(result.srcSet).toEqual([
       `url(https:${file.url}?w=2000&q=80&fm=webp) 1x`,
       `url(https:${file.url}?w=4000&q=80&fm=webp) 2x`,

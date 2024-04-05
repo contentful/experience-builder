@@ -38,14 +38,6 @@ npm install @contentful/experiences-components-react
 
 By default, the components are unstyled. This allows you to style the components to match your brand and design system. If you want a set of default styles to get started, see below.
 
-### Including default styles
-
-A set of optional, default styles are included with the components. To include them, import the `styles.css` file from the `@contentful/experiences-components-react` package:
-
-```jsx
-import '@contentful/experiences-components-react/styles.css';
-```
-
 ### Adding custom styles
 
 Each component has a css class that you can use to add your own styles. The classes are named in the style of `cf-{component-name}` (ie `cf-button`).
