@@ -143,7 +143,15 @@ export const CompositionBlock = ({
       },
       propMap,
     );
-  }, [componentRegistration, isAssembly, node.variables, resolveDesignValue, entityStore]);
+  }, [
+    componentRegistration,
+    isAssembly,
+    node.variables,
+    resolveDesignValue,
+    entityStore,
+    hyperlinkPattern,
+    locale,
+  ]);
 
   const cfStyles = buildCfStyles(nodeProps, node.definitionId);
 
@@ -169,6 +177,7 @@ export const CompositionBlock = ({
               node={childNode}
               key={index}
               locale={locale}
+              hyperlinkPattern={hyperlinkPattern}
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
             />
