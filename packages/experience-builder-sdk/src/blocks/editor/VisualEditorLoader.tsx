@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { EntityStore, VisualEditorMode } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
-import { Entry } from 'contentful';
 
 type VisualEditorLoaderProps = {
   visualEditorMode: VisualEditorMode;

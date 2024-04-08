@@ -8,7 +8,6 @@ import type {
 import { create } from 'zustand';
 import { componentRegistry } from './registries';
 import { isEqual } from 'lodash-es';
-import { Entry } from 'contentful';
 
 export interface InitEditorParams {
   componentRegistry: Map<string, ComponentRegistration>;
