@@ -24,13 +24,7 @@ export const transformBoundContentValue = (
 
   switch (variableDefinition.type) {
     case 'Media':
-      return transformMedia(
-        entityOrAsset as Asset,
-        variables,
-        resolveDesignValue,
-        variableName,
-        path,
-      );
+      return transformMedia(entityOrAsset as Asset, variables, resolveDesignValue, variableName);
     case 'RichText':
       return transformRichText(entityOrAsset, path);
     default:

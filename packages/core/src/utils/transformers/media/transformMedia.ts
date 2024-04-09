@@ -9,14 +9,12 @@ import {
 import { Asset, AssetFile } from 'contentful';
 import { getOptimizedBackgroundImageAsset } from './getOptimizedBackgroundImageAsset';
 import { getOptimizedImageAsset } from './getOptimizedImageAsset';
-import { getBoundValue } from '../getBoundValue';
 
 export const transformMedia = (
   asset: Asset,
   variables: ComponentTreeNode['variables'],
   resolveDesignValue: ResolveDesignValueType,
   variableName: string,
-  path: string,
 ) => {
   let value: BoundComponentPropertyTypes;
 
@@ -48,6 +46,8 @@ export const transformMedia = (
     }
     return;
   }
+
+  console.log({ variableName });
 
   if (variableName === 'cfBackgroundImageUrl') {
     const width = resolveDesignValue(
@@ -81,6 +81,5 @@ export const transformMedia = (
     return;
   }
 
-  // return getBoundValue(asset, entityStore, binding, path);
-  return getBoundValue(asset, path);
+  return asset.fields.file?.url;
 };
