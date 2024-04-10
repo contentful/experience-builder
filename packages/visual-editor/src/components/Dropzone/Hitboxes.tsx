@@ -47,6 +47,8 @@ const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, isEmptyZone }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoneId, fetchDomRect]);
 
+  // Use the size of the cloned dragging element to offset the position of the hitboxes
+  // So that when dragging causes a dropzone to expand, the hitboxes will be in the correct position
   const offsetRect = useMemo(() => {
     if (isEmptyZone || !isHoveringZone) return;
     return document.querySelector(`[${CTFL_DRAGGING_ELEMENT}]`)?.getBoundingClientRect();
