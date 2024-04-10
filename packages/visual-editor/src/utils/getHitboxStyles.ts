@@ -9,13 +9,20 @@ interface Params {
   domRect?: DOMRect;
   zoneDepth: number;
   scrollY: number;
+  offsetRect?: DOMRect;
 }
 
 const calcOffsetDepth = (depth: number) => {
   return INITIAL_OFFSET - OFFSET_INCREMENT * depth;
 };
 
-export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSProperties => {
+export const getHitboxStyles = ({
+  direction,
+  zoneDepth,
+  domRect,
+  scrollY,
+  offsetRect,
+}: Params): CSSProperties => {
   if (!domRect) {
     return {
       display: 'none',
@@ -23,6 +30,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
   }
 
   const { width, height, top, left, bottom, right } = domRect;
+  const { height: offsetHeight, width: offsetWidth } = offsetRect || { height: 0, width: 0 };
 
   const MAX_SELF_HEIGHT = DRAGGABLE_HEIGHT * 2;
 
@@ -34,7 +42,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
       return {
         width,
         height: HEIGHT,
-        top: top - calcOffsetDepth(zoneDepth) - scrollY,
+        top: top + offsetHeight - calcOffsetDepth(zoneDepth) - scrollY,
         left,
         zIndex: 100 + zoneDepth,
       };
@@ -42,7 +50,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
       return {
         width,
         height: HEIGHT,
-        top: bottom + calcOffsetDepth(zoneDepth) - scrollY,
+        top: bottom + offsetHeight + calcOffsetDepth(zoneDepth) - scrollY,
         left,
         zIndex: 100 + zoneDepth,
       };
@@ -50,7 +58,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
       return {
         width: WIDTH,
         height: height - HEIGHT,
-        left: left - calcOffsetDepth(zoneDepth) - WIDTH / 2,
+        left: left + offsetWidth - calcOffsetDepth(zoneDepth) - WIDTH / 2,
         top: top + HEIGHT / 2 - scrollY,
         zIndex: 100 + zoneDepth,
       };
@@ -58,7 +66,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
       return {
         width: WIDTH,
         height: height - HEIGHT,
-        left: right - calcOffsetDepth(zoneDepth) - WIDTH / 2,
+        left: right + offsetWidth - calcOffsetDepth(zoneDepth) - WIDTH / 2,
         top: top + HEIGHT / 2 - scrollY,
         zIndex: 100 + zoneDepth,
       };

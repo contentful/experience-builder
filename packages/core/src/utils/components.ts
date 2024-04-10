@@ -10,7 +10,7 @@ const structureComponents = new Set([
 export const isContentfulStructureComponent = (componentId?: string) =>
   structureComponents.has(componentId ?? '');
 
-export const isComponentAllowedOnRoot = (componentId: string) =>
+export const isComponentAllowedOnRoot = (componentId?: string) =>
   isContentfulStructureComponent(componentId) || componentId === CONTENTFUL_COMPONENTS.divider.id;
 
 export const isEmptyStructureWithRelativeHeight = (
