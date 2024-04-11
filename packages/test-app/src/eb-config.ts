@@ -1,6 +1,5 @@
 import { defineComponents } from '@contentful/experiences-sdk-react';
 import ComponentWithChildren from './components/ComponentWithChildren';
-import { ImageTestComponent } from './components/ImageTestComponent';
 
 defineComponents([
   {
@@ -21,21 +20,6 @@ defineComponents([
     },
     options: {
       wrapComponent: false,
-    },
-  },
-  {
-    component: ImageTestComponent,
-    definition: {
-      id: 'image-test',
-
-      name: 'image test',
-      category: 'Custom Components',
-      variables: {
-        href: {
-          displayName: 'HREF',
-          type: 'Media',
-        },
-      },
     },
   },
 ]);

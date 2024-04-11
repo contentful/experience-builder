@@ -9,7 +9,6 @@ import { transformMedia } from './media/transformMedia';
 import { EntityStoreBase } from '@/entity';
 import { Asset, UnresolvedLink } from 'contentful';
 import { getBoundValue } from './getBoundValue';
-import { isDeepPath } from '@/utils';
 
 export const transformBoundContentValue = (
   variables: ComponentTreeNode['variables'],
