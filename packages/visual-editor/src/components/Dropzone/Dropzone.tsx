@@ -1,5 +1,6 @@
-import React, { ElementType, useCallback } from 'react';
+import React, { ElementType, useCallback, useMemo } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
+import { isComponentAllowedOnRoot } from '@contentful/experiences-core';
 import type { ResolveDesignValueType } from '@contentful/experiences-core/types';
 import { EditorBlock } from './EditorBlock';
 import { ComponentData } from '@/types/Config';
@@ -9,7 +10,7 @@ import styles from './styles.module.css';
 import classNames from 'classnames';
 import { ROOT_ID } from '@/types/constants';
 import { EmptyContainer } from '@components/EmptyContainer/EmptyContainer';
-import { getZoneParents } from '@/utils/zone';
+import { getItem } from '@/utils/getItem';
 import { useZoneStore } from '@/store/zone';
 import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
 import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
@@ -42,8 +43,12 @@ export function Dropzone({
 
   const direction = useDropzoneDirection({ resolveDesignValue, node, zoneId });
 
-  const draggedSourceId = draggedItem && draggedItem.source.droppableId;
   const draggedDestinationId = draggedItem && draggedItem.destination?.droppableId;
+
+  const draggedBlockId = useMemo(() => {
+    if (!draggedItem) return;
+    return getItem({ id: draggedItem.draggableId }, tree)?.data.blockId;
+  }, [draggedItem, tree]);
 
   const isDraggingNewComponent = !!newComponentId;
   const isHoveringZone = hoveringZone === zoneId;
@@ -83,54 +88,42 @@ export function Dropzone({
     [resolveDesignValue],
   );
 
-  if (!resolveDesignValue) {
-    return null;
-  }
-
-  /**
-   * The Rules of Dropzones
-   *
-   * 1. A dropzone is disabled unless the mouse is hovering over it
-   *
-   * 2. Dragging a new component onto the canvas has no addtional rules
-   * besides rule #1
-   *
-   * 3. Dragging a component that is a direct descendant of the root
-   * (parentId === ROOT_ID) then only the Root Dropzone is enabled
-   *
-   * 4. Dragging a nested component (parentId !== ROOT_ID) then the Root
-   * Dropzone is disabled, all other Dropzones follow rule #1
-   *
-   * 5. Assemblies and the SingleColumn component are always disabled
-   *
-   */
-  const isDropzoneEnabled = () => {
+  const isDropzoneEnabled = useMemo(() => {
+    // Disable dropzone for Columns component
     if (node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id) {
       return false;
     }
 
+    // Disable dropzone for Assembly
     if (isAssembly) {
       return false;
     }
 
-    if (isDraggingNewComponent) {
-      return isHoveringZone;
+    // Enable dropzone for the non-root hovered zones if component is not allowed on root
+    if (!isDraggingNewComponent && !isComponentAllowedOnRoot(draggedBlockId)) {
+      return isHoveringZone && !isRootZone;
     }
 
-    const draggingParentIds = getZoneParents(draggedSourceId || '');
+    // Enable dropzone for the hovered zone only
+    return isHoveringZone;
+  }, [
+    node?.data.blockId,
+    isAssembly,
+    isHoveringZone,
+    isRootZone,
+    isDraggingNewComponent,
+    draggedBlockId,
+  ]);
 
-    if (!draggingParentIds.length) {
-      return isRootZone;
-    }
-
-    return isHoveringZone && !isRootZone;
-  };
+  if (!resolveDesignValue) {
+    return null;
+  }
 
   return (
     <Droppable
       droppableId={zoneId}
       direction={direction}
-      isDropDisabled={!isDropzoneEnabled()}
+      isDropDisabled={!isDropzoneEnabled}
       renderClone={(provided, snapshot, rubic) => (
         <EditorBlockClone
           node={content[rubic.source.index]}
