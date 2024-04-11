@@ -9,6 +9,7 @@ import { transformMedia } from './media/transformMedia';
 import { EntityStoreBase } from '@/entity';
 import { Asset, UnresolvedLink } from 'contentful';
 import { getBoundValue } from './getBoundValue';
+import { isDeepPath } from '@/utils';
 
 export const transformBoundContentValue = (
   variables: ComponentTreeNode['variables'],
@@ -24,7 +25,17 @@ export const transformBoundContentValue = (
 
   switch (variableDefinition.type) {
     case 'Media':
-      return transformMedia(entityOrAsset as Asset, variables, resolveDesignValue, variableName);
+      // If we bound a normal entry field to the media veriable we just return the bound value
+      if (entityOrAsset.sys.type === 'Entry') {
+        return getBoundValue(entityOrAsset, path);
+      }
+      return transformMedia(
+        entityOrAsset as Asset,
+        variables,
+        resolveDesignValue,
+        variableName,
+        path,
+      );
     case 'RichText':
       return transformRichText(entityOrAsset, path);
     default:
