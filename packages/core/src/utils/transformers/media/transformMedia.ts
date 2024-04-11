@@ -10,7 +10,7 @@ import { Asset, AssetFile } from 'contentful';
 import { getOptimizedBackgroundImageAsset } from './getOptimizedBackgroundImageAsset';
 import { getOptimizedImageAsset } from './getOptimizedImageAsset';
 import { getBoundValue } from '@/utils/transformers/getBoundValue';
-import { isDeepPath } from '@/utils';
+import { isDeepPath, lastPathNamedSegmentEq } from '@/utils';
 
 export const transformMedia = (
   asset: Asset,
@@ -23,8 +23,7 @@ export const transformMedia = (
 
   // If it is not a deep path and not pointing to the file of the asset,
   // it is just pointing to a normal field and therefore we just resolve the value as normal field
-  const splitPath = path.split('/');
-  if (!isDeepPath(path) && splitPath[splitPath.length - 2] !== 'file') {
+  if (!isDeepPath(path) && !lastPathNamedSegmentEq(path, 'file')) {
     return getBoundValue(asset, path);
   }
 
