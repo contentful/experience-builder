@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.4-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.3...v1.0.4-beta.0) (2024-04-12)
+
+### Bug Fixes
+
+- cleanup ([6f418e1](https://github.com/contentful/experience-builder/commit/6f418e103f141e1345fcf58d453ff2199e07793e))
+- linting ([c41896b](https://github.com/contentful/experience-builder/commit/c41896b3d9d8df0093aad7bacce2e02b4832a90f))
+- make all fields work for media ([6e2ca86](https://github.com/contentful/experience-builder/commit/6e2ca866bb0f39f80ddf85e48acdb3e360f330c2))
+- make deep binding for images work for custom components ([c7577da](https://github.com/contentful/experience-builder/commit/c7577dad9b74404365a420dbb9463d6ae0ac289b))
+- remove testing component ([b60a4d2](https://github.com/contentful/experience-builder/commit/b60a4d20a9eb04496b19aa00c5ac735fec619eae))
+- review follow up ([97a6a78](https://github.com/contentful/experience-builder/commit/97a6a78a82fbe2646dd0456fa2d9a2c44ee13136))
+
 ## [1.0.3](https://github.com/contentful/experience-builder/compare/v1.0.3-beta.0...v1.0.3) (2024-04-12)
 
 **Note:** Version bump only for package @contentful/experience
