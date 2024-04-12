@@ -6,6 +6,7 @@ import {
   BackgroundImageAlignmentOption,
 } from '@/types';
 import { isContentfulStructureComponent } from '@/utils/components';
+import { CALC_UNIT_REGEX } from '@/constants';
 
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
 
@@ -161,19 +162,17 @@ export const transformWidthSizing = ({
 
   const transformedValue = transformFill(value);
 
-  if (isContentfulStructureComponent(componentId)) {
+  if (transformedValue && isContentfulStructureComponent(componentId)) {
     const marginValues = cfMargin.split(' ');
     const rightMargin = marginValues[1] || '0px';
     const leftMargin = marginValues[3] || '0px';
-    const calcValue = `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`;
-    /**
-     * We want to check if the calculated value is valid CSS. If this fails,
-     * this means the `transformedValue` is not a calculable value (not a px, rem, or %).
-     * The value may instead be a string such as `min-content` or `max-content`. In
-     * that case we don't want to use calc and instead return the raw value.
-     */
-    if (typeof window !== 'undefined' && CSS.supports('width', calcValue)) {
-      return calcValue;
+
+    if (
+      transformedValue.match(CALC_UNIT_REGEX) &&
+      leftMargin.match(CALC_UNIT_REGEX) &&
+      rightMargin.match(CALC_UNIT_REGEX)
+    ) {
+      return `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`;
     }
   }
 
