@@ -36,6 +36,7 @@ describe('PreviewDeliveryRoot', () => {
   });
 
   it('throws an error if experience the schema version is not compatible', () => {
+    // @ts-expect-error testing an unsupported version
     const experienceEntryMock = createExperienceEntry({ schemaVersion: '2023-06-27' });
 
     const entityStore = new EntityStore({
@@ -53,7 +54,7 @@ describe('PreviewDeliveryRoot', () => {
     render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      `[experiences-sdk-react] Contentful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
+      `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
   });
 
