@@ -70,8 +70,6 @@ export const useComponent = ({
     userIsDragging,
   });
 
-  console.log({ componentProps });
-
   // Only pass editor props to built-in components
   const { editorMode, renderDropzone: _renderDropzone, ...otherComponentProps } = componentProps;
   const elementToRender = builtInComponents.includes(node.data.blockId || '')
