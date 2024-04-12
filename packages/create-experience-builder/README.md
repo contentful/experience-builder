@@ -1,3 +1,3 @@
-# Create Experience Builder
+# @contentful/create-experience-builder
 
 Docs coming soon...

@@ -19,7 +19,7 @@ const compositionFields: ExperienceEntry['fields'] = {
       },
     ],
     breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
-    schemaVersion: '2023-06-27',
+    schemaVersion: '2023-09-28',
   },
   dataSource: {
     uuid2: {

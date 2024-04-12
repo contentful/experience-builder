@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './styles.module.css';
 import { useTreeStore } from '@/store/tree';
 import { getItemDepthFromNode } from '@/utils/getItem';
-import { CTFL_ZONE_ID, HitboxDirection, ROOT_ID } from '@/types/constants';
+import { CTFL_DRAGGING_ELEMENT, CTFL_ZONE_ID, HitboxDirection, ROOT_ID } from '@/types/constants';
 import { useZoneStore } from '@/store/zone';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { createPortal } from 'react-dom';
@@ -11,10 +11,10 @@ import { getHitboxStyles } from '@/utils/getHitboxStyles';
 interface Props {
   parentZoneId: string;
   zoneId: string;
-  enableRootHitboxes: boolean;
+  isEmptyZone: boolean;
 }
 
-const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, enableRootHitboxes }) => {
+const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, isEmptyZone }) => {
   const tree = useTreeStore((state) => state.tree);
   const isDraggingOnCanvas = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const scrollY = useDraggedItemStore((state) => state.scrollY);
@@ -23,6 +23,8 @@ const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, enableRootHitboxes })
     [tree, parentZoneId],
   );
   const [fetchDomRect, setFetchDomRect] = useState(Date.now());
+  const { zones, hoveringZone } = useZoneStore();
+  const isHoveringZone = hoveringZone === zoneId;
 
   useEffect(() => {
     /**
@@ -45,16 +47,28 @@ const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, enableRootHitboxes })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoneId, fetchDomRect]);
 
-  const zones = useZoneStore((state) => state.zones);
+  // Use the size of the cloned dragging element to offset the position of the hitboxes
+  // So that when dragging causes a dropzone to expand, the hitboxes will be in the correct position
+  const offsetRect = useMemo(() => {
+    if (isEmptyZone || !isHoveringZone) return;
+    return document.querySelector(`[${CTFL_DRAGGING_ELEMENT}]`)?.getBoundingClientRect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEmptyZone, isHoveringZone, fetchDomRect]);
 
   const zoneDirection = zones[parentZoneId]?.direction || 'vertical';
   const isVertical = zoneDirection === 'vertical';
   const isRoot = parentZoneId === ROOT_ID;
-  const showRootHitboxes = isRoot && enableRootHitboxes;
 
   const getStyles = useCallback(
-    (direction: HitboxDirection) => getHitboxStyles({ direction, zoneDepth, domRect, scrollY }),
-    [zoneDepth, domRect, scrollY],
+    (direction: HitboxDirection) =>
+      getHitboxStyles({
+        direction,
+        zoneDepth,
+        domRect,
+        scrollY,
+        offsetRect,
+      }),
+    [zoneDepth, domRect, scrollY, offsetRect],
   );
 
   const ActiveHitboxes = (
@@ -66,14 +80,13 @@ const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, enableRootHitboxes })
           isVertical ? HitboxDirection.SELF_VERTICAL : HitboxDirection.SELF_HORIZONTAL,
         )}
       />
-      {showRootHitboxes && (
+      {isRoot ? (
         <div
           data-ctfl-zone-id={parentZoneId}
           className={styles.hitbox}
           style={getStyles(HitboxDirection.BOTTOM)}
         />
-      )}
-      {!isRoot && (
+      ) : (
         <>
           <div
             data-ctfl-zone-id={parentZoneId}
