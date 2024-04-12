@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-components-react",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "A basic set of components to use with Studio Experiences",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/components#readme",
   "repository": {

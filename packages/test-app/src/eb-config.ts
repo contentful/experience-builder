@@ -1,6 +1,7 @@
 import { defineComponents } from '@contentful/experiences-sdk-react';
 import ComponentWithChildren from './components/ComponentWithChildren';
 import { LinkComponent } from './components/LinkComponent';
+import { CustomImageComponent } from './components/CustomImageComponent';
 
 defineComponents([
   {
@@ -21,6 +22,20 @@ defineComponents([
     },
     options: {
       wrapComponent: false,
+    },
+  },
+  {
+    component: CustomImageComponent,
+    definition: {
+      id: 'custom-image',
+      name: 'Custom Image',
+      category: 'Custom Components',
+      variables: {
+        src: {
+          displayName: 'SRC',
+          type: 'Media',
+        },
+      },
     },
   },
   {
