@@ -24,6 +24,10 @@ export const transformBoundContentValue = (
 
   switch (variableDefinition.type) {
     case 'Media':
+      // If we bound a normal entry field to the media veriable we just return the bound value
+      if (entityOrAsset.sys.type === 'Entry') {
+        return getBoundValue(entityOrAsset, path);
+      }
       return transformMedia(
         entityOrAsset as Asset,
         variables,
