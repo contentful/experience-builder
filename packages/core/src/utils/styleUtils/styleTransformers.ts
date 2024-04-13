@@ -149,32 +149,46 @@ export const transformBackgroundImage = (
     backgroundSize: matchBackgroundSize(cfBackgroundImageOptions?.scaling),
   };
 };
-export const transformWidthSizing = ({
-  value,
-  cfMargin,
-  componentId,
-}: {
-  value?: string;
-  cfMargin?: string;
-  componentId?: string;
-}) => {
+
+export const transformWidthSizing = (value?: string, cfMargin?: string, componentId?: string) => {
   if (!value || !cfMargin || !componentId) return;
 
   const transformedValue = transformFill(value);
 
   if (transformedValue && isContentfulStructureComponent(componentId)) {
-    const marginValues = cfMargin.split(' ');
-    const rightMargin = marginValues[1] || '0px';
-    const leftMargin = marginValues[3] || '0px';
-
-    if (
-      transformedValue.match(CALC_UNIT_REGEX) &&
-      leftMargin.match(CALC_UNIT_REGEX) &&
-      rightMargin.match(CALC_UNIT_REGEX)
-    ) {
-      return `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`;
-    }
+    const margins = getWidthMargins(cfMargin);
+    const subtractMargins = margins.map((value) => ({ operator: '-', value }));
+    return transformCalc(transformedValue, subtractMargins);
   }
 
   return transformedValue;
+};
+
+/**
+ * Transform the value to a calc value
+ * @param value - value to be transformed
+ * @param calcValues - array of values to be appended to the calc value
+ * @returns `calc(${value} ${operator} ${value})` or `value`
+ */
+const transformCalc = (value: string, calcValues: { operator: string; value: string }[]) => {
+  if (
+    calcValues.length > 0 &&
+    CALC_UNIT_REGEX.test(value) &&
+    calcValues.every((o) => CALC_UNIT_REGEX.test(o.value))
+  ) {
+    const appendValues = calcValues.map((o) => `${o.operator} ${o.value}`).join(' ');
+    return `calc(${value} ${appendValues})`;
+  }
+  return value;
+};
+
+/**
+ * Get the horizontal margins from the margin string and filter out empty values
+ * @param cfMargin - margin string
+ * @returns array of horizontal margins
+ */
+const getWidthMargins = (cfMargin: string) => {
+  const margins = cfMargin.split(' ');
+  const ignoreValues = new Set([undefined, '', '0', '0px']);
+  return [margins[1], margins[3]].filter((value) => !ignoreValues.has(value));
 };
