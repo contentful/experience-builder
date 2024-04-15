@@ -153,3 +153,6 @@ export enum PostMessageMethods {
 }
 
 export const SUPPORTED_IMAGE_FORMATS = ['jpg', 'png', 'webp', 'gif', 'avif'] as const;
+
+export const CALC_UNIT_REGEX =
+  /^[+-]?([0-9]*[.])?[0-9]+(px|cm|mm|in|pt|pc|em|ex|ch|rem|vw|vh|vmin|vmax|%)$/;
