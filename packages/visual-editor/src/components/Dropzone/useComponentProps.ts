@@ -30,11 +30,9 @@ import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 import { DRAG_PADDING } from '../../types/constants';
 import { Entry } from 'contentful';
+import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
-
-// todo to globale place
-const HYPERLINK_DEFAULT_PATTERN = `/{locale}/{entry.fields.slug}/`;
 
 type UseComponentProps = {
   node: ExperienceTreeNode;

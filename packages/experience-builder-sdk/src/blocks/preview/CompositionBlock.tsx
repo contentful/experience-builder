@@ -10,6 +10,7 @@ import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
   EMPTY_CONTAINER_HEIGHT,
+  HYPERLINK_DEFAULT_PATTERN,
 } from '@contentful/experiences-core/constants';
 import type {
   ComponentTreeNode,
@@ -33,9 +34,6 @@ import {
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
 import { Entry } from 'contentful';
-
-// todo to globale place
-const HYPERLINK_DEFAULT_PATTERN = `/{locale}/{entry.fields.slug}/`;
 
 type CompositionBlockProps = {
   node: ComponentTreeNode;

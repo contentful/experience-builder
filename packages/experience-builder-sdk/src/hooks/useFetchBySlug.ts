@@ -9,6 +9,7 @@ export type UseFetchBySlugArgs = {
   slug: string;
   experienceTypeId: string;
   localeCode: string;
+  /** The pattern being used to generate links for hyperlink properties **/
   hyperlinkPattern?: string;
 };
 
