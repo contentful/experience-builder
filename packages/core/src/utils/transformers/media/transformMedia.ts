@@ -10,6 +10,7 @@ import { Asset, AssetFile } from 'contentful';
 import { getOptimizedBackgroundImageAsset } from './getOptimizedBackgroundImageAsset';
 import { getOptimizedImageAsset } from './getOptimizedImageAsset';
 import { getBoundValue } from '../getBoundValue';
+import { ValidFormats } from './mediaUtils';
 
 export const transformMedia = (
   asset: Asset,
@@ -36,12 +37,13 @@ export const transformMedia = (
       return;
     }
     try {
-      value = getOptimizedImageAsset(
-        asset.fields.file as AssetFile,
-        options.targetSize as string,
-        options.quality,
-        options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
-      );
+      value = getOptimizedImageAsset({
+        file: asset.fields.file as AssetFile,
+        loading: options.loading,
+        sizes: options.targetSize as string,
+        quality: options.quality,
+        format: options.format as ValidFormats,
+      });
       return value;
     } catch (error) {
       console.error('Error transforming image asset', error);
