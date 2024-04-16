@@ -37,4 +37,32 @@ defineComponents([
       },
     },
   },
+  {
+    component: CustomImageComponent,
+    definition: {
+      id: 'custom-image',
+      name: 'Custom Image',
+      category: 'Custom Components',
+      variables: {
+        src: {
+          displayName: 'SRC',
+          type: 'Media',
+        },
+      },
+    },
+  },
+  // {
+  //   component: CustomImageComponent,
+  //   definition: {
+  //     id: 'gonna-be-removed',
+  //     name: 'Gonna be removed',
+  //     category: 'Custom Components',
+  //     variables: {
+  //       src: {
+  //         displayName: 'SRC',
+  //         type: 'Media',
+  //       },
+  //     },
+  //   },
+  // },
 ]);

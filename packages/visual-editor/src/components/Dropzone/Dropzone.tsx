@@ -17,6 +17,7 @@ import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experien
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
+import { componentRegistry } from '@/store/registries';
 
 type DropzoneProps = {
   zoneId: string;
@@ -158,6 +159,18 @@ export function Dropzone({
             ) : (
               content.map((item, i) => {
                 const componentId = item.data.id;
+
+                const registration = componentRegistry.get(item.data.blockId!);
+
+                if (!registration) {
+                  return (
+                    <div
+                      key={componentId}
+                      style={{ background: 'red', padding: '12px', color: 'white' }}>
+                      Component registration not found: {item.data.blockId}
+                    </div>
+                  );
+                }
 
                 return (
                   <EditorBlock
