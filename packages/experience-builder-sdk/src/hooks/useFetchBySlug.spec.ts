@@ -56,7 +56,7 @@ describe('useFetchBySlug', () => {
 
     expect(result.current).toEqual({
       error: undefined,
-      experience: undefined,
+      experience: { hyperlinkPattern: undefined },
       isLoading: true,
       isEditorMode: false,
     });

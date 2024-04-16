@@ -94,6 +94,7 @@ export type ComponentDefinition<
   name: string;
   category?: string;
   thumbnailUrl?: string;
+  hyperlinkPattern?: string;
   variables: Partial<Record<ContainerStyleVariableName, ComponentDefinitionVariable<T>>> &
     Record<string, ComponentDefinitionVariable<T>>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
@@ -263,6 +264,7 @@ export interface HoveredElement {
 }
 
 export interface Experience<T extends EntityStore = EntityStore> {
+  hyperlinkPattern?: string;
   entityStore?: T;
 }
 

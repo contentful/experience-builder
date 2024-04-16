@@ -16,6 +16,8 @@ export interface InitEditorParams {
 }
 export interface EditorStore {
   dataSource: ExperienceDataSource;
+  hyperLinkPattern?: string;
+  setHyperLinkPattern: (pattern: string) => void;
   locale: string | null;
   selectedNodeId: string | null;
   unboundValues: ExperienceUnboundValues;
@@ -30,12 +32,15 @@ export interface EditorStore {
 
 export const useEditorStore = create<EditorStore>((set, get) => ({
   dataSource: {},
+  hyperLinkPattern: undefined,
   unboundValues: {},
   isDragging: false,
   dragItem: '',
   selectedNodeId: null,
   locale: null,
-
+  setHyperLinkPattern: (pattern: string) => {
+    set({ hyperLinkPattern: pattern });
+  },
   setSelectedNodeId: (id: string) => {
     set({ selectedNodeId: id });
   },
