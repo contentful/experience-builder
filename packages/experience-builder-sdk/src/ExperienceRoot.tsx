@@ -25,11 +25,10 @@ export const ExperienceRoot = ({
   });
 
   if (isEditorMode) {
-    const entityStore = experience?.entityStore;
     return (
       <VisualEditorRoot
+        experience={experience}
         visualEditorMode={visualEditorMode}
-        initialEntities={entityStore?.entities || []}
         initialLocale={locale}
       />
     );

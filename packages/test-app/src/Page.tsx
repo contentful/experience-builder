@@ -16,6 +16,7 @@ export default function Page() {
     localeCode,
     client,
     experienceTypeId: config.experienceTypeId,
+    hyperlinkPattern: '/{entry.fields.slug}',
   });
 
   if (isLoading) return <div>Loading...</div>;

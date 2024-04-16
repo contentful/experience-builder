@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 
 export const useInitializeEditor = () => {
   const initializeEditor = useEditorStore((state) => state.initializeEditor);
+
   const [initialized, setInitialized] = useState(false);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
 
