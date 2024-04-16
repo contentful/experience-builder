@@ -4,7 +4,7 @@ import { Dropzone } from '../Dropzone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
 import type { ExperienceTree } from '@contentful/experiences-core/types';
 
-import { COMPONENT_LIST_ID, DRAGGABLE_HEIGHT, ROOT_ID } from '@/types/constants';
+import { DRAGGABLE_HEIGHT, ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import styles from './render.module.css';
@@ -26,8 +26,6 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const breakpoints = useTreeStore((state) => state.breakpoints);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
-  const draggableSourceId = useDraggedItemStore((state) => state.draggedItem?.source.droppableId);
-  const draggingNewComponent = !!draggableSourceId?.startsWith(COMPONENT_LIST_ID);
   const containerRef = useRef<HTMLDivElement>(null);
   const { resolveDesignValue } = useBreakpoints(breakpoints);
   const [containerStyles, setContainerStyles] = useState<CSSProperties>({});
@@ -108,23 +106,10 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   return (
     <DNDProvider>
       {dragItem && <DraggableContainer id={dragItem} />}
-
       <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
-        {/* 
-          This hitbox is required so that users can
-          add sections to the top of the document.
-        */}
-        {userIsDragging && draggingNewComponent && (
-          <div className={styles.hitbox} data-ctfl-zone-id={ROOT_ID} />
-        )}
+        {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitbox} />}
         <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
-        {/* 
-          This hitbox is required so that users can
-          add sections to the bottom of the document.
-        */}
-        {userIsDragging && draggingNewComponent && (
-          <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />
-        )}
+        {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />}
       </div>
       <div data-ctfl-hitboxes />
     </DNDProvider>
