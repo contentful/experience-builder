@@ -1,11 +1,16 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
-import { EntityStore, isEmptyStructureWithRelativeHeight } from '@contentful/experiences-core';
+import {
+  EntityStore,
+  isEmptyStructureWithRelativeHeight,
+  resolveHyperlinkPattern,
+} from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
   EMPTY_CONTAINER_HEIGHT,
+  HYPERLINK_DEFAULT_PATTERN,
 } from '@contentful/experiences-core/constants';
 import type {
   ComponentTreeNode,
@@ -28,11 +33,13 @@ import {
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
+import { Entry } from 'contentful';
 
 type CompositionBlockProps = {
   node: ComponentTreeNode;
   locale: string;
   entityStore: EntityStore;
+  hyperlinkPattern?: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
 };
 
@@ -40,6 +47,7 @@ export const CompositionBlock = ({
   node: rawNode,
   locale,
   entityStore,
+  hyperlinkPattern,
   resolveDesignValue,
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
@@ -104,6 +112,23 @@ export const CompositionBlock = ({
             acc[variableName] = value;
             break;
           }
+
+          case 'HyperlinkValue': {
+            const binding = entityStore.dataSource[variable.linkTargetKey];
+            const hyperlinkEntry = entityStore.getEntryOrAsset(binding, variable.linkTargetKey);
+
+            const value = resolveHyperlinkPattern(
+              componentRegistration.definition.hyperlinkPattern ||
+                hyperlinkPattern ||
+                HYPERLINK_DEFAULT_PATTERN,
+              hyperlinkEntry as Entry,
+              locale,
+            );
+            if (value) {
+              acc[variableName] = value;
+            }
+            break;
+          }
           case 'UnboundValue': {
             const uuid = variable.key;
             acc[variableName] = entityStore.unboundValues[uuid]?.value;
@@ -116,7 +141,15 @@ export const CompositionBlock = ({
       },
       propMap,
     );
-  }, [componentRegistration, isAssembly, node.variables, resolveDesignValue, entityStore]);
+  }, [
+    componentRegistration,
+    isAssembly,
+    node.variables,
+    resolveDesignValue,
+    entityStore,
+    hyperlinkPattern,
+    locale,
+  ]);
 
   const cfStyles = buildCfStyles(nodeProps, node.definitionId);
 
@@ -142,6 +175,7 @@ export const CompositionBlock = ({
               node={childNode}
               key={index}
               locale={locale}
+              hyperlinkPattern={hyperlinkPattern}
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
             />

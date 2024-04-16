@@ -6,6 +6,7 @@ import {
   isEmptyStructureWithRelativeHeight,
   isContentfulStructureComponent,
   transformBoundContentValue,
+  resolveHyperlinkPattern,
 } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -28,6 +29,8 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 import { DRAG_PADDING } from '../../types/constants';
+import { Entry } from 'contentful';
+import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
@@ -49,6 +52,8 @@ export const useComponentProps = ({
   userIsDragging,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
+  const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
+  const locale = useEditorStore((state) => state.locale);
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: ComponentProps = useMemo(() => {
@@ -84,6 +89,21 @@ export const useComponentProps = ({
           return {
             ...acc,
             [variableName]: designValue,
+          };
+        } else if (variableMapping.type === 'HyperlinkValue') {
+          const binding = dataSource[variableMapping.linkTargetKey];
+
+          const hyperlinkEntry = entityStore.getEntryOrAsset(
+            binding,
+            variableMapping.linkTargetKey,
+          );
+          return {
+            ...acc,
+            [variableName]: resolveHyperlinkPattern(
+              definition.hyperlinkPattern || hyperlinkPattern || HYPERLINK_DEFAULT_PATTERN,
+              hyperlinkEntry as Entry,
+              locale,
+            ),
           };
         } else if (variableMapping.type === 'BoundValue') {
           const [, uuid, path] = variableMapping.path.split('/');
@@ -138,15 +158,14 @@ export const useComponentProps = ({
       {},
     );
   }, [
+    hyperlinkPattern,
+    node,
+    locale,
     definition,
-    node.data.props,
-    node.children,
-    node.data.blockId,
     resolveDesignValue,
     dataSource,
     areEntitiesFetched,
     unboundValues,
-    node.type,
     entityStore,
   ]);
 
