@@ -4,6 +4,7 @@ import {
   DropResult,
   OnBeforeDragStartResponder,
   OnDragEndResponder,
+  OnDragStartResponder,
   OnDragUpdateResponder,
   ResponderProvided,
 } from '@hello-pangea/dnd';
@@ -12,12 +13,14 @@ import React from 'react';
 interface TestDNDContainerProps extends React.PropsWithChildren {
   onDragUpdate: OnDragUpdateResponder;
   onBeforeDragStart: OnBeforeDragStartResponder;
+  onDragStart: OnDragStartResponder;
   onDragEnd: OnDragEndResponder;
 }
 
 const TestDNDContainer: React.FC<TestDNDContainerProps> = ({
   onDragEnd,
   onBeforeDragStart,
+  onDragStart,
   onDragUpdate,
   children,
 }) => {
@@ -30,6 +33,7 @@ const TestDNDContainer: React.FC<TestDNDContainerProps> = ({
       source: draggedItem.source,
     };
     onBeforeDragStart(start);
+    onDragStart(start, {} as ResponderProvided);
   };
 
   const handleDrag = (event: React.DragEvent<HTMLDivElement>) => {
