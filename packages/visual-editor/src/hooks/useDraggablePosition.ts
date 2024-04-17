@@ -15,7 +15,8 @@ export default function useDraggablePosition({ draggableId, draggableRef, positi
 
   useEffect(() => {
     const el: HTMLElement | null =
-      draggableRef?.current ?? document.querySelector(`[${CTFL_DRAGGING_ELEMENT}]`);
+      draggableRef?.current ??
+      document.querySelector(`[${CTFL_DRAGGING_ELEMENT}][data-cf-node-id="${draggableId}"]`);
 
     if (!isDraggingOnCanvas || draggingId !== draggableId || !el) {
       return;
