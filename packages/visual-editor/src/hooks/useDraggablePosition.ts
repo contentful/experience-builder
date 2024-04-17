@@ -35,5 +35,5 @@ export default function useDraggablePosition({ draggableId, draggableRef, positi
     el.style.top = `${top}px`;
     el.style.width = `${domRect.width}px`;
     el.style.height = `${domRect.height}px`;
-  }, [draggableRef, draggableId, draggingId, position, preDragDomRect, isDraggingOnCanvas]);
+  }, [draggableRef, draggableId, isDraggingOnCanvas, draggingId, position, preDragDomRect]);
 }
