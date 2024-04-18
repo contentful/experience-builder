@@ -240,10 +240,12 @@ const addExtraDropzonePadding = (padding: string) =>
   padding
     .split(' ')
     .map((value) => {
-      if (value.endsWith('px')) {
-        const parsedValue = parseInt(value.replace(/px$/, ''), 10);
-        return (parsedValue < DRAG_PADDING ? DRAG_PADDING : parsedValue) + 'px';
+      const numericValue = parseFloat(value);
+      const unit = value.replace(numericValue.toString(), '');
+
+      if (numericValue === 0 || (unit === 'px' && numericValue < 4)) {
+        return `${DRAG_PADDING}px`;
       }
-      return `${DRAG_PADDING}px`;
+      return value;
     })
     .join(' ');
