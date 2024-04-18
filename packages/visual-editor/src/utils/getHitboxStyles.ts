@@ -66,7 +66,7 @@ export const getHitboxStyles = ({
       return {
         width: WIDTH,
         height: height - HEIGHT,
-        left: right + offsetWidth - calcOffsetDepth(zoneDepth) - WIDTH / 2,
+        left: right + offsetWidth + calcOffsetDepth(zoneDepth) - WIDTH / 2,
         top: top + HEIGHT / 2 - scrollY,
         zIndex: 100 + zoneDepth,
       };
@@ -91,7 +91,7 @@ export const getHitboxStyles = ({
       return {
         width: width - DRAGGABLE_WIDTH * 2,
         height,
-        left: left + (DRAGGABLE_WIDTH * 2) / 2,
+        left: left + DRAGGABLE_WIDTH,
         top: top - scrollY,
         zIndex: 1000 + zoneDepth,
       };
