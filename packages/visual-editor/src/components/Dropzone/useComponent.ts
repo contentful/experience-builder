@@ -13,6 +13,7 @@ import { componentRegistry, createAssemblyRegistration } from '@/store/registrie
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
+import { ImportedComponentErrorBoundary } from './ImportedComponentErrorBoundary';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -78,7 +79,12 @@ export const useComponent = ({
     : node.type === ASSEMBLY_NODE_TYPE
       ? // Assembly.tsx requires renderDropzone and editorMode as well
         () => React.createElement(componentRegistration.component, componentProps)
-      : () => React.createElement(componentRegistration.component, otherComponentProps);
+      : () =>
+          React.createElement(
+            ImportedComponentErrorBoundary,
+            null,
+            React.createElement(componentRegistration.component, otherComponentProps),
+          );
 
   return {
     node,
