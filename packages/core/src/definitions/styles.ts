@@ -82,7 +82,7 @@ export const builtInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The width of the section',
-    defaultValue: 'fill',
+    defaultValue: '100%',
   },
   cfHeight: {
     displayName: 'Height',
@@ -340,7 +340,7 @@ export const dividerBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The width of the divider',
-    defaultValue: 'fill',
+    defaultValue: '100%',
   },
   cfHeight: {
     displayName: 'Height',
@@ -485,7 +485,7 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The width of the columns',
-    defaultValue: 'fill',
+    defaultValue: '100%',
   },
   cfMaxWidth: {
     displayName: 'Max width',
