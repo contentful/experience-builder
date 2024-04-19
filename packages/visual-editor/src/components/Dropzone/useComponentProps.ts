@@ -239,11 +239,7 @@ export const useComponentProps = ({
 const addExtraDropzonePadding = (padding: string) =>
   padding
     .split(' ')
-    .map((value) => {
-      if (value.endsWith('px')) {
-        const parsedValue = parseInt(value.replace(/px$/, ''), 10);
-        return (parsedValue < DRAG_PADDING ? DRAG_PADDING : parsedValue) + 'px';
-      }
-      return `${DRAG_PADDING}px`;
-    })
+    .map((value) =>
+      parseFloat(value) === 0 ? `${DRAG_PADDING}px` : `calc(${value} + ${DRAG_PADDING}px)`,
+    )
     .join(' ');
