@@ -155,8 +155,13 @@ describe('transformImageAsset', () => {
     );
   });
 
-  it('loading should default to lazy', () => {
+  it('loading should default to undefined', () => {
     const result = getOptimizedImageAsset({ file, sizes: '500px', loading: undefined });
+    expect(result.loading).toEqual(undefined);
+  });
+
+  it('when loading is lazy, should return lazy', () => {
+    const result = getOptimizedImageAsset({ file, sizes: '500px', loading: 'lazy' });
     expect(result.loading).toEqual('lazy');
   });
 
