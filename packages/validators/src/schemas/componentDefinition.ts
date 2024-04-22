@@ -9,6 +9,7 @@ export const DefinitionPropertyTypeSchema = z.enum([
   'Location',
   'Media',
   'Object',
+  'Hyperlink',
 ]);
 
 export const DefinitionPropertyKeySchema = z

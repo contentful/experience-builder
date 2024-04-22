@@ -6,7 +6,7 @@
   width: 100%;
   background-color: transparent;
   transition: background-color 0.2s;
-  pointer-events: all !important;
+  pointer-events: all;
 }
 
 .container:not(.isRoot):before {
@@ -47,10 +47,5 @@
 
 .hitbox {
   position: fixed;
-  pointer-events: all !important;
-}
-
-.hitbox {
-  position: fixed;
-  pointer-events: all !important;
+  pointer-events: all;
 }

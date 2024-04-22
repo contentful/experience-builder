@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.6](https://github.com/contentful/experience-builder/compare/v1.0.6-beta.0...v1.0.6) (2024-04-18)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
+## [1.0.6-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.5...v1.0.6-beta.0) (2024-04-18)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
+## [1.0.5](https://github.com/contentful/experience-builder/compare/v1.0.5-beta.0...v1.0.5) (2024-04-16)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
+## [1.0.5-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.4...v1.0.5-beta.0) (2024-04-16)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
+## [1.0.4](https://github.com/contentful/experience-builder/compare/v1.0.4-beta.0...v1.0.4) (2024-04-12)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
+## [1.0.4-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.3...v1.0.4-beta.0) (2024-04-12)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
+## [1.0.3](https://github.com/contentful/experience-builder/compare/v1.0.3-beta.0...v1.0.3) (2024-04-12)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
+## [1.0.3-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.2...v1.0.3-beta.0) (2024-04-12)
+
+### Bug Fixes
+
+- test ([f9f80e9](https://github.com/contentful/experience-builder/commit/f9f80e9f18687da17d4fc3a36d78af63e679e105))
+
+### Features
+
+- add hyperlink to component definition ([6ced4ba](https://github.com/contentful/experience-builder/commit/6ced4ba433cd2c20f481bc890ced665719f70287))
+
 ## [1.0.2](https://github.com/contentful/experience-builder/compare/v1.0.2-beta.1...v1.0.2) (2024-04-04)
 
 **Note:** Version bump only for package @contentful/experiences-validators

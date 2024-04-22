@@ -84,6 +84,7 @@ describe('validateComponentDefinition', () => {
       'Location',
       'Media',
       'Object',
+      'Hyperlink',
     ]);
   });
 });

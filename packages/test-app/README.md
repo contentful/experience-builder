@@ -1,6 +1,6 @@
-# EB Test App
+# Experiences Test App
 
-This apps intended purpose is to quickly test the functionality of the EB when developing locally. There is also a deployed instance of the app that can be used to test EB in a production.
+This apps intended purpose is to quickly test the functionality of Studio Experiences when developing locally. There is also a deployed instance of the app that can be used to test Experiences in production.
 
 ## How to Start
 
@@ -8,7 +8,7 @@ This apps intended purpose is to quickly test the functionality of the EB when d
 2. Make sure that the preview URL of the experience type is set to `http://localhost:5173/{entry.fields.slug}`.
 3. Run `npm start`.
 
-If you want to subscribe to live changes in other modules of this repository, go to the respective module folder and run `npm run build -- --watch`.
+If you want to subscribe to live changes in other packages of this repository, go to the respective package folder and run `npm run dev`.
 
 > [!WARNING]
 > Please note that changes in `visual-editor` will only be reflected at runtime if the `experiences-sdk-react` is rebuilt as well as it lazy loads this dependency.

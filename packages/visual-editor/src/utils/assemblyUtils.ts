@@ -70,6 +70,10 @@ export const deserializeAssemblyNode = ({
           type: 'BoundValue',
           path: instanceProperty.path,
         };
+      } else if (instanceProperty?.type === 'HyperlinkValue') {
+        const componentInstanceValue = componentInstanceDataSource[instanceProperty.linkTargetKey];
+        dataSource[instanceProperty.linkTargetKey] == componentInstanceValue;
+        childNodeVariable[variableName] = instanceProperty;
       }
     }
   }

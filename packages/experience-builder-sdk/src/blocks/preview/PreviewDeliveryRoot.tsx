@@ -21,7 +21,7 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
 
   if (!compatibleVersions.includes(entityStore.schemaVersion)) {
     console.warn(
-      `[experiences-sdk-react] Contentful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
+      `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
     return null;
   }
@@ -32,6 +32,7 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
         <CompositionBlock
           key={index}
           node={childNode}
+          hyperlinkPattern={experience.hyperlinkPattern}
           locale={locale}
           entityStore={entityStore}
           resolveDesignValue={resolveDesignValue}

@@ -17,7 +17,6 @@ import {
 import { DraggableChildComponent } from '@components/Draggable/DraggableChildComponent';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { PlaceholderParams } from '@components/Draggable/Placeholder';
-import { ROOT_ID } from '@/types/constants';
 import Hitboxes from './Hitboxes';
 
 type EditorBlockProps = {
@@ -35,7 +34,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   node: rawNode,
   resolveDesignValue,
   renderDropzone,
-  draggingNewComponent,
   index,
   zoneId,
   userIsDragging,
@@ -57,9 +55,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
-  const isRootComponent = zoneId === ROOT_ID;
-
-  const enableRootHitboxes = isRootComponent && !!draggingNewComponent;
+  const isEmptyZone = !node.children.length;
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
@@ -100,11 +96,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
           definition={definition}
         />
         {isStructureComponent && !isSingleColumn && userIsDragging && (
-          <Hitboxes
-            parentZoneId={zoneId}
-            zoneId={componentId}
-            enableRootHitboxes={enableRootHitboxes}
-          />
+          <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
         )}
       </>
     );
@@ -127,11 +119,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       onClick={onClick}>
       {elementToRender()}
       {isStructureComponent && !isSingleColumn && userIsDragging && (
-        <Hitboxes
-          parentZoneId={zoneId}
-          zoneId={componentId}
-          enableRootHitboxes={enableRootHitboxes}
-        />
+        <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
       )}
     </DraggableComponent>
   );

@@ -100,7 +100,7 @@ export const buildCfStyles = (
 };
 /**
  * Container/section default behavior:
- * Default height => height: EMPTY_CONTAINER_HEIGHT (120px)
+ * Default height => height: EMPTY_CONTAINER_HEIGHT
  * If a container component has children => height: 'fit-content'
  */
 export const calculateNodeDefaultHeight = ({

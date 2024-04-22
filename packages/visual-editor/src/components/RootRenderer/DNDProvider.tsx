@@ -8,6 +8,7 @@ import {
   OnBeforeCaptureResponder,
   OnBeforeDragStartResponder,
   OnDragEndResponder,
+  OnDragStartResponder,
   OnDragUpdateResponder,
 } from '@hello-pangea/dnd';
 import React, { useRef } from 'react';
@@ -33,11 +34,15 @@ export const DNDProvider = ({ children }: Props) => {
   const isTestRun =
     typeof window !== 'undefined' && Object.prototype.hasOwnProperty.call(window, 'Cypress');
 
-  const dragStart: OnBeforeDragStartResponder = ({ source }) => {
+  const beforeDragStart: OnBeforeDragStartResponder = ({ source }) => {
     prevSelectedNodeId.current = selectedNodeId;
 
-    //Unselect the current node when dragging and remove the outline
+    // Unselect the current node when dragging and remove the outline
     setSelectedNodeId('');
+
+    // Set dragging state here to make sure that DnD capture phase has completed
+    setDraggingOnCanvas(true);
+
     sendMessage(OUTGOING_EVENTS.ComponentSelected, {
       nodeId: '',
     });
@@ -47,8 +52,11 @@ export const DNDProvider = ({ children }: Props) => {
   };
 
   const beforeCapture: OnBeforeCaptureResponder = ({ draggableId }) => {
-    setDraggingOnCanvas(true);
     setOnBeforeCaptureId(draggableId);
+  };
+
+  const dragStart: OnDragStartResponder = (start) => {
+    updateItem(start);
   };
 
   const dragUpdate: OnDragUpdateResponder = (update) => {
@@ -58,7 +66,7 @@ export const DNDProvider = ({ children }: Props) => {
   const dragEnd: OnDragEndResponder = (dropResult) => {
     setDraggingOnCanvas(false);
     setOnBeforeCaptureId('');
-    updateItem(undefined);
+    updateItem();
     SimulateDnD.reset();
 
     if (!dropResult.destination) {
@@ -98,12 +106,14 @@ export const DNDProvider = ({ children }: Props) => {
     <DragDropContext
       onBeforeCapture={beforeCapture}
       onDragUpdate={dragUpdate}
-      onBeforeDragStart={dragStart}
+      onBeforeDragStart={beforeDragStart}
+      onDragStart={dragStart}
       onDragEnd={dragEnd}>
       {isTestRun ? (
         <TestDNDContainer
           onDragEnd={dragEnd}
-          onBeforeDragStart={dragStart}
+          onBeforeDragStart={beforeDragStart}
+          onDragStart={dragStart}
           onDragUpdate={dragUpdate}>
           {children}
         </TestDNDContainer>

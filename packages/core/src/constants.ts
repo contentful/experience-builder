@@ -145,6 +145,8 @@ export const CF_STYLE_ATTRIBUTES = [
 
 export const EMPTY_CONTAINER_HEIGHT = '80px';
 
+export const HYPERLINK_DEFAULT_PATTERN = `/{locale}/{entry.fields.slug}/`;
+
 export const DEFAULT_IMAGE_WIDTH = '500px';
 
 export enum PostMessageMethods {

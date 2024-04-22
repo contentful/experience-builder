@@ -28,6 +28,11 @@ export const deserializeAssemblyNode = ({
           type: 'BoundValue',
           path: instanceProperty.path,
         };
+      } else if (instanceProperty?.type === 'HyperlinkValue') {
+        variables[variableName] = {
+          type: 'HyperlinkValue',
+          linkTargetKey: instanceProperty.linkTargetKey,
+        };
       }
     }
   }
