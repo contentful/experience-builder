@@ -14,7 +14,12 @@ import {
   StyleProps,
 } from '@contentful/experiences-core/types';
 import { componentRegistry } from '../core/componentRegistry';
-import { ExperienceComponentTree } from '@contentful/experiences-validators';
+import {
+  ComponentPropertyValue,
+  ExperienceComponentTree,
+  ExperienceDataSource,
+  ExperienceUnboundValues,
+} from '@contentful/experiences-validators';
 import { Asset, Entry, UnresolvedLink } from 'contentful/dist/types/types';
 import { Breakpoint } from '@contentful/experiences-core/types';
 import { CF_STYLE_ATTRIBUTES } from '@contentful/experiences-core/constants';
@@ -24,7 +29,7 @@ type MediaQueryTemplate = Record<
   { condition: string; cssByClassName: Record<string, string> }
 >;
 
-export const ssrDetachExperienceStyles = (experience: Experience): string | undefined => {
+export const detachExperienceStyles = (experience: Experience): string | undefined => {
   const experienceTreeRoot = experience.entityStore?.experienceEntryFields
     ?.componentTree as ExperienceComponentTree;
 
@@ -277,11 +282,11 @@ export const ssrDetachExperienceStyles = (experience: Experience): string | unde
   return styleSheet;
 };
 
-const isCfStyleAttribute = (variableName: any): variableName is keyof StyleProps => {
+export const isCfStyleAttribute = (variableName: any): variableName is keyof StyleProps => {
   return CF_STYLE_ATTRIBUTES.includes(variableName);
 };
 
-const maybePopulateDesignTokenValue = (
+export const maybePopulateDesignTokenValue = (
   variableName: string,
   variableValue: any,
   mapOfDesignVariableKeys: Record<string, any>,
@@ -320,8 +325,10 @@ const maybePopulateDesignTokenValue = (
 
   const templateStringRegex = /\${(.+?)}/g;
 
+  const parts = variableValue.split(' ');
+
   let resolvedValue = '';
-  for (const part of variableValue.split(' ')) {
+  for (const part of parts) {
     const tokenValue = templateStringRegex.test(part)
       ? resolveSimpleDesignToken(variableName, part)
       : part;
@@ -331,20 +338,20 @@ const maybePopulateDesignTokenValue = (
   return resolvedValue.trim();
 };
 
-const resolveBackgroundImageBinding = ({
+export const resolveBackgroundImageBinding = ({
   variableData,
   getBoundEntityById,
   dataSource = {},
   unboundValues = {},
 }: {
-  variableData: any;
+  variableData: ComponentPropertyValue;
   getBoundEntityById: (id: string) => Entry | Asset | undefined;
-  unboundValues?: Record<string, any>;
-  dataSource?: Record<string, UnresolvedLink<'Entry' | 'Asset'>>;
-}) => {
+  unboundValues?: ExperienceUnboundValues;
+  dataSource?: ExperienceDataSource;
+}): string | undefined => {
   if (variableData.type === 'UnboundValue') {
     const uuid = variableData.key;
-    return unboundValues[uuid]?.value;
+    return unboundValues[uuid]?.value as string;
   }
 
   if (variableData.type === 'BoundValue') {
@@ -358,7 +365,7 @@ const resolveBackgroundImageBinding = ({
     }
 
     if (boundEntity.sys.type === 'Asset') {
-      return (boundEntity as Asset).fields.file?.url;
+      return (boundEntity as Asset).fields.file?.url as string;
     } else {
       // '/lUERH7tX7nJTaPX6f0udB/fields/assetReference/~locale/fields/file/~locale'
       // becomes
@@ -387,24 +394,24 @@ const resolveBackgroundImageBinding = ({
           return;
         }
 
-        return referencedAsset.fields.file?.url;
+        return referencedAsset.fields.file?.url as string;
       }
     }
   }
 };
 
-const indexByBreakpoint = ({
+export const indexByBreakpoint = ({
   variables,
   breakpointIds,
   getBoundEntityById,
   unboundValues = {},
   dataSource = {},
 }: {
-  variables: Record<string, any>;
+  variables: Record<string, ComponentPropertyValue>;
   breakpointIds: string[];
   getBoundEntityById: (id: string) => Entry | Asset | undefined;
-  unboundValues?: Record<string, any>;
-  dataSource?: Record<string, UnresolvedLink<'Entry' | 'Asset'>>;
+  unboundValues?: ExperienceUnboundValues;
+  dataSource?: ExperienceDataSource;
 }) => {
   const variableValuesByBreakpoints = breakpointIds.reduce<Record<string, Record<string, any>>>(
     (acc, breakpointId) => {
@@ -469,7 +476,7 @@ const indexByBreakpoint = ({
  *  'color.key': [value]
  * }
  */
-const flattenDesignTokenRegistry = (
+export const flattenDesignTokenRegistry = (
   designTokenRegistry: DesignTokensDefinition,
 ): Record<string, string | object> => {
   return Object.entries(designTokenRegistry).reduce((acc, [categoryName, tokenCategory]) => {
@@ -493,13 +500,13 @@ const flattenDesignTokenRegistry = (
 // Replaces camelCase with kebab-case
 
 // converts the <key, value> object into a css string
-const toCSSString = (breakpointStyles: Record<string, string>) => {
+export const toCSSString = (breakpointStyles: Record<string, string>) => {
   return Object.entries(breakpointStyles)
     .map(([key, value]) => `${key}:${value};`)
     .join('');
 };
 
-const toMediaQuery = (breakpointPayload: {
+export const toMediaQuery = (breakpointPayload: {
   condition: string;
   cssByClassName: Record<string, string>;
 }): string => {
