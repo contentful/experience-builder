@@ -139,7 +139,6 @@ export const ssrDetachExperienceStyles = (experience: Experience): string | unde
         cfBackgroundImageOptions: { type: 'DesignValue', valuesByBreakpoint: { desktop: [Object] } }
       }
      */
-    // console.log(currentNode.variables);
 
     // so first, I convert it into a map to help me make it easier to access the values
     const propsByBreakpoint = indexByBreakpoint({
@@ -185,7 +184,7 @@ export const ssrDetachExperienceStyles = (experience: Experience): string | unde
       ).reduce((acc, [variableName, variableValue]) => {
         return {
           ...acc,
-          [variableName]: maybeTransformDesignValue(
+          [variableName]: maybePopulateDesignTokenValue(
             variableName,
             variableValue,
             mapOfDesignVariableKeys,
@@ -282,7 +281,7 @@ const isCfStyleAttribute = (variableName: any): variableName is keyof StyleProps
   return CF_STYLE_ATTRIBUTES.includes(variableName);
 };
 
-const maybeTransformDesignValue = (
+const maybePopulateDesignTokenValue = (
   variableName: string,
   variableValue: any,
   mapOfDesignVariableKeys: Record<string, any>,
@@ -298,9 +297,7 @@ const maybeTransformDesignValue = (
 
   const resolveSimpleDesignToken = (variableName: keyof StyleProps, variableValue: string) => {
     const nonTemplateDesignTokenValue = variableValue.replace(templateStringRegex, '$1');
-    console.log(nonTemplateDesignTokenValue);
     const tokenValue = mapOfDesignVariableKeys[nonTemplateDesignTokenValue];
-    console.log('tokenValue', tokenValue);
 
     if (!tokenValue) {
       if (builtInStyles[variableName]) {
