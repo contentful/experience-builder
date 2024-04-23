@@ -16,6 +16,8 @@ export {
   CF_STYLE_ATTRIBUTES,
 } from '@contentful/experiences-core/constants';
 
+export { ssrDetachExperienceStyles } from './utils/ssrStyles';
+
 // Simple state store to store a few things that are needed across the SDK
 if (typeof window !== 'undefined') {
   window.__EB__ = {

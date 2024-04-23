@@ -14,6 +14,7 @@ import {
 } from '@contentful/experiences-core/constants';
 import type {
   ComponentTreeNode,
+  DesignValue,
   PrimitiveValue,
   ResolveDesignValueType,
   StyleProps,
@@ -159,7 +160,14 @@ export const CompositionBlock = ({
     cfStyles.minHeight = EMPTY_CONTAINER_HEIGHT;
   }
 
-  const { className } = useStyleTag({ styles: cfStyles });
+  const { className: runtimeClassname } = useStyleTag({ styles: cfStyles });
+
+  const className = node.variables.cfSsrClassName
+    ? (resolveDesignValue(
+        (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+        'cfSsrClassName',
+      ) as string)
+    : runtimeClassname;
 
   if (!componentRegistration) {
     return null;

@@ -21,6 +21,7 @@ import type {
   ResolveDesignValueType,
   ComponentRegistration,
   Link,
+  DesignValue,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useStyleTag } from '../../hooks/useStyleTag';
@@ -57,12 +58,21 @@ export const useComponentProps = ({
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: ComponentProps = useMemo(() => {
+    const propsBase = node.data.props?.cfSsrClassName
+      ? {
+          cfSsrClassName: resolveDesignValue(
+            (node.data.props.cfSsrClassName as DesignValue).valuesByBreakpoint,
+            'cfSsrClassName',
+          ) as string,
+        }
+      : {};
+
     // Don't enrich the assembly wrapper node with props
     if (!definition || node.type === ASSEMBLY_NODE_TYPE) {
-      return {};
+      return propsBase;
     }
 
-    return Object.entries(definition.variables).reduce(
+    const extractedProps = Object.entries(definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variableMapping = node.data.props[variableName];
         if (!variableMapping) {
@@ -157,6 +167,11 @@ export const useComponentProps = ({
       },
       {},
     );
+
+    return {
+      ...propsBase,
+      ...extractedProps,
+    };
   }, [
     hyperlinkPattern,
     node,
@@ -225,7 +240,7 @@ export const useComponentProps = ({
   const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
 
   const componentProps = {
-    className: componentClass,
+    className: props.cfSsrClassName ?? componentClass,
     editorMode: true,
     node,
     renderDropzone,
