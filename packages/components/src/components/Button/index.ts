@@ -88,7 +88,7 @@ export const ButtonComponentDefinition: ComponentDefinition = {
     },
     url: {
       displayName: 'URL',
-      type: 'Text',
+      type: 'Hyperlink',
       defaultValue: '/',
     },
     target: {
