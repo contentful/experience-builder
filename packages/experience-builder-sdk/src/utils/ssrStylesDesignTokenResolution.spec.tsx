@@ -259,7 +259,7 @@ const experienceEntry: ExperienceEntry = {
   },
 };
 
-describe('custom component with builtInStyles', () => {
+describe('custom component with builtInStyles which are supporting design tokens', () => {
   beforeEach(() => {
     defineComponents([
       {
@@ -274,7 +274,7 @@ describe('custom component with builtInStyles', () => {
     resetComponentRegistry();
   });
 
-  it('should extract builtInStyles as media query css', () => {
+  it('should populate values with design tokens and extract the css', () => {
     const experience = createExperience({
       experienceEntry: experienceEntry as Entry,
       locale: 'en-US',
@@ -283,8 +283,6 @@ describe('custom component with builtInStyles', () => {
     });
 
     const styles = detachExperienceStyles(experience);
-
-    console.log('styles', styles);
 
     const customComponent = experienceEntry.fields.componentTree.children[0];
     expect(customComponent.variables.cfSsrClassName).toBeDefined();

@@ -528,5 +528,5 @@ export const toMediaQuery = (breakpointPayload: {
 
   const mediaQueryRule = evaluation === '<' ? 'max-width' : 'min-width';
 
-  return `@media(${mediaQueryRule}:${pixelValue}){${mediaQueryStyles}}`;
+  return `@media (${mediaQueryRule}:${pixelValue}){${mediaQueryStyles}}`;
 };

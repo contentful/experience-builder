@@ -336,8 +336,6 @@ describe('custom component with builtInStyles', () => {
 
     const styles = detachExperienceStyles(experience);
 
-    console.log('styles', styles);
-
     const customComponent = experienceEntry.fields.componentTree.children[0];
     expect(customComponent.variables.cfSsrClassName).toBeDefined();
     expect(customComponent.variables.cfSsrClassName.type).toBe('DesignValue');
