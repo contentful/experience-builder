@@ -1,12 +1,15 @@
 import { CF_STYLE_ATTRIBUTES } from '@contentful/experiences-core/constants';
 import {
+  flattenDesignTokenRegistry,
   indexByBreakpoint,
   isCfStyleAttribute,
   maybePopulateDesignTokenValue,
   resolveBackgroundImageBinding,
+  toCSSString,
+  toMediaQuery,
 } from './ssrStyles';
 import { builtInStyles } from '@contentful/experiences-core';
-import { ComponentPropertyValue } from '@contentful/experiences-core/types';
+import { ComponentPropertyValue, DesignTokensDefinition } from '@contentful/experiences-core/types';
 import { Asset, Entry } from 'contentful';
 
 describe('isCfStyleAttribute', () => {
@@ -413,6 +416,161 @@ describe('indexByBreakpoint', () => {
         cfBackgroundColor: 'blue',
         cfMargin: '${spacing.s}',
       },
+    });
+  });
+
+  describe('flattenDesignTokenRegistry', () => {
+    it('should flatten the design token registry', () => {
+      const designTokenRegistry: DesignTokensDefinition = {
+        color: {
+          bg: 'white',
+          font: 'black',
+          danger: 'red',
+          warning: 'orange',
+          succcess: 'green',
+        },
+        spacing: {
+          xs: '0.5 rem',
+          s: '1rem',
+          m: '1.5rem',
+          l: '2rem',
+        },
+        sizing: {
+          quarter: '25%',
+          half: '50%',
+          threeQuarters: '75%',
+          full: '100%',
+        },
+        border: {
+          default: {
+            width: '1px',
+            style: 'solid',
+            color: 'black',
+          },
+          bold: {
+            width: '3px',
+            style: 'solid',
+            color: 'black',
+          },
+        },
+        fontSize: {
+          default: '1rem',
+          small: '0.75rem',
+          large: '1.5rem',
+        },
+        lineHeight: {
+          default: '1.5',
+          small: '1.25',
+          large: '2',
+        },
+        letterSpacing: {
+          default: 'normal',
+          tight: '0.5px',
+          wide: '2px',
+        },
+        textColor: {
+          default: 'black',
+          muted: 'gray',
+          accent: 'blue',
+        },
+      };
+      const res = flattenDesignTokenRegistry(designTokenRegistry);
+
+      expect(res).toEqual({
+        'color.bg': 'white',
+        'color.font': 'black',
+        'color.danger': 'red',
+        'color.warning': 'orange',
+        'color.succcess': 'green',
+        'spacing.xs': '0.5 rem',
+        'spacing.s': '1rem',
+        'spacing.m': '1.5rem',
+        'spacing.l': '2rem',
+        'sizing.quarter': '25%',
+        'sizing.half': '50%',
+        'sizing.threeQuarters': '75%',
+        'sizing.full': '100%',
+        'border.default': {
+          width: '1px',
+          style: 'solid',
+          color: 'black',
+        },
+        'border.bold': {
+          width: '3px',
+          style: 'solid',
+          color: 'black',
+        },
+        'fontSize.default': '1rem',
+        'fontSize.small': '0.75rem',
+        'fontSize.large': '1.5rem',
+        'lineHeight.default': '1.5',
+        'lineHeight.small': '1.25',
+        'lineHeight.large': '2',
+        'letterSpacing.default': 'normal',
+        'letterSpacing.tight': '0.5px',
+        'letterSpacing.wide': '2px',
+        'textColor.default': 'black',
+        'textColor.muted': 'gray',
+        'textColor.accent': 'blue',
+      });
+    });
+  });
+
+  describe('toCSSString', () => {
+    it('should convert a given map of css props into a string', () => {
+      const cssProps = {
+        background: 'green',
+        color: 'white',
+        'font-size': '1rem',
+      };
+
+      const res = toCSSString(cssProps);
+
+      expect(res).toBe('background:green;color:white;font-size:1rem;');
+    });
+  });
+
+  describe('toMediaQuery', () => {
+    it('should return css for default breakpoint without wrapping it into a media query', () => {
+      const res = toMediaQuery({
+        condition: '*',
+        cssByClassName: {
+          className1: 'background:green;color:white;font-size:1rem;',
+          className2: 'background:red;color:black;font-size:1.5rem;',
+        },
+      });
+
+      expect(res).toBe(
+        '.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}',
+      );
+    });
+
+    it('should wrap styles for non default breakpoint into a media query', () => {
+      const res = toMediaQuery({
+        condition: '<950px',
+        cssByClassName: {
+          className1: 'background:green;color:white;font-size:1rem;',
+          className2: 'background:red;color:black;font-size:1.5rem;',
+        },
+      });
+
+      expect(res).toBe(
+        '@media(max-width:950px){.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}}',
+      );
+    });
+
+    it('should support min-width media query rule', () => {
+      const res = toMediaQuery({
+        condition: '>950px',
+        cssByClassName: {
+          className1: 'background:green;color:white;font-size:1rem;',
+          className2: 'background:red;color:black;font-size:1.5rem;',
+        },
+      });
+
+      expect(res).toBe(
+        '@media(min-width:950px){.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}}',
+      );
     });
   });
 });

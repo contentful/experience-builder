@@ -512,7 +512,7 @@ export const toMediaQuery = (breakpointPayload: {
 }): string => {
   const mediaQueryStyles = Object.entries(breakpointPayload.cssByClassName).reduce<string>(
     (acc, [className, css]) => {
-      return `${acc}.${className} {${css}}`;
+      return `${acc}.${className}{${css}}`;
     },
     ``,
   );
@@ -528,5 +528,5 @@ export const toMediaQuery = (breakpointPayload: {
 
   const mediaQueryRule = evaluation === '<' ? 'max-width' : 'min-width';
 
-  return `@media (${mediaQueryRule}: ${pixelValue}) {${mediaQueryStyles}}`;
+  return `@media(${mediaQueryRule}:${pixelValue}){${mediaQueryStyles}}`;
 };
