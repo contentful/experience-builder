@@ -206,7 +206,6 @@ export const useComponentProps = ({
       }),
       ...(userIsDragging &&
         isContentfulStructureComponent(node?.data.blockId) &&
-        node?.data.blockId !== CONTENTFUL_COMPONENTS.divider.id &&
         node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
           padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),
         }),
@@ -240,11 +239,7 @@ export const useComponentProps = ({
 const addExtraDropzonePadding = (padding: string) =>
   padding
     .split(' ')
-    .map((value) => {
-      if (value.endsWith('px')) {
-        const parsedValue = parseInt(value.replace(/px$/, ''), 10);
-        return (parsedValue < DRAG_PADDING ? DRAG_PADDING : parsedValue) + 'px';
-      }
-      return `${DRAG_PADDING}px`;
-    })
+    .map((value) =>
+      parseFloat(value) === 0 ? `${DRAG_PADDING}px` : `calc(${value} + ${DRAG_PADDING}px)`,
+    )
     .join(' ');
