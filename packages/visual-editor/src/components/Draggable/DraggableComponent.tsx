@@ -45,6 +45,7 @@ interface DraggableComponentProps {
   style?: CSSProperties;
   isDragDisabled?: boolean;
   definition: ComponentDefinition<ComponentDefinitionVariableType>;
+  showHoverOutline: boolean;
 }
 
 export const DraggableComponent: React.FC<DraggableComponentProps> = ({
@@ -63,10 +64,12 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   isDragDisabled = false,
   placeholder,
   definition,
+  showHoverOutline,
   ...rest
 }) => {
   const ref = useRef<HTMLElement | null>(null);
   const setDomRect = useDraggedItemStore((state) => state.setDomRect);
+  const isHoveredComponent = useDraggedItemStore((state) => state.hoveredComponentId === id);
 
   useDraggablePosition({
     draggableId: id,
@@ -93,6 +96,8 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,
             [styles.userIsDragging]: userIsDragging,
+            [styles.isHoveringComponent]: isHoveredComponent,
+            [styles.isHoveringSameParent]: !isHoveredComponent && showHoverOutline,
           })}
           style={{
             ...style,

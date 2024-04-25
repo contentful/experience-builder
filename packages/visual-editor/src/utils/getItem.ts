@@ -82,3 +82,40 @@ export const getItem = (
 export const getItemDepthFromNode = (selector: ItemSelector, node: ExperienceTreeNode): number => {
   return findDepthById(node, selector.id);
 };
+
+function getRootParentNodeFromTree(
+  id: string,
+  node: ExperienceTreeNode,
+  rootParent?: ExperienceTreeNode,
+): ExperienceTreeNode | undefined {
+  // Check if the current node's id matches the search id
+  if (node.data.id === id) {
+    return rootParent || node;
+  }
+
+  // Recursively search through each child
+  for (const child of node.children) {
+    const result = getRootParentNodeFromTree(
+      id,
+      child,
+      node.parentId === ROOT_ID ? node : rootParent,
+    );
+    if (result) {
+      return result;
+    }
+  }
+}
+
+export const getRootParentNode = (
+  selector: ItemSelector,
+  tree: ExperienceTree,
+): ExperienceTreeNode | undefined => {
+  return getRootParentNodeFromTree(selector.id, {
+    type: 'block',
+    data: {
+      id: ROOT_ID,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any,
+    children: tree.root.children,
+  });
+};

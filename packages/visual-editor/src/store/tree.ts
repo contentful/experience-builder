@@ -49,7 +49,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
   tree: {
     root: {
       children: [],
-      type: 'root',
+      type: 'root' as const,
       data: {
         breakpoints: [],
         dataSource: {},

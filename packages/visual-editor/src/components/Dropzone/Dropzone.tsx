@@ -24,6 +24,7 @@ type DropzoneProps = {
   resolveDesignValue?: ResolveDesignValueType;
   className?: string;
   WrapperComponent?: ElementType | string;
+  showHoverOutline?: boolean;
 };
 
 export function Dropzone({
@@ -32,12 +33,14 @@ export function Dropzone({
   resolveDesignValue,
   className,
   WrapperComponent = 'div',
+  showHoverOutline = false,
   ...rest
 }: DropzoneProps) {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
-  const newComponentId = useDraggedItemStore((state) => state.componentId);
-  const hoveringZone = useZoneStore((state) => state.hoveringZone);
+  const hoveredRootParentId = useDraggedItemStore((state) => state.hoveredRootParentId);
+  const isDraggingNewComponent = useDraggedItemStore((state) => Boolean(state.componentId));
+  const isHoveringZone = useZoneStore((state) => state.hoveringZone === zoneId);
   const tree = useTreeStore((state) => state.tree);
   const content = node?.children || tree.root?.children || [];
 
@@ -50,8 +53,6 @@ export function Dropzone({
     return getItem({ id: draggedItem.draggableId }, tree)?.data.blockId;
   }, [draggedItem, tree]);
 
-  const isDraggingNewComponent = !!newComponentId;
-  const isHoveringZone = hoveringZone === zoneId;
   const isRootZone = zoneId === ROOT_ID;
   const isDestination = draggedDestinationId === zoneId;
   const isEmptyCanvas = isRootZone && !content.length;
@@ -66,11 +67,12 @@ export function Dropzone({
           zoneId={node.data.id}
           node={node}
           resolveDesignValue={resolveDesignValue}
+          showHoverOutline={showHoverOutline || node.data.id === hoveredRootParentId}
           {...props}
         />
       );
     },
-    [resolveDesignValue],
+    [resolveDesignValue, showHoverOutline, hoveredRootParentId],
   );
 
   const renderClonedDropzone: RenderDropzoneFunction = useCallback(
@@ -158,7 +160,6 @@ export function Dropzone({
             ) : (
               content.map((item, i) => {
                 const componentId = item.data.id;
-
                 return (
                   <EditorBlock
                     placeholder={{
@@ -176,6 +177,7 @@ export function Dropzone({
                     node={item}
                     resolveDesignValue={resolveDesignValue}
                     renderDropzone={renderDropzone}
+                    showHoverOutline={showHoverOutline || componentId === hoveredRootParentId}
                   />
                 );
               })

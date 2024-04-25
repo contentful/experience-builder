@@ -28,6 +28,7 @@ type EditorBlockProps = {
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   zoneId: string;
+  showHoverOutline: boolean;
 };
 
 export const EditorBlock: React.FC<EditorBlockProps> = ({
@@ -38,6 +39,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   zoneId,
   userIsDragging,
   placeholder,
+  showHoverOutline,
 }) => {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
@@ -84,13 +86,14 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
           elementToRender={elementToRender}
           id={componentId}
           index={index}
-          isAssemblyBlock={isAssemblyBlock}
+          isAssemblyBlock={isAssembly || isAssemblyBlock}
           isDragDisabled={isSingleColumn}
           isSelected={selectedNodeId === componentId}
           userIsDragging={userIsDragging}
           isContainer={isContainer}
           blockId={node.data.blockId}
           coordinates={coordinates!}
+          showHoverOutline={showHoverOutline}
           wrapperProps={wrapperProps}
           onClick={onClick}
           definition={definition}
@@ -108,13 +111,14 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       definition={definition}
       id={componentId}
       index={index}
-      isAssemblyBlock={isAssemblyBlock}
+      isAssemblyBlock={isAssembly || isAssemblyBlock}
       isDragDisabled={isAssemblyBlock}
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}
       isContainer={isContainer}
       blockId={node.data.blockId}
       coordinates={coordinates!}
+      showHoverOutline={showHoverOutline}
       wrapperProps={wrapperProps}
       onClick={onClick}>
       {elementToRender()}
