@@ -1,16 +1,25 @@
-import { OptimizedImageAsset } from '@/types';
+import { ImageLoadingOption, OptimizedImageAsset } from '@/types';
 import { AssetFile } from 'contentful';
 import { getOptimizedImageUrl } from './getOptimizedImageUrl';
 import { ValidFormats, validateParams } from './mediaUtils';
 
 const MAX_WIDTH_ALLOWED = 4000;
 
-export const getOptimizedImageAsset = (
-  file: AssetFile,
-  sizes?: string,
-  quality: string = '100%',
-  format?: ValidFormats,
-): OptimizedImageAsset => {
+type GetOptimizedImageAssetProps = {
+  file: AssetFile;
+  sizes?: string;
+  loading?: ImageLoadingOption;
+  quality?: string;
+  format?: ValidFormats;
+};
+
+export const getOptimizedImageAsset = ({
+  file,
+  sizes,
+  loading,
+  quality = '100%',
+  format,
+}: GetOptimizedImageAssetProps): OptimizedImageAsset => {
   const qualityNumber = Number(quality.replace('%', ''));
   if (!validateParams(file, qualityNumber, format)) {
     throw Error('Invalid parameters');
@@ -47,6 +56,7 @@ export const getOptimizedImageAsset = (
     srcSet,
     sizes,
     file,
+    loading,
   };
 
   return optimizedImageAsset;

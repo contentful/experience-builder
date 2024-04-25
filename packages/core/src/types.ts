@@ -311,6 +311,7 @@ export type OptimizedImageAsset = {
   quality?: number;
   format?: string;
   file: AssetFile;
+  loading?: ImageLoadingOption;
 };
 
 export type OptimizedBackgroundImageAsset = {
@@ -336,10 +337,13 @@ export type ImageObjectPositionOption =
   | 'center center'
   | 'center bottom';
 
+export type ImageLoadingOption = 'lazy' | 'eager';
+
 export type ImageOptions = {
   format?: string;
   width: string;
   height: string;
+  loading?: ImageLoadingOption;
   objectFit?: ImageObjectFitOption;
   objectPosition?: ImageObjectPositionOption;
   quality?: string;
