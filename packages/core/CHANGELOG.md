@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.7-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.6...v1.0.7-beta.0) (2024-04-25)
+
+### Bug Fixes
+
+- activate original dropzone when moving root-level components [ALT-746] ([#572](https://github.com/contentful/experience-builder/issues/572)) ([7d0a2d8](https://github.com/contentful/experience-builder/commit/7d0a2d859461f3fbbc1b9ba48b6256da2eb691b0))
+
+### Features
+
+- **components:** add loading attribute to image component ([#577](https://github.com/contentful/experience-builder/issues/577)) ([8115c53](https://github.com/contentful/experience-builder/commit/8115c53a0a7d045f514a5681a24049487f7d1dc6))
+- update definitions of fill to use 100% for components ([e29c08e](https://github.com/contentful/experience-builder/commit/e29c08e3a46782b75cc4a85a1541fc1120247089))
+
 ## [1.0.6](https://github.com/contentful/experience-builder/compare/v1.0.6-beta.0...v1.0.6) (2024-04-18)
 
 **Note:** Version bump only for package @contentful/experiences-core
