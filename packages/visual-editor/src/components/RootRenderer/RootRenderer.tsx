@@ -25,7 +25,6 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
-  const setHoveredRootParentId = useDraggedItemStore((state) => state.setHoveredRootParentId);
   const breakpoints = useTreeStore((state) => state.breakpoints);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,8 +35,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const handleMouseOver = useCallback(() => {
     // Remove hover state set by UI when mouse is over canvas
     setHoveredComponentId();
-    setHoveredRootParentId();
-  }, [setHoveredComponentId, setHoveredRootParentId]);
+  }, [setHoveredComponentId]);
 
   const handleClickOutside = useCallback(
     (e: MouseEvent) => {

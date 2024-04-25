@@ -43,7 +43,6 @@ type DraggableChildComponentProps = {
   isDragDisabled?: boolean;
   className?: string;
   definition: ComponentDefinition<ComponentDefinitionVariableType>;
-  showHoverOutline: boolean;
 };
 
 /**
@@ -71,7 +70,6 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     isDragDisabled = false,
     wrapperProps,
     definition,
-    showHoverOutline,
   } = props;
   const isHoveredComponent = useDraggedItemStore((state) => state.hoveredComponentId === id);
 
@@ -90,7 +88,6 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
             [styles.isSelected]: isSelected,
             [styles.userIsDragging]: userIsDragging,
             [styles.isHoveringComponent]: isHoveredComponent,
-            [styles.isHoveringSameParent]: !isHoveredComponent && showHoverOutline,
           }),
           dragHandleProps: provided.dragHandleProps!,
           style: {

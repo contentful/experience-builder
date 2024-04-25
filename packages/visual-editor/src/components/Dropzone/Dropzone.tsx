@@ -24,7 +24,6 @@ type DropzoneProps = {
   resolveDesignValue?: ResolveDesignValueType;
   className?: string;
   WrapperComponent?: ElementType | string;
-  showHoverOutline?: boolean;
 };
 
 export function Dropzone({
@@ -33,12 +32,10 @@ export function Dropzone({
   resolveDesignValue,
   className,
   WrapperComponent = 'div',
-  showHoverOutline = false,
   ...rest
 }: DropzoneProps) {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
-  const hoveredRootParentId = useDraggedItemStore((state) => state.hoveredRootParentId);
   const isDraggingNewComponent = useDraggedItemStore((state) => Boolean(state.componentId));
   const isHoveringZone = useZoneStore((state) => state.hoveringZone === zoneId);
   const tree = useTreeStore((state) => state.tree);
@@ -67,12 +64,11 @@ export function Dropzone({
           zoneId={node.data.id}
           node={node}
           resolveDesignValue={resolveDesignValue}
-          showHoverOutline={showHoverOutline || node.data.id === hoveredRootParentId}
           {...props}
         />
       );
     },
-    [resolveDesignValue, showHoverOutline, hoveredRootParentId],
+    [resolveDesignValue],
   );
 
   const renderClonedDropzone: RenderDropzoneFunction = useCallback(
@@ -177,7 +173,6 @@ export function Dropzone({
                     node={item}
                     resolveDesignValue={resolveDesignValue}
                     renderDropzone={renderDropzone}
-                    showHoverOutline={showHoverOutline || componentId === hoveredRootParentId}
                   />
                 );
               })

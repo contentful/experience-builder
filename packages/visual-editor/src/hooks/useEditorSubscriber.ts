@@ -31,7 +31,6 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
-import { getRootParentNode } from '@/utils/getItem';
 import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
 
@@ -39,8 +38,7 @@ export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
-  const { tree, updateTree, updateNodesByUpdatedEntity } = useTreeStore((state) => ({
-    tree: state.tree,
+  const { updateTree, updateNodesByUpdatedEntity } = useTreeStore((state) => ({
     updateTree: state.updateTree,
     updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
   }));
@@ -54,7 +52,6 @@ export function useEditorSubscriber() {
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
   const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
-  const setHoveredRootParentId = useDraggedItemStore((state) => state.setHoveredRootParentId);
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
   const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
   const setScrollY = useDraggedItemStore((state) => state.setScrollY);
@@ -301,8 +298,6 @@ export function useEditorSubscriber() {
         case INCOMING_EVENTS.HoverComponent: {
           const { hoveredNodeId } = payload;
           setHoveredComponentId(hoveredNodeId);
-          const hoveredParentId = getRootParentNode({ id: hoveredNodeId }, tree)?.data.id;
-          setHoveredRootParentId(hoveredParentId);
           break;
         }
         case INCOMING_EVENTS.ComponentDraggingChanged: {
@@ -411,9 +406,7 @@ export function useEditorSubscriber() {
     updateNodesByUpdatedEntity,
     setMousePosition,
     resetEntityStore,
-    tree,
     setHoveredComponentId,
-    setHoveredRootParentId,
   ]);
 
   /*

@@ -6,7 +6,6 @@ export type DraggedItem = DragStart & Partial<DragUpdate>;
 export interface DraggedItemStore {
   componentId: string;
   hoveredComponentId?: string;
-  hoveredRootParentId?: string;
   draggedItem?: DraggedItem;
   isDraggingOnCanvas: boolean;
   onBeforeCaptureId: string;
@@ -18,7 +17,6 @@ export interface DraggedItemStore {
   // actions
   setComponentId: (id: string) => void;
   setHoveredComponentId: (id?: string) => void;
-  setHoveredRootParentId: (id?: string) => void;
   updateItem: (item?: DraggedItem) => void;
   setOnBeforeCaptureId: (draggableId: string) => void;
   setMousePosition: (x: number, y: number) => void;
@@ -30,7 +28,6 @@ export interface DraggedItemStore {
 export const useDraggedItemStore = create<DraggedItemStore>((set) => ({
   draggedItem: undefined,
   hoveredComponentId: undefined,
-  hoveredRootParentId: undefined,
   domRect: undefined,
   componentId: '',
   isDraggingOnCanvas: false,
@@ -43,9 +40,6 @@ export const useDraggedItemStore = create<DraggedItemStore>((set) => ({
   },
   setHoveredComponentId(id) {
     set({ hoveredComponentId: id });
-  },
-  setHoveredRootParentId(id) {
-    set({ hoveredRootParentId: id });
   },
   updateItem: (item) => {
     set({ draggedItem: item });

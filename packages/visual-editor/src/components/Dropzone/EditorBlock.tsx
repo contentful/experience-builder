@@ -28,7 +28,6 @@ type EditorBlockProps = {
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   zoneId: string;
-  showHoverOutline: boolean;
 };
 
 export const EditorBlock: React.FC<EditorBlockProps> = ({
@@ -39,7 +38,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   zoneId,
   userIsDragging,
   placeholder,
-  showHoverOutline,
 }) => {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
@@ -93,7 +91,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
           isContainer={isContainer}
           blockId={node.data.blockId}
           coordinates={coordinates!}
-          showHoverOutline={showHoverOutline}
           wrapperProps={wrapperProps}
           onClick={onClick}
           definition={definition}
@@ -118,7 +115,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       isContainer={isContainer}
       blockId={node.data.blockId}
       coordinates={coordinates!}
-      showHoverOutline={showHoverOutline}
       wrapperProps={wrapperProps}
       onClick={onClick}>
       {elementToRender()}
