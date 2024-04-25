@@ -163,7 +163,7 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-db3d786173a2ee93e5974bcac27c1a9b{margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:calc(100% - 0 - 0);height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;font-style:normal;text-decoration:none;box-sizing:border-box;}@media (max-width:992px){.cf-98fd4817878e1af33902386b5ad692de{margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;font-style:normal;text-decoration:none;box-sizing:border-box;}}@media (max-width:576px){.cf-d2d0bfefe7032e1bd983bdc3c4c8b762{font-style:normal;text-decoration:none;box-sizing:border-box;}}',
+      '.cf-db3d786173a2ee93e5974bcac27c1a9b{margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:calc(100% - 0 - 0);height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;font-style:normal;text-decoration:none;box-sizing:border-box;}@media(max-width:992px){.cf-98fd4817878e1af33902386b5ad692de{margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;font-style:normal;text-decoration:none;box-sizing:border-box;}}@media(max-width:576px){.cf-d2d0bfefe7032e1bd983bdc3c4c8b762{font-style:normal;text-decoration:none;box-sizing:border-box;}}',
     );
   });
 
@@ -272,7 +272,7 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-54a8770496425e2a4e6afdef64cdefc3{margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:calc(100% - 0 - 0);height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;font-style:normal;text-decoration:none;box-sizing:border-box;}@media (max-width:992px){.cf-98fd4817878e1af33902386b5ad692de{margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;font-style:normal;text-decoration:none;box-sizing:border-box;}}@media (max-width:576px){.cf-d2d0bfefe7032e1bd983bdc3c4c8b762{font-style:normal;text-decoration:none;box-sizing:border-box;}}',
+      '.cf-54a8770496425e2a4e6afdef64cdefc3{margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:calc(100% - 0 - 0);height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;font-style:normal;text-decoration:none;box-sizing:border-box;}@media(max-width:992px){.cf-98fd4817878e1af33902386b5ad692de{margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;font-style:normal;text-decoration:none;box-sizing:border-box;}}@media(max-width:576px){.cf-d2d0bfefe7032e1bd983bdc3c4c8b762{font-style:normal;text-decoration:none;box-sizing:border-box;}}',
     );
     expect(styles).toContain('background-image:url(https://www.contentful.com/image1.png);');
   });
@@ -398,7 +398,7 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-54a8770496425e2a4e6afdef64cdefc3{margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:calc(100% - 0 - 0);height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;font-style:normal;text-decoration:none;box-sizing:border-box;}@media (max-width:992px){.cf-98fd4817878e1af33902386b5ad692de{margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;font-style:normal;text-decoration:none;box-sizing:border-box;}}@media (max-width:576px){.cf-d2d0bfefe7032e1bd983bdc3c4c8b762{font-style:normal;text-decoration:none;box-sizing:border-box;}}',
+      '.cf-54a8770496425e2a4e6afdef64cdefc3{margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:calc(100% - 0 - 0);height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;font-style:normal;text-decoration:none;box-sizing:border-box;}@media(max-width:992px){.cf-98fd4817878e1af33902386b5ad692de{margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;font-style:normal;text-decoration:none;box-sizing:border-box;}}@media(max-width:576px){.cf-d2d0bfefe7032e1bd983bdc3c4c8b762{font-style:normal;text-decoration:none;box-sizing:border-box;}}',
     );
 
     expect(styles).toContain('background-image:url(https://www.contentful.com/image1.png);');

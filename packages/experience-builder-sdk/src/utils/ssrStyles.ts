@@ -16,6 +16,7 @@ import {
 import { componentRegistry } from '../core/componentRegistry';
 import {
   ComponentPropertyValue,
+  ExperienceComponentSettings,
   ExperienceComponentTree,
   ExperienceDataSource,
   ExperienceUnboundValues,
@@ -81,40 +82,68 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
   // getting the breakpoint ids
   const breakpointIds = Object.keys(mediaQueriesTemplate);
 
-  // traversing the tree
-  const queue: ComponentTreeNode[] = [];
+  const iterateOverTreeAndExtractStyles = ({
+    componentTree,
+    dataSource,
+    unboundValues,
+    componentSettings,
+    componentVariablesOverwrites,
+  }: {
+    componentTree: ExperienceComponentTree;
+    dataSource: ExperienceDataSource;
+    unboundValues: ExperienceUnboundValues;
+    componentSettings?: ExperienceComponentSettings;
+    componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
+  }) => {
+    // traversing the tree
+    const queue: ComponentTreeNode[] = [];
 
-  queue.push(...experienceTreeRoot.children);
+    queue.push(...componentTree.children);
 
-  let currentNode: ComponentTreeNode | undefined = undefined;
+    let currentNode: ComponentTreeNode | undefined = undefined;
 
-  const registeredComponenIds = Array.from(componentRegistry.values()).map(
-    ({ definition }) => definition.id,
-  );
+    const registeredComponenIds = Array.from(componentRegistry.values()).map(
+      ({ definition }) => definition.id,
+    );
 
-  // for each tree node
-  while (queue.length) {
-    currentNode = queue.shift();
+    // for each tree node
+    while (queue.length) {
+      currentNode = queue.shift();
 
-    if (!currentNode) {
-      break;
-    }
+      if (!currentNode) {
+        break;
+      }
 
-    const isPatternNode = !registeredComponenIds.includes(currentNode.definitionId);
+      const isPatternNode = !registeredComponenIds.includes(currentNode.definitionId);
 
-    if (isPatternNode) {
-      const patternEntry = experience.entityStore?.entities.find(
-        (entry: Entry | Asset) => entry.sys.id === currentNode!.definitionId,
-      ) as ExperienceEntry | undefined;
-      if (!patternEntry) {
+      if (isPatternNode) {
+        const patternEntry = experience.entityStore?.entities.find(
+          (entry: Entry | Asset) => entry.sys.id === currentNode!.definitionId,
+        ) as ExperienceEntry | undefined;
+        if (!patternEntry) {
+          continue;
+        }
+
+        // the node of a used pattern contains only the definitionId (id of the patter entry)
+        // as well as the variables overwrites
+        // the layout of a pattern is stored in it's entry
+        iterateOverTreeAndExtractStyles({
+          // that is why we pass it here to iterate of the pattern tree
+          componentTree: patternEntry.fields.componentTree,
+          // but we pass the data source of the experience entry cause that's where the binding is stored
+          dataSource,
+          // unbound values of a pattern store the default values of pattern variables
+          unboundValues: patternEntry.fields.unboundValues,
+          // this is where we can map the pattern variable to it's default value
+          componentSettings: patternEntry.fields.componentSettings,
+          // and this is where the over-writes for the default values are stored
+          // yes, I know, it's a bit confusing
+          componentVariablesOverwrites: currentNode.variables,
+        });
         continue;
       }
 
-      queue.unshift(...patternEntry.fields.componentTree.children);
-      continue;
-    }
-
-    /** Variables value is stored in `valuesByBreakpoint` object
+      /** Variables value is stored in `valuesByBreakpoint` object
      * {
         cfVerticalAlignment: { type: 'DesignValue', valuesByBreakpoint: { desktop: 'center' } },
         cfHorizontalAlignment: { type: 'DesignValue', valuesByBreakpoint: { desktop: 'center' } },
@@ -145,19 +174,21 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       }
      */
 
-    // so first, I convert it into a map to help me make it easier to access the values
-    const propsByBreakpoint = indexByBreakpoint({
-      variables: currentNode.variables,
-      breakpointIds,
-      unboundValues: experience.entityStore?.unboundValues,
-      dataSource: experience.entityStore?.dataSource,
-      getBoundEntityById: (id: string) => {
-        return experience.entityStore?.entities.find(
-          (entity: Entry | Asset) => entity.sys.id === id,
-        );
-      },
-    });
-    /**
+      // so first, I convert it into a map to help me make it easier to access the values
+      const propsByBreakpoint = indexByBreakpoint({
+        variables: currentNode.variables,
+        breakpointIds,
+        unboundValues: unboundValues,
+        dataSource: dataSource,
+        componentSettings,
+        componentVariablesOverwrites,
+        getBoundEntityById: (id: string) => {
+          return experience.entityStore?.entities.find(
+            (entity: Entry | Asset) => entity.sys.id === id,
+          );
+        },
+      });
+      /**
      * propsByBreakpoint {
         desktop: {
           cfVerticalAlignment: 'center',
@@ -180,37 +211,37 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       }
      */
 
-    const currentNodeClassNames: string[] = [];
+      const currentNodeClassNames: string[] = [];
 
-    // then for each breakpoint
-    for (const breakpointId of breakpointIds) {
-      const propsByBreakpointWithResolvedDesignTokens = Object.entries(
-        propsByBreakpoint[breakpointId],
-      ).reduce((acc, [variableName, variableValue]) => {
-        return {
-          ...acc,
-          [variableName]: maybePopulateDesignTokenValue(
-            variableName,
-            variableValue,
-            mapOfDesignVariableKeys,
-          ),
-        };
-      }, {});
+      // then for each breakpoint
+      for (const breakpointId of breakpointIds) {
+        const propsByBreakpointWithResolvedDesignTokens = Object.entries(
+          propsByBreakpoint[breakpointId],
+        ).reduce((acc, [variableName, variableValue]) => {
+          return {
+            ...acc,
+            [variableName]: maybePopulateDesignTokenValue(
+              variableName,
+              variableValue,
+              mapOfDesignVariableKeys,
+            ),
+          };
+        }, {});
 
-      // We convert cryptic prop keys to css variables
-      // Eg: cfMargin to margin
-      const stylesForBreakpoint = buildCfStyles(
-        propsByBreakpointWithResolvedDesignTokens,
-        currentNode.definitionId,
-      );
+        // We convert cryptic prop keys to css variables
+        // Eg: cfMargin to margin
+        const stylesForBreakpoint = buildCfStyles(
+          propsByBreakpointWithResolvedDesignTokens,
+          currentNode.definitionId,
+        );
 
-      const stylesForBreakpointWithoutUndefined: Record<string, string> = Object.fromEntries(
-        Object.entries(stylesForBreakpoint)
-          .filter(([, value]) => value !== undefined)
-          .map(([key, value]) => [toCSSAttribute(key), value]),
-      );
+        const stylesForBreakpointWithoutUndefined: Record<string, string> = Object.fromEntries(
+          Object.entries(stylesForBreakpoint)
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => [toCSSAttribute(key), value]),
+        );
 
-      /**
+        /**
        * stylesForBreakpoint {
           margin: '0 0 0 0',
           padding: '0 0 0 0',
@@ -231,47 +262,55 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         }
        */
 
-      // I create a hash of the object above because that would ensure hash stability
-      const styleHash = md5(JSON.stringify(stylesForBreakpointWithoutUndefined));
+        // I create a hash of the object above because that would ensure hash stability
+        const styleHash = md5(JSON.stringify(stylesForBreakpointWithoutUndefined));
 
-      // and prefix the className to make sure the value can be processed
-      const className = `cf-${styleHash}`;
+        // and prefix the className to make sure the value can be processed
+        const className = `cf-${styleHash}`;
 
-      // I save the generated hashes into an array to later save it in the tree node
-      // as cfSsrClassName prop
-      // making sure to avoid the duplicates in case styles for > 1 breakpoints are the same
-      if (!currentNodeClassNames.includes(className)) {
-        currentNodeClassNames.push(className);
+        // I save the generated hashes into an array to later save it in the tree node
+        // as cfSsrClassName prop
+        // making sure to avoid the duplicates in case styles for > 1 breakpoints are the same
+        if (!currentNodeClassNames.includes(className)) {
+          currentNodeClassNames.push(className);
+        }
+
+        // if there is already the similar hash - no need to over-write it
+        if (mediaQueriesTemplate[breakpointId].cssByClassName[className]) {
+          continue;
+        }
+
+        // otherwise, save it to the stylesheet
+        mediaQueriesTemplate[breakpointId].cssByClassName[className] = toCSSString(
+          stylesForBreakpointWithoutUndefined,
+        );
       }
 
-      // if there is already the similar hash - no need to over-write it
-      if (mediaQueriesTemplate[breakpointId].cssByClassName[className]) {
-        continue;
-      }
+      // all generated classNames are saved in the tree node
+      // to be handled by the sdk later
+      // each node will get N classNames, where N is the number of breakpoints
+      // browsers process classNames in the order they are defined
+      // meaning that in case of className1 className2 className3
+      // className3 will win over className2 and className1
+      // making sure that we respect the order of breakpoints from
+      // we can achieve "desktop first" or "mobile first" approach to style over-writes
+      currentNode.variables.cfSsrClassName = {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          [breakpointIds[0]]: currentNodeClassNames.join(' '),
+        },
+      };
 
-      // otherwise, save it to the stylesheet
-      mediaQueriesTemplate[breakpointId].cssByClassName[className] = toCSSString(
-        stylesForBreakpointWithoutUndefined,
-      );
+      queue.push(...currentNode.children);
     }
+  };
 
-    // all generated classNames are saved in the tree node
-    // to be handled by the sdk later
-    // each node will get N classNames, where N is the number of breakpoints
-    // browsers process classNames in the order they are defined
-    // meaning that in case of className1 className2 className3
-    // className3 will win over className2 and className1
-    // making sure that we respect the order of breakpoints from
-    // we can achieve "desktop first" or "mobile first" approach to style over-writes
-    currentNode.variables.cfSsrClassName = {
-      type: 'DesignValue',
-      valuesByBreakpoint: {
-        [breakpointIds[0]]: currentNodeClassNames.join(' '),
-      },
-    };
-
-    queue.push(...currentNode.children);
-  }
+  iterateOverTreeAndExtractStyles({
+    componentTree: experienceTreeRoot,
+    dataSource: experience.entityStore?.dataSource ?? {},
+    unboundValues: experience.entityStore?.unboundValues ?? {},
+    componentSettings: experience.entityStore?.experienceEntryFields?.componentSettings,
+  });
 
   // once the whole tree was traversed, for each breakpoint, I aggregate the styles
   // for each generated className into one css string
@@ -315,7 +354,7 @@ export const maybePopulateDesignTokenValue = (
       return '0px';
     }
 
-    if (variableName === 'cfBorder') {
+    if (variableName === 'cfBorder' || variableName.startsWith('cfBorder_')) {
       const { width, style, color } = tokenValue;
       return `${width} ${style} ${color}`;
     }
@@ -343,15 +382,45 @@ export const resolveBackgroundImageBinding = ({
   getBoundEntityById,
   dataSource = {},
   unboundValues = {},
+  componentVariablesOverwrites,
+  componentSettings = { variableDefinitions: {} },
 }: {
   variableData: ComponentPropertyValue;
   getBoundEntityById: (id: string) => Entry | Asset | undefined;
   unboundValues?: ExperienceUnboundValues;
   dataSource?: ExperienceDataSource;
+  componentSettings?: ExperienceComponentSettings;
+  // patternNode.variables - a place which contains bindings scoped to the pattern
+  componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
 }): string | undefined => {
   if (variableData.type === 'UnboundValue') {
     const uuid = variableData.key;
     return unboundValues[uuid]?.value as string;
+  }
+
+  if (variableData.type === 'ComponentValue') {
+    const variableDefinitionKey = variableData.key;
+    const variableDefinition = componentSettings.variableDefinitions[variableDefinitionKey];
+
+    // @ts-expect-error TODO: fix the types as it thinks taht `defaultValue` is of type string
+    const defaultValueKey = variableDefinition.defaultValue?.key;
+    const defaultValue = unboundValues[defaultValueKey].value;
+
+    const userSetValue = componentVariablesOverwrites?.[variableDefinitionKey];
+    if (!userSetValue) {
+      return defaultValue as string | undefined;
+    }
+
+    const resolvedValue = resolveBackgroundImageBinding({
+      variableData: userSetValue,
+      getBoundEntityById,
+      dataSource,
+      unboundValues,
+      componentVariablesOverwrites,
+      componentSettings,
+    });
+
+    return resolvedValue || (defaultValue as string | undefined);
   }
 
   if (variableData.type === 'BoundValue') {
@@ -406,12 +475,16 @@ export const indexByBreakpoint = ({
   getBoundEntityById,
   unboundValues = {},
   dataSource = {},
+  componentVariablesOverwrites,
+  componentSettings = { variableDefinitions: {} },
 }: {
   variables: Record<string, ComponentPropertyValue>;
   breakpointIds: string[];
   getBoundEntityById: (id: string) => Entry | Asset | undefined;
   unboundValues?: ExperienceUnboundValues;
   dataSource?: ExperienceDataSource;
+  componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
+  componentSettings?: ExperienceComponentSettings;
 }) => {
   const variableValuesByBreakpoints = breakpointIds.reduce<Record<string, Record<string, any>>>(
     (acc, breakpointId) => {
@@ -428,12 +501,19 @@ export const indexByBreakpoint = ({
   for (const [variableName, variableData] of Object.entries(variables)) {
     // handling the special case - cfBackgroundImageUrl variable, which can be bound or unbound
     // so, we need to resolve it here and pass it down as a css property to be convereted into the CSS
-    if (variableName === 'cfBackgroundImageUrl') {
+
+    // I used .startsWith() cause it can be part of a pattern node
+    if (
+      variableName === 'cfBackgroundImageUrl' ||
+      variableName.startsWith('cfBackgroundImageUrl_')
+    ) {
       const imageUrl = resolveBackgroundImageBinding({
         variableData,
         getBoundEntityById,
         unboundValues,
         dataSource,
+        componentSettings,
+        componentVariablesOverwrites,
       });
 
       if (imageUrl) {
@@ -528,5 +608,5 @@ export const toMediaQuery = (breakpointPayload: {
 
   const mediaQueryRule = evaluation === '<' ? 'max-width' : 'min-width';
 
-  return `@media (${mediaQueryRule}:${pixelValue}){${mediaQueryStyles}}`;
+  return `@media(${mediaQueryRule}:${pixelValue}){${mediaQueryStyles}}`;
 };
