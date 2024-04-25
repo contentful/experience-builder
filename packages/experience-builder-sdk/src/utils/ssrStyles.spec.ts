@@ -9,7 +9,11 @@ import {
   toMediaQuery,
 } from './ssrStyles';
 import { builtInStyles } from '@contentful/experiences-core';
-import { ComponentPropertyValue, DesignTokensDefinition } from '@contentful/experiences-core/types';
+import {
+  ComponentPropertyValue,
+  DesignTokensDefinition,
+  ExperienceComponentSettings,
+} from '@contentful/experiences-core/types';
 import { Asset, Entry } from 'contentful';
 
 describe('isCfStyleAttribute', () => {
@@ -243,6 +247,164 @@ describe('resolveBackgroundImageBinding', () => {
 
     expect(res).toBe(asset.fields.file?.url);
   });
+
+  it('should return the image url for a pattern from default value', () => {
+    const componentSettings: ExperienceComponentSettings = {
+      variableDefinitions: {
+        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+          displayName: 'Background Image',
+          type: 'Text',
+          defaultValue: {
+            key: '9Ew1GTxkZvOXiBZxKPCSC',
+            type: 'UnboundValue',
+          },
+          description: 'Background image for section or container',
+        },
+      },
+    };
+
+    const res = resolveBackgroundImageBinding({
+      variableData: {
+        key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
+        type: 'ComponentValue',
+      },
+      getBoundEntityById: () => undefined,
+      unboundValues: {
+        '9Ew1GTxkZvOXiBZxKPCSC': {
+          value: 'https://www.contentful.com/image1.png',
+        },
+      },
+      componentSettings,
+    });
+
+    expect(res).toBe('https://www.contentful.com/image1.png');
+  });
+
+  it('should return the image url for a pattern from a binding to an asset', () => {
+    const componentSettings: ExperienceComponentSettings = {
+      variableDefinitions: {
+        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+          displayName: 'Background Image',
+          type: 'Text',
+          defaultValue: {
+            key: '9Ew1GTxkZvOXiBZxKPCSC',
+            type: 'UnboundValue',
+          },
+          description: 'Background image for section or container',
+        },
+      },
+    };
+
+    const boundAsset: Asset = {
+      sys: {
+        id: 'bound-asset-id',
+        type: 'Asset',
+      },
+      fields: {
+        file: {
+          url: 'https://www.contentful.com/bound-image.png',
+        },
+      },
+    } as unknown as Asset;
+
+    const res = resolveBackgroundImageBinding({
+      variableData: {
+        key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
+        type: 'ComponentValue',
+      },
+      getBoundEntityById: () => boundAsset,
+      unboundValues: {
+        '9Ew1GTxkZvOXiBZxKPCSC': {
+          value: 'https://www.contentful.com/image1.png',
+        },
+      },
+      dataSource: {
+        vOXiBZxKPCSC9Ew1GTxkZ: {
+          sys: { type: 'Link', linkType: 'Asset', id: boundAsset.sys.id },
+        },
+      },
+      componentSettings,
+      componentVariablesOverwrites: {
+        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+          type: 'BoundValue',
+          path: '/vOXiBZxKPCSC9Ew1GTxkZ/fields/file/url/~locale',
+        },
+      },
+    });
+
+    expect(res).toBe('https://www.contentful.com/bound-image.png');
+  });
+
+  it('should return the image url for a pattern from a deep binding to an entry', () => {
+    const componentSettings: ExperienceComponentSettings = {
+      variableDefinitions: {
+        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+          displayName: 'Background Image',
+          type: 'Text',
+          defaultValue: {
+            key: '9Ew1GTxkZvOXiBZxKPCSC',
+            type: 'UnboundValue',
+          },
+          description: 'Background image for section or container',
+        },
+      },
+    };
+
+    const referencedAsset: Asset = {
+      sys: {
+        id: 'bound-asset-id',
+        type: 'Asset',
+      },
+      fields: {
+        file: {
+          url: 'https://www.contentful.com/bound-image.png',
+        },
+      },
+    } as unknown as Asset;
+
+    const boundEntry: Entry = {
+      sys: {
+        id: 'bound-entry-id',
+        type: 'Entry',
+      },
+      fields: {
+        image: {
+          sys: {
+            type: 'Link',
+            linkType: 'Asset',
+            id: referencedAsset.sys.id,
+          },
+        },
+      },
+    } as unknown as Entry;
+
+    const res = resolveBackgroundImageBinding({
+      variableData: {
+        key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
+        type: 'ComponentValue',
+      },
+      getBoundEntityById: (id) => (id === boundEntry.sys.id ? boundEntry : referencedAsset),
+      unboundValues: {
+        '9Ew1GTxkZvOXiBZxKPCSC': {
+          value: 'https://www.contentful.com/image1.png',
+        },
+      },
+      dataSource: {
+        vOXiBZxKPCSC9Ew1GTxkZ: {
+          sys: { type: 'Link', linkType: 'Entry', id: boundEntry.sys.id },
+        },
+      },
+      componentSettings,
+      componentVariablesOverwrites: {
+        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+          type: 'BoundValue',
+          path: '/vOXiBZxKPCSC9Ew1GTxkZ/fields/image/~locale/file/url/~locale',
+        },
+      },
+    });
+
+    expect(res).toBe('https://www.contentful.com/bound-image.png');
+  });
 });
 
 describe('indexByBreakpoint', () => {
@@ -419,158 +581,427 @@ describe('indexByBreakpoint', () => {
     });
   });
 
-  describe('flattenDesignTokenRegistry', () => {
-    it('should flatten the design token registry', () => {
-      const designTokenRegistry: DesignTokensDefinition = {
-        color: {
-          bg: 'white',
-          font: 'black',
-          danger: 'red',
-          warning: 'orange',
-          succcess: 'green',
-        },
-        spacing: {
-          xs: '0.5 rem',
-          s: '1rem',
-          m: '1.5rem',
-          l: '2rem',
-        },
-        sizing: {
-          quarter: '25%',
-          half: '50%',
-          threeQuarters: '75%',
-          full: '100%',
-        },
-        border: {
-          default: {
-            width: '1px',
-            style: 'solid',
-            color: 'black',
+  it('resolves background image for a pattern from default value', () => {
+    const componentSettings: ExperienceComponentSettings = {
+      variableDefinitions: {
+        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+          displayName: 'Background Image',
+          type: 'Text',
+          defaultValue: {
+            key: '9Ew1GTxkZvOXiBZxKPCSC',
+            type: 'UnboundValue',
           },
-          bold: {
-            width: '3px',
-            style: 'solid',
-            color: 'black',
-          },
+          description: 'Background image for section or container',
         },
-        fontSize: {
-          default: '1rem',
-          small: '0.75rem',
-          large: '1.5rem',
-        },
-        lineHeight: {
-          default: '1.5',
-          small: '1.25',
-          large: '2',
-        },
-        letterSpacing: {
-          default: 'normal',
-          tight: '0.5px',
-          wide: '2px',
-        },
-        textColor: {
-          default: 'black',
-          muted: 'gray',
-          accent: 'blue',
-        },
-      };
-      const res = flattenDesignTokenRegistry(designTokenRegistry);
+      },
+    };
 
-      expect(res).toEqual({
-        'color.bg': 'white',
-        'color.font': 'black',
-        'color.danger': 'red',
-        'color.warning': 'orange',
-        'color.succcess': 'green',
-        'spacing.xs': '0.5 rem',
-        'spacing.s': '1rem',
-        'spacing.m': '1.5rem',
-        'spacing.l': '2rem',
-        'sizing.quarter': '25%',
-        'sizing.half': '50%',
-        'sizing.threeQuarters': '75%',
-        'sizing.full': '100%',
-        'border.default': {
+    const patternVariables = {
+      cfMargin: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: '0 Auto 0 Auto',
+        },
+      },
+      cfWidth: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: 'fill',
+        },
+      },
+      cfMaxWidth: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: '1192px',
+        },
+      },
+      cfPadding: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: '10px 10px 10px 10px',
+        },
+      },
+      cfBackgroundImageUrl: {
+        key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
+        type: 'ComponentValue',
+      },
+    } as Record<string, ComponentPropertyValue>;
+
+    const res = indexByBreakpoint({
+      variables: patternVariables,
+      breakpointIds: ['desktop'],
+      getBoundEntityById: () => undefined,
+      unboundValues: {
+        '9Ew1GTxkZvOXiBZxKPCSC': {
+          value: 'https://www.contentful.com/image1.png',
+        },
+      },
+      componentSettings,
+    });
+
+    expect(res).toEqual({
+      desktop: {
+        cfMargin: '0 Auto 0 Auto',
+        cfWidth: 'fill',
+        cfMaxWidth: '1192px',
+        cfPadding: '10px 10px 10px 10px',
+        cfBackgroundImageUrl: 'https://www.contentful.com/image1.png',
+      },
+    });
+  });
+
+  it('resolves background image for a pattern from a binding to an asset', () => {
+    const componentSettings: ExperienceComponentSettings = {
+      variableDefinitions: {
+        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+          displayName: 'Background Image',
+          type: 'Text',
+          defaultValue: {
+            key: '9Ew1GTxkZvOXiBZxKPCSC',
+            type: 'UnboundValue',
+          },
+          description: 'Background image for section or container',
+        },
+      },
+    };
+
+    const patternVariables = {
+      cfMargin: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: '0 Auto 0 Auto',
+        },
+      },
+      cfWidth: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: 'fill',
+        },
+      },
+      cfMaxWidth: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: '1192px',
+        },
+      },
+      cfPadding: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: '10px 10px 10px 10px',
+        },
+      },
+      cfBackgroundImageUrl: {
+        key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
+        type: 'ComponentValue',
+      },
+    } as Record<string, ComponentPropertyValue>;
+
+    const boundAsset: Asset = {
+      sys: {
+        id: 'bound-asset-id',
+        type: 'Asset',
+      },
+      fields: {
+        file: {
+          url: 'https://www.contentful.com/bound-image.png',
+        },
+      },
+    } as unknown as Asset;
+
+    const res = indexByBreakpoint({
+      variables: patternVariables,
+      breakpointIds: ['desktop'],
+      getBoundEntityById: () => boundAsset,
+      unboundValues: {
+        '9Ew1GTxkZvOXiBZxKPCSC': {
+          value: 'https://www.contentful.com/image1.png',
+        },
+      },
+      dataSource: {
+        vOXiBZxKPCSC9Ew1GTxkZ: {
+          sys: { type: 'Link', linkType: 'Asset', id: boundAsset.sys.id },
+        },
+      },
+      componentSettings,
+      componentVariablesOverwrites: {
+        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+          type: 'BoundValue',
+          path: '/vOXiBZxKPCSC9Ew1GTxkZ/fields/file/url/~locale',
+        },
+      },
+    });
+
+    expect(res).toEqual({
+      desktop: {
+        cfMargin: '0 Auto 0 Auto',
+        cfWidth: 'fill',
+        cfMaxWidth: '1192px',
+        cfPadding: '10px 10px 10px 10px',
+        cfBackgroundImageUrl: 'https://www.contentful.com/bound-image.png',
+      },
+    });
+  });
+
+  it('resolves background image for a pattern from a deep binding to an entry', () => {
+    const componentSettings: ExperienceComponentSettings = {
+      variableDefinitions: {
+        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+          displayName: 'Background Image',
+          type: 'Text',
+          defaultValue: {
+            key: '9Ew1GTxkZvOXiBZxKPCSC',
+            type: 'UnboundValue',
+          },
+          description: 'Background image for section or container',
+        },
+      },
+    };
+
+    const patternVariables = {
+      cfMargin: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: '0 Auto 0 Auto',
+        },
+      },
+      cfWidth: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: 'fill',
+        },
+      },
+      cfMaxWidth: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: '1192px',
+        },
+      },
+      cfPadding: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: '10px 10px 10px 10px',
+        },
+      },
+      cfBackgroundImageUrl: {
+        key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
+        type: 'ComponentValue',
+      },
+    } as Record<string, ComponentPropertyValue>;
+
+    const referencedAsset: Asset = {
+      sys: {
+        id: 'bound-asset-id',
+        type: 'Asset',
+      },
+      fields: {
+        file: {
+          url: 'https://www.contentful.com/bound-image.png',
+        },
+      },
+    } as unknown as Asset;
+
+    const boundEntry: Entry = {
+      sys: {
+        id: 'bound-entry-id',
+        type: 'Entry',
+      },
+      fields: {
+        image: {
+          sys: {
+            type: 'Link',
+            linkType: 'Asset',
+            id: referencedAsset.sys.id,
+          },
+        },
+      },
+    } as unknown as Entry;
+
+    const res = indexByBreakpoint({
+      variables: patternVariables,
+      breakpointIds: ['desktop'],
+      getBoundEntityById: (id) => (id === boundEntry.sys.id ? boundEntry : referencedAsset),
+      unboundValues: {
+        '9Ew1GTxkZvOXiBZxKPCSC': {
+          value: 'https://www.contentful.com/image1.png',
+        },
+      },
+      dataSource: {
+        vOXiBZxKPCSC9Ew1GTxkZ: {
+          sys: { type: 'Link', linkType: 'Entry', id: boundEntry.sys.id },
+        },
+      },
+      componentSettings,
+      componentVariablesOverwrites: {
+        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+          type: 'BoundValue',
+          path: '/vOXiBZxKPCSC9Ew1GTxkZ/fields/image/~locale/file/url/~locale',
+        },
+      },
+    });
+
+    expect(res).toEqual({
+      desktop: {
+        cfMargin: '0 Auto 0 Auto',
+        cfWidth: 'fill',
+        cfMaxWidth: '1192px',
+        cfPadding: '10px 10px 10px 10px',
+        cfBackgroundImageUrl: 'https://www.contentful.com/bound-image.png',
+      },
+    });
+  });
+});
+
+describe('flattenDesignTokenRegistry', () => {
+  it('should flatten the design token registry', () => {
+    const designTokenRegistry: DesignTokensDefinition = {
+      color: {
+        bg: 'white',
+        font: 'black',
+        danger: 'red',
+        warning: 'orange',
+        succcess: 'green',
+      },
+      spacing: {
+        xs: '0.5 rem',
+        s: '1rem',
+        m: '1.5rem',
+        l: '2rem',
+      },
+      sizing: {
+        quarter: '25%',
+        half: '50%',
+        threeQuarters: '75%',
+        full: '100%',
+      },
+      border: {
+        default: {
           width: '1px',
           style: 'solid',
           color: 'black',
         },
-        'border.bold': {
+        bold: {
           width: '3px',
           style: 'solid',
           color: 'black',
         },
-        'fontSize.default': '1rem',
-        'fontSize.small': '0.75rem',
-        'fontSize.large': '1.5rem',
-        'lineHeight.default': '1.5',
-        'lineHeight.small': '1.25',
-        'lineHeight.large': '2',
-        'letterSpacing.default': 'normal',
-        'letterSpacing.tight': '0.5px',
-        'letterSpacing.wide': '2px',
-        'textColor.default': 'black',
-        'textColor.muted': 'gray',
-        'textColor.accent': 'blue',
-      });
+      },
+      fontSize: {
+        default: '1rem',
+        small: '0.75rem',
+        large: '1.5rem',
+      },
+      lineHeight: {
+        default: '1.5',
+        small: '1.25',
+        large: '2',
+      },
+      letterSpacing: {
+        default: 'normal',
+        tight: '0.5px',
+        wide: '2px',
+      },
+      textColor: {
+        default: 'black',
+        muted: 'gray',
+        accent: 'blue',
+      },
+    };
+    const res = flattenDesignTokenRegistry(designTokenRegistry);
+
+    expect(res).toEqual({
+      'color.bg': 'white',
+      'color.font': 'black',
+      'color.danger': 'red',
+      'color.warning': 'orange',
+      'color.succcess': 'green',
+      'spacing.xs': '0.5 rem',
+      'spacing.s': '1rem',
+      'spacing.m': '1.5rem',
+      'spacing.l': '2rem',
+      'sizing.quarter': '25%',
+      'sizing.half': '50%',
+      'sizing.threeQuarters': '75%',
+      'sizing.full': '100%',
+      'border.default': {
+        width: '1px',
+        style: 'solid',
+        color: 'black',
+      },
+      'border.bold': {
+        width: '3px',
+        style: 'solid',
+        color: 'black',
+      },
+      'fontSize.default': '1rem',
+      'fontSize.small': '0.75rem',
+      'fontSize.large': '1.5rem',
+      'lineHeight.default': '1.5',
+      'lineHeight.small': '1.25',
+      'lineHeight.large': '2',
+      'letterSpacing.default': 'normal',
+      'letterSpacing.tight': '0.5px',
+      'letterSpacing.wide': '2px',
+      'textColor.default': 'black',
+      'textColor.muted': 'gray',
+      'textColor.accent': 'blue',
     });
   });
+});
 
-  describe('toCSSString', () => {
-    it('should convert a given map of css props into a string', () => {
-      const cssProps = {
-        background: 'green',
-        color: 'white',
-        'font-size': '1rem',
-      };
+describe('toCSSString', () => {
+  it('should convert a given map of css props into a string', () => {
+    const cssProps = {
+      background: 'green',
+      color: 'white',
+      'font-size': '1rem',
+    };
 
-      const res = toCSSString(cssProps);
+    const res = toCSSString(cssProps);
 
-      expect(res).toBe('background:green;color:white;font-size:1rem;');
+    expect(res).toBe('background:green;color:white;font-size:1rem;');
+  });
+});
+
+describe('toMediaQuery', () => {
+  it('should return css for default breakpoint without wrapping it into a media query', () => {
+    const res = toMediaQuery({
+      condition: '*',
+      cssByClassName: {
+        className1: 'background:green;color:white;font-size:1rem;',
+        className2: 'background:red;color:black;font-size:1.5rem;',
+      },
     });
+
+    expect(res).toBe(
+      '.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}',
+    );
   });
 
-  describe('toMediaQuery', () => {
-    it('should return css for default breakpoint without wrapping it into a media query', () => {
-      const res = toMediaQuery({
-        condition: '*',
-        cssByClassName: {
-          className1: 'background:green;color:white;font-size:1rem;',
-          className2: 'background:red;color:black;font-size:1.5rem;',
-        },
-      });
-
-      expect(res).toBe(
-        '.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}',
-      );
+  it('should wrap styles for non default breakpoint into a media query', () => {
+    const res = toMediaQuery({
+      condition: '<950px',
+      cssByClassName: {
+        className1: 'background:green;color:white;font-size:1rem;',
+        className2: 'background:red;color:black;font-size:1.5rem;',
+      },
     });
 
-    it('should wrap styles for non default breakpoint into a media query', () => {
-      const res = toMediaQuery({
-        condition: '<950px',
-        cssByClassName: {
-          className1: 'background:green;color:white;font-size:1rem;',
-          className2: 'background:red;color:black;font-size:1.5rem;',
-        },
-      });
+    expect(res).toBe(
+      '@media(max-width:950px){.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}}',
+    );
+  });
 
-      expect(res).toBe(
-        '@media(max-width:950px){.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}}',
-      );
+  it('should support min-width media query rule', () => {
+    const res = toMediaQuery({
+      condition: '>950px',
+      cssByClassName: {
+        className1: 'background:green;color:white;font-size:1rem;',
+        className2: 'background:red;color:black;font-size:1.5rem;',
+      },
     });
 
-    it('should support min-width media query rule', () => {
-      const res = toMediaQuery({
-        condition: '>950px',
-        cssByClassName: {
-          className1: 'background:green;color:white;font-size:1rem;',
-          className2: 'background:red;color:black;font-size:1.5rem;',
-        },
-      });
-
-      expect(res).toBe(
-        '@media(min-width:950px){.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}}',
-      );
-    });
+    expect(res).toBe(
+      '@media(min-width:950px){.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}}',
+    );
   });
 });

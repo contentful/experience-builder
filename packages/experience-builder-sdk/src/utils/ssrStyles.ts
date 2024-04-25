@@ -407,10 +407,13 @@ export const resolveBackgroundImageBinding = ({
     const defaultValue = unboundValues[defaultValueKey].value;
 
     const userSetValue = componentVariablesOverwrites?.[variableDefinitionKey];
+
     if (!userSetValue) {
       return defaultValue as string | undefined;
     }
 
+    // at this point userSetValue will either be type of 'DesignValue' or 'BoundValue'
+    // so we recursively run resolution again to resolve it
     const resolvedValue = resolveBackgroundImageBinding({
       variableData: userSetValue,
       getBoundEntityById,
