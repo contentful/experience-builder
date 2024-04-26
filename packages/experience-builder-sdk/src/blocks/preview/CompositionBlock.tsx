@@ -134,6 +134,11 @@ export const CompositionBlock = ({
             acc[variableName] = entityStore.unboundValues[uuid]?.value;
             break;
           }
+          case 'ComponentValue':
+            // We're rendering a pattern entry. Content cannot be set for ComponentValue type properties
+            // directly in the pattern so we can safely use the default value
+            acc[variableName] = variableDefinition.defaultValue;
+            break;
           default:
             break;
         }
