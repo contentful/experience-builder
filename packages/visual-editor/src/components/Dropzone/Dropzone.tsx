@@ -36,8 +36,8 @@ export function Dropzone({
 }: DropzoneProps) {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
-  const newComponentId = useDraggedItemStore((state) => state.componentId);
-  const hoveringZone = useZoneStore((state) => state.hoveringZone);
+  const isDraggingNewComponent = useDraggedItemStore((state) => Boolean(state.componentId));
+  const isHoveringZone = useZoneStore((state) => state.hoveringZone === zoneId);
   const tree = useTreeStore((state) => state.tree);
   const content = node?.children || tree.root?.children || [];
 
@@ -50,8 +50,6 @@ export function Dropzone({
     return getItem({ id: draggedItem.draggableId }, tree)?.data.blockId;
   }, [draggedItem, tree]);
 
-  const isDraggingNewComponent = !!newComponentId;
-  const isHoveringZone = hoveringZone === zoneId;
   const isRootZone = zoneId === ROOT_ID;
   const isDestination = draggedDestinationId === zoneId;
   const isEmptyCanvas = isRootZone && !content.length;
@@ -158,7 +156,6 @@ export function Dropzone({
             ) : (
               content.map((item, i) => {
                 const componentId = item.data.id;
-
                 return (
                   <EditorBlock
                     placeholder={{
