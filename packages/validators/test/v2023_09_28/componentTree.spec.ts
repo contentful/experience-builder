@@ -1,7 +1,6 @@
 import { validateExperienceFields } from '../../src/validators';
 import { experience } from '../__fixtures__/v2023_09_28';
 import { describe, it, expect } from 'vitest';
-import { SafeParseError, ZodInvalidUnionIssue } from 'zod';
 
 const schemaVersion = '2023-09-28' as const;
 const locale = 'en-US';
@@ -221,15 +220,46 @@ describe('componentTree', () => {
       expect(error?.details).toBe('The type of "children" is incorrect, expected type: array');
     });
 
+    it.each(['definitionId', 'variables', 'children'] as const)(
+      `fails if %s is missing`,
+      (attribute) => {
+        const componentTree = experience.fields.componentTree[locale];
+        // child includes all attributes except the one we want to test
+        const { [attribute]: _, ...child } = {
+          definitionId: 'test',
+          variables: {},
+          children: [],
+        };
+
+        const updatedExperience = {
+          ...experience,
+          fields: {
+            ...experience.fields,
+            componentTree: { [locale]: { ...componentTree, children: [child] } },
+          },
+        };
+        const result = validateExperienceFields(updatedExperience, schemaVersion);
+
+        const expectedError = {
+          name: 'required',
+          value: 'undefined',
+          path: ['componentTree', 'en-US', 'children', 0, attribute],
+          details: `The property "${attribute}" is required here`,
+        };
+        expect(result.success).toBe(false);
+        expect(result.errors).toEqual([expectedError]);
+      },
+    );
+
     it.each([
-      ['definitionId', 'string'],
-      ['variables', 'object'],
-      ['children', 'array'],
-    ] as const)(`fails if %s is missing`, (attribute, type) => {
+      'Test', // displayName provided
+      undefined, // displayName not provided
+    ])('succeeds if displayName is %s', (displayName) => {
       const componentTree = experience.fields.componentTree[locale];
-      // child includes all attributes except the one we want to test
-      const { [attribute]: _, ...child } = {
+      // child includes all attributes, with displayName either provided or not
+      const child = {
         definitionId: 'test',
+        displayName,
         variables: {},
         children: [],
       };
@@ -243,14 +273,10 @@ describe('componentTree', () => {
       };
       const result = validateExperienceFields(updatedExperience, schemaVersion);
 
-      const expectedError = {
-        name: 'required',
-        value: 'undefined',
-        path: ['componentTree', 'en-US', 'children', 0, attribute],
-        details: `The property "${attribute}" is required here`,
-      };
-      expect(result.success).toBe(false);
-      expect(result.errors).toEqual([expectedError]);
+      // Since displayName is optional, we expect the validation to succeed
+      expect(result.success).toBe(true);
+      // And we expect no errors
+      expect(result.errors).toEqual(undefined);
     });
 
     describe('variables name', () => {
