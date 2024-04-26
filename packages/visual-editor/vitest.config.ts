@@ -6,6 +6,7 @@ export default defineConfig({
   //@ts-expect-error ignore
   plugins: [tsconfigPaths()],
   test: {
+    globals: true,
     coverage: {
       reporter: ['text', 'json', 'html'],
       reportsDirectory: 'reports',
