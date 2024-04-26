@@ -84,7 +84,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
           elementToRender={elementToRender}
           id={componentId}
           index={index}
-          isAssemblyBlock={isAssemblyBlock}
+          isAssemblyBlock={isAssembly || isAssemblyBlock}
           isDragDisabled={isSingleColumn}
           isSelected={selectedNodeId === componentId}
           userIsDragging={userIsDragging}
@@ -108,7 +108,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       definition={definition}
       id={componentId}
       index={index}
-      isAssemblyBlock={isAssemblyBlock}
+      isAssemblyBlock={isAssembly || isAssemblyBlock}
       isDragDisabled={isAssemblyBlock}
       isSelected={selectedNodeId === componentId}
       userIsDragging={userIsDragging}

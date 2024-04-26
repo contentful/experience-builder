@@ -24,12 +24,18 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
 
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
+  const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
   const breakpoints = useTreeStore((state) => state.breakpoints);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const containerRef = useRef<HTMLDivElement>(null);
   const { resolveDesignValue } = useBreakpoints(breakpoints);
   const [containerStyles, setContainerStyles] = useState<CSSProperties>({});
   const tree = useTreeStore((state) => state.tree);
+
+  const handleMouseOver = useCallback(() => {
+    // Remove hover state set by UI when mouse is over canvas
+    setHoveredComponentId();
+  }, [setHoveredComponentId]);
 
   const handleClickOutside = useCallback(
     (e: MouseEvent) => {
@@ -90,6 +96,13 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   useEffect(() => {
     if (onChange) onChange(tree);
   }, [tree, onChange]);
+
+  useEffect(() => {
+    window.addEventListener('mouseover', handleMouseOver);
+    return () => {
+      window.removeEventListener('mouseover', handleMouseOver);
+    };
+  }, [handleMouseOver]);
 
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);

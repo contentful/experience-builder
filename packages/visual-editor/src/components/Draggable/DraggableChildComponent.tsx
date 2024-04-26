@@ -13,6 +13,7 @@ import {
   ComponentDefinition,
   ComponentDefinitionVariableType,
 } from '@contentful/experiences-core/types';
+import { useDraggedItemStore } from '@/store/draggedItem';
 
 export type NoWrapDraggableProps = {
   ['data-ctfl-draggable-id']: string;
@@ -70,6 +71,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     wrapperProps,
     definition,
   } = props;
+  const isHoveredComponent = useDraggedItemStore((state) => state.hoveredComponentId === id);
 
   return (
     <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
@@ -85,6 +87,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,
             [styles.userIsDragging]: userIsDragging,
+            [styles.isHoveringComponent]: isHoveredComponent,
           }),
           dragHandleProps: provided.dragHandleProps!,
           style: {
