@@ -1,5 +1,5 @@
 import React from 'react';
-import { DraggableComponent } from '../Draggable/DraggableComponent';
+import { DraggableComponent } from '@components/Draggable/DraggableComponent';
 import { isContentfulStructureComponent, sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
@@ -77,28 +77,34 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     }
   };
 
-  if (node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id) {
+  const onMouseOver = (e: React.SyntheticEvent<Element, Event>) => {
+    e.stopPropagation();
+
+    if (userIsDragging) return;
+
+    sendMessage(OUTGOING_EVENTS.NewHoveredElement, {
+      nodeId: componentId,
+    });
+  };
+
+  if (isSingleColumn) {
     return (
-      <>
-        <DraggableChildComponent
-          elementToRender={elementToRender}
-          id={componentId}
-          index={index}
-          isAssemblyBlock={isAssembly || isAssemblyBlock}
-          isDragDisabled={isSingleColumn}
-          isSelected={selectedNodeId === componentId}
-          userIsDragging={userIsDragging}
-          isContainer={isContainer}
-          blockId={node.data.blockId}
-          coordinates={coordinates!}
-          wrapperProps={wrapperProps}
-          onClick={onClick}
-          definition={definition}
-        />
-        {isStructureComponent && !isSingleColumn && userIsDragging && (
-          <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
-        )}
-      </>
+      <DraggableChildComponent
+        elementToRender={elementToRender}
+        id={componentId}
+        index={index}
+        isAssemblyBlock={isAssembly || isAssemblyBlock}
+        isDragDisabled
+        isSelected={selectedNodeId === componentId}
+        userIsDragging={userIsDragging}
+        isContainer={isContainer}
+        blockId={node.data.blockId!}
+        coordinates={coordinates!}
+        wrapperProps={wrapperProps}
+        onClick={onClick}
+        onMouseOver={onMouseOver}
+        definition={definition}
+      />
     );
   }
 
@@ -116,9 +122,10 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       blockId={node.data.blockId}
       coordinates={coordinates!}
       wrapperProps={wrapperProps}
-      onClick={onClick}>
+      onClick={onClick}
+      onMouseOver={onMouseOver}>
       {elementToRender()}
-      {isStructureComponent && !isSingleColumn && userIsDragging && (
+      {isStructureComponent && userIsDragging && (
         <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
       )}
     </DraggableComponent>

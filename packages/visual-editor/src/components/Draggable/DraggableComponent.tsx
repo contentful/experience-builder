@@ -54,6 +54,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   isAssemblyBlock = false,
   isSelected = false,
   onClick = () => null,
+  onMouseOver = () => null,
   coordinates,
   userIsDragging,
   style,
@@ -108,6 +109,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
             e.stopPropagation();
             setDomRect(e.currentTarget.getBoundingClientRect());
           }}
+          onMouseOver={onMouseOver}
           onClick={onClick}>
           <Tooltip
             id={id}
