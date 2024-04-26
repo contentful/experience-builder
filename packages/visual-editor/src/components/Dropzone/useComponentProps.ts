@@ -34,6 +34,14 @@ import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constant
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
+type ResolvedComponentProps = ComponentProps & {
+  children?: React.JSX.Element | undefined;
+  className: string;
+  editorMode: boolean;
+  node: ExperienceTreeNode;
+  renderDropzone: RenderDropzoneFunction;
+};
+
 type UseComponentProps = {
   node: ExperienceTreeNode;
   resolveDesignValue: ResolveDesignValueType;
@@ -151,6 +159,13 @@ export const useComponentProps = ({
             ...acc,
             [variableName]: value,
           };
+        } else if (variableMapping.type === 'ComponentValue') {
+          // We are rendering a pattern (assembly) entry. Content properties cannot be edited in this,
+          // so we always render the default value
+          return {
+            ...acc,
+            [variableName]: variableDefinition.defaultValue,
+          };
         } else {
           return { ...acc };
         }
@@ -224,7 +239,7 @@ export const useComponentProps = ({
   const stylesToKeep = ['cfImageAsset'];
   const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
 
-  const componentProps = {
+  const componentProps: ResolvedComponentProps = {
     className: componentClass,
     editorMode: true,
     node,
