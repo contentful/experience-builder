@@ -3,6 +3,7 @@ import type {
   ComponentRegistration,
   ComponentDefinition,
   ComponentRegistrationOptions,
+  DesignTokensDefinition,
 } from '@contentful/experiences-core/types';
 import {
   OUTGOING_EVENTS,
@@ -24,6 +25,8 @@ import { validateComponentDefinition } from '@contentful/experiences-validators'
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
 import { dividerDefinition } from '@contentful/experiences-core';
+
+const CssVarRegex = /var\(--[\w-]+\)/;
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -189,6 +192,116 @@ export const runRegisteredComponentValidations = () => {
   });
 };
 
+const getSingleCssVariableValue = (
+  element: HTMLDivElement,
+  cssVariableValue: string,
+  cssAttribute: any,
+) => {
+  element.style[cssAttribute] = cssVariableValue;
+  const styles = getComputedStyle(element);
+  const resolvedValue = styles.getPropertyValue(cssAttribute);
+  return resolvedValue;
+};
+
+const getAllCssVariableValues = (
+  element: HTMLDivElement,
+  cssVariable: Record<string, string>,
+  cssAttribute: any,
+) => {
+  const resolvedCssVariables = {} as Record<string, string>;
+
+  Object.keys(cssVariable).forEach((key) => {
+    const cssVariableValue = cssVariable[key];
+    if (CssVarRegex.test(cssVariableValue)) {
+      const resolvedValue = getSingleCssVariableValue(element, cssVariableValue, cssAttribute);
+      resolvedCssVariables[cssVariableValue] = resolvedValue;
+    }
+  });
+  return resolvedCssVariables;
+};
+
+const resolveCssVariables = (designTokensDefinition: DesignTokensDefinition) => {
+  const {
+    spacing,
+    sizing,
+    color,
+    borderRadius,
+    fontSize,
+    lineHeight,
+    letterSpacing,
+    textColor,
+    border,
+  } = designTokensDefinition;
+  const resolvedCssVariables = {} as Record<string, string>;
+
+  // Create an element
+  const element = document.createElement('div');
+  document.body.appendChild(element);
+
+  if (spacing) {
+    // Doesn't matter if it's margin or padding or gap related attributes. You just need to resolve the css variables related to the spacing design token once
+    // since each dropdown for those individual css attributes will have the same design token values
+    const rawResolvedValues = getAllCssVariableValues(
+      element,
+      spacing as Record<string, string>,
+      'margin',
+    );
+    Object.assign(resolvedCssVariables, rawResolvedValues);
+  }
+  if (sizing) {
+    const rawResolvedValues = getAllCssVariableValues(element, sizing, 'width');
+    Object.assign(resolvedCssVariables, rawResolvedValues);
+  }
+  if (color) {
+    const rawResolvedValues = getAllCssVariableValues(element, color, 'background-color');
+    Object.assign(resolvedCssVariables, rawResolvedValues);
+  }
+  if (borderRadius) {
+    const rawResolvedValues = getAllCssVariableValues(element, borderRadius, 'border-radius');
+    Object.assign(resolvedCssVariables, rawResolvedValues);
+  }
+  if (fontSize) {
+    const rawResolvedValues = getAllCssVariableValues(element, fontSize, 'font-size');
+    Object.assign(resolvedCssVariables, rawResolvedValues);
+  }
+  if (lineHeight) {
+    const rawResolvedValues = getAllCssVariableValues(element, lineHeight, 'line-height');
+    Object.assign(resolvedCssVariables, rawResolvedValues);
+  }
+  if (letterSpacing) {
+    const rawResolvedValues = getAllCssVariableValues(element, letterSpacing, 'letter-spacing');
+    Object.assign(resolvedCssVariables, rawResolvedValues);
+  }
+  if (textColor) {
+    const rawResolvedValues = getAllCssVariableValues(element, textColor, 'color');
+    Object.assign(resolvedCssVariables, rawResolvedValues);
+  }
+  if (border) {
+    const tempResolvedValue = {} as Record<string, string>;
+    Object.keys(border).forEach((borderKey) => {
+      const { width, style, color } = border[borderKey];
+
+      if (CssVarRegex.test(width)) {
+        const resolvedValue = getSingleCssVariableValue(element, width, 'border-width');
+        tempResolvedValue[width] = resolvedValue;
+      }
+      if (CssVarRegex.test(style)) {
+        const resolvedValue = getSingleCssVariableValue(element, style, 'border-style');
+        tempResolvedValue[style] = resolvedValue;
+      }
+      if (CssVarRegex.test(color)) {
+        const resolvedValue = getSingleCssVariableValue(element, color, 'border-color');
+        tempResolvedValue[color] = resolvedValue;
+      }
+      Object.assign(resolvedCssVariables, tempResolvedValue);
+    });
+  }
+
+  document.body.removeChild(element);
+  console.log('payload dt', resolvedCssVariables);
+  return resolvedCssVariables;
+};
+
 export const sendConnectedEventWithRegisteredComponents = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
@@ -202,6 +315,7 @@ export const sendConnectedEventWithRegisteredComponents = () => {
 
   sendMessage(OUTGOING_EVENTS.DesignTokens, {
     designTokens: designTokensRegistry,
+    resolvedCssVariables: resolveCssVariables(designTokensRegistry),
   });
 };
 

@@ -228,7 +228,7 @@ export type RecursiveDesignTokenDefinition = {
 };
 
 export type DesignTokensDefinition = {
-  spacing?: Record<string, string>;
+  spacing?: Record<string, string> | Record<string, number>;
   sizing?: Record<string, string>;
   color?: Record<string, string>;
   border?: Record<string, { width: string; style: 'solid' | 'dashed' | 'dotted'; color: string }>;
