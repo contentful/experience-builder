@@ -13,6 +13,7 @@ import {
   ComponentDefinition,
   ComponentDefinitionVariableType,
 } from '@contentful/experiences-core/types';
+import { useDraggedItemStore } from '@/store/draggedItem';
 
 export type NoWrapDraggableProps = {
   ['data-ctfl-draggable-id']: string;
@@ -23,6 +24,7 @@ export type NoWrapDraggableProps = {
   dragHandleProps: DraggableProvidedDragHandleProps;
   style: CSSProperties;
   onClick: (e: SyntheticEvent<Element, Event>) => void;
+  onMouseOver: (e: SyntheticEvent<Element, Event>) => void;
   ['data-test-id']?: string;
 };
 
@@ -34,6 +36,7 @@ type DraggableChildComponentProps = {
   isAssemblyBlock?: boolean;
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
+  onMouseOver?: (e: SyntheticEvent) => void;
   coordinates: Rect | null;
   isContainer: boolean;
   blockId: string;
@@ -47,7 +50,7 @@ type DraggableChildComponentProps = {
 /**
  * This component is meant to function the same as DraggableComponent except
  * with the difference that the draggable props are passed to the underlying
- * component. This removes an extra nexted `div` in editor mode that otherwise
+ * component. This removes an extra nested `div` in editor mode that otherwise
  * is not visible in delivery mode.
  *
  * This is helpful for `flex` or `grid` layouts. Currently used by the SingleColumn
@@ -61,6 +64,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     isAssemblyBlock = false,
     isSelected = false,
     onClick = () => null,
+    onMouseOver = () => null,
     coordinates,
     userIsDragging,
     style,
@@ -70,6 +74,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     wrapperProps,
     definition,
   } = props;
+  const isHoveredComponent = useDraggedItemStore((state) => state.hoveredComponentId === id);
 
   return (
     <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
@@ -85,6 +90,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,
             [styles.userIsDragging]: userIsDragging,
+            [styles.isHoveringComponent]: isHoveredComponent,
           }),
           dragHandleProps: provided.dragHandleProps!,
           style: {
@@ -92,6 +98,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
             ...provided.draggableProps.style,
           },
           onClick,
+          onMouseOver,
           Tooltip: (
             <Tooltip
               id={id}
