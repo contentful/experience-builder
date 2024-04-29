@@ -246,7 +246,7 @@ export const experience = {
               },
               {
                 definitionId: 'button',
-                displayName: 'Button 1',
+                // Component node without optional `displayName`.
                 variables: {
                   label: {
                     path: '/5J8rtZN_nOJUx5YGdFuF0/fields/name/~locale',
