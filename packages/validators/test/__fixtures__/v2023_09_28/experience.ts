@@ -89,6 +89,7 @@ export const experience = {
         children: [
           {
             definitionId: 'contentful-container',
+            displayName: 'Container 1',
             variables: {
               cfVerticalAlignment: {
                 type: 'DesignValue',
@@ -196,6 +197,7 @@ export const experience = {
             children: [
               {
                 definitionId: 'heading',
+                displayName: 'Heading 1',
                 variables: {
                   text: {
                     type: 'UnboundValue',
@@ -244,6 +246,7 @@ export const experience = {
               },
               {
                 definitionId: 'button',
+                // Component node without optional `displayName`.
                 variables: {
                   label: {
                     path: '/5J8rtZN_nOJUx5YGdFuF0/fields/name/~locale',

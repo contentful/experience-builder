@@ -35,6 +35,8 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const handleMouseOver = useCallback(() => {
     // Remove hover state set by UI when mouse is over canvas
     setHoveredComponentId();
+    // Remove hover styling from components in the layers tab
+    sendMessage(OUTGOING_EVENTS.NewHoveredElement, {});
   }, [setHoveredComponentId]);
 
   const handleClickOutside = useCallback(
