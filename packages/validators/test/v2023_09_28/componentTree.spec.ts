@@ -182,6 +182,7 @@ describe('componentTree', () => {
       expect(error?.details).toBe('The property "schemaVersion" is required here');
     });
   });
+
   it(`fails if unrecognised attribute is provided`, () => {
     const componentTree = experience.fields.componentTree[locale];
     const updatedExperience = {
@@ -276,7 +277,7 @@ describe('componentTree', () => {
       // Since displayName is optional, we expect the validation to succeed
       expect(result.success).toBe(true);
       // And we expect no errors
-      expect(result.errors).toEqual(undefined);
+      expect(result.errors).toBeUndefined();
     });
 
     describe('variables name', () => {
