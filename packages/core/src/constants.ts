@@ -24,6 +24,7 @@ export const OUTGOING_EVENTS = {
   ComponentMoveStarted: 'componentMoveStarted',
   ComponentMoveEnded: 'componentMoveEnded',
   OutsideCanvasClick: 'outsideCanvasClick',
+  UpdateThumbnail: 'updateThumbnail',
 };
 
 export const INCOMING_EVENTS = {

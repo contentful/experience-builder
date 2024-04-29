@@ -14,6 +14,7 @@ import { DNDProvider } from './DNDProvider';
 import { sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
+import html2canvas from 'html2canvas';
 
 interface Props {
   onChange?: (data: ExperienceTree) => void;
@@ -102,6 +103,49 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
     handleResizeCanvas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef.current]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      html2canvas(document.documentElement, {
+        logging: true,
+        allowTaint: false,
+        useCORS: true,
+      }).then(function (canvas) {
+        const scrollCroppedCanvas = document.createElement('canvas');
+        const cropScrollLeft = document.documentElement.scrollLeft;
+        const cropScrollTop = document.documentElement.scrollTop;
+
+        scrollCroppedCanvas.width = canvas.width - cropScrollLeft;
+        scrollCroppedCanvas.height = canvas.height - cropScrollTop;
+
+        scrollCroppedCanvas
+          ?.getContext('2d')
+          ?.drawImage(
+            canvas,
+            cropScrollLeft,
+            cropScrollTop,
+            scrollCroppedCanvas.width,
+            scrollCroppedCanvas.height,
+            0,
+            0,
+            scrollCroppedCanvas.width,
+            scrollCroppedCanvas.height,
+          );
+
+        // Convert the cropped canvas to base64 string
+        const base64String = scrollCroppedCanvas.toDataURL().split(',')[1];
+
+        sendMessage(OUTGOING_EVENTS.UpdateThumbnail, { base64String });
+
+        // Now you have the base64 string, you can use it as needed.
+        // For example, you can send it to a server or manipulate it further.
+
+        // var filename = 'canvas_image.png';
+        // saveCanvasImage(scrollCroppedCanvas.toDataURL(), filename);
+        // document.body.appendChild(canvas);
+      });
+    }, 2000);
+  }, []);
 
   return (
     <DNDProvider>
