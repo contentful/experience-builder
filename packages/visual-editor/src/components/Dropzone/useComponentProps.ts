@@ -199,7 +199,7 @@ export const useComponentProps = ({
     entityStore,
   ]);
 
-  const cfStyles = buildCfStyles(props, node.data.blockId);
+  const cfStyles = buildCfStyles(props as StyleProps, node.data.blockId);
 
   // Separate the component styles from the editor wrapper styles
   const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
@@ -255,7 +255,7 @@ export const useComponentProps = ({
   const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
 
   const componentProps: ResolvedComponentProps = {
-    className: props.cfSsrClassName ?? componentClass,
+    className: (props.cfSsrClassName as string | undefined) ?? componentClass,
     editorMode: true,
     node,
     renderDropzone,
