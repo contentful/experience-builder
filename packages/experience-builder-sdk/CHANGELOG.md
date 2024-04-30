@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/contentful/experience-builder/compare/v1.1.0-beta.0...v1.1.0) (2024-04-29)
+
+**Note:** Version bump only for package @contentful/experiences-sdk-react
+
+# [1.1.0-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.9-beta.0...v1.1.0-beta.0) (2024-04-29)
+
+**Note:** Version bump only for package @contentful/experiences-sdk-react
+
+## [1.0.9-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.8...v1.0.9-beta.0) (2024-04-26)
+
+**Note:** Version bump only for package @contentful/experiences-sdk-react
+
+## [1.0.8](https://github.com/contentful/experience-builder/compare/v1.0.8-beta.0...v1.0.8) (2024-04-26)
+
+**Note:** Version bump only for package @contentful/experiences-sdk-react
+
+## [1.0.8-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.7...v1.0.8-beta.0) (2024-04-26)
+
+### Bug Fixes
+
+- fix for preview/delivery mode ([30e0746](https://github.com/contentful/experience-builder/commit/30e07465b0a5f176b68846ad434857d214e1befe))
+
 ## [1.0.7](https://github.com/contentful/experience-builder/compare/v1.0.7-beta.0...v1.0.7) (2024-04-25)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react

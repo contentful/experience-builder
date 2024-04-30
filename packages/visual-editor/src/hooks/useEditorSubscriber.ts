@@ -30,7 +30,6 @@ import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
-import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { useEntityStore } from '@/store/entityStore';
 import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
@@ -51,8 +50,8 @@ export function useEditorSubscriber() {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
-
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
+  const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
   const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
   const setScrollY = useDraggedItemStore((state) => state.setScrollY);
@@ -298,7 +297,7 @@ export function useEditorSubscriber() {
         }
         case INCOMING_EVENTS.HoverComponent: {
           const { hoveredNodeId } = payload;
-          sendHoveredComponentCoordinates(hoveredNodeId);
+          setHoveredComponentId(hoveredNodeId);
           break;
         }
         case INCOMING_EVENTS.ComponentDraggingChanged: {
@@ -407,6 +406,7 @@ export function useEditorSubscriber() {
     updateNodesByUpdatedEntity,
     setMousePosition,
     resetEntityStore,
+    setHoveredComponentId,
   ]);
 
   /*

@@ -97,6 +97,7 @@ const UnboundValuesSchema = z.record(
 // Use helper schema to define a recursive schema with its type correctly below
 const BaseComponentTreeNodeSchema = z.object({
   definitionId: DefinitionPropertyKeySchema,
+  displayName: z.string().optional(),
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
 });
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {

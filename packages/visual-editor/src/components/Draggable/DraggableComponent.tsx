@@ -54,6 +54,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   isAssemblyBlock = false,
   isSelected = false,
   onClick = () => null,
+  onMouseOver = () => null,
   coordinates,
   userIsDragging,
   style,
@@ -67,6 +68,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
 }) => {
   const ref = useRef<HTMLElement | null>(null);
   const setDomRect = useDraggedItemStore((state) => state.setDomRect);
+  const isHoveredComponent = useDraggedItemStore((state) => state.hoveredComponentId === id);
 
   useDraggablePosition({
     draggableId: id,
@@ -93,6 +95,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
             [styles.isDragging]: snapshot.isDragging,
             [styles.isSelected]: isSelected,
             [styles.userIsDragging]: userIsDragging,
+            [styles.isHoveringComponent]: isHoveredComponent,
           })}
           style={{
             ...style,
@@ -106,6 +109,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
             e.stopPropagation();
             setDomRect(e.currentTarget.getBoundingClientRect());
           }}
+          onMouseOver={onMouseOver}
           onClick={onClick}>
           <Tooltip
             id={id}

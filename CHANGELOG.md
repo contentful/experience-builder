@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/contentful/experience-builder/compare/v1.1.0-beta.0...v1.1.0) (2024-04-29)
+
+**Note:** Version bump only for package @contentful/experience
+
+# [1.1.0-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.9-beta.0...v1.1.0-beta.0) (2024-04-29)
+
+### Bug Fixes
+
+- **visual-editor:** show canvas hover state in layers tab [ALT-787] ([#587](https://github.com/contentful/experience-builder/issues/587)) ([8541e97](https://github.com/contentful/experience-builder/commit/8541e974b675e5645be6a457ba4d2b6541c372a0))
+
+### Features
+
+- **validators:** add optional displayName to ComponentTreeNode [ALT-780] ([#590](https://github.com/contentful/experience-builder/issues/590)) ([44f51b0](https://github.com/contentful/experience-builder/commit/44f51b01dbd7ee97fc48ae5950812f9e65c263c2))
+
+## [1.0.9-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.8...v1.0.9-beta.0) (2024-04-26)
+
+### Bug Fixes
+
+- **visual-editor:** show hovered component outlines when hovering the layers tab [ALT-673] ([#584](https://github.com/contentful/experience-builder/issues/584)) ([34f0dee](https://github.com/contentful/experience-builder/commit/34f0dee341ac411730885ba060bebbeff2408f52))
+
+## [1.0.8](https://github.com/contentful/experience-builder/compare/v1.0.8-beta.0...v1.0.8) (2024-04-26)
+
+**Note:** Version bump only for package @contentful/experience
+
+## [1.0.8-beta.0](https://github.com/contentful/experience-builder/compare/v1.0.7...v1.0.8-beta.0) (2024-04-26)
+
+### Bug Fixes
+
+- fix for preview/delivery mode ([30e0746](https://github.com/contentful/experience-builder/commit/30e07465b0a5f176b68846ad434857d214e1befe))
+- use default values for componentValue properties ([53d9f79](https://github.com/contentful/experience-builder/commit/53d9f79f5481fb395acf62ff65bbdce9f9226fc5))
+
 ## [1.0.7](https://github.com/contentful/experience-builder/compare/v1.0.7-beta.0...v1.0.7) (2024-04-25)
 
 **Note:** Version bump only for package @contentful/experience
