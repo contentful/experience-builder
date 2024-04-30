@@ -1,7 +1,7 @@
 import { DesignTokensDefinition } from '@/types';
 import { builtInStyles, optionalBuiltInStyles } from '../definitions/styles';
 
-export const designTokensRegistry: DesignTokensDefinition = {};
+export let designTokensRegistry: DesignTokensDefinition = {};
 
 /**
  * Register design tokens styling
@@ -48,4 +48,9 @@ const resolveSimpleDesignToken = (templateString: string, variableName: string) 
     return optionalBuiltInStyles[variableName].defaultValue;
   }
   return '0px';
+};
+
+// Used in unit tests to reset the design token registry
+export const resetDesignTokenRegistry = () => {
+  designTokensRegistry = {};
 };

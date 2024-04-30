@@ -11,7 +11,7 @@ import { isContentfulStructureComponent } from '../components';
 import { EMPTY_CONTAINER_HEIGHT } from '../../constants';
 import { CSSProperties, StyleProps, PrimitiveValue, ExperienceTreeNode } from '@/types';
 
-const toCSSAttribute = (key: string) => {
+export const toCSSAttribute = (key: string) => {
   let val = key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
 
   // Remove the number from the end of the key to allow for overrides on style properties
