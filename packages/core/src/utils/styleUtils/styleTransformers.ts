@@ -157,12 +157,12 @@ export const transformWidthSizing = ({
   cfMargin?: string;
   componentId?: string;
 }) => {
-  if (!value || !cfMargin || !componentId) return;
+  if (!value || !componentId) return;
 
   const transformedValue = transformFill(value);
 
   if (isContentfulStructureComponent(componentId)) {
-    const marginValues = cfMargin.split(' ');
+    const marginValues = cfMargin ? cfMargin.split(' ') : [];
     const rightMargin = marginValues[1] || '0px';
     const leftMargin = marginValues[3] || '0px';
     const calcValue = `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`;
