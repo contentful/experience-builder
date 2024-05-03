@@ -220,6 +220,11 @@ const getAllCssVariableValues = (
   return resolvedCssVariables;
 };
 
+type CssMapType = {
+  variable?: Record<string, string>;
+  property: string;
+};
+
 const resolveCssVariables = (designTokensDefinition: DesignTokensDefinition) => {
   const {
     spacing,
@@ -238,44 +243,24 @@ const resolveCssVariables = (designTokensDefinition: DesignTokensDefinition) => 
   const element = document.createElement('div');
   document.body.appendChild(element);
 
-  if (spacing) {
-    // Doesn't matter if it's margin or padding or gap related attributes. You just need to resolve the css variables related to the spacing design token once
-    // since each dropdown for those individual css attributes will have the same design token values
-    const rawResolvedValues = getAllCssVariableValues(
-      element,
-      spacing as Record<string, string>,
-      'margin',
-    );
-    Object.assign(resolvedCssVariables, rawResolvedValues);
-  }
-  if (sizing) {
-    const rawResolvedValues = getAllCssVariableValues(element, sizing, 'width');
-    Object.assign(resolvedCssVariables, rawResolvedValues);
-  }
-  if (color) {
-    const rawResolvedValues = getAllCssVariableValues(element, color, 'background-color');
-    Object.assign(resolvedCssVariables, rawResolvedValues);
-  }
-  if (borderRadius) {
-    const rawResolvedValues = getAllCssVariableValues(element, borderRadius, 'border-radius');
-    Object.assign(resolvedCssVariables, rawResolvedValues);
-  }
-  if (fontSize) {
-    const rawResolvedValues = getAllCssVariableValues(element, fontSize, 'font-size');
-    Object.assign(resolvedCssVariables, rawResolvedValues);
-  }
-  if (lineHeight) {
-    const rawResolvedValues = getAllCssVariableValues(element, lineHeight, 'line-height');
-    Object.assign(resolvedCssVariables, rawResolvedValues);
-  }
-  if (letterSpacing) {
-    const rawResolvedValues = getAllCssVariableValues(element, letterSpacing, 'letter-spacing');
-    Object.assign(resolvedCssVariables, rawResolvedValues);
-  }
-  if (textColor) {
-    const rawResolvedValues = getAllCssVariableValues(element, textColor, 'color');
-    Object.assign(resolvedCssVariables, rawResolvedValues);
-  }
+  const cssProperties: CssMapType[] = [
+    { variable: spacing, property: 'margin' },
+    { variable: sizing, property: 'width' },
+    { variable: color, property: 'background-color' },
+    { variable: borderRadius, property: 'border-radius' },
+    { variable: fontSize, property: 'font-size' },
+    { variable: lineHeight, property: 'line-height' },
+    { variable: letterSpacing, property: 'letter-spacing' },
+    { variable: textColor, property: 'color' },
+  ];
+
+  cssProperties.forEach(({ variable, property }) => {
+    if (variable) {
+      const rawResolvedValues = getAllCssVariableValues(element, variable, property);
+      Object.assign(resolvedCssVariables, rawResolvedValues);
+    }
+  });
+
   if (border) {
     const tempResolvedValue = {} as Record<string, string>;
     Object.keys(border).forEach((borderKey) => {
@@ -298,7 +283,6 @@ const resolveCssVariables = (designTokensDefinition: DesignTokensDefinition) => 
   }
 
   document.body.removeChild(element);
-  console.log('payload dt', resolvedCssVariables);
   return resolvedCssVariables;
 };
 
