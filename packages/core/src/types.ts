@@ -110,7 +110,9 @@ export type ComponentRegistration = {
   definition: ComponentDefinition;
   options?: {
     wrapComponent?: boolean;
+    /** @deprecated use wrapContainer instead */
     wrapContainerTag?: keyof JSX.IntrinsicElements;
+    wrapContainer?: keyof JSX.IntrinsicElements | React.ReactElement;
   };
 };
 

@@ -1,5 +1,10 @@
 import { ComponentRegistration } from '@contentful/experiences-core/types';
 import React from 'react';
+import {
+  DragWrapper,
+  DragWrapperProps,
+  WrapperTags,
+} from '@contentful/experiences-components-react';
 
 interface CFProps {
   /**
@@ -10,21 +15,7 @@ interface CFProps {
    * Classes to be applied to the child component if `wrapComponent` is true, or directly to the child component if false.
    */
   classes?: string;
-  onMouseDown?: React.MouseEventHandler;
-  onMouseUp?: React.MouseEventHandler;
-  onClick?: React.MouseEventHandler;
-  /**
-   * Prop required by Experience Builder to identify the component.
-   */
-  'data-cf-node-id'?: string;
-  /**
-   * Prop required by Experience Builder to identify the component.
-   */
-  'data-cf-node-block-id'?: string;
-  /**
-   * Prop required by Experience Builder to identify the component's type.
-   */
-  'data-cf-node-block-type'?: string;
+  dragProps?: DragWrapperProps;
 }
 
 /**
@@ -35,45 +26,24 @@ interface CFProps {
  * @returns A component that can be passed to `defineComponents`.
  */
 export function withComponentWrapper<T extends object>(
-  Component: React.ElementType<T>,
+  Component: React.ElementType,
   options: ComponentRegistration['options'] = {
     wrapComponent: true,
     wrapContainerTag: 'div',
+    wrapContainer: 'div',
   },
 ) {
-  const Wrapped = ({
-    classes = '',
-    className = '',
-    'data-cf-node-id': dataCfNodeId,
-    'data-cf-node-block-id': dataCfNodeBlockId,
-    'data-cf-node-block-type': dataCfNodeBlockType,
-    onClick,
-    onMouseDown,
-    onMouseUp,
-    ...props
-  }: CFProps & T) => {
-    const Tag = options.wrapContainerTag || 'div';
-    const cfProps = {
-      'data-cf-node-id': dataCfNodeId,
-      'data-cf-node-block-id': dataCfNodeBlockId,
-      'data-cf-node-block-type': dataCfNodeBlockType,
-      onClick,
-      onMouseDown,
-      onMouseUp,
-    };
-
+  const Wrapped = ({ classes = '', className = '', dragProps = {}, ...props }: CFProps & T) => {
     const component = options.wrapComponent ? (
-      <Tag className={className} {...cfProps}>
-        {typeof Component === 'string' ? (
-          React.createElement(Component, { className: classes, ...props })
-        ) : (
-          <Component className={classes} {...(props as T)} />
-        )}
-      </Tag>
+      <DragWrapper
+        className={className}
+        Tag={options.wrapContainerTag as WrapperTags}
+        {...dragProps}>
+        <Component className={className + ' ' + classes} {...(props as T)} />
+      </DragWrapper>
     ) : (
       React.createElement(Component, {
         className: classes + className ? classes + ' ' + className : undefined,
-        ...cfProps,
         ...(props as T),
       })
     );

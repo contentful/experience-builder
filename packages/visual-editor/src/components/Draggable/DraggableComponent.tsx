@@ -26,6 +26,7 @@ function getStyle(style, snapshot) {
 }
 
 interface DraggableComponentProps {
+  elementToRender: (props?: Record<string, unknown>) => React.ReactElement;
   placeholder: PlaceholderParams;
   wrapperProps: Record<string, string | undefined>;
   children: ReactNode;
@@ -48,6 +49,7 @@ interface DraggableComponentProps {
 }
 
 export const DraggableComponent: React.FC<DraggableComponentProps> = ({
+  elementToRender,
   children,
   id,
   index,
@@ -77,50 +79,107 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   });
 
   return (
-    <Draggable key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
+    <Draggable
+      key={id}
+      draggableId={id}
+      index={index}
+      isDragDisabled={isDragDisabled}
+      disableInteractiveElementBlocking>
       {(provided, snapshot) => (
-        <div
-          data-ctfl-draggable-id={id}
-          data-test-id={`draggable-${blockId ?? 'node'}`}
-          ref={(refNode) => {
-            provided?.innerRef(refNode);
-            ref.current = refNode;
-          }}
-          {...wrapperProps}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          {...rest}
-          className={classNames(styles.DraggableComponent, wrapperProps.className, {
-            [styles.isAssemblyBlock]: isAssemblyBlock,
-            [styles.isDragging]: snapshot.isDragging,
-            [styles.isSelected]: isSelected,
-            [styles.userIsDragging]: userIsDragging,
-            [styles.isHoveringComponent]: isHoveredComponent,
-          })}
-          style={{
-            ...style,
-            ...getStyle(provided.draggableProps.style, snapshot),
-          }}
-          onMouseDown={(e) => {
-            if (isDragDisabled) {
-              return;
-            }
+        <>
+          {elementToRender({
+            dragProps: {
+              ...wrapperProps,
+              'data-ctfl-draggable-id': id,
+              'data-test-id': `draggable-${blockId ?? 'node'}`,
+              innerRef: (refNode) => {
+                provided?.innerRef(refNode);
+                ref.current = refNode;
+              },
+              ...provided.draggableProps,
+              ...provided.dragHandleProps,
+              ...rest,
+              className: classNames(styles.DraggableComponent, wrapperProps.className, {
+                [styles.isAssemblyBlock]: isAssemblyBlock,
+                [styles.isDragging]: snapshot?.isDragging,
+                [styles.isSelected]: isSelected,
+                [styles.userIsDragging]: userIsDragging,
+                [styles.isHoveringComponent]: isHoveredComponent,
+              }),
+              style: {
+                ...style,
+                ...getStyle(provided.draggableProps.style, snapshot),
+              },
+              onMouseDown: (e) => {
+                if (isDragDisabled) {
+                  return;
+                }
 
-            e.stopPropagation();
-            setDomRect(e.currentTarget.getBoundingClientRect());
-          }}
-          onMouseOver={onMouseOver}
-          onClick={onClick}>
-          <Tooltip
-            id={id}
-            coordinates={coordinates}
-            isAssemblyBlock={isAssemblyBlock}
-            isContainer={isContainer}
-            label={definition.name || 'No label specified'}
-          />
-          <Placeholder {...placeholder} id={id} />
+                e.stopPropagation();
+                setDomRect(e.currentTarget.getBoundingClientRect());
+              },
+              onMouseOver,
+              onClick,
+              ToolTipAndPlaceHolder: (
+                <>
+                  <Tooltip
+                    id={id}
+                    coordinates={coordinates}
+                    isAssemblyBlock={isAssemblyBlock}
+                    isContainer={isContainer}
+                    label={definition.name || 'No label specified'}
+                  />
+                  <Placeholder {...placeholder} id={id} />
+                </>
+              ),
+            },
+          })}
+
+          {/* <div
+            data-ctfl-draggable-id={id}
+            data-test-id={`draggable-${blockId ?? 'node'}`}
+            ref={(refNode) => {
+              provided?.innerRef(refNode);
+              ref.current = refNode;
+            }}
+            {...wrapperProps}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            {...rest}
+            className={classNames(styles.DraggableComponent, wrapperProps.className, {
+              [styles.isAssemblyBlock]: isAssemblyBlock,
+              [styles.isDragging]: snapshot.isDragging,
+              [styles.isSelected]: isSelected,
+              [styles.userIsDragging]: userIsDragging,
+              [styles.isHoveringComponent]: isHoveredComponent,
+            })}
+            style={{
+              ...style,
+              ...getStyle(provided.draggableProps.style, snapshot),
+            }}
+            onMouseDown={(e) => {
+              if (isDragDisabled) {
+                return;
+              }
+
+              e.stopPropagation();
+              setDomRect(e.currentTarget.getBoundingClientRect());
+            }}
+            onMouseOver={onMouseOver}
+            onClick={onClick}>
+            <Tooltip
+              id={id}
+              coordinates={coordinates}
+              isAssemblyBlock={isAssemblyBlock}
+              isContainer={isContainer}
+              label={definition.name || 'No label specified'}
+            />
+            <Placeholder {...placeholder} id={id} />
+            {children}
+          </div> */}
+
           {children}
-        </div>
+        </>
       )}
     </Draggable>
   );

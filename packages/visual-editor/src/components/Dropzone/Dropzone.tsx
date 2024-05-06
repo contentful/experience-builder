@@ -135,7 +135,9 @@ export function Dropzone({
         return (
           <WrapperComponent
             {...(provided || { droppableProps: {} }).droppableProps}
-            ref={provided?.innerRef}
+            ref={(refNode) => {
+              provided?.innerRef(refNode);
+            }}
             id={zoneId}
             data-ctfl-zone-id={zoneId}
             className={classNames(

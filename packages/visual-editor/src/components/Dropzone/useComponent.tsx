@@ -12,8 +12,9 @@ import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
-import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
+// import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
 import { ImportedComponentErrorBoundary } from './ImportedComponentErrorBoundary';
+import { DragWrapper } from '@contentful/experiences-components-react';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -71,20 +72,54 @@ export const useComponent = ({
     userIsDragging,
   });
 
-  // Only pass editor props to built-in components
-  const { editorMode, renderDropzone: _renderDropzone, ...otherComponentProps } = componentProps;
-  const elementToRender = builtInComponents.includes(node.data.blockId || '')
-    ? (dragProps?: NoWrapDraggableProps) =>
-        React.createElement(componentRegistration.component, { ...dragProps, ...componentProps })
-    : node.type === ASSEMBLY_NODE_TYPE
-      ? // Assembly.tsx requires renderDropzone and editorMode as well
-        () => React.createElement(componentRegistration.component, componentProps)
-      : () =>
-          React.createElement(
-            ImportedComponentErrorBoundary,
-            null,
-            React.createElement(componentRegistration.component, otherComponentProps),
-          );
+  const elementToRender = (props?: Record<string, unknown>) => {
+    const { dragProps = {}, ...rest } = props || {};
+
+    let element: React.ReactElement;
+    let requiresDragWrapper = true;
+
+    if (builtInComponents.includes(node.data.blockId || '')) {
+      element = React.createElement(componentRegistration.component, {
+        ...rest,
+        ...componentProps,
+      });
+      requiresDragWrapper = true;
+    } else if (node.type === ASSEMBLY_NODE_TYPE) {
+      element = React.createElement(componentRegistration.component, componentProps);
+      requiresDragWrapper = true;
+    } else {
+      // Don't pass editor props to custom components
+      const {
+        editorMode: _editorMode,
+        renderDropzone: _renderDropzone,
+        node: _node,
+        ...otherComponentProps
+      } = componentProps;
+
+      requiresDragWrapper = !componentRegistration.options?.wrapComponent;
+
+      element = React.createElement(
+        ImportedComponentErrorBoundary,
+        null,
+        requiresDragWrapper
+          ? React.createElement(componentRegistration.component, otherComponentProps)
+          : React.createElement(componentRegistration.component, {
+              ...otherComponentProps,
+              dragProps,
+            }),
+      );
+    }
+
+    if (requiresDragWrapper) {
+      return (
+        <DragWrapper editorMode={true} {...(dragProps as any)}>
+          {element}
+        </DragWrapper>
+      );
+    } else {
+      return element;
+    }
+  };
 
   return {
     node,

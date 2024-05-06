@@ -110,6 +110,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
   return (
     <DraggableComponent
+      elementToRender={elementToRender}
       placeholder={placeholder}
       definition={definition}
       id={componentId}
@@ -124,7 +125,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       wrapperProps={wrapperProps}
       onClick={onClick}
       onMouseOver={onMouseOver}>
-      {elementToRender()}
       {isStructureComponent && userIsDragging && (
         <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
       )}

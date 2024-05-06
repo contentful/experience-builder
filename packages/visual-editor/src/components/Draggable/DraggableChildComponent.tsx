@@ -26,6 +26,7 @@ export type NoWrapDraggableProps = {
   onClick: (e: SyntheticEvent<Element, Event>) => void;
   onMouseOver: (e: SyntheticEvent<Element, Event>) => void;
   ['data-test-id']?: string;
+  dragProps?: Record<string, unknown>;
 };
 
 type DraggableChildComponentProps = {
