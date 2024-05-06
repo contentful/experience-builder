@@ -8,6 +8,7 @@ defineComponents([
     component: ComponentWithChildren,
     definition: {
       id: 'component-with-children',
+      thumbnailUrl: 'https://static.thenounproject.com/png/2397501-200.png',
       children: true,
       name: 'Children Enabled',
       category: 'Custom Components',
