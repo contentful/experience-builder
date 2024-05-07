@@ -37,7 +37,11 @@ describe('useClassName', () => {
     });
 
     it('should return class name set on server side if present', () => {
-      const testProps = { display: 'grid', color: 'snow', cfSsrClassName: 'test-ssr-class' };
+      const testProps = {
+        cfFontSize: '1rem',
+        cfBackgroundColor: 'snow',
+        cfSsrClassName: 'test-ssr-class',
+      };
       const { result } = renderHook(() => useClassName({ node: testNode, props: testProps }));
 
       // expects format "cfstyles-" + 32 char suffix (MD5)
