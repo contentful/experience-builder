@@ -1,15 +1,10 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
-import {
-  EntityStore,
-  isEmptyStructureWithRelativeHeight,
-  resolveHyperlinkPattern,
-} from '@contentful/experiences-core';
+import { EntityStore, resolveHyperlinkPattern } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
-  EMPTY_CONTAINER_HEIGHT,
   HYPERLINK_DEFAULT_PATTERN,
 } from '@contentful/experiences-core/constants';
 import type {
@@ -20,12 +15,8 @@ import type {
   StyleProps,
 } from '@contentful/experiences-core/types';
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
-import {
-  buildCfStyles,
-  checkIsAssemblyNode,
-  transformBoundContentValue,
-} from '@contentful/experiences-core';
-import { useStyleTag } from '../../hooks/useStyleTag';
+import { checkIsAssemblyNode, transformBoundContentValue } from '@contentful/experiences-core';
+import { useClassName } from '../../hooks/useClassName';
 import {
   Columns,
   ContentfulContainer,
@@ -87,7 +78,14 @@ export const CompositionBlock = ({
       return {};
     }
 
-    const propMap: Record<string, PrimitiveValue> = {};
+    const propMap: Record<string, PrimitiveValue> = {
+      cfSsrClassName: node.variables.cfSsrClassName
+        ? resolveDesignValue(
+            (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+            'cfSsrClassName',
+          )
+        : undefined,
+    };
 
     return Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
@@ -157,22 +155,7 @@ export const CompositionBlock = ({
     locale,
   ]);
 
-  const cfStyles = buildCfStyles(nodeProps, node.definitionId);
-
-  if (
-    isEmptyStructureWithRelativeHeight(node.children.length, node.definitionId, cfStyles.height)
-  ) {
-    cfStyles.minHeight = EMPTY_CONTAINER_HEIGHT;
-  }
-
-  const { className: runtimeClassname } = useStyleTag({ styles: cfStyles });
-
-  const className = node.variables.cfSsrClassName
-    ? (resolveDesignValue(
-        (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
-        'cfSsrClassName',
-      ) as string)
-    : runtimeClassname;
+  const className = useClassName({ props: nodeProps, node });
 
   if (!componentRegistration) {
     return null;
@@ -235,7 +218,7 @@ export const CompositionBlock = ({
   return React.createElement(
     component,
     {
-      ...omit(nodeProps, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab']),
+      ...omit(nodeProps, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
       className,
     },
     children ?? (typeof nodeProps.children === 'string' ? nodeProps.children : null),
