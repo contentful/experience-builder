@@ -1,11 +1,7 @@
+// import { ComponentRegistration } from '@contentful/experiences-core/types';
 import { ComponentRegistration } from '@contentful/experiences-core/types';
+import classNames from 'classnames';
 import React from 'react';
-import {
-  DragWrapper,
-  DragWrapperProps,
-  WrapperTags,
-} from '@contentful/experiences-components-react';
-
 interface CFProps {
   /**
    * Classes to be applied to the container component if `wrapComponent` is true, or directly to the child component if false.
@@ -15,7 +11,7 @@ interface CFProps {
    * Classes to be applied to the child component if `wrapComponent` is true, or directly to the child component if false.
    */
   classes?: string;
-  dragProps?: DragWrapperProps;
+  dragProps?: any;
 }
 
 /**
@@ -34,13 +30,23 @@ export function withComponentWrapper<T extends object>(
   },
 ) {
   const Wrapped = ({ classes = '', className = '', dragProps = {}, ...props }: CFProps & T) => {
+    const {
+      innerRef,
+      className: dragClassName,
+      ToolTipAndPlaceHolder,
+      ...restOfDragProps
+    } = dragProps;
     const component = options.wrapComponent ? (
-      <DragWrapper
-        className={className}
-        Tag={options.wrapContainerTag as WrapperTags}
-        {...dragProps}>
-        <Component className={className + ' ' + classes} {...(props as T)} />
-      </DragWrapper>
+      <div
+        data-cacawrapper
+        className={classNames(className, classes, dragClassName)}
+        {...restOfDragProps}
+        ref={(refNode: HTMLElement | null) => {
+          if (innerRef && refNode) innerRef(refNode);
+        }}>
+        {ToolTipAndPlaceHolder}
+        <Component {...(props as T)} />
+      </div>
     ) : (
       React.createElement(Component, {
         className: classes + className ? classes + ' ' + className : undefined,

@@ -1,6 +1,5 @@
-import { combineClasses } from '@/utils/combineClasses';
 // import { wrap } from 'cypress/types/lodash';
-import React, { useEffect, useMemo, useRef, useState, type HTMLAttributes } from 'react';
+import React, { useEffect, useRef, type HTMLAttributes } from 'react';
 
 interface DraggableProvidedDraggableProps {
   'data-rfd-draggable-context-id'?: string;
@@ -43,7 +42,6 @@ export interface DragWrapperProps
   'data-cf-node-block-id'?: string;
   'data-cf-node-block-type'?: string;
   innerRef?: (refNode: HTMLElement) => void;
-  editorMode?: boolean;
   wrapComponent?: boolean;
   Tag?: WrapperTags;
   ToolTipAndPlaceHolder?: React.ReactNode;
@@ -52,7 +50,6 @@ export interface DragWrapperProps
 export const DragWrapper: React.FC<DragWrapperProps> = ({
   className,
   children,
-  editorMode = false,
   innerRef,
   Tag = 'div',
   ToolTipAndPlaceHolder,
@@ -72,67 +69,44 @@ export const DragWrapper: React.FC<DragWrapperProps> = ({
       }
 
       let width = componentElement.style.getPropertyValue('width');
+      let maxWidth = componentElement.style.getPropertyValue('max-width');
 
-      if (!width) {
+      if (!width || !maxWidth) {
         const styleSheets = Array.from(document.styleSheets);
-
         for (let i = styleSheets.length - 1; i >= 0; i--) {
-          const cssRules = styleSheets[i].cssRules || styleSheets[i].rules || [];
-
-          for (let j = 0; j < cssRules.length; j++) {
-            const selectorText = cssRules[j].selectorText as string;
-            if (
-              !selectorText ||
-              selectorText.startsWith('.styles-') ||
-              selectorText.startsWith('.contentful-container')
-            ) {
-              continue;
+          const cssRules = Array.from(styleSheets[i].cssRules || styleSheets[i].rules || []);
+          cssRules.some((cssRule) => {
+            if (cssRule instanceof CSSStyleRule) {
+              const selectorText = cssRule.selectorText as string;
+              if (
+                !selectorText ||
+                selectorText.startsWith('.styles-') ||
+                selectorText.startsWith('.contentful-container')
+              ) {
+                return;
+              }
+              if (componentElement?.matches(selectorText)) {
+                width = width || cssRule.style.width;
+                maxWidth = maxWidth || cssRule.style.maxWidth;
+                return !!width && !!maxWidth;
+              }
             }
-            if (componentElement?.matches(selectorText)) {
-              width = cssRules[j].style.width;
-              break;
-            }
-          }
+          });
 
-          if (width) {
+          if (width && maxWidth) {
             break;
           }
         }
       }
 
-      if (width) {
-        // wrapperRef.current.style.setProperty('all', 'initial');
+      if (width || maxWidth) {
+        // wrapperRef.current.style.setProperty('display', 'inline-block');
         wrapperRef.current.style.setProperty('width', width);
+        wrapperRef.current.style.setProperty('max-width', maxWidth);
         // wrapperRef.current.style.setProperty('height', '33px');
         // wrapperRef.current.classList.add(...classes);
       }
-      // const cssRules = document.styleSheets[s].cssRules || document.styleSheets[s].rules || []; // IE support
-
-      // for (var c = 0; c < cssRules.length; c++) {
-      //   if (cssRules[c].selectorText === selectorText) return cssRules[c].style[propertyName];
-      // }
-      // }
-      // return null;
-
-      // // // console.log('aaa', { wrapperRef, componentElement });
-      // // const computedWidth = window.getComputedStyle(componentElement!).width;
-      // const width = componentElement.style.getPropertyValue('width');
-      // wrapperRef.current.style.setProperty('all', 'initial');
-      // wrapperRef.current.style.setProperty('width', width);
-      // wrapperRef.current.style.setProperty('height', '33px');
-      // wrapperRef.current.classList.add(...classes);
-      // // console.log('aaa', { computedStyle });
-      // const mutationObserver = new window.MutationObserver((mutationRecord) => {
-      //   // console.log('aaa', { mutationRecord });
-      //   const width = window.getComputedStyle(componentElement!).width;
-      //   wrapperRef.current?.style.setProperty('width', width);
-      // });
-      // mutationObserver.observe(componentElement as Node, {
-      //   attributes: true,
-      //   attributeFilter: ['style', 'class'],
-      // });
     }
-    // }, 0);
   }, [wrapComponent]);
 
   if (wrapComponent) {
@@ -150,10 +124,5 @@ export const DragWrapper: React.FC<DragWrapperProps> = ({
     );
   }
 
-  return (
-    <>
-      {ToolTipAndPlaceHolder}
-      {children}
-    </>
-  );
+  return <>{children}</>;
 };

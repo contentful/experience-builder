@@ -38,6 +38,7 @@ const Tooltip: React.FC<Props> = ({ coordinates, id, label, isAssemblyBlock, isC
     <div
       ref={tooltipRef}
       style={tooltipStyles}
+      data-tooltip
       className={classNames(styles.overlay, {
         [styles.overlayContainer]: isContainer,
         [styles.overlayAssembly]: isAssemblyBlock,

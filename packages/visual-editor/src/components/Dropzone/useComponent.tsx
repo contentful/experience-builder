@@ -14,7 +14,7 @@ import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from './Dropzone.types';
 // import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
 import { ImportedComponentErrorBoundary } from './ImportedComponentErrorBoundary';
-import { DragWrapper } from '@contentful/experiences-components-react';
+import { DragWrapper, DragWrapperProps } from './DragWrapper';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -72,52 +72,50 @@ export const useComponent = ({
     userIsDragging,
   });
 
-  const elementToRender = (props?: Record<string, unknown>) => {
+  const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
     const { dragProps = {}, ...rest } = props || {};
 
-    let element: React.ReactElement;
-    let requiresDragWrapper = true;
-
-    if (builtInComponents.includes(node.data.blockId || '')) {
-      element = React.createElement(componentRegistration.component, {
+    if (isStructuralOrPatternComponent()) {
+      const element = React.createElement(componentRegistration.component, {
         ...rest,
         ...componentProps,
       });
-      requiresDragWrapper = true;
-    } else if (node.type === ASSEMBLY_NODE_TYPE) {
-      element = React.createElement(componentRegistration.component, componentProps);
-      requiresDragWrapper = true;
+      return (
+        <DragWrapper wrapComponent={true} {...dragProps}>
+          {element}
+        </DragWrapper>
+      );
     } else {
       // Don't pass editor props to custom components
       const {
         editorMode: _editorMode,
         renderDropzone: _renderDropzone,
         node: _node,
-        ...otherComponentProps
+        ...customComponentProps
       } = componentProps;
 
-      requiresDragWrapper = !componentRegistration.options?.wrapComponent;
+      const requiresDragWrapper = !componentRegistration.options?.wrapComponent;
 
-      element = React.createElement(
+      const element = React.createElement(
         ImportedComponentErrorBoundary,
         null,
-        requiresDragWrapper
-          ? React.createElement(componentRegistration.component, otherComponentProps)
-          : React.createElement(componentRegistration.component, {
-              ...otherComponentProps,
-              dragProps,
-            }),
+        React.createElement(componentRegistration.component, {
+          ...customComponentProps,
+          dragProps,
+        }),
       );
-    }
 
-    if (requiresDragWrapper) {
       return (
-        <DragWrapper editorMode={true} {...(dragProps as any)}>
+        <DragWrapper wrapComponent={requiresDragWrapper} {...dragProps}>
           {element}
         </DragWrapper>
       );
-    } else {
-      return element;
+    }
+
+    function isStructuralOrPatternComponent() {
+      return (
+        builtInComponents.includes(node.data.blockId || '') || node.type === ASSEMBLY_NODE_TYPE
+      );
     }
   };
 

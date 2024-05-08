@@ -1,0 +1,19 @@
+.full-width-div-wrapper {
+  width: 101%;
+  /* display: flex; */
+  flex-direction: column;
+  padding: 1rem;
+  border: 1px solid black;
+  background-color: cornflowerblue;
+  text-align: center;
+}
+
+div > .full-width-div-no-wrapper {
+  width: 101%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border: 1px solid black;
+  background-color: cornflowerblue;
+  text-align: center;
+}

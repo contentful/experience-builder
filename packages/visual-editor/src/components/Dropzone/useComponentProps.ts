@@ -202,7 +202,7 @@ export const useComponentProps = ({
   const cfStyles = buildCfStyles(props as StyleProps, node.data.blockId);
 
   // Separate the component styles from the editor wrapper styles
-  const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
+  // const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
 
   // Styles that will be applied to the editor wrapper (draggable) element
   const { className: wrapperClass } = useStyleTag({
@@ -214,30 +214,25 @@ export const useComponentProps = ({
             display: 'block !important',
             width: '100%',
           }
-        : {
-            margin,
-            maxWidth,
-            width,
-            height,
-          },
+        : {},
     nodeId: `editor-${node.data.id}`,
   });
 
   // Styles that will be applied to the component element
   const { className: componentClass } = useStyleTag({
     styles: {
-      ...componentStyles,
-      margin: 0,
-      width: '100%',
-      height: '100%',
-      maxWidth: 'none',
-      ...(isEmptyStructureWithRelativeHeight(node.children.length, node?.data.blockId, height) && {
+      ...cfStyles,
+      ...(isEmptyStructureWithRelativeHeight(
+        node.children.length,
+        node?.data.blockId,
+        cfStyles.height,
+      ) && {
         minHeight: EMPTY_CONTAINER_HEIGHT,
       }),
       ...(userIsDragging &&
         isContentfulStructureComponent(node?.data.blockId) &&
         node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
-          padding: addExtraDropzonePadding(componentStyles.padding?.toString() || '0 0 0 0'),
+          padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
         }),
     },
     nodeId: node.data.id,
