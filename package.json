@@ -46,7 +46,8 @@
     "lint-staged": "^15.0.1",
     "nx": "^18.0.4",
     "nx-cloud": "latest",
-    "prettier": "3.2.5"
+    "prettier": "3.2.5",
+    "prettier-plugin-astro": "^0.13.0"
   },
   "lint-staged": {
     "*.{t,j}s?(x)": [
