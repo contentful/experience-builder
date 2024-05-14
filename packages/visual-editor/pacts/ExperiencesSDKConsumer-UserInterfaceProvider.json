@@ -1,0 +1,90 @@
+{
+  "consumer": {
+    "name": "ExperiencesSDKConsumer"
+  },
+  "messages": [
+    {
+      "contents": {
+        "eventType": "updatedEntity",
+        "payload": {
+          "entity": {
+            "sys": {
+              "id": "iloveorange",
+              "type": "iloveorange",
+              "version": 13
+            }
+          },
+          "shouldRerender": true
+        }
+      },
+      "description": "a updatedEntity message",
+      "matchingRules": {
+        "body": {
+          "$.payload.entity.sys": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.payload.entity.sys.id": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.payload.entity.sys.type": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.payload.entity.sys.version": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.payload.shouldRerender": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "contentType": "application/json"
+      },
+      "providerStates": [
+        {
+          "name": "a updatedEntity message is sent"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "12.5.0"
+    },
+    "pactRust": {
+      "ffi": "0.4.20",
+      "models": "1.2.0"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "UserInterfaceProvider"
+  }
+}
