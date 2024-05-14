@@ -78,7 +78,8 @@
     "typescript": "^5.2.2",
     "vite": "^4.3.9",
     "vite-plugin-dts": "^3.6.1",
-    "vite-plugin-svgr": "^4.1.0"
+    "vite-plugin-svgr": "^4.1.0",
+    "@pact-foundation/pact": "^12.5.0"
   },
   "peerDependencies": {
     "contentful": ">=10.6.0",
