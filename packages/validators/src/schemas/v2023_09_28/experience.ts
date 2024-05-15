@@ -98,6 +98,7 @@ const UnboundValuesSchema = z.record(
 const BaseComponentTreeNodeSchema = z.object({
   definitionId: DefinitionPropertyKeySchema,
   displayName: z.string().optional(),
+  slotId: z.string().optional(),
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
 });
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
