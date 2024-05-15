@@ -88,6 +88,7 @@ const builtInStylesWithDesignTokens = [
   'cfLineHeight',
   'cfLetterSpacing',
   'cfTextColor',
+  'cfMaxWidth',
 ];
 
 export const getValueForBreakpoint = (
