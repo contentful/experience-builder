@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0-beta.0](https://github.com/contentful/experience-builder/compare/v1.3.0...v1.4.0-beta.0) (2024-05-15)
+
+### Features
+
+- **validators:** add optional slotId to component tree node ([6abf9b3](https://github.com/contentful/experience-builder/commit/6abf9b34f7323125bbc02e64f3dbdcc68429f078))
+
 # [1.3.0](https://github.com/contentful/experience-builder/compare/v1.3.0-beta.0...v1.3.0) (2024-05-06)
 
 **Note:** Version bump only for package @contentful/experiences-validators
