@@ -13,7 +13,10 @@ const messagePayload = {
     entity: entries[0],
     shouldRerender: true,
   },
+  source: 'composability-app',
 };
+
+// This shape doesn't reflect reality completely, it reality we send a stringified JSON object
 const data = {
   eventType: event,
   payload: {
@@ -26,6 +29,7 @@ const data = {
     },
     shouldRerender: m.boolean(),
   },
+  source: 'composability-app',
 };
 
 const createPostMessageReceiver = (_event: IncomingEvent, payload) =>
@@ -33,12 +37,10 @@ const createPostMessageReceiver = (_event: IncomingEvent, payload) =>
     let listener: EventListener | undefined;
     vi.spyOn(window, 'addEventListener').mockImplementationOnce((_event, _listener) => {
       // _listener will be src/javascripts/features/content-preview-frame/useMessaging.ts:L172
-      console.log('listener', _listener);
       listener = _listener as EventListener;
     });
-    const { result } = renderHook(() => useEditorSubscriber());
-
-    console.log(result.current);
+    renderHook(() => useEditorSubscriber());
+    // TODO assert that the listener is called with the expected payload and performs the right actions
   });
 
 describe('Canvas Subscriber methods', () => {
@@ -49,8 +51,6 @@ describe('Canvas Subscriber methods', () => {
   });
 
   beforeEach(() => {});
-
-  //afterEach(() => vi.resetAllMocks());
 
   it.each`
     event    | payload           | data

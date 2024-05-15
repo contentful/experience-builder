@@ -15,7 +15,8 @@
             }
           },
           "shouldRerender": true
-        }
+        },
+        "source": "composability-app"
       },
       "description": "a updatedEntity message",
       "matchingRules": {
