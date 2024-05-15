@@ -252,12 +252,8 @@ describe('componentTree', () => {
       },
     );
 
-    it.each([
-      'Test', // displayName provided
-      undefined, // displayName not provided
-    ])('succeeds if displayName is %s', (displayName) => {
+    it.each(['Test', undefined])('succeeds if displayName is %s', (displayName) => {
       const componentTree = experience.fields.componentTree[locale];
-      // child includes all attributes, with displayName either provided or not
       const child = {
         definitionId: 'test',
         displayName,
@@ -273,10 +269,27 @@ describe('componentTree', () => {
         },
       };
       const result = validateExperienceFields(updatedExperience, schemaVersion);
-
-      // Since displayName is optional, we expect the validation to succeed
       expect(result.success).toBe(true);
-      // And we expect no errors
+      expect(result.errors).toBeUndefined();
+    });
+
+    it.each(['string-value', undefined])('succeeds if slotId is %s', (slotId) => {
+      const componentTree = experience.fields.componentTree[locale];
+      const child = {
+        definitionId: 'test',
+        slotId,
+        variables: {},
+        children: [],
+      };
+      const updatedExperience = {
+        ...experience,
+        fields: {
+          ...experience.fields,
+          componentTree: { [locale]: { ...componentTree, children: [child] } },
+        },
+      };
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
+      expect(result.success).toBe(true);
       expect(result.errors).toBeUndefined();
     });
 
