@@ -6,8 +6,10 @@
     {
       "contents": {
         "eventType": "updatedEntity",
+        "newAttribute": "iloveorange",
         "payload": {
           "entity": {
+            "fields": {},
             "sys": {
               "id": "iloveorange",
               "type": "iloveorange",
@@ -21,6 +23,22 @@
       "description": "a updatedEntity message",
       "matchingRules": {
         "body": {
+          "$.newAttribute": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
+          "$.payload.entity.fields": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          },
           "$.payload.entity.sys": {
             "combine": "AND",
             "matchers": [

@@ -26,10 +26,12 @@ const data = {
         type: m.string(),
         version: m.integer(),
       }),
+      fields: m.like({}),
     },
     shouldRerender: m.boolean(),
   },
   source: 'composability-app',
+  newAttribute: m.string(),
 };
 
 const createPostMessageReceiver = (_event: IncomingEvent, payload) =>
