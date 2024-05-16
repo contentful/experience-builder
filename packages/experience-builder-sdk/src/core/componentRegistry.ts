@@ -3,6 +3,7 @@ import type {
   ComponentRegistration,
   ComponentDefinition,
   ComponentRegistrationOptions,
+  DesignTokensDefinition,
 } from '@contentful/experiences-core/types';
 import {
   OUTGOING_EVENTS,
@@ -24,6 +25,8 @@ import { validateComponentDefinition } from '@contentful/experiences-validators'
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
 import { dividerDefinition } from '@contentful/experiences-core';
+
+const CssVarRegex = /var\(--[\w-]+\)/;
 
 const cloneObject = <T>(targetObject: T): T => {
   if (typeof structuredClone !== 'undefined') {
@@ -189,6 +192,100 @@ export const runRegisteredComponentValidations = () => {
   });
 };
 
+const getSingleCssVariableValue = (
+  element: HTMLDivElement,
+  cssVariableValue: string,
+  cssAttribute: any,
+) => {
+  element.style[cssAttribute] = cssVariableValue;
+  const styles = getComputedStyle(element);
+  const resolvedValue = styles.getPropertyValue(cssAttribute);
+  return resolvedValue;
+};
+
+const getAllCssVariableValues = (
+  element: HTMLDivElement,
+  cssVariable: Record<string, string>,
+  cssAttribute: any,
+) => {
+  const resolvedCssVariables = {} as Record<string, string>;
+
+  Object.keys(cssVariable).forEach((key) => {
+    const cssVariableValue = cssVariable[key];
+    if (CssVarRegex.test(cssVariableValue)) {
+      const resolvedValue = getSingleCssVariableValue(element, cssVariableValue, cssAttribute);
+      resolvedCssVariables[cssVariableValue] = resolvedValue;
+    }
+  });
+  return resolvedCssVariables;
+};
+
+type CssMapType = {
+  variable?: Record<string, string>;
+  property: string;
+};
+
+const resolveCssVariables = (designTokensDefinition: DesignTokensDefinition) => {
+  const {
+    spacing,
+    sizing,
+    color,
+    borderRadius,
+    fontSize,
+    lineHeight,
+    letterSpacing,
+    textColor,
+    border,
+  } = designTokensDefinition;
+  const resolvedCssVariables = {} as Record<string, string>;
+
+  // Create an element
+  const element = document.createElement('div');
+  document.body.appendChild(element);
+
+  const cssProperties: CssMapType[] = [
+    { variable: spacing, property: 'margin' },
+    { variable: sizing, property: 'width' },
+    { variable: color, property: 'background-color' },
+    { variable: borderRadius, property: 'border-radius' },
+    { variable: fontSize, property: 'font-size' },
+    { variable: lineHeight, property: 'line-height' },
+    { variable: letterSpacing, property: 'letter-spacing' },
+    { variable: textColor, property: 'color' },
+  ];
+
+  cssProperties.forEach(({ variable, property }) => {
+    if (variable) {
+      const rawResolvedValues = getAllCssVariableValues(element, variable, property);
+      Object.assign(resolvedCssVariables, rawResolvedValues);
+    }
+  });
+
+  if (border) {
+    const tempResolvedValue = {} as Record<string, string>;
+    Object.keys(border).forEach((borderKey) => {
+      const { width, style, color } = border[borderKey];
+
+      if (CssVarRegex.test(width)) {
+        const resolvedValue = getSingleCssVariableValue(element, width, 'border-width');
+        tempResolvedValue[width] = resolvedValue;
+      }
+      if (CssVarRegex.test(style)) {
+        const resolvedValue = getSingleCssVariableValue(element, style, 'border-style');
+        tempResolvedValue[style] = resolvedValue;
+      }
+      if (CssVarRegex.test(color)) {
+        const resolvedValue = getSingleCssVariableValue(element, color, 'border-color');
+        tempResolvedValue[color] = resolvedValue;
+      }
+      Object.assign(resolvedCssVariables, tempResolvedValue);
+    });
+  }
+
+  document.body.removeChild(element);
+  return resolvedCssVariables;
+};
+
 export const sendConnectedEventWithRegisteredComponents = () => {
   // Send the definitions (without components) via the connection message to the experience builder
   const registeredDefinitions = Array.from(componentRegistry.values()).map(
@@ -202,6 +299,7 @@ export const sendConnectedEventWithRegisteredComponents = () => {
 
   sendMessage(OUTGOING_EVENTS.DesignTokens, {
     designTokens: designTokensRegistry,
+    resolvedCssVariables: resolveCssVariables(designTokensRegistry),
   });
 };
 
