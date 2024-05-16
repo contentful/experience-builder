@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0-beta.0](https://github.com/contentful/experience-builder/compare/v1.4.0...v1.5.0-beta.0) (2024-05-16)
+
+### Bug Fixes
+
+- add maxWidth to list with design tokens ([876c927](https://github.com/contentful/experience-builder/commit/876c92721ca9d98a898039c4bec1142ec068ac3c))
+- cleanup code ([53f68e0](https://github.com/contentful/experience-builder/commit/53f68e06f71fe3315312e1f2721274cc0fb1a6ae))
+
+### Features
+
+- resolve css variables in experiences ([9180d23](https://github.com/contentful/experience-builder/commit/9180d238a890870dffffb364b6ab88bab70b09e7))
+
 # [1.4.0](https://github.com/contentful/experience-builder/compare/v1.4.0-beta.0...v1.4.0) (2024-05-15)
 
 **Note:** Version bump only for package @contentful/experience
