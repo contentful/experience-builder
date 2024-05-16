@@ -1,5 +1,7 @@
 import { defineComponents } from '@contentful/experiences-sdk-react';
 import ComponentWithChildren from './components/ComponentWithChildren';
+import DualDropzones from './components/DualDropzones';
+import IconGroup from './components/IconGroup';
 import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 
@@ -20,6 +22,44 @@ defineComponents([
           defaultValue: 'Lorem ipsum',
         },
       },
+    },
+    options: {
+      wrapComponent: false,
+    },
+  },
+  {
+    component: DualDropzones,
+    definition: {
+      id: 'dual-dropzones',
+      thumbnailUrl: 'https://static.thenounproject.com/png/3406258-200.png',
+      // children: true, // ['zone1', 'zone2'],
+      name: 'Dual Dropzones',
+      category: 'Custom Components',
+      builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBorder'],
+      variables: {
+        // zone1: {
+        //   displayName: 'Zone 1',
+        //   type: 'Slot',
+        // },
+        // zone2: {
+        //   displayName: 'Zone 2',
+        //   type: 'Slot',
+        // },
+      },
+    },
+    // options: {
+    //   wrapComponent: false,
+    // },
+  },
+  {
+    component: IconGroup,
+    definition: {
+      id: 'icon-group',
+      name: 'Icon Group',
+      category: 'Custom Components',
+      builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfFlexDirection'],
+      variables: {},
+      children: true,
     },
     options: {
       wrapComponent: false,

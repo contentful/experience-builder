@@ -9,12 +9,14 @@ interface OnDropParams {
   componentType: string;
   destinationZoneId: string;
   destinationIndex: number;
+  slotId?: string;
 }
 export const onDrop = ({
   destinationIndex,
   componentType,
   destinationZoneId,
   data,
+  slotId,
 }: OnDropParams) => {
   const parentId = destinationZoneId;
 
@@ -29,12 +31,15 @@ export const onDrop = ({
     data: {
       blockId: componentType,
       id: generateId(componentType),
+      slotId,
       breakpoints: [],
       dataSource: {},
       props: {},
       unboundValues: {},
     },
   };
+
+  console.log(`[DEBUG] onDrop`, emptyComponentData);
 
   onComponentDropped({
     node: emptyComponentData,

@@ -7,3 +7,4 @@ export * from './ContentfulContainer';
 export * from './Divider';
 export * from './Columns';
 export * from './Assembly';
+export * from './Slot';

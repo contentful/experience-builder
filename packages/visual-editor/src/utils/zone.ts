@@ -27,3 +27,8 @@ export const getZoneParents = (zoneId: string) => {
 
   return getZonesToRoot(element);
 };
+
+export const parseZoneId = (zoneId: string) => {
+  const [nodeId, slotId] = zoneId.includes('|') ? zoneId.split('|') : [zoneId, undefined];
+  return { nodeId, slotId };
+};

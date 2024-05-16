@@ -98,6 +98,10 @@ export const CONTENTFUL_COMPONENTS = {
     id: 'contentful-divider',
     name: 'Divider',
   },
+  slot: {
+    id: 'contentful-slot',
+    name: 'Slot',
+  },
 };
 
 export const ASSEMBLY_NODE_TYPE = 'assembly';

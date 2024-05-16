@@ -160,7 +160,11 @@ export const CompositionBlock = ({
   const cfStyles = buildCfStyles(nodeProps, node.definitionId);
 
   if (
-    isEmptyStructureWithRelativeHeight(node.children.length, node.definitionId, cfStyles.height)
+    isEmptyStructureWithRelativeHeight(
+      node.children.filter((child) => child.slotId === node.slotId).length,
+      node.definitionId,
+      cfStyles.height,
+    )
   ) {
     cfStyles.minHeight = EMPTY_CONTAINER_HEIGHT;
   }

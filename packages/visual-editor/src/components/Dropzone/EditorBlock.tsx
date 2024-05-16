@@ -7,6 +7,7 @@ import { useComponent } from './useComponent';
 import type {
   ExperienceTreeNode,
   ResolveDesignValueType,
+  RenderDropzoneFunction,
 } from '@contentful/experiences-core/types';
 import {
   CONTENTFUL_COMPONENTS,
@@ -15,9 +16,9 @@ import {
   ASSEMBLY_NODE_TYPE,
 } from '@contentful/experiences-core/constants';
 import { DraggableChildComponent } from '@components/Draggable/DraggableChildComponent';
-import { RenderDropzoneFunction } from './Dropzone.types';
 import { PlaceholderParams } from '@components/Draggable/Placeholder';
 import Hitboxes from './Hitboxes';
+import { parseZoneId } from '@/utils/zone';
 
 type EditorBlockProps = {
   placeholder: PlaceholderParams;
@@ -39,13 +40,15 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   userIsDragging,
   placeholder,
 }) => {
+  const { slotId } = parseZoneId(zoneId);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, wrapperProps, definition, elementToRender } = useComponent({
+  const { node, wrapperProps, definition, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
     userIsDragging,
+    slotId,
   });
 
   const coordinates = useSelectedInstanceCoordinates({ node });
@@ -55,7 +58,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
-  const isEmptyZone = !node.children.length;
+  const isEmptyZone = !node.children.filter((node) => node.data.slotId === slotId).length;
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
@@ -83,7 +86,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     if (userIsDragging) return;
 
     sendMessage(OUTGOING_EVENTS.NewHoveredElement, {
-      nodeId: componentId,
+      nodeId: node.data.id,
     });
   };
 
@@ -91,11 +94,11 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     return (
       <DraggableChildComponent
         elementToRender={elementToRender}
-        id={componentId}
+        id={node.data.id}
         index={index}
         isAssemblyBlock={isAssembly || isAssemblyBlock}
         isDragDisabled
-        isSelected={selectedNodeId === componentId}
+        isSelected={selectedNodeId === node.data.id}
         userIsDragging={userIsDragging}
         isContainer={isContainer}
         blockId={node.data.blockId!}
@@ -112,11 +115,11 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     <DraggableComponent
       placeholder={placeholder}
       definition={definition}
-      id={componentId}
+      id={node.data.id}
       index={index}
       isAssemblyBlock={isAssembly || isAssemblyBlock}
       isDragDisabled={isAssemblyBlock}
-      isSelected={selectedNodeId === componentId}
+      isSelected={selectedNodeId === node.data.id}
       userIsDragging={userIsDragging}
       isContainer={isContainer}
       blockId={node.data.blockId}
@@ -126,7 +129,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       onMouseOver={onMouseOver}>
       {elementToRender()}
       {isStructureComponent && userIsDragging && (
-        <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
+        <Hitboxes parentZoneId={zoneId} zoneId={node.data.id} isEmptyZone={isEmptyZone} />
       )}
     </DraggableComponent>
   );

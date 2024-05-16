@@ -22,26 +22,35 @@ import type {
   ComponentRegistration,
   Link,
   DesignValue,
+  RenderDropzoneFunction,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useStyleTag } from '../../hooks/useStyleTag';
 import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
-import type { RenderDropzoneFunction } from './Dropzone.types';
 import { DRAG_PADDING } from '../../types/constants';
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
-type ResolvedComponentProps = ComponentProps & {
-  children?: React.JSX.Element | undefined;
+type ComponentEditorProps = {
+  children?: React.JSX.Element;
   className: string;
   editorMode: boolean;
   node: ExperienceTreeNode;
   renderDropzone: RenderDropzoneFunction;
+  cfSlotProps: SlotProps;
 };
+
+type SlotProps = {
+  editorMode: boolean;
+  node: ExperienceTreeNode;
+  renderDropzone: RenderDropzoneFunction;
+};
+
+type ResolvedComponentProps = ComponentProps & ComponentEditorProps;
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -50,6 +59,7 @@ type UseComponentProps = {
   definition: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
+  slotId?: string;
 };
 
 export const useComponentProps = ({
@@ -59,6 +69,7 @@ export const useComponentProps = ({
   renderDropzone,
   definition,
   userIsDragging,
+  slotId,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
@@ -82,6 +93,17 @@ export const useComponentProps = ({
 
     const extractedProps = Object.entries(definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
+        // TODO: Experimental solution for slots defined as component definition variables
+        // if (variableDefinition.type === 'Slot') {
+        //   return {
+        //     ...acc,
+        //     [variableName]: renderDropzone(node, {
+        //       zoneId: [node.data.id, variableName].join('|'),
+        //       // slotId: variableName,
+        //     }),
+        //   };
+        // }
+
         const variableMapping = node.data.props[variableName];
         if (!variableMapping) {
           return {
@@ -223,6 +245,10 @@ export const useComponentProps = ({
     nodeId: `editor-${node.data.id}`,
   });
 
+  if (slotId) {
+    console.log(`[DEBUG] useComponentProps`, { slotId, node, props });
+  }
+
   // Styles that will be applied to the component element
   const { className: componentClass } = useStyleTag({
     styles: {
@@ -231,7 +257,11 @@ export const useComponentProps = ({
       width: '100%',
       height: '100%',
       maxWidth: 'none',
-      ...(isEmptyStructureWithRelativeHeight(node.children.length, node?.data.blockId, height) && {
+      ...(isEmptyStructureWithRelativeHeight(
+        node.children.filter((child) => child.data.slotId === slotId).length,
+        node?.data.blockId,
+        height,
+      ) && {
         minHeight: EMPTY_CONTAINER_HEIGHT,
       }),
       ...(userIsDragging &&
@@ -260,7 +290,27 @@ export const useComponentProps = ({
     node,
     renderDropzone,
     ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab']),
-    ...(definition.children ? { children: renderDropzone(node) } : {}),
+    ...(definition.children
+      ? {
+          children: renderDropzone(node),
+          // children: Array.isArray(definition.children)
+          //   ? definition.children.reduce(
+          //       (acc, childrenId) => ({
+          //         ...acc,
+          //         // [childrenId]: renderDropzone(node, { zoneId: `${node.data.id}-${childrenId}` }),
+          //         [childrenId]: renderDropzone(node, { childrenId }),
+          //       }),
+          //       {},
+          //     )
+          //   : renderDropzone(node),
+        }
+      : {}),
+    // TODO: Move editorMode and renderDropzone state to a context provider as these props are not unique to the component
+    cfSlotProps: {
+      editorMode: true,
+      node,
+      renderDropzone,
+    },
   };
 
   return { componentProps, wrapperProps };

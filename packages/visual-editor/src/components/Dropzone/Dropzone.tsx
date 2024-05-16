@@ -1,7 +1,10 @@
 import React, { ElementType, useCallback, useMemo } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import { isComponentAllowedOnRoot } from '@contentful/experiences-core';
-import type { ResolveDesignValueType } from '@contentful/experiences-core/types';
+import type {
+  ResolveDesignValueType,
+  RenderDropzoneFunction,
+} from '@contentful/experiences-core/types';
 import { EditorBlock } from './EditorBlock';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
@@ -14,9 +17,9 @@ import { getItem } from '@/utils/getItem';
 import { useZoneStore } from '@/store/zone';
 import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
 import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
-import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
+import { parseZoneId } from '@/utils/zone';
 
 type DropzoneProps = {
   zoneId: string;
@@ -24,6 +27,7 @@ type DropzoneProps = {
   resolveDesignValue?: ResolveDesignValueType;
   className?: string;
   WrapperComponent?: ElementType | string;
+  wrapperProps?: Record<string, unknown>;
 };
 
 export function Dropzone({
@@ -32,14 +36,25 @@ export function Dropzone({
   resolveDesignValue,
   className,
   WrapperComponent = 'div',
+  wrapperProps,
   ...rest
 }: DropzoneProps) {
+  const { nodeId, slotId } = parseZoneId(zoneId);
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
   const isDraggingNewComponent = useDraggedItemStore((state) => Boolean(state.componentId));
   const isHoveringZone = useZoneStore((state) => state.hoveringZone === zoneId);
   const tree = useTreeStore((state) => state.tree);
   const content = node?.children || tree.root?.children || [];
+
+  // if (slotId) {
+  //   console.log(`[DEBUG] Dropzone`, {
+  //     slotId,
+  //     zoneId,
+  //     node,
+  //     filtered: content.filter((node) => node.data.slotId === slotId),
+  //   });
+  // }
 
   const direction = useDropzoneDirection({ resolveDesignValue, node, zoneId });
 
@@ -136,8 +151,9 @@ export function Dropzone({
           <WrapperComponent
             {...(provided || { droppableProps: {} }).droppableProps}
             ref={provided?.innerRef}
-            id={zoneId}
+            id={nodeId}
             data-ctfl-zone-id={zoneId}
+            data-ctfl-slot-id={slotId}
             className={classNames(
               styles.container,
               {
@@ -150,32 +166,37 @@ export function Dropzone({
               className,
             )}
             node={node}
+            {...wrapperProps}
             {...rest}>
             {isEmptyCanvas ? (
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
             ) : (
-              content.map((item, i) => {
-                const componentId = item.data.id;
-                return (
-                  <EditorBlock
-                    placeholder={{
-                      isDraggingOver: snapshot?.isDraggingOver,
-                      totalIndexes: content.length,
-                      elementIndex: i,
-                      dropzoneElementId: zoneId,
-                      direction,
-                    }}
-                    index={i}
-                    zoneId={zoneId}
-                    key={componentId}
-                    userIsDragging={userIsDragging}
-                    draggingNewComponent={isDraggingNewComponent}
-                    node={item}
-                    resolveDesignValue={resolveDesignValue}
-                    renderDropzone={renderDropzone}
-                  />
-                );
-              })
+              content
+                // Filtering out based on the current slot:
+                .filter((node) => node.data.slotId === slotId)
+                // Rendering the children
+                .map((item, i) => {
+                  const componentId = item.data.id;
+                  return (
+                    <EditorBlock
+                      placeholder={{
+                        isDraggingOver: snapshot?.isDraggingOver,
+                        totalIndexes: content.length,
+                        elementIndex: i,
+                        dropzoneElementId: zoneId,
+                        direction,
+                      }}
+                      index={i}
+                      zoneId={zoneId}
+                      key={componentId}
+                      userIsDragging={userIsDragging}
+                      draggingNewComponent={isDraggingNewComponent}
+                      node={item}
+                      resolveDesignValue={resolveDesignValue}
+                      renderDropzone={renderDropzone}
+                    />
+                  );
+                })
             )}
             {provided?.placeholder}
           </WrapperComponent>

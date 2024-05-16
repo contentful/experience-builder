@@ -1,12 +1,14 @@
 import React, { ElementType } from 'react';
-import type { ResolveDesignValueType } from '@contentful/experiences-core/types';
+import type {
+  ResolveDesignValueType,
+  RenderDropzoneFunction,
+} from '@contentful/experiences-core/types';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
 import styles from './styles.module.css';
 import classNames from 'classnames';
 import { ROOT_ID } from '@/types/constants';
 
-import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 
 type DropzoneProps = {

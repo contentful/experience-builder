@@ -66,7 +66,6 @@ export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyper
   return renderDropzone(node, {
     ['data-test-id']: 'contentful-container',
     className: combineClasses(className, 'contentful-container', 'contentful-container-link'),
-    zoneId: node.data.id,
     WrapperComponent: 'a',
     onClick: stopPropagationInEditorMode,
   });

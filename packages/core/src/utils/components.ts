@@ -5,6 +5,7 @@ const structureComponents = new Set([
   CONTENTFUL_COMPONENTS.columns.id,
   CONTENTFUL_COMPONENTS.container.id,
   CONTENTFUL_COMPONENTS.singleColumn.id,
+  CONTENTFUL_COMPONENTS.slot.id,
 ]);
 
 export const isContentfulStructureComponent = (componentId?: string) =>

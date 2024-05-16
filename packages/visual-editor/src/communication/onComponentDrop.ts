@@ -14,6 +14,7 @@ export const onComponentDropped = ({
   parentType?: string;
   parentBlockId?: string;
   parentId?: string;
+  slotId?: string;
 }) => {
   sendMessage(OUTGOING_EVENTS.ComponentDropped, {
     node,

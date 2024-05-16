@@ -2,6 +2,7 @@ import React from 'react';
 import type {
   ExperienceTreeNode,
   ResolveDesignValueType,
+  RenderDropzoneFunction,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
@@ -11,8 +12,7 @@ import { Assembly } from '@contentful/experiences-components-react';
 import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
-import type { RenderDropzoneFunction } from './Dropzone.types';
-import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
+import { NoWrapDraggableProps } from '@/components/Draggable/DraggableChildComponent';
 import { ImportedComponentErrorBoundary } from './ImportedComponentErrorBoundary';
 
 type UseComponentProps = {
@@ -20,6 +20,7 @@ type UseComponentProps = {
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
+  slotId?: string;
 };
 
 export const useComponent = ({
@@ -27,6 +28,7 @@ export const useComponent = ({
   resolveDesignValue,
   renderDropzone,
   userIsDragging,
+  slotId,
 }: UseComponentProps) => {
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const entityStore = useEntityStore((state) => state.entityStore);
@@ -60,8 +62,6 @@ export const useComponent = ({
     return registration;
   }, [node]);
 
-  const componentId = node.data.id;
-
   const { componentProps, wrapperProps } = useComponentProps({
     node,
     areEntitiesFetched,
@@ -69,6 +69,7 @@ export const useComponent = ({
     renderDropzone,
     definition: componentRegistration.definition,
     userIsDragging,
+    slotId,
   });
 
   // Only pass editor props to built-in components
@@ -88,7 +89,6 @@ export const useComponent = ({
 
   return {
     node,
-    componentId,
     elementToRender,
     wrapperProps,
     definition: componentRegistration.definition,

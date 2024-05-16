@@ -146,6 +146,7 @@ export type ExperienceTreeNode = {
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
+    slotId?: string;
     assembly?: {
       id: string;
       componentId: string;
@@ -375,3 +376,8 @@ export type BackgroundImageOptions = {
   quality?: string;
   targetSize: string;
 };
+
+export type RenderDropzoneFunction = (
+  node: ExperienceTreeNode,
+  props?: Record<string, unknown>,
+) => React.JSX.Element;
