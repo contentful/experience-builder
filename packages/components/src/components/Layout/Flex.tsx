@@ -1,5 +1,6 @@
 import React, { MouseEventHandler, forwardRef } from 'react';
 import type * as CSS from 'csstype';
+import { combineClasses } from '@/utils/combineClasses';
 
 export interface FlexProps {
   /**
@@ -61,6 +62,7 @@ export interface FlexProps {
   className?: string;
   cssStyles?: Record<string, string>;
   id?: string;
+  dragProps?: any; //TODO: add type
 }
 
 export const Flex = forwardRef<HTMLDivElement, FlexProps>(
@@ -89,14 +91,33 @@ export const Flex = forwardRef<HTMLDivElement, FlexProps>(
       flexGrow,
       className,
       cssStyles,
+      dragProps,
       ...props
     },
-    ref
+    ref,
   ) => {
+    const {
+      innerRef,
+      className: dragClassName,
+      ToolTipAndPlaceHolder,
+      ...restDragProps
+    } = dragProps || {};
+
+    console.log('aaa', { ToolTipAndPlaceHolder });
+
     return (
       <div
         id={id}
-        ref={ref}
+        ref={(refNode) => {
+          if (innerRef && refNode) innerRef(refNode);
+          if (ref) {
+            if (ref instanceof Function) {
+              ref(refNode);
+            } else {
+              ref.current = refNode;
+            }
+          }
+        }}
         style={{
           display: 'flex',
           flex,
@@ -115,16 +136,18 @@ export const Flex = forwardRef<HTMLDivElement, FlexProps>(
           flexGrow,
           ...cssStyles,
         }}
-        className={className}
+        className={combineClasses(className, dragClassName)}
         onMouseEnter={onMouseEnter}
         onMouseUp={onMouseUp}
         onMouseDown={onMouseDown}
         onMouseLeave={onMouseLeave}
         onClick={onClick}
-        {...props}>
+        {...props}
+        {...restDragProps}>
+        {ToolTipAndPlaceHolder}
         {children}
       </div>
     );
-  }
+  },
 );
 Flex.displayName = 'Flex';

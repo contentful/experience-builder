@@ -30,6 +30,7 @@ export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = (EditorM
   cfHyperlink?: StyleProps['cfHyperlink'];
   cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
   WrapperComponent?: React.ElementType;
+  dragProps?: any; // TODO: add type
 };
 
 export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyperlinkProps> = (

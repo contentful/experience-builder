@@ -39,17 +39,17 @@ export function withComponentWrapper<T extends object>(
     const component = options.wrapComponent ? (
       <div
         data-cacawrapper
-        className={classNames(className, classes, dragClassName)}
+        className={classNames(classes, dragClassName)}
         {...restOfDragProps}
         ref={(refNode: HTMLElement | null) => {
           if (innerRef && refNode) innerRef(refNode);
         }}>
         {ToolTipAndPlaceHolder}
-        <Component {...(props as T)} />
+        <Component className={classNames(classes, className)} {...(props as T)} />
       </div>
     ) : (
       React.createElement(Component, {
-        className: classes + className ? classes + ' ' + className : undefined,
+        className: classNames(classes, className),
         ...(props as T),
       })
     );

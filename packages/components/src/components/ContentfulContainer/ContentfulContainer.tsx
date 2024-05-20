@@ -8,7 +8,7 @@ import { combineClasses } from '../../utils/combineClasses';
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 
 export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (props) => {
-  const { className, editorMode, children, cfHyperlink } = props;
+  const { className, editorMode, children, cfHyperlink, dragProps = {} } = props;
 
   if (cfHyperlink) {
     return <ContentfulContainerAsHyperlink {...props}>{children}</ContentfulContainerAsHyperlink>;
@@ -28,25 +28,33 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
   const { renderDropzone, node } = props;
 
   const isEmpty = !node.children.length;
+  const { ...restOfDragProps } = dragProps;
 
   const renderDropzoneComponent = () => {
     return renderDropzone(node, {
       ['data-test-id']: 'contentful-container',
       id: 'ContentfulContainer',
       className: combineClasses('contentful-container', className),
+      dragProps: restOfDragProps,
       WrapperComponent: Flex,
     });
   };
 
   // Perform ternary so that we only render the wrapper div if the container is empty
   return isEmpty ? (
-    <div className="cf-container-wrapper" data-ctfl-draggable-id={node.data.id}>
-      <div className="cf-container-label">
-        {node.data.blockId === CONTENTFUL_COMPONENTS.section.id ? 'Section' : 'Container'}
+    <>
+      <div className="cf-container-wrapper" data-ctfl-draggable-id={node.data.id}>
+        <div className="cf-container-label">
+          {node.data.blockId === CONTENTFUL_COMPONENTS.section.id ? 'Section' : 'Container'}
+        </div>
+        {/* {ToolTipAndPlaceHolder} */}
+        {renderDropzoneComponent()}
       </div>
-      {renderDropzoneComponent()}
-    </div>
+    </>
   ) : (
-    renderDropzoneComponent()
+    <>
+      {/* {ToolTipAndPlaceHolder} */}
+      {renderDropzoneComponent()}
+    </>
   );
 };
