@@ -50,6 +50,7 @@ type UseComponentProps = {
   definition: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
+  slotId?: string;
 };
 
 export const useComponentProps = ({
@@ -59,6 +60,7 @@ export const useComponentProps = ({
   renderDropzone,
   definition,
   userIsDragging,
+  slotId,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
@@ -87,6 +89,15 @@ export const useComponentProps = ({
           return {
             ...acc,
             [variableName]: variableDefinition.defaultValue,
+          };
+        }
+
+        if (variableDefinition.type === 'Dropzone') {
+          return {
+            ...acc,
+            [variableName]: renderDropzone(node, {
+              zoneId: [node.data.id, variableName].join('|'),
+            }),
           };
         }
 
@@ -231,7 +242,11 @@ export const useComponentProps = ({
       width: '100%',
       height: '100%',
       maxWidth: 'none',
-      ...(isEmptyStructureWithRelativeHeight(node.children.length, node?.data.blockId, height) && {
+      ...(isEmptyStructureWithRelativeHeight(
+        node.children.filter((child) => child.data.slotId === slotId).length,
+        node?.data.blockId,
+        height,
+      ) && {
         minHeight: EMPTY_CONTAINER_HEIGHT,
       }),
       ...(userIsDragging &&

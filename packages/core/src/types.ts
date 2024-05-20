@@ -146,6 +146,7 @@ export type ExperienceTreeNode = {
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
+    slotId?: string;
     assembly?: {
       id: string;
       componentId: string;
