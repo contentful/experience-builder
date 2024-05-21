@@ -85,6 +85,7 @@ describe('validateComponentDefinition', () => {
       'Media',
       'Object',
       'Hyperlink',
+      'Dropzone',
     ]);
   });
 });
