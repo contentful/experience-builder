@@ -35,7 +35,7 @@ export function Dropzone({
   WrapperComponent = 'div',
   ...rest
 }: DropzoneProps) {
-  const { nodeId, slotId } = parseZoneId(zoneId);
+  const { slotId } = parseZoneId(zoneId);
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const draggedItem = useDraggedItemStore((state) => state.draggedItem);
   const isDraggingNewComponent = useDraggedItemStore((state) => Boolean(state.componentId));
@@ -94,6 +94,14 @@ export function Dropzone({
       return false;
     }
 
+    if (draggedItem) {
+      // Disable all dropzones to prevent moving reserved dropzone components
+      const { slotId: draggedSlotId } = parseZoneId(draggedItem?.source.droppableId);
+      if (draggedSlotId) {
+        return false;
+      }
+    }
+
     // Disable dropzone for Assembly
     if (isAssembly) {
       return false;
@@ -113,6 +121,7 @@ export function Dropzone({
     isRootZone,
     isDraggingNewComponent,
     draggedBlockId,
+    draggedItem,
   ]);
 
   if (!resolveDesignValue) {

@@ -90,6 +90,23 @@ export const CompositionBlock = ({
     return Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variable = node.variables[variableName];
+
+        if (variableDefinition.type === 'Dropzone') {
+          const slotNode = node.children.find(({ slotId }) => slotId === variableName);
+          if (slotNode) {
+            acc[variableName] = (
+              <CompositionBlock
+                node={slotNode}
+                locale={locale}
+                hyperlinkPattern={hyperlinkPattern}
+                entityStore={entityStore}
+                resolveDesignValue={resolveDesignValue}
+              />
+            );
+          }
+          return acc;
+        }
+
         if (!variable) return acc;
         switch (variable.type) {
           case 'DesignValue':
@@ -148,6 +165,7 @@ export const CompositionBlock = ({
   }, [
     componentRegistration,
     isAssembly,
+    node.children,
     node.variables,
     resolveDesignValue,
     entityStore,

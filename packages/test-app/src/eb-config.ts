@@ -47,7 +47,6 @@ defineComponents([
     definition: {
       id: 'dual-dropzones',
       thumbnailUrl: 'https://static.thenounproject.com/png/3406258-200.png',
-      // children: true, // ['zone1', 'zone2'],
       name: 'Dual Dropzones',
       category: 'Custom Components',
       builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBorder'],
@@ -62,9 +61,6 @@ defineComponents([
         },
       },
     },
-    // options: {
-    //   wrapComponent: false,
-    // },
   },
   {
     component: CustomImageComponent,
