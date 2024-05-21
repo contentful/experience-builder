@@ -208,6 +208,7 @@ export const useComponentProps = ({
     areEntitiesFetched,
     unboundValues,
     entityStore,
+    renderDropzone,
   ]);
 
   const cfStyles = buildCfStyles(props as StyleProps, node.data.blockId);
