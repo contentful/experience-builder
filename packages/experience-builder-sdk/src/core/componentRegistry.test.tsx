@@ -12,6 +12,7 @@ import {
 } from '@contentful/experiences-core/constants';
 import * as registry from './componentRegistry';
 import type { ComponentRegistration } from '@contentful/experiences-core/types';
+import { SDK_VERSION } from '../sdkVersion';
 
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>;
@@ -396,11 +397,13 @@ describe('sendConnectedEventWithRegisteredComponents', () => {
 
     registry.sendConnectedEventWithRegisteredComponents();
 
-    expect(window.postMessage).toHaveBeenCalledWith(
+    expect(window.postMessage).toHaveBeenNthCalledWith(
+      1,
       {
         source: 'customer-app',
-        eventType: OUTGOING_EVENTS.RegisteredComponents,
+        eventType: OUTGOING_EVENTS.Connected,
         payload: {
+          sdkVersion: SDK_VERSION,
           definitions: Array.from(registry.componentRegistry.values()).map(
             (registration) => registration.definition,
           ),
@@ -409,12 +412,26 @@ describe('sendConnectedEventWithRegisteredComponents', () => {
       '*',
     );
 
-    expect(window.postMessage).toHaveBeenCalledWith(
+    expect(window.postMessage).toHaveBeenNthCalledWith(
+      2,
       {
         source: 'customer-app',
         eventType: OUTGOING_EVENTS.RegisteredBreakpoints,
         payload: {
           breakpoints: customBreakpoints,
+        },
+      },
+      '*',
+    );
+
+    expect(window.postMessage).toHaveBeenNthCalledWith(
+      3,
+      {
+        source: 'customer-app',
+        eventType: OUTGOING_EVENTS.DesignTokens,
+        payload: {
+          designTokens: {},
+          resolvedCssVariables: {},
         },
       },
       '*',
