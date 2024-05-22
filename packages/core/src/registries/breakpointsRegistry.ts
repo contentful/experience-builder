@@ -1,6 +1,5 @@
 import { Breakpoint, validateBreakpointsDefinition } from '@contentful/experiences-validators';
 
-// export const breakpointsRegistry = new Map<string, Breakpoint>();
 export let breakpointsRegistry: Breakpoint[] = [];
 
 /**
@@ -21,6 +20,11 @@ export const runBreakpointsValidation = () => {
   }
 };
 
-export const resetComponentRegistry = () => {
+// Used in the tests to get a breakpoint registration
+export const getBreakpointRegistration = (id: string) =>
+  breakpointsRegistry.find((breakpoint) => breakpoint.id === id);
+
+// Used in the tests to reset the registry
+export const resetBreakpointsRegistry = () => {
   breakpointsRegistry = [];
 };

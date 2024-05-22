@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { EntityStore } from '@contentful/experiences-core';
+import { EntityStore, breakpointsRegistry } from '@contentful/experiences-core';
 import {
   componentRegistry,
   sendConnectedEventWithRegisteredComponents,
@@ -57,6 +57,7 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
           detail: {
             componentRegistry,
             designTokens: designTokensRegistry,
+            breakpoints: breakpointsRegistry,
             locale,
             entities: initialEntities ?? [],
           },

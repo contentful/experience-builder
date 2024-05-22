@@ -1,5 +1,9 @@
 import React from 'react';
-import { containerDefinition, sectionDefinition } from '@contentful/experiences-core';
+import {
+  containerDefinition,
+  defineBreakpoints,
+  sectionDefinition,
+} from '@contentful/experiences-core';
 import {
   INTERNAL_EVENTS,
   CONTENTFUL_COMPONENTS,
@@ -336,5 +340,84 @@ describe('sendRegisteredComponentsMessage', () => {
         expect(definition).not.toHaveProperty('component');
       }
     }
+  });
+});
+
+describe('sendConnectedEventWithRegisteredComponents', () => {
+  beforeEach(() => {
+    jest.spyOn(window, 'postMessage');
+    jest.spyOn(window, 'dispatchEvent');
+  });
+
+  afterEach(() => {
+    registry.resetComponentRegistry();
+  });
+
+  it('should only send component definitions', () => {
+    const definitionId = 'TestComponent';
+    registry.defineComponents([
+      {
+        component: TestComponent,
+        definition: {
+          id: definitionId,
+          name: 'TestComponent',
+          builtInStyles: [],
+          variables: {
+            isChecked: {
+              type: 'Boolean',
+            },
+          },
+        },
+      },
+    ]);
+
+    const customBreakpoints = [
+      {
+        id: 'test-desktop',
+        query: '*',
+        displayName: 'All Sizes',
+        previewSize: '100%',
+      },
+      {
+        id: 'test-tablet',
+        query: '<982px',
+        displayName: 'Tablet',
+        previewSize: '820px',
+      },
+      {
+        id: 'test-mobile',
+        query: '<576px',
+        displayName: 'Mobile',
+        previewSize: '390px',
+      },
+    ];
+
+    defineBreakpoints(customBreakpoints);
+
+    registry.sendConnectedEventWithRegisteredComponents();
+
+    expect(window.postMessage).toHaveBeenCalledWith(
+      {
+        source: 'customer-app',
+        eventType: OUTGOING_EVENTS.RegisteredComponents,
+        payload: {
+          definitions: Array.from(registry.componentRegistry.values()).map(
+            (registration) => registration.definition,
+          ),
+        },
+      },
+      '*',
+    );
+
+    expect(window.postMessage).toHaveBeenCalledWith(
+      {
+        source: 'customer-app',
+        eventType: OUTGOING_EVENTS.RegisteredBreakpoints,
+        payload: {
+          breakpoints: customBreakpoints,
+        },
+      },
+      '*',
+    );
   });
 });
