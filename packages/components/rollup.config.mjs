@@ -5,14 +5,12 @@ import dts from 'rollup-plugin-dts';
 import postcss from 'rollup-plugin-postcss';
 import postcssImport from 'postcss-import';
 
-import packageJson from './package.json' assert { type: 'json' };
-
 export default [
   {
     input: 'src/index.ts',
     output: [
       {
-        file: packageJson.module,
+        file: './dist/index.js',
         format: 'esm',
         sourcemap: true,
       },
