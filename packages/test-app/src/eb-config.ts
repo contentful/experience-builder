@@ -36,11 +36,11 @@ defineComponents([
       builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBorder'],
       variables: {
         zone1: {
-          displayName: 'Zone 1',
+          displayName: 'Drop zone 1',
           type: 'Dropzone',
         },
         zone2: {
-          displayName: 'Zone 2',
+          displayName: 'Drop zone 2',
           type: 'Dropzone',
         },
       },

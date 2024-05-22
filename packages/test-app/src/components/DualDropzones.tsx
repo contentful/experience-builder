@@ -34,11 +34,11 @@ const DualDropzones: React.FC<DualDropzoneProps> = ({ zone1, zone2, ...props }) 
     <div id="DualDropzones" style={style.container} {...props}>
       <div style={style.row}>
         <div style={style.column}>
-          <h3 style={style.heading}>Zone 1</h3>
+          <h3 style={style.heading}>Drop zone 1</h3>
           {zone1}
         </div>
         <div style={style.column}>
-          <h3 style={style.heading}>Zone 2</h3>
+          <h3 style={style.heading}>Drop zone 2</h3>
           {zone2}
         </div>
       </div>
