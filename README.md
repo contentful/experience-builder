@@ -1,6 +1,6 @@
 # Welcome!
 
-This repository represents a set of packages, related to the [Studio Experiences](https://www.contentful.com/developers/docs/experiences/what-are-experiences/) product.
+This repository represents a set of packages, related to the [Experiences](https://www.contentful.com/developers/docs/experiences/what-are-experiences/) product.
 
 ## Documentation Links
 - [Home](https://www.contentful.com/developers/docs/experiences/)
@@ -24,14 +24,14 @@ This repository represents a set of packages, related to the [Studio Experiences
 - [Validators](https://github.com/contentful/experience-builder/tree/main/packages/validators)
 - [Visual-editor](https://github.com/contentful/experience-builder/tree/main/packages/visual-editor)
 
-## Local Development
-Each package has a 'dev' script that will build the application and watch for changes. Running `npm run dev` in the root directory of each package will have the benefit of hot-reloading when making changes at the cost of having more terminal windows depending on how many packages you are running. Therefore, if a more concise terminal windowed experience is preferred, you can always run `npm run build` at the project repo root level after every change instead at the cost of hot-reloading.
+## Local development
+Each package has a `dev` script that will build the application and watch for changes. Running `npm run dev` in the root directory of each package will have the benefit of hot-reloading changes. Doing so comes at the cost of having more terminal windows depending on how many packages you are running. Therefore, if a more concise terminal windowed experience is preferred, run `npm run build` at the project repo root level after every change at the cost of hot-reloading benefits.
 
-Additionally, there is a provided `test-app` package on your behalf to get you quickly started. This package handles fetching the experience and should be displayed in your Contentful Experience webapp once you setup your enablements, space, and Experience type in the Contentful webapp. 
+Additionally, there is a provided `test-app` package on your behalf to get you quickly started. This package handles fetching the experience and should be displayed in the experience canvas once you set up your enablements, space, and experience type in the Contentful web app.
 
 **If you are looking to use the `test-app`, follow the steps below:**
 
-1. Setup your enablements, space, and Experience type through the Contentful webapp. At this point, your Experience canvas in the UI should display some error state such as `localhost refused to connect`.
+1. Set up your enablements, space, and experience type through the Contentful web app. At this point, your experience canvas in the UI should display some error state such as `localhost refused to connect`.
 2. Then in the `test-app` package open up the `local.env` file and make sure to fill out the following variables
 ```
 VITE_CTFL_ENVIRONMENT=
@@ -47,7 +47,7 @@ VITE_CTFL_EXPERIENCE_TYPE=
 
 If you are having issues getting the test-app to show up in the canvas checkout the Troubleshooting section below.
 
-## Branching & Release Process
+## Branching & release process
 
 For each new feature, bug fix, or improvement, create a new branch based off `development` to do your work in. When ready, open up a PR to `development`, and once approved, merge it using the "Squash and merge" option. If the feature branch was a long lived branch, you might decide to do a "Create a merge commit" instead to maintain the history of the feature branch. However, try to avoid having meaningless commits in the feature branch as that will make the overall history of the repository hard to follow.
 
