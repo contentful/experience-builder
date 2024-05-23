@@ -1,5 +1,6 @@
 import React from 'react';
 import type {
+  ComponentRegistration,
   ExperienceTreeNode,
   ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
@@ -42,7 +43,7 @@ export const useComponent = ({
     return rawNode;
   }, [areEntitiesFetched, rawNode, entityStore]);
 
-  const componentRegistration = useMemo(() => {
+  const componentRegistration: ComponentRegistration | undefined = useMemo(() => {
     let registration = componentRegistry.get(node.data.blockId!);
 
     if (node.type === ASSEMBLY_NODE_TYPE && !registration) {
@@ -53,9 +54,10 @@ export const useComponent = ({
     }
 
     if (!registration) {
-      throw Error(
-        `Component registration not found for component with id: "${node.data.blockId}". The component might of been removed. To proceed, remove the component manually from the layers tab.`,
+      console.warn(
+        `;;Component registration not found for component with id: "${node.data.blockId}". The component might of been removed. To proceed, remove the component manually from the layers tab.`,
       );
+      return undefined;
     }
     return registration;
   }, [node]);
@@ -67,30 +69,37 @@ export const useComponent = ({
     areEntitiesFetched,
     resolveDesignValue,
     renderDropzone,
-    definition: componentRegistration.definition,
+    definition: componentRegistration?.definition,
     userIsDragging,
   });
 
+  const createElementToRender = (componentRegistration: ComponentRegistration) => {
+    return builtInComponents.includes(node.data.blockId || '')
+      ? (dragProps?: NoWrapDraggableProps) =>
+          React.createElement(componentRegistration.component, { ...dragProps, ...componentProps })
+      : node.type === ASSEMBLY_NODE_TYPE
+        ? // Assembly.tsx requires renderDropzone and editorMode as well
+          () => React.createElement(componentRegistration.component, componentProps)
+        : () =>
+            React.createElement(
+              ImportedComponentErrorBoundary,
+              null,
+              React.createElement(componentRegistration.component, otherComponentProps),
+            );
+  };
+
   // Only pass editor props to built-in components
   const { editorMode, renderDropzone: _renderDropzone, ...otherComponentProps } = componentProps;
-  const elementToRender = builtInComponents.includes(node.data.blockId || '')
-    ? (dragProps?: NoWrapDraggableProps) =>
-        React.createElement(componentRegistration.component, { ...dragProps, ...componentProps })
-    : node.type === ASSEMBLY_NODE_TYPE
-      ? // Assembly.tsx requires renderDropzone and editorMode as well
-        () => React.createElement(componentRegistration.component, componentProps)
-      : () =>
-          React.createElement(
-            ImportedComponentErrorBoundary,
-            null,
-            React.createElement(componentRegistration.component, otherComponentProps),
-          );
+  const elementToRender = componentRegistration
+    ? createElementToRender(componentRegistration)
+    : null;
 
   return {
+    isComponentMissing: !componentRegistration,
     node,
     componentId,
     elementToRender,
     wrapperProps,
-    definition: componentRegistration.definition,
+    definition: componentRegistration ? componentRegistration.definition : null,
   };
 };

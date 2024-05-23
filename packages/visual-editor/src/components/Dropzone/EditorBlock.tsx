@@ -41,12 +41,13 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 }) => {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, wrapperProps, definition, elementToRender } = useComponent({
-    node: rawNode,
-    resolveDesignValue,
-    renderDropzone,
-    userIsDragging,
-  });
+  const { isComponentMissing, node, componentId, wrapperProps, definition, elementToRender } =
+    useComponent({
+      node: rawNode,
+      resolveDesignValue,
+      renderDropzone,
+      userIsDragging,
+    });
 
   const coordinates = useSelectedInstanceCoordinates({ node });
 
@@ -86,6 +87,10 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       nodeId: componentId,
     });
   };
+
+  if (isComponentMissing || !definition || !elementToRender) {
+    return <div style={{ border: '1px solid gold' }}>Missing component</div>;
+  }
 
   if (isSingleColumn) {
     return (

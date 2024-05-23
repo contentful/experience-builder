@@ -43,7 +43,7 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
 }) => {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
 
-  const { node, wrapperProps, elementToRender } = useComponent({
+  const { isComponentMissing, node, wrapperProps, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -52,6 +52,10 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
+
+  if (isComponentMissing || !elementToRender) {
+    return <div>Missing component fallback</div>;
+  }
 
   if (isSingleColumn) {
     return elementToRender();
