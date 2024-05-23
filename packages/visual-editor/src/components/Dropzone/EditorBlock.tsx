@@ -1,5 +1,6 @@
 import React from 'react';
 import { DraggableComponent } from '@components/Draggable/DraggableComponent';
+import { SelectableComponent } from '@components/Draggable/SelectableComponent';
 import { isContentfulStructureComponent, sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
@@ -41,13 +42,19 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 }) => {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { isComponentMissing, node, componentId, wrapperProps, definition, elementToRender } =
-    useComponent({
-      node: rawNode,
-      resolveDesignValue,
-      renderDropzone,
-      userIsDragging,
-    });
+  const {
+    isComponentMissing,
+    node,
+    componentId /* node.data.id */,
+    wrapperProps,
+    definition,
+    elementToRender,
+  } = useComponent({
+    node: rawNode,
+    resolveDesignValue,
+    renderDropzone,
+    userIsDragging,
+  });
 
   const coordinates = useSelectedInstanceCoordinates({ node });
 
@@ -89,15 +96,32 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   };
 
   if (isComponentMissing || !definition || !elementToRender) {
-    return (
+    const renderMissingComponentPlacehoder = () => (
       <div
         style={{
           border: '1px solid red',
           width: '100%',
           height: '100%',
         }}>
-        Missing component
+        Missing component &lt;{node.data.blockId}&gt;
       </div>
+    );
+
+    return (
+      <SelectableComponent
+        tooltipLabel="Missing component"
+        placeholder={placeholder}
+        id={node.data.id}
+        isAssemblyBlock={isAssembly || isAssemblyBlock}
+        isSelected={selectedNodeId === node.data.id}
+        isContainer={isContainer}
+        blockId={node.data.blockId}
+        coordinates={coordinates!}
+        wrapperProps={wrapperProps}
+        onClick={onClick}
+        onMouseOver={onMouseOver}>
+        {renderMissingComponentPlacehoder()}
+      </SelectableComponent>
     );
   }
 
