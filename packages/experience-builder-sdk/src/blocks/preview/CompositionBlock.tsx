@@ -87,27 +87,11 @@ export const CompositionBlock = ({
         : undefined,
     };
 
-    return Object.entries(componentRegistration.definition.variables).reduce(
+    const props = Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variable = node.variables[variableName];
-
-        if (variableDefinition.type === 'Dropzone') {
-          const slotNode = node.children.find(({ slotId }) => slotId === variableName);
-          if (slotNode) {
-            acc[variableName] = (
-              <CompositionBlock
-                node={slotNode}
-                locale={locale}
-                hyperlinkPattern={hyperlinkPattern}
-                entityStore={entityStore}
-                resolveDesignValue={resolveDesignValue}
-              />
-            );
-          }
-          return acc;
-        }
-
         if (!variable) return acc;
+
         switch (variable.type) {
           case 'DesignValue':
             acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
@@ -162,6 +146,25 @@ export const CompositionBlock = ({
       },
       propMap,
     );
+
+    if (componentRegistration.definition.dropzones) {
+      for (const slotId in componentRegistration.definition.dropzones) {
+        const slotNode = node.children.find((child) => child.slotId === slotId);
+        if (slotNode) {
+          props[slotId] = (
+            <CompositionBlock
+              node={slotNode}
+              locale={locale}
+              hyperlinkPattern={hyperlinkPattern}
+              entityStore={entityStore}
+              resolveDesignValue={resolveDesignValue}
+            />
+          );
+        }
+      }
+    }
+
+    return props;
   }, [
     componentRegistration,
     isAssembly,

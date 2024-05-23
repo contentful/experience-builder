@@ -34,14 +34,13 @@ defineComponents([
       name: 'Dual Dropzones',
       category: 'Custom Components',
       builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBorder'],
-      variables: {
+      variables: {},
+      dropzones: {
         zone1: {
           displayName: 'Drop zone 1',
-          type: 'Dropzone',
         },
         zone2: {
           displayName: 'Drop zone 2',
-          type: 'Dropzone',
         },
       },
     },

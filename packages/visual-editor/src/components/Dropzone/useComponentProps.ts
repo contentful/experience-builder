@@ -92,15 +92,6 @@ export const useComponentProps = ({
           };
         }
 
-        if (variableDefinition.type === 'Dropzone') {
-          return {
-            ...acc,
-            [variableName]: renderDropzone(node, {
-              zoneId: [node.data.id, variableName].join('|'),
-            }),
-          };
-        }
-
         if (variableMapping.type === 'DesignValue') {
           const valueByBreakpoint = resolveDesignValue(
             variableMapping.valuesByBreakpoint,
@@ -194,9 +185,19 @@ export const useComponentProps = ({
       {},
     );
 
+    const dropzoneProps: Record<string, React.JSX.Element> = {};
+    if (definition.dropzones) {
+      for (const slotId in definition.dropzones) {
+        dropzoneProps[slotId] = renderDropzone(node, {
+          zoneId: [node.data.id, slotId].join('|'),
+        });
+      }
+    }
+
     return {
       ...propsBase,
       ...extractedProps,
+      ...dropzoneProps,
     };
   }, [
     hyperlinkPattern,
