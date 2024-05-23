@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { DraggableComponent } from '@components/Draggable/DraggableComponent';
 import { isContentfulStructureComponent, sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
@@ -58,7 +58,9 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
-  const isEmptyZone = !node.children.filter((node) => node.data.slotId === slotId).length;
+  const isEmptyZone = useMemo(() => {
+    return !node.children.filter((node) => node.data.slotId === slotId).length;
+  }, [node.children, slotId]);
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();

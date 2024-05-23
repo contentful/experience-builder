@@ -13,14 +13,6 @@ export const isContentfulStructureComponent = (componentId?: string) =>
 export const isComponentAllowedOnRoot = (componentId?: string) =>
   isContentfulStructureComponent(componentId) || componentId === CONTENTFUL_COMPONENTS.divider.id;
 
-export const isEmptyStructureWithRelativeHeight = (
-  children: number,
-  componentId?: string,
-  height?: string | number,
-) => {
-  return (
-    children === 0 &&
-    isContentfulStructureComponent(componentId) &&
-    !height?.toString().endsWith('px')
-  );
+export const isStructureWithRelativeHeight = (componentId?: string, height?: string | number) => {
+  return isContentfulStructureComponent(componentId) && !height?.toString().endsWith('px');
 };

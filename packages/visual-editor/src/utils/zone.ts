@@ -28,6 +28,13 @@ export const getZoneParents = (zoneId: string) => {
   return getZonesToRoot(element);
 };
 
+/**
+ * Parses a droppable zone ID into a node ID and slot ID.
+ *
+ * The slot ID is optional and only present if the component implements multiple drop zones.
+ *
+ * @param zoneId - Expected formats are `nodeId` or `nodeId|slotId`.
+ */
 export const parseZoneId = (zoneId: string) => {
   const [nodeId, slotId] = zoneId.includes('|') ? zoneId.split('|') : [zoneId, undefined];
   return { nodeId, slotId };
