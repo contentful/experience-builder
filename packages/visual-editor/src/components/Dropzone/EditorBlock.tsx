@@ -89,7 +89,16 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   };
 
   if (isComponentMissing || !definition || !elementToRender) {
-    return <div style={{ border: '1px solid gold' }}>Missing component</div>;
+    return (
+      <div
+        style={{
+          border: '1px solid red',
+          width: '100%',
+          height: '100%',
+        }}>
+        Missing component
+      </div>
+    );
   }
 
   if (isSingleColumn) {
