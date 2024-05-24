@@ -1,4 +1,4 @@
-import { defineComponents } from '@contentful/experiences-sdk-react';
+import { defineComponents, defineBreakpoints } from '@contentful/experiences-sdk-react';
 import ComponentWithChildren from './components/ComponentWithChildren';
 import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
@@ -93,5 +93,26 @@ defineComponents([
         },
       },
     },
+  },
+]);
+
+defineBreakpoints([
+  {
+    id: 'test-desktop',
+    query: '*',
+    displayName: 'All Sizes',
+    previewSize: '100%',
+  },
+  {
+    id: 'test-tablet',
+    query: '<982px',
+    displayName: 'Tablet',
+    previewSize: '820px',
+  },
+  {
+    id: 'test-mobile',
+    query: '<360px',
+    displayName: 'Mobile',
+    previewSize: '390px',
   },
 ]);

@@ -7,6 +7,7 @@ export const SCROLL_STATES = {
 export const OUTGOING_EVENTS = {
   Connected: 'connected',
   DesignTokens: 'registerDesignTokens',
+  RegisteredBreakpoints: 'registeredBreakpoints',
   HoveredSection: 'hoveredSection',
   MouseMove: 'mouseMove',
   NewHoveredElement: 'newHoveredElement',

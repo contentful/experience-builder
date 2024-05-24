@@ -14,6 +14,7 @@ import {
 import {
   builtInStyles as builtInStyleDefinitions,
   designTokensRegistry,
+  breakpointsRegistry,
   optionalBuiltInStyles,
   sendMessage,
   containerDefinition,
@@ -295,6 +296,10 @@ export const sendConnectedEventWithRegisteredComponents = () => {
   sendMessage(OUTGOING_EVENTS.Connected, {
     sdkVersion: SDK_VERSION,
     definitions: registeredDefinitions,
+  });
+
+  sendMessage(OUTGOING_EVENTS.RegisteredBreakpoints, {
+    breakpoints: breakpointsRegistry,
   });
 
   sendMessage(OUTGOING_EVENTS.DesignTokens, {
