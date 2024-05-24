@@ -354,7 +354,7 @@ describe('sendConnectedEventWithRegisteredComponents', () => {
     registry.resetComponentRegistry();
   });
 
-  it('should only send component definitions', () => {
+  it('should send connected event with component definitions, breakpoints, and design tokens ', () => {
     const definitionId = 'TestComponent';
     registry.defineComponents([
       {
