@@ -15,6 +15,7 @@
     "predev": "npm run clean",
     "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
     "update-dist-version": "node ./bin/injectSDKVersion.cjs & node ./bin/searchAndReplaceSdkVersion.cjs",
+    "prepare": "node ./bin/injectSDKVersion.cjs",
     "prebuild": "npm run clean && node ./bin/injectSDKVersion.cjs",
     "build": "rollup -c rollup.config.mjs",
     "watch": "vite build --watch",
