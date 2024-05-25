@@ -18,6 +18,7 @@
     "prepare": "node ./bin/injectSDKVersion.cjs",
     "prebuild": "npm run clean && node ./bin/injectSDKVersion.cjs",
     "build": "rollup -c rollup.config.mjs",
+    "postversion": "npm run update-dist-version",
     "watch": "vite build --watch",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
