@@ -22,5 +22,8 @@
         "commitlist.config.js"
       ]
     }
+  },
+  "changelogPreset": {
+    "name": "conventionalcommits"
   }
 }
