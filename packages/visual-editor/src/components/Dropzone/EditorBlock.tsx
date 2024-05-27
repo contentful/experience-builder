@@ -49,6 +49,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   });
 
   const coordinates = useSelectedInstanceCoordinates({ node });
+  const displayName = node.data.displayName;
 
   const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
   const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
@@ -104,6 +105,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         onClick={onClick}
         onMouseOver={onMouseOver}
         definition={definition}
+        displayName={displayName}
       />
     );
   }
@@ -123,7 +125,8 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       coordinates={coordinates!}
       wrapperProps={wrapperProps}
       onClick={onClick}
-      onMouseOver={onMouseOver}>
+      onMouseOver={onMouseOver}
+      displayName={displayName}>
       {elementToRender()}
       {isStructureComponent && userIsDragging && (
         <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
