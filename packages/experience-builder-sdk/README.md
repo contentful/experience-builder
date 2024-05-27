@@ -1,11 +1,18 @@
 # @contentful/experiences-sdk-react
+### Purpose
+- To bundle up and expose features from other packages to be used by the end user. This is the package that users will install and import into their own React projects.
+- Note that this is a React-specific package. Therefore, unlike the core package, React specific compatibilities are implemented here and support for other frontend frameworks would result in a new package being created under a separate namespace.
 
-This package provides the core SDK for Contentful Studio Experiences. It offers a set of tools and services that enable developers to build, manage, and enhance experiences.
+### Concepts
+- **Experience object**: Generalized typed definition of what an experience is. Contains information about the component tree, unbound values, and data source that are converted from the content entry so that the experiences packages can use the transformed object, handle manipulations to the tree, validate its values, and update the experience object back to the content entry as users trigger and save their changes.
+- **ExperienceRoot**: Main entry point component that users will use in their React project which takes in a experience object as a prop. The experience object can be fetched in a multitude of ways. One common way for Vite React projects for example would be to use the `useFetchBySlug/useFetchById` hooks. However, for SSR they would use the `fetchBySlug/fetchById` functions instead. Additionally, users can create their own experience object using custom transformations they provide for themselves and pass their transformed object as a prop to the `ExperienceRoot` provided that the object complies with the experience type. 
+- **SSR**: Making the SDK compatible with SSR is provided in the SDK package itself. However, there are discussion on moving the logic into the core package in the future.
+- **Breakpoints**: Defines how we separate desktop, tablet, and mobile breakpoints for each viewport.
+- **Preview vs Live vs Editor mode**: Editor mode is what is seen in the Contentful web app for experiences with the Component sidebar, Visual editor, and the Design sidebar where users are allowed to drag and drop components, edit the styles, and publish their changes. Live mode is the ability to view a user's experience with published changes. Preview mode is the ability to see a user's experience with unpublished changes. 
+- **PreviewDeliveryRoot vs VisualEditorRoot**: In the `ExperienceRoot.tsx` file, notice there is logic to either render the `<VisualEditorRoot>` vs the `<PreviewDeliveryRoot>` depending on whether or not the user is in editor mode. Note for both compoments, they have their own way of parsing through the entire component tree and rendering the components to the UI. This is because the Visual editor has to add wrapping divs for drag and drop while the Preview delivery can just print the components to the UI as is. Additionally, the name PreviewDelivery converges the Live and Preview mode concepts into just one idea. In reality, PreviewDeliveryRoot works more as the Live mode concept. There are plans to iterate and to build a third mode for Preview and rename `<PreviewDeliveryRoot>` to just `<DeliveryRoot>` or `<LiveRoot>`.
+- **Preview vs Delivery API**: Each experience object will draw their source of truth from a content entry which is either fetched via Contentful's Delivery or Preview API. The user will define which API is used when setting up experiences. This is not to be confused with "Preview" or "Delivery/Live" mode with respect to experiences as they are separate entities.
+- **Component Registry**: Takes in the component definitions and registers them into the UI where the `enrichComponentDefinition` function will apply styles that are defined by the component themselves as default styles. This will ensure that the user dragging a built-in or structure component will display the default styles defined by Contentful.
 
-## Installation
-
-Please follow the guide to [Set up Experiences SDK](https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/).
-
-## Documentation
-
-Please refer to our [Documentation](https://www.contentful.com/developers/docs/experiences/) to learn more about it.
+### Relevant Contentful documentation links
+- [Component definition schema](https://www.contentful.com/developers/docs/experiences/component-definition-schema/)
+- [Data structures](https://www.contentful.com/developers/docs/experiences/data-structures/)

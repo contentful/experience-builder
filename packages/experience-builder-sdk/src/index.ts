@@ -5,6 +5,7 @@ export { useFetchById, useFetchBySlug } from './hooks';
 export { defineComponents, maintainBasicComponentIdsWithoutPrefix } from './core/componentRegistry';
 export {
   defineDesignTokens,
+  defineBreakpoints,
   VisualEditorMode,
   fetchById,
   fetchBySlug,
