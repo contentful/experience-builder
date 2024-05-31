@@ -62,6 +62,7 @@ export interface FlexProps {
   className?: string;
   cssStyles?: Record<string, string>;
   id?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dragProps?: any; //TODO: add type
 }
 

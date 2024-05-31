@@ -44,13 +44,14 @@ export function withComponentWrapper<T>(
     const component = options.wrapComponent ? (
       <div
         data-component-wrapper
-        className={classNames(classes, dragClassName)}
+        className={classNames(classes, className, dragClassName)}
         {...restOfDragProps}
         ref={(refNode: HTMLElement | null) => {
           if (innerRef && refNode) innerRef(refNode);
-        }}>
+        }}
+        {...props}>
         {ToolTipAndPlaceHolder}
-        <Component className={classNames(classes, className)} {...(props as T)} />
+        <Component className={classNames(classes)} {...(props as T)} />
       </div>
     ) : (
       React.createElement(Component, {
