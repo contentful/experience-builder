@@ -190,10 +190,10 @@ export const useComponentProps = ({
       {},
     );
 
-    const dropzoneProps: Record<string, React.JSX.Element> = {};
-    if (definition.dropzones) {
-      for (const slotId in definition.dropzones) {
-        dropzoneProps[slotId] = renderDropzone(node, {
+    const slotProps: Record<string, React.JSX.Element> = {};
+    if (definition.slots) {
+      for (const slotId in definition.slots) {
+        slotProps[slotId] = renderDropzone(node, {
           zoneId: [node.data.id, slotId].join('|'),
         });
       }
@@ -202,7 +202,7 @@ export const useComponentProps = ({
     return {
       ...propsBase,
       ...extractedProps,
-      ...dropzoneProps,
+      ...slotProps,
     };
   }, [
     hyperlinkPattern,

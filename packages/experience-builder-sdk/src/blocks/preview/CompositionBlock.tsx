@@ -147,8 +147,8 @@ export const CompositionBlock = ({
       propMap,
     );
 
-    if (componentRegistration.definition.dropzones) {
-      for (const slotId in componentRegistration.definition.dropzones) {
+    if (componentRegistration.definition.slots) {
+      for (const slotId in componentRegistration.definition.slots) {
         const slotNode = node.children.find((child) => child.slotId === slotId);
         if (slotNode) {
           props[slotId] = (

@@ -2,7 +2,7 @@ import { defineComponents, defineBreakpoints } from '@contentful/experiences-sdk
 import ComponentWithChildren from './components/ComponentWithChildren';
 import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
-import DualDropzones from './components/DualDropzones';
+import NestedSlots from './components/NestedSlots';
 
 defineComponents([
   {
@@ -27,20 +27,20 @@ defineComponents([
     },
   },
   {
-    component: DualDropzones,
+    component: NestedSlots,
     definition: {
-      id: 'dual-dropzones',
-      thumbnailUrl: 'https://static.thenounproject.com/png/3406258-200.png',
-      name: 'Dual Dropzones',
+      id: 'nested-slots',
+      thumbnailUrl: 'https://static.thenounproject.com/png/302688-200.png',
+      name: 'Nested Slots',
       category: 'Custom Components',
       builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBorder'],
       variables: {},
-      dropzones: {
-        zone1: {
-          displayName: 'Drop zone 1',
+      slots: {
+        childrenSlot1: {
+          displayName: 'Slot 1',
         },
-        zone2: {
-          displayName: 'Drop zone 2',
+        childrenSlot2: {
+          displayName: 'Slot 2',
         },
       },
     },

@@ -24,26 +24,26 @@ const style: Record<string, CSSProperties> = {
   },
 };
 
-interface DualDropzoneProps {
-  zone1: React.ReactNode;
-  zone2: React.ReactNode;
+interface NestedSlotsProps {
+  childrenSlot1: React.ReactNode;
+  childrenSlot2: React.ReactNode;
 }
 
-const DualDropzones: React.FC<DualDropzoneProps> = ({ zone1, zone2, ...props }) => {
+const NestedSlots: React.FC<NestedSlotsProps> = ({ childrenSlot1, childrenSlot2, ...props }) => {
   return (
-    <div id="DualDropzones" style={style.container} {...props}>
+    <div id="NestedSlots" style={style.container} {...props}>
       <div style={style.row}>
         <div style={style.column}>
-          <h3 style={style.heading}>Drop zone 1</h3>
-          {zone1}
+          <h3 style={style.heading}>First Slot</h3>
+          {childrenSlot1}
         </div>
         <div style={style.column}>
-          <h3 style={style.heading}>Drop zone 2</h3>
-          {zone2}
+          <h3 style={style.heading}>Second Slot</h3>
+          {childrenSlot2}
         </div>
       </div>
     </div>
   );
 };
 
-export default DualDropzones;
+export default NestedSlots;
