@@ -46,6 +46,7 @@ interface DraggableComponentProps {
   style?: CSSProperties;
   isDragDisabled?: boolean;
   definition: ComponentDefinition<ComponentDefinitionVariableType>;
+  displayName?: string;
 }
 
 export const DraggableComponent: React.FC<DraggableComponentProps> = ({
@@ -66,6 +67,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   isDragDisabled = false,
   placeholder,
   definition,
+  displayName,
   ...rest
 }) => {
   const ref = useRef<HTMLElement | null>(null);

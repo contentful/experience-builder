@@ -78,12 +78,13 @@ const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
 
-const BreakpointSchema = z
+export const BreakpointSchema = z
   .object({
     id: propertyKeySchema,
     query: z.string().regex(/^\*$|^<[0-9*]+px$/),
     previewSize: z.string(),
     displayName: z.string(),
+    displayIconUrl: z.string().optional(),
   })
   .strict();
 
@@ -98,6 +99,7 @@ const UnboundValuesSchema = z.record(
 const BaseComponentTreeNodeSchema = z.object({
   definitionId: DefinitionPropertyKeySchema,
   displayName: z.string().optional(),
+  slotId: z.string().optional(),
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
 });
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
@@ -144,11 +146,24 @@ const UsedComponentsSchema = z.array(
   }),
 );
 
-const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
-  if (!value.length || value[0].id !== 'desktop' || value[0].query !== '*') {
+export const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
+  if (!value.length || value[0].query !== '*') {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: `The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }`,
+      message: `The first breakpoint should include the following attributes: { "query": "*" }`,
+    });
+  }
+
+  const hasDuplicateIds = value.some((currentBreakpoint, currentBreakpointIndex) => {
+    // check if the current breakpoint id is found in the rest of the array
+    const breakpointIndex = value.findIndex((breakpoint) => breakpoint.id === currentBreakpoint.id);
+    return breakpointIndex !== currentBreakpointIndex;
+  });
+
+  if (hasDuplicateIds) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Breakpoint IDs must be unique`,
     });
   }
   // Extract the queries boundary by removing the special characters around it

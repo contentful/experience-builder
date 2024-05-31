@@ -153,6 +153,7 @@ export type ExperienceTreeNode = {
       componentId: string;
       nodeLocation: string | null;
     };
+    displayName?: string;
     props: Record<string, ComponentPropertyValue>;
     dataSource: ExperienceDataSource;
     unboundValues: ExperienceUnboundValues;

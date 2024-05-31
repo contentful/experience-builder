@@ -24,7 +24,7 @@ import type {
   DesignValue,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
-import { useStyleTag } from '../../hooks/useStyleTag';
+import { useEditorModeClassName } from '../../hooks/useEditorModeClassName';
 import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
@@ -66,14 +66,14 @@ export const useComponentProps = ({
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
   const props: ComponentProps = useMemo(() => {
-    const propsBase = node.data.props?.cfSsrClassName
-      ? {
-          cfSsrClassName: resolveDesignValue(
+    const propsBase = {
+      cfSsrClassName: node.data.props.cfSsrClassName
+        ? (resolveDesignValue(
             (node.data.props.cfSsrClassName as DesignValue).valuesByBreakpoint,
             'cfSsrClassName',
-          ) as string,
-        }
-      : {};
+          ) as string)
+        : undefined,
+    };
 
     // Don't enrich the assembly wrapper node with props
     if (!definition || node.type === ASSEMBLY_NODE_TYPE) {
@@ -205,7 +205,7 @@ export const useComponentProps = ({
   // const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
 
   // Styles that will be applied to the editor wrapper (draggable) element
-  const { className: wrapperClass } = useStyleTag({
+  const wrapperClass = useEditorModeClassName({
     styles:
       // To ensure that assembly nodes are rendered like they are rendered in
       // the assembly editor, we need to use a normal block instead of a flex box.
@@ -219,7 +219,7 @@ export const useComponentProps = ({
   });
 
   // Styles that will be applied to the component element
-  const { className: componentClass } = useStyleTag({
+  const componentClass = useEditorModeClassName({
     styles: {
       ...cfStyles,
       ...(isEmptyStructureWithRelativeHeight(
@@ -254,7 +254,7 @@ export const useComponentProps = ({
     editorMode: true,
     node,
     renderDropzone,
-    ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab']),
+    ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 

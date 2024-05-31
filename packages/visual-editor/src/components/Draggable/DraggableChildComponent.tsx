@@ -46,6 +46,7 @@ type DraggableChildComponentProps = {
   isDragDisabled?: boolean;
   className?: string;
   definition: ComponentDefinition<ComponentDefinitionVariableType>;
+  displayName?: string;
 };
 
 /**
@@ -74,6 +75,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
     isDragDisabled = false,
     wrapperProps,
     definition,
+    displayName,
   } = props;
   const isHoveredComponent = useDraggedItemStore((state) => state.hoveredComponentId === id);
 
@@ -106,7 +108,7 @@ export const DraggableChildComponent: React.FC<DraggableChildComponentProps> = (
               coordinates={coordinates}
               isAssemblyBlock={isAssemblyBlock}
               isContainer={isContainer}
-              label={definition.name || 'No label specified'}
+              label={displayName || definition.name || 'No label specified'}
             />
           ),
         })

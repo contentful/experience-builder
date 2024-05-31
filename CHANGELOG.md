@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2](https://github.com/contentful/experience-builder/compare/v1.5.2-beta.0...v1.5.2) (2024-05-30)
+
+**Note:** Version bump only for package @contentful/experience
+
+## [1.5.1](https://github.com/contentful/experience-builder/compare/v1.5.1-beta.2...v1.5.1) (2024-05-27)
+
+**Note:** Version bump only for package @contentful/experience
+
+## [1.5.1-beta.2](https://github.com/contentful/experience-builder/compare/v1.5.1-beta.1...v1.5.1-beta.2) (2024-05-27)
+
+**Note:** Version bump only for package @contentful/experience
+
+## [1.5.1-beta.1](https://github.com/contentful/experience-builder/compare/v1.5.1-beta.0...v1.5.1-beta.1) (2024-05-27)
+
+### Bug Fixes
+
+- component level README to be more compliant with Contenetful's technical writing guidelines ([895021d](https://github.com/contentful/experience-builder/commit/895021de1f9ce83dbc12c964e35b4f76f158563f))
+- core README to be more compliant with Contenetful's technical writing guidelines ([21ac522](https://github.com/contentful/experience-builder/commit/21ac522fd8a60ca5f9e09d1e6025399e54e406ba))
+- display name of hover of component ([9f419b2](https://github.com/contentful/experience-builder/commit/9f419b2955449d5be40663ec8de2b3f6d155db3d))
+- root level README to be more compliant with Contenetful's technical writing guidelines ([55d6125](https://github.com/contentful/experience-builder/commit/55d6125e77b2890fb596ced07b8227d530b34ae3))
+- sdk level README to be more compliant with Contenetful's technical writing guidelines ([f79a2ea](https://github.com/contentful/experience-builder/commit/f79a2ea83f6d6bdc69fc409e94eafcbd90c9f4df))
+- visual-editor README to be more compliant with Contenetful's technical writing guidelines ([6ae3a6e](https://github.com/contentful/experience-builder/commit/6ae3a6ee1eeaa6ecea1ccc14b15d9db815d4e1bd))
+
+### Features
+
+- add github documentation for the components package ([6b4cff7](https://github.com/contentful/experience-builder/commit/6b4cff7cb0fea9e4530370a478c4a62ae96096ec))
+- add github documentation for the core package ([73419b5](https://github.com/contentful/experience-builder/commit/73419b52b9584a6fbc367ac686473d52fddfae81))
+- add github documentation for the sdk package ([139d35e](https://github.com/contentful/experience-builder/commit/139d35e7e8b435ebdd5a3eb4c4dd51d6db0a7d42))
+- add github documentation for the visual editor package ([fcfccd2](https://github.com/contentful/experience-builder/commit/fcfccd2f2101d7d1f82cc7c30c54941070043a4d))
+- expose function to define custom breakpoints [SPA-2076] ([#621](https://github.com/contentful/experience-builder/issues/621)) ([4443695](https://github.com/contentful/experience-builder/commit/44436952ecd3c39206484d5fc3e561fb917d8e38))
+- update github readme at the root level for more direct links and more detailed explanations ([3111828](https://github.com/contentful/experience-builder/commit/3111828e41ee6ee19da676a9ce209bf00bea0693))
+
+## [1.5.1-beta.0](https://github.com/contentful/experience-builder/compare/v1.5.0...v1.5.1-beta.0) (2024-05-27)
+
+**Note:** Version bump only for package @contentful/experience
+
+# [1.5.0](https://github.com/contentful/experience-builder/compare/v1.5.0-beta.0...v1.5.0) (2024-05-16)
+
+**Note:** Version bump only for package @contentful/experience
+
+# [1.5.0-beta.0](https://github.com/contentful/experience-builder/compare/v1.4.0...v1.5.0-beta.0) (2024-05-16)
+
+### Bug Fixes
+
+- add maxWidth to list with design tokens ([876c927](https://github.com/contentful/experience-builder/commit/876c92721ca9d98a898039c4bec1142ec068ac3c))
+- cleanup code ([53f68e0](https://github.com/contentful/experience-builder/commit/53f68e06f71fe3315312e1f2721274cc0fb1a6ae))
+
+### Features
+
+- resolve css variables in experiences ([9180d23](https://github.com/contentful/experience-builder/commit/9180d238a890870dffffb364b6ab88bab70b09e7))
+
+# [1.4.0](https://github.com/contentful/experience-builder/compare/v1.4.0-beta.0...v1.4.0) (2024-05-15)
+
+**Note:** Version bump only for package @contentful/experience
+
+# [1.4.0-beta.0](https://github.com/contentful/experience-builder/compare/v1.3.0...v1.4.0-beta.0) (2024-05-15)
+
+### Bug Fixes
+
+- not generate styles on csr if generated on ssr [SPA-2049] ([#600](https://github.com/contentful/experience-builder/issues/600)) ([149a569](https://github.com/contentful/experience-builder/commit/149a56978043fd799fce5d09b47626f2d414cf93))
+
+### Features
+
+- **validators:** add optional slotId to component tree node ([6abf9b3](https://github.com/contentful/experience-builder/commit/6abf9b34f7323125bbc02e64f3dbdcc68429f078))
+
+# [1.3.0](https://github.com/contentful/experience-builder/compare/v1.3.0-beta.0...v1.3.0) (2024-05-06)
+
+**Note:** Version bump only for package @contentful/experience
+
+# [1.3.0-beta.0](https://github.com/contentful/experience-builder/compare/v1.2.0...v1.3.0-beta.0) (2024-05-06)
+
+### Bug Fixes
+
+- remove check if no margin ([aa1421e](https://github.com/contentful/experience-builder/commit/aa1421edb0ebb03d31f428727239dcab348bbaac))
+
+### Features
+
+- **experiences:** implement layer renaming ([#597](https://github.com/contentful/experience-builder/issues/597)) ([6cde60e](https://github.com/contentful/experience-builder/commit/6cde60e0973e9038ef998f0209223667b4da211d))
+
 # [1.2.0](https://github.com/contentful/experience-builder/compare/v1.2.0-beta.0...v1.2.0) (2024-04-30)
 
 **Note:** Version bump only for package @contentful/experience

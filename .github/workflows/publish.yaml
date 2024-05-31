@@ -74,11 +74,11 @@ jobs:
           git config user.email "${{ github.actor}}@users.noreply.github.com"
 
           if [ ${{ github.ref_name }} = development ]; then
-            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --dist-tag dev --no-changelog --no-push --yes --no-private 
           elif [ ${{ github.ref_name }} = next ]; then
-            npx lerna publish --exact --conventional-commits --conventional-prerelease --force-publish --preid beta --yes --no-private --dist-tag next
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid beta --dist-tag next --no-changelog --yes --no-private
           else
-            npx lerna publish --conventional-commits --conventional-graduate --force-publish --yes --no-private --create-release github --dist-tag latest
+            npx lerna publish --conventional-commits --conventional-graduate --exact --force-publish --yes --no-private --dist-tag latest --create-release github
           fi
       - name: 'Merge changes downstream'
         env:

@@ -42,7 +42,7 @@ describe('componentTree', () => {
       expect(result.success).toBe(false);
       expect(error?.name).toBe('custom');
       expect(error?.details).toBe(
-        'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }',
+        'The first breakpoint should include the following attributes: { "query": "*" }',
       );
     });
 
@@ -119,8 +119,7 @@ describe('componentTree', () => {
 
       const expectedErrors = [
         {
-          details:
-            'The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }',
+          details: 'The first breakpoint should include the following attributes: { "query": "*" }',
           name: 'custom',
           path: ['componentTree', 'en-US', 'breakpoints'],
         },
@@ -158,6 +157,31 @@ describe('componentTree', () => {
       expect(error?.details).toBe(
         'Breakpoints should be ordered from largest to smallest pixel value',
       );
+    });
+
+    it(`fails if there are duplicate breakpoint ids`, () => {
+      const breakpoints = [
+        { id: 'desktop', query: '*', previewSize: 'large', displayName: 'Desktop' },
+        { id: 'tablet', query: '<1024px', previewSize: 'medium', displayName: 'Tablet' },
+        { id: 'mobile', query: '<768px', previewSize: 'small', displayName: 'Mobile' },
+        { id: 'mobile', query: '<350px', previewSize: 'small', displayName: 'Mobile' },
+      ];
+      const componentTree = experience.fields.componentTree[locale];
+      const updatedExperience = {
+        ...experience,
+        fields: {
+          ...experience.fields,
+          componentTree: { [locale]: { ...componentTree, breakpoints } },
+        },
+      };
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
+
+      expect(result.success).toBe(false);
+      const error = result.errors?.[0];
+
+      expect(result.success).toBe(false);
+      expect(error?.name).toBe('custom');
+      expect(error?.details).toBe('Breakpoint IDs must be unique');
     });
   });
 
@@ -252,12 +276,8 @@ describe('componentTree', () => {
       },
     );
 
-    it.each([
-      'Test', // displayName provided
-      undefined, // displayName not provided
-    ])('succeeds if displayName is %s', (displayName) => {
+    it.each(['Test', undefined])('succeeds if displayName is %s', (displayName) => {
       const componentTree = experience.fields.componentTree[locale];
-      // child includes all attributes, with displayName either provided or not
       const child = {
         definitionId: 'test',
         displayName,
@@ -273,10 +293,27 @@ describe('componentTree', () => {
         },
       };
       const result = validateExperienceFields(updatedExperience, schemaVersion);
-
-      // Since displayName is optional, we expect the validation to succeed
       expect(result.success).toBe(true);
-      // And we expect no errors
+      expect(result.errors).toBeUndefined();
+    });
+
+    it.each(['string-value', undefined])('succeeds if slotId is %s', (slotId) => {
+      const componentTree = experience.fields.componentTree[locale];
+      const child = {
+        definitionId: 'test',
+        slotId,
+        variables: {},
+        children: [],
+      };
+      const updatedExperience = {
+        ...experience,
+        fields: {
+          ...experience.fields,
+          componentTree: { [locale]: { ...componentTree, children: [child] } },
+        },
+      };
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
+      expect(result.success).toBe(true);
       expect(result.errors).toBeUndefined();
     });
 

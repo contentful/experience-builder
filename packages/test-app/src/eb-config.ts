@@ -1,4 +1,4 @@
-import { defineComponents } from '@contentful/experiences-sdk-react';
+import { defineComponents, defineBreakpoints } from '@contentful/experiences-sdk-react';
 import ComponentWithChildren from './components/ComponentWithChildren';
 import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
@@ -10,6 +10,7 @@ defineComponents([
     component: ComponentWithChildren,
     definition: {
       id: 'component-with-children',
+      thumbnailUrl: 'https://static.thenounproject.com/png/2397501-200.png',
       children: true,
       name: 'Children Enabled',
       category: 'Custom Components',
@@ -105,5 +106,26 @@ defineComponents([
       },
     },
     options: { wrapComponent: false },
+  },
+]);
+
+defineBreakpoints([
+  {
+    id: 'test-desktop',
+    query: '*',
+    displayName: 'All Sizes',
+    previewSize: '100%',
+  },
+  {
+    id: 'test-tablet',
+    query: '<982px',
+    displayName: 'Tablet',
+    previewSize: '820px',
+  },
+  {
+    id: 'test-mobile',
+    query: '<360px',
+    displayName: 'Mobile',
+    previewSize: '390px',
   },
 ]);
