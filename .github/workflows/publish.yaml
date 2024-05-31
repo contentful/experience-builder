@@ -80,8 +80,7 @@ jobs:
           git config user.email "${{ github.actor}}@users.noreply.github.com"
 
           if [ ${{ inputs.publish-prerelease }} ]; then
-            # temporarily echoing to verify that publish command is correct and correctly rendered
-            echo npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid prerelease-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --no-changelog --no-push --yes --no-private --allow-branch ${{ github.ref_name }}
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid prerelease-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --no-changelog --no-push --yes --no-private --dist-tag prerelease --allow-branch ${{ github.ref_name }}
           elif [ ${{ github.ref_name }} = development ]; then
             npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --dist-tag dev --no-changelog --no-push --yes --no-private 
           elif [ ${{ github.ref_name }} = next ]; then
