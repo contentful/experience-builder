@@ -9,7 +9,7 @@ import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 
 export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (props) => {
   const { className, editorMode, children, cfHyperlink, dragProps = {} } = props;
-
+  console.log('bbb', { dragProps });
   if (cfHyperlink) {
     return <ContentfulContainerAsHyperlink {...props}>{children}</ContentfulContainerAsHyperlink>;
   }
@@ -28,14 +28,13 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
   const { renderDropzone, node } = props;
 
   const isEmpty = !node.children.length;
-  const { ...restOfDragProps } = dragProps;
 
   const renderDropzoneComponent = () => {
     return renderDropzone(node, {
       ['data-test-id']: 'contentful-container',
       id: 'ContentfulContainer',
       className: combineClasses('contentful-container', className),
-      dragProps: restOfDragProps,
+      dragProps: dragProps,
       WrapperComponent: Flex,
     });
   };

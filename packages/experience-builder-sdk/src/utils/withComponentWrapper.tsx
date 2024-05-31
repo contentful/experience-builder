@@ -38,7 +38,7 @@ export function withComponentWrapper<T extends object>(
     } = dragProps;
     const component = options.wrapComponent ? (
       <div
-        data-cacawrapper
+        data-component-wrapper
         className={classNames(classes, dragClassName)}
         {...restOfDragProps}
         ref={(refNode: HTMLElement | null) => {

@@ -79,12 +79,9 @@ export const useComponent = ({
       const element = React.createElement(componentRegistration.component, {
         ...rest,
         ...componentProps,
+        dragProps,
       });
-      return (
-        <DragWrapper wrapComponent={true} {...dragProps}>
-          {element}
-        </DragWrapper>
-      );
+      return element;
     } else {
       // Don't pass editor props to custom components
       const {

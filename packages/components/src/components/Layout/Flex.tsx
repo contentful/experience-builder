@@ -103,8 +103,6 @@ export const Flex = forwardRef<HTMLDivElement, FlexProps>(
       ...restDragProps
     } = dragProps || {};
 
-    console.log('aaa', { ToolTipAndPlaceHolder });
-
     return (
       <div
         id={id}
