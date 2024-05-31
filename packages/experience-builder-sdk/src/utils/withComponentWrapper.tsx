@@ -2,7 +2,7 @@
 import { ComponentRegistration } from '@contentful/experiences-core/types';
 import classNames from 'classnames';
 import React from 'react';
-interface CFProps {
+interface CFProps extends React.HtmlHTMLAttributes<HTMLElement> {
   /**
    * Classes to be applied to the container component if `wrapComponent` is true, or directly to the child component if false.
    */
@@ -21,7 +21,7 @@ interface CFProps {
  * @default { wrapComponent: true, wrapContainerTag: 'div' }
  * @returns A component that can be passed to `defineComponents`.
  */
-export function withComponentWrapper<T extends object>(
+export function withComponentWrapper<T>(
   Component: React.ElementType,
   options: ComponentRegistration['options'] = {
     wrapComponent: true,
@@ -29,7 +29,12 @@ export function withComponentWrapper<T extends object>(
     wrapContainer: 'div',
   },
 ) {
-  const Wrapped = ({ classes = '', className = '', dragProps = {}, ...props }: CFProps & T) => {
+  const Wrapped: React.FC<CFProps & T> = ({
+    classes = '',
+    className = '',
+    dragProps = {},
+    ...props
+  }) => {
     const {
       innerRef,
       className: dragClassName,
