@@ -5,6 +5,7 @@ import {
   tryParseMessage,
 } from '@contentful/experiences-core';
 import { INCOMING_EVENTS, OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
+import { sdkFeatures } from '../core/sdkFeatures';
 
 type UseDetectEditorModeArgs = {
   /** If running from a known client side only situation (ie: useFetchBySlug),
@@ -42,6 +43,7 @@ export const useDetectEditorMode = ({ isClientSide = false }: UseDetectEditorMod
       if (typeof window !== 'undefined' && !window.__EB__?.isEditorMode) {
         window.addEventListener('message', onMessage);
         sendMessage(OUTGOING_EVENTS.Connected);
+        sendMessage(OUTGOING_EVENTS.SDKFeatures, sdkFeatures);
 
         setTimeout(() => {
           if (!receivedMessage.current) {
