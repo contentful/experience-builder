@@ -58,6 +58,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
+  const isSlotComponent = Boolean(node.data.slotId);
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const isEmptyZone = useMemo(() => {
     return !node.children.filter((node) => node.data.slotId === slotId).length;
@@ -122,7 +123,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       id={node.data.id}
       index={index}
       isAssemblyBlock={isAssembly || isAssemblyBlock}
-      isDragDisabled={isAssemblyBlock}
+      isDragDisabled={isAssemblyBlock || isSlotComponent}
       isSelected={selectedNodeId === node.data.id}
       userIsDragging={userIsDragging}
       isContainer={isContainer}
