@@ -158,24 +158,7 @@ export const CompositionBlock = ({
   const className = useClassName({ props: nodeProps, node });
 
   if (!componentRegistration) {
-    console.info(
-      `;; cannot find componentRegistration for ${isAssembly ? `<embed ${node.definitionId}>` : `<${node.definitionId}>`}`,
-    );
-    return (
-      <div
-        style={{
-          border: '1px solid gold ',
-          width: '100%',
-          height: '100%',
-        }}>
-        <h1>
-          Cannot find componentRegistration <em>{node.definitionId}</em>
-        </h1>
-        <p>isAssembly: {isAssembly ? 'true' : 'false'}</p>
-        <p>definitionId: {node.definitionId}</p>
-        <pre>{JSON.stringify({ className }, null, 2)}</pre>
-      </div>
-    );
+    return null;
   }
 
   const { component } = componentRegistration;
