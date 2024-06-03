@@ -38,7 +38,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/publish.yaml
     with:
-      publish-prelease: ${{ inputs.publish-prerelease }}
+      publish-prelease: ${{ !!inputs.publish-prerelease }}
     secrets:
       VAULT_URL: ${{ secrets.VAULT_URL }}
   upload-artifact-cleanup:
