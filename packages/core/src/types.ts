@@ -234,7 +234,10 @@ export type DesignTokensDefinition = {
   spacing?: Record<string, string>;
   sizing?: Record<string, string>;
   color?: Record<string, string>;
-  border?: Record<string, { width: string; style: 'solid' | 'dashed' | 'dotted'; color: string }>;
+  border?: Record<
+    string,
+    { width?: string; style?: 'solid' | 'dashed' | 'dotted'; color?: string }
+  >;
   borderRadius?: Record<string, string>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;
