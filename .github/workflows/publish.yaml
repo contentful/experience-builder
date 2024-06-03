@@ -2,6 +2,12 @@ name: Publish packages
 
 on:
   workflow_call:
+    inputs:
+      publish-prelease:
+        description: 'Publish prerelease version of the current ref'
+        default: false
+        required: false
+        type: boolean
     secrets:
       VAULT_URL:
         required: true
@@ -73,14 +79,17 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor}}@users.noreply.github.com"
 
-          if [ ${{ github.ref_name }} = development ]; then
-            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --dist-tag dev --no-changelog --no-push --yes --no-private 
+          if [ ${{ inputs.publish-prerelease }} ]; then
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid prerelease-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --no-changelog --no-push --yes --no-private --dist-tag prerelease --allow-branch ${{ github.ref_name }}
+          elif [ ${{ github.ref_name }} = development ]; then
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --dist-tag dev --no-changelog --no-push --yes --no-private 
           elif [ ${{ github.ref_name }} = next ]; then
             npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid beta --dist-tag next --no-changelog --yes --no-private
           else
             npx lerna publish --conventional-commits --conventional-graduate --exact --force-publish --yes --no-private --dist-tag latest --create-release github
           fi
       - name: 'Merge changes downstream'
+        if: ${{ !inputs.publish-prerelease }}
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |

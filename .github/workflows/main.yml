@@ -5,6 +5,12 @@ on:
     branches:
       - '**'
   workflow_dispatch:
+    inputs:
+      publish-prerelease:
+        description: 'Publish prerelease version of the selected branch'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   install-build:
@@ -21,7 +27,9 @@ jobs:
     if: >-
       (github.ref_name == 'main' ||
         github.ref_name == 'development' ||
-        github.ref_name == 'next') &&
+        github.ref_name == 'next' ||
+        inputs.publish-prerelease 
+      ) &&
       !contains(github.event.head_commit.message, 'skip-release') &&
       github.actor != 'dependabot[bot]' &&
       github.actor != 'contentful-automation[bot]'
@@ -29,6 +37,8 @@ jobs:
       contents: write
       id-token: write
     uses: ./.github/workflows/publish.yaml
+    with:
+      publish-prelease: ${{ inputs.publish-prerelease }}
     secrets:
       VAULT_URL: ${{ secrets.VAULT_URL }}
   upload-artifact-cleanup:
