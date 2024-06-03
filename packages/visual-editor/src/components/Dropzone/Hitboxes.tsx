@@ -7,6 +7,7 @@ import { useZoneStore } from '@/store/zone';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { createPortal } from 'react-dom';
 import { getHitboxStyles } from '@/utils/getHitboxStyles';
+import { parseZoneId } from '@/utils/zone';
 
 interface Props {
   parentZoneId: string;
@@ -47,6 +48,7 @@ const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, isEmptyZone }) => {
   const zoneDirection = zones[parentZoneId]?.direction || 'vertical';
   const isVertical = zoneDirection === 'vertical';
   const isRoot = parentZoneId === ROOT_ID;
+  const { slotId: parentSlotId } = parseZoneId(parentZoneId);
 
   const getStyles = useCallback(
     (direction: HitboxDirection) =>
@@ -60,6 +62,35 @@ const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, isEmptyZone }) => {
     [zoneDepth, domRect, scrollY, offsetRect],
   );
 
+  const renderFinalRootHitbox = () => {
+    if (!isRoot) return null;
+    return (
+      <div
+        data-ctfl-zone-id={parentZoneId}
+        className={styles.hitbox}
+        style={getStyles(HitboxDirection.BOTTOM)}
+      />
+    );
+  };
+
+  const renderSurroundingHitboxes = () => {
+    if (isRoot || parentSlotId) return null;
+    return (
+      <>
+        <div
+          data-ctfl-zone-id={parentZoneId}
+          className={styles.hitbox}
+          style={getStyles(isVertical ? HitboxDirection.TOP : HitboxDirection.LEFT)}
+        />
+        <div
+          data-ctfl-zone-id={parentZoneId}
+          className={styles.hitbox}
+          style={getStyles(isVertical ? HitboxDirection.BOTTOM : HitboxDirection.RIGHT)}
+        />
+      </>
+    );
+  };
+
   const ActiveHitboxes = (
     <>
       <div
@@ -69,26 +100,8 @@ const Hitboxes: React.FC<Props> = ({ zoneId, parentZoneId, isEmptyZone }) => {
           isVertical ? HitboxDirection.SELF_VERTICAL : HitboxDirection.SELF_HORIZONTAL,
         )}
       />
-      {isRoot ? (
-        <div
-          data-ctfl-zone-id={parentZoneId}
-          className={styles.hitbox}
-          style={getStyles(HitboxDirection.BOTTOM)}
-        />
-      ) : (
-        <>
-          <div
-            data-ctfl-zone-id={parentZoneId}
-            className={styles.hitbox}
-            style={getStyles(isVertical ? HitboxDirection.TOP : HitboxDirection.LEFT)}
-          />
-          <div
-            data-ctfl-zone-id={parentZoneId}
-            className={styles.hitbox}
-            style={getStyles(isVertical ? HitboxDirection.BOTTOM : HitboxDirection.RIGHT)}
-          />
-        </>
-      )}
+      {renderSurroundingHitboxes()}
+      {renderFinalRootHitbox()}
     </>
   );
 

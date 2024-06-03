@@ -5,6 +5,7 @@ import { createTreeNode } from '@/utils/createTreeNode';
 import { onDrop } from '@/utils/onDrop';
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { DropResult } from '@hello-pangea/dnd';
+import { parseZoneId } from '@/utils/zone';
 
 export default function useCanvasInteractions() {
   const tree = useTreeStore((state) => state.tree);
@@ -19,15 +20,17 @@ export default function useCanvasInteractions() {
       return;
     }
 
-    const droppingOnRoot = destination.droppableId === ROOT_ID;
+    const { nodeId: parentId, slotId } = parseZoneId(destination.droppableId);
+
+    const droppingOnRoot = parentId === ROOT_ID;
     const isValidRootComponent = draggableId === CONTENTFUL_COMPONENTS.container.id;
 
-    let node = createTreeNode({ blockId: draggableId, parentId: destination.droppableId });
+    let node = createTreeNode({ blockId: draggableId, parentId, slotId });
 
     if (droppingOnRoot && !isValidRootComponent) {
       const wrappingContainer = createTreeNode({
         blockId: CONTENTFUL_COMPONENTS.container.id,
-        parentId: destination.droppableId,
+        parentId,
       });
       const childNode = createTreeNode({
         blockId: draggableId,
@@ -38,13 +41,14 @@ export default function useCanvasInteractions() {
       node.children = [childNode];
     }
 
-    addChild(destination.index, destination.droppableId, node);
+    addChild(destination.index, parentId, node);
 
     onDrop({
       data: tree,
       componentType: draggableId,
       destinationIndex: destination.index,
-      destinationZoneId: destination.droppableId,
+      destinationZoneId: parentId,
+      slotId,
     });
   };
 
