@@ -3,7 +3,7 @@ import {
   buildCfStyles,
   calculateNodeDefaultHeight,
   isLinkToAsset,
-  isEmptyStructureWithRelativeHeight,
+  isStructureWithRelativeHeight,
   isContentfulStructureComponent,
   transformBoundContentValue,
   resolveHyperlinkPattern,
@@ -50,6 +50,7 @@ type UseComponentProps = {
   definition: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
+  slotId?: string;
 };
 
 export const useComponentProps = ({
@@ -59,12 +60,18 @@ export const useComponentProps = ({
   renderDropzone,
   definition,
   userIsDragging,
+  slotId,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
   const locale = useEditorStore((state) => state.locale);
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
+
+  const isEmptyZone = useMemo(() => {
+    return !node.children.filter((child) => child.data.slotId === slotId).length;
+  }, [node.children, slotId]);
+
   const props: ComponentProps = useMemo(() => {
     const propsBase = {
       cfSsrClassName: node.data.props.cfSsrClassName
@@ -183,9 +190,19 @@ export const useComponentProps = ({
       {},
     );
 
+    const slotProps: Record<string, React.JSX.Element> = {};
+    if (definition.slots) {
+      for (const slotId in definition.slots) {
+        slotProps[slotId] = renderDropzone(node, {
+          zoneId: [node.data.id, slotId].join('|'),
+        });
+      }
+    }
+
     return {
       ...propsBase,
       ...extractedProps,
+      ...slotProps,
     };
   }, [
     hyperlinkPattern,
@@ -197,6 +214,7 @@ export const useComponentProps = ({
     areEntitiesFetched,
     unboundValues,
     entityStore,
+    renderDropzone,
   ]);
 
   const cfStyles = buildCfStyles(props as StyleProps, node.data.blockId);
@@ -231,9 +249,10 @@ export const useComponentProps = ({
       width: '100%',
       height: '100%',
       maxWidth: 'none',
-      ...(isEmptyStructureWithRelativeHeight(node.children.length, node?.data.blockId, height) && {
-        minHeight: EMPTY_CONTAINER_HEIGHT,
-      }),
+      ...(isEmptyZone &&
+        isStructureWithRelativeHeight(node?.data.blockId, height) && {
+          minHeight: EMPTY_CONTAINER_HEIGHT,
+        }),
       ...(userIsDragging &&
         isContentfulStructureComponent(node?.data.blockId) &&
         node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
