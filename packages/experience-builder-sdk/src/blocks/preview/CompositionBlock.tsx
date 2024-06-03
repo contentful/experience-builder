@@ -87,10 +87,11 @@ export const CompositionBlock = ({
         : undefined,
     };
 
-    return Object.entries(componentRegistration.definition.variables).reduce(
+    const props = Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variable = node.variables[variableName];
         if (!variable) return acc;
+
         switch (variable.type) {
           case 'DesignValue':
             acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
@@ -145,9 +146,29 @@ export const CompositionBlock = ({
       },
       propMap,
     );
+
+    if (componentRegistration.definition.slots) {
+      for (const slotId in componentRegistration.definition.slots) {
+        const slotNode = node.children.find((child) => child.slotId === slotId);
+        if (slotNode) {
+          props[slotId] = (
+            <CompositionBlock
+              node={slotNode}
+              locale={locale}
+              hyperlinkPattern={hyperlinkPattern}
+              entityStore={entityStore}
+              resolveDesignValue={resolveDesignValue}
+            />
+          );
+        }
+      }
+    }
+
+    return props;
   }, [
     componentRegistration,
     isAssembly,
+    node.children,
     node.variables,
     resolveDesignValue,
     entityStore,

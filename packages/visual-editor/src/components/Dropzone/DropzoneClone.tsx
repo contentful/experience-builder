@@ -5,9 +5,9 @@ import { useTreeStore } from '@/store/tree';
 import styles from './styles.module.css';
 import classNames from 'classnames';
 import { ROOT_ID } from '@/types/constants';
-
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
+import { parseZoneId } from '@/utils/zone';
 
 type DropzoneProps = {
   zoneId: string;
@@ -29,6 +29,7 @@ export function DropzoneClone({
 }: DropzoneProps) {
   const tree = useTreeStore((state) => state.tree);
   const content = node?.children || tree.root?.children || [];
+  const { slotId } = parseZoneId(zoneId);
 
   const isRootZone = zoneId === ROOT_ID;
 
@@ -48,18 +49,20 @@ export function DropzoneClone({
       )}
       node={node}
       {...rest}>
-      {content.map((item) => {
-        const componentId = item.data.id;
+      {content
+        .filter((node) => node.data.slotId === slotId)
+        .map((item) => {
+          const componentId = item.data.id;
 
-        return (
-          <EditorBlockClone
-            key={componentId}
-            node={item}
-            resolveDesignValue={resolveDesignValue}
-            renderDropzone={renderDropzone}
-          />
-        );
-      })}
+          return (
+            <EditorBlockClone
+              key={componentId}
+              node={item}
+              resolveDesignValue={resolveDesignValue}
+              renderDropzone={renderDropzone}
+            />
+          );
+        })}
     </WrapperComponent>
   );
 }
