@@ -31,7 +31,7 @@ export const useClassName = ({
       return;
     }
 
-    const cfStyles = buildCfStyles(props, node.definitionId);
+    const cfStyles = buildCfStyles(props);
 
     if (Object.keys(cfStyles).length === 0) {
       return;

@@ -217,7 +217,7 @@ export const useComponentProps = ({
     renderDropzone,
   ]);
 
-  const cfStyles = buildCfStyles(props as StyleProps, node.data.blockId);
+  const cfStyles = buildCfStyles(props as StyleProps);
 
   // Separate the component styles from the editor wrapper styles
   const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
