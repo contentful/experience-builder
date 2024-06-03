@@ -12,6 +12,8 @@ export const defineBreakpoints = (breakpoints: Breakpoint[]) => {
 };
 
 export const runBreakpointsValidation = () => {
+  if (!breakpointsRegistry.length) return;
+
   const validation = validateBreakpointsDefinition(breakpointsRegistry);
   if (!validation.success) {
     throw new Error(

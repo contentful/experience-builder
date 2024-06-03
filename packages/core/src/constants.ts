@@ -25,6 +25,7 @@ export const OUTGOING_EVENTS = {
   ComponentMoveStarted: 'componentMoveStarted',
   ComponentMoveEnded: 'componentMoveEnded',
   OutsideCanvasClick: 'outsideCanvasClick',
+  SDKFeatures: 'sdkFeatures',
 };
 
 export const INCOMING_EVENTS = {
