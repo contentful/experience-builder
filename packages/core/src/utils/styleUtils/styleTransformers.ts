@@ -153,11 +153,9 @@ export const transformBackgroundImage = (
 };
 export const transformWidthSizing = ({
   value,
-  cfMargin,
   componentId,
 }: {
   value?: string;
-  cfMargin?: string;
   componentId?: string;
 }) => {
   if (!value || !componentId) return;
@@ -165,10 +163,7 @@ export const transformWidthSizing = ({
   const transformedValue = transformFill(value);
 
   if (isContentfulStructureComponent(componentId)) {
-    const marginValues = cfMargin ? cfMargin.split(' ') : [];
-    const rightMargin = marginValues[1] || '0px';
-    const leftMargin = marginValues[3] || '0px';
-    const calcValue = `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`;
+    const calcValue = `calc(${transformedValue})`;
     /**
      * We want to check if the calculated value is valid CSS. If this fails,
      * this means the `transformedValue` is not a calculable value (not a px, rem, or %).

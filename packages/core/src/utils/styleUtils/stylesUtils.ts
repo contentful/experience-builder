@@ -73,7 +73,7 @@ export const buildCfStyles = (
     margin: cfMargin,
     padding: cfPadding,
     backgroundColor: cfBackgroundColor,
-    width: transformWidthSizing({ value: cfWidth || cfImageOptions?.width, cfMargin, componentId }),
+    width: transformWidthSizing({ value: cfWidth || cfImageOptions?.width, componentId }),
     height: transformFill(cfHeight || cfImageOptions?.height),
     maxWidth: cfMaxWidth,
     ...transformGridColumn(cfColumnSpan),
