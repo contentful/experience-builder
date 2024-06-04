@@ -267,15 +267,15 @@ const resolveCssVariables = (designTokensDefinition: DesignTokensDefinition) => 
     Object.keys(border).forEach((borderKey) => {
       const { width, style, color } = border[borderKey];
 
-      if (CssVarRegex.test(width)) {
+      if (width && CssVarRegex.test(width)) {
         const resolvedValue = getSingleCssVariableValue(element, width, 'border-width');
         tempResolvedValue[width] = resolvedValue;
       }
-      if (CssVarRegex.test(style)) {
+      if (style && CssVarRegex.test(style)) {
         const resolvedValue = getSingleCssVariableValue(element, style, 'border-style');
         tempResolvedValue[style] = resolvedValue;
       }
-      if (CssVarRegex.test(color)) {
+      if (color && CssVarRegex.test(color)) {
         const resolvedValue = getSingleCssVariableValue(element, color, 'border-color');
         tempResolvedValue[color] = resolvedValue;
       }

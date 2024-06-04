@@ -3,13 +3,33 @@ import { builtInStyles, optionalBuiltInStyles } from '../definitions/styles';
 
 export let designTokensRegistry: DesignTokensDefinition = {};
 
+// This function is used to ensure that the composite values are valid since composite values are optional.
+// Therefore only border and in the future text related design tokens are/will be checked in this funciton.
+// Ensuring values for simple key-value design tokens are not neccessary since they are required via typescript.
+const ensureValidCompositeValues = (designTokenDefinition: DesignTokensDefinition) => {
+  // TODO: add validation logic when text related design tokens are added
+
+  // Border validation
+  if (designTokenDefinition.border) {
+    for (const borderKey in designTokenDefinition.border) {
+      const borderValue = designTokenDefinition.border[borderKey];
+      designTokenDefinition.border[borderKey] = {
+        width: borderValue.width || '1px',
+        style: borderValue.style || 'solid',
+        color: borderValue.color || '#000000',
+      };
+    }
+  }
+  return designTokenDefinition;
+};
+
 /**
  * Register design tokens styling
  * @param designTokenDefinition - {[key:string]: Record<string, string>}
  * @returns void
  */
 export const defineDesignTokens = (designTokenDefinition: DesignTokensDefinition) => {
-  Object.assign(designTokensRegistry, designTokenDefinition);
+  Object.assign(designTokensRegistry, ensureValidCompositeValues(designTokenDefinition));
 };
 
 const templateStringRegex = /\${(.+?)}/g;
