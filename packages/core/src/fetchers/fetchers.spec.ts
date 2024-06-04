@@ -2,7 +2,7 @@ import type { ContentfulClientApi } from 'contentful';
 import * as fetchers from './fetchers';
 import * as fetchExperienceEntryModule from './fetchExperienceEntry';
 import * as fetchReferencedEntitiesModule from './fetchReferencedEntities';
-import { compositionEntry } from '../test/__fixtures__/composition';
+import { experienceEntry } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
 import { describe, beforeEach, it, expect, vi, Mock } from 'vitest';
 
@@ -18,7 +18,7 @@ describe('fetchExperience', () => {
   beforeEach(() => {
     // used by fetchExperience()->fetchExperienceEntry()
     (mockClient.getEntries as Mock).mockResolvedValueOnce({
-      items: [compositionEntry],
+      items: [experienceEntry],
     });
 
     // used by fetchExperience()->fetchReferencedEntities()
@@ -46,7 +46,7 @@ describe('fetchExperience', () => {
 
     expect(fetchReferencesSpy).toHaveBeenCalledWith({
       client: mockClient,
-      experienceEntry: compositionEntry,
+      experienceEntry,
       locale: 'en-US',
     });
   });

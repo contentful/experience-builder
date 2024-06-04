@@ -1,5 +1,5 @@
 import type { Entry } from 'contentful';
-import { compositionEntry } from '../../../test/__fixtures__/composition';
+import { experienceEntry } from '../../../test/__fixtures__/composition';
 import { createAssemblyEntry } from '../../../test/__fixtures__/assembly';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
@@ -15,7 +15,7 @@ describe('resolveAssembly', () => {
       children: [],
     };
     const entityStore = new EntityStore({
-      experienceEntry: compositionEntry as unknown as Entry,
+      experienceEntry: experienceEntry as unknown as Entry,
       entities: [...entries, ...assets],
       locale: 'en-US',
     });
@@ -47,7 +47,7 @@ describe('resolveAssembly', () => {
     };
 
     const entityStore = new EntityStore({
-      experienceEntry: compositionEntry as unknown as Entry,
+      experienceEntry: experienceEntry as unknown as Entry,
       entities: [...entries, ...assets],
       locale: 'en-US',
     });
@@ -70,9 +70,9 @@ describe('resolveAssembly', () => {
 
     const entityStore = new EntityStore({
       experienceEntry: {
-        ...compositionEntry,
+        ...experienceEntry,
         fields: {
-          ...compositionEntry.fields,
+          ...experienceEntry.fields,
           usedComponents: [assemblyEntry],
         },
       } as unknown as Entry,
@@ -87,7 +87,7 @@ describe('resolveAssembly', () => {
       children: assemblyEntry.fields.componentTree.children,
     });
     expect(entityStore.unboundValues).toEqual({
-      ...compositionEntry.fields.unboundValues,
+      ...experienceEntry.fields.unboundValues,
       ...assemblyEntry.fields.unboundValues,
     });
   });
