@@ -2,7 +2,7 @@ import { CONTENTFUL_COMPONENTS, LATEST_SCHEMA_VERSION } from '@/constants';
 import { ExperienceEntry, SchemaVersions } from '@/types';
 import { entityIds } from './entities';
 
-const compositionFields: ExperienceEntry['fields'] = {
+const experienceFields: ExperienceEntry['fields'] = {
   title: 'Test Composition',
   slug: 'test',
   componentTree: {
@@ -92,7 +92,7 @@ export const experienceEntry: ExperienceEntry = {
     },
   },
   metadata: { tags: [] },
-  fields: compositionFields as ExperienceEntry['fields'],
+  fields: experienceFields as ExperienceEntry['fields'],
 };
 
 type createExperienceEntryArgs = {

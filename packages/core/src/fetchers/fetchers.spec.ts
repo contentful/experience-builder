@@ -23,7 +23,10 @@ describe('fetchExperience', () => {
 
     // used by fetchExperience()->fetchReferencedEntities()
     (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
-    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
+    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({
+      items: entries,
+      includes: { Asset: assets },
+    });
   });
 
   it('should call fetchExperienceEntry and fetchReferencedEntities with given parameters', async () => {
