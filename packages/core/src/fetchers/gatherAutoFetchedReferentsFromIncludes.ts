@@ -1,10 +1,14 @@
 import { Entry, Asset, EntryCollection, EntrySkeletonType, UnresolvedLink } from 'contentful';
 import type { DeepReference } from '@/deep-binding/DeepReference';
 import { isLink } from '@/utils/isLink';
-export type MinimalEntryCollection = Pick<
-  EntryCollection<EntrySkeletonType, 'WITHOUT_LINK_RESOLUTION'>,
-  'items' | 'includes'
->;
+
+export type MinimalEntryCollection = {
+  items: Entry[];
+  includes: {
+    Entry: Entry[];
+    Asset: Asset[];
+  };
+};
 
 /**
  * Traverses deep-references and extracts referents from valid deep-paths.
@@ -54,37 +58,31 @@ export function gatherAutoFetchedReferentsFromIncludes(
       continue;
     }
 
-    if (linkToReferent.sys.linkType === 'Entry') {
-      const referentEntry = entriesResponse.includes?.Entry?.find(
-        (entry) => entry.sys.id === linkToReferent.sys.id,
-      );
-      if (!referentEntry) {
-        throw new Error(
-          `Logic Error: L2-referent Entry was not found within .includes (${JSON.stringify({
-            linkToReferent,
-          })})`,
-        );
-      }
-      autoFetchedReferentEntries.push(referentEntry as Entry);
-    } else if (linkToReferent.sys.linkType === 'Asset') {
-      const referentAsset = entriesResponse.includes?.Asset?.find(
-        (entry) => entry.sys.id === linkToReferent.sys.id,
-      );
-      if (!referentAsset) {
-        throw new Error(
-          `Logic Error: L2-referent Asset was not found within includes (${JSON.stringify({
-            linkToReferent,
-          })})`,
-        );
-      }
-      autoFetchedReferentAssets.push(referentAsset as Asset);
-    } else {
+    const linkType = linkToReferent.sys.linkType;
+
+    if (!['Entry', 'Asset'].includes(linkType)) {
       console.debug(
         `[experiences-sdk-react::gatherAutoFetchedReferentsFromIncludes] Unhandled linkType :${JSON.stringify(
           linkToReferent,
         )}`,
       );
+      continue;
     }
+
+    const referentEntity = entriesResponse.includes?.[linkType]?.find(
+      (entity) => entity.sys.id === linkToReferent.sys.id,
+    );
+    if (!referentEntity) {
+      throw new Error(
+        `Logic Error: L2-referent ${linkType} was not found within .includes (${JSON.stringify({
+          linkToReferent,
+        })})`,
+      );
+    }
+
+    linkType === 'Entry'
+      ? autoFetchedReferentEntries.push(referentEntity as Entry)
+      : autoFetchedReferentAssets.push(referentEntity as Asset);
   } // for (reference of deepReferences)
 
   return { autoFetchedReferentAssets, autoFetchedReferentEntries };

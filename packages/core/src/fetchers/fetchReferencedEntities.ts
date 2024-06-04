@@ -55,10 +55,10 @@ export const fetchReferencedEntities = async ({
     }
   }
 
-  const [entriesResponse, assetsResponse] = (await Promise.all([
+  const [entriesResponse, assetsResponse] = await Promise.all([
     fetchAllEntries({ client, ids: entryIds, locale }),
     fetchAllAssets({ client, ids: assetIds, locale }),
-  ])) as unknown as [MinimalEntryCollection, AssetCollection];
+  ]);
 
   const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
     gatherAutoFetchedReferentsFromIncludes(deepReferences, entriesResponse);

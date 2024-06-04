@@ -1,4 +1,4 @@
-import { Asset, ContentfulClientApi, Entry } from 'contentful';
+import { Asset, AssetCollection, ContentfulClientApi, Entry } from 'contentful';
 import { MinimalEntryCollection } from './gatherAutoFetchedReferentsFromIncludes';
 import { uniqBy } from 'lodash-es';
 
@@ -19,7 +19,13 @@ export const fetchAllEntries = async ({
   limit?: number;
   responseItems?: Entry[];
   responseIncludes?: MinimalEntryCollection['includes'];
-}) => {
+}): Promise<{
+  items: Entry[];
+  includes: {
+    Entry: Entry[];
+    Asset: Asset[];
+  };
+}> => {
   try {
     if (!client) {
       throw new Error(
@@ -115,7 +121,7 @@ export const fetchAllAssets = async ({
   skip?: number;
   limit?: number;
   responseItems?: Asset[];
-}) => {
+}): Promise<{ items: Asset[] }> => {
   try {
     if (!client) {
       throw new Error(
