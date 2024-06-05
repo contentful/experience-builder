@@ -5,7 +5,6 @@ import {
   BackgroundImageScalingOption,
   BackgroundImageAlignmentOption,
 } from '@/types';
-import { isContentfulStructureComponent } from '@/utils/components';
 
 // Keep this for backwards compatilibity - deleting this would be a breaking change
 // because existing components on a users experience will have the width value as fill
@@ -150,35 +149,4 @@ export const transformBackgroundImage = (
     backgroundPosition: matchBackgroundPosition(cfBackgroundImageOptions?.alignment),
     backgroundSize: matchBackgroundSize(cfBackgroundImageOptions?.scaling),
   };
-};
-export const transformWidthSizing = ({
-  value,
-  cfMargin,
-  componentId,
-}: {
-  value?: string;
-  cfMargin?: string;
-  componentId?: string;
-}) => {
-  if (!value || !componentId) return;
-
-  const transformedValue = transformFill(value);
-
-  if (isContentfulStructureComponent(componentId)) {
-    const marginValues = cfMargin ? cfMargin.split(' ') : [];
-    const rightMargin = marginValues[1] || '0px';
-    const leftMargin = marginValues[3] || '0px';
-    const calcValue = `calc(${transformedValue} - ${leftMargin} - ${rightMargin})`;
-    /**
-     * We want to check if the calculated value is valid CSS. If this fails,
-     * this means the `transformedValue` is not a calculable value (not a px, rem, or %).
-     * The value may instead be a string such as `min-content` or `max-content`. In
-     * that case we don't want to use calc and instead return the raw value.
-     */
-    if (typeof window !== 'undefined' && CSS.supports('width', calcValue)) {
-      return calcValue;
-    }
-  }
-
-  return transformedValue;
 };
