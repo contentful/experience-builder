@@ -1,4 +1,4 @@
-import { Entry, Asset, EntryCollection, EntrySkeletonType, UnresolvedLink } from 'contentful';
+import { Entry, Asset, UnresolvedLink } from 'contentful';
 import type { DeepReference } from '@/deep-binding/DeepReference';
 import { isLink } from '@/utils/isLink';
 

@@ -1,4 +1,4 @@
-import { Asset, AssetCollection, ContentfulClientApi, Entry } from 'contentful';
+import { Asset, ContentfulClientApi, Entry } from 'contentful';
 import { MinimalEntryCollection } from './gatherAutoFetchedReferentsFromIncludes';
 import { uniqBy } from 'lodash-es';
 

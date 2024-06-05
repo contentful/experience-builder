@@ -1,7 +1,6 @@
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import { getActiveBreakpointIndex, getValueForBreakpoint, mediaQueryMatcher } from './breakpoints';
 import { describe, it, expect } from 'vitest';
-import { initial } from 'lodash-es';
 
 describe('getValueForBreakpoint', () => {
   const breakpoints = createBreakpoints();

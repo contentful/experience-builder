@@ -82,7 +82,7 @@ describe('transformBoundContentValue', () => {
     expect(result).toEqual(assets[0].fields.file?.url);
   });
 
-  it.only('should transform text to rich text if variable type is "RichText"', () => {
+  it('should transform text to rich text if variable type is "RichText"', () => {
     const variableName = 'description';
     const resolveDesignValue = vitest.fn();
     const binding: UnresolvedLink<'Entry'> = {
