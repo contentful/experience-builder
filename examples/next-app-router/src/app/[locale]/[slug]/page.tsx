@@ -1,15 +1,28 @@
-import { getExperience } from '@/utils';
+import { getExperience } from '@/getExperience';
 import Experience from '@/components/Experience';
 
-export default async function SsrPage({ params }: { params: { locale?: string; slug?: string } }) {
-  const { locale = 'en-US', slug = 'home-page' } = params || {};
-  const experience = await getExperience(slug, locale);
+type Page = {
+  params: { locale?: string; slug?: string; preview?: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-  if (!experience) {
-    return <div>Experience {slug} not found</div>;
+export default async function ExperiencePage({ params, searchParams }: Page) {
+  const { locale = 'en-US', slug = 'home-page' } = params || {};
+  const { preview = 'false', editor = 'false' } = searchParams;
+  const isPreview = preview === 'true';
+  const isEditorMode = editor === 'true';
+  const { experience, error } = await getExperience(slug, locale, isPreview, isEditorMode);
+
+  if (error) {
+    return <div>{error.message}</div>;
   }
 
-  const experienceJSON = JSON.stringify(experience);
+  //experience currently needs to be stringified manually to be passed to the component
+  const experienceJSON = experience ? JSON.stringify(experience) : null;
 
-  return <Experience experienceJSON={experienceJSON} locale={locale} />;
+  return (
+    <main style={{ width: '100%' }}>
+      <Experience experienceJSON={experienceJSON} locale={locale} />
+    </main>
+  );
 }

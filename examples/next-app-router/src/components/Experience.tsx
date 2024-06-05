@@ -1,5 +1,4 @@
 'use client';
-
 import {
   ExperienceRoot,
   createExperience,
@@ -11,18 +10,21 @@ export default function Experience({
   experienceJSON,
   locale,
 }: {
-  experienceJSON: string;
+  experienceJSON: string | null;
   locale: string;
 }) {
-  const experience = createExperience(experienceJSON);
-  // const stylesheet = detachExperienceStyles(experience);
+  // manually parse the experience JSON into a Experience object
+  const experience = useMemo(() => {
+    return experienceJSON ? createExperience(experienceJSON) : undefined;
+  }, [experienceJSON]);
+
   const stylesheet = useMemo(() => {
-    console.log('in memo');
-    return detachExperienceStyles(experience);
+    return experience ? detachExperienceStyles(experience) : null;
   }, [experience]);
+
   return (
     <>
-      {stylesheet && <style data-ssg>{stylesheet}</style>}
+      {stylesheet && <style data-css-ssr>{stylesheet}</style>}
       <ExperienceRoot experience={experience} locale={locale} />
     </>
   );

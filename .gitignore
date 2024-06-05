@@ -42,6 +42,8 @@ tmp/
 
 # Ingore .env local files
 .env
+# Allow env template files
+!.env.local.tmpl
 
 **/cypress/screenshots/**
 **/cypress/videos/**

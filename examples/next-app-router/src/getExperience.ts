@@ -1,3 +1,4 @@
+// fetchBySlug currently needs to be imported from core to avoid NextJS build errors
 import { fetchBySlug } from '@contentful/experiences-core';
 import { createClient } from 'contentful';
 
@@ -6,9 +7,9 @@ const prevAccessToken = process.env.NEXT_PUBLIC_CTFL_PREVIEW_ACCESS_TOKEN!;
 const space = process.env.NEXT_PUBLIC_CTFL_SPACE_ID!;
 const environment = process.env.NEXT_PUBLIC_CTFL_ENV_ID!;
 const experienceTypeId = process.env.NEXT_PUBLIC_CTFL_EXPERIENCE_TYPE_ID!;
-const domain = process.env.NEXT_PUBLIC_CTFL_DOMAIN;
+const domain = process.env.NEXT_PUBLIC_CTFL_DOMAIN || 'contentful.com';
 
-export const getConfig = (isPreview = true) => {
+const getConfig = (isPreview: boolean) => {
   const client = createClient({
     space,
     environment,
@@ -18,9 +19,21 @@ export const getConfig = (isPreview = true) => {
   return client;
 };
 
-export const getExperience = async (slug: string, localeCode: string) => {
-  const client = getConfig();
-  let experience: any;
+export const getExperience = async (
+  slug: string,
+  localeCode: string,
+  isPreview = false,
+  isEditorMode = false,
+) => {
+  // While in editor mode, the experience is passed to the ExperienceRoot
+  // component by the editor, so we don't fetch it here
+  if (isEditorMode) {
+    return { experience: undefined, error: undefined };
+  }
+
+  const client = getConfig(isPreview);
+  let experience: Awaited<ReturnType<typeof fetchBySlug>> | undefined;
+
   try {
     experience = await fetchBySlug({
       client,
@@ -29,7 +42,7 @@ export const getExperience = async (slug: string, localeCode: string) => {
       localeCode,
     });
   } catch (error) {
-    console.error(error);
+    return { experience, error: error as Error };
   }
-  return experience;
+  return { experience, error: undefined };
 };
