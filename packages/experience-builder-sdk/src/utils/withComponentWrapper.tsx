@@ -38,7 +38,7 @@ export function withComponentWrapper<T>(
     const {
       innerRef,
       className: dragClassName,
-      ToolTipAndPlaceHolder,
+      ToolTipAndPlaceholder,
       ...restOfDragProps
     } = dragProps;
     const component = options.wrapComponent ? (
@@ -50,7 +50,7 @@ export function withComponentWrapper<T>(
           if (innerRef && refNode) innerRef(refNode);
         }}
         {...props}>
-        {ToolTipAndPlaceHolder}
+        {ToolTipAndPlaceholder}
         <Component className={classNames(classes)} {...(props as T)} />
       </div>
     ) : (

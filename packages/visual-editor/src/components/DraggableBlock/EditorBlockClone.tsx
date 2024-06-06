@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react';
-import styles from '../Draggable/styles.module.css';
-import { useComponent } from './useComponent';
+import styles from './styles.module.css';
+import { useComponent } from '@/hooks/useComponent';
 import type {
   ExperienceTreeNode,
   ResolveDesignValueType,
@@ -43,7 +43,7 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
 }) => {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
 
-  const { node, wrapperProps, elementToRender } = useComponent({
+  const { node, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -61,18 +61,12 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
     <div
       ref={provided?.innerRef}
       data-ctfl-dragging-element
-      {...wrapperProps}
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
-      className={classNames(
-        styles.DraggableComponent,
-        wrapperProps.className,
-        styles.DraggableClone,
-        {
-          [styles.isAssemblyBlock]: isAssemblyBlock,
-          [styles.isDragging]: snapshot?.isDragging,
-        },
-      )}
+      className={classNames(styles.DraggableComponent, styles.DraggableClone, {
+        [styles.isAssemblyBlock]: isAssemblyBlock,
+        [styles.isDragging]: snapshot?.isDragging,
+      })}
       style={getStyle(provided?.draggableProps.style, snapshot)}>
       {elementToRender()}
     </div>

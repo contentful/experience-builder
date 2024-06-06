@@ -1,9 +1,8 @@
-import React from 'react';
-import { DraggableComponent } from '@components/Draggable/DraggableComponent';
+import React, { useRef } from 'react';
 import { isContentfulStructureComponent, sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
-import { useComponent } from './useComponent';
+import { useComponent } from '@/hooks/useComponent';
 import type {
   ExperienceTreeNode,
   ResolveDesignValueType,
@@ -14,10 +13,27 @@ import {
   OUTGOING_EVENTS,
   ASSEMBLY_NODE_TYPE,
 } from '@contentful/experiences-core/constants';
-import { DraggableChildComponent } from '@components/Draggable/DraggableChildComponent';
 import { RenderDropzoneFunction } from './Dropzone.types';
-import { PlaceholderParams } from '@components/Draggable/Placeholder';
-import Hitboxes from './Hitboxes';
+import { Draggable } from '@hello-pangea/dnd';
+import Placeholder, { PlaceholderParams } from '@/components/DraggableHelpers/Placeholder';
+import Hitboxes from '@/components/DraggableHelpers/Hitboxes';
+import Tooltip from './Tooltip';
+import useDraggablePosition from '@/hooks/useDraggablePosition';
+import { DraggablePosition } from '@/types/constants';
+import { useDraggedItemStore } from '@/store/draggedItem';
+import classNames from 'classnames';
+import styles from './styles.module.css';
+
+function getStyle(style, snapshot) {
+  if (!snapshot.isDropAnimating) {
+    return style;
+  }
+  return {
+    ...style,
+    // cannot be 0, but make it super tiny
+    transitionDuration: `0.001s`,
+  };
+}
 
 type EditorBlockProps = {
   placeholder: PlaceholderParams;
@@ -39,24 +55,36 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   userIsDragging,
   placeholder,
 }) => {
+  const ref = useRef<HTMLElement | null>(null);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, wrapperProps, definition, elementToRender } = useComponent({
+  const { node, componentId, definition, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
     userIsDragging,
   });
-
+  const setDomRect = useDraggedItemStore((state) => state.setDomRect);
+  const isHoveredComponent = useDraggedItemStore(
+    (state) => state.hoveredComponentId === componentId,
+  );
   const coordinates = useSelectedInstanceCoordinates({ node });
   const displayName = node.data.displayName;
-
+  const testId = `draggable-${node.data.blockId ?? 'node'}`;
+  const isSelected = node.data.id === selectedNodeId;
   const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
   const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const isEmptyZone = !node.children.length;
+  const isDragDisabled = isAssemblyBlock || isSingleColumn;
+
+  useDraggablePosition({
+    draggableId: componentId,
+    draggableRef: ref,
+    position: DraggablePosition.MOUSE_POSITION,
+  });
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
@@ -88,49 +116,64 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     });
   };
 
-  if (isSingleColumn) {
-    return (
-      <DraggableChildComponent
-        elementToRender={elementToRender}
-        id={componentId}
-        index={index}
-        isAssemblyBlock={isAssembly || isAssemblyBlock}
-        isDragDisabled
-        isSelected={selectedNodeId === componentId}
-        userIsDragging={userIsDragging}
-        isContainer={isContainer}
-        blockId={node.data.blockId!}
-        coordinates={coordinates!}
-        wrapperProps={wrapperProps}
-        onClick={onClick}
-        onMouseOver={onMouseOver}
-        definition={definition}
-        displayName={displayName}
-      />
-    );
-  }
+  const onMouseDown = (e: React.SyntheticEvent<Element, Event>) => {
+    if (isDragDisabled) {
+      return;
+    }
 
-  return (
-    <DraggableComponent
-      elementToRender={elementToRender}
-      placeholder={placeholder}
-      definition={definition}
-      id={componentId}
-      index={index}
-      isAssemblyBlock={isAssembly || isAssemblyBlock}
-      isDragDisabled={isAssemblyBlock}
-      isSelected={selectedNodeId === componentId}
-      userIsDragging={userIsDragging}
-      isContainer={isContainer}
-      blockId={node.data.blockId}
-      coordinates={coordinates!}
-      wrapperProps={wrapperProps}
-      onClick={onClick}
-      onMouseOver={onMouseOver}
-      displayName={displayName}>
+    e.stopPropagation();
+    setDomRect(e.currentTarget.getBoundingClientRect());
+  };
+
+  const ToolTipAndPlaceholder = (
+    <>
+      <Tooltip
+        id={componentId}
+        coordinates={coordinates}
+        isAssemblyBlock={isAssemblyBlock}
+        isContainer={isContainer}
+        label={displayName || definition.name || 'No label specified'}
+      />
+      <Placeholder {...placeholder} id={componentId} />
       {isStructureComponent && userIsDragging && (
         <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
       )}
-    </DraggableComponent>
+    </>
+  );
+
+  return (
+    <Draggable
+      key={componentId}
+      draggableId={componentId}
+      index={index}
+      isDragDisabled={isDragDisabled}
+      disableInteractiveElementBlocking>
+      {(provided, snapshot) =>
+        elementToRender({
+          dragProps: {
+            ...provided.draggableProps,
+            ...provided.dragHandleProps,
+            'data-ctfl-draggable-id': componentId,
+            'data-test-id': testId,
+            innerRef: (refNode) => {
+              provided?.innerRef(refNode);
+              ref.current = refNode;
+            },
+            className: classNames(styles.DraggableComponent, {
+              [styles.isAssemblyBlock]: isAssemblyBlock,
+              [styles.isDragging]: snapshot?.isDragging,
+              [styles.isSelected]: isSelected,
+              [styles.userIsDragging]: userIsDragging,
+              [styles.isHoveringComponent]: isHoveredComponent,
+            }),
+            style: getStyle(provided.draggableProps.style, snapshot),
+            onMouseDown,
+            onMouseOver,
+            onClick,
+            ToolTipAndPlaceholder,
+          },
+        })
+      }
+    </Draggable>
   );
 };

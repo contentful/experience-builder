@@ -1,6 +1,5 @@
 import React, { MouseEventHandler, forwardRef } from 'react';
 import type * as CSS from 'csstype';
-import { combineClasses } from '@/utils/combineClasses';
 
 export interface FlexProps {
   /**
@@ -92,31 +91,14 @@ export const Flex = forwardRef<HTMLDivElement, FlexProps>(
       flexGrow,
       className,
       cssStyles,
-      dragProps,
       ...props
     },
     ref,
   ) => {
-    const {
-      innerRef,
-      className: dragClassName,
-      ToolTipAndPlaceHolder,
-      ...restDragProps
-    } = dragProps || {};
-
     return (
       <div
         id={id}
-        ref={(refNode) => {
-          if (innerRef && refNode) innerRef(refNode);
-          if (ref) {
-            if (ref instanceof Function) {
-              ref(refNode);
-            } else {
-              ref.current = refNode;
-            }
-          }
-        }}
+        ref={ref}
         style={{
           display: 'flex',
           flex,
@@ -135,15 +117,13 @@ export const Flex = forwardRef<HTMLDivElement, FlexProps>(
           flexGrow,
           ...cssStyles,
         }}
-        className={combineClasses(className, dragClassName)}
+        className={className}
         onMouseEnter={onMouseEnter}
         onMouseUp={onMouseUp}
         onMouseDown={onMouseDown}
         onMouseLeave={onMouseLeave}
         onClick={onClick}
-        {...props}
-        {...restDragProps}>
-        {ToolTipAndPlaceHolder}
+        {...props}>
         {children}
       </div>
     );

@@ -1,9 +1,7 @@
 import React, { CSSProperties, useCallback, useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { Dropzone } from '../Dropzone/Dropzone';
-import DraggableContainer from '../Draggable/DraggableComponentList';
+import DraggableContainer from '@/components/DraggableHelpers/DraggableComponentList';
 import type { ExperienceTree } from '@contentful/experiences-core/types';
-
 import { DRAGGABLE_HEIGHT, ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
@@ -14,6 +12,7 @@ import { DNDProvider } from './DNDProvider';
 import { sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
+import { Dropzone } from '@components/DraggableBlock/Dropzone';
 
 interface Props {
   onChange?: (data: ExperienceTree) => void;

@@ -11,10 +11,9 @@ import { Assembly } from '@contentful/experiences-components-react';
 import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
-import type { RenderDropzoneFunction } from './Dropzone.types';
-// import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
-import { ImportedComponentErrorBoundary } from './ImportedComponentErrorBoundary';
-import { DragWrapper, DragWrapperProps } from './DragWrapper';
+import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
+import { DragWrapper, DragWrapperProps } from '@components/DraggableHelpers/DragWrapper';
+import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -63,7 +62,7 @@ export const useComponent = ({
 
   const componentId = node.data.id;
 
-  const { componentProps, wrapperProps } = useComponentProps({
+  const { componentProps } = useComponentProps({
     node,
     areEntitiesFetched,
     resolveDesignValue,
@@ -73,41 +72,37 @@ export const useComponent = ({
   });
 
   const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
-    const { dragProps = {}, ...rest } = props || {};
+    const { dragProps = {} } = props || {};
+
+    const {
+      editorMode: _editorMode,
+      renderDropzone: _renderDropzone,
+      node: _node,
+      ...customComponentProps
+    } = componentProps;
+
+    const modifiedProps = isStructuralOrPatternComponent() ? componentProps : customComponentProps;
+
+    const requiresDragWrapper = !componentRegistration.options?.wrapComponent;
+
+    const element = React.createElement(
+      ImportedComponentErrorBoundary,
+      null,
+      React.createElement(componentRegistration.component, {
+        ...modifiedProps,
+        dragProps,
+      }),
+    );
 
     if (isStructuralOrPatternComponent()) {
-      const element = React.createElement(componentRegistration.component, {
-        ...rest,
-        ...componentProps,
-        dragProps,
-      });
       return element;
-    } else {
-      // Don't pass editor props to custom components
-      const {
-        editorMode: _editorMode,
-        renderDropzone: _renderDropzone,
-        node: _node,
-        ...customComponentProps
-      } = componentProps;
-
-      const requiresDragWrapper = !componentRegistration.options?.wrapComponent;
-
-      const element = React.createElement(
-        ImportedComponentErrorBoundary,
-        null,
-        React.createElement(componentRegistration.component, {
-          ...customComponentProps,
-          dragProps,
-        }),
-      );
-
-      return (
-        <DragWrapper wrapComponent={requiresDragWrapper} {...dragProps}>
-          {element}
-        </DragWrapper>
-      );
     }
+
+    return (
+      <DragWrapper wrapComponent={requiresDragWrapper} {...dragProps}>
+        {element}
+      </DragWrapper>
+    );
 
     function isStructuralOrPatternComponent() {
       return (
@@ -120,7 +115,6 @@ export const useComponent = ({
     node,
     componentId,
     elementToRender,
-    wrapperProps,
     definition: componentRegistration.definition,
   };
 };

@@ -17,6 +17,7 @@ import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experien
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
+import { DragWrapperProps } from '@/components/DraggableHelpers/DragWrapper';
 
 type DropzoneProps = {
   zoneId: string;
@@ -24,6 +25,7 @@ type DropzoneProps = {
   resolveDesignValue?: ResolveDesignValueType;
   className?: string;
   WrapperComponent?: ElementType | string;
+  dragProps?: DragWrapperProps;
 };
 
 export function Dropzone({
@@ -32,6 +34,7 @@ export function Dropzone({
   resolveDesignValue,
   className,
   WrapperComponent = 'div',
+  dragProps,
   ...rest
 }: DropzoneProps) {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
@@ -55,6 +58,14 @@ export function Dropzone({
   const isEmptyCanvas = isRootZone && !content.length;
 
   const isAssembly = ASSEMBLY_NODE_TYPES.includes(node?.type || '');
+
+  let draggableProps = {};
+
+  if (dragProps) {
+    const { ToolTipAndPlaceholder, Tag, innerRef, wrapComponent, ...htmlDragProps } = dragProps;
+
+    draggableProps = htmlDragProps;
+  }
 
   // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
   const renderDropzone: RenderDropzoneFunction = useCallback(
@@ -135,51 +146,48 @@ export function Dropzone({
         return (
           <WrapperComponent
             {...(provided || { droppableProps: {} }).droppableProps}
+            {...draggableProps}
             ref={(refNode) => {
+              if (dragProps?.innerRef) {
+                dragProps.innerRef(refNode);
+              }
               provided?.innerRef(refNode);
             }}
             id={zoneId}
             data-ctfl-zone-id={zoneId}
-            className={classNames(
-              styles.container,
-              {
-                [styles.isEmptyCanvas]: isEmptyCanvas,
-                [styles.isDragging]: userIsDragging && !isAssembly,
-                [styles.isDestination]: isDestination && !isAssembly,
-                [styles.isRoot]: isRootZone,
-                [styles.isEmptyZone]: !content.length,
-              },
-              className,
-            )}
-            node={node}
+            className={classNames(dragProps?.className, styles.Dropzone, className, {
+              [styles.isEmptyCanvas]: isEmptyCanvas,
+              [styles.isDragging]: userIsDragging,
+              [styles.isDestination]: isDestination && !isAssembly,
+              [styles.isRoot]: isRootZone,
+              [styles.isEmptyZone]: !content.length,
+            })}
             {...rest}>
             {isEmptyCanvas ? (
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
             ) : (
-              content.map((item, i) => {
-                const componentId = item.data.id;
-                return (
-                  <EditorBlock
-                    placeholder={{
-                      isDraggingOver: snapshot?.isDraggingOver,
-                      totalIndexes: content.length,
-                      elementIndex: i,
-                      dropzoneElementId: zoneId,
-                      direction,
-                    }}
-                    index={i}
-                    zoneId={zoneId}
-                    key={componentId}
-                    userIsDragging={userIsDragging}
-                    draggingNewComponent={isDraggingNewComponent}
-                    node={item}
-                    resolveDesignValue={resolveDesignValue}
-                    renderDropzone={renderDropzone}
-                  />
-                );
-              })
+              content.map((item, i) => (
+                <EditorBlock
+                  placeholder={{
+                    isDraggingOver: snapshot?.isDraggingOver,
+                    totalIndexes: content.length,
+                    elementIndex: i,
+                    dropzoneElementId: zoneId,
+                    direction,
+                  }}
+                  index={i}
+                  zoneId={zoneId}
+                  key={item.data.id}
+                  userIsDragging={userIsDragging}
+                  draggingNewComponent={isDraggingNewComponent}
+                  node={item}
+                  resolveDesignValue={resolveDesignValue}
+                  renderDropzone={renderDropzone}
+                />
+              ))
             )}
             {provided?.placeholder}
+            {dragProps?.ToolTipAndPlaceholder}
           </WrapperComponent>
         );
       }}

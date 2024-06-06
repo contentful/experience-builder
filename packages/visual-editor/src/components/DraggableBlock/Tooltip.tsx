@@ -1,4 +1,4 @@
-import { Rect, getTooltipPositions } from '@components/Draggable/canvasToolsUtils';
+import { Rect, getTooltipPositions } from '@/utils/canvasToolsUtils';
 import classNames from 'classnames';
 import React, { useMemo, useRef } from 'react';
 import styles from './styles.module.css';

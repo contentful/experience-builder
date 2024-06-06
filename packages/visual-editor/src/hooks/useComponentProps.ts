@@ -24,14 +24,15 @@ import type {
   DesignValue,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
-import { useEditorModeClassName } from '../../hooks/useEditorModeClassName';
+import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
 import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
-import type { RenderDropzoneFunction } from './Dropzone.types';
-import { DRAG_PADDING } from '../../types/constants';
+import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzone.types';
+
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
+import { DRAG_PADDING } from '@/types/constants';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
@@ -205,18 +206,18 @@ export const useComponentProps = ({
   // const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
 
   // Styles that will be applied to the editor wrapper (draggable) element
-  const wrapperClass = useEditorModeClassName({
-    styles:
-      // To ensure that assembly nodes are rendered like they are rendered in
-      // the assembly editor, we need to use a normal block instead of a flex box.
-      node.type === ASSEMBLY_NODE_TYPE
-        ? {
-            display: 'block !important',
-            width: '100%',
-          }
-        : {},
-    nodeId: `editor-${node.data.id}`,
-  });
+  // const wrapperClass = useEditorModeClassName({
+  //   styles:
+  //     // To ensure that assembly nodes are rendered like they are rendered in
+  //     // the assembly editor, we need to use a normal block instead of a flex box.
+  //     node.type === ASSEMBLY_NODE_TYPE
+  //       ? {
+  //           display: 'block !important',
+  //           width: '100%',
+  //         }
+  //       : {},
+  //   nodeId: `editor-${node.data.id}`,
+  // });
 
   // Styles that will be applied to the component element
   const componentClass = useEditorModeClassName({
@@ -238,18 +239,14 @@ export const useComponentProps = ({
     nodeId: node.data.id,
   });
 
-  const wrapperProps = {
-    className: wrapperClass,
-    'data-cf-node-id': node.data.id,
-    'data-cf-node-block-id': node.data.blockId,
-    'data-cf-node-block-type': node.type,
-  };
-
   //List explicit style props that will end up being passed to the component
   const stylesToKeep = ['cfImageAsset'];
   const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
 
   const componentProps: ResolvedComponentProps = {
+    'data-cf-node-id': node.data.id,
+    'data-cf-node-block-id': node.data.blockId,
+    'data-cf-node-block-type': node.type,
     className: (props.cfSsrClassName as string | undefined) ?? componentClass,
     editorMode: true,
     node,
@@ -258,7 +255,7 @@ export const useComponentProps = ({
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { componentProps, wrapperProps };
+  return { componentProps };
 };
 
 const addExtraDropzonePadding = (padding: string) =>
