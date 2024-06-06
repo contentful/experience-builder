@@ -2,8 +2,6 @@ import { defineComponents, defineBreakpoints } from '@contentful/experiences-sdk
 import ComponentWithChildren from './components/ComponentWithChildren';
 import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
-import { FullWidthWrapped } from './components/FullWidthWrapped';
-import { FullWidthNoWrapped } from './components/FullWidthNoWrapped';
 import NestedSlots from './components/NestedSlots';
 
 defineComponents([
@@ -95,37 +93,6 @@ defineComponents([
         },
       },
     },
-  },
-  {
-    component: FullWidthWrapped,
-    definition: {
-      id: 'fullWidthWrapped',
-      name: 'FullWidth Wrapped',
-      category: 'Custom Components',
-      builtInStyles: ['cfWidth', 'cfHeight', 'cfMargin'],
-      variables: {
-        text: {
-          displayName: 'Text',
-          type: 'Text',
-        },
-      },
-    },
-    options: { wrapComponent: true },
-  },
-  {
-    component: FullWidthNoWrapped,
-    definition: {
-      id: 'fullWidthNoWrapped',
-      name: 'FullWidth No Wrapped',
-      category: 'Custom Components',
-      variables: {
-        text: {
-          displayName: 'Text',
-          type: 'Text',
-        },
-      },
-    },
-    options: { wrapComponent: false },
   },
 ]);
 
