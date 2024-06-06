@@ -1,7 +1,7 @@
 import { useFetchById, UseFetchByIdArgs } from './useFetchById';
 import { EntityStore } from '@contentful/experiences-core';
 import { renderHook, waitFor } from '@testing-library/react';
-import { compositionEntry } from '../../test/__fixtures__/composition';
+import { experienceEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
 import type { ContentfulClientApi, Entry } from 'contentful';
 
@@ -15,7 +15,7 @@ describe('useFetchById', () => {
   beforeEach(() => {
     clientMock = {
       getEntries: jest.fn().mockImplementation(() => {
-        return Promise.resolve({ items: [compositionEntry] });
+        return Promise.resolve({ items: [experienceEntry] });
       }),
       getAssets: jest.fn().mockResolvedValue({ items: assets }),
       withoutLinkResolution: {
@@ -56,7 +56,7 @@ describe('useFetchById', () => {
       const store = result.current;
 
       const entityStore = new EntityStore({
-        experienceEntry: compositionEntry as unknown as Entry,
+        experienceEntry: experienceEntry as unknown as Entry,
         entities: [...entries, ...assets],
         locale: localeCode,
       });
@@ -64,7 +64,7 @@ describe('useFetchById', () => {
 
       expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
         content_type: experienceTypeId,
-        'sys.id': compositionEntry.sys.id,
+        'sys.id': experienceEntry.sys.id,
         locale: localeCode,
       });
 
@@ -110,7 +110,7 @@ describe('useFetchById', () => {
       if ('sys.id[in]' in data) {
         return Promise.resolve({ items: entries });
       }
-      return Promise.resolve({ items: [compositionEntry] });
+      return Promise.resolve({ items: [experienceEntry] });
     });
 
     rerender({ ...initialProps, id: 'composition-id' });

@@ -1,5 +1,5 @@
 import type { Entry } from 'contentful';
-import { compositionEntry } from '../test/__fixtures__/composition';
+import { experienceEntry } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
 import { createExperience } from './createExperience';
 import { describe, it, expect } from 'vitest';
@@ -22,7 +22,7 @@ describe('createExperience', () => {
 
   it('should return the instance of an entity store and mode', () => {
     const experience = createExperience({
-      experienceEntry: compositionEntry as unknown as Entry,
+      experienceEntry: experienceEntry as unknown as Entry,
       referencedEntries: entries,
       referencedAssets: assets,
       locale: 'en-US',
@@ -30,7 +30,7 @@ describe('createExperience', () => {
     });
 
     expect(experience.entityStore).toBeDefined();
-    expect(experience.entityStore?.experienceEntryFields).toEqual(compositionEntry.fields);
+    expect(experience.entityStore?.experienceEntryFields).toEqual(experienceEntry.fields);
     expect(experience.entityStore?.getCurrentLocale()).toBe('en-US');
   });
 });

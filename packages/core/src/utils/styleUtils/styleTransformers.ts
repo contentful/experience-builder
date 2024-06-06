@@ -26,7 +26,6 @@ export const transformBorderStyle = (value?: string): CSSProperties => {
   const parts = value.split(' ');
   // Just accept the passed value
   if (parts.length < 3) return { border: value };
-  // Replace the second part always with `solid` and set the box sizing accordingly
   const [borderSize, borderStyle, ...borderColorParts] = parts;
   const borderColor = borderColorParts.join(' ');
   return {

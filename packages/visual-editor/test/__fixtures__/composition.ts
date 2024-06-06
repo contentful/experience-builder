@@ -51,7 +51,7 @@ const compositionFields: ExperienceEntry['fields'] = {
   },
 };
 
-export const compositionEntry: ExperienceEntry = {
+export const experienceEntry: ExperienceEntry = {
   sys: {
     id: 'composition-id',
     type: 'Entry',
