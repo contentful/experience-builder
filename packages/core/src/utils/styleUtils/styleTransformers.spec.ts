@@ -1,11 +1,9 @@
-import { CONTENTFUL_COMPONENTS } from '@/constants';
 import {
   transformAlignment,
   transformBackgroundImage,
   transformBorderStyle,
   transformFill,
   transformGridColumn,
-  transformWidthSizing,
 } from './styleTransformers';
 
 describe('transformFill', () => {
@@ -78,25 +76,5 @@ describe('transformBackgroundImage', () => {
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'contain',
     });
-  });
-});
-describe('transformWidthSizing', () => {
-  it('takes into account margins if component is a structural component', () => {
-    expect(
-      transformWidthSizing({
-        value: '100px',
-        cfMargin: '10px 20px 30px 40px',
-        componentId: CONTENTFUL_COMPONENTS.container.id,
-      }),
-    ).toEqual('calc(100px - 40px - 20px)');
-  });
-  it('returns original width if component is not structural component', () => {
-    expect(
-      transformWidthSizing({
-        value: '100px',
-        cfMargin: '10px 10px 10px 10px',
-        componentId: CONTENTFUL_COMPONENTS.button.id,
-      }),
-    ).toEqual('100px');
   });
 });
