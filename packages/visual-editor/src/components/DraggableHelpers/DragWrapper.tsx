@@ -44,7 +44,7 @@ export interface DragWrapperProps
   innerRef?: (refNode: HTMLElement) => void;
   wrapComponent?: boolean;
   Tag?: WrapperTags;
-  ToolTipAndPlaceHolder?: React.ReactNode;
+  ToolTipAndPlaceholder?: React.ReactNode;
 }
 
 export const DragWrapper: React.FC<DragWrapperProps> = ({
@@ -52,7 +52,7 @@ export const DragWrapper: React.FC<DragWrapperProps> = ({
   children,
   innerRef,
   Tag = 'div',
-  ToolTipAndPlaceHolder,
+  ToolTipAndPlaceholder,
   wrapComponent,
   ...props
 }) => {
@@ -105,6 +105,8 @@ export const DragWrapper: React.FC<DragWrapperProps> = ({
         wrapperRef.current.style.setProperty('max-width', maxWidth);
         // wrapperRef.current.style.setProperty('height', '33px');
         // wrapperRef.current.classList.add(...classes);
+      } else {
+        wrapperRef.current.style.setProperty('width', 'max-content');
       }
     }
   }, [wrapComponent]);
@@ -118,11 +120,11 @@ export const DragWrapper: React.FC<DragWrapperProps> = ({
           wrapperRef.current = refNode;
         }}
         {...props}>
-        {ToolTipAndPlaceHolder}
+        {ToolTipAndPlaceholder}
         {children}
       </Tag>
     );
   }
 
-  return <>{children}</>;
+  return children;
 };
