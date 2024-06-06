@@ -3,10 +3,10 @@ import {
   buildCfStyles,
   calculateNodeDefaultHeight,
   isLinkToAsset,
-  isEmptyStructureWithRelativeHeight,
   isContentfulStructureComponent,
   transformBoundContentValue,
   resolveHyperlinkPattern,
+  isStructureWithRelativeHeight,
 } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -51,6 +51,7 @@ type UseComponentProps = {
   definition: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
+  slotId?: string;
 };
 
 export const useComponentProps = ({
@@ -60,12 +61,18 @@ export const useComponentProps = ({
   renderDropzone,
   definition,
   userIsDragging,
+  slotId,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
   const locale = useEditorStore((state) => state.locale);
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
+
+  const isEmptyZone = useMemo(() => {
+    return !node.children.filter((child) => child.data.slotId === slotId).length;
+  }, [node.children, slotId]);
+
   const props: ComponentProps = useMemo(() => {
     const propsBase = {
       cfSsrClassName: node.data.props.cfSsrClassName
@@ -184,9 +191,19 @@ export const useComponentProps = ({
       {},
     );
 
+    const slotProps: Record<string, React.JSX.Element> = {};
+    if (definition.slots) {
+      for (const slotId in definition.slots) {
+        slotProps[slotId] = renderDropzone(node, {
+          zoneId: [node.data.id, slotId].join('|'),
+        });
+      }
+    }
+
     return {
       ...propsBase,
       ...extractedProps,
+      ...slotProps,
     };
   }, [
     hyperlinkPattern,
@@ -198,38 +215,19 @@ export const useComponentProps = ({
     areEntitiesFetched,
     unboundValues,
     entityStore,
+    renderDropzone,
   ]);
 
-  const cfStyles = buildCfStyles(props as StyleProps, node.data.blockId);
-
-  // Separate the component styles from the editor wrapper styles
-  // const { margin, height, width, maxWidth, ...componentStyles } = cfStyles;
-
-  // Styles that will be applied to the editor wrapper (draggable) element
-  // const wrapperClass = useEditorModeClassName({
-  //   styles:
-  //     // To ensure that assembly nodes are rendered like they are rendered in
-  //     // the assembly editor, we need to use a normal block instead of a flex box.
-  //     node.type === ASSEMBLY_NODE_TYPE
-  //       ? {
-  //           display: 'block !important',
-  //           width: '100%',
-  //         }
-  //       : {},
-  //   nodeId: `editor-${node.data.id}`,
-  // });
+  const cfStyles = buildCfStyles(props as StyleProps);
 
   // Styles that will be applied to the component element
   const componentClass = useEditorModeClassName({
     styles: {
       ...cfStyles,
-      ...(isEmptyStructureWithRelativeHeight(
-        node.children.length,
-        node?.data.blockId,
-        cfStyles.height,
-      ) && {
-        minHeight: EMPTY_CONTAINER_HEIGHT,
-      }),
+      ...(isEmptyZone &&
+        isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
+          minHeight: EMPTY_CONTAINER_HEIGHT,
+        }),
       ...(userIsDragging &&
         isContentfulStructureComponent(node?.data.blockId) &&
         node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {

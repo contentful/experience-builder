@@ -3,7 +3,7 @@ import { useLayoutEffect, useState } from 'react';
 import {
   buildCfStyles,
   buildStyleTag,
-  isEmptyStructureWithRelativeHeight,
+  isStructureWithRelativeHeight,
 } from '@contentful/experiences-core';
 import { ComponentTreeNode } from '@contentful/experiences-core/types';
 import { EMPTY_CONTAINER_HEIGHT } from '@contentful/experiences-core/constants';
@@ -31,14 +31,15 @@ export const useClassName = ({
       return;
     }
 
-    const cfStyles = buildCfStyles(props, node.definitionId);
+    const cfStyles = buildCfStyles(props);
 
     if (Object.keys(cfStyles).length === 0) {
       return;
     }
 
     if (
-      isEmptyStructureWithRelativeHeight(node.children.length, node.definitionId, cfStyles.height)
+      !node.children.length &&
+      isStructureWithRelativeHeight(node.definitionId, cfStyles.height)
     ) {
       cfStyles.minHeight = EMPTY_CONTAINER_HEIGHT;
     }

@@ -97,6 +97,7 @@ export type ComponentDefinition<
   hyperlinkPattern?: string;
   variables: Partial<Record<ContainerStyleVariableName, ComponentDefinitionVariable<T>>> &
     Record<string, ComponentDefinitionVariable<T>>;
+  slots?: Record<string, { displayName: string }>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
   tooltip?: {
@@ -148,6 +149,7 @@ export type ExperienceTreeNode = {
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
+    slotId?: string;
     assembly?: {
       id: string;
       componentId: string;
@@ -234,7 +236,10 @@ export type DesignTokensDefinition = {
   spacing?: Record<string, string>;
   sizing?: Record<string, string>;
   color?: Record<string, string>;
-  border?: Record<string, { width: string; style: 'solid' | 'dashed' | 'dotted'; color: string }>;
+  border?: Record<
+    string,
+    { width?: string; style?: 'solid' | 'dashed' | 'dotted'; color?: string }
+  >;
   borderRadius?: Record<string, string>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;

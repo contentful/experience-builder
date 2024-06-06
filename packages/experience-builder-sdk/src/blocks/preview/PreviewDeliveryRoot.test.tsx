@@ -10,12 +10,12 @@ import { compatibleVersions } from '../../constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
 
 const locale = 'en-US';
-const compositionEntry = createExperienceEntry({
+const experienceEntry = createExperienceEntry({
   schemaVersion: '2023-09-28',
 });
 
 const entityStore = new EntityStore({
-  experienceEntry: compositionEntry as unknown as Entry,
+  experienceEntry: experienceEntry as unknown as Entry,
   entities: [...entries, ...assets],
   locale,
 });

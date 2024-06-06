@@ -18,6 +18,7 @@ import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
 import { DragWrapperProps } from '@/components/DraggableHelpers/DragWrapper';
+import { parseZoneId } from '@/utils/zone';
 
 type DropzoneProps = {
   zoneId: string;
@@ -43,6 +44,7 @@ export function Dropzone({
   const isHoveringZone = useZoneStore((state) => state.hoveringZone === zoneId);
   const tree = useTreeStore((state) => state.tree);
   const content = node?.children || tree.root?.children || [];
+  const { slotId } = parseZoneId(zoneId);
 
   const direction = useDropzoneDirection({ resolveDesignValue, node, zoneId });
 
@@ -162,29 +164,32 @@ export function Dropzone({
               [styles.isRoot]: isRootZone,
               [styles.isEmptyZone]: !content.length,
             })}
+            data-ctfl-slot-id={slotId}
             {...rest}>
             {isEmptyCanvas ? (
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
             ) : (
-              content.map((item, i) => (
-                <EditorBlock
-                  placeholder={{
-                    isDraggingOver: snapshot?.isDraggingOver,
-                    totalIndexes: content.length,
-                    elementIndex: i,
-                    dropzoneElementId: zoneId,
-                    direction,
-                  }}
-                  index={i}
-                  zoneId={zoneId}
-                  key={item.data.id}
-                  userIsDragging={userIsDragging}
-                  draggingNewComponent={isDraggingNewComponent}
-                  node={item}
-                  resolveDesignValue={resolveDesignValue}
-                  renderDropzone={renderDropzone}
-                />
-              ))
+              content
+                .filter((node) => node.data.slotId === slotId)
+                .map((item, i) => (
+                  <EditorBlock
+                    placeholder={{
+                      isDraggingOver: snapshot?.isDraggingOver,
+                      totalIndexes: content.length,
+                      elementIndex: i,
+                      dropzoneElementId: zoneId,
+                      direction,
+                    }}
+                    index={i}
+                    zoneId={zoneId}
+                    key={item.data.id}
+                    userIsDragging={userIsDragging}
+                    draggingNewComponent={isDraggingNewComponent}
+                    node={item}
+                    resolveDesignValue={resolveDesignValue}
+                    renderDropzone={renderDropzone}
+                  />
+                ))
             )}
             {provided?.placeholder}
             {dragProps?.ToolTipAndPlaceholder}

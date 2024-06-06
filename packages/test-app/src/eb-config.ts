@@ -4,6 +4,7 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import { FullWidthWrapped } from './components/FullWidthWrapped';
 import { FullWidthNoWrapped } from './components/FullWidthNoWrapped';
+import NestedSlots from './components/NestedSlots';
 
 defineComponents([
   {
@@ -25,6 +26,25 @@ defineComponents([
     },
     options: {
       wrapComponent: false,
+    },
+  },
+  {
+    component: NestedSlots,
+    definition: {
+      id: 'nested-slots',
+      thumbnailUrl: 'https://static.thenounproject.com/png/302688-200.png',
+      name: 'Nested Slots',
+      category: 'Custom Components',
+      builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBorder'],
+      variables: {},
+      slots: {
+        childrenSlot1: {
+          displayName: 'Slot 1',
+        },
+        childrenSlot2: {
+          displayName: 'Slot 2',
+        },
+      },
     },
   },
   {

@@ -230,10 +230,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
         // We convert cryptic prop keys to css variables
         // Eg: cfMargin to margin
-        const stylesForBreakpoint = buildCfStyles(
-          propsByBreakpointWithResolvedDesignTokens,
-          currentNode.definitionId,
-        );
+        const stylesForBreakpoint = buildCfStyles(propsByBreakpointWithResolvedDesignTokens);
 
         const stylesForBreakpointWithoutUndefined: Record<string, string> = Object.fromEntries(
           Object.entries(stylesForBreakpoint)

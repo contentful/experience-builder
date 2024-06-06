@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { isContentfulStructureComponent, sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
@@ -23,6 +23,7 @@ import { DraggablePosition } from '@/types/constants';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import classNames from 'classnames';
 import styles from './styles.module.css';
+import { parseZoneId } from '@/utils/zone';
 
 function getStyle(style, snapshot) {
   if (!snapshot.isDropAnimating) {
@@ -55,6 +56,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   userIsDragging,
   placeholder,
 }) => {
+  const { slotId } = parseZoneId(zoneId);
   const ref = useRef<HTMLElement | null>(null);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
@@ -63,6 +65,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     resolveDesignValue,
     renderDropzone,
     userIsDragging,
+    slotId,
   });
   const setDomRect = useDraggedItemStore((state) => state.setDomRect);
   const isHoveredComponent = useDraggedItemStore(
@@ -77,8 +80,12 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
-  const isEmptyZone = !node.children.length;
-  const isDragDisabled = isAssemblyBlock || isSingleColumn;
+  const isSlotComponent = Boolean(node.data.slotId);
+  const isDragDisabled = isAssemblyBlock || isSingleColumn || isSlotComponent;
+
+  const isEmptyZone = useMemo(() => {
+    return !node.children.filter((node) => node.data.slotId === slotId).length;
+  }, [node.children, slotId]);
 
   useDraggablePosition({
     draggableId: componentId,
