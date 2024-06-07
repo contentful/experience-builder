@@ -156,14 +156,14 @@ describe(validateBreakpointsDefinition, () => {
         query: '*',
         displayName: 'All Sizes',
         previewSize: '100%',
-        displayIconUrl: 'https://test.com',
+        displayIcon: 'IconDeviceTablet',
       },
       {
         id: 'test-tablet',
         query: '<982px',
         displayName: 'Tablet',
         previewSize: '820px',
-        displayIconUrl: 'https://test.com',
+        displayIcon: 'IconDeviceTablet',
         wrongFieldAdded: 'test',
       },
     ];
