@@ -1,6 +1,7 @@
 {
-  "name": "@contentful/experience-builder-storybook-addon",
-  "version": "0.0.2-alpha.16",
+  "name": "@contentful/experiences-storybook-addon",
+  "private": true,
+  "version": "0.0.1-alpha.11",
   "description": "Develop Contentful experience builder components with storybook",
   "keywords": [
     "storybook-addons",
@@ -39,7 +40,11 @@
     "*.js",
     "*.d.ts"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
+    "dev": "echo noop",
     "clean": "rimraf ./dist",
     "prebuild": "npm run clean",
     "build": "tsup",
@@ -50,7 +55,8 @@
     "release": "npm run build && auto shipit",
     "eject-ts": "zx scripts/eject-typescript.mjs",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "depcruise": "depcruise src"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.0.0",
@@ -61,26 +67,26 @@
     "@storybook/testing-library": "^0.0.14-next.1",
     "@svgr/plugin-jsx": "^8.1.0",
     "@svgr/rollup": "^8.1.0",
-    "@types/node": "^18.15.0",
+    "@types/node": "^20.11.10",
     "@types/react": "^18.0.34",
-    "@vitejs/plugin-react": "^3.1.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "auto": "^10.3.0",
     "boxen": "^5.0.1",
-    "dedent": "^0.7.0",
+    "dedent": "^1.5.1",
     "esbuild-plugin-svgr": "^2.1.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.3.1",
+    "prettier": "^3.2.5",
     "prompts": "^2.4.2",
     "prop-types": "^15.8.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "rimraf": "^3.0.2",
+    "rimraf": "^5.0.5",
     "storybook": "^7.0.0",
     "tsup": "^6.6.3",
-    "typescript": "^4.9.5",
+    "typescript": "^5.3.3",
     "vite": "^4.1.4",
     "vite-plugin-svgr": "^4.1.0",
-    "zx": "^1.14.1"
+    "zx": "^7.2.3"
   },
   "peerDependencies": {
     "@storybook/blocks": "^7.0.0",
@@ -101,9 +107,6 @@
       "optional": true
     }
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "storybook": {
     "displayName": "Contentful Experience Builder Addon",
     "supportedFrameworks": [
@@ -114,8 +117,8 @@
   },
   "dependencies": {
     "@contentful/app-sdk": "^4.23.1",
-    "@contentful/experience-builder": "file:../experience-builder-sdk",
-    "@contentful/experience-builder-components": "file:../components",
+    "@contentful/experiences-components-react": "file:../components",
+    "@contentful/experiences-sdk-react": "file:../experiences-sdk-react",
     "@contentful/f36-components": "^4.52.1",
     "@contentful/f36-tokens": "^4.0.2",
     "@contentful/f36-workbench": "^4.21.0",

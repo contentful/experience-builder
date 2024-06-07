@@ -1,30 +1,17 @@
 import React from 'react';
-
-import { EntityStore } from '@contentful/experience-builder-core';
-import type { Experience, InternalSDKMode } from '@contentful/experience-builder-core/types';
+import { EntityStore } from '@contentful/experiences-core';
+import type { Experience } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
-import { useBreakpoints, useEditorModeSwitch } from '../../hooks';
+import { useBreakpoints } from '../../hooks';
 
 type DeliveryRootProps = {
   experience: Experience<EntityStore>;
   locale: string;
-  mode: InternalSDKMode;
-  switchToEditorMode: () => void;
 };
 
-export const PreviewDeliveryRoot = ({
-  locale,
-  mode,
-  switchToEditorMode,
-  experience,
-}: DeliveryRootProps) => {
+export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) => {
   const { entityStore } = experience;
-
-  useEditorModeSwitch({
-    mode,
-    switchToEditorMode,
-  });
 
   const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? []);
 
@@ -34,7 +21,7 @@ export const PreviewDeliveryRoot = ({
 
   if (!compatibleVersions.includes(entityStore.schemaVersion)) {
     console.warn(
-      `[exp-builder.sdk] Contenful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`
+      `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
     return null;
   }
@@ -45,12 +32,9 @@ export const PreviewDeliveryRoot = ({
         <CompositionBlock
           key={index}
           node={childNode}
+          hyperlinkPattern={experience.hyperlinkPattern}
           locale={locale}
           entityStore={entityStore}
-          dataSource={entityStore.dataSource}
-          unboundValues={entityStore.unboundValues}
-          breakpoints={entityStore.breakpoints}
-          usedComponents={entityStore.usedComponents}
           resolveDesignValue={resolveDesignValue}
         />
       ))}

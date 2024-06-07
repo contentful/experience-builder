@@ -1,4 +1,4 @@
-import { EditorModeEntityStore } from '@contentful/experience-builder-core';
+import { EditorModeEntityStore } from '@contentful/experiences-core';
 import { create } from 'zustand';
 
 export interface EntityState {
@@ -9,21 +9,29 @@ export interface EntityState {
   areEntitiesFetched: boolean;
   // updaters
   setEntitiesFetched: (fetched: boolean) => void;
-  resetEntityStore: (locale: string, entities?: EditorModeEntityStore['entities']) => void;
+  resetEntityStore: (
+    locale: string,
+    entities?: EditorModeEntityStore['entities'],
+  ) => EditorModeEntityStore;
 }
 
 export const useEntityStore = create<EntityState>((set) => ({
   entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
-  areEntitesResolvedInParent: false,
   areEntitiesFetched: false,
 
   setEntitiesFetched(fetched) {
     set({ areEntitiesFetched: fetched });
   },
-  resetEntityStore(locale, entities = []) {
+  resetEntityStore(locale, entities = []): EditorModeEntityStore {
     console.debug(
-      `[exp-builder.sdk] Resetting entity store because the locale changed to '${locale}'.`
+      `[experiences-sdk-react] Resetting entity store because the locale changed to '${locale}'.`,
     );
-    set({ entityStore: new EditorModeEntityStore({ locale, entities }) });
+    const newEntityStore = new EditorModeEntityStore({ locale, entities });
+    set({
+      entityStore: newEntityStore,
+      areEntitiesFetched: false,
+    });
+
+    return newEntityStore;
   },
 }));

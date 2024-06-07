@@ -2,21 +2,18 @@ import React from 'react';
 
 import { render } from '@testing-library/react';
 
-import {
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
-} from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
-import type { CompositionNode, ExperienceEntry } from '@contentful/experience-builder-core/types';
+import type { ComponentTreeNode, ExperienceEntry } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
-import { compositionEntry } from '../../../test/__fixtures__/composition';
+import { experienceEntry } from '../../../test/__fixtures__/composition';
 import {
   createAssemblyEntry,
   defaultAssemblyId,
   assemblyGeneratedVariableName,
 } from '../../../test/__fixtures__/assembly';
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experiences-core';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 
 const TestComponent: React.FC<{ text: string }> = (props) => {
@@ -24,6 +21,13 @@ const TestComponent: React.FC<{ text: string }> = (props) => {
 };
 
 describe('CompositionBlock', () => {
+  const emptyEntityStore = {
+    breakpoints: [],
+    dataSource: {},
+    unboundValues: {},
+    usedComponents: [],
+  } as unknown as EntityStore;
+
   beforeEach(() => {
     defineComponents([
       {
@@ -48,7 +52,7 @@ describe('CompositionBlock', () => {
   });
 
   it('renders the custom component node', () => {
-    const mockCompositionComponentNode: CompositionNode = {
+    const mockExperienceTreeNode: ComponentTreeNode = {
       definitionId: 'custom-component',
       variables: {
         text: { type: 'UnboundValue', key: 'value1' },
@@ -59,24 +63,25 @@ describe('CompositionBlock', () => {
     // Render the component with the initial text
     render(
       <CompositionBlock
-        node={mockCompositionComponentNode}
-        dataSource={{}}
+        node={mockExperienceTreeNode}
         locale="en-US"
-        breakpoints={[]}
-        entityStore={undefined}
-        usedComponents={[]}
-        unboundValues={{
-          value1: { value: 'unboundValue1' },
-          value2: { value: 1 },
-        }}
+        entityStore={
+          {
+            ...emptyEntityStore,
+            unboundValues: {
+              value1: { value: 'unboundValue1' },
+              value2: { value: 1 },
+            },
+          } as unknown as EntityStore
+        }
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
   });
 
   it('renders section node', () => {
-    const sectionNode: CompositionNode = {
-      definitionId: CONTENTFUL_SECTION_ID,
+    const sectionNode: ComponentTreeNode = {
+      definitionId: CONTENTFUL_COMPONENTS.section.id,
       variables: {},
       children: [],
     };
@@ -84,22 +89,18 @@ describe('CompositionBlock', () => {
     const { getByTestId } = render(
       <CompositionBlock
         node={sectionNode}
-        dataSource={{}}
         locale="en-US"
-        breakpoints={[]}
-        entityStore={undefined}
-        usedComponents={[]}
-        unboundValues={{}}
+        entityStore={emptyEntityStore}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
 
     expect(getByTestId('contentful-container')).toBeInTheDocument();
   });
 
   it('renders container node', () => {
-    const containerNode: CompositionNode = {
-      definitionId: CONTENTFUL_CONTAINER_ID,
+    const containerNode: ComponentTreeNode = {
+      definitionId: CONTENTFUL_COMPONENTS.container.id,
       variables: {},
       children: [],
     };
@@ -107,14 +108,10 @@ describe('CompositionBlock', () => {
     const { getByTestId } = render(
       <CompositionBlock
         node={containerNode}
-        dataSource={{}}
         locale="en-US"
-        breakpoints={[]}
-        entityStore={undefined}
-        usedComponents={[]}
-        unboundValues={{}}
+        entityStore={emptyEntityStore}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
 
     expect(getByTestId('contentful-container')).toBeInTheDocument();
@@ -126,10 +123,10 @@ describe('CompositionBlock', () => {
       id: defaultAssemblyId,
       schemaVersion: '2023-09-28',
     });
-    const experienceEntry = {
-      ...compositionEntry,
+    const updatedExperienceEntry = {
+      ...experienceEntry,
       fields: {
-        ...compositionEntry.fields,
+        ...experienceEntry.fields,
         usedComponents: [assemblyEntry],
         unboundValues: {
           [unboundValueKey]: {
@@ -140,12 +137,12 @@ describe('CompositionBlock', () => {
     } as ExperienceEntry;
 
     const entityStore = new EntityStore({
-      experienceEntry: experienceEntry as unknown as Entry,
+      experienceEntry: updatedExperienceEntry as unknown as Entry,
       entities: [...entries, ...assets],
       locale: 'en-US',
     });
 
-    const assemblyNode: CompositionNode = {
+    const assemblyNode: ComponentTreeNode = {
       definitionId: defaultAssemblyId,
       variables: {
         [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },
@@ -156,14 +153,10 @@ describe('CompositionBlock', () => {
     const { getByTestId, getByText } = render(
       <CompositionBlock
         node={assemblyNode}
-        dataSource={{}}
         locale="en-US"
-        breakpoints={[]}
         entityStore={entityStore}
-        usedComponents={[assemblyEntry] as ExperienceEntry[]}
-        unboundValues={experienceEntry.fields.unboundValues}
         resolveDesignValue={jest.fn()}
-      />
+      />,
     );
 
     expect(getByTestId('assembly')).toBeInTheDocument();

@@ -20,7 +20,7 @@ export class FsClient {
 
     this.copyTemplateFiles(projectDir, templateDir, variant.srcDir);
 
-    const installEbLibsCommand = `npm i --prefix ${projectDir} @contentful/experience-builder contentful`;
+    const installEbLibsCommand = `npm i --prefix ${projectDir} @contentful/experiences-sdk-react contentful`;
 
     const ebLibStatus = await this.runCommand(installEbLibsCommand);
 

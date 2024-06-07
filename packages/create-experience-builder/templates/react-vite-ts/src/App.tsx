@@ -1,9 +1,7 @@
+import React from 'react';
 import { createClient } from 'contentful';
-import { useFetchBySlug, ExperienceRoot } from '@contentful/experience-builder';
+import { useFetchBySlug, ExperienceRoot } from '@contentful/experiences-sdk-react';
 import './App.css';
-
-// Import the styles for the default components
-import '@contentful/experience-builder-components/styles.css';
 
 const experienceTypeId = import.meta.env.VITE_CTFL_EXPERIENCE_TYPE_ID; //Content type id for the experience
 const localeCode = 'en-US'; //Locale code for the experience (could be dynamic)

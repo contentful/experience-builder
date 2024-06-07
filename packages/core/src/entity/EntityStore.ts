@@ -1,26 +1,46 @@
-import type { Asset, Entry, UnresolvedLink, AssetFile } from 'contentful';
-import { EntityStore as VisualSdkEntityStore } from '@contentful/visual-sdk';
+import type { Asset, Entry, UnresolvedLink } from 'contentful';
 import { isExperienceEntry } from '@/utils';
-import type { Composition, CompositionUnboundValues, ExperienceEntry } from '@/types';
-
+import type { ExperienceFields, ExperienceUnboundValues, ExperienceEntry } from '@/types';
+import { EntityStoreBase } from './EntityStoreBase';
+import { get } from '@/utils/get';
+import { transformAssetFileToUrl } from './value-transformers';
+import { isLink } from '@/utils/isLink';
 type EntityStoreArgs = {
   experienceEntry: ExperienceEntry | Entry;
   entities: Array<Entry | Asset>;
   locale: string;
 };
 
-export class EntityStore extends VisualSdkEntityStore {
-  private _experienceEntry: Composition | undefined;
-  private _unboundValues: CompositionUnboundValues | undefined;
+export class EntityStore extends EntityStoreBase {
+  private _experienceEntry: ExperienceFields | undefined;
+  private _unboundValues: ExperienceUnboundValues | undefined;
 
-  constructor({ experienceEntry, entities, locale }: EntityStoreArgs) {
-    super({ entities, locale });
+  constructor(json: string);
+  constructor({ experienceEntry, entities, locale }: EntityStoreArgs);
 
-    if (isExperienceEntry(experienceEntry)) {
-      this._experienceEntry = (experienceEntry as ExperienceEntry).fields;
-      this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
+  constructor(options: string | EntityStoreArgs) {
+    if (typeof options === 'string') {
+      const data = JSON.parse(options);
+      const { _experienceEntry, _unboundValues, locale, entryMap, assetMap } = data.entityStore;
+      super({
+        entities: [
+          ...(Object.values(entryMap) as Entry[]),
+          ...(Object.values(assetMap) as Asset[]),
+        ],
+        locale,
+      });
+      this._experienceEntry = _experienceEntry;
+      this._unboundValues = _unboundValues;
     } else {
-      throw new Error('Provided entry is not experience entry');
+      const { experienceEntry, entities, locale } = options;
+      super({ entities, locale });
+
+      if (isExperienceEntry(experienceEntry)) {
+        this._experienceEntry = (experienceEntry as ExperienceEntry).fields;
+        this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
+      } else {
+        throw new Error('Provided entry is not experience entry');
+      }
     }
   }
 
@@ -52,57 +72,37 @@ export class EntityStore extends VisualSdkEntityStore {
     return this._experienceEntry?.usedComponents ?? [];
   }
 
-  public updateUnboundValues(unboundValues: CompositionUnboundValues) {
-    this._unboundValues = { ...(this._unboundValues ?? {}), ...unboundValues };
+  /**
+   * Extend the existing set of unbound values with the ones from the assembly definition.
+   * When creating a new assembly out of a container, the unbound value keys are copied and
+   * thus the existing and the added ones have colliding keys. In the case of overlapping value
+   * keys, the ones from the experience overrule the ones from the assembly definition as
+   * the latter one is certainly just a default value while the other one is from the actual instance.
+   * @param unboundValues set of unbound values defined in the assembly definition
+   */
+  public addAssemblyUnboundValues(unboundValues: ExperienceUnboundValues) {
+    this._unboundValues = { ...unboundValues, ...(this._unboundValues ?? {}) };
   }
 
   public getValue(
     entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
-    path: string[]
+    path: string[],
   ): string | undefined {
-    const isLink = (
-      entity: typeof entityLinkOrEntity
-    ): entity is UnresolvedLink<'Entry' | 'Asset'> => entityLinkOrEntity.sys.type === 'Link';
-
-    let entity: Entry | Asset;
-    if (isLink(entityLinkOrEntity)) {
-      const resolvedEntity =
-        entityLinkOrEntity.sys.linkType === 'Entry'
-          ? this.entryMap.get(entityLinkOrEntity.sys.id)
-          : this.assetMap.get(entityLinkOrEntity.sys.id);
-
-      if (!resolvedEntity || resolvedEntity.sys.type !== entityLinkOrEntity.sys.linkType) {
-        console.warn(
-          `Experience references unresolved entity: ${JSON.stringify(entityLinkOrEntity)}`
-        );
-        return;
-      }
-      entity = resolvedEntity;
-    } else {
-      // We already have the complete entity in preview & delivery (resolved by the CMA client)
-      entity = entityLinkOrEntity;
+    const entity = isLink(entityLinkOrEntity)
+      ? this.getEntityFromLink(entityLinkOrEntity)
+      : (entityLinkOrEntity as Entry | Asset);
+    if (entity === undefined) {
+      return;
     }
-
     const fieldValue = get<string>(entity, path);
-
-    // walk around to render asset files
-    return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
-      ? (fieldValue as AssetFile).url
-      : fieldValue;
-  }
-}
-
-// Taken from visual-sdk. We need this when we already have the full entity instead of the link (preview & delivery)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function get<T>(obj: Record<string, any>, path: string[]): T | undefined {
-  if (!path.length) {
-    return obj as T;
+    return transformAssetFileToUrl(fieldValue);
   }
 
-  try {
-    const [currentPath, ...nextPath] = path;
-    return get(obj[currentPath], nextPath);
-  } catch (err) {
-    return undefined;
+  public toJSON() {
+    return {
+      _experienceEntry: this._experienceEntry,
+      _unboundValues: this._unboundValues,
+      ...super.toJSON(),
+    };
   }
 }

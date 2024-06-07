@@ -9,12 +9,9 @@ import { assets } from '../../test/__fixtures__/entities';
 import {
   ASSEMBLY_BLOCK_NODE_TYPE,
   ASSEMBLY_NODE_TYPE,
-} from '@contentful/experience-builder-core/constants';
-import type {
-  CompositionComponentNode,
-  CompositionNode,
-} from '@contentful/experience-builder-core/types';
-import { EditorModeEntityStore } from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core/constants';
+import type { ExperienceTreeNode, ComponentTreeNode } from '@contentful/experiences-core/types';
+import { EditorModeEntityStore } from '@contentful/experiences-core';
 import { deserializeAssemblyNode, resolveAssembly } from './assemblyUtils';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { assembliesRegistry } from '@/store/registries';
@@ -35,17 +32,20 @@ describe('deserializeAssemblyNode', () => {
     assembliesRegistry.clear();
   });
 
-  it('should correctly deserialize a simple CompositionNode with no variables or children', () => {
-    const node: CompositionNode = {
+  it('should correctly deserialize a simple ComponentTreeNode with no variables or children', () => {
+    const node: ComponentTreeNode = {
       definitionId: 'assembly-id',
       variables: {},
-      children: assemblyEntry.fields.componentTree.children as CompositionNode['children'],
+      children: assemblyEntry.fields.componentTree.children as ComponentTreeNode['children'],
     };
 
     const result = deserializeAssemblyNode({
       node,
       nodeId: 'random-node-id',
       parentId: 'root',
+      assemblyId: 'whatever',
+      assemblyComponentId: 'whatever',
+      nodeLocation: '0',
       assemblyDataSource: {},
       assemblyUnboundValues: assemblyEntry.fields.unboundValues,
       componentInstanceProps: {
@@ -64,6 +64,11 @@ describe('deserializeAssemblyNode', () => {
       type: ASSEMBLY_NODE_TYPE,
       parentId: 'root',
       data: {
+        assembly: {
+          componentId: 'whatever',
+          id: 'whatever',
+          nodeLocation: '0',
+        },
         blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
@@ -76,6 +81,11 @@ describe('deserializeAssemblyNode', () => {
           type: ASSEMBLY_BLOCK_NODE_TYPE,
           parentId: 'random-node-id',
           data: {
+            assembly: {
+              componentId: 'whatever',
+              id: 'whatever',
+              nodeLocation: '0_0',
+            },
             blockId: 'contentful-container',
             id: expect.any(String),
             props: {},
@@ -88,6 +98,11 @@ describe('deserializeAssemblyNode', () => {
               type: ASSEMBLY_BLOCK_NODE_TYPE,
               parentId: expect.any(String),
               data: {
+                assembly: {
+                  componentId: 'whatever',
+                  id: 'whatever',
+                  nodeLocation: '0_0_0',
+                },
                 blockId: 'custom-component',
                 id: expect.any(String),
                 props: { text: { key: 'unbound_uuid1Experience', type: 'UnboundValue' } },
@@ -120,7 +135,7 @@ describe('resolveAssembly', () => {
   });
 
   it('should return the input node when its type is not an assembly node type', () => {
-    const node: CompositionComponentNode = {
+    const node: ExperienceTreeNode = {
       type: 'block',
       data: {
         id: '1',
@@ -147,7 +162,7 @@ describe('resolveAssembly', () => {
   });
 
   it('should return the input node when assembliesRegistry does not have the componentId', () => {
-    const node: CompositionComponentNode = {
+    const node: ExperienceTreeNode = {
       type: ASSEMBLY_NODE_TYPE,
       data: {
         blockId: 'assemblyId',
@@ -169,9 +184,14 @@ describe('resolveAssembly', () => {
   });
 
   it('should return the input node when entityStore does not have componentFields', () => {
-    const node: CompositionComponentNode = {
+    const node: ExperienceTreeNode = {
       type: ASSEMBLY_NODE_TYPE,
       data: {
+        assembly: {
+          componentId: 'random-node-id',
+          id: 'assembly-id',
+          nodeLocation: null,
+        },
         blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
@@ -193,9 +213,14 @@ describe('resolveAssembly', () => {
   });
 
   it('should return the input node when entityStore is null', () => {
-    const node: CompositionComponentNode = {
+    const node: ExperienceTreeNode = {
       type: ASSEMBLY_NODE_TYPE,
       data: {
+        assembly: {
+          componentId: 'random-node-id',
+          id: 'assembly-id',
+          nodeLocation: null,
+        },
         blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
@@ -235,6 +260,11 @@ describe('resolveAssembly', () => {
       type: ASSEMBLY_NODE_TYPE,
       parentId: 'root',
       data: {
+        assembly: {
+          componentId: 'random-node-id',
+          id: 'assembly-id',
+          nodeLocation: null,
+        },
         blockId: 'assembly-id',
         id: 'random-node-id',
         props: {},
@@ -247,6 +277,11 @@ describe('resolveAssembly', () => {
           type: ASSEMBLY_BLOCK_NODE_TYPE,
           parentId: 'random-node-id',
           data: {
+            assembly: {
+              componentId: 'random-node-id',
+              id: 'assembly-id',
+              nodeLocation: '0',
+            },
             blockId: 'contentful-container',
             id: expect.any(String),
             props: {},
@@ -259,6 +294,11 @@ describe('resolveAssembly', () => {
               type: ASSEMBLY_BLOCK_NODE_TYPE,
               parentId: expect.any(String),
               data: {
+                assembly: {
+                  componentId: 'random-node-id',
+                  id: 'assembly-id',
+                  nodeLocation: '0_0',
+                },
                 blockId: 'custom-component',
                 id: expect.any(String),
                 props: {

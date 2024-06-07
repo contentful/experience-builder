@@ -1,11 +1,38 @@
-/**
- * danv:
- * NOTE!! The code commented here will be used in future. We commented it out to remove not yet fully unsupported parts
- */
-
-import type { ContentfulClientApi, Entry } from 'contentful';
-import type { EntityStore } from '@contentful/visual-sdk';
+import type { Asset, AssetFile, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
+import { EntityStore } from './entity/EntityStore';
+import { Document as RichTextDocument } from '@contentful/rich-text-types';
+
+// Types for experience entry fields (as fetched in the API) are inferred by Zod schema in `@contentful/experiences-validators`
+import type {
+  ExperienceDataSource,
+  ExperienceUnboundValues,
+  ExperienceComponentSettings,
+  ExperienceUsedComponents,
+  ValuesByBreakpoint,
+  Breakpoint,
+  ComponentPropertyValue,
+  PrimitiveValue,
+  ExperienceComponentTree,
+  ComponentDefinitionPropertyType,
+} from '@contentful/experiences-validators';
+// TODO: Remove references to 'Composition'
+export type {
+  ExperienceDataSource,
+  ExperienceUnboundValues,
+  ExperienceComponentSettings,
+  ComponentPropertyValue,
+  ComponentTreeNode,
+  PrimitiveValue,
+  ValuesByBreakpoint,
+  Breakpoint,
+  SchemaVersions,
+  DesignValue,
+  UnboundValue,
+  BoundValue,
+  ComponentValue,
+  ComponentDefinitionPropertyType as ComponentDefinitionVariableType,
+} from '@contentful/experiences-validators';
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
@@ -27,33 +54,20 @@ export interface Link<T extends string> {
   };
 }
 
-export type ComponentDefinitionVariableType =
-  | 'Text'
-  | 'RichText'
-  | 'Number'
-  | 'Date'
-  | 'Boolean'
-  | 'Location'
-  | 'Media'
-  | 'Object';
-// | 'Link'
-// | 'Array'
-// export type ComponentDefinitionVariableArrayItemType = 'Link' | 'Symbol' | 'Component'
-
 export type VariableFormats = 'URL'; // | alphaNum | base64 | email | ipAddress
 
-export type ValidationOption<T extends ComponentDefinitionVariableType> = {
+export type ValidationOption<T extends ComponentDefinitionPropertyType> = {
   value: T extends 'Text' ? string : T extends 'Number' ? number : never;
   displayName?: string;
 };
 
-export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionVariableType> = {
+export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionPropertyType> = {
   required?: boolean;
   in?: ValidationOption<T>[];
   format?: VariableFormats;
 };
 
-export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVariableType> {
+export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionPropertyType> {
   type: T;
   validations?: ComponentDefinitionVariableValidation<T>;
   group?: 'style' | 'content';
@@ -63,38 +77,8 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionVa
   defaultValue?: string | boolean | number | Record<any, any>; //todo: fix typings
 }
 
-// export interface ComponentDefinitionVariableLink extends ComponentDefinitionVariableBase<'Link'> {
-//   linkType: 'Entry' | 'Asset'
-// }
-
-// export interface ComponentDefinitionVariableArrayOfEntityLinks
-//   extends ComponentDefinitionVariableBase<'Array'> {
-//   items: {
-//     type: 'Link'
-//     linkType: 'Entry' | 'Asset'
-//   }
-// }
-
-// export interface ComponentDefinitionVariableArrayOfPrimitives
-//   extends ComponentDefinitionVariableBase<'Array'> {
-//   type: 'Array'
-// }
-
-// export interface ComponentDefinitionVariableArrayOfComponents {
-//   type: 'Array'
-//   items: {
-//     type: 'Component'
-//   }
-// }
-
-// export type ComponentDefinitionVariableArray<
-//   K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
-// > = K extends 'Link'
-//   ? ComponentDefinitionVariableArrayOfEntityLinks
-//   : ComponentDefinitionVariableArrayOfPrimitives
-
 export type ComponentDefinitionVariable<
-  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType
+  T extends ComponentDefinitionPropertyType = ComponentDefinitionPropertyType,
   // K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
 > =
   // T extends 'Link'
@@ -104,16 +88,22 @@ export type ComponentDefinitionVariable<
   /*:*/ ComponentDefinitionVariableBase<T>;
 
 export type ComponentDefinition<
-  T extends ComponentDefinitionVariableType = ComponentDefinitionVariableType
+  T extends ComponentDefinitionPropertyType = ComponentDefinitionPropertyType,
 > = {
   id: string;
   name: string;
   category?: string;
   thumbnailUrl?: string;
+  hyperlinkPattern?: string;
   variables: Partial<Record<ContainerStyleVariableName, ComponentDefinitionVariable<T>>> &
     Record<string, ComponentDefinitionVariable<T>>;
+  slots?: Record<string, { displayName: string }>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
+  tooltip?: {
+    imageUrl?: string;
+    description: string;
+  };
 };
 
 export type ComponentRegistration = {
@@ -123,6 +113,10 @@ export type ComponentRegistration = {
     wrapComponent?: boolean;
     wrapContainerTag?: keyof JSX.IntrinsicElements;
   };
+};
+
+export type ComponentRegistrationOptions = {
+  enabledBuiltInComponents?: string[];
 };
 
 export type Binding = {
@@ -139,25 +133,9 @@ export type BindingMapByBlockId = Record<string, BindingMap>;
 
 export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type CompositionVariableValueType = string | boolean | number | Record<any, any> | undefined; //todo: fix typings
-type CompositionComponentPropType =
-  | 'BoundValue'
-  | 'UnboundValue'
-  | 'DesignValue'
-  | 'ComponentValue';
-
-export type CompositionComponentPropValue<
-  T extends CompositionComponentPropType = CompositionComponentPropType
-> = T extends 'DesignValue'
-  ? // The keys in valuesByBreakpoint are the breakpoint ids
-    { type: T; valuesByBreakpoint: Record<string, CompositionVariableValueType> }
-  : T extends 'BoundValue'
-  ? { type: T; path: string }
-  : { type: T; key: string };
-
-// TODO: add conditional typing magic to reduce the number of optionals
-export type CompositionComponentNode = {
+/** Type of a single node of the experience tree exchanged via postMessage between the SDK and Contentful Web app */
+export type ExperienceTreeNode = {
+  // TODO: add conditional typing magic to reduce the number of optionals
   type:
     | 'block'
     | 'root'
@@ -169,17 +147,24 @@ export type CompositionComponentNode = {
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
-    props: Record<string, CompositionComponentPropValue<CompositionComponentPropType>>;
-    dataSource: CompositionDataSource;
-    unboundValues: CompositionUnboundValues;
+    slotId?: string;
+    assembly?: {
+      id: string;
+      componentId: string;
+      nodeLocation: string | null;
+    };
+    displayName?: string;
+    props: Record<string, ComponentPropertyValue>;
+    dataSource: ExperienceDataSource;
+    unboundValues: ExperienceUnboundValues;
     breakpoints: Breakpoint[];
   };
-  children: CompositionComponentNode[];
+  children: ExperienceTreeNode[];
   parentId?: string;
 };
-
-export type CompositionTree = {
-  root: CompositionComponentNode;
+/** Type of the tree data structure exchanged via postMessage between the SDK and Contentful Web app */
+export type ExperienceTree = {
+  root: ExperienceTreeNode;
 };
 
 export type ExternalSDKMode = 'preview' | 'delivery';
@@ -201,24 +186,13 @@ export type StyleProps = {
   cfFlexDirection: 'row' | 'column';
   cfFlexWrap: 'nowrap' | 'wrap';
   cfBorder: string;
+  cfBorderRadius: string;
   cfGap: string;
-  cfBackgroundImageUrl: string;
-  cfBackgroundImageScaling: 'fit' | 'fill' | 'tile';
-  cfBackgroundImageAlignment:
-    | 'left'
-    | 'right'
-    | 'top'
-    | 'bottom'
-    | 'left top'
-    | 'left center'
-    | 'left bottom'
-    | 'right top'
-    | 'right center'
-    | 'right bottom'
-    | 'center top'
-    | 'center center'
-    | 'center bottom';
   cfHyperlink: string;
+  cfImageAsset: OptimizedImageAsset | string;
+  cfImageOptions: ImageOptions;
+  cfBackgroundImageUrl: OptimizedBackgroundImageAsset | string;
+  cfBackgroundImageOptions: BackgroundImageOptions;
   cfOpenInNewTab: boolean;
   cfFontSize: string;
   cfFontWeight: string;
@@ -230,6 +204,11 @@ export type StyleProps = {
   cfTextBold: boolean;
   cfTextItalic: boolean;
   cfTextUnderline: boolean;
+  cfColumns: string;
+  cfColumnSpan: string;
+  cfColumnSpanLock: boolean;
+  cfWrapColumns: boolean;
+  cfWrapColumnsCount: string;
 };
 
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic
@@ -237,45 +216,13 @@ export type CSSProperties = React.CSSProperties;
 
 export type ContainerStyleVariableName = keyof StyleProps;
 
-// cda types
-export type CompositionNode = {
-  definitionId: string;
-  children: Array<CompositionNode>;
-  variables: Record<string, CompositionComponentPropValue>;
-};
-
-export type CompositionDataSource = Record<string, DataSourceEntryValueType>;
-export type CompositionUnboundValues = Record<string, { value: CompositionVariableValueType }>;
-
-export type Breakpoint = {
-  id: string;
-  query: string;
-  displayName: string;
-  previewSize: string;
-};
-
-export type SchemaVersions = '2023-09-28' | '2023-06-27' | '2023-07-26' | '2023-08-23';
-
-export type ExperienceComponentSettings = {
-  variableDefinitions: Record<
-    string,
-    Omit<ComponentDefinitionVariableBase<ComponentDefinitionVariableType>, 'defaultValue'> & {
-      defaultValue: CompositionComponentPropValue<'BoundValue' | 'UnboundValue'>;
-    }
-  >;
-};
-
-export type Composition = {
+export type ExperienceFields = {
   title: string;
   slug: string;
-  componentTree: {
-    breakpoints: Array<Breakpoint>;
-    children: Array<CompositionNode>;
-    schemaVersion: SchemaVersions;
-  };
-  dataSource: CompositionDataSource;
-  unboundValues: CompositionUnboundValues;
-  usedComponents?: Array<Link<'Entry'> | ExperienceEntry>;
+  componentTree: ExperienceComponentTree;
+  dataSource: ExperienceDataSource;
+  unboundValues: ExperienceUnboundValues;
+  usedComponents?: ExperienceUsedComponents | Array<ExperienceEntry>; // This will be either an array of Entry links or an array of resolved Experience entries
   componentSettings?: ExperienceComponentSettings;
 };
 
@@ -287,16 +234,21 @@ export type DesignTokensDefinition = {
   spacing?: Record<string, string>;
   sizing?: Record<string, string>;
   color?: Record<string, string>;
-  border?: Record<string, { width: string; style: 'inside' | 'outside'; color: string }>;
+  border?: Record<
+    string,
+    { width?: string; style?: 'solid' | 'dashed' | 'dotted'; color?: string }
+  >;
+  borderRadius?: Record<string, string>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;
   letterSpacing?: Record<string, string>;
   textColor?: Record<string, string>;
 } & RecursiveDesignTokenDefinition;
 
+/** Type of experience entry JSON data structure as returned by CPA/CDA */
 export type ExperienceEntry = {
   sys: Entry['sys'];
-  fields: Composition;
+  fields: ExperienceFields;
   metadata: Entry['metadata'];
 };
 
@@ -317,54 +269,114 @@ export interface HoveredElement {
   blockId: string | undefined;
 }
 
-export interface DeprecatedExperienceStore {
-  composition: Composition | undefined;
-  entityStore: EntityStore | undefined;
-  isLoading: boolean;
-  children: Composition['componentTree']['children'];
-  breakpoints: Composition['componentTree']['breakpoints'];
-  dataSource: Composition['dataSource'];
-  unboundValues: Composition['unboundValues'];
-  schemaVersion: Composition['componentTree']['schemaVersion'] | undefined;
-  fetchBySlug: ({
-    experienceTypeId,
-    slug,
-    localeCode,
-  }: {
-    experienceTypeId: string;
-    slug: string;
-    localeCode: string;
-  }) => Promise<{ success: boolean; error?: Error }>;
-}
-
 export interface Experience<T extends EntityStore = EntityStore> {
+  hyperlinkPattern?: string;
   entityStore?: T;
-  mode: InternalSDKMode;
 }
-
-/**
- * @deprecated please use `Experience` instead
- */
-export interface DeprecatedExperience {
-  /**
-   * @deprecated please don't use
-   */
-  client: ContentfulClientApi<undefined>;
-  /**
-   * @deprecated please don't use
-   */
-  experienceTypeId: string;
-  /**
-   * @deprecated please don't use
-   */
-  mode: InternalSDKMode;
-}
-
-export type ValuesByBreakpoint =
-  | Record<string, CompositionVariableValueType>
-  | CompositionVariableValueType;
 
 export type ResolveDesignValueType = (
   valuesByBreakpoint: ValuesByBreakpoint,
-  variableName: string
-) => CompositionVariableValueType;
+  variableName: string,
+) => PrimitiveValue;
+
+// The 'contentful' package only exposes CDA types while we received CMA ones in editor mode
+export type ManagementEntity = (Entry | Asset) & {
+  sys: {
+    version: number;
+  };
+};
+
+export type RequestEntitiesMessage = {
+  entityIds: string[];
+  entityType: 'Asset' | 'Entry';
+  locale: string;
+};
+
+export type RequestedEntitiesMessage = {
+  entities: Array<Entry | Asset>;
+  missingEntityIds?: string[];
+};
+
+//All the possible types that can be returned to a component prop
+export type BoundComponentPropertyTypes =
+  | string
+  | number
+  | boolean
+  | AssetFile
+  | Record<string, AssetFile | undefined>
+  | RichTextDocument
+  | OptimizedBackgroundImageAsset
+  | OptimizedImageAsset
+  | Link<'Asset'>
+  | undefined;
+
+export type OptimizedImageAsset = {
+  url: string;
+  srcSet?: string[];
+  sizes?: string;
+  quality?: number;
+  format?: string;
+  file: AssetFile;
+  loading?: ImageLoadingOption;
+};
+
+export type OptimizedBackgroundImageAsset = {
+  url: string;
+  srcSet?: string[];
+  file: AssetFile;
+};
+
+export type ImageObjectFitOption = 'contain' | 'cover' | 'none';
+
+export type ImageObjectPositionOption =
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'left top'
+  | 'left center'
+  | 'left bottom'
+  | 'right top'
+  | 'right center'
+  | 'right bottom'
+  | 'center top'
+  | 'center center'
+  | 'center bottom';
+
+export type ImageLoadingOption = 'lazy' | 'eager';
+
+export type ImageOptions = {
+  format?: string;
+  width: string;
+  height: string;
+  loading?: ImageLoadingOption;
+  objectFit?: ImageObjectFitOption;
+  objectPosition?: ImageObjectPositionOption;
+  quality?: string;
+  targetSize: string;
+};
+
+export type BackgroundImageScalingOption = 'fit' | 'fill' | 'tile';
+
+export type BackgroundImageAlignmentOption =
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'left top'
+  | 'left center'
+  | 'left bottom'
+  | 'right top'
+  | 'right center'
+  | 'right bottom'
+  | 'center top'
+  | 'center center'
+  | 'center bottom';
+
+export type BackgroundImageOptions = {
+  format?: string;
+  scaling: BackgroundImageScalingOption;
+  alignment: BackgroundImageAlignmentOption;
+  quality?: string;
+  targetSize: string;
+};

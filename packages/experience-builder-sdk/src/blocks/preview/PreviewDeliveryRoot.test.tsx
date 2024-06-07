@@ -1,28 +1,27 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experiences-core';
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
-import type { Experience } from '@contentful/experience-builder-core/types';
-import { createCompositionEntry } from '../../../test/__fixtures__/composition';
+import type { Experience } from '@contentful/experiences-core/types';
+import { createExperienceEntry } from '../../../test/__fixtures__/composition';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 import type { Entry } from 'contentful';
 import { compatibleVersions } from '../../constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
 
 const locale = 'en-US';
-const compositionEntry = createCompositionEntry({
+const experienceEntry = createExperienceEntry({
   schemaVersion: '2023-09-28',
 });
 
 const entityStore = new EntityStore({
-  experienceEntry: compositionEntry as unknown as Entry,
+  experienceEntry: experienceEntry as unknown as Entry,
   entities: [...entries, ...assets],
   locale,
 });
 
 const experience: Experience<EntityStore> = {
   entityStore,
-  mode: 'preview',
 };
 
 describe('PreviewDeliveryRoot', () => {
@@ -31,22 +30,14 @@ describe('PreviewDeliveryRoot', () => {
   });
 
   it('returns null if experience is not fetched', () => {
-    const switchToEditorMode = jest.fn();
-
-    const { container } = render(
-      <PreviewDeliveryRoot
-        locale={locale}
-        mode="preview"
-        switchToEditorMode={switchToEditorMode}
-        experience={experience}
-      />
-    );
+    const { container } = render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
 
     expect(container.childElementCount).toBe(0);
   });
 
   it('throws an error if experience the schema version is not compatible', () => {
-    const experienceEntryMock = createCompositionEntry({ schemaVersion: '2023-06-27' });
+    // @ts-expect-error testing an unsupported version
+    const experienceEntryMock = createExperienceEntry({ schemaVersion: '2023-06-27' });
 
     const entityStore = new EntityStore({
       experienceEntry: experienceEntryMock as unknown as Entry,
@@ -56,24 +47,14 @@ describe('PreviewDeliveryRoot', () => {
 
     const experience: Experience<EntityStore> = {
       entityStore,
-      mode: 'preview',
     };
-
-    const switchToEditorMode = jest.fn();
 
     const consoleWarnSpy = jest.spyOn(console, 'warn');
 
-    render(
-      <PreviewDeliveryRoot
-        locale={locale}
-        mode="preview"
-        switchToEditorMode={switchToEditorMode}
-        experience={experience}
-      />
-    );
+    render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      `[exp-builder.sdk] Contenful composition schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`
+      `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
   });
 
@@ -89,15 +70,8 @@ describe('PreviewDeliveryRoot', () => {
       },
     ]);
 
-    const switchToEditorMode = jest.fn();
-
     const { container, getByTestId } = render(
-      <PreviewDeliveryRoot
-        locale={locale}
-        mode="preview"
-        switchToEditorMode={switchToEditorMode}
-        experience={experience}
-      />
+      <PreviewDeliveryRoot locale={locale} experience={experience} />,
     );
 
     expect(container.childElementCount).toBe(1);

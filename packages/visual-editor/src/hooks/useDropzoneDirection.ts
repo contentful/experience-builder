@@ -1,14 +1,15 @@
-import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import type {
-  CompositionComponentNode,
+  ExperienceTreeNode,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { useEffect } from 'react';
 import { useZoneStore } from '@/store/zone';
+import { isContentfulStructureComponent } from '@contentful/experiences-core';
 
 interface Params {
   resolveDesignValue: ResolveDesignValueType | undefined;
-  node: CompositionComponentNode | undefined;
+  node: ExperienceTreeNode | undefined;
   zoneId: string;
 }
 
@@ -18,12 +19,16 @@ export const useDropzoneDirection = ({ resolveDesignValue, node, zoneId }: Param
 
   useEffect(() => {
     function getDirection() {
-      if (!node) {
+      if (!node || !node.data.blockId) {
         return 'vertical';
       }
 
-      if (node.data.blockId !== CONTENTFUL_CONTAINER_ID) {
+      if (!isContentfulStructureComponent(node.data.blockId)) {
         return 'vertical';
+      }
+
+      if (node.data.blockId === CONTENTFUL_COMPONENTS.columns.id) {
+        return 'horizontal';
       }
 
       const designValues = node.data.props['cfFlexDirection'];

@@ -2,7 +2,7 @@ import React from 'react';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { Document, BLOCKS } from '@contentful/rich-text-types';
 import { combineClasses } from '@/utils/combineClasses';
-
+import './RichText.css';
 export interface RichTextProps extends Omit<React.HTMLAttributes<HTMLElement>, 'value'> {
   /**
    * Renders the text in a specific HTML tag.
@@ -35,18 +35,15 @@ export interface RichTextProps extends Omit<React.HTMLAttributes<HTMLElement>, '
 }
 
 export const RichText: React.FC<RichTextProps> = ({ as = 'p', className, value, ...props }) => {
-  const classes = combineClasses('cf-richtext', className);
   const Tag = as;
 
-  return documentToReactComponents(value, {
-    renderNode: {
-      [BLOCKS.PARAGRAPH]: (_node, children) => {
-        return (
-          <Tag className={classes} {...props}>
-            {children}
-          </Tag>
-        );
-      },
-    },
-  });
+  return (
+    <span className={combineClasses('cf-richtext', className)} {...props}>
+      {documentToReactComponents(value, {
+        renderNode: {
+          [BLOCKS.PARAGRAPH]: (_node, children) => <Tag>{children}</Tag>,
+        },
+      })}
+    </span>
+  );
 };

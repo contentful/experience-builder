@@ -1,13 +1,32 @@
-import {
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
-} from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 
-export const DRAGGABLE_HEIGHT = 74;
-export const DRAGGABLE_WIDTH = 92;
+export const DRAGGABLE_HEIGHT = 30;
+export const DRAGGABLE_WIDTH = 50;
+export const DRAG_PADDING = 4;
+
 export const ROOT_ID = 'root';
+export const COMPONENT_LIST_ID = 'component-list';
+export const NEW_COMPONENT_ID = 'ctfl-new-draggable';
+export const CTFL_ZONE_ID = 'data-ctfl-zone-id';
+export const CTFL_DRAGGABLE_ID = 'data-ctfl-draggable-id';
+export const CTFL_DRAGGING_ELEMENT = 'data-ctfl-dragging-element';
 
-export const builtInComponents = [CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID];
+export const HITBOX = {
+  WIDTH: 70,
+  HEIGHT: 20,
+  INITIAL_OFFSET: 10,
+  OFFSET_INCREMENT: 8,
+  MIN_HEIGHT: 45,
+  MIN_DEPTH_HEIGHT: 20,
+  DEEP_ZONE: 5,
+};
+
+export const builtInComponents = [
+  CONTENTFUL_COMPONENTS.container.id,
+  CONTENTFUL_COMPONENTS.section.id,
+  CONTENTFUL_COMPONENTS.columns.id,
+  CONTENTFUL_COMPONENTS.singleColumn.id,
+];
 
 export enum TreeAction {
   REMOVE_NODE,
@@ -16,4 +35,18 @@ export enum TreeAction {
   UPDATE_NODE,
   REORDER_NODE,
   REPLACE_NODE,
+}
+
+export enum HitboxDirection {
+  TOP,
+  LEFT,
+  RIGHT,
+  BOTTOM,
+  SELF_VERTICAL,
+  SELF_HORIZONTAL,
+}
+
+export enum DraggablePosition {
+  CENTERED,
+  MOUSE_POSITION,
 }

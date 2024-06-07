@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { useVariableState } from '@/hooks/useVariableState';
 import { Grid, Text, TextInput } from '@contentful/f36-components';
 import { styles } from './styles';

@@ -1,6 +1,9 @@
 import { ExperienceEntry } from '@/types';
 import { ContentfulClientApi, Entry, Asset } from 'contentful';
 import { isExperienceEntry } from '@/utils';
+import { DeepReference, gatherDeepReferencesFromExperienceEntry } from '@/deep-binding';
+import { gatherAutoFetchedReferentsFromIncludes } from './gatherAutoFetchedReferentsFromIncludes';
+import { fetchAllEntries, fetchAllAssets } from './fetchAllEntities';
 
 type FetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;
@@ -15,21 +18,24 @@ export const fetchReferencedEntities = async ({
 }: FetchReferencedEntitiesArgs) => {
   if (!client) {
     throw new Error(
-      'Failed to fetch experience entities. Required "client" parameter was not provided'
+      'Failed to fetch experience entities. Required "client" parameter was not provided',
     );
   }
 
   if (!locale) {
     throw new Error(
-      'Failed to fetch experience entities. Required "locale" parameter was not provided'
+      'Failed to fetch experience entities. Required "locale" parameter was not provided',
     );
   }
 
   if (!isExperienceEntry(experienceEntry)) {
     throw new Error(
-      'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema'
+      'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema',
     );
   }
+  const deepReferences: Array<DeepReference> = gatherDeepReferencesFromExperienceEntry(
+    experienceEntry as ExperienceEntry,
+  );
 
   const entryIds: string[] = [];
   const assetIds: string[] = [];
@@ -47,18 +53,27 @@ export const fetchReferencedEntities = async ({
   }
 
   const [entriesResponse, assetsResponse] = await Promise.all([
-    entryIds.length > 0 ? client.getEntries({ 'sys.id[in]': entryIds, locale }) : { items: [] },
-    assetIds.length > 0 ? client.getAssets({ 'sys.id[in]': assetIds, locale }) : { items: [] },
+    fetchAllEntries({ client, ids: entryIds, locale }),
+    fetchAllAssets({ client, ids: assetIds, locale }),
   ]);
+
+  const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
+    gatherAutoFetchedReferentsFromIncludes(deepReferences, entriesResponse);
 
   // Using client getEntries resolves all linked entry references, so we do not need to resolve entries in usedComponents
   const allResolvedEntries = [
-    ...((entriesResponse.items ?? []) as Entry[]),
+    ...((entriesResponse?.items ?? []) as Entry[]),
     ...((experienceEntry.fields.usedComponents as ExperienceEntry[]) || []),
+    ...autoFetchedReferentEntries,
+  ];
+
+  const allResolvedAssets = [
+    ...((assetsResponse.items ?? []) as Asset[]),
+    ...autoFetchedReferentAssets,
   ];
 
   return {
     entries: allResolvedEntries as Entry[],
-    assets: (assetsResponse.items ?? []) as Asset[],
+    assets: allResolvedAssets as Asset[],
   };
 };

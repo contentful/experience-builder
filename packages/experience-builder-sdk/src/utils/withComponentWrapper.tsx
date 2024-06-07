@@ -1,4 +1,4 @@
-import { ComponentRegistration } from '@contentful/experience-builder-core/types';
+import { ComponentRegistration } from '@contentful/experiences-core/types';
 import React from 'react';
 
 interface CFProps {
@@ -39,7 +39,7 @@ export function withComponentWrapper<T extends object>(
   options: ComponentRegistration['options'] = {
     wrapComponent: true,
     wrapContainerTag: 'div',
-  }
+  },
 ) {
   const Wrapped = ({
     classes = '',

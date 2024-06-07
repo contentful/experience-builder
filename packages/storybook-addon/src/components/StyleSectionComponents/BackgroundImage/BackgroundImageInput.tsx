@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import type { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { Flex, Text } from '@contentful/f36-components';
 import { css } from 'emotion';
 import tokens from '@contentful/f36-tokens';
@@ -27,7 +27,7 @@ export const BackgroundImageInput = ({
   return (
     <Flex flexDirection="column">
       <Text color="gray500" fontWeight="fontWeightNormal" className={styles.label}>
-        Background Image
+        Background image
       </Text>
       <Flex flexDirection="column" gap="spacingS">
         {!!backgroundImageScaling && (

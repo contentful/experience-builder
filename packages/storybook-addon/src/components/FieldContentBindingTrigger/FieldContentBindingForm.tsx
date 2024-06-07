@@ -8,7 +8,7 @@ import tokens from '@contentful/f36-tokens';
 import {
   ComponentDefinition,
   ComponentDefinitionVariableType,
-} from '@contentful/experience-builder';
+} from '@contentful/experiences-sdk-react';
 
 export const styles = {
   entryTab: css({

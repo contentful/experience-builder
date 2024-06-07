@@ -1,10 +1,9 @@
 import { useFetchById, UseFetchByIdArgs } from './useFetchById';
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experiences-core';
 import { renderHook, waitFor } from '@testing-library/react';
-import { compositionEntry } from '../../test/__fixtures__/composition';
+import { experienceEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
 import type { ContentfulClientApi, Entry } from 'contentful';
-import type { ExternalSDKMode } from '@contentful/experience-builder-core/types';
 
 const experienceTypeId = 'layout';
 const localeCode = 'en-US';
@@ -15,14 +14,15 @@ let clientMock: ContentfulClientApi<undefined>;
 describe('useFetchById', () => {
   beforeEach(() => {
     clientMock = {
-      getEntries: jest.fn().mockImplementation((data) => {
-        if ('sys.id[in]' in data) {
-          return Promise.resolve({ items: entries });
-        }
-
-        return Promise.resolve({ items: [compositionEntry] });
+      getEntries: jest.fn().mockImplementation(() => {
+        return Promise.resolve({ items: [experienceEntry] });
       }),
       getAssets: jest.fn().mockResolvedValue({ items: assets }),
+      withoutLinkResolution: {
+        getEntries: jest.fn().mockImplementation(() => {
+          return Promise.resolve({ items: entries });
+        }),
+      },
     } as unknown as ContentfulClientApi<undefined>;
   });
 
@@ -30,7 +30,6 @@ describe('useFetchById', () => {
     const { result } = renderHook(useFetchById, {
       initialProps: {
         client: clientMock,
-        mode: 'preview' as ExternalSDKMode,
         id,
         experienceTypeId,
         localeCode,
@@ -47,7 +46,6 @@ describe('useFetchById', () => {
     const { result } = renderHook(useFetchById, {
       initialProps: {
         client: clientMock,
-        mode: 'preview' as ExternalSDKMode,
         id,
         experienceTypeId,
         localeCode,
@@ -58,31 +56,35 @@ describe('useFetchById', () => {
       const store = result.current;
 
       const entityStore = new EntityStore({
-        experienceEntry: compositionEntry as unknown as Entry,
+        experienceEntry: experienceEntry as unknown as Entry,
         entities: [...entries, ...assets],
         locale: localeCode,
       });
-      expect(store.experience?.mode).toBe('preview');
       expect(store.experience?.entityStore).toMatchObject(entityStore);
 
       expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
         content_type: experienceTypeId,
-        'sys.id': compositionEntry.sys.id,
+        'sys.id': experienceEntry.sys.id,
         locale: localeCode,
       });
 
-      expect(clientMock.getEntries).toHaveBeenNthCalledWith(2, {
+      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {
+        limit: 100,
+        skip: 0,
         'sys.id[in]': entries.map((entry) => entry.sys.id),
         locale: localeCode,
       });
 
       expect(clientMock.getAssets).toHaveBeenCalledWith({
+        limit: 100,
+        skip: 0,
         'sys.id[in]': assets.map((asset) => asset.sys.id),
         locale: localeCode,
       });
 
       expect(store).toEqual({
         experience: store.experience,
+        isEditorMode: false,
         isLoading: false,
         error: undefined,
       });
@@ -93,7 +95,6 @@ describe('useFetchById', () => {
     clientMock.getEntries = jest.fn().mockResolvedValue({ items: [] });
     const initialProps: UseFetchByIdArgs = {
       client: clientMock,
-      mode: 'preview' as ExternalSDKMode,
       id: 'unknown-id',
       experienceTypeId,
       localeCode,
@@ -109,7 +110,7 @@ describe('useFetchById', () => {
       if ('sys.id[in]' in data) {
         return Promise.resolve({ items: entries });
       }
-      return Promise.resolve({ items: [compositionEntry] });
+      return Promise.resolve({ items: [experienceEntry] });
     });
 
     rerender({ ...initialProps, id: 'composition-id' });
@@ -120,7 +121,6 @@ describe('useFetchById', () => {
   it('should return an error if experienceTypeId is not defined', async () => {
     const initialProps = {
       client: clientMock,
-      mode: 'preview' as ExternalSDKMode,
       id,
       localeCode,
       experienceTypeId: undefined,
@@ -133,7 +133,7 @@ describe('useFetchById', () => {
 
     await waitFor(() => {
       expect(result.current.error?.message).toBe(
-        'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided'
+        'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided',
       );
     });
 
@@ -145,7 +145,6 @@ describe('useFetchById', () => {
   it('should return an error if localeCode is not defined, then when localCode is provided, the error should be undefined', async () => {
     const initialProps: UseFetchByIdArgs = {
       client: clientMock,
-      mode: 'preview' as ExternalSDKMode,
       id,
       experienceTypeId,
       // @ts-expect-error undefined is not allowed through types, but it can still happen if invoked from plain js
@@ -156,7 +155,7 @@ describe('useFetchById', () => {
 
     await waitFor(() => {
       expect(result.current.error?.message).toBe(
-        'Failed to fetch experience entities. Required "locale" parameter was not provided'
+        'Failed to fetch experience entities. Required "locale" parameter was not provided',
       );
       expect(result.current.isLoading).toBe(false);
     });

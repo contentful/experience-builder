@@ -1,20 +1,23 @@
 import {
-  CompositionTree,
-  CompositionComponentNode,
+  ExperienceTree,
+  ExperienceTreeNode,
   StyleProps,
-  CompositionDataSource,
-  CompositionUnboundValues,
+  ExperienceDataSource,
+  ExperienceUnboundValues,
   ExperienceEntry,
+  ComponentDefinition,
 } from '@/types';
+import { Entry } from 'contentful';
+import { ASSEMBLY_DEFAULT_CATEGORY } from '@/constants';
 
 export const getDataFromTree = (
-  tree: CompositionTree
+  tree: ExperienceTree,
 ): {
-  dataSource: CompositionDataSource;
-  unboundValues: CompositionUnboundValues;
+  dataSource: ExperienceDataSource;
+  unboundValues: ExperienceUnboundValues;
 } => {
-  let dataSource: CompositionDataSource = {};
-  let unboundValues: CompositionUnboundValues = {};
+  let dataSource: ExperienceDataSource = {};
+  let unboundValues: ExperienceUnboundValues = {};
   const queue = [...tree.root.children];
 
   while (queue.length) {
@@ -38,8 +41,8 @@ export const getDataFromTree = (
 };
 
 type GetInsertionDataParams = {
-  dropReceiverNode: CompositionComponentNode;
-  dropReceiverParentNode: CompositionComponentNode;
+  dropReceiverNode: ExperienceTreeNode;
+  dropReceiverParentNode: ExperienceTreeNode;
   flexDirection?: StyleProps['cfFlexDirection'];
   isMouseAtTopBorder: boolean;
   isMouseAtBottomBorder: boolean;
@@ -50,7 +53,7 @@ type GetInsertionDataParams = {
 };
 
 type InsertionData = {
-  node: CompositionComponentNode;
+  node: ExperienceTreeNode;
   index: number;
 };
 
@@ -74,7 +77,7 @@ export const getInsertionData = ({
 
   if (isMouseAtTopBorder || isMouseAtBottomBorder) {
     const indexOfSectionInParentChildren = dropReceiverParentNode.children.findIndex(
-      (n) => n.data.id === dropReceiverNode.data.id
+      (n) => n.data.id === dropReceiverNode.data.id,
     );
     const APPEND_OUTSIDE = indexOfSectionInParentChildren + 1;
     const PREPEND_OUTSIDE = indexOfSectionInParentChildren;
@@ -89,7 +92,7 @@ export const getInsertionData = ({
   // if over one of the section indicators
   if (isOverTopIndicator || isOverBottomIndicator) {
     const indexOfSectionInParentChildren = dropReceiverParentNode.children.findIndex(
-      (n) => n.data.id === dropReceiverNode.data.id
+      (n) => n.data.id === dropReceiverNode.data.id,
     );
     const APPEND_OUTSIDE = indexOfSectionInParentChildren + 1;
     const PREPEND_OUTSIDE = indexOfSectionInParentChildren;
@@ -125,7 +128,7 @@ export const generateRandomId = (letterCount: number): string => {
   return times(letterCount, () => ALNUM[random(0, ALNUM.length - 1)]).join('');
 };
 
-export const checkIsAssembly = ({
+export const checkIsAssemblyNode = ({
   componentId,
   usedComponents,
 }: {
@@ -136,3 +139,17 @@ export const checkIsAssembly = ({
 
   return usedComponents.some((usedComponent) => usedComponent.sys.id === componentId);
 };
+
+/** @deprecated use `checkIsAssemblyNode` instead. Will be removed with SDK v5. */
+export const checkIsAssembly = checkIsAssemblyNode;
+
+/**
+ * This check assumes that the entry is already ensured to be an experience, i.e. the
+ * content type of the entry is an experience type with the necessary annotations.
+ **/
+export const checkIsAssemblyEntry = (entry: Entry): boolean => {
+  return Boolean(entry.fields?.componentSettings);
+};
+
+export const checkIsAssemblyDefinition = (component?: ComponentDefinition) =>
+  component?.category === ASSEMBLY_DEFAULT_CATEGORY;

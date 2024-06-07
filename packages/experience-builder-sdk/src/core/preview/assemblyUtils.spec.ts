@@ -1,21 +1,21 @@
 import type { Entry } from 'contentful';
-import { compositionEntry } from '../../../test/__fixtures__/composition';
+import { experienceEntry } from '../../../test/__fixtures__/composition';
 import { createAssemblyEntry } from '../../../test/__fixtures__/assembly';
 import { assets, entries } from '../../../test/__fixtures__/entities';
-import { CONTENTFUL_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
-import type { CompositionNode } from '@contentful/experience-builder-core/types';
-import { EntityStore } from '@contentful/experience-builder-core';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
+import type { ComponentTreeNode } from '@contentful/experiences-core/types';
+import { EntityStore } from '@contentful/experiences-core';
 import { resolveAssembly } from './assemblyUtils';
 
 describe('resolveAssembly', () => {
   it('should return the input node when it is not a assembly', () => {
-    const containerNode: CompositionNode = {
-      definitionId: CONTENTFUL_CONTAINER_ID,
+    const containerNode: ComponentTreeNode = {
+      definitionId: CONTENTFUL_COMPONENTS.container.id,
       variables: {},
       children: [],
     };
     const entityStore = new EntityStore({
-      experienceEntry: compositionEntry as unknown as Entry,
+      experienceEntry: experienceEntry as unknown as Entry,
       entities: [...entries, ...assets],
       locale: 'en-US',
     });
@@ -26,13 +26,13 @@ describe('resolveAssembly', () => {
   });
 
   it('should return the input node when the entity store is undefined', () => {
-    const containerNode: CompositionNode = {
-      definitionId: CONTENTFUL_CONTAINER_ID,
+    const containerNode: ComponentTreeNode = {
+      definitionId: CONTENTFUL_COMPONENTS.container.id,
       variables: {},
       children: [],
     };
 
-    const entityStore = undefined;
+    const entityStore = {} as unknown as EntityStore;
 
     const result = resolveAssembly({ node: containerNode, entityStore });
 
@@ -40,14 +40,14 @@ describe('resolveAssembly', () => {
   });
 
   it('should return the input node when the corresponding component is not found in the entity store', () => {
-    const assemblyNode: CompositionNode = {
+    const assemblyNode: ComponentTreeNode = {
       definitionId: 'assembly-id',
       variables: {},
       children: [],
     };
 
     const entityStore = new EntityStore({
-      experienceEntry: compositionEntry as unknown as Entry,
+      experienceEntry: experienceEntry as unknown as Entry,
       entities: [...entries, ...assets],
       locale: 'en-US',
     });
@@ -57,7 +57,7 @@ describe('resolveAssembly', () => {
     expect(result).toBe(assemblyNode);
   });
   it('should return a assembly node with children', () => {
-    const assemblyNode: CompositionNode = {
+    const assemblyNode: ComponentTreeNode = {
       definitionId: 'assembly-id',
       variables: {},
       children: [],
@@ -70,9 +70,9 @@ describe('resolveAssembly', () => {
 
     const entityStore = new EntityStore({
       experienceEntry: {
-        ...compositionEntry,
+        ...experienceEntry,
         fields: {
-          ...compositionEntry.fields,
+          ...experienceEntry.fields,
           usedComponents: [assemblyEntry],
         },
       } as unknown as Entry,
@@ -87,7 +87,7 @@ describe('resolveAssembly', () => {
       children: assemblyEntry.fields.componentTree.children,
     });
     expect(entityStore.unboundValues).toEqual({
-      ...compositionEntry.fields.unboundValues,
+      ...experienceEntry.fields.unboundValues,
       ...assemblyEntry.fields.unboundValues,
     });
   });

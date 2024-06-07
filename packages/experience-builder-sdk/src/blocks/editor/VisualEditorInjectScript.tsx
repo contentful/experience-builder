@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { VISUAL_EDITOR_CONTAINER_ID } from '@contentful/experience-builder-core/constants';
+import { VISUAL_EDITOR_CONTAINER_ID } from '@contentful/experiences-core/constants';
 
 /**
  * The version can be any semver version or dist tag
@@ -13,6 +13,8 @@ const version = '@0.0.1-pre-20231213T210727.0';
  * CDN URL for the visual editor script
  *
  * This can be changed to a local file path for development
+ *
+ * TODO: Reconsider unpkg
  */
 const scriptUrl = `https://unpkg.com/@contentful/experience-builder-visual-editor${version}/dist/renderApp.js`;
 

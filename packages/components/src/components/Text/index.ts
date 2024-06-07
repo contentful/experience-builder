@@ -1,12 +1,15 @@
-import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
-import constants from '@/utils/constants';
+import type { ComponentDefinition } from '@contentful/experiences-core/types';
+import {
+  CONTENTFUL_COMPONENTS,
+  CONTENTFUL_DEFAULT_CATEGORY,
+} from '@contentful/experiences-core/constants';
 
 export * from './Text';
 
 export const TextComponentDefinition: ComponentDefinition = {
-  id: 'text',
-  name: 'Text',
-  category: 'Contentful',
+  id: CONTENTFUL_COMPONENTS.text.id,
+  name: CONTENTFUL_COMPONENTS.text.name,
+  category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: [
     'cfMargin',
     'cfPadding',
@@ -20,14 +23,28 @@ export const TextComponentDefinition: ComponentDefinition = {
     'cfTextBold',
     'cfTextItalic',
     'cfTextUnderline',
+    'cfBackgroundColor',
+    'cfBorder',
+    'cfBorderRadius',
+    'cfWidth',
+    'cfMaxWidth',
   ],
-  thumbnailUrl: constants.thumbnails.text,
+  tooltip: {
+    description: 'Drop onto the canvas to add plain text.',
+  },
   variables: {
+    cfHeight: {
+      displayName: 'Height',
+      type: 'Text',
+      group: 'style',
+      description: 'The height of the button.',
+      defaultValue: 'fit-content',
+    },
     value: {
       displayName: 'Value',
       description: 'The text to display. If not provided, children will be used instead.',
       type: 'Text',
-      defaultValue: 'Lorem ipsum',
+      defaultValue: 'Text',
     },
     as: {
       displayName: 'As',
@@ -47,12 +64,15 @@ export const TextComponentDefinition: ComponentDefinition = {
         ],
       },
     },
-    classes: {
-      displayName: 'Classes',
-      description: 'Additional CSS classes to apply to the component.',
+    url: {
+      displayName: 'URL',
       type: 'Text',
-      defaultValue: 'cf-text',
-      group: 'style',
+      defaultValue: '',
+    },
+    target: {
+      displayName: 'Target',
+      type: 'Text',
+      defaultValue: '',
     },
   },
 };

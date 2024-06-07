@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { EntityStore } from '@contentful/visual-sdk';
+import { EntityStore, breakpointsRegistry } from '@contentful/experiences-core';
 import {
   componentRegistry,
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
+  runRegisteredComponentValidations,
 } from '../core/componentRegistry';
-import {
-  INTERNAL_EVENTS,
-  VISUAL_EDITOR_EVENTS,
-} from '@contentful/experience-builder-core/constants';
-import { designTokensRegistry } from '@contentful/experience-builder-core';
+import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
+import { designTokensRegistry, runBreakpointsValidation } from '@contentful/experiences-core';
 
 type InitializeVisualEditorParams = {
   initialLocale: string;
@@ -19,19 +17,21 @@ type InitializeVisualEditorParams = {
 export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) => {
   const { initialLocale, initialEntities } = params;
   const [locale, setLocale] = useState<string>(initialLocale);
-
   const hasConnectEventBeenSent = useRef(false);
 
   // sends component definitions to the web app
   // InternalEvents.COMPONENTS_REGISTERED is triggered by defineComponents function
   useEffect(() => {
     if (!hasConnectEventBeenSent.current) {
+      runRegisteredComponentValidations();
+      runBreakpointsValidation();
       // sending CONNECT but with the registered components now
       sendConnectedEventWithRegisteredComponents();
       hasConnectEventBeenSent.current = true;
     }
 
     const onComponentsRegistered = () => {
+      runRegisteredComponentValidations();
       sendRegisteredComponentsMessage();
     };
 
@@ -57,10 +57,11 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
           detail: {
             componentRegistry,
             designTokens: designTokensRegistry,
+            breakpoints: breakpointsRegistry,
             locale,
             entities: initialEntities ?? [],
           },
-        })
+        }),
       );
     };
 

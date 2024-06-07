@@ -4,48 +4,60 @@ import {
   getDataFromTree,
   doesMismatchMessageSchema,
   tryParseMessage,
-} from '@contentful/experience-builder-core';
+  gatherDeepReferencesFromTree,
+  DeepReference,
+  isLink,
+  EditorModeEntityStore,
+} from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
   SCROLL_STATES,
-} from '@contentful/experience-builder-core/constants';
+  PostMessageMethods,
+} from '@contentful/experiences-core/constants';
 import {
-  CompositionTree,
-  CompositionComponentNode,
-  CompositionComponentPropValue,
+  ExperienceTree,
+  ExperienceTreeNode,
+  ComponentPropertyValue,
   ComponentRegistration,
   Link,
-  CompositionDataSource,
-} from '@contentful/experience-builder-core/types';
+  ExperienceDataSource,
+  ManagementEntity,
+} from '@contentful/experiences-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
-import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { Entry } from 'contentful';
-import { Assembly } from '@contentful/experience-builder-components';
+import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
-import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
-import { PostMessageMethods } from '@contentful/visual-sdk';
 import { useEntityStore } from '@/store/entityStore';
-import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
+import SimulateDnD from '@/utils/simulateDnD';
+import { UnresolvedLink } from 'contentful';
 
 export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
-  const updateTree = useTreeStore((state) => state.updateTree);
+  const { updateTree, updateNodesByUpdatedEntity } = useTreeStore((state) => ({
+    updateTree: state.updateTree,
+    updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
+  }));
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const setLocale = useEditorStore((state) => state.setLocale);
   const setUnboundValues = useEditorStore((state) => state.setUnboundValues);
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
-
+  const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
+  const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
+  const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
+  const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
+  const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
+  const setScrollY = useDraggedItemStore((state) => state.setScrollY);
 
-  const [isFetchingEntities, setFetchingEntities] = useState(false);
+  // TODO: As we have disabled the useEffect, we can remove these states
+  const [, /* isFetchingEntities */ setFetchingEntities] = useState(false);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, {});
@@ -60,43 +72,97 @@ export function useEditorSubscriber() {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
   }, []);
 
-  // Either gets called when dataSource changed or assembliesRegistry changed (manually)
+  /**
+   * Fills up entityStore with entities from newDataSource and from the tree.
+   * Also manages "entity status" variables (areEntitiesFetched, isFetchingEntities)
+   */
   const fetchMissingEntities = useCallback(
-    async (newDataSource?: CompositionDataSource) => {
-      const entityLinks = [
-        ...Object.values(newDataSource ?? dataSource),
-        ...assembliesRegistry.values(),
-      ];
-      const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
-      // Only continue and trigger rerendering when we need to fetch something and we're not fetching yet
-      if (!missingAssetIds.length && !missingEntryIds.length) {
-        setEntitiesFetched(true);
-        return;
-      }
-      setEntitiesFetched(false);
-      setFetchingEntities(true);
-      try {
-        // Await until the fetching is done to update the state variable at the right moment
-        await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
-        console.debug('[exp-builder.sdk] Finished fetching entities', { entityStore, entityLinks });
-      } catch (error) {
-        console.error('[exp-builder.sdk] Failed fetching entities');
-        console.error(error);
-      } finally {
-        // Important to set this as it is the only state variable that triggers a rerendering
-        // of the components (changes inside the entityStore are not part of the state)
+    async (
+      entityStore: EditorModeEntityStore,
+      newDataSource: ExperienceDataSource,
+      tree: ExperienceTree,
+    ) => {
+      // if we realize that there's nothing missing and nothing to fill-fetch before we do any async call,
+      // then we can simply return and not lock the EntityStore at all.
+      const startFetching = () => {
+        setEntitiesFetched(false);
+        setFetchingEntities(true);
+      };
+      const endFetching = () => {
         setEntitiesFetched(true);
         setFetchingEntities(false);
+      };
+
+      // Prepare L1 entities and deepReferences
+      const entityLinksL1 = [
+        ...Object.values(newDataSource),
+        ...assembliesRegistry.values(), // we count assemblies here as "L1 entities", for convenience. Even though they're not headEntities.
+      ];
+      const deepReferences = gatherDeepReferencesFromTree(tree.root, newDataSource);
+
+      /**
+       * Checks only for _missing_ L1 entities
+       * WARNING: Does NOT check for entity staleness/versions. If an entity is stale, it will NOT be considered missing.
+       *          If ExperienceBuilder wants to update stale entities, it should post  `▼UPDATED_ENTITY` message to SDK.
+       */
+      const isMissingL1Entities = (entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]): boolean => {
+        const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinks);
+        return Boolean(missingAssetIds.length) || Boolean(missingEntryIds.length);
+      };
+
+      /**
+       * PRECONDITION: all L1 entities are fetched
+       */
+      const isMissingL2Entities = (deepReferences: DeepReference[]): boolean => {
+        const referentLinks = deepReferences
+          .map((deepReference) => deepReference.extractReferent(entityStore))
+          .filter(isLink);
+        const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
+        return Boolean(missingAssetIds.length) || Boolean(missingEntryIds.length);
+      };
+
+      /**
+       * POST_CONDITION: entityStore is has all L1 entities (aka headEntities)
+       */
+      const fillupL1 = async ({
+        entityLinksL1,
+      }: {
+        entityLinksL1: UnresolvedLink<'Entry' | 'Asset'>[];
+      }) => {
+        const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(entityLinksL1);
+        await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
+      };
+
+      /**
+       * PRECONDITION: all L1 entites are fetched
+       */
+      const fillupL2 = async ({ deepReferences }: { deepReferences: DeepReference[] }) => {
+        const referentLinks = deepReferences
+          .map((deepReference) => deepReference.extractReferent(entityStore))
+          .filter(isLink);
+        const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
+        await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
+      };
+
+      try {
+        if (isMissingL1Entities(entityLinksL1)) {
+          startFetching();
+          await fillupL1({ entityLinksL1 });
+        }
+        if (isMissingL2Entities(deepReferences)) {
+          startFetching();
+          await fillupL2({ deepReferences });
+        }
+      } catch (error) {
+        console.error('[experiences-sdk-react] Failed fetching entities');
+        console.error(error);
+        throw error; // TODO: The original catch didn't let's rethrow; for the moment throw to see if we have any errors
+      } finally {
+        endFetching();
       }
     },
-    [dataSource, entityStore, setEntitiesFetched]
+    [setEntitiesFetched /* setFetchingEntities, assembliesRegistry */],
   );
-  // When the tree was updated, we store the dataSource and
-  // afterward, this effect fetches the respective entities.
-  useEffect(() => {
-    if (areEntitiesFetched || isFetchingEntities) return;
-    fetchMissingEntities();
-  }, [areEntitiesFetched, fetchMissingEntities, isFetchingEntities]);
 
   useEffect(() => {
     const onMessage = async (event: MessageEvent) => {
@@ -109,8 +175,8 @@ export function useEditorSubscriber() {
           reloadApp();
         } else {
           console.warn(
-            `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
-            event
+            `[experiences-sdk-react::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
+            event,
           );
         }
         return;
@@ -118,18 +184,18 @@ export function useEditorSubscriber() {
 
       const eventData = tryParseMessage(event);
       if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
-        // Expected message: This message is handled in the visual-sdk to store fetched entities
+        // Expected message: This message is handled in the EntityStore to store fetched entities
         return;
       }
       console.debug(
-        `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
-        eventData
+        `[experiences-sdk-react::onMessage] Received message [${eventData.eventType}]`,
+        eventData,
       );
 
       const { payload } = eventData;
 
       switch (eventData.eventType) {
-        case INCOMING_EVENTS.CompositionUpdated: {
+        case INCOMING_EVENTS.ExperienceUpdated: {
           const {
             tree,
             locale,
@@ -137,12 +203,12 @@ export function useEditorSubscriber() {
             changedValueType,
             assemblies,
           }: {
-            tree: CompositionTree;
+            tree: ExperienceTree;
             assemblies: Link<'Entry'>[];
             locale: string;
             entitiesResolved?: boolean;
-            changedNode?: CompositionComponentNode;
-            changedValueType?: CompositionComponentPropValue['type'];
+            changedNode?: ExperienceTreeNode;
+            changedValueType?: ComponentPropertyValue['type'];
           } = payload;
 
           // Make sure to first store the assemblies before setting the tree and thus triggering a rerender
@@ -152,6 +218,13 @@ export function useEditorSubscriber() {
             // the imperative calls to fetchMissingEntities.
           }
 
+          let newEntityStore = entityStore;
+          if (entityStore.locale !== locale) {
+            newEntityStore = resetEntityStore(locale);
+            setLocale(locale);
+          }
+
+          // Below are mutually exclusive cases
           if (changedNode) {
             /**
              * On single node updates, we want to skip the process of getting the data (datasource and unbound values)
@@ -163,7 +236,7 @@ export function useEditorSubscriber() {
             if (changedValueType === 'BoundValue') {
               const newDataSource = { ...dataSource, ...changedNode.data.dataSource };
               setDataSource(newDataSource);
-              await fetchMissingEntities(newDataSource);
+              await fetchMissingEntities(newEntityStore, newDataSource, tree);
             } else if (changedValueType === 'UnboundValue') {
               setUnboundValues({
                 ...unboundValues,
@@ -174,17 +247,12 @@ export function useEditorSubscriber() {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
-            await fetchMissingEntities(dataSource);
+            await fetchMissingEntities(newEntityStore, dataSource, tree);
           }
-
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
-          setLocale(locale);
           break;
         }
-        case INCOMING_EVENTS.DesignComponentsRegistered:
-          // Event was deprecated and support will be discontinued with version 5
-          break;
         case INCOMING_EVENTS.AssembliesRegistered: {
           const { assemblies }: { assemblies: ComponentRegistration['definition'][] } = payload;
 
@@ -196,15 +264,12 @@ export function useEditorSubscriber() {
           });
           break;
         }
-        case INCOMING_EVENTS.DesignComponentsAdded:
-          // Event was deprecated and support will be discontinued with version 5
-          break;
         case INCOMING_EVENTS.AssembliesAdded: {
           const {
             assembly,
             assemblyDefinition,
           }: {
-            assembly: Entry;
+            assembly: ManagementEntity;
             assemblyDefinition?: ComponentRegistration['definition'];
           } = payload;
           entityStore.updateEntity(assembly);
@@ -224,11 +289,15 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.CanvasResized: {
+          const { selectedNodeId } = payload;
+          if (selectedNodeId) {
+            sendSelectedComponentCoordinates(selectedNodeId);
+          }
           break;
         }
         case INCOMING_EVENTS.HoverComponent: {
           const { hoveredNodeId } = payload;
-          sendHoveredComponentCoordinates(hoveredNodeId);
+          setHoveredComponentId(hoveredNodeId);
           break;
         }
         case INCOMING_EVENTS.ComponentDraggingChanged: {
@@ -236,14 +305,27 @@ export function useEditorSubscriber() {
 
           if (!isDragging) {
             setComponentId('');
-            dragState.reset();
+            setDraggingOnCanvas(false);
+            SimulateDnD.reset();
           }
           break;
         }
         case INCOMING_EVENTS.UpdatedEntity: {
-          const { entity } = payload;
-          if (entity) {
-            entityStore.updateEntity(entity);
+          const { entity: updatedEntity, shouldRerender } = payload as {
+            entity: ManagementEntity;
+            shouldRerender?: boolean;
+          };
+          if (updatedEntity) {
+            const storedEntity = entityStore.entities.find(
+              (entity) => entity.sys.id === updatedEntity.sys.id,
+            ) as unknown as ManagementEntity | undefined;
+
+            const didEntityChange = storedEntity?.sys.version !== updatedEntity.sys.version;
+            entityStore.updateEntity(updatedEntity);
+            // We traverse the whole tree, so this is a opt-in feature to only use it when required.
+            if (shouldRerender && didEntityChange) {
+              updateNodesByUpdatedEntity(updatedEntity.sys.id);
+            }
           }
           break;
         }
@@ -251,20 +333,26 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.ComponentDragCanceled: {
-          if (dragState.isDragging) {
+          if (SimulateDnD.isDragging) {
             //simulate a mouseup event to cancel the drag
-            simulateMouseEvent(0, 0, 'mouseup');
+            SimulateDnD.endDrag(0, 0);
           }
           break;
         }
         case INCOMING_EVENTS.ComponentDragStarted: {
-          dragState.updateIsDragStartedOnParent(true);
+          SimulateDnD.setupDrag();
           setComponentId(payload.id || '');
+          setDraggingOnCanvas(true);
+
+          sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+            nodeId: '',
+          });
           break;
         }
         case INCOMING_EVENTS.ComponentDragEnded: {
-          dragState.reset();
+          SimulateDnD.reset();
           setComponentId('');
+          setDraggingOnCanvas(false);
           break;
         }
         case INCOMING_EVENTS.SelectComponent: {
@@ -273,9 +361,26 @@ export function useEditorSubscriber() {
           sendSelectedComponentCoordinates(nodeId);
           break;
         }
+        case INCOMING_EVENTS.MouseMove: {
+          const { mouseX, mouseY } = payload;
+          setMousePosition(mouseX, mouseY);
+
+          if (SimulateDnD.isDraggingOnParent && !SimulateDnD.isDragging) {
+            SimulateDnD.startDrag(mouseX, mouseY);
+          } else {
+            SimulateDnD.updateDrag(mouseX, mouseY);
+          }
+
+          break;
+        }
+        case INCOMING_EVENTS.ComponentMoveEnded: {
+          const { mouseX, mouseY } = payload;
+          SimulateDnD.endDrag(mouseX, mouseY);
+          break;
+        }
         default:
           console.error(
-            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`
+            `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`,
           );
       }
     };
@@ -288,6 +393,7 @@ export function useEditorSubscriber() {
   }, [
     entityStore,
     setComponentId,
+    setDraggingOnCanvas,
     setDataSource,
     setLocale,
     setSelectedNodeId,
@@ -297,6 +403,10 @@ export function useEditorSubscriber() {
     setUnboundValues,
     unboundValues,
     updateTree,
+    updateNodesByUpdatedEntity,
+    setMousePosition,
+    resetEntityStore,
+    setHoveredComponentId,
   ]);
 
   /*
@@ -307,6 +417,7 @@ export function useEditorSubscriber() {
     let isScrolling = false;
 
     const onScroll = () => {
+      setScrollY(window.scrollY);
       if (isScrolling === false) {
         sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.Start);
       }
@@ -327,14 +438,17 @@ export function useEditorSubscriber() {
         /**
          * On scroll end, send new co-ordinates of selected node
          */
+        if (selectedNodeId) {
+          sendSelectedComponentCoordinates(selectedNodeId);
+        }
       }, 150);
     };
 
     window.addEventListener('scroll', onScroll, { capture: true, passive: true });
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll, { capture: true });
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [selectedNodeId, setScrollY]);
 }

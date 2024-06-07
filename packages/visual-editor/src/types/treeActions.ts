@@ -1,4 +1,4 @@
-import { CompositionComponentNode } from '@contentful/experience-builder-core/types';
+import { ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { TreeAction } from './constants';
 
 interface DiffBase {
@@ -8,27 +8,28 @@ interface DiffBase {
 export interface RemoveNode extends DiffBase {
   type: TreeAction.REMOVE_NODE;
   indexToRemove: number;
+  idToRemove: string;
   parentNodeId: string;
 }
 
 export interface AddNode extends DiffBase {
   type: TreeAction.ADD_NODE;
   indexToAdd: number;
-  nodeToAdd: CompositionComponentNode;
+  nodeToAdd: ExperienceTreeNode;
   parentNodeId: string;
 }
 
 export interface ReplaceNode extends DiffBase {
   type: TreeAction.REPLACE_NODE;
   originalId: string;
-  node: CompositionComponentNode;
+  node: ExperienceTreeNode;
   indexToReplace: number;
 }
 
 export interface UpdateNode extends DiffBase {
   type: TreeAction.UPDATE_NODE;
   nodeId: string;
-  node: CompositionComponentNode;
+  node: ExperienceTreeNode;
 }
 
 export interface MoveNode extends DiffBase {

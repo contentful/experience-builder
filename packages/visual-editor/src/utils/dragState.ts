@@ -1,4 +1,4 @@
-class DragState {
+export default class DragState {
   private isDraggingItem;
   private isDragStartedOnParent;
 
@@ -11,7 +11,7 @@ class DragState {
     return this.isDraggingItem;
   }
 
-  get isDragStart() {
+  get isDraggingOnParent() {
     return this.isDragStartedOnParent;
   }
 
@@ -22,10 +22,8 @@ class DragState {
     this.isDragStartedOnParent = isDragStartedOnParent;
   }
 
-  public reset() {
+  public resetState() {
     this.isDraggingItem = false;
     this.isDragStartedOnParent = false;
   }
 }
-
-export default new DragState();

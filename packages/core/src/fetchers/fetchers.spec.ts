@@ -2,22 +2,31 @@ import type { ContentfulClientApi } from 'contentful';
 import * as fetchers from './fetchers';
 import * as fetchExperienceEntryModule from './fetchExperienceEntry';
 import * as fetchReferencedEntitiesModule from './fetchReferencedEntities';
-import { compositionEntry } from '../test/__fixtures__/composition';
+import { experienceEntry } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
 import { describe, beforeEach, it, expect, vi, Mock } from 'vitest';
 
 const mockClient = {
-  getEntries: vi.fn(),
   getAssets: vi.fn(),
+  getEntries: vi.fn(),
+  withoutLinkResolution: {
+    getEntries: vi.fn(),
+  },
 } as unknown as ContentfulClientApi<undefined>;
 
 describe('fetchExperience', () => {
   beforeEach(() => {
+    // used by fetchExperience()->fetchExperienceEntry()
     (mockClient.getEntries as Mock).mockResolvedValueOnce({
-      items: [compositionEntry],
+      items: [experienceEntry],
     });
+
+    // used by fetchExperience()->fetchReferencedEntities()
     (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
-    (mockClient.getEntries as Mock).mockResolvedValue({ items: entries });
+    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({
+      items: entries,
+      includes: { Asset: assets },
+    });
   });
 
   it('should call fetchExperienceEntry and fetchReferencedEntities with given parameters', async () => {
@@ -40,7 +49,7 @@ describe('fetchExperience', () => {
 
     expect(fetchReferencesSpy).toHaveBeenCalledWith({
       client: mockClient,
-      experienceEntry: compositionEntry,
+      experienceEntry,
       locale: 'en-US',
     });
   });

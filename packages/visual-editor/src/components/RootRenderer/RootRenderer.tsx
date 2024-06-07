@@ -1,110 +1,132 @@
-import React from 'react';
+import React, { CSSProperties, useCallback, useRef, useState } from 'react';
 import { useEffect } from 'react';
-import { DragDropContext } from '@hello-pangea/dnd';
 import { Dropzone } from '../Dropzone/Dropzone';
 import DraggableContainer from '../Draggable/DraggableComponentList';
-import { sendMessage } from '@contentful/experience-builder-core';
-import type { CompositionTree } from '@contentful/experience-builder-core/types';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
-import dragState from '@/utils/dragState';
-import { usePlaceholderStyle } from '@/hooks/usePlaceholderStyle';
-import { ROOT_ID } from '@/types/constants';
+import type { ExperienceTree } from '@contentful/experiences-core/types';
+
+import { DRAGGABLE_HEIGHT, ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { useEditorStore } from '@/store/editor';
-import { useZoneStore } from '@/store/zone';
 import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
-import useCanvasInteractions from '@/hooks/useCanvasInteractions';
+import { DNDProvider } from './DNDProvider';
+import { sendMessage } from '@contentful/experiences-core';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
+import { useEditorStore } from '@/store/editor';
 
 interface Props {
-  onChange?: (data: CompositionTree) => void;
+  onChange?: (data: ExperienceTree) => void;
 }
 
 export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   useEditorSubscriber();
 
-  const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const dragItem = useDraggedItemStore((state) => state.componentId);
-  const updateItem = useDraggedItemStore((state) => state.updateItem);
-  const setHoveringSection = useZoneStore((state) => state.setHoveringSection);
-  const userIsDragging = !!dragItem;
+  const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
+  const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
   const breakpoints = useTreeStore((state) => state.breakpoints);
-
+  const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { resolveDesignValue } = useBreakpoints(breakpoints);
+  const [containerStyles, setContainerStyles] = useState<CSSProperties>({});
   const tree = useTreeStore((state) => state.tree);
 
-  const { onAddComponent, onMoveComponent } = useCanvasInteractions();
+  const handleMouseOver = useCallback(() => {
+    // Remove hover state set by UI when mouse is over canvas
+    setHoveredComponentId();
+    // Remove hover styling from components in the layers tab
+    sendMessage(OUTGOING_EVENTS.NewHoveredElement, {});
+  }, [setHoveredComponentId]);
+
+  const handleClickOutside = useCallback(
+    (e: MouseEvent) => {
+      const element = e.target as HTMLElement;
+
+      const isRoot = element.getAttribute('data-ctfl-zone-id') === ROOT_ID;
+      const clickedOnCanvas = element.closest(`[data-ctfl-root]`);
+
+      if (clickedOnCanvas && !isRoot) {
+        return;
+      }
+
+      sendMessage(OUTGOING_EVENTS.OutsideCanvasClick, {
+        outsideCanvasClick: true,
+      });
+      sendMessage(OUTGOING_EVENTS.ComponentSelected, {
+        selectedId: '',
+      });
+      setSelectedNodeId('');
+    },
+    [setSelectedNodeId],
+  );
+
+  const handleResizeCanvas = useCallback(() => {
+    const parentElement = containerRef.current?.parentElement;
+    if (!parentElement) {
+      return;
+    }
+
+    let siblingHeight = 0;
+
+    for (const child of parentElement.children) {
+      if (!child.hasAttribute('data-ctfl-root')) {
+        siblingHeight += child.getBoundingClientRect().height;
+      }
+    }
+
+    if (!siblingHeight) {
+      /**
+       * DRAGGABLE_HEIGHT is subtracted here due to an uninteded scrolling effect
+       * when dragging a new component onto the canvas
+       *
+       * The DRAGGABLE_HEIGHT is then added as margin bottom to offset this value
+       * so that visually there is no difference to the user.
+       */
+      setContainerStyles({
+        minHeight: `${window.innerHeight - DRAGGABLE_HEIGHT}px`,
+      });
+      return;
+    }
+
+    setContainerStyles({
+      minHeight: `${window.innerHeight - siblingHeight}px`,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [containerRef.current]);
+
   useEffect(() => {
     if (onChange) onChange(tree);
   }, [tree, onChange]);
 
-  const { onDragStartOrUpdate } = usePlaceholderStyle();
+  useEffect(() => {
+    window.addEventListener('mouseover', handleMouseOver);
+    return () => {
+      window.removeEventListener('mouseover', handleMouseOver);
+    };
+  }, [handleMouseOver]);
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
+  useEffect(() => {
+    handleResizeCanvas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [containerRef.current]);
 
   return (
-    <DragDropContext
-      onDragUpdate={(update) => {
-        updateItem(update);
-        onDragStartOrUpdate(update);
-      }}
-      onBeforeDragStart={(start) => {
-        onDragStartOrUpdate(start);
-        setSelectedNodeId('');
-        sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-          nodeId: '',
-        });
-      }}
-      onDragEnd={(droppedItem) => {
-        updateItem(undefined);
-        dragState.reset();
-
-        sendMessage(OUTGOING_EVENTS.MouseUp);
-
-        // User cancel drag
-        if (!droppedItem.destination) {
-          sendMessage(OUTGOING_EVENTS.ComponentDragCanceled);
-          return;
-        }
-
-        // New component added to canvas
-        if (droppedItem.source.droppableId.startsWith('component-list')) {
-          onAddComponent(droppedItem);
-        } else {
-          onMoveComponent(droppedItem);
-        }
-      }}>
+    <DNDProvider>
       {dragItem && <DraggableContainer id={dragItem} />}
-
-      <div className={styles.container}>
-        {/* 
-          This hitbox is required so that users can
-          add sections to the top of the document.
-        */}
-        {userIsDragging && (
-          <div
-            className={styles.hitbox}
-            onMouseOver={(e) => {
-              e.stopPropagation();
-              setHoveringSection(ROOT_ID);
-            }}
-          />
-        )}
-        <Dropzone sectionId={ROOT_ID} zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
-        {/* 
-          This hitbox is required so that users can
-          add sections to the bottom of the document.
-        */}
-        {userIsDragging && (
-          <div
-            className={styles.hitboxLower}
-            onMouseOver={(e) => {
-              e.stopPropagation();
-              setHoveringSection(ROOT_ID);
-            }}
-          />
-        )}
+      <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
+        {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitbox} />}
+        <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
+        {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />}
       </div>
-    </DragDropContext>
+      <div data-ctfl-hitboxes />
+    </DNDProvider>
   );
 };

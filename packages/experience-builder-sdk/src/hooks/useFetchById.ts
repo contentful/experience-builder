@@ -1,15 +1,15 @@
 import { useCallback } from 'react';
 import type { ContentfulClientApi } from 'contentful';
-import type { ExternalSDKMode } from '@contentful/experience-builder-core/types';
 import { useFetchByBase } from './useFetchByBase';
-import { fetchById } from '@contentful/experience-builder-core';
+import { fetchById } from '@contentful/experiences-core';
+import { useDetectEditorMode } from './useDetectEditorMode';
 
 export type UseFetchByIdArgs = {
-  mode: ExternalSDKMode;
   client: ContentfulClientApi<undefined>;
   id: string;
   experienceTypeId: string;
   localeCode: string;
+  hyperlinkPattern?: string;
 };
 
 export const useFetchById = ({
@@ -17,11 +17,15 @@ export const useFetchById = ({
   localeCode,
   client,
   experienceTypeId,
-  mode,
+  hyperlinkPattern,
 }: UseFetchByIdArgs) => {
-  const fetchMethod = useCallback(() => {
-    return fetchById({ id, localeCode, client, experienceTypeId, mode });
-  }, [id, localeCode, client, experienceTypeId, mode]);
+  const isEditorMode = useDetectEditorMode({ isClientSide: typeof window !== 'undefined' });
 
-  return useFetchByBase(fetchMethod);
+  const fetchMethod = useCallback(() => {
+    return fetchById({ id, localeCode, client, experienceTypeId });
+  }, [id, localeCode, client, experienceTypeId]);
+
+  const fetchResult = useFetchByBase(fetchMethod, isEditorMode);
+
+  return { ...fetchResult, experience: { ...fetchResult.experience, hyperlinkPattern } };
 };

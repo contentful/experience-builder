@@ -91,7 +91,7 @@ export const Flex = forwardRef<HTMLDivElement, FlexProps>(
       cssStyles,
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <div
@@ -125,6 +125,6 @@ export const Flex = forwardRef<HTMLDivElement, FlexProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 Flex.displayName = 'Flex';

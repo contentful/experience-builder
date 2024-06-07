@@ -1,17 +1,14 @@
-import { checkIsAssembly, EntityStore } from '@contentful/experience-builder-core';
-import type {
-  CompositionComponentPropValue,
-  CompositionNode,
-} from '@contentful/experience-builder-core/types';
+import { checkIsAssemblyNode, EntityStore } from '@contentful/experiences-core';
+import type { ComponentPropertyValue, ComponentTreeNode } from '@contentful/experiences-core/types';
 
 export const deserializeAssemblyNode = ({
   node,
   componentInstanceVariables,
 }: {
-  node: CompositionNode;
-  componentInstanceVariables: CompositionNode['variables'];
-}): CompositionNode => {
-  const variables: Record<string, CompositionComponentPropValue> = {};
+  node: ComponentTreeNode;
+  componentInstanceVariables: ComponentTreeNode['variables'];
+}): ComponentTreeNode => {
+  const variables: Record<string, ComponentPropertyValue> = {};
 
   for (const [variableName, variable] of Object.entries(node.variables)) {
     variables[variableName] = variable;
@@ -31,15 +28,20 @@ export const deserializeAssemblyNode = ({
           type: 'BoundValue',
           path: instanceProperty.path,
         };
+      } else if (instanceProperty?.type === 'HyperlinkValue') {
+        variables[variableName] = {
+          type: 'HyperlinkValue',
+          linkTargetKey: instanceProperty.linkTargetKey,
+        };
       }
     }
   }
 
-  const children: CompositionNode[] = node.children.map((child) =>
+  const children: ComponentTreeNode[] = node.children.map((child) =>
     deserializeAssemblyNode({
       node: child,
       componentInstanceVariables,
-    })
+    }),
   );
 
   return {
@@ -53,12 +55,12 @@ export const resolveAssembly = ({
   node,
   entityStore,
 }: {
-  node: CompositionNode;
-  entityStore: EntityStore | undefined;
+  node: ComponentTreeNode;
+  entityStore: EntityStore;
 }) => {
-  const isAssembly = checkIsAssembly({
+  const isAssembly = checkIsAssemblyNode({
     componentId: node.definitionId,
-    usedComponents: entityStore?.usedComponents,
+    usedComponents: entityStore.usedComponents,
   });
 
   if (!isAssembly) {
@@ -66,8 +68,8 @@ export const resolveAssembly = ({
   }
 
   const componentId = node.definitionId as string;
-  const assembly = entityStore?.experienceEntryFields?.usedComponents?.find(
-    (component) => component.sys.id === componentId
+  const assembly = entityStore.experienceEntryFields?.usedComponents?.find(
+    (component) => component.sys.id === componentId,
   );
 
   if (!assembly || !('fields' in assembly)) {
@@ -85,7 +87,7 @@ export const resolveAssembly = ({
     componentInstanceVariables: node.variables,
   });
 
-  entityStore?.updateUnboundValues(componentFields.unboundValues);
+  entityStore.addAssemblyUnboundValues(componentFields.unboundValues);
 
   return deserializedNode;
 };

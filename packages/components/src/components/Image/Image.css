@@ -1,3 +1,35 @@
-.cf-image {
-  max-width: var(--cf-max-width-full);
+@import url('../variables.css');
+
+.cf-no-image {
+  position: relative;
+}
+
+.cf-no-image img {
+  background-color: var(--cf-color-gray100);
+  outline-offset: -2px;
+  outline: 2px solid rgba(var(--cf-color-gray400-rgb), 0.5);
+}
+
+[data-ctfl-draggable-id] .cf-no-image {
+  width: 100%;
+  height: 100%;
+}
+
+[data-ctfl-draggable-id] .cf-no-image img {
+  width: 100%;
+}
+
+.cf-no-image svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: var(--cf-text-3xl);
+  width: var(--cf-text-3xl);
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.cf-no-image svg path {
+  fill: var(--cf-color-gray400);
 }

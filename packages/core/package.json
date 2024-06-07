@@ -1,6 +1,6 @@
 {
-  "name": "@contentful/experience-builder-core",
-  "version": "0.0.2-alpha.13",
+  "name": "@contentful/experiences-core",
+  "version": "1.7.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -8,7 +8,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder-toolkit.git"
+    "url": "git+https://github.com/contentful/experience-builder.git"
   },
   "files": [
     "readme.md",
@@ -18,6 +18,9 @@
   "exports": {
     ".": "./dist/index.js",
     "./constants": "./dist/constants.js"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "typesVersions": {
     "*": {
@@ -34,11 +37,12 @@
     "prebuild": "npm run clean",
     "build": "rollup -c ./rollup.config.mjs",
     "predev": "npm run clean",
-    "dev": "rollup -c ./rollup.dev.config.mjs --watch",
+    "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "depcruise": "depcruise src"
   },
   "author": "",
   "license": "MIT",
@@ -48,12 +52,12 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.5",
     "@types/lodash-es": "^4.17.12",
-    "@typescript-eslint/eslint-plugin": "^6.12.0",
-    "@typescript-eslint/parser": "^6.12.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
     "@vitest/coverage-v8": "^1.0.4",
     "contentful": "^10.6.4",
     "eslint": "^8.54.0",
-    "happy-dom": "^12.10.3",
+    "happy-dom": "^13.3.8",
     "rimraf": "^5.0.5",
     "rollup-plugin-dts": "^6.1.0",
     "rollup-plugin-ts": "^3.4.5",
@@ -61,8 +65,8 @@
     "vitest": "^1.0.4"
   },
   "dependencies": {
-    "@contentful/rich-text-types": "^16.3.0",
-    "@contentful/visual-sdk": "../visual-sdk"
+    "@contentful/experiences-validators": "file:../validators",
+    "@contentful/rich-text-types": "^16.3.0"
   },
   "peerDependencies": {
     "contentful": ">=10.6.0"

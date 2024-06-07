@@ -1,10 +1,11 @@
-import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
+import type { ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { isEqual } from 'lodash-es';
+import { getChildFromTree } from './getItem';
 
 export function updateNode(
   nodeId: string,
-  updatedNode: CompositionComponentNode,
-  node: CompositionComponentNode
+  updatedNode: ExperienceTreeNode,
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === nodeId) {
     node.data = updatedNode.data;
@@ -15,8 +16,8 @@ export function updateNode(
 }
 export function replaceNode(
   indexToReplace: number,
-  updatedNode: CompositionComponentNode,
-  node: CompositionComponentNode
+  updatedNode: ExperienceTreeNode,
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === updatedNode.parentId) {
     node.children = [
@@ -32,8 +33,8 @@ export function replaceNode(
 
 export function reorderChildrenNodes(
   nodeId: string,
-  updatedChildren: CompositionComponentNode[],
-  node: CompositionComponentNode
+  updatedChildren: ExperienceTreeNode[],
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === nodeId) {
     node.children = updatedChildren;
@@ -45,13 +46,13 @@ export function reorderChildrenNodes(
 
 export function addChildToNode(
   nodeId: string,
-  oldChildren: CompositionComponentNode[],
-  updatedChildren: CompositionComponentNode[],
-  node: CompositionComponentNode
+  oldChildren: ExperienceTreeNode[],
+  updatedChildren: ExperienceTreeNode[],
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id !== nodeId) {
     node.children.forEach((childNode) =>
-      addChildToNode(nodeId, oldChildren, updatedChildren, childNode)
+      addChildToNode(nodeId, oldChildren, updatedChildren, childNode),
     );
   }
 
@@ -73,57 +74,34 @@ export function addChildToNode(
       oldChildren.length,
       node.data.id,
       updatedChildren[updatedChildren.length - 1],
-      node
+      node,
     );
   }
-}
-
-export function removeChildFromNode(
-  nodeId: string,
-  oldChildren: CompositionComponentNode[],
-  updatedChildren: CompositionComponentNode[],
-  node: CompositionComponentNode
-) {
-  if (node.data.id !== nodeId) {
-    node.children.forEach((childNode) =>
-      removeChildFromNode(nodeId, oldChildren, updatedChildren, childNode)
-    );
-  }
-
-  let changed = false;
-
-  oldChildren.forEach((child, i) => {
-    if (isEqual(child, updatedChildren[i])) {
-      return;
-    }
-
-    // we only care about the first instance of an unequal node
-    if (changed) {
-      return;
-    }
-    changed = true;
-    removeChildNode(i, nodeId, node);
-  });
 }
 
 export function removeChildNode(
   indexToRemove: number,
+  nodeId: string,
   parentNodeId: string,
-  node: CompositionComponentNode
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === parentNodeId) {
-    node.children.splice(indexToRemove, 1);
+    const childIndex = node.children.findIndex((child) => child.data.id === nodeId);
+
+    node.children.splice(childIndex === -1 ? indexToRemove : childIndex, 1);
     return;
   }
 
-  node.children.forEach((childNode) => removeChildNode(indexToRemove, parentNodeId, childNode));
+  node.children.forEach((childNode) =>
+    removeChildNode(indexToRemove, nodeId, parentNodeId, childNode),
+  );
 }
 
 export function addChildNode(
   indexToAdd: number,
   parentNodeId: string,
-  nodeToAdd: CompositionComponentNode,
-  node: CompositionComponentNode
+  nodeToAdd: ExperienceTreeNode,
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === parentNodeId) {
     node.children = [
@@ -136,7 +114,7 @@ export function addChildNode(
   }
 
   node.children.forEach((childNode) =>
-    addChildNode(indexToAdd, parentNodeId, nodeToAdd, childNode)
+    addChildNode(indexToAdd, parentNodeId, nodeToAdd, childNode),
   );
 }
 
@@ -144,7 +122,7 @@ export function reorderChildNode(
   oldIndex: number,
   newIndex: number,
   parentNodeId: string,
-  node: CompositionComponentNode
+  node: ExperienceTreeNode,
 ) {
   if (node.data.id === parentNodeId) {
     // Remove the child from the old position
@@ -156,18 +134,23 @@ export function reorderChildNode(
   }
 
   node.children.forEach((childNode) =>
-    reorderChildNode(oldIndex, newIndex, parentNodeId, childNode)
+    reorderChildNode(oldIndex, newIndex, parentNodeId, childNode),
   );
 }
 
-export function countNodes(node: CompositionComponentNode): number {
-  // Count the current node
-  let count = 1;
+export function reparentChildNode(
+  oldIndex: number,
+  newIndex: number,
+  sourceNodeId: string,
+  destinationNodeId: string,
+  node: ExperienceTreeNode,
+) {
+  const nodeToMove = getChildFromTree(sourceNodeId, oldIndex, node);
 
-  // Recursively count the children
-  node.children.forEach((child) => {
-    count += countNodes(child);
-  });
+  if (!nodeToMove) {
+    return;
+  }
 
-  return count;
+  removeChildNode(oldIndex, nodeToMove.data.id, sourceNodeId, node);
+  addChildNode(newIndex, destinationNodeId, nodeToMove, node);
 }

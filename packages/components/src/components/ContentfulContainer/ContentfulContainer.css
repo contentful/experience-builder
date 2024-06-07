@@ -1,20 +1,47 @@
-#ContentfulContainer.defaultStyles {
+.contentful-container {
   position: relative;
   display: flex;
   box-sizing: border-box;
+  pointer-events: all;
 }
 
-#ContentfulContainer.defaultStyles::-webkit-scrollbar {
+.contentful-container::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
 
+.cf-single-column-wrapper {
+  position: relative;
+}
+
+.cf-container-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.cf-container-label {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: clip;
+  font-family: var(--exp-builder-font-stack-primary);
+  font-size: 12px;
+  color: var(--exp-builder-gray400);
+  z-index: 10;
+}
+
 /* used by ContentfulSectionAsHyperlink.tsx */
-.cf-section-link,
-.cf-section-link:active,
-.cf-section-link:visited,
-.cf-section-link:hover,
-.cf-section-link:read-write,
-.cf-section-link:focus-visible {
+.contentful-container-link,
+.contentful-container-link:active,
+.contentful-container-link:visited,
+.contentful-container-link:hover,
+.contentful-container-link:read-write,
+.contentful-container-link:focus-visible {
   color: inherit;
   text-decoration: unset;
   outline: unset;

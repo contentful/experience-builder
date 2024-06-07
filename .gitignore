@@ -6,14 +6,18 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+*.tgz
+.npmrc
 
 node_modules
 build
 .yarn
 dist
 reports
+coverage
 dist-ssr
 *.local
+*.local.*
 .yarnrc.yml
 vite.config.ts.timestamp-*
 
@@ -31,12 +35,13 @@ vite.config.ts.timestamp-*
 
 tmp/
 
-# Necessary for pushing to alternative npm registry
-.npmrc
-
 .vercel
-# Ignore built styles.css file in packages/components
-/packages/components/styles.css
 
 # Ingore .nx local files
 .nx
+
+# Ingore .env local files
+.env
+
+**/cypress/screenshots/**
+**/cypress/videos/**

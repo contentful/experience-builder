@@ -1,15 +1,15 @@
 import type {
   ValuesByBreakpoint,
   Breakpoint,
-  CompositionVariableValueType,
+  PrimitiveValue,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import {
   mediaQueryMatcher,
   getFallbackBreakpointIndex,
   getActiveBreakpointIndex,
   getValueForBreakpoint,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import { useCallback, useEffect, useState } from 'react';
 
 // TODO: In order to support integrations without React, we should extract this heavy logic into simple
@@ -22,21 +22,22 @@ import { useCallback, useEffect, useState } from 'react';
  * and then decending by screen width. For mobile-first designs, the order would be ascending
  */
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
-  const [mediaQueryMatchers, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
-
-  const [mediaQueryMatches, setMediaQueryMatches] =
-    useState<Record<string, boolean>>(initialMediaQueryMatches);
+  const [mediaQueryMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({});
 
   const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
 
   // Register event listeners to update the media query states
   useEffect(() => {
+    const [mediaQueryMatchers, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
+    // Store the media query state in the beginning to initialise the state
+    setMediaQueryMatches(initialMediaQueryMatches);
     const eventListeners = mediaQueryMatchers.map(({ id, signal }) => {
       const onChange = () =>
         setMediaQueryMatches((prev) => ({
           ...prev,
           [id]: signal.matches,
         }));
+
       signal.addEventListener('change', onChange);
       return onChange;
     });
@@ -46,27 +47,26 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
         mediaQueryMatchers[index].signal.removeEventListener('change', eventListener);
       });
     };
-  }, [mediaQueryMatchers]);
+    // Only re-setup all listeners when the breakpoint definition changed
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [breakpoints]);
 
   const activeBreakpointIndex = getActiveBreakpointIndex(
     breakpoints,
     mediaQueryMatches,
-    fallbackBreakpointIndex
+    fallbackBreakpointIndex,
   );
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
-    (
-      valuesByBreakpoint: ValuesByBreakpoint,
-      variableName: string
-    ): CompositionVariableValueType => {
+    (valuesByBreakpoint: ValuesByBreakpoint, variableName: string): PrimitiveValue => {
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,
         activeBreakpointIndex,
-        variableName
+        variableName,
       );
     },
-    [activeBreakpointIndex, breakpoints]
+    [activeBreakpointIndex, breakpoints],
   );
 
   return { resolveDesignValue };

@@ -25,16 +25,15 @@
     "prepare": "husky install",
     "build": "lerna run build",
     "start": "lerna run --stream start",
-    "prepublish": "lerna run build",
     "prettier:check": "lerna run prettier:check",
-    "cm": "git-cz"
+    "cm": "git-cz",
+    "depcruise": "lerna run depcruise"
   },
-  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^18.0.0",
     "@commitlint/config-conventional": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
     "commitizen": "4.3.0",
     "concurrently": "^8.2.2",
     "eslint": "^8.52.0",
@@ -42,12 +41,12 @@
     "eslint-plugin-import-helpers": "^1.2.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "husky": "^8.0.3",
-    "lerna": "^7.4.1",
+    "husky": "^9.0.10",
+    "lerna": "^8.0.2",
     "lint-staged": "^15.0.1",
-    "nx": "16.10.0",
+    "nx": "^18.0.4",
     "nx-cloud": "latest",
-    "prettier": "2.8.8"
+    "prettier": "3.2.5"
   },
   "lint-staged": {
     "*.{t,j}s?(x)": [

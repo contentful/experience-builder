@@ -1,58 +1,54 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { omit } from 'lodash-es';
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore, resolveHyperlinkPattern } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
-} from '@contentful/experience-builder-core/constants';
+  CONTENTFUL_COMPONENTS,
+  HYPERLINK_DEFAULT_PATTERN,
+} from '@contentful/experiences-core/constants';
 import type {
-  Breakpoint,
-  CompositionDataSource,
-  CompositionNode,
-  CompositionUnboundValues,
-  CompositionVariableValueType,
-  ExperienceEntry,
+  ComponentTreeNode,
+  DesignValue,
+  PrimitiveValue,
   ResolveDesignValueType,
   StyleProps,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
+import { checkIsAssemblyNode, transformBoundContentValue } from '@contentful/experiences-core';
+import { useClassName } from '../../hooks/useClassName';
 import {
-  buildCfStyles,
-  checkIsAssembly,
-  transformContentValue,
-} from '@contentful/experience-builder-core';
-import { useStyleTag } from '../../hooks/useStyleTag';
-import { ContentfulContainer } from '@contentful/experience-builder-components';
+  Columns,
+  ContentfulContainer,
+  SingleColumn,
+} from '@contentful/experiences-components-react';
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
+import { Entry } from 'contentful';
 
 type CompositionBlockProps = {
-  node: CompositionNode;
+  node: ComponentTreeNode;
   locale: string;
-  dataSource: CompositionDataSource;
-  unboundValues: CompositionUnboundValues;
-  entityStore?: EntityStore;
-  breakpoints: Breakpoint[];
+  entityStore: EntityStore;
+  hyperlinkPattern?: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
-  usedComponents: ExperienceEntry['fields']['usedComponents'];
 };
 
 export const CompositionBlock = ({
   node: rawNode,
   locale,
   entityStore,
-  dataSource,
-  unboundValues,
-  breakpoints,
+  hyperlinkPattern,
   resolveDesignValue,
-  usedComponents,
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
-    () => checkIsAssembly({ componentId: rawNode.definitionId, usedComponents }),
-    [rawNode.definitionId, usedComponents]
+    () =>
+      checkIsAssemblyNode({
+        componentId: rawNode.definitionId,
+        usedComponents: entityStore.usedComponents,
+      }),
+    [entityStore.usedComponents, rawNode.definitionId],
   );
 
   const node = useMemo(() => {
@@ -82,53 +78,105 @@ export const CompositionBlock = ({
       return {};
     }
 
-    const propMap: Record<string, CompositionVariableValueType> = {};
+    const propMap: Record<string, PrimitiveValue> = {
+      cfSsrClassName: node.variables.cfSsrClassName
+        ? resolveDesignValue(
+            (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+            'cfSsrClassName',
+          )
+        : undefined,
+    };
 
-    return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
-      switch (variable.type) {
-        case 'DesignValue':
-          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
-          break;
-        case 'BoundValue': {
-          const [, uuid, ...path] = variable.path.split('/');
-          const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-          let value = entityStore?.getValue(binding, path.slice(0, -1));
-          if (!value) {
-            const foundAssetValue = entityStore?.getValue(binding, [
-              ...path.slice(0, -2),
-              'fields',
-              'file',
-            ]);
-            if (foundAssetValue) {
-              value = foundAssetValue;
-            }
+    const props = Object.entries(componentRegistration.definition.variables).reduce(
+      (acc, [variableName, variableDefinition]) => {
+        const variable = node.variables[variableName];
+        if (!variable) return acc;
+
+        switch (variable.type) {
+          case 'DesignValue':
+            acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
+            break;
+          case 'BoundValue': {
+            const [, uuid] = variable.path.split('/');
+            const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
+
+            const value = transformBoundContentValue(
+              node.variables,
+              entityStore,
+              binding,
+              resolveDesignValue,
+              variableName,
+              variableDefinition,
+              variable.path,
+            );
+            acc[variableName] = value;
+            break;
           }
-          const variableDefinition = componentRegistration.definition.variables[variableName];
-          acc[variableName] = transformContentValue(value, variableDefinition);
-          break;
+
+          case 'HyperlinkValue': {
+            const binding = entityStore.dataSource[variable.linkTargetKey];
+            const hyperlinkEntry = entityStore.getEntryOrAsset(binding, variable.linkTargetKey);
+
+            const value = resolveHyperlinkPattern(
+              componentRegistration.definition.hyperlinkPattern ||
+                hyperlinkPattern ||
+                HYPERLINK_DEFAULT_PATTERN,
+              hyperlinkEntry as Entry,
+              locale,
+            );
+            if (value) {
+              acc[variableName] = value;
+            }
+            break;
+          }
+          case 'UnboundValue': {
+            const uuid = variable.key;
+            acc[variableName] = entityStore.unboundValues[uuid]?.value;
+            break;
+          }
+          case 'ComponentValue':
+            // We're rendering a pattern entry. Content cannot be set for ComponentValue type properties
+            // directly in the pattern so we can safely use the default value
+            acc[variableName] = variableDefinition.defaultValue;
+            break;
+          default:
+            break;
         }
-        case 'UnboundValue': {
-          const uuid = variable.key;
-          acc[variableName] = (entityStore?.unboundValues || unboundValues)[uuid]?.value;
-          break;
+        return acc;
+      },
+      propMap,
+    );
+
+    if (componentRegistration.definition.slots) {
+      for (const slotId in componentRegistration.definition.slots) {
+        const slotNode = node.children.find((child) => child.slotId === slotId);
+        if (slotNode) {
+          props[slotId] = (
+            <CompositionBlock
+              node={slotNode}
+              locale={locale}
+              hyperlinkPattern={hyperlinkPattern}
+              entityStore={entityStore}
+              resolveDesignValue={resolveDesignValue}
+            />
+          );
         }
-        default:
-          break;
       }
-      return acc;
-    }, propMap);
+    }
+
+    return props;
   }, [
     componentRegistration,
     isAssembly,
+    node.children,
     node.variables,
     resolveDesignValue,
-    dataSource,
     entityStore,
-    unboundValues,
+    hyperlinkPattern,
+    locale,
   ]);
 
-  const cfStyles = buildCfStyles(nodeProps);
-  const { className } = useStyleTag({ styles: cfStyles });
+  const className = useClassName({ props: nodeProps, node });
 
   if (!componentRegistration) {
     return null;
@@ -138,25 +186,25 @@ export const CompositionBlock = ({
 
   const children =
     componentRegistration.definition.children === true
-      ? node.children.map((childNode: CompositionNode, index) => {
+      ? node.children.map((childNode: ComponentTreeNode, index) => {
           return (
             <CompositionBlock
               node={childNode}
               key={index}
               locale={locale}
-              dataSource={dataSource}
-              unboundValues={unboundValues}
+              hyperlinkPattern={hyperlinkPattern}
               entityStore={entityStore}
-              breakpoints={breakpoints}
               resolveDesignValue={resolveDesignValue}
-              usedComponents={usedComponents}
             />
           );
         })
       : null;
 
-  // remove CONTENTFUL_SECTION_ID when all customers are using 2023-09-28 schema version
-  if ([CONTENTFUL_CONTAINER_ID, CONTENTFUL_SECTION_ID].includes(node.definitionId)) {
+  if (
+    [CONTENTFUL_COMPONENTS.container.id, CONTENTFUL_COMPONENTS.section.id].includes(
+      node.definitionId,
+    )
+  ) {
     return (
       <ContentfulContainer
         editorMode={false}
@@ -168,12 +216,32 @@ export const CompositionBlock = ({
     );
   }
 
+  if (node.definitionId === CONTENTFUL_COMPONENTS.columns.id) {
+    return (
+      <Columns editorMode={false} className={className}>
+        {children}
+      </Columns>
+    );
+  }
+
+  if (node.definitionId === CONTENTFUL_COMPONENTS.singleColumn.id) {
+    return (
+      <SingleColumn editorMode={false} className={className}>
+        {children}
+      </SingleColumn>
+    );
+  }
+
+  //List explicit style props that will end up being passed to the component
+  const stylesToKeep = ['cfImageAsset'];
+  const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
+
   return React.createElement(
     component,
     {
-      ...omit(nodeProps, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+      ...omit(nodeProps, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
       className,
     },
-    children
+    children ?? (typeof nodeProps.children === 'string' ? nodeProps.children : null),
   );
 };

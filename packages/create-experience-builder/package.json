@@ -1,11 +1,12 @@
 {
-  "name": "create-experience-builder",
-  "version": "0.0.2-alpha.2",
+  "name": "@contentful/create-experience-builder",
+  "private": true,
+  "version": "0.0.2-alpha.9",
   "description": "A CLI tool to get up and running with Contentful Experience Builder quickly",
-  "homepage": "https://github.com/contentful/experience-builder-toolkit/tree/next/packages/create-experience-builder#readme",
+  "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-experience-builder#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder-toolkit.git"
+    "url": "git+https://github.com/contentful/experience-builder.git"
   },
   "type": "module",
   "main": "./dist/index.js",
@@ -18,15 +19,19 @@
     "bin/**/*.*",
     "templates/**/*.*"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
-    "dev": "tsc -w",
+    "dev": "echo noop",
     "_prebuild": "npm uninstall -g && rimraf dist",
     "prebuild": "rimraf dist",
     "build": "tsc",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "_postbuild": "npm install -g",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "depcruise": "depcruise src"
   },
   "author": "",
   "license": "MIT",
@@ -42,7 +47,7 @@
     "@clack/prompts": "^0.7.0",
     "cross-spawn": "^7.0.3",
     "kleur": "^4.1.5",
-    "open": "^8.4.2",
+    "open": "^10.0.3",
     "yargs": "^17.7.2"
   }
 }

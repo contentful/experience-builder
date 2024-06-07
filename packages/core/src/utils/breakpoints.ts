@@ -1,5 +1,5 @@
 import { getDesignTokenRegistration } from '@/registries';
-import { Breakpoint, ValuesByBreakpoint } from '@/types';
+import { Breakpoint, PrimitiveValue, ValuesByBreakpoint } from '@/types';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
 
@@ -21,7 +21,7 @@ const toCSSMediaQuery = ({ query }: Breakpoint): string | undefined => {
 // Remove this helper when upgrading to TypeScript 5.0 - https://github.com/microsoft/TypeScript/issues/48829
 const findLast = <T>(
   array: Array<T>,
-  predicate: Parameters<Array<T>['find']>[0]
+  predicate: Parameters<Array<T>['find']>[0],
 ): T | undefined => {
   return array.reverse().find(predicate);
 };
@@ -44,21 +44,21 @@ export const mediaQueryMatcher = (breakpoints: Breakpoint[]) => {
 
   return [mediaQueryMatchers, mediaQueryMatches] as [
     typeof mediaQueryMatchers,
-    typeof mediaQueryMatches
+    typeof mediaQueryMatches,
   ];
 };
 
 export const getActiveBreakpointIndex = (
   breakpoints: Breakpoint[],
   mediaQueryMatches: Record<string, boolean>,
-  fallbackBreakpointIndex: number
+  fallbackBreakpointIndex: number,
 ) => {
   // The breakpoints are ordered (desktop-first: descending by screen width)
   const breakpointsWithMatches = breakpoints.map(({ id }, index) => ({
     id,
     index,
     // The fallback breakpoint with wildcard query will always match
-    isMatch: mediaQueryMatches[id] ?? true,
+    isMatch: mediaQueryMatches[id] ?? index === fallbackBreakpointIndex,
   }));
 
   // Find the last breakpoint in the list that matches (desktop-first: the narrowest one)
@@ -71,7 +71,7 @@ export const getFallbackBreakpointIndex = (breakpoints: Breakpoint[]) => {
   // If there is none, we just take the first one in the list.
   return Math.max(
     breakpoints.findIndex(({ query }) => query === '*'),
-    0
+    0,
   );
 };
 
@@ -83,37 +83,44 @@ const builtInStylesWithDesignTokens = [
   'cfHeight',
   'cfBackgroundColor',
   'cfBorder',
+  'cfBorderRadius',
   'cfFontSize',
   'cfLineHeight',
   'cfLetterSpacing',
   'cfTextColor',
+  'cfMaxWidth',
 ];
 
 export const getValueForBreakpoint = (
   valuesByBreakpoint: ValuesByBreakpoint,
   breakpoints: Breakpoint[],
   activeBreakpointIndex: number,
-  variableName: string
+  variableName: string,
 ) => {
-  const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
-  const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id;
+  const eventuallyResolveDesignTokens = (value: PrimitiveValue) => {
+    // For some built-in design propertier, we support design tokens
+    if (builtInStylesWithDesignTokens.includes(variableName)) {
+      return getDesignTokenRegistration(value as string, variableName);
+    }
+    // For all other properties, we just return the breakpoint-specific value
+    return value;
+  };
+
   if (valuesByBreakpoint instanceof Object) {
     // Assume that the values are sorted by media query to apply the cascading CSS logic
     for (let index = activeBreakpointIndex; index >= 0; index--) {
       const breakpointId = breakpoints[index].id;
-      if (builtInStylesWithDesignTokens.includes(variableName)) {
-        const breakpointValue =
-          valuesByBreakpoint[breakpointId] || valuesByBreakpoint[fallbackBreakpointId];
-
-        return getDesignTokenRegistration(breakpointValue, variableName);
-      }
       if (valuesByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade
-        return valuesByBreakpoint[breakpointId];
+        return eventuallyResolveDesignTokens(valuesByBreakpoint[breakpointId]);
       }
     }
-    return valuesByBreakpoint[fallbackBreakpointId];
+    // If no breakpoint matched, we search and apply the fallback breakpoint
+    const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+    const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id;
+    return eventuallyResolveDesignTokens(valuesByBreakpoint[fallbackBreakpointId]);
   } else {
+    // Old design properties did not support breakpoints, keep for backward compatibility
     return valuesByBreakpoint;
   }
 };

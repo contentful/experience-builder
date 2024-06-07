@@ -1,10 +1,10 @@
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-core/types';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Grid, Select, Text, TextInput } from '@contentful/f36-components';
 import { useVariableState } from '@/hooks/useVariableState';
 import { styles } from './styles';
 import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
-import { CompositionComponentNode } from '@contentful/experience-builder/dist/types';
+import { EMPTY_CONTAINER_HEIGHT } from '@contentful/experiences-core/constants';
 
 const heightVariableName = 'cfHeight';
 const widthVariableName = 'cfWidth';
@@ -36,7 +36,7 @@ const transformValuesBySizingOption = (sizingOption: SizingOptions, value: strin
   }
 
   if (sizingOption === 'fixed') {
-    return '200px';
+    return EMPTY_CONTAINER_HEIGHT;
   }
 
   if (sizingOption === 'fit') {
@@ -152,7 +152,7 @@ export const SizeSelector = ({ variableName, variableDefinition, label }: SizeSe
         </TextInput.Group>
       );
     },
-    [isNumberInputFocused, label, setValue, value]
+    [isNumberInputFocused, label, setValue, value],
   );
 
   return (

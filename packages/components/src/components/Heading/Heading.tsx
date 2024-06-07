@@ -1,6 +1,6 @@
 import { combineClasses } from '@/utils/combineClasses';
 import React from 'react';
-
+import './Heading.css';
 export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   /**
    * The text to display in the heading. If not provided, children will be used instead.

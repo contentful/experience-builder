@@ -1,4 +1,4 @@
-import { CONTENTFUL_CONTAINER_ID, ComponentDefinition } from '@contentful/experience-builder';
+import { CONTENTFUL_COMPONENTS, ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { builtInStyles } from './variables';
 
 const cloneObject = <T>(targetObject: T): T => {
@@ -18,7 +18,7 @@ const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinit
 };
 
 const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
-  if ([CONTENTFUL_CONTAINER_ID].includes(componentDefinition.id)) {
+  if ([CONTENTFUL_COMPONENTS.container.id].includes(componentDefinition.id)) {
     return componentDefinition;
   }
 

@@ -1,6 +1,9 @@
-import { EditorEntityStore, RequestedEntitiesMessage } from '@contentful/visual-sdk';
 import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
 import { sendMessage } from '../communication/sendMessage';
+import { EditorEntityStore } from './EditorEntityStore';
+import { RequestedEntitiesMessage } from '../types';
+import { get } from '@/utils/get';
+import { transformAssetFileToUrl } from './value-transformers';
 
 // The default of 3s in the EditorEntityStore is sometimes timing out and
 // leads to not rendering bound content and assemblies.
@@ -8,11 +11,10 @@ const REQUEST_TIMEOUT = 10000;
 
 export class EditorModeEntityStore extends EditorEntityStore {
   public locale: string;
-
-  constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
+  constructor({ entities, locale }: { entities: Array<Asset | Entry>; locale: string }) {
     console.debug(
-      `[exp-builder.sdk] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
-      { entities }
+      `[experiences-sdk-react] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
+      { entities },
     );
 
     const subscribe = (method: unknown, cb: (payload: RequestedEntitiesMessage) => void) => {
@@ -55,12 +57,17 @@ export class EditorModeEntityStore extends EditorEntityStore {
   async fetchEntities({
     missingEntryIds,
     missingAssetIds,
+    skipCache = false,
   }: {
     missingEntryIds: string[];
     missingAssetIds: string[];
+    skipCache?: boolean;
   }) {
     // Entries and assets will be stored in entryMap and assetMap
-    await Promise.all([this.fetchEntries(missingEntryIds), this.fetchAssets(missingAssetIds)]);
+    await Promise.all([
+      this.fetchEntries(missingEntryIds, skipCache),
+      this.fetchAssets(missingAssetIds, skipCache),
+    ]);
   }
 
   getMissingEntityIds(entityLinks: UnresolvedLink<'Entry' | 'Asset'>[]) {
@@ -76,17 +83,22 @@ export class EditorModeEntityStore extends EditorEntityStore {
     return { missingEntryIds, missingAssetIds };
   }
 
-  getValue(
-    entityLink: UnresolvedLink<'Entry' | 'Asset'> | undefined,
-    path: string[]
+  public getValue(
+    entityLinkOrEntity: UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset,
+    path: string[],
   ): string | undefined {
-    if (!entityLink || !entityLink.sys) return;
+    const entity = this.getEntryOrAsset(entityLinkOrEntity, path.join('/'));
 
-    const fieldValue = super.getValue(entityLink, path);
+    if (!entity) {
+      return;
+    }
+
+    const fieldValue = get<string>(entity, path);
 
     // walk around to render asset files
     return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
       ? (fieldValue as AssetFile).url
       : fieldValue;
+    return transformAssetFileToUrl(fieldValue);
   }
 }

@@ -5,46 +5,48 @@ import { Flex } from '../Layout/Flex';
 import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink';
 import type { ContentfulContainerAsHyperlinkProps } from './ContentfulContainerAsHyperlink';
 import { combineClasses } from '../../utils/combineClasses';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 
-export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (
-  sectionProps
-) => {
-  const { className, editorMode, children } = sectionProps;
+export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (props) => {
+  const { className, editorMode, children, cfHyperlink } = props;
 
-  if (sectionProps.cfHyperlink) {
-    return (
-      <ContentfulContainerAsHyperlink
-        className={className}
-        editorMode={editorMode}
-        cfHyperlink={sectionProps.cfHyperlink}
-        cfOpenInNewTab={sectionProps.cfOpenInNewTab}
-        {...sectionProps}>
-        {children}
-      </ContentfulContainerAsHyperlink>
-    );
+  if (cfHyperlink) {
+    return <ContentfulContainerAsHyperlink {...props}>{children}</ContentfulContainerAsHyperlink>;
   }
 
   if (editorMode === false) {
     return (
       <Flex
-        id="ContentfulContainer"
         data-test-id="contentful-container"
-        className={combineClasses(className, 'defaultStyles')}>
-        {(sectionProps as any).children}
+        className={combineClasses(className, 'contentful-container')}>
+        {children}
       </Flex>
     );
   }
 
-  const { renderDropzone, node } = sectionProps;
   // Extract properties that are only available in editor mode
+  const { renderDropzone, node } = props;
 
-  return renderDropzone(node, {
-    ['data-test-id']: 'contentful-container',
-    ['data-cf-node-id']: node.data.id,
-    ['data-cf-node-block-id']: node.data.blockId,
-    ['data-cf-node-block-type']: node.type,
-    id: 'ContentfulContainer',
-    className: combineClasses(className, 'defaultStyles'),
-    WrapperComponent: Flex,
-  });
+  const isEmpty = !node.children.length;
+
+  const renderDropzoneComponent = () => {
+    return renderDropzone(node, {
+      ['data-test-id']: 'contentful-container',
+      id: 'ContentfulContainer',
+      className: combineClasses('contentful-container', className),
+      WrapperComponent: Flex,
+    });
+  };
+
+  // Perform ternary so that we only render the wrapper div if the container is empty
+  return isEmpty ? (
+    <div className="cf-container-wrapper" data-ctfl-draggable-id={node.data.id}>
+      <div className="cf-container-label">
+        {node.data.blockId === CONTENTFUL_COMPONENTS.section.id ? 'Section' : 'Container'}
+      </div>
+      {renderDropzoneComponent()}
+    </div>
+  ) : (
+    renderDropzoneComponent()
+  );
 };

@@ -8,7 +8,7 @@ export interface EmptyContainerProps {
   isHoveringOnRoot?: boolean;
 }
 
-export const EmptyEditorContainer = ({ isDragging }: EmptyContainerProps) => {
+export const EmptyContainer = ({ isDragging }: EmptyContainerProps) => {
   return (
     <div
       className={classNames(styles.container, {
@@ -61,7 +61,7 @@ export const EmptyEditorContainer = ({ isDragging }: EmptyContainerProps) => {
         />
       </svg>
 
-      <span className={styles.label}>Add elements to begin</span>
+      <span className={styles.label}>Add components to begin</span>
     </div>
   );
 };

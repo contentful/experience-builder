@@ -2,9 +2,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
-import terser from '@rollup/plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import postcssImport from 'postcss-import';
+import nodeExternals from 'rollup-plugin-node-externals';
 
 export default [
   {
@@ -17,6 +17,7 @@ export default [
       },
     ],
     plugins: [
+      nodeExternals(),
       postcss({
         plugins: [postcssImport()],
         inject(cssVariableName) {
@@ -25,14 +26,12 @@ export default [
       }),
       resolve(),
       commonjs(),
-      typescript({ tsconfig: './tsconfig.json' }),
-      terser(),
+      typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true }),
     ],
-    external: [/node_modules/],
   },
   {
     input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
-    plugins: [dts()],
+    plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
   },
 ];

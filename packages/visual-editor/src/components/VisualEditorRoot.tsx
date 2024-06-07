@@ -1,38 +1,48 @@
 import React, { useEffect } from 'react';
-import { sendMessage } from '@contentful/experience-builder-core';
-import dragState from '@/utils/dragState';
+import { EntityStore, sendMessage } from '@contentful/experiences-core';
 import { RootRenderer } from './RootRenderer/RootRenderer';
-import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import SimulateDnD from '@/utils/simulateDnD';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useInitializeEditor } from '@/hooks/useInitializeEditor';
-import { useEntityStore } from '@/store/entityStore';
+import { useZoneStore } from '@/store/zone';
+import { CTFL_ZONE_ID, NEW_COMPONENT_ID } from '@/types/constants';
+import { useDraggedItemStore } from '@/store/draggedItem';
+import type { Experience } from '@contentful/experiences-core/types';
 import { useEditorStore } from '@/store/editor';
 
-export const VisualEditorRoot = () => {
+export const VisualEditorRoot = ({ experience }: { experience?: Experience<EntityStore> }) => {
   const initialized = useInitializeEditor();
-  const locale = useEditorStore((state) => state.locale);
+  const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
 
-  const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
+  const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
+  const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
 
   useEffect(() => {
-    if (!locale) {
-      return;
+    if (experience?.hyperlinkPattern) {
+      setHyperLinkPattern(experience.hyperlinkPattern);
     }
-
-    resetEntityStore(locale);
-  }, [locale, resetEntityStore]);
+  }, [experience?.hyperlinkPattern, setHyperLinkPattern]);
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      if ((e.target as HTMLElement)?.id === 'item') {
+      setMousePosition(e.clientX, e.clientY);
+
+      const target = e.target as HTMLElement;
+      const zoneId = target.closest(`[${CTFL_ZONE_ID}]`)?.getAttribute(CTFL_ZONE_ID);
+
+      if (zoneId) {
+        setHoveringZone(zoneId);
+      }
+
+      if (!SimulateDnD.isDragging) {
         return;
       }
 
-      if (!dragState.isDragStart) {
+      if (target.id === NEW_COMPONENT_ID) {
         return;
       }
 
-      simulateMouseEvent(e.pageX, e.pageY);
+      SimulateDnD.updateDrag(e.clientX, e.clientY);
 
       sendMessage(OUTGOING_EVENTS.MouseMove, {
         clientX: e.pageX,
@@ -40,17 +50,12 @@ export const VisualEditorRoot = () => {
       });
     };
 
-    const onMouseUp = () => {
-      sendMessage(OUTGOING_EVENTS.MouseUp);
-    };
-
     document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
 
     return () => {
       document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!initialized) return null;

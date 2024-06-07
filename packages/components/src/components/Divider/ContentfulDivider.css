@@ -1,0 +1,16 @@
+.cf-divider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.cf-divider::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  bottom: -5px;
+  right: -5px;
+  pointer-events: all;
+}

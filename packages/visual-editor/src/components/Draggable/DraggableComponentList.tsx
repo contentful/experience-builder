@@ -1,6 +1,13 @@
-import { DRAGGABLE_HEIGHT, DRAGGABLE_WIDTH } from '@/types/constants';
+import useDraggablePosition from '@/hooks/useDraggablePosition';
+import {
+  COMPONENT_LIST_ID,
+  DRAGGABLE_HEIGHT,
+  DRAGGABLE_WIDTH,
+  DraggablePosition,
+  NEW_COMPONENT_ID,
+} from '@/types/constants';
 import { Draggable, Droppable } from '@hello-pangea/dnd';
-import React from 'react';
+import React, { useRef } from 'react';
 
 interface Props {
   id: string;
@@ -18,29 +25,43 @@ function getStyle(style, snapshot) {
 }
 
 const DraggableContainer: React.FC<Props> = ({ id }) => {
+  const ref = useRef<HTMLElement | null>(null);
+
+  useDraggablePosition({
+    draggableId: id,
+    draggableRef: ref,
+    position: DraggablePosition.CENTERED,
+  });
+
   return (
     <div
-      id="component-list"
+      id={COMPONENT_LIST_ID}
       style={{
         position: 'absolute',
         top: 0,
         left: 0,
+        pointerEvents: 'none',
         zIndex: -1,
       }}>
-      <Droppable droppableId={`component-list`} isDropDisabled>
+      <Droppable droppableId={COMPONENT_LIST_ID} isDropDisabled>
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             <Draggable draggableId={id} key={id} index={0}>
               {(provided, snapshot) => (
                 <div
-                  id="item"
-                  ref={provided.innerRef}
+                  id={NEW_COMPONENT_ID}
+                  data-ctfl-dragging-element
+                  ref={(node) => {
+                    provided.innerRef(node);
+                    ref.current = node;
+                  }}
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
                   style={{
                     ...getStyle(provided.draggableProps.style, snapshot),
                     width: DRAGGABLE_WIDTH,
                     height: DRAGGABLE_HEIGHT,
+                    pointerEvents: 'none',
                   }}
                 />
               )}

@@ -7,10 +7,9 @@ export const SCROLL_STATES = {
 export const OUTGOING_EVENTS = {
   Connected: 'connected',
   DesignTokens: 'registerDesignTokens',
+  RegisteredBreakpoints: 'registeredBreakpoints',
   HoveredSection: 'hoveredSection',
   MouseMove: 'mouseMove',
-  MouseUp: 'mouseUp',
-  MouseDown: 'mouseDown',
   NewHoveredElement: 'newHoveredElement',
   ComponentSelected: 'componentSelected',
   RegisteredComponents: 'registeredComponents',
@@ -23,32 +22,28 @@ export const OUTGOING_EVENTS = {
   UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
+  ComponentMoveStarted: 'componentMoveStarted',
+  ComponentMoveEnded: 'componentMoveEnded',
+  OutsideCanvasClick: 'outsideCanvasClick',
+  SDKFeatures: 'sdkFeatures',
 };
 
 export const INCOMING_EVENTS = {
   RequestEditorMode: 'requestEditorMode',
-  CompositionUpdated: 'componentTreeUpdated',
+  ExperienceUpdated: 'componentTreeUpdated',
   ComponentDraggingChanged: 'componentDraggingChanged',
   ComponentDragCanceled: 'componentDragCanceled',
   ComponentDragStarted: 'componentDragStarted',
   ComponentDragEnded: 'componentDragEnded',
+  ComponentMoveEnded: 'componentMoveEnded',
   CanvasResized: 'canvasResized',
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
-  /**
-   * @deprecated use `AssembliesAdded` instead. This will be removed in version 5.
-   * In the meanwhile, the experience builder will send the old and the new event to support multiple SDK versions.
-   */
-  DesignComponentsAdded: 'designComponentsAdded',
-  /**
-   * @deprecated use `AssembliesRegistered` instead. This will be removed in version 5.
-   * In the meanwhile, the experience builder will send the old and the new event to support multiple SDK versions.
-   */
-  DesignComponentsRegistered: 'designComponentsRegistered',
   AssembliesAdded: 'assembliesAdded',
   AssembliesRegistered: 'assembliesRegistered',
   InitEditor: 'initEditor',
+  MouseMove: 'mouseMove',
 };
 
 export const INTERNAL_EVENTS = {
@@ -61,27 +56,56 @@ export const VISUAL_EDITOR_EVENTS = {
 };
 
 export const VISUAL_EDITOR_CONTAINER_ID = 'cf-visual-editor';
-export const CONTENTFUL_SECTION_ID = 'contentful-section'; // TODO: remove me once all customers are using 2023-09-28 schema version
-export const CONTENTFUL_CONTAINER_ID = 'contentful-container';
-export const CONTENTFUL_SECTION_NAME = 'Section'; // TODO: remove me once all customers are using 2023-09-28 schema version
-export const CONTENTFUL_CONTAINER_NAME = 'Container';
 export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component';
+export const CONTENTFUL_DEFAULT_CATEGORY = 'Contentful';
+
+export const CONTENTFUL_COMPONENTS = {
+  section: {
+    id: 'contentful-section',
+    name: 'Section',
+  },
+  container: {
+    id: 'contentful-container',
+    name: 'Container',
+  },
+  columns: {
+    id: 'contentful-columns',
+    name: 'Columns',
+  },
+  singleColumn: {
+    id: 'contentful-single-column',
+    name: 'Column',
+  },
+  button: {
+    id: 'contentful-button',
+    name: 'Button',
+  },
+  heading: {
+    id: 'contentful-heading',
+    name: 'Heading',
+  },
+  image: {
+    id: 'contentful-image',
+    name: 'Image',
+  },
+  richText: {
+    id: 'contentful-richText',
+    name: 'Rich Text',
+  },
+  text: {
+    id: 'contentful-text',
+    name: 'Text',
+  },
+  divider: {
+    id: 'contentful-divider',
+    name: 'Divider',
+  },
+};
+
 export const ASSEMBLY_NODE_TYPE = 'assembly';
 export const ASSEMBLY_DEFAULT_CATEGORY = 'Assemblies';
 export const ASSEMBLY_BLOCK_NODE_TYPE = 'assemblyBlock';
 export const ASSEMBLY_NODE_TYPES = [ASSEMBLY_NODE_TYPE, ASSEMBLY_BLOCK_NODE_TYPE];
-
-/** @deprecated use `ASSEMBLY_NODE_TYPE` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_NODE_TYPE = 'designComponent';
-/** @deprecated use `ASSEMBLY_DEFAULT_CATEGORY` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_DEFAULT_CATEGORY = 'Design Components';
-/** @deprecated use `ASSEMBLY_BLOCK_NODE_TYPE` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_BLOCK_NODE_TYPE = 'designComponentBlock';
-/** @deprecated use `ASSEMBLY_NODE_TYPES` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_NODE_TYPES = [
-  DESIGN_COMPONENT_NODE_TYPE,
-  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
-];
 export const LATEST_SCHEMA_VERSION = '2023-09-28';
 export const CF_STYLE_ATTRIBUTES = [
   'cfHorizontalAlignment',
@@ -92,13 +116,15 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfWidth',
   'cfMaxWidth',
   'cfHeight',
+  'cfImageAsset',
+  'cfImageOptions',
+  'cfBackgroundImageUrl',
+  'cfBackgroundImageOptions',
   'cfFlexDirection',
   'cfFlexWrap',
   'cfBorder',
+  'cfBorderRadius',
   'cfGap',
-  'cfBackgroundImageUrl',
-  'cfBackgroundImageScaling',
-  'cfBackgroundImageAlignment',
   'cfFontSize',
   'cfFontWeight',
   'cfLineHeight',
@@ -113,6 +139,21 @@ export const CF_STYLE_ATTRIBUTES = [
   // we need to keep those in this constant array
   // so that omit() in <VisualEditorBlock> and <CompositionBlock>
   // can filter them out and not pass as props
+  'cfBackgroundImageScaling',
+  'cfBackgroundImageAlignment',
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',
 ];
+
+export const EMPTY_CONTAINER_HEIGHT = '80px';
+
+export const HYPERLINK_DEFAULT_PATTERN = `/{locale}/{entry.fields.slug}/`;
+
+export const DEFAULT_IMAGE_WIDTH = '500px';
+
+export enum PostMessageMethods {
+  REQUEST_ENTITIES = 'REQUEST_ENTITIES',
+  REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',
+}
+
+export const SUPPORTED_IMAGE_FORMATS = ['jpg', 'png', 'webp', 'gif', 'avif'] as const;

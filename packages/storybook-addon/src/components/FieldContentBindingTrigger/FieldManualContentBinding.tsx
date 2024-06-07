@@ -10,11 +10,7 @@ import {
 import React, { useMemo, useState } from 'react';
 import tokens from '@contentful/f36-tokens';
 import { Document } from '@contentful/rich-text-types';
-import {
-  CONTENTFUL_SECTION_ID,
-  CONTENTFUL_CONTAINER_ID,
-  ComponentDefinition,
-} from '@contentful/experience-builder';
+import { CONTENTFUL_COMPONENTS, ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { css } from 'emotion';
 import { useBindingContext } from './FieldContentBindingContext';
 
@@ -63,8 +59,8 @@ export const FieldManualContentBinding = ({
 
   const toggleText = useMemo(() => {
     if (
-      componentDefinition?.id === CONTENTFUL_SECTION_ID ||
-      componentDefinition?.id === CONTENTFUL_CONTAINER_ID
+      componentDefinition?.id === CONTENTFUL_COMPONENTS.section.id ||
+      componentDefinition?.id === CONTENTFUL_COMPONENTS.container.id
     ) {
       return 'Open in new tab';
     }
@@ -90,7 +86,7 @@ export const FieldManualContentBinding = ({
                   <Select.Option value={validation.value} key={`${validation.value}-${index}`}>
                     {validation.displayName || validation.value}
                   </Select.Option>
-                )
+                ),
               )}
             </Select>
           </FormControl>

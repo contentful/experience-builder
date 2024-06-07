@@ -2,13 +2,9 @@ import type {
   ComponentRegistration,
   ComponentDefinition,
   Link,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 
-import {
-  CONTENTFUL_CONTAINER_ID,
-  CONTENTFUL_SECTION_ID,
-  ASSEMBLY_DEFAULT_CATEGORY,
-} from '@contentful/experience-builder-core/constants';
+import { ASSEMBLY_DEFAULT_CATEGORY } from '@contentful/experiences-core/constants';
 
 // Note: During development, the hot reloading might empty this and it
 // stays empty leading to not rendering assemblies. Ideally, this is
@@ -22,12 +18,7 @@ export const setAssemblies = (assemblies: Link<'Entry'>[]) => {
 
 export const componentRegistry = new Map<string, ComponentRegistration>();
 
-export const getComponentRegistration = (id: string) => {
-  if (id === CONTENTFUL_SECTION_ID) {
-    return componentRegistry.get(CONTENTFUL_CONTAINER_ID);
-  }
-  return componentRegistry.get(id);
-};
+export const getComponentRegistration = (id: string) => componentRegistry.get(id);
 
 export const addComponentRegistration = (componentRegistration: ComponentRegistration) => {
   componentRegistry.set(componentRegistration.definition.id, componentRegistration);

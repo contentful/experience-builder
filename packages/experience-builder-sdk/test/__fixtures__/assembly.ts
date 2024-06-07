@@ -1,12 +1,9 @@
 import {
-  CONTENTFUL_CONTAINER_ID,
+  CONTENTFUL_COMPONENTS,
   ASSEMBLY_NODE_TYPE,
   LATEST_SCHEMA_VERSION,
-} from '@contentful/experience-builder-core/constants';
-import type {
-  CompositionComponentNode,
-  SchemaVersions,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/constants';
+import type { ExperienceTreeNode, SchemaVersions } from '@contentful/experiences-core/types';
 
 type createAssemblyEntryArgs = {
   schemaVersion: SchemaVersions;
@@ -56,7 +53,7 @@ export const createAssemblyEntry = ({
       componentTree: {
         children: [
           {
-            definitionId: CONTENTFUL_CONTAINER_ID,
+            definitionId: CONTENTFUL_COMPONENTS.container.id,
             variables: {},
             children: [
               {
@@ -72,7 +69,7 @@ export const createAssemblyEntry = ({
             ],
           },
         ],
-        breakpoints: [],
+        breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
         schemaVersion,
       },
       dataSource: {},
@@ -84,7 +81,7 @@ export const createAssemblyEntry = ({
       componentSettings: {
         variableDefinitions: {
           [assemblyGeneratedVariableName]: {
-            id: 'text',
+            displayName: 'Text',
             name: 'Text',
             type: 'Text',
             defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },
@@ -110,8 +107,8 @@ export const createAssemblyNode = ({
   unboundValue = 'New year Eve',
   unboundValueKey = undefined,
   boundValueKey = undefined,
-}: createAssemblyNodeArgs): CompositionComponentNode => {
-  const node: CompositionComponentNode = {
+}: createAssemblyNodeArgs): ExperienceTreeNode => {
+  const node: ExperienceTreeNode = {
     type: ASSEMBLY_NODE_TYPE,
     data: {
       blockId,

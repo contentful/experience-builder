@@ -1,40 +1,65 @@
 .DraggableComponent {
-  pointer-events: auto;
+  pointer-events: all;
   position: relative;
   transition: outline 0.2s;
   cursor: grab;
-  outline-offset: -2px;
-  outline: 2px solid transparent;
-  min-width: 100px;
   box-sizing: border-box;
+  display: flex;
 }
 
-.DraggableComponent > * {
+.DraggableComponent:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  outline-offset: -2px;
+  outline: 2px solid transparent;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.DraggableClone:before {
+  outline: 2px solid var(--exp-builder-blue500);
+}
+
+.DraggableClone,
+.DraggableClone * {
+  pointer-events: none !important;
+}
+
+.DraggableComponent:not(.userIsDragging) :not(.DraggableComponent) {
   pointer-events: none;
 }
 
 .isDragging {
-  background: #abc7e510;
   overflow: hidden;
 }
 
-.isSelected {
+.isSelected:before {
   outline: 2px solid transparent !important;
 }
 
 .overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
+  display: flex;
+  align-items: center;
+  min-width: max-content;
+  height: 24px;
+  z-index: 2;
   font-family: var(--exp-builder-font-stack-primary);
   font-size: 14px;
   font-weight: 500;
   background-color: var(--exp-builder-gray500);
   color: var(--exp-builder-color-white);
-  border-radius: 0 0 2px 0;
-  padding: 2px 6px 2px 5px;
-  transition: opacity 0.2s;
+  padding: 4px 12px 4px 12px;
+  transition: opacity 0.1s;
+  opacity: 0;
+  text-wrap: nowrap;
+}
+
+.overlayContainer {
   opacity: 0;
 }
 
@@ -42,37 +67,51 @@
   background-color: var(--exp-builder-purple600);
 }
 
-/* .DraggableComponent:hover .overlay {
-  opacity: 1;
-} */
-
-.userIsDragging > .overlay {
+.userIsDragging > .overlay,
+.userIsDragging > .overlayContainer {
   opacity: 0 !important;
 }
 
-.userIsDragging {
+.userIsDragging:before {
   outline: 2px solid transparent !important;
 }
 
-.DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)) > .overlay {
+.isHoveringComponent > .overlay,
+.DraggableComponent:hover:not(:has(.DraggableComponent:hover)) > .overlay {
   opacity: 1;
 }
 
-.DraggableComponent:hover,
-.DraggableComponent:hover div[data-rfd-draggable-id] {
+/* hovering related component in layers tab */
+.DraggableComponent:has(.isHoveringComponent):not(.isAssemblyBlock):before,
+.DraggableComponent:has(.isHoveringComponent):not(.isAssemblyBlock) .DraggableComponent:not(.isHoveringComponent):not(.isAssemblyBlock):before,
+.isHoveringComponent:not(.isAssemblyBlock) .DraggableComponent:not(.isAssemblyBlock):before,
+/* hovering related component in canvas */
+.DraggableComponent:hover:before,
+.DraggableComponent:hover .DraggableComponent:before {
   outline: 2px dashed var(--exp-builder-gray500);
 }
 
-.DraggableComponent:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
+/* hovering component in layers tab */
+.isHoveringComponent:not(.isAssemblyBlock):before,
+/* hovering component in canvas */
+.DraggableComponent:hover:not(:has(.DraggableComponent:hover)):before {
   outline: 2px solid var(--exp-builder-gray500);
 }
 
-.isAssemblyBlock:hover,
-.isAssemblyBlock:hover div[data-rfd-draggable-id],
-.DraggableComponent:hover div[data-rfd-draggable-id][data-cf-node-block-type^="assembly"] {
-  outline: 2px dashed var(--exp-builder-purple600) !important;
+/* hovering related pattern in layers tab */
+.isAssemblyBlock:has(.isHoveringComponent):before,
+.isAssemblyBlock:has(.isHoveringComponent) .isAssemblyBlock:not(.isHoveringComponent):before,
+.isHoveringComponent .isAssemblyBlock:before,
+/* hovering related pattern in canvas */
+.isAssemblyBlock:hover:before,
+.isAssemblyBlock:hover .DraggableComponent:before,
+.DraggableComponent:hover .isAssemblyBlock:before {
+  outline: 2px dashed var(--exp-builder-purple600);
 }
 
-.isAssemblyBlock:hover:not(:has(div[data-rfd-draggable-id]:hover)) {
-  outline: 2px solid var(--exp-builder-purple600) !important;
+/* hovering pattern in layers tab */
+.isAssemblyBlock.isHoveringComponent:before,
+/* hovering pattern in canvas */
+.isAssemblyBlock:hover:not(:has(.DraggableComponent:hover)):before {
+  outline: 2px solid var(--exp-builder-purple600);
 }

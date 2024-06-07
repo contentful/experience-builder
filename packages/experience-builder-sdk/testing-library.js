@@ -12,3 +12,7 @@ console.debug = (message, ...args) => {
   }
   origConsoleDebug.apply(console, [message, ...args]);
 };
+
+global.CSS = {
+  supports: (k, v) => true,
+};

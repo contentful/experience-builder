@@ -18,7 +18,7 @@ describe('withComponentWrapper', () => {
       const { container } = render(
         <WrappedButton onClick={onClickSpy} onMouseDown={onMouseDownSpy} onMouseUp={onMouseUpSpy}>
           Click me
-        </WrappedButton>
+        </WrappedButton>,
       );
 
       fireEvent.click(container.firstChild!);
@@ -38,7 +38,7 @@ describe('withComponentWrapper', () => {
           data-cf-node-block-type="test2"
           data-cf-node-id="test3">
           Click me
-        </WrappedButton>
+        </WrappedButton>,
       );
 
       expect(container.firstChild).toHaveAttribute('data-cf-node-block-id', 'test1');
@@ -50,7 +50,7 @@ describe('withComponentWrapper', () => {
       const WrappedButtonSpan = withComponentWrapper(MyButton, { wrapContainerTag: 'span' });
 
       const { container } = render(
-        <WrappedButtonSpan className="my-span">Click me</WrappedButtonSpan>
+        <WrappedButtonSpan className="my-span">Click me</WrappedButtonSpan>,
       );
 
       expect(container.firstChild).toHaveClass('my-span');
@@ -67,7 +67,7 @@ describe('withComponentWrapper', () => {
           classes="my-class"
           data-caca="yep">
           Click me
-        </WrappedButton>
+        </WrappedButton>,
       );
 
       expect(container.firstChild).toHaveClass('my-wrapper');
@@ -92,7 +92,7 @@ describe('withComponentWrapper', () => {
       const { container } = render(
         <Button onClick={onClickSpy} onMouseDown={onMouseDownSpy} onMouseUp={onMouseUpSpy}>
           Click me
-        </Button>
+        </Button>,
       );
 
       fireEvent.click(container.firstChild!);
@@ -112,7 +112,7 @@ describe('withComponentWrapper', () => {
           data-cf-node-block-type="test2"
           data-cf-node-id="test3">
           Click me
-        </Button>
+        </Button>,
       );
       expect(container.firstChild).toHaveAttribute('data-cf-node-block-id', 'test1');
       expect(container.firstChild).toHaveAttribute('data-cf-node-block-type', 'test2');
@@ -128,7 +128,7 @@ describe('withComponentWrapper', () => {
           className="my-button" //so we can select it later
           classes="my-class">
           Click me
-        </Button>
+        </Button>,
       );
       expect(container.firstChild).toHaveClass('my-button');
       expect(container.firstChild).toHaveClass('my-class');
