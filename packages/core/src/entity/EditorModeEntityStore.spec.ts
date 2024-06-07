@@ -27,13 +27,13 @@ describe('ExperienceBuilderEditorEntityStore', () => {
         store.getValue({ sys: { id: entityIds.ENTRY1, linkType: 'Entry', type: 'Link' } }, [
           'fields',
           'title',
-        ])
+        ]),
       ).toEqual('Entry 1');
       expect(
         store.getValue({ sys: { id: entityIds.ASSET1, linkType: 'Asset', type: 'Link' } }, [
           'fields',
           'title',
-        ])
+        ]),
       ).toEqual('Asset 1');
     });
 
@@ -45,7 +45,7 @@ describe('ExperienceBuilderEditorEntityStore', () => {
         store.getValue({ sys: { id: 'test', linkType: 'Entry', type: 'Link' } }, [
           'fields',
           'title',
-        ])
+        ]),
       ).toBeUndefined();
     });
 
@@ -57,7 +57,7 @@ describe('ExperienceBuilderEditorEntityStore', () => {
         store.getValue({ sys: { id: entityIds.ASSET1, linkType: 'Asset', type: 'Link' } }, [
           'fields',
           'file',
-        ])
+        ]),
       ).toEqual('https://test.com/test.jpg');
     });
   });

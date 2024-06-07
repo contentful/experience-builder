@@ -84,7 +84,7 @@ export const BreakpointSchema = z
     query: z.string().regex(/^\*$|^<[0-9*]+px$/),
     previewSize: z.string(),
     displayName: z.string(),
-    displayIconUrl: z.string().optional(),
+    displayIcon: z.enum(['desktop', 'tablet', 'mobile']).optional(),
   })
   .strict();
 

@@ -2,7 +2,7 @@ import { CONTENTFUL_COMPONENTS, LATEST_SCHEMA_VERSION } from '@/constants';
 import { ExperienceEntry, SchemaVersions } from '@/types';
 import { entityIds } from './entities';
 
-const compositionFields: ExperienceEntry['fields'] = {
+const experienceFields: ExperienceEntry['fields'] = {
   title: 'Test Composition',
   slug: 'test',
   componentTree: {
@@ -10,7 +10,18 @@ const compositionFields: ExperienceEntry['fields'] = {
       {
         definitionId: 'component-1',
         variables: {},
-        children: [],
+        children: [
+          {
+            definitionId: 'Image',
+            variables: {
+              imageSource: {
+                type: 'BoundValue',
+                path: '/uuid2/fields/logo/~locale/fields/file/~locale',
+              },
+            },
+            children: [],
+          },
+        ],
       },
       {
         definitionId: 'component-2',
@@ -51,7 +62,7 @@ const compositionFields: ExperienceEntry['fields'] = {
   },
 };
 
-export const compositionEntry: ExperienceEntry = {
+export const experienceEntry: ExperienceEntry = {
   sys: {
     id: 'composition-id',
     type: 'Entry',
@@ -81,7 +92,7 @@ export const compositionEntry: ExperienceEntry = {
     },
   },
   metadata: { tags: [] },
-  fields: compositionFields as ExperienceEntry['fields'],
+  fields: experienceFields as ExperienceEntry['fields'],
 };
 
 type createExperienceEntryArgs = {
@@ -215,18 +226,7 @@ export const createAssemblyEntry = ({
           {
             definitionId: CONTENTFUL_COMPONENTS.container.id,
             variables: {},
-            children: [
-              {
-                definitionId: 'custom-component',
-                variables: {
-                  text: {
-                    key: assemblyGeneratedVariableName,
-                    type: 'ComponentValue',
-                  },
-                },
-                children: [],
-              },
-            ],
+            children: [],
           },
         ],
 

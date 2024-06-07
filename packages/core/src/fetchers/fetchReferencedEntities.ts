@@ -1,11 +1,8 @@
 import { ExperienceEntry } from '@/types';
-import { ContentfulClientApi, Entry, Asset, AssetCollection } from 'contentful';
+import { ContentfulClientApi, Entry, Asset } from 'contentful';
 import { isExperienceEntry } from '@/utils';
 import { DeepReference, gatherDeepReferencesFromExperienceEntry } from '@/deep-binding';
-import {
-  MinimalEntryCollection,
-  gatherAutoFetchedReferentsFromIncludes,
-} from './gatherAutoFetchedReferentsFromIncludes';
+import { gatherAutoFetchedReferentsFromIncludes } from './gatherAutoFetchedReferentsFromIncludes';
 import { fetchAllEntries, fetchAllAssets } from './fetchAllEntities';
 
 type FetchReferencedEntitiesArgs = {
@@ -55,10 +52,10 @@ export const fetchReferencedEntities = async ({
     }
   }
 
-  const [entriesResponse, assetsResponse] = (await Promise.all([
+  const [entriesResponse, assetsResponse] = await Promise.all([
     fetchAllEntries({ client, ids: entryIds, locale }),
     fetchAllAssets({ client, ids: assetIds, locale }),
-  ])) as unknown as [MinimalEntryCollection, AssetCollection];
+  ]);
 
   const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
     gatherAutoFetchedReferentsFromIncludes(deepReferences, entriesResponse);
