@@ -1,5 +1,5 @@
 import { ContentfulClientApi, Entry } from 'contentful';
-import { compositionEntry } from '../test/__fixtures__/composition';
+import { experienceEntry } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { gatherDeepReferencesFromExperienceEntry } from '@/deep-binding/DeepReference';
@@ -34,7 +34,7 @@ describe('fetchReferencedEntities', () => {
       await fetchReferencedEntities({
         // @ts-expect-error intentionally setting it to undefined
         client: undefined,
-        experienceEntry: compositionEntry,
+        experienceEntry: experienceEntry,
         locale: 'en-US',
       });
     } catch (e) {
@@ -48,7 +48,7 @@ describe('fetchReferencedEntities', () => {
     try {
       await fetchReferencedEntities({
         client: mockClient,
-        experienceEntry: compositionEntry,
+        experienceEntry: experienceEntry,
         // @ts-expect-error intentionally setting it to undefined
         locale: undefined,
       });
@@ -82,7 +82,7 @@ describe('fetchReferencedEntities', () => {
 
     const res = await fetchReferencedEntities({
       client: mockClient,
-      experienceEntry: compositionEntry as unknown as Entry,
+      experienceEntry: experienceEntry as unknown as Entry,
       locale: 'en-US',
     });
 
@@ -116,11 +116,11 @@ describe('fetchReferencedEntities handling deep-references', () => {
     (gatherDeepReferencesFromExperienceEntry as Mock).mockReturnValue([]);
     fetchReferencedEntities({
       client: mockClient,
-      experienceEntry: compositionEntry,
+      experienceEntry: experienceEntry,
       locale: 'en-US',
     });
 
     expect(gatherDeepReferencesFromExperienceEntry).toHaveBeenCalledOnce();
-    expect(gatherDeepReferencesFromExperienceEntry).toHaveBeenCalledWith(compositionEntry);
+    expect(gatherDeepReferencesFromExperienceEntry).toHaveBeenCalledWith(experienceEntry);
   });
 });
