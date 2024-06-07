@@ -111,6 +111,7 @@ export const deserializeAssemblyNode = ({
       },
       blockId: node.definitionId,
       slotId: node.slotId,
+      displayName: node.displayName,
       props: childNodeVariable,
       dataSource,
       unboundValues,
