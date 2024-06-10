@@ -13,6 +13,7 @@ export const TextComponentDefinition: ComponentDefinition = {
   builtInStyles: [
     'cfMargin',
     'cfPadding',
+    'cfFontFamily',
     'cfFontSize',
     'cfFontWeight',
     'cfLineHeight',
@@ -33,11 +34,18 @@ export const TextComponentDefinition: ComponentDefinition = {
     description: 'Drop onto the canvas to add plain text.',
   },
   variables: {
+    cfFontFamily: {
+      displayName: 'Font Family',
+      type: 'Text',
+      group: 'style',
+      description: 'The font family of the text',
+      defaultValue: 'Arial',
+    },
     cfHeight: {
       displayName: 'Height',
       type: 'Text',
       group: 'style',
-      description: 'The height of the button.',
+      description: 'The height of the text.',
       defaultValue: 'fit-content',
     },
     value: {

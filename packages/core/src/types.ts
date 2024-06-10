@@ -194,6 +194,7 @@ export type StyleProps = {
   cfBackgroundImageUrl: OptimizedBackgroundImageAsset | string;
   cfBackgroundImageOptions: BackgroundImageOptions;
   cfOpenInNewTab: boolean;
+  cfFontFamily: string;
   cfFontSize: string;
   cfFontWeight: string;
   cfLineHeight: string;

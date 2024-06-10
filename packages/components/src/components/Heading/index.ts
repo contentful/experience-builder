@@ -13,6 +13,7 @@ export const HeadingComponentDefinition: ComponentDefinition = {
   builtInStyles: [
     'cfMargin',
     'cfPadding',
+    'cfFontFamily',
     'cfFontWeight',
     'cfLetterSpacing',
     'cfTextAlign',
@@ -35,8 +36,15 @@ export const HeadingComponentDefinition: ComponentDefinition = {
       displayName: 'Height',
       type: 'Text',
       group: 'style',
-      description: 'The height of the button.',
+      description: 'The height of the heading.',
       defaultValue: 'fit-content',
+    },
+    cfFontFamily: {
+      displayName: 'Font Family',
+      type: 'Text',
+      group: 'style',
+      description: 'The font family of the heading.',
+      defaultValue: 'Arial',
     },
     cfFontSize: {
       displayName: 'Font Size',

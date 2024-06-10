@@ -36,6 +36,7 @@ const TestSubjectComponentDefinition: ComponentDefinition = {
     'cfColumns',
     'cfFlexDirection',
     'cfFlexWrap',
+    'cfFontFamily',
     'cfFontSize',
     'cfFontWeight',
     'cfGap',
@@ -346,7 +347,7 @@ describe('custom component with builtInStyles', () => {
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint
         .desktop as string,
     ).toEqual(
-      'cf-2109ec1a9fccae15d7529f415b77a465 cf-aed6b8fd8999db736ecad69198982c97 cf-9d7a53e110e877eeaef28ce871edf181',
+      'cf-ef8b823b9b8af59e136c4691c0995285 cf-20ab88e5fef6d8201b01f7389a7f7ae4 cf-a72f63aa4a3de9a52fd277ed98970f18',
     );
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -356,7 +357,7 @@ describe('custom component with builtInStyles', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-2109ec1a9fccae15d7529f415b77a465{margin:0 0 0 0;padding:0 0 0 0;background-color:black;width:100%;height:100%;max-width:none;grid-column:span 1;border:1px solid red;border-radius:0px;gap:10px 10px;align-items:center;justify-content:safe center;flex-direction:row;flex-wrap:wrap;background-image:url(https://www.contentful.com/bg-image.jpg);background-repeat:no-repeat;font-size:16px;font-weight:bold;font-style:italic;line-height:1.5;letter-spacing:1px;color:white;text-align:center;text-transform:uppercase;text-decoration:underline;box-sizing:border-box;}@media(max-width:992px){.cf-aed6b8fd8999db736ecad69198982c97{margin:1rem 1rem 1rem 1rem;padding:1rem 1rem 1rem 1rem;background-color:grey;width:50%;height:50%;max-width:500px;grid-column:span 2;border:1px solid green;border-radius:2px;gap:5px 5px;align-items:top;justify-content:left;flex-direction:column;flex-wrap:nowrap;font-size:14px;font-weight:bold;font-style:italic;line-height:1.25;letter-spacing:0.5px;color:black;text-align:left;text-transform:capitalize;text-decoration:underline;box-sizing:border-box;}}@media(max-width:576px){.cf-9d7a53e110e877eeaef28ce871edf181{margin:1.5rem 1.5rem 1.5rem 1.5rem;padding:1.5rem 1.5rem 1.5rem 1.5rem;background-color:ashgrey;width:25%;height:25%;max-width:300px;grid-column:span 3;border:1px solid blue;border-radius:5px;gap:2px 2px;align-items:right;justify-content:bottom;flex-direction:row;flex-wrap:wrap;font-size:12px;font-weight:bold;font-style:italic;line-height:1;letter-spacing:0px;color:grey;text-align:right;text-transform:lowercase;text-decoration:underline;box-sizing:border-box;}}',
+      '.cf-ef8b823b9b8af59e136c4691c0995285{margin:0 0 0 0;padding:0 0 0 0;background-color:black;width:100%;height:100%;max-width:none;grid-column:span 1;border:1px solid red;border-radius:0px;gap:10px 10px;align-items:center;justify-content:safe center;flex-direction:row;flex-wrap:wrap;background-image:url(https://www.contentful.com/bg-image.jpg);background-repeat:no-repeat;font-family:Arial;font-size:16px;font-weight:bold;font-style:italic;line-height:1.5;letter-spacing:1px;color:white;text-align:center;text-transform:uppercase;text-decoration:underline;box-sizing:border-box;}@media(max-width:992px){.cf-20ab88e5fef6d8201b01f7389a7f7ae4{margin:1rem 1rem 1rem 1rem;padding:1rem 1rem 1rem 1rem;background-color:grey;width:50%;height:50%;max-width:500px;grid-column:span 2;border:1px solid green;border-radius:2px;gap:5px 5px;align-items:top;justify-content:left;flex-direction:column;flex-wrap:nowrap;font-family:Arial;font-size:14px;font-weight:bold;font-style:italic;line-height:1.25;letter-spacing:0.5px;color:black;text-align:left;text-transform:capitalize;text-decoration:underline;box-sizing:border-box;}}@media(max-width:576px){.cf-a72f63aa4a3de9a52fd277ed98970f18{margin:1.5rem 1.5rem 1.5rem 1.5rem;padding:1.5rem 1.5rem 1.5rem 1.5rem;background-color:ashgrey;width:25%;height:25%;max-width:300px;grid-column:span 3;border:1px solid blue;border-radius:5px;gap:2px 2px;align-items:right;justify-content:bottom;flex-direction:row;flex-wrap:wrap;font-family:Arial;font-size:12px;font-weight:bold;font-style:italic;line-height:1;letter-spacing:0px;color:grey;text-align:right;text-transform:lowercase;text-decoration:underline;box-sizing:border-box;}}',
     );
   });
 });
