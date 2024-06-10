@@ -230,19 +230,44 @@ export type RecursiveDesignTokenDefinition = {
   [key: string]: string | RecursiveDesignTokenDefinition;
 };
 
+type DesignBorderTokenStyle = 'solid' | 'dashed' | 'dotted';
+type DesignTextTokenEmphasis =
+  | 'bold'
+  | 'italic'
+  | 'underline'
+  | 'bold italic'
+  | 'bold underline'
+  | 'italic underline'
+  | 'bold italic underline';
+type DesignTextTokenTextAlign = 'left' | 'center' | 'right';
+type DesignTextTokenCase = 'capitalize' | 'uppercase' | 'lowercase' | 'normal';
+
 export type DesignTokensDefinition = {
   spacing?: Record<string, string>;
   sizing?: Record<string, string>;
   color?: Record<string, string>;
   border?: Record<
     string,
-    { width?: string; style?: 'solid' | 'dashed' | 'dotted'; color?: string }
+    { width?: string; style?: DesignBorderTokenStyle; color?: string }
   >;
   borderRadius?: Record<string, string>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;
   letterSpacing?: Record<string, string>;
   textColor?: Record<string, string>;
+  text?: Record<
+    string,
+    {
+      emphasis?: DesignTextTokenEmphasis;
+      textAlign?: DesignTextTokenTextAlign;
+      fontSize?: string;
+      case?: DesignTextTokenCase;
+      fontWeight?: string;
+      lineHeight?: string;
+      letterSpacing?: string;
+      color?: string;
+    }
+  >;
 } & RecursiveDesignTokenDefinition;
 
 /** Type of experience entry JSON data structure as returned by CPA/CDA */
