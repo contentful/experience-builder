@@ -75,7 +75,6 @@ export const builtInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The background color of the section',
-    defaultValue: 'rgba(255, 255, 255, 0)',
   },
   cfWidth: {
     displayName: 'Width',
@@ -427,7 +426,6 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The background color of the column',
-    defaultValue: 'rgba(255, 255, 255, 0)',
   },
   cfFlexDirection: {
     displayName: 'Direction',
@@ -506,7 +504,6 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The background color of the columns',
-    defaultValue: 'rgba(255, 255, 255, 0)',
   },
   cfBorder: {
     displayName: 'Border',
