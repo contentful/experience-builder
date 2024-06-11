@@ -64,7 +64,8 @@
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-serve": "^3.0.0",
     "rollup-plugin-ts": "^3.4.5",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.2",
+    "@pact-foundation/pact": "^12.5.0"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
