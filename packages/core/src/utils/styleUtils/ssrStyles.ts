@@ -356,7 +356,7 @@ export const isCfStyleAttribute = (variableName: string): variableName is keyof 
 
 export const maybePopulateDesignTokenValue = (
   variableName: string,
-  variableValue: string,
+  variableValue: unknown,
   mapOfDesignVariableKeys: FlattenedDesignTokens,
 ) => {
   // TODO: refactor to reuse fn from core package
