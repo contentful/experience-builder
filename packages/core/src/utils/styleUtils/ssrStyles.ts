@@ -101,10 +101,6 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
     let currentNode: ComponentTreeNode | undefined = undefined;
 
-    // const registeredComponenIds = Array.from(componentRegistry.values()).map(
-    //   ({ definition }) => definition.id,
-    // );
-
     // for each tree node
     while (queue.length) {
       currentNode = queue.shift();
@@ -115,7 +111,6 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
       const usedComponents = experience.entityStore?.experienceEntryFields?.usedComponents ?? [];
 
-      //const isPatternNode = !registeredComponenIds.includes(currentNode.definitionId);
       const isPatternNode = checkIsAssemblyNode({
         componentId: currentNode.definitionId,
         usedComponents,
