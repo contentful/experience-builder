@@ -25,3 +25,5 @@ if (typeof window !== 'undefined') {
 }
 
 export type { ExternalSDKMode, ComponentDefinition } from '@contentful/experiences-core/types';
+
+export { detachExperienceStyles } from '@contentful/experiences-core';
