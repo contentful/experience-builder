@@ -81,7 +81,7 @@ export const resolveAssembly = ({
   const deserializedNode = deserializeAssemblyNode({
     node: {
       definitionId: node.definitionId,
-      variables: {},
+      variables: node.variables,
       children: componentFields.componentTree.children,
     },
     componentInstanceVariables: node.variables,
