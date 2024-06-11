@@ -58,7 +58,7 @@ describe('maybePopulateDesignTokenValue', () => {
       'color.black': '#000000',
     });
 
-    expect(res).toBe(builtInStyles.cfBackgroundColor?.defaultValue);
+    expect(res).toBe(`${builtInStyles.cfBackgroundColor?.defaultValue}`);
   });
 
   it('should repalce design token variables with their values', () => {

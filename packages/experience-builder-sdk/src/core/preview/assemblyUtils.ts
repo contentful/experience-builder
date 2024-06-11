@@ -48,6 +48,8 @@ export const deserializeAssemblyNode = ({
     definitionId: node.definitionId,
     variables,
     children,
+    slotId: node.slotId,
+    displayName: node.displayName,
   };
 };
 
