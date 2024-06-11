@@ -18,11 +18,15 @@ import {
   Breakpoint,
 } from '@/types';
 import { CF_STYLE_ATTRIBUTES } from '@/constants';
-//import { componentRegistry } from '../core/componentRegistry';
 
 type MediaQueryTemplate = Record<
   string,
   { condition: string; cssByClassName: Record<string, string> }
+>;
+
+type FlattenedDesignTokens = Record<
+  string,
+  string | { width?: string; style?: string; color?: string }
 >;
 
 export const detachExperienceStyles = (experience: Experience): string | undefined => {
@@ -346,14 +350,14 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
   return styleSheet;
 };
 
-export const isCfStyleAttribute = (variableName: any): variableName is keyof StyleProps => {
+export const isCfStyleAttribute = (variableName: string): variableName is keyof StyleProps => {
   return CF_STYLE_ATTRIBUTES.includes(variableName);
 };
 
 export const maybePopulateDesignTokenValue = (
   variableName: string,
-  variableValue: any,
-  mapOfDesignVariableKeys: Record<string, any>,
+  variableValue: string,
+  mapOfDesignVariableKeys: FlattenedDesignTokens,
 ) => {
   // TODO: refactor to reuse fn from core package
   if (typeof variableValue !== 'string') {
@@ -380,8 +384,10 @@ export const maybePopulateDesignTokenValue = (
     }
 
     if (variableName === 'cfBorder' || variableName.startsWith('cfBorder_')) {
-      const { width, style, color } = tokenValue;
-      return `${width} ${style} ${color}`;
+      if (typeof tokenValue === 'object') {
+        const { width, style, color } = tokenValue;
+        return `${width} ${style} ${color}`;
+      }
     }
 
     return tokenValue;
@@ -514,7 +520,7 @@ export const indexByBreakpoint = ({
   componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
   componentSettings?: ExperienceComponentSettings;
 }) => {
-  const variableValuesByBreakpoints = breakpointIds.reduce<Record<string, Record<string, any>>>(
+  const variableValuesByBreakpoints = breakpointIds.reduce<Record<string, Record<string, unknown>>>(
     (acc, breakpointId) => {
       return {
         ...acc,
@@ -586,9 +592,9 @@ export const indexByBreakpoint = ({
  */
 export const flattenDesignTokenRegistry = (
   designTokenRegistry: DesignTokensDefinition,
-): Record<string, string | object> => {
+): FlattenedDesignTokens => {
   return Object.entries(designTokenRegistry).reduce((acc, [categoryName, tokenCategory]) => {
-    const tokensWithCategory = Object.entries(tokenCategory as Record<string, any>).reduce(
+    const tokensWithCategory = Object.entries(tokenCategory).reduce(
       (acc, [tokenName, tokenValue]) => {
         return {
           ...acc,
