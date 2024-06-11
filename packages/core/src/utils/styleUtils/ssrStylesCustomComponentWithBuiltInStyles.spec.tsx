@@ -1,4 +1,3 @@
-import React from 'react';
 import { createExperience, detachExperienceStyles } from '../../index';
 import { DesignValue, ExperienceEntry } from '../../types';
 import { Entry } from 'contentful';

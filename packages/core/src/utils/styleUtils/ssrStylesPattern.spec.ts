@@ -6,7 +6,6 @@ import {
   ExperienceEntry,
   ExperienceUnboundValues,
 } from '../../types';
-import { ExperienceUsedComponents } from '@contentful/experiences-validators';
 import { Asset, Entry } from 'contentful';
 
 const patternEntry: ExperienceEntry = {
