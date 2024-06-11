@@ -110,6 +110,8 @@ export const deserializeAssemblyNode = ({
         nodeLocation: nodeLocation || null,
       },
       blockId: node.definitionId,
+      slotId: node.slotId,
+      displayName: node.displayName,
       props: childNodeVariable,
       dataSource,
       unboundValues,
