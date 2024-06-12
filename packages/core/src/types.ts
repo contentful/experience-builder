@@ -238,7 +238,8 @@ type DesignTextTokenEmphasis =
   | 'bold italic'
   | 'bold underline'
   | 'italic underline'
-  | 'bold italic underline';
+  | 'bold italic underline'
+  | 'none';
 type DesignTextTokenTextAlign = 'left' | 'center' | 'right';
 type DesignTextTokenCase = 'capitalize' | 'uppercase' | 'lowercase' | 'normal';
 
@@ -246,10 +247,7 @@ export type DesignTokensDefinition = {
   spacing?: Record<string, string>;
   sizing?: Record<string, string>;
   color?: Record<string, string>;
-  border?: Record<
-    string,
-    { width?: string; style?: DesignBorderTokenStyle; color?: string }
-  >;
+  border?: Record<string, { width?: string; style?: DesignBorderTokenStyle; color?: string }>;
   borderRadius?: Record<string, string>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;

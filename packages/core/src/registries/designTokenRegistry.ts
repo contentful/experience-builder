@@ -9,6 +9,22 @@ export let designTokensRegistry: DesignTokensDefinition = {};
 const ensureValidCompositeValues = (designTokenDefinition: DesignTokensDefinition) => {
   // TODO: add validation logic when text related design tokens are added
 
+  if (designTokenDefinition.text) {
+    for (const textKey in designTokenDefinition.text) {
+      const textValue = designTokenDefinition.text[textKey];
+      designTokenDefinition.text[textKey] = {
+        emphasis: textValue.emphasis || 'none',
+        textAlign: textValue.textAlign || 'left',
+        fontSize: textValue.fontSize || '16px',
+        case: textValue.case || 'normal',
+        fontWeight: textValue.fontWeight || '400',
+        lineHeight: textValue.lineHeight || '20px',
+        letterSpacing: textValue.letterSpacing || '0px',
+        color: textValue.color || '#000000',
+      };
+    }
+  }
+
   // Border validation
   if (designTokenDefinition.border) {
     for (const borderKey in designTokenDefinition.border) {
