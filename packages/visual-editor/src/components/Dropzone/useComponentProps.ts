@@ -47,7 +47,7 @@ type UseComponentProps = {
   node: ExperienceTreeNode;
   resolveDesignValue: ResolveDesignValueType;
   areEntitiesFetched: boolean;
-  definition: ComponentRegistration['definition'];
+  definition?: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
   slotId?: string;
@@ -279,10 +279,13 @@ export const useComponentProps = ({
     node,
     renderDropzone,
     ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
-    ...(definition.children ? { children: renderDropzone(node) } : {}),
+    ...(definition?.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { componentProps, wrapperProps };
+  return {
+    componentProps,
+    wrapperProps,
+  };
 };
 
 const addExtraDropzonePadding = (padding: string) =>

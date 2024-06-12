@@ -48,9 +48,9 @@ defineComponents([
   {
     component: CustomImageComponent,
     definition: {
-      id: 'custom-image',
-      name: 'Custom Image',
-      category: 'Custom Components',
+      id: 'acme-image',
+      name: 'acme Image',
+      category: 'acme Components',
       variables: {
         src: {
           displayName: 'SRC',

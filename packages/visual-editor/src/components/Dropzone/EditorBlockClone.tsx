@@ -43,7 +43,7 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
 }) => {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
 
-  const { node, wrapperProps, elementToRender } = useComponent({
+  const { isComponentMissing, node, wrapperProps, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -52,6 +52,40 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
+
+  if (isComponentMissing || !elementToRender) {
+    // return <div>Clone of EditorBlock</div>;
+    const renderMissingComponentPlacehoder = () => (
+      <div
+        style={{
+          border: '1px solid red',
+          width: '100%',
+          height: '100%',
+        }}>
+        Missing component &lt;{node.data.blockId}&gt;
+      </div>
+    );
+    return (
+      <div
+        ref={provided?.innerRef}
+        data-ctfl-dragging-element
+        {...wrapperProps}
+        {...provided?.draggableProps}
+        {...provided?.dragHandleProps}
+        className={classNames(
+          styles.DraggableComponent,
+          wrapperProps.className,
+          styles.DraggableClone,
+          {
+            [styles.isAssemblyBlock]: isAssemblyBlock,
+            [styles.isDragging]: snapshot?.isDragging,
+          },
+        )}
+        style={getStyle(provided?.draggableProps.style, snapshot)}>
+        {renderMissingComponentPlacehoder()}
+      </div>
+    );
+  }
 
   if (isSingleColumn) {
     return elementToRender();

@@ -43,7 +43,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const { slotId } = parseZoneId(zoneId);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, wrapperProps, definition, elementToRender } = useComponent({
+  const { node, wrapperProps, definition, elementToRender, isComponentMissing } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -94,6 +94,43 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     });
   };
 
+  if (isComponentMissing || !definition || !elementToRender) {
+    console.log(`;;selectedNodeId === componentId`, { selectedNodeId, componentId });
+    const renderMissingComponentPlacehoder = () => (
+      <div
+        style={{
+          border: '1px solid red',
+          width: '100%',
+          height: '100%',
+        }}>
+        Missing component &lt;{node.data.blockId}&gt;
+      </div>
+    );
+
+    return (
+      <DraggableComponent
+        placeholder={placeholder}
+        id={componentId}
+        index={index}
+        isAssemblyBlock={isAssembly || isAssemblyBlock}
+        isDragDisabled={false}
+        isSelected={selectedNodeId === componentId}
+        userIsDragging={userIsDragging}
+        isContainer={isContainer}
+        blockId={node.data.blockId}
+        coordinates={coordinates!}
+        wrapperProps={wrapperProps}
+        onClick={onClick}
+        onMouseOver={onMouseOver}
+        displayName={displayName || definition?.name}>
+        {renderMissingComponentPlacehoder()}
+        {/* {isStructureComponent && userIsDragging && (
+          <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
+        )} */}
+      </DraggableComponent>
+    );
+  }
+
   if (isSingleColumn) {
     return (
       <DraggableChildComponent
@@ -119,7 +156,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   return (
     <DraggableComponent
       placeholder={placeholder}
-      definition={definition}
       id={node.data.id}
       index={index}
       isAssemblyBlock={isAssembly || isAssemblyBlock}

@@ -68,6 +68,9 @@ export function useEditorSubscriber() {
     }, 50);
   };
 
+  // Why do we need to send this message?
+  // also it seems that when this message is received by the ExperienceBuilder,
+  // the tree is not loaded (restored) yet, so what's sent down is just a dummy empty tree.
   useEffect(() => {
     sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
   }, []);
