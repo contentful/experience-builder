@@ -94,13 +94,13 @@ export const useComponent = ({
       return () => React.createElement(componentRegistration.component, componentProps);
     }
 
-    // eslint-disable-next-line react/display-name
-    return () =>
-      React.createElement(
-        ImportedComponentErrorBoundary,
-        null,
-        React.createElement(componentRegistration.component, otherComponentProps),
+    return function createComponentWrappedInErrorBoundary() {
+      const elementToWrap = React.createElement(
+        componentRegistration.component,
+        otherComponentProps,
       );
+      return React.createElement(ImportedComponentErrorBoundary, null, elementToWrap);
+    };
   };
 
   const elementToRender = componentRegistration
