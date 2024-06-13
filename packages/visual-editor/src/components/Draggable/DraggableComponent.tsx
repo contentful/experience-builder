@@ -59,7 +59,6 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   blockId,
   isDragDisabled = false,
   placeholder,
-  // definition,
   displayName,
   ...rest
 }) => {
