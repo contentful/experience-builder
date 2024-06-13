@@ -53,7 +53,8 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
 
-  if (isComponentMissing) {
+  if (isComponentMissing || !elementToRender) {
+    // !elementToRender is for typescript
     const renderMissingComponentPlacehoder = () => (
       <div
         style={{
