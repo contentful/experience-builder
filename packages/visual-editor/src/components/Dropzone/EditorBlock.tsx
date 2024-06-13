@@ -95,7 +95,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   };
 
   if (isComponentMissing || !definition || !elementToRender) {
-    console.log(`;;selectedNodeId === componentId`, { selectedNodeId, componentId });
     const renderMissingComponentPlacehoder = () => (
       <div
         style={{
@@ -110,11 +109,11 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     return (
       <DraggableComponent
         placeholder={placeholder}
-        id={componentId}
+        id={node.data.id}
         index={index}
         isAssemblyBlock={isAssembly || isAssemblyBlock}
         isDragDisabled={false}
-        isSelected={selectedNodeId === componentId}
+        isSelected={selectedNodeId === node.data.id}
         userIsDragging={userIsDragging}
         isContainer={isContainer}
         blockId={node.data.blockId}
