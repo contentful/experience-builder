@@ -102,7 +102,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
           width: '100%',
           height: '100%',
         }}>
-        Missing component &lt;{node.data.blockId}&gt;
+        Missing component &apos;{node.data.blockId}&apos;
       </div>
     );
 
