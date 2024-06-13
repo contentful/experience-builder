@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CompositionComponentNode } from '@/types';
+import { ExperienceTreeNode } from '@/types';
 import { generateRandomId, getInsertionData } from '@/utils';
 
 const dropReceiverChildNode: ExperienceTreeNode = {

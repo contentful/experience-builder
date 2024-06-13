@@ -13,6 +13,7 @@ import yargs from 'yargs';
 import { CtflClient } from './ctflClient.js';
 import { allFrameworks } from './models.js';
 import { FsClient } from './fsClient.js';
+import { generateExperienceNameId } from './utils.js';
 
 const args = await yargs(process.argv.slice(2))
   .option('token', {
@@ -49,7 +50,7 @@ async function init() {
 
   try {
     intro(
-      `👋 Welcome to the Contentful Experience Builder!\nWe will guide you through creating a new project that will be ready-to-go with Experience Builder!`
+      `👋 Welcome to the Contentful Experience Builder!\nWe will guide you through creating a new project that will be ready-to-go with Experience Builder!`,
     );
 
     const projectType = await select({
@@ -61,7 +62,6 @@ async function init() {
         };
       }),
     });
-
     const framework = allFrameworks.find((f) => f.name === projectType)!;
 
     const variantType = await select({
@@ -93,6 +93,8 @@ async function init() {
     const shouldSelectSpace = await confirm({
       message: 'Would you like to select an existing space to use with Experience Builder?',
     });
+
+    let experienceName: string = '';
 
     if (shouldSelectSpace) {
       if (!args.token) {
@@ -127,9 +129,7 @@ async function init() {
 
         spinner.stop('Token validated!');
       }
-    }
 
-    if (shouldSelectSpace) {
       const orgs = await ctflClient.getOrgs();
 
       const selectedOrgId = await select<{ label: string; value: string }[], string>({
@@ -147,9 +147,19 @@ async function init() {
 
       const spaces = await ctflClient.getSpacesForOrg(selectedOrgId as string);
 
+      const spaceEnablements = await ctflClient.getManySpaceEnablements({
+        orgId: selectedOrgId as string,
+      });
+      const spaceEnablementsIds = spaceEnablements.map(
+        (spaceEnablement) => spaceEnablement.sys.space.sys.id,
+      );
+      const spacesWithStudioExperienceEnabled = spaces.filter((space) => {
+        return spaceEnablementsIds.includes(space.id);
+      });
+
       const selectedSpaceId = await select<{ label: string; value: string }[], string>({
         message: 'Select space to use.',
-        options: spaces.map((space) => {
+        options: spacesWithStudioExperienceEnabled.map((space) => {
           return {
             label: space.name,
             value: space.id,
@@ -161,6 +171,7 @@ async function init() {
       ctflClient.space = selectedSpace;
 
       const apiKeys = await ctflClient.getApiKeys();
+
       if (apiKeys.length === 0) {
         spinner.start('No API keys are currently found, creating one.');
         await ctflClient.createApiKeys();
@@ -198,41 +209,60 @@ async function init() {
       }
 
       const previewEnvironments = await ctflClient.getPreviewEnvironments();
+
       const ebPreviewEnvironment = previewEnvironments.find(
-        (item) => item.url === `http://localhost:${variant.devPort}`
+        (item) => item.url === `http://localhost:${variant.devPort}`,
       );
+
       if (previewEnvironments.length === 0 || !ebPreviewEnvironment) {
+        experienceName = (await text({
+          message:
+            'What would you like to call your experience?  Note: something like `Studio Experiences Content Type`, or `Marketing Studio` might be a good idea. This name will be re-used for all future Experiences, as well as the initial Preview Environment',
+          validate(expName) {
+            if (expName.length === 0) return `Value is required!`;
+            if (expName.length > 50) return 'Experience Name must be less than 51 characters.';
+          },
+        })) as string;
+        const experienceNameId = generateExperienceNameId(experienceName);
+        console.log('[ index ] experienceName => ', experienceName);
+
         spinner.start(
-          'No preview environments for Experience Builder currently found, creating one.'
+          'No preview environments for Experience Builder currently found, creating one.',
         );
-        await ctflClient.createPreviewEnvironment(variant.devPort);
+
+        await ctflClient.createPreviewEnvironment(
+          variant.devPort,
+          experienceName,
+          experienceNameId,
+        );
         spinner.stop('Preview environment created!');
       } else if (ebPreviewEnvironment) {
         log.message('Using existing preview environment for Experience Builder.');
         ctflClient.previewEnvironment = ebPreviewEnvironment;
       }
-
-      // if (!apiKeyFound) {
-      //   spinner.start('Existing API key for Experience Builder not found, creating one.');
-
-      //   await ctflClient.createApiKeys();
-
-      //   spinner.stop('API key created!');
-      // }
-
-      // await ctflClient.createPreviewEnvironment(variant.devPort);
-
-      // await ctflClient.createContentLayoutType();
-
-      // await ctflClient.createContentEntry();
-
-      // await ctflClient.createApiKeys();
     }
+
+    if (!experienceName) {
+      experienceName = (await text({
+        message:
+          'What would you like to call your experience?  Note: something like `Studio Experiences Content Type`, or `Marketing Studio` might be a good idea. This name will be re-used for all future Experiences, as well as the initial Preview Environment',
+        validate(expName) {
+          if (expName.length === 0) return `Value is required!`;
+          if (expName.length > 50) return 'Experience Name must be less than 51 characters.';
+        },
+      })) as string;
+      log.message(`Experience Name ID: ${generateExperienceNameId(experienceName)}`);
+    }
+
+    const experienceNameId = generateExperienceNameId(experienceName);
+    await ctflClient.createContentLayoutType(experienceName, experienceNameId);
+
+    await ctflClient.createContentEntry(experienceName, experienceNameId);
 
     const projectDir = fsClient.getProjectDir(projectName);
 
     spinner.start(
-      `Creating a new Contentful Experience Builder project using ${variant.display}, this might take a minute ⏰`
+      `Creating a new Contentful Experience Builder project using ${variant.display}, this might take a minute ⏰`,
     );
 
     await fsClient.createProject(variant, projectName);
@@ -241,7 +271,8 @@ async function init() {
 
     //copy env file
     if (shouldSelectSpace && ctflClient) {
-      fsClient.copyEnvFile(projectDir, ctflClient.getEnvFileData());
+      // TODO: Pass experienceNameID
+      fsClient.copyEnvFile(projectDir, ctflClient.getEnvFileData(/* experienceNameId */));
     }
 
     outro(`Your project is ready and located in the ${projectName} folder.`);
@@ -254,10 +285,7 @@ async function init() {
 
     if (shouldCleanup) {
       fsClient.deleteDirectory(projectDir);
-      // if (shouldSelectSpace && ctflClient?.space) {
-      // await ctflClient.deleteSpace();
       await ctflClient.deleteAuthToken();
-      // }
     }
   } catch (e) {
     console.log(e);

@@ -66,8 +66,7 @@
   },
   "dependencies": {
     "@contentful/experiences-validators": "file:../validators",
-    "@contentful/rich-text-types": "^16.3.0",
-    "@contentful/visual-sdk": "../visual-sdk"
+    "@contentful/rich-text-types": "^16.3.0"
   },
   "peerDependencies": {
     "contentful": ">=10.6.0"
