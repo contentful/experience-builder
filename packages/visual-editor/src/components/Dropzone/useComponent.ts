@@ -80,6 +80,7 @@ export const useComponent = ({
   const { editorMode, renderDropzone: _renderDropzone, ...otherComponentProps } = componentProps;
   const createElementToRender = (componentRegistration: ComponentRegistration) => {
     if (builtInComponents.includes(node.data.blockId || '')) {
+      // eslint-disable-next-line react/display-name
       return (dragProps?: NoWrapDraggableProps) =>
         React.createElement(componentRegistration.component, {
           ...dragProps,
@@ -89,9 +90,11 @@ export const useComponent = ({
 
     if (node.type === ASSEMBLY_NODE_TYPE) {
       // Assembly.tsx requires renderDropzone and editorMode as well
+      // eslint-disable-next-line react/display-name
       return () => React.createElement(componentRegistration.component, componentProps);
     }
 
+    // eslint-disable-next-line react/display-name
     return () =>
       React.createElement(
         ImportedComponentErrorBoundary,
