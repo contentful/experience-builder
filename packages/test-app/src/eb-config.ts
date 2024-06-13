@@ -10,7 +10,7 @@ defineComponents([
     definition: {
       id: 'component-with-children',
       thumbnailUrl:
-        'https://images.ctfassets.net/son9ld5ewssk/n4mM2dPRoi2wRiWjF3uz7/f5234173673b99b722ca1e6e40a39ec5/children-enabled.svg',
+        'https://images.ctfassets.net/son9ld5ewssk/YKKHoWzAGkQjDiqMgjJvY/c68bdc91347fc205a1d7bdb298b9f264/children-enabled_3x__1_.png',
       children: true,
       name: 'Children Enabled',
       category: 'Custom Components',
@@ -32,7 +32,7 @@ defineComponents([
     definition: {
       id: 'nested-slots',
       thumbnailUrl:
-        'https://images.ctfassets.net/son9ld5ewssk/1lflVWmAowEo9SjOzwmLGT/18f6cacf6693ddb2d5e339d823ceabbe/nested-slots.svg',
+        'https://images.ctfassets.net/son9ld5ewssk/5BnZXWKlokwQq8mXwNPINn/2eac00f83ee12f8456bec528add1a3a3/nested-slots_3x__1_.png',
       name: 'Nested Slots',
       category: 'Custom Components',
       builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBorder'],
