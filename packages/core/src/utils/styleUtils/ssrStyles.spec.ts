@@ -1,4 +1,11 @@
-import { CF_STYLE_ATTRIBUTES } from '@contentful/experiences-core/constants';
+import { Asset, Entry } from 'contentful';
+import { CF_STYLE_ATTRIBUTES } from '@/constants';
+import { builtInStyles } from '@/definitions';
+import {
+  ComponentPropertyValue,
+  DesignTokensDefinition,
+  ExperienceComponentSettings,
+} from '@/types';
 import {
   flattenDesignTokenRegistry,
   indexByBreakpoint,
@@ -8,13 +15,6 @@ import {
   toCSSString,
   toMediaQuery,
 } from './ssrStyles';
-import { builtInStyles } from '@contentful/experiences-core';
-import {
-  ComponentPropertyValue,
-  DesignTokensDefinition,
-  ExperienceComponentSettings,
-} from '@contentful/experiences-core/types';
-import { Asset, Entry } from 'contentful';
 
 describe('isCfStyleAttribute', () => {
   it('should return true for each value from CF_STYLE_ATTRIBUTES', () => {
@@ -58,7 +58,7 @@ describe('maybePopulateDesignTokenValue', () => {
       'color.black': '#000000',
     });
 
-    expect(res).toBe(builtInStyles.cfBackgroundColor?.defaultValue);
+    expect(res).toBe(`${builtInStyles.cfBackgroundColor?.defaultValue}`);
   });
 
   it('should repalce design token variables with their values', () => {

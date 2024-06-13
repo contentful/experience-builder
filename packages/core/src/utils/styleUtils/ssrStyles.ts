@@ -1,19 +1,5 @@
 import md5 from 'md5';
-import {
-  buildCfStyles,
-  builtInStyles,
-  designTokensRegistry,
-  optionalBuiltInStyles,
-  toCSSAttribute,
-} from '@contentful/experiences-core';
-import {
-  ComponentTreeNode,
-  DesignTokensDefinition,
-  Experience,
-  ExperienceEntry,
-  StyleProps,
-} from '@contentful/experiences-core/types';
-import { componentRegistry } from '../core/componentRegistry';
+import { Asset, Entry, UnresolvedLink } from 'contentful/dist/types/types';
 import {
   ComponentPropertyValue,
   ExperienceComponentSettings,
@@ -21,13 +7,26 @@ import {
   ExperienceDataSource,
   ExperienceUnboundValues,
 } from '@contentful/experiences-validators';
-import { Asset, Entry, UnresolvedLink } from 'contentful/dist/types/types';
-import { Breakpoint } from '@contentful/experiences-core/types';
-import { CF_STYLE_ATTRIBUTES } from '@contentful/experiences-core/constants';
+import { buildCfStyles, checkIsAssemblyNode, toCSSAttribute } from '@/utils';
+import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
+import { designTokensRegistry } from '@/registries';
+import {
+  ComponentTreeNode,
+  DesignTokensDefinition,
+  Experience,
+  StyleProps,
+  Breakpoint,
+} from '@/types';
+import { CF_STYLE_ATTRIBUTES } from '@/constants';
 
 type MediaQueryTemplate = Record<
   string,
   { condition: string; cssByClassName: Record<string, string> }
+>;
+
+type FlattenedDesignTokens = Record<
+  string,
+  string | { width?: string; style?: string; color?: string }
 >;
 
 export const detachExperienceStyles = (experience: Experience): string | undefined => {
@@ -102,10 +101,6 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
     let currentNode: ComponentTreeNode | undefined = undefined;
 
-    const registeredComponenIds = Array.from(componentRegistry.values()).map(
-      ({ definition }) => definition.id,
-    );
-
     // for each tree node
     while (queue.length) {
       currentNode = queue.shift();
@@ -114,15 +109,47 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         break;
       }
 
-      const isPatternNode = !registeredComponenIds.includes(currentNode.definitionId);
+      const usedComponents = experience.entityStore?.experienceEntryFields?.usedComponents ?? [];
+
+      const isPatternNode = checkIsAssemblyNode({
+        componentId: currentNode.definitionId,
+        usedComponents,
+      });
 
       if (isPatternNode) {
-        const patternEntry = experience.entityStore?.entities.find(
-          (entry: Entry | Asset) => entry.sys.id === currentNode!.definitionId,
-        ) as ExperienceEntry | undefined;
-        if (!patternEntry) {
+        const patternEntry = usedComponents.find(
+          (component) => component.sys.id === currentNode!.definitionId,
+        );
+
+        if (!patternEntry || !('fields' in patternEntry)) {
           continue;
         }
+
+        const defaultPatternDivStyles: Record<string, string> = Object.fromEntries(
+          Object.entries(buildCfStyles({}))
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => [toCSSAttribute(key), value]),
+        );
+
+        // I create a hash of the object above because that would ensure hash stability
+        const styleHash = md5(JSON.stringify(defaultPatternDivStyles));
+
+        // and prefix the className to make sure the value can be processed
+        const className = `cf-${styleHash}`;
+
+        for (const breakpointId of breakpointIds) {
+          if (!mediaQueriesTemplate[breakpointId].cssByClassName[className]) {
+            mediaQueriesTemplate[breakpointId].cssByClassName[className] =
+              toCSSString(defaultPatternDivStyles);
+          }
+        }
+
+        currentNode.variables.cfSsrClassName = {
+          type: 'DesignValue',
+          valuesByBreakpoint: {
+            [breakpointIds[0]]: className,
+          },
+        };
 
         // the node of a used pattern contains only the definitionId (id of the patter entry)
         // as well as the variables overwrites
@@ -318,14 +345,14 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
   return styleSheet;
 };
 
-export const isCfStyleAttribute = (variableName: any): variableName is keyof StyleProps => {
+export const isCfStyleAttribute = (variableName: string): variableName is keyof StyleProps => {
   return CF_STYLE_ATTRIBUTES.includes(variableName);
 };
 
 export const maybePopulateDesignTokenValue = (
   variableName: string,
-  variableValue: any,
-  mapOfDesignVariableKeys: Record<string, any>,
+  variableValue: unknown,
+  mapOfDesignVariableKeys: FlattenedDesignTokens,
 ) => {
   // TODO: refactor to reuse fn from core package
   if (typeof variableValue !== 'string') {
@@ -352,8 +379,10 @@ export const maybePopulateDesignTokenValue = (
     }
 
     if (variableName === 'cfBorder' || variableName.startsWith('cfBorder_')) {
-      const { width, style, color } = tokenValue;
-      return `${width} ${style} ${color}`;
+      if (typeof tokenValue === 'object') {
+        const { width, style, color } = tokenValue;
+        return `${width} ${style} ${color}`;
+      }
     }
 
     return tokenValue;
@@ -486,7 +515,7 @@ export const indexByBreakpoint = ({
   componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
   componentSettings?: ExperienceComponentSettings;
 }) => {
-  const variableValuesByBreakpoints = breakpointIds.reduce<Record<string, Record<string, any>>>(
+  const variableValuesByBreakpoints = breakpointIds.reduce<Record<string, Record<string, unknown>>>(
     (acc, breakpointId) => {
       return {
         ...acc,
@@ -558,9 +587,9 @@ export const indexByBreakpoint = ({
  */
 export const flattenDesignTokenRegistry = (
   designTokenRegistry: DesignTokensDefinition,
-): Record<string, string | object> => {
+): FlattenedDesignTokens => {
   return Object.entries(designTokenRegistry).reduce((acc, [categoryName, tokenCategory]) => {
-    const tokensWithCategory = Object.entries(tokenCategory as Record<string, any>).reduce(
+    const tokensWithCategory = Object.entries(tokenCategory).reduce(
       (acc, [tokenName, tokenValue]) => {
         return {
           ...acc,

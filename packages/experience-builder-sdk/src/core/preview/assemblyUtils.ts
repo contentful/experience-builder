@@ -48,6 +48,8 @@ export const deserializeAssemblyNode = ({
     definitionId: node.definitionId,
     variables,
     children,
+    slotId: node.slotId,
+    displayName: node.displayName,
   };
 };
 
@@ -81,7 +83,7 @@ export const resolveAssembly = ({
   const deserializedNode = deserializeAssemblyNode({
     node: {
       definitionId: node.definitionId,
-      variables: {},
+      variables: node.variables,
       children: componentFields.componentTree.children,
     },
     componentInstanceVariables: node.variables,

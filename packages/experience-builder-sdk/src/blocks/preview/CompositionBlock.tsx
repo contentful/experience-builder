@@ -73,11 +73,6 @@ export const CompositionBlock = ({
   }, [isAssembly, node.definitionId]);
 
   const nodeProps = useMemo(() => {
-    // Don't enrich the assembly wrapper node with props
-    if (!componentRegistration || isAssembly) {
-      return {};
-    }
-
     const propMap: Record<string, PrimitiveValue> = {
       cfSsrClassName: node.variables.cfSsrClassName
         ? resolveDesignValue(
@@ -86,6 +81,10 @@ export const CompositionBlock = ({
           )
         : undefined,
     };
+    // Don't enrich the assembly wrapper node with props
+    if (!componentRegistration || isAssembly) {
+      return propMap;
+    }
 
     const props = Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
