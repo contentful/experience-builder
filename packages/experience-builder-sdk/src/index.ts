@@ -17,8 +17,6 @@ export {
   CF_STYLE_ATTRIBUTES,
 } from '@contentful/experiences-core/constants';
 
-export { detachExperienceStyles } from './utils/ssrStyles';
-
 // Simple state store to store a few things that are needed across the SDK
 if (typeof window !== 'undefined') {
   window.__EB__ = {
@@ -27,3 +25,5 @@ if (typeof window !== 'undefined') {
 }
 
 export type { ExternalSDKMode, ComponentDefinition } from '@contentful/experiences-core/types';
+
+export { detachExperienceStyles } from '@contentful/experiences-core';
