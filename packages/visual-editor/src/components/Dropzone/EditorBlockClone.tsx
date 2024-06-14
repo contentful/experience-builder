@@ -13,6 +13,7 @@ import {
   CONTENTFUL_COMPONENTS,
 } from '@contentful/experiences-core/constants';
 import classNames from 'classnames';
+import { MissingComponentPlacehoder } from './MissingComponentPlaceholder';
 
 function getStyle(style: CSSProperties = {}, snapshot?: DraggableStateSnapshot) {
   if (!snapshot?.isDropAnimating) {
@@ -55,16 +56,6 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
 
   if (isComponentMissing || !elementToRender) {
     // !elementToRender is for typescript
-    const renderMissingComponentPlacehoder = () => (
-      <div
-        style={{
-          border: '1px solid red',
-          width: '100%',
-          height: '100%',
-        }}>
-        Missing component &apos;{node.data.blockId}&apos;
-      </div>
-    );
     return (
       <div
         ref={provided?.innerRef}
@@ -82,7 +73,7 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
           },
         )}
         style={getStyle(provided?.draggableProps.style, snapshot)}>
-        {renderMissingComponentPlacehoder()}
+        <MissingComponentPlacehoder blockId={node.data.blockId} />
       </div>
     );
   }

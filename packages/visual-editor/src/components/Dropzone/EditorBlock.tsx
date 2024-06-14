@@ -19,6 +19,7 @@ import { RenderDropzoneFunction } from './Dropzone.types';
 import { PlaceholderParams } from '@components/Draggable/Placeholder';
 import Hitboxes from './Hitboxes';
 import { parseZoneId } from '@/utils/zone';
+import { MissingComponentPlacehoder } from './MissingComponentPlaceholder';
 
 type EditorBlockProps = {
   placeholder: PlaceholderParams;
@@ -95,17 +96,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   };
 
   if (isComponentMissing || !definition || !elementToRender) {
-    const renderMissingComponentPlacehoder = () => (
-      <div
-        style={{
-          border: '1px solid red',
-          width: '100%',
-          height: '100%',
-        }}>
-        Missing component &apos;{node.data.blockId}&apos;
-      </div>
-    );
-
     return (
       <DraggableComponent
         placeholder={placeholder}
@@ -122,10 +112,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         onClick={onClick}
         onMouseOver={onMouseOver}
         displayName={displayName || definition?.name}>
-        {renderMissingComponentPlacehoder()}
-        {/* {isStructureComponent && userIsDragging && (
-          <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
-        )} */}
+        <MissingComponentPlacehoder blockId={node.data.blockId} />
       </DraggableComponent>
     );
   }
