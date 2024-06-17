@@ -17,6 +17,7 @@ import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experien
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
+import { parseZoneId } from '@/utils/zone';
 
 type DropzoneProps = {
   zoneId: string;
@@ -40,6 +41,7 @@ export function Dropzone({
   const isHoveringZone = useZoneStore((state) => state.hoveringZone === zoneId);
   const tree = useTreeStore((state) => state.tree);
   const content = node?.children || tree.root?.children || [];
+  const { slotId } = parseZoneId(zoneId);
 
   const direction = useDropzoneDirection({ resolveDesignValue, node, zoneId });
 
@@ -138,6 +140,7 @@ export function Dropzone({
             ref={provided?.innerRef}
             id={zoneId}
             data-ctfl-zone-id={zoneId}
+            data-ctfl-slot-id={slotId}
             className={classNames(
               styles.container,
               {
@@ -154,28 +157,30 @@ export function Dropzone({
             {isEmptyCanvas ? (
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
             ) : (
-              content.map((item, i) => {
-                const componentId = item.data.id;
-                return (
-                  <EditorBlock
-                    placeholder={{
-                      isDraggingOver: snapshot?.isDraggingOver,
-                      totalIndexes: content.length,
-                      elementIndex: i,
-                      dropzoneElementId: zoneId,
-                      direction,
-                    }}
-                    index={i}
-                    zoneId={zoneId}
-                    key={componentId}
-                    userIsDragging={userIsDragging}
-                    draggingNewComponent={isDraggingNewComponent}
-                    node={item}
-                    resolveDesignValue={resolveDesignValue}
-                    renderDropzone={renderDropzone}
-                  />
-                );
-              })
+              content
+                .filter((node) => node.data.slotId === slotId)
+                .map((item, i) => {
+                  const componentId = item.data.id;
+                  return (
+                    <EditorBlock
+                      placeholder={{
+                        isDraggingOver: snapshot?.isDraggingOver,
+                        totalIndexes: content.length,
+                        elementIndex: i,
+                        dropzoneElementId: zoneId,
+                        direction,
+                      }}
+                      index={i}
+                      zoneId={zoneId}
+                      key={componentId}
+                      userIsDragging={userIsDragging}
+                      draggingNewComponent={isDraggingNewComponent}
+                      node={item}
+                      resolveDesignValue={resolveDesignValue}
+                      renderDropzone={renderDropzone}
+                    />
+                  );
+                })
             )}
             {provided?.placeholder}
           </WrapperComponent>

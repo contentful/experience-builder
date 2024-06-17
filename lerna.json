@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "npmClient": "npm",
-  "version": "1.5.0",
+  "version": "1.8.0-beta.0",
   "command": {
     "version": {
       "allowBranch": ["main", "next", "development"],
@@ -22,5 +22,8 @@
         "commitlist.config.js"
       ]
     }
+  },
+  "changelogPreset": {
+    "name": "conventionalcommits"
   }
 }

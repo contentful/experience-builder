@@ -2,13 +2,15 @@ import { defineComponents, defineBreakpoints } from '@contentful/experiences-sdk
 import ComponentWithChildren from './components/ComponentWithChildren';
 import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
+import NestedSlots from './components/NestedSlots';
 
 defineComponents([
   {
     component: ComponentWithChildren,
     definition: {
       id: 'component-with-children',
-      thumbnailUrl: 'https://static.thenounproject.com/png/2397501-200.png',
+      thumbnailUrl:
+        'https://images.ctfassets.net/son9ld5ewssk/66dcJbD6GoCqwQ0ciGaCOg/6c20042a8684baedc1517fadfc3e3070/children-enabled_7x.png',
       children: true,
       name: 'Children Enabled',
       category: 'Custom Components',
@@ -23,6 +25,26 @@ defineComponents([
     },
     options: {
       wrapComponent: false,
+    },
+  },
+  {
+    component: NestedSlots,
+    definition: {
+      id: 'nested-slots',
+      thumbnailUrl:
+        'https://images.ctfassets.net/son9ld5ewssk/5J3uY5m9DMwWg7FnpLvKwR/858b0168bbea353c57785797aa8e39ac/nested-slots_7x.png',
+      name: 'Nested Slots',
+      category: 'Custom Components',
+      builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBorder'],
+      variables: {},
+      slots: {
+        childrenSlot1: {
+          displayName: 'Slot 1',
+        },
+        childrenSlot2: {
+          displayName: 'Slot 2',
+        },
+      },
     },
   },
   {

@@ -1,6 +1,6 @@
 import { ContentfulClientApi } from 'contentful';
 import { fetchExperienceEntry } from './fetchExperienceEntry';
-import { compositionEntry } from '../test/__fixtures__/composition';
+import { experienceEntry } from '../test/__fixtures__/experience';
 import { entries } from '../test/__fixtures__/entities';
 import { describe, it, expect, vi, Mock } from 'vitest';
 
@@ -18,9 +18,9 @@ describe('fetchExperienceEntry', () => {
         experienceTypeId: 'books',
         locale: 'en-US',
         identifier: { slug: 'slug' },
-      })
+      }),
     ).rejects.toThrow(
-      'Failed to fetch experience entities. Required "client" parameter was not provided'
+      'Failed to fetch experience entities. Required "client" parameter was not provided',
     );
   });
 
@@ -32,9 +32,9 @@ describe('fetchExperienceEntry', () => {
         // @ts-expect-error intentionally setting it to undefined
         locale: undefined,
         identifier: { slug: 'slug' },
-      })
+      }),
     ).rejects.toThrow(
-      'Failed to fetch experience entities. Required "locale" parameter was not provided'
+      'Failed to fetch experience entities. Required "locale" parameter was not provided',
     );
   });
 
@@ -46,9 +46,9 @@ describe('fetchExperienceEntry', () => {
         experienceTypeId: undefined,
         locale: 'en-US',
         identifier: { slug: 'slug' },
-      })
+      }),
     ).rejects.toThrow(
-      'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided'
+      'Failed to fetch experience entities. Required "experienceTypeId" parameter was not provided',
     );
   });
 
@@ -59,23 +59,23 @@ describe('fetchExperienceEntry', () => {
         experienceTypeId: 'books',
         locale: 'en-US',
         identifier: {},
-      })
+      }),
     ).rejects.toThrow(
-      'Failed to fetch experience entities. At least one identifier must be provided. Received: {}'
+      'Failed to fetch experience entities. At least one identifier must be provided. Received: {}',
     );
   });
 
   it('should call client.getEntries with given parameters', async () => {
-    (mockClient.getEntries as Mock).mockResolvedValue({ items: [compositionEntry] });
+    (mockClient.getEntries as Mock).mockResolvedValue({ items: [experienceEntry] });
 
-    const experienceEntry = await fetchExperienceEntry({
+    const fetchedExperience = await fetchExperienceEntry({
       client: mockClient,
       experienceTypeId: 'books',
       locale: 'en-US',
       identifier: { slug: 'slug' },
     });
 
-    expect(experienceEntry).toEqual(compositionEntry);
+    expect(fetchedExperience).toEqual(experienceEntry);
 
     expect(mockClient.getEntries).toHaveBeenCalledWith({
       content_type: 'books',
@@ -96,12 +96,12 @@ describe('fetchExperienceEntry', () => {
       'sys.id': 'entry-id',
     });
 
-    expect(expEntry).toEqual(compositionEntry);
+    expect(expEntry).toEqual(experienceEntry);
   });
 
   it('should throw and error if getEntries call returns more than one entry', () => {
     (mockClient.getEntries as Mock).mockResolvedValue({
-      items: [compositionEntry, entries[0]],
+      items: [experienceEntry, entries[0]],
     });
 
     expect(
@@ -110,7 +110,7 @@ describe('fetchExperienceEntry', () => {
         experienceTypeId: 'books',
         locale: 'en-US',
         identifier: { slug: 'slug' },
-      })
+      }),
     ).rejects.toThrow('More than one experience with identifier: {"slug":"slug"} was found');
   });
 });

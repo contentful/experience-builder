@@ -40,6 +40,13 @@ export const entries: Entry[] = [
     },
     fields: {
       title: 'Entry 1',
+      logo: {
+        sys: {
+          id: entityIds.ASSET1,
+          type: 'Link',
+          linkType: 'Asset',
+        },
+      },
     },
     metadata: {
       tags: [],

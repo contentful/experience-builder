@@ -63,6 +63,10 @@ When a PR is merged into `main`, the CI/CD pipeline will automatically publish a
 
 To fix a critical bug that is in `main`, branch of the `main` branch. When your work is complete open a PR against `main`, and when it is approved, merge it back into `main` using the "Squash and merge" option. The change will be automatically merged back into `next` and `development`. However, if there is a merge conflict doing so, you will have to resolve it manually.
 
+### "Prerelease" packages
+
+An option exists for developers to publish specific feature branches as an installable "prerelease" version for testing purposes. This option is presented when [manually triggering the main workflow](https://github.com/contentful/experience-builder/actions/workflows/main.yml). If the "Publish prerelease version of the selected branch" checkbox is selected, a package version for that work-in-progress feature branch will be published to the public NPM repository.
+
 ## Commit Message Guidelines
 
 We follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification for our commit messages. This allows us to automatically generate changelogs and version bumps based on the commit messages. Please take care in your commit messages that make it into the main branches (`development`, `next`, and `main`) to follow this specification, as it helps with the release process.

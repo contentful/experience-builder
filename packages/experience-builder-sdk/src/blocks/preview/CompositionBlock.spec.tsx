@@ -7,7 +7,7 @@ import { defineComponents, resetComponentRegistry } from '../../core/componentRe
 import type { ComponentTreeNode, ExperienceEntry } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
-import { compositionEntry } from '../../../test/__fixtures__/composition';
+import { experienceEntry } from '../../../test/__fixtures__/composition';
 import {
   createAssemblyEntry,
   defaultAssemblyId,
@@ -123,10 +123,10 @@ describe('CompositionBlock', () => {
       id: defaultAssemblyId,
       schemaVersion: '2023-09-28',
     });
-    const experienceEntry = {
-      ...compositionEntry,
+    const updatedExperienceEntry = {
+      ...experienceEntry,
       fields: {
-        ...compositionEntry.fields,
+        ...experienceEntry.fields,
         usedComponents: [assemblyEntry],
         unboundValues: {
           [unboundValueKey]: {
@@ -137,7 +137,7 @@ describe('CompositionBlock', () => {
     } as ExperienceEntry;
 
     const entityStore = new EntityStore({
-      experienceEntry: experienceEntry as unknown as Entry,
+      experienceEntry: updatedExperienceEntry as unknown as Entry,
       entities: [...entries, ...assets],
       locale: 'en-US',
     });
