@@ -1,11 +1,11 @@
-import { createExperience, detachExperienceStyles } from '../index';
+import { createExperience, detachExperienceStyles } from '../../index';
 import {
   ComponentTreeNode,
   DesignValue,
   ExperienceDataSource,
   ExperienceEntry,
   ExperienceUnboundValues,
-} from '@contentful/experiences-core/types';
+} from '../../types';
 import { Asset, Entry } from 'contentful';
 
 const getExperienceEntryWithNode = ({

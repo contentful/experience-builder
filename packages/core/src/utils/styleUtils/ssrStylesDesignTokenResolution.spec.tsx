@@ -1,17 +1,5 @@
-import React from 'react';
-import {
-  ComponentDefinition,
-  createExperience,
-  defineComponents,
-  defineDesignTokens,
-  detachExperienceStyles,
-} from '../index';
-import { resetComponentRegistry } from '../core/componentRegistry';
-import {
-  DesignTokensDefinition,
-  DesignValue,
-  ExperienceEntry,
-} from '@contentful/experiences-core/types';
+import { createExperience, defineDesignTokens, detachExperienceStyles } from '../../index';
+import { DesignTokensDefinition, DesignValue, ExperienceEntry } from '../../types';
 import { Entry } from 'contentful';
 
 const designTokenRegistry: DesignTokensDefinition = {
@@ -73,44 +61,6 @@ const designTokenRegistry: DesignTokensDefinition = {
   },
 };
 
-const TestSubjectComponent = ({
-  title = 'GlaDOS',
-  quote = 'You Will Be Baked, And Then There Will Be Cake',
-  ...props
-}) => {
-  return (
-    <div {...props}>
-      <h1>{title}</h1>
-      <q>{quote}</q>
-    </div>
-  );
-};
-
-const TestSubjectComponentDefinition: ComponentDefinition = {
-  id: 'GLaDOS Quote',
-  name: 'GLaDOS Quote',
-  builtInStyles: [
-    'cfBackgroundColor',
-    'cfBorder',
-    'cfFontSize',
-    'cfGap',
-    'cfHeight',
-    'cfMargin',
-    'cfPadding',
-    'cfTextColor',
-    'cfWidth',
-  ],
-  variables: {
-    title: {
-      type: 'Text',
-      defaultValue: 'GlaDOS',
-    },
-    quote: {
-      type: 'Text',
-      defaultValue: 'You Will Be Baked, And Then There Will Be Cake',
-    },
-  },
-};
 const experienceEntry: ExperienceEntry = {
   sys: {
     id: 'test-id',
@@ -167,7 +117,7 @@ const experienceEntry: ExperienceEntry = {
       schemaVersion: '2023-09-28',
       children: [
         {
-          definitionId: TestSubjectComponentDefinition.id,
+          definitionId: 'custom-component-id',
           variables: {
             title: { type: 'UnboundValue', key: 'LbgUfow4SJIqWCrkZ1fvi' },
             quote: { type: 'UnboundValue', key: 'FPbWCrkZgUfow4SJIq31d' },
@@ -261,17 +211,7 @@ const experienceEntry: ExperienceEntry = {
 
 describe('custom component with builtInStyles which are supporting design tokens', () => {
   beforeEach(() => {
-    defineComponents([
-      {
-        component: TestSubjectComponent,
-        definition: TestSubjectComponentDefinition,
-      },
-    ]);
     defineDesignTokens(designTokenRegistry);
-  });
-
-  afterEach(() => {
-    resetComponentRegistry();
   });
 
   it('should populate values with design tokens and extract the css', () => {
