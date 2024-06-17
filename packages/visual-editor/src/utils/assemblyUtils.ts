@@ -74,6 +74,8 @@ export const deserializeAssemblyNode = ({
         const componentInstanceValue = componentInstanceDataSource[instanceProperty.linkTargetKey];
         dataSource[instanceProperty.linkTargetKey] == componentInstanceValue;
         childNodeVariable[variableName] = instanceProperty;
+      } else if (instanceProperty?.type === 'DesignValue') {
+        childNodeVariable[variableName] = instanceProperty;
       }
     }
   }
@@ -155,6 +157,18 @@ export const resolveAssembly = ({
     });
   }
 
+  const variableDefinitions = componentFields.componentSettings?.variableDefinitions || {};
+  console.log('deserializeAssemblyNode - componentVariables: ', variableDefinitions);
+  const missingVariables = Object.keys(variableDefinitions).filter((key) => !node.data.props[key]);
+  console.log('deserializeAssemblyNode - missingVariables: ', missingVariables);
+  const componentInstanceProps = { ...node.data.props };
+  missingVariables.forEach((key) => {
+    if (variableDefinitions[key].defaultValue !== undefined) {
+      componentInstanceProps[key] = variableDefinitions[key].defaultValue as ComponentPropertyValue;
+    }
+  });
+  console.log('deserializeAssemblyNode - componentInstanceProps: ', componentInstanceProps);
+
   const deserializedNode = deserializeAssemblyNode({
     node: {
       definitionId: node.data.blockId || '',
@@ -168,7 +182,7 @@ export const resolveAssembly = ({
     assemblyId: assembly.sys.id,
     assemblyComponentId: node.data.id,
     assemblyUnboundValues: componentFields.unboundValues,
-    componentInstanceProps: node.data.props,
+    componentInstanceProps,
     componentInstanceUnboundValues: node.data.unboundValues,
     componentInstanceDataSource: node.data.dataSource,
   });
