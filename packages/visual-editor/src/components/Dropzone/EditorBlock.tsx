@@ -19,6 +19,7 @@ import { RenderDropzoneFunction } from './Dropzone.types';
 import { PlaceholderParams } from '@components/Draggable/Placeholder';
 import Hitboxes from './Hitboxes';
 import { parseZoneId } from '@/utils/zone';
+import { MissingComponentPlacehoder } from './MissingComponentPlaceholder';
 
 type EditorBlockProps = {
   placeholder: PlaceholderParams;
@@ -43,7 +44,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const { slotId } = parseZoneId(zoneId);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, wrapperProps, definition, elementToRender } = useComponent({
+  const { node, wrapperProps, definition, elementToRender, isComponentMissing } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -94,6 +95,28 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     });
   };
 
+  if (isComponentMissing || !definition || !elementToRender) {
+    return (
+      <DraggableComponent
+        placeholder={placeholder}
+        id={node.data.id}
+        index={index}
+        isAssemblyBlock={isAssembly || isAssemblyBlock}
+        isDragDisabled={false}
+        isSelected={selectedNodeId === node.data.id}
+        userIsDragging={userIsDragging}
+        isContainer={isContainer}
+        blockId={node.data.blockId}
+        coordinates={coordinates!}
+        wrapperProps={wrapperProps}
+        onClick={onClick}
+        onMouseOver={onMouseOver}
+        displayName={displayName || definition?.name}>
+        <MissingComponentPlacehoder blockId={node.data.blockId} />
+      </DraggableComponent>
+    );
+  }
+
   if (isSingleColumn) {
     return (
       <DraggableChildComponent
@@ -119,7 +142,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   return (
     <DraggableComponent
       placeholder={placeholder}
-      definition={definition}
       id={node.data.id}
       index={index}
       isAssemblyBlock={isAssembly || isAssemblyBlock}
