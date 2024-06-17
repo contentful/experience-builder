@@ -13,6 +13,7 @@ import {
   CONTENTFUL_COMPONENTS,
 } from '@contentful/experiences-core/constants';
 import classNames from 'classnames';
+import { MissingComponentPlacehoder } from './MissingComponentPlaceholder';
 
 function getStyle(style: CSSProperties = {}, snapshot?: DraggableStateSnapshot) {
   if (!snapshot?.isDropAnimating) {
@@ -43,7 +44,7 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
 }) => {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
 
-  const { node, wrapperProps, elementToRender } = useComponent({
+  const { isComponentMissing, node, wrapperProps, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -52,6 +53,30 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
+
+  if (isComponentMissing || !elementToRender) {
+    // !elementToRender is for typescript
+    return (
+      <div
+        ref={provided?.innerRef}
+        data-ctfl-dragging-element
+        {...wrapperProps}
+        {...provided?.draggableProps}
+        {...provided?.dragHandleProps}
+        className={classNames(
+          styles.DraggableComponent,
+          wrapperProps.className,
+          styles.DraggableClone,
+          {
+            [styles.isAssemblyBlock]: isAssemblyBlock,
+            [styles.isDragging]: snapshot?.isDragging,
+          },
+        )}
+        style={getStyle(provided?.draggableProps.style, snapshot)}>
+        <MissingComponentPlacehoder blockId={node.data.blockId} />
+      </div>
+    );
+  }
 
   if (isSingleColumn) {
     return elementToRender();

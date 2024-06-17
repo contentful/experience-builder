@@ -1,75 +1,7 @@
-import React from 'react';
-import {
-  ComponentDefinition,
-  createExperience,
-  defineComponents,
-  detachExperienceStyles,
-} from '../index';
-import { resetComponentRegistry } from '../core/componentRegistry';
-import { DesignValue, ExperienceEntry } from '@contentful/experiences-core/types';
+import { createExperience, detachExperienceStyles } from '../../index';
+import { DesignValue, ExperienceEntry } from '../../types';
 import { Entry } from 'contentful';
 
-const TestSubjectComponent = ({
-  title = 'GlaDOS',
-  quote = 'You Will Be Baked, And Then There Will Be Cake',
-  ...props
-}) => {
-  return (
-    <div {...props}>
-      <h1>{title}</h1>
-      <q>{quote}</q>
-    </div>
-  );
-};
-
-const TestSubjectComponentDefinition: ComponentDefinition = {
-  id: 'GLaDOS Quote',
-  name: 'GLaDOS Quote',
-  builtInStyles: [
-    'cfBackgroundColor',
-    'cfBackgroundImageOptions',
-    'cfBackgroundImageUrl',
-    'cfBorder',
-    'cfBorderRadius',
-    'cfColumnSpan',
-    'cfColumnSpanLock',
-    'cfColumns',
-    'cfFlexDirection',
-    'cfFlexWrap',
-    'cfFontSize',
-    'cfFontWeight',
-    'cfGap',
-    'cfHeight',
-    'cfHorizontalAlignment',
-    'cfImageAsset',
-    'cfImageOptions',
-    'cfLetterSpacing',
-    'cfLineHeight',
-    'cfMargin',
-    'cfMaxWidth',
-    'cfPadding',
-    'cfTextAlign',
-    'cfTextBold',
-    'cfTextColor',
-    'cfTextItalic',
-    'cfTextTransform',
-    'cfTextUnderline',
-    'cfVerticalAlignment',
-    'cfWidth',
-    'cfWrapColumns',
-    'cfWrapColumnsCount',
-  ],
-  variables: {
-    title: {
-      type: 'Text',
-      defaultValue: 'GlaDOS',
-    },
-    quote: {
-      type: 'Text',
-      defaultValue: 'You Will Be Baked, And Then There Will Be Cake',
-    },
-  },
-};
 const experienceEntry: ExperienceEntry = {
   sys: {
     id: 'test-id',
@@ -126,7 +58,7 @@ const experienceEntry: ExperienceEntry = {
       schemaVersion: '2023-09-28',
       children: [
         {
-          definitionId: TestSubjectComponentDefinition.id,
+          definitionId: 'custom-component-id',
           variables: {
             title: { type: 'UnboundValue', key: 'LbgUfow4SJIqWCrkZ1fvi' },
             quote: { type: 'UnboundValue', key: 'FPbWCrkZgUfow4SJIq31d' },
@@ -294,10 +226,10 @@ const experienceEntry: ExperienceEntry = {
     dataSource: {},
     unboundValues: {
       LbgUfow4SJIqWCrkZ1fvi: {
-        value: TestSubjectComponentDefinition.variables.title.defaultValue,
+        value: 'GlaDOS',
       },
       FPbWCrkZgUfow4SJIq31d: {
-        value: TestSubjectComponentDefinition.variables.quote.defaultValue,
+        value: 'You Will Be Baked, And Then There Will Be Cake',
       },
       QiTUaZhbBwpPXCrtjereK: {
         value: 'https://www.contentful.com/bg-image.jpg',
@@ -313,19 +245,6 @@ const experienceEntry: ExperienceEntry = {
 };
 
 describe('custom component with builtInStyles', () => {
-  beforeEach(() => {
-    defineComponents([
-      {
-        component: TestSubjectComponent,
-        definition: TestSubjectComponentDefinition,
-      },
-    ]);
-  });
-
-  afterEach(() => {
-    resetComponentRegistry();
-  });
-
   it('should extract builtInStyles as media query css', () => {
     const experience = createExperience({
       experienceEntry: experienceEntry as Entry,

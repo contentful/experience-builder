@@ -9,7 +9,8 @@ defineComponents([
     component: ComponentWithChildren,
     definition: {
       id: 'component-with-children',
-      thumbnailUrl: 'https://static.thenounproject.com/png/2397501-200.png',
+      thumbnailUrl:
+        'https://images.ctfassets.net/son9ld5ewssk/66dcJbD6GoCqwQ0ciGaCOg/6c20042a8684baedc1517fadfc3e3070/children-enabled_7x.png',
       children: true,
       name: 'Children Enabled',
       category: 'Custom Components',
@@ -30,7 +31,8 @@ defineComponents([
     component: NestedSlots,
     definition: {
       id: 'nested-slots',
-      thumbnailUrl: 'https://static.thenounproject.com/png/302688-200.png',
+      thumbnailUrl:
+        'https://images.ctfassets.net/son9ld5ewssk/5J3uY5m9DMwWg7FnpLvKwR/858b0168bbea353c57785797aa8e39ac/nested-slots_7x.png',
       name: 'Nested Slots',
       category: 'Custom Components',
       builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBorder'],
