@@ -1,5 +1,6 @@
 import { getExperience } from '@/getExperience';
 import Experience from '@/components/Experience';
+import { detachExperienceStyles } from '@contentful/experiences-core';
 
 type Page = {
   params: { locale?: string; slug?: string; preview?: string };
@@ -17,12 +18,14 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
     return <div>{error.message}</div>;
   }
 
+  const stylesheet = detachExperienceStyles(experience!);
+
   //experience currently needs to be stringified manually to be passed to the component
   const experienceJSON = experience ? JSON.stringify(experience) : null;
 
   return (
     <main style={{ width: '100%' }}>
-      <Experience experienceJSON={experienceJSON} locale={locale} />
+      <Experience experienceJSON={experienceJSON} locale={locale} stylesheet={stylesheet} />
     </main>
   );
 }
