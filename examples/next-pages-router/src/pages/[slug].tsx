@@ -50,8 +50,8 @@ function ExperiencePage({
 }
 
 export const getServerSideProps = async (content: GetServerSidePropsContext<Params, Query>) => {
-  const { params, query } = content;
-  const { locale = 'en-US', slug = 'home-page' } = params || {};
+  const { params, query, locale = 'en-US' } = content;
+  const { slug = 'home-page' } = params || {};
   const { preview = 'false', editor = 'false' } = query;
   const isPreview = preview === 'true';
   const isEditorMode = editor === 'true';
@@ -72,5 +72,7 @@ export const getServerSideProps = async (content: GetServerSidePropsContext<Para
     },
   };
 };
+
+// give getStaticProps a try with a revalidation property instead of GSSP
 
 export default ExperiencePage;

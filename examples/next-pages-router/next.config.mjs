@@ -4,15 +4,14 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/en-US/home-page',
-        permanent: true,
-      },
-      {
-        source: '/:locale',
-        destination: '/:locale/home-page',
+        destination: '/home-page',
         permanent: true,
       },
     ];
+  },
+  i18n: {
+    locales: ['en-US', 'de'],
+    defaultLocale: 'en-US',
   },
   reactStrictMode: true,
 };
