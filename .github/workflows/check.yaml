@@ -42,7 +42,7 @@ jobs:
       - name: List component build folders
         run: ls -la packages/components/dist
       - name: List test-app build folders
-        run: ls -la packages/test-app/dist
+        run: ls -la packages/test-apps/react-vite/dist
       - name: Run Prettier
         run: npm run prettier:check
       - name: Run Linting

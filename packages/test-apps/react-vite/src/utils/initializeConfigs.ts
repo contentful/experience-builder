@@ -33,7 +33,7 @@ export function initializeConfigs() {
 
       if (!window.localStorage['contentful-current-config']) {
         const baseConfigs: Record<string, ContentfulConfig> = JSON.parse(
-          window.localStorage['contentful-configs']
+          window.localStorage['contentful-configs'],
         );
         window.localStorage['contentful-current-config'] = Object.keys(baseConfigs)[0];
       }

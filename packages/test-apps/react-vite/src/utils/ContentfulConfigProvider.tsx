@@ -19,13 +19,13 @@ export const ContentfulConfigProviderContext = createContext<
 export const ContentfulConfigProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [isPreview, setIsPreview] = useState<boolean>(
     window.location.search.includes('isPreview=true') ||
-      JSON.parse(window.localStorage['contentful-is-preview'])
+      JSON.parse(window.localStorage['contentful-is-preview']),
   );
   const [currentConfig, setCurrentConfig] = useState<string>(
-    window.localStorage['contentful-current-config']
+    window.localStorage['contentful-current-config'],
   );
   const [availableConfigs] = useState<Record<string, ContentfulConfig>>(
-    JSON.parse(window.localStorage['contentful-configs'])
+    JSON.parse(window.localStorage['contentful-configs']),
   );
 
   const handleSetIsPreview = (isPreview: boolean) => {
