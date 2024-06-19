@@ -2,13 +2,12 @@ export const SCROLL_STATES = {
   Start: 'scrollStart',
   IsScrolling: 'isScrolling',
   End: 'scrollEnd',
-};
+} as const;
 
 export const OUTGOING_EVENTS = {
   Connected: 'connected',
   DesignTokens: 'registerDesignTokens',
   RegisteredBreakpoints: 'registeredBreakpoints',
-  HoveredSection: 'hoveredSection',
   MouseMove: 'mouseMove',
   NewHoveredElement: 'newHoveredElement',
   ComponentSelected: 'componentSelected',
@@ -19,14 +18,14 @@ export const OUTGOING_EVENTS = {
   ComponentMoved: 'componentMoved',
   CanvasReload: 'canvasReload',
   UpdateSelectedComponentCoordinates: 'updateSelectedComponentCoordinates',
-  UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
   ComponentMoveStarted: 'componentMoveStarted',
   ComponentMoveEnded: 'componentMoveEnded',
   OutsideCanvasClick: 'outsideCanvasClick',
   SDKFeatures: 'sdkFeatures',
-};
+  RequestEntities: 'REQUEST_ENTITIES',
+} as const;
 
 export const INCOMING_EVENTS = {
   RequestEditorMode: 'requestEditorMode',

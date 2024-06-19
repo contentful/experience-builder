@@ -16,7 +16,6 @@ import type {
   ExperienceComponentTree,
   ComponentDefinitionPropertyType,
 } from '@contentful/experiences-validators';
-// TODO: Remove references to 'Composition'
 export type {
   ExperienceDataSource,
   ExperienceUnboundValues,
@@ -38,7 +37,7 @@ type ScrollStateKey = keyof typeof SCROLL_STATES;
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
 
 type OutgoingEventKey = keyof typeof OUTGOING_EVENTS;
-export type OutgoingEvent = (typeof OUTGOING_EVENTS)[OutgoingEventKey];
+export type OutgoingEventValue = (typeof OUTGOING_EVENTS)[OutgoingEventKey];
 
 type IncomingEventKey = keyof typeof INCOMING_EVENTS;
 export type IncomingEvent = (typeof INCOMING_EVENTS)[IncomingEventKey];
@@ -380,3 +379,85 @@ export type BackgroundImageOptions = {
   quality?: string;
   targetSize: string;
 };
+
+type ConnectedPayload = undefined | { sdkVersion: string; definitions: ComponentDefinition[] };
+type DesignTokensPayload = DesignTokensDefinition;
+type RegisteredBreakpointsPayload = { breakpoints: Breakpoint[] };
+type MouseMovePayload = { clientX: number; clientY: number };
+type NewHoveredElementPayload = { nodeId?: string };
+type ComponentSelectedPayload = {
+  nodeId: string;
+  assembly?: { id: string; componentId: string; nodeLocation: string | null };
+};
+type RegisteredComponentsPayload = { definitions: ComponentDefinition[] };
+type RequestComponentTreeUpdatePayload = undefined;
+type ComponentDragCanceledPayload = undefined;
+type ComponentDroppedPayload = {
+  node: ExperienceTreeNode;
+  index: number;
+  parentNode: {
+    type?: ExperienceTreeNode['type'] | 'root';
+    data: { blockId?: string; id?: string };
+  };
+};
+type ComponentMovedPayload = {
+  nodeId: string;
+  sourceParentId: string;
+  destinationParentId: string;
+  sourceIndex: number;
+  destinationIndex: number;
+};
+type CanvasReloadPayload = {};
+type CanvasErrorPayload = Error;
+type UpdateSelectedComponentCoordinatesPayload = {
+  selectedNodeCoordinates: DOMRect;
+  selectedAssemblyChildCoordinates: DOMRect | null;
+  parentCoordinates: DOMRect | null;
+};
+type CanvasScrollPayload = (typeof SCROLL_STATES)[keyof typeof SCROLL_STATES];
+type ComponentMoveStartedPayload = undefined;
+type ComponentMoveEndedPayload = undefined;
+type OutsideCanvasClickPayload = { outsideCanvasClick: boolean };
+type SDKFeaturesPayload = Record<string, unknown>;
+type RequestEntitiesPayload = {
+  entityIds: string[];
+  entityType: 'Entry' | 'Asset';
+  locale: string;
+};
+
+type OUTGOING_EVENT_PAYLOADS = {
+  connected: ConnectedPayload;
+  registerDesignTokens: DesignTokensPayload;
+  registeredBreakpoints: RegisteredBreakpointsPayload;
+  mouseMove: MouseMovePayload;
+  newHoveredElement: NewHoveredElementPayload;
+  componentSelected: ComponentSelectedPayload;
+  registeredComponents: RegisteredComponentsPayload;
+  requestComponentTreeUpdate: RequestComponentTreeUpdatePayload;
+  componentDragCanceled: ComponentDragCanceledPayload;
+  componentDropped: ComponentDroppedPayload;
+  componentMoved: ComponentMovedPayload;
+  canvasReload: CanvasReloadPayload;
+  canvasError: CanvasErrorPayload;
+  updateSelectedComponentCoordinates: UpdateSelectedComponentCoordinatesPayload;
+  canvasScrolling: CanvasScrollPayload;
+  componentMoveStarted: ComponentMoveStartedPayload;
+  componentMoveEnded: ComponentMoveEndedPayload;
+  outsideCanvasClick: OutsideCanvasClickPayload;
+  sdkFeatures: SDKFeaturesPayload;
+  REQUEST_ENTITIES: RequestEntitiesPayload;
+};
+
+type OUTGOING_EVENT_VALUES = (typeof OUTGOING_EVENTS)[keyof typeof OUTGOING_EVENTS];
+
+// TODO - make data optional only for events that don't require it
+export type OutgoingEvent = <T extends OUTGOING_EVENT_VALUES>(
+  eventType: T,
+  data?: OUTGOING_EVENT_PAYLOADS[T],
+) => void;
+
+// const sendMessage: OutgoingEvent = (eventType, data) => {
+//   console.log(eventType, data);
+// }
+
+// sendMessage("connected", { sdkVersion: "1.0.0", definitions: [] });
