@@ -461,3 +461,86 @@ export type OutgoingEvent = <T extends OUTGOING_EVENT_VALUES>(
 // }
 
 // sendMessage("connected", { sdkVersion: "1.0.0", definitions: [] });
+
+type ValueTypes = ComponentPropertyValue['type'];
+
+type Filter<T, U> = T extends U ? T : never;
+
+type SelectedValueTypes = Filter<ValueTypes, 'UnboundValue' | 'BoundValue'>;
+
+type RequestEditorModePayload = undefined;
+type ExperienceUpdatedPayload = {
+  tree: ExperienceTree;
+  /** @deprecated in favor of assemblies */
+  designComponents?: ExperienceUsedComponents;
+  assemblies?: ExperienceUsedComponents;
+  locale: string;
+  /** @deprecated maybe? */
+  defaultLocaleCode?: string;
+  changedNode?: ExperienceTreeNode;
+  changedValueType?: SelectedValueTypes;
+};
+
+type ComponentDraggingChangedPayload = {
+  isDragging: boolean;
+};
+
+type IncomingComponentDragCanceledPayload = undefined;
+type ComponentDragStartedPayload = { id: string };
+type ComponentDragEndedPayload = undefined;
+type IncomingComponentMoveEndedPayload = {
+  mouseX: number;
+  mouseY: number;
+};
+type CanvasResizedPayload = {
+  selectedNodeId: string;
+};
+type SelectComponentPayload = {
+  selectedNodeId: string;
+};
+type HoverComponentPayload = {
+  hoveredNodeId: string;
+};
+type UpdatedEntityPayload = {
+  entity: ManagementEntity;
+  shouldRerender?: boolean;
+};
+type AssembliesAddedPayload = {
+  assembly: ManagementEntity;
+  assemblyDefinition: ComponentDefinition;
+};
+type AssembliesRegisteredPayload = {
+  assemblies: ComponentDefinition[];
+};
+type IncomingMouseMovePayload = {
+  mouseX: number;
+  mouseY: number;
+};
+type RequestedEntitiesPayload = {
+  entities: ManagementEntity[];
+};
+
+type INCOMING_EVENT_PAYLOADS = {
+  requestEditorMode: RequestEditorModePayload;
+  componentTreeUpdated: ExperienceUpdatedPayload;
+  componentDraggingChanged: ComponentDraggingChangedPayload;
+  componentDragCanceled: IncomingComponentDragCanceledPayload;
+  componentDragStarted: ComponentDragStartedPayload;
+  componentDragEnded: ComponentDragEndedPayload;
+  componentMoveEnded: IncomingComponentMoveEndedPayload;
+  canvasResized: CanvasResizedPayload;
+  selectComponent: SelectComponentPayload;
+  hoverComponent: HoverComponentPayload;
+  updatedEntity: UpdatedEntityPayload;
+  assembliesAdded: AssembliesAddedPayload;
+  assembliesRegistered: AssembliesRegisteredPayload;
+  mouseMove: IncomingMouseMovePayload;
+  REQUESTED_ENTITIES: RequestedEntitiesPayload;
+};
+
+export type IncomingMessage = {
+  [K in keyof INCOMING_EVENT_PAYLOADS]: {
+    eventType: K;
+    payload: INCOMING_EVENT_PAYLOADS[K];
+  };
+}[keyof INCOMING_EVENT_PAYLOADS];

@@ -41,14 +41,14 @@ export const INCOMING_EVENTS = {
   UpdatedEntity: 'updatedEntity',
   AssembliesAdded: 'assembliesAdded',
   AssembliesRegistered: 'assembliesRegistered',
-  InitEditor: 'initEditor',
   MouseMove: 'mouseMove',
-};
+  RequestedEntities: 'REQUESTED_ENTITIES',
+} as const;
 
 export const INTERNAL_EVENTS = {
   ComponentsRegistered: 'cfComponentsRegistered',
   VisualEditorInitialize: 'cfVisualEditorInitialize',
-};
+} as const;
 
 export const VISUAL_EDITOR_EVENTS = {
   Ready: 'cfVisualEditorReady',

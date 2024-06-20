@@ -17,12 +17,12 @@ import {
 } from '@contentful/experiences-core/constants';
 import {
   ExperienceTree,
-  ExperienceTreeNode,
-  ComponentPropertyValue,
   ComponentRegistration,
   Link,
   ExperienceDataSource,
   ManagementEntity,
+  ExperienceUpdatedPayload,
+  IncomingMessage,
 } from '@contentful/experiences-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import { useTreeStore } from '@/store/tree';
@@ -192,24 +192,9 @@ export function useEditorSubscriber() {
         eventData,
       );
 
-      const { payload } = eventData;
-
       switch (eventData.eventType) {
         case INCOMING_EVENTS.ExperienceUpdated: {
-          const {
-            tree,
-            locale,
-            changedNode,
-            changedValueType,
-            assemblies,
-          }: {
-            tree: ExperienceTree;
-            assemblies: Link<'Entry'>[];
-            locale: string;
-            entitiesResolved?: boolean;
-            changedNode?: ExperienceTreeNode;
-            changedValueType?: ComponentPropertyValue['type'];
-          } = payload;
+          const { tree, locale, changedNode, changedValueType, assemblies } = eventData.payload;
 
           // Make sure to first store the assemblies before setting the tree and thus triggering a rerender
           if (assemblies) {
@@ -254,7 +239,7 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.AssembliesRegistered: {
-          const { assemblies }: { assemblies: ComponentRegistration['definition'][] } = payload;
+          const { assemblies } = eventData.payload;
 
           assemblies.forEach((definition) => {
             addComponentRegistration({
@@ -271,7 +256,7 @@ export function useEditorSubscriber() {
           }: {
             assembly: ManagementEntity;
             assemblyDefinition?: ComponentRegistration['definition'];
-          } = payload;
+          } = eventData.payload;
           entityStore.updateEntity(assembly);
           // Using a Map here to avoid setting state and rerending all existing assemblies when a new assembly is added
           // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
@@ -289,19 +274,19 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.CanvasResized: {
-          const { selectedNodeId } = payload;
+          const { selectedNodeId } = eventData.payload;
           if (selectedNodeId) {
             sendSelectedComponentCoordinates(selectedNodeId);
           }
           break;
         }
         case INCOMING_EVENTS.HoverComponent: {
-          const { hoveredNodeId } = payload;
+          const { hoveredNodeId } = eventData.payload;
           setHoveredComponentId(hoveredNodeId);
           break;
         }
         case INCOMING_EVENTS.ComponentDraggingChanged: {
-          const { isDragging } = payload;
+          const { isDragging } = eventData.payload;
 
           if (!isDragging) {
             setComponentId('');
@@ -311,10 +296,7 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.UpdatedEntity: {
-          const { entity: updatedEntity, shouldRerender } = payload as {
-            entity: ManagementEntity;
-            shouldRerender?: boolean;
-          };
+          const { entity: updatedEntity, shouldRerender } = eventData.payload;
           if (updatedEntity) {
             const storedEntity = entityStore.entities.find(
               (entity) => entity.sys.id === updatedEntity.sys.id,
@@ -340,8 +322,9 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.ComponentDragStarted: {
+          const { id } = eventData.payload;
           SimulateDnD.setupDrag();
-          setComponentId(payload.id || '');
+          setComponentId(id || '');
           setDraggingOnCanvas(true);
 
           sendMessage(OUTGOING_EVENTS.ComponentSelected, {
@@ -356,13 +339,13 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.SelectComponent: {
-          const { selectedNodeId: nodeId } = payload;
+          const { selectedNodeId: nodeId } = eventData.payload;
           setSelectedNodeId(nodeId);
           sendSelectedComponentCoordinates(nodeId);
           break;
         }
         case INCOMING_EVENTS.MouseMove: {
-          const { mouseX, mouseY } = payload;
+          const { mouseX, mouseY } = eventData.payload;
           setMousePosition(mouseX, mouseY);
 
           if (SimulateDnD.isDraggingOnParent && !SimulateDnD.isDragging) {
@@ -374,13 +357,13 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.ComponentMoveEnded: {
-          const { mouseX, mouseY } = payload;
+          const { mouseX, mouseY } = eventData.payload;
           SimulateDnD.endDrag(mouseX, mouseY);
           break;
         }
         default:
           console.error(
-            `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`,
+            `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${(eventData as IncomingMessage).eventType}]`,
           );
       }
     };
