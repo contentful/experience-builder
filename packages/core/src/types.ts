@@ -37,7 +37,7 @@ type ScrollStateKey = keyof typeof SCROLL_STATES;
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
 
 type OutgoingEventKey = keyof typeof OUTGOING_EVENTS;
-export type OutgoingEventValue = (typeof OUTGOING_EVENTS)[OutgoingEventKey];
+export type OutgoingEvent = (typeof OUTGOING_EVENTS)[OutgoingEventKey];
 
 type IncomingEventKey = keyof typeof INCOMING_EVENTS;
 export type IncomingEvent = (typeof INCOMING_EVENTS)[IncomingEventKey];
@@ -407,7 +407,7 @@ type ComponentMovedPayload = {
   sourceIndex: number;
   destinationIndex: number;
 };
-type CanvasReloadPayload = {};
+type CanvasReloadPayload = undefined;
 type CanvasErrorPayload = Error;
 type UpdateSelectedComponentCoordinatesPayload = {
   selectedNodeCoordinates: DOMRect;
@@ -448,25 +448,21 @@ type OUTGOING_EVENT_PAYLOADS = {
   REQUEST_ENTITIES: RequestEntitiesPayload;
 };
 
-type OUTGOING_EVENT_VALUES = (typeof OUTGOING_EVENTS)[keyof typeof OUTGOING_EVENTS];
-
-// TODO - make data optional only for events that don't require it
-export type OutgoingEvent = <T extends OUTGOING_EVENT_VALUES>(
+export type SendMessageParams = <T extends OutgoingEvent>(
   eventType: T,
   data: OUTGOING_EVENT_PAYLOADS[T],
 ) => void;
 
-// const sendMessage: OutgoingEvent = (eventType, data) => {
-//   console.log(eventType, data);
-// }
-
-// sendMessage("connected", { sdkVersion: "1.0.0", definitions: [] });
-
-type ValueTypes = ComponentPropertyValue['type'];
+export type OutgoingMessage = {
+  [K in keyof OUTGOING_EVENT_PAYLOADS]: {
+    source: 'customer-app';
+    eventType: K;
+    payload: OUTGOING_EVENT_PAYLOADS[K];
+  };
+}[keyof OUTGOING_EVENT_PAYLOADS];
 
 type Filter<T, U> = T extends U ? T : never;
-
-type SelectedValueTypes = Filter<ValueTypes, 'UnboundValue' | 'BoundValue'>;
+type SelectedValueTypes = Filter<ComponentPropertyValue['type'], 'UnboundValue' | 'BoundValue'>;
 
 type RequestEditorModePayload = undefined;
 type ExperienceUpdatedPayload = {

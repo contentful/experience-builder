@@ -59,7 +59,7 @@ export function useEditorSubscriber() {
   const [, /* isFetchingEntities */ setFetchingEntities] = useState(false);
 
   const reloadApp = () => {
-    sendMessage(OUTGOING_EVENTS.CanvasReload, {});
+    sendMessage(OUTGOING_EVENTS.CanvasReload, undefined);
     // Wait a moment to ensure that the message was sent
     setTimeout(() => {
       // Received a hot reload message from webpack dev server -> reload the canvas

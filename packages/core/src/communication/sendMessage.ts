@@ -1,6 +1,6 @@
-import { OutgoingEvent } from '@/types';
+import { SendMessageParams, OutgoingMessage } from '@/types';
 
-export const sendMessage: OutgoingEvent = (eventType, data) => {
+export const sendMessage: SendMessageParams = (eventType, data) => {
   if (typeof window === 'undefined') {
     return;
   }
@@ -16,7 +16,7 @@ export const sendMessage: OutgoingEvent = (eventType, data) => {
       source: 'customer-app',
       eventType,
       payload: data,
-    },
+    } as OutgoingMessage,
     '*',
   );
 };
