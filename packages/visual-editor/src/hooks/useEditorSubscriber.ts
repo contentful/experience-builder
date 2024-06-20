@@ -21,7 +21,6 @@ import {
   Link,
   ExperienceDataSource,
   ManagementEntity,
-  ExperienceUpdatedPayload,
   IncomingMessage,
 } from '@contentful/experiences-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
@@ -69,7 +68,7 @@ export function useEditorSubscriber() {
   };
 
   useEffect(() => {
-    sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
+    sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate, undefined);
   }, []);
 
   /**

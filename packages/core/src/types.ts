@@ -453,7 +453,7 @@ type OUTGOING_EVENT_VALUES = (typeof OUTGOING_EVENTS)[keyof typeof OUTGOING_EVEN
 // TODO - make data optional only for events that don't require it
 export type OutgoingEvent = <T extends OUTGOING_EVENT_VALUES>(
   eventType: T,
-  data?: OUTGOING_EVENT_PAYLOADS[T],
+  data: OUTGOING_EVENT_PAYLOADS[T],
 ) => void;
 
 // const sendMessage: OutgoingEvent = (eventType, data) => {
