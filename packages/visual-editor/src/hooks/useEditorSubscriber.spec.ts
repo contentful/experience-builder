@@ -54,7 +54,7 @@ describe('Canvas Subscriber methods', () => {
     logLevel: 'info',
     // Silence warning about older spec version of existing pact files -> always overwrite existing pact files
     pactfileWriteMode: 'overwrite',
-    dir: '../../pacts/visual-editor',
+    dir: '../../pacts',
   });
 
   beforeAll(() => {
