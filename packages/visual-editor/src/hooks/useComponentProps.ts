@@ -23,7 +23,7 @@ import type {
   Link,
   DesignValue,
 } from '@contentful/experiences-core/types';
-import { useMemo } from 'react';
+import { CSSProperties, useMemo } from 'react';
 import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
 import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
@@ -69,9 +69,7 @@ export const useComponentProps = ({
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
 
-  const isEmptyZone = useMemo(() => {
-    return !node.children.filter((child) => child.data.slotId === slotId).length;
-  }, [node.children, slotId]);
+  const isEmptyZone = !node.children.filter((child) => child.data.slotId === slotId).length;
 
   const props: ComponentProps = useMemo(() => {
     const propsBase = {
@@ -220,6 +218,16 @@ export const useComponentProps = ({
 
   const cfStyles = buildCfStyles(props as StyleProps);
 
+  const sizeStyles: CSSProperties = {
+    width: cfStyles.width,
+    maxWidth: cfStyles.maxWidth,
+    maxHeight: cfStyles.maxHeight,
+  };
+
+  const isAssemblyBlock = node.type === 'assemblyBlock';
+  const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
+  const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
+
   // Styles that will be applied to the component element
   const componentClass = useEditorModeClassName({
     styles: {
@@ -229,8 +237,9 @@ export const useComponentProps = ({
           minHeight: EMPTY_CONTAINER_HEIGHT,
         }),
       ...(userIsDragging &&
-        isContentfulStructureComponent(node?.data.blockId) &&
-        node?.data.blockId !== CONTENTFUL_COMPONENTS.columns.id && {
+        isStructureComponent &&
+        !isSingleColumn &&
+        !isAssemblyBlock && {
           padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
         }),
     },
@@ -253,7 +262,7 @@ export const useComponentProps = ({
     ...(definition.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { componentProps };
+  return { componentProps, sizeStyles };
 };
 
 const addExtraDropzonePadding = (padding: string) =>

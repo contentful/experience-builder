@@ -3,7 +3,7 @@ import { Droppable } from '@hello-pangea/dnd';
 import { isComponentAllowedOnRoot } from '@contentful/experiences-core';
 import type { ResolveDesignValueType } from '@contentful/experiences-core/types';
 import { EditorBlock } from './EditorBlock';
-import { ComponentData } from '@/types/Config';
+import { ComponentData, DragWrapperProps } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import styles from './styles.module.css';
@@ -17,7 +17,6 @@ import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experien
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
-import { DragWrapperProps } from '@/components/DraggableHelpers/DragWrapper';
 import { parseZoneId } from '@/utils/zone';
 
 type DropzoneProps = {

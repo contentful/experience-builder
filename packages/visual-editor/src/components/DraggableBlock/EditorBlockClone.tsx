@@ -8,10 +8,7 @@ import type {
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import {
-  ASSEMBLY_BLOCK_NODE_TYPE,
-  CONTENTFUL_COMPONENTS,
-} from '@contentful/experiences-core/constants';
+import { ASSEMBLY_BLOCK_NODE_TYPE } from '@contentful/experiences-core/constants';
 import classNames from 'classnames';
 
 function getStyle(style: CSSProperties = {}, snapshot?: DraggableStateSnapshot) {
@@ -51,24 +48,18 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
   });
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
-  const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
 
-  if (isSingleColumn) {
-    return elementToRender();
-  }
-
-  return (
-    <div
-      ref={provided?.innerRef}
-      data-ctfl-dragging-element
-      {...provided?.draggableProps}
-      {...provided?.dragHandleProps}
-      className={classNames(styles.DraggableComponent, styles.DraggableClone, {
+  return elementToRender({
+    dragProps: {
+      ...provided?.draggableProps,
+      ...provided?.dragHandleProps,
+      'data-ctfl-dragging-element': 'true',
+      innerRef: provided?.innerRef,
+      className: classNames(styles.DraggableComponent, styles.DraggableClone, {
         [styles.isAssemblyBlock]: isAssemblyBlock,
         [styles.isDragging]: snapshot?.isDragging,
-      })}
-      style={getStyle(provided?.draggableProps.style, snapshot)}>
-      {elementToRender()}
-    </div>
-  );
+      }),
+      style: getStyle(provided?.draggableProps.style, snapshot),
+    },
+  });
 };

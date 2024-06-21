@@ -5,15 +5,15 @@ import type {
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
-import { builtInComponents } from '@/types/constants';
 import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
 import { Assembly } from '@contentful/experiences-components-react';
 import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
-import { DragWrapper, DragWrapperProps } from '@components/DraggableHelpers/DragWrapper';
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
+import { isContentfulStructureComponent } from '@contentful/experiences-core';
+import { DragWrapperProps } from '@/types/Config';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -64,7 +64,7 @@ export const useComponent = ({
 
   const componentId = node.data.id;
 
-  const { componentProps } = useComponentProps({
+  const { componentProps, sizeStyles } = useComponentProps({
     node,
     areEntitiesFetched,
     resolveDesignValue,
@@ -84,9 +84,13 @@ export const useComponent = ({
       ...customComponentProps
     } = componentProps;
 
-    const modifiedProps = isStructuralOrPatternComponent() ? componentProps : customComponentProps;
+    const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
+    const isAssembly = node.type === 'assembly';
+    const modifiedProps =
+      isStructureComponent || isAssembly ? componentProps : customComponentProps;
 
-    const requiresDragWrapper = !componentRegistration.options?.wrapComponent;
+    const requiresDragWrapper =
+      !isStructureComponent && componentRegistration.options?.wrapComponent === false;
 
     const element = React.createElement(
       ImportedComponentErrorBoundary,
@@ -97,21 +101,23 @@ export const useComponent = ({
       }),
     );
 
-    if (isStructuralOrPatternComponent()) {
+    if (!requiresDragWrapper) {
       return element;
     }
 
-    return (
-      <DragWrapper wrapComponent={requiresDragWrapper} {...dragProps}>
-        {element}
-      </DragWrapper>
-    );
+    const { children, innerRef, Tag = 'div', ToolTipAndPlaceholder, style, ...rest } = dragProps;
 
-    function isStructuralOrPatternComponent() {
-      return (
-        builtInComponents.includes(node.data.blockId || '') || node.type === ASSEMBLY_NODE_TYPE
-      );
-    }
+    return (
+      <Tag
+        {...rest}
+        style={{ ...style, ...sizeStyles }}
+        ref={(refNode: HTMLElement | null) => {
+          if (innerRef && refNode) innerRef(refNode);
+        }}>
+        {ToolTipAndPlaceholder}
+        {element}
+      </Tag>
+    );
   };
 
   return {

@@ -1,6 +1,6 @@
 import React, { ElementType } from 'react';
 import type { ResolveDesignValueType } from '@contentful/experiences-core/types';
-import { ComponentData } from '@/types/Config';
+import { ComponentData, DragWrapperProps } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
 import styles from './styles.module.css';
 import classNames from 'classnames';
@@ -16,20 +16,29 @@ type DropzoneProps = {
   className?: string;
   WrapperComponent?: ElementType | string;
   renderDropzone: RenderDropzoneFunction;
+  dragProps?: DragWrapperProps;
 };
 
 export function DropzoneClone({
   node,
   zoneId,
   resolveDesignValue,
-  className,
   WrapperComponent = 'div',
   renderDropzone,
+  dragProps,
   ...rest
 }: DropzoneProps) {
   const tree = useTreeStore((state) => state.tree);
   const content = node?.children || tree.root?.children || [];
   const { slotId } = parseZoneId(zoneId);
+
+  let draggableProps = {};
+
+  if (dragProps) {
+    const { ToolTipAndPlaceholder, Tag, innerRef, wrapComponent, ...htmlDragProps } = dragProps;
+
+    draggableProps = htmlDragProps;
+  }
 
   const isRootZone = zoneId === ROOT_ID;
 
@@ -39,16 +48,24 @@ export function DropzoneClone({
 
   return (
     <WrapperComponent
+      {...draggableProps}
+      {...rest}
       className={classNames(
-        styles.container,
+        dragProps?.className,
+        styles.Dropzone,
+        styles.DropzoneClone,
+        rest.className,
         {
           [styles.isRoot]: isRootZone,
           [styles.isEmptyZone]: !content.length,
         },
-        className,
       )}
-      node={node}
-      {...rest}>
+      data-ctfl-slot-id={slotId}
+      ref={(refNode) => {
+        if (dragProps?.innerRef) {
+          dragProps.innerRef(refNode);
+        }
+      }}>
       {content
         .filter((node) => node.data.slotId === slotId)
         .map((item) => {

@@ -46,7 +46,7 @@
   min-height: 80px;
 }
 
-.isDragging:not(.isRoot):before {
+.isDragging:not(.isRoot):not(.DraggableClone):before {
   outline: 2px dashed var(--exp-builder-gray300);
 }
 
@@ -57,6 +57,7 @@
 .DraggableClone,
 .DraggableClone * {
   pointer-events: none !important;
+  width: 100%;
 }
 
 .DraggableComponent:not(.isDragging) :not(.DraggableComponent) {
@@ -69,6 +70,21 @@
 
 .isSelected:before {
   outline: 2px solid transparent !important;
+}
+
+.tooltipWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.DraggableComponent.isDragging .tooltipWrapper {
+  display: none;
 }
 
 .overlay {
@@ -106,8 +122,8 @@
   outline: 2px solid transparent !important;
 }
 
-.isHoveringComponent > .overlay,
-.DraggableComponent:hover:not(:has(.DraggableComponent:hover)) > .overlay {
+.isHoveringComponent > div > .overlay,
+.DraggableComponent:hover:not(:has(.DraggableComponent:hover)) > div > .overlay {
   opacity: 1;
 }
 

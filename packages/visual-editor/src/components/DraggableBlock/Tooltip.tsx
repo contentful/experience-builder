@@ -35,15 +35,17 @@ const Tooltip: React.FC<Props> = ({ coordinates, id, label, isAssemblyBlock, isC
   }, [coordinates, id, tooltipRef.current]);
 
   return (
-    <div
-      ref={tooltipRef}
-      style={tooltipStyles}
-      data-tooltip
-      className={classNames(styles.overlay, {
-        [styles.overlayContainer]: isContainer,
-        [styles.overlayAssembly]: isAssemblyBlock,
-      })}>
-      {label}
+    <div data-tooltip className={styles.tooltipWrapper}>
+      <div
+        data-tooltip
+        ref={tooltipRef}
+        style={tooltipStyles}
+        className={classNames(styles.overlay, {
+          [styles.overlayContainer]: isContainer,
+          [styles.overlayAssembly]: isAssemblyBlock,
+        })}>
+        {label}
+      </div>
     </div>
   );
 };
