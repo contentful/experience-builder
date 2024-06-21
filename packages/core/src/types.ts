@@ -380,22 +380,24 @@ export type BackgroundImageOptions = {
   targetSize: string;
 };
 
-type ConnectedPayload = undefined | { sdkVersion: string; definitions: ComponentDefinition[] };
-type DesignTokensPayload = {
+export type ConnectedPayload =
+  | undefined
+  | { sdkVersion: string; definitions: ComponentDefinition[] };
+export type DesignTokensPayload = {
   designTokens: DesignTokensDefinition;
   resolvedCssVariables: Record<string, string>;
 };
-type RegisteredBreakpointsPayload = { breakpoints: Breakpoint[] };
-type MouseMovePayload = { clientX: number; clientY: number };
-type NewHoveredElementPayload = { nodeId?: string };
-type ComponentSelectedPayload = {
+export type RegisteredBreakpointsPayload = { breakpoints: Breakpoint[] };
+export type MouseMovePayload = { clientX: number; clientY: number };
+export type NewHoveredElementPayload = { nodeId?: string };
+export type ComponentSelectedPayload = {
   nodeId: string;
   assembly?: { id: string; componentId: string; nodeLocation: string | null };
 };
-type RegisteredComponentsPayload = { definitions: ComponentDefinition[] };
-type RequestComponentTreeUpdatePayload = undefined;
-type ComponentDragCanceledPayload = undefined;
-type ComponentDroppedPayload = {
+export type RegisteredComponentsPayload = { definitions: ComponentDefinition[] };
+export type RequestComponentTreeUpdatePayload = undefined;
+export type ComponentDragCanceledPayload = undefined;
+export type ComponentDroppedPayload = {
   node: ExperienceTreeNode;
   index: number;
   parentNode: {
@@ -403,26 +405,26 @@ type ComponentDroppedPayload = {
     data: { blockId?: string; id?: string };
   };
 };
-type ComponentMovedPayload = {
+export type ComponentMovedPayload = {
   nodeId: string;
   sourceParentId: string;
   destinationParentId: string;
   sourceIndex: number;
   destinationIndex: number;
 };
-type CanvasReloadPayload = undefined;
-type CanvasErrorPayload = Error;
-type UpdateSelectedComponentCoordinatesPayload = {
+export type CanvasReloadPayload = undefined;
+export type CanvasErrorPayload = Error;
+export type UpdateSelectedComponentCoordinatesPayload = {
   selectedNodeCoordinates: DOMRect;
-  selectedAssemblyChildCoordinates: DOMRect | null;
-  parentCoordinates: DOMRect | null;
+  selectedAssemblyChildCoordinates?: DOMRect;
+  parentCoordinates?: DOMRect;
 };
-type CanvasScrollPayload = (typeof SCROLL_STATES)[keyof typeof SCROLL_STATES];
-type ComponentMoveStartedPayload = undefined;
-type ComponentMoveEndedPayload = undefined;
-type OutsideCanvasClickPayload = { outsideCanvasClick: boolean };
-type SDKFeaturesPayload = Record<string, unknown>;
-type RequestEntitiesPayload = {
+export type CanvasScrollPayload = (typeof SCROLL_STATES)[keyof typeof SCROLL_STATES];
+export type ComponentMoveStartedPayload = undefined;
+export type ComponentMoveEndedPayload = undefined;
+export type OutsideCanvasClickPayload = { outsideCanvasClick: boolean };
+export type SDKFeaturesPayload = Record<string, unknown>;
+export type RequestEntitiesPayload = {
   entityIds: string[];
   entityType: 'Entry' | 'Asset';
   locale: string;
@@ -467,8 +469,8 @@ export type OutgoingMessage = {
 type Filter<T, U> = T extends U ? T : never;
 type SelectedValueTypes = Filter<ComponentPropertyValue['type'], 'UnboundValue' | 'BoundValue'>;
 
-type RequestEditorModePayload = undefined;
-type ExperienceUpdatedPayload = {
+export type RequestEditorModePayload = undefined;
+export type ExperienceUpdatedPayload = {
   tree: ExperienceTree;
   /** @deprecated in favor of assemblies */
   designComponents?: ExperienceUsedComponents;
@@ -480,42 +482,42 @@ type ExperienceUpdatedPayload = {
   changedValueType?: SelectedValueTypes;
 };
 
-type ComponentDraggingChangedPayload = {
+export type ComponentDraggingChangedPayload = {
   isDragging: boolean;
 };
 
-type IncomingComponentDragCanceledPayload = undefined;
-type ComponentDragStartedPayload = { id: string };
-type ComponentDragEndedPayload = undefined;
-type IncomingComponentMoveEndedPayload = {
+export type IncomingComponentDragCanceledPayload = undefined;
+export type ComponentDragStartedPayload = { id: string };
+export type ComponentDragEndedPayload = undefined;
+export type IncomingComponentMoveEndedPayload = {
   mouseX: number;
   mouseY: number;
 };
-type CanvasResizedPayload = {
+export type CanvasResizedPayload = {
   selectedNodeId: string;
 };
-type SelectComponentPayload = {
+export type SelectComponentPayload = {
   selectedNodeId: string;
 };
-type HoverComponentPayload = {
+export type HoverComponentPayload = {
   hoveredNodeId: string;
 };
-type UpdatedEntityPayload = {
+export type UpdatedEntityPayload = {
   entity: ManagementEntity;
   shouldRerender?: boolean;
 };
-type AssembliesAddedPayload = {
+export type AssembliesAddedPayload = {
   assembly: ManagementEntity;
   assemblyDefinition: ComponentDefinition;
 };
-type AssembliesRegisteredPayload = {
+export type AssembliesRegisteredPayload = {
   assemblies: ComponentDefinition[];
 };
-type IncomingMouseMovePayload = {
+export type IncomingMouseMovePayload = {
   mouseX: number;
   mouseY: number;
 };
-type RequestedEntitiesPayload = {
+export type RequestedEntitiesPayload = {
   entities: ManagementEntity[];
 };
 
