@@ -60,7 +60,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const ref = useRef<HTMLElement | null>(null);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, definition, elementToRender } = useComponent({
+  const { node, componentId, elementToRender } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -139,7 +139,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         coordinates={coordinates}
         isAssemblyBlock={isAssemblyBlock}
         isContainer={isContainer}
-        label={displayName || definition.name || 'No label specified'}
+        label={displayName || 'No label specified'}
       />
       <Placeholder {...placeholder} id={componentId} />
       {isStructureComponent && userIsDragging && (

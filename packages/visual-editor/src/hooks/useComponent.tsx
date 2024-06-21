@@ -1,5 +1,6 @@
 import React from 'react';
 import type {
+  ComponentRegistration,
   ExperienceTreeNode,
   ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
@@ -14,6 +15,7 @@ import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/Imp
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
 import { isContentfulStructureComponent } from '@contentful/experiences-core';
 import { DragWrapperProps } from '@/types/Config';
+import { MissingComponentPlacehoder } from '@components/DraggableBlock/MissingComponentPlaceholder';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -44,7 +46,7 @@ export const useComponent = ({
     return rawNode;
   }, [areEntitiesFetched, rawNode, entityStore]);
 
-  const componentRegistration = useMemo(() => {
+  const componentRegistration: ComponentRegistration | undefined = useMemo(() => {
     let registration = componentRegistry.get(node.data.blockId!);
 
     if (node.type === ASSEMBLY_NODE_TYPE && !registration) {
@@ -55,9 +57,10 @@ export const useComponent = ({
     }
 
     if (!registration) {
-      throw Error(
+      console.warn(
         `Component registration not found for component with id: "${node.data.blockId}". The component might of been removed. To proceed, remove the component manually from the layers tab.`,
       );
+      return undefined;
     }
     return registration;
   }, [node]);
@@ -69,12 +72,16 @@ export const useComponent = ({
     areEntitiesFetched,
     resolveDesignValue,
     renderDropzone,
-    definition: componentRegistration.definition,
+    definition: componentRegistration?.definition,
     userIsDragging,
     slotId,
   });
 
   const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
+    if (!componentRegistration) {
+      return <MissingComponentPlacehoder blockId={node.data.blockId} />;
+    }
+
     const { dragProps = {} } = props || {};
 
     const {
@@ -124,6 +131,6 @@ export const useComponent = ({
     node,
     componentId,
     elementToRender,
-    definition: componentRegistration.definition,
+    definition: componentRegistration?.definition,
   };
 };
