@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, it, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useEditorSubscriber } from './useEditorSubscriber';
 import { IncomingEvent } from '@contentful/experiences-core/types';
@@ -34,8 +34,10 @@ const data = {
   newAttribute: m.string(),
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createPostMessageReceiver = (_event: IncomingEvent, payload) =>
   synchronousBodyHandler(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let listener: EventListener | undefined;
     vi.spyOn(window, 'addEventListener').mockImplementationOnce((_event, _listener) => {
       // _listener will be src/javascripts/features/content-preview-frame/useMessaging.ts:L172
