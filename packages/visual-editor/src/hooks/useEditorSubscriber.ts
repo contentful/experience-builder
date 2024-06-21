@@ -335,7 +335,7 @@ export function useEditorSubscriber() {
         case INCOMING_EVENTS.ComponentDragCanceled: {
           if (SimulateDnD.isDragging) {
             //simulate a mouseup event to cancel the drag
-            // SimulateDnD.endDrag(0, 0);
+            SimulateDnD.endDrag(0, 0);
           }
           break;
         }
@@ -375,7 +375,7 @@ export function useEditorSubscriber() {
         }
         case INCOMING_EVENTS.ComponentMoveEnded: {
           const { mouseX, mouseY } = payload;
-          // SimulateDnD.endDrag(mouseX, mouseY);
+          SimulateDnD.endDrag(mouseX, mouseY);
           break;
         }
         default:
