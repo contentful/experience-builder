@@ -20,7 +20,7 @@
   pointer-events: none;
 }
 
-.DraggableComponent.Dropzone:before {
+.DraggableComponent.isDragging.Dropzone:before {
   outline-offset: -1px;
 }
 
