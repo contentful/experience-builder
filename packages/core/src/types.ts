@@ -381,7 +381,10 @@ export type BackgroundImageOptions = {
 };
 
 type ConnectedPayload = undefined | { sdkVersion: string; definitions: ComponentDefinition[] };
-type DesignTokensPayload = DesignTokensDefinition;
+type DesignTokensPayload = {
+  designTokens: DesignTokensDefinition;
+  resolvedCssVariables: Record<string, string>;
+};
 type RegisteredBreakpointsPayload = { breakpoints: Breakpoint[] };
 type MouseMovePayload = { clientX: number; clientY: number };
 type NewHoveredElementPayload = { nodeId?: string };
