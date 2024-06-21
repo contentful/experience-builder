@@ -36,7 +36,7 @@ import { DRAG_PADDING } from '@/types/constants';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
-type ResolvedComponentProps = ComponentProps & {
+export type ResolvedComponentProps = ComponentProps & {
   children?: React.JSX.Element | undefined;
   className: string;
   editorMode: boolean;

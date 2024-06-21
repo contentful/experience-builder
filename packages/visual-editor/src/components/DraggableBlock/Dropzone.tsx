@@ -18,6 +18,7 @@ import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
 import { parseZoneId } from '@/utils/zone';
+import { getHtmlComponentProps, getHtmlDragProps } from '@/utils/getComponentProps';
 
 type DropzoneProps = {
   zoneId: string;
@@ -57,17 +58,10 @@ export function Dropzone({
   const isRootZone = zoneId === ROOT_ID;
   const isDestination = draggedDestinationId === zoneId;
   const isEmptyCanvas = isRootZone && !content.length;
-
   const isAssembly = ASSEMBLY_NODE_TYPES.includes(node?.type || '');
 
-  let draggableProps = {};
-
-  if (dragProps) {
-    const { ToolTipAndPlaceholder, Tag, innerRef, wrapComponent, ...htmlDragProps } = dragProps;
-
-    draggableProps = htmlDragProps;
-  }
-
+  const htmlDraggableProps = getHtmlDragProps(dragProps);
+  const htmlProps = getHtmlComponentProps(rest);
   // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
   const renderDropzone: RenderDropzoneFunction = useCallback(
     (node, props) => {
@@ -147,7 +141,8 @@ export function Dropzone({
         return (
           <WrapperComponent
             {...(provided || { droppableProps: {} }).droppableProps}
-            {...draggableProps}
+            {...htmlDraggableProps}
+            {...htmlProps}
             ref={(refNode) => {
               if (dragProps?.innerRef) {
                 dragProps.innerRef(refNode);
@@ -163,8 +158,7 @@ export function Dropzone({
               [styles.isRoot]: isRootZone,
               [styles.isEmptyZone]: !content.length,
             })}
-            data-ctfl-slot-id={slotId}
-            {...rest}>
+            data-ctfl-slot-id={slotId}>
             {isEmptyCanvas ? (
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
             ) : (

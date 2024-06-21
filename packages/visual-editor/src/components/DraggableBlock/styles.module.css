@@ -34,7 +34,7 @@
 }
 
 .DraggableComponent:is(.Dropzone).isDragging {
-  pointer-events: all !important;
+  pointer-events: all;
 }
 
 .isRoot,
@@ -54,10 +54,11 @@
   outline: 2px solid var(--exp-builder-blue500);
 }
 
+.DropzoneClone,
 .DraggableClone,
+.DropzoneClone *,
 .DraggableClone * {
-  pointer-events: none !important;
-  width: 100%;
+  pointer-events: none;
 }
 
 .DraggableComponent:not(.isDragging) :not(.DraggableComponent) {

@@ -8,6 +8,7 @@ import { ROOT_ID } from '@/types/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { parseZoneId } from '@/utils/zone';
+import { getHtmlComponentProps, getHtmlDragProps } from '@/utils/getComponentProps';
 
 type DropzoneProps = {
   zoneId: string;
@@ -31,14 +32,8 @@ export function DropzoneClone({
   const tree = useTreeStore((state) => state.tree);
   const content = node?.children || tree.root?.children || [];
   const { slotId } = parseZoneId(zoneId);
-
-  let draggableProps = {};
-
-  if (dragProps) {
-    const { ToolTipAndPlaceholder, Tag, innerRef, wrapComponent, ...htmlDragProps } = dragProps;
-
-    draggableProps = htmlDragProps;
-  }
+  const htmlDraggableProps = getHtmlDragProps(dragProps);
+  const htmlProps = getHtmlComponentProps(rest);
 
   const isRootZone = zoneId === ROOT_ID;
 
@@ -48,8 +43,8 @@ export function DropzoneClone({
 
   return (
     <WrapperComponent
-      {...draggableProps}
-      {...rest}
+      {...htmlDraggableProps}
+      {...htmlProps}
       className={classNames(
         dragProps?.className,
         styles.Dropzone,
