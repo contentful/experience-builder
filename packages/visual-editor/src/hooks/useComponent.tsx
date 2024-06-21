@@ -15,7 +15,7 @@ import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/Imp
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
 import { isContentfulStructureComponent } from '@contentful/experiences-core';
 import { DragWrapperProps } from '@/types/Config';
-import { MissingComponentPlacehoder } from '@components/DraggableBlock/MissingComponentPlaceholder';
+import { MissingComponentPlacehoder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;

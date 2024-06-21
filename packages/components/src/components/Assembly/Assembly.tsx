@@ -37,7 +37,6 @@ export const Assembly: React.FC<AssemblyProps> = (props) => {
       ...editorModeProps,
       ['data-test-id']: 'contentful-assembly',
       className: props.className,
-      // style: assemblyStyle,
       dragProps,
     });
   }
