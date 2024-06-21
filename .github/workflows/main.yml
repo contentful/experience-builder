@@ -22,6 +22,8 @@ jobs:
     uses: ./.github/workflows/check.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+      PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
   publish:
     needs: [install-build, check]
     if: >-
