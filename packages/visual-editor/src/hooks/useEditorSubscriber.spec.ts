@@ -49,7 +49,21 @@ describe('Canvas Subscriber methods', () => {
   const pact = new MessageConsumerPact({
     consumer: 'ExperiencesSDKConsumer',
     provider: 'UserInterfaceProvider',
-    logLevel: 'debug',
+    logLevel: 'info',
+    // Silence warning about older spec version of existing pact files -> always overwrite existing pact files
+    pactfileWriteMode: 'overwrite',
+  });
+
+  beforeAll(() => {
+    // Monkey patch console.debug to avoid debug logs for consequently fired messages
+    const origConsoleDebug = console.debug;
+    const debugMessage = 'Sending message';
+    console.debug = (message: unknown, ...args: unknown[]) => {
+      if (`${message}`.includes(debugMessage)) {
+        return;
+      }
+      origConsoleDebug.apply(console, [message, ...args]);
+    };
   });
 
   beforeEach(() => {});
