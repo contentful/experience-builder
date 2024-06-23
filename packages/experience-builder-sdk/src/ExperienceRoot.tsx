@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { VisualEditorMode, validateExperienceBuilderConfig } from '@contentful/experiences-core';
 import { EntityStore } from '@contentful/experiences-core';
