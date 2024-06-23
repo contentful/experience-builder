@@ -6,7 +6,8 @@
     "dev": "next dev --port 5173 ",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "depcruise": "depcruise src"
   },
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experiences-sdk-react",
