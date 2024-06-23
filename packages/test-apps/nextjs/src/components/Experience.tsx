@@ -2,10 +2,11 @@
 
 import React, { useMemo } from 'react';
 import { ExperienceRoot, createExperience } from '@contentful/experiences-sdk-react';
+import '../eb-config';
 
 interface ExperienceProps extends React.PropsWithChildren {
   experienceJSON: string | null;
-  stylesheet?: string;
+  stylesheet?: string | null;
   locale: string;
 }
 
