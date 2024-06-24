@@ -14,7 +14,7 @@ env:
 
 jobs:
   # this job relies on the install-build & check workflow to run first
-  lint-and-test:
+  record-release:
     runs-on: ubuntu-latest
     steps:
       - name: Record releases of published pacts between Experiences SDK and User Interface
