@@ -19,8 +19,8 @@ npm run dev
 
 ## CLI steps
 
-1. Project Type - currently only supports React.
-2. React Type - currently only supports Vite + React + TypeScript.
+1. Project Type - Currently supports React.
+2. React Type - Currently supports Vite + React + TypeScript.
 3. Installation Path - The generated project will be installed here.
 4. _Optional_ Contentful Space - Note: only spaces that have already been "Experiences" enabled are eligible. See: [How to enable Experiences in a space](https://www.contentful.com/help/enable-spaces-for-experiences/).
     - Select your Contentful Organization.
@@ -36,7 +36,7 @@ npm run dev
     ```bash
     node dist/index.js --dev
     ```
-2. Token - If you already have an valid API CLI token, you can optionally pass it as an argument. If you do not pass one, you will be prompted to create one at runtime.
+2. Token - If you already have a valid API CLI token, you can optionally pass it as an argument. If you do not pass one, you will be prompted to create one at runtime.
     ```bash
     node dist/index.js --token <my_token>
     ```
