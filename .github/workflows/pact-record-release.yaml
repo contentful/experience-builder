@@ -1,0 +1,26 @@
+name: 'Run Checks: Lint & Tests'
+
+on:
+  workflow_call:
+    secrets:
+      PACT_BROKER_BASE_URL:
+        required: true
+      PACT_BROKER_TOKEN:
+        required: true
+
+env:
+  GIT_BRANCH: ${{ github.ref_name }}
+  GIT_COMMIT: ${{ github.sha }}
+
+jobs:
+  # this job relies on the install-build & check workflow to run first
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record releases of published pacts between Experiences SDK and User Interface
+        run: docker run --rm -v ${PWD}:${PWD} -e PACT_BROKER_BASE_URL -e PACT_BROKER_TOKEN pactfoundation/pact-cli pact-broker record-release --pacticipant ExperiencesSDKConsumer --version ${GIT_COMMIT} --environment ${GIT_BRANCH}
+        env:
+          PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+          PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+          GIT_COMMIT: ${{ env.GIT_COMMIT }}
+          GIT_BRANCH: ${{ env.GIT_BRANCH }}

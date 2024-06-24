@@ -64,7 +64,12 @@ jobs:
       - name: Run CT Tests
         run: npm run test:component
       - name: Publish pacts between Experiences SDK and User Interface
-        run: docker run --rm -v ${PWD}:${PWD} -e PACT_BROKER_BASE_URL -e PACT_BROKER_TOKEN pactfoundation/pact-cli publish ${PWD}/pacts --consumer-app-version ${GIT_COMMIT} --branch ${GIT_BRANCH}
+        run: >-
+          docker run --rm -v ${PWD}:${PWD}
+          -e PACT_BROKER_BASE_URL
+          -e PACT_BROKER_TOKEN
+          pactfoundation/pact-cli publish ${PWD}/pacts
+          --consumer-app-version ${GIT_COMMIT} --branch ${GIT_BRANCH}
         env:
           PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
           PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
