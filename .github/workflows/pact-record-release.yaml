@@ -18,7 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Record releases of published pacts between Experiences SDK and User Interface
-        run: docker run --rm -v ${PWD}:${PWD} -e PACT_BROKER_BASE_URL -e PACT_BROKER_TOKEN pactfoundation/pact-cli pact-broker record-release --pacticipant ExperiencesSDKConsumer --version ${GIT_COMMIT} --environment ${GIT_BRANCH}
+        run: >-
+          docker run --rm -v ${PWD}:${PWD}
+          -e PACT_BROKER_BASE_URL -e PACT_BROKER_TOKEN
+          pactfoundation/pact-cli pact-broker record-release
+          --pacticipant ExperiencesSDKConsumer --version ${GIT_COMMIT}
+          --environment test
         env:
           PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
           PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
