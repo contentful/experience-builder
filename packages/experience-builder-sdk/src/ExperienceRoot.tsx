@@ -12,7 +12,7 @@ import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
 import { useDetectEditorMode } from './hooks/useDetectEditorMode';
 
 type ExperienceRootProps = {
-  experience?: Experience<EntityStore> | string;
+  experience?: Experience<EntityStore> | string | null;
   locale: string;
   visualEditorMode?: VisualEditorMode;
 };
