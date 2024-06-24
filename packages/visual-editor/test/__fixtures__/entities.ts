@@ -51,6 +51,7 @@ export const entries: (Entry & ManagementEntity)[] = [
   {
     sys: {
       id: entityIds.ENTRY2,
+      version: 10,
       type: 'Entry',
       contentType: {
         sys: {

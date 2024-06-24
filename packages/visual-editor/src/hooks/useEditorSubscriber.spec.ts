@@ -1,4 +1,4 @@
-import { beforeEach, describe, it, vi } from 'vitest';
+import { describe, it, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import * as treeStoreModule from '@/store/tree';
 import * as entityStoreModule from '@/store/entityStore';
