@@ -12,7 +12,7 @@ This package is a CLI tool to bootstrap a [React, Vite & TypeScript](https://git
 ## Getting started
 
 ```bash
-npm init studio-experiences
+npm init contentful-studio-experiences
 cd <studio-experiences-react-app>
 npm run dev
 ```
