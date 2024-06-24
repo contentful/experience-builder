@@ -12,25 +12,19 @@ import { useMemo } from 'react';
 interface Params extends ParsedUrlQuery {
   locale: string;
   slug: string;
-  preview?: string;
 }
 
 interface Query extends ParsedUrlQuery {
-  preview?: string;
-  editor?: string;
+  isPreview?: string;
+  expEditorMode?: string;
 }
 
 function ExperiencePage({
   experienceJSON,
+  error,
   stylesheet,
   locale,
-  error,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // manually parse the experience JSON into a Experience object
-  const experience = useMemo(() => {
-    return experienceJSON ? createExperience(experienceJSON) : undefined;
-  }, [experienceJSON]);
-
   if (error) {
     return <div>{error}</div>;
   }
@@ -43,20 +37,24 @@ function ExperiencePage({
         </Head>
       )}
       <main style={{ width: '100%' }}>
-        <ExperienceRoot experience={experience} locale={locale} />
+        <ExperienceRoot experience={experienceJSON} locale={locale} />
       </main>
     </>
   );
 }
 
-export const getServerSideProps = async (content: GetServerSidePropsContext<Params, Query>) => {
-  const { params, query, locale = 'en-US' } = content;
+export const getServerSideProps = async ({
+  params,
+  query,
+  locale = 'en-US',
+}: GetServerSidePropsContext<Params, Query>) => {
+  console.log('params', params, query);
   const { slug = 'home-page' } = params || {};
-  const { preview = 'false', editor = 'false' } = query;
-  const isPreview = preview === 'true';
-  const isEditorMode = editor === 'true';
+  const { isPreview, expEditorMode } = query;
+  const preview = isPreview === 'true';
+  const editorMode = expEditorMode === 'true';
 
-  const { experience, error } = await getExperience(slug, locale, isPreview, isEditorMode);
+  const { experience, error } = await getExperience(slug, locale, preview, editorMode);
 
   // extract the styles from the experience
   const stylesheet = experience ? detachExperienceStyles(experience) : null;
@@ -66,13 +64,11 @@ export const getServerSideProps = async (content: GetServerSidePropsContext<Para
   return {
     props: {
       experienceJSON,
+      error: error?.message || null,
       stylesheet,
       locale,
-      error: error?.message || null,
     },
   };
 };
-
-// give getStaticProps a try with a revalidation property instead of GSSP
 
 export default ExperiencePage;

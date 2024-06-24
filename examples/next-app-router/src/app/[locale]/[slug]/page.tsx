@@ -1,7 +1,5 @@
 import { getExperience } from '@/getExperience';
-import Experience from '@/components/Experience';
-import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
-import { headers } from 'next/headers';
+import { ExperienceRoot, detachExperienceStyles } from '@contentful/experiences-sdk-react';
 
 type Page = {
   params: { locale?: string; slug?: string; preview?: string };
@@ -9,14 +7,11 @@ type Page = {
 };
 
 export default async function ExperiencePage({ params, searchParams }: Page) {
-  const headersList = headers();
-  console.log({ params });
   const { locale = 'en-US', slug = 'home-page' } = params || {};
-  console.log({ locale });
-  const { preview = 'false', editor = 'false' } = searchParams;
-  const isPreview = preview === 'true';
-  const isEditorMode = editor === 'true';
-  const { experience, error } = await getExperience(slug, locale!, isPreview, isEditorMode);
+  const { isPreview, expEditorMode } = searchParams;
+  const preview = isPreview === 'true';
+  const editorMode = expEditorMode === 'true';
+  const { experience, error } = await getExperience(slug, locale, preview, editorMode);
 
   if (error) {
     return <div>{error.message}</div>;
@@ -26,11 +21,10 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
 
   //experience currently needs to be stringified manually to be passed to the component
   const experienceJSON = experience ? JSON.stringify(experience) : null;
-
   return (
     <main style={{ width: '100%' }}>
-      {/* Look into using Draft Mode here */}
-      <Experience experienceJSON={experienceJSON} locale={locale} stylesheet={stylesheet} />
+      {stylesheet && <style>{stylesheet}</style>}
+      <ExperienceRoot experience={experienceJSON} locale={locale} />
     </main>
   );
 }

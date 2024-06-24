@@ -6,9 +6,7 @@ export function middleware(request: NextRequest) {
     locales: ['en-US', 'de'],
     defaultLocale: 'en-US',
   };
-  // throw Error('fucikasdf')
   const resp = i18nRouter(request, i18n);
-  console.log({ resp });
   return resp;
 }
 
