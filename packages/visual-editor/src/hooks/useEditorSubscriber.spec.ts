@@ -1,5 +1,7 @@
 import { beforeEach, describe, it, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import * as treeStoreModule from '@/store/tree';
+import * as entityStoreModule from '@/store/entityStore';
 import { useEditorSubscriber } from './useEditorSubscriber';
 import { IncomingEvent } from '@contentful/experiences-core/types';
 import { MessageConsumerPact, synchronousBodyHandler, Matchers as m } from '@pact-foundation/pact';
@@ -7,10 +9,15 @@ import { INCOMING_EVENTS } from '@contentful/experiences-core/constants';
 import { entries } from '../../test/__fixtures__/entities';
 
 const event = INCOMING_EVENTS.UpdatedEntity;
+const entity = entries[0];
+const updatedEntity = {
+  ...entity,
+  sys: { ...entity.sys, version: entity.sys.version + 1 },
+};
 const messagePayload = {
   eventType: event,
   payload: {
-    entity: entries[0],
+    entity: updatedEntity,
     shouldRerender: true,
   },
   source: 'composability-app',
@@ -34,19 +41,6 @@ const data = {
   newAttribute: m.string(),
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const createPostMessageReceiver = (_event: IncomingEvent, payload) =>
-  synchronousBodyHandler(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    let listener: EventListener | undefined;
-    vi.spyOn(window, 'addEventListener').mockImplementationOnce((_event, _listener) => {
-      // _listener will be src/javascripts/features/content-preview-frame/useMessaging.ts:L172
-      listener = _listener as EventListener;
-    });
-    renderHook(() => useEditorSubscriber());
-    // TODO assert that the listener is called with the expected payload and performs the right actions
-  });
-
 describe('Canvas Subscriber methods', () => {
   const pact = new MessageConsumerPact({
     consumer: 'ExperiencesSDKConsumer',
@@ -60,16 +54,42 @@ describe('Canvas Subscriber methods', () => {
   beforeAll(() => {
     // Monkey patch console.debug to avoid debug logs for consequently fired messages
     const origConsoleDebug = console.debug;
-    const debugMessage = 'Sending message';
+    const debugMessages = ['sendMessage', 'onMessage'];
     console.debug = (message: unknown, ...args: unknown[]) => {
-      if (`${message}`.includes(debugMessage)) {
+      if (debugMessages.some((msg) => `${message}`.includes(msg))) {
         return;
       }
       origConsoleDebug.apply(console, [message, ...args]);
     };
   });
 
-  beforeEach(() => {});
+  const createPostMessageReceiver = (_event: IncomingEvent, payload: typeof messagePayload) =>
+    synchronousBodyHandler(() => {
+      let listener: EventListener | undefined;
+      const updateNodesByUpdatedEntity = vi.fn();
+      const updateEntity = vi.fn();
+      vi.spyOn(treeStoreModule, 'useTreeStore').mockReturnValueOnce({ updateNodesByUpdatedEntity });
+      vi.spyOn(entityStoreModule, 'useEntityStore').mockImplementation((selector) =>
+        selector({
+          entityStore: {
+            entities: entries,
+            updateEntity,
+            locale: 'en-US',
+          },
+        } as unknown as entityStoreModule.EntityState),
+      );
+      vi.spyOn(window, 'addEventListener').mockImplementationOnce((_event, _listener) => {
+        listener = _listener as EventListener;
+      });
+
+      renderHook(() => useEditorSubscriber());
+
+      // assert that the listener is called with the expected payload and performs the right actions
+      expect(listener).toBeDefined();
+      listener!(new MessageEvent('message', { data: JSON.stringify(payload) }));
+      expect(updateNodesByUpdatedEntity).toHaveBeenNthCalledWith(1, updatedEntity.sys.id);
+      expect(updateEntity).toHaveBeenNthCalledWith(1, updatedEntity);
+    });
 
   it.each`
     event    | payload           | data
