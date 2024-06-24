@@ -54,7 +54,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
         outsideCanvasClick: true,
       });
       sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-        selectedId: '',
+        nodeId: '',
       });
       setSelectedNodeId('');
     },

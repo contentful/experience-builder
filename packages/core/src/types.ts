@@ -16,7 +16,6 @@ import type {
   ExperienceComponentTree,
   ComponentDefinitionPropertyType,
 } from '@contentful/experiences-validators';
-// TODO: Remove references to 'Composition'
 export type {
   ExperienceDataSource,
   ExperienceUnboundValues,
@@ -380,3 +379,169 @@ export type BackgroundImageOptions = {
   quality?: string;
   targetSize: string;
 };
+
+export type ConnectedPayload =
+  | undefined
+  | { sdkVersion: string; definitions: ComponentDefinition[] };
+export type DesignTokensPayload = {
+  designTokens: DesignTokensDefinition;
+  resolvedCssVariables: Record<string, string>;
+};
+export type RegisteredBreakpointsPayload = { breakpoints: Breakpoint[] };
+export type MouseMovePayload = { clientX: number; clientY: number };
+export type NewHoveredElementPayload = { nodeId?: string };
+export type ComponentSelectedPayload = {
+  nodeId: string;
+  assembly?: { id: string; componentId: string; nodeLocation: string | null };
+};
+export type RegisteredComponentsPayload = { definitions: ComponentDefinition[] };
+export type RequestComponentTreeUpdatePayload = undefined;
+export type ComponentDragCanceledPayload = undefined;
+export type ComponentDroppedPayload = {
+  node: ExperienceTreeNode;
+  index: number;
+  parentNode: {
+    type?: ExperienceTreeNode['type'] | 'root';
+    data: { blockId?: string; id?: string };
+  };
+};
+export type ComponentMovedPayload = {
+  nodeId: string;
+  sourceParentId: string;
+  destinationParentId: string;
+  sourceIndex: number;
+  destinationIndex: number;
+};
+export type CanvasReloadPayload = undefined;
+export type CanvasErrorPayload = Error;
+export type UpdateSelectedComponentCoordinatesPayload = {
+  selectedNodeCoordinates: DOMRect;
+  selectedAssemblyChildCoordinates?: DOMRect;
+  parentCoordinates?: DOMRect;
+};
+export type CanvasScrollPayload = (typeof SCROLL_STATES)[keyof typeof SCROLL_STATES];
+export type ComponentMoveStartedPayload = undefined;
+export type ComponentMoveEndedPayload = undefined;
+export type OutsideCanvasClickPayload = { outsideCanvasClick: boolean };
+export type SDKFeaturesPayload = Record<string, unknown>;
+export type RequestEntitiesPayload = {
+  entityIds: string[];
+  entityType: 'Entry' | 'Asset';
+  locale: string;
+};
+
+type OUTGOING_EVENT_PAYLOADS = {
+  connected: ConnectedPayload;
+  registerDesignTokens: DesignTokensPayload;
+  registeredBreakpoints: RegisteredBreakpointsPayload;
+  mouseMove: MouseMovePayload;
+  newHoveredElement: NewHoveredElementPayload;
+  componentSelected: ComponentSelectedPayload;
+  registeredComponents: RegisteredComponentsPayload;
+  requestComponentTreeUpdate: RequestComponentTreeUpdatePayload;
+  componentDragCanceled: ComponentDragCanceledPayload;
+  componentDropped: ComponentDroppedPayload;
+  componentMoved: ComponentMovedPayload;
+  canvasReload: CanvasReloadPayload;
+  canvasError: CanvasErrorPayload;
+  updateSelectedComponentCoordinates: UpdateSelectedComponentCoordinatesPayload;
+  canvasScrolling: CanvasScrollPayload;
+  componentMoveStarted: ComponentMoveStartedPayload;
+  componentMoveEnded: ComponentMoveEndedPayload;
+  outsideCanvasClick: OutsideCanvasClickPayload;
+  sdkFeatures: SDKFeaturesPayload;
+  REQUEST_ENTITIES: RequestEntitiesPayload;
+};
+
+export type SendMessageParams = <T extends OutgoingEvent>(
+  eventType: T,
+  data: OUTGOING_EVENT_PAYLOADS[T],
+) => void;
+
+export type OutgoingMessage = {
+  [K in keyof OUTGOING_EVENT_PAYLOADS]: {
+    source: 'customer-app';
+    eventType: K;
+    payload: OUTGOING_EVENT_PAYLOADS[K];
+  };
+}[keyof OUTGOING_EVENT_PAYLOADS];
+
+type Filter<T, U> = T extends U ? T : never;
+type SelectedValueTypes = Filter<ComponentPropertyValue['type'], 'UnboundValue' | 'BoundValue'>;
+
+export type RequestEditorModePayload = undefined;
+export type ExperienceUpdatedPayload = {
+  tree: ExperienceTree;
+  /** @deprecated in favor of assemblies */
+  designComponents?: ExperienceUsedComponents;
+  assemblies?: ExperienceUsedComponents;
+  locale: string;
+  /** @deprecated maybe? */
+  defaultLocaleCode?: string;
+  changedNode?: ExperienceTreeNode;
+  changedValueType?: SelectedValueTypes;
+};
+
+export type ComponentDraggingChangedPayload = {
+  isDragging: boolean;
+};
+
+export type IncomingComponentDragCanceledPayload = undefined;
+export type ComponentDragStartedPayload = { id: string };
+export type ComponentDragEndedPayload = undefined;
+export type IncomingComponentMoveEndedPayload = {
+  mouseX: number;
+  mouseY: number;
+};
+export type CanvasResizedPayload = {
+  selectedNodeId: string;
+};
+export type SelectComponentPayload = {
+  selectedNodeId: string;
+};
+export type HoverComponentPayload = {
+  hoveredNodeId: string;
+};
+export type UpdatedEntityPayload = {
+  entity: ManagementEntity;
+  shouldRerender?: boolean;
+};
+export type AssembliesAddedPayload = {
+  assembly: ManagementEntity;
+  assemblyDefinition: ComponentDefinition;
+};
+export type AssembliesRegisteredPayload = {
+  assemblies: ComponentDefinition[];
+};
+export type IncomingMouseMovePayload = {
+  mouseX: number;
+  mouseY: number;
+};
+export type RequestedEntitiesPayload = {
+  entities: ManagementEntity[];
+};
+
+type INCOMING_EVENT_PAYLOADS = {
+  requestEditorMode: RequestEditorModePayload;
+  componentTreeUpdated: ExperienceUpdatedPayload;
+  componentDraggingChanged: ComponentDraggingChangedPayload;
+  componentDragCanceled: IncomingComponentDragCanceledPayload;
+  componentDragStarted: ComponentDragStartedPayload;
+  componentDragEnded: ComponentDragEndedPayload;
+  componentMoveEnded: IncomingComponentMoveEndedPayload;
+  canvasResized: CanvasResizedPayload;
+  selectComponent: SelectComponentPayload;
+  hoverComponent: HoverComponentPayload;
+  updatedEntity: UpdatedEntityPayload;
+  assembliesAdded: AssembliesAddedPayload;
+  assembliesRegistered: AssembliesRegisteredPayload;
+  mouseMove: IncomingMouseMovePayload;
+  REQUESTED_ENTITIES: RequestedEntitiesPayload;
+};
+
+export type IncomingMessage = {
+  [K in keyof INCOMING_EVENT_PAYLOADS]: {
+    eventType: K;
+    payload: INCOMING_EVENT_PAYLOADS[K];
+  };
+}[keyof INCOMING_EVENT_PAYLOADS];
