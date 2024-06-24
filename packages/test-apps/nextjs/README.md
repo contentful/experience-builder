@@ -1,6 +1,6 @@
 # Experiences NextJS Test App
 
-This apps intended purpose is to quickly test the functionality of Studio Experiences when developing locally.
+This app's intended purpose is to quickly test the functionality of Studio Experiences when developing locally.
 
 ## How to Start
 
@@ -9,7 +9,7 @@ This apps intended purpose is to quickly test the functionality of Studio Experi
 3. Run `npm run dev`.
 
 > [!WARNING]
-> Please note that changes in `visual-editor` will only be reflected at runtime if the `experiences-sdk-react` is rebuilt as well as it lazy loads this dependency.
+> Please note that changes in `visual-editor` will only be reflected at runtime if the `experiences-sdk-react` is rebuilt as it lazy loads this dependency.
 
 ## Config
 
