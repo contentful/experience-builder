@@ -23,7 +23,7 @@ jobs:
           -e PACT_BROKER_BASE_URL -e PACT_BROKER_TOKEN
           pactfoundation/pact-cli pact-broker record-release
           --pacticipant ExperiencesSDKConsumer --version ${GIT_COMMIT}
-          --environment test
+          --environment production
         env:
           PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
           PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
