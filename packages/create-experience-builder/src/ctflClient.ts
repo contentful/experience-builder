@@ -1,48 +1,104 @@
 import open from 'open';
 import { EnvFileData } from './models.js';
-
+import { GetmanySpaceEnablementsReturn } from './types.js';
+import {
+  getDemoExperienceReqBody,
+  getExperienceContentTypeReqBody,
+} from './api-requests-builders.js';
 const baseUrl = process.env.BASE_URL || 'https://api.contentful.com';
-const contentLayoutType = 'DevLayout';
+const defaultExperienceName = `CLI Generated Experience Name`;
+const defaultExperienceNameId = `cliGeneratedExperienceName`;
 
 export class CtflClient {
-  public space: { name: string; id: string } | undefined;
-  private authToken: string | undefined;
-  private accessToken: string = '';
-  private previewAccessToken: string = '';
+  public space?: { name: string; id: string };
+  public org?: { name: string; id: string };
+  public apiKey?: {
+    accessToken: string;
+    name: string;
+    previewKeyId: string;
+    previewAccessToken?: string;
+  };
+
+  public previewEnvironment?: {
+    name: string;
+    id: string;
+    url: string;
+  };
+
+  private authToken?: string;
   private authTokenCreatedFromApi = false;
 
   async createApiKeys() {
     //Create API key
-    type ApiKeyReturn = { accessToken: string; preview_api_key: { sys: { id: string } } };
-    const apiKeys = await this.apiCall<ApiKeyReturn>(`/spaces/${this.space?.id}/api_keys`, {
-      body: '{"name":"Experience Builder Dev Keys"}',
+    type ApiKeyReturn = {
+      accessToken: string;
+      name: string;
+      preview_api_key: { sys: { id: string } };
+    };
+    const apiKey = await this.apiCall<ApiKeyReturn>(`/spaces/${this.space?.id}/api_keys`, {
+      body: '{"name":"Experience Builder Keys"}',
       method: 'POST',
     }).then((val) => {
       return {
         accessToken: val.accessToken,
+        name: val.name,
         previewKeyId: val.preview_api_key.sys.id,
       };
     });
-    this.accessToken = apiKeys.accessToken;
+    this.apiKey = apiKey;
+    return apiKey;
+  }
 
-    //Get Preview Key
+  async getApiKeys() {
+    type ApiKeyReturn = {
+      items: { accessToken: string; preview_api_key: { sys: { id: string } }; name: string }[];
+    };
+    const apiKeys = await this.apiCall<ApiKeyReturn>(`/spaces/${this.space?.id}/api_keys`, {
+      method: 'GET',
+    }).then((val) => {
+      return val.items.map((item) => {
+        return {
+          accessToken: item.accessToken,
+          previewKeyId: item.preview_api_key.sys.id,
+          name: item.name,
+        };
+      });
+    });
+
+    return apiKeys;
+  }
+
+  async getPreviewAccessToken(id: string) {
     type PreviewKeyReturn = { accessToken: string };
-    const previewKey = await this.apiCall<PreviewKeyReturn>(
-      `/spaces/${this.space?.id}/preview_api_keys/${apiKeys.previewKeyId}`,
+    const previewAccessToken = await this.apiCall<PreviewKeyReturn>(
+      `/spaces/${this.space?.id}/preview_api_keys/${id}`,
       {
-        headers: {
-          'content-type': 'application/vnd.contentful.management.v1+json',
-          authorization: `Bearer ${this.authToken as string}`,
-        },
         method: 'GET',
-      }
+      },
     ).then((val) => {
       return val.accessToken;
     });
-    this.previewAccessToken = previewKey;
+    this.apiKey!.previewAccessToken = previewAccessToken;
   }
 
-  async createContentEntry() {
+  /**
+   * @description - retrieve Enablements
+   */
+  async getManySpaceEnablements({ orgId }: { orgId: string }) {
+    const getAllEnablementsUrl = `/organizations/${orgId}/space_enablements`;
+
+    try {
+      const response = await this.apiCall<GetmanySpaceEnablementsReturn>(getAllEnablementsUrl, {
+        method: 'GET',
+      });
+
+      return response.items;
+    } catch (error) {
+      throw new Error(`Unable to retrieve Space Enablements. error: ${error}`);
+    }
+  }
+
+  async createContentEntry(experienceName: string, experienceNameId: string) {
     //Create entry
     type ContentEntryReturn = { sys: { id: string } };
     const entryId = await this.apiCall<ContentEntryReturn>(
@@ -50,153 +106,10 @@ export class CtflClient {
       {
         method: 'POST',
         headers: {
-          'x-contentful-content-type': contentLayoutType,
+          'x-contentful-content-type': experienceNameId,
         },
-        body: JSON.stringify({
-          fields: {
-            title: { 'en-US': 'homePage' },
-            slug: { 'en-US': 'homePage' },
-            unboundValues: {
-              'en-US': {
-                t8s3d2yu4Kp6elHh3MFOD: { value: 'Welcome to Experience Builder!' },
-                '48AnlKk_hzR3poirBGJoq': { value: 'h1' },
-                yZ0T3Qbr7ZO8CUSJvMF8R: { value: '' },
-                XFjLtoeKIQFBAegSpmkSu: { value: '' },
-                'qTbSL18NOQ-MnfEIwXjs8': { value: false },
-              },
-            },
-            dataSource: { 'en-US': {} },
-            componentTree: {
-              'en-US': {
-                breakpoints: [
-                  {
-                    id: 'desktop',
-                    query: '*',
-                    displayName: 'All Sizes',
-                    previewSize: '100%',
-                  },
-                  {
-                    id: 'tablet',
-                    query: '<992px',
-                    displayName: 'Tablet',
-                    previewSize: '820px',
-                  },
-                  {
-                    id: 'mobile',
-                    query: '<576px',
-                    displayName: 'Mobile',
-                    previewSize: '390px',
-                  },
-                ],
-                schemaVersion: '2023-09-28',
-                children: [
-                  {
-                    definitionId: 'contentful-container',
-                    variables: {
-                      cfVerticalAlignment: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'center' },
-                      },
-                      cfHorizontalAlignment: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'center' },
-                      },
-                      cfMargin: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: '0px' },
-                      },
-                      cfPadding: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: '0px' },
-                      },
-                      cfBackgroundColor: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'rgba(255, 255, 255, 0)' },
-                      },
-                      cfWidth: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'fill' },
-                      },
-                      cfHeight: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'fit-content' },
-                      },
-                      cfMaxWidth: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: '100%' },
-                      },
-                      cfFlexDirection: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'row' },
-                      },
-                      cfFlexWrap: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'nowrap' },
-                      },
-                      cfBorder: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: '0px' },
-                      },
-                      cfGap: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: '0px' },
-                      },
-                      cfBackgroundImageUrl: {
-                        type: 'UnboundValue',
-                        key: 'yZ0T3Qbr7ZO8CUSJvMF8R',
-                      },
-                      cfBackgroundImageScaling: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'fit' },
-                      },
-                      cfBackgroundImageAlignment: {
-                        type: 'DesignValue',
-                        valuesByBreakpoint: { desktop: 'left top' },
-                      },
-                      cfHyperlink: {
-                        type: 'UnboundValue',
-                        key: 'XFjLtoeKIQFBAegSpmkSu',
-                      },
-                      cfOpenInNewTab: {
-                        type: 'UnboundValue',
-                        key: 'qTbSL18NOQ-MnfEIwXjs8',
-                      },
-                    },
-                    children: [
-                      {
-                        definitionId: 'heading',
-                        variables: {
-                          text: {
-                            key: 't8s3d2yu4Kp6elHh3MFOD',
-                            type: 'UnboundValue',
-                          },
-                          type: {
-                            type: 'UnboundValue',
-                            key: '48AnlKk_hzR3poirBGJoq',
-                          },
-                          classes: {
-                            type: 'DesignValue',
-                            valuesByBreakpoint: { desktop: 'cf-heading' },
-                          },
-                          cfMargin: {
-                            type: 'DesignValue',
-                            valuesByBreakpoint: { desktop: '0px' },
-                          },
-                          cfPadding: {
-                            type: 'DesignValue',
-                            valuesByBreakpoint: { desktop: '0px' },
-                          },
-                        },
-                        children: [],
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
-        }),
-      }
+        body: JSON.stringify(getDemoExperienceReqBody(experienceName)),
+      },
     ).then((val) => val.sys.id);
 
     //Publish entry
@@ -207,51 +120,88 @@ export class CtflClient {
         headers: {
           'x-contentful-version': '1',
         },
-      }
+      },
     );
   }
 
-  async createContentLayoutType() {
-    // Create Content Type
-    await this.apiCall(
-      `/spaces/${this.space?.id}/environments/master/content_types/${contentLayoutType}`,
-      {
-        headers: {
-          'x-contentful-version': '0',
+  async createContentLayoutType(
+    experienceName: string = defaultExperienceName,
+    experienceNameId: string,
+  ) {
+    try {
+      // Create Content Type
+      await this.apiCall(
+        `/spaces/${this.space?.id}/environments/master/content_types/${experienceNameId}`,
+        {
+          headers: {
+            'x-contentful-version': '0',
+          },
+          body: JSON.stringify(getExperienceContentTypeReqBody(experienceName)),
+          method: 'PUT',
         },
-        body: '{"name":"DevLayout","fields":[{"id":"title","name":"Title","type":"Symbol","required":true,"localized":false,"validations":[]},{"id":"slug","name":"Slug","type":"Symbol","required":true,"localized":false,"validations":[{"unique":true}]},{"id":"componentTree","name":"Component Tree","type":"Object","required":true,"localized":false,"validations":[]},{"id":"dataSource","name":"Data Source","type":"Object","required":true,"localized":false,"validations":[]},{"id":"unboundValues","name":"Unbound Values","type":"Object","required":true,"localized":false,"validations":[]}],"description":"","metadata":{"annotations":{"ContentTypeField":{"dataSource":[{"sys":{"id":"Contentful:ExperienceBuilderField","type":"Link","linkType":"Annotation"},"parameters":{"purpose":"dataSource"}}],"unboundValues":[{"sys":{"id":"Contentful:ExperienceBuilderField","type":"Link","linkType":"Annotation"},"parameters":{"purpose":"unboundValues"}}],"componentTree":[{"sys":{"id":"Contentful:ExperienceBuilderField","type":"Link","linkType":"Annotation"},"parameters":{"purpose":"componentTree"}}]}}},"displayField":"title"}',
-        method: 'PUT',
-      }
-    );
+      );
 
-    // Publish Content Type
-    await this.apiCall(
-      `/spaces/${this.space?.id}/environments/master/content_types/${contentLayoutType}/published`,
-      {
-        headers: {
-          'x-contentful-version': '1',
+      // Publish Content Type
+      await this.apiCall(
+        `/spaces/${this.space?.id}/environments/master/content_types/${experienceNameId}/published`,
+        {
+          headers: {
+            'x-contentful-version': '1',
+          },
+          method: 'PUT',
+          body: null,
         },
-        method: 'PUT',
-        body: null,
-      }
-    );
+      );
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
-  async createPreviewEnvironment(port: string) {
+  async createPreviewEnvironment(
+    port: string,
+    experienceName: string = defaultExperienceName,
+    experienceNameId: string,
+  ) {
     await this.apiCall(`/spaces/${this.space?.id}/preview_environments`, {
       method: 'POST',
       body: JSON.stringify({
-        name: `Preview for experience '${contentLayoutType}'`,
-        description: 'This preview is required for the Experience Builder to work.',
+        name: `Preview for experience '${experienceName}'`,
+        description: `This preview environment was auto generated using the "create-experience-builder" CLI Tool, on ${new Date()}.  A configured Preview Environment is required for the Experience Builder to work.`,
         configurations: [
           {
-            contentType: contentLayoutType,
+            contentType: experienceNameId,
             url: `http://localhost:${port}`,
             enabled: true,
           },
         ],
       }),
     });
+  }
+
+  async getPreviewEnvironments() {
+    type PreviewEnvironmentsReturn = {
+      items: {
+        name: string;
+        sys: { id: string };
+        configurations: { contentType: string; url: string }[];
+      }[];
+    };
+    const previewEnvironments = await this.apiCall<PreviewEnvironmentsReturn>(
+      `/spaces/${this.space?.id}/preview_environments`,
+      {
+        method: 'GET',
+      },
+    ).then((val) => {
+      return val.items.map((item) => {
+        return {
+          name: item.name,
+          id: item.sys.id,
+          url: item.configurations[0].url,
+        };
+      });
+    });
+    return previewEnvironments;
   }
 
   async createSpace(name: string, orgId: string) {
@@ -280,13 +230,13 @@ export class CtflClient {
     if (this.authToken && this.authTokenCreatedFromApi) {
       type KeysReturn = { items: { sys: { id: string; redactedValue: string } }[] };
       const keys: { id: string; redactedValue: string }[] = await this.apiCall<KeysReturn>(
-        `/users/me/access_tokens?revokedAt`
+        `/users/me/access_tokens?revokedAt`,
       ).then((data) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         data.items.map((item: any) => ({
           id: item.sys.id,
           redactedValue: item.sys.redactedValue,
-        }))
+        })),
       );
 
       const keyToRevoke = keys.find((key) => this.authToken!.endsWith(key.redactedValue));
@@ -321,9 +271,9 @@ export class CtflClient {
     return {
       environment: 'master',
       spaceId: this.space!.id,
-      accessToken: this.accessToken,
-      previewAccessToken: this.previewAccessToken,
-      typeId: contentLayoutType,
+      accessToken: this.apiKey!.accessToken,
+      previewAccessToken: this.apiKey!.previewAccessToken!,
+      typeId: defaultExperienceNameId,
     };
   }
 
@@ -335,9 +285,22 @@ export class CtflClient {
           name: item.name,
           id: item.sys.id,
         };
-      })
+      }),
     );
     return orgs;
+  }
+
+  async getSpacesForOrg(orgId: string) {
+    type SpacesReturn = { items: { name: string; sys: { id: string } }[] };
+    const spaces = await this.apiCall<SpacesReturn>(`/organizations/${orgId}/spaces`).then((res) =>
+      res.items.map((item) => {
+        return {
+          name: item.name,
+          id: item.sys.id,
+        };
+      }),
+    );
+    return spaces;
   }
 
   async setAuthToken(authToken: string, createdFromApi: boolean = false) {
@@ -365,6 +328,8 @@ export class CtflClient {
       });
 
       if (!response.ok) {
+        console.log('[ ctflClient.ts ] apiCall() not OK response => ', await response.json());
+
         throw new Error(response.statusText);
       }
 

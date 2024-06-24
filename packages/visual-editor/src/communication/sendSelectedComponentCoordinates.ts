@@ -33,8 +33,8 @@ export const sendSelectedComponentCoordinates = (instanceId?: string) => {
         selectedNodeCoordinates: getElementCoordinates(selectedElement!),
         selectedAssemblyChildCoordinates: selectedAssemblyChild
           ? getElementCoordinates(selectedAssemblyChild)
-          : null,
-        parentCoordinates: parent ? getElementCoordinates(parent) : null,
+          : undefined,
+        parentCoordinates: parent ? getElementCoordinates(parent) : undefined,
       });
     };
 
