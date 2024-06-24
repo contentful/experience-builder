@@ -243,8 +243,6 @@ async function init() {
       spinner.stop('Preview environment created!');
     } else if (previewEnv) {
       log.message('Using existing preview environment for Studio Experiences.');
-      // DEBUGGING:
-      console.log('[DEBUG] previewEnv:', previewEnv);
       ctflClient.previewEnvironment = previewEnv;
     }
 
