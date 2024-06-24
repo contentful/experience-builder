@@ -23,3 +23,7 @@ The app reads several environment variables to configure its behavior:
  NEXT_PUBLIC_CTFL_EXPERIENCE_TYPE=<experience type>
  NEXT_PUBLIC_CTFL_DOMAIN=<domain> (contentful.com (prod) or flinkly.com (staging))
 ```
+
+### Content Preview URL setup
+
+The content preview URL that points to this app will need a special query param added to it. This param is called `expEditorMode`, and it's used to indicate to the app that it is being loaded in the editor. An example URL using this param could be: "http://localhost:5173?expEditorMode=true"
