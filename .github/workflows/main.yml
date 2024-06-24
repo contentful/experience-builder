@@ -46,11 +46,12 @@ jobs:
   # Run after publishing according to docs:
   # https://docs.pact.io/pact_broker/recording_deployments_and_releases#recording-releases
   pact-record-release:
-    # needs: [publish]
+    # needs: publish
     needs: check
     uses: ./.github/workflows/pact-record-release.yaml
     # github.ref_name == 'main' &&
     if: >-
+      vars.ENABLE_PACTFLOW == 'true' &&
       github.ref_name == 'feat/SPA-2123-publish-pacts' &&
       !contains(github.event.head_commit.message, 'skip-release') &&
       github.actor != 'dependabot[bot]' &&

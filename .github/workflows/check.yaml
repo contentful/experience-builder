@@ -13,6 +13,7 @@ on:
 env:
   GIT_BRANCH: ${{ github.ref_name }}
   GIT_COMMIT: ${{ github.sha }}
+  ENABLE_PACTFLOW: ${{ vars.ENABLE_PACTFLOW }}
 
 jobs:
   # this job relies on the install-build workflow to run first
@@ -64,6 +65,7 @@ jobs:
       - name: Run CT Tests
         run: npm run test:component
       - name: Publish pacts between Experiences SDK and User Interface
+        if: env.ENABLE_PACTFLOW == 'true'
         run: >-
           docker run --rm -v ${PWD}:${PWD}
           -e PACT_BROKER_BASE_URL
@@ -75,7 +77,6 @@ jobs:
           PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
           GIT_COMMIT: ${{ env.GIT_COMMIT }}
           GIT_BRANCH: ${{ env.GIT_BRANCH }}
-      # TODO: Record releases
       - name: Save test results to artifact
         uses: actions/upload-artifact@v4
         with:
