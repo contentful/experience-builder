@@ -1,4 +1,4 @@
-# @contentful/create-experience-builder
+# create-contentful-studio-experiences
 
 ## Description
 
@@ -12,8 +12,9 @@ This package is a CLI tool to bootstrap a [React, Vite & TypeScript](https://git
 ## Getting started
 
 ```bash
-npm init experience-builder
-cd <your_studio_experiences_app_name>
+npm init studio-experiences
+# Replace "studio-experiences-react-app" with the name of your project directory
+cd studio-experiences-react-app
 npm run dev
 ```
 
@@ -43,7 +44,7 @@ The CLI tool automatically creates Vite environment variables for safely storing
 
 1. Contentful Space ID: `VITE_CTFL_SPACE_ID`
 2. Contentful Environment ID: `VITE_CTFL_ENV_ID`
-3. Contentful API HOST: `VITE_CTFL_API_HOST`
+3. Contentful API Host: `VITE_CTFL_API_HOST`
 4. Contentful Access Token: `VITE_CTFL_ACCESS_TOKEN`
 5. Contentful Preview Token: `VITE_CTFL_PREVIEW_ACCESS_TOKEN`
-6. Contentful Experience Name Content Type Id: `VITE_CTFL_EXPERIENCE_TYPE_ID`
+6. Contentful Experience Content Type ID: `VITE_CTFL_EXPERIENCE_TYPE_ID`
