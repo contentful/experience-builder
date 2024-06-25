@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState } from 'react';
 import { EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
