@@ -1,4 +1,4 @@
-name: 'Run Checks: Lint & Tests'
+name: 'Record Pact Release'
 
 on:
   workflow_call:
@@ -14,7 +14,7 @@ env:
 
 jobs:
   # this job relies on the install-build & check workflow to run first
-  record-release:
+  record-pact-release:
     runs-on: ubuntu-latest
     steps:
       - name: Record releases of published pacts between Experiences SDK and User Interface

@@ -38,7 +38,6 @@ const data = {
     shouldRerender: m.boolean(),
   },
   source: 'composability-app',
-  newAttribute: m.string(),
 };
 
 describe('Canvas Subscriber methods', () => {
