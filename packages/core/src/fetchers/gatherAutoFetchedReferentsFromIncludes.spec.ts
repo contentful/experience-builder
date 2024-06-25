@@ -91,7 +91,7 @@ describe('gatherAutoFetchedReferentsFromIncludes', () => {
     });
   });
 
-  it('throws an error if head entity not in collection', () => {
+  it('resolves nothing if head entity is missing', () => {
     const deepReferences = [
       new DeepReference({
         path: '/uuid1/fields/logo/~locale/fields/file/~locale',
@@ -100,10 +100,29 @@ describe('gatherAutoFetchedReferentsFromIncludes', () => {
     ];
 
     const newCollection = { items: [], includes: { ...collection.includes } };
-    expect(() =>
-      gatherAutoFetchedReferentsFromIncludes(deepReferences, newCollection),
-    ).toThrowError(
-      `LogicError: When resolving deep-references could not find headEntry (id=entry1)`,
-    );
+    const result = gatherAutoFetchedReferentsFromIncludes(deepReferences, newCollection);
+    expect(result).toEqual({
+      autoFetchedReferentAssets: [],
+      autoFetchedReferentEntries: [],
+    });
+  });
+
+  it('resolves nothing if L2-referent is missing', () => {
+    const deepReferences = [
+      new DeepReference({
+        path: '/uuid1/fields/logo/~locale/fields/file/~locale',
+        dataSource,
+      }),
+    ];
+
+    const newCollection = {
+      items: [...collection.items],
+      includes: { Entry: [...collection.includes.Entry], Asset: [] },
+    };
+    const result = gatherAutoFetchedReferentsFromIncludes(deepReferences, newCollection);
+    expect(result).toEqual({
+      autoFetchedReferentAssets: [],
+      autoFetchedReferentEntries: [],
+    });
   });
 });
