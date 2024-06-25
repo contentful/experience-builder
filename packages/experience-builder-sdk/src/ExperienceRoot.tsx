@@ -35,7 +35,7 @@ export const ExperienceRoot = ({
   if (isEditorMode) {
     return (
       <VisualEditorRoot
-        experience={experienceObject}
+        experience={experienceObject as Experience<EntityStore> | undefined}
         visualEditorMode={visualEditorMode}
         initialLocale={locale}
       />
