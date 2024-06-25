@@ -1,7 +1,8 @@
 import open from 'open';
 import { EnvFileData } from './models.js';
-import { GetmanySpaceEnablementsReturn } from './types.js';
 import { getExperienceEntryDemoReqBody, getExperienceContentTypeReqBody } from './content.js';
+
+const defaultLocale = 'en-US';
 const baseUrl = process.env.BASE_URL || 'https://api.contentful.com';
 
 export class CtflClient {
@@ -78,20 +79,54 @@ export class CtflClient {
     this.apiKey!.previewAccessToken = previewAccessToken;
   }
 
-  /**
-   * @description - retrieve Enablements
-   */
-  async getManySpaceEnablements({ orgId }: { orgId: string }) {
-    const getAllEnablementsUrl = `/organizations/${orgId}/space_enablements`;
-
-    try {
-      const response = await this.apiCall<GetmanySpaceEnablementsReturn>(getAllEnablementsUrl, {
+  async getSpaceEnablements(orgId: string) {
+    type GetSpaceEnablementsReturn = {
+      items: {
+        sys: { space: { sys: { id: string } } };
+        studioExperiences: {
+          enabled: boolean;
+        };
+      }[];
+    };
+    const enablements = await this.apiCall<GetSpaceEnablementsReturn>(
+      `/organizations/${orgId}/space_enablements`,
+      {
         method: 'GET',
-      });
+      },
+    );
+    return enablements.items;
+  }
 
-      return response.items;
-    } catch (error) {
-      throw new Error(`Unable to retrieve Space Enablements. error: ${error}`);
+  async enableStudioExperiences() {
+    await this.apiCall(`/spaces/${this.space?.id}/enablements`, {
+      method: 'PUT',
+      headers: {
+        'x-contentful-version': '1',
+      },
+      body: JSON.stringify({
+        spaceTemplates: { enabled: false },
+        crossSpaceLinks: { enabled: false },
+        studioExperiences: { enabled: true },
+      }),
+    });
+  }
+
+  async hasExistingContentEntry(slug: string, contentTypeId: string) {
+    type GetContentEntriesReturn = {
+      items: { fields: { slug: { [defaultLocale]: string } } }[];
+    };
+    try {
+      const entries = await this.apiCall<GetContentEntriesReturn>(
+        `/spaces/${this.space?.id}/environments/master/entries?content_type=${contentTypeId}&fields.slug.${defaultLocale}=${slug}&limit=1`,
+        {
+          method: 'GET',
+        },
+        false,
+      );
+      return entries.items[0];
+    } catch (e) {
+      console.error(e);
+      return undefined;
     }
   }
 
@@ -113,7 +148,7 @@ export class CtflClient {
     await this.apiCall(
       `/spaces/${this.space?.id}/environments/master/entries/${entryId}/published`,
       {
-        method: 'put',
+        method: 'PUT',
         headers: {
           'x-contentful-version': '1',
         },
@@ -121,35 +156,60 @@ export class CtflClient {
     );
   }
 
-  async createContentType(contentTypeName: string, contentTypeId: string) {
-    try {
-      // Create Content Type
-      await this.apiCall(
-        `/spaces/${this.space?.id}/environments/master/content_types/${contentTypeId}`,
-        {
-          headers: {
-            'x-contentful-version': '0',
-          },
-          body: JSON.stringify(getExperienceContentTypeReqBody(contentTypeName)),
-          method: 'PUT',
-        },
-      );
+  async getExistingExperienceType() {
+    type GetContentTypesReturn = {
+      items: {
+        name: string;
+        sys: { id: string };
+        metadata: { annotations: { ContentType: { sys: { id: string } }[] } };
+      }[];
+    };
+    return await this.apiCall<GetContentTypesReturn>(
+      `/spaces/${this.space?.id}/environments/master/content_types`,
+      {
+        method: 'GET',
+      },
+    ).then((val) => {
+      for (const item of val.items) {
+        if (
+          item.metadata?.annotations?.ContentType?.some(
+            (ct) => ct.sys.id === 'Contentful:ExperienceType',
+          )
+        ) {
+          // Return the first Content Type found (currently there can be only one Experience Type per space)
+          return {
+            id: item.sys.id,
+            name: item.name,
+          };
+        }
+      }
+    });
+  }
 
-      // Publish Content Type
-      await this.apiCall(
-        `/spaces/${this.space?.id}/environments/master/content_types/${contentTypeId}/published`,
-        {
-          headers: {
-            'x-contentful-version': '1',
-          },
-          method: 'PUT',
-          body: null,
+  async createContentType(contentTypeName: string, contentTypeId: string) {
+    // Create Content Type
+    await this.apiCall(
+      `/spaces/${this.space?.id}/environments/master/content_types/${contentTypeId}`,
+      {
+        headers: {
+          'x-contentful-version': '0',
         },
-      );
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+        body: JSON.stringify(getExperienceContentTypeReqBody(contentTypeName)),
+        method: 'PUT',
+      },
+    );
+
+    // Publish Content Type
+    await this.apiCall(
+      `/spaces/${this.space?.id}/environments/master/content_types/${contentTypeId}/published`,
+      {
+        headers: {
+          'x-contentful-version': '1',
+        },
+        method: 'PUT',
+        body: null,
+      },
+    );
   }
 
   async createPreviewEnvironment(port: string, contentTypeName: string, contentTypeId: string) {
@@ -201,10 +261,7 @@ export class CtflClient {
       headers: {
         'X-Contentful-Organization': orgId,
       },
-      body: JSON.stringify({
-        name: name,
-        defaultLocale: 'en-US',
-      }),
+      body: JSON.stringify({ name, defaultLocale }),
     }).then((res) => {
       this.space = {
         name: res.name,
@@ -303,7 +360,11 @@ export class CtflClient {
     return true;
   }
 
-  private async apiCall<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  private async apiCall<T>(
+    endpoint: string,
+    options: RequestInit = {},
+    logErrors = true,
+  ): Promise<T> {
     try {
       const { headers, method = 'GET', ...otherOptions } = options;
       const baseHeaders = {
@@ -318,8 +379,9 @@ export class CtflClient {
       });
 
       if (!response.ok) {
-        console.log('[ ctflClient.ts ] apiCall() not OK response => ', await response.json());
-
+        if (logErrors) {
+          console.log('[ ctflClient.ts ] apiCall() not OK response => ', await response.json());
+        }
         throw new Error(response.statusText);
       }
 
@@ -329,7 +391,9 @@ export class CtflClient {
       }
       return undefined as T;
     } catch (e) {
-      console.error('Error calling Contentful API');
+      if (logErrors) {
+        console.error('Error calling Contentful API');
+      }
       throw e;
     }
   }

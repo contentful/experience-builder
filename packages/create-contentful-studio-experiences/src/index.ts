@@ -96,73 +96,79 @@ async function init() {
       },
     })) as string;
 
-    const useExistingSpace = await confirm({
-      message: 'Would you like to select an existing space to use with Studio Experiences?',
-    });
+    type SpaceOption = 'existing' | 'new';
 
-    if (useExistingSpace) {
-      if (!args.token) {
-        const confirmAnswer = await confirm({
-          message:
-            "Next, a browser window will open where you will log in (or sign up if you don't have an account) to Contentful, and authorize this CLI tool. Once done, you will see your access token, where you can copy it and paste it back into the command window. \n\nAre you ready to continue?",
-        });
+    const spaceType = (await select<{ label: string; value: SpaceOption }[], string>({
+      message: 'Where would you like to use Studio Experiences?',
+      options: [
+        { label: 'Select an existing space', value: 'existing' },
+        { label: 'Create a new space', value: 'new' },
+      ],
+    })) as SpaceOption;
 
-        if (!confirmAnswer) {
-          outro('Ok, bye!');
-          process.exit();
-        }
+    if (!args.token) {
+      const confirmAnswer = await confirm({
+        message:
+          "Next, a browser window will open where you will log in (or sign up if you don't have an account) to Contentful, and authorize this CLI tool. Once done, you will see your access token, where you can copy it and paste it back into the command window. \n\nAre you ready to continue?",
+      });
 
-        await ctflClient.getAuthToken();
-
-        const authToken = await password({
-          message: 'Enter your Contentful management token from the browser window:',
-          validate(token) {
-            if (token.length === 0) return `Value is required!`;
-          },
-        });
-
-        spinner.start('Validating token...');
-
-        const validToken = await ctflClient.setAuthToken(authToken as string, true);
-
-        if (!validToken) {
-          console.error('\nInvalid token\n');
-          outro('Ok, bye!');
-          process.exit(1);
-        }
-
-        spinner.stop('Token validated!');
+      if (!confirmAnswer) {
+        outro('Ok, bye!');
+        process.exit();
       }
 
-      const orgs = await ctflClient.getOrgs();
+      await ctflClient.getAuthToken();
 
-      const selectedOrgId = await select<{ label: string; value: string }[], string>({
-        message: 'Select organization the space is in.',
-        options: orgs.map((org) => {
-          return {
-            label: org.name,
-            value: org.id,
-          };
-        }),
+      const authToken = await password({
+        message: 'Enter your Contentful management token from the browser window:',
+        validate(token) {
+          if (token.length === 0) return `Value is required!`;
+        },
       });
 
-      const selectedOrg = orgs.find((org) => org.id === selectedOrgId)!;
-      ctflClient.org = selectedOrg;
+      spinner.start('Validating token...');
 
-      const spaces = await ctflClient.getSpacesForOrg(selectedOrgId as string);
+      const validToken = await ctflClient.setAuthToken(authToken as string, true);
 
-      const spaceEnablements = await ctflClient.getManySpaceEnablements({
-        orgId: selectedOrgId as string,
-      });
-      const spaceEnablementsIds = spaceEnablements.map(
-        (spaceEnablement) => spaceEnablement.sys.space.sys.id,
-      );
+      if (!validToken) {
+        console.error('\nInvalid token\n');
+        outro('Ok, bye!');
+        process.exit(1);
+      }
+
+      spinner.stop('Token validated!');
+    }
+
+    const orgs = await ctflClient.getOrgs();
+
+    const selectedOrgId = (await select<{ label: string; value: string }[], string>({
+      message: 'Select an organization for the space.',
+      options: orgs.map((org) => {
+        return {
+          label: org.name,
+          value: org.id,
+        };
+      }),
+    })) as string;
+
+    const selectedOrg = orgs.find((org) => org.id === selectedOrgId);
+    ctflClient.org = selectedOrg;
+
+    if (spaceType === 'existing') {
+      const spaces = await ctflClient.getSpacesForOrg(selectedOrgId);
+
+      const spaceEnablements = await ctflClient.getSpaceEnablements(selectedOrgId);
+
+      const studioExperiencesEnabledSpaceIds = spaceEnablements
+        .filter((val) => val.studioExperiences.enabled)
+        .map((spaceEnablement) => spaceEnablement.sys.space.sys.id);
+
       const spacesWithStudioExperienceEnabled = spaces.filter((space) => {
-        return spaceEnablementsIds.includes(space.id);
+        return studioExperiencesEnabledSpaceIds.includes(space.id);
       });
 
       const selectedSpaceId = await select<{ label: string; value: string }[], string>({
-        message: 'Select space to use.',
+        message: 'Select the space to use.',
         options: spacesWithStudioExperienceEnabled.map((space) => {
           return {
             label: space.name,
@@ -173,61 +179,88 @@ async function init() {
 
       const selectedSpace = spaces.find((space) => space.id === selectedSpaceId)!;
       ctflClient.space = selectedSpace;
+    } else {
+      const spaceName = (await text({
+        message: 'Enter a name for your space',
+        placeholder: 'My Studio Experiences Space',
+        validate(name) {
+          if (name.length === 0) return `Value is required!`;
+          // TODO: validate that space name is a valid one for CF
+        },
+      })) as string;
 
-      const apiKeys = await ctflClient.getApiKeys();
+      spinner.start('Creating space...');
+      const space = await ctflClient.createSpace(spaceName, selectedOrgId);
+      ctflClient.space = space;
+      await ctflClient.enableStudioExperiences();
+      spinner.stop(`Space ${space.name} created!`);
+    }
 
-      if (apiKeys.length === 0) {
-        spinner.start('No API keys are currently found, creating one.');
-        await ctflClient.createApiKeys();
+    const apiKeys = await ctflClient.getApiKeys();
+
+    if (apiKeys.length === 0) {
+      spinner.start('No API keys are currently found, creating one.');
+      await ctflClient.createApiKeys();
+      spinner.stop('API key created!');
+    } else if (apiKeys.find((item) => item.name === ctflClient.apiKeysName)) {
+      log.message('Using existing API key for Studio Experiences.');
+      const selectedApiKey = apiKeys.find((apiKey) => apiKey.name === ctflClient.apiKeysName)!;
+      ctflClient.apiKey = selectedApiKey;
+      await ctflClient.getPreviewAccessToken(selectedApiKey.previewKeyId);
+    } else {
+      const createNewOption = { label: 'Create new API key', value: 'create' };
+      const selectedApiKeyId = await select<{ label: string; value: string }[], string>({
+        message: 'Select API key to use.',
+        options: [
+          ...apiKeys.map((apiKey) => {
+            return {
+              label: apiKey.name,
+              value: apiKey.accessToken,
+            };
+          }),
+          createNewOption,
+        ],
+      });
+
+      if (selectedApiKeyId === createNewOption.value) {
+        spinner.start('Creating new API key.');
+        const apiKey = await ctflClient.createApiKeys();
+        await ctflClient.getPreviewAccessToken(apiKey.previewKeyId);
         spinner.stop('API key created!');
-      } else if (apiKeys.find((item) => item.name === ctflClient.apiKeysName)) {
-        log.message('Using existing API key for Studio Experiences.');
-        const selectedApiKey = apiKeys.find((apiKey) => apiKey.name === ctflClient.apiKeysName)!;
+      } else {
+        const selectedApiKey = apiKeys.find((apiKey) => apiKey.accessToken === selectedApiKeyId)!;
         ctflClient.apiKey = selectedApiKey;
         await ctflClient.getPreviewAccessToken(selectedApiKey.previewKeyId);
-      } else {
-        const createNewOption = { label: 'Create new API key', value: 'create' };
-        const selectedApiKeyId = await select<{ label: string; value: string }[], string>({
-          message: 'Select API key to use.',
-          options: [
-            ...apiKeys.map((apiKey) => {
-              return {
-                label: apiKey.name,
-                value: apiKey.accessToken,
-              };
-            }),
-            createNewOption,
-          ],
-        });
-
-        if (selectedApiKeyId === createNewOption.value) {
-          spinner.start('Creating new API key.');
-          const apiKey = await ctflClient.createApiKeys();
-          await ctflClient.getPreviewAccessToken(apiKey.previewKeyId);
-          spinner.stop('API key created!');
-        } else {
-          const selectedApiKey = apiKeys.find((apiKey) => apiKey.accessToken === selectedApiKeyId)!;
-          ctflClient.apiKey = selectedApiKey;
-          await ctflClient.getPreviewAccessToken(selectedApiKey.previewKeyId);
-        }
       }
     }
 
-    const contentTypeName = (await text({
-      message: 'Name your new Experiences Content Type:',
-      initialValue: DEFAULT.contentType,
-      validate(input) {
-        if (input.length === 0) return `Value is required!`;
-        if (input.length > 50) return 'Value must be 50 characters or less.';
-      },
-    })) as string;
+    let contentTypeName: string | undefined;
+    let contentTypeId: string | undefined;
 
-    const contentTypeId = generateContentTypeId(contentTypeName);
-    log.message(`Experience Type ID: ${contentTypeId}`);
+    const existingContentType = await ctflClient.getExistingExperienceType();
 
-    await ctflClient.createContentType(contentTypeName, contentTypeId);
+    if (existingContentType) {
+      contentTypeName = existingContentType.name;
+      contentTypeId = existingContentType.id;
+      log.message(`Using existing Experiences Content Type: ${contentTypeName}.`);
+    } else {
+      contentTypeName = (await text({
+        message: 'Enter a name for your Experiences Content Type:',
+        initialValue: DEFAULT.contentType,
+        validate(input) {
+          if (input.length === 0) return `Value is required!`;
+          if (input.length > 50) return 'Value must be 50 characters or less.';
+        },
+      })) as string;
+      contentTypeId = generateContentTypeId(contentTypeName);
+      await ctflClient.createContentType(contentTypeName, contentTypeId);
+    }
 
-    await ctflClient.createContentEntry(DEFAULT.title, DEFAULT.slug, contentTypeId);
+    const hasContentEntry = await ctflClient.hasExistingContentEntry(DEFAULT.slug, contentTypeId);
+
+    if (!hasContentEntry) {
+      await ctflClient.createContentEntry(DEFAULT.title, DEFAULT.slug, contentTypeId);
+    }
 
     const previewEnvironments = await ctflClient.getPreviewEnvironments();
 
@@ -256,10 +289,7 @@ async function init() {
 
     spinner.stop('Done creating project and installing dependencies!');
 
-    //copy env file
-    if (useExistingSpace && ctflClient) {
-      fsClient.copyEnvFile(projectDir, ctflClient.getEnvFileData(contentTypeId));
-    }
+    fsClient.copyEnvFile(projectDir, ctflClient.getEnvFileData(contentTypeId));
 
     outro(`Your project is ready and located in the ${projectName} folder.`);
 
