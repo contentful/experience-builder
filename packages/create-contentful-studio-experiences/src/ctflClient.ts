@@ -115,19 +115,13 @@ export class CtflClient {
     type GetContentEntriesReturn = {
       items: { fields: { slug: { [defaultLocale]: string } } }[];
     };
-    try {
-      const entries = await this.apiCall<GetContentEntriesReturn>(
-        `/spaces/${this.space?.id}/environments/master/entries?content_type=${contentTypeId}&fields.slug.${defaultLocale}=${slug}&limit=1`,
-        {
-          method: 'GET',
-        },
-        false,
-      );
-      return entries.items[0];
-    } catch (e) {
-      console.error(e);
-      return undefined;
-    }
+    const entries = await this.apiCall<GetContentEntriesReturn>(
+      `/spaces/${this.space?.id}/environments/master/entries?content_type=${contentTypeId}&fields.slug.${defaultLocale}=${slug}&limit=1`,
+      {
+        method: 'GET',
+      },
+    );
+    return entries.items[0];
   }
 
   async createContentEntry(title: string, slug: string, contentTypeId: string) {
@@ -360,11 +354,7 @@ export class CtflClient {
     return true;
   }
 
-  private async apiCall<T>(
-    endpoint: string,
-    options: RequestInit = {},
-    logErrors = true,
-  ): Promise<T> {
+  private async apiCall<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     try {
       const { headers, method = 'GET', ...otherOptions } = options;
       const baseHeaders = {
@@ -379,9 +369,7 @@ export class CtflClient {
       });
 
       if (!response.ok) {
-        if (logErrors) {
-          console.log('[ ctflClient.ts ] apiCall() not OK response => ', await response.json());
-        }
+        console.log('[ ctflClient.ts ] apiCall() not OK response => ', await response.json());
         throw new Error(response.statusText);
       }
 
@@ -391,9 +379,7 @@ export class CtflClient {
       }
       return undefined as T;
     } catch (e) {
-      if (logErrors) {
-        console.error('Error calling Contentful API');
-      }
+      console.error('Error calling Contentful API');
       throw e;
     }
   }

@@ -200,7 +200,8 @@ async function init() {
 
     if (apiKeys.length === 0) {
       spinner.start('No API keys are currently found, creating one.');
-      await ctflClient.createApiKeys();
+      const newApiKey = await ctflClient.createApiKeys();
+      await ctflClient.getPreviewAccessToken(newApiKey.previewKeyId);
       spinner.stop('API key created!');
     } else if (apiKeys.find((item) => item.name === ctflClient.apiKeysName)) {
       log.message('Using existing API key for Studio Experiences.');
@@ -242,10 +243,10 @@ async function init() {
     if (existingContentType) {
       contentTypeName = existingContentType.name;
       contentTypeId = existingContentType.id;
-      log.message(`Using existing Experiences Content Type: ${contentTypeName}.`);
+      log.message(`Using existing content type for Experiences: ${contentTypeName}.`);
     } else {
       contentTypeName = (await text({
-        message: 'Enter a name for your Experiences Content Type:',
+        message: 'Enter a name for the content type for Experiences',
         initialValue: DEFAULT.contentType,
         validate(input) {
           if (input.length === 0) return `Value is required!`;
