@@ -97,20 +97,6 @@ export class CtflClient {
     return enablements.items;
   }
 
-  async enableStudioExperiences() {
-    await this.apiCall(`/spaces/${this.space?.id}/enablements`, {
-      method: 'PUT',
-      headers: {
-        'x-contentful-version': '1',
-      },
-      body: JSON.stringify({
-        spaceTemplates: { enabled: false },
-        crossSpaceLinks: { enabled: false },
-        studioExperiences: { enabled: true },
-      }),
-    });
-  }
-
   async hasExistingContentEntry(slug: string, contentTypeId: string) {
     type GetContentEntriesReturn = {
       items: { fields: { slug: { [defaultLocale]: string } } }[];
@@ -248,25 +234,6 @@ export class CtflClient {
     return previewEnvironments;
   }
 
-  async createSpace(name: string, orgId: string) {
-    type SpaceReturn = { name: string; sys: { id: string } };
-    const space = await this.apiCall<SpaceReturn>('/spaces', {
-      method: 'POST',
-      headers: {
-        'X-Contentful-Organization': orgId,
-      },
-      body: JSON.stringify({ name, defaultLocale }),
-    }).then((res) => {
-      this.space = {
-        name: res.name,
-        id: res.sys.id,
-      };
-      return this.space;
-    });
-
-    return space;
-  }
-
   async deleteAuthToken() {
     if (this.authToken && this.authTokenCreatedFromApi) {
       type KeysReturn = { items: { sys: { id: string; redactedValue: string } }[] };
@@ -287,14 +254,6 @@ export class CtflClient {
           method: 'PUT',
         });
       }
-    }
-  }
-
-  async deleteSpace() {
-    if (this.space) {
-      await this.apiCall(`/spaces/${this.space.id}`, {
-        method: 'DELETE',
-      });
     }
   }
 
