@@ -22,6 +22,8 @@ jobs:
     uses: ./.github/workflows/check.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+      PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
   publish:
     needs: [install-build, check]
     if: >-
@@ -42,6 +44,20 @@ jobs:
     secrets:
       VAULT_URL: ${{ secrets.VAULT_URL }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  # Run after publishing according to docs:
+  # https://docs.pact.io/pact_broker/recording_deployments_and_releases#recording-releases
+  pact-record-release:
+    needs: publish
+    uses: ./.github/workflows/pact-record-release.yaml
+    if: >-
+      vars.ENABLE_PACTFLOW == 'true' &&
+      github.ref_name == 'main' &&
+      !contains(github.event.head_commit.message, 'skip-release') &&
+      github.actor != 'dependabot[bot]' &&
+      github.actor != 'contentful-automation[bot]'
+    secrets:
+      PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+      PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
   upload-artifact-cleanup:
     if: ${{ always() }}
     needs: [install-build, check, publish]
