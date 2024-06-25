@@ -28,7 +28,7 @@ npm run dev
 5. Experience Content Type - Enter a name for your Experiences Content Type.
     - Creates your Experience Content Type.
     - Creates a Demo Experience Entry to help you get started.
-6. Preview Environment - Configures the Content Preview Settings for Studio Experiences canvas to preview your local project.
+6. Content Preview Environment - Configures the Content Preview Settings for Studio Experiences canvas to preview your local project.
 
 ## CLI Options
 

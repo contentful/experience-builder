@@ -15,10 +15,10 @@ import { allFrameworks } from './models.js';
 import { FsClient } from './fsClient.js';
 import { generateContentTypeId, isValidPackageName } from './utils.js';
 
-const Default = {
-  ContentType: 'Studio Experiences',
-  Title: 'Home Page',
-  Slug: 'homePage',
+const DEFAULT = {
+  contentType: 'Studio Experiences',
+  title: 'Home Page',
+  slug: 'homePage',
 };
 
 const args = await yargs(process.argv.slice(2))
@@ -215,7 +215,7 @@ async function init() {
 
     const contentTypeName = (await text({
       message: 'Name your new Experiences Content Type:',
-      initialValue: Default.ContentType,
+      initialValue: DEFAULT.contentType,
       validate(input) {
         if (input.length === 0) return `Value is required!`;
         if (input.length > 50) return 'Value must be 50 characters or less.';
@@ -227,7 +227,7 @@ async function init() {
 
     await ctflClient.createContentType(contentTypeName, contentTypeId);
 
-    await ctflClient.createContentEntry(Default.Title, Default.Slug, contentTypeId);
+    await ctflClient.createContentEntry(DEFAULT.title, DEFAULT.slug, contentTypeId);
 
     const previewEnvironments = await ctflClient.getPreviewEnvironments();
 
@@ -237,12 +237,12 @@ async function init() {
 
     if (previewEnvironments.length === 0 || !previewEnv) {
       spinner.start(
-        'No preview environments for Studio Experiences currently found, creating one.',
+        'No content preview environments for Studio Experiences currently found, creating one.',
       );
       await ctflClient.createPreviewEnvironment(variant.devPort, contentTypeName, contentTypeId);
-      spinner.stop('Preview environment created!');
+      spinner.stop('Content preview environment created!');
     } else if (previewEnv) {
-      log.message('Using existing preview environment for Studio Experiences.');
+      log.message('Using existing content preview environment for Studio Experiences.');
       ctflClient.previewEnvironment = previewEnv;
     }
 
