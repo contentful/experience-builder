@@ -22,13 +22,14 @@ npm run dev
 1. Project Type - Currently supports React.
 2. React Type - Currently supports Vite + React + TypeScript.
 3. Installation Path - The generated project will be installed here.
-4. Contentful Space - A workspace that contains all content and media for a project.
-    - Select an existing space that has Studio Experiences enabled. See: [How to enable Experiences in a space](https://www.contentful.com/help/enable-spaces-for-experiences/).
-    - Create a new space with Studio Experiences enabled.
-5. API Key - Select existing API access key or create new one.
-6. Content Type - Creates the content type for Experiences (or uses the existing one if available).
-7. Experience Entry - A demo experience entry is created to help you get started (unless you already have one).
-8. Content Preview - Configures the Content Preview Environment for Studio Experiences.
+4. Connect to Contentful Space _(Optional)_ - Note: only spaces that have Studio Experiences enabled are eligible. See: [How to enable Experiences in a space](https://www.contentful.com/help/enable-spaces-for-experiences/).
+    - Select your Contentful Organization.
+    - Select your Contentful Space.
+    - Select or Create an API key.
+    - Content Type will be created for Experiences if needed.
+    - Demo Experience Entry will be created (unless one exists).
+    - Content Preview Settings will be configured if needed.
+5. Project Output - The React project will be created, incorporating the [Studio Experiences SDK](https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/#usage).
 
 ## CLI Arguments
 
