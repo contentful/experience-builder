@@ -45,5 +45,3 @@ tmp/
 
 **/cypress/screenshots/**
 **/cypress/videos/**
-
-pacts
