@@ -271,11 +271,23 @@ async function init() {
 
     spinner.stop('Done creating project and installing dependencies!');
 
-    if (useExistingSpace && contentTypeId) {
-      fsClient.copyEnvFile(projectDir, ctflClient.getEnvFileData(contentTypeId));
-    }
+    const envFileData =
+      useExistingSpace && contentTypeId
+        ? ctflClient.getEnvFileData(contentTypeId)
+        : {
+            environment: 'master',
+            spaceId: '*YOUR SPACE ID*',
+            accessToken: '*YOUR ACCESS TOKEN*',
+            previewAccessToken: '*YOUR PREVIEW ACCESS TOKEN*',
+            experienceTypeId: '*YOUR EXPERIENCE CONTENT TYPE ID*',
+          };
+    fsClient.copyEnvFile(projectDir, envFileData);
 
-    outro(`Your project is ready and located in the ${projectName} folder.`);
+    const note = useExistingSpace
+      ? ''
+      : ' To connect your project with Contentful, update your .env.local file.';
+
+    outro(`Your project is ready and located in the ${projectName} folder.${note}`);
 
     const shouldCleanup =
       args.dev &&
