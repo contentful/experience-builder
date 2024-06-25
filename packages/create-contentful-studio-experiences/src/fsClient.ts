@@ -34,11 +34,11 @@ export class FsClient {
     fs.writeFileSync(
       path.join(projectDir, '.env.local'),
       `VITE_CTFL_ENV_ID=${envFileData.environment}
+VITE_CTFL_EXPERIENCE_TYPE_ID=${envFileData.experienceTypeId}
 VITE_CTFL_SPACE_ID=${envFileData.spaceId}
 VITE_CTFL_ACCESS_TOKEN=${envFileData.accessToken}
 VITE_CTFL_PREVIEW_ACCESS_TOKEN=${envFileData.previewAccessToken}
-VITE_CTFL_API_HOST=cdn.contentful.com
-VITE_CTFL_EXPERIENCE_TYPE_ID=${envFileData.typeId}`,
+VITE_CTFL_API_HOST=cdn.contentful.com`,
     );
   }
 
