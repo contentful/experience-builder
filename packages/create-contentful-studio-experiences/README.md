@@ -25,6 +25,7 @@ npm run dev
 4. Connect to Contentful Space _(Optional)_ - Note: only spaces that have Studio Experiences enabled are eligible. See: [How to enable Experiences in a space](https://www.contentful.com/help/enable-spaces-for-experiences/).
     - Select your Contentful Organization.
     - Select your Contentful Space.
+    - Select your Environment (if your Space has multiple).
     - Select or Create an API key.
     - Content Type will be created for Experiences if needed.
     - Demo Experience Entry will be created (unless one exists).
