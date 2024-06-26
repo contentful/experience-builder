@@ -11,7 +11,7 @@ export const onComponentDropped = ({
 }: {
   node: ExperienceTreeNode;
   index?: number;
-  parentType?: string;
+  parentType?: ExperienceTreeNode['type'];
   parentBlockId?: string;
   parentId?: string;
 }) => {

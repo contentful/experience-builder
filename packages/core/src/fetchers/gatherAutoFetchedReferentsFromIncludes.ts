@@ -37,23 +37,24 @@ export function gatherAutoFetchedReferentsFromIncludes(
       (entry) => entry.sys.id === reference.headEntityId,
     );
     if (!headEntry) {
-      throw new Error(
-        `LogicError: When resolving deep-references could not find headEntry (id=${reference.entityId})`,
+      console.debug(
+        `[experiences-sdk-core::fetchers] When resolving deep-references could not find headEntry with id '${reference.entityId}'`,
       );
+      continue;
     }
 
     const linkToReferent = headEntry.fields[reference.field] as UnresolvedLink<'Asset' | 'Entry'>;
 
     if (undefined === linkToReferent) {
       console.debug(
-        `[experiences-sdk-react::gatherAutoFetchedReferentsFromIncludes] Empty reference in headEntity. Probably reference is simply not set.`,
+        `[experiences-sdk-core::fetchers] Empty reference in headEntity. Probably reference is simply not set.`,
       );
       continue;
     }
 
     if (!isLink(linkToReferent)) {
       console.debug(
-        `[experiences-sdk-react::gatherAutoFetchedReferentsFromIncludes] Non-link value in headEntity. Probably broken path '${reference.originalPath}'`,
+        `[experiences-sdk-core::fetchers] Non-link value in headEntity. Probably broken path '${reference.originalPath}'`,
       );
       continue;
     }
@@ -62,9 +63,7 @@ export function gatherAutoFetchedReferentsFromIncludes(
 
     if (!['Entry', 'Asset'].includes(linkType)) {
       console.debug(
-        `[experiences-sdk-react::gatherAutoFetchedReferentsFromIncludes] Unhandled linkType :${JSON.stringify(
-          linkToReferent,
-        )}`,
+        `[experiences-sdk-core::fetchers] Unhandled linkType :${JSON.stringify(linkToReferent)}`,
       );
       continue;
     }
@@ -73,11 +72,14 @@ export function gatherAutoFetchedReferentsFromIncludes(
       (entity) => entity.sys.id === linkToReferent.sys.id,
     );
     if (!referentEntity) {
-      throw new Error(
-        `Logic Error: L2-referent ${linkType} was not found within .includes (${JSON.stringify({
-          linkToReferent,
-        })})`,
+      console.debug(
+        `[experiences-sdk-core::fetchers] L2-referent ${linkType} was not found within .includes (${JSON.stringify(
+          {
+            linkToReferent,
+          },
+        )})`,
       );
+      continue;
     }
 
     linkType === 'Entry'

@@ -1,10 +1,10 @@
-export const getDemoExperienceReqBody = (experienceName: string) => ({
+export const getExperienceEntryDemoReqBody = (title: string, slug: string) => ({
   fields: {
     title: {
-      'en-US': experienceName,
+      'en-US': title,
     },
     slug: {
-      'en-US': experienceName,
+      'en-US': slug,
     },
     componentTree: {
       'en-US': {
@@ -75,7 +75,7 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
                       cfTextAlign: {
                         type: 'DesignValue',
                         valuesByBreakpoint: {
-                          desktop: 'left',
+                          desktop: 'center',
                         },
                       },
                       cfTextColor: {
@@ -174,7 +174,7 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
                       cfMargin: {
                         type: 'DesignValue',
                         valuesByBreakpoint: {
-                          desktop: '3% 0 2% 0',
+                          desktop: '30px 0 30px 0',
                         },
                       },
                       cfPadding: {
@@ -204,7 +204,7 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
                       cfTextAlign: {
                         type: 'DesignValue',
                         valuesByBreakpoint: {
-                          desktop: 'left',
+                          desktop: 'center',
                         },
                       },
                       cfTextColor: {
@@ -222,7 +222,7 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
                       cfLineHeight: {
                         type: 'DesignValue',
                         valuesByBreakpoint: {
-                          desktop: '20px',
+                          desktop: '24px',
                         },
                       },
                       cfTextItalic: {
@@ -590,7 +590,7 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
     unboundValues: {
       'en-US': {
         '1nYkkh22xpZCcNqmpycVu': {
-          value: 'Welcome to Experience Builder!',
+          value: 'Welcome to Studio Experiences!',
         },
         DwG6uk2DfoIYgMKD4tvPo: {},
         JK5w9tssNBQTEOjKli5n0: {
@@ -604,7 +604,7 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
         },
         XFjLtoeKIQFBAegSpmkSu: {
           value:
-            'Read more: https://github.com/contentful/experience-builder/tree/development/packages/create-experience-builder',
+            'Read more: https://github.com/contentful/experience-builder/tree/development/packages/create-contentful-studio-experiences',
         },
         'ch6sZSVEQy9a4x_tYv-pG': {
           value: false,
@@ -685,7 +685,7 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
                         ],
                       },
                       {
-                        nodeType: 'ordered-list',
+                        nodeType: 'unordered-list',
                         data: {},
                         content: [
                           {
@@ -739,7 +739,7 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
                         ],
                       },
                       {
-                        nodeType: 'ordered-list',
+                        nodeType: 'unordered-list',
                         data: {},
                         content: [
                           {
@@ -752,14 +752,8 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
                                 content: [
                                   {
                                     nodeType: 'text',
-                                    value: 'L',
-                                    marks: [],
-                                    data: {},
-                                  },
-                                  {
-                                    nodeType: 'text',
                                     value:
-                                      'inking between Experiences: https://www.contentful.com/developers/docs/experiences/experience-hyperlinks/',
+                                      'Linking between Experiences: https://www.contentful.com/developers/docs/experiences/experience-hyperlinks/',
                                     marks: [],
                                     data: {},
                                   },
@@ -830,7 +824,7 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
                         ],
                       },
                       {
-                        nodeType: 'ordered-list',
+                        nodeType: 'unordered-list',
                         data: {},
                         content: [
                           {
@@ -909,18 +903,18 @@ export const getDemoExperienceReqBody = (experienceName: string) => ({
         },
         tWZlyWIFsAvl1qGtXtNuP: {
           value:
-            'This Experience was generated by the "create-experience-builder" CLI.  Learn more about Experiences: https://www.contentful.com/developers/docs/experiences/',
+            'This Experience was generated by the Contentful Studio Experiences CLI.\nLearn more about Experiences: https://www.contentful.com/developers/docs/experiences/',
         },
         yZ0T3Qbr7ZO8CUSJvMF8R: {
-          value: 'This Experience was bootstrapped using the "Create Experience Builder" CLI.',
+          value: '',
         },
       },
     },
   },
 });
 
-export const getExperienceContentTypeReqBody = (experienceName: string) => ({
-  name: experienceName,
+export const getExperienceContentTypeReqBody = (contentTypeName: string) => ({
+  name: contentTypeName,
   fields: [
     {
       id: 'title',
@@ -974,11 +968,11 @@ export const getExperienceContentTypeReqBody = (experienceName: string) => ({
       items: {
         type: 'Link',
         linkType: 'Entry',
-        validations: [{ linkContentType: [experienceName] }],
+        validations: [{ linkContentType: [contentTypeName] }],
       },
     },
   ],
-  description: `Content Type generated by the "create-experience-builder" CLI tool on: ${new Date()}`,
+  description: `Generated by the Contentful Studio Experiences CLI on ${new Date().toLocaleString()}`,
   metadata: {
     annotations: {
       ContentType: [
