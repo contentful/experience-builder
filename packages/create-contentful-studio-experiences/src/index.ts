@@ -177,6 +177,22 @@ async function init() {
       const selectedSpace = spaces.find((space) => space.id === selectedSpaceId)!;
       ctflClient.space = selectedSpace;
 
+      const environments = await ctflClient.getEnvironments();
+      let env = environments.length === 1 ? environments[0] : undefined;
+      if (environments.length > 1) {
+        const selectedEnv = (await select<{ label: string; value: string }[], string>({
+          message: 'Select the environment to use.',
+          options: environments.map((env) => {
+            return {
+              label: env.name,
+              value: env.id,
+            };
+          }),
+        })) as string;
+        env = environments.find((item) => item.id === selectedEnv);
+      }
+      ctflClient.environment = env;
+
       const apiKeys = await ctflClient.getApiKeys();
 
       if (apiKeys.length === 0) {
@@ -275,7 +291,7 @@ async function init() {
       useExistingSpace && contentTypeId
         ? ctflClient.getEnvFileData(contentTypeId)
         : {
-            environment: 'master',
+            environment: ctflClient.environment?.id ?? 'master',
             spaceId: '*YOUR SPACE ID*',
             accessToken: '*YOUR ACCESS TOKEN*',
             previewAccessToken: '*YOUR PREVIEW ACCESS TOKEN*',

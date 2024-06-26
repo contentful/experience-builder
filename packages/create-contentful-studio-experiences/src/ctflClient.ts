@@ -8,6 +8,7 @@ const baseUrl = process.env.BASE_URL || 'https://api.contentful.com';
 export class CtflClient {
   public space?: { name: string; id: string };
   public org?: { name: string; id: string };
+  public environment?: { name: string; id: string };
   public apiKey?: {
     accessToken: string;
     name: string;
@@ -102,7 +103,7 @@ export class CtflClient {
       items: { fields: { slug: { [defaultLocale]: string } } }[];
     };
     const entries = await this.apiCall<GetContentEntriesReturn>(
-      `/spaces/${this.space?.id}/environments/master/entries?content_type=${contentTypeId}&fields.slug.${defaultLocale}=${slug}&limit=1`,
+      `/spaces/${this.space?.id}/environments/${this.environment?.id}/entries?content_type=${contentTypeId}&fields.slug.${defaultLocale}=${slug}&limit=1`,
       {
         method: 'GET',
       },
@@ -114,7 +115,7 @@ export class CtflClient {
     //Create entry
     type ContentEntryReturn = { sys: { id: string } };
     const entryId = await this.apiCall<ContentEntryReturn>(
-      `/spaces/${this.space?.id}/environments/master/entries`,
+      `/spaces/${this.space?.id}/environments/${this.environment?.id}/entries`,
       {
         method: 'POST',
         headers: {
@@ -126,7 +127,7 @@ export class CtflClient {
 
     //Publish entry
     await this.apiCall(
-      `/spaces/${this.space?.id}/environments/master/entries/${entryId}/published`,
+      `/spaces/${this.space?.id}/environments/${this.environment?.id}/entries/${entryId}/published`,
       {
         method: 'PUT',
         headers: {
@@ -145,7 +146,7 @@ export class CtflClient {
       }[];
     };
     return await this.apiCall<GetContentTypesReturn>(
-      `/spaces/${this.space?.id}/environments/master/content_types`,
+      `/spaces/${this.space?.id}/environments/${this.environment?.id}/content_types`,
       {
         method: 'GET',
       },
@@ -169,7 +170,7 @@ export class CtflClient {
   async createContentType(contentTypeName: string, contentTypeId: string) {
     // Create Content Type
     await this.apiCall(
-      `/spaces/${this.space?.id}/environments/master/content_types/${contentTypeId}`,
+      `/spaces/${this.space?.id}/environments/${this.environment?.id}/content_types/${contentTypeId}`,
       {
         headers: {
           'x-contentful-version': '0',
@@ -181,7 +182,7 @@ export class CtflClient {
 
     // Publish Content Type
     await this.apiCall(
-      `/spaces/${this.space?.id}/environments/master/content_types/${contentTypeId}/published`,
+      `/spaces/${this.space?.id}/environments/${this.environment?.id}/content_types/${contentTypeId}/published`,
       {
         headers: {
           'x-contentful-version': '1',
@@ -269,7 +270,7 @@ export class CtflClient {
 
   getEnvFileData(experienceTypeId: string): EnvFileData {
     return {
-      environment: 'master',
+      environment: this.environment!.id,
       spaceId: this.space!.id,
       accessToken: this.apiKey!.accessToken,
       previewAccessToken: this.apiKey!.previewAccessToken!,
@@ -301,6 +302,21 @@ export class CtflClient {
       }),
     );
     return spaces;
+  }
+
+  async getEnvironments() {
+    type EnvironmentsReturn = { items: { name: string; sys: { id: string } }[] };
+    const environments = await this.apiCall<EnvironmentsReturn>(
+      `/spaces/${this.space?.id}/environments`,
+    ).then((res) =>
+      res.items.map((item) => {
+        return {
+          name: item.name,
+          id: item.sys.id,
+        };
+      }),
+    );
+    return environments;
   }
 
   async setAuthToken(authToken: string, createdFromApi: boolean = false) {
