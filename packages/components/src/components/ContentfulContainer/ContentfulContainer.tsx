@@ -25,28 +25,22 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
   }
 
   // Extract properties that are only available in editor mode
-  const { renderDropzone, node } = props;
+  const { renderDropzone, node, dragProps = {}, ...editorModeProps } = props;
 
   const isEmpty = !node.children.length;
 
-  const renderDropzoneComponent = () => {
-    return renderDropzone(node, {
-      ['data-test-id']: 'contentful-container',
-      id: 'ContentfulContainer',
-      className: combineClasses('contentful-container', className),
-      WrapperComponent: Flex,
-    });
-  };
+  const isSection = node.data.blockId === CONTENTFUL_COMPONENTS.section.id;
 
-  // Perform ternary so that we only render the wrapper div if the container is empty
-  return isEmpty ? (
-    <div className="cf-container-wrapper" data-ctfl-draggable-id={node.data.id}>
-      <div className="cf-container-label">
-        {node.data.blockId === CONTENTFUL_COMPONENTS.section.id ? 'Section' : 'Container'}
-      </div>
-      {renderDropzoneComponent()}
-    </div>
-  ) : (
-    renderDropzoneComponent()
-  );
+  return renderDropzone(node, {
+    ...editorModeProps,
+    ['data-test-id']: 'contentful-container',
+    id: 'ContentfulContainer',
+    className: combineClasses(
+      'contentful-container',
+      className,
+      isEmpty ? (isSection ? 'contentful-section-label' : 'contentful-container-label') : '',
+    ),
+    WrapperComponent: Flex,
+    dragProps,
+  });
 };

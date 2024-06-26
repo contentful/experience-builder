@@ -3,18 +3,19 @@ import type {
   ComponentRegistration,
   ExperienceTreeNode,
   ResolveDesignValueType,
+  DragWrapperProps,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
-import { builtInComponents } from '@/types/constants';
 import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
 import { Assembly } from '@contentful/experiences-components-react';
 import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
-import type { RenderDropzoneFunction } from './Dropzone.types';
-import { NoWrapDraggableProps } from '@components/Draggable/DraggableChildComponent';
-import { ImportedComponentErrorBoundary } from './ImportedComponentErrorBoundary';
+import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
+import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
+import { isContentfulStructureComponent } from '@contentful/experiences-core';
+import { MissingComponentPlacehoder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -66,7 +67,7 @@ export const useComponent = ({
 
   const componentId = node.data.id;
 
-  const { componentProps, wrapperProps } = useComponentProps({
+  const { componentProps, sizeStyles } = useComponentProps({
     node,
     areEntitiesFetched,
     resolveDesignValue,
@@ -76,43 +77,60 @@ export const useComponent = ({
     slotId,
   });
 
-  // Only pass editor props to built-in components
-  const { editorMode, renderDropzone: _renderDropzone, ...otherComponentProps } = componentProps;
-  const createElementToRender = (componentRegistration: ComponentRegistration) => {
-    if (builtInComponents.includes(node.data.blockId || '')) {
-      // eslint-disable-next-line react/display-name
-      return (dragProps?: NoWrapDraggableProps) =>
-        React.createElement(componentRegistration.component, {
-          ...dragProps,
-          ...componentProps,
-        });
+  const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
+    if (!componentRegistration) {
+      return <MissingComponentPlacehoder blockId={node.data.blockId} />;
     }
 
-    if (node.type === ASSEMBLY_NODE_TYPE) {
-      // Assembly.tsx requires renderDropzone and editorMode as well
-      // eslint-disable-next-line react/display-name
-      return () => React.createElement(componentRegistration.component, componentProps);
+    const { dragProps = {} } = props || {};
+
+    const {
+      editorMode: _editorMode,
+      renderDropzone: _renderDropzone,
+      node: _node,
+      ...customComponentProps
+    } = componentProps;
+
+    const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
+    const isAssembly = node.type === 'assembly';
+    const modifiedProps =
+      isStructureComponent || isAssembly ? componentProps : customComponentProps;
+
+    const requiresDragWrapper =
+      !isStructureComponent && componentRegistration.options?.wrapComponent === false;
+
+    const element = React.createElement(
+      ImportedComponentErrorBoundary,
+      null,
+      React.createElement(componentRegistration.component, {
+        ...modifiedProps,
+        dragProps,
+      }),
+    );
+
+    if (!requiresDragWrapper) {
+      return element;
     }
 
-    return function createComponentWrappedInErrorBoundary() {
-      const elementToWrap = React.createElement(
-        componentRegistration.component,
-        otherComponentProps,
-      );
-      return React.createElement(ImportedComponentErrorBoundary, null, elementToWrap);
-    };
+    const { children, innerRef, Tag = 'div', ToolTipAndPlaceholder, style, ...rest } = dragProps;
+
+    return (
+      <Tag
+        {...rest}
+        style={{ ...style, ...sizeStyles }}
+        ref={(refNode: HTMLElement | null) => {
+          if (innerRef && refNode) innerRef(refNode);
+        }}>
+        {ToolTipAndPlaceholder}
+        {element}
+      </Tag>
+    );
   };
 
-  const elementToRender = componentRegistration
-    ? createElementToRender(componentRegistration)
-    : null;
-
   return {
-    isComponentMissing: !componentRegistration,
     node,
     componentId,
     elementToRender,
-    wrapperProps,
     definition: componentRegistration?.definition,
   };
 };
