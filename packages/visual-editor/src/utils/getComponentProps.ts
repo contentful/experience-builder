@@ -1,5 +1,5 @@
 import { ResolvedComponentProps } from '@/hooks/useComponentProps';
-import { DragWrapperProps } from '@/types/Config';
+import type { DragWrapperProps } from '@contentful/experiences-core/types';
 
 export const getHtmlDragProps = (dragProps?: DragWrapperProps) => {
   if (dragProps) {

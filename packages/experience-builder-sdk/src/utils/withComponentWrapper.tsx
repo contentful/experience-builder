@@ -1,4 +1,3 @@
-// import { ComponentRegistration } from '@contentful/experiences-core/types';
 import { ComponentRegistration } from '@contentful/experiences-core/types';
 import classNames from 'classnames';
 import React from 'react';

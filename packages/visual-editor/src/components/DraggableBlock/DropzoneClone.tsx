@@ -1,6 +1,6 @@
 import React, { ElementType } from 'react';
-import type { ResolveDesignValueType } from '@contentful/experiences-core/types';
-import { ComponentData, DragWrapperProps } from '@/types/Config';
+import type { ResolveDesignValueType, DragWrapperProps } from '@contentful/experiences-core/types';
+import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
 import styles from './styles.module.css';
 import classNames from 'classnames';

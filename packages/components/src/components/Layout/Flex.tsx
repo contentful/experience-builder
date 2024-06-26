@@ -1,5 +1,6 @@
 import React, { MouseEventHandler, forwardRef } from 'react';
 import type * as CSS from 'csstype';
+import type { DragWrapperProps } from '@contentful/experiences-core/types';
 
 export interface FlexProps {
   /**
@@ -61,8 +62,7 @@ export interface FlexProps {
   className?: string;
   cssStyles?: Record<string, string>;
   id?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dragProps?: any; //TODO: add type
+  dragProps?: DragWrapperProps;
 }
 
 export const Flex = forwardRef<HTMLDivElement, FlexProps>(

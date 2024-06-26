@@ -1,9 +1,9 @@
 import React, { ElementType, useCallback, useMemo } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import { isComponentAllowedOnRoot } from '@contentful/experiences-core';
-import type { ResolveDesignValueType } from '@contentful/experiences-core/types';
+import type { ResolveDesignValueType, DragWrapperProps } from '@contentful/experiences-core/types';
 import { EditorBlock } from './EditorBlock';
-import { ComponentData, DragWrapperProps } from '@/types/Config';
+import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import styles from './styles.module.css';

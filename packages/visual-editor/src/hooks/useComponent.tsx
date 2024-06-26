@@ -3,6 +3,7 @@ import type {
   ComponentRegistration,
   ExperienceTreeNode,
   ResolveDesignValueType,
+  DragWrapperProps,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
@@ -14,7 +15,6 @@ import { useEntityStore } from '@/store/entityStore';
 import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
 import { isContentfulStructureComponent } from '@contentful/experiences-core';
-import { DragWrapperProps } from '@/types/Config';
 import { MissingComponentPlacehoder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
 
 type UseComponentProps = {
