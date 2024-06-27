@@ -16,9 +16,10 @@ describe('withComponentWrapper', () => {
       const onMouseUpSpy = jest.fn();
 
       const { container } = render(
-        <WrappedButton onClick={onClickSpy} onMouseDown={onMouseDownSpy} onMouseUp={onMouseUpSpy}>
-          Click me
-        </WrappedButton>,
+        <WrappedButton
+          onClick={onClickSpy}
+          onMouseDown={onMouseDownSpy}
+          onMouseUp={onMouseUpSpy}></WrappedButton>,
       );
 
       fireEvent.click(container.firstChild!);

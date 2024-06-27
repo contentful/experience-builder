@@ -32,7 +32,7 @@ export const allFrameworks: Framework[] = [
         color: kleur.white,
         installCommand: 'npm create vite@latest PROJECT_NAME -- --template react-ts',
         srcDir: 'src',
-        defaultDir: 'react-eb-project',
+        defaultDir: 'studio-experiences-react-app',
         devPort: '5173',
         templateDir: 'react-vite-ts',
       },
@@ -45,5 +45,5 @@ export type EnvFileData = {
   spaceId: string;
   accessToken: string;
   previewAccessToken: string;
-  typeId: string;
+  experienceTypeId: string;
 };

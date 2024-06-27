@@ -18,7 +18,9 @@
   width: 100%;
 }
 
-.cf-container-label {
+.contentful-container:after {
+  content: '';
+  display: block;
   position: absolute;
   pointer-events: none;
   top: 0;
@@ -32,7 +34,15 @@
   font-family: var(--exp-builder-font-stack-primary);
   font-size: 12px;
   color: var(--exp-builder-gray400);
-  z-index: 10;
+  z-index: 1;
+}
+
+.contentful-section-label:after {
+  content: 'Section';
+}
+
+.contentful-container-label:after {
+  content: 'Container';
 }
 
 /* used by ContentfulSectionAsHyperlink.tsx */

@@ -13,40 +13,25 @@ export const SingleColumn: React.FC<SingleColumnProps> = (props) => {
   const {
     renderDropzone,
     node,
-    innerRef,
-    Tooltip,
-    style,
-    dragHandleProps,
-    draggableProps,
+    className: _className,
+    dragProps = {},
     cfColumnSpan,
     editorMode: edit,
-    wrapperClassName,
     ...editorProps
   } = props;
 
   const isEmpty = !node.children.length;
-  return (
-    <div
-      ref={innerRef}
-      {...dragHandleProps}
-      {...draggableProps}
-      {...editorProps}
-      className={combineClasses(
-        wrapperClassName,
-        'cf-single-column-wrapper',
-        isEmpty ? 'cf-single-column-empty' : '',
-      )}
-      style={{
-        ...style,
-        gridColumn: `span ${cfColumnSpan}`,
-      }}>
-      {Tooltip}
-      {isEmpty && <div className="cf-single-column-label">Column</div>}
-      {renderDropzone(node, {
-        ['data-test-id']: 'contentful-single-column',
-        className: combineClasses('cf-single-column', className),
-        WrapperComponent: Flex,
-      })}
-    </div>
-  );
+
+  return renderDropzone(node, {
+    ['data-test-id']: 'contentful-single-column',
+    id: 'ContentfulSingleColumn',
+    className: combineClasses(
+      'cf-single-column-wrapper',
+      className,
+      isEmpty ? 'cf-single-column-label' : '',
+    ),
+    WrapperComponent: Flex,
+    dragProps,
+    ...editorProps,
+  });
 };
