@@ -47,7 +47,7 @@ export const DNDProvider = ({ children }: Props) => {
       nodeId: '',
     });
     if (source.droppableId !== COMPONENT_LIST_ID) {
-      sendMessage(OUTGOING_EVENTS.ComponentMoveStarted);
+      sendMessage(OUTGOING_EVENTS.ComponentMoveStarted, undefined);
     }
   };
 
@@ -72,7 +72,7 @@ export const DNDProvider = ({ children }: Props) => {
     if (!dropResult.destination) {
       if (!draggedItem?.destination) {
         // User cancel drag
-        sendMessage(OUTGOING_EVENTS.ComponentDragCanceled);
+        sendMessage(OUTGOING_EVENTS.ComponentDragCanceled, undefined);
         //select the previously selected node if drag was canceled
         if (prevSelectedNodeId.current) {
           setSelectedNodeId(prevSelectedNodeId.current);
@@ -96,7 +96,7 @@ export const DNDProvider = ({ children }: Props) => {
 
     // If a node was previously selected prior to dragging, re-select it
     setSelectedNodeId(dropResult.draggableId);
-    sendMessage(OUTGOING_EVENTS.ComponentMoveEnded);
+    sendMessage(OUTGOING_EVENTS.ComponentMoveEnded, undefined);
     sendMessage(OUTGOING_EVENTS.ComponentSelected, {
       nodeId: dropResult.draggableId,
     });

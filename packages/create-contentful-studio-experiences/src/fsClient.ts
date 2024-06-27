@@ -20,7 +20,7 @@ export class FsClient {
 
     this.copyTemplateFiles(projectDir, templateDir, variant.srcDir);
 
-    const installEbLibsCommand = `npm i --prefix ${projectDir} @contentful/experiences-sdk-react @contentful/experiences-components-react`;
+    const installEbLibsCommand = `npm i --prefix ${projectDir} @contentful/experiences-sdk-react`;
 
     const ebLibStatus = await this.runCommand(installEbLibsCommand);
 
@@ -33,11 +33,12 @@ export class FsClient {
   copyEnvFile(projectDir: string, envFileData: EnvFileData) {
     fs.writeFileSync(
       path.join(projectDir, '.env.local'),
-      `VITE_ENVIRONMENT_ID=${envFileData.environment}
-VITE_SPACE_ID=${envFileData.spaceId}
-VITE_ACCESS_TOKEN=${envFileData.accessToken}
-VITE_PREVIEW_ACCESS_TOKEN=${envFileData.previewAccessToken}
-VITE_EB_TYPE_ID=${envFileData.typeId}`,
+      `VITE_CTFL_ENV_ID=${envFileData.environment}
+VITE_CTFL_EXPERIENCE_TYPE_ID=${envFileData.experienceTypeId}
+VITE_CTFL_SPACE_ID=${envFileData.spaceId}
+VITE_CTFL_ACCESS_TOKEN=${envFileData.accessToken}
+VITE_CTFL_PREVIEW_ACCESS_TOKEN=${envFileData.previewAccessToken}
+VITE_CTFL_API_HOST=cdn.contentful.com`,
     );
   }
 

@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef, useState } from 'react';
 import {
   doesMismatchMessageSchema,
@@ -42,7 +43,7 @@ export const useDetectEditorMode = ({ isClientSide = false }: UseDetectEditorMod
       //Double check if we are in editor mode by listening to postMessage events
       if (typeof window !== 'undefined' && !window.__EB__?.isEditorMode) {
         window.addEventListener('message', onMessage);
-        sendMessage(OUTGOING_EVENTS.Connected);
+        sendMessage(OUTGOING_EVENTS.Connected, undefined);
         sendMessage(OUTGOING_EVENTS.SDKFeatures, sdkFeatures);
 
         setTimeout(() => {

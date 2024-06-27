@@ -1,9 +1,9 @@
 {
-  "name": "@contentful/create-experience-builder",
+  "name": "create-contentful-studio-experiences",
   "private": true,
   "version": "0.0.2-alpha.9",
-  "description": "A CLI tool to get up and running with Contentful Experience Builder quickly",
-  "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-experience-builder#readme",
+  "description": "A CLI tool to get up and running with Contentful Studio Experiences quickly",
+  "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-contentful-studio-experiences#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/contentful/experience-builder.git"
@@ -25,14 +25,15 @@
   "scripts": {
     "dev": "echo noop",
     "_prebuild": "npm uninstall -g && rimraf dist",
-    "_build": "tsc",
+    "prebuild": "rimraf dist",
+    "build": "tsc",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
-    "postbuild": "npm install -g",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "depcruise": "depcruise src"
+    "depcruise": "depcruise src",
+    "create-contentful-studio-experiences": "node dist/index.js"
   },
-  "author": "",
+  "author": "Contentful GmbH",
   "license": "MIT",
   "devDependencies": {
     "@types/yargs": "^17.0.28",
@@ -40,13 +41,13 @@
     "typescript": "^5.2.2"
   },
   "bin": {
-    "create-experience-builder": "./dist/index.js"
+    "create-contentful-studio-experiences": "./dist/index.js"
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",
     "cross-spawn": "^7.0.3",
     "kleur": "^4.1.5",
-    "open": "^10.0.3",
+    "open": "^10.1.0",
     "yargs": "^17.7.2"
   }
 }

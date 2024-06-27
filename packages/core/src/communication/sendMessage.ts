@@ -1,7 +1,6 @@
-import { PostMessageMethods } from '@/constants';
-import { OutgoingEvent } from '@/types';
+import { SendMessageParams, OutgoingMessage } from '@/types';
 
-export const sendMessage = (eventType: OutgoingEvent | PostMessageMethods, data?: unknown) => {
+export const sendMessage: SendMessageParams = (eventType, data) => {
   if (typeof window === 'undefined') {
     return;
   }
@@ -17,7 +16,7 @@ export const sendMessage = (eventType: OutgoingEvent | PostMessageMethods, data?
       source: 'customer-app',
       eventType,
       payload: data,
-    },
+    } as OutgoingMessage,
     '*',
   );
 };

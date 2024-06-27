@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.2](https://github.com/contentful/experience-builder/compare/v1.8.2-beta.0...v1.8.2) (2024-06-27)
+
+**Note:** Version bump only for package @contentful/experiences-components-react
+
+## [1.8.1](https://github.com/contentful/experience-builder/compare/v1.8.1-beta.0...v1.8.1) (2024-06-24)
+
+**Note:** Version bump only for package @contentful/experiences-components-react
+
+## [1.8.0](https://github.com/contentful/experience-builder/compare/v1.8.0-beta.0...v1.8.0) (2024-06-17)
+
+**Note:** Version bump only for package @contentful/experiences-components-react
+
 ## [1.7.1](https://github.com/contentful/experience-builder/compare/v1.7.1-beta.0...v1.7.1) (2024-06-11)
 
 **Note:** Version bump only for package @contentful/experiences-components-react
