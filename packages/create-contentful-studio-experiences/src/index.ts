@@ -305,7 +305,7 @@ async function init() {
         await ctflClient.createPreviewEnvironment(variant.devPort, contentTypeName, contentTypeId);
         spinner.stop('Content preview environment created!');
       } else if (previewEnv) {
-        log.message('Using existing content preview environment.');
+        log.message('Using existing content preview environment for Studio Experiences.');
         ctflClient.previewEnvironment = previewEnv;
       }
     }
@@ -335,7 +335,7 @@ async function init() {
     const outroMessages = [
       '🚀 Your project is ready!\n',
       'Need help? Check out the docs: https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/\n',
-      useExistingSpace
+      useExistingSpace && contentEntryId
         ? `* Launch Contentful Studio Experiences: https://app.contentful.com/spaces/${ctflClient.space?.id}/experiences/${contentEntryId}`
         : '* Launch Contentful and navigate to Experiences: https://app.contentful.com/',
       `* Navigate to your project folder: \`cd ${projectName}\``,
