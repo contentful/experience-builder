@@ -5,7 +5,7 @@ import SpaceForm from './SpaceForm';
 interface SpaceSelectorProps {}
 
 const SpaceSelector: React.FC<SpaceSelectorProps> = () => {
-  const { config, mode, isPreview, currentConfig, setConfig, availableConfigs, setIsPreview } =
+  const { config, isPreview, currentConfig, setConfig, availableConfigs, setIsPreview } =
     useContentfulConfig();
 
   return (
@@ -13,7 +13,6 @@ const SpaceSelector: React.FC<SpaceSelectorProps> = () => {
       <div>Space: {config.space}</div>
       <div>AccessToken: {config.accessToken}</div>
       <div>Domain: {config.domain}</div>
-      <div>Mode: {mode}</div>
       <div>ExperienceTypeId: {config.experienceTypeId}</div>
       <div>
         <label>isPreview:</label>
