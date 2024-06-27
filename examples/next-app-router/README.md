@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Studio Experiences with Next.js App Router example
 
-## Getting Started
+This example demonstrates how to use the Next.js App Router to create a server rendered page with Studio Experiences.
 
-First, run the development server:
+For more information, see [Using Experiences with Next.js](http://localhost:8001/developers/docs/experiences/using-with-nextjs/) in the Contentful docs.
+
+## Getting started
+
+Before you begin, you should already have a Contentful space with Studio Experiences enabled and configured. If you do not yet have a space, please contact your Contentful account representative.
+
+### Step 1: Clone the repo and install the app
+
+To get started with this example, clone the repo, go into the examples/next-app-router directory, and install the app:
+
+```bash
+npm install
+```
+
+### Step 2: Set up your environment variables
+
+Next, you will need to set up your environment variables. Copy the `.env.local.example` file to `.env.local` and fill in the following variables:
+
+- NEXT_PUBLIC_CTFL_SPACE: This is the Space ID of your Contentful space. This can be found in Settings>General Settings.
+- NEXT_PUBLIC_CTFL_ACCESS_TOKEN: This is the Content Delivery API access token, which is used for fetching published data from your Contentful space. This can be found in Settings>API Keys.
+- NEXT_PUBLIC_CTFL_PREVIEW_ACCESS_TOKEN: This is the Content Preview API access token, which is used for fetching draft data from your Contentful space. This can be found in Settings>API Keys.
+- NEXT_PUBLIC_CTFL_ENVIRONMENT: This is the environment of your Contentful space. This can be found in Settings>General Settings. This can be found in Settings>Environments.
+- NEXT_PUBLIC_CTFL_EXPERIENCE_TYPE= This is the content type id of the Experience content type in your Contentful space. This can be found in Content Model>Experience.
+
+### Step 3: Add expEditorMode query param to the Content Preview Url
+
+In order to preview your Experiences in the Contentful web app, you will need to add the `expEditorMode` query parameter to the Content Preview URL. This parameter should be set to `true`. For example, if your Content Preview URL is `https://example.com`, you should set it to `https://example.com?expEditorMode=true`.
+
+### Step 4: Start the development server
+
+Now that you have set up your environment variables, you can start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app is set up to run on `http://localhost:3000`. By default, the root URL will pull up an experience with the slug of 'home-page'. The locale will be determined by your browser settings. You can change the slug and locale by modifying the URL. For example, to view the experience with the slug of 'about-page' and a locale of 'de', you would navigate to `http://localhost:3000/de/about-page`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For the localization, this app uses the [Next i18n Router plugin](https://github.com/i18nexus/next-i18n-router#readme) for Next.js. You can configure locales by adding them to the `i18n` section in the `src/middleware.ts` file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

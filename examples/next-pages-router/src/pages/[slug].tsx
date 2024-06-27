@@ -1,13 +1,8 @@
-import {
-  ExperienceRoot,
-  createExperience,
-  detachExperienceStyles,
-} from '@contentful/experiences-sdk-react';
+import { ExperienceRoot, detachExperienceStyles } from '@contentful/experiences-sdk-react';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { getExperience } from '@/getExperience';
 import Head from 'next/head';
-import { useMemo } from 'react';
 
 interface Params extends ParsedUrlQuery {
   locale: string;
@@ -48,7 +43,6 @@ export const getServerSideProps = async ({
   query,
   locale = 'en-US',
 }: GetServerSidePropsContext<Params, Query>) => {
-  console.log('params', params, query);
   const { slug = 'home-page' } = params || {};
   const { isPreview, expEditorMode } = query;
   const preview = isPreview === 'true';
@@ -58,7 +52,7 @@ export const getServerSideProps = async ({
 
   // extract the styles from the experience
   const stylesheet = experience ? detachExperienceStyles(experience) : null;
-  //experience currently needs to be stringified manually to be passed to the component
+  // experience currently needs to be stringified manually to be passed to the component
   const experienceJSON = experience ? JSON.stringify(experience) : null;
 
   return {
