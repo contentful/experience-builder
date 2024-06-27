@@ -1,17 +1,14 @@
 import open from 'open';
 import { EnvFileData } from './models.js';
-import { GetmanySpaceEnablementsReturn } from './types.js';
-import {
-  getDemoExperienceReqBody,
-  getExperienceContentTypeReqBody,
-} from './api-requests-builders.js';
+import { getExperienceEntryDemoReqBody, getExperienceContentTypeReqBody } from './content.js';
+
+const defaultLocale = 'en-US';
 const baseUrl = process.env.BASE_URL || 'https://api.contentful.com';
-const defaultExperienceName = `CLI Generated Experience Name`;
-const defaultExperienceNameId = `cliGeneratedExperienceName`;
 
 export class CtflClient {
   public space?: { name: string; id: string };
   public org?: { name: string; id: string };
+  public env?: { name: string; id: string };
   public apiKey?: {
     accessToken: string;
     name: string;
@@ -25,6 +22,8 @@ export class CtflClient {
     url: string;
   };
 
+  public apiKeysName = 'Studio Experiences API keys';
+
   private authToken?: string;
   private authTokenCreatedFromApi = false;
 
@@ -36,7 +35,7 @@ export class CtflClient {
       preview_api_key: { sys: { id: string } };
     };
     const apiKey = await this.apiCall<ApiKeyReturn>(`/spaces/${this.space?.id}/api_keys`, {
-      body: '{"name":"Experience Builder Keys"}',
+      body: `{"name":"${this.apiKeysName}"}`,
       method: 'POST',
     }).then((val) => {
       return {
@@ -81,96 +80,127 @@ export class CtflClient {
     this.apiKey!.previewAccessToken = previewAccessToken;
   }
 
-  /**
-   * @description - retrieve Enablements
-   */
-  async getManySpaceEnablements({ orgId }: { orgId: string }) {
-    const getAllEnablementsUrl = `/organizations/${orgId}/space_enablements`;
-
-    try {
-      const response = await this.apiCall<GetmanySpaceEnablementsReturn>(getAllEnablementsUrl, {
+  async getSpaceEnablements(orgId: string) {
+    type GetSpaceEnablementsReturn = {
+      items: {
+        sys: { space: { sys: { id: string } } };
+        studioExperiences: {
+          enabled: boolean;
+        };
+      }[];
+    };
+    const enablements = await this.apiCall<GetSpaceEnablementsReturn>(
+      `/organizations/${orgId}/space_enablements`,
+      {
         method: 'GET',
-      });
-
-      return response.items;
-    } catch (error) {
-      throw new Error(`Unable to retrieve Space Enablements. error: ${error}`);
-    }
+      },
+    );
+    return enablements.items;
   }
 
-  async createContentEntry(experienceName: string, experienceNameId: string) {
+  async getContentEntry(slug: string, contentTypeId: string) {
+    type GetContentEntriesReturn = { items: { sys: { id: string } }[] };
+    const entries = await this.apiCall<GetContentEntriesReturn>(
+      `/spaces/${this.space?.id}/environments/${this.env?.id}/entries?content_type=${contentTypeId}&fields.slug.${defaultLocale}=${slug}&limit=1`,
+      {
+        method: 'GET',
+      },
+    );
+    return entries.items[0]?.sys.id || undefined;
+  }
+
+  async createContentEntry(title: string, slug: string, contentTypeId: string) {
     //Create entry
     type ContentEntryReturn = { sys: { id: string } };
     const entryId = await this.apiCall<ContentEntryReturn>(
-      `/spaces/${this.space?.id}/environments/master/entries`,
+      `/spaces/${this.space?.id}/environments/${this.env?.id}/entries`,
       {
         method: 'POST',
         headers: {
-          'x-contentful-content-type': experienceNameId,
+          'x-contentful-content-type': contentTypeId,
         },
-        body: JSON.stringify(getDemoExperienceReqBody(experienceName)),
+        body: JSON.stringify(getExperienceEntryDemoReqBody(title, slug)),
       },
     ).then((val) => val.sys.id);
 
     //Publish entry
     await this.apiCall(
-      `/spaces/${this.space?.id}/environments/master/entries/${entryId}/published`,
+      `/spaces/${this.space?.id}/environments/${this.env?.id}/entries/${entryId}/published`,
       {
-        method: 'put',
+        method: 'PUT',
         headers: {
           'x-contentful-version': '1',
         },
       },
     );
+    return entryId;
   }
 
-  async createContentLayoutType(
-    experienceName: string = defaultExperienceName,
-    experienceNameId: string,
-  ) {
-    try {
-      // Create Content Type
-      await this.apiCall(
-        `/spaces/${this.space?.id}/environments/master/content_types/${experienceNameId}`,
-        {
-          headers: {
-            'x-contentful-version': '0',
-          },
-          body: JSON.stringify(getExperienceContentTypeReqBody(experienceName)),
-          method: 'PUT',
-        },
-      );
-
-      // Publish Content Type
-      await this.apiCall(
-        `/spaces/${this.space?.id}/environments/master/content_types/${experienceNameId}/published`,
-        {
-          headers: {
-            'x-contentful-version': '1',
-          },
-          method: 'PUT',
-          body: null,
-        },
-      );
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  async getExistingExperienceType() {
+    type GetContentTypesReturn = {
+      items: {
+        name: string;
+        sys: { id: string };
+        metadata: { annotations: { ContentType: { sys: { id: string } }[] } };
+      }[];
+    };
+    return await this.apiCall<GetContentTypesReturn>(
+      `/spaces/${this.space?.id}/environments/${this.env?.id}/content_types`,
+      {
+        method: 'GET',
+      },
+    ).then((val) => {
+      for (const item of val.items) {
+        if (
+          item.metadata?.annotations?.ContentType?.some(
+            (ct) => ct.sys.id === 'Contentful:ExperienceType',
+          )
+        ) {
+          // Return the first Content Type found (currently there can be only one Experience Type per space)
+          return {
+            id: item.sys.id,
+            name: item.name,
+          };
+        }
+      }
+    });
   }
 
-  async createPreviewEnvironment(
-    port: string,
-    experienceName: string = defaultExperienceName,
-    experienceNameId: string,
-  ) {
+  async createContentType(contentTypeName: string, contentTypeId: string) {
+    // Create Content Type
+    await this.apiCall(
+      `/spaces/${this.space?.id}/environments/${this.env?.id}/content_types/${contentTypeId}`,
+      {
+        headers: {
+          'x-contentful-version': '0',
+        },
+        body: JSON.stringify(getExperienceContentTypeReqBody(contentTypeName)),
+        method: 'PUT',
+      },
+    );
+
+    // Publish Content Type
+    await this.apiCall(
+      `/spaces/${this.space?.id}/environments/${this.env?.id}/content_types/${contentTypeId}/published`,
+      {
+        headers: {
+          'x-contentful-version': '1',
+        },
+        method: 'PUT',
+        body: null,
+      },
+    );
+  }
+
+  async createPreviewEnvironment(port: string, contentTypeName: string, contentTypeId: string) {
     await this.apiCall(`/spaces/${this.space?.id}/preview_environments`, {
       method: 'POST',
       body: JSON.stringify({
-        name: `Preview for experience '${experienceName}'`,
-        description: `This preview environment was auto generated using the "create-experience-builder" CLI Tool, on ${new Date()}.  A configured Preview Environment is required for the Experience Builder to work.`,
+        name: `Preview for ${contentTypeName}`,
+        description: `Generated by the Contentful Studio Experiences CLI on ${new Date().toLocaleString()}.`,
         configurations: [
           {
-            contentType: experienceNameId,
+            contentType: contentTypeId,
             url: `http://localhost:${port}`,
             enabled: true,
           },
@@ -204,28 +234,6 @@ export class CtflClient {
     return previewEnvironments;
   }
 
-  async createSpace(name: string, orgId: string) {
-    type SpaceReturn = { name: string; sys: { id: string } };
-    const space = await this.apiCall<SpaceReturn>('/spaces', {
-      method: 'POST',
-      headers: {
-        'X-Contentful-Organization': orgId,
-      },
-      body: JSON.stringify({
-        name: name,
-        defaultLocale: 'en-US',
-      }),
-    }).then((res) => {
-      this.space = {
-        name: res.name,
-        id: res.sys.id,
-      };
-      return this.space;
-    });
-
-    return space;
-  }
-
   async deleteAuthToken() {
     if (this.authToken && this.authTokenCreatedFromApi) {
       type KeysReturn = { items: { sys: { id: string; redactedValue: string } }[] };
@@ -249,14 +257,6 @@ export class CtflClient {
     }
   }
 
-  async deleteSpace() {
-    if (this.space) {
-      await this.apiCall(`/spaces/${this.space.id}`, {
-        method: 'DELETE',
-      });
-    }
-  }
-
   async getAuthToken() {
     const APP_ID = '9f86a1d54f3d6f85c159468f5919d6e5d27716b3ed68fd01bd534e3dea2df864';
     const REDIRECT_URI = 'https://www.contentful.com/developers/cli-oauth-page/';
@@ -267,13 +267,13 @@ export class CtflClient {
     });
   }
 
-  getEnvFileData(): EnvFileData {
+  getEnvFileData(experienceTypeId: string): EnvFileData {
     return {
-      environment: 'master',
+      environment: this.env!.id,
       spaceId: this.space!.id,
       accessToken: this.apiKey!.accessToken,
       previewAccessToken: this.apiKey!.previewAccessToken!,
-      typeId: defaultExperienceNameId,
+      experienceTypeId,
     };
   }
 
@@ -303,6 +303,21 @@ export class CtflClient {
     return spaces;
   }
 
+  async getEnvironments() {
+    type EnvironmentsReturn = { items: { name: string; sys: { id: string } }[] };
+    const environments = await this.apiCall<EnvironmentsReturn>(
+      `/spaces/${this.space?.id}/environments`,
+    ).then((res) =>
+      res.items.map((item) => {
+        return {
+          name: item.name,
+          id: item.sys.id,
+        };
+      }),
+    );
+    return environments;
+  }
+
   async setAuthToken(authToken: string, createdFromApi: boolean = false) {
     this.authToken = authToken;
     const validToken = await this.validateToken();
@@ -329,7 +344,6 @@ export class CtflClient {
 
       if (!response.ok) {
         console.log('[ ctflClient.ts ] apiCall() not OK response => ', await response.json());
-
         throw new Error(response.statusText);
       }
 

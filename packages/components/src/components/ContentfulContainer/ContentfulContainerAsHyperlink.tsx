@@ -6,6 +6,7 @@ import type {
   ExperienceDataSource,
   ExperienceUnboundValues,
   StyleProps,
+  DragWrapperProps,
 } from '@contentful/experiences-core/types';
 
 import { EntityStore } from '@contentful/experiences-core';
@@ -30,6 +31,7 @@ export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = (EditorM
   cfHyperlink?: StyleProps['cfHyperlink'];
   cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
   WrapperComponent?: React.ElementType;
+  dragProps?: DragWrapperProps;
 };
 
 export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyperlinkProps> = (

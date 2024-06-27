@@ -1,4 +1,4 @@
-import { Rect, getTooltipPositions } from '@components/Draggable/canvasToolsUtils';
+import { Rect, getTooltipPositions } from '@/utils/canvasToolsUtils';
 import classNames from 'classnames';
 import React, { useMemo, useRef } from 'react';
 import styles from './styles.module.css';
@@ -35,14 +35,17 @@ const Tooltip: React.FC<Props> = ({ coordinates, id, label, isAssemblyBlock, isC
   }, [coordinates, id, tooltipRef.current]);
 
   return (
-    <div
-      ref={tooltipRef}
-      style={tooltipStyles}
-      className={classNames(styles.overlay, {
-        [styles.overlayContainer]: isContainer,
-        [styles.overlayAssembly]: isAssemblyBlock,
-      })}>
-      {label}
+    <div data-tooltip className={styles.tooltipWrapper}>
+      <div
+        data-tooltip
+        ref={tooltipRef}
+        style={tooltipStyles}
+        className={classNames(styles.overlay, {
+          [styles.overlayContainer]: isContainer,
+          [styles.overlayAssembly]: isAssemblyBlock,
+        })}>
+        {label}
+      </div>
     </div>
   );
 };

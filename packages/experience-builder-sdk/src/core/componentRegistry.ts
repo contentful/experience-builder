@@ -78,6 +78,7 @@ export const enrichComponentDefinition = ({
   return {
     component: withComponentWrapper(component, options),
     definition: definitionWithBuiltInStyles,
+    options,
   };
 };
 
