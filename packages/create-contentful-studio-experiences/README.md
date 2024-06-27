@@ -1,34 +1,35 @@
 # create-contentful-studio-experiences
 
-## Description
-
 This package is a CLI tool to bootstrap a [React, Vite & TypeScript](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) app that renders [Studio Experiences](https://www.contentful.com/developers/docs/experiences/what-are-experiences/).
-
-## Prerequisites
-
-1. A Contentful Space that has Experiences Enabled. See: [How to enable Experiences in a space](https://www.contentful.com/help/enable-spaces-for-experiences/).
-2. You must not have an Experiences Content type already configured for your space. For Studio Experiences to work correctly, a maximum of one experiences content type must be defined. As many individual experiences as required (within your subscription plan/billing) can be created.
 
 ## Getting started
 
+To create a Contentful Studio Experiences project, run this command and follow the prompts.
+
 ```bash
 npm init contentful-studio-experiences
-cd <studio-experiences-react-app>
+```
+
+Navigate to your project directory and start the server. After that, you can manage your Experiences in Contentful.
+
+```bash
+cd studio-experiences-react-app
 npm run dev
 ```
 
-## CLI steps
+## CLI Steps
 
 1. Project Type - Currently supports React.
 2. React Type - Currently supports Vite + React + TypeScript.
 3. Installation Path - The generated project will be installed here.
-4. _Optional_ Contentful Space - Note: only spaces that have already been "Experiences" enabled are eligible. See: [How to enable Experiences in a space](https://www.contentful.com/help/enable-spaces-for-experiences/).
+4. Connect to Contentful Space _(Optional)_ - Note: only spaces that have Studio Experiences enabled are eligible. See: [How to enable Experiences in a space](https://www.contentful.com/help/enable-spaces-for-experiences/).
     - Select your Contentful Organization.
-    - Select or Create an CLI API Token.
-5. Experience Content Type - Enter a name for your Experiences Content Type.
-    - Creates your Experience Content Type.
-    - Creates a Demo Experience Entry to help you get started.
-6. Content Preview Environment - Configures the Content Preview Settings for Studio Experiences canvas to preview your local project.
+    - Select your Contentful Space.
+    - Select or Create an API key.
+    - Content Type will be created for Experiences if needed.
+    - Demo Experience Entry will be created (unless one exists).
+    - Content Preview Settings will be configured if needed.
+5. Project Output - The React project will be created, incorporating the [Studio Experiences SDK](https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/#usage).
 
 ## CLI Options
 

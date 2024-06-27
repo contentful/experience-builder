@@ -1,7 +1,8 @@
 import open from 'open';
 import { EnvFileData } from './models.js';
-import { GetmanySpaceEnablementsReturn } from './types.js';
 import { getExperienceEntryDemoReqBody, getExperienceContentTypeReqBody } from './content.js';
+
+const defaultLocale = 'en-US';
 const baseUrl = process.env.BASE_URL || 'https://api.contentful.com';
 
 export class CtflClient {
@@ -78,21 +79,33 @@ export class CtflClient {
     this.apiKey!.previewAccessToken = previewAccessToken;
   }
 
-  /**
-   * @description - retrieve Enablements
-   */
-  async getManySpaceEnablements({ orgId }: { orgId: string }) {
-    const getAllEnablementsUrl = `/organizations/${orgId}/space_enablements`;
-
-    try {
-      const response = await this.apiCall<GetmanySpaceEnablementsReturn>(getAllEnablementsUrl, {
+  async getSpaceEnablements(orgId: string) {
+    type GetSpaceEnablementsReturn = {
+      items: {
+        sys: { space: { sys: { id: string } } };
+        studioExperiences: {
+          enabled: boolean;
+        };
+      }[];
+    };
+    const enablements = await this.apiCall<GetSpaceEnablementsReturn>(
+      `/organizations/${orgId}/space_enablements`,
+      {
         method: 'GET',
-      });
+      },
+    );
+    return enablements.items;
+  }
 
-      return response.items;
-    } catch (error) {
-      throw new Error(`Unable to retrieve Space Enablements. error: ${error}`);
-    }
+  async getContentEntry(slug: string, contentTypeId: string) {
+    type GetContentEntriesReturn = { items: { sys: { id: string } }[] };
+    const entries = await this.apiCall<GetContentEntriesReturn>(
+      `/spaces/${this.space?.id}/environments/master/entries?content_type=${contentTypeId}&fields.slug.${defaultLocale}=${slug}&limit=1`,
+      {
+        method: 'GET',
+      },
+    );
+    return entries.items[0]?.sys.id || undefined;
   }
 
   async createContentEntry(title: string, slug: string, contentTypeId: string) {
@@ -113,43 +126,69 @@ export class CtflClient {
     await this.apiCall(
       `/spaces/${this.space?.id}/environments/master/entries/${entryId}/published`,
       {
-        method: 'put',
+        method: 'PUT',
         headers: {
           'x-contentful-version': '1',
         },
       },
     );
+    return entryId;
+  }
+
+  async getExistingExperienceType() {
+    type GetContentTypesReturn = {
+      items: {
+        name: string;
+        sys: { id: string };
+        metadata: { annotations: { ContentType: { sys: { id: string } }[] } };
+      }[];
+    };
+    return await this.apiCall<GetContentTypesReturn>(
+      `/spaces/${this.space?.id}/environments/master/content_types`,
+      {
+        method: 'GET',
+      },
+    ).then((val) => {
+      for (const item of val.items) {
+        if (
+          item.metadata?.annotations?.ContentType?.some(
+            (ct) => ct.sys.id === 'Contentful:ExperienceType',
+          )
+        ) {
+          // Return the first Content Type found (currently there can be only one Experience Type per space)
+          return {
+            id: item.sys.id,
+            name: item.name,
+          };
+        }
+      }
+    });
   }
 
   async createContentType(contentTypeName: string, contentTypeId: string) {
-    try {
-      // Create Content Type
-      await this.apiCall(
-        `/spaces/${this.space?.id}/environments/master/content_types/${contentTypeId}`,
-        {
-          headers: {
-            'x-contentful-version': '0',
-          },
-          body: JSON.stringify(getExperienceContentTypeReqBody(contentTypeName)),
-          method: 'PUT',
+    // Create Content Type
+    await this.apiCall(
+      `/spaces/${this.space?.id}/environments/master/content_types/${contentTypeId}`,
+      {
+        headers: {
+          'x-contentful-version': '0',
         },
-      );
+        body: JSON.stringify(getExperienceContentTypeReqBody(contentTypeName)),
+        method: 'PUT',
+      },
+    );
 
-      // Publish Content Type
-      await this.apiCall(
-        `/spaces/${this.space?.id}/environments/master/content_types/${contentTypeId}/published`,
-        {
-          headers: {
-            'x-contentful-version': '1',
-          },
-          method: 'PUT',
-          body: null,
+    // Publish Content Type
+    await this.apiCall(
+      `/spaces/${this.space?.id}/environments/master/content_types/${contentTypeId}/published`,
+      {
+        headers: {
+          'x-contentful-version': '1',
         },
-      );
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+        method: 'PUT',
+        body: null,
+      },
+    );
   }
 
   async createPreviewEnvironment(port: string, contentTypeName: string, contentTypeId: string) {
@@ -194,28 +233,6 @@ export class CtflClient {
     return previewEnvironments;
   }
 
-  async createSpace(name: string, orgId: string) {
-    type SpaceReturn = { name: string; sys: { id: string } };
-    const space = await this.apiCall<SpaceReturn>('/spaces', {
-      method: 'POST',
-      headers: {
-        'X-Contentful-Organization': orgId,
-      },
-      body: JSON.stringify({
-        name: name,
-        defaultLocale: 'en-US',
-      }),
-    }).then((res) => {
-      this.space = {
-        name: res.name,
-        id: res.sys.id,
-      };
-      return this.space;
-    });
-
-    return space;
-  }
-
   async deleteAuthToken() {
     if (this.authToken && this.authTokenCreatedFromApi) {
       type KeysReturn = { items: { sys: { id: string; redactedValue: string } }[] };
@@ -236,14 +253,6 @@ export class CtflClient {
           method: 'PUT',
         });
       }
-    }
-  }
-
-  async deleteSpace() {
-    if (this.space) {
-      await this.apiCall(`/spaces/${this.space.id}`, {
-        method: 'DELETE',
-      });
     }
   }
 
@@ -319,7 +328,6 @@ export class CtflClient {
 
       if (!response.ok) {
         console.log('[ ctflClient.ts ] apiCall() not OK response => ', await response.json());
-
         throw new Error(response.statusText);
       }
 
