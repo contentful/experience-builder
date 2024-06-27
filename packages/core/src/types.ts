@@ -307,6 +307,8 @@ export type BoundComponentPropertyTypes =
   | OptimizedBackgroundImageAsset
   | OptimizedImageAsset
   | Link<'Asset'>
+  | Entry
+  | Asset
   | undefined;
 
 export type OptimizedImageAsset = {

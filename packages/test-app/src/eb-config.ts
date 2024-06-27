@@ -120,6 +120,22 @@ defineComponents([
           displayName: 'List Text',
           type: 'Array',
         },
+        entryReference: {
+          displayName: 'Entry Reference',
+          type: 'Link',
+        },
+        imageReference: {
+          displayName: 'Image Reference',
+          type: 'Link',
+        },
+        listReference: {
+          displayName: 'List Entry Reference',
+          type: 'Array',
+        },
+        text: {
+          displayName: 'Text',
+          type: 'Text',
+        },
       },
     },
     options: {

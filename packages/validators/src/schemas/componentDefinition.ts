@@ -11,6 +11,7 @@ export const DefinitionPropertyTypeSchema = z.enum([
   'Object',
   'Hyperlink',
   'Array',
+  'Link',
 ]);
 
 export const DefinitionPropertyKeySchema = z
