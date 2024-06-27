@@ -97,17 +97,15 @@ export class CtflClient {
     return enablements.items;
   }
 
-  async hasExistingContentEntry(slug: string, contentTypeId: string) {
-    type GetContentEntriesReturn = {
-      items: { fields: { slug: { [defaultLocale]: string } } }[];
-    };
+  async getContentEntry(slug: string, contentTypeId: string) {
+    type GetContentEntriesReturn = { items: { sys: { id: string } }[] };
     const entries = await this.apiCall<GetContentEntriesReturn>(
       `/spaces/${this.space?.id}/environments/master/entries?content_type=${contentTypeId}&fields.slug.${defaultLocale}=${slug}&limit=1`,
       {
         method: 'GET',
       },
     );
-    return entries.items[0];
+    return entries.items[0]?.sys.id || undefined;
   }
 
   async createContentEntry(title: string, slug: string, contentTypeId: string) {
@@ -134,6 +132,7 @@ export class CtflClient {
         },
       },
     );
+    return entryId;
   }
 
   async getExistingExperienceType() {
