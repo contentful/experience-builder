@@ -1,4 +1,3 @@
-// fetchBySlug currently needs to be imported from core to avoid NextJS build errors
 import { fetchBySlug } from '@contentful/experiences-sdk-react';
 import { createClient } from 'contentful';
 

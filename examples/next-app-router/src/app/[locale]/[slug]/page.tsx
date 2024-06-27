@@ -17,9 +17,10 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
     return <div>{error.message}</div>;
   }
 
+  // extract the styles from the experience
   const stylesheet = detachExperienceStyles(experience!);
 
-  //experience currently needs to be stringified manually to be passed to the component
+  // experience currently needs to be stringified manually to be passed to the component
   const experienceJSON = experience ? JSON.stringify(experience) : null;
   return (
     <main style={{ width: '100%' }}>

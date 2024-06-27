@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@contentful/experiences-sdk-react": "^1.8.1-prerelease-20240624T1502-6dcdc44.0",
+    "@contentful/experiences-sdk-react": "^1.8.2",
     "contentful": "^10.11.3",
     "next": "14.2.3",
     "react": "^18",
