@@ -253,9 +253,9 @@ async function init() {
         await ctflClient.createContentType(contentTypeName, contentTypeId);
       }
 
-      const hasContentEntry = await ctflClient.hasExistingContentEntry(DEFAULT.slug, contentTypeId);
+      const contentEntryId = await ctflClient.getContentEntry(DEFAULT.slug, contentTypeId);
 
-      if (!hasContentEntry) {
+      if (!contentEntryId) {
         await ctflClient.createContentEntry(DEFAULT.title, DEFAULT.slug, contentTypeId);
       }
 
