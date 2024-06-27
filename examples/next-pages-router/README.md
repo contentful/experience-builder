@@ -1,10 +1,10 @@
-# Studio Experiences with Next.js Pages Router Example
+# Studio Experiences with Next.js Pages Router example
 
 This example demonstrates how to use the Next.js Pages Router to create a server rendered page with Studio Experiences.
 
 For more information, see [Using Experiences with Next.js](http://localhost:8001/developers/docs/experiences/using-with-nextjs/) in the Contentful docs.
 
-## Getting Started
+## Getting started
 
 Before you begin, you should already have a Contentful space with Studio Experiences enabled and configured. If you do not yet have a space, please contact your Contentful account representative.
 

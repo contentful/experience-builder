@@ -1,10 +1,10 @@
-# Studio Experiences with Next.js App Router Example
+# Studio Experiences with Next.js App Router example
 
 This example demonstrates how to use the Next.js App Router to create a server rendered page with Studio Experiences.
 
 For more information, see [Using Experiences with Next.js](http://localhost:8001/developers/docs/experiences/using-with-nextjs/) in the Contentful docs.
 
-## Getting Started
+## Getting started
 
 Before you begin, you should already have a Contentful space with Studio Experiences enabled and configured. If you do not yet have a space, please contact your Contentful account representative.
 
@@ -41,3 +41,6 @@ npm run dev
 The app is set up to run on `http://localhost:3000`. By default, the root URL will pull up an experience with the slug of 'home-page'. The locale will be determined by your browser settings. You can change the slug and locale by modifying the URL. For example, to view the experience with the slug of 'about-page' and a locale of 'de', you would navigate to `http://localhost:3000/de/about-page`.
 
 For the localization, this app uses the [Next i18n Router plugin](https://github.com/i18nexus/next-i18n-router#readme) for Next.js. You can configure locales by adding them to the `i18n` section in the `src/middleware.ts` file.
+
+## 
+
