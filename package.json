@@ -13,7 +13,7 @@
     "url": "https://github.com/contentful/experience-builder/issues"
   },
   "workspaces": [
-    "packages/*"
+    "packages/**/*"
   ],
   "scripts": {
     "lint": "lerna run lint",
