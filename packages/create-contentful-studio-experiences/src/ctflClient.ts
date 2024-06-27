@@ -3,7 +3,7 @@ import { EnvFileData } from './models.js';
 import { getExperienceEntryDemoReqBody, getExperienceContentTypeReqBody } from './content.js';
 import { CONSTANTS } from './constants.js';
 
-const baseUrl = process.env.BASE_URL || CONSTANTS.baseUrl;
+const baseUrl = process.env.BASE_URL || 'https://api.contentful.com';
 
 export class CtflClient {
   public space?: { name: string; id: string };
