@@ -382,6 +382,7 @@ export type BackgroundImageOptions = {
   targetSize: string;
 };
 
+
 interface DraggableProvidedDraggableProps {
   'data-rfd-draggable-context-id'?: string;
   'data-rfd-draggable-id'?: string;
