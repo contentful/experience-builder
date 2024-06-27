@@ -1,9 +1,10 @@
 import open from 'open';
 import { EnvFileData } from './models.js';
 import { getExperienceEntryDemoReqBody, getExperienceContentTypeReqBody } from './content.js';
+import { CONSTANTS } from './constants.js';
 
-const defaultLocale = 'en-US';
-const baseUrl = process.env.BASE_URL || 'https://api.contentful.com';
+const defaultLocale = CONSTANTS.locale;
+const baseUrl = process.env.BASE_URL || CONSTANTS.baseUrl;
 
 export class CtflClient {
   public space?: { name: string; id: string };
