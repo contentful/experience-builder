@@ -1,0 +1,4 @@
+.hitbox {
+  position: fixed;
+  pointer-events: all;
+}

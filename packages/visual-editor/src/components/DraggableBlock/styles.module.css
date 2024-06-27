@@ -1,10 +1,9 @@
 .DraggableComponent {
-  pointer-events: all;
   position: relative;
-  transition: outline 0.2s;
-  cursor: grab;
+  transition: background-color 0.2s;
+  pointer-events: all;
   box-sizing: border-box;
-  display: flex;
+  cursor: grab;
 }
 
 .DraggableComponent:before {
@@ -17,28 +16,76 @@
   outline-offset: -2px;
   outline: 2px solid transparent;
   z-index: 1;
+  transition: outline 0.2s;
   pointer-events: none;
+}
+
+.DraggableComponent.isDragging.Dropzone:before {
+  outline-offset: -1px;
+}
+
+.Dropzone.isDestination:not(.isRoot):before {
+  transition:
+    outline 0.2s,
+    background-color 0.2s;
+  outline: 2px dashed var(--exp-builder-blue400);
+  background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
+  z-index: 2;
+}
+
+.DraggableComponent:is(.Dropzone).isDragging {
+  pointer-events: all;
+}
+
+.isRoot,
+.isEmptyCanvas {
+  flex: 1;
+}
+
+.isEmptyZone {
+  min-height: 80px;
+}
+
+.isDragging:not(.isRoot):not(.DraggableClone):before {
+  outline: 2px dashed var(--exp-builder-gray300);
 }
 
 .DraggableClone:before {
   outline: 2px solid var(--exp-builder-blue500);
 }
 
+.DropzoneClone,
 .DraggableClone,
+.DropzoneClone *,
 .DraggableClone * {
-  pointer-events: none !important;
-}
-
-.DraggableComponent:not(.userIsDragging) :not(.DraggableComponent) {
   pointer-events: none;
 }
 
-.isDragging {
+.DraggableComponent:not(.isDragging) :not(.DraggableComponent) {
+  pointer-events: none;
+}
+
+.isDraggingThisComponent {
   overflow: hidden;
 }
 
 .isSelected:before {
   outline: 2px solid transparent !important;
+}
+
+.tooltipWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.DraggableComponent.isDragging .tooltipWrapper {
+  display: none;
 }
 
 .overlay {
@@ -67,17 +114,17 @@
   background-color: var(--exp-builder-purple600);
 }
 
-.userIsDragging > .overlay,
-.userIsDragging > .overlayContainer {
+.isDragging > .overlay,
+.isDragging > .overlayContainer {
   opacity: 0 !important;
 }
 
-.userIsDragging:before {
+.isDragging:not(.Dropzone):before {
   outline: 2px solid transparent !important;
 }
 
-.isHoveringComponent > .overlay,
-.DraggableComponent:hover:not(:has(.DraggableComponent:hover)) > .overlay {
+.isHoveringComponent > div > .overlay,
+.DraggableComponent:hover:not(:has(.DraggableComponent:hover)) > div > .overlay {
   opacity: 1;
 }
 
@@ -86,15 +133,15 @@
 .DraggableComponent:has(.isHoveringComponent):not(.isAssemblyBlock) .DraggableComponent:not(.isHoveringComponent):not(.isAssemblyBlock):before,
 .isHoveringComponent:not(.isAssemblyBlock) .DraggableComponent:not(.isAssemblyBlock):before,
 /* hovering related component in canvas */
-.DraggableComponent:hover:before,
-.DraggableComponent:hover .DraggableComponent:before {
+.DraggableComponent:not(.isDragging):hover:before,
+.DraggableComponent:not(.isDragging):hover .DraggableComponent:before {
   outline: 2px dashed var(--exp-builder-gray500);
 }
 
 /* hovering component in layers tab */
 .isHoveringComponent:not(.isAssemblyBlock):before,
 /* hovering component in canvas */
-.DraggableComponent:hover:not(:has(.DraggableComponent:hover)):before {
+.DraggableComponent:not(.isDragging):hover:not(:has(.DraggableComponent:hover)):before {
   outline: 2px solid var(--exp-builder-gray500);
 }
 
@@ -105,7 +152,7 @@
 /* hovering related pattern in canvas */
 .isAssemblyBlock:hover:before,
 .isAssemblyBlock:hover .DraggableComponent:before,
-.DraggableComponent:hover .isAssemblyBlock:before {
+.DraggableComponent:not(.isDragging):hover .isAssemblyBlock:before {
   outline: 2px dashed var(--exp-builder-purple600);
 }
 
