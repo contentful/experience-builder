@@ -18,7 +18,7 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   }
 
   // extract the styles from the experience
-  const stylesheet = detachExperienceStyles(experience!);
+  const stylesheet = experience ? detachExperienceStyles(experience) : null;
 
   // experience currently needs to be stringified manually to be passed to the component
   const experienceJSON = experience ? JSON.stringify(experience) : null;
