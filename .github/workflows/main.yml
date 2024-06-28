@@ -41,6 +41,7 @@ jobs:
       publish-prelease: ${{ !!inputs.publish-prerelease }}
     secrets:
       VAULT_URL: ${{ secrets.VAULT_URL }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   upload-artifact-cleanup:
     if: ${{ always() }}
     needs: [install-build, check, publish]

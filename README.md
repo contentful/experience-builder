@@ -20,19 +20,19 @@ This repository represents a set of packages, related to the [Experiences](https
 - [Core](https://github.com/contentful/experience-builder/tree/main/packages/core)
 - [Experiences CLI tool](https://github.com/contentful/experience-builder/tree/main/packages/create-experience-builder)
 - [Experiences SDK](https://github.com/contentful/experience-builder/tree/main/packages/experience-builder-sdk)
-- [Test-app](https://github.com/contentful/experience-builder/tree/main/packages/test-app)
+- [Test-apps](https://github.com/contentful/experience-builder/tree/main/packages/test-apps)
 - [Validators](https://github.com/contentful/experience-builder/tree/main/packages/validators)
 - [Visual-editor](https://github.com/contentful/experience-builder/tree/main/packages/visual-editor)
 
 ## Local development
 Each package has a `dev` script that will build the application and watch for changes. Running `npm run dev` in the root directory of each package will have the benefit of hot-reloading changes. Doing so comes at the cost of having more terminal windows depending on how many packages you are running. Therefore, if a more concise terminal windowed experience is preferred, run `npm run build` at the project repo root level after every change at the cost of hot-reloading benefits.
 
-Additionally, there is a provided `test-app` package on your behalf to get you quickly started. This package handles fetching the experience and should be displayed in the experience canvas once you set up your enablements, space, and experience type in the Contentful web app.
+Additionally, there are provided test apps for Vite and NextJS on your behalf to get you quickly started. This package handles fetching the experience and should be displayed in the experience canvas once you set up your enablements, space, and experience type in the Contentful web app.
 
-**If you are looking to use the `test-app`, follow the steps below:**
+**If you are looking to use any of the test apps, follow the steps below:**
 
 1. Set up your enablements, space, and experience type through the Contentful web app. At this point, your experience canvas in the UI should display some error state such as `localhost refused to connect`.
-2. Then in the `test-app` package open up the `local.env` file and make sure to fill out the following variables
+2. Then in the test app folder of your choice, open up the `env.local` file and make sure to fill out the following variables
 ```
 VITE_CTFL_ENVIRONMENT=
 VITE_CTFL_SPACE=
@@ -42,7 +42,7 @@ VITE_CTFL_DOMAIN=contentful.com
 VITE_CTFL_EXPERIENCE_TYPE=
 ```
 3. Go to the root directory of the repo and run `npm i` and `npm run build`
-4. cd into the `test-app` directory and run `npm run dev`
+4. cd into the test app directory and run `npm run dev`
 5. Go back into the Contentful Experiences UI and refresh. You should see your canvas in a happy state where you can now start adding components onto the canvas.
 
 If you are having issues getting the test-app to show up in the canvas checkout the Troubleshooting section below.
