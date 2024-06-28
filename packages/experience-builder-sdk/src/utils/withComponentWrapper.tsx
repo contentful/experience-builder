@@ -1,7 +1,7 @@
 import { ComponentRegistration } from '@contentful/experiences-core/types';
+import classNames from 'classnames';
 import React from 'react';
-
-interface CFProps {
+interface CFProps extends React.HtmlHTMLAttributes<HTMLElement> {
   /**
    * Classes to be applied to the container component if `wrapComponent` is true, or directly to the child component if false.
    */
@@ -10,21 +10,7 @@ interface CFProps {
    * Classes to be applied to the child component if `wrapComponent` is true, or directly to the child component if false.
    */
   classes?: string;
-  onMouseDown?: React.MouseEventHandler;
-  onMouseUp?: React.MouseEventHandler;
-  onClick?: React.MouseEventHandler;
-  /**
-   * Prop required by Experience Builder to identify the component.
-   */
-  'data-cf-node-id'?: string;
-  /**
-   * Prop required by Experience Builder to identify the component.
-   */
-  'data-cf-node-block-id'?: string;
-  /**
-   * Prop required by Experience Builder to identify the component's type.
-   */
-  'data-cf-node-block-type'?: string;
+  dragProps?: any;
 }
 
 /**
@@ -34,46 +20,41 @@ interface CFProps {
  * @default { wrapComponent: true, wrapContainerTag: 'div' }
  * @returns A component that can be passed to `defineComponents`.
  */
-export function withComponentWrapper<T extends object>(
-  Component: React.ElementType<T>,
+export function withComponentWrapper<T>(
+  Component: React.ElementType,
   options: ComponentRegistration['options'] = {
     wrapComponent: true,
     wrapContainerTag: 'div',
+    wrapContainer: 'div',
   },
 ) {
-  const Wrapped = ({
+  const Wrapped: React.FC<CFProps & T> = ({
     classes = '',
     className = '',
-    'data-cf-node-id': dataCfNodeId,
-    'data-cf-node-block-id': dataCfNodeBlockId,
-    'data-cf-node-block-type': dataCfNodeBlockType,
-    onClick,
-    onMouseDown,
-    onMouseUp,
+    dragProps = {},
     ...props
-  }: CFProps & T) => {
-    const Tag = options.wrapContainerTag || 'div';
-    const cfProps = {
-      'data-cf-node-id': dataCfNodeId,
-      'data-cf-node-block-id': dataCfNodeBlockId,
-      'data-cf-node-block-type': dataCfNodeBlockType,
-      onClick,
-      onMouseDown,
-      onMouseUp,
-    };
-
+  }) => {
+    const {
+      innerRef,
+      className: dragClassName,
+      ToolTipAndPlaceholder,
+      ...restOfDragProps
+    } = dragProps;
     const component = options.wrapComponent ? (
-      <Tag className={className} {...cfProps}>
-        {typeof Component === 'string' ? (
-          React.createElement(Component, { className: classes, ...props })
-        ) : (
-          <Component className={classes} {...(props as T)} />
-        )}
-      </Tag>
+      <div
+        data-component-wrapper
+        className={classNames(classes, className, dragClassName)}
+        {...restOfDragProps}
+        ref={(refNode: HTMLElement | null) => {
+          if (innerRef && refNode) innerRef(refNode);
+        }}
+        {...props}>
+        {ToolTipAndPlaceholder}
+        <Component className={classNames(classes)} {...(props as T)} />
+      </div>
     ) : (
       React.createElement(Component, {
-        className: classes + className ? classes + ' ' + className : undefined,
-        ...cfProps,
+        className: classNames(classes, className),
         ...(props as T),
       })
     );
