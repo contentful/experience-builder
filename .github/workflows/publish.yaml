@@ -11,6 +11,8 @@ on:
     secrets:
       VAULT_URL:
         required: true
+      NPM_TOKEN:
+        required: true
 
 jobs:
   publish:
@@ -59,8 +61,6 @@ jobs:
         run: echo -e "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}\n//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
-        secrets:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       # We only want to publish if there are changes to any package. Since the lerna --force-publish flag publishes even if there are no changes
       # we check if there are changes to the packages first, and if not, we exit early
       - name: Changed packages check
