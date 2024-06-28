@@ -55,8 +55,8 @@ jobs:
             packages/test-apps/react-vite/dist
             packages/test-apps/nextjs/.next
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
-      - name: Authenticate with private GH package
-        run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
+      - name: Authenticate with private NPM and GH package
+        run: echo -e "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}\n//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
       # We only want to publish if there are changes to any package. Since the lerna --force-publish flag publishes even if there are no changes
@@ -72,6 +72,7 @@ jobs:
         run: echo "No changes to packages to publish, skipping publish step"
       - name: 'Version and publish'
         env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
           # GH_TOKEN needed by lerna to create releases on github
           GH_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
