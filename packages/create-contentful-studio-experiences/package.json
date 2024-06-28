@@ -1,6 +1,5 @@
 {
   "name": "create-contentful-studio-experiences",
-  "private": true,
   "version": "0.0.2-alpha.9",
   "description": "A CLI tool to get up and running with Contentful Studio Experiences quickly",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-contentful-studio-experiences#readme",
@@ -19,9 +18,6 @@
     "bin/**/*.*",
     "templates/**/*.*"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "scripts": {
     "dev": "echo noop",
     "_prebuild": "npm uninstall -g && rimraf dist",

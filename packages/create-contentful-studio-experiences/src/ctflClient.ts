@@ -1,8 +1,8 @@
 import open from 'open';
 import { EnvFileData } from './models.js';
 import { getExperienceEntryDemoReqBody, getExperienceContentTypeReqBody } from './content.js';
+import { CONSTANTS } from './constants.js';
 
-const defaultLocale = 'en-US';
 const baseUrl = process.env.BASE_URL || 'https://api.contentful.com';
 
 export class CtflClient {
@@ -101,7 +101,7 @@ export class CtflClient {
   async getContentEntry(slug: string, contentTypeId: string) {
     type GetContentEntriesReturn = { items: { sys: { id: string } }[] };
     const entries = await this.apiCall<GetContentEntriesReturn>(
-      `/spaces/${this.space?.id}/environments/${this.env?.id}/entries?content_type=${contentTypeId}&fields.slug.${defaultLocale}=${slug}&limit=1`,
+      `/spaces/${this.space?.id}/environments/${this.env?.id}/entries?content_type=${contentTypeId}&fields.slug.${CONSTANTS.locale}=${slug}&limit=1`,
       {
         method: 'GET',
       },
