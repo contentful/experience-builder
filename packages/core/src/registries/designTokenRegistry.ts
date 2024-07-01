@@ -52,6 +52,7 @@ export const getDesignTokenRegistration = (breakpointValue: string, variableName
   if (!breakpointValue) return breakpointValue;
 
   let resolvedValue = '';
+  // console.log('bruh resolved value', resolvedValue);
   for (const part of breakpointValue.split(' ')) {
     const tokenValue = templateStringRegex.test(part)
       ? resolveSimpleDesignToken(part, variableName)
