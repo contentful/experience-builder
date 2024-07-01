@@ -349,7 +349,7 @@ async function init() {
         : ['* Update your .env.local config file with the necessary environment variables.']),
       '* Start your project by running `npm run dev` in the terminal.',
       '* Once your project is running, reload the Studio Experiences canvas.\n',
-      `For additional help, refer to the docs: https://www.${args.host}/developers/docs/experiences/set-up-experiences-sdk/`,
+      `For additional help, refer to the docs: https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/`,
     ];
 
     outro(outroMessages.join('\n'));
