@@ -240,7 +240,6 @@ type DesignTextTokenEmphasis =
   | 'italic underline'
   | 'bold italic underline'
   | 'none';
-type DesignTextTokenTextAlign = 'left' | 'center' | 'right';
 type DesignTextTokenCase = 'capitalize' | 'uppercase' | 'lowercase' | 'normal';
 
 export type DesignTokensDefinition = {
@@ -257,7 +256,6 @@ export type DesignTokensDefinition = {
     string,
     {
       emphasis?: DesignTextTokenEmphasis;
-      textAlign?: DesignTextTokenTextAlign;
       fontSize?: string;
       case?: DesignTextTokenCase;
       fontWeight?: string;

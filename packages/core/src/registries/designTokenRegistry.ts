@@ -14,7 +14,6 @@ const ensureValidCompositeValues = (designTokenDefinition: DesignTokensDefinitio
       const textValue = designTokenDefinition.text[textKey];
       designTokenDefinition.text[textKey] = {
         emphasis: textValue.emphasis || 'none',
-        textAlign: textValue.textAlign || 'left',
         fontSize: textValue.fontSize || '16px',
         case: textValue.case || 'normal',
         fontWeight: textValue.fontWeight || '400',
