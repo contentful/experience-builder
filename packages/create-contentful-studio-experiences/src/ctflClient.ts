@@ -336,7 +336,7 @@ export class CtflClient {
         authorization: `Bearer ${this.authToken as string}`,
         ...headers,
       };
-      const baseUrl = 'https://api.{{host}}'.replace('{{host}}', this.host);
+      const baseUrl = `https://api.${this.host}`;
       const response = await fetch(`${baseUrl}${endpoint}`, {
         method,
         headers: baseHeaders,
