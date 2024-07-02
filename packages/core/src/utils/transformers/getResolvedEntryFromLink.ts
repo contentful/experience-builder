@@ -1,5 +1,4 @@
-import { PrimitiveValue } from '@/types';
-import { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
+import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../get';
 import { EntityStoreBase } from '@/entity';
 
@@ -21,11 +20,5 @@ export function getResolvedEntryFromLink(
 
   //Look up the reference in the entity store
   const resolvedEntity = entityStore.getEntityFromLink(value);
-  // const resolvedEntity = entityStore.getEntityFromLink(value);
-  console.log('aaa', { value, entryOrAsset, path, entityStore, resolvedEntity });
   return resolvedEntity;
 }
-
-// {
-//   "sys": { "type": "Link", "linkType": "Entry", "id": "ABpagfAmvNIxdxqGMejT8" }
-// }
