@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { isContentfulStructureComponent, sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
@@ -24,6 +24,15 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import classNames from 'classnames';
 import styles from './styles.module.css';
 import { parseZoneId } from '@/utils/zone';
+import ResizeHandlers from '@components/DraggableHelpers/ResizeHandlers';
+import { useResizeStore } from '@/store/resizeItem';
+import {
+  HeadingComponentDefinition,
+  RichTextComponentDefinition,
+  TextComponentDefinition,
+} from '@contentful/experiences-components-react';
+import ContentToolbar from '../DraggableHelpers/ContentToolbar';
+import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 
 function getStyle(style, snapshot) {
   if (!snapshot.isDropAnimating) {
@@ -67,6 +76,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     userIsDragging,
     slotId,
   });
+  const [editing, setEditing] = useState(false);
   const setDomRect = useDraggedItemStore((state) => state.setDomRect);
   const isHoveredComponent = useDraggedItemStore(
     (state) => state.hoveredComponentId === componentId,
@@ -81,7 +91,8 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const isSlotComponent = Boolean(node.data.slotId);
-  const isDragDisabled = isAssemblyBlock || isSingleColumn || isSlotComponent;
+  const isHoveringResize = useResizeStore((state) => state.isResize);
+  const isDragDisabled = isAssemblyBlock || isSingleColumn || isSlotComponent || isHoveringResize;
 
   const isEmptyZone = useMemo(() => {
     return !node.children.filter((node) => node.data.slotId === slotId).length;
@@ -94,8 +105,12 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   });
 
   const onClick = (e: React.SyntheticEvent<Element, Event>) => {
-    e.stopPropagation();
+    // needs to not trigger for doubleclick
+    if ((e as any)?.detail > 1) {
+      return;
+    }
 
+    e.stopPropagation();
     if (!userIsDragging) {
       setSelectedNodeId(node.data.id);
       // if it is the assembly directly we just want to select it as a normal component
@@ -105,7 +120,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         });
         return;
       }
-
       sendMessage(OUTGOING_EVENTS.ComponentSelected, {
         assembly: node.data.assembly,
         nodeId: node.data.id,
@@ -121,6 +135,44 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     sendMessage(OUTGOING_EVENTS.NewHoveredElement, {
       nodeId: componentId,
     });
+  };
+
+  const onDoubleClick = () => {
+    const editableContent = [
+      TextComponentDefinition.id,
+      RichTextComponentDefinition.id,
+      HeadingComponentDefinition.id,
+    ];
+
+    sendSelectedComponentCoordinates(node.data.id);
+
+    if (editableContent.includes(node.data.blockId!)) {
+      const nodeElement = document.querySelector(
+        `[data-cf-node-id="${node.data.id}"]`,
+      ) as HTMLParagraphElement;
+
+      if (!nodeElement) {
+        return;
+      }
+
+      setEditing(true);
+      nodeElement.contentEditable = 'true';
+      nodeElement.style.pointerEvents = 'all !important';
+      nodeElement.focus();
+      nodeElement.addEventListener('input', () => {
+        sendSelectedComponentCoordinates(node.data.id);
+      });
+      nodeElement.addEventListener('blur', (e: any) => {
+        sendSelectedComponentCoordinates(node.data.id);
+        nodeElement.contentEditable = 'false';
+        setEditing(false);
+
+        const content = e.target.innerText;
+        console.log('::inline-content::', content);
+        // send a postmessage back up to the web_app
+        // call `onContentValueChanged` to update the input
+      });
+    }
   };
 
   const onMouseDown = (e: React.SyntheticEvent<Element, Event>) => {
@@ -141,7 +193,9 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         isContainer={isContainer}
         label={displayName || 'No label specified'}
       />
+      <ResizeHandlers element={ref.current} componentId={node.data.id} />
       <Placeholder {...placeholder} id={componentId} />
+      {editing && <ContentToolbar />}
       {isStructureComponent && userIsDragging && (
         <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
       )}
@@ -172,12 +226,15 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
               [styles.isSelected]: isSelected,
               [styles.userIsDragging]: userIsDragging,
               [styles.isHoveringComponent]: isHoveredComponent,
+              [styles.isEditing]: editing,
             }),
             style: getStyle(provided.draggableProps.style, snapshot),
             onMouseDown,
             onMouseOver,
+            onDoubleClick,
             onClick,
             ToolTipAndPlaceholder,
+            editingContent: editing,
           },
         })
       }

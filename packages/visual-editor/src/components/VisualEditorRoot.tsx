@@ -5,16 +5,21 @@ import SimulateDnD from '@/utils/simulateDnD';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useInitializeEditor } from '@/hooks/useInitializeEditor';
 import { useZoneStore } from '@/store/zone';
-import { CTFL_ZONE_ID, NEW_COMPONENT_ID } from '@/types/constants';
+import { CTFL_RESIZE_ID, CTFL_ZONE_ID, NEW_COMPONENT_ID } from '@/types/constants';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import type { Experience } from '@contentful/experiences-core/types';
 import { useEditorStore } from '@/store/editor';
+import { useResizeStore } from '@/store/resizeItem';
 
 export const VisualEditorRoot = ({ experience }: { experience?: Experience<EntityStore> }) => {
   const initialized = useInitializeEditor();
   const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
 
+  const setIsResize = useResizeStore((state) => state.setIsResize);
+  const resizingComponentId = useResizeStore((state) => state.resizingComponentId);
+  const setResizingComponent = useResizeStore((state) => state.setResizingComponent);
   const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
+  const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
 
   useEffect(() => {
@@ -29,6 +34,9 @@ export const VisualEditorRoot = ({ experience }: { experience?: Experience<Entit
 
       const target = e.target as HTMLElement;
       const zoneId = target.closest(`[${CTFL_ZONE_ID}]`)?.getAttribute(CTFL_ZONE_ID);
+      const isResize = target.getAttribute(CTFL_RESIZE_ID);
+
+      setIsResize(!!isResize);
 
       if (zoneId) {
         setHoveringZone(zoneId);
@@ -57,6 +65,33 @@ export const VisualEditorRoot = ({ experience }: { experience?: Experience<Entit
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const onMouseUp = (e: MouseEvent) => {
+      const { initialWidth, initialX } = useResizeStore.getState();
+
+      if (resizingComponentId) {
+        setResizingComponent('');
+        sendMessage(OUTGOING_EVENTS.DesignValueChanged, {
+          nodeId: selectedNodeId,
+          variableName: 'cfWidth',
+          value: `${initialWidth + initialX - e.pageX}px`,
+        });
+        // sendMessage(OUTGOING_EVENTS.DesignValueChanged, {
+        //   nodeId: selectedNodeId,
+        //   variableName: 'cfHeight',
+        //   value: `${initialHeight + (initialY + e.pageY)}px`,
+        // });
+      }
+    };
+
+    document.addEventListener('mouseup', onMouseUp);
+
+    return () => {
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resizingComponentId, selectedNodeId]);
 
   if (!initialized) return null;
 
