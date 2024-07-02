@@ -1,17 +1,18 @@
 import React from 'react';
 import { UnresolvedLink } from 'contentful';
 
-interface CustomJsonObjectProps {
+interface KitchenSinkProps {
   jsonObject?: object;
   booleanValue?: boolean;
   listText?: string[];
   entryReference?: UnresolvedLink<'Entry'>;
-  imageReference?: UnresolvedLink<'Entry'>;
+  imageReference?: UnresolvedLink<'Asset'>;
+  imageListReference?: UnresolvedLink<'Asset'>[];
   listReference?: UnresolvedLink<'Entry'>[];
   text?: string;
 }
 
-const KitchenSink: React.FC<CustomJsonObjectProps> = ({
+const KitchenSink: React.FC<KitchenSinkProps> = ({
   booleanValue,
   entryReference,
   imageReference,
@@ -19,9 +20,10 @@ const KitchenSink: React.FC<CustomJsonObjectProps> = ({
   listText,
   listReference,
   text,
+  ...props
 }) => {
   return (
-    <div>
+    <div {...props}>
       <h1>Kitchen Sink</h1>
 
       {text && (
