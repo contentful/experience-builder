@@ -427,6 +427,7 @@ export interface DragWrapperProps
   wrapComponent?: boolean;
   Tag?: WrapperTags;
   ToolTipAndPlaceholder?: React.ReactNode;
+  editingContent?: boolean;
 }
 
 export type ConnectedPayload =
