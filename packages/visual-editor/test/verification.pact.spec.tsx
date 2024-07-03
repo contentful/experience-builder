@@ -1,13 +1,34 @@
+import React from 'react';
+import { render, renderHook } from '@testing-library/react';
+import { vitest } from 'vitest';
+import { useEditorSubscriber } from '../src/hooks/useEditorSubscriber';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { MessageProviderPact } from '@pact-foundation/pact';
 import path from 'path';
+import { VisualEditorRoot } from '../src/components/VisualEditorRoot';
 
-import { sendConnectedEventWithRegisteredComponents } from './core/componentRegistry';
-import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
-import { defineBreakpoints, defineDesignTokens } from '@contentful/experiences-core';
+import { EntityStore, defineBreakpoints, defineDesignTokens } from '@contentful/experiences-core';
+import {
+  sendConnectedEventWithRegisteredComponents,
+  sendRegisteredComponentsMessage,
+} from '@contentful/experiences-sdk-react/src/core/componentRegistry';
+import { Experience, OutgoingEvent } from '@contentful/experiences-core/types';
+
+const requestComponentTreeUpdateMessageProvider = () => {
+  let message;
+  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
+    if (msg.eventType === OUTGOING_EVENTS.RequestComponentTreeUpdate) {
+      message = msg;
+    }
+  });
+
+  renderHook(() => useEditorSubscriber());
+  return message;
+};
 
 const connectedMessageProvider = () => {
   let message;
-  const postMessageSpy = jest.spyOn(window, 'postMessage').mockImplementation((msg) => {
+  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
     // We need to only intercept the OUTGOING_EVENTS.Connected event,
     // sendConnectedEventWithRegisteredComponents also sends OUTGOING_EVENTS.DesignTokens
     if (msg.eventType === OUTGOING_EVENTS.Connected) {
@@ -46,7 +67,7 @@ export enum InteractionIds {
 
 const designTokensMessageProvider = () => {
   let message;
-  const postMessageSpy = jest.spyOn(window, 'postMessage').mockImplementation((msg) => {
+  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
     if (msg.eventType === OUTGOING_EVENTS.DesignTokens) {
       message = msg;
     }
@@ -67,7 +88,7 @@ const designTokensMessageProvider = () => {
 
 const breakpointsMessageProvider = () => {
   let message;
-  const postMessageSpy = jest.spyOn(window, 'postMessage').mockImplementation((msg) => {
+  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
     if (msg.eventType === OUTGOING_EVENTS.RegisteredBreakpoints) {
       message = msg;
     }
@@ -89,17 +110,71 @@ const breakpointsMessageProvider = () => {
   return message;
 };
 
+const componentSelectedMessageProvider = () => {};
+const assemblyComponentSelectedMessageProvider = () => {};
+const componentsRegisteredMessageProvider = () => {
+  let message;
+  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
+    if (msg.eventType === OUTGOING_EVENTS.RegisteredComponents) {
+      message = msg;
+    }
+  });
+  sendRegisteredComponentsMessage();
+  postMessageSpy.mockRestore();
+
+  return message;
+};
+const mouseMoveMessageProvider = () => {
+  let message;
+  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
+    if (msg.eventType === OUTGOING_EVENTS.MouseMove) {
+      message = msg;
+    }
+  });
+  render(<VisualEditorRoot experience={vitest.fn() as Experience<EntityStore>} />);
+
+  postMessageSpy.mockRestore();
+
+  return message;
+};
+
+const messageProviderWrapper = (messageProvider: () => any, event: OutgoingEvent) => {
+  let message;
+  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
+    if (msg.eventType === OUTGOING_EVENTS.RegisteredComponents) {
+      message = msg;
+    }
+  });
+  messageProvider();
+
+  postMessageSpy.mockRestore();
+
+  return message;
+};
+
 describe('Pact Verification', () => {
   // 2 Pact setup
   const p = new MessageProviderPact({
     // For convinence we using the pacts folder that is created in user_interface. In reality pacts would be loaded from the pact broker (e.g. PactFlow)
-    pactUrls: [path.resolve(process.cwd(), '../../../user_interface/pacts')],
+    pactUrls: [
+      path.resolve(
+        process.cwd(),
+        '../../../user_interface/pacts/UserInterfaceConsumer-ExperiencesSDKProvider.json',
+      ),
+    ],
     messageProviders: {
       [InteractionIds.ConnectedInterationId]: connectedMessageProvider,
       [InteractionIds.DesignTokensInterationId]: designTokensMessageProvider,
       [InteractionIds.RegisteredBreakpointsInteractionId]: breakpointsMessageProvider,
+      [InteractionIds.ComponentSelectedInteractionId]: componentSelectedMessageProvider,
+      [InteractionIds.AssemblyComponentSelectedInteractionId]:
+        assemblyComponentSelectedMessageProvider,
+      [InteractionIds.RequestComponentTreeUpdateInteractionId]:
+        requestComponentTreeUpdateMessageProvider,
+      [InteractionIds.RegisteredComponentsInteractionId]: componentsRegisteredMessageProvider,
+      [InteractionIds.MouseMoveInteractionId]: mouseMoveMessageProvider,
     },
-    logLevel: 'debug',
+    //logLevel: 'debug',
     provider: 'ExperiencesSDKProvider',
     providerVersion: '1.3.0',
   });
