@@ -19,6 +19,7 @@ const ContentToolbar = () => {
           backgroundColor: '#fff',
           boxShadow: '0 0 24px rgba(0,0,0,.1)',
           minWidth: 400,
+          width: 400,
           overflow: 'hidden',
           borderRadius: 8,
           border: `1px solid #eee`,
