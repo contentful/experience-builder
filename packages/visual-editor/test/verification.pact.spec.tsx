@@ -15,30 +15,11 @@ import {
 import { Experience, OutgoingEvent } from '@contentful/experiences-core/types';
 
 const requestComponentTreeUpdateMessageProvider = () => {
-  let message;
-  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
-    if (msg.eventType === OUTGOING_EVENTS.RequestComponentTreeUpdate) {
-      message = msg;
-    }
-  });
-
   renderHook(() => useEditorSubscriber());
-  return message;
 };
 
 const connectedMessageProvider = () => {
-  let message;
-  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
-    // We need to only intercept the OUTGOING_EVENTS.Connected event,
-    // sendConnectedEventWithRegisteredComponents also sends OUTGOING_EVENTS.DesignTokens
-    if (msg.eventType === OUTGOING_EVENTS.Connected) {
-      message = msg;
-    }
-  });
   sendConnectedEventWithRegisteredComponents();
-  postMessageSpy.mockRestore();
-
-  return message;
 };
 
 export enum InteractionIds {
@@ -66,12 +47,6 @@ export enum InteractionIds {
 }
 
 const designTokensMessageProvider = () => {
-  let message;
-  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
-    if (msg.eventType === OUTGOING_EVENTS.DesignTokens) {
-      message = msg;
-    }
-  });
   defineDesignTokens({
     colors: {
       primary: '#ff0000',
@@ -80,19 +55,9 @@ const designTokensMessageProvider = () => {
   });
 
   sendConnectedEventWithRegisteredComponents();
-
-  postMessageSpy.mockRestore();
-
-  return JSON.parse(JSON.stringify(message));
 };
 
 const breakpointsMessageProvider = () => {
-  let message;
-  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
-    if (msg.eventType === OUTGOING_EVENTS.RegisteredBreakpoints) {
-      message = msg;
-    }
-  });
   defineBreakpoints([
     {
       id: 'desktop',
@@ -104,52 +69,37 @@ const breakpointsMessageProvider = () => {
   ]);
 
   sendConnectedEventWithRegisteredComponents();
-
-  postMessageSpy.mockRestore();
-
-  return message;
 };
 
 const componentSelectedMessageProvider = () => {};
 const assemblyComponentSelectedMessageProvider = () => {};
 const componentsRegisteredMessageProvider = () => {
-  let message;
-  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
-    if (msg.eventType === OUTGOING_EVENTS.RegisteredComponents) {
-      message = msg;
-    }
-  });
   sendRegisteredComponentsMessage();
-  postMessageSpy.mockRestore();
-
-  return message;
 };
 const mouseMoveMessageProvider = () => {
-  let message;
-  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
-    if (msg.eventType === OUTGOING_EVENTS.MouseMove) {
-      message = msg;
-    }
-  });
   render(<VisualEditorRoot experience={vitest.fn() as Experience<EntityStore>} />);
-
-  postMessageSpy.mockRestore();
-
-  return message;
 };
 
-const messageProviderWrapper = (messageProvider: () => any, event: OutgoingEvent) => {
-  let message;
-  const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
-    if (msg.eventType === OUTGOING_EVENTS.RegisteredComponents) {
-      message = msg;
-    }
-  });
-  messageProvider();
+const messageProviderWrapper = (messageProvider: () => any, eventType: OutgoingEvent) => {
+  return () => {
+    let message;
+    const postMessageSpy = vitest.spyOn(window, 'postMessage').mockImplementation((msg) => {
+      // We need to only intercept the OUTGOING_EVENTS.Connected event,
+      // sendConnectedEventWithRegisteredComponents also sends OUTGOING_EVENTS.DesignTokens
+      if (msg.eventType === eventType) {
+        message = msg;
+      }
+    });
+    messageProvider();
 
-  postMessageSpy.mockRestore();
+    postMessageSpy.mockRestore();
 
-  return message;
+    return message;
+  };
+};
+
+const newHoveredElementMessageProvider = () => {
+  render(<VisualEditorRoot experience={vitest.fn() as Experience<EntityStore>} />);
 };
 
 describe('Pact Verification', () => {
@@ -163,16 +113,42 @@ describe('Pact Verification', () => {
       ),
     ],
     messageProviders: {
-      [InteractionIds.ConnectedInterationId]: connectedMessageProvider,
-      [InteractionIds.DesignTokensInterationId]: designTokensMessageProvider,
-      [InteractionIds.RegisteredBreakpointsInteractionId]: breakpointsMessageProvider,
-      [InteractionIds.ComponentSelectedInteractionId]: componentSelectedMessageProvider,
-      [InteractionIds.AssemblyComponentSelectedInteractionId]:
+      [InteractionIds.ConnectedInterationId]: messageProviderWrapper(
+        connectedMessageProvider,
+        OUTGOING_EVENTS.Connected,
+      ),
+      [InteractionIds.DesignTokensInterationId]: messageProviderWrapper(
+        designTokensMessageProvider,
+        OUTGOING_EVENTS.DesignTokens,
+      ),
+      [InteractionIds.RegisteredBreakpointsInteractionId]: messageProviderWrapper(
+        breakpointsMessageProvider,
+        OUTGOING_EVENTS.RegisteredBreakpoints,
+      ),
+      [InteractionIds.ComponentSelectedInteractionId]: messageProviderWrapper(
+        componentSelectedMessageProvider,
+        OUTGOING_EVENTS.ComponentSelected,
+      ),
+      [InteractionIds.AssemblyComponentSelectedInteractionId]: messageProviderWrapper(
         assemblyComponentSelectedMessageProvider,
-      [InteractionIds.RequestComponentTreeUpdateInteractionId]:
+        OUTGOING_EVENTS.ComponentSelected,
+      ),
+      [InteractionIds.RequestComponentTreeUpdateInteractionId]: messageProviderWrapper(
         requestComponentTreeUpdateMessageProvider,
-      [InteractionIds.RegisteredComponentsInteractionId]: componentsRegisteredMessageProvider,
-      [InteractionIds.MouseMoveInteractionId]: mouseMoveMessageProvider,
+        OUTGOING_EVENTS.RequestComponentTreeUpdate,
+      ),
+      [InteractionIds.RegisteredComponentsInteractionId]: messageProviderWrapper(
+        componentsRegisteredMessageProvider,
+        OUTGOING_EVENTS.RegisteredComponents,
+      ),
+      [InteractionIds.MouseMoveInteractionId]: messageProviderWrapper(
+        mouseMoveMessageProvider,
+        OUTGOING_EVENTS.MouseMove,
+      ),
+      [InteractionIds.NewHoveredElementInteractionId]: messageProviderWrapper(
+        newHoveredElementMessageProvider,
+        OUTGOING_EVENTS.NewHoveredElement,
+      ),
     },
     //logLevel: 'debug',
     provider: 'ExperiencesSDKProvider',
