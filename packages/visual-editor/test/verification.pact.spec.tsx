@@ -1,5 +1,5 @@
-import React from 'react';
-import { render, renderHook } from '@testing-library/react';
+import React, { act } from 'react';
+import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { vitest } from 'vitest';
 import { useEditorSubscriber } from '../src/hooks/useEditorSubscriber';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
@@ -13,6 +13,9 @@ import {
   sendRegisteredComponentsMessage,
 } from '@contentful/experiences-sdk-react/src/core/componentRegistry';
 import { Experience, OutgoingEvent } from '@contentful/experiences-core/types';
+import { RootRenderer } from '../src/components/RootRenderer/RootRenderer';
+import { DNDProvider } from '../src/components/RootRenderer/DNDProvider';
+import TestDNDContainer from '../src/components/RootRenderer/TestDNDContainer';
 
 const requestComponentTreeUpdateMessageProvider = () => {
   renderHook(() => useEditorSubscriber());
@@ -102,6 +105,30 @@ const newHoveredElementMessageProvider = () => {
   render(<VisualEditorRoot experience={vitest.fn() as Experience<EntityStore>} />);
 };
 
+const outsideCanvasClickMessageProvider = () => {
+  render(<RootRenderer />);
+  fireEvent.click(document.body);
+};
+
+const componentMoveStartedMessageProvider = () => {
+  render(<RootRenderer />);
+  fireEvent.mouseDown(document.body);
+};
+
+const componentMoveEndedMessageProvider = () => {
+  render(<DNDProvider isTestRunOverride={true}>{}</DNDProvider>);
+  const testContainer = document.querySelector('[data-test-id="dnd-context-substitute"]');
+  testContainer && fireEvent.mouseDown(testContainer);
+  testContainer && fireEvent.mouseMove(testContainer, { clientX: 100, clientY: 100 });
+  const event = new CustomEvent('dragStart');
+  testContainer && testContainer.dispatchEvent(event);
+  console.log('div: ', testContainer);
+  // if (div) {
+  //   fireEvent.mouseDown(div);
+  // }
+  screen.debug();
+};
+
 describe('Pact Verification', () => {
   // 2 Pact setup
   const p = new MessageProviderPact({
@@ -148,6 +175,54 @@ describe('Pact Verification', () => {
       [InteractionIds.NewHoveredElementInteractionId]: messageProviderWrapper(
         newHoveredElementMessageProvider,
         OUTGOING_EVENTS.NewHoveredElement,
+      ),
+      [InteractionIds.ComponentDragCanceledInteractionId]: messageProviderWrapper(
+        () => {},
+        OUTGOING_EVENTS.ComponentDragCanceled,
+      ),
+      [InteractionIds.ComponentDroppedInteractionId]: messageProviderWrapper(
+        () => {},
+        OUTGOING_EVENTS.ComponentDropped,
+      ),
+      [InteractionIds.ComponentMovedInteractionId]: messageProviderWrapper(
+        () => {},
+        OUTGOING_EVENTS.ComponentMoved,
+      ),
+      [InteractionIds.CanvasReloadInteractionId]: messageProviderWrapper(
+        () => {},
+        OUTGOING_EVENTS.CanvasReload,
+      ),
+      [InteractionIds.CanvasScrollInteractionId]: messageProviderWrapper(
+        () => {},
+        OUTGOING_EVENTS.CanvasScroll,
+      ),
+      [InteractionIds.CanvasErrorInteractionId]: messageProviderWrapper(
+        () => {},
+        OUTGOING_EVENTS.CanvasError,
+      ),
+      [InteractionIds.UpdateSelectedComponentCoordinatesInteractionId]: messageProviderWrapper(
+        () => {},
+        OUTGOING_EVENTS.UpdateSelectedComponentCoordinates,
+      ),
+      [InteractionIds.ComponentMoveStartedInteractionId]: messageProviderWrapper(
+        componentMoveStartedMessageProvider,
+        OUTGOING_EVENTS.ComponentMoveStarted,
+      ),
+      [InteractionIds.ComponentMoveEndedInteractionId]: messageProviderWrapper(
+        componentMoveEndedMessageProvider,
+        OUTGOING_EVENTS.ComponentMoveEnded,
+      ),
+      [InteractionIds.OutsideCanvasClickInteractionId]: messageProviderWrapper(
+        outsideCanvasClickMessageProvider,
+        OUTGOING_EVENTS.OutsideCanvasClick,
+      ),
+      [InteractionIds.SDKFeaturesInteractionId]: messageProviderWrapper(
+        () => {},
+        OUTGOING_EVENTS.SDKFeatures,
+      ),
+      [InteractionIds.RequestEntitiesInteractionId]: messageProviderWrapper(
+        () => {},
+        OUTGOING_EVENTS.RequestEntities,
       ),
     },
     //logLevel: 'debug',
