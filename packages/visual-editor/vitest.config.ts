@@ -11,6 +11,6 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       reportsDirectory: 'reports',
     },
-    environment: 'happy-dom',
+    environment: 'jsdom',
   },
 });
