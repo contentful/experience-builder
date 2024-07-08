@@ -18,7 +18,7 @@ import {
   sendRegisteredComponentsMessage,
 } from '@contentful/experiences-sdk-react/src/core/componentRegistry';
 import { useDetectEditorMode } from '@contentful/experiences-sdk-react/src/hooks/useDetectEditorMode';
-import { OutgoingEvent } from '@contentful/experiences-core/types';
+import { OutgoingEvent } from '../../core/src/types';
 import { RootRenderer } from '../src/components/RootRenderer/RootRenderer';
 import { assets, componentRegistrations, entries, experienceEntry, tree } from './__fixtures__';
 import { Entry } from 'contentful';
@@ -86,6 +86,20 @@ const messageProviderWrapper = (messageProvider: () => any, eventType: OutgoingE
 
     return message;
   };
+};
+
+const renderEditorRoot = () => {
+  addComponentRegistration(componentRegistrations[0]);
+  addComponentRegistration(componentRegistrations[1]);
+
+  const { result } = renderHook(() =>
+    useTreeStore((state) => ({
+      updateTree: state.updateTree,
+    })),
+  );
+  act(() => result.current.updateTree(tree));
+
+  render(<VisualEditorRoot experience={experience} />);
 };
 
 const connectedMessageProvider = () => {
@@ -262,15 +276,7 @@ const canvasErrorMessageProvider = () => {
 };
 
 describe('Pact Verification', () => {
-  // 2 Pact setup
   const p = new MessageProviderPact({
-    // For convinence we using the pacts folder that is created in user_interface. In reality pacts would be loaded from the pact broker (e.g. PactFlow)
-    pactUrls: [
-      path.resolve(
-        process.cwd(),
-        '../../../user_interface/pacts/UserInterfaceConsumer-ExperiencesSDKProvider.json',
-      ),
-    ],
     messageProviders: {
       [InteractionIds.ConnectedInterationId]: messageProviderWrapper(
         connectedMessageProvider,
@@ -339,7 +345,6 @@ describe('Pact Verification', () => {
       ),
     },
     provider: PACT_PROVIDER,
-    providerVersion: '1.3.0',
   });
 
   it('verifies the interactions', () => {
@@ -348,17 +353,3 @@ describe('Pact Verification', () => {
     });
   });
 });
-
-const renderEditorRoot = () => {
-  addComponentRegistration(componentRegistrations[0]);
-  addComponentRegistration(componentRegistrations[1]);
-
-  const { result } = renderHook(() =>
-    useTreeStore((state) => ({
-      updateTree: state.updateTree,
-    })),
-  );
-  act(() => result.current.updateTree(tree));
-
-  render(<VisualEditorRoot experience={experience} />);
-};
