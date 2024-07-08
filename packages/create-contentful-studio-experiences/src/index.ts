@@ -19,6 +19,12 @@ import { generateContentTypeId, isValidPackageName } from './utils.js';
 import { CONSTANTS } from './constants.js';
 
 const args = await yargs(process.argv.slice(2))
+  .option('host', {
+    alias: 'h',
+    type: 'string',
+    description: 'Contentful host to use (defaults to contentful.com)',
+    default: 'contentful.com',
+  })
   .option('token', {
     alias: 't',
     type: 'string',
@@ -47,8 +53,8 @@ init().catch((e) => {
 
 async function init() {
   const spinner = Spinner();
-  const ctflClient = new CtflClient();
-  const fsClient = new FsClient();
+  const ctflClient = new CtflClient(args.host);
+  const fsClient = new FsClient(args.host);
 
   if (args.token) {
     const validToken = await ctflClient.setAuthToken(args.token);
@@ -335,15 +341,15 @@ async function init() {
     const outroMessages = [
       '🚀 Your project is ready!\n',
       useExistingSpace && contentEntryId
-        ? `* Launch Contentful Studio Experiences: https://app.contentful.com/spaces/${ctflClient.space?.id}/experiences/${contentEntryId}`
-        : '* Launch Contentful and navigate to Experiences: https://app.contentful.com/',
+        ? `* Launch Contentful Studio Experiences: https://app.${args.host}/spaces/${ctflClient.space?.id}/experiences/${contentEntryId}`
+        : '* Launch Contentful and navigate to Experiences: https://app.${args.host}/',
       `* Navigate to your project folder using the terminal: \`cd ${projectName}\``,
       ...(useExistingSpace
         ? []
         : ['* Update your .env.local config file with the necessary environment variables.']),
       '* Start your project by running `npm run dev` in the terminal.',
       '* Once your project is running, reload the Studio Experiences canvas.\n',
-      'For additional help, refer to the docs: https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/',
+      `For additional help, refer to the docs: https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/`,
     ];
 
     outro(outroMessages.join('\n'));
