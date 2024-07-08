@@ -10,6 +10,7 @@ import { EntityStoreBase } from '@/entity';
 import { Asset, UnresolvedLink } from 'contentful';
 import { getBoundValue } from './getBoundValue';
 import { getResolvedEntryFromLink } from './getResolvedEntryFromLink';
+import { getArrayValue } from './getArrayValue';
 
 export const transformBoundContentValue = (
   variables: ComponentTreeNode['variables'],
@@ -38,11 +39,10 @@ export const transformBoundContentValue = (
       );
     case 'RichText':
       return transformRichText(entityOrAsset, path);
-    // case 'Array':
-    //   console.log('aaa', 'array type', entityOrAsset, path);
-    //   return getBoundValue(entityOrAsset, path);
+    case 'Array':
+      console.log('aaa', 'array type', entityOrAsset, path);
+      return getArrayValue(entityOrAsset, path, entityStore);
     case 'Link':
-      // console.log('aaa', {variableDefinition, entityOrAsset, entityStore, path});
       return getResolvedEntryFromLink(entityOrAsset, path, entityStore);
     default:
       return getBoundValue(entityOrAsset, path);
