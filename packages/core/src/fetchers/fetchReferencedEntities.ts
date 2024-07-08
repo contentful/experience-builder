@@ -74,8 +74,6 @@ export const fetchReferencedEntities = async ({
     ...autoFetchedReferentAssets,
   ];
 
-  //maybe depuping should happen here? The same asset can appear multiple times, maybe coming back in autoFetchedReferentAssets
-
   return {
     entries: allResolvedEntries as Entry[],
     assets: allResolvedAssets as Asset[],
