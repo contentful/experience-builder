@@ -40,7 +40,6 @@ export const transformBoundContentValue = (
     case 'RichText':
       return transformRichText(entityOrAsset, path);
     case 'Array':
-      console.log('aaa', 'array type', entityOrAsset, path);
       return getArrayValue(entityOrAsset, path, entityStore);
     case 'Link':
       return getResolvedEntryFromLink(entityOrAsset, path, entityStore);
