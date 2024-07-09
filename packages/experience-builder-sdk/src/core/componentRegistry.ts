@@ -4,6 +4,7 @@ import type {
   ComponentDefinition,
   ComponentRegistrationOptions,
   DesignTokensDefinition,
+  BehaviorRegistration,
 } from '@contentful/experiences-core/types';
 import {
   OUTGOING_EVENTS,
@@ -163,6 +164,8 @@ export const componentRegistry = new Map<string, ComponentRegistration>([
   [DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.text],
   [DEFAULT_COMPONENT_REGISTRATIONS.divider.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.divider],
 ]);
+
+export const behaviorRegistry = new Map<string, BehaviorRegistration>([]);
 
 export const optionalBuiltInComponents = [
   DEFAULT_COMPONENT_REGISTRATIONS.button.definition.id,
@@ -338,6 +341,12 @@ export const defineComponents = (
 
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent(INTERNAL_EVENTS.ComponentsRegistered));
+  }
+};
+
+export const defineBehaviors = (behaviorRegistration: BehaviorRegistration[]) => {
+  for (const registration of behaviorRegistration) {
+    behaviorRegistry.set(registration.definition.id, registration);
   }
 };
 

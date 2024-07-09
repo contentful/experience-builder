@@ -95,11 +95,17 @@ const UnboundValuesSchema = z.record(
   }),
 );
 
+const BehaviorSchema = z.object({
+  variables: z.record(propertyKeySchema, ComponentPropertyValueSchema), // change this to a behavior schema
+  eventType: z.string(),
+});
+
 // Use helper schema to define a recursive schema with its type correctly below
 const BaseComponentTreeNodeSchema = z.object({
   definitionId: DefinitionPropertyKeySchema,
   displayName: z.string().optional(),
   slotId: z.string().optional(),
+  behaviors: z.record(DefinitionPropertyKeySchema, BehaviorSchema).optional(),
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
 });
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {

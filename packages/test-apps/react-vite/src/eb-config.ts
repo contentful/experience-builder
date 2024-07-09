@@ -1,8 +1,25 @@
-import { defineComponents, defineBreakpoints } from '@contentful/experiences-sdk-react';
+import {
+  defineComponents,
+  defineBehaviors,
+  defineBreakpoints,
+} from '@contentful/experiences-sdk-react';
 import ComponentWithChildren from './components/ComponentWithChildren';
 import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
+import testBehavior from './behaviors/testBehavior';
+
+defineBehaviors([
+  {
+    definition: {
+      id: 'test-behavior',
+      name: 'Test Behavior',
+      description: 'Test behavior for the custom component',
+      eventType: 'onClick',
+    },
+    behavior: testBehavior,
+  },
+]);
 
 defineComponents([
   {

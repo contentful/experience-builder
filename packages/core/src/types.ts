@@ -116,6 +116,20 @@ export type ComponentRegistration = {
   };
 };
 
+export type BehaviorDefinition = {
+  id: string;
+  name: string;
+  description: string;
+
+  eventType: string;
+  variables: Record<string, string>;
+};
+
+export type BehaviorRegistration = {
+  behavior: (payload: unknown) => void;
+  definition: BehaviorDefinition;
+};
+
 export type ComponentRegistrationOptions = {
   enabledBuiltInComponents?: string[];
 };

@@ -8,6 +8,7 @@ import {
   HYPERLINK_DEFAULT_PATTERN,
 } from '@contentful/experiences-core/constants';
 import type {
+  BehaviorDefinition,
   ComponentTreeNode,
   DesignValue,
   PrimitiveValue,
@@ -26,6 +27,7 @@ import {
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Assembly } from '../../components/Assembly';
 import { Entry } from 'contentful';
+import { withComponentWrapper } from '../../utils/withComponentWrapper';
 
 type CompositionBlockProps = {
   node: ComponentTreeNode;
@@ -235,8 +237,27 @@ export const CompositionBlock = ({
   const stylesToKeep = ['cfImageAsset'];
   const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
 
+  const behaviors = Object.entries(node.behaviors || {});
+  const hasBehaviors = behaviors.length > 0;
+
+  const testBehavior: Record<string, BehaviorDefinition> = {
+    'test-behavior': {
+      id: 'test-behavior',
+      name: 'Test Behavior',
+      description: 'A test behavior',
+      variables: {
+        Text: 'Text',
+        cat: 'bye',
+      },
+      eventType: 'click',
+    },
+  };
+
   return React.createElement(
-    component,
+    // eslint-disable-next-line no-constant-condition
+    hasBehaviors || true
+      ? withComponentWrapper(component, { wrapComponent: false }, testBehavior)
+      : component,
     {
       ...omit(nodeProps, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
       className,

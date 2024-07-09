@@ -1,6 +1,7 @@
-import { ComponentRegistration } from '@contentful/experiences-core/types';
+import { BehaviorDefinition, ComponentRegistration } from '@contentful/experiences-core/types';
 import classNames from 'classnames';
 import React from 'react';
+import { behaviorRegistry } from '../core/componentRegistry';
 interface CFProps extends React.HtmlHTMLAttributes<HTMLElement> {
   /**
    * Classes to be applied to the container component if `wrapComponent` is true, or directly to the child component if false.
@@ -27,6 +28,7 @@ export function withComponentWrapper<T>(
     wrapContainerTag: 'div',
     wrapContainer: 'div',
   },
+  behaviors: Record<string, BehaviorDefinition> = {},
 ) {
   const Wrapped: React.FC<CFProps & T> = ({
     classes = '',
@@ -40,6 +42,19 @@ export function withComponentWrapper<T>(
       ToolTipAndPlaceholder,
       ...restOfDragProps
     } = dragProps;
+
+    const onClickHandler = () => {
+      Object.entries(behaviors).forEach(([key, value]) => {
+        const behaviorRegistration = behaviorRegistry.get(key);
+        if (!behaviorRegistration) {
+          return;
+        }
+
+        const { behavior } = behaviorRegistration;
+        behavior(value);
+      });
+    };
+
     const component = options.wrapComponent ? (
       <div
         data-component-wrapper
@@ -48,6 +63,7 @@ export function withComponentWrapper<T>(
         ref={(refNode: HTMLElement | null) => {
           if (innerRef && refNode) innerRef(refNode);
         }}
+        onClick={onClickHandler}
         {...props}>
         {ToolTipAndPlaceholder}
         <Component className={classNames(classes)} {...(props as T)} />
@@ -55,6 +71,7 @@ export function withComponentWrapper<T>(
     ) : (
       React.createElement(Component, {
         className: classNames(classes, className),
+        onClick: onClickHandler,
         ...(props as T),
       })
     );

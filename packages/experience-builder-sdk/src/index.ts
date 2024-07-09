@@ -2,7 +2,11 @@ import { SDK_VERSION } from './sdkVersion';
 
 export { ExperienceRoot } from './ExperienceRoot';
 export { useFetchById, useFetchBySlug } from './hooks';
-export { defineComponents, maintainBasicComponentIdsWithoutPrefix } from './core/componentRegistry';
+export {
+  defineComponents,
+  defineBehaviors,
+  maintainBasicComponentIdsWithoutPrefix,
+} from './core/componentRegistry';
 export {
   defineDesignTokens,
   defineBreakpoints,
