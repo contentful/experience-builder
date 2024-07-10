@@ -2,14 +2,21 @@ import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
 import { getExperience } from '@/utils/getExperience';
 import { Experience } from '@/StudioExperiencesComponents/Experience';
 
-export default async function ShoppingCartExperienceContainer() {
-  const locale = 'en-US';
+type ShoppingCartProps = {
+  isEditorMode?: boolean;
+  isPreviewMode?: boolean;
+  locale?: string;
+};
+
+export default async function ShoppingCartExperienceContainer({
+  isPreviewMode = false,
+  isEditorMode = false,
+  locale = 'en-US',
+}: ShoppingCartProps) {
   const slug = 'hackathon-dyno';
-  // const { locale = "en-US", slug = "home-page" } = params || {};
-  // const { isPreview, expEditorMode } = searchParams;
-  const preview = false; // isPreview === "true";
-  const editorMode = false; // expEditorMode === "true";
-  const { experience, error } = await getExperience(slug, locale, preview, editorMode);
+  const { experience, error } = await getExperience(slug, locale, isPreviewMode, isEditorMode);
+
+  console.log('[ <ShoppingCartExperienceContainer> ] isPreviewMode => ', isPreviewMode);
 
   if (error) {
     return <div>{error.message}</div>;

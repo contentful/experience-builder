@@ -3,7 +3,7 @@ import {
   defineBreakpoints,
   // defineBehaviors,
 } from '@contentful/experiences-sdk-react';
-import { Cart } from './app/components/Cart';
+import { Cart } from './components/Cart';
 
 // defineBehaviors();
 

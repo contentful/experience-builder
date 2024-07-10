@@ -6,7 +6,7 @@ const Header: React.FC = () => {
     <header className="shadow-md bg-slate-900">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" legacyBehavior>
-          <p className="text-2xl font-bold text-slate-50">Dyno</p>
+          <p className="text-2xl font-bold text-slate-50 cursor-pointer">Dyno</p>
         </Link>
         <nav className="space-x-6">
           <Link href="/" legacyBehavior>
