@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { ExperienceTree } from '../../../core/src/types';
+=======
+import { ExperienceTree } from '@contentful/experiences-core/types';
+>>>>>>> d62612c8 (test: add pact contracts for ExperiencesSDKConsumer)
 
 export const tree: ExperienceTree = {
   root: {
@@ -10,8 +14,22 @@ export const tree: ExperienceTree = {
           breakpoints: [],
           dataSource: {},
           id: 'component-1',
+<<<<<<< HEAD
           props: {},
           unboundValues: {},
+=======
+          props: {
+            title: {
+              type: 'UnboundValue',
+              key: 'unbound_uuid1',
+            },
+          },
+          unboundValues: {
+            unbound_uuid1: {
+              value: 'custom component title',
+            },
+          },
+>>>>>>> d62612c8 (test: add pact contracts for ExperiencesSDKConsumer)
           blockId: 'component-1',
         },
       },
