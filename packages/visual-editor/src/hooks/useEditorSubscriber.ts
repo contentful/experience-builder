@@ -207,7 +207,6 @@ export function useEditorSubscriber() {
             newEntityStore = resetEntityStore(locale);
             setLocale(locale);
           }
-
           // Below are mutually exclusive cases
           if (changedNode) {
             /**
