@@ -12,7 +12,7 @@ export function getArrayValue(
     return entryOrAsset;
   }
 
-  const arrayValue = get(entryOrAsset, path.split('/').slice(2, -1));
+  const arrayValue = get<Array<string | UnresolvedLink<'Entry' | 'Asset'>>>(entryOrAsset, path.split('/').slice(2, -1));
 
   if (!isArray(arrayValue)) {
     console.warn(`Expected a value to an array, but got: ${JSON.stringify(arrayValue)}`);
