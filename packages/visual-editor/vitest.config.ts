@@ -12,5 +12,6 @@ export default defineConfig({
       reportsDirectory: 'reports',
     },
     environment: 'jsdom',
+    pool: 'forks',
   },
 });

@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { useEditorSubscriber } from '../src/hooks/useEditorSubscriber';
 import { INCOMING_EVENTS, OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
-import { MessageProviderPact } from '@pact-foundation/pact';
+import { MessageProviderPact, PactV3, Verifier } from '@pact-foundation/pact';
 import path from 'path';
 import { VisualEditorRoot } from '../src/components/VisualEditorRoot';
 import {
@@ -67,7 +67,7 @@ const InteractionIds = {
 // wrapper for each message provider, spies on the `window.postMessage` method for the specified event,
 // intercepts and returns the message being sent
 const messageProviderWrapper = (messageProvider: () => any, eventType: OutgoingEvent) => {
-  return () => {
+  return async () => {
     let message;
     const postMessageSpy = vi.spyOn(window, 'postMessage').mockImplementation((msg) => {
       // We need to only intercept the OUTGOING_EVENTS.Connected event,
@@ -77,7 +77,7 @@ const messageProviderWrapper = (messageProvider: () => any, eventType: OutgoingE
       }
     });
 
-    messageProvider();
+    await messageProvider();
 
     postMessageSpy.mockRestore();
 
@@ -275,81 +275,94 @@ const canvasErrorMessageProvider = () => {
   return message;
 };
 
-describe('Pact Verification', () => {
-  const p = new MessageProviderPact({
-    messageProviders: {
-      [InteractionIds.ConnectedInterationId]: messageProviderWrapper(
-        connectedMessageProvider,
-        OUTGOING_EVENTS.Connected,
-      ),
-      [InteractionIds.DesignTokensInterationId]: messageProviderWrapper(
-        designTokensMessageProvider,
-        OUTGOING_EVENTS.DesignTokens,
-      ),
-      [InteractionIds.RegisteredBreakpointsInteractionId]: messageProviderWrapper(
-        breakpointsMessageProvider,
-        OUTGOING_EVENTS.RegisteredBreakpoints,
-      ),
-      [InteractionIds.ComponentSelectedInteractionId]: messageProviderWrapper(
-        componentSelectedMessageProvider,
-        OUTGOING_EVENTS.ComponentSelected,
-      ),
-      [InteractionIds.AssemblyComponentSelectedInteractionId]: messageProviderWrapper(
-        assemblyComponentSelectedMessageProvider,
-        OUTGOING_EVENTS.ComponentSelected,
-      ),
-      [InteractionIds.RequestComponentTreeUpdateInteractionId]: messageProviderWrapper(
-        requestComponentTreeUpdateMessageProvider,
-        OUTGOING_EVENTS.RequestComponentTreeUpdate,
-      ),
-      [InteractionIds.RegisteredComponentsInteractionId]: messageProviderWrapper(
-        componentsRegisteredMessageProvider,
-        OUTGOING_EVENTS.RegisteredComponents,
-      ),
-      [InteractionIds.MouseMoveInteractionId]: messageProviderWrapper(
-        mouseMoveMessageProvider,
-        OUTGOING_EVENTS.MouseMove,
-      ),
-      [InteractionIds.NewHoveredElementInteractionId]: messageProviderWrapper(
-        newHoveredElementMessageProvider,
-        OUTGOING_EVENTS.NewHoveredElement,
-      ),
-      [InteractionIds.ComponentDroppedInteractionId]: messageProviderWrapper(
-        componentDroppedMessageProvider,
-        OUTGOING_EVENTS.ComponentDropped,
-      ),
-      [InteractionIds.ComponentMovedInteractionId]: messageProviderWrapper(
-        componentMovedMessageProvider,
-        OUTGOING_EVENTS.ComponentMoved,
-      ),
-      [InteractionIds.CanvasScrollInteractionId]: messageProviderWrapper(
-        canvasScrollMessageProvider,
-        OUTGOING_EVENTS.CanvasScroll,
-      ),
-      [InteractionIds.CanvasErrorInteractionId]: canvasErrorMessageProvider,
-      [InteractionIds.UpdateSelectedComponentCoordinatesInteractionId]: messageProviderWrapper(
-        updateSelectedComponentCoordinatesMessageProvider,
-        OUTGOING_EVENTS.UpdateSelectedComponentCoordinates,
-      ),
-      [InteractionIds.OutsideCanvasClickInteractionId]: messageProviderWrapper(
-        outsideCanvasClickMessageProvider,
-        OUTGOING_EVENTS.OutsideCanvasClick,
-      ),
-      [InteractionIds.SDKFeaturesInteractionId]: messageProviderWrapper(
-        sdkFeaturesMessageProvider,
-        OUTGOING_EVENTS.SDKFeatures,
-      ),
-      [InteractionIds.RequestEntitiesInteractionId]: messageProviderWrapper(
-        requestEntitiesMessageProvider,
-        OUTGOING_EVENTS.RequestEntities,
-      ),
+const p = new MessageProviderPact({
+  messageProviders: {
+    [InteractionIds.ConnectedInterationId]: messageProviderWrapper(
+      connectedMessageProvider,
+      OUTGOING_EVENTS.Connected,
+    ),
+    [InteractionIds.DesignTokensInterationId]: messageProviderWrapper(
+      designTokensMessageProvider,
+      OUTGOING_EVENTS.DesignTokens,
+    ),
+    [InteractionIds.RegisteredBreakpointsInteractionId]: messageProviderWrapper(
+      breakpointsMessageProvider,
+      OUTGOING_EVENTS.RegisteredBreakpoints,
+    ),
+    [InteractionIds.ComponentSelectedInteractionId]: messageProviderWrapper(
+      componentSelectedMessageProvider,
+      OUTGOING_EVENTS.ComponentSelected,
+    ),
+    [InteractionIds.AssemblyComponentSelectedInteractionId]: messageProviderWrapper(
+      assemblyComponentSelectedMessageProvider,
+      OUTGOING_EVENTS.ComponentSelected,
+    ),
+    [InteractionIds.RequestComponentTreeUpdateInteractionId]: messageProviderWrapper(
+      requestComponentTreeUpdateMessageProvider,
+      OUTGOING_EVENTS.RequestComponentTreeUpdate,
+    ),
+    [InteractionIds.RegisteredComponentsInteractionId]: messageProviderWrapper(
+      componentsRegisteredMessageProvider,
+      OUTGOING_EVENTS.RegisteredComponents,
+    ),
+    [InteractionIds.MouseMoveInteractionId]: messageProviderWrapper(
+      mouseMoveMessageProvider,
+      OUTGOING_EVENTS.MouseMove,
+    ),
+    [InteractionIds.NewHoveredElementInteractionId]: messageProviderWrapper(
+      newHoveredElementMessageProvider,
+      OUTGOING_EVENTS.NewHoveredElement,
+    ),
+    [InteractionIds.ComponentDroppedInteractionId]: messageProviderWrapper(
+      componentDroppedMessageProvider,
+      OUTGOING_EVENTS.ComponentDropped,
+    ),
+    [InteractionIds.ComponentMovedInteractionId]: messageProviderWrapper(
+      componentMovedMessageProvider,
+      OUTGOING_EVENTS.ComponentMoved,
+    ),
+    [InteractionIds.CanvasScrollInteractionId]: messageProviderWrapper(
+      canvasScrollMessageProvider,
+      OUTGOING_EVENTS.CanvasScroll,
+    ),
+    [InteractionIds.CanvasErrorInteractionId]: canvasErrorMessageProvider,
+    [InteractionIds.UpdateSelectedComponentCoordinatesInteractionId]: messageProviderWrapper(
+      updateSelectedComponentCoordinatesMessageProvider,
+      OUTGOING_EVENTS.UpdateSelectedComponentCoordinates,
+    ),
+    [InteractionIds.OutsideCanvasClickInteractionId]: messageProviderWrapper(
+      outsideCanvasClickMessageProvider,
+      OUTGOING_EVENTS.OutsideCanvasClick,
+    ),
+    [InteractionIds.SDKFeaturesInteractionId]: messageProviderWrapper(
+      sdkFeaturesMessageProvider,
+      OUTGOING_EVENTS.SDKFeatures,
+    ),
+    [InteractionIds.RequestEntitiesInteractionId]: messageProviderWrapper(
+      requestEntitiesMessageProvider,
+      OUTGOING_EVENTS.RequestEntities,
+    ),
+  },
+  provider: PACT_PROVIDER,
+  consumerVersionSelectors: [
+    {
+      branch: 'test/user-interface-consumer-pacts',
+      latest: true,
     },
-    provider: PACT_PROVIDER,
-  });
+  ],
+});
 
-  it('verifies the interactions', () => {
-    return p.verify().then(() => {
-      console.log('Pact Verification Complete!');
-    });
-  });
+describe('Pact Verification', () => {
+  it(
+    'verifies the interactions',
+    () =>
+      // vitest way of setting up async test case
+      new Promise<void>((resolve) => {
+        p.verify().then(() => {
+          console.log('Pact verification complete!');
+          resolve();
+        });
+      }),
+    10000,
+  );
 });
