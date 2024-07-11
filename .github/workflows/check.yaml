@@ -63,6 +63,9 @@ jobs:
         run: npm run tsc
       - name: Run Unit Tests
         run: npm run test:coverage
+        env:
+          PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+          PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
       - name: Run CT Tests
         run: npm run test:component
       - name: Publish pacts between Experiences SDK and User Interface
