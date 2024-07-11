@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.0](https://github.com/contentful/experience-builder/compare/v1.9.0-beta.0...v1.9.0) (2024-06-28)
+
+**Note:** Version bump only for package create-contentful-studio-experiences
+
 ## [0.0.2-alpha.9](https://github.com/contentful/experience-builder/compare/@contentful/create-experience-builder@0.0.2-alpha.8...@contentful/create-experience-builder@0.0.2-alpha.9) (2024-03-08)
 
 ### Bug Fixes

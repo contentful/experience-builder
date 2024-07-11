@@ -1,11 +1,11 @@
 import open from 'open';
 import { EnvFileData } from './models.js';
 import { getExperienceEntryDemoReqBody, getExperienceContentTypeReqBody } from './content.js';
-
-const defaultLocale = 'en-US';
-const baseUrl = process.env.BASE_URL || 'https://api.contentful.com';
+import { CONSTANTS } from './constants.js';
 
 export class CtflClient {
+  constructor(private host = 'contentful.com') {}
+
   public space?: { name: string; id: string };
   public org?: { name: string; id: string };
   public env?: { name: string; id: string };
@@ -101,7 +101,7 @@ export class CtflClient {
   async getContentEntry(slug: string, contentTypeId: string) {
     type GetContentEntriesReturn = { items: { sys: { id: string } }[] };
     const entries = await this.apiCall<GetContentEntriesReturn>(
-      `/spaces/${this.space?.id}/environments/${this.env?.id}/entries?content_type=${contentTypeId}&fields.slug.${defaultLocale}=${slug}&limit=1`,
+      `/spaces/${this.space?.id}/environments/${this.env?.id}/entries?content_type=${contentTypeId}&fields.slug.${CONSTANTS.locale}=${slug}&limit=1`,
       {
         method: 'GET',
       },
@@ -259,8 +259,8 @@ export class CtflClient {
 
   async getAuthToken() {
     const APP_ID = '9f86a1d54f3d6f85c159468f5919d6e5d27716b3ed68fd01bd534e3dea2df864';
-    const REDIRECT_URI = 'https://www.contentful.com/developers/cli-oauth-page/';
-    const oAuthURL = `https://be.contentful.com/oauth/authorize?response_type=token&client_id=${APP_ID}&redirect_uri=${REDIRECT_URI}&scope=content_management_manage&action=cli`;
+    const REDIRECT_URI = `https://www.${this.host}/developers/cli-oauth-page/`;
+    const oAuthURL = `https://be.${this.host}/oauth/authorize?response_type=token&client_id=${APP_ID}&redirect_uri=${REDIRECT_URI}&scope=content_management_manage&action=cli`;
 
     await open(oAuthURL, {
       wait: false,
@@ -336,6 +336,7 @@ export class CtflClient {
         authorization: `Bearer ${this.authToken as string}`,
         ...headers,
       };
+      const baseUrl = `https://api.${this.host}`;
       const response = await fetch(`${baseUrl}${endpoint}`, {
         method,
         headers: baseHeaders,

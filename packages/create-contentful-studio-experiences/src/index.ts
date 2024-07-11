@@ -1,5 +1,7 @@
 #! /usr/bin/env node
 import {
+  isCancel,
+  cancel,
   confirm,
   intro,
   outro,
@@ -14,14 +16,15 @@ import { CtflClient } from './ctflClient.js';
 import { allFrameworks } from './models.js';
 import { FsClient } from './fsClient.js';
 import { generateContentTypeId, isValidPackageName } from './utils.js';
-
-const DEFAULT = {
-  contentType: 'Studio Experiences',
-  title: 'Home Page',
-  slug: 'homePage',
-};
+import { CONSTANTS } from './constants.js';
 
 const args = await yargs(process.argv.slice(2))
+  .option('host', {
+    alias: 'h',
+    type: 'string',
+    description: 'Contentful host to use (defaults to contentful.com)',
+    default: 'contentful.com',
+  })
   .option('token', {
     alias: 't',
     type: 'string',
@@ -37,14 +40,21 @@ const args = await yargs(process.argv.slice(2))
   .strict()
   .parse();
 
+const onCancel = (answer: unknown) => {
+  if (isCancel(answer)) {
+    cancel('Ok, bye!');
+    process.exit();
+  }
+};
+
 init().catch((e) => {
   console.error(e);
 });
 
 async function init() {
   const spinner = Spinner();
-  const ctflClient = new CtflClient();
-  const fsClient = new FsClient();
+  const ctflClient = new CtflClient(args.host);
+  const fsClient = new FsClient(args.host);
 
   if (args.token) {
     const validToken = await ctflClient.setAuthToken(args.token);
@@ -68,6 +78,9 @@ async function init() {
         };
       }),
     });
+
+    onCancel(projectType);
+
     const framework = allFrameworks.find((f) => f.name === projectType)!;
 
     const variantType = await select({
@@ -79,6 +92,8 @@ async function init() {
         };
       }),
     });
+
+    onCancel(variantType);
 
     const variant = framework.variants.find((v) => v.name === variantType)!;
 
@@ -96,12 +111,17 @@ async function init() {
       },
     })) as string;
 
+    onCancel(projectName);
+
     let contentTypeId: string | undefined;
+    let contentEntryId: string | undefined;
 
     const useExistingSpace = await confirm({
       message:
         'Would you like to connect the project to an existing space with Studio Experiences?',
     });
+
+    onCancel(useExistingSpace);
 
     if (useExistingSpace) {
       if (!args.token) {
@@ -109,6 +129,8 @@ async function init() {
           message:
             "Next, a browser window will open where you will log in (or sign up if you don't have an account) to Contentful, and authorize this CLI tool. Once done, you will see your access token, where you can copy it and paste it back into the command window. \n\nAre you ready to continue?",
         });
+
+        onCancel(confirmAnswer);
 
         if (!confirmAnswer) {
           outro('Ok, bye!');
@@ -124,13 +146,14 @@ async function init() {
           },
         });
 
+        onCancel(authToken);
+
         spinner.start('Validating token...');
 
         const validToken = await ctflClient.setAuthToken(authToken as string, true);
 
         if (!validToken) {
           console.error('\nInvalid token\n');
-          outro('Ok, bye!');
           process.exit(1);
         }
 
@@ -148,6 +171,8 @@ async function init() {
           };
         }),
       })) as string;
+
+      onCancel(selectedOrgId);
 
       const selectedOrg = orgs.find((org) => org.id === selectedOrgId);
       ctflClient.org = selectedOrg;
@@ -174,6 +199,8 @@ async function init() {
         }),
       });
 
+      onCancel(selectedSpaceId);
+
       const selectedSpace = spaces.find((space) => space.id === selectedSpaceId)!;
       ctflClient.space = selectedSpace;
 
@@ -189,6 +216,9 @@ async function init() {
             };
           }),
         });
+
+        onCancel(selectedEnv);
+
         env = environments.find((item) => item.id === selectedEnv);
       }
       ctflClient.env = env;
@@ -220,6 +250,8 @@ async function init() {
           ],
         });
 
+        onCancel(selectedApiKeyId);
+
         if (selectedApiKeyId === createNewOption.value) {
           spinner.start('Creating new API key.');
           const apiKey = await ctflClient.createApiKeys();
@@ -243,20 +275,27 @@ async function init() {
       } else {
         contentTypeName = (await text({
           message: 'Enter a name for the content type for Experiences',
-          initialValue: DEFAULT.contentType,
+          initialValue: CONSTANTS.contentType,
           validate(input) {
             if (input.length === 0) return `Value is required!`;
             if (input.length > 50) return 'Value must be 50 characters or less.';
           },
         })) as string;
+
+        onCancel(contentTypeName);
+
         contentTypeId = generateContentTypeId(contentTypeName);
         await ctflClient.createContentType(contentTypeName, contentTypeId);
       }
 
-      const contentEntryId = await ctflClient.getContentEntry(DEFAULT.slug, contentTypeId);
+      contentEntryId = await ctflClient.getContentEntry(CONSTANTS.slug, contentTypeId);
 
       if (!contentEntryId) {
-        await ctflClient.createContentEntry(DEFAULT.title, DEFAULT.slug, contentTypeId);
+        contentEntryId = await ctflClient.createContentEntry(
+          CONSTANTS.title,
+          CONSTANTS.slug,
+          contentTypeId,
+        );
       }
 
       const previewEnvironments = await ctflClient.getPreviewEnvironments();
@@ -291,7 +330,7 @@ async function init() {
       useExistingSpace && contentTypeId
         ? ctflClient.getEnvFileData(contentTypeId)
         : {
-            environment: ctflClient.env?.id ?? 'master',
+            environment: ctflClient.env?.id ?? CONSTANTS.environment,
             spaceId: '*YOUR SPACE ID*',
             accessToken: '*YOUR ACCESS TOKEN*',
             previewAccessToken: '*YOUR PREVIEW ACCESS TOKEN*',
@@ -299,21 +338,33 @@ async function init() {
           };
     fsClient.copyEnvFile(projectDir, envFileData);
 
-    const note = useExistingSpace
-      ? ''
-      : ' To connect your project with Contentful, update your .env.local file.';
+    const outroMessages = [
+      '🚀 Your project is ready!\n',
+      useExistingSpace && contentEntryId
+        ? `* Launch Contentful Studio Experiences: https://app.${args.host}/spaces/${ctflClient.space?.id}/experiences/${contentEntryId}`
+        : '* Launch Contentful and navigate to Experiences: https://app.${args.host}/',
+      `* Navigate to your project folder using the terminal: \`cd ${projectName}\``,
+      ...(useExistingSpace
+        ? []
+        : ['* Update your .env.local config file with the necessary environment variables.']),
+      '* Start your project by running `npm run dev` in the terminal.',
+      '* Once your project is running, reload the Studio Experiences canvas.\n',
+      `For additional help, refer to the docs: https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/`,
+    ];
 
-    outro(`Your project is ready and located in the ${projectName} folder.${note}`);
+    outro(outroMessages.join('\n'));
 
-    const shouldCleanup =
-      args.dev &&
-      (await confirm({
+    if (args.dev) {
+      const shouldCleanup = await confirm({
         message: 'Cleanup?',
-      }));
+      });
 
-    if (shouldCleanup) {
-      fsClient.deleteDirectory(projectDir);
-      await ctflClient.deleteAuthToken();
+      onCancel(shouldCleanup);
+
+      if (shouldCleanup) {
+        fsClient.deleteDirectory(projectDir);
+        await ctflClient.deleteAuthToken();
+      }
     }
   } catch (e) {
     console.log(e);

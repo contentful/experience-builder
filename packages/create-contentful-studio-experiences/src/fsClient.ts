@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { EnvFileData, FrameworkVariant } from './models.js';
 
 export class FsClient {
+  constructor(private host = 'contentful.com') {}
+
   async createProject(variant: FrameworkVariant, projectName: string) {
     const installCommand = variant.installCommand.replace('PROJECT_NAME', projectName);
     const installStatus = await this.runCommand(installCommand);
@@ -38,7 +40,7 @@ VITE_CTFL_EXPERIENCE_TYPE_ID=${envFileData.experienceTypeId}
 VITE_CTFL_SPACE_ID=${envFileData.spaceId}
 VITE_CTFL_ACCESS_TOKEN=${envFileData.accessToken}
 VITE_CTFL_PREVIEW_ACCESS_TOKEN=${envFileData.previewAccessToken}
-VITE_CTFL_API_HOST=cdn.contentful.com`,
+VITE_CTFL_API_HOST=cdn.${this.host}`,
     );
   }
 
