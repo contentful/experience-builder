@@ -500,6 +500,7 @@ type OUTGOING_EVENT_PAYLOADS = {
   outsideCanvasClick: OutsideCanvasClickPayload;
   sdkFeatures: SDKFeaturesPayload;
   REQUEST_ENTITIES: RequestEntitiesPayload;
+  A11Y_EXPERIENCE_NODES: { nodes: Record<string, string> };
 };
 
 export type SendMessageParams = <T extends OutgoingEvent>(
@@ -569,6 +570,9 @@ export type IncomingMouseMovePayload = {
 export type RequestedEntitiesPayload = {
   entities: ManagementEntity[];
 };
+export type AccessibilityScanResultPayload = {
+  violations: Array<{ id: string; help: string; nodes: string[] }>;
+};
 
 type INCOMING_EVENT_PAYLOADS = {
   requestEditorMode: RequestEditorModePayload;
@@ -585,6 +589,7 @@ type INCOMING_EVENT_PAYLOADS = {
   assembliesAdded: AssembliesAddedPayload;
   assembliesRegistered: AssembliesRegisteredPayload;
   mouseMove: IncomingMouseMovePayload;
+  A11Y_RESOLVE_EXPERIENCE_NODES: AccessibilityScanResultPayload;
   REQUESTED_ENTITIES: RequestedEntitiesPayload;
 };
 

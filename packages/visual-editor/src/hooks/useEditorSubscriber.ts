@@ -360,6 +360,34 @@ export function useEditorSubscriber() {
           SimulateDnD.endDrag(mouseX, mouseY);
           break;
         }
+        case INCOMING_EVENTS.AccessibilityScanResolveNodeRequest: {
+          const { violations = [] } = eventData.payload;
+
+          const violationIdsToNodeIds = violations
+            .map(({ id, help, nodes }) => {
+              const element = document.querySelector(nodes.join(' ')) as HTMLElement | undefined;
+
+              // Finds the first parent that is a VisualEditorBlock
+              const closestNodeOrParent = element?.closest(
+                '[data-cf-node-id]',
+              ) as HTMLElement | null;
+              const nodeId = closestNodeOrParent?.dataset.cfNodeId;
+
+              return {
+                id,
+                node: nodeId,
+              };
+            })
+            .filter(({ node }) => !!node)
+            .reduce((acc, { id, node }) => {
+              acc[id] = node;
+              return acc;
+            }, {});
+
+          sendMessage(OUTGOING_EVENTS.AccessibilityScanNodes, violationIdsToNodeIds as any);
+
+          break;
+        }
         default:
           console.error(
             `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${(eventData as IncomingMessage).eventType}]`,

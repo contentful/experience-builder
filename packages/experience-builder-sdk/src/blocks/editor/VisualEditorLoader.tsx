@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axe from 'axe-core';
 import { EntityStore, VisualEditorMode } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
 
@@ -15,6 +16,11 @@ export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({
   const [VisualEditor, setVisualEditor] = useState<React.ComponentType<{
     experience?: Experience<EntityStore>;
   }> | null>(null);
+
+  useEffect(() => {
+    console.log('- VisualEditorRoot:: Configuring axe');
+    axe.configure({ allowedOrigins: ['<unsafe_all_origins>'] });
+  }, []);
 
   useEffect(() => {
     // Dynamically import the visual editor based on the configured mode

@@ -25,6 +25,7 @@ export const OUTGOING_EVENTS = {
   OutsideCanvasClick: 'outsideCanvasClick',
   SDKFeatures: 'sdkFeatures',
   RequestEntities: 'REQUEST_ENTITIES',
+  AccessibilityScanNodes: 'A11Y_EXPERIENCE_NODES',
 } as const;
 
 export const INCOMING_EVENTS = {
@@ -43,6 +44,7 @@ export const INCOMING_EVENTS = {
   AssembliesRegistered: 'assembliesRegistered',
   MouseMove: 'mouseMove',
   RequestedEntities: 'REQUESTED_ENTITIES',
+  AccessibilityScanResolveNodeRequest: 'A11Y_RESOLVE_EXPERIENCE_NODES',
 } as const;
 
 export const INTERNAL_EVENTS = {
