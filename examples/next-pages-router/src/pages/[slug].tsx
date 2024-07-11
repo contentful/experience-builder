@@ -3,6 +3,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { getExperience } from '@/getExperience';
 import Head from 'next/head';
+import '../eb-config';
 
 interface Params extends ParsedUrlQuery {
   locale: string;
