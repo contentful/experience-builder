@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProductCardList } from './components/ProductCardList/ProductCardList';
-import ShoppingCartExperienceContainer from '@/StudioExperiencesComponents/ShoppingCartExperienceContainer';
+import ShoppingCartExperienceContainer from '@/StudioExperiences/components/ShoppingCartExperienceContainer';
 
 type Page = {
   params: { locale?: string; slug?: string; preview?: string };

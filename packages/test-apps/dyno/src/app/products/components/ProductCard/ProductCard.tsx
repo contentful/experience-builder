@@ -1,5 +1,4 @@
 import { ProductType } from '@/types';
-import Image from 'next/image';
 import React from 'react';
 
 export const ProductCard: React.FC<ProductType> = async ({

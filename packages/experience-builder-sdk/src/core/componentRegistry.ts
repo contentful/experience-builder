@@ -345,9 +345,16 @@ export const defineComponents = (
 };
 
 export const defineBehaviors = (behaviorRegistration: BehaviorRegistration[]) => {
+  console.log(
+    '[ <ComponentRegistry> ] defineBehaviors() behaviorRegistration => ',
+    JSON.stringify(behaviorRegistration, null, 4),
+  );
+
   for (const registration of behaviorRegistration) {
     behaviorRegistry.set(registration.definition.id, registration);
   }
+
+  console.log('[ sdk::Core ] defineBehaviors() behaviorRegistry => ', behaviorRegistry);
 };
 
 /**
