@@ -19,9 +19,10 @@ export {
 
 // Simple state store to store a few things that are needed across the SDK
 if (typeof window !== 'undefined') {
-  window.__EB__ = {
-    sdkVersion: SDK_VERSION,
-  };
+  if (!window.__EB__) {
+    window.__EB__ = {};
+  }
+  window.__EB__.sdkVersion = SDK_VERSION;
 }
 
 export type { ExternalSDKMode, ComponentDefinition } from '@contentful/experiences-core/types';
