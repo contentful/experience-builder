@@ -14,7 +14,7 @@ export const fetchAllEntries = async ({
 }: {
   client: ContentfulClientApi<undefined>;
   ids: string[];
-  locale: string;
+  locale?: string;
   skip?: number;
   limit?: number;
   responseItems?: Entry[];
@@ -117,7 +117,7 @@ export const fetchAllAssets = async ({
 }: {
   client: ContentfulClientApi<undefined>;
   ids: string[];
-  locale: string;
+  locale?: string;
   skip?: number;
   limit?: number;
   responseItems?: Asset[];

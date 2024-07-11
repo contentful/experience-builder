@@ -85,6 +85,8 @@ describe('validateComponentDefinition', () => {
       'Media',
       'Object',
       'Hyperlink',
+      'Array',
+      'Link',
     ]);
   });
 });

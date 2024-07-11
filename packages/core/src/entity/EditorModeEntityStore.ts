@@ -65,8 +65,8 @@ export class EditorModeEntityStore extends EditorEntityStore {
   }) {
     // Entries and assets will be stored in entryMap and assetMap
     await Promise.all([
-      this.fetchEntries(missingEntryIds, skipCache),
-      this.fetchAssets(missingAssetIds, skipCache),
+      super.fetchEntries(missingEntryIds, skipCache),
+      super.fetchAssets(missingAssetIds, skipCache),
     ]);
   }
 
