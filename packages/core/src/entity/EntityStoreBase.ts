@@ -37,6 +37,7 @@ export abstract class EntityStoreBase {
       return this.getDeepEntry(linkOrEntryOrAsset, path);
     }
     let entity: Entry | Asset;
+
     if (isLink(linkOrEntryOrAsset)) {
       const resolvedEntity =
         linkOrEntryOrAsset.sys.linkType === 'Entry'
