@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@contentful/experiences-sdk-react": "^1.9.0",
+    "@contentful/experiences-sdk-react": "file:../../experiences-sdk-react",
     "@heroicons/react": "^2.1.4",
     "contentful": "^10.12.7",
     "install": "^0.13.0",

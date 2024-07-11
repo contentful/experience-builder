@@ -1,11 +1,23 @@
 import {
   defineComponents,
   defineBreakpoints,
-  // defineBehaviors,
+  defineBehaviors,
 } from '@contentful/experiences-sdk-react';
 import { Cart } from './components/Cart';
+import { shoppingCartBehavior } from '@/StudioExperiences/behaviors/ShoppingCartBehavior';
 
-// defineBehaviors();
+defineBehaviors([
+  {
+    definition: {
+      id: 'cart',
+      name: 'Dyno Shopping Cart Test Behavior',
+      description:
+        'Dyno hackathon project for injecting behaviors into studio experiences components',
+      eventType: 'onClick',
+    },
+    behavior: shoppingCartBehavior,
+  },
+]);
 
 defineComponents([
   {

@@ -1,6 +1,6 @@
 import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
-import { Experience } from '@/StudioExperiencesComponents/Experience';
 import { getExperience } from '@/utils/getExperience';
+import { Experience } from '@/StudioExperiences/components/Experience';
 
 type Page = {
   params: { locale?: string; slug?: string; preview?: string };

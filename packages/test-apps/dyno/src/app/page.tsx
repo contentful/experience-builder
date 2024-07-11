@@ -1,4 +1,4 @@
-import ShoppingCartExperienceContainer from '@/StudioExperiencesComponents/ShoppingCartExperienceContainer';
+import ShoppingCartExperienceContainer from '@/StudioExperiences/components/ShoppingCartExperienceContainer';
 import { ProductCardList } from './products/components/ProductCardList';
 
 type Page = {

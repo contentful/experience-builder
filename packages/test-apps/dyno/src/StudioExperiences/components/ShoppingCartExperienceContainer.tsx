@@ -1,6 +1,6 @@
 import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
 import { getExperience } from '@/utils/getExperience';
-import { Experience } from '@/StudioExperiencesComponents/Experience';
+import { Experience } from './Experience';
 
 type ShoppingCartProps = {
   isEditorMode?: boolean;
@@ -15,8 +15,6 @@ export default async function ShoppingCartExperienceContainer({
 }: ShoppingCartProps) {
   const slug = 'hackathon-dyno';
   const { experience, error } = await getExperience(slug, locale, isPreviewMode, isEditorMode);
-
-  console.log('[ <ShoppingCartExperienceContainer> ] isPreviewMode => ', isPreviewMode);
 
   if (error) {
     return <div>{error.message}</div>;

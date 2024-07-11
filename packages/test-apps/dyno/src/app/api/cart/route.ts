@@ -1,4 +1,3 @@
-// import { CartType } from "@/types";
 import { CartType } from '@/types';
 import { NextResponse } from 'next/server';
 
@@ -11,5 +10,14 @@ const cartData: CartType = {
 
 // GET: /api/cart
 export async function GET() {
+  return NextResponse.json(cartData);
+}
+
+// POST: /api/cart
+export async function POST(req: Request) {
+  const r = await req.json();
+
+  console.log('[ /POST ] /cart r => ', r);
+
   return NextResponse.json(cartData);
 }

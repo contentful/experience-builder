@@ -237,14 +237,16 @@ export const CompositionBlock = ({
   const stylesToKeep = ['cfImageAsset'];
   const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
 
+  //@ts-ignore
   const behaviors = Object.entries(node.behaviors || {});
   const hasBehaviors = behaviors.length > 0;
 
   const testBehavior: Record<string, BehaviorDefinition> = {
-    'test-behavior': {
-      id: 'test-behavior',
-      name: 'Test Behavior',
-      description: 'A test behavior',
+    cart: {
+      id: 'cart',
+      name: 'Dyno Shopping Cart Test Behavior',
+      description:
+        'Dyno hackathon project for injecting behaviors into studio experiences components',
       variables: {
         Text: 'Text',
         cat: 'bye',
