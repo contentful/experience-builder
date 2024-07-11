@@ -63,12 +63,14 @@ export const fetchReferencedEntities = async ({
   // Using client getEntries resolves all linked entry references, so we do not need to resolve entries in usedComponents
   const allResolvedEntries = [
     ...((entriesResponse?.items ?? []) as Entry[]),
+    ...((entriesResponse.includes?.Entry ?? []) as Entry[]),
     ...((experienceEntry.fields.usedComponents as ExperienceEntry[]) || []),
     ...autoFetchedReferentEntries,
   ];
 
   const allResolvedAssets = [
     ...((assetsResponse.items ?? []) as Asset[]),
+    ...((entriesResponse?.includes?.Asset ?? []) as Asset[]),
     ...autoFetchedReferentAssets,
   ];
 

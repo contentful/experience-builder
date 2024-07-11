@@ -1,4 +1,4 @@
-import type { Asset, AssetFile, Entry } from 'contentful';
+import type { Asset, AssetFile, ChainModifiers, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
 import { EntityStore } from './entity/EntityStore';
 import { Document as RichTextDocument } from '@contentful/rich-text-types';
@@ -309,6 +309,9 @@ export type BoundComponentPropertyTypes =
   | OptimizedBackgroundImageAsset
   | OptimizedImageAsset
   | Link<'Asset'>
+  | Entry
+  | Asset
+  | (string | Entry | Asset<ChainModifiers, string> | undefined)[]
   | undefined;
 
 export type OptimizedImageAsset = {

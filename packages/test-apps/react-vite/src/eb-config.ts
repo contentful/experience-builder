@@ -3,6 +3,7 @@ import ComponentWithChildren from './components/ComponentWithChildren';
 import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
+import KitchenSink from './components/KitchenSink';
 
 defineComponents([
   {
@@ -96,6 +97,51 @@ defineComponents([
       },
     },
   },
+  {
+    component: KitchenSink,
+    definition: {
+      id: 'kitchen-sink',
+      thumbnailUrl:
+        'https://images.ctfassets.net/son9ld5ewssk/66dcJbD6GoCqwQ0ciGaCOg/6c20042a8684baedc1517fadfc3e3070/children-enabled_7x.png',
+      children: true,
+      name: 'Kitchen Sink',
+      category: 'Custom Components',
+      builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+      variables: {
+        jsonObject: {
+          displayName: 'Json',
+          type: 'Object',
+        },
+        booleanValue: {
+          displayName: 'Boolean',
+          type: 'Boolean',
+        },
+        listText: {
+          displayName: 'List Text',
+          type: 'Array',
+        },
+        entryReference: {
+          displayName: 'Entry Reference',
+          type: 'Link',
+        },
+        imageReference: {
+          displayName: 'Image Reference',
+          type: 'Link',
+        },
+        listReference: {
+          displayName: 'List Entry Reference',
+          type: 'Array',
+        },
+        text: {
+          displayName: 'Text',
+          type: 'Text',
+        },
+      },
+    },
+    options: {
+      wrapComponent: false,
+    },
+  },
 ]);
 
 defineBreakpoints([
@@ -103,18 +149,21 @@ defineBreakpoints([
     id: 'test-desktop',
     query: '*',
     displayName: 'All Sizes',
+    displayIcon: 'desktop',
     previewSize: '100%',
   },
   {
     id: 'test-tablet',
     query: '<982px',
     displayName: 'Tablet',
+    displayIcon: 'tablet',
     previewSize: '820px',
   },
   {
     id: 'test-mobile',
     query: '<360px',
     displayName: 'Mobile',
+    displayIcon: 'mobile',
     previewSize: '390px',
   },
 ]);
