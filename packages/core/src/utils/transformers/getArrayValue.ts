@@ -1,4 +1,4 @@
-import { Asset, Entry } from 'contentful';
+import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../get';
 import { EntityStoreBase } from '@/entity';
 import { isArray } from 'lodash-es';
@@ -12,7 +12,10 @@ export function getArrayValue(
     return entryOrAsset;
   }
 
-  const arrayValue = get<Array<string | UnresolvedLink<'Entry' | 'Asset'>>>(entryOrAsset, path.split('/').slice(2, -1));
+  const arrayValue = get<Array<string | UnresolvedLink<'Entry' | 'Asset'>>>(
+    entryOrAsset,
+    path.split('/').slice(2, -1),
+  );
 
   if (!isArray(arrayValue)) {
     console.warn(`Expected a value to be an array, but got: ${JSON.stringify(arrayValue)}`);
