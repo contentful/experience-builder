@@ -15,7 +15,7 @@ export function getArrayValue(
   const arrayValue = get<Array<string | UnresolvedLink<'Entry' | 'Asset'>>>(entryOrAsset, path.split('/').slice(2, -1));
 
   if (!isArray(arrayValue)) {
-    console.warn(`Expected a value to an array, but got: ${JSON.stringify(arrayValue)}`);
+    console.warn(`Expected a value to be an array, but got: ${JSON.stringify(arrayValue)}`);
     return;
   }
 
