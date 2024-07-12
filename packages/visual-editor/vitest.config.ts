@@ -12,6 +12,7 @@ export default defineConfig({
       reportsDirectory: 'reports',
     },
     environment: 'jsdom',
+    // using 'forks' instead of 'threads' as pact crashes with 'threads'
     pool: 'forks',
   },
 });
