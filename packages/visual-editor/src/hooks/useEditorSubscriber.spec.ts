@@ -154,7 +154,6 @@ describe('Canvas Subscriber methods', () => {
   const createPostMessageReceiverForSelectedEntities = (_event: IncomingEvent, payload) =>
     asynchronousBodyHandler(async () => {
       const store = new EditorModeEntityStore({ entities: [], locale: 'en-US' });
-      console.log(store);
 
       const promise = store.fetchEntities({
         missingEntryIds: [entityIds.ENTRY1, entityIds.ENTRY2],
@@ -172,9 +171,6 @@ describe('Canvas Subscriber methods', () => {
     'should receive the expected payload for $event event',
     async ({ id, description, event, payload, payloadMatcher }) => {
       let messageReceiverConstructor = createPostMessageReceiver;
-      if (event !== INCOMING_EVENTS.RequestedEntities) {
-        return;
-      }
       if (event === INCOMING_EVENTS.RequestedEntities) {
         messageReceiverConstructor = createPostMessageReceiverForSelectedEntities;
       }
