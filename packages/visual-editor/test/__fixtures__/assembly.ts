@@ -6,8 +6,8 @@ import {
 import type { ExperienceTreeNode, SchemaVersions } from '@contentful/experiences-core/types';
 
 type createAssemblyEntryArgs = {
-  schemaVersion: SchemaVersions;
-  id: string;
+  schemaVersion?: SchemaVersions;
+  id?: string;
 };
 
 export const defaultAssemblyId = 'assembly-id';
@@ -45,6 +45,7 @@ export const createAssemblyEntry = ({
           id: 'cfexampleEnvironment',
         },
       },
+      version: 1,
     },
     metadata: { tags: [] },
     fields: {
