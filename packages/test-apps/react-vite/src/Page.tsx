@@ -1,4 +1,4 @@
-import './eb-config';
+import './studio-config';
 import { useParams } from 'react-router-dom';
 import './styles.css';
 import { ExperienceRoot, useFetchBySlug } from '@contentful/experiences-sdk-react';

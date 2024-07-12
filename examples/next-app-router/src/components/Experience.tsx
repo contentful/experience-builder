@@ -1,6 +1,6 @@
 'use client';
 
-import '../eb-config';
+import '../studio-config';
 import { ExperienceRoot } from '@contentful/experiences-sdk-react';
 import React from 'react';
 
