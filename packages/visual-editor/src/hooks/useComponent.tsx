@@ -16,6 +16,7 @@ import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/Imp
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
 import { isContentfulStructureComponent } from '@contentful/experiences-core';
 import { MissingComponentPlacehoder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
+import { ContentEditor } from '@components/DraggableHelpers/ContentEditor';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -112,7 +113,15 @@ export const useComponent = ({
       return element;
     }
 
-    const { children, innerRef, Tag = 'div', ToolTipAndPlaceholder, style, ...rest } = dragProps;
+    const {
+      children,
+      innerRef,
+      Tag = 'div',
+      ToolTipAndPlaceholder,
+      style,
+      editingContent,
+      ...rest
+    } = dragProps;
 
     return (
       <Tag

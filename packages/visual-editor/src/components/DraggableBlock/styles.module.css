@@ -65,6 +65,10 @@
   pointer-events: none;
 }
 
+.DraggableComponent [contenteditable='true'] {
+  pointer-events: all !important;
+}
+
 .isDraggingThisComponent {
   overflow: hidden;
 }
@@ -81,7 +85,7 @@
   bottom: 0;
   display: flex;
   z-index: 10;
-  pointer-events: none;
+  pointer-events: none !important;
 }
 
 .DraggableComponent.isDragging .tooltipWrapper {

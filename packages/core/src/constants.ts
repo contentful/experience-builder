@@ -25,6 +25,8 @@ export const OUTGOING_EVENTS = {
   OutsideCanvasClick: 'outsideCanvasClick',
   SDKFeatures: 'sdkFeatures',
   RequestEntities: 'REQUEST_ENTITIES',
+  DesignValueChanged: 'designValueChanged',
+  ContentValueChanged: 'contentValueChanged',
 } as const;
 
 export const INCOMING_EVENTS = {
