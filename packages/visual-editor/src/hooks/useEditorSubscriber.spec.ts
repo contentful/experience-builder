@@ -154,13 +154,15 @@ describe('Canvas Subscriber methods', () => {
   const createPostMessageReceiverForSelectedEntities = (_event: IncomingEvent, payload) =>
     asynchronousBodyHandler(async () => {
       const store = new EditorModeEntityStore({ entities: [], locale: 'en-US' });
-
-      const promise = store.fetchEntities({
-        missingEntryIds: [entityIds.ENTRY1, entityIds.ENTRY2],
-        missingAssetIds: [],
-        skipCache: true,
+      let listener;
+      vi.spyOn(window, 'addEventListener').mockImplementationOnce((_event, _listener) => {
+        listener = _listener;
       });
-      window.dispatchEvent(new MessageEvent('message', { data: JSON.stringify(payload) }));
+
+      const promise = store.fetchEntries([entityIds.ENTRY1, entityIds.ENTRY2]);
+
+      expect(listener).toBeDefined();
+      listener(new MessageEvent('message', { data: JSON.stringify(payload) }));
 
       await promise;
 
@@ -171,6 +173,7 @@ describe('Canvas Subscriber methods', () => {
     'should receive the expected payload for $event event',
     async ({ id, description, event, payload, payloadMatcher }) => {
       let messageReceiverConstructor = createPostMessageReceiver;
+
       if (event === INCOMING_EVENTS.RequestedEntities) {
         messageReceiverConstructor = createPostMessageReceiverForSelectedEntities;
       }
