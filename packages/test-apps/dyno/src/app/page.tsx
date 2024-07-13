@@ -1,5 +1,6 @@
 import ShoppingCartExperienceContainer from '@/StudioExperiences/components/ShoppingCartExperienceContainer';
 import { ProductCardList } from './products/components/ProductCardList';
+import { Cart } from '@/components/Cart';
 
 type Page = {
   params: { locale?: string; slug?: string; preview?: string };
@@ -20,6 +21,7 @@ export default function Home({ params, searchParams }: Page) {
         isPreviewMode={preview}
         isEditorMode={editorMode}
       />
+      <Cart />
     </main>
   );
 }

@@ -19,5 +19,11 @@ export async function POST(req: Request) {
 
   console.log('[ /POST ] /cart r => ', r);
 
-  return NextResponse.json(cartData);
+  const updatedCartData = {
+    id: `273847`,
+    numberOfItems: cartData.numberOfItems + 1,
+    totalPrice: cartData.totalPrice,
+  };
+
+  return NextResponse.json(updatedCartData);
 }

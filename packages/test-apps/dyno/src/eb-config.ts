@@ -3,14 +3,15 @@ import {
   defineBreakpoints,
   defineBehaviors,
 } from '@contentful/experiences-sdk-react';
-import { Cart } from './components/Cart';
+// import { Cart } from './components/Cart';
 import { shoppingCartBehavior } from '@/StudioExperiences/behaviors/ShoppingCartBehavior';
+import { AddToCartButton } from './components/AddToCartButton';
 
 defineBehaviors([
   {
     definition: {
-      id: 'cart',
-      name: 'Dyno Shopping Cart Test Behavior',
+      id: 'add-to-cart-button-behavior',
+      name: 'Dyno add to cart Behavior',
       description:
         'Dyno hackathon project for injecting behaviors into studio experiences components',
       eventType: 'onClick',
@@ -21,11 +22,11 @@ defineBehaviors([
 
 defineComponents([
   {
-    component: Cart,
+    component: AddToCartButton,
     definition: {
-      id: 'cart',
+      id: 'add-to-cart-button',
       children: true,
-      name: 'Cart',
+      name: 'Add to cart button',
       category: 'Custom Components',
       builtInStyles: [],
       variables: {
@@ -40,6 +41,26 @@ defineComponents([
       wrapComponent: false,
     },
   },
+  // {
+  //   component: Cart,
+  //   definition: {
+  //     id: 'cart',
+  //     children: true,
+  //     name: 'Cart',
+  //     category: 'Custom Components',
+  //     builtInStyles: [],
+  //     variables: {
+  //       heading: {
+  //         displayName: 'What is this for?',
+  //         type: 'Text',
+  //         defaultValue: 'Lorem ipsum',
+  //       },
+  //     },
+  //   },
+  //   options: {
+  //     wrapComponent: false,
+  //   },
+  // },
 ]);
 
 defineBreakpoints([

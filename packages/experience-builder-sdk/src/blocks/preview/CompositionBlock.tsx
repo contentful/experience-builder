@@ -243,7 +243,7 @@ export const CompositionBlock = ({
 
   const testBehavior: Record<string, BehaviorDefinition> = {
     cart: {
-      id: 'cart',
+      id: 'add-to-cart-button-behavior',
       name: 'Dyno Shopping Cart Test Behavior',
       description:
         'Dyno hackathon project for injecting behaviors into studio experiences components',

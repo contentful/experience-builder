@@ -1,13 +1,11 @@
-'use client';
-
 import { FC, useEffect, useState } from 'react';
 import { ShoppingCartIcon } from '@heroicons/react/24/solid';
-import { getCartData } from '@/lib/cartApi';
-import { CartType } from '@/types';
+import { CartType } from '../../types';
+import { getCartData } from '../../lib/cartApi';
 
 const CART_ID = `2749284`;
 
-export const Cart: FC = () => {
+export const ShoppingCartButton: FC = () => {
   const [cartData, setCartData] = useState<CartType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -16,6 +14,7 @@ export const Cart: FC = () => {
       setIsLoading(true);
 
       try {
+        //@ts-ignore
         const response = await getCartData(CART_ID);
         setIsLoading(false);
         setCartData(response);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ProductCardList } from './components/ProductCardList/ProductCardList';
-import ShoppingCartExperienceContainer from '@/StudioExperiences/components/ShoppingCartExperienceContainer';
+// import ShoppingCartExperienceContainer from '@/StudioExperiences/components/ShoppingCartExperienceContainer';
+import { Cart } from '@/components/Cart';
 
 type Page = {
   params: { locale?: string; slug?: string; preview?: string };
@@ -16,11 +17,12 @@ export default async function Page({ params, searchParams }: Page) {
   return (
     <>
       <ProductCardList />;
-      <ShoppingCartExperienceContainer
+      {/* <ShoppingCartExperienceContainer
         locale={locale}
         isPreviewMode={preview}
         isEditorMode={editorMode}
-      />
+      /> */}
+      <Cart />
     </>
   );
 }
