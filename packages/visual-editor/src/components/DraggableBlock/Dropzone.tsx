@@ -50,9 +50,9 @@ export function Dropzone({
 
   const draggedDestinationId = draggedItem && draggedItem.destination?.droppableId;
 
-  const draggedBlockId = useMemo(() => {
+  const draggedNode = useMemo(() => {
     if (!draggedItem) return;
-    return getItem({ id: draggedItem.draggableId }, tree)?.data.blockId;
+    return getItem({ id: draggedItem.draggableId }, tree);
   }, [draggedItem, tree]);
 
   const isRootZone = zoneId === ROOT_ID;
@@ -93,8 +93,25 @@ export function Dropzone({
   );
 
   const isDropzoneEnabled = useMemo(() => {
+    const isColumns = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
+    const isDraggingSingleColumn =
+      draggedNode?.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
+    const isParentOfDraggedNode = node?.data.id === draggedNode?.parentId;
+
+    // If dragging a single column, only enable the dropzone of the parent
+    // columns component
+    if (isDraggingSingleColumn && isColumns && isParentOfDraggedNode) {
+      return true;
+    }
+
+    // If dragging a single column, disable dropzones for any component besides
+    // the parent of the dragged single column
+    if (isDraggingSingleColumn && !isParentOfDraggedNode) {
+      return false;
+    }
+
     // Disable dropzone for Columns component
-    if (node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id) {
+    if (isColumns) {
       return false;
     }
 
@@ -104,20 +121,13 @@ export function Dropzone({
     }
 
     // Enable dropzone for the non-root hovered zones if component is not allowed on root
-    if (!isDraggingNewComponent && !isComponentAllowedOnRoot(draggedBlockId)) {
+    if (!isDraggingNewComponent && !isComponentAllowedOnRoot(draggedNode?.data.blockId)) {
       return isHoveringZone && !isRootZone;
     }
 
     // Enable dropzone for the hovered zone only
     return isHoveringZone;
-  }, [
-    node?.data.blockId,
-    isAssembly,
-    isHoveringZone,
-    isRootZone,
-    isDraggingNewComponent,
-    draggedBlockId,
-  ]);
+  }, [isAssembly, isHoveringZone, isRootZone, isDraggingNewComponent, draggedNode, node]);
 
   if (!resolveDesignValue) {
     return null;
