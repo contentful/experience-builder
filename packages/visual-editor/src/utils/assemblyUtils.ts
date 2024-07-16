@@ -6,6 +6,8 @@ import type {
   ExperienceTreeNode,
   ComponentPropertyValue,
   ExperienceFields,
+  ExperienceComponentSettings,
+  DesignValue,
 } from '@contentful/experiences-core/types';
 import type { Entry } from 'contentful';
 import {
@@ -26,9 +28,10 @@ export const deserializeAssemblyNode = ({
   nodeLocation,
   parentId,
   assemblyDataSource,
+  assemblyUnboundValues,
+  assemblyVariableDefinitions,
   assemblyId,
   assemblyComponentId,
-  assemblyUnboundValues,
   componentInstanceProps,
   componentInstanceUnboundValues,
   componentInstanceDataSource,
@@ -39,6 +42,7 @@ export const deserializeAssemblyNode = ({
   parentId?: string;
   assemblyDataSource: ExperienceDataSource;
   assemblyUnboundValues: ExperienceUnboundValues;
+  assemblyVariableDefinitions: ExperienceComponentSettings['variableDefinitions'];
   assemblyId: string;
   assemblyComponentId: string;
   componentInstanceProps: Record<string, ComponentPropertyValue>;
@@ -54,6 +58,7 @@ export const deserializeAssemblyNode = ({
     if (variable.type === 'ComponentValue') {
       const componentValueKey = variable.key;
       const instanceProperty = componentInstanceProps[componentValueKey];
+      const defaultValue = assemblyVariableDefinitions?.[componentValueKey].defaultValue;
 
       // For assembly, we look up the value in the assembly instance and
       // replace the componentValue with that one.
@@ -72,6 +77,11 @@ export const deserializeAssemblyNode = ({
         childNodeVariable[variableName] = instanceProperty;
       } else if (instanceProperty?.type === 'DesignValue') {
         childNodeVariable[variableName] = instanceProperty;
+      } else if (!instanceProperty && defaultValue) {
+        // So far, we only automatically fallback to the defaultValue for design properties
+        if (typeof defaultValue === 'object' && defaultValue.type === 'DesignValue') {
+          childNodeVariable[variableName] = defaultValue as DesignValue;
+        }
       }
     }
   }
@@ -84,12 +94,13 @@ export const deserializeAssemblyNode = ({
     return deserializeAssemblyNode({
       node: child,
       nodeId: `${assemblyComponentId}---${newNodeLocation}`,
-      parentId: nodeId,
       nodeLocation: newNodeLocation,
-      assemblyId,
+      parentId: nodeId,
       assemblyDataSource,
-      assemblyComponentId,
       assemblyUnboundValues,
+      assemblyVariableDefinitions,
+      assemblyId,
+      assemblyComponentId,
       componentInstanceProps,
       componentInstanceUnboundValues,
       componentInstanceDataSource,
@@ -168,6 +179,7 @@ export const resolveAssembly = ({
     assemblyId: assembly.sys.id,
     assemblyComponentId: node.data.id,
     assemblyUnboundValues: componentFields.unboundValues,
+    assemblyVariableDefinitions: componentFields.componentSettings!.variableDefinitions,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
     componentInstanceDataSource: node.data.dataSource,

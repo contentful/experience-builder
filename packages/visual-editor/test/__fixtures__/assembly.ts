@@ -8,6 +8,7 @@ import type {
   ExperienceEntry,
   ExperienceTreeNode,
   SchemaVersions,
+  ValuesByBreakpoint,
 } from '@contentful/experiences-core/types';
 
 type createAssemblyEntryArgs = {
@@ -114,6 +115,7 @@ type createAssemblyNodeArgs = {
   unboundValue?: string;
   unboundValueKey?: string;
   boundValueKey?: string;
+  designValue?: ValuesByBreakpoint;
 };
 
 export const createAssemblyNode = ({
@@ -122,6 +124,7 @@ export const createAssemblyNode = ({
   unboundValue = 'New year Eve',
   unboundValueKey = undefined,
   boundValueKey = undefined,
+  designValue = undefined,
 }: createAssemblyNodeArgs): ExperienceTreeNode => {
   const node: ExperienceTreeNode = {
     type: ASSEMBLY_NODE_TYPE,
@@ -157,6 +160,12 @@ export const createAssemblyNode = ({
           id: 'someEntryId',
         },
       },
+    };
+  }
+  if (designValue) {
+    node.data.props[assemblyGeneratedDesignVariableName] = {
+      type: 'DesignValue',
+      valuesByBreakpoint: designValue,
     };
   }
   return node;

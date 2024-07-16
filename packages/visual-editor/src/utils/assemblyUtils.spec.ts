@@ -3,6 +3,7 @@ import {
   createAssemblyEntry,
   createAssemblyNode,
   assemblyGeneratedVariableName,
+  assemblyGeneratedDesignVariableName,
 } from '../../test/__fixtures__/assembly';
 import { assets } from '../../test/__fixtures__/entities';
 
@@ -52,11 +53,16 @@ describe('deserializeAssemblyNode', () => {
       assemblyComponentId: 'whatever',
       nodeLocation: '0',
       assemblyDataSource: {},
+      assemblyVariableDefinitions: {},
       assemblyUnboundValues: assemblyEntry.fields.unboundValues,
       componentInstanceProps: {
         [assemblyGeneratedVariableName]: {
           type: 'UnboundValue',
           key: 'unbound_uuid1Experience',
+        },
+        [assemblyGeneratedDesignVariableName]: {
+          type: 'DesignValue',
+          valuesByBreakpoint: { desktop: '27px' },
         },
       },
       componentInstanceUnboundValues: {
@@ -93,7 +99,12 @@ describe('deserializeAssemblyNode', () => {
             },
             blockId: 'contentful-container',
             id: expect.any(String),
-            props: {},
+            props: {
+              cfWidth: {
+                type: 'DesignValue',
+                valuesByBreakpoint: { desktop: '27px' },
+              },
+            },
             dataSource: {},
             unboundValues: {},
             breakpoints: [],
@@ -203,6 +214,11 @@ describe('resolveAssembly', () => {
       children: [],
     };
 
+    const entityStore = new EditorModeEntityStore({
+      entities: [{ ...assemblyEntry, fields: {} }, ...assets] as Array<Entry | Asset>,
+      locale: 'en-US',
+    });
+
     const result = resolveAssembly({ node, entityStore });
 
     expect(result).toEqual(node);
@@ -233,9 +249,7 @@ describe('resolveAssembly', () => {
     expect(result).toEqual(node);
   });
 
-  // TODO: This tests is basically a plain snapshot test and missing specific assertions.
-  // Also it is testing almost completley the same as above for `deserializeAssemblyNode`.
-  it('returns a deserialized assembly node with unboundValues and props', () => {
+  it('returns a deserialized assembly node with an unbound value', () => {
     const node = createAssemblyNode({
       id: 'random-node-id',
       unboundValueKey: 'unbound_uuid1Experience',
@@ -245,70 +259,12 @@ describe('resolveAssembly', () => {
     const result = resolveAssembly({ node, entityStore });
 
     expect(result).not.toEqual(node);
-    expect(result).toEqual({
-      type: ASSEMBLY_NODE_TYPE,
-      parentId: 'root',
-      data: {
-        assembly: {
-          componentId: 'random-node-id',
-          id: 'assembly-id',
-          nodeLocation: null,
-        },
-        blockId: 'assembly-id',
-        id: 'random-node-id',
-        props: {},
-        dataSource: {},
-        unboundValues: {},
-        breakpoints: [],
-      },
-      children: [
-        {
-          type: ASSEMBLY_BLOCK_NODE_TYPE,
-          parentId: 'random-node-id',
-          data: {
-            assembly: {
-              componentId: 'random-node-id',
-              id: 'assembly-id',
-              nodeLocation: '0',
-            },
-            blockId: 'contentful-container',
-            id: expect.any(String),
-            props: {},
-            dataSource: {},
-            unboundValues: {},
-            breakpoints: [],
-          },
-          children: [
-            {
-              type: ASSEMBLY_BLOCK_NODE_TYPE,
-              parentId: expect.any(String),
-              data: {
-                assembly: {
-                  componentId: 'random-node-id',
-                  id: 'assembly-id',
-                  nodeLocation: '0_0',
-                },
-                blockId: 'custom-component',
-                id: expect.any(String),
-                props: {
-                  text: {
-                    key: 'unbound_uuid1Experience',
-                    type: 'UnboundValue',
-                  },
-                },
-                dataSource: {},
-                unboundValues: {
-                  unbound_uuid1Experience: {
-                    value: 'New year Eve',
-                  },
-                },
-                breakpoints: [],
-              },
-              children: [],
-            },
-          ],
-        },
-      ],
+    expect(result.children[0].children[0].data.props.text).toEqual({
+      type: 'UnboundValue',
+      key: 'unbound_uuid1Experience',
+    });
+    expect(result.children[0].children[0].data.unboundValues['unbound_uuid1Experience']).toEqual({
+      value: 'New year Eve',
     });
   });
 
@@ -338,8 +294,19 @@ describe('resolveAssembly', () => {
   it('returns a deserialized assembly node with an exposed design value', () => {
     const node = createAssemblyNode({
       id: 'random-node-id',
-      boundValueKey: 'bound_uuid1Experience',
+      designValue: { desktop: '27px' },
     });
+    const result = resolveAssembly({ node, entityStore });
+
+    expect(result).not.toEqual(node);
+    expect(result.children[0].data.props.cfWidth).toEqual({
+      type: 'DesignValue',
+      valuesByBreakpoint: { desktop: '27px' },
+    });
+  });
+
+  it('returns a deserialized assembly node with an exposed design value using fallback value', () => {
+    const node = createAssemblyNode({ id: 'random-node-id' });
     const result = resolveAssembly({ node, entityStore });
 
     expect(result).not.toEqual(node);
