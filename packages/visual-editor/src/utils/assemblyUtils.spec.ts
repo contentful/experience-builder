@@ -21,6 +21,11 @@ const assemblyEntry = createAssemblyEntry({
   schemaVersion: '2023-09-28',
 });
 
+const entityStore = new EditorModeEntityStore({
+  entities: [assemblyEntry, ...assets] as Array<Entry | Asset>,
+  locale: 'en-US',
+});
+
 describe('deserializeAssemblyNode', () => {
   beforeEach(() => {
     assembliesRegistry.set(assemblyEntry.sys.id, {
@@ -154,9 +159,7 @@ describe('resolveAssembly', () => {
       children: [],
     };
 
-    const entityStore = null;
-
-    const result = resolveAssembly({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore: null });
 
     expect(result).toEqual(node);
   });
@@ -175,10 +178,8 @@ describe('resolveAssembly', () => {
       children: [],
     };
 
-    const entityStore = null;
-
     // Throws warning "Entry for assembly with ID 'assembly-id' not found"
-    const result = resolveAssembly({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore: null });
 
     expect(result).toEqual(node);
   });
@@ -201,11 +202,6 @@ describe('resolveAssembly', () => {
       },
       children: [],
     };
-
-    const entityStore = new EditorModeEntityStore({
-      entities: [{ ...assemblyEntry, fields: {} }, ...assets] as Array<Entry | Asset>,
-      locale: 'en-US',
-    });
 
     const result = resolveAssembly({ node, entityStore });
 
@@ -231,10 +227,8 @@ describe('resolveAssembly', () => {
       children: [],
     };
 
-    const entityStore = null;
-
     // Throws warning "Entry for assembly with ID 'assembly-id' not found"
-    const result = resolveAssembly({ node, entityStore });
+    const result = resolveAssembly({ node, entityStore: null });
 
     expect(result).toEqual(node);
   });
@@ -246,11 +240,6 @@ describe('resolveAssembly', () => {
       id: 'random-node-id',
       unboundValueKey: 'unbound_uuid1Experience',
       unboundValue: 'New year Eve',
-    });
-
-    const entityStore = new EditorModeEntityStore({
-      entities: [assemblyEntry, ...assets] as Array<Entry | Asset>,
-      locale: 'en-US',
     });
 
     const result = resolveAssembly({ node, entityStore });
@@ -329,11 +318,6 @@ describe('resolveAssembly', () => {
       boundValueKey: 'bound_uuid1Experience',
     });
 
-    const entityStore = new EditorModeEntityStore({
-      entities: [assemblyEntry, ...assets] as Array<Entry | Asset>,
-      locale: 'en-US',
-    });
-
     const result = resolveAssembly({ node, entityStore });
 
     expect(result).not.toEqual(node);
@@ -348,6 +332,20 @@ describe('resolveAssembly', () => {
         linkType: 'Entry',
         id: 'someEntryId',
       },
+    });
+  });
+
+  it('returns a deserialized assembly node with an exposed design value', () => {
+    const node = createAssemblyNode({
+      id: 'random-node-id',
+      boundValueKey: 'bound_uuid1Experience',
+    });
+    const result = resolveAssembly({ node, entityStore });
+
+    expect(result).not.toEqual(node);
+    expect(result.children[0].data.props.cfWidth).toEqual({
+      type: 'DesignValue',
+      valuesByBreakpoint: { desktop: '42px' },
     });
   });
 });

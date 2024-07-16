@@ -1,5 +1,5 @@
 import { CONTENTFUL_COMPONENTS, LATEST_SCHEMA_VERSION } from '@/constants';
-import { ExperienceEntry, SchemaVersions } from '@/types';
+import { ExperienceComponentSettings, ExperienceEntry, SchemaVersions } from '@/types';
 import { entityIds } from './entities';
 
 const experienceFields: ExperienceEntry['fields'] = {
@@ -184,6 +184,7 @@ export const createExperienceEntry = ({
 };
 
 export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
+export const assemblyGeneratedDesignVariableName = 'cfWidth_uuid2Assembly';
 export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = 'assembly-id',
@@ -225,8 +226,24 @@ export const createAssemblyEntry = ({
         children: [
           {
             definitionId: CONTENTFUL_COMPONENTS.container.id,
-            variables: {},
-            children: [],
+            variables: {
+              cfWidth: {
+                type: 'ComponentValue',
+                key: assemblyGeneratedDesignVariableName,
+              },
+            },
+            children: [
+              {
+                definitionId: 'custom-component',
+                variables: {
+                  text: {
+                    type: 'ComponentValue',
+                    key: assemblyGeneratedVariableName,
+                  },
+                },
+                children: [],
+              },
+            ],
           },
         ],
 
@@ -242,14 +259,18 @@ export const createAssemblyEntry = ({
       componentSettings: {
         variableDefinitions: {
           [assemblyGeneratedVariableName]: {
-            id: 'text',
-            name: 'Text',
+            displayName: 'Text',
             type: 'Text',
             defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },
-            required: false,
+          },
+          [assemblyGeneratedDesignVariableName]: {
+            displayName: 'Width',
+            type: 'Text',
+            group: 'style',
+            defaultValue: { type: 'DesignValue', valuesByBreakpoint: { desktop: '42px' } },
           },
         },
-      },
+      } satisfies ExperienceComponentSettings,
     },
   };
 };
