@@ -1,12 +1,21 @@
 import { checkIsAssemblyNode, EntityStore } from '@contentful/experiences-core';
-import type { ComponentPropertyValue, ComponentTreeNode } from '@contentful/experiences-core/types';
+import type {
+  ComponentPropertyValue,
+  ComponentTreeNode,
+  DesignValue,
+  ExperienceComponentSettings,
+} from '@contentful/experiences-core/types';
 
+/** While unfolding the assembly definition on the instance, this function will replace all
+ * ComponentValue in the definitions tree with the actual value on the instance. */
 export const deserializeAssemblyNode = ({
   node,
   componentInstanceVariables,
+  assemblyVariableDefinitions,
 }: {
   node: ComponentTreeNode;
   componentInstanceVariables: ComponentTreeNode['variables'];
+  assemblyVariableDefinitions: ExperienceComponentSettings['variableDefinitions'];
 }): ComponentTreeNode => {
   const variables: Record<string, ComponentPropertyValue> = {};
 
@@ -15,9 +24,11 @@ export const deserializeAssemblyNode = ({
     if (variable.type === 'ComponentValue') {
       const componentValueKey = variable.key;
       const instanceProperty = componentInstanceVariables[componentValueKey];
+      const variableDefinition = assemblyVariableDefinitions?.[componentValueKey];
+      const defaultValue = variableDefinition?.defaultValue;
 
       // For assembly, we look up the variable in the assembly instance and
-      // replace the componentValue with that one.
+      // replace the ComponentValue with that one.
       if (instanceProperty?.type === 'UnboundValue') {
         variables[variableName] = {
           type: 'UnboundValue',
@@ -33,6 +44,19 @@ export const deserializeAssemblyNode = ({
           type: 'HyperlinkValue',
           linkTargetKey: instanceProperty.linkTargetKey,
         };
+      } else if (instanceProperty?.type === 'DesignValue') {
+        variables[variableName] = {
+          type: 'DesignValue',
+          valuesByBreakpoint: instanceProperty.valuesByBreakpoint,
+        };
+      } else if (!instanceProperty && defaultValue) {
+        // So far, we only automatically fallback to the defaultValue for design properties
+        if (variableDefinition.group === 'style') {
+          variables[variableName] = {
+            type: 'DesignValue',
+            valuesByBreakpoint: (defaultValue as DesignValue).valuesByBreakpoint,
+          };
+        }
       }
     }
   }
@@ -41,6 +65,7 @@ export const deserializeAssemblyNode = ({
     deserializeAssemblyNode({
       node: child,
       componentInstanceVariables,
+      assemblyVariableDefinitions,
     }),
   );
 
@@ -87,6 +112,7 @@ export const resolveAssembly = ({
       children: componentFields.componentTree.children,
     },
     componentInstanceVariables: node.variables,
+    assemblyVariableDefinitions: componentFields.componentSettings!.variableDefinitions,
   });
 
   entityStore.addAssemblyUnboundValues(componentFields.unboundValues);
