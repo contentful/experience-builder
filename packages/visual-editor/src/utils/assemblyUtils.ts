@@ -58,7 +58,8 @@ export const deserializeAssemblyNode = ({
     if (variable.type === 'ComponentValue') {
       const componentValueKey = variable.key;
       const instanceProperty = componentInstanceProps[componentValueKey];
-      const defaultValue = assemblyVariableDefinitions?.[componentValueKey].defaultValue;
+      const variableDefinition = assemblyVariableDefinitions?.[componentValueKey];
+      const defaultValue = variableDefinition?.defaultValue;
 
       // For assembly, we look up the value in the assembly instance and
       // replace the componentValue with that one.
@@ -79,7 +80,7 @@ export const deserializeAssemblyNode = ({
         childNodeVariable[variableName] = instanceProperty;
       } else if (!instanceProperty && defaultValue) {
         // So far, we only automatically fallback to the defaultValue for design properties
-        if (typeof defaultValue === 'object' && defaultValue.type === 'DesignValue') {
+        if (variableDefinition.group === 'style') {
           childNodeVariable[variableName] = defaultValue as DesignValue;
         }
       }
@@ -164,6 +165,14 @@ export const resolveAssembly = ({
     console.warn(`Component tree for assembly with ID '${componentId}' not found`, {
       componentFields,
     });
+    return node;
+  }
+
+  if (!componentFields.componentSettings?.variableDefinitions) {
+    console.warn(`Component settings for assembly with ID '${componentId}' not found`, {
+      componentFields,
+    });
+    return node;
   }
 
   const deserializedNode = deserializeAssemblyNode({
