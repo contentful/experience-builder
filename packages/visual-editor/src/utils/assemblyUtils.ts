@@ -18,6 +18,8 @@ export const checkIsAssemblyEntry = (entry: Entry): boolean => {
   return Boolean(entry.fields?.componentSettings);
 };
 
+/** While unfolding the assembly definition on the instance, this function will replace all
+ * ComponentValue in the definitions tree with the actual value on the instance. */
 export const deserializeAssemblyNode = ({
   node,
   nodeId,
@@ -58,21 +60,17 @@ export const deserializeAssemblyNode = ({
       if (instanceProperty?.type === 'UnboundValue') {
         const componentInstanceValue = componentInstanceUnboundValues[instanceProperty.key];
         unboundValues[instanceProperty.key] = componentInstanceValue;
-        childNodeVariable[variableName] = {
-          type: 'UnboundValue',
-          key: instanceProperty.key,
-        };
+        childNodeVariable[variableName] = instanceProperty;
       } else if (instanceProperty?.type === 'BoundValue') {
         const [, dataSourceKey] = instanceProperty.path.split('/');
         const componentInstanceValue = componentInstanceDataSource[dataSourceKey];
         dataSource[dataSourceKey] = componentInstanceValue;
-        childNodeVariable[variableName] = {
-          type: 'BoundValue',
-          path: instanceProperty.path,
-        };
+        childNodeVariable[variableName] = instanceProperty;
       } else if (instanceProperty?.type === 'HyperlinkValue') {
         const componentInstanceValue = componentInstanceDataSource[instanceProperty.linkTargetKey];
         dataSource[instanceProperty.linkTargetKey] == componentInstanceValue;
+        childNodeVariable[variableName] = instanceProperty;
+      } else if (instanceProperty?.type === 'DesignValue') {
         childNodeVariable[variableName] = instanceProperty;
       }
     }
