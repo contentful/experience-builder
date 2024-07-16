@@ -1,6 +1,8 @@
 import { checkIsAssemblyNode, EntityStore } from '@contentful/experiences-core';
 import type { ComponentPropertyValue, ComponentTreeNode } from '@contentful/experiences-core/types';
 
+/** While unfolding the assembly definition on the instance, this function will replace all
+ * ComponentValue in the definitions tree with the actual value on the instance. */
 export const deserializeAssemblyNode = ({
   node,
   componentInstanceVariables,
@@ -17,7 +19,7 @@ export const deserializeAssemblyNode = ({
       const instanceProperty = componentInstanceVariables[componentValueKey];
 
       // For assembly, we look up the variable in the assembly instance and
-      // replace the componentValue with that one.
+      // replace the ComponentValue with that one.
       if (instanceProperty?.type === 'UnboundValue') {
         variables[variableName] = {
           type: 'UnboundValue',
@@ -32,6 +34,11 @@ export const deserializeAssemblyNode = ({
         variables[variableName] = {
           type: 'HyperlinkValue',
           linkTargetKey: instanceProperty.linkTargetKey,
+        };
+      } else if (instanceProperty?.type === 'DesignValue') {
+        variables[variableName] = {
+          type: 'DesignValue',
+          valuesByBreakpoint: instanceProperty.valuesByBreakpoint,
         };
       }
     }
