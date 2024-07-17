@@ -108,7 +108,7 @@ export const useComponent = ({
       }),
     );
 
-    if (!requiresDragWrapper) {
+    if (!requiresDragWrapper || isAssembly) {
       return element;
     }
 
