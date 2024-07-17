@@ -13,7 +13,11 @@ import { EmptyContainer } from '@components/EmptyContainer/EmptyContainer';
 import { getItem } from '@/utils/getItem';
 import { useZoneStore } from '@/store/zone';
 import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
-import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
+import {
+  ASSEMBLY_NODE_TYPE,
+  ASSEMBLY_NODE_TYPES,
+  CONTENTFUL_COMPONENTS,
+} from '@contentful/experiences-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
@@ -59,7 +63,7 @@ export function Dropzone({
   const isDestination = draggedDestinationId === zoneId;
   const isEmptyCanvas = isRootZone && !content.length;
   const isAssembly = ASSEMBLY_NODE_TYPES.includes(node?.type || '');
-
+  const isRootAssembly = node?.type === ASSEMBLY_NODE_TYPE;
   const htmlDraggableProps = getHtmlDragProps(dragProps);
   const htmlProps = getHtmlComponentProps(rest);
   // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
@@ -167,6 +171,7 @@ export function Dropzone({
               [styles.isDestination]: isDestination && !isAssembly,
               [styles.isRoot]: isRootZone,
               [styles.isEmptyZone]: !content.length,
+              [styles.isAssembly]: isRootAssembly,
             })}
             data-ctfl-slot-id={slotId}>
             {isEmptyCanvas ? (
