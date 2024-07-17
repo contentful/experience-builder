@@ -230,7 +230,9 @@ export type RecursiveDesignTokenDefinition = {
   [key: string]: string | RecursiveDesignTokenDefinition;
 };
 
+/** not yet implemented, don't use */
 type DesignBorderTokenStyle = 'solid' | 'dashed' | 'dotted';
+/** not yet implemented, don't use */
 type DesignTextTokenEmphasis =
   | 'bold'
   | 'italic'
@@ -240,6 +242,7 @@ type DesignTextTokenEmphasis =
   | 'italic underline'
   | 'bold italic underline'
   | 'none';
+/** not yet implemented, don't use */
 type DesignTextTokenCase = 'capitalize' | 'uppercase' | 'lowercase' | 'normal';
 
 export type DesignTokensDefinition = {
@@ -252,6 +255,7 @@ export type DesignTokensDefinition = {
   lineHeight?: Record<string, string>;
   letterSpacing?: Record<string, string>;
   textColor?: Record<string, string>;
+  /** not yet implemented, don't use */
   text?: Record<
     string,
     {
