@@ -18,13 +18,13 @@ import { createAssemblyRegistration, getComponentRegistration } from '../../core
 import { checkIsAssemblyNode, transformBoundContentValue } from '@contentful/experiences-core';
 import { useClassName } from '../../hooks/useClassName';
 import {
+  Assembly,
   Columns,
   ContentfulContainer,
   SingleColumn,
 } from '@contentful/experiences-components-react';
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
-import { Assembly } from '../../components/Assembly';
 import { Entry } from 'contentful';
 
 type CompositionBlockProps = {
