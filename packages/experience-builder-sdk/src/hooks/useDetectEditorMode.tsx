@@ -31,6 +31,9 @@ export const useDetectEditorMode = ({ isClientSide = false }: UseDetectEditorMod
         receivedMessage.current = true;
         if (typeof window !== 'undefined') {
           //Once we definitely know that we are in editor mode, we set this flag so future postMessage connect calls are not made
+          if (!window.__EB__) {
+            window.__EB__ = {};
+          }
           window.__EB__.isEditorMode = true;
           window.removeEventListener('message', onMessage);
         }

@@ -24,6 +24,7 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import classNames from 'classnames';
 import styles from './styles.module.css';
 import { parseZoneId } from '@/utils/zone';
+import useSingleColumn from '@/hooks/useSingleColumn';
 
 function getStyle(style, snapshot) {
   if (!snapshot.isDropAnimating) {
@@ -67,6 +68,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     userIsDragging,
     slotId,
   });
+  const { isSingleColumn, isWrapped } = useSingleColumn(node, resolveDesignValue);
   const setDomRect = useDraggedItemStore((state) => state.setDomRect);
   const isHoveredComponent = useDraggedItemStore(
     (state) => state.hoveredComponentId === componentId,
@@ -76,12 +78,11 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const testId = `draggable-${node.data.blockId ?? 'node'}`;
   const isSelected = node.data.id === selectedNodeId;
   const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
-  const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const isSlotComponent = Boolean(node.data.slotId);
-  const isDragDisabled = isAssemblyBlock || isSingleColumn || isSlotComponent;
+  const isDragDisabled = isAssemblyBlock || (isSingleColumn && isWrapped) || isSlotComponent;
 
   const isEmptyZone = useMemo(() => {
     return !node.children.filter((node) => node.data.slotId === slotId).length;

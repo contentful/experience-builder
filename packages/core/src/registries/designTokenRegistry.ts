@@ -7,7 +7,21 @@ export let designTokensRegistry: DesignTokensDefinition = {};
 // Therefore only border and in the future text related design tokens are/will be checked in this funciton.
 // Ensuring values for simple key-value design tokens are not neccessary since they are required via typescript.
 const ensureValidCompositeValues = (designTokenDefinition: DesignTokensDefinition) => {
-  // TODO: add validation logic when text related design tokens are added
+  // Text token validation
+  if (designTokenDefinition.text) {
+    for (const textKey in designTokenDefinition.text) {
+      const textValue = designTokenDefinition.text[textKey];
+      designTokenDefinition.text[textKey] = {
+        emphasis: textValue.emphasis || 'none',
+        fontSize: textValue.fontSize || '16px',
+        case: textValue.case || 'normal',
+        fontWeight: textValue.fontWeight || '400',
+        lineHeight: textValue.lineHeight || '20px',
+        letterSpacing: textValue.letterSpacing || '0px',
+        color: textValue.color || '#000000',
+      };
+    }
+  }
 
   // Border validation
   if (designTokenDefinition.border) {
