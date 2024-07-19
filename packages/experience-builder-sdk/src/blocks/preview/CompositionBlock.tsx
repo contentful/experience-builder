@@ -136,6 +136,7 @@ export const CompositionBlock = ({
           case 'ComponentValue':
             // We're rendering a pattern entry. Content cannot be set for ComponentValue type properties
             // directly in the pattern so we can safely use the default value
+            // This can either a design (style) or a content variable
             acc[variableName] = variableDefinition.defaultValue;
             break;
           default:

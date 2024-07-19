@@ -69,6 +69,13 @@ export const DNDProvider = ({ children }: Props) => {
     updateItem();
     SimulateDnD.reset();
 
+    // If the component is being dropped onto itself, do nothing
+    // This can happen from an apparent race condition where the hovering zone gets set
+    // to the component after its dropped.
+    if (dropResult.destination?.droppableId === dropResult.draggableId) {
+      return;
+    }
+
     if (!dropResult.destination) {
       if (!draggedItem?.destination) {
         // User cancel drag

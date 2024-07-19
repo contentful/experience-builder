@@ -3,7 +3,11 @@ import {
   ASSEMBLY_NODE_TYPE,
   LATEST_SCHEMA_VERSION,
 } from '@contentful/experiences-core/constants';
-import type { ExperienceTreeNode, SchemaVersions } from '@contentful/experiences-core/types';
+import type {
+  ExperienceComponentSettings,
+  ExperienceTreeNode,
+  SchemaVersions,
+} from '@contentful/experiences-core/types';
 
 type createAssemblyEntryArgs = {
   schemaVersion: SchemaVersions;
@@ -13,6 +17,7 @@ type createAssemblyEntryArgs = {
 export const defaultAssemblyId = 'assembly-id';
 
 export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
+export const assemblyGeneratedDesignVariableName = 'cfWidth_uuid2Assembly';
 export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = defaultAssemblyId,
@@ -54,7 +59,12 @@ export const createAssemblyEntry = ({
         children: [
           {
             definitionId: CONTENTFUL_COMPONENTS.container.id,
-            variables: {},
+            variables: {
+              cfWidth: {
+                type: 'ComponentValue',
+                key: assemblyGeneratedDesignVariableName,
+              },
+            },
             children: [
               {
                 definitionId: 'custom-component',
@@ -82,13 +92,17 @@ export const createAssemblyEntry = ({
         variableDefinitions: {
           [assemblyGeneratedVariableName]: {
             displayName: 'Text',
-            name: 'Text',
             type: 'Text',
             defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },
-            required: false,
+          },
+          [assemblyGeneratedDesignVariableName]: {
+            displayName: 'Width',
+            type: 'Text',
+            group: 'style',
+            defaultValue: { type: 'DesignValue', valuesByBreakpoint: { desktop: '42px' } },
           },
         },
-      },
+      } satisfies ExperienceComponentSettings,
     },
   };
 };

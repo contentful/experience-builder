@@ -6,6 +6,8 @@ import type {
   ExperienceTreeNode,
   ComponentPropertyValue,
   ExperienceFields,
+  ExperienceComponentSettings,
+  DesignValue,
 } from '@contentful/experiences-core/types';
 import type { Entry } from 'contentful';
 import {
@@ -18,15 +20,18 @@ export const checkIsAssemblyEntry = (entry: Entry): boolean => {
   return Boolean(entry.fields?.componentSettings);
 };
 
+/** While unfolding the assembly definition on the instance, this function will replace all
+ * ComponentValue in the definitions tree with the actual value on the instance. */
 export const deserializeAssemblyNode = ({
   node,
   nodeId,
   nodeLocation,
   parentId,
   assemblyDataSource,
+  assemblyUnboundValues,
+  assemblyVariableDefinitions,
   assemblyId,
   assemblyComponentId,
-  assemblyUnboundValues,
   componentInstanceProps,
   componentInstanceUnboundValues,
   componentInstanceDataSource,
@@ -37,6 +42,7 @@ export const deserializeAssemblyNode = ({
   parentId?: string;
   assemblyDataSource: ExperienceDataSource;
   assemblyUnboundValues: ExperienceUnboundValues;
+  assemblyVariableDefinitions: ExperienceComponentSettings['variableDefinitions'];
   assemblyId: string;
   assemblyComponentId: string;
   componentInstanceProps: Record<string, ComponentPropertyValue>;
@@ -52,28 +58,31 @@ export const deserializeAssemblyNode = ({
     if (variable.type === 'ComponentValue') {
       const componentValueKey = variable.key;
       const instanceProperty = componentInstanceProps[componentValueKey];
+      const variableDefinition = assemblyVariableDefinitions?.[componentValueKey];
+      const defaultValue = variableDefinition?.defaultValue;
 
       // For assembly, we look up the value in the assembly instance and
       // replace the componentValue with that one.
       if (instanceProperty?.type === 'UnboundValue') {
         const componentInstanceValue = componentInstanceUnboundValues[instanceProperty.key];
         unboundValues[instanceProperty.key] = componentInstanceValue;
-        childNodeVariable[variableName] = {
-          type: 'UnboundValue',
-          key: instanceProperty.key,
-        };
+        childNodeVariable[variableName] = instanceProperty;
       } else if (instanceProperty?.type === 'BoundValue') {
         const [, dataSourceKey] = instanceProperty.path.split('/');
         const componentInstanceValue = componentInstanceDataSource[dataSourceKey];
         dataSource[dataSourceKey] = componentInstanceValue;
-        childNodeVariable[variableName] = {
-          type: 'BoundValue',
-          path: instanceProperty.path,
-        };
+        childNodeVariable[variableName] = instanceProperty;
       } else if (instanceProperty?.type === 'HyperlinkValue') {
         const componentInstanceValue = componentInstanceDataSource[instanceProperty.linkTargetKey];
         dataSource[instanceProperty.linkTargetKey] == componentInstanceValue;
         childNodeVariable[variableName] = instanceProperty;
+      } else if (instanceProperty?.type === 'DesignValue') {
+        childNodeVariable[variableName] = instanceProperty;
+      } else if (!instanceProperty && defaultValue) {
+        // So far, we only automatically fallback to the defaultValue for design properties
+        if (variableDefinition.group === 'style') {
+          childNodeVariable[variableName] = defaultValue as DesignValue;
+        }
       }
     }
   }
@@ -86,12 +95,13 @@ export const deserializeAssemblyNode = ({
     return deserializeAssemblyNode({
       node: child,
       nodeId: `${assemblyComponentId}---${newNodeLocation}`,
-      parentId: nodeId,
       nodeLocation: newNodeLocation,
-      assemblyId,
+      parentId: nodeId,
       assemblyDataSource,
-      assemblyComponentId,
       assemblyUnboundValues,
+      assemblyVariableDefinitions,
+      assemblyId,
+      assemblyComponentId,
       componentInstanceProps,
       componentInstanceUnboundValues,
       componentInstanceDataSource,
@@ -155,6 +165,14 @@ export const resolveAssembly = ({
     console.warn(`Component tree for assembly with ID '${componentId}' not found`, {
       componentFields,
     });
+    return node;
+  }
+
+  if (!componentFields.componentSettings?.variableDefinitions) {
+    console.warn(`Component settings for assembly with ID '${componentId}' not found`, {
+      componentFields,
+    });
+    return node;
   }
 
   const deserializedNode = deserializeAssemblyNode({
@@ -170,6 +188,7 @@ export const resolveAssembly = ({
     assemblyId: assembly.sys.id,
     assemblyComponentId: node.data.id,
     assemblyUnboundValues: componentFields.unboundValues,
+    assemblyVariableDefinitions: componentFields.componentSettings!.variableDefinitions,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
     componentInstanceDataSource: node.data.dataSource,

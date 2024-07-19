@@ -180,6 +180,7 @@ export const useComponentProps = ({
           // so we always render the default value
           return {
             ...acc,
+            // This can either a design (style) or a content variable
             [variableName]: variableDefinition.defaultValue,
           };
         } else {

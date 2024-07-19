@@ -24,6 +24,10 @@
   outline-offset: -1px;
 }
 
+.Dropzone.isAssembly {
+  width: 100%;
+}
+
 .Dropzone.isDestination:not(.isRoot):before {
   transition:
     outline 0.2s,

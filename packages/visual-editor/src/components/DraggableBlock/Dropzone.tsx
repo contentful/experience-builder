@@ -13,7 +13,11 @@ import { EmptyContainer } from '@components/EmptyContainer/EmptyContainer';
 import { getItem } from '@/utils/getItem';
 import { useZoneStore } from '@/store/zone';
 import { useDropzoneDirection } from '@/hooks/useDropzoneDirection';
-import { ASSEMBLY_NODE_TYPES, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
+import {
+  ASSEMBLY_NODE_TYPE,
+  ASSEMBLY_NODE_TYPES,
+  CONTENTFUL_COMPONENTS,
+} from '@contentful/experiences-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { DropzoneClone } from './DropzoneClone';
@@ -50,16 +54,16 @@ export function Dropzone({
 
   const draggedDestinationId = draggedItem && draggedItem.destination?.droppableId;
 
-  const draggedBlockId = useMemo(() => {
+  const draggedNode = useMemo(() => {
     if (!draggedItem) return;
-    return getItem({ id: draggedItem.draggableId }, tree)?.data.blockId;
+    return getItem({ id: draggedItem.draggableId }, tree);
   }, [draggedItem, tree]);
 
   const isRootZone = zoneId === ROOT_ID;
   const isDestination = draggedDestinationId === zoneId;
   const isEmptyCanvas = isRootZone && !content.length;
   const isAssembly = ASSEMBLY_NODE_TYPES.includes(node?.type || '');
-
+  const isRootAssembly = node?.type === ASSEMBLY_NODE_TYPE;
   const htmlDraggableProps = getHtmlDragProps(dragProps);
   const htmlProps = getHtmlComponentProps(rest);
   // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
@@ -93,8 +97,25 @@ export function Dropzone({
   );
 
   const isDropzoneEnabled = useMemo(() => {
+    const isColumns = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
+    const isDraggingSingleColumn =
+      draggedNode?.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
+    const isParentOfDraggedNode = node?.data.id === draggedNode?.parentId;
+
+    // If dragging a single column, only enable the dropzone of the parent
+    // columns component
+    if (isDraggingSingleColumn && isColumns && isParentOfDraggedNode) {
+      return true;
+    }
+
+    // If dragging a single column, disable dropzones for any component besides
+    // the parent of the dragged single column
+    if (isDraggingSingleColumn && !isParentOfDraggedNode) {
+      return false;
+    }
+
     // Disable dropzone for Columns component
-    if (node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id) {
+    if (isColumns) {
       return false;
     }
 
@@ -104,20 +125,13 @@ export function Dropzone({
     }
 
     // Enable dropzone for the non-root hovered zones if component is not allowed on root
-    if (!isDraggingNewComponent && !isComponentAllowedOnRoot(draggedBlockId)) {
+    if (!isDraggingNewComponent && !isComponentAllowedOnRoot(draggedNode?.data.blockId)) {
       return isHoveringZone && !isRootZone;
     }
 
     // Enable dropzone for the hovered zone only
     return isHoveringZone;
-  }, [
-    node?.data.blockId,
-    isAssembly,
-    isHoveringZone,
-    isRootZone,
-    isDraggingNewComponent,
-    draggedBlockId,
-  ]);
+  }, [isAssembly, isHoveringZone, isRootZone, isDraggingNewComponent, draggedNode, node]);
 
   if (!resolveDesignValue) {
     return null;
@@ -157,6 +171,7 @@ export function Dropzone({
               [styles.isDestination]: isDestination && !isAssembly,
               [styles.isRoot]: isRootZone,
               [styles.isEmptyZone]: !content.length,
+              [styles.isAssembly]: isRootAssembly,
             })}
             data-ctfl-slot-id={slotId}>
             {isEmptyCanvas ? (

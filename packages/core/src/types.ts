@@ -231,19 +231,43 @@ export type RecursiveDesignTokenDefinition = {
   [key: string]: string | RecursiveDesignTokenDefinition;
 };
 
+type DesignBorderTokenStyle = 'solid' | 'dashed' | 'dotted';
+/** We are currently in the process of implementing this feature. Do not use this field in your designTokenDefinition. **/
+type DesignTextTokenEmphasis =
+  | 'bold'
+  | 'italic'
+  | 'underline'
+  | 'bold italic'
+  | 'bold underline'
+  | 'italic underline'
+  | 'bold italic underline'
+  | 'none';
+/** We are currently in the process of implementing this feature. Do not use this field in your designTokenDefinition. **/
+type DesignTextTokenCase = 'capitalize' | 'uppercase' | 'lowercase' | 'normal';
+
 export type DesignTokensDefinition = {
   spacing?: Record<string, string>;
   sizing?: Record<string, string>;
   color?: Record<string, string>;
-  border?: Record<
-    string,
-    { width?: string; style?: 'solid' | 'dashed' | 'dotted'; color?: string }
-  >;
+  border?: Record<string, { width?: string; style?: DesignBorderTokenStyle; color?: string }>;
   borderRadius?: Record<string, string>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;
   letterSpacing?: Record<string, string>;
   textColor?: Record<string, string>;
+  /** We are currently in the process of implementing this feature. Do not use this field in your designTokenDefinition. **/
+  text?: Record<
+    string,
+    {
+      emphasis?: DesignTextTokenEmphasis;
+      fontSize?: string;
+      case?: DesignTextTokenCase;
+      fontWeight?: string;
+      lineHeight?: string;
+      letterSpacing?: string;
+      color?: string;
+    }
+  >;
 } & RecursiveDesignTokenDefinition;
 
 /** Type of experience entry JSON data structure as returned by CPA/CDA */
