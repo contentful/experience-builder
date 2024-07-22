@@ -1,5 +1,5 @@
-import { validateExperienceFields } from './validateExperienceFields';
-import { experience } from '../../test/__fixtures__/v2023_09_28/experience';
+import { validateExperienceFields } from '../validateExperienceFields';
+import { experience } from '../../test/__fixtures__/v2023_09_28';
 import { describe, it, expect } from 'vitest';
 
 describe('validateExperienceFields', () => {

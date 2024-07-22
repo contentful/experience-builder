@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { zodToContentfulError } from '../../src/utils/zodToContentfulError';
+import { zodToContentfulError } from './zodToContentfulError';
 import { ZodIssueCode } from 'zod';
 
 describe('zodToContentfulError', () => {

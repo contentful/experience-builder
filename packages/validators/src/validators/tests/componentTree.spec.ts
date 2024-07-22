@@ -1,5 +1,5 @@
-import { validateExperienceFields } from '../../src/validators';
-import { experience } from '../__fixtures__/v2023_09_28';
+import { validateExperienceFields } from '..';
+import { experience } from '../../test/__fixtures__/v2023_09_28';
 import { describe, it, expect } from 'vitest';
 
 const schemaVersion = '2023-09-28' as const;

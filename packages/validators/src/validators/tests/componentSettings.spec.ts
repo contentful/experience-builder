@@ -1,7 +1,6 @@
-import { validateExperienceFields } from '../../src/validators';
-import { experience, experiencePattern } from '../__fixtures__/v2023_09_28';
+import { validateExperienceFields } from '../validateExperienceFields';
+import { experience, experiencePattern } from '../../test/__fixtures__/v2023_09_28';
 import { describe, it, expect } from 'vitest';
-import { SafeParseError } from 'zod';
 
 const schemaVersion = '2023-09-28' as const;
 const locale = 'en-US';
