@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PrimitiveValueSchema } from './v2023_09_28/experience';
 
 export const DefinitionPropertyTypeSchema = z.enum([
   'Text',
@@ -29,7 +30,7 @@ export const ComponentDefinitionSchema = z.object({
         type: DefinitionPropertyTypeSchema,
         description: z.string().optional(),
         group: z.string().optional(),
-        defaultValue: z.union([z.string(), z.number(), z.undefined(), z.any()]).optional(),
+        defaultValue: PrimitiveValueSchema.optional(),
       })
       .superRefine((val, ctx) => {
         switch (val.type) {

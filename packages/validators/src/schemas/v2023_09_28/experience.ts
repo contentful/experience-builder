@@ -26,7 +26,7 @@ const DataSourceSchema = z.record(
   }),
 );
 
-const PrimitiveValueSchema = z.union([
+export const PrimitiveValueSchema = z.union([
   z.string(),
   z.boolean(),
   z.number(),
