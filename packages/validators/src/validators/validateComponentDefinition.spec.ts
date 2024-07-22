@@ -1,4 +1,4 @@
-import { validateComponentDefinition } from '.';
+import { validateComponentDefinition } from './validateComponentDefinition';
 import { componentDefinition } from '../../test/__fixtures__/componentDefinition';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { ComponentDefinitionType } from '@/schemas/componentDefinition';
