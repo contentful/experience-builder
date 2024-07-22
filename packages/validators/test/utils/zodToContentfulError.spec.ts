@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { zodToContentfulError } from '../../src/utils/zodToContentfulError';
-import { ZodInvalidStringIssue, ZodInvalidTypeIssue, ZodIssueCode } from 'zod';
+import { ZodIssueCode } from 'zod';
 
 describe('zodToContentfulError', () => {
   describe('ZodIssueCode.invalid_type', () => {

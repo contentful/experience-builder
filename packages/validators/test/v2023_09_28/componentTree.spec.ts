@@ -199,7 +199,6 @@ describe('componentTree', () => {
 
       expect(result.success).toBe(false);
       const error = result.errors?.[0];
-      console.log(result.errors);
 
       expect(result.success).toBe(false);
       expect(error?.name).toBe('required');

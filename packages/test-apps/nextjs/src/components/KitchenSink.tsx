@@ -10,6 +10,10 @@ interface KitchenSinkProps {
   imageListReference?: UnresolvedLink<'Asset'>[];
   listReference?: UnresolvedLink<'Entry'>[];
   text?: string;
+  date?: string;
+  location?: string;
+  media?: string;
+  hyperlink?: string;
 }
 
 const KitchenSink: React.FC<KitchenSinkProps> = ({
@@ -20,6 +24,10 @@ const KitchenSink: React.FC<KitchenSinkProps> = ({
   listText,
   listReference,
   text,
+  date,
+  location,
+  media,
+  hyperlink,
   ...props
 }) => {
   return (
@@ -30,6 +38,42 @@ const KitchenSink: React.FC<KitchenSinkProps> = ({
         <div>
           <h3>Text</h3>
           <div>{text}</div>
+          <hr />
+        </div>
+      )}
+
+      {date && (
+        <div>
+          <h3>Date</h3>
+          <h4>type: {typeof date}</h4>
+          <div>{date}</div>
+          <hr />
+        </div>
+      )}
+
+      {location && (
+        <div>
+          <h3>Location</h3>
+          <h4>type: {typeof location}</h4>
+          <div>{JSON.stringify(location, null, 2)}</div>
+          <hr />
+        </div>
+      )}
+
+      {hyperlink && (
+        <div>
+          <h3>Hyperlink</h3>
+          <h4>type: {typeof hyperlink}</h4>
+          <div>{hyperlink}</div>
+          <hr />
+        </div>
+      )}
+
+      {media && (
+        <div>
+          <h3>Media</h3>
+          <h4>type: {typeof media}</h4>
+          <div>{JSON.stringify(media, null, 2)}</div>
           <hr />
         </div>
       )}

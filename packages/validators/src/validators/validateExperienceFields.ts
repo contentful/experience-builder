@@ -1,21 +1,10 @@
-import { z } from 'zod';
-import { Schema_2023_09_28, ComponentDefinitionSchema } from './schemas';
-import {
-  ContentfulErrorDetails,
-  zodToContentfulError,
-  CodeNames,
-} from './utils/zodToContentfulError';
-
-import { type SchemaVersions } from './types';
-import { BreakpointSchema, breakpointsRefinement } from './schemas/latest';
+import { type SchemaVersions } from '../types';
+import { ValidatorReturnValue } from './ValidatorReturnValue';
+import { Schema_2023_09_28 } from '../schemas';
+import { zodToContentfulError, CodeNames } from '../utils/zodToContentfulError';
 
 const VERSION_SCHEMAS = {
   '2023-09-28': Schema_2023_09_28,
-};
-
-type ValidatorReturnValue = {
-  success: boolean;
-  errors?: ContentfulErrorDetails[];
 };
 
 /**
@@ -64,31 +53,6 @@ export const validateExperienceFields = (
   if (!result.success) {
     return {
       success: result.success,
-      errors: result.error.issues.map(zodToContentfulError),
-    };
-  }
-  return { success: true };
-};
-
-export const validateComponentDefinition = (definition): ValidatorReturnValue => {
-  const result = ComponentDefinitionSchema.safeParse(definition);
-  if (!result.success) {
-    return {
-      success: false,
-      errors: result.error.issues.map(zodToContentfulError),
-    };
-  }
-  return { success: true };
-};
-
-export const validateBreakpointsDefinition = (breakpoints): ValidatorReturnValue => {
-  const result = z
-    .array(BreakpointSchema)
-    .superRefine(breakpointsRefinement)
-    .safeParse(breakpoints);
-  if (!result.success) {
-    return {
-      success: false,
       errors: result.error.issues.map(zodToContentfulError),
     };
   }

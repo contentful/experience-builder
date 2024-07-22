@@ -11,7 +11,8 @@
     "url": "git+https://github.com/contentful/experience-builder.git"
   },
   "scripts": {
-    "dev": "vite",
+    "predev": "npm run clean",
+    "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "build": "rollup -c rollup.config.mjs",
