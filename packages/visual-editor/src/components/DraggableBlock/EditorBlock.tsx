@@ -66,7 +66,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     resolveDesignValue,
     renderDropzone,
     userIsDragging,
-    slotId,
   });
   const { isSingleColumn, isWrapped } = useSingleColumn(node, resolveDesignValue);
   const setDomRect = useDraggedItemStore((state) => state.setDomRect);
