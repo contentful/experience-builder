@@ -157,6 +157,10 @@ defineComponents([
           type: 'Hyperlink',
           defaultValue: 'https://www.contentful.com',
         },
+        richText: {
+          displayName: 'Rich Text',
+          type: 'RichText',
+        },
       },
     },
     options: {

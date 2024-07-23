@@ -1,5 +1,7 @@
 import React from 'react';
 import { UnresolvedLink } from 'contentful';
+import { Document } from '@contentful/rich-text-types';
+import { RichText } from '@contentful/experiences-components-react';
 
 interface KitchenSinkProps {
   jsonObject?: object;
@@ -14,6 +16,7 @@ interface KitchenSinkProps {
   location?: string;
   media?: string;
   hyperlink?: string;
+  richText?: Document;
 }
 
 const KitchenSink: React.FC<KitchenSinkProps> = ({
@@ -28,6 +31,7 @@ const KitchenSink: React.FC<KitchenSinkProps> = ({
   location,
   media,
   hyperlink,
+  richText,
   ...props
 }) => {
   return (
@@ -56,6 +60,18 @@ const KitchenSink: React.FC<KitchenSinkProps> = ({
           <h3>Location</h3>
           <h4>type: {typeof location}</h4>
           <div>{JSON.stringify(location, null, 2)}</div>
+          <hr />
+        </div>
+      )}
+
+      {richText && (
+        <div>
+          <h3>Rich Text</h3>
+          <h4>type: {typeof richText}</h4>
+          <div>{JSON.stringify(richText, null, 2)}</div>
+          <div>
+            <RichText value={richText} />
+          </div>
           <hr />
         </div>
       )}
