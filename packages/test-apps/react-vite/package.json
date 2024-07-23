@@ -17,7 +17,7 @@
     "depcruise": "depcruise src"
   },
   "dependencies": {
-    "@contentful/experiences-sdk-react": "file:../../experiences-sdk-react",
+    "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
     "@contentful/experiences-components-react": "file:../../components",
     "@contentful/experiences-storybook-addon": "file:../../storybook-addon",
     "contentful": "^10.6.14",

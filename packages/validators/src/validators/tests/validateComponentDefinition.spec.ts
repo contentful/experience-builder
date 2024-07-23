@@ -96,20 +96,14 @@ describe('validateComponentDefinition', () => {
         expect(result.success).toBe(true);
       });
 
-      it('should pass when defaultValue is an array', () => {
-        updatedComponentDefinition.variables!.testVar.defaultValue = ['test'];
-        const result = validateComponentDefinition(updatedComponentDefinition);
-        expect(result.success).toBe(true);
-      });
-
-      it('should return an error if defaultValue is not an array', () => {
+      it('should return an error if defaultValue is defined', () => {
         updatedComponentDefinition.variables!.testVar.defaultValue = 'test';
 
         const result = validateComponentDefinition(updatedComponentDefinition);
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be an array when type is "Array" for variables.testVar, got string instead',
+          'defaultValue is not supported for "Array" type for variables.testVar',
         );
       });
     });
@@ -280,32 +274,14 @@ describe('validateComponentDefinition', () => {
         expect(result.success).toBe(true);
       });
 
-      it('should pass when defaultValue is an object', () => {
-        updatedComponentDefinition.variables!.testVar.defaultValue = {
-          sys: {
-            space: {},
-            type: 'Entry',
-            id: 'abc123',
-            contentType: {
-              sys: {},
-            },
-            locale: 'en-US',
-            environment: {},
-          },
-          fields: {},
-        };
-        const result = validateComponentDefinition(updatedComponentDefinition);
-        expect(result.success).toBe(true);
-      });
-
-      it('should return an error if defaultValue is not an object', () => {
+      it('should return an error if defaultValue is defined', () => {
         updatedComponentDefinition.variables!.testVar.defaultValue = 'test';
 
         const result = validateComponentDefinition(updatedComponentDefinition);
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be an object when type is "Link" for variables.testVar, got string instead',
+          'defaultValue is not supported for "Link" type for variables.testVar',
         );
       });
     });

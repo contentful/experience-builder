@@ -119,24 +119,10 @@ defineComponents([
         listText: {
           displayName: 'List Text',
           type: 'Array',
-          defaultValue: ['one', 'two', 'three'],
         },
         entryReference: {
           displayName: 'Entry Reference',
           type: 'Link',
-          defaultValue: {
-            sys: {
-              space: {},
-              type: 'Entry',
-              id: 'abc123',
-              contentType: {
-                sys: {},
-              },
-              locale: 'en-US',
-              environment: {},
-            },
-            fields: {},
-          },
         },
         imageReference: {
           displayName: 'Image Reference',
@@ -149,6 +135,7 @@ defineComponents([
         text: {
           displayName: 'Text',
           type: 'Text',
+          // defaultValue: 'Lorem ipsum',
         },
         date: {
           displayName: 'Date',

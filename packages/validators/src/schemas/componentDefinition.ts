@@ -1,5 +1,12 @@
 import { z } from 'zod';
-import { PrimitiveValueSchema } from './v2023_09_28/experience';
+
+export const PrimitiveValueSchema = z.union([
+  z.string(),
+  z.boolean(),
+  z.number(),
+  z.record(z.any(), z.any()),
+  z.undefined(),
+]);
 
 export const DefinitionPropertyTypeSchema = z.enum([
   'Text',
@@ -35,10 +42,10 @@ export const ComponentDefinitionSchema = z.object({
       .superRefine((val, ctx) => {
         switch (val.type) {
           case 'Array':
-            if (typeof val.defaultValue !== 'undefined' && !Array.isArray(val.defaultValue)) {
+            if (typeof val.defaultValue !== 'undefined') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be an array when type is "Array" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue is not supported for "Array" type for ${ctx.path.join('.')}`,
                 fatal: false,
               });
             }
@@ -74,7 +81,7 @@ export const ComponentDefinitionSchema = z.object({
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'object') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be an object when type is "Link" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue is not supported for "Link" type for ${ctx.path.join('.')}`,
                 fatal: false,
               });
             }

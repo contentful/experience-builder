@@ -18,7 +18,8 @@
     "build": "rollup -c rollup.config.mjs",
     "preview": "vite preview",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "depcruise": "depcruise src"
   },
   "files": [
     "dist/**/*.*"

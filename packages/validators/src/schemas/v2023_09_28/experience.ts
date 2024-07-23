@@ -1,6 +1,10 @@
 import { z } from 'zod';
 import { SchemaVersions } from '../schemaVersions';
-import { DefinitionPropertyTypeSchema, DefinitionPropertyKeySchema } from '../componentDefinition';
+import {
+  DefinitionPropertyTypeSchema,
+  DefinitionPropertyKeySchema,
+  PrimitiveValueSchema,
+} from '../componentDefinition';
 
 const uuidKeySchema = z
   .string()
@@ -25,14 +29,6 @@ const DataSourceSchema = z.record(
     }),
   }),
 );
-
-export const PrimitiveValueSchema = z.union([
-  z.string(),
-  z.boolean(),
-  z.number(),
-  z.record(z.any(), z.any()),
-  z.undefined(),
-]);
 
 const ValuesByBreakpointSchema = z.record(z.lazy(() => PrimitiveValueSchema));
 
