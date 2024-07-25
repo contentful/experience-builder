@@ -21,7 +21,7 @@ export default [
     plugins: [
       nodeResolve(),
       commonjs(),
-      typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true })
+      typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true }),
     ],
     external: [/node_modules\/(?!tslib.*)/],
   },
@@ -45,5 +45,5 @@ export default [
         compilerOptions: { noEmitOnError: process.env.DEV ? false : true },
       }),
     ],
-  }
+  },
 ];
