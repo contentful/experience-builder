@@ -575,8 +575,6 @@ export const indexByBreakpoint = ({
     let resolvedVariableData = variableData;
 
     if (variableData.type === 'ComponentValue') {
-      // console.log('componentVariablesOverwrites: ', componentVariablesOverwrites);
-      // console.log('componentSettings: ', componentSettings);
       const variableDefinition = componentSettings?.variableDefinitions[variableData.key];
       if (variableDefinition.group === 'style' && variableDefinition.defaultValue !== undefined) {
         const overrideVariableData = componentVariablesOverwrites?.[variableData.key];
