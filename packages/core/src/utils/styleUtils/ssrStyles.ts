@@ -552,11 +552,26 @@ export const indexByBreakpoint = ({
       continue;
     }
 
-    if (variableData.type !== 'DesignValue') {
+    let resolvedVariableData = variableData;
+
+    if (variableData.type === 'ComponentValue') {
+      // console.log('componentVariablesOverwrites: ', componentVariablesOverwrites);
+      // console.log('componentSettings: ', componentSettings);
+      const variableDefinition = componentSettings?.variableDefinitions[variableData.key];
+      if (variableDefinition.group === 'style' && variableDefinition.defaultValue !== undefined) {
+        const overrideVariableData = componentVariablesOverwrites?.[variableData.key];
+        resolvedVariableData =
+          overrideVariableData || (variableDefinition.defaultValue as ComponentPropertyValue);
+      }
+    }
+
+    if (resolvedVariableData.type !== 'DesignValue') {
       continue;
     }
 
-    for (const [breakpointId, variableValue] of Object.entries(variableData.valuesByBreakpoint)) {
+    for (const [breakpointId, variableValue] of Object.entries(
+      resolvedVariableData.valuesByBreakpoint,
+    )) {
       if (!variableValue) {
         continue;
       }
