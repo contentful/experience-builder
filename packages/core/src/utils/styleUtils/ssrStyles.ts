@@ -18,7 +18,7 @@ import {
   Breakpoint,
 } from '@/types';
 import { CF_STYLE_ATTRIBUTES } from '@/constants';
-import { nanoid } from 'nanoid';
+import { generateRandomId } from '@/utils';
 
 type MediaQueryTemplate = Record<
   string,
@@ -324,7 +324,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       // we can achieve "desktop first" or "mobile first" approach to style over-writes
       if (patternWrapper) {
         // @ts-expect-error TODO: fix the types - add id to ComponentTreeNode
-        currentNode.id = currentNode.id ?? nanoid();
+        currentNode.id = currentNode.id ?? generateRandomId(15);
         // @ts-expect-error TODO: fix the types
         patternWrapper.variables.cfSsrClassName = {
           ...(patternWrapper.variables.cfSsrClassName ?? {}),
