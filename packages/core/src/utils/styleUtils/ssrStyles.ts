@@ -18,6 +18,7 @@ import {
   Breakpoint,
 } from '@/types';
 import { CF_STYLE_ATTRIBUTES } from '@/constants';
+import { nanoid } from 'nanoid';
 
 type MediaQueryTemplate = Record<
   string,
@@ -87,12 +88,14 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     unboundValues,
     componentSettings,
     componentVariablesOverwrites,
+    patternWrapper,
   }: {
     componentTree: ExperienceComponentTree;
     dataSource: ExperienceDataSource;
     unboundValues: ExperienceUnboundValues;
     componentSettings?: ExperienceComponentSettings;
     componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
+    patternWrapper?: ComponentTreeNode;
   }) => {
     // traversing the tree
     const queue: ComponentTreeNode[] = [];
@@ -166,6 +169,8 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           // and this is where the over-writes for the default values are stored
           // yes, I know, it's a bit confusing
           componentVariablesOverwrites: currentNode.variables,
+          // and this is where the pattern node
+          patternWrapper: currentNode,
         });
         continue;
       }
@@ -285,7 +290,6 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           'box-sizing': 'border-box'
         }
        */
-
         // I create a hash of the object above because that would ensure hash stability
         const styleHash = md5(JSON.stringify(stylesForBreakpointWithoutUndefined));
 
@@ -318,12 +322,28 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       // className3 will win over className2 and className1
       // making sure that we respect the order of breakpoints from
       // we can achieve "desktop first" or "mobile first" approach to style over-writes
-      currentNode.variables.cfSsrClassName = {
-        type: 'DesignValue',
-        valuesByBreakpoint: {
-          [breakpointIds[0]]: currentNodeClassNames.join(' '),
-        },
-      };
+      if (patternWrapper) {
+        // @ts-expect-error TODO: fix the types - add id to ComponentTreeNode
+        currentNode.id = currentNode.id ?? nanoid();
+        // @ts-expect-error TODO: fix the types
+        patternWrapper.variables.cfSsrClassName = {
+          ...(patternWrapper.variables.cfSsrClassName ?? {}),
+          type: 'DesignValue',
+          // @ts-expect-error TODO: fix the types - add id to ComponentTreeNode
+          [currentNode.id]: {
+            valuesByBreakpoint: {
+              [breakpointIds[0]]: currentNodeClassNames.join(' '),
+            },
+          },
+        };
+      } else {
+        currentNode.variables.cfSsrClassName = {
+          type: 'DesignValue',
+          valuesByBreakpoint: {
+            [breakpointIds[0]]: currentNodeClassNames.join(' '),
+          },
+        };
+      }
 
       queue.push(...currentNode.children);
     }
