@@ -108,7 +108,7 @@ export const CompositionBlock = ({
               variableDefinition,
               variable.path,
             );
-            acc[variableName] = value;
+            acc[variableName] = value ?? variableDefinition.defaultValue;
             break;
           }
 
@@ -130,7 +130,8 @@ export const CompositionBlock = ({
           }
           case 'UnboundValue': {
             const uuid = variable.key;
-            acc[variableName] = entityStore.unboundValues[uuid]?.value;
+            acc[variableName] =
+              entityStore.unboundValues[uuid]?.value ?? variableDefinition.defaultValue;
             break;
           }
           case 'ComponentValue':

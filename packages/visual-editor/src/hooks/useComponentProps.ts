@@ -96,7 +96,7 @@ export const useComponentProps = ({
         }
 
         if (variableMapping.type === 'DesignValue') {
-          const valueByBreakpoint = resolveDesignValue(
+          const valuesByBreakpoint = resolveDesignValue(
             variableMapping.valuesByBreakpoint,
             variableName,
           );
@@ -105,9 +105,9 @@ export const useComponentProps = ({
               ? calculateNodeDefaultHeight({
                   blockId: node.data.blockId,
                   children: node.children,
-                  value: valueByBreakpoint,
+                  value: valuesByBreakpoint,
                 })
-              : valueByBreakpoint;
+              : valuesByBreakpoint;
 
           return {
             ...acc,
