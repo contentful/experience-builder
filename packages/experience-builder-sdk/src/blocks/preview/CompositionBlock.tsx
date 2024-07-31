@@ -88,9 +88,9 @@ export const CompositionBlock = ({
     }
 
     const propMap: Record<string, PrimitiveValue> = {
-      // @ts-expect-error -- bla
+      // @ts-expect-error -- node id is being generated in ssrStyles.ts, currently missing ComponentTreeNode type
       cfSsrClassName: node.id
-        ? // @ts-expect-error -- bla
+        ? // @ts-expect-error -- node id is being generated in ssrStyles.ts, currently missing ComponentTreeNode type
           getPatternChildNodeClassName?.(node.id)
         : node.variables.cfSsrClassName
           ? resolveDesignValue(
@@ -200,7 +200,7 @@ export const CompositionBlock = ({
 
   const _getPatternChildNodeClassName = (childNodeId: string) => {
     if (isAssembly) {
-      // @ts-expect-error -- bla
+      // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
       const classesForNode = node.variables.cfSsrClassName[childNodeId];
       if (classesForNode) {
         return resolveDesignValue(
