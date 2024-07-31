@@ -168,9 +168,8 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
             },
             className: classNames(styles.DraggableComponent, {
               [styles.isAssemblyBlock]: isAssemblyBlock,
-              [styles.isDragging]: snapshot?.isDragging,
+              [styles.isDragging]: snapshot?.isDragging || userIsDragging,
               [styles.isSelected]: isSelected,
-              [styles.userIsDragging]: userIsDragging,
               [styles.isHoveringComponent]: isHoveredComponent,
             }),
             style: getStyle(provided.draggableProps.style, snapshot),
