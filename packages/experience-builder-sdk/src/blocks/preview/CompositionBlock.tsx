@@ -33,6 +33,7 @@ type CompositionBlockProps = {
   entityStore: EntityStore;
   hyperlinkPattern?: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
+  getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
 };
 
 export const CompositionBlock = ({
@@ -41,6 +42,7 @@ export const CompositionBlock = ({
   entityStore,
   hyperlinkPattern,
   resolveDesignValue,
+  getPatternChildNodeClassName,
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
     () =>
@@ -73,18 +75,30 @@ export const CompositionBlock = ({
   }, [isAssembly, node.definitionId]);
 
   const nodeProps = useMemo(() => {
-    const propMap: Record<string, PrimitiveValue> = {
-      cfSsrClassName: node.variables.cfSsrClassName
-        ? resolveDesignValue(
-            (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
-            'cfSsrClassName',
-          )
-        : undefined,
-    };
     // Don't enrich the assembly wrapper node with props
     if (!componentRegistration || isAssembly) {
-      return propMap;
+      return {
+        cfSsrClassName: node.variables.cfSsrClassName
+          ? resolveDesignValue(
+              (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+              'cfSsrClassName',
+            )
+          : undefined,
+      };
     }
+
+    const propMap: Record<string, PrimitiveValue> = {
+      // @ts-expect-error -- node id is being generated in ssrStyles.ts, currently missing ComponentTreeNode type
+      cfSsrClassName: node.id
+        ? // @ts-expect-error -- node id is being generated in ssrStyles.ts, currently missing ComponentTreeNode type
+          getPatternChildNodeClassName?.(node.id)
+        : node.variables.cfSsrClassName
+          ? resolveDesignValue(
+              (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+              'cfSsrClassName',
+            )
+          : undefined,
+    };
 
     const props = Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
@@ -185,11 +199,27 @@ export const CompositionBlock = ({
 
   const { component } = componentRegistration;
 
+  const _getPatternChildNodeClassName = (childNodeId: string) => {
+    if (isAssembly) {
+      // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
+      const classesForNode = node.variables.cfSsrClassName[childNodeId];
+      if (classesForNode) {
+        return resolveDesignValue(
+          (classesForNode as DesignValue).valuesByBreakpoint,
+          'cfSsrClassName',
+        ) as string;
+      }
+      return;
+    }
+    return getPatternChildNodeClassName?.(childNodeId);
+  };
+
   const children =
     componentRegistration.definition.children === true
       ? node.children.map((childNode: ComponentTreeNode, index) => {
           return (
             <CompositionBlock
+              getPatternChildNodeClassName={_getPatternChildNodeClassName}
               node={childNode}
               key={index}
               locale={locale}
