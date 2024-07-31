@@ -71,6 +71,8 @@ export const deserializeAssemblyNode = ({
 
   return {
     definitionId: node.definitionId,
+    // @ts-expect-error -- required to extract Ssr styles classNames for pattern instances, ComponentTreeNode type is missing id
+    id: node.id,
     variables,
     children,
     slotId: node.slotId,
@@ -108,6 +110,8 @@ export const resolveAssembly = ({
   const deserializedNode = deserializeAssemblyNode({
     node: {
       definitionId: node.definitionId,
+      // @ts-expect-error -- required to extract Ssr styles classNames for pattern instances, ComponentTreeNode type is missing id
+      id: node.id,
       variables: node.variables,
       children: componentFields.componentTree.children,
     },

@@ -61,7 +61,6 @@ export const useComponentProps = ({
   renderDropzone,
   definition,
   userIsDragging,
-  slotId,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
@@ -69,7 +68,7 @@ export const useComponentProps = ({
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
 
-  const isEmptyZone = !node.children.filter((child) => child.data.slotId === slotId).length;
+  const isEmptyZone = !node.children.length;
 
   const props: ComponentProps = useMemo(() => {
     const propsBase = {
@@ -97,7 +96,7 @@ export const useComponentProps = ({
         }
 
         if (variableMapping.type === 'DesignValue') {
-          const valueByBreakpoint = resolveDesignValue(
+          const valuesByBreakpoint = resolveDesignValue(
             variableMapping.valuesByBreakpoint,
             variableName,
           );
@@ -106,9 +105,9 @@ export const useComponentProps = ({
               ? calculateNodeDefaultHeight({
                   blockId: node.data.blockId,
                   children: node.children,
-                  value: valueByBreakpoint,
+                  value: valuesByBreakpoint,
                 })
-              : valueByBreakpoint;
+              : valuesByBreakpoint;
 
           return {
             ...acc,
