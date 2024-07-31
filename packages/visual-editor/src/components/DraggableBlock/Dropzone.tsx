@@ -165,6 +165,7 @@ export function Dropzone({
             }}
             id={zoneId}
             data-ctfl-zone-id={zoneId}
+            data-ctfl-slot-id={slotId}
             className={classNames(dragProps?.className, styles.Dropzone, className, {
               [styles.isEmptyCanvas]: isEmptyCanvas,
               [styles.isDragging]: userIsDragging,
@@ -172,8 +173,8 @@ export function Dropzone({
               [styles.isRoot]: isRootZone,
               [styles.isEmptyZone]: !content.length,
               [styles.isAssembly]: isRootAssembly,
-            })}
-            data-ctfl-slot-id={slotId}>
+              [styles.isSlot]: Boolean(slotId),
+            })}>
             {isEmptyCanvas ? (
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
             ) : (

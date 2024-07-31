@@ -22,7 +22,6 @@ type UseComponentProps = {
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
-  slotId?: string;
 };
 
 export const useComponent = ({
@@ -30,7 +29,6 @@ export const useComponent = ({
   resolveDesignValue,
   renderDropzone,
   userIsDragging,
-  slotId,
 }: UseComponentProps) => {
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const entityStore = useEntityStore((state) => state.entityStore);
@@ -74,7 +72,6 @@ export const useComponent = ({
     renderDropzone,
     definition: componentRegistration?.definition,
     userIsDragging,
-    slotId,
   });
 
   const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
