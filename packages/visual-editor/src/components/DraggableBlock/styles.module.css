@@ -1,4 +1,5 @@
-.DraggableComponent {
+.DraggableComponent,
+.Dropzone:not(.isSlot) {
   position: relative;
   transition: background-color 0.2s;
   pointer-events: all;
@@ -6,7 +7,8 @@
   cursor: grab;
 }
 
-.DraggableComponent:before {
+.DraggableComponent:before,
+.Dropzone:not(.isSlot):before {
   content: '';
   position: absolute;
   top: 0;
@@ -28,15 +30,6 @@
   width: 100%;
 }
 
-.Dropzone.isDestination:not(.isRoot):before {
-  transition:
-    outline 0.2s,
-    background-color 0.2s;
-  outline: 2px dashed var(--exp-builder-blue400);
-  background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
-  z-index: 2;
-}
-
 .DraggableComponent:is(.Dropzone).isDragging {
   pointer-events: all;
 }
@@ -52,6 +45,15 @@
 
 .isDragging:not(.isRoot):not(.DraggableClone):before {
   outline: 2px dashed var(--exp-builder-gray300);
+}
+
+.Dropzone.isDestination:not(.isRoot):before {
+  transition:
+    outline 0.2s,
+    background-color 0.2s;
+  outline: 2px dashed var(--exp-builder-blue400);
+  background-color: rgba(var(--exp-builder-blue100-rgb), 0.5);
+  z-index: 2;
 }
 
 .DraggableClone:before {
