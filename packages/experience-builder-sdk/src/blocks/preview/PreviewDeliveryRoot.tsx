@@ -14,8 +14,6 @@ type DeliveryRootProps = {
 export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) => {
   const { entityStore } = experience;
 
-  console.log({ entityStore });
-
   const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? []);
 
   if (!entityStore?.experienceEntryFields || !entityStore?.schemaVersion) {

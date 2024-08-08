@@ -232,8 +232,6 @@ export const useReadOnlySubscriber = () => {
             await fetchMissingEntities(newEntityStore, dataSource, tree);
           }
 
-          console.log('update tree 4432', tree);
-
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
           break;

@@ -111,8 +111,6 @@ export const useComponent = ({
 
     const { children, innerRef, Tag = 'div', ToolTipAndPlaceholder, style, ...rest } = dragProps;
 
-    console.log({ rest });
-
     return (
       <Tag
         {...rest}

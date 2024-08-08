@@ -32,8 +32,6 @@ export const ExperienceRoot = ({
     isEditorMode,
   });
 
-  console.log({ isEditorMode, isReadOnlyMode }, window.__EB__);
-
   if (isEditorMode) {
     return (
       <VisualEditorRoot

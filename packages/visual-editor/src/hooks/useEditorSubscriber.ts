@@ -195,8 +195,6 @@ export function useEditorSubscriber() {
         case INCOMING_EVENTS.ExperienceUpdated: {
           const { tree, locale, changedNode, changedValueType, assemblies } = eventData.payload;
 
-          console.log('tree updated', tree);
-
           // Make sure to first store the assemblies before setting the tree and thus triggering a rerender
           if (assemblies) {
             setAssemblies(assemblies);
@@ -235,8 +233,6 @@ export function useEditorSubscriber() {
             setUnboundValues(unboundValues);
             await fetchMissingEntities(newEntityStore, dataSource, tree);
           }
-
-          console.log('update tree', tree);
 
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
