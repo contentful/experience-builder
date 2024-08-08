@@ -8,7 +8,7 @@ export type ContentfulDividerProps = {
 export const ContentfulDivider = (props: ContentfulDividerProps) => {
   const { className } = props;
   return (
-    <div className={'cf-divider'} {...props}>
+    <div className="cf-divider" {...props}>
       <hr className={className} />
     </div>
   );
