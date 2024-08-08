@@ -7,11 +7,14 @@ import { useBreakpoints } from '../../hooks';
 
 type DeliveryRootProps = {
   experience: Experience<EntityStore>;
+
   locale: string;
 };
 
 export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) => {
   const { entityStore } = experience;
+
+  console.log({ entityStore });
 
   const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? []);
 

@@ -21,14 +21,12 @@ type UseComponentProps = {
   node: ExperienceTreeNode;
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
-  userIsDragging: boolean;
 };
 
-export const useComponent = ({
+export const useReadOnlyComponent = ({
   node: rawNode,
   resolveDesignValue,
   renderDropzone,
-  userIsDragging,
 }: UseComponentProps) => {
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const entityStore = useEntityStore((state) => state.entityStore);
@@ -71,22 +69,14 @@ export const useComponent = ({
     resolveDesignValue,
     renderDropzone,
     definition: componentRegistration?.definition,
-    userIsDragging,
   });
 
-  const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
+  const elementToRender = (props) => {
     if (!componentRegistration) {
       return <MissingComponentPlacehoder blockId={node.data.blockId} />;
     }
 
-    const { dragProps = {} } = props || {};
-
-    const {
-      editorMode: _editorMode,
-      renderDropzone: _renderDropzone,
-      node: _node,
-      ...customComponentProps
-    } = componentProps;
+    const { editorMode: _editorMode, node: _node, ...customComponentProps } = componentProps;
 
     const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
     const isAssembly = node.type === 'assembly';
@@ -96,12 +86,17 @@ export const useComponent = ({
     const requiresDragWrapper =
       !isStructureComponent && componentRegistration.options?.wrapComponent === false;
 
+    const { children, innerRef, style, ...rest } = props;
+
     const element = React.createElement(
       ImportedComponentErrorBoundary,
       null,
       React.createElement(componentRegistration.component, {
         ...modifiedProps,
-        dragProps,
+        style: { ...sizeStyles, ...style },
+        // forces the container elements to render without the dropzone
+        editorMode: false,
+        ...rest,
       }),
     );
 
@@ -109,21 +104,7 @@ export const useComponent = ({
       return element;
     }
 
-    const { children, innerRef, Tag = 'div', ToolTipAndPlaceholder, style, ...rest } = dragProps;
-
-    console.log({ rest });
-
-    return (
-      <Tag
-        {...rest}
-        style={{ ...style, ...sizeStyles }}
-        ref={(refNode: HTMLElement | null) => {
-          if (innerRef && refNode) innerRef(refNode);
-        }}>
-        {ToolTipAndPlaceholder}
-        {element}
-      </Tag>
-    );
+    return <>{element}</>;
   };
 
   return {

@@ -22,7 +22,7 @@ export const ExperienceRoot = ({
   experience,
   visualEditorMode = VisualEditorMode.LazyLoad,
 }: ExperienceRootProps) => {
-  const isEditorMode = useDetectEditorMode();
+  const { isEditorMode, isReadOnlyMode } = useDetectEditorMode();
   //If experience is passed in as a JSON string, recreate it to an experience object
   const experienceObject =
     typeof experience === 'string' ? createExperience(experience) : experience;
@@ -32,12 +32,15 @@ export const ExperienceRoot = ({
     isEditorMode,
   });
 
+  console.log({ isEditorMode, isReadOnlyMode }, window.__EB__);
+
   if (isEditorMode) {
     return (
       <VisualEditorRoot
         experience={experienceObject as Experience<EntityStore> | undefined}
         visualEditorMode={visualEditorMode}
         initialLocale={locale}
+        isReadOnlyMode={isReadOnlyMode}
       />
     );
   }

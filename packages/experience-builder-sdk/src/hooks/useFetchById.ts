@@ -19,13 +19,15 @@ export const useFetchById = ({
   experienceTypeId,
   hyperlinkPattern,
 }: UseFetchByIdArgs) => {
-  const isEditorMode = useDetectEditorMode({ isClientSide: typeof window !== 'undefined' });
+  const { isEditorMode, isReadOnlyMode } = useDetectEditorMode({
+    isClientSide: typeof window !== 'undefined',
+  });
 
   const fetchMethod = useCallback(() => {
     return fetchById({ id, localeCode, client, experienceTypeId });
   }, [id, localeCode, client, experienceTypeId]);
 
-  const fetchResult = useFetchByBase(fetchMethod, isEditorMode);
+  const fetchResult = useFetchByBase(fetchMethod, isEditorMode || !!isReadOnlyMode);
 
   return { ...fetchResult, experience: { ...fetchResult.experience, hyperlinkPattern } };
 };

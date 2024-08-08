@@ -19,6 +19,8 @@ export interface EditorStore {
   hyperLinkPattern?: string;
   setHyperLinkPattern: (pattern: string) => void;
   locale: string | null;
+  isReadOnly: boolean;
+  setIsReadOnly: (isReadOnly: boolean) => void;
   selectedNodeId: string | null;
   unboundValues: ExperienceUnboundValues;
   // updaters
@@ -35,11 +37,15 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   hyperLinkPattern: undefined,
   unboundValues: {},
   isDragging: false,
+  isReadOnly: false,
   dragItem: '',
   selectedNodeId: null,
   locale: null,
   setHyperLinkPattern: (pattern: string) => {
     set({ hyperLinkPattern: pattern });
+  },
+  setIsReadOnly: (isReadOnly: boolean) => {
+    set({ isReadOnly });
   },
   setSelectedNodeId: (id: string) => {
     set({ selectedNodeId: id });

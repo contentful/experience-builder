@@ -17,13 +17,17 @@ type UseDetectEditorModeArgs = {
 export const useDetectEditorMode = ({ isClientSide = false }: UseDetectEditorModeArgs = {}) => {
   const [mounted, setMounted] = useState(false);
   const [isEditorMode, setIsEditorMode] = useState(isClientSide ? inIframe() : false);
+  const [isReadOnlyMode, setIsReadOnlyMode] = useState(!!window.__EB__.isReadOnlyMode);
   const receivedMessage = useRef(false);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
-      if (doesMismatchMessageSchema(event)) {
+      const missmatch = doesMismatchMessageSchema(event);
+
+      if (missmatch) {
         return;
       }
+
       const eventData = tryParseMessage(event);
 
       if (eventData.eventType === INCOMING_EVENTS.RequestEditorMode) {
@@ -35,8 +39,20 @@ export const useDetectEditorMode = ({ isClientSide = false }: UseDetectEditorMod
             window.__EB__ = {};
           }
           window.__EB__.isEditorMode = true;
-          window.removeEventListener('message', onMessage);
+          // window.removeEventListener('message', onMessage);
         }
+      }
+
+      // @ts-expect-error skipping this for now
+      if (eventData.eventType === INCOMING_EVENTS.RequestReadOnlyMode) {
+        setIsEditorMode(true);
+        setIsReadOnlyMode(true);
+        //Once we definitely know that we are in editor mode, we set this flag so future postMessage connect calls are not made
+        if (!window.__EB__) {
+          window.__EB__ = {};
+        }
+        window.__EB__.isEditorMode = true;
+        window.__EB__.isReadOnlyMode = true;
       }
     };
 
@@ -63,7 +79,7 @@ export const useDetectEditorMode = ({ isClientSide = false }: UseDetectEditorMod
     return () => window.removeEventListener('message', onMessage);
   }, [mounted]);
 
-  return isEditorMode;
+  return { isEditorMode, isReadOnlyMode };
 };
 
 function inIframe() {

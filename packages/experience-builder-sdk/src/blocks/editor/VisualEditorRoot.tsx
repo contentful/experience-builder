@@ -10,12 +10,15 @@ type VisualEditorRootProps = {
   visualEditorMode: VisualEditorMode;
   experience?: Experience<EntityStore>;
   initialLocale: string;
+
+  isReadOnlyMode?: boolean;
 };
 
 export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
   visualEditorMode,
   experience,
   initialLocale,
+  isReadOnlyMode,
 }) => {
   const initialEntities = experience?.entityStore?.entities || [];
 
@@ -27,7 +30,11 @@ export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
   return (
     <ErrorBoundary>
       <Suspense fallback={<div>Loading...</div>}>
-        <VisualEditorLoader experience={experience} visualEditorMode={visualEditorMode} />
+        <VisualEditorLoader
+          experience={experience}
+          isReadOnlyMode={isReadOnlyMode}
+          visualEditorMode={visualEditorMode}
+        />
       </Suspense>
     </ErrorBoundary>
   );

@@ -9,13 +9,25 @@ import { CTFL_ZONE_ID, NEW_COMPONENT_ID } from '@/types/constants';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import type { Experience } from '@contentful/experiences-core/types';
 import { useEditorStore } from '@/store/editor';
+import { ReadOnlyRenderer } from '@components/ReadOnlyRenderer';
 
-export const VisualEditorRoot = ({ experience }: { experience?: Experience<EntityStore> }) => {
+export const VisualEditorRoot = ({
+  experience,
+  isReadOnlyMode,
+}: {
+  experience?: Experience<EntityStore>;
+  isReadOnlyMode?: boolean;
+}) => {
   const initialized = useInitializeEditor();
   const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
+  const setIsReadOnly = useEditorStore((state) => state.setIsReadOnly);
 
   const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
+
+  useEffect(() => {
+    setIsReadOnly(!!isReadOnlyMode);
+  }, [isReadOnlyMode, setIsReadOnly]);
 
   useEffect(() => {
     if (experience?.hyperlinkPattern) {
@@ -59,6 +71,10 @@ export const VisualEditorRoot = ({ experience }: { experience?: Experience<Entit
   }, []);
 
   if (!initialized) return null;
+
+  if (isReadOnlyMode) {
+    return <ReadOnlyRenderer />;
+  }
 
   return <RootRenderer />;
 };
