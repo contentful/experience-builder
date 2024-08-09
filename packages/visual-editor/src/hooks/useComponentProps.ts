@@ -41,7 +41,7 @@ export type ResolvedComponentProps = ComponentProps & {
   className: string;
   editorMode: boolean;
   node: ExperienceTreeNode;
-  renderDropzone: RenderDropzoneFunction;
+  renderDropzone?: RenderDropzoneFunction;
 };
 
 type UseComponentProps = {
@@ -50,7 +50,7 @@ type UseComponentProps = {
   areEntitiesFetched: boolean;
   definition?: ComponentRegistration['definition'];
   renderDropzone: RenderDropzoneFunction;
-  userIsDragging: boolean;
+  userIsDragging?: boolean;
   slotId?: string;
 };
 
@@ -190,7 +190,7 @@ export const useComponentProps = ({
     );
 
     const slotProps: Record<string, React.JSX.Element> = {};
-    if (definition.slots) {
+    if (definition.slots && renderDropzone) {
       for (const slotId in definition.slots) {
         slotProps[slotId] = renderDropzone(node, {
           zoneId: [node.data.id, slotId].join('|'),
@@ -257,9 +257,9 @@ export const useComponentProps = ({
     className: (props.cfSsrClassName as string | undefined) ?? componentClass,
     editorMode: true,
     node,
-    renderDropzone,
+    renderDropzone: renderDropzone || undefined,
     ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
-    ...(definition?.children ? { children: renderDropzone(node) } : {}),
+    ...(definition?.children && definition ? { children: renderDropzone(node) } : {}),
   };
 
   return { componentProps, sizeStyles };

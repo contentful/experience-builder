@@ -7,6 +7,7 @@ import { useBreakpoints } from '../../hooks';
 
 type DeliveryRootProps = {
   experience: Experience<EntityStore>;
+
   locale: string;
 };
 

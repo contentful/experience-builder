@@ -29,6 +29,7 @@ export const OUTGOING_EVENTS = {
 
 export const INCOMING_EVENTS = {
   RequestEditorMode: 'requestEditorMode',
+  RequestReadOnlyMode: 'requestReadOnlyMode',
   ExperienceUpdated: 'componentTreeUpdated',
   ComponentDraggingChanged: 'componentDraggingChanged',
   ComponentDragCanceled: 'componentDragCanceled',
