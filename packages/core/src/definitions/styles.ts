@@ -75,6 +75,7 @@ export const builtInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The background color of the section',
+    defaultValue: 'rgba(0, 0, 0, 0)',
   },
   cfWidth: {
     displayName: 'Width',
@@ -187,6 +188,13 @@ export const optionalBuiltInStyles: VariableDefinitions = {
       height: '100%',
       targetSize: DEFAULT_IMAGE_WIDTH,
     },
+  },
+  cfBackgroundColor: {
+    displayName: 'Background color',
+    type: 'Text',
+    group: 'style',
+    description: 'The background color of the element',
+    defaultValue: 'rgba(0, 0, 0, 0)',
   },
   cfBackgroundImageUrl: {
     displayName: 'Background image',
@@ -360,12 +368,13 @@ export const dividerBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The background color of the divider',
-    defaultValue: 'rgba(0, 0, 0, 1)',
+    defaultValue: 'rgba(0, 0, 0, 0)',
   },
 };
 
 export const singleColumnBuiltInStyles: VariableDefinitions = {
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
+  cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
   cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
   cfVerticalAlignment: {
@@ -421,12 +430,6 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
     description: 'The padding of the column',
     defaultValue: '0 0 0 0',
   },
-  cfBackgroundColor: {
-    displayName: 'Background color',
-    type: 'Text',
-    group: 'style',
-    description: 'The background color of the column',
-  },
   cfFlexDirection: {
     displayName: 'Direction',
     type: 'Text',
@@ -469,6 +472,7 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
 
 export const columnsBuiltInStyles: VariableDefinitions = {
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
+  cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
   cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
   cfMargin: {
@@ -498,12 +502,6 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     group: 'style',
     description: 'The padding of the columns',
     defaultValue: '10px 10px 10px 10px',
-  },
-  cfBackgroundColor: {
-    displayName: 'Background color',
-    type: 'Text',
-    group: 'style',
-    description: 'The background color of the columns',
   },
   cfBorder: {
     displayName: 'Border',
