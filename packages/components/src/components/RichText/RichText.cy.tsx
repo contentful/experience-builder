@@ -22,7 +22,7 @@ describe('RichText', () => {
 
   it('additional props should be passed to the rich text', () => {
     cy.mount(<RichText value={document} data-foo="bar" />);
-    cy.get('div').should('have.attr', 'data-foo', 'bar');
+    cy.get('div[class="cf-richtext"]').should('have.attr', 'data-foo', 'bar');
   });
 
   it('when className is provided, it should be added to the rich text', () => {
@@ -32,6 +32,6 @@ describe('RichText', () => {
 
   it('has a default class of "cf-richtext"', () => {
     cy.mount(<RichText value={document} />);
-    cy.get('div').should('have.class', 'cf-richtext');
+    cy.get('div[class="cf-richtext"]').should('have.class', 'cf-richtext');
   });
 });
