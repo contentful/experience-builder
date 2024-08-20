@@ -10,7 +10,13 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import type { Experience } from '@contentful/experiences-core/types';
 import { useEditorStore } from '@/store/editor';
 
-export const VisualEditorRoot = ({ experience }: { experience?: Experience<EntityStore> }) => {
+export const VisualEditorRoot = ({
+  experience,
+  metadata,
+}: {
+  experience?: Experience<EntityStore>;
+  metadata: Record<string, unknown>;
+}) => {
   const initialized = useInitializeEditor();
   const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
 
@@ -60,5 +66,5 @@ export const VisualEditorRoot = ({ experience }: { experience?: Experience<Entit
 
   if (!initialized) return null;
 
-  return <RootRenderer />;
+  return <RootRenderer metadata={metadata} />;
 };

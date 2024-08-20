@@ -34,6 +34,7 @@ type CompositionBlockProps = {
   hyperlinkPattern?: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
   getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
+  metadata?: Record<string, unknown>;
 };
 
 export const CompositionBlock = ({
@@ -43,6 +44,7 @@ export const CompositionBlock = ({
   hyperlinkPattern,
   resolveDesignValue,
   getPatternChildNodeClassName,
+  metadata,
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
     () =>
@@ -226,6 +228,7 @@ export const CompositionBlock = ({
               hyperlinkPattern={hyperlinkPattern}
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
+              metadata={metadata}
             />
           );
         })
@@ -272,6 +275,7 @@ export const CompositionBlock = ({
     {
       ...omit(nodeProps, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
       className,
+      metadata,
     },
     children ?? (typeof nodeProps.children === 'string' ? nodeProps.children : null),
   );

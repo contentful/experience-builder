@@ -31,6 +31,7 @@ type DropzoneProps = {
   className?: string;
   WrapperComponent?: ElementType | string;
   dragProps?: DragWrapperProps;
+  metadata: Record<string, any>;
 };
 
 export function Dropzone({
@@ -40,6 +41,7 @@ export function Dropzone({
   className,
   WrapperComponent = 'div',
   dragProps,
+  metadata,
   ...rest
 }: DropzoneProps) {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
@@ -71,6 +73,7 @@ export function Dropzone({
     (node, props) => {
       return (
         <Dropzone
+          metadata={metadata}
           zoneId={node.data.id}
           node={node}
           resolveDesignValue={resolveDesignValue}
@@ -78,7 +81,7 @@ export function Dropzone({
         />
       );
     },
-    [resolveDesignValue],
+    [resolveDesignValue, metadata],
   );
 
   const renderClonedDropzone: RenderDropzoneFunction = useCallback(
@@ -189,6 +192,7 @@ export function Dropzone({
                       dropzoneElementId: zoneId,
                       direction,
                     }}
+                    metadata={metadata}
                     index={i}
                     zoneId={zoneId}
                     key={item.data.id}

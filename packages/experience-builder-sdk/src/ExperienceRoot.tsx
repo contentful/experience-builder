@@ -15,12 +15,14 @@ type ExperienceRootProps = {
   experience?: Experience<EntityStore> | string | null;
   locale: string;
   visualEditorMode?: VisualEditorMode;
+  metadata: Record<string, any>;
 };
 
 export const ExperienceRoot = ({
   locale,
   experience,
   visualEditorMode = VisualEditorMode.LazyLoad,
+  metadata,
 }: ExperienceRootProps) => {
   const isEditorMode = useDetectEditorMode();
   //If experience is passed in as a JSON string, recreate it to an experience object
@@ -38,11 +40,12 @@ export const ExperienceRoot = ({
         experience={experienceObject as Experience<EntityStore> | undefined}
         visualEditorMode={visualEditorMode}
         initialLocale={locale}
+        metadata={metadata}
       />
     );
   }
 
   if (!experienceObject) return null;
 
-  return <PreviewDeliveryRoot locale={locale} experience={experienceObject} />;
+  return <PreviewDeliveryRoot metadata={metadata} locale={locale} experience={experienceObject} />;
 };

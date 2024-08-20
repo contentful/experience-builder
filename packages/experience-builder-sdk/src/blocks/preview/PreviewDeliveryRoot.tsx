@@ -8,9 +8,10 @@ import { useBreakpoints } from '../../hooks';
 type DeliveryRootProps = {
   experience: Experience<EntityStore>;
   locale: string;
+  metadata: Record<string, unknown>;
 };
 
-export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) => {
+export const PreviewDeliveryRoot = ({ locale, experience, metadata }: DeliveryRootProps) => {
   const { entityStore } = experience;
 
   const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? []);
@@ -30,6 +31,7 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
     <>
       {entityStore.experienceEntryFields.componentTree.children.map((childNode, index) => (
         <CompositionBlock
+          metadata={metadata}
           key={index}
           node={childNode}
           hyperlinkPattern={experience.hyperlinkPattern}

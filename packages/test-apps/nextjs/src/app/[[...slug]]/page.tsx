@@ -14,6 +14,10 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   const editorMode = expEditorMode === 'true';
   const { experience, error } = await getExperience(slug, locale, preview, editorMode);
 
+  const bitcoinData = await fetch('https://api.coindesk.com/v1/bpi/currentprice.json').then((res) =>
+    res.json(),
+  );
+
   if (error) {
     return <div>{error.message}</div>;
   }
@@ -26,7 +30,7 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   return (
     <main style={{ width: '100%' }}>
       {stylesheet && <style data-css-ssr>{stylesheet}</style>}
-      <Experience experienceJSON={experienceJSON} locale={locale} />
+      <Experience metadata={{ bitcoinData }} experienceJSON={experienceJSON} locale={locale} />
     </main>
   );
 }

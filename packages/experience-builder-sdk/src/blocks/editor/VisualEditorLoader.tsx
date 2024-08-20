@@ -5,15 +5,17 @@ import type { Experience } from '@contentful/experiences-core/types';
 type VisualEditorLoaderProps = {
   visualEditorMode: VisualEditorMode;
   experience?: Experience<EntityStore>;
+  metadata?: Record<string, any>;
 };
 
 export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({
   visualEditorMode,
-
+  metadata,
   experience,
 }) => {
   const [VisualEditor, setVisualEditor] = useState<React.ComponentType<{
     experience?: Experience<EntityStore>;
+    metadata: Record<string, unknown>;
   }> | null>(null);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({
 
   if (!VisualEditor) return null;
 
-  return <VisualEditor experience={experience} />;
+  return <VisualEditor metadata={metadata ?? {}} experience={experience} />;
 };
 
 export default VisualEditorLoader;

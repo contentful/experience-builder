@@ -52,6 +52,7 @@ type UseComponentProps = {
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
   slotId?: string;
+  metadata: Record<string, any>;
 };
 
 export const useComponentProps = ({
@@ -61,6 +62,7 @@ export const useComponentProps = ({
   renderDropzone,
   definition,
   userIsDragging,
+  metadata,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
@@ -258,6 +260,7 @@ export const useComponentProps = ({
     editorMode: true,
     node,
     renderDropzone,
+    metadata,
     ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
     ...(definition?.children ? { children: renderDropzone(node) } : {}),
   };

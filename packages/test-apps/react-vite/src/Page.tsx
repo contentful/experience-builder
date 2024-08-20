@@ -23,5 +23,5 @@ export default function Page() {
 
   if (error) return <div>{error.message}</div>;
 
-  return <ExperienceRoot experience={experience} locale={localeCode} />;
+  return <ExperienceRoot metadata={{ foo: 'bar' }} experience={experience} locale={localeCode} />;
 }

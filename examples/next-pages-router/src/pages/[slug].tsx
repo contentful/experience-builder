@@ -33,7 +33,7 @@ function ExperiencePage({
         </Head>
       )}
       <main style={{ width: '100%' }}>
-        <ExperienceRoot experience={experienceJSON} locale={locale} />
+        <ExperienceRoot metadata={{ foo: 'bar' }} experience={experienceJSON} locale={locale} />
       </main>
     </>
   );

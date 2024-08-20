@@ -30,7 +30,9 @@ describe('PreviewDeliveryRoot', () => {
   });
 
   it('returns null if experience is not fetched', () => {
-    const { container } = render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
+    const { container } = render(
+      <PreviewDeliveryRoot metadata={{}} locale={locale} experience={experience} />,
+    );
 
     expect(container.childElementCount).toBe(0);
   });
@@ -51,7 +53,7 @@ describe('PreviewDeliveryRoot', () => {
 
     const consoleWarnSpy = jest.spyOn(console, 'warn');
 
-    render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
+    render(<PreviewDeliveryRoot metadata={{}} locale={locale} experience={experience} />);
 
     expect(consoleWarnSpy).toHaveBeenCalledWith(
       `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
@@ -71,7 +73,7 @@ describe('PreviewDeliveryRoot', () => {
     ]);
 
     const { container, getByTestId } = render(
-      <PreviewDeliveryRoot locale={locale} experience={experience} />,
+      <PreviewDeliveryRoot metadata={{}} locale={locale} experience={experience} />,
     );
 
     expect(container.childElementCount).toBe(1);
