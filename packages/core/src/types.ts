@@ -94,6 +94,7 @@ export type ComponentDefinition<
   category?: string;
   thumbnailUrl?: string;
   hyperlinkPattern?: string;
+  store?: Record<string, boolean>;
   variables: Partial<Record<ContainerStyleVariableName, ComponentDefinitionVariable<T>>> &
     Record<string, ComponentDefinitionVariable<T>>;
   slots?: Record<string, { displayName: string }>;

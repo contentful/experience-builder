@@ -10,6 +10,8 @@ export {
   fetchById,
   fetchBySlug,
   createExperience,
+  updateStoreValue,
+  watchStoreValue,
 } from '@contentful/experiences-core';
 export {
   CONTENTFUL_COMPONENTS,

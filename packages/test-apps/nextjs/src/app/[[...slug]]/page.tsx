@@ -30,7 +30,7 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   return (
     <main style={{ width: '100%' }}>
       {stylesheet && <style data-css-ssr>{stylesheet}</style>}
-      <Experience metadata={{ bitcoinData }} experienceJSON={experienceJSON} locale={locale} />
+      <Experience initialStore={{ bitcoinData }} experienceJSON={experienceJSON} locale={locale} />
     </main>
   );
 }

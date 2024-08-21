@@ -5,6 +5,7 @@ import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import BitcoinComponent from './components/BitcoinComponent';
+import DemoStoreComponent from './components/DemoStoreComponent';
 
 defineComponents([
   {
@@ -15,6 +16,22 @@ defineComponents([
       category: 'Custom Components',
       builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
       variables: {},
+      store: {
+        bitcoinData: true,
+      },
+    },
+  },
+  {
+    component: DemoStoreComponent,
+    definition: {
+      id: 'store-component',
+      name: 'Demo Store Component',
+      category: 'Custom Components',
+      builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+      variables: {},
+      store: {
+        count: true,
+      },
     },
   },
   {

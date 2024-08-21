@@ -7,5 +7,11 @@
     "jsx": "react-jsx",
     "outDir": "dist"
   },
-  "include": ["src", "vite.config.ts", "test/components/Test.spec.tsx", "test/components/Test.tsx"]
+  "include": [
+    "src",
+    "vite.config.ts",
+    "test/components/Test.spec.tsx",
+    "test/components/Test.tsx",
+    "../core/src/store"
+  ]
 }

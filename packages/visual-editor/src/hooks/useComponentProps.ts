@@ -7,6 +7,7 @@ import {
   transformBoundContentValue,
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
+  store,
 } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -52,7 +53,6 @@ type UseComponentProps = {
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
   slotId?: string;
-  metadata: Record<string, any>;
 };
 
 export const useComponentProps = ({
@@ -62,7 +62,6 @@ export const useComponentProps = ({
   renderDropzone,
   definition,
   userIsDragging,
-  metadata,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
@@ -200,10 +199,19 @@ export const useComponentProps = ({
       }
     }
 
+    const storeProps = Object.entries(definition.store || {}).reduce(
+      (acc, [variableName]) => {
+        const value = store.getState(variableName);
+        return { ...acc, [variableName]: value };
+      },
+      {} as Record<string, unknown>,
+    );
+
     return {
       ...propsBase,
       ...extractedProps,
       ...slotProps,
+      ...storeProps,
     };
   }, [
     hyperlinkPattern,
@@ -260,7 +268,6 @@ export const useComponentProps = ({
     editorMode: true,
     node,
     renderDropzone,
-    metadata,
     ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
     ...(definition?.children ? { children: renderDropzone(node) } : {}),
   };

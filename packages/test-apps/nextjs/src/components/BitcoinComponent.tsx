@@ -1,11 +1,21 @@
-import React from 'react';
-
+import React, { useEffect } from 'react';
+import { updateStoreValue } from '@contentful/experiences-sdk-react';
 interface BitcoinComponentProps {
-  metadata: Record<string, any>;
+  bitcoinData: any;
 }
 
-const BitcoinComponent: React.FC<BitcoinComponentProps> = ({ metadata, ...rest }) => {
-  const { EUR, USD } = metadata.bitcoinData.bpi;
+const BitcoinComponent: React.FC<BitcoinComponentProps> = ({ bitcoinData, ...rest }) => {
+  const { EUR, USD } = bitcoinData.bpi;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      updateStoreValue('count', Math.random());
+    }, 1500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <div

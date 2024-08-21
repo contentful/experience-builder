@@ -7,6 +7,6 @@ import { VISUAL_EDITOR_CONTAINER_ID } from '@contentful/experiences-core/constan
 
 ReactDOM.createRoot(document.getElementById(VISUAL_EDITOR_CONTAINER_ID)!).render(
   <React.StrictMode>
-    <VisualEditorRoot metadata={{}} />
+    <VisualEditorRoot />
   </React.StrictMode>,
 );

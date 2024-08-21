@@ -10,19 +10,20 @@ import type { Experience } from '@contentful/experiences-core/types';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
 import { useDetectEditorMode } from './hooks/useDetectEditorMode';
+import { store } from '@contentful/experiences-core';
 
-type ExperienceRootProps = {
+type ExperienceRootProps<T = unknown> = {
   experience?: Experience<EntityStore> | string | null;
   locale: string;
   visualEditorMode?: VisualEditorMode;
-  metadata: Record<string, any>;
+  initialStore?: T;
 };
 
 export const ExperienceRoot = ({
   locale,
   experience,
   visualEditorMode = VisualEditorMode.LazyLoad,
-  metadata,
+  initialStore,
 }: ExperienceRootProps) => {
   const isEditorMode = useDetectEditorMode();
   //If experience is passed in as a JSON string, recreate it to an experience object
@@ -34,18 +35,20 @@ export const ExperienceRoot = ({
     isEditorMode,
   });
 
+  store.makeStore(initialStore);
+
   if (isEditorMode) {
     return (
       <VisualEditorRoot
+        initialStore={initialStore}
         experience={experienceObject as Experience<EntityStore> | undefined}
         visualEditorMode={visualEditorMode}
         initialLocale={locale}
-        metadata={metadata}
       />
     );
   }
 
   if (!experienceObject) return null;
 
-  return <PreviewDeliveryRoot metadata={metadata} locale={locale} experience={experienceObject} />;
+  return <PreviewDeliveryRoot locale={locale} experience={experienceObject} />;
 };

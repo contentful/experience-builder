@@ -15,11 +15,10 @@ import { useEditorStore } from '@/store/editor';
 import { Dropzone } from '@components/DraggableBlock/Dropzone';
 
 interface Props {
-  metadata: Record<string, any>;
   onChange?: (data: ExperienceTree) => void;
 }
 
-export const RootRenderer: React.FC<Props> = ({ onChange, metadata }) => {
+export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   useEditorSubscriber();
 
   const dragItem = useDraggedItemStore((state) => state.componentId);
@@ -123,7 +122,7 @@ export const RootRenderer: React.FC<Props> = ({ onChange, metadata }) => {
       {dragItem && <DraggableContainer id={dragItem} />}
       <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
         {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitbox} />}
-        <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} metadata={metadata} />
+        <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
         {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />}
       </div>
       <div data-ctfl-hitboxes />
