@@ -56,7 +56,7 @@ export const useComponent = ({
 
     if (!registration) {
       console.warn(
-        `Component registration not found for component with id: "${node.data.blockId}". The component might of been removed. To proceed, remove the component manually from the layers tab.`,
+        `Component registration not found for component with id: "${node.data.blockId}". The registered component might have been removed from the code. To proceed, remove the component manually from the layers tab.`,
       );
       return undefined;
     }

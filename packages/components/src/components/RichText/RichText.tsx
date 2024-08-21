@@ -38,12 +38,12 @@ export const RichText: React.FC<RichTextProps> = ({ as = 'p', className, value, 
   const Tag = as;
 
   return (
-    <span className={combineClasses('cf-richtext', className)} {...props}>
+    <div className={combineClasses('cf-richtext', className)} {...props}>
       {documentToReactComponents(value, {
         renderNode: {
           [BLOCKS.PARAGRAPH]: (_node, children) => <Tag>{children}</Tag>,
         },
       })}
-    </span>
+    </div>
   );
 };
