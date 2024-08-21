@@ -10,7 +10,7 @@ interface ExperienceProps {
 }
 
 const Experience: React.FC<ExperienceProps> = ({ experienceJSON, locale }) => {
-  return <ExperienceRoot metadata={{ foo: 'bar' }} experience={experienceJSON} locale={locale} />;
+  return <ExperienceRoot experience={experienceJSON} locale={locale} />;
 };
 
 export default Experience;
