@@ -14,15 +14,24 @@ let clientMock: ContentfulClientApi<undefined>;
 describe('useFetchById', () => {
   beforeEach(() => {
     clientMock = {
-      getEntries: jest.fn().mockImplementation(() => {
-        return Promise.resolve({ items: [experienceEntry] });
-      }),
-      getAssets: jest.fn().mockResolvedValue({ items: assets }),
-      withoutLinkResolution: {
-        getEntries: jest.fn().mockImplementation(() => {
+      getEntries: jest.fn().mockImplementation((_query) => {
+        if (_query.content_type === 'layout') {
+          return Promise.resolve({ items: [experienceEntry] });
+        } else {
           return Promise.resolve({ items: entries });
-        }),
-      },
+        }
+        // { content_type: 'layout', locale: 'en-US', 'fields.slug': 'hello-world' }
+      }),
+      // .mockImplementationOnce((_query) => {
+      //   // { 'sys.id[in]': [ 'entry1', 'entry2' ], locale: 'en-US' }
+      //   return Promise.resolve({ items: entries });
+      // }),
+      getAssets: jest.fn().mockResolvedValue({ items: assets }),
+      // withoutLinkResolution: {
+      //   getEntries: jest.fn().mockImplementation(() => {
+      //     return Promise.resolve({ items: entries });
+      //   }),
+      // },
     } as unknown as ContentfulClientApi<undefined>;
   });
 
@@ -68,7 +77,7 @@ describe('useFetchById', () => {
         locale: localeCode,
       });
 
-      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {
+      expect(clientMock.getEntries).toHaveBeenNthCalledWith(2, {
         limit: 100,
         skip: 0,
         'sys.id[in]': entries.map((entry) => entry.sys.id),

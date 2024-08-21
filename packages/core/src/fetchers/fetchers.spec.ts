@@ -9,9 +9,6 @@ import { describe, beforeEach, it, expect, vi, Mock } from 'vitest';
 const mockClient = {
   getAssets: vi.fn(),
   getEntries: vi.fn(),
-  withoutLinkResolution: {
-    getEntries: vi.fn(),
-  },
 } as unknown as ContentfulClientApi<undefined>;
 
 describe('fetchExperience', () => {
@@ -23,7 +20,7 @@ describe('fetchExperience', () => {
 
     // used by fetchExperience()->fetchReferencedEntities()
     (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
-    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({
+    (mockClient.getEntries as Mock).mockResolvedValue({
       items: entries,
       includes: { Asset: assets },
     });
