@@ -69,6 +69,7 @@ const HyperlinkValueSchema = z
   .object({
     type: z.literal('HyperlinkValue'),
     linkTargetKey: z.string(),
+    /** Allows to override parts of the URL, e.g. the locale */
     overrides: z.object({}).optional(),
   })
   .strict();
@@ -260,4 +261,5 @@ export type PrimitiveValue = z.infer<typeof PrimitiveValueSchema>;
 export type DesignValue = z.infer<typeof DesignValueSchema>;
 export type BoundValue = z.infer<typeof BoundValueSchema>;
 export type UnboundValue = z.infer<typeof UnboundValueSchema>;
+export type HyperlinkValue = z.infer<typeof HyperlinkValueSchema>;
 export type ComponentValue = z.infer<typeof ComponentValueSchema>;
