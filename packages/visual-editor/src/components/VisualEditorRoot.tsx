@@ -23,8 +23,13 @@ export const VisualEditorRoot = ({ experience }: { experience?: Experience<Entit
     }
   }, [experience?.hyperlinkPattern, setHyperLinkPattern]);
 
+  // if !readOnlyMode
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
+      // if (readOnlyMode) {
+      //   return;
+      // }
+
       setMousePosition(e.clientX, e.clientY);
 
       const target = e.target as HTMLElement;

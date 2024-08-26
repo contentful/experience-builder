@@ -6,6 +6,7 @@ import type { Experience } from '@contentful/experiences-core/types';
 export const useFetchByBase = (
   fetchMethod: () => Promise<Experience<EntityStore> | undefined>,
   isEditorMode: boolean,
+  isReadOnlyMode: boolean,
 ) => {
   const [experience, setExperience] = useState<Experience<EntityStore>>();
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +16,15 @@ export const useFetchByBase = (
     (async () => {
       // if we are in editor mode, we don't want to fetch the experience here
       // it is passed via postMessage instead
-      if (isEditorMode) {
+      if (isEditorMode || isReadOnlyMode) {
+        console.log(
+          '[ SDK ] useFetchByBase() isReadOnlyMode => ',
+          isReadOnlyMode,
+          ' or isEditorMode',
+          isEditorMode,
+          ' is true, returning early.',
+        );
+
         return;
       }
       setIsLoading(true);

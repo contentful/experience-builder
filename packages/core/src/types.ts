@@ -471,6 +471,7 @@ export type ComponentSelectedPayload = {
   assembly?: { id: string; componentId: string; nodeLocation: string | null };
 };
 export type RegisteredComponentsPayload = { definitions: ComponentDefinition[] };
+export type RequestReadOnlyExperiencePayload = undefined;
 export type RequestComponentTreeUpdatePayload = undefined;
 export type ComponentDragCanceledPayload = undefined;
 export type ComponentDroppedPayload = {
@@ -515,6 +516,7 @@ type OUTGOING_EVENT_PAYLOADS = {
   componentSelected: ComponentSelectedPayload;
   registeredComponents: RegisteredComponentsPayload;
   requestComponentTreeUpdate: RequestComponentTreeUpdatePayload;
+  requestReadOnlyExperience: RequestReadOnlyExperiencePayload;
   componentDragCanceled: ComponentDragCanceledPayload;
   componentDropped: ComponentDroppedPayload;
   componentMoved: ComponentMovedPayload;
@@ -545,6 +547,7 @@ export type OutgoingMessage = {
 type Filter<T, U> = T extends U ? T : never;
 type SelectedValueTypes = Filter<ComponentPropertyValue['type'], 'UnboundValue' | 'BoundValue'>;
 
+export type RequestReadOnlyModePayload = { experienceId: string };
 export type RequestEditorModePayload = undefined;
 export type ExperienceUpdatedPayload = {
   tree: ExperienceTree;
@@ -599,6 +602,7 @@ export type RequestedEntitiesPayload = {
 
 type INCOMING_EVENT_PAYLOADS = {
   requestEditorMode: RequestEditorModePayload;
+  requestReadOnlyMode: RequestReadOnlyModePayload;
   componentTreeUpdated: ExperienceUpdatedPayload;
   componentDraggingChanged: ComponentDraggingChangedPayload;
   componentDragCanceled: IncomingComponentDragCanceledPayload;

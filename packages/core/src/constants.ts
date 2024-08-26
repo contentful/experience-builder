@@ -25,10 +25,12 @@ export const OUTGOING_EVENTS = {
   OutsideCanvasClick: 'outsideCanvasClick',
   SDKFeatures: 'sdkFeatures',
   RequestEntities: 'REQUEST_ENTITIES',
+  RequestReadOnlyExperience: 'requestReadOnlyExperience',
 } as const;
 
 export const INCOMING_EVENTS = {
   RequestEditorMode: 'requestEditorMode',
+  RequestReadOnlyMode: 'requestReadOnlyMode',
   ExperienceUpdated: 'componentTreeUpdated',
   ComponentDraggingChanged: 'componentDraggingChanged',
   ComponentDragCanceled: 'componentDragCanceled',

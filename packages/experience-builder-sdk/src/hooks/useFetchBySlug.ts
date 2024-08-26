@@ -3,6 +3,7 @@ import type { ContentfulClientApi } from 'contentful';
 import { useFetchByBase } from './useFetchByBase';
 import { fetchBySlug } from '@contentful/experiences-core';
 import { useDetectEditorMode } from './useDetectEditorMode';
+import { useDetectReadOnlyMode } from './useDetectReadOnlyMode';
 
 export type UseFetchBySlugArgs = {
   client: ContentfulClientApi<undefined>;
@@ -21,12 +22,13 @@ export const useFetchBySlug = ({
   hyperlinkPattern,
 }: UseFetchBySlugArgs) => {
   const isEditorMode = useDetectEditorMode({ isClientSide: typeof window !== 'undefined' });
+  const isReadOnlyMode = useDetectReadOnlyMode();
 
   const fetchMethod = useCallback(() => {
     return fetchBySlug({ slug, localeCode, client, experienceTypeId });
   }, [slug, localeCode, client, experienceTypeId]);
 
-  const fetchResult = useFetchByBase(fetchMethod, isEditorMode);
+  const fetchResult = useFetchByBase(fetchMethod, isEditorMode, isReadOnlyMode);
 
   return { ...fetchResult, experience: { ...fetchResult.experience, hyperlinkPattern } };
 };

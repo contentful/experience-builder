@@ -32,6 +32,10 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   const tree = useTreeStore((state) => state.tree);
 
   const handleMouseOver = useCallback(() => {
+    if (readOnlyMode) {
+      return;
+    }
+
     // Remove hover state set by UI when mouse is over canvas
     setHoveredComponentId();
     // Remove hover styling from components in the layers tab
@@ -40,6 +44,10 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
 
   const handleClickOutside = useCallback(
     (e: MouseEvent) => {
+      if (readOnlyMode) {
+        return;
+      }
+
       const element = e.target as HTMLElement;
 
       const isRoot = element.getAttribute('data-ctfl-zone-id') === ROOT_ID;
@@ -61,6 +69,10 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   );
 
   const handleResizeCanvas = useCallback(() => {
+    if (readOnlyMode) {
+      return;
+    }
+
     const parentElement = containerRef.current?.parentElement;
     if (!parentElement) {
       return;
