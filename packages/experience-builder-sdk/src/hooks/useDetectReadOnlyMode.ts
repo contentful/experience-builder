@@ -16,9 +16,6 @@ export const useDetectReadOnlyMode = () => {
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
-      alert('on Message');
-      console.log('[ SDK ] onMessage() event => ', event);
-
       if (doesMismatchMessageSchema(event)) {
         return;
       }

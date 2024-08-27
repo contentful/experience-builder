@@ -26,14 +26,14 @@ import {
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
-import { useDraggedItemStore } from '@/store/draggedItem';
+// import { useDraggedItemStore } from '@/store/draggedItem';
 import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
 
-export function useEditorSubscriber() {
+export function useReadOnlySubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
@@ -49,14 +49,11 @@ export function useEditorSubscriber() {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
-  const setComponentId = useDraggedItemStore((state) => state.setComponentId);
-  const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
-  const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
-  const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
-  const setScrollY = useDraggedItemStore((state) => state.setScrollY);
-
-  console.log('[ useEditorSub() ] entityStore => ', entityStore);
-  console.log('[ useEditorSub() ] dataSource => ', dataSource);
+  // const setComponentId = useDraggedItemStore((state) => state.setComponentId);
+  // const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
+  // const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
+  // const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
+  // const setScrollY = useDraggedItemStore((state) => state.setScrollY);
 
   // TODO: As we have disabled the useEffect, we can remove these states
   const [, /* isFetchingEntities */ setFetchingEntities] = useState(false);
@@ -84,10 +81,6 @@ export function useEditorSubscriber() {
       newDataSource: ExperienceDataSource,
       tree: ExperienceTree,
     ) => {
-      console.log('[ useEditorSub() ] fetchMissingEntities() entityStore => ', entityStore);
-      console.log('[ useEditorSub() ] fetchMissingEntities() newDataSource => ', newDataSource);
-      console.log('[ useEditorSub() ] fetchMissingEntities() tree => ', tree);
-
       // if we realize that there's nothing missing and nothing to fill-fetch before we do any async call,
       // then we can simply return and not lock the EntityStore at all.
       const startFetching = () => {

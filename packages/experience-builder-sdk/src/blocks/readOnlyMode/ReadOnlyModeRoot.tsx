@@ -18,6 +18,7 @@ export const ReadOnlyModeRoot: React.FC<VisualEditorRootProps> = ({
   initialLocale,
 }) => {
   const initialEntities = experience?.entityStore?.entities || [];
+  // useReadOnlySubscriber();
 
   // useInitializeReadOnlyMode({
   //   initialLocale,
@@ -26,10 +27,7 @@ export const ReadOnlyModeRoot: React.FC<VisualEditorRootProps> = ({
 
   return (
     <ErrorBoundary>
-      <Suspense fallback={<div>Loading...</div>}>
-        todo: bespoke read only mode component
-        {/* <VisualEditorLoader experience={experience} visualEditorMode={visualEditorMode} /> */}
-      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}></Suspense>
     </ErrorBoundary>
   );
 };

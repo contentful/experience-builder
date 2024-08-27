@@ -137,6 +137,8 @@ export function Dropzone({
     return null;
   }
 
+  console.log('[ <Dropzone> ] content => ', content);
+
   return (
     <Droppable
       droppableId={zoneId}
@@ -179,7 +181,10 @@ export function Dropzone({
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
             ) : (
               content
-                .filter((node) => node.data.slotId === slotId)
+                .filter((node) => {
+                  console.log('[ <Dropzone> ] content.filter() node => ', node);
+                  return node.data.slotId === slotId;
+                })
                 .map((item, i) => (
                   <EditorBlock
                     placeholder={{

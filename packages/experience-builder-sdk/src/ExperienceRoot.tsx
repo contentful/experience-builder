@@ -35,14 +35,14 @@ export const ExperienceRoot = ({
     isEditorMode,
   });
 
-  console.log('[ <ExperienceRoot> ] isReadOnlyMode => ', isReadOnlyMode);
+  // console.log('[ <ExperienceRoot> ] isReadOnlyMode => ', isReadOnlyMode);
 
-  if (isReadOnlyMode) {
-    return (
-      // inject visualEditorMode
-      <ReadOnlyModeRoot experience={experience} visualEditorMode={visualEditorMode} />
-    );
-  }
+  // if (isReadOnlyMode) {
+  //   return (
+  //     // inject visualEditorMode
+  //     <ReadOnlyModeRoot experience={experience} visualEditorMode={visualEditorMode} />
+  //   );
+  // }
 
   if (isEditorMode) {
     return (
