@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IncomingMessage } from '@/types';
-import { INCOMING_EVENTS, PostMessageMethods } from '@/constants';
+import { INCOMING_EVENTS, StudioExperienceMode, PostMessageMethods } from '@/constants';
 
 class ParseError extends Error {
   constructor(message: string) {
@@ -74,12 +74,12 @@ export const tryParseMessage = (event: MessageEvent): IncomingMessage => {
 
 export const validateExperienceBuilderConfig = ({
   locale,
-  isEditorMode,
+  mode,
 }: {
   locale: string;
-  isEditorMode: boolean;
+  mode: StudioExperienceMode;
 }) => {
-  if (isEditorMode) {
+  if (mode === StudioExperienceMode.EDITOR || mode === StudioExperienceMode.READ_ONLY) {
     return;
   }
 

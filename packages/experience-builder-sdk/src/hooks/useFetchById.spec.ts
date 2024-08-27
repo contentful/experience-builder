@@ -4,6 +4,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { experienceEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
 import type { ContentfulClientApi, Entry } from 'contentful';
+import { StudioExperienceMode } from '@contentful/experiences-core/constants';
 
 const experienceTypeId = 'layout';
 const localeCode = 'en-US';
@@ -84,7 +85,7 @@ describe('useFetchById', () => {
 
       expect(store).toEqual({
         experience: store.experience,
-        isEditorMode: false,
+        mode: StudioExperienceMode.NONE,
         isLoading: false,
         error: undefined,
       });
