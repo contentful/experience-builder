@@ -176,6 +176,7 @@ export type InternalSDKMode = ExternalSDKMode | 'editor';
  * collisions with user defined variables.
  */
 export type StyleProps = {
+  cfCanToggleVisibility: boolean;
   cfHorizontalAlignment: 'start' | 'end' | 'center';
   cfVerticalAlignment: 'start' | 'end' | 'center';
   cfMargin: string;

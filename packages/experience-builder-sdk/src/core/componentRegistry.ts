@@ -56,6 +56,7 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
   if (!clone.builtInStyles) {
     clone.builtInStyles = ['cfMargin'];
   }
+  clone.variables['cfCanToggleVisibility'] = builtInStyleDefinitions['cfCanToggleVisibility'];
 
   for (const style of Object.values(clone.builtInStyles || [])) {
     if (builtInStyleDefinitions[style]) {

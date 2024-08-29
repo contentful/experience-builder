@@ -56,6 +56,13 @@ export const builtInStyles: VariableDefinitions = {
     defaultValue: 'center',
     displayName: 'Horizontal alignment',
   },
+  cfCanToggleVisibility: {
+    displayName: 'Visibility toggle',
+    type: 'Boolean',
+    group: 'style',
+    defaultValue: false,
+    description: 'To enable visibility toggle in patterns',
+  },
   cfMargin: {
     displayName: 'Margin',
     type: 'Text',
