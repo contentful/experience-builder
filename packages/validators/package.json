@@ -8,7 +8,11 @@
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/validators#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder.git"
+    "url": "git+https://github.com/contentful/experience-builder.git",
+    "directory": "packages/validators"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/experience-builder/issues"
   },
   "scripts": {
     "predev": "npm run clean",
