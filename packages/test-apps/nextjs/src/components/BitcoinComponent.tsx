@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
-import { updateStoreValue } from '@contentful/experiences-sdk-react';
+import { updateStoreValue /* useExperienceData */ } from '@contentful/experiences-sdk-react';
 interface BitcoinComponentProps {
   bitcoinData: any;
 }
 
 const BitcoinComponent: React.FC<BitcoinComponentProps> = ({ bitcoinData, ...rest }) => {
   const { EUR, USD } = bitcoinData.bpi;
+
+  // const count = useExperienceData('count');
 
   useEffect(() => {
     const interval = setInterval(() => {

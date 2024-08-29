@@ -1,7 +1,7 @@
 import { SDK_VERSION } from './sdkVersion';
 
 export { ExperienceRoot } from './ExperienceRoot';
-export { useFetchById, useFetchBySlug } from './hooks';
+export { useFetchById, useFetchBySlug, useExperienceData } from './hooks';
 export { defineComponents, maintainBasicComponentIdsWithoutPrefix } from './core/componentRegistry';
 export {
   defineDesignTokens,
