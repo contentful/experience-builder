@@ -10,6 +10,14 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/experience-builder.git",
+    "directory": "packages/experience-builder-sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/experience-builder/issues"
+  },
   "scripts": {
     "clean": "rimraf dist",
     "predev": "npm run clean",
