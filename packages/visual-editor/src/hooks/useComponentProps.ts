@@ -7,6 +7,7 @@ import {
   transformBoundContentValue,
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
+  store,
 } from '@contentful/experiences-core';
 import {
   CF_STYLE_ATTRIBUTES,
@@ -198,10 +199,19 @@ export const useComponentProps = ({
       }
     }
 
+    const storeProps = Object.entries(definition.store || {}).reduce(
+      (acc, [variableName]) => {
+        const value = store.getState(variableName);
+        return { ...acc, [variableName]: value };
+      },
+      {} as Record<string, unknown>,
+    );
+
     return {
       ...propsBase,
       ...extractedProps,
       ...slotProps,
+      ...storeProps,
     };
   }, [
     hyperlinkPattern,

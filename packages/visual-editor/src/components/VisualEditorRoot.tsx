@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { EntityStore, sendMessage } from '@contentful/experiences-core';
+import { EntityStore, sendMessage, store } from '@contentful/experiences-core';
 import { RootRenderer } from './RootRenderer/RootRenderer';
 import SimulateDnD from '@/utils/simulateDnD';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
@@ -10,12 +10,20 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import type { Experience } from '@contentful/experiences-core/types';
 import { useEditorStore } from '@/store/editor';
 
-export const VisualEditorRoot = ({ experience }: { experience?: Experience<EntityStore> }) => {
+export const VisualEditorRoot = ({
+  experience,
+  initialStore,
+}: {
+  experience?: Experience<EntityStore>;
+  initialStore?: unknown;
+}) => {
   const initialized = useInitializeEditor();
   const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
 
   const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
+
+  store.makeStore(initialStore);
 
   useEffect(() => {
     if (experience?.hyperlinkPattern) {

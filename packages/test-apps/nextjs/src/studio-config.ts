@@ -4,8 +4,36 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
+import BitcoinComponent from './components/BitcoinComponent';
+import DemoStoreComponent from './components/DemoStoreComponent';
 
 defineComponents([
+  {
+    component: BitcoinComponent,
+    definition: {
+      id: 'bitcoin-component',
+      name: '3rd Party Bitcoin Component',
+      category: 'Custom Components',
+      builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+      variables: {},
+      store: {
+        bitcoinData: true,
+      },
+    },
+  },
+  {
+    component: DemoStoreComponent,
+    definition: {
+      id: 'store-component',
+      name: 'Demo Store Component',
+      category: 'Custom Components',
+      builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+      variables: {},
+      store: {
+        count: true,
+      },
+    },
+  },
   {
     component: ComponentWithChildren,
     definition: {

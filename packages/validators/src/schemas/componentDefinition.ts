@@ -8,6 +8,7 @@ import {
 
 export const ComponentDefinitionSchema = z.object({
   id: DefinitionPropertyKeySchema,
+  store: z.record(z.string(), z.boolean()).optional(),
   variables: z.record(
     DefinitionPropertyKeySchema,
     ComponentVariableSchema.extend({
