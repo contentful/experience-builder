@@ -5,7 +5,11 @@
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-contentful-studio-experiences#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder.git"
+    "url": "git+https://github.com/contentful/experience-builder.git",
+    "directory": "packages/create-contentful-studio-experiences"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/experience-builder/issues"
   },
   "type": "module",
   "main": "./dist/index.js",

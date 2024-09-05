@@ -186,9 +186,9 @@ defineBreakpoints([
   },
   {
     id: 'test-mobile',
-    query: '<360px',
+    query: '<576px',
     displayName: 'Mobile',
     displayIcon: 'mobile',
-    previewSize: '390px',
+    previewSize: '350px',
   },
 ]);
