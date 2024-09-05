@@ -341,6 +341,7 @@ export const containerBuiltInStyles: VariableDefinitions = {
 };
 
 export const dividerBuiltInStyles: VariableDefinitions = {
+  cfCanToggleVisibility: builtInStyles.cfCanToggleVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfMargin: {
     displayName: 'Margin',
@@ -380,6 +381,7 @@ export const dividerBuiltInStyles: VariableDefinitions = {
 };
 
 export const singleColumnBuiltInStyles: VariableDefinitions = {
+  cfCanToggleVisibility: builtInStyles.cfCanToggleVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
@@ -478,6 +480,7 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
 };
 
 export const columnsBuiltInStyles: VariableDefinitions = {
+  cfCanToggleVisibility: builtInStyles.cfCanToggleVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,

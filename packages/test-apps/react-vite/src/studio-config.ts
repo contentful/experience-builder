@@ -171,7 +171,7 @@ defineComponents([
 
 defineBreakpoints([
   {
-    id: 'test-desktop',
+    id: 'test-desktop1',
     query: '*',
     displayName: 'All Sizes',
     displayIcon: 'desktop',
