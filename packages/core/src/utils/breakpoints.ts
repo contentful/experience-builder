@@ -109,7 +109,7 @@ export const getValueForBreakpoint = (
   if (valuesByBreakpoint instanceof Object) {
     // Assume that the values are sorted by media query to apply the cascading CSS logic
     for (let index = activeBreakpointIndex; index >= 0; index--) {
-      const breakpointId = breakpoints[index].id;
+      const breakpointId = breakpoints[index]?.id;
       if (valuesByBreakpoint[breakpointId]) {
         // If the value is defined, we use it and stop the breakpoints cascade
         return eventuallyResolveDesignTokens(valuesByBreakpoint[breakpointId]);
@@ -117,8 +117,10 @@ export const getValueForBreakpoint = (
     }
     // If no breakpoint matched, we search and apply the fallback breakpoint
     const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
-    const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex].id;
-    return eventuallyResolveDesignTokens(valuesByBreakpoint[fallbackBreakpointId]);
+    const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex]?.id;
+    if (valuesByBreakpoint[fallbackBreakpointId]) {
+      return eventuallyResolveDesignTokens(valuesByBreakpoint[fallbackBreakpointId]);
+    }
   } else {
     // Old design properties did not support breakpoints, keep for backward compatibility
     return valuesByBreakpoint;
