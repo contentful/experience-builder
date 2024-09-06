@@ -90,6 +90,7 @@ export const experience = {
           {
             definitionId: 'contentful-container',
             displayName: 'Container 1',
+            id: '111-222-333-444',
             variables: {
               cfVerticalAlignment: {
                 type: 'DesignValue',
@@ -198,6 +199,7 @@ export const experience = {
               {
                 definitionId: 'heading',
                 displayName: 'Heading 1',
+                id: '111-222-333-555',
                 variables: {
                   text: {
                     type: 'UnboundValue',
@@ -246,6 +248,7 @@ export const experience = {
               },
               {
                 definitionId: 'button',
+                id: '111-222-333-666',
                 // Component node without optional `displayName`.
                 variables: {
                   label: {
