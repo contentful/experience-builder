@@ -56,7 +56,7 @@ export const builtInStyles: VariableDefinitions = {
     defaultValue: 'center',
     displayName: 'Horizontal alignment',
   },
-  cfCanToggleVisibility: {
+  cfVisibility: {
     displayName: 'Visibility toggle',
     type: 'Boolean',
     group: 'style',
@@ -341,7 +341,7 @@ export const containerBuiltInStyles: VariableDefinitions = {
 };
 
 export const dividerBuiltInStyles: VariableDefinitions = {
-  cfCanToggleVisibility: builtInStyles.cfCanToggleVisibility,
+  cfVisibility: builtInStyles.cfVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfMargin: {
     displayName: 'Margin',
@@ -381,7 +381,7 @@ export const dividerBuiltInStyles: VariableDefinitions = {
 };
 
 export const singleColumnBuiltInStyles: VariableDefinitions = {
-  cfCanToggleVisibility: builtInStyles.cfCanToggleVisibility,
+  cfVisibility: builtInStyles.cfVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
@@ -480,7 +480,7 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
 };
 
 export const columnsBuiltInStyles: VariableDefinitions = {
-  cfCanToggleVisibility: builtInStyles.cfCanToggleVisibility,
+  cfVisibility: builtInStyles.cfVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
