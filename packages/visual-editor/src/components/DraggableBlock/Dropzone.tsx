@@ -47,6 +47,7 @@ export function Dropzone({
   const isDraggingNewComponent = useDraggedItemStore((state) => Boolean(state.componentId));
   const isHoveringZone = useZoneStore((state) => state.hoveringZone === zoneId);
   const tree = useTreeStore((state) => state.tree);
+
   const content = node?.children || tree.root?.children || [];
   const { slotId } = parseZoneId(zoneId);
 
