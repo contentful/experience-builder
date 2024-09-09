@@ -1,4 +1,5 @@
-import React, { ErrorInfo, ReactElement } from 'react';
+import { isContentfulComponent } from '@contentful/experiences-core';
+import React, { ErrorInfo } from 'react';
 
 class ImportedComponentError extends Error {
   constructor(message: string) {
@@ -7,24 +8,35 @@ class ImportedComponentError extends Error {
   }
 }
 
-/** Use this error class (inside visual-editor) if you want to make sure that the error
- * is tracked via Sentry. Currently, the `ImportedComponentErrorBoundary` is swallowing
- * more errors than intended, so this way we make sure that the errors are being tracked. */
-export class SDKVisualEditorError extends Error {
+class ExperienceSDKError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'SDKVisualEditorError';
+    this.name = 'ExperienceSDKError';
   }
 }
 
-export class ImportedComponentErrorBoundary extends React.Component<{ children: ReactElement }> {
+type ImportedComponentErrorBoundaryProps = {
+  children?: React.ReactNode;
+  componentID?: string;
+};
+
+export class ImportedComponentErrorBoundary extends React.Component<ImportedComponentErrorBoundaryProps> {
+  constructor(props: ImportedComponentErrorBoundaryProps) {
+    super(props);
+  }
+
   componentDidCatch(error: Error, _errorInfo: ErrorInfo) {
-    if (error instanceof SDKVisualEditorError) {
-      // Turning it into ImportedComponentError skips it during error tracking. By explicitly creating
-      // a SDKVisualEditorError, we can make sure that errors in visual-editor are still being tracked.
+    if (error.name === 'ImportedComponentError' || error.name === 'ExperienceSDKError') {
+      // This error was already handled by a nested error boundary and should be passed upwards
+      // We have to do this as we wrap every component on every layer with this error boundary and
+      // thus an error deep in the tree bubbles through many layers of error boundaries.
       throw error;
     }
-    const err = new ImportedComponentError(error.message);
+    // Differentiate between custom and SDK-provided components for error tracking
+    const ErrorClass = isContentfulComponent(this.props.componentID)
+      ? ExperienceSDKError
+      : ImportedComponentError;
+    const err = new ErrorClass(error.message);
     err.stack = error.stack;
     throw err;
   }

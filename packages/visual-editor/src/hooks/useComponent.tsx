@@ -98,7 +98,7 @@ export const useComponent = ({
 
     const element = React.createElement(
       ImportedComponentErrorBoundary,
-      null,
+      { componentID: node.data.blockId },
       React.createElement(componentRegistration.component, {
         ...modifiedProps,
         dragProps,
