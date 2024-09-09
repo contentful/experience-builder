@@ -61,7 +61,7 @@ export const builtInStyles: VariableDefinitions = {
     type: 'Boolean',
     group: 'style',
     defaultValue: false,
-    description: 'To enable visibility toggle in patterns',
+    description: 'To enable visibility toggle in components',
   },
   cfMargin: {
     displayName: 'Margin',
