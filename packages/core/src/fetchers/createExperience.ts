@@ -1,6 +1,6 @@
 import type { Asset, Entry } from 'contentful';
 import { isExperienceEntry } from '@/utils';
-import type { Experience, ExternalSDKMode } from '@/types';
+import type { Experience } from '@/types';
 import { EntityStore } from '@/entity/EntityStore';
 
 type createExperienceArgs = {
@@ -8,8 +8,6 @@ type createExperienceArgs = {
   referencedEntries: Array<Entry>;
   referencedAssets: Array<Asset>;
   locale: string;
-  /** @deprecated mode no longer needed */
-  mode?: ExternalSDKMode;
 };
 
 /**

@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-visual-editor-react",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -12,6 +12,14 @@
   ],
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/experience-builder.git",
+    "directory": "packages/visual-editor"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/experience-builder/issues"
   },
   "scripts": {
     "bundle": "npx watchify dist/index.cjs -o dist/bundle.js",

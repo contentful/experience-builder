@@ -1,7 +1,7 @@
 import { createExperience } from './createExperience';
 import { fetchExperienceEntry } from './fetchExperienceEntry';
 import { fetchReferencedEntities } from './fetchReferencedEntities';
-import { ExperienceEntry, ExternalSDKMode } from '@/types';
+import { ExperienceEntry } from '@/types';
 import { ContentfulClientApi, Entry } from 'contentful';
 
 const errorMessagesWhileFetching = {
@@ -32,8 +32,6 @@ export async function fetchBySlug({
   experienceTypeId: string;
   slug: string;
   localeCode: string;
-  /** @deprecated mode no longer needed */
-  mode?: ExternalSDKMode;
 }) {
   let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
 

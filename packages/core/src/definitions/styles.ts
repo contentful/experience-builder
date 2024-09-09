@@ -331,6 +331,13 @@ export const containerBuiltInStyles: VariableDefinitions = {
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
   cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
+  cfMargin: {
+    displayName: 'Margin',
+    type: 'Text',
+    group: 'style',
+    description: 'The margin of the section',
+    defaultValue: '0 auto 0 auto',
+  },
   cfMaxWidth: {
     displayName: 'Max Width',
     type: 'Text',

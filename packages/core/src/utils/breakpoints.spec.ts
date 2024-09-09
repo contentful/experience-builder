@@ -82,6 +82,18 @@ describe('getValueForBreakpoint', () => {
       expect(value).toEqual(desktopValue);
     });
   });
+
+  describe('when rendering a view without a matching breakpoint', () => {
+    it('falls back to the desktop-specific value', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithoutTabletAndMobile,
+        breakpoints,
+        3,
+        variableName,
+      );
+      expect(value).toEqual(desktopValue);
+    });
+  });
 });
 
 describe('getActiveBreakpointIndex', () => {

@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-sdk-react",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -9,6 +9,14 @@
   "license": "MIT",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentful/experience-builder.git",
+    "directory": "packages/experience-builder-sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/experience-builder/issues"
   },
   "scripts": {
     "clean": "rimraf dist",
