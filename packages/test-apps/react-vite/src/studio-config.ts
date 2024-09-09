@@ -4,8 +4,51 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
+import Accordion from './components/Accordion';
 
 defineComponents([
+  {
+    component: Accordion,
+    definition: {
+      id: 'cf-accordion',
+      name: 'Accordion',
+      category: 'Experimental',
+      builtInStyles: ['cfPadding', 'cfMargin', 'cfWidth', 'cfMaxWidth'],
+      tooltip: {
+        description: 'Experimental component',
+      },
+      slots: Object.fromEntries(
+        Array.from({ length: 10 }, (_, i) => [
+          `childrenSlot${i + 1}`,
+          { displayName: `Slot ${i + 1}` },
+        ]),
+      ),
+      variables: {
+        numberOfItems: {
+          displayName: 'Number of Items',
+          group: 'style',
+          type: 'Number',
+          defaultValue: 2,
+        },
+        ...Object.fromEntries(
+          Array.from({ length: 10 }, (_, i) => [
+            `title${i + 1}`,
+            {
+              displayName: `Title ${i + 1}`,
+              type: 'Text',
+              defaultValue: `Title ${i + 1}`,
+            },
+          ]),
+        ),
+        singleExpandMode: {
+          displayName: 'Single Expand Mode',
+          group: 'style',
+          type: 'Boolean',
+          defaultValue: false,
+        },
+      },
+    },
+  },
   {
     component: ComponentWithChildren,
     definition: {
