@@ -173,6 +173,7 @@ export type ExperienceTree = {
  * collisions with user defined variables.
  */
 export type StyleProps = {
+  cfVisibility: boolean;
   cfHorizontalAlignment: 'start' | 'end' | 'center';
   cfVerticalAlignment: 'start' | 'end' | 'center';
   cfMargin: string;
