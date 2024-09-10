@@ -7,7 +7,7 @@ const structureComponentIds = new Set([
   CONTENTFUL_COMPONENTS.singleColumn.id,
 ]);
 
-const allComponentIds = new Set(
+const allContentfulComponentIds = new Set(
   Object.values(CONTENTFUL_COMPONENTS).map((component) => component.id),
 );
 
@@ -15,7 +15,7 @@ export const isContentfulStructureComponent = (componentId?: string) =>
   structureComponentIds.has(componentId ?? '');
 
 export const isContentfulComponent = (componentId?: string) =>
-  allComponentIds.has(componentId ?? '');
+  allContentfulComponentIds.has(componentId ?? '');
 
 export const isComponentAllowedOnRoot = (componentId?: string) =>
   isContentfulStructureComponent(componentId) || componentId === CONTENTFUL_COMPONENTS.divider.id;
