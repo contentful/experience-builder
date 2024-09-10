@@ -16,7 +16,7 @@ export const transformVisibility = (value?: boolean): CSSProperties => {
   return {};
 };
 
-// Keep this for backwards compatilibity - deleting this would be a breaking change
+// Keep this for backwards compatibility - deleting this would be a breaking change
 // because existing components on a users experience will have the width value as fill
 // rather than 100%
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
