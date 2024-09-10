@@ -20,6 +20,7 @@ export const RichTextComponentDefinition: ComponentDefinition = {
     'cfBackgroundColor',
     'cfBorder',
     'cfBorderRadius',
+    'cfTextColor',
   ],
   tooltip: {
     description: 'Drop onto the canvas to add text with Rich text formatting options.',
