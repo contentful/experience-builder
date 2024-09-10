@@ -57,6 +57,9 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
     clone.builtInStyles = ['cfMargin'];
   }
 
+  // Enforce the presence of this property for toggling visibility on any node
+  clone.variables['cfVisibility'] = builtInStyleDefinitions['cfVisibility'];
+
   for (const style of Object.values(clone.builtInStyles || [])) {
     if (builtInStyleDefinitions[style]) {
       clone.variables[style] = builtInStyleDefinitions[style];
