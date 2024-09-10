@@ -12,7 +12,6 @@ describe('createExperience', () => {
         referencedAssets: [],
         referencedEntries: [],
         locale: 'en-US',
-        mode: 'preview',
       });
       throw new Error('Should not reach this point');
     } catch (e) {
@@ -26,7 +25,6 @@ describe('createExperience', () => {
       referencedEntries: entries,
       referencedAssets: assets,
       locale: 'en-US',
-      mode: 'preview',
     });
 
     expect(experience.entityStore).toBeDefined();

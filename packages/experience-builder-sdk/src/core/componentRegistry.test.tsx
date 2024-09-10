@@ -147,7 +147,7 @@ describe('component registration', () => {
       expect(variableKeys).not.toContain('cfMargin');
     });
 
-    it('should apply fallback to group: content for variables that have it undefined', () => {
+    it('should contain cfVisibility property by default', () => {
       const definitionId = 'TestComponent';
 
       registry.defineComponents([
@@ -166,12 +166,11 @@ describe('component registration', () => {
         },
       ]);
 
-      const definition = registry.getComponentRegistration(definitionId);
-      expect(definition).toBeDefined();
+      const componentRegistration = registry.getComponentRegistration(definitionId);
+      expect(componentRegistration).toBeDefined();
 
-      for (const variable of Object.values(definition!.definition.variables)) {
-        expect(variable.group).toBe('content');
-      }
+      const variableKeys = Object.keys(componentRegistration!.definition.variables);
+      expect(variableKeys).toContain('cfVisibility');
     });
   });
 });
