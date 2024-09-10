@@ -17,14 +17,10 @@ class ExperienceSDKError extends Error {
 
 type ImportedComponentErrorBoundaryProps = {
   children?: React.ReactNode;
-  componentID?: string;
+  componentId?: string;
 };
 
 export class ImportedComponentErrorBoundary extends React.Component<ImportedComponentErrorBoundaryProps> {
-  constructor(props: ImportedComponentErrorBoundaryProps) {
-    super(props);
-  }
-
   componentDidCatch(error: Error, _errorInfo: ErrorInfo) {
     if (error.name === 'ImportedComponentError' || error.name === 'ExperienceSDKError') {
       // This error was already handled by a nested error boundary and should be passed upwards
@@ -33,7 +29,7 @@ export class ImportedComponentErrorBoundary extends React.Component<ImportedComp
       throw error;
     }
     // Differentiate between custom and SDK-provided components for error tracking
-    const ErrorClass = isContentfulComponent(this.props.componentID)
+    const ErrorClass = isContentfulComponent(this.props.componentId)
       ? ExperienceSDKError
       : ImportedComponentError;
     const err = new ErrorClass(error.message);

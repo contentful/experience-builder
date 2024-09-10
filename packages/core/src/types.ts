@@ -168,14 +168,12 @@ export type ExperienceTree = {
   root: ExperienceTreeNode;
 };
 
-export type ExternalSDKMode = 'preview' | 'delivery';
-export type InternalSDKMode = ExternalSDKMode | 'editor';
-
 /**
  * Internally defined style variables are prefix with `cf` to avoid
  * collisions with user defined variables.
  */
 export type StyleProps = {
+  cfVisibility: boolean;
   cfHorizontalAlignment: 'start' | 'end' | 'center';
   cfVerticalAlignment: 'start' | 'end' | 'center';
   cfMargin: string;
