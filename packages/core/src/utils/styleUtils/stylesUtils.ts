@@ -5,6 +5,7 @@ import {
   transformBorderStyle,
   transformFill,
   transformGridColumn,
+  transformVisibility,
 } from './styleTransformers';
 import { isContentfulStructureComponent } from '../components';
 import { EMPTY_CONTAINER_HEIGHT } from '../../constants';
@@ -64,8 +65,10 @@ export const buildCfStyles = ({
   cfTextItalic,
   cfTextUnderline,
   cfColumnSpan,
+  cfVisibility,
 }: Partial<StyleProps>): CSSProperties => {
   return {
+    ...transformVisibility(cfVisibility),
     margin: cfMargin,
     padding: cfPadding,
     backgroundColor: cfBackgroundColor,
