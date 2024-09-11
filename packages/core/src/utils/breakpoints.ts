@@ -103,7 +103,7 @@ export const getValueForBreakpoint = (
   resolveDesignTokens = true,
 ) => {
   const eventuallyResolveDesignTokens = (value: PrimitiveValue) => {
-    // For some built-in design propertier, we support design tokens
+    // For some built-in design properties, we support design tokens
     if (builtInStylesWithDesignTokens.includes(variableName)) {
       return getDesignTokenRegistration(value as string, variableName);
     }

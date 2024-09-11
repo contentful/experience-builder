@@ -1,6 +1,8 @@
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
+import { designTokensFixture } from '@/__fixtures__/designTokens';
 import { getActiveBreakpointIndex, getValueForBreakpoint, mediaQueryMatcher } from './breakpoints';
 import { describe, it, expect } from 'vitest';
+import { defineDesignTokens } from '../registries';
 
 describe('getValueForBreakpoint', () => {
   const breakpoints = createBreakpoints();
@@ -18,6 +20,11 @@ describe('getValueForBreakpoint', () => {
   };
   const valuesByBreakpointWithoutTabletAndMobile = {
     desktop: desktopValue,
+  };
+  const valuesByBreakpointWithDesignTokens = {
+    desktop: '${sizing.half}',
+    tablet: '${sizing.threeQuarters}',
+    mobile: '${sizing.full}',
   };
 
   describe('when rendering a desktop view', () => {
@@ -92,6 +99,33 @@ describe('getValueForBreakpoint', () => {
         variableName,
       );
       expect(value).toEqual(desktopValue);
+    });
+  });
+
+  describe('when using design tokens', () => {
+    beforeEach(() => {
+      defineDesignTokens(designTokensFixture);
+    });
+
+    it('resolves the design token', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithDesignTokens,
+        breakpoints,
+        desktopIndex,
+        'cfWidth',
+      );
+      expect(value).toEqual('50%');
+    });
+
+    it('can resolve the raw design token value', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithDesignTokens,
+        breakpoints,
+        desktopIndex,
+        'cfWidth',
+        false, // disable resolving design token
+      );
+      expect(value).toEqual('${sizing.half}');
     });
   });
 });
