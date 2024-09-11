@@ -108,9 +108,9 @@ describe('getValueForBreakpoint for design tokens', () => {
     '${color.success}',
   ];
   const [desktopResolvedValue, tabletResolvedValue, mobileResolvedValue] = [
-    'red',
-    'orange',
-    'green',
+    designTokensFixture.color!.danger,
+    designTokensFixture.color!.warning,
+    designTokensFixture.color!.success,
   ];
   const valuesByBreakpoint = {
     desktop: desktopTokenValue,
