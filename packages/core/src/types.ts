@@ -561,7 +561,7 @@ export type ComponentDraggingChangedPayload = {
 };
 
 export type IncomingComponentDragCanceledPayload = undefined;
-export type ComponentDragStartedPayload = { id: string };
+export type ComponentDragStartedPayload = { id: string; isAssembly: boolean };
 export type ComponentDragEndedPayload = undefined;
 export type IncomingComponentMoveEndedPayload = {
   mouseX: number;

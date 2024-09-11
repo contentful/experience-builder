@@ -6,7 +6,17 @@ import {
   BackgroundImageAlignmentOption,
 } from '@/types';
 
-// Keep this for backwards compatilibity - deleting this would be a breaking change
+export const transformVisibility = (value?: boolean): CSSProperties => {
+  if (value === false) {
+    return {
+      display: 'none',
+    };
+  }
+  // Don't explicitly set anything when visible to not overwrite values like `grid` or `flex`.
+  return {};
+};
+
+// Keep this for backwards compatibility - deleting this would be a breaking change
 // because existing components on a users experience will have the width value as fill
 // rather than 100%
 export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);

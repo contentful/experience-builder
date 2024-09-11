@@ -448,7 +448,7 @@ export const resolveBackgroundImageBinding = ({
     const variableDefinitionKey = variableData.key;
     const variableDefinition = componentSettings.variableDefinitions[variableDefinitionKey];
 
-    // @ts-expect-error TODO: fix the types as it thinks taht `defaultValue` is of type string
+    // @ts-expect-error TODO: Types coming from validations erroneously assume that `defaultValue` can be a primitive value (e.g. string or number)
     const defaultValueKey = variableDefinition.defaultValue?.key;
     const defaultValue = unboundValues[defaultValueKey].value;
 
