@@ -216,7 +216,7 @@ export const useComponentProps = ({
     renderDropzone,
   ]);
 
-  const cfStyles = buildCfStyles(props as StyleProps);
+  const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
 
   const sizeStyles: CSSProperties = {
     width: cfStyles.width,
