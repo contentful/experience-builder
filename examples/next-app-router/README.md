@@ -1,8 +1,8 @@
 # Studio Experiences with Next.js App Router example
 
-This example demonstrates how to use the Next.js App Router to create a server rendered page with Studio Experiences.
+This example demonstrates how to use the [Next.js App Router](https://nextjs.org/docs/app) to create a server rendered page with Studio Experiences.
 
-For more information, see [Using Experiences with Next.js](http://localhost:8001/developers/docs/experiences/using-with-nextjs/) in the Contentful docs.
+For more information, see [Using Experiences with Next.js](https://www.contentful.com/developers/docs/experiences/using-with-nextjs/) in the Contentful docs.
 
 ## Getting started
 

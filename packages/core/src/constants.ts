@@ -107,6 +107,7 @@ export const ASSEMBLY_BLOCK_NODE_TYPE = 'assemblyBlock';
 export const ASSEMBLY_NODE_TYPES = [ASSEMBLY_NODE_TYPE, ASSEMBLY_BLOCK_NODE_TYPE];
 export const LATEST_SCHEMA_VERSION = '2023-09-28';
 export const CF_STYLE_ATTRIBUTES = [
+  'cfVisibility',
   'cfHorizontalAlignment',
   'cfVerticalAlignment',
   'cfMargin',
