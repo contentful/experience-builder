@@ -100,6 +100,7 @@ export const getValueForBreakpoint = (
   breakpoints: Breakpoint[],
   activeBreakpointIndex: number,
   variableName: string,
+  resolveDesignTokens = true,
 ) => {
   const eventuallyResolveDesignTokens = (value: PrimitiveValue) => {
     // For some built-in design propertier, we support design tokens
@@ -116,14 +117,20 @@ export const getValueForBreakpoint = (
       const breakpointId = breakpoints[index]?.id;
       if (isValidBreakpointValue(valuesByBreakpoint[breakpointId])) {
         // If the value is defined, we use it and stop the breakpoints cascade
-        return eventuallyResolveDesignTokens(valuesByBreakpoint[breakpointId]);
+        if (resolveDesignTokens) {
+          return eventuallyResolveDesignTokens(valuesByBreakpoint[breakpointId]);
+        }
+        return valuesByBreakpoint[breakpointId];
       }
     }
     // If no breakpoint matched, we search and apply the fallback breakpoint
     const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
     const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex]?.id;
     if (isValidBreakpointValue(valuesByBreakpoint[fallbackBreakpointId])) {
-      return eventuallyResolveDesignTokens(valuesByBreakpoint[fallbackBreakpointId]);
+      if (resolveDesignTokens) {
+        return eventuallyResolveDesignTokens(valuesByBreakpoint[fallbackBreakpointId]);
+      }
+      return valuesByBreakpoint[fallbackBreakpointId];
     }
   } else {
     // Old design properties did not support breakpoints, keep for backward compatibility
