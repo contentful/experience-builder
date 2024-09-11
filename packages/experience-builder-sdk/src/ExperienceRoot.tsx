@@ -46,13 +46,11 @@ export const ExperienceRoot = ({
 
   if (mode === StudioCanvasMode.READ_ONLY) {
     return (
-      <>
-        <VisualEditorRoot
-          experience={experienceObject as Experience<EntityStore> | undefined}
-          visualEditorMode={visualEditorMode}
-          initialLocale={locale}
-        />
-      </>
+      <VisualEditorRoot
+        experience={experienceObject as Experience<EntityStore> | undefined}
+        visualEditorMode={visualEditorMode}
+        initialLocale={locale}
+      />
     );
   }
 
