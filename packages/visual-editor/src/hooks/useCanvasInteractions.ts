@@ -43,7 +43,7 @@ export default function useCanvasInteractions() {
       node.children = [childNode];
     }
 
-    if (!isAssembly) {
+    if (isAssembly === 'false') {
       addChild(destination.index, parentId, node);
     }
 
