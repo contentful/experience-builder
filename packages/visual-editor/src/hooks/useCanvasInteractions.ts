@@ -20,6 +20,10 @@ export default function useCanvasInteractions() {
       return;
     }
 
+    /**
+     * We only have the draggableId as information about the new component being dropped.
+     * So we need to split it to get the blockId and the isAssembly flag.
+     */
     const [blockId, isAssembly] = draggableId.split(':');
 
     const { nodeId: parentId, slotId } = parseZoneId(destination.droppableId);
@@ -43,6 +47,10 @@ export default function useCanvasInteractions() {
       node.children = [childNode];
     }
 
+    /**
+     * isAssembly comes from a string ID so we need to check if it's 'true' or 'false'
+     * in string format.
+     */
     if (isAssembly === 'false') {
       addChild(destination.index, parentId, node);
     }
