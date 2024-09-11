@@ -20,12 +20,14 @@ export default function useCanvasInteractions() {
       return;
     }
 
+    const [blockId, isAssembly] = draggableId.split(':');
+
     const { nodeId: parentId, slotId } = parseZoneId(destination.droppableId);
 
     const droppingOnRoot = parentId === ROOT_ID;
-    const isValidRootComponent = draggableId === CONTENTFUL_COMPONENTS.container.id;
+    const isValidRootComponent = blockId === CONTENTFUL_COMPONENTS.container.id;
 
-    let node = createTreeNode({ blockId: draggableId, parentId, slotId });
+    let node = createTreeNode({ blockId: blockId, parentId, slotId });
 
     if (droppingOnRoot && !isValidRootComponent) {
       const wrappingContainer = createTreeNode({
@@ -33,7 +35,7 @@ export default function useCanvasInteractions() {
         parentId,
       });
       const childNode = createTreeNode({
-        blockId: draggableId,
+        blockId: blockId,
         parentId: wrappingContainer.data.id,
       });
 
@@ -41,11 +43,13 @@ export default function useCanvasInteractions() {
       node.children = [childNode];
     }
 
-    addChild(destination.index, parentId, node);
+    if (!isAssembly) {
+      addChild(destination.index, parentId, node);
+    }
 
     onDrop({
       data: tree,
-      componentType: draggableId,
+      componentType: blockId,
       destinationIndex: destination.index,
       destinationZoneId: parentId,
       slotId,
