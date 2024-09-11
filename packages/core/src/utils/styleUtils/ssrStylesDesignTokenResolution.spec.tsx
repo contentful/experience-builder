@@ -176,7 +176,7 @@ describe('custom component with builtInStyles which are supporting design tokens
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint
         .desktop as string,
     ).toEqual(
-      'cf-c9e1b7c280ecf05fda4ab04e16644807 cf-2c4e00b479e8209382b0814b0ba1f706 cf-bd9d9646c4500dc3f4a3a7d9974d0e40',
+      'cf-c9e1b7c280ecf05fda4ab04e16644807 cf-511d6b2de57fd63af53a455b9a3c6c20 cf-bd9d9646c4500dc3f4a3a7d9974d0e40',
     );
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -186,7 +186,7 @@ describe('custom component with builtInStyles which are supporting design tokens
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-c9e1b7c280ecf05fda4ab04e16644807{margin:2rem;padding:2rem;background-color:white;width:50%;height:25%;border:1px solid black;gap:2rem 2rem;font-size:1rem;font-style:normal;color:black;text-decoration:none;box-sizing:border-box;}@media(max-width:992px){.cf-2c4e00b479e8209382b0814b0ba1f706{margin:1.5rem;padding:1.5rem;background-color:black;width:75%;height:50%;border:3px solid black;gap:1.5rem 1.5rem;font-size:0.75rem;font-style:normal;color:rgba(0, 0, 0, 1);text-decoration:none;box-sizing:border-box;}}@media(max-width:576px){.cf-bd9d9646c4500dc3f4a3a7d9974d0e40{margin:1rem;padding:1rem;background-color:red;width:100%;height:100%;border:0px solid transparent;gap:1rem 1rem;font-size:1.5rem;font-style:normal;color:orange;text-decoration:none;box-sizing:border-box;}}',
+      '.cf-c9e1b7c280ecf05fda4ab04e16644807{margin:2rem;padding:2rem;background-color:white;width:50%;height:25%;border:1px solid black;gap:2rem 2rem;font-size:1rem;font-style:normal;color:black;text-decoration:none;box-sizing:border-box;}@media(max-width:992px){.cf-511d6b2de57fd63af53a455b9a3c6c20{margin:1.5rem;padding:1.5rem;background-color:black;width:75%;height:50%;border:3px solid black;gap:1.5rem 1.5rem;font-size:0.75rem;font-style:normal;color:green;text-decoration:none;box-sizing:border-box;}}@media(max-width:576px){.cf-bd9d9646c4500dc3f4a3a7d9974d0e40{margin:1rem;padding:1rem;background-color:red;width:100%;height:100%;border:0px solid transparent;gap:1rem 1rem;font-size:1.5rem;font-style:normal;color:orange;text-decoration:none;box-sizing:border-box;}}',
     );
   });
 });

@@ -6,7 +6,7 @@ export const designTokensFixture: DesignTokensDefinition = {
     font: 'black',
     danger: 'red',
     warning: 'orange',
-    succcess: 'green',
+    success: 'green',
   },
   spacing: {
     xs: '0.5 rem',

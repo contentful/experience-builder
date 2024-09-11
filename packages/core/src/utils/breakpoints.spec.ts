@@ -4,7 +4,7 @@ import { getActiveBreakpointIndex, getValueForBreakpoint, mediaQueryMatcher } fr
 import { describe, it, expect } from 'vitest';
 import { defineDesignTokens } from '../registries';
 
-describe('getValueForBreakpoint', () => {
+describe('getValueForBreakpoint for css values', () => {
   const breakpoints = createBreakpoints();
   const variableName = 'cfBackgroundColor';
   const [desktopIndex, tabletIndex, mobileIndex] = [0, 1, 2];
@@ -20,11 +20,6 @@ describe('getValueForBreakpoint', () => {
   };
   const valuesByBreakpointWithoutTabletAndMobile = {
     desktop: desktopValue,
-  };
-  const valuesByBreakpointWithDesignTokens = {
-    desktop: '${sizing.half}',
-    tablet: '${sizing.threeQuarters}',
-    mobile: '${sizing.full}',
   };
 
   describe('when rendering a desktop view', () => {
@@ -101,31 +96,183 @@ describe('getValueForBreakpoint', () => {
       expect(value).toEqual(desktopValue);
     });
   });
+});
 
-  describe('when using design tokens', () => {
-    beforeEach(() => {
-      defineDesignTokens(designTokensFixture);
-    });
+describe('getValueForBreakpoint for design tokens', () => {
+  const breakpoints = createBreakpoints();
+  const variableName = 'cfBackgroundColor';
+  const [desktopIndex, tabletIndex, mobileIndex] = [0, 1, 2];
+  const [desktopTokenValue, tabletTokenValue, mobileTokenValue] = [
+    '${color.danger}',
+    '${color.warning}',
+    '${color.success}',
+  ];
+  const [desktopResolvedValue, tabletResolvedValue, mobileResolvedValue] = [
+    'red',
+    'orange',
+    'green',
+  ];
+  const valuesByBreakpoint = {
+    desktop: desktopTokenValue,
+    tablet: tabletTokenValue,
+    mobile: mobileTokenValue,
+  };
+  const valuesByBreakpointWithoutMobile = {
+    desktop: desktopTokenValue,
+    tablet: tabletTokenValue,
+  };
+  const valuesByBreakpointWithoutTabletAndMobile = {
+    desktop: desktopTokenValue,
+  };
 
-    it('resolves the design token', () => {
+  beforeEach(() => {
+    defineDesignTokens(designTokensFixture);
+  });
+
+  describe('when rendering a desktop view', () => {
+    it('renders desktop with design token resolved', () => {
       const value = getValueForBreakpoint(
-        valuesByBreakpointWithDesignTokens,
+        valuesByBreakpoint,
         breakpoints,
         desktopIndex,
-        'cfWidth',
+        variableName,
       );
-      expect(value).toEqual('50%');
+      expect(value).toEqual(desktopResolvedValue);
     });
-
-    it('can resolve the raw design token value', () => {
+    it('renders desktop with design token in string template format', () => {
       const value = getValueForBreakpoint(
-        valuesByBreakpointWithDesignTokens,
+        valuesByBreakpoint,
         breakpoints,
         desktopIndex,
-        'cfWidth',
-        false, // disable resolving design token
+        variableName,
+        false,
       );
-      expect(value).toEqual('${sizing.half}');
+      expect(value).toEqual(desktopTokenValue);
+    });
+  });
+
+  describe('when rendering a tablet view', () => {
+    it('renders tablet with design token resolved', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpoint,
+        breakpoints,
+        tabletIndex,
+        variableName,
+      );
+      expect(value).toEqual(tabletResolvedValue);
+    });
+    it('falls back to the desktop value with design token resolved', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithoutTabletAndMobile,
+        breakpoints,
+        tabletIndex,
+        variableName,
+      );
+      expect(value).toEqual(desktopResolvedValue);
+    });
+
+    it('renders tablet with design token in string template format', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpoint,
+        breakpoints,
+        tabletIndex,
+        variableName,
+        false,
+      );
+      expect(value).toEqual(tabletTokenValue);
+    });
+    it('falls back to the desktop value with design token in string template format', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithoutTabletAndMobile,
+        breakpoints,
+        tabletIndex,
+        variableName,
+        false,
+      );
+      expect(value).toEqual(desktopTokenValue);
+    });
+  });
+
+  describe('when rendering a mobile view', () => {
+    it('renders the mobile value with design token resolved', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpoint,
+        breakpoints,
+        mobileIndex,
+        variableName,
+      );
+      expect(value).toEqual(mobileResolvedValue);
+    });
+    it('falls back to the tablet value with design token resolved', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithoutMobile,
+        breakpoints,
+        mobileIndex,
+        variableName,
+      );
+      expect(value).toEqual(tabletResolvedValue);
+    });
+    it('falls back to the desktop value with design token resolved', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithoutTabletAndMobile,
+        breakpoints,
+        mobileIndex,
+        variableName,
+      );
+      expect(value).toEqual(desktopResolvedValue);
+    });
+
+    it('renders the mobile value with design token in string template format', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpoint,
+        breakpoints,
+        mobileIndex,
+        variableName,
+        false,
+      );
+      expect(value).toEqual(mobileTokenValue);
+    });
+    it('falls back to the tablet value with design token in string template format', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithoutMobile,
+        breakpoints,
+        mobileIndex,
+        variableName,
+        false,
+      );
+      expect(value).toEqual(tabletTokenValue);
+    });
+    it('falls back to the desktop value with design token in string template format', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithoutTabletAndMobile,
+        breakpoints,
+        mobileIndex,
+        variableName,
+        false,
+      );
+      expect(value).toEqual(desktopTokenValue);
+    });
+  });
+
+  describe('when rendering a view without a matching breakpoint', () => {
+    it('falls back to the desktop value with design token resolved', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithoutTabletAndMobile,
+        breakpoints,
+        3,
+        variableName,
+      );
+      expect(value).toEqual(desktopResolvedValue);
+    });
+    it('falls back to the desktop value with design token in string template format', () => {
+      const value = getValueForBreakpoint(
+        valuesByBreakpointWithoutTabletAndMobile,
+        breakpoints,
+        3,
+        variableName,
+        false,
+      );
+      expect(value).toEqual(desktopTokenValue);
     });
   });
 });
