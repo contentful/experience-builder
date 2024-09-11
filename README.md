@@ -3,17 +3,19 @@
 This repository represents a set of packages, related to the [Experiences](https://www.contentful.com/developers/docs/experiences/what-are-experiences/) product.
 
 ## Documentation Links
-- [Home](https://www.contentful.com/developers/docs/experiences/)
 - [What are Experiences?](https://www.contentful.com/developers/docs/experiences/what-are-experiences/)
 - [Set up Experiences SDK](https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/)
 - [Register custom components](https://www.contentful.com/developers/docs/experiences/register-custom-components/)
 - [Component definition schema](https://www.contentful.com/developers/docs/experiences/component-definition-schema/)
 - [Built-in styles](https://www.contentful.com/developers/docs/experiences/built-in-styles/)
 - [Design tokens](https://www.contentful.com/developers/docs/experiences/design-tokens/)
+- [Register custom breakpoints](https://www.contentful.com/developers/docs/experiences/register-custom-breakpoints/)
+- [Layout structures](https://www.contentful.com/developers/docs/experiences/layout-structures/)
 - [Data structures](https://www.contentful.com/developers/docs/experiences/data-structures/)
 - [Error handling](https://www.contentful.com/developers/docs/experiences/error-handling/)
 - [Image optimzation](https://www.contentful.com/developers/docs/experiences/image-optimization/)
-- [Experiences with NextJS](https://www.contentful.com/developers/docs/experiences/using-with-nextjs/)
+- [Linking between experiences](https://www.contentful.com/developers/docs/experiences/experience-hyperlinks/)
+- [Using Experiences with NextJS](https://www.contentful.com/developers/docs/experiences/using-with-nextjs/)
 
 ## Links to packages in this repo
 - [Components](https://github.com/contentful/experience-builder/tree/main/packages/components)
