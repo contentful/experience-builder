@@ -60,7 +60,7 @@ export const VISUAL_EDITOR_EVENTS = {
  * editing an experience inside of Contentful Studio. i.e. these modes
  * intentionally do not include preview/delivery modes.
  */
-export enum StudioExperienceMode {
+export enum StudioCanvasMode {
   READ_ONLY = 'readOnlyMode',
   EDITOR = 'editorMode',
   NONE = 'none',

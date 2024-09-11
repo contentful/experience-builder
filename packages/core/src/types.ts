@@ -545,10 +545,8 @@ export type OutgoingMessage = {
 type Filter<T, U> = T extends U ? T : never;
 type SelectedValueTypes = Filter<ComponentPropertyValue['type'], 'UnboundValue' | 'BoundValue'>;
 
-export type RequestReadOnlyModePayload = {
-  tree: ExperienceTree;
-  locale: string;
-};
+export type RequestReadOnlyModePayload = undefined;
+
 export type RequestEditorModePayload = undefined;
 export type ExperienceUpdatedPayload = {
   tree: ExperienceTree;

@@ -1,18 +1,18 @@
 import { fireEvent, renderHook } from '@testing-library/react';
-import { useDetectMode } from './useDetectMode';
-import { INCOMING_EVENTS, StudioExperienceMode } from '@contentful/experiences-core/constants';
+import { useDetectCanvasModeMode } from './useDetectCanvasModeMode';
+import { INCOMING_EVENTS, StudioCanvasMode } from '@contentful/experiences-core/constants';
 import * as experiencesCore from '@contentful/experiences-core';
 
-describe('useDetectMode()', () => {
+describe('useDetectCanvasModeMode()', () => {
   beforeEach(() => {
     jest.spyOn(experiencesCore, 'doesMismatchMessageSchema').mockReturnValue(false);
   });
 
   describe('SSR', () => {
     it('returns mode: null', () => {
-      const { result } = renderHook(() => useDetectMode({ isClientSide: true }));
+      const { result } = renderHook(() => useDetectCanvasModeMode({ isClientSide: true }));
 
-      expect(result.current).toEqual(StudioExperienceMode.NONE);
+      expect(result.current).toEqual(StudioCanvasMode.NONE);
     });
   });
 
@@ -27,10 +27,10 @@ describe('useDetectMode()', () => {
         },
       });
 
-      const { result } = renderHook(() => useDetectMode({ isClientSide: true }));
+      const { result } = renderHook(() => useDetectCanvasModeMode({ isClientSide: true }));
       fireEvent(window, new CustomEvent('message', {}));
 
-      expect(result.current).toEqual(StudioExperienceMode.EDITOR);
+      expect(result.current).toEqual(StudioCanvasMode.EDITOR);
     });
   });
 
@@ -45,10 +45,10 @@ describe('useDetectMode()', () => {
         },
       });
 
-      const { result } = renderHook(() => useDetectMode({ isClientSide: true }));
+      const { result } = renderHook(() => useDetectCanvasModeMode({ isClientSide: true }));
       fireEvent(window, new CustomEvent('message', {}));
 
-      expect(result.current).toEqual(StudioExperienceMode.READ_ONLY);
+      expect(result.current).toEqual(StudioCanvasMode.READ_ONLY);
     });
   });
 });
