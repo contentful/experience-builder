@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
+    "@ninetailed/experience.js-next": "^7.8.1",
+    "@ninetailed/experience.js-utils-contentful": "^7.8.1",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18"

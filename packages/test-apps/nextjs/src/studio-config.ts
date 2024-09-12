@@ -4,8 +4,39 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
+import NinetailedExperienceContainer from './components/NinetailedExperienceContainer';
+import NinetailedVariantContainer from './components/NinetailedVariantContainer';
 
 defineComponents([
+  {
+    component: NinetailedExperienceContainer,
+    definition: {
+      id: 'ninetailed-experience-container',
+      children: true,
+      name: 'Ninetailed Experience Container',
+      category: 'Ninetailed',
+      variables: {
+        experienceId: {
+          displayName: 'Ninetailed Experience ID',
+          type: 'Text',
+        },
+        selectedVariantIndex: {
+          displayName: 'Selected Variant Index',
+          type: 'Number',
+        },
+      },
+    },
+  },
+  {
+    component: NinetailedVariantContainer,
+    definition: {
+      id: 'ninetailed-variant-container',
+      children: true,
+      name: 'Ninetailed Basline / Variant Container',
+      category: 'Ninetailed',
+      variables: {},
+    },
+  },
   {
     component: ComponentWithChildren,
     definition: {

@@ -60,5 +60,10 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "@ninetailed/experience.js-plugin-preview": "^7.8.1",
+    "@ninetailed/experience.js-react": "^7.8.1",
+    "@ninetailed/experience.js-utils-contentful": "^7.8.1"
   }
 }

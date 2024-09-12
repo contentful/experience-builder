@@ -1,4 +1,10 @@
 import { fetchBySlug } from '@contentful/experiences-sdk-react';
+import {
+  AudienceEntryLike,
+  AudienceMapper,
+  ExperienceEntryLike,
+  ExperienceMapper,
+} from '@ninetailed/experience.js-utils-contentful';
 import { createClient } from 'contentful';
 
 const accessToken = process.env.NEXT_PUBLIC_CTFL_ACCESS_TOKEN!;
@@ -8,7 +14,7 @@ const environment = process.env.NEXT_PUBLIC_CTFL_ENVIRONMENT!;
 const experienceTypeId = process.env.NEXT_PUBLIC_CTFL_EXPERIENCE_TYPE!;
 const domain = process.env.NEXT_PUBLIC_CTFL_DOMAIN || 'contentful.com';
 
-const getConfig = (isPreview: boolean) => {
+export const getConfig = (isPreview: boolean) => {
   const client = createClient({
     space,
     environment,
@@ -17,6 +23,41 @@ const getConfig = (isPreview: boolean) => {
   });
   return client;
 };
+
+export async function getAllNinetailedExperiences() {
+  const query = {
+    content_type: 'nt_experience',
+    include: 1,
+  };
+
+  const client = getConfig(true);
+
+  const entries = await client.getEntries(query);
+  const experiences = entries.items as ExperienceEntryLike[];
+
+  const mappedExperiences = (experiences || [])
+    .filter((entry) => ExperienceMapper.isExperienceEntry(entry))
+    .map((entry) => ExperienceMapper.mapExperience(entry));
+
+  return mappedExperiences;
+}
+
+export async function getAllNinetailedAudiences() {
+  const query = {
+    content_type: 'nt_audience',
+  };
+
+  const client = getConfig(true);
+
+  const entries = await client.getEntries(query);
+  const audiences = entries.items as AudienceEntryLike[];
+
+  const mappedAudiences = (audiences || [])
+    .filter((entry) => AudienceMapper.isAudienceEntry(entry))
+    .map((entry) => AudienceMapper.mapAudience(entry));
+
+  return mappedAudiences;
+}
 
 export const getExperience = async (
   slug: string,
