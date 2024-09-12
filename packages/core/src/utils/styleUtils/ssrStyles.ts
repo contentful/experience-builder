@@ -590,7 +590,7 @@ export const indexByBreakpoint = ({
     for (const [breakpointId, variableValue] of Object.entries(
       resolvedVariableData.valuesByBreakpoint,
     )) {
-      if (!variableValue) {
+      if (typeof variableValue !== 'boolean' && !variableValue) {
         continue;
       }
 
