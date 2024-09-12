@@ -29,6 +29,7 @@ export const OUTGOING_EVENTS = {
 
 export const INCOMING_EVENTS = {
   RequestEditorMode: 'requestEditorMode',
+  RequestReadOnlyMode: 'requestReadOnlyMode',
   ExperienceUpdated: 'componentTreeUpdated',
   ComponentDraggingChanged: 'componentDraggingChanged',
   ComponentDragCanceled: 'componentDragCanceled',
@@ -53,6 +54,17 @@ export const INTERNAL_EVENTS = {
 export const VISUAL_EDITOR_EVENTS = {
   Ready: 'cfVisualEditorReady',
 };
+
+/**
+ * These modes are ONLY intended to be internally used within the context of
+ * editing an experience inside of Contentful Studio. i.e. these modes
+ * intentionally do not include preview/delivery modes.
+ */
+export enum StudioCanvasMode {
+  READ_ONLY = 'readOnlyMode',
+  EDITOR = 'editorMode',
+  NONE = 'none',
+}
 
 export const VISUAL_EDITOR_CONTAINER_ID = 'cf-visual-editor';
 export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component';
