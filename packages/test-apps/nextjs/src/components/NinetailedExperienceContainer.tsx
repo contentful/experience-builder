@@ -1,31 +1,32 @@
 import React, { useEffect } from 'react';
-import {
-  Experience,
-  ExperienceConfiguration,
-  useExperience,
-  useNinetailed,
-} from '@ninetailed/experience.js-next';
+import { Experience, ExperienceConfiguration, useNinetailed } from '@ninetailed/experience.js-next';
 import { ExperienceMapper } from '@ninetailed/experience.js-utils-contentful';
 
 import { getConfig as getClient } from '@/utils/getExperience';
 import { NinetailedContainerProvider } from '@/utils/useNinetailedContainer';
-import NinetailedVariantContainer from './NinetailedVariantContainer';
-import NinetailedVariantRenderer from './NinetailedVariantRenderer';
 
 type NinetailedExperienceContainerProps = React.PropsWithChildren<{
   experienceId?: string;
-
-  selectedVariantIndex: number;
 }>;
+
+const IntermediateContainer = (props) => {
+  const { children, studioId, ...rest } = props;
+
+  console.log('intermediate', props);
+
+  return (
+    <>
+      <pre>{JSON.stringify(rest, null, 2)}</pre>
+      <NinetailedContainerProvider selectedVariantContainerId={studioId || 'none'}>
+        {children}
+      </NinetailedContainerProvider>
+    </>
+  );
+};
 
 const NinetailedExperienceContainer: React.FC<NinetailedExperienceContainerProps> = ({
   children,
-
   experienceId,
-
-  selectedVariantIndex = 0,
-
-  ...rest
 }) => {
   const [experiences, setExperiences] = React.useState<ExperienceConfiguration[]>([]);
   const experience = experiences[0];
@@ -35,13 +36,6 @@ const NinetailedExperienceContainer: React.FC<NinetailedExperienceContainerProps
 
   const ninetailedBaselineId = experience?.components[0].baseline.id;
   const studioBaselineId = children.props.node.children[0]?.data.id;
-
-  const ninetailedResult = useExperience({
-    baseline: { id: ninetailedBaselineId || '', studioId: studioBaselineId },
-    experiences,
-  });
-
-  const { baseline, variant } = ninetailedResult;
 
   useEffect(() => {
     const execute = async () => {
@@ -84,22 +78,18 @@ const NinetailedExperienceContainer: React.FC<NinetailedExperienceContainerProps
     execute();
   }, [experienceId]);
 
-  console.log(ninetailedResult);
+  if (!experience) {
+    return <span>please select a Ninetailed Experience</span>;
+  }
 
   return (
-    <NinetailedContainerProvider selectedVariantContainerId={variant.studioId || 'none'}>
-      <pre>{JSON.stringify(rest, null, 2)}</pre>
-      {/* <pre>{JSON.stringify(experience, null, 2)}</pre> */}
-      {/* 
-        {experience && <Experience 
-            studioChildren={studioChildren}
-            id={experience.components[0].baseline.id}  
-            experiences={[experience]}
-            component={NinetailedVariantRenderer}/>
-        } */}
-
-      {children}
-    </NinetailedContainerProvider>
+    <Experience
+      id={ninetailedBaselineId}
+      studioId={studioBaselineId}
+      experiences={experiences}
+      component={IntermediateContainer}
+      passthroughProps={{ children }}
+    />
   );
 };
 
