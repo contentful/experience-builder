@@ -173,6 +173,7 @@ export type ExperienceTree = {
  * collisions with user defined variables.
  */
 export type StyleProps = {
+  cfVisibility: boolean;
   cfHorizontalAlignment: 'start' | 'end' | 'center';
   cfVerticalAlignment: 'start' | 'end' | 'center';
   cfMargin: string;
@@ -560,7 +561,7 @@ export type ComponentDraggingChangedPayload = {
 };
 
 export type IncomingComponentDragCanceledPayload = undefined;
-export type ComponentDragStartedPayload = { id: string };
+export type ComponentDragStartedPayload = { id: string; isAssembly: boolean };
 export type ComponentDragEndedPayload = undefined;
 export type IncomingComponentMoveEndedPayload = {
   mouseX: number;
