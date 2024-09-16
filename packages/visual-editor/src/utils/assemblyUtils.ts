@@ -27,11 +27,11 @@ export const deserializeAssemblyNode = ({
   nodeId,
   nodeLocation,
   parentId,
-  assemblyDataSource,
-  assemblyUnboundValues,
-  assemblyVariableDefinitions,
-  assemblyId,
-  assemblyComponentId,
+  patternDataSource,
+  patternUnboundValues,
+  patternVariableDefinitions,
+  patternId,
+  patternComponentId,
   componentInstanceProps,
   componentInstanceUnboundValues,
   componentInstanceDataSource,
@@ -40,11 +40,11 @@ export const deserializeAssemblyNode = ({
   nodeId: string;
   nodeLocation: string | null;
   parentId?: string;
-  assemblyDataSource: ExperienceDataSource;
-  assemblyUnboundValues: ExperienceUnboundValues;
-  assemblyVariableDefinitions: ExperienceComponentSettings['variableDefinitions'];
-  assemblyId: string;
-  assemblyComponentId: string;
+  patternDataSource: ExperienceDataSource;
+  patternUnboundValues: ExperienceUnboundValues;
+  patternVariableDefinitions: ExperienceComponentSettings['variableDefinitions'];
+  patternId: string;
+  patternComponentId: string;
   componentInstanceProps: Record<string, ComponentPropertyValue>;
   componentInstanceUnboundValues: ExperienceUnboundValues;
   componentInstanceDataSource: ExperienceDataSource;
@@ -54,7 +54,7 @@ export const deserializeAssemblyNode = ({
     componentInstanceProps,
     componentInstanceUnboundValues,
     componentInstanceDataSource,
-    assemblyVariableDefinitions,
+    patternVariableDefinitions,
   });
 
   const isAssembly = assembliesRegistry.has(node.definitionId);
@@ -64,14 +64,14 @@ export const deserializeAssemblyNode = ({
       nodeLocation === null ? `${childIndex}` : nodeLocation + '_' + childIndex;
     return deserializeAssemblyNode({
       node: child,
-      nodeId: `${assemblyComponentId}---${newNodeLocation}`,
+      nodeId: `${patternComponentId}---${newNodeLocation}`,
       nodeLocation: newNodeLocation,
       parentId: nodeId,
-      assemblyDataSource,
-      assemblyUnboundValues,
-      assemblyVariableDefinitions,
-      assemblyId,
-      assemblyComponentId,
+      patternDataSource,
+      patternUnboundValues,
+      patternVariableDefinitions,
+      patternId,
+      patternComponentId,
       componentInstanceProps,
       componentInstanceUnboundValues,
       componentInstanceDataSource,
@@ -85,8 +85,8 @@ export const deserializeAssemblyNode = ({
     data: {
       id: nodeId,
       assembly: {
-        id: assemblyId,
-        componentId: assemblyComponentId,
+        id: patternId,
+        componentId: patternComponentId,
         nodeLocation: nodeLocation || null,
       },
       blockId: node.definitionId,
@@ -154,11 +154,11 @@ export const resolveAssembly = ({
     nodeLocation: null,
     nodeId: node.data.id,
     parentId: node.parentId,
-    assemblyDataSource: {},
-    assemblyId: assembly.sys.id,
-    assemblyComponentId: node.data.id,
-    assemblyUnboundValues: componentFields.unboundValues,
-    assemblyVariableDefinitions: componentFields.componentSettings!.variableDefinitions,
+    patternDataSource: {},
+    patternId: assembly.sys.id,
+    patternComponentId: node.data.id,
+    patternUnboundValues: componentFields.unboundValues,
+    patternVariableDefinitions: componentFields.componentSettings!.variableDefinitions,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
     componentInstanceDataSource: node.data.dataSource,

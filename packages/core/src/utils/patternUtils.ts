@@ -11,13 +11,13 @@ export const deserializePatternVariables = ({
   componentInstanceProps,
   componentInstanceUnboundValues,
   componentInstanceDataSource,
-  assemblyVariableDefinitions,
+  patternVariableDefinitions,
 }: {
   nodeVariables: Record<string, ComponentPropertyValue>;
   componentInstanceProps: Record<string, ComponentPropertyValue>;
   componentInstanceUnboundValues: ExperienceUnboundValues;
   componentInstanceDataSource: ExperienceDataSource;
-  assemblyVariableDefinitions?: ExperienceComponentSettings['variableDefinitions'];
+  patternVariableDefinitions?: ExperienceComponentSettings['variableDefinitions'];
 }): {
   childNodeVariable: Record<string, ComponentPropertyValue>;
   dataSource: ExperienceDataSource;
@@ -32,7 +32,7 @@ export const deserializePatternVariables = ({
     if (variable.type === 'ComponentValue') {
       const componentValueKey = variable.key;
       const instanceProperty = componentInstanceProps[componentValueKey];
-      const variableDefinition = assemblyVariableDefinitions?.[componentValueKey];
+      const variableDefinition = patternVariableDefinitions?.[componentValueKey];
       const defaultValue = variableDefinition?.defaultValue;
 
       // For assembly, we look up the value in the assembly instance and

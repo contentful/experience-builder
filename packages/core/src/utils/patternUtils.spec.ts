@@ -64,7 +64,7 @@ describe('deserializePatternVariables', () => {
       componentInstanceProps,
       componentInstanceUnboundValues: {},
       componentInstanceDataSource: {},
-      assemblyVariableDefinitions: patternVariableDefinitions,
+      patternVariableDefinitions,
     });
 
     expect(result).toEqual({
