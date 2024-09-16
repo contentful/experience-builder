@@ -35,7 +35,7 @@ export const deserializePatternVariables = ({
       const variableDefinition = patternVariableDefinitions?.[componentValueKey];
       const defaultValue = variableDefinition?.defaultValue;
 
-      // For assembly, we look up the value in the assembly instance and
+      // For pattern, we look up the value in the pattern instance and
       // replace the componentValue with that one.
       if (instanceProperty?.type === 'UnboundValue') {
         const componentInstanceValue = componentInstanceUnboundValues[instanceProperty.key];
