@@ -9,7 +9,7 @@ import {
 } from '@contentful/experiences-sdk-react';
 import { useContentfulClient } from './hooks/useContentfulClient';
 import { useContentfulConfig } from './hooks/useContentfulConfig';
-import { Foo } from './Foo';
+import { CustomCarousel } from './components/CustomCarousel';
 
 const color = {
   Slate: '#94a3b8',
@@ -22,47 +22,30 @@ const color = {
 
 defineComponents([
   {
-    component: Foo,
+    component: CustomCarousel,
     definition: {
-      id: 'foo',
-      name: 'Foo',
+      id: 'customCarousel',
+      name: 'CustomCarousel',
       category: 'Custom Components',
-      variables: {
-        text: {
-          displayName: 'Text',
-          type: 'Text',
-          defaultValue: 'Click me!',
-          group: 'content',
-        },
-        thumbnail: {
-          displayName: 'Thumbnail',
-          type: 'Media',
-          group: 'content',
-        },
-      },
+      variables: {},
+      children: true,
+      builtInStyles: [
+        'cfAlignment',
+        'cfMargin',
+        'cfWidth',
+        'cfHeight',
+        'cfMaxWidth',
+        'cfLetterSpacing',
+        'cfTextItalic',
+        'cfTextUnderline',
+        'cfTextBold',
+        'cfLineHeight',
+        'cfBorder',
+        'cfBorderRadius',
+      ],
     },
   },
 ]);
-
-// defineDesignTokens({
-//   "color": {
-//     "Color 1": "rgba(186.624, 186.624, 186.624, 1.000)",
-//     "Color 2": "rgba(62.208, 62.208, 62.208, 1.000)",
-//     "Color 3": "rgba(29.184, 46.08, 59.136, 1.000)"
-//   },
-//   "sizing": {
-//     "sizingM": "512px"
-//   },
-//   "spacing": {
-//     "spacingM": "8px",
-//     "spacingL": "16px"
-//   },
-//   "borderRadius": {
-//     "radiusM": "12px",
-//     "radiusL": "24px",
-//     "radiusXL": "400px"
-//   }
-// });
 
 // register design tokens
 defineDesignTokens({
@@ -99,28 +82,8 @@ defineDesignTokens({
       letterSpacing: '0.05em',
       color: color.Green,
     },
-  }
+  },
 });
-
-// defineDesignTokens({
-//   "color": {
-//     "Color 1": "rgba(186.624, 186.624, 186.624, 1.000)",
-//     "Color 2": "rgba(62.208, 62.208, 62.208, 1.000)",
-//     "Color 3": "rgba(29.184, 46.08, 59.136, 1.000)"
-//   },
-//   "sizing": {
-//     "sizingM": "512px"
-//   },
-//   "spacing": {
-//     "spacingM": "8px",
-//     "spacingL": "16px"
-//   },
-//   "borderRadius": {
-//     "radiusM": "12px",
-//     "radiusL": "24px",
-//     "radiusXL": "400px"
-//   }
-// });
 
 export default function Page() {
   const { slug = 'home-page' } = useParams<{ slug: string }>();

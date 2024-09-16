@@ -17,12 +17,16 @@
     "depcruise": "depcruise src"
   },
   "dependencies": {
-    "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
     "@contentful/experiences-components-react": "file:../../components",
+    "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
     "@contentful/experiences-storybook-addon": "file:../../storybook-addon",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.0",
     "contentful": "^10.6.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-material-ui-carousel": "^3.4.2",
     "react-router-dom": "^6.16.0"
   },
   "devDependencies": {

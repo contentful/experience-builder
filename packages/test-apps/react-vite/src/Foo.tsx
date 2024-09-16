@@ -1,5 +1,4 @@
-import React from 'react';
-import { UnresolvedLink } from 'contentful';
+// import React from 'react';
 import { OptimizedImageAsset } from '../../../core/dist/types';
 
 interface Props {
