@@ -7,7 +7,12 @@ import {
   ExperienceDataSource,
   ExperienceUnboundValues,
 } from '@contentful/experiences-validators';
-import { buildCfStyles, checkIsAssemblyNode, toCSSAttribute } from '@/utils';
+import {
+  buildCfStyles,
+  checkIsAssemblyNode,
+  isValidBreakpointValue,
+  toCSSAttribute,
+} from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
 import {
@@ -590,7 +595,7 @@ export const indexByBreakpoint = ({
     for (const [breakpointId, variableValue] of Object.entries(
       resolvedVariableData.valuesByBreakpoint,
     )) {
-      if (!variableValue) {
+      if (!isValidBreakpointValue(variableValue)) {
         continue;
       }
 

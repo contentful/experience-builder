@@ -2,10 +2,11 @@
 import { useEffect, useState } from 'react';
 import { EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
+import { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
 export const useFetchByBase = (
   fetchMethod: () => Promise<Experience<EntityStore> | undefined>,
-  isEditorMode: boolean,
+  mode: StudioCanvasMode,
 ) => {
   const [experience, setExperience] = useState<Experience<EntityStore>>();
   const [isLoading, setIsLoading] = useState(false);
@@ -13,9 +14,9 @@ export const useFetchByBase = (
 
   useEffect(() => {
     (async () => {
-      // if we are in editor mode, we don't want to fetch the experience here
+      // if we are in editor/read only mode, we don't want to fetch the experience here
       // it is passed via postMessage instead
-      if (isEditorMode) {
+      if (mode === StudioCanvasMode.EDITOR || mode === StudioCanvasMode.READ_ONLY) {
         return;
       }
       setIsLoading(true);
@@ -29,12 +30,12 @@ export const useFetchByBase = (
         setIsLoading(false);
       }
     })();
-  }, [fetchMethod, isEditorMode]);
+  }, [fetchMethod, mode]);
 
   return {
     error,
     experience,
     isLoading,
-    isEditorMode,
+    mode,
   };
 };

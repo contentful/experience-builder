@@ -4,6 +4,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { experienceEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
 import type { ContentfulClientApi, Entry } from 'contentful';
+import { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
 const experienceTypeId = 'layout';
 const localeCode = 'en-US';
@@ -58,7 +59,7 @@ describe('useFetchBySlug', () => {
       error: undefined,
       experience: { hyperlinkPattern: undefined },
       isLoading: true,
-      isEditorMode: false,
+      mode: StudioCanvasMode.NONE,
     });
 
     const entityStore = new EntityStore({
@@ -92,7 +93,7 @@ describe('useFetchBySlug', () => {
 
       expect(result.current).toEqual({
         experience: result.current.experience,
-        isEditorMode: false,
+        mode: StudioCanvasMode.NONE,
         isLoading: false,
         error: undefined,
       });
