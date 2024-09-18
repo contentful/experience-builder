@@ -10,3 +10,4 @@ export * from './isLinkToAsset';
 export * from './isLink';
 export * from './pathSchema';
 export * from './resolveHyperlinkPattern';
+export * from './patternUtils';

@@ -7,8 +7,8 @@ import type {
   ComponentPropertyValue,
   ExperienceFields,
   ExperienceComponentSettings,
-  DesignValue,
 } from '@contentful/experiences-core/types';
+import { deserializePatternVariables } from '@contentful/experiences-core';
 import type { Entry } from 'contentful';
 import {
   ASSEMBLY_BLOCK_NODE_TYPE,
@@ -27,11 +27,11 @@ export const deserializeAssemblyNode = ({
   nodeId,
   nodeLocation,
   parentId,
-  assemblyDataSource,
-  assemblyUnboundValues,
-  assemblyVariableDefinitions,
-  assemblyId,
-  assemblyComponentId,
+  patternDataSource,
+  patternUnboundValues,
+  patternVariableDefinitions,
+  patternId,
+  patternComponentId,
   componentInstanceProps,
   componentInstanceUnboundValues,
   componentInstanceDataSource,
@@ -40,52 +40,22 @@ export const deserializeAssemblyNode = ({
   nodeId: string;
   nodeLocation: string | null;
   parentId?: string;
-  assemblyDataSource: ExperienceDataSource;
-  assemblyUnboundValues: ExperienceUnboundValues;
-  assemblyVariableDefinitions: ExperienceComponentSettings['variableDefinitions'];
-  assemblyId: string;
-  assemblyComponentId: string;
+  patternDataSource: ExperienceDataSource;
+  patternUnboundValues: ExperienceUnboundValues;
+  patternVariableDefinitions: ExperienceComponentSettings['variableDefinitions'];
+  patternId: string;
+  patternComponentId: string;
   componentInstanceProps: Record<string, ComponentPropertyValue>;
   componentInstanceUnboundValues: ExperienceUnboundValues;
   componentInstanceDataSource: ExperienceDataSource;
 }): ExperienceTreeNode => {
-  const childNodeVariable: Record<string, ComponentPropertyValue> = {};
-  const dataSource: ExperienceDataSource = {};
-  const unboundValues: ExperienceUnboundValues = {};
-
-  for (const [variableName, variable] of Object.entries(node.variables)) {
-    childNodeVariable[variableName] = variable;
-    if (variable.type === 'ComponentValue') {
-      const componentValueKey = variable.key;
-      const instanceProperty = componentInstanceProps[componentValueKey];
-      const variableDefinition = assemblyVariableDefinitions?.[componentValueKey];
-      const defaultValue = variableDefinition?.defaultValue;
-
-      // For assembly, we look up the value in the assembly instance and
-      // replace the componentValue with that one.
-      if (instanceProperty?.type === 'UnboundValue') {
-        const componentInstanceValue = componentInstanceUnboundValues[instanceProperty.key];
-        unboundValues[instanceProperty.key] = componentInstanceValue;
-        childNodeVariable[variableName] = instanceProperty;
-      } else if (instanceProperty?.type === 'BoundValue') {
-        const [, dataSourceKey] = instanceProperty.path.split('/');
-        const componentInstanceValue = componentInstanceDataSource[dataSourceKey];
-        dataSource[dataSourceKey] = componentInstanceValue;
-        childNodeVariable[variableName] = instanceProperty;
-      } else if (instanceProperty?.type === 'HyperlinkValue') {
-        const componentInstanceValue = componentInstanceDataSource[instanceProperty.linkTargetKey];
-        dataSource[instanceProperty.linkTargetKey] == componentInstanceValue;
-        childNodeVariable[variableName] = instanceProperty;
-      } else if (instanceProperty?.type === 'DesignValue') {
-        childNodeVariable[variableName] = instanceProperty;
-      } else if (!instanceProperty && defaultValue) {
-        // So far, we only automatically fallback to the defaultValue for design properties
-        if (variableDefinition.group === 'style') {
-          childNodeVariable[variableName] = defaultValue as DesignValue;
-        }
-      }
-    }
-  }
+  const { childNodeVariable, dataSource, unboundValues } = deserializePatternVariables({
+    nodeVariables: node.variables,
+    componentInstanceProps,
+    componentInstanceUnboundValues,
+    componentInstanceDataSource,
+    patternVariableDefinitions,
+  });
 
   const isAssembly = assembliesRegistry.has(node.definitionId);
 
@@ -94,14 +64,14 @@ export const deserializeAssemblyNode = ({
       nodeLocation === null ? `${childIndex}` : nodeLocation + '_' + childIndex;
     return deserializeAssemblyNode({
       node: child,
-      nodeId: `${assemblyComponentId}---${newNodeLocation}`,
+      nodeId: `${patternComponentId}---${newNodeLocation}`,
       nodeLocation: newNodeLocation,
       parentId: nodeId,
-      assemblyDataSource,
-      assemblyUnboundValues,
-      assemblyVariableDefinitions,
-      assemblyId,
-      assemblyComponentId,
+      patternDataSource,
+      patternUnboundValues,
+      patternVariableDefinitions,
+      patternId,
+      patternComponentId,
       componentInstanceProps,
       componentInstanceUnboundValues,
       componentInstanceDataSource,
@@ -115,8 +85,8 @@ export const deserializeAssemblyNode = ({
     data: {
       id: nodeId,
       assembly: {
-        id: assemblyId,
-        componentId: assemblyComponentId,
+        id: patternId,
+        componentId: patternComponentId,
         nodeLocation: nodeLocation || null,
       },
       blockId: node.definitionId,
@@ -184,11 +154,11 @@ export const resolveAssembly = ({
     nodeLocation: null,
     nodeId: node.data.id,
     parentId: node.parentId,
-    assemblyDataSource: {},
-    assemblyId: assembly.sys.id,
-    assemblyComponentId: node.data.id,
-    assemblyUnboundValues: componentFields.unboundValues,
-    assemblyVariableDefinitions: componentFields.componentSettings!.variableDefinitions,
+    patternDataSource: {},
+    patternId: assembly.sys.id,
+    patternComponentId: node.data.id,
+    patternUnboundValues: componentFields.unboundValues,
+    patternVariableDefinitions: componentFields.componentSettings!.variableDefinitions,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
     componentInstanceDataSource: node.data.dataSource,
