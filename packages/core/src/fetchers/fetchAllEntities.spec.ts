@@ -60,7 +60,7 @@ describe('fetchAllEntries', () => {
     expect(result.items).toHaveLength(100);
   });
 
-  it.only('should resolve entries that are embedded into rich text fields', async () => {
+  it('should resolve entries that are embedded into rich text fields', async () => {
     const entryThatsEmbeddedIntoRichText = createEntry('entry-with-embedded-entry', {
       sys: {
         id: 'abc123',
