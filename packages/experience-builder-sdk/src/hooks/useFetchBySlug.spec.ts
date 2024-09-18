@@ -20,12 +20,6 @@ describe('useFetchBySlug', () => {
         return Promise.resolve({ items: [experienceEntry] });
       }),
       getAssets: jest.fn().mockResolvedValue({ items: assets }),
-      withoutLinkResolution: {
-        getEntries: jest.fn().mockImplementation((_query) => {
-          // { 'sys.id[in]': [ 'entry1', 'entry2' ], locale: 'en-US' }
-          return Promise.resolve({ items: entries });
-        }),
-      },
     } as unknown as ContentfulClientApi<undefined>;
   });
 
@@ -77,7 +71,7 @@ describe('useFetchBySlug', () => {
         locale: localeCode,
       });
 
-      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {
+      expect(clientMock.getEntries).toHaveBeenNthCalledWith(1, {
         limit: 100,
         skip: 0,
         'sys.id[in]': entries.map((entry) => entry.sys.id),
@@ -159,7 +153,7 @@ describe('useFetchBySlug', () => {
     await waitFor(() => {
       expect(result.current.error).toBeUndefined();
       expect(clientMock.getEntries).toHaveBeenCalledTimes(1);
-      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenCalledTimes(1);
+      expect(clientMock.getEntries).toHaveBeenCalledTimes(1);
     });
   });
 

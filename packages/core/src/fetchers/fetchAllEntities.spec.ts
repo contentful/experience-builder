@@ -6,9 +6,7 @@ import { ContentfulClientApi } from 'contentful';
 
 const mockClient = {
   getAssets: vi.fn(),
-  withoutLinkResolution: {
-    getEntries: vi.fn(),
-  },
+  getEntries: vi.fn(),
 } as unknown as ContentfulClientApi<undefined>;
 
 const testEntries = [...Array(100).keys()].map((i) => createEntry(`some-entry-id-${i}`));
@@ -20,7 +18,7 @@ describe('fetchAllEntries', () => {
   });
 
   it('should fetch all entities', async () => {
-    (mockClient.withoutLinkResolution.getEntries as Mock).mockImplementation((query) => {
+    (mockClient.getEntries as Mock).mockImplementation((query) => {
       const { limit, skip } = query;
       const result = {
         items: [...testEntries.slice(skip, skip + limit)],
@@ -45,7 +43,7 @@ describe('fetchAllEntries', () => {
 
     const result = await fetchAllEntries(params);
 
-    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledTimes(5);
+    expect(mockClient.getEntries).toHaveBeenCalledTimes(5);
     // Five pages will return those values of `includes.Entry[]`:
     // Page 1 : `some-entry-id` , `some-entry-id-0`
     // Page 2: `some-entry-id` , `some-entry-id-20`
@@ -60,7 +58,7 @@ describe('fetchAllEntries', () => {
   });
 
   it('should reduce limit and refetch all entities if response error is gotten', async () => {
-    (mockClient.withoutLinkResolution.getEntries as Mock)
+    (mockClient.getEntries as Mock)
       .mockRejectedValueOnce(new Error('Response size too big'))
       .mockImplementation((query) => {
         const { limit, skip } = query;
@@ -83,19 +81,18 @@ describe('fetchAllEntries', () => {
 
     const result = await fetchAllEntries(params);
 
-    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(11, {
+    expect(mockClient.getEntries).toHaveBeenNthCalledWith(11, {
       'sys.id[in]': params.ids,
       locale: 'en-US',
       skip: 90,
       limit: 10,
+      include: 10,
     });
     expect(result.items).toHaveLength(100);
   });
 
   it('should never reduce limit to less than MIN_FETCH_LIMIT', async () => {
-    (mockClient.withoutLinkResolution.getEntries as Mock).mockRejectedValue(
-      new Error('Response size too big'),
-    );
+    (mockClient.getEntries as Mock).mockRejectedValue(new Error('Response size too big'));
 
     const params = {
       ids: testEntries.map((entry) => entry.sys.id),
@@ -110,11 +107,12 @@ describe('fetchAllEntries', () => {
       expect((e as Error).message).toEqual('Response size too big');
     }
 
-    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(5, {
+    expect(mockClient.getEntries).toHaveBeenNthCalledWith(5, {
       'sys.id[in]': params.ids,
       locale: 'en-US',
       skip: 0,
       limit: 1,
+      include: 10,
     });
   });
 });
@@ -170,6 +168,7 @@ describe('fetchAllAssets', () => {
       client: mockClient,
       locale: 'en-US',
       limit: 20,
+      include: 10,
     };
 
     const result = await fetchAllAssets(params);
