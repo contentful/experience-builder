@@ -7,6 +7,9 @@ import { ContentfulClientApi } from 'contentful';
 const mockClient = {
   getAssets: vi.fn(),
   getEntries: vi.fn(),
+  withoutLinkResolution: {
+    getEntries: vi.fn(),
+  },
 } as unknown as ContentfulClientApi<undefined>;
 
 const testEntries = [...Array(100).keys()].map((i) => createEntry(`some-entry-id-${i}`));
@@ -55,6 +58,85 @@ describe('fetchAllEntries', () => {
     expect(result.includes.Entry).toHaveLength(6);
     expect(result.includes.Asset).toHaveLength(0);
     expect(result.items).toHaveLength(100);
+  });
+
+  it.only('should resolve entries that are embedded into rich text fields', async () => {
+    const entryThatsEmbeddedIntoRichText = createEntry('entry-with-embedded-entry', {
+      sys: {
+        id: 'abc123',
+        type: 'Entry',
+      },
+      fields: { name: { 'en-US': 'A Test entry thats embedded into RT' } },
+    });
+
+    const entryWithEmbeddedEntryInRichText = createEntry('some-entry-id', {
+      fields: {
+        title: { en: 'Entry with embedded entry its RT' },
+        //@ts-expect-error types don't line up
+        body: {
+          'en-US': {
+            data: {},
+            content: [
+              {
+                data: {},
+                content: [
+                  {
+                    data: {},
+                    marks: [],
+                    value: 'Test 123',
+                    nodeType: 'text',
+                  },
+                ],
+                nodeType: 'paragraph',
+              },
+              {
+                data: {
+                  target: entryThatsEmbeddedIntoRichText,
+                },
+                content: [],
+                nodeType: 'embedded-entry-block',
+              },
+            ],
+            nodeType: 'document',
+          },
+        },
+      },
+    });
+
+    (mockClient.getEntries as Mock).mockImplementation(() => {
+      const result = {
+        items: [entryWithEmbeddedEntryInRichText],
+        includes: { Entry: [entryThatsEmbeddedIntoRichText] },
+      };
+      return result;
+    });
+
+    const params = {
+      ids: [entryWithEmbeddedEntryInRichText.sys.id],
+      entityType: 'Entry' as 'Entry' | 'Asset',
+      client: mockClient,
+      locale: 'en-US',
+      limit: 20,
+    };
+
+    const result = await fetchAllEntries(params);
+
+    //important that `getEntries` is called and not client.withoutLinkResolution.getEntries so the entities are resolved
+    expect(mockClient.getEntries).toHaveBeenCalledOnce();
+    //This call is the actual test, verify `getEntries` was called and not `withoutLinkResolution.getEntries`
+    expect(mockClient.withoutLinkResolution.getEntries).not.toHaveBeenCalled();
+    expect(result.includes.Entry).toHaveLength(1);
+    expect(result.items).toHaveLength(1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const entry = result.items[0] as any;
+
+    expect(entry.fields.body['en-US'].content[1].data.target.sys.id).toEqual(
+      entryThatsEmbeddedIntoRichText.sys.id,
+    );
+
+    expect(entry.fields.body['en-US'].content[1].data.target.fields.name['en-US']).toEqual(
+      entryThatsEmbeddedIntoRichText.fields.name!['en-US'],
+    );
   });
 
   it('should reduce limit and refetch all entities if response error is gotten', async () => {
