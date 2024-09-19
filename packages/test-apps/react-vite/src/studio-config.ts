@@ -4,6 +4,7 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
+import { components } from './forma36-components';
 
 defineComponents([
   {
@@ -167,6 +168,7 @@ defineComponents([
       wrapComponent: false,
     },
   },
+  ...components,
 ]);
 
 defineBreakpoints([
