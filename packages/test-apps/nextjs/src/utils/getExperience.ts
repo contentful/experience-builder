@@ -6,6 +6,7 @@ import {
   ExperienceMapper,
 } from '@ninetailed/experience.js-utils-contentful';
 import { createClient } from 'contentful';
+import type { ExposedAudienceDefinition } from '@ninetailed/experience.js-preview-bridge';
 
 const accessToken = process.env.NEXT_PUBLIC_CTFL_ACCESS_TOKEN!;
 const prevAccessToken = process.env.NEXT_PUBLIC_CTFL_PREVIEW_ACCESS_TOKEN!;
@@ -42,7 +43,7 @@ export async function getAllNinetailedExperiences() {
   return mappedExperiences;
 }
 
-export async function getAllNinetailedAudiences() {
+export async function getAllNinetailedAudiences(): Promise<ExposedAudienceDefinition[]> {
   const query = {
     content_type: 'nt_audience',
   };
@@ -56,7 +57,7 @@ export async function getAllNinetailedAudiences() {
     .filter((entry) => AudienceMapper.isAudienceEntry(entry))
     .map((entry) => AudienceMapper.mapAudience(entry));
 
-  return mappedAudiences;
+  return mappedAudiences as ExposedAudienceDefinition[];
 }
 
 export const getExperience = async (

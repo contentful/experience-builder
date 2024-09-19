@@ -2,12 +2,13 @@
 
 import { ExperienceConfiguration, NinetailedProvider } from '@ninetailed/experience.js-react';
 import { NinetailedPreviewPlugin } from '@ninetailed/experience.js-plugin-preview';
+import type { ExposedAudienceDefinition } from '@ninetailed/experience.js-preview-bridge';
 
 export const Providers: React.FC<
   React.PropsWithChildren<{
     preview: {
       experiences?: ExperienceConfiguration[];
-      audiences?: { id: string; name: string }[];
+      audiences?: ExposedAudienceDefinition[];
     };
   }>
 > = ({ children, preview }) => {

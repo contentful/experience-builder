@@ -7,6 +7,8 @@ import KitchenSink from './components/KitchenSink';
 import NinetailedExperienceContainer from './components/NinetailedExperienceContainer';
 import NinetailedVariantContainer from './components/NinetailedVariantContainer';
 
+console.log('DEFINING COMPONENTS!');
+
 defineComponents([
   {
     component: NinetailedExperienceContainer,
@@ -32,7 +34,7 @@ defineComponents([
     definition: {
       id: 'ninetailed-variant-container',
       children: true,
-      name: 'Ninetailed Basline / Variant Container',
+      name: 'Ninetailed Baseline / Variant Container',
       category: 'Ninetailed',
       variables: {},
     },

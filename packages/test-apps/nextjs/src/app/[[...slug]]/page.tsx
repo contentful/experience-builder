@@ -1,6 +1,5 @@
 import Experience from '@/components/Experience';
 import {
-  getAllAudiences,
   getAllNinetailedAudiences,
   getAllNinetailedExperiences,
   getExperience,

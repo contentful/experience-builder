@@ -16,7 +16,7 @@ const IntermediateContainer = (props) => {
 
   return (
     <>
-      <pre>{JSON.stringify(rest, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(rest, null, 2)}</pre> */}
       <NinetailedContainerProvider selectedVariantContainerId={studioId || 'none'}>
         {children}
       </NinetailedContainerProvider>

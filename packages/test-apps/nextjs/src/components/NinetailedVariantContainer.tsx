@@ -10,7 +10,7 @@ const NinetailedVariantContainer: React.FC<React.PropsWithChildren> = ({ childre
 
   return (
     <>
-      <span>Variant Container {rest['data-cf-node-id']}</span>
+      {/* <span>Variant Container {rest['data-cf-node-id']}</span> */}
       {children}
     </>
   );
