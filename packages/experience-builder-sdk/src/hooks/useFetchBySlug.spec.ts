@@ -158,7 +158,6 @@ describe('useFetchBySlug', () => {
     await waitFor(() => {
       expect(result.current.error).toBeUndefined();
       expect(clientMock.getEntries).toHaveBeenCalledTimes(1);
-      expect(clientMock.getEntries).toHaveBeenCalledTimes(1);
     });
   });
 
