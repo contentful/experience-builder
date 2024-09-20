@@ -49,7 +49,7 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   upload-artifact-cleanup:
     if: ${{ always() }}
-    needs: [install-build, check, publish]
+    needs: [install-build, check, publish, vercel]
     permissions:
       actions: write
     uses: ./.github/workflows/cleanup.yaml
