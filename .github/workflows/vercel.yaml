@@ -1,4 +1,4 @@
-name: Publish packages
+name: Deploy demo apps to Vercel
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -10,7 +10,7 @@ on:
         required: true
 
 jobs:
-  publish:
+  deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
