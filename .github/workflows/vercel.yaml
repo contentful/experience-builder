@@ -1,0 +1,53 @@
+name: Publish packages
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
+on:
+  workflow_call:
+    secrets:
+      VERCEL_TOKEN:
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Checkout all branches and tags, needed for publish
+      - name: 'Use NodeJS 20'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11'
+          cache: 'npm'
+      - name: Install dependencies
+        run: |
+          npm ci
+      - name: Restore the build folders
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            packages/*/dist
+            packages/*/build
+            packages/test-apps/react-vite/dist
+            packages/templates/nextjs-marketing-demo/.next
+          key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Install Vercel CLI
+        run: npm install --global vercel@canary
+      - name: 'Deploy nextjs-marketing-demo settings to Vercel'
+        env:
+          VERCEL_PROJECT_ID: prj_CQ1K4Pbkx5SQq2Fi9c4ZPHloOv79
+        run: |
+          if [ ${{ github.ref_name }} = main ]; then
+            vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          else
+            vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          fi
+          vercel build --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}          
+     
