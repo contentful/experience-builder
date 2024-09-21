@@ -27,6 +27,7 @@ jobs:
     uses: ./.github/workflows/vercel.yaml
     secrets:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   publish:
     needs: [install-build, check]
     if: >-

@@ -1,12 +1,11 @@
 name: Deploy demo apps to Vercel
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-
 on:
   workflow_call:
     secrets:
       VERCEL_TOKEN:
+        required: true
+      VERCEL_ORG_ID:
         required: true
 
 jobs:
@@ -42,6 +41,7 @@ jobs:
       - name: 'Deploy nextjs-marketing-demo settings to Vercel'
         env:
           VERCEL_PROJECT_ID: prj_CQ1K4Pbkx5SQq2Fi9c4ZPHloOv79
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
           if [ ${{ github.ref_name }} = main ]; then
             vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
