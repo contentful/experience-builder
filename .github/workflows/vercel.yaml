@@ -39,12 +39,12 @@ jobs:
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Install Vercel CLI
         run: npm install --global vercel@canary
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-          limit-access-to-actor: true
-      - name: 'Deploy nextjs-marketing-demo settings to Vercel'
+      # - name: Setup upterm session
+      #   uses: lhotari/action-upterm@v1
+      #   with:
+      #     ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+      #     limit-access-to-actor: true
+      - name: 'Deploy nextjs-marketing-demo site to Vercel'
         env:
           VERCEL_PROJECT_ID: prj_CQ1K4Pbkx5SQq2Fi9c4ZPHloOv79
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
