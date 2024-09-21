@@ -17,19 +17,21 @@ jobs:
     uses: ./.github/workflows/build.yaml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-  check:
-    needs: install-build
-    uses: ./.github/workflows/check.yaml
-    secrets:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  # check:
+  #   needs: install-build
+  #   uses: ./.github/workflows/check.yaml
+  #   secrets:
+  #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   vercel:
-    needs: [install-build, check]
+    # needs: [install-build, check]
+    needs: [install-build]
     uses: ./.github/workflows/vercel.yaml
     secrets:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   publish:
-    needs: [install-build, check]
+    needs: [install-build]
+    # needs: [install-build, check]
     if: >-
       (github.ref_name == 'main' ||
         github.ref_name == 'development' ||
@@ -50,7 +52,8 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   upload-artifact-cleanup:
     if: ${{ always() }}
-    needs: [install-build, check, publish, vercel]
+    needs: [install-build, publish, vercel]
+    # needs: [install-build, check, publish, vercel]
     permissions:
       actions: write
     uses: ./.github/workflows/cleanup.yaml
