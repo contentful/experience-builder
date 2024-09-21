@@ -37,6 +37,7 @@ jobs:
             packages/*/build
             packages/test-apps/react-vite/dist
             packages/test-apps/nextjs/.next
+            packages/templates/nextjs-marketing-demo/.next
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
       - name: List components folder
         run: ls -la packages/components
