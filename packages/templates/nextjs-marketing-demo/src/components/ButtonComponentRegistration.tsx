@@ -1,18 +1,23 @@
 import { Button } from 'antd';
+import Icon from './Icon';
 
-type ButtonComponentProps = Omit<React.ComponentProps<typeof Button>, 'children'> & {
+type ButtonComponentProps = Omit<React.ComponentProps<typeof Button>, 'children' | 'icon'> & {
   text: string;
+  icon?: React.ComponentProps<typeof Icon>['icon'];
 };
 
 export const ButtonComponentRegistration = {
   component: (props: ButtonComponentProps) => {
-    const { color, variant, text, ...rest } = props;
+    const { color, icon, variant, text, ...rest } = props;
     return (
       <>
-        <Button color={color ? color : undefined} variant={variant ? variant : undefined} {...rest}>
+        <Button
+          color={color ? color : undefined}
+          variant={variant ? variant : undefined}
+          icon={icon && <Icon icon={icon} />}
+          {...rest}>
           {text}
         </Button>
-        <Button>test</Button>
       </>
     );
   },
@@ -21,6 +26,10 @@ export const ButtonComponentRegistration = {
     name: 'Button',
     category: 'Custom Components',
     variables: {
+      href: {
+        displayName: 'Link',
+        type: 'Text',
+      },
       text: {
         displayName: 'Text',
         type: 'Text',
@@ -82,6 +91,32 @@ export const ButtonComponentRegistration = {
             {
               value: 'link',
               displayName: 'Link',
+            },
+          ],
+        },
+      },
+      icon: {
+        displayName: 'Icon',
+        type: 'Text',
+        group: 'style',
+        defaultValue: '',
+        validations: {
+          in: [
+            {
+              value: '',
+              displayName: 'None',
+            },
+            {
+              value: 'CheckOutlined',
+              displayName: 'Check',
+            },
+            {
+              value: 'NotificationOutlined',
+              displayName: 'Notification',
+            },
+            {
+              value: 'SearchOutlined',
+              displayName: 'Search',
             },
           ],
         },
