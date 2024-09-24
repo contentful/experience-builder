@@ -10,15 +10,13 @@ export const ButtonComponentRegistration = {
   component: (props: ButtonComponentProps) => {
     const { color, icon, variant, text, ...rest } = props;
     return (
-      <>
-        <Button
-          color={color ? color : undefined}
-          variant={variant ? variant : undefined}
-          icon={icon && <Icon icon={icon} />}
-          {...rest}>
-          {text}
-        </Button>
-      </>
+      <Button
+        color={color?.length ? color : undefined}
+        variant={variant?.length ? variant : undefined}
+        icon={icon && <Icon icon={icon} />}
+        {...rest}>
+        {text}
+      </Button>
     );
   },
   definition: {
