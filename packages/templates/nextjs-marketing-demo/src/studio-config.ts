@@ -1,4 +1,7 @@
 import { defineComponents } from '@contentful/experiences-sdk-react';
 import { ButtonComponentRegistration } from './components/ButtonComponentRegistration';
+import { CustomRatingComponentRegistration } from '@/components/CustomRatingComponentRegistration';
 
-defineComponents([ButtonComponentRegistration]);
+defineComponents([ButtonComponentRegistration, CustomRatingComponentRegistration], {
+  enabledBuiltInComponents: [],
+});
