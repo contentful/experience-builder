@@ -23,9 +23,12 @@
     "templates/**/*.*"
   ],
   "scripts": {
+    "precreate": "npm run copy-templates",
+    "create": "node ./dist/index.js -d",
+    "postcreate": "npm run delete-templates",
     "copy-templates": "node ./dist/copyTemplates.js",
     "delete-templates": "rimraf ./templates",
-    "dev": "echo noop",
+    "dev": "tsc --watch",
     "_prebuild": "npm uninstall -g && rimraf dist",
     "prebuild": "rimraf dist",
     "prepack": "npm run copy-templates",

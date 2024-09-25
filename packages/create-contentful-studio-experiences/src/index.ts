@@ -319,9 +319,7 @@ async function init() {
 
     const projectDir = fsClient.getProjectDir(projectName);
 
-    spinner.start(
-      `Creating a new Contentful Studio Experiences project using ${variant.display}, this might take a minute ⏰`,
-    );
+    spinner.start(`Creating a new project using ${variant.display}, this might take a minute ⏰`);
 
     await fsClient.createProject(variant, projectName);
 
