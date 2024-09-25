@@ -8,8 +8,6 @@ const environment = process.env.NEXT_PUBLIC_CTFL_ENVIRONMENT!;
 const experienceTypeId = process.env.NEXT_PUBLIC_CTFL_EXPERIENCE_TYPE!;
 const domain = process.env.NEXT_PUBLIC_CTFL_DOMAIN || 'contentful.com';
 
-console.log('accessToken', accessToken, 'prevAccessToken', prevAccessToken);
-
 const getConfig = (isPreview: boolean) => {
   const client = createClient({
     space,

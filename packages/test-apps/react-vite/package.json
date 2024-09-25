@@ -17,8 +17,8 @@
     "depcruise": "depcruise src"
   },
   "dependencies": {
-    "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
     "@contentful/experiences-components-react": "file:../../components",
+    "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
     "@contentful/experiences-storybook-addon": "file:../../storybook-addon",
     "contentful": "^10.6.14",
     "react": "^18.2.0",
@@ -48,6 +48,6 @@
     "rimraf": "^5.0.5",
     "storybook": "^7.5.1",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "vite": "^5.4.8"
   }
 }
