@@ -1,4 +1,3 @@
-import React from 'react';
 import { createClient } from 'contentful';
 import { useFetchBySlug, ExperienceRoot } from '@contentful/experiences-sdk-react';
 import './App.css';
