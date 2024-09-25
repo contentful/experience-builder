@@ -15,17 +15,15 @@ let clientMock: ContentfulClientApi<undefined>;
 describe('useFetchBySlug', () => {
   beforeEach(() => {
     clientMock = {
-      getEntries: jest.fn().mockImplementation((_query) => {
-        // { content_type: 'layout', locale: 'en-US', 'fields.slug': 'hello-world' }
-        return Promise.resolve({ items: [experienceEntry] });
+      getEntries: jest.fn().mockImplementation((query: any) => {
+        if (query['fields.slug'] === 'hello-world') {
+          //fetching the experience entry
+          return Promise.resolve({ items: [experienceEntry] });
+        }
+        //fetching the bound entities
+        return Promise.resolve({ items: entries });
       }),
       getAssets: jest.fn().mockResolvedValue({ items: assets }),
-      withoutLinkResolution: {
-        getEntries: jest.fn().mockImplementation((_query) => {
-          // { 'sys.id[in]': [ 'entry1', 'entry2' ], locale: 'en-US' }
-          return Promise.resolve({ items: entries });
-        }),
-      },
     } as unknown as ContentfulClientApi<undefined>;
   });
 
@@ -77,11 +75,12 @@ describe('useFetchBySlug', () => {
         locale: localeCode,
       });
 
-      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {
+      expect(clientMock.getEntries).toHaveBeenNthCalledWith(2, {
         limit: 100,
         skip: 0,
         'sys.id[in]': entries.map((entry) => entry.sys.id),
         locale: localeCode,
+        include: 2,
       });
 
       expect(clientMock.getAssets).toHaveBeenCalledWith({
@@ -159,7 +158,6 @@ describe('useFetchBySlug', () => {
     await waitFor(() => {
       expect(result.current.error).toBeUndefined();
       expect(clientMock.getEntries).toHaveBeenCalledTimes(1);
-      expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenCalledTimes(1);
     });
   });
 
