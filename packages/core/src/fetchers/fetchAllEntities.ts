@@ -43,13 +43,11 @@ export const fetchAllEntries = async ({
       };
     }
 
-    const query = { 'sys.id[in]': ids, locale, limit, skip };
-
     const {
       items,
       includes,
       total: responseTotal,
-    } = await client.withoutLinkResolution.getEntries({ ...query });
+    } = await client.getEntries({ 'sys.id[in]': ids, locale, limit, skip, include: 2 });
 
     responseItems.push(...(items as Entry[]));
     responseIncludes?.Entry?.push(...(includes?.Entry || []));
