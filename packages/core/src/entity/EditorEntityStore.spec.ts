@@ -53,7 +53,7 @@ describe('EditorEntityStore', () => {
     );
 
     // Let it resolve
-    subscribe.mock.lastCall[1]({ entities });
+    subscribe.mock.lastCall![1]({ entities });
   }
 
   beforeEach(() => {
