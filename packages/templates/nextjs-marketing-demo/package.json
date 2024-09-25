@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
+    "@ant-design/nextjs-registry": "^1.0.1",
+    "antd": "^5.21.0",
     "contentful": "^11.0.2",
     "next": "14.2.13",
     "next-i18n-router": "^5.5.0",
