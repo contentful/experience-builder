@@ -168,7 +168,7 @@ describe('fetchAllEntries', () => {
       locale: 'en-US',
       skip: 90,
       limit: 10,
-      include: 10,
+      include: 2,
     });
     expect(result.items).toHaveLength(100);
   });
@@ -194,7 +194,7 @@ describe('fetchAllEntries', () => {
       locale: 'en-US',
       skip: 0,
       limit: 1,
-      include: 10,
+      include: 2,
     });
   });
 });
@@ -250,7 +250,7 @@ describe('fetchAllAssets', () => {
       client: mockClient,
       locale: 'en-US',
       limit: 20,
-      include: 10,
+      include: 2,
     };
 
     const result = await fetchAllAssets(params);

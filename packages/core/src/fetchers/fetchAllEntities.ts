@@ -47,7 +47,7 @@ export const fetchAllEntries = async ({
       items,
       includes,
       total: responseTotal,
-    } = await client.getEntries({ 'sys.id[in]': ids, locale, limit, skip, include: 10 });
+    } = await client.getEntries({ 'sys.id[in]': ids, locale, limit, skip, include: 2 });
 
     responseItems.push(...(items as Entry[]));
     responseIncludes?.Entry?.push(...(includes?.Entry || []));

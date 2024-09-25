@@ -96,7 +96,7 @@ describe('fetchReferencedEntities', () => {
       'sys.id[in]': entries.map((entry) => entry.sys.id),
       limit: 100,
       skip: 0,
-      include: 10,
+      include: 2,
     });
 
     expect(res).toEqual({

@@ -74,7 +74,7 @@ describe('useFetchById', () => {
         skip: 0,
         'sys.id[in]': entries.map((entry) => entry.sys.id),
         locale: localeCode,
-        include: 10,
+        include: 2,
       });
 
       expect(clientMock.getAssets).toHaveBeenCalledWith({
