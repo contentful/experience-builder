@@ -125,7 +125,10 @@ export function Dropzone({
     }
 
     // Enable dropzone for the non-root hovered zones if component is not allowed on root
-    if (!isDraggingNewComponent && !isComponentAllowedOnRoot(draggedNode?.data.blockId)) {
+    if (
+      !isDraggingNewComponent &&
+      !isComponentAllowedOnRoot({ type: draggedNode?.type, componentId: draggedNode?.data.blockId })
+    ) {
       return isHoveringZone && !isRootZone;
     }
 
