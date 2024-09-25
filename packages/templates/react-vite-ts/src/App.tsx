@@ -3,24 +3,26 @@ import { createClient } from 'contentful';
 import { useFetchBySlug, ExperienceRoot } from '@contentful/experiences-sdk-react';
 import './App.css';
 
-const experienceTypeId = import.meta.env.VITE_CTFL_EXPERIENCE_TYPE_ID; //Content type id for the experience
-const localeCode = 'en-US'; //Locale code for the experience (could be dynamic)
+const accessToken = import.meta.env.VITE_CTFL_ACCESS_TOKEN!;
+const prevAccessToken = import.meta.env.VITE_CTFL_PREVIEW_ACCESS_TOKEN!;
+const space = import.meta.env.VITE_CTFL_SPACE!;
+const environment = import.meta.env.VITE_CTFL_ENVIRONMENT!;
+const experienceTypeId = import.meta.env.VITE_CTFL_EXPERIENCE_TYPE!;
+const domain = import.meta.env.VITE_CTFL_DOMAIN || 'contentful.com';
+const isPreview = false; // Could be dynamic
+const localeCode = 'en-US'; // Could be dynamic
 
 const client = createClient({
-  // your space id
-  space: import.meta.env.VITE_CTFL_SPACE_ID,
-  // your environment id
-  environment: import.meta.env.VITE_CTFL_ENV_ID,
-  // Supported values: 'preview.contentful.com' or 'cdn.contentful.com',
-  host: import.meta.env.VITE_CTFL_API_HOST,
-  // needs to be access token if host = 'cdn.contentful.com' and preview token if 'preview.contentful.com'
-  accessToken: import.meta.env.VITE_CTFL_ACCESS_TOKEN,
+  space,
+  environment,
+  accessToken: isPreview ? prevAccessToken : accessToken,
+  host: isPreview ? `preview.${domain}` : `cdn.${domain}`,
 });
 
 function App() {
   const { experience, isLoading, error } = useFetchBySlug({
     client,
-    slug: 'homePage', //Could be fetched from the url,
+    slug: 'home-page', //Could be fetched from the url,
     experienceTypeId,
     localeCode,
   });

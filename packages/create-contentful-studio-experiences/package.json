@@ -23,9 +23,13 @@
     "templates/**/*.*"
   ],
   "scripts": {
+    "copy-templates": "node ./dist/copyTemplates.js",
+    "delete-templates": "rimraf ./templates",
     "dev": "echo noop",
     "_prebuild": "npm uninstall -g && rimraf dist",
     "prebuild": "rimraf dist",
+    "prepack": "npm run copy-templates",
+    "postpack": "npm run delete-templates",
     "build": "tsc",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",

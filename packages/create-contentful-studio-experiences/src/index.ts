@@ -35,6 +35,7 @@ const args = await yargs(process.argv.slice(2))
     alias: 'd',
     type: 'boolean',
     description: 'dev mode',
+    default: false,
     hidden: true,
   })
   .strict()
@@ -363,7 +364,9 @@ async function init() {
 
       if (shouldCleanup) {
         fsClient.deleteDirectory(projectDir);
-        await ctflClient.deleteAuthToken();
+        if (!args.token) {
+          await ctflClient.deleteAuthToken();
+        }
       }
     }
   } catch (e) {
