@@ -7,7 +7,9 @@ import { fetchReferencedEntities } from './fetchReferencedEntities';
 
 const mockClient = {
   getAssets: vi.fn(),
-  getEntries: vi.fn(),
+  withoutLinkResolution: {
+    getEntries: vi.fn(),
+  },
 } as unknown as ContentfulClientApi<undefined>;
 
 vi.mock('@/deep-binding/DeepReference', async (importOriginal) => {
@@ -74,7 +76,7 @@ describe('fetchReferencedEntities', () => {
   it('should fetch referenced entities', async () => {
     (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
 
-    (mockClient.getEntries as Mock).mockResolvedValue({ items: entries });
+    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
 
     (gatherDeepReferencesFromExperienceEntry as Mock).mockReturnValue([]);
 
@@ -91,12 +93,11 @@ describe('fetchReferencedEntities', () => {
       'sys.id[in]': assets.map((asset) => asset.sys.id),
     });
 
-    expect(mockClient.getEntries).toHaveBeenCalledWith({
+    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledWith({
       locale: 'en-US',
       'sys.id[in]': entries.map((entry) => entry.sys.id),
       limit: 100,
       skip: 0,
-      include: 2,
     });
 
     expect(res).toEqual({
@@ -110,7 +111,7 @@ describe('fetchReferencedEntities handling deep-references', () => {
   it('should call gatherDeepReferencesFromExperienceEntry()', async () => {
     (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
 
-    (mockClient.getEntries as Mock).mockResolvedValue({ items: entries });
+    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
 
     (gatherDeepReferencesFromExperienceEntry as Mock).mockReturnValue([]);
     fetchReferencedEntities({
