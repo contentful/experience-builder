@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@contentful/experiences-sdk-react": "^1.16.0",
+    "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
     "contentful": "^11.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
