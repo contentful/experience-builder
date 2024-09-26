@@ -60,8 +60,5 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "dependencies": {
-    "@svgr/webpack": "^8.1.0"
   }
 }
