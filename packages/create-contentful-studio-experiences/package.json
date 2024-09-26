@@ -1,6 +1,6 @@
 {
   "name": "create-contentful-studio-experiences",
-  "version": "1.16.1",
+  "version": "1.17.0-beta.0",
   "description": "A CLI tool to get up and running with Contentful Studio Experiences quickly",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-contentful-studio-experiences#readme",
   "repository": {
@@ -23,9 +23,16 @@
     "templates/**/*.*"
   ],
   "scripts": {
-    "dev": "echo noop",
+    "precreate": "npm run copy-templates",
+    "create": "node ./dist/index.js -d",
+    "postcreate": "npm run delete-templates",
+    "copy-templates": "node ./dist/copyTemplates.js",
+    "delete-templates": "rimraf ./templates",
+    "dev": "tsc --watch",
     "_prebuild": "npm uninstall -g && rimraf dist",
     "prebuild": "rimraf dist",
+    "prepack": "npm run copy-templates",
+    "postpack": "npm run delete-templates",
     "build": "tsc",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
