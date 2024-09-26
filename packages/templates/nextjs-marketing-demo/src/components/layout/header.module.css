@@ -4,22 +4,6 @@
   align-items: center;
 }
 
-.logo {
-  display: flex;
-  height: 32px;
-  padding: 0 20px;
-  flex-direction: column;
-  justify-content: center;
-  border: 1px dashed #91D5FF;
-  background: #E6F7FF;
-}
-
-.logo span {
-  color: #1890FF;
-  text-align: center;
-  font-size: 10px;
-}
-
 .nav {
   display: flex;
   flex-direction: row;

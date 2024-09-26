@@ -1,14 +1,13 @@
 import React from 'react';
 import { Button } from 'antd';
+import Nav from './Nav';
 import styles from './header.module.css';
-import Nav from './nav';
+import Logo from '../../../public/Logo.svg';
 
 const Header: React.FC = () => {
   return (
     <div className={styles.header}>
-      <div className={styles.logo}>
-        <span>Logo</span>
-      </div>
+      <Logo />
       <div className={styles.nav}>
         <Nav />
         <Button variant="outlined" size="small">
