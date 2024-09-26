@@ -35,6 +35,7 @@ const args = await yargs(process.argv.slice(2))
     alias: 'd',
     type: 'boolean',
     description: 'dev mode',
+    default: false,
     hidden: true,
   })
   .strict()
@@ -318,9 +319,7 @@ async function init() {
 
     const projectDir = fsClient.getProjectDir(projectName);
 
-    spinner.start(
-      `Creating a new Contentful Studio Experiences project using ${variant.display}, this might take a minute ⏰`,
-    );
+    spinner.start(`Creating a new project using ${variant.display}, this might take a minute ⏰`);
 
     await fsClient.createProject(variant, projectName);
 
@@ -363,7 +362,9 @@ async function init() {
 
       if (shouldCleanup) {
         fsClient.deleteDirectory(projectDir);
-        await ctflClient.deleteAuthToken();
+        if (!args.token) {
+          await ctflClient.deleteAuthToken();
+        }
       }
     }
   } catch (e) {

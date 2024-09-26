@@ -1,7 +1,7 @@
 export const CONSTANTS = {
-  contentType: 'Studio Experiences',
+  contentType: 'ExperiencesLayout',
   environment: 'master',
   locale: 'en-US',
-  slug: 'homePage',
+  slug: 'home-page',
   title: 'Home Page',
 };

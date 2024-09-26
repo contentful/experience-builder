@@ -20,9 +20,15 @@ export class FsClient {
 
     const projectDir = this.getProjectDir(projectName);
 
-    this.copyTemplateFiles(projectDir, templateDir, variant.srcDir);
+    this.copyTemplateFiles(projectDir, templateDir, variant.pathsToCopy);
 
-    const installEbLibsCommand = `npm i --prefix ${projectDir} @contentful/experiences-sdk-react`;
+    const additionalLibsToInstall = [
+      '@contentful/experiences-sdk-react@latest',
+      'contentful@latest',
+      ...(variant.additionalDeps ? variant.additionalDeps : []),
+    ];
+
+    const installEbLibsCommand = `npm i --prefix ${projectDir} ${additionalLibsToInstall.join(' ')}`;
 
     const ebLibStatus = await this.runCommand(installEbLibsCommand);
 
@@ -33,21 +39,22 @@ export class FsClient {
   }
 
   copyEnvFile(projectDir: string, envFileData: EnvFileData) {
-    fs.writeFileSync(
-      path.join(projectDir, '.env.local'),
-      `VITE_CTFL_ENV_ID=${envFileData.environment}
-VITE_CTFL_EXPERIENCE_TYPE_ID=${envFileData.experienceTypeId}
-VITE_CTFL_SPACE_ID=${envFileData.spaceId}
-VITE_CTFL_ACCESS_TOKEN=${envFileData.accessToken}
-VITE_CTFL_PREVIEW_ACCESS_TOKEN=${envFileData.previewAccessToken}
-VITE_CTFL_API_HOST=cdn.${this.host}`,
-    );
+    const fileContents = fs.readFileSync(path.join(projectDir, '.env.local'), 'utf8');
+    const newFileContents = fileContents
+      .replace('*YOUR SPACE ID*', envFileData.spaceId)
+      .replace('*YOUR ACCESS TOKEN*', envFileData.accessToken)
+      .replace('*YOUR PREVIEW ACCESS TOKEN*', envFileData.previewAccessToken)
+      .replace('*YOUR EXPERIENCE CONTENT TYPE ID*', envFileData.experienceTypeId);
+
+    fs.writeFileSync(path.join(projectDir, '.env.local'), newFileContents);
   }
 
-  copyTemplateFiles(projectDir: string, templateDir: string, srcDir: string) {
-    fs.rmSync(path.join(projectDir, srcDir), { recursive: true, force: true });
-    fs.cpSync(path.join(templateDir, srcDir), path.join(projectDir, srcDir), { recursive: true });
-    fs.cpSync(path.join(templateDir, '.env.local'), path.join(projectDir, '.env.local'));
+  copyTemplateFiles(projectDir: string, templateDir: string, paths: string[]) {
+    paths.forEach((srcDir) => {
+      fs.rmSync(path.join(projectDir, srcDir), { recursive: true, force: true });
+      fs.cpSync(path.join(templateDir, srcDir), path.join(projectDir, srcDir), { recursive: true });
+    });
+    fs.renameSync(path.join(projectDir, '.env.template'), path.join(projectDir, '.env.local'));
   }
 
   deleteDirectory(dir: string) {
@@ -65,8 +72,8 @@ VITE_CTFL_API_HOST=cdn.${this.host}`,
     return path.join(process.cwd(), projectName);
   }
 
-  getTemplateDir(framework: string) {
-    return path.join(fileURLToPath(import.meta.url), '../../templates', framework);
+  getTemplateDir(templateFolderName: string) {
+    return path.join(fileURLToPath(import.meta.url), '../../templates', templateFolderName);
   }
 
   async runCommand(command: string) {
