@@ -56,6 +56,7 @@ jobs:
             packages/*/build
             packages/test-apps/react-vite/dist
             packages/test-apps/nextjs/.next
+            packages/templates/nextjs-marketing-demo/.next
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Authenticate with private NPM and GH package
         run: echo -e "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}\n//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
