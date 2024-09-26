@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { Menu } from 'antd';
 import styles from './footer.module.css';

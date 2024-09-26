@@ -20,10 +20,6 @@
   font-size: 10px;
 }
 
-ul.menu {
-  border-bottom: 1px solid transparent;
-}
-
 .nav {
   display: flex;
   flex-direction: row;
