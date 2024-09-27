@@ -1,5 +1,10 @@
 import { defineComponents } from '@contentful/experiences-sdk-react';
 import { ButtonComponentRegistration } from './components/ButtonComponentRegistration';
-import { CustomRatingComponentRegistration } from '@/components/CustomRatingComponentRegistration';
+import { RatingStarsComponentRegistration } from '@/components/RatingStarsComponentRegistration';
+import { CardComponentRegistration } from './components/CardComponentRegistration';
 
-defineComponents([ButtonComponentRegistration, CustomRatingComponentRegistration]);
+defineComponents([
+  ButtonComponentRegistration,
+  RatingStarsComponentRegistration,
+  CardComponentRegistration,
+]);
