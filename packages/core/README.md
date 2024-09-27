@@ -1,6 +1,11 @@
 # @contentful/experiences-core
 
+## Private Package Notice
+
+*Note*: This package is not meant to be used directly by the end user. It is a dependency for the Studio Experiences packages. Changes to this package are not guaranteed to follow semantic versioning and may break without notice if used directly.
+
 ### Purpose
+
 - To contain shared code and utilities across the Experiences packages such as constants, types, transformers, and hooks.
 - This means additions to core should be framework agnostic. For example, code that is only compatible with React does not belong in the core package.
 
