@@ -5,7 +5,7 @@ This app is a starter template for Studio Experiences, showcasing an example mar
 ## How to Start
 
 1. Copy the `.env.template` file to `.env` in this project directory and set the environment variables as described in [Config](#config)
-2. Set the content preview URL of the experience type to `http://localhost:3000/{locale}/{entry.fields.slug}?expEditorMode=true`
+2. Set the content preview URL of the experience type to `http://localhost:3000/{entry.fields.slug}?expEditorMode=true`
 3. Run `npm run dev`
 
 ## Config
