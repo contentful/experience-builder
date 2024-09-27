@@ -2,43 +2,18 @@ import React from 'react';
 import { Card } from 'antd';
 
 type CardComponentProps = {
+  coverSlot: React.ReactNode;
   title: string;
   description: string;
-  coverImageUrl?: string;
-  coverImageAltText?: string;
   bordered: boolean;
   hoverable: boolean;
   size: 'default' | 'small';
 };
 
 export const CardComponentRegistration = {
-  component: ({
-    title,
-    description,
-    bordered,
-    hoverable,
-    size,
-    coverImageUrl,
-    coverImageAltText,
-  }: CardComponentProps) => {
+  component: ({ coverSlot, title, description, bordered, hoverable, size }: CardComponentProps) => {
     return (
-      <Card
-        hoverable={hoverable}
-        bordered={bordered}
-        size={size}
-        style={{ width: 375, maxWidth: '100%' }}
-        cover={
-          coverImageUrl && (
-            <div style={{ overflow: 'hidden', height: 300 }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={coverImageUrl}
-                alt={coverImageAltText ?? 'cover image'}
-                style={{ width: '100%' }}
-              />
-            </div>
-          )
-        }>
+      <Card hoverable={hoverable} bordered={bordered} size={size} cover={coverSlot}>
         <Card.Meta title={title} description={description} />
       </Card>
     );
@@ -47,6 +22,11 @@ export const CardComponentRegistration = {
     id: 'custom-card',
     name: 'Card',
     category: 'Custom Components',
+    slots: {
+      coverSlot: {
+        displayName: 'Cover Slot',
+      },
+    },
     variables: {
       title: {
         displayName: 'Title',
@@ -57,14 +37,6 @@ export const CardComponentRegistration = {
         displayName: 'Description',
         type: 'Text',
         defaultValue: 'Description',
-      },
-      coverImageUrl: {
-        displayName: 'Cover Image URL',
-        type: 'Media',
-      },
-      coverImageAltText: {
-        displayName: 'Cover Image Alt Text',
-        type: 'Text',
       },
       bordered: {
         displayName: 'Bordered',
