@@ -59,10 +59,11 @@ export const transformMedia = (
   }
 
   if (variableName === 'cfBackgroundImageUrl') {
-    const width = resolveDesignValue(
-      variables['cfWidth']?.type === 'DesignValue' ? variables['cfWidth'].valuesByBreakpoint : {},
-      'cfWidth',
-    );
+    const width =
+      resolveDesignValue(
+        variables['cfWidth']?.type === 'DesignValue' ? variables['cfWidth'].valuesByBreakpoint : {},
+        'cfWidth',
+      ) || '100%';
     const optionsVariableName = 'cfBackgroundImageOptions';
     const options = resolveDesignValue(
       variables[optionsVariableName]?.type === 'DesignValue'
