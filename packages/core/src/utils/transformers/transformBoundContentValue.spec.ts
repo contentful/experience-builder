@@ -106,7 +106,7 @@ describe('transformBoundContentValue', () => {
         expect(result.url).toEqual(assets[0].fields.file?.url + '?w=1024&fm=jpg');
       });
 
-      it.only('when the component doesnt have a width variable, it should still transform value to OptimizedBackgroundImageAsset', () => {
+      it('when the component doesnt have a width variable, it should still transform value to OptimizedBackgroundImageAsset', () => {
         const binding: UnresolvedLink<'Asset'> = {
           sys: { type: 'Link', linkType: 'Asset', id: 'asset1' },
         };
