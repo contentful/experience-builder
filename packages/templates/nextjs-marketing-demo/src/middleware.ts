@@ -6,6 +6,7 @@ export function middleware(request: NextRequest) {
     locales: ['en-US', 'de'],
     defaultLocale: 'en-US',
   };
+
   const resp = i18nRouter(request, i18n);
   return resp;
 }

@@ -1,10 +1,10 @@
 import { Rate } from 'antd';
 
-export const CustomRatingComponentRegistration = {
+export const RatingStarsComponentRegistration = {
   component: Rate,
   definition: {
     id: 'custom-rating',
-    name: 'Custom Rating',
+    name: 'Rating Stars',
     category: 'Custom Components',
     variables: {
       disabled: {
