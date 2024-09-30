@@ -1,5 +1,9 @@
 # @contentful/experiences-visual-editor-react
 
+## Private Package Notice
+
+*Note*: This package is not meant to be used directly by the end user. It is a dependency for the Studio Experiences packages. Changes to this package are not guaranteed to follow semantic versioning and may break without notice if used directly.
+
 ### Purpose
 - Handles the canvas interaction logic with dragging, hitboxes, dropzones, reparenting, and communicating with the parent frame to ensure a smooth drag and drop experience.
 - Note that this package is framework specific to React.
