@@ -152,7 +152,7 @@ describe('transformBoundContentValue', () => {
           binding,
           resolveDesignValue,
           variableName,
-          variableType as any,
+          variableType,
           path,
         );
         expect(result).toEqual(assets[0].fields.file?.url);
