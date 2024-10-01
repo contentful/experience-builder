@@ -30,9 +30,7 @@ const Nav: React.FC = () => {
         className={styles.menu}
         items={items}
       />
-      <Button variant="outlined" size="small">
-        Book Now
-      </Button>
+      <Button variant="outlined">Book now</Button>
     </div>
   );
 };
