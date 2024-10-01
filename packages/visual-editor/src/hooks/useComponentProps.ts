@@ -218,20 +218,28 @@ export const useComponentProps = ({
 
   const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
 
-  const sizeStyles: CSSProperties = {
-    width: cfStyles.width,
-    maxWidth: cfStyles.maxWidth,
-    maxHeight: cfStyles.maxHeight,
-  };
-
   const isAssemblyBlock = node.type === 'assemblyBlock';
   const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
   const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
+
+  const sizeStyles: CSSProperties = {
+    width: cfStyles.width,
+    maxWidth: cfStyles.maxWidth,
+  };
+  if (!isStructureComponent) {
+    sizeStyles.height = cfStyles.height;
+  }
+
+  const overrideSizeStyles = {
+    height: sizeStyles.height ? '100%' : cfStyles.height,
+    width: sizeStyles.width ? '100%' : undefined,
+  };
 
   // Styles that will be applied to the component element
   const componentClass = useEditorModeClassName({
     styles: {
       ...cfStyles,
+      ...overrideSizeStyles,
       ...(isEmptyZone &&
         isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
           minHeight: EMPTY_CONTAINER_HEIGHT,

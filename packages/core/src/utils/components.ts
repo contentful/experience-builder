@@ -39,5 +39,5 @@ export const isComponentAllowedOnRoot = ({ type, category, componentId }: Compon
   componentId === CONTENTFUL_COMPONENTS.divider.id;
 
 export const isStructureWithRelativeHeight = (componentId?: string, height?: string | number) => {
-  return isContentfulStructureComponent(componentId) && !height?.toString().endsWith('px');
+  return isContentfulStructureComponent(componentId) && height?.toString().endsWith('%');
 };
