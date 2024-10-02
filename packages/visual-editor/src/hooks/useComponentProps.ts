@@ -223,12 +223,12 @@ export const useComponentProps = ({
 
   // Move size styles to the wrapping div and override the component styles
   const overrideStyles: CSSProperties = {};
-  const sizeStyles: CSSProperties = {
+  const wrapperStyles: CSSProperties = {
     width: cfStyles.width,
     maxWidth: cfStyles.maxWidth,
   };
   if (!isStructureComponent) {
-    sizeStyles.height = cfStyles.height;
+    wrapperStyles.height = cfStyles.height;
     overrideStyles.height = '100%';
     overrideStyles.width = '100%';
   }
@@ -264,7 +264,7 @@ export const useComponentProps = ({
     ...(definition?.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { componentProps, sizeStyles };
+  return { componentProps, wrapperStyles };
 };
 
 const addExtraDropzonePadding = (padding: string) =>

@@ -22,7 +22,9 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
   nodeProps,
   component,
 }) => {
-  const wrapperStyle: CSSProperties = {};
+  const wrapperStyle: CSSProperties = {
+    position: 'relative',
+  };
 
   const modifiedNodeProps = { ...nodeProps };
   if (typeof modifiedNodeProps.cfImageOptions === 'object') {
@@ -43,7 +45,7 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
   const className = useClassName({ props: modifiedNodeProps, node });
 
   return (
-    <div style={wrapperStyle}>
+    <div className="cf-preview-unbound-image" style={wrapperStyle}>
       {React.createElement(component, {
         ...sanitizeNodeProps(modifiedNodeProps),
         className,
