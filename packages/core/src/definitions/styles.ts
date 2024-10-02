@@ -369,7 +369,7 @@ export const dividerBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The height of the divider',
-    defaultValue: '2px',
+    defaultValue: '1px',
   },
   cfMaxWidth: {
     displayName: 'Max width',
