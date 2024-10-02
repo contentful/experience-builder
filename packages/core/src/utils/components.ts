@@ -42,7 +42,7 @@ export const isComponentAllowedOnRoot = ({ type, category, componentId }: Compon
   componentId === CONTENTFUL_COMPONENTS.divider.id;
 
 export const isStructureWithRelativeHeight = (componentId?: string, height?: string | number) => {
-  return isContentfulStructureComponent(componentId) && height?.toString().endsWith('%');
+  return isContentfulStructureComponent(componentId) && !height?.toString().endsWith('px');
 };
 
 const stylesToKeep = ['cfImageAsset'];

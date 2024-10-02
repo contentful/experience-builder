@@ -230,8 +230,6 @@ export const useComponentProps = ({
   if (!isStructureComponent) {
     sizeStyles.height = cfStyles.height;
     overrideStyles.height = '100%';
-  }
-  if (cfStyles.width) {
     overrideStyles.width = '100%';
   }
 
