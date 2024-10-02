@@ -7,9 +7,9 @@ import {
   transformBoundContentValue,
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
+  sanitizeNodeProps,
 } from '@contentful/experiences-core';
 import {
-  CF_STYLE_ATTRIBUTES,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
   CONTENTFUL_COMPONENTS,
@@ -25,7 +25,6 @@ import type {
 } from '@contentful/experiences-core/types';
 import { CSSProperties, useMemo } from 'react';
 import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
-import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzone.types';
@@ -222,24 +221,25 @@ export const useComponentProps = ({
   const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
   const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
 
+  // Move size styles to the wrapping div and override the component styles
+  const overrideStyles: CSSProperties = {};
   const sizeStyles: CSSProperties = {
     width: cfStyles.width,
     maxWidth: cfStyles.maxWidth,
   };
   if (!isStructureComponent) {
     sizeStyles.height = cfStyles.height;
+    overrideStyles.height = '100%';
   }
-
-  const overrideSizeStyles = {
-    height: sizeStyles.height ? '100%' : cfStyles.height,
-    width: sizeStyles.width ? '100%' : undefined,
-  };
+  if (cfStyles.width) {
+    overrideStyles.width = '100%';
+  }
 
   // Styles that will be applied to the component element
   const componentClass = useEditorModeClassName({
     styles: {
       ...cfStyles,
-      ...overrideSizeStyles,
+      ...overrideStyles,
       ...(isEmptyZone &&
         isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
           minHeight: EMPTY_CONTAINER_HEIGHT,
@@ -254,10 +254,6 @@ export const useComponentProps = ({
     nodeId: node.data.id,
   });
 
-  //List explicit style props that will end up being passed to the component
-  const stylesToKeep = ['cfImageAsset'];
-  const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
-
   const componentProps: ResolvedComponentProps = {
     'data-cf-node-id': node.data.id,
     'data-cf-node-block-id': node.data.blockId,
@@ -266,7 +262,7 @@ export const useComponentProps = ({
     editorMode: true,
     node,
     renderDropzone,
-    ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
+    ...sanitizeNodeProps(props),
     ...(definition?.children ? { children: renderDropzone(node) } : {}),
   };
 

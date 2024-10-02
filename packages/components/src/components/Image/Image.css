@@ -2,6 +2,8 @@
 
 .cf-no-image {
   position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 .cf-no-image img {

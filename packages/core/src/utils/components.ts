@@ -1,9 +1,12 @@
+import { omit } from 'lodash-es';
 import {
   ASSEMBLY_BLOCK_NODE_TYPE,
   ASSEMBLY_DEFAULT_CATEGORY,
   ASSEMBLY_NODE_TYPE,
+  CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
 } from '../constants';
+import type { PrimitiveValue } from '../types';
 
 const structureComponentIds = new Set([
   CONTENTFUL_COMPONENTS.section.id,
@@ -40,4 +43,12 @@ export const isComponentAllowedOnRoot = ({ type, category, componentId }: Compon
 
 export const isStructureWithRelativeHeight = (componentId?: string, height?: string | number) => {
   return isContentfulStructureComponent(componentId) && height?.toString().endsWith('%');
+};
+
+const stylesToKeep = ['cfImageAsset'];
+const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
+const propsToRemove = ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName'];
+
+export const sanitizeNodeProps = (nodeProps: Record<PropertyKey, PrimitiveValue>) => {
+  return omit(nodeProps, stylesToRemove, propsToRemove);
 };
