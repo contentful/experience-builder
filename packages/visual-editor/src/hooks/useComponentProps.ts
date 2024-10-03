@@ -228,9 +228,13 @@ export const useComponentProps = ({
     maxWidth: cfStyles.maxWidth,
   };
   if (!isStructureComponent) {
-    wrapperStyles.height = cfStyles.height;
-    overrideStyles.height = '100%';
-    overrideStyles.width = '100%';
+    if (cfStyles.height) {
+      wrapperStyles.height = cfStyles.height;
+      overrideStyles.height = '100%';
+    }
+    if (cfStyles.width) {
+      overrideStyles.width = '100%';
+    }
   }
 
   // Styles that will be applied to the component element
