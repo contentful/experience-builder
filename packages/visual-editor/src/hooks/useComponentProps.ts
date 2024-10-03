@@ -238,21 +238,23 @@ export const useComponentProps = ({
   }
 
   // Styles that will be applied to the component element
+  const componentStyles = {
+    ...cfStyles,
+    ...overrideStyles,
+    ...(isEmptyZone &&
+      isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
+        minHeight: EMPTY_CONTAINER_HEIGHT,
+      }),
+    ...(userIsDragging &&
+      isStructureComponent &&
+      !isSingleColumn &&
+      !isAssemblyBlock && {
+        padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
+      }),
+  };
+
   const componentClass = useEditorModeClassName({
-    styles: {
-      ...cfStyles,
-      ...overrideStyles,
-      ...(isEmptyZone &&
-        isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
-          minHeight: EMPTY_CONTAINER_HEIGHT,
-        }),
-      ...(userIsDragging &&
-        isStructureComponent &&
-        !isSingleColumn &&
-        !isAssemblyBlock && {
-          padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
-        }),
-    },
+    styles: componentStyles,
     nodeId: node.data.id,
   });
 
@@ -268,7 +270,7 @@ export const useComponentProps = ({
     ...(definition?.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { componentProps, wrapperStyles };
+  return { componentProps, componentStyles, wrapperStyles };
 };
 
 const addExtraDropzonePadding = (padding: string) =>
