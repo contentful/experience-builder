@@ -65,7 +65,7 @@ export const useComponent = ({
 
   const componentId = node.data.id;
 
-  const { componentProps, sizeStyles } = useComponentProps({
+  const { componentProps, wrapperStyles } = useComponentProps({
     node,
     areEntitiesFetched,
     resolveDesignValue,
@@ -114,7 +114,7 @@ export const useComponent = ({
     return (
       <Tag
         {...rest}
-        style={{ ...style, ...sizeStyles }}
+        style={{ ...style, ...wrapperStyles }}
         ref={(refNode: HTMLElement | null) => {
           if (innerRef && refNode) innerRef(refNode);
         }}>
