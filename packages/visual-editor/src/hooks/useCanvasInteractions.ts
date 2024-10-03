@@ -31,7 +31,7 @@ export default function useCanvasInteractions() {
     const droppingOnRoot = parentId === ROOT_ID;
     const isValidRootComponent = blockId === CONTENTFUL_COMPONENTS.container.id;
 
-    let node = createTreeNode({ blockId: blockId, parentId, slotId });
+    let node = createTreeNode({ blockId, parentId, slotId });
 
     if (droppingOnRoot && !isValidRootComponent) {
       const wrappingContainer = createTreeNode({
@@ -39,7 +39,7 @@ export default function useCanvasInteractions() {
         parentId,
       });
       const childNode = createTreeNode({
-        blockId: blockId,
+        blockId,
         parentId: wrappingContainer.data.id,
       });
 

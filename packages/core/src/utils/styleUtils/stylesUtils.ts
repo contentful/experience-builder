@@ -68,6 +68,7 @@ export const buildCfStyles = ({
   cfVisibility,
 }: Partial<StyleProps>): CSSProperties => {
   return {
+    boxSizing: 'border-box',
     ...transformVisibility(cfVisibility),
     margin: cfMargin,
     padding: cfPadding,
@@ -85,14 +86,13 @@ export const buildCfStyles = ({
     ...transformBackgroundImage(cfBackgroundImageUrl, cfBackgroundImageOptions),
     fontSize: cfFontSize,
     fontWeight: cfTextBold ? 'bold' : cfFontWeight,
-    fontStyle: cfTextItalic ? 'italic' : 'normal',
+    fontStyle: cfTextItalic ? 'italic' : undefined,
+    textDecoration: cfTextUnderline ? 'underline' : undefined,
     lineHeight: cfLineHeight,
     letterSpacing: cfLetterSpacing,
     color: cfTextColor,
     textAlign: cfTextAlign,
     textTransform: cfTextTransform,
-    textDecoration: cfTextUnderline ? 'underline' : 'none',
-    boxSizing: 'border-box',
     objectFit: cfImageOptions?.objectFit,
     objectPosition: cfImageOptions?.objectPosition,
   };
