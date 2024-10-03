@@ -153,7 +153,7 @@ describe('section component', () => {
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.desktop as string,
     ).toEqual(
-      'cf-fe8cbbf24ebeda287d72ffc9c71dd8ee cf-98fd4817878e1af33902386b5ad692de cf-d2d0bfefe7032e1bd983bdc3c4c8b762',
+      'cf-af0b6d3878df39339244ff4d1278fb11 cf-aa568a1f1bd7057bc8d4ad69498d82ae cf-7e4c2816c958433ffc9d8cf113ce4c6c',
     );
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -163,7 +163,7 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-fe8cbbf24ebeda287d72ffc9c71dd8ee{margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;font-style:normal;text-decoration:none;box-sizing:border-box;}@media(max-width:992px){.cf-98fd4817878e1af33902386b5ad692de{margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;font-style:normal;text-decoration:none;box-sizing:border-box;}}@media(max-width:576px){.cf-d2d0bfefe7032e1bd983bdc3c4c8b762{font-style:normal;text-decoration:none;box-sizing:border-box;}}',
+      '.cf-af0b6d3878df39339244ff4d1278fb11{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}@media(max-width:992px){.cf-aa568a1f1bd7057bc8d4ad69498d82ae{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-7e4c2816c958433ffc9d8cf113ce4c6c{box-sizing:border-box;}}',
     );
   });
 
@@ -262,7 +262,7 @@ describe('section component', () => {
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.desktop as string,
     ).toEqual(
-      'cf-e6f702c05409b19b0aa209b0d9be06b1 cf-98fd4817878e1af33902386b5ad692de cf-d2d0bfefe7032e1bd983bdc3c4c8b762',
+      'cf-80a28f6ba36900c2f42e42382c0b938e cf-aa568a1f1bd7057bc8d4ad69498d82ae cf-7e4c2816c958433ffc9d8cf113ce4c6c',
     );
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -272,7 +272,7 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-e6f702c05409b19b0aa209b0d9be06b1{margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;font-style:normal;text-decoration:none;box-sizing:border-box;}@media(max-width:992px){.cf-98fd4817878e1af33902386b5ad692de{margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;font-style:normal;text-decoration:none;box-sizing:border-box;}}@media(max-width:576px){.cf-d2d0bfefe7032e1bd983bdc3c4c8b762{font-style:normal;text-decoration:none;box-sizing:border-box;}}',
+      '.cf-80a28f6ba36900c2f42e42382c0b938e{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;}@media(max-width:992px){.cf-aa568a1f1bd7057bc8d4ad69498d82ae{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-7e4c2816c958433ffc9d8cf113ce4c6c{box-sizing:border-box;}}',
     );
     expect(styles).toContain('background-image:url(https://www.contentful.com/image1.png);');
   });
@@ -388,7 +388,7 @@ describe('section component', () => {
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.desktop as string,
     ).toEqual(
-      'cf-e6f702c05409b19b0aa209b0d9be06b1 cf-98fd4817878e1af33902386b5ad692de cf-d2d0bfefe7032e1bd983bdc3c4c8b762',
+      'cf-80a28f6ba36900c2f42e42382c0b938e cf-aa568a1f1bd7057bc8d4ad69498d82ae cf-7e4c2816c958433ffc9d8cf113ce4c6c',
     );
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -398,7 +398,7 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-e6f702c05409b19b0aa209b0d9be06b1{margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;font-style:normal;text-decoration:none;box-sizing:border-box;}@media(max-width:992px){.cf-98fd4817878e1af33902386b5ad692de{margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;font-style:normal;text-decoration:none;box-sizing:border-box;}}@media(max-width:576px){.cf-d2d0bfefe7032e1bd983bdc3c4c8b762{font-style:normal;text-decoration:none;box-sizing:border-box;}}',
+      '.cf-80a28f6ba36900c2f42e42382c0b938e{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;}@media(max-width:992px){.cf-aa568a1f1bd7057bc8d4ad69498d82ae{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-7e4c2816c958433ffc9d8cf113ce4c6c{box-sizing:border-box;}}',
     );
 
     expect(styles).toContain('background-image:url(https://www.contentful.com/image1.png);');
