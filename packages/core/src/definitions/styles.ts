@@ -369,7 +369,7 @@ export const dividerBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The height of the divider',
-    defaultValue: '2px',
+    defaultValue: '1px',
   },
   cfMaxWidth: {
     displayName: 'Max width',
@@ -383,7 +383,7 @@ export const dividerBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The background color of the divider',
-    defaultValue: 'rgba(0, 0, 0, 0)',
+    defaultValue: 'rgba(204, 204, 204, 1)',
   },
 };
 
