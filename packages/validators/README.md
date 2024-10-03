@@ -1,5 +1,9 @@
 # @contentful/experiences-validators
 
+## Private Package Notice
+
+*Note*: This package is not meant to be used directly by the end user. It is a dependency for the Studio Experiences packages. Changes to this package are not guaranteed to follow semantic versioning and may break without notice if used directly.
+
 This package defines schemas and validator functions for experience data structures in the [Experiences SDK](https://www.contentful.com/developers/docs/experiences/set-up-experiences-sdk/). These validators ensure the integrity and correctness of the data used in experiences.
 
 ## Purpose
