@@ -10,6 +10,7 @@ import {
   Content as LayoutContent,
 } from 'antd/es/layout/layout';
 import styles from '@/app/page.module.css';
+import '../../../studio-config';
 
 type Page = {
   params: { locale?: string; slug?: string; preview?: string };
