@@ -335,7 +335,7 @@ export const containerBuiltInStyles: VariableDefinitions = {
     displayName: 'Margin',
     type: 'Text',
     group: 'style',
-    description: 'The margin of the section',
+    description: 'The margin of the container',
     defaultValue: '0 auto 0 auto',
   },
   cfMaxWidth: {
@@ -497,7 +497,7 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The margin of the columns',
-    defaultValue: '0 0 0 0',
+    defaultValue: '0 auto 0 auto',
   },
   cfWidth: {
     displayName: 'Width',
