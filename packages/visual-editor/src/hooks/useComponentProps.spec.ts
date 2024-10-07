@@ -1,4 +1,4 @@
-import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
+import { ASSEMBLY_NODE_TYPE, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { useComponentProps } from './useComponentProps';
 import { ComponentDefinition, ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { vi } from 'vitest';
@@ -102,8 +102,8 @@ describe('useComponentProps', () => {
 
   describe('structure components', () => {
     const definition: ComponentDefinition = {
-      id: 'contentful-section',
-      name: 'Section',
+      id: CONTENTFUL_COMPONENTS.section.id,
+      name: CONTENTFUL_COMPONENTS.section.name,
       variables: {
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
@@ -113,7 +113,7 @@ describe('useComponentProps', () => {
       data: {
         id: 'id',
         // This block id will identify the component as a structure component
-        blockId: 'contentful-section',
+        blockId: CONTENTFUL_COMPONENTS.section.id,
         props: {
           cfWidth: {
             type: 'DesignValue',
@@ -160,6 +160,8 @@ describe('useComponentProps', () => {
       variables: {
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
+        cfMaxWidth: { type: 'Text' },
+        cfMargin: { type: 'Text' },
       },
     };
     const node: ExperienceTreeNode = {
@@ -180,6 +182,18 @@ describe('useComponentProps', () => {
               [desktop.id]: '50%',
             },
           },
+          cfMaxWidth: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [desktop.id]: '50%',
+            },
+          },
+          cfMargin: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [desktop.id]: '10px 0 10px 0',
+            },
+          },
         },
         unboundValues: {},
         dataSource: {},
@@ -189,7 +203,7 @@ describe('useComponentProps', () => {
       type: 'block',
     };
 
-    it('should set the component size in wrapperStyles and set 100% size in componentStyles', () => {
+    it('should set the component size in wrapperStyles when drag wrapper is enabled', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
@@ -197,14 +211,39 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
+          requiresDragWrapper: true,
           userIsDragging,
         }),
       );
 
       expect(result.current.wrapperStyles.width).toEqual('50%');
       expect(result.current.wrapperStyles.height).toEqual('50%');
+      expect(result.current.wrapperStyles.maxWidth).toEqual('50%');
+      expect(result.current.wrapperStyles.margin).toEqual('10px 0 10px 0');
+
       expect(result.current.componentStyles.width).toEqual('100%');
       expect(result.current.componentStyles.height).toEqual('100%');
+      expect(result.current.componentStyles.maxWidth).toEqual('none');
+      expect(result.current.componentStyles.margin).toEqual('0');
+    });
+
+    it('should set the component size in componentStyles when drag wrapper is disabled', () => {
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node,
+          areEntitiesFetched,
+          resolveDesignValue,
+          renderDropzone,
+          definition,
+          requiresDragWrapper: false,
+          userIsDragging,
+        }),
+      );
+
+      expect(result.current.componentStyles.width).toEqual('50%');
+      expect(result.current.componentStyles.height).toEqual('50%');
+      expect(result.current.componentStyles.maxWidth).toEqual('50%');
+      expect(result.current.componentStyles.margin).toEqual('10px 0 10px 0');
     });
   });
 });

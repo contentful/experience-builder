@@ -30,8 +30,10 @@ export const Image: React.FC<ImageProps> = ({ className = '', src, cfImageAsset,
     );
   }
 
+  const imageClasses = combineClasses('cf-image', className);
+
   if (typeof cfImageAsset === 'string') {
-    return <img src={cfImageAsset} className={'cf-image ' + className} {...props} />;
+    return <img src={cfImageAsset} className={imageClasses} {...props} />;
   }
 
   if (cfImageAsset) {
@@ -41,13 +43,13 @@ export const Image: React.FC<ImageProps> = ({ className = '', src, cfImageAsset,
         srcSet={cfImageAsset.srcSet?.length ? cfImageAsset.srcSet?.join(', ') : undefined}
         sizes={cfImageAsset.sizes ? cfImageAsset.sizes : undefined}
         loading={cfImageAsset.loading}
-        className={'cf-image ' + className}
+        className={imageClasses}
         {...props}
       />
     );
   }
 
   if (src) {
-    return <img src={src} className={'cf-image ' + className} {...props} />;
+    return <img src={src} className={imageClasses} {...props} />;
   }
 };
