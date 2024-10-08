@@ -79,7 +79,6 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
-  const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const isSlotComponent = Boolean(node.data.slotId);
   const isDragDisabled = isAssemblyBlock || (isSingleColumn && isWrapped) || isSlotComponent;
   const isEmptyZone = useMemo(() => {
@@ -139,7 +138,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         label={displayName || 'No label specified'}
       />
       <Placeholder {...placeholder} id={componentId} />
-      {isStructureComponent && userIsDragging && (
+      {userIsDragging && (
         <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
       )}
     </>
