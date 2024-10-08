@@ -138,7 +138,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         label={displayName || 'No label specified'}
       />
       <Placeholder {...placeholder} id={componentId} />
-      {userIsDragging && (
+      {userIsDragging && !isAssemblyBlock && (
         <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
       )}
     </>
