@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react';
-import { isContentfulStructureComponent, sendMessage } from '@contentful/experiences-core';
+import { sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from '@/hooks/useComponent';
