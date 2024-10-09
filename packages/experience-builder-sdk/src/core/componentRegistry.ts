@@ -173,6 +173,7 @@ export const optionalBuiltInComponents = [
   DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id,
   DEFAULT_COMPONENT_REGISTRATIONS.richText.definition.id,
   DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id,
+  DEFAULT_COMPONENT_REGISTRATIONS.divider.definition.id,
 ];
 
 export const sendRegisteredComponentsMessage = () => {
