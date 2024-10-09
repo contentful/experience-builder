@@ -112,6 +112,13 @@ export const builtInStyles: VariableDefinitions = {
     description: 'The orientation of the section',
     defaultValue: 'column',
   },
+  cfFlexReverse: {
+    displayName: 'Reverse Direction',
+    type: 'Boolean',
+    group: 'style',
+    description: 'Toggle the flex direction to be reversed',
+    defaultValue: false,
+  },
   cfFlexWrap: {
     displayName: 'Wrap objects',
     type: 'Text',
