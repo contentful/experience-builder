@@ -96,8 +96,12 @@ const calcNewComponentStyles = (params: CalcStylesParams): CSSProperties => {
 
   const width = isHorizontal ? DRAGGABLE_WIDTH : dropzoneSizes.width - horizontalPadding;
   const height = isHorizontal ? dropzoneSizes.height - verticalPadding : DRAGGABLE_HEIGHT;
-  const top = isHorizontal ? calcOffsetTop(element, height, elementSizes.height) : -height;
-  const left = isHorizontal ? -width : calcOffsetLeft(element, width, elementSizes.width);
+  const top = isHorizontal
+    ? calcOffsetTop(element.parentElement, height, elementSizes.height)
+    : -height;
+  const left = isHorizontal
+    ? -width
+    : calcOffsetLeft(element.parentElement, width, elementSizes.width);
 
   return {
     width,
@@ -150,8 +154,12 @@ const calcMovementStyles = (params: CalcStylesParams): CSSProperties => {
 
   const width = isHorizontal ? draggableSizes.width : dropzoneSizes.width - horizontalPadding;
   const height = isHorizontal ? dropzoneSizes.height - verticalPadding : draggableSizes.height;
-  const top = isHorizontal ? calcOffsetTop(element, height, elementSizes.height) : -height;
-  const left = isHorizontal ? -width : calcOffsetLeft(element, width, elementSizes.width);
+  const top = isHorizontal
+    ? calcOffsetTop(element.parentElement, height, elementSizes.height)
+    : -height;
+  const left = isHorizontal
+    ? -width
+    : calcOffsetLeft(element.parentElement, width, elementSizes.width);
 
   return {
     width,
