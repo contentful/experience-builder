@@ -118,6 +118,7 @@ const BaseComponentTreeNodeSchema = z.object({
   definitionId: DefinitionPropertyKeySchema,
   displayName: z.string().optional(),
   slotId: z.string().optional(),
+  id: uuidKeySchema.optional(), // UUID needs to be added to this persisting schema
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
 });
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
