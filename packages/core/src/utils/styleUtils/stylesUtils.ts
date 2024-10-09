@@ -41,6 +41,7 @@ export const buildCfStyles = ({
   cfHorizontalAlignment,
   cfVerticalAlignment,
   cfFlexDirection,
+  cfFlexReverse,
   cfFlexWrap,
   cfMargin,
   cfPadding,
@@ -81,7 +82,8 @@ export const buildCfStyles = ({
     borderRadius: cfBorderRadius,
     gap: cfGap,
     ...transformAlignment(cfHorizontalAlignment, cfVerticalAlignment, cfFlexDirection),
-    flexDirection: cfFlexDirection,
+    flexDirection:
+      cfFlexReverse && cfFlexDirection ? `${cfFlexDirection}-reverse` : cfFlexDirection,
     flexWrap: cfFlexWrap,
     ...transformBackgroundImage(cfBackgroundImageUrl, cfBackgroundImageOptions),
     fontSize: cfFontSize,
