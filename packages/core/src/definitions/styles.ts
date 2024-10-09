@@ -112,6 +112,13 @@ export const builtInStyles: VariableDefinitions = {
     description: 'The orientation of the section',
     defaultValue: 'column',
   },
+  cfFlexReverse: {
+    displayName: 'Reverse Direction',
+    type: 'Boolean',
+    group: 'style',
+    description: 'Toggle the flex direction to be reversed',
+    defaultValue: false,
+  },
   cfFlexWrap: {
     displayName: 'Wrap objects',
     type: 'Text',
@@ -335,7 +342,7 @@ export const containerBuiltInStyles: VariableDefinitions = {
     displayName: 'Margin',
     type: 'Text',
     group: 'style',
-    description: 'The margin of the section',
+    description: 'The margin of the container',
     defaultValue: '0 auto 0 auto',
   },
   cfMaxWidth: {
@@ -497,7 +504,7 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The margin of the columns',
-    defaultValue: '0 0 0 0',
+    defaultValue: '0 auto 0 auto',
   },
   cfWidth: {
     displayName: 'Width',

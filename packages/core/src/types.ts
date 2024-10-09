@@ -184,6 +184,7 @@ export type StyleProps = {
   cfHeight: string;
   cfFlexDirection: 'row' | 'column';
   cfFlexWrap: 'nowrap' | 'wrap';
+  cfFlexReverse: boolean;
   cfBorder: string;
   cfBorderRadius: string;
   cfGap: string;

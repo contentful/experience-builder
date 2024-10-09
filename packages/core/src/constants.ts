@@ -134,6 +134,7 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageOptions',
   'cfFlexDirection',
   'cfFlexWrap',
+  'cfFlexReverse',
   'cfBorder',
   'cfBorderRadius',
   'cfGap',
