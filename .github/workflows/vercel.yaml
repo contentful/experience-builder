@@ -71,7 +71,7 @@ jobs:
           vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
       - name: 'Deploy react-vite template site to Vercel'
         env:
-          VERCEL_PROJECT_ID: //TO-DO
+          VERCEL_PROJECT_ID: prj_HoAvIbgvZ3gYJDLCAaNsHIpBvI0k
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
           if [ ${{ github.ref_name }} = main ]; then
