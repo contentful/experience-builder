@@ -64,6 +64,10 @@ export const useComponent = ({
   }, [node]);
 
   const componentId = node.data.id;
+  const isAssembly = node.type === 'assembly';
+  const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
+  const requiresDragWrapper =
+    !isAssembly && !isStructureComponent && !componentRegistration?.options?.wrapComponent;
 
   const { componentProps, wrapperStyles } = useComponentProps({
     node,
@@ -72,6 +76,7 @@ export const useComponent = ({
     renderDropzone,
     definition: componentRegistration?.definition,
     userIsDragging,
+    requiresDragWrapper,
   });
 
   const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
@@ -88,13 +93,8 @@ export const useComponent = ({
       ...customComponentProps
     } = componentProps;
 
-    const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
-    const isAssembly = node.type === 'assembly';
     const modifiedProps =
       isStructureComponent || isAssembly ? componentProps : customComponentProps;
-
-    const requiresDragWrapper =
-      !isStructureComponent && componentRegistration.options?.wrapComponent === false;
 
     const element = React.createElement(
       ImportedComponentErrorBoundary,
@@ -105,7 +105,7 @@ export const useComponent = ({
       }),
     );
 
-    if (!requiresDragWrapper || isAssembly) {
+    if (!requiresDragWrapper) {
       return element;
     }
 

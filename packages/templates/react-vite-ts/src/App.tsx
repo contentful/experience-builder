@@ -1,6 +1,7 @@
 import { createClient } from 'contentful';
 import { useFetchBySlug, ExperienceRoot } from '@contentful/experiences-sdk-react';
 import './App.css';
+import './studio-config';
 
 const accessToken = import.meta.env.VITE_CTFL_ACCESS_TOKEN!;
 const prevAccessToken = import.meta.env.VITE_CTFL_PREVIEW_ACCESS_TOKEN!;

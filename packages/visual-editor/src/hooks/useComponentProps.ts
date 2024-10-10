@@ -51,6 +51,7 @@ type UseComponentProps = {
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
   slotId?: string;
+  requiresDragWrapper?: boolean;
 };
 
 export const useComponentProps = ({
@@ -60,6 +61,7 @@ export const useComponentProps = ({
   renderDropzone,
   definition,
   userIsDragging,
+  requiresDragWrapper,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
@@ -223,36 +225,47 @@ export const useComponentProps = ({
 
   // Move size styles to the wrapping div and override the component styles
   const overrideStyles: CSSProperties = {};
-  const wrapperStyles: CSSProperties = {
-    width: cfStyles.width,
-    maxWidth: cfStyles.maxWidth,
-  };
-  if (!isStructureComponent) {
+  const wrapperStyles: CSSProperties = {};
+  if (requiresDragWrapper) {
     if (cfStyles.height) {
       wrapperStyles.height = cfStyles.height;
       overrideStyles.height = '100%';
     }
+
     if (cfStyles.width) {
+      wrapperStyles.width = cfStyles.width;
       overrideStyles.width = '100%';
+    }
+
+    if (cfStyles.maxWidth) {
+      wrapperStyles.maxWidth = cfStyles.maxWidth;
+      overrideStyles.maxWidth = 'none';
+    }
+
+    if (cfStyles.margin) {
+      wrapperStyles.margin = cfStyles.margin;
+      overrideStyles.margin = '0';
     }
   }
 
   // Styles that will be applied to the component element
+  const componentStyles = {
+    ...cfStyles,
+    ...overrideStyles,
+    ...(isEmptyZone &&
+      isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
+        minHeight: EMPTY_CONTAINER_HEIGHT,
+      }),
+    ...(userIsDragging &&
+      isStructureComponent &&
+      !isSingleColumn &&
+      !isAssemblyBlock && {
+        padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
+      }),
+  };
+
   const componentClass = useEditorModeClassName({
-    styles: {
-      ...cfStyles,
-      ...overrideStyles,
-      ...(isEmptyZone &&
-        isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
-          minHeight: EMPTY_CONTAINER_HEIGHT,
-        }),
-      ...(userIsDragging &&
-        isStructureComponent &&
-        !isSingleColumn &&
-        !isAssemblyBlock && {
-          padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
-        }),
-    },
+    styles: componentStyles,
     nodeId: node.data.id,
   });
 
@@ -268,7 +281,7 @@ export const useComponentProps = ({
     ...(definition?.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { componentProps, wrapperStyles };
+  return { componentProps, componentStyles, wrapperStyles };
 };
 
 const addExtraDropzonePadding = (padding: string) =>
