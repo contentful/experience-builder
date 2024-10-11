@@ -1,4 +1,4 @@
-import type { Asset, AssetFile, Entry } from 'contentful';
+import type { Asset, AssetFile, ChainModifiers, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
 import { EntityStore } from './entity/EntityStore';
 import { Document as RichTextDocument } from '@contentful/rich-text-types';
@@ -16,7 +16,6 @@ import type {
   ExperienceComponentTree,
   ComponentDefinitionPropertyType,
 } from '@contentful/experiences-validators';
-// TODO: Remove references to 'Composition'
 export type {
   ExperienceDataSource,
   ExperienceUnboundValues,
@@ -97,6 +96,7 @@ export type ComponentDefinition<
   hyperlinkPattern?: string;
   variables: Partial<Record<ContainerStyleVariableName, ComponentDefinitionVariable<T>>> &
     Record<string, ComponentDefinitionVariable<T>>;
+  slots?: Record<string, { displayName: string }>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
   tooltip?: {
@@ -110,7 +110,9 @@ export type ComponentRegistration = {
   definition: ComponentDefinition;
   options?: {
     wrapComponent?: boolean;
+    /** @deprecated use wrapContainer instead */
     wrapContainerTag?: keyof JSX.IntrinsicElements;
+    wrapContainer?: keyof JSX.IntrinsicElements | React.ReactElement;
   };
 };
 
@@ -146,6 +148,7 @@ export type ExperienceTreeNode = {
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
+    slotId?: string;
     assembly?: {
       id: string;
       componentId: string;
@@ -165,14 +168,12 @@ export type ExperienceTree = {
   root: ExperienceTreeNode;
 };
 
-export type ExternalSDKMode = 'preview' | 'delivery';
-export type InternalSDKMode = ExternalSDKMode | 'editor';
-
 /**
  * Internally defined style variables are prefix with `cf` to avoid
  * collisions with user defined variables.
  */
 export type StyleProps = {
+  cfVisibility: boolean;
   cfHorizontalAlignment: 'start' | 'end' | 'center';
   cfVerticalAlignment: 'start' | 'end' | 'center';
   cfMargin: string;
@@ -183,6 +184,7 @@ export type StyleProps = {
   cfHeight: string;
   cfFlexDirection: 'row' | 'column';
   cfFlexWrap: 'nowrap' | 'wrap';
+  cfFlexReverse: boolean;
   cfBorder: string;
   cfBorderRadius: string;
   cfGap: string;
@@ -228,16 +230,43 @@ export type RecursiveDesignTokenDefinition = {
   [key: string]: string | RecursiveDesignTokenDefinition;
 };
 
+type DesignBorderTokenStyle = 'solid' | 'dashed' | 'dotted';
+/** We are currently in the process of implementing this feature. Do not use this field in your designTokenDefinition. **/
+type DesignTextTokenEmphasis =
+  | 'bold'
+  | 'italic'
+  | 'underline'
+  | 'bold italic'
+  | 'bold underline'
+  | 'italic underline'
+  | 'bold italic underline'
+  | 'none';
+/** We are currently in the process of implementing this feature. Do not use this field in your designTokenDefinition. **/
+type DesignTextTokenCase = 'capitalize' | 'uppercase' | 'lowercase' | 'normal';
+
 export type DesignTokensDefinition = {
   spacing?: Record<string, string>;
   sizing?: Record<string, string>;
   color?: Record<string, string>;
-  border?: Record<string, { width: string; style: 'solid' | 'dashed' | 'dotted'; color: string }>;
+  border?: Record<string, { width?: string; style?: DesignBorderTokenStyle; color?: string }>;
   borderRadius?: Record<string, string>;
   fontSize?: Record<string, string>;
   lineHeight?: Record<string, string>;
   letterSpacing?: Record<string, string>;
   textColor?: Record<string, string>;
+  /** We are currently in the process of implementing this feature. Do not use this field in your designTokenDefinition. **/
+  text?: Record<
+    string,
+    {
+      emphasis?: DesignTextTokenEmphasis;
+      fontSize?: string;
+      case?: DesignTextTokenCase;
+      fontWeight?: string;
+      lineHeight?: string;
+      letterSpacing?: string;
+      color?: string;
+    }
+  >;
 } & RecursiveDesignTokenDefinition;
 
 /** Type of experience entry JSON data structure as returned by CPA/CDA */
@@ -303,6 +332,9 @@ export type BoundComponentPropertyTypes =
   | OptimizedBackgroundImageAsset
   | OptimizedImageAsset
   | Link<'Asset'>
+  | Entry
+  | Asset
+  | (string | Entry | Asset<ChainModifiers, string> | undefined)[]
   | undefined;
 
 export type OptimizedImageAsset = {
@@ -375,3 +407,219 @@ export type BackgroundImageOptions = {
   quality?: string;
   targetSize: string;
 };
+
+interface DraggableProvidedDraggableProps {
+  'data-rfd-draggable-context-id'?: string;
+  'data-rfd-draggable-id'?: string;
+}
+
+interface DraggableProvidedDragHandleProps {
+  'data-rfd-drag-handle-draggable-id'?: string;
+  'data-rfd-drag-handle-context-id'?: string;
+}
+
+export type WrapperTags = keyof Pick<
+  JSX.IntrinsicElements,
+  | 'div'
+  | 'span'
+  | 'section'
+  | 'article'
+  | 'aside'
+  | 'p'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'header'
+  | 'footer'
+  | 'nav'
+  | 'main'
+>;
+
+export interface DragWrapperProps
+  extends DraggableProvidedDragHandleProps,
+    DraggableProvidedDraggableProps,
+    React.HTMLAttributes<HTMLElement>,
+    React.PropsWithChildren {
+  'data-cf-node-id'?: string;
+  'data-ctfl-draggable-id'?: string;
+  'data-test-id'?: string;
+  'data-cf-node-block-id'?: string;
+  'data-cf-node-block-type'?: string;
+  'data-ctfl-dragging-element'?: string;
+  innerRef?: (refNode: HTMLElement) => void;
+  wrapComponent?: boolean;
+  Tag?: WrapperTags;
+  ToolTipAndPlaceholder?: React.ReactNode;
+}
+
+export type ConnectedPayload =
+  | undefined
+  | { sdkVersion: string; definitions: ComponentDefinition[] };
+export type DesignTokensPayload = {
+  designTokens: DesignTokensDefinition;
+  resolvedCssVariables: Record<string, string>;
+};
+export type RegisteredBreakpointsPayload = { breakpoints: Breakpoint[] };
+export type MouseMovePayload = { clientX: number; clientY: number };
+export type NewHoveredElementPayload = { nodeId?: string };
+export type ComponentSelectedPayload = {
+  nodeId: string;
+  assembly?: { id: string; componentId: string; nodeLocation: string | null };
+};
+export type RegisteredComponentsPayload = { definitions: ComponentDefinition[] };
+export type RequestComponentTreeUpdatePayload = undefined;
+export type ComponentDragCanceledPayload = undefined;
+export type ComponentDroppedPayload = {
+  node: ExperienceTreeNode;
+  index: number;
+  parentNode: {
+    type?: ExperienceTreeNode['type'] | 'root';
+    data: { blockId?: string; id?: string };
+  };
+};
+export type ComponentMovedPayload = {
+  nodeId: string;
+  sourceParentId: string;
+  destinationParentId: string;
+  sourceIndex: number;
+  destinationIndex: number;
+};
+export type CanvasReloadPayload = undefined;
+export type CanvasErrorPayload = Error;
+export type UpdateSelectedComponentCoordinatesPayload = {
+  selectedNodeCoordinates: DOMRect;
+  selectedAssemblyChildCoordinates?: DOMRect;
+  parentCoordinates?: DOMRect;
+};
+export type CanvasScrollPayload = (typeof SCROLL_STATES)[keyof typeof SCROLL_STATES];
+export type ComponentMoveStartedPayload = undefined;
+export type ComponentMoveEndedPayload = undefined;
+export type OutsideCanvasClickPayload = { outsideCanvasClick: boolean };
+export type SDKFeaturesPayload = Record<string, unknown>;
+export type RequestEntitiesPayload = {
+  entityIds: string[];
+  entityType: 'Entry' | 'Asset';
+  locale: string;
+};
+
+type OUTGOING_EVENT_PAYLOADS = {
+  connected: ConnectedPayload;
+  registerDesignTokens: DesignTokensPayload;
+  registeredBreakpoints: RegisteredBreakpointsPayload;
+  mouseMove: MouseMovePayload;
+  newHoveredElement: NewHoveredElementPayload;
+  componentSelected: ComponentSelectedPayload;
+  registeredComponents: RegisteredComponentsPayload;
+  requestComponentTreeUpdate: RequestComponentTreeUpdatePayload;
+  componentDragCanceled: ComponentDragCanceledPayload;
+  componentDropped: ComponentDroppedPayload;
+  componentMoved: ComponentMovedPayload;
+  canvasReload: CanvasReloadPayload;
+  canvasError: CanvasErrorPayload;
+  updateSelectedComponentCoordinates: UpdateSelectedComponentCoordinatesPayload;
+  canvasScrolling: CanvasScrollPayload;
+  componentMoveStarted: ComponentMoveStartedPayload;
+  componentMoveEnded: ComponentMoveEndedPayload;
+  outsideCanvasClick: OutsideCanvasClickPayload;
+  sdkFeatures: SDKFeaturesPayload;
+  REQUEST_ENTITIES: RequestEntitiesPayload;
+};
+
+export type SendMessageParams = <T extends OutgoingEvent>(
+  eventType: T,
+  data: OUTGOING_EVENT_PAYLOADS[T],
+) => void;
+
+export type OutgoingMessage = {
+  [K in keyof OUTGOING_EVENT_PAYLOADS]: {
+    source: 'customer-app';
+    eventType: K;
+    payload: OUTGOING_EVENT_PAYLOADS[K];
+  };
+}[keyof OUTGOING_EVENT_PAYLOADS];
+
+type Filter<T, U> = T extends U ? T : never;
+type SelectedValueTypes = Filter<ComponentPropertyValue['type'], 'UnboundValue' | 'BoundValue'>;
+
+export type RequestReadOnlyModePayload = undefined;
+
+export type RequestEditorModePayload = undefined;
+export type ExperienceUpdatedPayload = {
+  tree: ExperienceTree;
+  /** @deprecated in favor of assemblies */
+  designComponents?: ExperienceUsedComponents;
+  assemblies?: ExperienceUsedComponents;
+  locale: string;
+  /** @deprecated maybe? */
+  defaultLocaleCode?: string;
+  changedNode?: ExperienceTreeNode;
+  changedValueType?: SelectedValueTypes;
+};
+
+export type ComponentDraggingChangedPayload = {
+  isDragging: boolean;
+};
+
+export type IncomingComponentDragCanceledPayload = undefined;
+export type ComponentDragStartedPayload = { id: string; isAssembly: boolean };
+export type ComponentDragEndedPayload = undefined;
+export type IncomingComponentMoveEndedPayload = {
+  mouseX: number;
+  mouseY: number;
+};
+export type CanvasResizedPayload = {
+  selectedNodeId: string;
+};
+export type SelectComponentPayload = {
+  selectedNodeId: string;
+};
+export type HoverComponentPayload = {
+  hoveredNodeId: string;
+};
+export type UpdatedEntityPayload = {
+  entity: ManagementEntity;
+  shouldRerender?: boolean;
+};
+export type AssembliesAddedPayload = {
+  assembly: ManagementEntity;
+  assemblyDefinition: ComponentDefinition;
+};
+export type AssembliesRegisteredPayload = {
+  assemblies: ComponentDefinition[];
+};
+export type IncomingMouseMovePayload = {
+  mouseX: number;
+  mouseY: number;
+};
+export type RequestedEntitiesPayload = {
+  entities: ManagementEntity[];
+};
+
+type INCOMING_EVENT_PAYLOADS = {
+  requestEditorMode: RequestEditorModePayload;
+  requestReadOnlyMode: RequestReadOnlyModePayload;
+  componentTreeUpdated: ExperienceUpdatedPayload;
+  componentDraggingChanged: ComponentDraggingChangedPayload;
+  componentDragCanceled: IncomingComponentDragCanceledPayload;
+  componentDragStarted: ComponentDragStartedPayload;
+  componentDragEnded: ComponentDragEndedPayload;
+  componentMoveEnded: IncomingComponentMoveEndedPayload;
+  canvasResized: CanvasResizedPayload;
+  selectComponent: SelectComponentPayload;
+  hoverComponent: HoverComponentPayload;
+  updatedEntity: UpdatedEntityPayload;
+  assembliesAdded: AssembliesAddedPayload;
+  assembliesRegistered: AssembliesRegisteredPayload;
+  mouseMove: IncomingMouseMovePayload;
+  REQUESTED_ENTITIES: RequestedEntitiesPayload;
+};
+
+export type IncomingMessage = {
+  [K in keyof INCOMING_EVENT_PAYLOADS]: {
+    eventType: K;
+    payload: INCOMING_EVENT_PAYLOADS[K];
+  };
+}[keyof INCOMING_EVENT_PAYLOADS];

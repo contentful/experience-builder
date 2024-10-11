@@ -45,7 +45,10 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: |
-            packages/components/styles.css
             packages/*/dist
             packages/*/build
+            packages/test-apps/react-vite/dist
+            packages/test-apps/nextjs/.next
+            packages/templates/nextjs-marketing-demo/.next
+            packages/templates/react-vite-ts/dist
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}

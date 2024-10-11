@@ -12,6 +12,7 @@ interface ColumnsEditorModeProps extends ColumnsBaseProps {
   cfColumns: string;
   node: ExperienceTreeNode;
   renderDropzone: (node: ExperienceTreeNode, props?: Record<string, unknown>) => React.ReactNode;
+  dragProps?: unknown;
 }
 
 interface ColumnsDeliveryModeProps extends ColumnsBaseProps {
@@ -23,14 +24,9 @@ interface SingleColumnEditorModeProps extends ColumnsBaseProps {
   node: ExperienceTreeNode;
   renderDropzone: (node: ExperienceTreeNode, props?: Record<string, unknown>) => React.ReactNode;
   cfColumnSpan: string;
-
-  wrapperClassName: string;
+  dragProps?: unknown;
   ['data-ctfl-draggable-id']: string;
-  Tooltip: React.ReactNode;
-  innerRef: (element?: HTMLElement | null | undefined) => void;
-  draggableProps: Record<string, unknown>;
-  dragHandleProps: Record<string, unknown>;
-  style: CSSProperties;
+  style?: CSSProperties;
   className: string;
   onMouseOver: (e: SyntheticEvent<Element, Event>) => void;
   onMouseOut: (e: SyntheticEvent<Element, Event>) => void;

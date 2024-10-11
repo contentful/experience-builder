@@ -14,12 +14,18 @@ export const fetchAllEntries = async ({
 }: {
   client: ContentfulClientApi<undefined>;
   ids: string[];
-  locale: string;
+  locale?: string;
   skip?: number;
   limit?: number;
   responseItems?: Entry[];
   responseIncludes?: MinimalEntryCollection['includes'];
-}) => {
+}): Promise<{
+  items: Entry[];
+  includes: {
+    Entry: Entry[];
+    Asset: Asset[];
+  };
+}> => {
   try {
     if (!client) {
       throw new Error(
@@ -111,11 +117,11 @@ export const fetchAllAssets = async ({
 }: {
   client: ContentfulClientApi<undefined>;
   ids: string[];
-  locale: string;
+  locale?: string;
   skip?: number;
   limit?: number;
   responseItems?: Asset[];
-}) => {
+}): Promise<{ items: Asset[] }> => {
   try {
     if (!client) {
       throw new Error(

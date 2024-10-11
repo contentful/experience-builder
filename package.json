@@ -7,13 +7,13 @@
   "homepage": "https://github.com/contentful/experience-builder#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/contentful/experience-builder.git"
+    "url": "git+https://github.com/contentful/experience-builder.git"
   },
   "bugs": {
     "url": "https://github.com/contentful/experience-builder/issues"
   },
   "workspaces": [
-    "packages/*"
+    "packages/**/*"
   ],
   "scripts": {
     "lint": "lerna run lint",

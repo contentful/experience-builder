@@ -6,7 +6,9 @@ import type {
   ExperienceTreeNode,
   ComponentPropertyValue,
   ExperienceFields,
+  ExperienceComponentSettings,
 } from '@contentful/experiences-core/types';
+import { deserializePatternVariables } from '@contentful/experiences-core';
 import type { Entry } from 'contentful';
 import {
   ASSEMBLY_BLOCK_NODE_TYPE,
@@ -18,15 +20,18 @@ export const checkIsAssemblyEntry = (entry: Entry): boolean => {
   return Boolean(entry.fields?.componentSettings);
 };
 
+/** While unfolding the assembly definition on the instance, this function will replace all
+ * ComponentValue in the definitions tree with the actual value on the instance. */
 export const deserializeAssemblyNode = ({
   node,
   nodeId,
   nodeLocation,
   parentId,
-  assemblyDataSource,
-  assemblyId,
-  assemblyComponentId,
-  assemblyUnboundValues,
+  patternDataSource,
+  patternUnboundValues,
+  patternVariableDefinitions,
+  patternId,
+  patternComponentId,
   componentInstanceProps,
   componentInstanceUnboundValues,
   componentInstanceDataSource,
@@ -35,48 +40,22 @@ export const deserializeAssemblyNode = ({
   nodeId: string;
   nodeLocation: string | null;
   parentId?: string;
-  assemblyDataSource: ExperienceDataSource;
-  assemblyUnboundValues: ExperienceUnboundValues;
-  assemblyId: string;
-  assemblyComponentId: string;
+  patternDataSource: ExperienceDataSource;
+  patternUnboundValues: ExperienceUnboundValues;
+  patternVariableDefinitions: ExperienceComponentSettings['variableDefinitions'];
+  patternId: string;
+  patternComponentId: string;
   componentInstanceProps: Record<string, ComponentPropertyValue>;
   componentInstanceUnboundValues: ExperienceUnboundValues;
   componentInstanceDataSource: ExperienceDataSource;
 }): ExperienceTreeNode => {
-  const childNodeVariable: Record<string, ComponentPropertyValue> = {};
-  const dataSource: ExperienceDataSource = {};
-  const unboundValues: ExperienceUnboundValues = {};
-
-  for (const [variableName, variable] of Object.entries(node.variables)) {
-    childNodeVariable[variableName] = variable;
-    if (variable.type === 'ComponentValue') {
-      const componentValueKey = variable.key;
-      const instanceProperty = componentInstanceProps[componentValueKey];
-
-      // For assembly, we look up the value in the assembly instance and
-      // replace the componentValue with that one.
-      if (instanceProperty?.type === 'UnboundValue') {
-        const componentInstanceValue = componentInstanceUnboundValues[instanceProperty.key];
-        unboundValues[instanceProperty.key] = componentInstanceValue;
-        childNodeVariable[variableName] = {
-          type: 'UnboundValue',
-          key: instanceProperty.key,
-        };
-      } else if (instanceProperty?.type === 'BoundValue') {
-        const [, dataSourceKey] = instanceProperty.path.split('/');
-        const componentInstanceValue = componentInstanceDataSource[dataSourceKey];
-        dataSource[dataSourceKey] = componentInstanceValue;
-        childNodeVariable[variableName] = {
-          type: 'BoundValue',
-          path: instanceProperty.path,
-        };
-      } else if (instanceProperty?.type === 'HyperlinkValue') {
-        const componentInstanceValue = componentInstanceDataSource[instanceProperty.linkTargetKey];
-        dataSource[instanceProperty.linkTargetKey] == componentInstanceValue;
-        childNodeVariable[variableName] = instanceProperty;
-      }
-    }
-  }
+  const { childNodeVariable, dataSource, unboundValues } = deserializePatternVariables({
+    nodeVariables: node.variables,
+    componentInstanceProps,
+    componentInstanceUnboundValues,
+    componentInstanceDataSource,
+    patternVariableDefinitions,
+  });
 
   const isAssembly = assembliesRegistry.has(node.definitionId);
 
@@ -85,13 +64,14 @@ export const deserializeAssemblyNode = ({
       nodeLocation === null ? `${childIndex}` : nodeLocation + '_' + childIndex;
     return deserializeAssemblyNode({
       node: child,
-      nodeId: `${assemblyComponentId}---${newNodeLocation}`,
-      parentId: nodeId,
+      nodeId: `${patternComponentId}---${newNodeLocation}`,
       nodeLocation: newNodeLocation,
-      assemblyId,
-      assemblyDataSource,
-      assemblyComponentId,
-      assemblyUnboundValues,
+      parentId: nodeId,
+      patternDataSource,
+      patternUnboundValues,
+      patternVariableDefinitions,
+      patternId,
+      patternComponentId,
       componentInstanceProps,
       componentInstanceUnboundValues,
       componentInstanceDataSource,
@@ -105,11 +85,13 @@ export const deserializeAssemblyNode = ({
     data: {
       id: nodeId,
       assembly: {
-        id: assemblyId,
-        componentId: assemblyComponentId,
+        id: patternId,
+        componentId: patternComponentId,
         nodeLocation: nodeLocation || null,
       },
       blockId: node.definitionId,
+      slotId: node.slotId,
+      displayName: node.displayName,
       props: childNodeVariable,
       dataSource,
       unboundValues,
@@ -153,6 +135,14 @@ export const resolveAssembly = ({
     console.warn(`Component tree for assembly with ID '${componentId}' not found`, {
       componentFields,
     });
+    return node;
+  }
+
+  if (!componentFields.componentSettings?.variableDefinitions) {
+    console.warn(`Component settings for assembly with ID '${componentId}' not found`, {
+      componentFields,
+    });
+    return node;
   }
 
   const deserializedNode = deserializeAssemblyNode({
@@ -164,10 +154,11 @@ export const resolveAssembly = ({
     nodeLocation: null,
     nodeId: node.data.id,
     parentId: node.parentId,
-    assemblyDataSource: {},
-    assemblyId: assembly.sys.id,
-    assemblyComponentId: node.data.id,
-    assemblyUnboundValues: componentFields.unboundValues,
+    patternDataSource: {},
+    patternId: assembly.sys.id,
+    patternComponentId: node.data.id,
+    patternUnboundValues: componentFields.unboundValues,
+    patternVariableDefinitions: componentFields.componentSettings!.variableDefinitions,
     componentInstanceProps: node.data.props,
     componentInstanceUnboundValues: node.data.unboundValues,
     componentInstanceDataSource: node.data.dataSource,

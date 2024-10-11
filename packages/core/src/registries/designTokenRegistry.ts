@@ -3,13 +3,47 @@ import { builtInStyles, optionalBuiltInStyles } from '../definitions/styles';
 
 export let designTokensRegistry: DesignTokensDefinition = {};
 
+// This function is used to ensure that the composite values are valid since composite values are optional.
+// Therefore only border and in the future text related design tokens are/will be checked in this funciton.
+// Ensuring values for simple key-value design tokens are not neccessary since they are required via typescript.
+const ensureValidCompositeValues = (designTokenDefinition: DesignTokensDefinition) => {
+  // Text token validation
+  if (designTokenDefinition.text) {
+    for (const textKey in designTokenDefinition.text) {
+      const textValue = designTokenDefinition.text[textKey];
+      designTokenDefinition.text[textKey] = {
+        emphasis: textValue.emphasis || 'none',
+        fontSize: textValue.fontSize || '16px',
+        case: textValue.case || 'normal',
+        fontWeight: textValue.fontWeight || '400',
+        lineHeight: textValue.lineHeight || '20px',
+        letterSpacing: textValue.letterSpacing || '0px',
+        color: textValue.color || '#000000',
+      };
+    }
+  }
+
+  // Border validation
+  if (designTokenDefinition.border) {
+    for (const borderKey in designTokenDefinition.border) {
+      const borderValue = designTokenDefinition.border[borderKey];
+      designTokenDefinition.border[borderKey] = {
+        width: borderValue.width || '1px',
+        style: borderValue.style || 'solid',
+        color: borderValue.color || '#000000',
+      };
+    }
+  }
+  return designTokenDefinition;
+};
+
 /**
  * Register design tokens styling
  * @param designTokenDefinition - {[key:string]: Record<string, string>}
  * @returns void
  */
 export const defineDesignTokens = (designTokenDefinition: DesignTokensDefinition) => {
-  Object.assign(designTokensRegistry, designTokenDefinition);
+  Object.assign(designTokensRegistry, ensureValidCompositeValues(designTokenDefinition));
 };
 
 const templateStringRegex = /\${(.+?)}/g;

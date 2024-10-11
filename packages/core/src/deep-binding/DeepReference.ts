@@ -40,12 +40,11 @@ export class DeepReference {
   /**
    * Extracts referent from the path, using EntityStore as source of
    * entities during the resolution path.
-   * TODO: should it be called `extractLeafReferent` ? or `followToLeafReferent`
    */
   extractReferent(entityStore: EntityStoreBase): Link<'Asset' | 'Entry'> | undefined {
     const headEntity = entityStore.getEntityFromLink(this.entityLink);
 
-    const maybeReferentLink = headEntity!.fields[this.field] as
+    const maybeReferentLink = headEntity?.fields[this.field] as
       | Link<'Entry'>
       | Link<'Asset'>
       | undefined

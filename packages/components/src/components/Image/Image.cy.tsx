@@ -27,9 +27,8 @@ describe('Image', () => {
 
   it('renders default image when no src or cfImageAsset are specified', () => {
     cy.mount(<Image />);
-    cy.get('.cf-no-image').should('exist');
-    cy.get('.cf-no-image img').should('exist');
-    cy.get('.cf-no-image svg').should('exist');
+    cy.get('img.cf-placeholder-image').should('exist');
+    cy.get('svg.cf-placeholder-icon').should('exist');
   });
 
   it('renders at the proper width', () => {

@@ -40,6 +40,13 @@ export const entries: Entry[] = [
     },
     fields: {
       title: 'Entry 1',
+      logo: {
+        sys: {
+          id: entityIds.ASSET1,
+          type: 'Link',
+          linkType: 'Asset',
+        },
+      },
     },
     metadata: {
       tags: [],
@@ -113,6 +120,13 @@ export const assets: Asset[] = [
         url: 'https://test.com/test.jpg',
         fileName: 'example.jpg',
         contentType: '',
+        details: {
+          size: 3147977,
+          image: {
+            width: 1024,
+            height: 1024,
+          },
+        },
       } as AssetFile,
     },
     metadata: {

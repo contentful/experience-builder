@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IncomingEvent } from '@/types';
-import { INCOMING_EVENTS, PostMessageMethods } from '@/constants';
-
-export type VisualEditorMessagePayload = {
-  source: string;
-  eventType: IncomingEvent;
-  payload: any;
-};
+import { IncomingMessage } from '@/types';
+import { INCOMING_EVENTS, StudioCanvasMode, PostMessageMethods } from '@/constants';
 
 class ParseError extends Error {
   constructor(message: string) {
@@ -38,7 +32,7 @@ export const doesMismatchMessageSchema = (event: MessageEvent): false | string =
   }
 };
 
-export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload => {
+export const tryParseMessage = (event: MessageEvent): IncomingMessage => {
   if (!event.data) {
     throw new ParseError('Field event.data is missing');
   }
@@ -75,17 +69,17 @@ export const tryParseMessage = (event: MessageEvent): VisualEditorMessagePayload
     }
   }
 
-  return eventData;
+  return eventData as IncomingMessage;
 };
 
 export const validateExperienceBuilderConfig = ({
   locale,
-  isEditorMode,
+  mode,
 }: {
   locale: string;
-  isEditorMode: boolean;
+  mode: StudioCanvasMode;
 }) => {
-  if (isEditorMode) {
+  if (mode === StudioCanvasMode.EDITOR || mode === StudioCanvasMode.READ_ONLY) {
     return;
   }
 

@@ -2,12 +2,12 @@ export const SCROLL_STATES = {
   Start: 'scrollStart',
   IsScrolling: 'isScrolling',
   End: 'scrollEnd',
-};
+} as const;
 
 export const OUTGOING_EVENTS = {
   Connected: 'connected',
   DesignTokens: 'registerDesignTokens',
-  HoveredSection: 'hoveredSection',
+  RegisteredBreakpoints: 'registeredBreakpoints',
   MouseMove: 'mouseMove',
   NewHoveredElement: 'newHoveredElement',
   ComponentSelected: 'componentSelected',
@@ -18,16 +18,18 @@ export const OUTGOING_EVENTS = {
   ComponentMoved: 'componentMoved',
   CanvasReload: 'canvasReload',
   UpdateSelectedComponentCoordinates: 'updateSelectedComponentCoordinates',
-  UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
   ComponentMoveStarted: 'componentMoveStarted',
   ComponentMoveEnded: 'componentMoveEnded',
   OutsideCanvasClick: 'outsideCanvasClick',
-};
+  SDKFeatures: 'sdkFeatures',
+  RequestEntities: 'REQUEST_ENTITIES',
+} as const;
 
 export const INCOMING_EVENTS = {
   RequestEditorMode: 'requestEditorMode',
+  RequestReadOnlyMode: 'requestReadOnlyMode',
   ExperienceUpdated: 'componentTreeUpdated',
   ComponentDraggingChanged: 'componentDraggingChanged',
   ComponentDragCanceled: 'componentDragCanceled',
@@ -40,18 +42,29 @@ export const INCOMING_EVENTS = {
   UpdatedEntity: 'updatedEntity',
   AssembliesAdded: 'assembliesAdded',
   AssembliesRegistered: 'assembliesRegistered',
-  InitEditor: 'initEditor',
   MouseMove: 'mouseMove',
-};
+  RequestedEntities: 'REQUESTED_ENTITIES',
+} as const;
 
 export const INTERNAL_EVENTS = {
   ComponentsRegistered: 'cfComponentsRegistered',
   VisualEditorInitialize: 'cfVisualEditorInitialize',
-};
+} as const;
 
 export const VISUAL_EDITOR_EVENTS = {
   Ready: 'cfVisualEditorReady',
 };
+
+/**
+ * These modes are ONLY intended to be internally used within the context of
+ * editing an experience inside of Contentful Studio. i.e. these modes
+ * intentionally do not include preview/delivery modes.
+ */
+export enum StudioCanvasMode {
+  READ_ONLY = 'readOnlyMode',
+  EDITOR = 'editorMode',
+  NONE = 'none',
+}
 
 export const VISUAL_EDITOR_CONTAINER_ID = 'cf-visual-editor';
 export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component';
@@ -106,6 +119,7 @@ export const ASSEMBLY_BLOCK_NODE_TYPE = 'assemblyBlock';
 export const ASSEMBLY_NODE_TYPES = [ASSEMBLY_NODE_TYPE, ASSEMBLY_BLOCK_NODE_TYPE];
 export const LATEST_SCHEMA_VERSION = '2023-09-28';
 export const CF_STYLE_ATTRIBUTES = [
+  'cfVisibility',
   'cfHorizontalAlignment',
   'cfVerticalAlignment',
   'cfMargin',
@@ -120,6 +134,7 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageOptions',
   'cfFlexDirection',
   'cfFlexWrap',
+  'cfFlexReverse',
   'cfBorder',
   'cfBorderRadius',
   'cfGap',

@@ -3,6 +3,137 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.0](https://github.com/contentful/experience-builder/compare/v1.18.0-beta.0...v1.18.0) (2024-10-10)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.17.1](https://github.com/contentful/experience-builder/compare/v1.17.1-beta.0...v1.17.1) (2024-10-03)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.17.0](https://github.com/contentful/experience-builder/compare/v1.17.0-beta.1...v1.17.0) (2024-09-30)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.16.1](https://github.com/contentful/experience-builder/compare/v1.16.1-beta.1...v1.16.1) (2024-09-25)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.16.0](https://github.com/contentful/experience-builder/compare/v1.16.0-beta.0...v1.16.0) (2024-09-17)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.15.1](https://github.com/contentful/experience-builder/compare/v1.15.0...v1.15.1) (2024-09-12)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.15.0](https://github.com/contentful/experience-builder/compare/v1.14.0...v1.15.0) (2024-09-11)
+
+### Features
+
+- introduce rendering cfVisibility in SDK ([d53a8d2](https://github.com/contentful/experience-builder/commit/d53a8d2cf1f810cc0e5587d28abe1c19636fcad5))
+
+### Bug Fixes
+
+- assemblies incorrectly rendered on initial drop [ALT-1220] ([#742](https://github.com/contentful/experience-builder/issues/742)) ([fbf3d88](https://github.com/contentful/experience-builder/commit/fbf3d889e0a57b2f654bf45d78c2acbfd05af7e1))
+- **core:** resolving design values [ALT-1222] ([#744](https://github.com/contentful/experience-builder/issues/744)) ([93c9cc5](https://github.com/contentful/experience-builder/commit/93c9cc509f6e653b6bb4faaa44cb1f600b23fa3e))
+- dont suppress errors in SDK code but only custom code ([5f3fa19](https://github.com/contentful/experience-builder/commit/5f3fa1994bba392c6f39ea4ade411dc4c6352660))
+- only fallback for not defined breakpoint values ([100fd98](https://github.com/contentful/experience-builder/commit/100fd98b40bf813bac3434f5ad04ffe74fbde124))
+
+## [1.14.0](https://github.com/contentful/experience-builder/compare/v1.14.0-beta.0...v1.14.0) (2024-09-10)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.13.0](https://github.com/contentful/experience-builder/compare/v1.13.0-beta.0...v1.13.0) (2024-09-05)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.12.0](https://github.com/contentful/experience-builder/compare/v1.12.0-beta.0...v1.12.0) (2024-08-21)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.11.2](https://github.com/contentful/experience-builder/compare/v1.11.2-beta.0...v1.11.2) (2024-07-31)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.11.1](https://github.com/contentful/experience-builder/compare/v1.11.1-beta.0...v1.11.1) (2024-07-19)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.11.0](https://github.com/contentful/experience-builder/compare/v1.11.0-beta.0...v1.11.0) (2024-07-19)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.10.0](https://github.com/contentful/experience-builder/compare/v1.10.0-beta.0...v1.10.0) (2024-07-11)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.9.0](https://github.com/contentful/experience-builder/compare/v1.9.0-beta.0...v1.9.0) (2024-06-28)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.8.2](https://github.com/contentful/experience-builder/compare/v1.8.2-beta.0...v1.8.2) (2024-06-27)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.8.1](https://github.com/contentful/experience-builder/compare/v1.8.1-beta.0...v1.8.1) (2024-06-24)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.8.0](https://github.com/contentful/experience-builder/compare/v1.8.0-beta.0...v1.8.0) (2024-06-17)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.7.1](https://github.com/contentful/experience-builder/compare/v1.7.1-beta.0...v1.7.1) (2024-06-11)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.7.0](https://github.com/contentful/experience-builder/compare/v1.7.0-beta.0...v1.7.0) (2024-06-07)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.6.0](https://github.com/contentful/experience-builder/compare/v1.6.0-beta.0...v1.6.0) (2024-06-03)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.5.2](https://github.com/contentful/experience-builder/compare/v1.5.2-beta.0...v1.5.2) (2024-05-30)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.5.1](https://github.com/contentful/experience-builder/compare/v1.5.1-beta.2...v1.5.1) (2024-05-27)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.5.1-beta.2](https://github.com/contentful/experience-builder/compare/v1.5.1-beta.1...v1.5.1-beta.2) (2024-05-27)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.5.1-beta.1](https://github.com/contentful/experience-builder/compare/v1.5.1-beta.0...v1.5.1-beta.1) (2024-05-27)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+## [1.5.1-beta.0](https://github.com/contentful/experience-builder/compare/v1.5.0...v1.5.1-beta.0) (2024-05-27)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+# [1.5.0](https://github.com/contentful/experience-builder/compare/v1.5.0-beta.0...v1.5.0) (2024-05-16)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+# [1.5.0-beta.0](https://github.com/contentful/experience-builder/compare/v1.4.0...v1.5.0-beta.0) (2024-05-16)
+
+### Bug Fixes
+
+- add maxWidth to list with design tokens ([876c927](https://github.com/contentful/experience-builder/commit/876c92721ca9d98a898039c4bec1142ec068ac3c))
+
+# [1.4.0](https://github.com/contentful/experience-builder/compare/v1.4.0-beta.0...v1.4.0) (2024-05-15)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
+# [1.4.0-beta.0](https://github.com/contentful/experience-builder/compare/v1.3.0...v1.4.0-beta.0) (2024-05-15)
+
+**Note:** Version bump only for package @contentful/experiences-core
+
 # [1.3.0](https://github.com/contentful/experience-builder/compare/v1.3.0-beta.0...v1.3.0) (2024-05-06)
 
 **Note:** Version bump only for package @contentful/experiences-core

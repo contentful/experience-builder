@@ -89,7 +89,6 @@ export const ButtonComponentDefinition: ComponentDefinition = {
     url: {
       displayName: 'URL',
       type: 'Hyperlink',
-      defaultValue: '/',
     },
     target: {
       displayName: 'Target',

@@ -1,9 +1,10 @@
 import { useFetchBySlug, UseFetchBySlugArgs } from './useFetchBySlug';
 import { EntityStore } from '@contentful/experiences-core';
 import { renderHook, waitFor } from '@testing-library/react';
-import { compositionEntry } from '../../test/__fixtures__/composition';
+import { experienceEntry } from '../../test/__fixtures__/composition';
 import { entries, assets } from '../../test/__fixtures__/entities';
 import type { ContentfulClientApi, Entry } from 'contentful';
+import { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
 const experienceTypeId = 'layout';
 const localeCode = 'en-US';
@@ -16,7 +17,7 @@ describe('useFetchBySlug', () => {
     clientMock = {
       getEntries: jest.fn().mockImplementation((_query) => {
         // { content_type: 'layout', locale: 'en-US', 'fields.slug': 'hello-world' }
-        return Promise.resolve({ items: [compositionEntry] });
+        return Promise.resolve({ items: [experienceEntry] });
       }),
       getAssets: jest.fn().mockResolvedValue({ items: assets }),
       withoutLinkResolution: {
@@ -58,11 +59,11 @@ describe('useFetchBySlug', () => {
       error: undefined,
       experience: { hyperlinkPattern: undefined },
       isLoading: true,
-      isEditorMode: false,
+      mode: StudioCanvasMode.NONE,
     });
 
     const entityStore = new EntityStore({
-      experienceEntry: compositionEntry as unknown as Entry,
+      experienceEntry: experienceEntry as unknown as Entry,
       entities: [...entries, ...assets],
       locale: localeCode,
     });
@@ -92,7 +93,7 @@ describe('useFetchBySlug', () => {
 
       expect(result.current).toEqual({
         experience: result.current.experience,
-        isEditorMode: false,
+        mode: StudioCanvasMode.NONE,
         isLoading: false,
         error: undefined,
       });
@@ -120,7 +121,7 @@ describe('useFetchBySlug', () => {
       if ('sys.id[in]' in data) {
         return Promise.resolve({ items: entries });
       }
-      return Promise.resolve({ items: [compositionEntry] });
+      return Promise.resolve({ items: [experienceEntry] });
     });
 
     rerender({ ...initialProps, slug: 'hello-world' });
@@ -131,7 +132,7 @@ describe('useFetchBySlug', () => {
   it('should return an error if multiple experience entries were found, then when slug changes to only one entry, then the error should be undefined', async () => {
     clientMock.getEntries = jest
       .fn()
-      .mockResolvedValue({ items: [compositionEntry, compositionEntry] });
+      .mockResolvedValue({ items: [experienceEntry, experienceEntry] });
     const initialProps: UseFetchBySlugArgs = {
       client: clientMock,
       slug,
@@ -151,7 +152,7 @@ describe('useFetchBySlug', () => {
     // Reset stub
     clientMock.getEntries = jest
       .fn()
-      .mockResolvedValue({ items: [{ ...compositionEntry, slug: 'hello-world2' }] });
+      .mockResolvedValue({ items: [{ ...experienceEntry, slug: 'hello-world2' }] });
 
     rerender({ ...initialProps, slug: 'hello-world2' });
 

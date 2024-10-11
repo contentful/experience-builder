@@ -1,5 +1,9 @@
 import React from 'react';
-import { containerDefinition, sectionDefinition } from '@contentful/experiences-core';
+import {
+  containerDefinition,
+  defineBreakpoints,
+  sectionDefinition,
+} from '@contentful/experiences-core';
 import {
   INTERNAL_EVENTS,
   CONTENTFUL_COMPONENTS,
@@ -8,6 +12,7 @@ import {
 } from '@contentful/experiences-core/constants';
 import * as registry from './componentRegistry';
 import type { ComponentRegistration } from '@contentful/experiences-core/types';
+import { SDK_VERSION } from '../sdkVersion';
 
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>;
@@ -142,7 +147,7 @@ describe('component registration', () => {
       expect(variableKeys).not.toContain('cfMargin');
     });
 
-    it('should apply fallback to group: content for variables that have it undefined', () => {
+    it('should contain cfVisibility property by default', () => {
       const definitionId = 'TestComponent';
 
       registry.defineComponents([
@@ -161,12 +166,11 @@ describe('component registration', () => {
         },
       ]);
 
-      const definition = registry.getComponentRegistration(definitionId);
-      expect(definition).toBeDefined();
+      const componentRegistration = registry.getComponentRegistration(definitionId);
+      expect(componentRegistration).toBeDefined();
 
-      for (const variable of Object.values(definition!.definition.variables)) {
-        expect(variable.group).toBe('content');
-      }
+      const variableKeys = Object.keys(componentRegistration!.definition.variables);
+      expect(variableKeys).toContain('cfVisibility');
     });
   });
 });
@@ -336,5 +340,100 @@ describe('sendRegisteredComponentsMessage', () => {
         expect(definition).not.toHaveProperty('component');
       }
     }
+  });
+});
+
+describe('sendConnectedEventWithRegisteredComponents', () => {
+  beforeEach(() => {
+    jest.spyOn(window, 'postMessage');
+    jest.spyOn(window, 'dispatchEvent');
+  });
+
+  afterEach(() => {
+    registry.resetComponentRegistry();
+  });
+
+  it('should send connected event with component definitions, breakpoints, and design tokens ', () => {
+    const definitionId = 'TestComponent';
+    registry.defineComponents([
+      {
+        component: TestComponent,
+        definition: {
+          id: definitionId,
+          name: 'TestComponent',
+          builtInStyles: [],
+          variables: {
+            isChecked: {
+              type: 'Boolean',
+            },
+          },
+        },
+      },
+    ]);
+
+    const customBreakpoints = [
+      {
+        id: 'test-desktop',
+        query: '*',
+        displayName: 'All Sizes',
+        previewSize: '100%',
+      },
+      {
+        id: 'test-tablet',
+        query: '<982px',
+        displayName: 'Tablet',
+        previewSize: '820px',
+      },
+      {
+        id: 'test-mobile',
+        query: '<576px',
+        displayName: 'Mobile',
+        previewSize: '390px',
+      },
+    ];
+
+    defineBreakpoints(customBreakpoints);
+
+    registry.sendConnectedEventWithRegisteredComponents();
+
+    expect(window.postMessage).toHaveBeenNthCalledWith(
+      1,
+      {
+        source: 'customer-app',
+        eventType: OUTGOING_EVENTS.Connected,
+        payload: {
+          sdkVersion: SDK_VERSION,
+          definitions: Array.from(registry.componentRegistry.values()).map(
+            (registration) => registration.definition,
+          ),
+        },
+      },
+      '*',
+    );
+
+    expect(window.postMessage).toHaveBeenNthCalledWith(
+      2,
+      {
+        source: 'customer-app',
+        eventType: OUTGOING_EVENTS.RegisteredBreakpoints,
+        payload: {
+          breakpoints: customBreakpoints,
+        },
+      },
+      '*',
+    );
+
+    expect(window.postMessage).toHaveBeenNthCalledWith(
+      3,
+      {
+        source: 'customer-app',
+        eventType: OUTGOING_EVENTS.DesignTokens,
+        payload: {
+          designTokens: {},
+          resolvedCssVariables: {},
+        },
+      },
+      '*',
+    );
   });
 });

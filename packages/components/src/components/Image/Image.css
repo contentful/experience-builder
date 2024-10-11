@@ -1,25 +1,12 @@
 @import url('../variables.css');
 
-.cf-no-image {
-  position: relative;
-}
-
-.cf-no-image img {
+img.cf-placeholder-image {
   background-color: var(--cf-color-gray100);
   outline-offset: -2px;
   outline: 2px solid rgba(var(--cf-color-gray400-rgb), 0.5);
 }
 
-[data-ctfl-draggable-id] .cf-no-image {
-  width: 100%;
-  height: 100%;
-}
-
-[data-ctfl-draggable-id] .cf-no-image img {
-  width: 100%;
-}
-
-.cf-no-image svg {
+svg.cf-placeholder-icon {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -30,6 +17,6 @@
   max-width: 100%;
 }
 
-.cf-no-image svg path {
+svg.cf-placeholder-icon path {
   fill: var(--cf-color-gray400);
 }

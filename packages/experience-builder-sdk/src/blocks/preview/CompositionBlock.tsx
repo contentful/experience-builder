@@ -1,9 +1,11 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
-import { omit } from 'lodash-es';
-import { EntityStore, resolveHyperlinkPattern } from '@contentful/experiences-core';
 import {
-  CF_STYLE_ATTRIBUTES,
+  EntityStore,
+  resolveHyperlinkPattern,
+  sanitizeNodeProps,
+} from '@contentful/experiences-core';
+import {
   CONTENTFUL_COMPONENTS,
   HYPERLINK_DEFAULT_PATTERN,
 } from '@contentful/experiences-core/constants';
@@ -18,14 +20,15 @@ import { createAssemblyRegistration, getComponentRegistration } from '../../core
 import { checkIsAssemblyNode, transformBoundContentValue } from '@contentful/experiences-core';
 import { useClassName } from '../../hooks/useClassName';
 import {
+  Assembly,
   Columns,
   ContentfulContainer,
   SingleColumn,
 } from '@contentful/experiences-components-react';
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
-import { Assembly } from '../../components/Assembly';
 import { Entry } from 'contentful';
+import PreviewUnboundImage from './PreviewUnboundImage';
 
 type CompositionBlockProps = {
   node: ComponentTreeNode;
@@ -33,6 +36,7 @@ type CompositionBlockProps = {
   entityStore: EntityStore;
   hyperlinkPattern?: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
+  getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
 };
 
 export const CompositionBlock = ({
@@ -41,6 +45,7 @@ export const CompositionBlock = ({
   entityStore,
   hyperlinkPattern,
   resolveDesignValue,
+  getPatternChildNodeClassName,
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
     () =>
@@ -75,22 +80,34 @@ export const CompositionBlock = ({
   const nodeProps = useMemo(() => {
     // Don't enrich the assembly wrapper node with props
     if (!componentRegistration || isAssembly) {
-      return {};
+      return {
+        cfSsrClassName: node.variables.cfSsrClassName
+          ? resolveDesignValue(
+              (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+              'cfSsrClassName',
+            )
+          : undefined,
+      };
     }
 
     const propMap: Record<string, PrimitiveValue> = {
-      cfSsrClassName: node.variables.cfSsrClassName
-        ? resolveDesignValue(
-            (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
-            'cfSsrClassName',
-          )
-        : undefined,
+      // @ts-expect-error -- node id is being generated in ssrStyles.ts, currently missing ComponentTreeNode type
+      cfSsrClassName: node.id
+        ? // @ts-expect-error -- node id is being generated in ssrStyles.ts, currently missing ComponentTreeNode type
+          getPatternChildNodeClassName?.(node.id)
+        : node.variables.cfSsrClassName
+          ? resolveDesignValue(
+              (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+              'cfSsrClassName',
+            )
+          : undefined,
     };
 
-    return Object.entries(componentRegistration.definition.variables).reduce(
+    const props = Object.entries(componentRegistration.definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variable = node.variables[variableName];
         if (!variable) return acc;
+
         switch (variable.type) {
           case 'DesignValue':
             acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
@@ -108,7 +125,7 @@ export const CompositionBlock = ({
               variableDefinition,
               variable.path,
             );
-            acc[variableName] = value;
+            acc[variableName] = value ?? variableDefinition.defaultValue;
             break;
           }
 
@@ -130,12 +147,14 @@ export const CompositionBlock = ({
           }
           case 'UnboundValue': {
             const uuid = variable.key;
-            acc[variableName] = entityStore.unboundValues[uuid]?.value;
+            acc[variableName] =
+              entityStore.unboundValues[uuid]?.value ?? variableDefinition.defaultValue;
             break;
           }
           case 'ComponentValue':
             // We're rendering a pattern entry. Content cannot be set for ComponentValue type properties
             // directly in the pattern so we can safely use the default value
+            // This can either a design (style) or a content variable
             acc[variableName] = variableDefinition.defaultValue;
             break;
           default:
@@ -145,9 +164,29 @@ export const CompositionBlock = ({
       },
       propMap,
     );
+
+    if (componentRegistration.definition.slots) {
+      for (const slotId in componentRegistration.definition.slots) {
+        const slotNode = node.children.find((child) => child.slotId === slotId);
+        if (slotNode) {
+          props[slotId] = (
+            <CompositionBlock
+              node={slotNode}
+              locale={locale}
+              hyperlinkPattern={hyperlinkPattern}
+              entityStore={entityStore}
+              resolveDesignValue={resolveDesignValue}
+            />
+          );
+        }
+      }
+    }
+
+    return props;
   }, [
     componentRegistration,
     isAssembly,
+    node.children,
     node.variables,
     resolveDesignValue,
     entityStore,
@@ -163,11 +202,27 @@ export const CompositionBlock = ({
 
   const { component } = componentRegistration;
 
+  const _getPatternChildNodeClassName = (childNodeId: string) => {
+    if (isAssembly) {
+      // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
+      const classesForNode = node.variables.cfSsrClassName[childNodeId];
+      if (classesForNode) {
+        return resolveDesignValue(
+          (classesForNode as DesignValue).valuesByBreakpoint,
+          'cfSsrClassName',
+        ) as string;
+      }
+      return;
+    }
+    return getPatternChildNodeClassName?.(childNodeId);
+  };
+
   const children =
     componentRegistration.definition.children === true
       ? node.children.map((childNode: ComponentTreeNode, index) => {
           return (
             <CompositionBlock
+              getPatternChildNodeClassName={_getPatternChildNodeClassName}
               node={childNode}
               key={index}
               locale={locale}
@@ -211,14 +266,17 @@ export const CompositionBlock = ({
     );
   }
 
-  //List explicit style props that will end up being passed to the component
-  const stylesToKeep = ['cfImageAsset'];
-  const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
+  if (
+    node.definitionId === CONTENTFUL_COMPONENTS.image.id &&
+    node.variables.cfImageAsset?.type === 'UnboundValue'
+  ) {
+    return <PreviewUnboundImage node={node} nodeProps={nodeProps} component={component} />;
+  }
 
   return React.createElement(
     component,
     {
-      ...omit(nodeProps, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
+      ...sanitizeNodeProps(nodeProps),
       className,
     },
     children ?? (typeof nodeProps.children === 'string' ? nodeProps.children : null),

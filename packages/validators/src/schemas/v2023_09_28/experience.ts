@@ -1,6 +1,31 @@
 import { z } from 'zod';
 import { SchemaVersions } from '../schemaVersions';
-import { DefinitionPropertyTypeSchema, DefinitionPropertyKeySchema } from '../componentDefinition';
+
+export const DefinitionPropertyTypeSchema = z.enum([
+  'Text',
+  'RichText',
+  'Number',
+  'Date',
+  'Boolean',
+  'Location',
+  'Media',
+  'Object',
+  'Hyperlink',
+  'Array',
+  'Link',
+]);
+
+export const DefinitionPropertyKeySchema = z
+  .string()
+  .regex(/^[a-zA-Z0-9-_]{1,32}$/, { message: 'Property needs to match: /^[a-zA-Z0-9-_]{1,32}$/' });
+
+export const PrimitiveValueSchema = z.union([
+  z.string(),
+  z.boolean(),
+  z.number(),
+  z.record(z.any(), z.any()),
+  z.undefined(),
+]);
 
 const uuidKeySchema = z
   .string()
@@ -26,14 +51,6 @@ const DataSourceSchema = z.record(
   }),
 );
 
-const PrimitiveValueSchema = z.union([
-  z.string(),
-  z.boolean(),
-  z.number(),
-  z.record(z.any(), z.any()),
-  z.undefined(),
-]);
-
 const ValuesByBreakpointSchema = z.record(z.lazy(() => PrimitiveValueSchema));
 
 const DesignValueSchema = z
@@ -52,6 +69,7 @@ const HyperlinkValueSchema = z
   .object({
     type: z.literal('HyperlinkValue'),
     linkTargetKey: z.string(),
+    /** Allows to override parts of the URL, e.g. the locale */
     overrides: z.object({}).optional(),
   })
   .strict();
@@ -78,12 +96,13 @@ const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
 
-const BreakpointSchema = z
+export const BreakpointSchema = z
   .object({
     id: propertyKeySchema,
     query: z.string().regex(/^\*$|^<[0-9*]+px$/),
     previewSize: z.string(),
     displayName: z.string(),
+    displayIcon: z.enum(['desktop', 'tablet', 'mobile']).optional(),
   })
   .strict();
 
@@ -98,6 +117,7 @@ const UnboundValuesSchema = z.record(
 const BaseComponentTreeNodeSchema = z.object({
   definitionId: DefinitionPropertyKeySchema,
   displayName: z.string().optional(),
+  slotId: z.string().optional(),
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
 });
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
@@ -107,31 +127,35 @@ const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> = BaseComponentTreeN
   children: z.lazy(() => ComponentTreeNodeSchema.array()),
 });
 
-const ComponentSettingsSchema = z.object({
-  variableDefinitions: z.record(
-    z.string().regex(/^[a-zA-Z0-9-_]{1,54}$/), // Here the key is <variableName>_<nanoidId> so we need to allow for a longer length
-    z.object({
-      displayName: z.string().optional(),
-      type: DefinitionPropertyTypeSchema,
-      defaultValue: PrimitiveValueSchema.or(ComponentPropertyValueSchema).optional(),
-      description: z.string().optional(),
-      group: z.string().optional(),
-      validations: z
-        .object({
-          required: z.boolean().optional(),
-          format: z.literal('URL').optional(),
-          in: z
-            .array(
-              z.object({
-                value: z.union([z.string(), z.number()]),
-                displayName: z.string().optional(),
-              }),
-            )
-            .optional(),
-        })
+export const ComponentVariableSchema = z.object({
+  displayName: z.string().optional(),
+  type: DefinitionPropertyTypeSchema,
+  description: z.string().optional(),
+  group: z.string().optional(),
+  defaultValue: PrimitiveValueSchema.or(ComponentPropertyValueSchema).optional(),
+  validations: z
+    .object({
+      required: z.boolean().optional(),
+      format: z.literal('URL').optional(),
+      in: z
+        .array(
+          z.object({
+            value: z.union([z.string(), z.number()]),
+            displayName: z.string().optional(),
+          }),
+        )
         .optional(),
-    }),
-  ),
+    })
+    .optional(),
+});
+
+export const ComponentVariablesSchema = z.record(
+  z.string().regex(/^[a-zA-Z0-9-_]{1,54}$/), // Here the key is <variableName>_<nanoidId> so we need to allow for a longer length
+  ComponentVariableSchema,
+);
+
+const ComponentSettingsSchema = z.object({
+  variableDefinitions: ComponentVariablesSchema,
 });
 
 const UsedComponentsSchema = z.array(
@@ -144,11 +168,24 @@ const UsedComponentsSchema = z.array(
   }),
 );
 
-const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
-  if (!value.length || value[0].id !== 'desktop' || value[0].query !== '*') {
+export const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx) => {
+  if (!value.length || value[0].query !== '*') {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: `The first breakpoint should include the following attributes: { "id": "desktop", "query": "*" }`,
+      message: `The first breakpoint should include the following attributes: { "query": "*" }`,
+    });
+  }
+
+  const hasDuplicateIds = value.some((currentBreakpoint, currentBreakpointIndex) => {
+    // check if the current breakpoint id is found in the rest of the array
+    const breakpointIndex = value.findIndex((breakpoint) => breakpoint.id === currentBreakpoint.id);
+    return breakpointIndex !== currentBreakpointIndex;
+  });
+
+  if (hasDuplicateIds) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Breakpoint IDs must be unique`,
     });
   }
   // Extract the queries boundary by removing the special characters around it
@@ -224,4 +261,5 @@ export type PrimitiveValue = z.infer<typeof PrimitiveValueSchema>;
 export type DesignValue = z.infer<typeof DesignValueSchema>;
 export type BoundValue = z.infer<typeof BoundValueSchema>;
 export type UnboundValue = z.infer<typeof UnboundValueSchema>;
+export type HyperlinkValue = z.infer<typeof HyperlinkValueSchema>;
 export type ComponentValue = z.infer<typeof ComponentValueSchema>;

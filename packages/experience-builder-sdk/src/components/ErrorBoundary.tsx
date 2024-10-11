@@ -3,6 +3,8 @@ import { sendMessage } from '@contentful/experiences-core';
 import '../styles/ErrorBoundary.css';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
+('use client');
+
 export class ErrorBoundary extends React.Component<
   { children: ReactElement },
   { hasError: boolean; error: Error | null; errorInfo: ErrorInfo | null; showErrorDetails: boolean }

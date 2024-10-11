@@ -5,6 +5,7 @@ export { useFetchById, useFetchBySlug } from './hooks';
 export { defineComponents, maintainBasicComponentIdsWithoutPrefix } from './core/componentRegistry';
 export {
   defineDesignTokens,
+  defineBreakpoints,
   VisualEditorMode,
   fetchById,
   fetchBySlug,
@@ -16,13 +17,14 @@ export {
   CF_STYLE_ATTRIBUTES,
 } from '@contentful/experiences-core/constants';
 
-export { detachExperienceStyles } from './utils/ssrStyles';
-
 // Simple state store to store a few things that are needed across the SDK
 if (typeof window !== 'undefined') {
-  window.__EB__ = {
-    sdkVersion: SDK_VERSION,
-  };
+  if (!window.__EB__) {
+    window.__EB__ = {};
+  }
+  window.__EB__.sdkVersion = SDK_VERSION;
 }
 
-export type { ExternalSDKMode, ComponentDefinition } from '@contentful/experiences-core/types';
+export type { ComponentDefinition } from '@contentful/experiences-core/types';
+
+export { detachExperienceStyles } from '@contentful/experiences-core';

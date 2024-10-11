@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { EntityStore } from '@contentful/experiences-core';
+import { EntityStore, breakpointsRegistry } from '@contentful/experiences-core';
 import {
   componentRegistry,
   sendConnectedEventWithRegisteredComponents,
@@ -7,7 +7,7 @@ import {
   runRegisteredComponentValidations,
 } from '../core/componentRegistry';
 import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
-import { designTokensRegistry } from '@contentful/experiences-core';
+import { designTokensRegistry, runBreakpointsValidation } from '@contentful/experiences-core';
 
 type InitializeVisualEditorParams = {
   initialLocale: string;
@@ -24,6 +24,7 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
   useEffect(() => {
     if (!hasConnectEventBeenSent.current) {
       runRegisteredComponentValidations();
+      runBreakpointsValidation();
       // sending CONNECT but with the registered components now
       sendConnectedEventWithRegisteredComponents();
       hasConnectEventBeenSent.current = true;
@@ -56,6 +57,7 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
           detail: {
             componentRegistry,
             designTokens: designTokensRegistry,
+            breakpoints: breakpointsRegistry,
             locale,
             entities: initialEntities ?? [],
           },
