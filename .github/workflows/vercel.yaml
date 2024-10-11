@@ -69,7 +69,7 @@ jobs:
           fi
           vercel build --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-      - name: 'Deploy react-vite template site to Vercel'
+      - name: 'Deploy react vite template site to Vercel'
         env:
           VERCEL_PROJECT_ID: prj_HoAvIbgvZ3gYJDLCAaNsHIpBvI0k
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
