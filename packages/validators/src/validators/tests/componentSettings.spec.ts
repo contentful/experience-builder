@@ -74,7 +74,7 @@ describe('componentSettings', () => {
     expect(result.errors?.[0]).toEqual(expectedError);
   });
 
-  it('fails if componentSettings is used in conjuction with usedComponents', () => {
+  it('passes if componentSettings is used in conjuction with usedComponents', () => {
     const updatedPattern = {
       ...experiencePattern,
       fields: {
@@ -87,14 +87,14 @@ describe('componentSettings', () => {
 
     const result = validateExperienceFields(updatedPattern, schemaVersion);
 
-    const expectedError = {
-      name: 'custom',
-      details:
-        "'componentSettings' field cannot be used in conjunction with 'usedComponents' field",
-      path: ['componentSettings', 'en-US'],
-    };
+    expect(result.success).toBe(true);
+    expect(result.errors).toBeUndefined();
+  });
 
-    expect(result.success).toBe(false);
-    expect(result.errors).toEqual([expectedError]);
+  it('passes if componentSettings is used NOT in conjuction with usedComponents', () => {
+    const result = validateExperienceFields(experiencePattern, schemaVersion);
+
+    expect(result.success).toBe(true);
+    expect(result.errors).toBeUndefined();
   });
 });
