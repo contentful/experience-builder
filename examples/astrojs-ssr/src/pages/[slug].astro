@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
 import Experience from '../components/Experience';
 import { getExperience } from '../getExperience';
+import '../studio-config';
 
 const slug = Astro.params.slug || 'home-page';
 const isPreview = Astro.url.searchParams.has('isPreview', 'true');
