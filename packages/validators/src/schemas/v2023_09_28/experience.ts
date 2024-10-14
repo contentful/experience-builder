@@ -212,23 +212,6 @@ export const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx)
   }
 };
 
-const componentSettingsRefinement = (value, ctx: z.RefinementCtx) => {
-  const { componentSettings, usedComponents } = value as ExperienceFields;
-
-  if (!componentSettings || !usedComponents) {
-    return;
-  }
-  const localeKey = Object.keys(componentSettings ?? {})[0];
-
-  if (componentSettings[localeKey] !== undefined && usedComponents[localeKey] !== undefined) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `'componentSettings' field cannot be used in conjunction with 'usedComponents' field`,
-      path: ['componentSettings', localeKey],
-    });
-  }
-};
-
 const ComponentTreeSchema = z
   .object({
     breakpoints: z.array(BreakpointSchema).superRefine(breakpointsRefinement),
@@ -239,15 +222,13 @@ const ComponentTreeSchema = z
 
 const localeWrapper = (fieldSchema: any) => z.record(z.string(), fieldSchema);
 
-export const ExperienceFieldsCMAShapeSchema = z
-  .object({
-    componentTree: localeWrapper(ComponentTreeSchema),
-    dataSource: localeWrapper(DataSourceSchema),
-    unboundValues: localeWrapper(UnboundValuesSchema),
-    usedComponents: localeWrapper(UsedComponentsSchema).optional(),
-    componentSettings: localeWrapper(ComponentSettingsSchema).optional(),
-  })
-  .superRefine(componentSettingsRefinement);
+export const ExperienceFieldsCMAShapeSchema = z.object({
+  componentTree: localeWrapper(ComponentTreeSchema),
+  dataSource: localeWrapper(DataSourceSchema),
+  unboundValues: localeWrapper(UnboundValuesSchema),
+  usedComponents: localeWrapper(UsedComponentsSchema).optional(),
+  componentSettings: localeWrapper(ComponentSettingsSchema).optional(),
+});
 
 export type ExperienceFields = z.infer<typeof ExperienceFieldsCMAShapeSchema>;
 export type ExperienceDataSource = z.infer<typeof DataSourceSchema>;
