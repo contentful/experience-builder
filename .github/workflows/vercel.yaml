@@ -27,10 +27,6 @@ jobs:
       - name: Install dependencies
         run: |
           npm ci
-      - name: Build dependencies
-        run: |
-          npm run build --workspace=@contentful/experiences-sdk-react
-          npm run build --workspace=@contentful/experiences-components-react
       - name: Restore the build folders
         uses: actions/cache/restore@v4
         with:
@@ -85,3 +81,4 @@ jobs:
           fi
           vercel build --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+     
