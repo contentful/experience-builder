@@ -27,6 +27,12 @@ jobs:
       - name: Install dependencies
         run: |
           npm ci
+      - name: Build dependencies
+        run: |
+          npm run build --prefix ./packages/core
+          npm run build --prefix ./packages/components
+          npm run build --prefix ./packages/visual-editor
+          npm run build --prefix ./packages/experience-builder-sdk
       - name: Restore the build folders
         uses: actions/cache/restore@v4
         with:

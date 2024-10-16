@@ -8,7 +8,6 @@
     "start": "vite",
     "prebuild": "rimraf dist",
     "build": "tsc && vite build",
-    "build:vercel": "npm run build --prefix ../../core && npm run build --prefix ../../components && npm run build --prefix ../../visual-editor && npm run build --prefix ../../experience-builder-sdk && npm run build",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "preview": "vite preview",
