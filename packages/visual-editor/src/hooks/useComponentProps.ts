@@ -24,6 +24,7 @@ import type {
   DesignValue,
 } from '@contentful/experiences-core/types';
 import { CSSProperties, useMemo } from 'react';
+import type * as CSS from 'csstype';
 import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
@@ -262,6 +263,9 @@ export const useComponentProps = ({
       !isAssemblyBlock && {
         padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
       }),
+    ...(userIsDragging && {
+      flexDirection: cfStyles.flexDirection?.replace('-reverse', '') as CSS.Property.FlexDirection,
+    }),
   };
 
   const componentClass = useEditorModeClassName({
