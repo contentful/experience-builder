@@ -4,7 +4,7 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
-import ColorfulBox from './components/ColorfulBox';
+import ColorfulBox from './components/ColorfulBox/ColorfulBox';
 
 defineComponents([
   {

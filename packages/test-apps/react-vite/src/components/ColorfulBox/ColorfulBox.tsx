@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ColorfulBox.module.css';
-import { combineClasses } from '../utils/combineClasses';
+import { combineClasses } from '../../utils/combineClasses';
 
 type Props = { className?: string };
 
