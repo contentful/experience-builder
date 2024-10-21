@@ -11,7 +11,7 @@ Has a default class of `cf-heading`, which can be used to style the component.
 ## Usage
 
 ```tsx
-import { Heading } from '@contentful/experience-builder-components';
+import { Heading } from '@contentful/experiences-components-react';
 
 const MyPage = () => <Heading>Hello world</Heading>;
 ```

@@ -1,23 +1,22 @@
 import { onComponentDropped } from '@/communication/onComponentDrop';
 import { getItem } from './getItem';
-import type {
-  CompositionComponentNode,
-  CompositionTree,
-} from '@contentful/experience-builder-core/types';
+import type { ExperienceTreeNode, ExperienceTree } from '@contentful/experiences-core/types';
 import { generateId } from './generate-id';
 import { ROOT_ID } from '../types/constants';
 
 interface OnDropParams {
-  data: CompositionTree;
+  data: ExperienceTree;
   componentType: string;
   destinationZoneId: string;
   destinationIndex: number;
+  slotId?: string;
 }
 export const onDrop = ({
   destinationIndex,
   componentType,
   destinationZoneId,
   data,
+  slotId,
 }: OnDropParams) => {
   const parentId = destinationZoneId;
 
@@ -25,13 +24,14 @@ export const onDrop = ({
 
   const parentIsRoot = parentId === ROOT_ID;
 
-  const emptyComponentData: CompositionComponentNode = {
+  const emptyComponentData: ExperienceTreeNode = {
     type: 'block',
     parentId,
     children: [],
     data: {
       blockId: componentType,
       id: generateId(componentType),
+      slotId,
       breakpoints: [],
       dataSource: {},
       props: {},

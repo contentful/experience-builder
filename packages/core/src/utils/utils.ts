@@ -1,23 +1,23 @@
 import {
-  CompositionTree,
-  CompositionComponentNode,
+  ExperienceTree,
+  ExperienceTreeNode,
   StyleProps,
-  CompositionDataSource,
-  CompositionUnboundValues,
+  ExperienceDataSource,
+  ExperienceUnboundValues,
   ExperienceEntry,
   ComponentDefinition,
 } from '@/types';
 import { Entry } from 'contentful';
-import { ASSEMBLY_DEFAULT_CATEGORY, DESIGN_COMPONENT_DEFAULT_CATEGORY } from '@/constants';
+import { ASSEMBLY_DEFAULT_CATEGORY } from '@/constants';
 
 export const getDataFromTree = (
-  tree: CompositionTree
+  tree: ExperienceTree,
 ): {
-  dataSource: CompositionDataSource;
-  unboundValues: CompositionUnboundValues;
+  dataSource: ExperienceDataSource;
+  unboundValues: ExperienceUnboundValues;
 } => {
-  let dataSource: CompositionDataSource = {};
-  let unboundValues: CompositionUnboundValues = {};
+  let dataSource: ExperienceDataSource = {};
+  let unboundValues: ExperienceUnboundValues = {};
   const queue = [...tree.root.children];
 
   while (queue.length) {
@@ -41,8 +41,8 @@ export const getDataFromTree = (
 };
 
 type GetInsertionDataParams = {
-  dropReceiverNode: CompositionComponentNode;
-  dropReceiverParentNode: CompositionComponentNode;
+  dropReceiverNode: ExperienceTreeNode;
+  dropReceiverParentNode: ExperienceTreeNode;
   flexDirection?: StyleProps['cfFlexDirection'];
   isMouseAtTopBorder: boolean;
   isMouseAtBottomBorder: boolean;
@@ -53,7 +53,7 @@ type GetInsertionDataParams = {
 };
 
 type InsertionData = {
-  node: CompositionComponentNode;
+  node: ExperienceTreeNode;
   index: number;
 };
 
@@ -77,7 +77,7 @@ export const getInsertionData = ({
 
   if (isMouseAtTopBorder || isMouseAtBottomBorder) {
     const indexOfSectionInParentChildren = dropReceiverParentNode.children.findIndex(
-      (n) => n.data.id === dropReceiverNode.data.id
+      (n) => n.data.id === dropReceiverNode.data.id,
     );
     const APPEND_OUTSIDE = indexOfSectionInParentChildren + 1;
     const PREPEND_OUTSIDE = indexOfSectionInParentChildren;
@@ -92,7 +92,7 @@ export const getInsertionData = ({
   // if over one of the section indicators
   if (isOverTopIndicator || isOverBottomIndicator) {
     const indexOfSectionInParentChildren = dropReceiverParentNode.children.findIndex(
-      (n) => n.data.id === dropReceiverNode.data.id
+      (n) => n.data.id === dropReceiverNode.data.id,
     );
     const APPEND_OUTSIDE = indexOfSectionInParentChildren + 1;
     const PREPEND_OUTSIDE = indexOfSectionInParentChildren;
@@ -152,5 +152,4 @@ export const checkIsAssemblyEntry = (entry: Entry): boolean => {
 };
 
 export const checkIsAssemblyDefinition = (component?: ComponentDefinition) =>
-  component?.category === DESIGN_COMPONENT_DEFAULT_CATEGORY ||
   component?.category === ASSEMBLY_DEFAULT_CATEGORY;

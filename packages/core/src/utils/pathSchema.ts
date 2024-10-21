@@ -142,3 +142,18 @@ const chunkSegments = (
 
   return chunks.filter(excludeEmptyChunks);
 };
+
+export const lastPathNamedSegmentEq = (path: string, expectedName: string) => {
+  // `/key123/fields/featureImage/~locale/fields/file/~locale`
+  // ['', 'key123', 'fields', 'featureImage', '~locale', 'fields', 'file', '~locale']
+  const segments = path.split('/');
+
+  if (segments.length < 2) {
+    console.warn(
+      `[experiences-sdk-react] Attempting to check whether last named segment of the path (${path}) equals to '${expectedName}', but the path doesn't have enough segments.`,
+    );
+    return false;
+  }
+  const secondLast = segments[segments.length - 2]; // skipping trailing '~locale'
+  return secondLast === expectedName;
+};

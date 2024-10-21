@@ -7,32 +7,30 @@ import {
   gatherDeepReferencesFromTree,
   DeepReference,
   isLink,
-} from '@contentful/experience-builder-core';
+  EditorModeEntityStore,
+} from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
   SCROLL_STATES,
   PostMessageMethods,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import {
-  CompositionTree,
-  CompositionComponentNode,
-  CompositionComponentPropValue,
+  ExperienceTree,
   ComponentRegistration,
   Link,
-  CompositionDataSource,
+  ExperienceDataSource,
   ManagementEntity,
-} from '@contentful/experience-builder-core/types';
+  IncomingMessage,
+} from '@contentful/experiences-core/types';
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
-import dragState from '@/utils/dragState';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { Assembly } from '@contentful/experience-builder-components';
+import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
-import { sendHoveredComponentCoordinates } from '@/communication/sendHoveredComponentCoordinates';
 import { useEntityStore } from '@/store/entityStore';
-import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
+import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
 
 export function useEditorSubscriber() {
@@ -50,15 +48,18 @@ export function useEditorSubscriber() {
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-
+  const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
+  const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
+  const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
+  const setScrollY = useDraggedItemStore((state) => state.setScrollY);
 
   // TODO: As we have disabled the useEffect, we can remove these states
   const [, /* isFetchingEntities */ setFetchingEntities] = useState(false);
 
   const reloadApp = () => {
-    sendMessage(OUTGOING_EVENTS.CanvasReload, {});
+    sendMessage(OUTGOING_EVENTS.CanvasReload, undefined);
     // Wait a moment to ensure that the message was sent
     setTimeout(() => {
       // Received a hot reload message from webpack dev server -> reload the canvas
@@ -67,7 +68,7 @@ export function useEditorSubscriber() {
   };
 
   useEffect(() => {
-    sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate);
+    sendMessage(OUTGOING_EVENTS.RequestComponentTreeUpdate, undefined);
   }, []);
 
   /**
@@ -75,7 +76,11 @@ export function useEditorSubscriber() {
    * Also manages "entity status" variables (areEntitiesFetched, isFetchingEntities)
    */
   const fetchMissingEntities = useCallback(
-    async (newDataSource: CompositionDataSource, tree: CompositionTree) => {
+    async (
+      entityStore: EditorModeEntityStore,
+      newDataSource: ExperienceDataSource,
+      tree: ExperienceTree,
+    ) => {
       // if we realize that there's nothing missing and nothing to fill-fetch before we do any async call,
       // then we can simply return and not lock the EntityStore at all.
       const startFetching = () => {
@@ -148,17 +153,14 @@ export function useEditorSubscriber() {
           await fillupL2({ deepReferences });
         }
       } catch (error) {
-        console.error('[exp-builder.sdk] Failed fetching entities');
+        console.error('[experiences-sdk-react] Failed fetching entities');
         console.error(error);
         throw error; // TODO: The original catch didn't let's rethrow; for the moment throw to see if we have any errors
       } finally {
         endFetching();
       }
     },
-    [
-      /* dataSource, */ entityStore,
-      setEntitiesFetched /* setFetchingEntities, assembliesRegistry */,
-    ],
+    [setEntitiesFetched /* setFetchingEntities, assembliesRegistry */],
   );
 
   useEffect(() => {
@@ -172,7 +174,7 @@ export function useEditorSubscriber() {
           reloadApp();
         } else {
           console.warn(
-            `[exp-builder.sdk::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
+            `[experiences-sdk-react::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
             event,
           );
         }
@@ -185,34 +187,25 @@ export function useEditorSubscriber() {
         return;
       }
       console.debug(
-        `[exp-builder.sdk::onMessage] Received message [${eventData.eventType}]`,
+        `[experiences-sdk-react::onMessage] Received message [${eventData.eventType}]`,
         eventData,
       );
 
-      const { payload } = eventData;
-
       switch (eventData.eventType) {
-        case INCOMING_EVENTS.CompositionUpdated: {
-          const {
-            tree,
-            locale,
-            changedNode,
-            changedValueType,
-            assemblies,
-          }: {
-            tree: CompositionTree;
-            assemblies: Link<'Entry'>[];
-            locale: string;
-            entitiesResolved?: boolean;
-            changedNode?: CompositionComponentNode;
-            changedValueType?: CompositionComponentPropValue['type'];
-          } = payload;
+        case INCOMING_EVENTS.ExperienceUpdated: {
+          const { tree, locale, changedNode, changedValueType, assemblies } = eventData.payload;
 
           // Make sure to first store the assemblies before setting the tree and thus triggering a rerender
           if (assemblies) {
             setAssemblies(assemblies);
             // If the assemblyEntry is not yet fetched, this will be done below by
             // the imperative calls to fetchMissingEntities.
+          }
+
+          let newEntityStore = entityStore;
+          if (entityStore.locale !== locale) {
+            newEntityStore = resetEntityStore(locale);
+            setLocale(locale);
           }
 
           // Below are mutually exclusive cases
@@ -227,33 +220,25 @@ export function useEditorSubscriber() {
             if (changedValueType === 'BoundValue') {
               const newDataSource = { ...dataSource, ...changedNode.data.dataSource };
               setDataSource(newDataSource);
-              await fetchMissingEntities(newDataSource, tree);
+              await fetchMissingEntities(newEntityStore, newDataSource, tree);
             } else if (changedValueType === 'UnboundValue') {
               setUnboundValues({
                 ...unboundValues,
                 ...changedNode.data.unboundValues,
               });
             }
-
-            // Update the tree when all necessary data is fetched and ready for rendering.
-            updateTree(tree);
-            setLocale(locale);
           } else {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
-            await fetchMissingEntities(dataSource, tree);
-            // Update the tree when all necessary data is fetched and ready for rendering.
-            updateTree(tree);
-            setLocale(locale);
+            await fetchMissingEntities(newEntityStore, dataSource, tree);
           }
+          // Update the tree when all necessary data is fetched and ready for rendering.
+          updateTree(tree);
           break;
         }
-        case INCOMING_EVENTS.DesignComponentsRegistered:
-          // Event was deprecated and support will be discontinued with version 5
-          break;
         case INCOMING_EVENTS.AssembliesRegistered: {
-          const { assemblies }: { assemblies: ComponentRegistration['definition'][] } = payload;
+          const { assemblies } = eventData.payload;
 
           assemblies.forEach((definition) => {
             addComponentRegistration({
@@ -263,9 +248,6 @@ export function useEditorSubscriber() {
           });
           break;
         }
-        case INCOMING_EVENTS.DesignComponentsAdded:
-          // Event was deprecated and support will be discontinued with version 5
-          break;
         case INCOMING_EVENTS.AssembliesAdded: {
           const {
             assembly,
@@ -273,7 +255,7 @@ export function useEditorSubscriber() {
           }: {
             assembly: ManagementEntity;
             assemblyDefinition?: ComponentRegistration['definition'];
-          } = payload;
+          } = eventData.payload;
           entityStore.updateEntity(assembly);
           // Using a Map here to avoid setting state and rerending all existing assemblies when a new assembly is added
           // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
@@ -291,28 +273,29 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.CanvasResized: {
+          const { selectedNodeId } = eventData.payload;
+          if (selectedNodeId) {
+            sendSelectedComponentCoordinates(selectedNodeId);
+          }
           break;
         }
         case INCOMING_EVENTS.HoverComponent: {
-          const { hoveredNodeId } = payload;
-          sendHoveredComponentCoordinates(hoveredNodeId);
+          const { hoveredNodeId } = eventData.payload;
+          setHoveredComponentId(hoveredNodeId);
           break;
         }
         case INCOMING_EVENTS.ComponentDraggingChanged: {
-          const { isDragging } = payload;
+          const { isDragging } = eventData.payload;
 
           if (!isDragging) {
             setComponentId('');
             setDraggingOnCanvas(false);
-            dragState.reset();
+            SimulateDnD.reset();
           }
           break;
         }
         case INCOMING_EVENTS.UpdatedEntity: {
-          const { entity: updatedEntity, shouldRerender } = payload as {
-            entity: ManagementEntity;
-            shouldRerender?: boolean;
-          };
+          const { entity: updatedEntity, shouldRerender } = eventData.payload;
           if (updatedEntity) {
             const storedEntity = entityStore.entities.find(
               (entity) => entity.sys.id === updatedEntity.sys.id,
@@ -331,36 +314,55 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.ComponentDragCanceled: {
-          if (dragState.isDragging) {
+          if (SimulateDnD.isDragging) {
             //simulate a mouseup event to cancel the drag
-            simulateMouseEvent(0, 0, 'mouseup');
+            SimulateDnD.endDrag(0, 0);
           }
           break;
         }
         case INCOMING_EVENTS.ComponentDragStarted: {
-          dragState.updateIsDragStartedOnParent(true);
+          const { id, isAssembly } = eventData.payload;
+          SimulateDnD.setupDrag();
+          setComponentId(`${id}:${isAssembly}` || '');
           setDraggingOnCanvas(true);
-          setComponentId(payload.id || '');
+
           sendMessage(OUTGOING_EVENTS.ComponentSelected, {
             nodeId: '',
           });
           break;
         }
         case INCOMING_EVENTS.ComponentDragEnded: {
-          dragState.reset();
+          SimulateDnD.reset();
           setComponentId('');
           setDraggingOnCanvas(false);
           break;
         }
         case INCOMING_EVENTS.SelectComponent: {
-          const { selectedNodeId: nodeId } = payload;
+          const { selectedNodeId: nodeId } = eventData.payload;
           setSelectedNodeId(nodeId);
           sendSelectedComponentCoordinates(nodeId);
           break;
         }
+        case INCOMING_EVENTS.MouseMove: {
+          const { mouseX, mouseY } = eventData.payload;
+          setMousePosition(mouseX, mouseY);
+
+          if (SimulateDnD.isDraggingOnParent && !SimulateDnD.isDragging) {
+            SimulateDnD.startDrag(mouseX, mouseY);
+          } else {
+            SimulateDnD.updateDrag(mouseX, mouseY);
+          }
+
+          break;
+        }
+        case INCOMING_EVENTS.ComponentMoveEnded: {
+          const { mouseX, mouseY } = eventData.payload;
+          SimulateDnD.endDrag(mouseX, mouseY);
+          break;
+        }
         default:
           console.error(
-            `[exp-builder.sdk::onMessage] Logic error, unsupported eventType: [${eventData.eventType}]`,
+            `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${(eventData as IncomingMessage).eventType}]`,
           );
       }
     };
@@ -384,6 +386,9 @@ export function useEditorSubscriber() {
     unboundValues,
     updateTree,
     updateNodesByUpdatedEntity,
+    setMousePosition,
+    resetEntityStore,
+    setHoveredComponentId,
   ]);
 
   /*
@@ -394,6 +399,7 @@ export function useEditorSubscriber() {
     let isScrolling = false;
 
     const onScroll = () => {
+      setScrollY(window.scrollY);
       if (isScrolling === false) {
         sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.Start);
       }
@@ -426,5 +432,5 @@ export function useEditorSubscriber() {
       window.removeEventListener('scroll', onScroll, { capture: true });
       clearTimeout(timeoutId);
     };
-  }, [selectedNodeId]);
+  }, [selectedNodeId, setScrollY]);
 }

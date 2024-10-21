@@ -2,28 +2,26 @@
 import React, { RefObject } from 'react';
 
 import type {
-  CompositionComponentNode,
-  CompositionDataSource,
-  CompositionUnboundValues,
+  ExperienceTreeNode,
+  ExperienceDataSource,
+  ExperienceUnboundValues,
   StyleProps,
-} from '@contentful/experience-builder-core/types';
+  DragWrapperProps,
+} from '@contentful/experiences-core/types';
 
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experiences-core';
 import { combineClasses } from '../../utils/combineClasses';
 
 export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = (EditorMode extends true
   ? {
       editorMode?: EditorMode;
-      node: CompositionComponentNode;
-      dataSource?: CompositionDataSource;
-      unboundValues?: CompositionUnboundValues;
+      node: ExperienceTreeNode;
+      dataSource?: ExperienceDataSource;
+      unboundValues?: ExperienceUnboundValues;
       resolveDesignValue?: any;
       entityStore?: RefObject<EntityStore>;
       areEntitiesFetched?: boolean;
-      renderDropzone: (
-        node: CompositionComponentNode,
-        props?: Record<string, any>
-      ) => React.ReactNode;
+      renderDropzone: (node: ExperienceTreeNode, props?: Record<string, any>) => React.ReactNode;
     }
   : {
       editorMode: EditorMode;
@@ -33,10 +31,11 @@ export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = (EditorM
   cfHyperlink?: StyleProps['cfHyperlink'];
   cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
   WrapperComponent?: React.ElementType;
+  dragProps?: DragWrapperProps;
 };
 
 export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyperlinkProps> = (
-  props
+  props,
 ) => {
   const { cfHyperlink, cfOpenInNewTab, editorMode, className, children } = props;
 

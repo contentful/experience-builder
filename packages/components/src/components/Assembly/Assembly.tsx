@@ -1,8 +1,8 @@
 import {
-  CompositionComponentNode,
+  ExperienceTreeNode,
   ResolveDesignValueType,
   StyleProps,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import React from 'react';
 
 export type AssemblyProps<EditorMode = boolean> = EditorMode extends true
@@ -12,12 +12,14 @@ export type AssemblyProps<EditorMode = boolean> = EditorMode extends true
       cfHyperlink?: StyleProps['cfHyperlink'];
       cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
       editorMode?: EditorMode;
-      node: CompositionComponentNode;
+      node: ExperienceTreeNode;
       resolveDesignValue?: ResolveDesignValueType;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      dragProps?: Record<string, any>;
       renderDropzone: (
-        node: CompositionComponentNode,
+        node: ExperienceTreeNode,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        props?: Record<string, any>
+        props?: Record<string, any>,
       ) => React.ReactNode;
     }
   : // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,12 +31,13 @@ const assemblyStyle = { display: 'contents' };
 // Or if this isn't necessary by the time we figure that part out, we can bid this part farewell
 export const Assembly: React.FC<AssemblyProps> = (props) => {
   if (props.editorMode) {
-    const { node } = props;
+    const { node, dragProps, ...editorModeProps } = props;
 
     return props.renderDropzone(node, {
+      ...editorModeProps,
       ['data-test-id']: 'contentful-assembly',
       className: props.className,
-      style: assemblyStyle,
+      dragProps,
     });
   }
   // Using a display contents so assembly content/children

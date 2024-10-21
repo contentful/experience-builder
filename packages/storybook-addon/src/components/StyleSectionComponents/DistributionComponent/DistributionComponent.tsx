@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { Checkbox, Flex, IconButton, Text, Box } from '@contentful/f36-components';
 import IconFlexDirectionRow from '@svg/composition/FlexDirectionRow.svg';
 import IconFlexDirectionColumn from '@svg/composition/FlexDirectionColumn.svg';

@@ -1,133 +1,27 @@
-# Experience Builder Components
+# @contentful/experiences-components-react
+### Purpose
+- Stores React-specific definitions for Structure and Built-in copmonents provided to the user by Contentful.
+- Note that this is a React specific package. Therefore, unlike the core package, React specific compatibilities are implemented here and support for other frontend frameworks would result in a new package being created under a separate namespace.
 
-> Experience Builder is currently in a private alpha and not available publicly. If you are interested in participating in the alpha, please reach out to your Contentful account team.
-
-This folder contains the source code for the default/example components that can be used with Experience Builder. These components can be used as-is to kick start building your experiences, or used as an example for building your own components.
-
-## In this guide
-
-- [Components](#components)
-- [Getting started](#getting-started)
-  * [Installation](#installation)
-  * [Register the components with Experience Builder](#register-the-components-with-experience-builder)
-- [Styling](#styling)
-  * [Including default styles](#including-default-styles)
-  * [Adding custom styles](#adding-custom-styles)
-- [withExperienceBuilder util](#withexperiencebuilder-util)
-  * [Usage](#usage)
-
-
-## Components
-
-The following components are available:
-
-- [Button](src/components/Button/README.md)
-- [Heading](src/components/Heading/README.md)
-- [Image](src/components/Image/README.md)
-- [RichText](src/components/RichText/README.md)
-- [Text](src/components/Text/README.md)
-
-## Getting started
-
-### Installation
-
-```bash
-npm install @contentful/experience-builder-components
+### Concepts
+- **Structure component**: Contentful-provided components for users to define their layout in the experience canvas.
+- **Built-in component**: Synonymously named as Basic component. These are Contentful-provided components with a two-fold purpose. First is to get users quickly kickstarted with some compoments such as the built-in button so that they can drag and drop components on the canvas in cases where the user has yet to provide their own custom components. Second purpose is to provide universally useful components on the user's behalf so that every user does not have to solve the same problem. Great examples would be the image or text component.
+- **Custom component**: User-defined components where the user will register their components through the `defineComponents` function. Components that are registered through the `defineComponents` function will be displayed in the Components tab in the Experiences UI.
+- **Disabling built-ins**: Users are allowed to disable specific or all Contentful-provided `basic/built-in components` as they see fit. The main purpose is to restrict or ensure that Experiences editors use the correct components for their Experiences. Additionally, the built-in components IDs are prefixed with `contentful-` to prevent id clashing where a customer would override Contentful's built-in component in cases where the IDs match. This means the user will have to intentionally id their custom component with the `contentful-` prefix to override the provided built-in component such as `contentful-button`.
+- **variables vs builtInStyles**: In the Contentful-provided components or even user-defined custom components there are two ways to enable style options in the Design sidebar in the Experiences UI with default values. Listing an array of options with `builtInStyles` defined like `builtInStyles: ['cfMargin']` will provide the editor with UI margin editing in their Experience with predefined default values for margin which is currently `0px`. However, let's say the user would like to define their button margin with `4px` whenever a button is dropped onto the canvas, they can then define a variable instead like below. This will still provide the editor with the margin UI editing in their experience with the values being defaulted to `4px` instead of `0px`.
 ```
-
-### Register the components with Experience Builder
-
-> This guide assumes you already have Experience Builder configured in your application and space. If you don't, please contact your Contentful representative for instructions on how to do so.
-
-In the section of code (usually the main App or Page components) where Experience Builder is configured, perform the following steps:
-
-Import the `useExperienceBuilderComponents` hook from the `@contentful/experience-builder-components` package:
-
-```jsx
-import { useExperienceBuilderComponents } from '@contentful/experience-builder-components';
-```
-
-After the call to `useExperienceBuilder` (where you obtain the `defineComponents` method), pass in `defineComponents` to the `userExperienceBuilder` hook:
-
-```jsx
-useExperienceBuilderComponents(defineComponents);
-```
-
-All of the components will now be available for use in your experiences.
-
-## Styling
-
-By default, the components are unstyled. This allows you to style the components to match your brand and design system. If you want a set of default styles to get started, see below.
-
-### Including default styles
-
-A set of optional, default styles are included with the components. To include them, import the `styles.css` file from the `@contentful/experience-builder-components` package:
-
-```jsx
-import '@contentful/experience-builder-components/styles.css';
-```
-
-### Adding custom styles
-
-Each component has a css class that you can use to add your own styles. The classes are named in the style of `cf-{component-name}` (ie `cf-button`).
-
-For example, to style the `Button` component, you can do the following:
-
-```css
-.cf-button {
-  /* your styles here */
-}
-```
-
-All components also support passing in custom class names via the `className` prop. This allows you to add your own class names to the component, which you can then use to style the component.
-
-## withExperienceBuilder util
-
-We provide a helper function (as a [higher-order-component](https://legacy.reactjs.org/docs/higher-order-components.html)) to make it easier to register your own custom components with Experience Builder. This function helps ensure your component has all the required props and is properly registered with Experience Builder.
-
-### Usage
-
-```jsx
-import { withExperienceBuilder } from '@/utils/withExperienceBuilder';
-import { MyComponent } from './MyComponent';
-
-export const ExperienceBuilderMyComponent = withExperienceBuilder(
-  // Your component
-  MyComponent,
-  // component registration configuration for EB
-  {
-    id: 'my-component',
-    name: 'My Component',
-    category: 'Custom',
-    variables: {
-      label: {
-        type: 'Text',
-        defaultValue: 'My Component',
-      },
+  variables: {
+    cfMargin: {
+      displayName: 'Margin',
+      type: 'Text',
+      group: 'style',
+      description: 'The margin of the button.',
+      defaultValue: '4px',
     },
-  },
-);
+  }
 ```
 
-### Container wrapping
-
-By default, the `withExperienceBuilder` function will not wrap your component in a container. However, it is often useful to have your component wrapped. If the components is wrapped, all the styles generated from Experience Builder will be applied to the wrapping container instead of the component itself. This will make it so the additional styles don't interfere with your component's styles.
-
-To wrap your component, pass in the `wrapComponent` option:
-
-```jsx
-export const ExperienceBuilderMyComponent = withExperienceBuilder(
-  // Your component
-  MyComponent,
-  // component registration configuration for EB
-  { /* EB config */ },
-  // wrap the component with a container (defaults to false)
-  { wrapComponent: true }
-);
-```
-
-You can also provide the tag name the container will use (which defaults to 'div'):
-
-```tsx
-{ wrapComponent: true, wrapContainerTag: 'span' }
-```
+### Relevant Contentful documentation links
+- [Built-in styles](https://www.contentful.com/developers/docs/experiences/built-in-styles/)
+- [Register custom components](https://www.contentful.com/developers/docs/experiences/register-custom-components/)
+- [Component definition schema](https://www.contentful.com/developers/docs/experiences/component-definition-schema/)

@@ -9,6 +9,7 @@ export default {
     '\\.(css)$': '<rootDir>/test/styleMock.ts',
     '^.+\\.svg$': '<rootDir>/test/fileMock.ts',
     '^.+\\.svg\\?react$': '<rootDir>/test/fileMock.ts',
+    'lodash-es': 'lodash', // hack to make lodash-es work with jest
   },
   transform: {
     '\\.[jt]sx?$': ['ts-jest'],
