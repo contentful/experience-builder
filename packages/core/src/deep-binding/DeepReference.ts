@@ -1,9 +1,9 @@
 import {
-  CompositionComponentNode,
-  CompositionDataSource,
-  CompositionNode,
+  ExperienceTreeNode,
+  ExperienceDataSource,
   DataSourceEntryValueType,
   ExperienceEntry,
+  ComponentTreeNode,
   Link,
 } from '@/types';
 import { isDeepPath, parseDataSourcePathWithL1DeepBindings } from '@/utils/pathSchema';
@@ -13,7 +13,7 @@ import { EntityStoreBase } from '@/entity/EntityStoreBase';
 
 type DeepReferenceOpts = {
   path: string;
-  dataSource: CompositionDataSource;
+  dataSource: ExperienceDataSource;
 };
 
 export class DeepReference {
@@ -40,12 +40,11 @@ export class DeepReference {
   /**
    * Extracts referent from the path, using EntityStore as source of
    * entities during the resolution path.
-   * TODO: should it be called `extractLeafReferent` ? or `followToLeafReferent`
    */
   extractReferent(entityStore: EntityStoreBase): Link<'Asset' | 'Entry'> | undefined {
     const headEntity = entityStore.getEntityFromLink(this.entityLink);
 
-    const maybeReferentLink = headEntity!.fields[this.field] as
+    const maybeReferentLink = headEntity?.fields[this.field] as
       | Link<'Entry'>
       | Link<'Asset'>
       | undefined
@@ -83,7 +82,7 @@ export function gatherDeepReferencesFromExperienceEntry(
       definitionId: 'root',
       variables: {},
       children,
-    } as CompositionNode,
+    } as ComponentTreeNode,
     (node) => {
       if (!node.variables) return;
 
@@ -105,8 +104,8 @@ export function gatherDeepReferencesFromExperienceEntry(
 }
 
 export function gatherDeepReferencesFromTree(
-  startingNode: CompositionComponentNode,
-  dataSource: CompositionDataSource,
+  startingNode: ExperienceTreeNode,
+  dataSource: ExperienceDataSource,
 ): DeepReference[] {
   const deepReferences: Array<DeepReference> = [];
 

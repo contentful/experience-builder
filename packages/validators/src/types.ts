@@ -15,4 +15,5 @@ export type {
   BoundValue,
   ComponentValue,
 } from './schemas/latest';
+export type { ComponentDefinitionPropertyType } from './schemas/componentDefinition';
 export type { SchemaVersions } from './schemas/schemaVersions';

@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.11](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.10...@contentful/experiences-storybook-addon@0.0.1-alpha.11) (2024-03-22)
+
+**Note:** Version bump only for package @contentful/experiences-storybook-addon
+
+## [0.0.1-alpha.10](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.9...@contentful/experiences-storybook-addon@0.0.1-alpha.10) (2024-03-22)
+
+**Note:** Version bump only for package @contentful/experiences-storybook-addon
+
+## [0.0.1-alpha.9](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.8...@contentful/experiences-storybook-addon@0.0.1-alpha.9) (2024-03-21)
+
+**Note:** Version bump only for package @contentful/experiences-storybook-addon
+
+## [0.0.1-alpha.8](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.7...@contentful/experiences-storybook-addon@0.0.1-alpha.8) (2024-03-20)
+
+**Note:** Version bump only for package @contentful/experiences-storybook-addon
+
+## [0.0.1-alpha.7](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.6...@contentful/experiences-storybook-addon@0.0.1-alpha.7) (2024-03-19)
+
+### Features
+
+- add borderRadius definition to structure components ([b2117a7](https://github.com/contentful/experience-builder-storybook/commit/b2117a703ae8b5ed603e27b481f4764b6e830a1c))
+
+## [0.0.1-alpha.6](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.5...@contentful/experiences-storybook-addon@0.0.1-alpha.6) (2024-03-18)
+
+**Note:** Version bump only for package @contentful/experiences-storybook-addon
+
+## [0.0.1-alpha.5](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.4...@contentful/experiences-storybook-addon@0.0.1-alpha.5) (2024-03-13)
+
+**Note:** Version bump only for package @contentful/experiences-storybook-addon
+
+## [0.0.1-alpha.4](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.3...@contentful/experiences-storybook-addon@0.0.1-alpha.4) (2024-03-12)
+
+**Note:** Version bump only for package @contentful/experiences-storybook-addon
+
+## [0.0.1-alpha.3](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experiences-storybook-addon@0.0.1-alpha.2...@contentful/experiences-storybook-addon@0.0.1-alpha.3) (2024-03-08)
+
+**Note:** Version bump only for package @contentful/experiences-storybook-addon
+
+## 0.0.1-alpha.2 (2024-03-04)
+
+### Bug Fixes
+
+- adjust auto to Auto so that the design tab is consistent throughout ([81c7f50](https://github.com/contentful/experience-builder-storybook/commit/81c7f5071e79e4f7e24df908f5c9ccca8b935b1c))
+- allow built-in components to be disabled [ALT-267] ([#321](https://github.com/contentful/experience-builder-storybook/issues/321)) ([453225c](https://github.com/contentful/experience-builder-storybook/commit/453225cf9c0813137441e1445754c4ed3aecd8bc))
+- smaller dropzone indicator and container height adjustments [ALT-356] ([#326](https://github.com/contentful/experience-builder-storybook/issues/326)) ([bf75c10](https://github.com/contentful/experience-builder-storybook/commit/bf75c10b13e3e165dac1f4d1d6a68deae1622078))
+- update background related fields to have display names of Background image and Background color ([84aecb4](https://github.com/contentful/experience-builder-storybook/commit/84aecb4cfcd4a51a29c9444d02686fa35254f30a))
+
+### Features
+
+- section component [ALT-205] ([#279](https://github.com/contentful/experience-builder-storybook/issues/279)) ([aea2ac8](https://github.com/contentful/experience-builder-storybook/commit/aea2ac899dbf12e9e62ac174d84b5171ce60dbdb))
+
 ## [0.0.2-alpha.33](https://github.com/contentful/experience-builder-storybook/compare/@contentful/experience-builder-storybook-addon@0.0.2-alpha.32...@contentful/experience-builder-storybook-addon@0.0.2-alpha.33) (2024-03-01)
 
 **Note:** Version bump only for package @contentful/experience-builder-storybook-addon

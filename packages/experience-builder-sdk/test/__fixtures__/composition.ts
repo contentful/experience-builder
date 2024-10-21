@@ -1,12 +1,8 @@
-import type {
-  Composition,
-  ExperienceEntry,
-  SchemaVersions,
-} from '@contentful/experience-builder-core/types';
+import type { ExperienceEntry, SchemaVersions } from '@contentful/experiences-core/types';
 import { entityIds } from './entities';
-import { LATEST_SCHEMA_VERSION } from '@contentful/experience-builder-core/constants';
+import { LATEST_SCHEMA_VERSION } from '@contentful/experiences-core/constants';
 
-const compositionFields: Composition = {
+const compositionFields: ExperienceEntry['fields'] = {
   title: 'Test Composition',
   slug: 'test',
   componentTree: {
@@ -23,7 +19,7 @@ const compositionFields: Composition = {
       },
     ],
     breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
-    schemaVersion: '2023-06-27',
+    schemaVersion: '2023-09-28',
   },
   dataSource: {
     uuid2: {
@@ -55,7 +51,7 @@ const compositionFields: Composition = {
   },
 };
 
-export const compositionEntry: ExperienceEntry = {
+export const experienceEntry: ExperienceEntry = {
   sys: {
     id: 'composition-id',
     type: 'Entry',
@@ -88,13 +84,13 @@ export const compositionEntry: ExperienceEntry = {
   fields: compositionFields,
 };
 
-type createCompositionEntryArgs = {
+type createExperienceEntryArgs = {
   schemaVersion: SchemaVersions;
 };
 
-export const createCompositionEntry = ({
+export const createExperienceEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
-}: createCompositionEntryArgs): ExperienceEntry => {
+}: createExperienceEntryArgs): ExperienceEntry => {
   return {
     sys: {
       id: 'composition-id',

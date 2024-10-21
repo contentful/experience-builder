@@ -2,18 +2,18 @@ import React from 'react';
 
 import { render } from '@testing-library/react';
 
-import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
-import type { CompositionNode, ExperienceEntry } from '@contentful/experience-builder-core/types';
+import type { ComponentTreeNode, ExperienceEntry } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import type { Entry } from 'contentful';
-import { compositionEntry } from '../../../test/__fixtures__/composition';
+import { experienceEntry } from '../../../test/__fixtures__/composition';
 import {
   createAssemblyEntry,
   defaultAssemblyId,
   assemblyGeneratedVariableName,
 } from '../../../test/__fixtures__/assembly';
-import { EntityStore } from '@contentful/experience-builder-core';
+import { EntityStore } from '@contentful/experiences-core';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 
 const TestComponent: React.FC<{ text: string }> = (props) => {
@@ -52,7 +52,7 @@ describe('CompositionBlock', () => {
   });
 
   it('renders the custom component node', () => {
-    const mockCompositionComponentNode: CompositionNode = {
+    const mockExperienceTreeNode: ComponentTreeNode = {
       definitionId: 'custom-component',
       variables: {
         text: { type: 'UnboundValue', key: 'value1' },
@@ -63,7 +63,7 @@ describe('CompositionBlock', () => {
     // Render the component with the initial text
     render(
       <CompositionBlock
-        node={mockCompositionComponentNode}
+        node={mockExperienceTreeNode}
         locale="en-US"
         entityStore={
           {
@@ -80,7 +80,7 @@ describe('CompositionBlock', () => {
   });
 
   it('renders section node', () => {
-    const sectionNode: CompositionNode = {
+    const sectionNode: ComponentTreeNode = {
       definitionId: CONTENTFUL_COMPONENTS.section.id,
       variables: {},
       children: [],
@@ -99,7 +99,7 @@ describe('CompositionBlock', () => {
   });
 
   it('renders container node', () => {
-    const containerNode: CompositionNode = {
+    const containerNode: ComponentTreeNode = {
       definitionId: CONTENTFUL_COMPONENTS.container.id,
       variables: {},
       children: [],
@@ -123,10 +123,10 @@ describe('CompositionBlock', () => {
       id: defaultAssemblyId,
       schemaVersion: '2023-09-28',
     });
-    const experienceEntry = {
-      ...compositionEntry,
+    const updatedExperienceEntry = {
+      ...experienceEntry,
       fields: {
-        ...compositionEntry.fields,
+        ...experienceEntry.fields,
         usedComponents: [assemblyEntry],
         unboundValues: {
           [unboundValueKey]: {
@@ -137,12 +137,12 @@ describe('CompositionBlock', () => {
     } as ExperienceEntry;
 
     const entityStore = new EntityStore({
-      experienceEntry: experienceEntry as unknown as Entry,
+      experienceEntry: updatedExperienceEntry as unknown as Entry,
       entities: [...entries, ...assets],
       locale: 'en-US',
     });
 
-    const assemblyNode: CompositionNode = {
+    const assemblyNode: ComponentTreeNode = {
       definitionId: defaultAssemblyId,
       variables: {
         [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },

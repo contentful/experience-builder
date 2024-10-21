@@ -3,6 +3,7 @@ declare interface Window {
 }
 
 type EB_Store = {
+  isReadOnlyMode?: boolean;
   isEditorMode?: boolean;
   sdkVersion?: string;
 };

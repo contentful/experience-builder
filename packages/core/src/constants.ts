@@ -2,12 +2,12 @@ export const SCROLL_STATES = {
   Start: 'scrollStart',
   IsScrolling: 'isScrolling',
   End: 'scrollEnd',
-};
+} as const;
 
 export const OUTGOING_EVENTS = {
   Connected: 'connected',
   DesignTokens: 'registerDesignTokens',
-  HoveredSection: 'hoveredSection',
+  RegisteredBreakpoints: 'registeredBreakpoints',
   MouseMove: 'mouseMove',
   NewHoveredElement: 'newHoveredElement',
   ComponentSelected: 'componentSelected',
@@ -18,46 +18,53 @@ export const OUTGOING_EVENTS = {
   ComponentMoved: 'componentMoved',
   CanvasReload: 'canvasReload',
   UpdateSelectedComponentCoordinates: 'updateSelectedComponentCoordinates',
-  UpdateHoveredComponentCoordinates: 'updateHoveredComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
+  ComponentMoveStarted: 'componentMoveStarted',
+  ComponentMoveEnded: 'componentMoveEnded',
   OutsideCanvasClick: 'outsideCanvasClick',
-};
+  SDKFeatures: 'sdkFeatures',
+  RequestEntities: 'REQUEST_ENTITIES',
+} as const;
 
 export const INCOMING_EVENTS = {
   RequestEditorMode: 'requestEditorMode',
-  CompositionUpdated: 'componentTreeUpdated',
+  RequestReadOnlyMode: 'requestReadOnlyMode',
+  ExperienceUpdated: 'componentTreeUpdated',
   ComponentDraggingChanged: 'componentDraggingChanged',
   ComponentDragCanceled: 'componentDragCanceled',
   ComponentDragStarted: 'componentDragStarted',
   ComponentDragEnded: 'componentDragEnded',
+  ComponentMoveEnded: 'componentMoveEnded',
   CanvasResized: 'canvasResized',
   SelectComponent: 'selectComponent',
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
-  /**
-   * @deprecated use `AssembliesAdded` instead. This will be removed in version 5.
-   * In the meanwhile, the experience builder will send the old and the new event to support multiple SDK versions.
-   */
-  DesignComponentsAdded: 'designComponentsAdded',
-  /**
-   * @deprecated use `AssembliesRegistered` instead. This will be removed in version 5.
-   * In the meanwhile, the experience builder will send the old and the new event to support multiple SDK versions.
-   */
-  DesignComponentsRegistered: 'designComponentsRegistered',
   AssembliesAdded: 'assembliesAdded',
   AssembliesRegistered: 'assembliesRegistered',
-  InitEditor: 'initEditor',
-};
+  MouseMove: 'mouseMove',
+  RequestedEntities: 'REQUESTED_ENTITIES',
+} as const;
 
 export const INTERNAL_EVENTS = {
   ComponentsRegistered: 'cfComponentsRegistered',
   VisualEditorInitialize: 'cfVisualEditorInitialize',
-};
+} as const;
 
 export const VISUAL_EDITOR_EVENTS = {
   Ready: 'cfVisualEditorReady',
 };
+
+/**
+ * These modes are ONLY intended to be internally used within the context of
+ * editing an experience inside of Contentful Studio. i.e. these modes
+ * intentionally do not include preview/delivery modes.
+ */
+export enum StudioCanvasMode {
+  READ_ONLY = 'readOnlyMode',
+  EDITOR = 'editorMode',
+  NONE = 'none',
+}
 
 export const VISUAL_EDITOR_CONTAINER_ID = 'cf-visual-editor';
 export const CONTENTFUL_COMPONENT_CATEGORY = 'contentful-component';
@@ -81,50 +88,38 @@ export const CONTENTFUL_COMPONENTS = {
     name: 'Column',
   },
   button: {
-    id: 'button',
+    id: 'contentful-button',
     name: 'Button',
   },
   heading: {
-    id: 'heading',
+    id: 'contentful-heading',
     name: 'Heading',
   },
   image: {
-    id: 'image',
+    id: 'contentful-image',
     name: 'Image',
   },
   richText: {
-    id: 'richText',
+    id: 'contentful-richText',
     name: 'Rich Text',
   },
   text: {
-    id: 'text',
+    id: 'contentful-text',
     name: 'Text',
   },
+  divider: {
+    id: 'contentful-divider',
+    name: 'Divider',
+  },
 };
-
-/** @deprecated use `CONTENTFUL_COMPONENTS.section.id` instead. This will be removed in version 4. */
-export const CONTENTFUL_SECTION_ID = CONTENTFUL_COMPONENTS.section.id;
-/** @deprecated use `CONTENTFUL_COMPONENTS.container.id` instead. This will be removed in version 4. */
-export const CONTENTFUL_CONTAINER_ID = CONTENTFUL_COMPONENTS.container.id;
 
 export const ASSEMBLY_NODE_TYPE = 'assembly';
 export const ASSEMBLY_DEFAULT_CATEGORY = 'Assemblies';
 export const ASSEMBLY_BLOCK_NODE_TYPE = 'assemblyBlock';
 export const ASSEMBLY_NODE_TYPES = [ASSEMBLY_NODE_TYPE, ASSEMBLY_BLOCK_NODE_TYPE];
-
-/** @deprecated use `ASSEMBLY_NODE_TYPE` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_NODE_TYPE = 'designComponent';
-/** @deprecated use `ASSEMBLY_DEFAULT_CATEGORY` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_DEFAULT_CATEGORY = 'Design Components';
-/** @deprecated use `ASSEMBLY_BLOCK_NODE_TYPE` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_BLOCK_NODE_TYPE = 'designComponentBlock';
-/** @deprecated use `ASSEMBLY_NODE_TYPES` instead. This will be removed in version 5. */
-export const DESIGN_COMPONENT_NODE_TYPES = [
-  DESIGN_COMPONENT_NODE_TYPE,
-  DESIGN_COMPONENT_BLOCK_NODE_TYPE,
-];
 export const LATEST_SCHEMA_VERSION = '2023-09-28';
 export const CF_STYLE_ATTRIBUTES = [
+  'cfVisibility',
   'cfHorizontalAlignment',
   'cfVerticalAlignment',
   'cfMargin',
@@ -133,13 +128,16 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfWidth',
   'cfMaxWidth',
   'cfHeight',
+  'cfImageAsset',
+  'cfImageOptions',
+  'cfBackgroundImageUrl',
+  'cfBackgroundImageOptions',
   'cfFlexDirection',
   'cfFlexWrap',
+  'cfFlexReverse',
   'cfBorder',
+  'cfBorderRadius',
   'cfGap',
-  'cfBackgroundImageUrl',
-  'cfBackgroundImageScaling',
-  'cfBackgroundImageAlignment',
   'cfFontSize',
   'cfFontWeight',
   'cfLineHeight',
@@ -154,13 +152,21 @@ export const CF_STYLE_ATTRIBUTES = [
   // we need to keep those in this constant array
   // so that omit() in <VisualEditorBlock> and <CompositionBlock>
   // can filter them out and not pass as props
+  'cfBackgroundImageScaling',
+  'cfBackgroundImageAlignment',
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',
 ];
 
 export const EMPTY_CONTAINER_HEIGHT = '80px';
 
+export const HYPERLINK_DEFAULT_PATTERN = `/{locale}/{entry.fields.slug}/`;
+
+export const DEFAULT_IMAGE_WIDTH = '500px';
+
 export enum PostMessageMethods {
   REQUEST_ENTITIES = 'REQUEST_ENTITIES',
   REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',
 }
+
+export const SUPPORTED_IMAGE_FORMATS = ['jpg', 'png', 'webp', 'gif', 'avif'] as const;

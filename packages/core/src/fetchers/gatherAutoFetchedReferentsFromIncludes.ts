@@ -1,10 +1,14 @@
-import { Entry, Asset, EntryCollection, EntrySkeletonType, UnresolvedLink } from 'contentful';
+import { Entry, Asset, UnresolvedLink } from 'contentful';
 import type { DeepReference } from '@/deep-binding/DeepReference';
 import { isLink } from '@/utils/isLink';
-export type MinimalEntryCollection = Pick<
-  EntryCollection<EntrySkeletonType, 'WITHOUT_LINK_RESOLUTION'>,
-  'items' | 'includes'
->;
+
+export type MinimalEntryCollection = {
+  items: Entry[];
+  includes: {
+    Entry: Entry[];
+    Asset: Asset[];
+  };
+};
 
 /**
  * Traverses deep-references and extracts referents from valid deep-paths.
@@ -33,58 +37,54 @@ export function gatherAutoFetchedReferentsFromIncludes(
       (entry) => entry.sys.id === reference.headEntityId,
     );
     if (!headEntry) {
-      throw new Error(
-        `LogicError: When resolving deep-references could not find headEntry (id=${reference.entityId})`,
+      console.debug(
+        `[experiences-sdk-core::fetchers] When resolving deep-references could not find headEntry with id '${reference.entityId}'`,
       );
+      continue;
     }
 
     const linkToReferent = headEntry.fields[reference.field] as UnresolvedLink<'Asset' | 'Entry'>;
 
     if (undefined === linkToReferent) {
       console.debug(
-        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Empty reference in headEntity. Probably reference is simply not set.`,
+        `[experiences-sdk-core::fetchers] Empty reference in headEntity. Probably reference is simply not set.`,
       );
       continue;
     }
 
     if (!isLink(linkToReferent)) {
       console.debug(
-        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Non-link value in headEntity. Probably broken path '${reference.originalPath}'`,
+        `[experiences-sdk-core::fetchers] Non-link value in headEntity. Probably broken path '${reference.originalPath}'`,
       );
       continue;
     }
 
-    if (linkToReferent.sys.linkType === 'Entry') {
-      const referentEntry = entriesResponse.includes?.Entry?.find(
-        (entry) => entry.sys.id === linkToReferent.sys.id,
-      );
-      if (!referentEntry) {
-        throw new Error(
-          `Logic Error: L2-referent Entry was not found within .includes (${JSON.stringify({
-            linkToReferent,
-          })})`,
-        );
-      }
-      autoFetchedReferentEntries.push(referentEntry as Entry);
-    } else if (linkToReferent.sys.linkType === 'Asset') {
-      const referentAsset = entriesResponse.includes?.Asset?.find(
-        (entry) => entry.sys.id === linkToReferent.sys.id,
-      );
-      if (!referentAsset) {
-        throw new Error(
-          `Logic Error: L2-referent Asset was not found within includes (${JSON.stringify({
-            linkToReferent,
-          })})`,
-        );
-      }
-      autoFetchedReferentAssets.push(referentAsset as Asset);
-    } else {
+    const linkType = linkToReferent.sys.linkType;
+
+    if (!['Entry', 'Asset'].includes(linkType)) {
       console.debug(
-        `[exp-builder.sdk::gatherAutoFetchedReferentsFromIncludes] Unhandled linkType :${JSON.stringify(
-          linkToReferent,
-        )}`,
+        `[experiences-sdk-core::fetchers] Unhandled linkType :${JSON.stringify(linkToReferent)}`,
       );
+      continue;
     }
+
+    const referentEntity = entriesResponse.includes?.[linkType]?.find(
+      (entity) => entity.sys.id === linkToReferent.sys.id,
+    );
+    if (!referentEntity) {
+      console.debug(
+        `[experiences-sdk-core::fetchers] L2-referent ${linkType} was not found within .includes (${JSON.stringify(
+          {
+            linkToReferent,
+          },
+        )})`,
+      );
+      continue;
+    }
+
+    linkType === 'Entry'
+      ? autoFetchedReferentEntries.push(referentEntity as Entry)
+      : autoFetchedReferentAssets.push(referentEntity as Asset);
   } // for (reference of deepReferences)
 
   return { autoFetchedReferentAssets, autoFetchedReferentEntries };

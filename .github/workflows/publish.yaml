@@ -2,8 +2,16 @@ name: Publish packages
 
 on:
   workflow_call:
+    inputs:
+      publish-prelease:
+        description: 'Publish prerelease version of the current ref'
+        default: false
+        required: false
+        type: boolean
     secrets:
       VAULT_URL:
+        required: true
+      NPM_TOKEN:
         required: true
 
 jobs:
@@ -14,13 +22,14 @@ jobs:
       id-token: write
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Checkout all branches and tags, needed for publish
       - name: 'Use NodeJS 20'
         uses: actions/setup-node@v4
         with:
           node-version: '20.11'
+          cache: 'npm'
       # Retrieve token from Vault and use in .npmrc for installing npm packages from the GitHub registry
       # See https://contentful.atlassian.net/wiki/spaces/ENG/pages/4396155213/Migrating+to+GitHub+Packages+from+npmjs?focusedCommentId=4431282518
       - name: 'Retrieve NPM Token from Vault'
@@ -40,43 +49,67 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
       - name: Restore the build folders
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: |
-            packages/components/styles.css
             packages/*/dist
             packages/*/build
+            packages/test-apps/react-vite/dist
+            packages/test-apps/nextjs/.next
+            packages/templates/nextjs-marketing-demo/.next
+            packages/templates/react-vite-ts/dist
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
-      - name: Authenticate with private GH package
-        run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
+      - name: Authenticate with private NPM and GH package
+        run: echo -e "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}\n//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
+      # We only want to publish if there are changes to any package. Since the lerna --force-publish flag publishes even if there are no changes
+      # we check if there are changes to the packages first, and if not, we exit early
+      - name: Changed packages check
+        id: changed_packages
+        run: |
+          echo "CHANGED_PACKAGES<<EOF" >> $GITHUB_OUTPUT
+          echo "CHANGED_PACKAGES=$(npx lerna changed --conventional-commits --json)" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Skip Publish if no changes
+        if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES == '' }}
+        run: echo "No changes to packages to publish, skipping publish step"
       - name: 'Version and publish'
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
+          # GH_TOKEN needed by lerna to create releases on github
+          GH_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
+        if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES != '' }}
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor}}@users.noreply.github.com"
 
-          if [ ${{ github.ref_name }} = development ]; then
-            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD  | cut -c1-7) --no-changelog --no-git-tag-version --dist-tag dev --no-push --yes
+          if [ ${{ inputs.publish-prerelease }} ]; then
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid prerelease-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --no-changelog --no-push --yes --no-private --dist-tag prerelease --allow-branch ${{ github.ref_name }}
+          elif [ ${{ github.ref_name }} = development ]; then
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --dist-tag dev --no-changelog --no-push --yes --no-private 
           elif [ ${{ github.ref_name }} = next ]; then
-            npx lerna publish prerelease --exact --conventional-commits --conventional-prerelease --preid alpha --yes --no-private --dist-tag latest
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid beta --dist-tag next --no-changelog --yes --no-private
           else
-            npx lerna publish --conventional-commits --conventional-graduate --yes --no-private --create-release github --dist-tag latest
+            npx lerna publish --conventional-commits --conventional-graduate --exact --force-publish --yes --no-private --dist-tag latest --create-release github
           fi
-
-          # merge upstream package version changes to next/dev 
-
+      - name: 'Merge changes downstream'
+        if: ${{ !inputs.publish-prerelease }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
           if [ ${{ github.ref_name }} = main ]; then
             git checkout next
+            git pull
             git rebase main
             git push origin
             git checkout development
+            git pull
             git rebase next
             git push origin
           elif [ ${{ github.ref_name }} = next ]; then
             git checkout development
+            git pull
             git rebase next
             git push origin
           fi

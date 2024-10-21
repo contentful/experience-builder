@@ -3,8 +3,9 @@ import { useTreeStore } from '@/store/tree';
 import { ROOT_ID } from '@/types/constants';
 import { createTreeNode } from '@/utils/createTreeNode';
 import { onDrop } from '@/utils/onDrop';
-import { CONTENTFUL_COMPONENTS } from '@contentful/experience-builder-core/constants';
+import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { DropResult } from '@hello-pangea/dnd';
+import { parseZoneId } from '@/utils/zone';
 
 export default function useCanvasInteractions() {
   const tree = useTreeStore((state) => state.tree);
@@ -19,18 +20,26 @@ export default function useCanvasInteractions() {
       return;
     }
 
-    const droppingOnRoot = destination.droppableId === ROOT_ID;
-    const isValidRootComponent = draggableId === CONTENTFUL_COMPONENTS.container.id;
+    /**
+     * We only have the draggableId as information about the new component being dropped.
+     * So we need to split it to get the blockId and the isAssembly flag.
+     */
+    const [blockId, isAssembly] = draggableId.split(':');
 
-    let node = createTreeNode({ blockId: draggableId, parentId: destination.droppableId });
+    const { nodeId: parentId, slotId } = parseZoneId(destination.droppableId);
+
+    const droppingOnRoot = parentId === ROOT_ID;
+    const isValidRootComponent = blockId === CONTENTFUL_COMPONENTS.container.id;
+
+    let node = createTreeNode({ blockId, parentId, slotId });
 
     if (droppingOnRoot && !isValidRootComponent) {
       const wrappingContainer = createTreeNode({
         blockId: CONTENTFUL_COMPONENTS.container.id,
-        parentId: destination.droppableId,
+        parentId,
       });
       const childNode = createTreeNode({
-        blockId: draggableId,
+        blockId,
         parentId: wrappingContainer.data.id,
       });
 
@@ -38,13 +47,20 @@ export default function useCanvasInteractions() {
       node.children = [childNode];
     }
 
-    addChild(destination.index, destination.droppableId, node);
+    /**
+     * isAssembly comes from a string ID so we need to check if it's 'true' or 'false'
+     * in string format.
+     */
+    if (isAssembly === 'false') {
+      addChild(destination.index, parentId, node);
+    }
 
     onDrop({
       data: tree,
-      componentType: draggableId,
+      componentType: blockId,
       destinationIndex: destination.index,
-      destinationZoneId: destination.droppableId,
+      destinationZoneId: parentId,
+      slotId,
     });
   };
 

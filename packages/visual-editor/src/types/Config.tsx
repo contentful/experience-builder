@@ -1,4 +1,4 @@
-import type { CompositionComponentNode } from '@contentful/experience-builder-core/types';
+import type { ExperienceTreeNode } from '@contentful/experiences-core/types';
 
 type WithCtflProps<Props> = Props & {
   id: string;
@@ -9,19 +9,19 @@ export type DefaultComponentProps = { [key: string]: unknown; editorMode?: boole
 export type Content = ComponentData[];
 
 export type CtflComponent<Props extends DefaultComponentProps = DefaultComponentProps> = (
-  props: WithCtflProps<Props & { ctfl: unknown }>
+  props: WithCtflProps<Props & { ctfl: unknown }>,
 ) => JSX.Element;
 
 export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
-  DefaultProps = ComponentProps
+  DefaultProps = ComponentProps,
 > = {
   id: string;
   render: CtflComponent<ComponentProps>;
   defaultProps?: DefaultProps;
 };
 
-export type ComponentData = CompositionComponentNode;
+export type ComponentData = ExperienceTreeNode;
 
 export interface Dropzone {
   direction: 'horizontal' | 'vertical';

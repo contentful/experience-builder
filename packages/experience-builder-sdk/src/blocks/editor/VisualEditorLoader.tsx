@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { VisualEditorMode } from '@contentful/experience-builder-core';
+import { EntityStore, VisualEditorMode } from '@contentful/experiences-core';
+import type { Experience } from '@contentful/experiences-core/types';
 
 type VisualEditorLoaderProps = {
   visualEditorMode: VisualEditorMode;
+  experience?: Experience<EntityStore>;
 };
 
-export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({ visualEditorMode }) => {
-  const [VisualEditor, setVisualEditor] = useState<React.ComponentType | null>(null);
+export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({
+  visualEditorMode,
+
+  experience,
+}) => {
+  const [VisualEditor, setVisualEditor] = useState<React.ComponentType<{
+    experience?: Experience<EntityStore>;
+  }> | null>(null);
 
   useEffect(() => {
     // Dynamically import the visual editor based on the configured mode
@@ -19,7 +27,7 @@ export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({ visualEd
 
       // VisualEditorMode.LazyLoad:
       default:
-        import('@contentful/experience-builder-visual-editor').then((module) => {
+        import('@contentful/experiences-visual-editor-react').then((module) => {
           setVisualEditor(() => module.default);
         });
     }
@@ -27,7 +35,7 @@ export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({ visualEd
 
   if (!VisualEditor) return null;
 
-  return <VisualEditor />;
+  return <VisualEditor experience={experience} />;
 };
 
 export default VisualEditorLoader;

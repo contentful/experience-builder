@@ -31,15 +31,18 @@ export const Columns: React.FC<ColumnsProps> = (props) => {
 
   if (!editorMode) {
     return (
-      <ColumnWrapper className={combineClasses(className, 'Columns')}>{children}</ColumnWrapper>
+      <ColumnWrapper className={combineClasses(className, 'cf-columns')}>{children}</ColumnWrapper>
     );
   }
 
-  const { node, renderDropzone } = props;
+  const { node, renderDropzone, dragProps = {}, ...rest } = props;
 
   return renderDropzone(node, {
+    ...rest,
     ['data-test-id']: 'contentful-columns',
-    className: className,
+    id: 'ContentfulContainer',
+    className: combineClasses('cf-columns', className),
     WrapperComponent: ColumnWrapper,
+    dragProps,
   });
 };

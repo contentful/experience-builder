@@ -1,4 +1,4 @@
-import { CompositionComponentNode } from '@contentful/experience-builder-core/types';
+import { ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { CSSProperties, SyntheticEvent } from 'react';
 
 interface ColumnsBaseProps {
@@ -10,11 +10,9 @@ interface ColumnsBaseProps {
 interface ColumnsEditorModeProps extends ColumnsBaseProps {
   editorMode: true;
   cfColumns: string;
-  node: CompositionComponentNode;
-  renderDropzone: (
-    node: CompositionComponentNode,
-    props?: Record<string, unknown>
-  ) => React.ReactNode;
+  node: ExperienceTreeNode;
+  renderDropzone: (node: ExperienceTreeNode, props?: Record<string, unknown>) => React.ReactNode;
+  dragProps?: unknown;
 }
 
 interface ColumnsDeliveryModeProps extends ColumnsBaseProps {
@@ -23,20 +21,12 @@ interface ColumnsDeliveryModeProps extends ColumnsBaseProps {
 
 interface SingleColumnEditorModeProps extends ColumnsBaseProps {
   editorMode: true;
-  node: CompositionComponentNode;
-  renderDropzone: (
-    node: CompositionComponentNode,
-    props?: Record<string, unknown>
-  ) => React.ReactNode;
+  node: ExperienceTreeNode;
+  renderDropzone: (node: ExperienceTreeNode, props?: Record<string, unknown>) => React.ReactNode;
   cfColumnSpan: string;
-
-  wrapperClassName: string;
+  dragProps?: unknown;
   ['data-ctfl-draggable-id']: string;
-  Tooltip: React.ReactNode;
-  innerRef: (element?: HTMLElement | null | undefined) => void;
-  draggableProps: Record<string, unknown>;
-  dragHandleProps: Record<string, unknown>;
-  style: CSSProperties;
+  style?: CSSProperties;
   className: string;
   onMouseOver: (e: SyntheticEvent<Element, Event>) => void;
   onMouseOut: (e: SyntheticEvent<Element, Event>) => void;

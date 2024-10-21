@@ -1,8 +1,15 @@
-import { ComponentDefinitionVariable, ContainerStyleVariableName } from '@/types';
+import { DEFAULT_IMAGE_WIDTH } from '@/constants';
+import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../types';
 
-export const builtInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
-> = {
+type VariableDefinitions = Partial<
+  Record<
+    ContainerStyleVariableName,
+    ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media' | 'Object' | 'Hyperlink'>
+  >
+>;
+
+// These styles get added to every component, user custom or contentful provided
+export const builtInStyles: VariableDefinitions = {
   cfVerticalAlignment: {
     validations: {
       in: [
@@ -49,6 +56,13 @@ export const builtInStyles: Partial<
     defaultValue: 'center',
     displayName: 'Horizontal alignment',
   },
+  cfVisibility: {
+    displayName: 'Visibility toggle',
+    type: 'Boolean',
+    group: 'style',
+    defaultValue: true,
+    description: 'The visibility of the component',
+  },
   cfMargin: {
     displayName: 'Margin',
     type: 'Text',
@@ -68,14 +82,14 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The background color of the section',
-    defaultValue: 'rgba(255, 255, 255, 0)',
+    defaultValue: 'rgba(0, 0, 0, 0)',
   },
   cfWidth: {
     displayName: 'Width',
     type: 'Text',
     group: 'style',
     description: 'The width of the section',
-    defaultValue: 'fill',
+    defaultValue: '100%',
   },
   cfHeight: {
     displayName: 'Height',
@@ -98,6 +112,13 @@ export const builtInStyles: Partial<
     description: 'The orientation of the section',
     defaultValue: 'column',
   },
+  cfFlexReverse: {
+    displayName: 'Reverse Direction',
+    type: 'Boolean',
+    group: 'style',
+    description: 'Toggle the flex direction to be reversed',
+    defaultValue: false,
+  },
   cfFlexWrap: {
     displayName: 'Wrap objects',
     type: 'Text',
@@ -110,7 +131,7 @@ export const builtInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The border of the section',
-    defaultValue: '1px solid rgba(0, 0, 0, 0)',
+    defaultValue: '0px solid rgba(0, 0, 0, 0)',
   },
   cfGap: {
     displayName: 'Gap',
@@ -119,45 +140,9 @@ export const builtInStyles: Partial<
     description: 'The spacing between the elements of the section',
     defaultValue: '0px',
   },
-  cfBackgroundImageUrl: {
-    displayName: 'Background image',
-    type: 'Text',
-    defaultValue: '',
-    description: 'Background image for section or container',
-  },
-  cfBackgroundImageScaling: {
-    displayName: 'Image scaling',
-    type: 'Text',
-    group: 'style',
-    description: 'Adjust background image to fit, fill or tile the container',
-    defaultValue: 'fit',
-    validations: {
-      in: [
-        {
-          value: 'fill',
-          displayName: 'Fill',
-        },
-        {
-          value: 'fit',
-          displayName: 'Fit',
-        },
-        {
-          value: 'tile',
-          displayName: 'Tile',
-        },
-      ],
-    },
-  },
-  cfBackgroundImageAlignment: {
-    displayName: 'Image alignment',
-    type: 'Text',
-    group: 'style',
-    description: 'Align background image to the edges of the container',
-    defaultValue: 'left top',
-  },
   cfHyperlink: {
     displayName: 'Hyperlink',
-    type: 'Text',
+    type: 'Hyperlink',
     defaultValue: '',
     validations: {
       format: 'URL',
@@ -172,9 +157,7 @@ export const builtInStyles: Partial<
   },
 };
 
-export const optionalBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
-> = {
+export const optionalBuiltInStyles: VariableDefinitions = {
   cfFontSize: {
     displayName: 'Font Size',
     type: 'Text',
@@ -204,6 +187,50 @@ export const optionalBuiltInStyles: Partial<
     group: 'style',
     description: 'The font weight of the element',
     defaultValue: '400',
+  },
+  cfImageAsset: {
+    displayName: 'Image',
+    type: 'Media',
+    description: 'Image to display',
+  },
+  cfImageOptions: {
+    displayName: 'Image options',
+    type: 'Object',
+    group: 'style',
+    defaultValue: {
+      width: DEFAULT_IMAGE_WIDTH,
+      height: '100%',
+      targetSize: DEFAULT_IMAGE_WIDTH,
+    },
+  },
+  cfBackgroundColor: {
+    displayName: 'Background color',
+    type: 'Text',
+    group: 'style',
+    description: 'The background color of the element',
+    defaultValue: 'rgba(0, 0, 0, 0)',
+  },
+  cfBackgroundImageUrl: {
+    displayName: 'Background image',
+    type: 'Media',
+    description: 'Background image for component',
+  },
+  cfBackgroundImageOptions: {
+    displayName: 'Background image options',
+    type: 'Object',
+    group: 'style',
+    defaultValue: {
+      scaling: 'fill',
+      alignment: 'left top',
+      targetSize: '2000px',
+    },
+  },
+  cfBorderRadius: {
+    displayName: 'Border Radius',
+    type: 'Text',
+    group: 'style',
+    description: 'The border radius of the section',
+    defaultValue: '0px',
   },
   cfLineHeight: {
     displayName: 'Line Height',
@@ -299,10 +326,25 @@ export const optionalBuiltInStyles: Partial<
   },
 };
 
-export const containerBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
-> = {
+export const sectionBuiltInStyles: VariableDefinitions = {
   ...builtInStyles,
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
+  cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
+  cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
+};
+
+export const containerBuiltInStyles: VariableDefinitions = {
+  ...builtInStyles,
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
+  cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
+  cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
+  cfMargin: {
+    displayName: 'Margin',
+    type: 'Text',
+    group: 'style',
+    description: 'The margin of the container',
+    defaultValue: '0 auto 0 auto',
+  },
   cfMaxWidth: {
     displayName: 'Max Width',
     type: 'Text',
@@ -310,18 +352,54 @@ export const containerBuiltInStyles: Partial<
     description: 'The max-width of the section',
     defaultValue: '1192px',
   },
+};
+
+export const dividerBuiltInStyles: VariableDefinitions = {
+  cfVisibility: builtInStyles.cfVisibility,
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfMargin: {
     displayName: 'Margin',
     type: 'Text',
     group: 'style',
-    description: 'The margin of the container',
-    defaultValue: '0 Auto 0 Auto',
+    description: 'The margin of the divider',
+    defaultValue: '20px 0px 20px 0px',
+  },
+  cfWidth: {
+    displayName: 'Width',
+    type: 'Text',
+    group: 'style',
+    description: 'The width of the divider',
+    defaultValue: '100%',
+  },
+  cfHeight: {
+    displayName: 'Height',
+    type: 'Text',
+    group: 'style',
+    description: 'The height of the divider',
+    defaultValue: '1px',
+  },
+  cfMaxWidth: {
+    displayName: 'Max width',
+    type: 'Text',
+    group: 'style',
+    description: 'The max-width of the divider',
+    defaultValue: 'none',
+  },
+  cfBackgroundColor: {
+    displayName: 'Background color',
+    type: 'Text',
+    group: 'style',
+    description: 'The background color of the divider',
+    defaultValue: 'rgba(204, 204, 204, 1)',
   },
 };
 
-export const singleColumnBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
-> = {
+export const singleColumnBuiltInStyles: VariableDefinitions = {
+  cfVisibility: builtInStyles.cfVisibility,
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
+  cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
+  cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
+  cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
   cfVerticalAlignment: {
     validations: {
       in: [
@@ -375,13 +453,6 @@ export const singleColumnBuiltInStyles: Partial<
     description: 'The padding of the column',
     defaultValue: '0 0 0 0',
   },
-  cfBackgroundColor: {
-    displayName: 'Background color',
-    type: 'Text',
-    group: 'style',
-    description: 'The background color of the column',
-    defaultValue: 'rgba(255, 255, 255, 0)',
-  },
   cfFlexDirection: {
     displayName: 'Direction',
     type: 'Text',
@@ -401,7 +472,7 @@ export const singleColumnBuiltInStyles: Partial<
     type: 'Text',
     group: 'style',
     description: 'The border of the column',
-    defaultValue: '1px solid rgba(0, 0, 0, 0)',
+    defaultValue: '0px solid rgba(0, 0, 0, 0)',
   },
   cfGap: {
     displayName: 'Gap',
@@ -409,42 +480,6 @@ export const singleColumnBuiltInStyles: Partial<
     group: 'style',
     description: 'The spacing between the elements of the column',
     defaultValue: '0px',
-  },
-  cfBackgroundImageUrl: {
-    displayName: 'Background image',
-    type: 'Text',
-    defaultValue: '',
-    description: 'Background image for section or container',
-  },
-  cfBackgroundImageScaling: {
-    displayName: 'Image scaling',
-    type: 'Text',
-    group: 'style',
-    description: 'Adjust background image to fit, fill or tile the column',
-    defaultValue: 'fit',
-    validations: {
-      in: [
-        {
-          value: 'fill',
-          displayName: 'Fill',
-        },
-        {
-          value: 'fit',
-          displayName: 'Fit',
-        },
-        {
-          value: 'tile',
-          displayName: 'Tile',
-        },
-      ],
-    },
-  },
-  cfBackgroundImageAlignment: {
-    displayName: 'Image alignment',
-    type: 'Text',
-    group: 'style',
-    description: 'Align background image to the edges of the column',
-    defaultValue: 'left top',
   },
   cfColumnSpan: {
     type: 'Text',
@@ -458,22 +493,25 @@ export const singleColumnBuiltInStyles: Partial<
   },
 };
 
-export const columnsBuiltInStyles: Partial<
-  Record<ContainerStyleVariableName, ComponentDefinitionVariable<'Text' | 'Boolean'>>
-> = {
+export const columnsBuiltInStyles: VariableDefinitions = {
+  cfVisibility: builtInStyles.cfVisibility,
+  cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
+  cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
+  cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
+  cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
   cfMargin: {
     displayName: 'Margin',
     type: 'Text',
     group: 'style',
     description: 'The margin of the columns',
-    defaultValue: '0 Auto 0 Auto',
+    defaultValue: '0 auto 0 auto',
   },
   cfWidth: {
     displayName: 'Width',
     type: 'Text',
     group: 'style',
     description: 'The width of the columns',
-    defaultValue: 'fill',
+    defaultValue: '100%',
   },
   cfMaxWidth: {
     displayName: 'Max width',
@@ -489,25 +527,12 @@ export const columnsBuiltInStyles: Partial<
     description: 'The padding of the columns',
     defaultValue: '10px 10px 10px 10px',
   },
-  cfBackgroundColor: {
-    displayName: 'Background color',
-    type: 'Text',
-    group: 'style',
-    description: 'The background color of the columns',
-    defaultValue: 'rgba(255, 255, 255, 0)',
-  },
   cfBorder: {
     displayName: 'Border',
     type: 'Text',
     group: 'style',
     description: 'The border of the columns',
-    defaultValue: '1px solid rgba(0, 0, 0, 0)',
-  },
-  cfBackgroundImageUrl: {
-    displayName: 'Background image',
-    type: 'Text',
-    defaultValue: '',
-    description: 'Background image for section or container',
+    defaultValue: '0px solid rgba(0, 0, 0, 0)',
   },
   cfGap: {
     displayName: 'Gap',
@@ -515,36 +540,6 @@ export const columnsBuiltInStyles: Partial<
     group: 'style',
     description: 'The spacing between the elements of the columns',
     defaultValue: '10px 10px',
-  },
-  cfBackgroundImageScaling: {
-    displayName: 'Image scaling',
-    type: 'Text',
-    group: 'style',
-    description: 'Adjust background image to fit, fill or tile the columns',
-    defaultValue: 'fit',
-    validations: {
-      in: [
-        {
-          value: 'fill',
-          displayName: 'Fill',
-        },
-        {
-          value: 'fit',
-          displayName: 'Fit',
-        },
-        {
-          value: 'tile',
-          displayName: 'Tile',
-        },
-      ],
-    },
-  },
-  cfBackgroundImageAlignment: {
-    displayName: 'Image alignment',
-    type: 'Text',
-    group: 'style',
-    description: 'Align background image to the edges of the columns',
-    defaultValue: 'left top',
   },
   cfColumns: {
     type: 'Text',

@@ -5,24 +5,58 @@ export type DraggedItem = DragStart & Partial<DragUpdate>;
 
 export interface DraggedItemStore {
   componentId: string;
-  setComponentId: (id: string) => void;
+  hoveredComponentId?: string;
   draggedItem?: DraggedItem;
-  updateItem: (item?: DraggedItem) => void;
   isDraggingOnCanvas: boolean;
+  onBeforeCaptureId: string;
+  mouseX: number;
+  mouseY: number;
+  scrollY: number;
+  domRect?: DOMRect;
+
+  // actions
+  setComponentId: (id: string) => void;
+  setHoveredComponentId: (id?: string) => void;
+  updateItem: (item?: DraggedItem) => void;
+  setOnBeforeCaptureId: (draggableId: string) => void;
+  setMousePosition: (x: number, y: number) => void;
+  setScrollY: (y: number) => void;
   setDraggingOnCanvas: (isDraggingOnCanvas: boolean) => void;
+  setDomRect: (domRect?: DOMRect) => void;
 }
 
 export const useDraggedItemStore = create<DraggedItemStore>((set) => ({
   draggedItem: undefined,
+  hoveredComponentId: undefined,
+  domRect: undefined,
   componentId: '',
   isDraggingOnCanvas: false,
+  onBeforeCaptureId: '',
+  mouseX: 0,
+  mouseY: 0,
+  scrollY: 0,
   setComponentId(id) {
     set({ componentId: id });
+  },
+  setHoveredComponentId(id) {
+    set({ hoveredComponentId: id });
   },
   updateItem: (item) => {
     set({ draggedItem: item });
   },
   setDraggingOnCanvas: (isDraggingOnCanvas) => {
     set({ isDraggingOnCanvas });
+  },
+  setOnBeforeCaptureId: (onBeforeCaptureId) => {
+    set({ onBeforeCaptureId });
+  },
+  setMousePosition(x, y) {
+    set({ mouseX: x, mouseY: y });
+  },
+  setDomRect(domRect) {
+    set({ domRect });
+  },
+  setScrollY(y) {
+    set({ scrollY: y });
   },
 }));

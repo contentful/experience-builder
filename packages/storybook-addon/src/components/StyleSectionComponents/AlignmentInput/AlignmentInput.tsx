@@ -1,4 +1,4 @@
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { ButtonGroup, Text, IconButton, Flex } from '@contentful/f36-components';
 import { css, cx } from 'emotion';
 import React from 'react';

@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+*.tgz
 .npmrc
 
 node_modules
@@ -34,11 +35,14 @@ vite.config.ts.timestamp-*
 tmp/
 
 .vercel
-# Ignore built styles.css file in packages/components
-/packages/components/styles.css
 
 # Ingore .nx local files
 .nx
 
 # Ingore .env local files
 .env
+# Allow env template files
+!.env.local.tmpl
+
+**/cypress/screenshots/**
+**/cypress/videos/**

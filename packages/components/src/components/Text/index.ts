@@ -1,8 +1,8 @@
-import type { ComponentDefinition } from '@contentful/experience-builder-core/types';
+import type { ComponentDefinition } from '@contentful/experiences-core/types';
 import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 
 export * from './Text';
 
@@ -25,11 +25,12 @@ export const TextComponentDefinition: ComponentDefinition = {
     'cfTextUnderline',
     'cfBackgroundColor',
     'cfBorder',
+    'cfBorderRadius',
     'cfWidth',
     'cfMaxWidth',
   ],
   tooltip: {
-    description: 'Click and drop onto the canvas to add plain text or bind existing content.',
+    description: 'Drop onto the canvas to add plain text.',
   },
   variables: {
     cfHeight: {
