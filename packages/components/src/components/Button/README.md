@@ -13,7 +13,7 @@ Has a default class of `cf-button`, which can be used to style the component.
 ## Usage
 
 ```tsx
-import { Button } from '@contentful/experience-builder-components';
+import { Button } from '@contentful/experiences-components-react';
 
 const MyPage = () => <Button label="Go" url="https://www.contentful.com" />;
 ```

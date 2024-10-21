@@ -1,11 +1,9 @@
 import { ExperienceEntry } from '@/types';
-import { ContentfulClientApi, Entry, Asset, AssetCollection } from 'contentful';
+import { ContentfulClientApi, Entry, Asset } from 'contentful';
 import { isExperienceEntry } from '@/utils';
 import { DeepReference, gatherDeepReferencesFromExperienceEntry } from '@/deep-binding';
-import {
-  MinimalEntryCollection,
-  gatherAutoFetchedReferentsFromIncludes,
-} from './gatherAutoFetchedReferentsFromIncludes';
+import { gatherAutoFetchedReferentsFromIncludes } from './gatherAutoFetchedReferentsFromIncludes';
+import { fetchAllEntries, fetchAllAssets } from './fetchAllEntities';
 
 type FetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;
@@ -54,25 +52,25 @@ export const fetchReferencedEntities = async ({
     }
   }
 
-  const [entriesResponse, assetsResponse] = (await Promise.all([
-    entryIds.length > 0
-      ? client.withoutLinkResolution.getEntries({ 'sys.id[in]': entryIds, locale })
-      : { items: [], includes: [] },
-    assetIds.length > 0 ? client.getAssets({ 'sys.id[in]': assetIds, locale }) : { items: [] },
-  ])) as unknown as [MinimalEntryCollection, AssetCollection];
+  const [entriesResponse, assetsResponse] = await Promise.all([
+    fetchAllEntries({ client, ids: entryIds, locale }),
+    fetchAllAssets({ client, ids: assetIds, locale }),
+  ]);
 
   const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
     gatherAutoFetchedReferentsFromIncludes(deepReferences, entriesResponse);
 
   // Using client getEntries resolves all linked entry references, so we do not need to resolve entries in usedComponents
   const allResolvedEntries = [
-    ...((entriesResponse.items ?? []) as Entry[]),
+    ...((entriesResponse?.items ?? []) as Entry[]),
+    ...((entriesResponse.includes?.Entry ?? []) as Entry[]),
     ...((experienceEntry.fields.usedComponents as ExperienceEntry[]) || []),
     ...autoFetchedReferentEntries,
   ];
 
   const allResolvedAssets = [
     ...((assetsResponse.items ?? []) as Asset[]),
+    ...((entriesResponse?.includes?.Asset ?? []) as Asset[]),
     ...autoFetchedReferentAssets,
   ];
 

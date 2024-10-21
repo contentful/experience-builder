@@ -1,10 +1,10 @@
-import { defineDesignTokens } from '@contentful/experience-builder-core';
+import { defineDesignTokens } from '@contentful/experiences-core';
 import type {
   ComponentRegistration,
-  CompositionDataSource,
-  CompositionUnboundValues,
+  ExperienceDataSource,
+  ExperienceUnboundValues,
   DesignTokensDefinition,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { create } from 'zustand';
 import { componentRegistry } from './registries';
 import { isEqual } from 'lodash-es';
@@ -15,13 +15,15 @@ export interface InitEditorParams {
   initialLocale: string;
 }
 export interface EditorStore {
-  dataSource: CompositionDataSource;
+  dataSource: ExperienceDataSource;
+  hyperLinkPattern?: string;
+  setHyperLinkPattern: (pattern: string) => void;
   locale: string | null;
   selectedNodeId: string | null;
-  unboundValues: CompositionUnboundValues;
+  unboundValues: ExperienceUnboundValues;
   // updaters
-  setDataSource: (data: CompositionDataSource) => void;
-  setUnboundValues: (values: CompositionUnboundValues) => void;
+  setDataSource: (data: ExperienceDataSource) => void;
+  setUnboundValues: (values: ExperienceUnboundValues) => void;
   setLocale: (locale: string) => void;
   setSelectedNodeId: (id: string) => void;
 
@@ -30,12 +32,15 @@ export interface EditorStore {
 
 export const useEditorStore = create<EditorStore>((set, get) => ({
   dataSource: {},
+  hyperLinkPattern: undefined,
   unboundValues: {},
   isDragging: false,
   dragItem: '',
   selectedNodeId: null,
   locale: null,
-
+  setHyperLinkPattern: (pattern: string) => {
+    set({ hyperLinkPattern: pattern });
+  },
   setSelectedNodeId: (id: string) => {
     set({ selectedNodeId: id });
   },
@@ -64,7 +69,7 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
       componentRegistry.set(registration.definition.id, registration);
     });
 
-    // Re-register the design tokens with the Visual Editor's instance of the experience-builder-core package
+    // Re-register the design tokens with the Visual Editor's instance of the experiences-core package
     defineDesignTokens(designTokens);
 
     set({ locale: initialLocale });

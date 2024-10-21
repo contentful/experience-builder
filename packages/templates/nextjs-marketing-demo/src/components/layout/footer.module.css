@@ -1,0 +1,9 @@
+ul.menu {
+  justify-content: center;
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+}
+
+ul.menu li span {
+  color: #fff;
+}

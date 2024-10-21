@@ -3,7 +3,7 @@ import React, { KeyboardEventHandler } from 'react';
 import { styles } from './styles';
 import { TextInput } from '@contentful/f36-components';
 import { useSpacingValue } from './useSpacingValue';
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 
 type MarginGridProps = {
   margin: ComponentDefinitionVariable<'Text'>;

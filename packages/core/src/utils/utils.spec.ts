@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { CompositionComponentNode } from '@/types';
+import { ExperienceTreeNode } from '@/types';
 import { generateRandomId, getInsertionData } from '@/utils';
 
-const dropReceiverChildNode: CompositionComponentNode = {
+const dropReceiverChildNode: ExperienceTreeNode = {
   type: 'block',
   data: {
     id: 'drop-receiver-node-child',
@@ -14,7 +14,7 @@ const dropReceiverChildNode: CompositionComponentNode = {
   children: [],
 };
 
-const dropReceiverNode: CompositionComponentNode = {
+const dropReceiverNode: ExperienceTreeNode = {
   type: 'block',
   data: {
     id: 'drop-receiver-node',
@@ -26,7 +26,7 @@ const dropReceiverNode: CompositionComponentNode = {
   children: [dropReceiverChildNode],
 };
 
-const childFillerNode1: CompositionComponentNode = {
+const childFillerNode1: ExperienceTreeNode = {
   type: 'block',
   data: {
     id: 'random-child-node-1',
@@ -38,7 +38,7 @@ const childFillerNode1: CompositionComponentNode = {
   children: [],
 };
 
-const childFillerNode2: CompositionComponentNode = {
+const childFillerNode2: ExperienceTreeNode = {
   type: 'block',
   data: {
     id: 'random-child-node-1',
@@ -50,7 +50,7 @@ const childFillerNode2: CompositionComponentNode = {
   children: [],
 };
 
-const dropReceiverParentNode: CompositionComponentNode = {
+const dropReceiverParentNode: ExperienceTreeNode = {
   type: 'root',
   data: {
     id: 'tree-root',
@@ -75,7 +75,7 @@ describe('getInsertionData', () => {
         isMouseInUpperHalf: false,
         isOverTopIndicator: false,
         isOverBottomIndicator: false,
-      })
+      }),
     ).toEqual({
       node: dropReceiverParentNode,
       index: 1, // dropped before the dropReceiverNode within the dropReceiverParentNode
@@ -94,7 +94,7 @@ describe('getInsertionData', () => {
         isMouseInUpperHalf: false,
         isOverTopIndicator: false,
         isOverBottomIndicator: false,
-      })
+      }),
     ).toEqual({
       node: dropReceiverParentNode,
       index: 2, // dropped after the dropReceiverNode within the dropReceiverParentNode
@@ -113,7 +113,7 @@ describe('getInsertionData', () => {
         isMouseInUpperHalf: false,
         isOverTopIndicator: true,
         isOverBottomIndicator: false,
-      })
+      }),
     ).toEqual({
       node: dropReceiverParentNode,
       index: 1, // dropped before the dropReceiverNode within the dropReceiverParentNode
@@ -132,7 +132,7 @@ describe('getInsertionData', () => {
         isMouseInUpperHalf: false,
         isOverTopIndicator: false,
         isOverBottomIndicator: true,
-      })
+      }),
     ).toEqual({
       node: dropReceiverParentNode,
       index: 2, // dropped after the dropReceiverNode within the dropReceiverParentNode
@@ -152,7 +152,7 @@ describe('getInsertionData', () => {
           isMouseInUpperHalf: false,
           isOverTopIndicator: false,
           isOverBottomIndicator: false,
-        })
+        }),
       ).toEqual({
         node: dropReceiverNode,
         index: 0, // dropped as the new first child within the dropReceiverNode
@@ -171,7 +171,7 @@ describe('getInsertionData', () => {
           isMouseInUpperHalf: false,
           isOverTopIndicator: false,
           isOverBottomIndicator: false,
-        })
+        }),
       ).toEqual({
         node: dropReceiverNode,
         index: 1, // dropped as the new last child within the dropReceiverNode
@@ -192,7 +192,7 @@ describe('getInsertionData', () => {
           isMouseInUpperHalf: true,
           isOverTopIndicator: false,
           isOverBottomIndicator: false,
-        })
+        }),
       ).toEqual({
         node: dropReceiverNode,
         index: 0, // dropped as the new first child within the dropReceiverNode
@@ -211,7 +211,7 @@ describe('getInsertionData', () => {
           isMouseInUpperHalf: false,
           isOverTopIndicator: false,
           isOverBottomIndicator: false,
-        })
+        }),
       ).toEqual({
         node: dropReceiverNode,
         index: 1, // dropped as the new last child within the dropReceiverNode

@@ -4,5 +4,6 @@ export * from './RichText';
 export * from './Text';
 export * from './Image';
 export * from './ContentfulContainer';
+export * from './Divider';
 export * from './Columns';
 export * from './Assembly';

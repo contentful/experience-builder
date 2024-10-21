@@ -1,7 +1,41 @@
 import { DesignTokensDefinition } from '@/types';
 import { builtInStyles, optionalBuiltInStyles } from '../definitions/styles';
 
-export const designTokensRegistry: DesignTokensDefinition = {};
+export let designTokensRegistry: DesignTokensDefinition = {};
+
+// This function is used to ensure that the composite values are valid since composite values are optional.
+// Therefore only border and in the future text related design tokens are/will be checked in this funciton.
+// Ensuring values for simple key-value design tokens are not neccessary since they are required via typescript.
+const ensureValidCompositeValues = (designTokenDefinition: DesignTokensDefinition) => {
+  // Text token validation
+  if (designTokenDefinition.text) {
+    for (const textKey in designTokenDefinition.text) {
+      const textValue = designTokenDefinition.text[textKey];
+      designTokenDefinition.text[textKey] = {
+        emphasis: textValue.emphasis || 'none',
+        fontSize: textValue.fontSize || '16px',
+        case: textValue.case || 'normal',
+        fontWeight: textValue.fontWeight || '400',
+        lineHeight: textValue.lineHeight || '20px',
+        letterSpacing: textValue.letterSpacing || '0px',
+        color: textValue.color || '#000000',
+      };
+    }
+  }
+
+  // Border validation
+  if (designTokenDefinition.border) {
+    for (const borderKey in designTokenDefinition.border) {
+      const borderValue = designTokenDefinition.border[borderKey];
+      designTokenDefinition.border[borderKey] = {
+        width: borderValue.width || '1px',
+        style: borderValue.style || 'solid',
+        color: borderValue.color || '#000000',
+      };
+    }
+  }
+  return designTokenDefinition;
+};
 
 /**
  * Register design tokens styling
@@ -9,21 +43,27 @@ export const designTokensRegistry: DesignTokensDefinition = {};
  * @returns void
  */
 export const defineDesignTokens = (designTokenDefinition: DesignTokensDefinition) => {
-  Object.assign(designTokensRegistry, designTokenDefinition);
+  Object.assign(designTokensRegistry, ensureValidCompositeValues(designTokenDefinition));
 };
 
-const templateStringRegex = /\${(.+?)}/g;
+const templateStringRegex = /\${(\w.+?)}/g;
 
 export const getDesignTokenRegistration = (breakpointValue: string, variableName: string) => {
   if (!breakpointValue) return breakpointValue;
 
   let resolvedValue = '';
-  for (const part of breakpointValue.split(' ')) {
-    const tokenValue = templateStringRegex.test(part)
-      ? resolveSimpleDesignToken(part, variableName)
-      : part;
-    resolvedValue += `${tokenValue} `;
+
+  // Match all parts of the string, including design tokens and other parts
+  const parts = breakpointValue.match(/(\${.+?}|\S+)/g);
+
+  if (parts) {
+    for (const part of parts) {
+      const isDesignToken = templateStringRegex.test(part);
+      const tokenValue = isDesignToken ? resolveSimpleDesignToken(part, variableName) : part;
+      resolvedValue += `${tokenValue} `;
+    }
   }
+
   // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
   return resolvedValue.trim();
 };
@@ -41,6 +81,7 @@ const resolveSimpleDesignToken = (templateString: string, variableName: string) 
 
     return tokenValues[tokenName];
   }
+
   if (builtInStyles[variableName]) {
     return builtInStyles[variableName].defaultValue;
   }
@@ -48,4 +89,9 @@ const resolveSimpleDesignToken = (templateString: string, variableName: string) 
     return optionalBuiltInStyles[variableName].defaultValue;
   }
   return '0px';
+};
+
+// Used in unit tests to reset the design token registry
+export const resetDesignTokenRegistry = () => {
+  designTokensRegistry = {};
 };

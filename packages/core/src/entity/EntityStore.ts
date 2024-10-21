@@ -1,6 +1,6 @@
 import type { Asset, Entry, UnresolvedLink } from 'contentful';
 import { isExperienceEntry } from '@/utils';
-import type { Composition, CompositionUnboundValues, ExperienceEntry } from '@/types';
+import type { ExperienceFields, ExperienceUnboundValues, ExperienceEntry } from '@/types';
 import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
@@ -12,8 +12,8 @@ type EntityStoreArgs = {
 };
 
 export class EntityStore extends EntityStoreBase {
-  private _experienceEntry: Composition | undefined;
-  private _unboundValues: CompositionUnboundValues | undefined;
+  private _experienceEntry: ExperienceFields | undefined;
+  private _unboundValues: ExperienceUnboundValues | undefined;
 
   constructor(json: string);
   constructor({ experienceEntry, entities, locale }: EntityStoreArgs);
@@ -80,7 +80,7 @@ export class EntityStore extends EntityStoreBase {
    * the latter one is certainly just a default value while the other one is from the actual instance.
    * @param unboundValues set of unbound values defined in the assembly definition
    */
-  public addAssemblyUnboundValues(unboundValues: CompositionUnboundValues) {
+  public addAssemblyUnboundValues(unboundValues: ExperienceUnboundValues) {
     this._unboundValues = { ...unboundValues, ...(this._unboundValues ?? {}) };
   }
 
@@ -96,5 +96,13 @@ export class EntityStore extends EntityStoreBase {
     }
     const fieldValue = get<string>(entity, path);
     return transformAssetFileToUrl(fieldValue);
+  }
+
+  public toJSON() {
+    return {
+      _experienceEntry: this._experienceEntry,
+      _unboundValues: this._unboundValues,
+      ...super.toJSON(),
+    };
   }
 }

@@ -1,22 +1,25 @@
 {
-  "name": "@contentful/experience-builder-components",
-  "version": "0.0.2-alpha.33",
-  "description": "A basic set of components to use with Experience Builder",
+  "name": "@contentful/experiences-components-react",
+  "version": "1.19.0",
+  "description": "A basic set of components to use with Studio Experiences",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/components#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder.git"
+    "url": "git+https://github.com/contentful/experience-builder.git",
+    "directory": "packages/components"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/experience-builder/issues"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "style": "./styles.css",
   "type": "module",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
   "scripts": {
-    "clean": "rimraf dist && rimraf styles.css",
+    "clean": "rimraf dist",
     "predev": "npm run clean",
     "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
     "prebuild": "npm run clean",
@@ -32,7 +35,6 @@
   "license": "MIT",
   "files": [
     "readme.md",
-    "styles.css",
     "package.json",
     "dist/**/*.*"
   ],
@@ -68,14 +70,15 @@
     "storybook": "^7.4.1",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9"
+    "vite": "^5.4.8",
+    "vite-plugin-svgr": "^4.1.0"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0"
   },
   "dependencies": {
-    "@contentful/experience-builder-core": "file:../core",
+    "@contentful/experiences-core": "file:../core",
     "@contentful/rich-text-react-renderer": "^15.17.2",
     "postcss-import": "^15.1.0",
     "style-inject": "^0.3.0"

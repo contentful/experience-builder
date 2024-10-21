@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ComponentDefinitionVariable } from '@contentful/experience-builder';
-
-// import { SECTION_STYLE_ATTRIBUTE_KEY } from '@contentful/experience-builder/dist/types';
+import { ComponentDefinitionVariable } from '@contentful/experiences-sdk-react';
 import { BackgroundColorInput, BorderInput, DefaultInput } from './StyleSectionComponents';
 import { Button, Flex, Text } from '@contentful/f36-components';
 import { HorizontalRuleIcon, PlusIcon } from '@contentful/f36-icons';
 import { css } from 'emotion';
-import { ContainerStyleVariableName } from '@contentful/experience-builder/dist/types';
+import { ContainerStyleVariableName } from '@contentful/experiences-sdk-react/dist/types';
 import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
 
 const styles = {

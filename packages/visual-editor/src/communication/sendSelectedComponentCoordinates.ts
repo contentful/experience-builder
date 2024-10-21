@@ -1,5 +1,5 @@
-import { sendMessage, getElementCoordinates } from '@contentful/experience-builder-core';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import { sendMessage, getElementCoordinates } from '@contentful/experiences-core';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 /**
  * This function gets the element co-ordinates of a specified component in the DOM and its parent
@@ -28,12 +28,25 @@ export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   }
 
   if (selectedElement) {
-    sendMessage(OUTGOING_EVENTS.UpdateSelectedComponentCoordinates, {
-      selectedNodeCoordinates: getElementCoordinates(selectedElement),
-      selectedAssemblyChildCoordinates: selectedAssemblyChild
-        ? getElementCoordinates(selectedAssemblyChild)
-        : null,
-      parentCoordinates: parent ? getElementCoordinates(parent) : null,
-    });
+    const sendUpdateSelectedComponentCoordinates = () => {
+      sendMessage(OUTGOING_EVENTS.UpdateSelectedComponentCoordinates, {
+        selectedNodeCoordinates: getElementCoordinates(selectedElement!),
+        selectedAssemblyChildCoordinates: selectedAssemblyChild
+          ? getElementCoordinates(selectedAssemblyChild)
+          : undefined,
+        parentCoordinates: parent ? getElementCoordinates(parent) : undefined,
+      });
+    };
+
+    const childImage = selectedElement.querySelector('img');
+    if (childImage) {
+      const handleImageLoad = () => {
+        sendUpdateSelectedComponentCoordinates();
+        childImage.removeEventListener('load', handleImageLoad);
+      };
+      childImage.addEventListener('load', handleImageLoad);
+    }
+
+    sendUpdateSelectedComponentCoordinates();
   }
 };

@@ -7,13 +7,13 @@
   "homepage": "https://github.com/contentful/experience-builder#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/contentful/experience-builder.git"
+    "url": "git+https://github.com/contentful/experience-builder.git"
   },
   "bugs": {
     "url": "https://github.com/contentful/experience-builder/issues"
   },
   "workspaces": [
-    "packages/*"
+    "packages/**/*"
   ],
   "scripts": {
     "lint": "lerna run lint",
@@ -30,8 +30,8 @@
     "depcruise": "lerna run depcruise"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.0.0",
-    "@commitlint/config-conventional": "^18.0.0",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.0.3",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "commitizen": "4.3.0",

@@ -1,9 +1,9 @@
 import React, { ErrorInfo, ReactElement } from 'react';
-import { sendMessage } from '@contentful/experience-builder-core';
+import { sendMessage } from '@contentful/experiences-core';
 import '../styles/ErrorBoundary.css';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
-class ImportedComponentError extends Error {}
+('use client');
 
 export class ErrorBoundary extends React.Component<
   { children: ReactElement },
@@ -20,7 +20,7 @@ export class ErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ error, errorInfo });
-    if (!(error instanceof ImportedComponentError)) {
+    if (error.name !== 'ImportedComponentError') {
       sendMessage(OUTGOING_EVENTS.CanvasError, error);
     } else {
       throw error;
@@ -64,18 +64,6 @@ export class ErrorBoundary extends React.Component<
         </div>
       );
     }
-    return this.props.children;
-  }
-}
-
-export class ImportedComponentErrorBoundary extends React.Component<{ children: ReactElement }> {
-  componentDidCatch(error: Error, _errorInfo: ErrorInfo) {
-    const err = new ImportedComponentError(error.message);
-    err.stack = error.stack;
-    throw err;
-  }
-
-  render() {
     return this.props.children;
   }
 }

@@ -1,66 +1,48 @@
 import React, { useEffect } from 'react';
-import { sendMessage } from '@contentful/experience-builder-core';
-import dragState from '@/utils/dragState';
+import { EntityStore, sendMessage } from '@contentful/experiences-core';
 import { RootRenderer } from './RootRenderer/RootRenderer';
-import { simulateMouseEvent } from '@/utils/simulateMouseEvent';
-import { OUTGOING_EVENTS } from '@contentful/experience-builder-core/constants';
+import SimulateDnD from '@/utils/simulateDnD';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useInitializeEditor } from '@/hooks/useInitializeEditor';
-import { useEntityStore } from '@/store/entityStore';
-import { useEditorStore } from '@/store/editor';
 import { useZoneStore } from '@/store/zone';
-import { CTFL_ZONE_ID } from '@/types/constants';
+import { CTFL_ZONE_ID, NEW_COMPONENT_ID } from '@/types/constants';
+import { useDraggedItemStore } from '@/store/draggedItem';
+import type { Experience } from '@contentful/experiences-core/types';
+import { useEditorStore } from '@/store/editor';
 
-const findNearestDropzone = (element: HTMLElement): string | null => {
-  const zoneId = element.getAttribute(CTFL_ZONE_ID);
-
-  if (!element.parentElement) {
-    return null;
-  }
-
-  if (element.tagName === 'BODY') {
-    return null;
-  }
-
-  return zoneId ?? findNearestDropzone(element.parentElement);
-};
-
-export const VisualEditorRoot = () => {
+export const VisualEditorRoot = ({ experience }: { experience?: Experience<EntityStore> }) => {
   const initialized = useInitializeEditor();
-  const locale = useEditorStore((state) => state.locale);
-  const entityStore = useEntityStore((state) => state.entityStore);
+  const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
+
+  const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
   const setHoveringZone = useZoneStore((state) => state.setHoveringZone);
-  const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
 
   useEffect(() => {
-    if (!locale) {
-      return;
+    if (experience?.hyperlinkPattern) {
+      setHyperLinkPattern(experience.hyperlinkPattern);
     }
-    if (entityStore.locale === locale) {
-      return;
-    }
-
-    resetEntityStore(locale);
-  }, [locale, resetEntityStore, entityStore.locale]);
+  }, [experience?.hyperlinkPattern, setHyperLinkPattern]);
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
+      setMousePosition(e.clientX, e.clientY);
 
-      const zoneId = findNearestDropzone(target);
+      const target = e.target as HTMLElement;
+      const zoneId = target.closest(`[${CTFL_ZONE_ID}]`)?.getAttribute(CTFL_ZONE_ID);
 
       if (zoneId) {
         setHoveringZone(zoneId);
       }
 
-      if ((e.target as HTMLElement)?.id === 'item') {
+      if (!SimulateDnD.isDragging) {
         return;
       }
 
-      if (!dragState.isDragStart) {
+      if (target.id === NEW_COMPONENT_ID) {
         return;
       }
 
-      simulateMouseEvent(e.pageX, e.pageY);
+      SimulateDnD.updateDrag(e.clientX, e.clientY);
 
       sendMessage(OUTGOING_EVENTS.MouseMove, {
         clientX: e.pageX,

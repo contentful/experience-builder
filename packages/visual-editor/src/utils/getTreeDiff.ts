@@ -1,7 +1,4 @@
-import {
-  CompositionComponentNode,
-  CompositionTree,
-} from '@contentful/experience-builder-core/types';
+import { ExperienceTreeNode, ExperienceTree } from '@contentful/experiences-core/types';
 
 import { getItem } from './getItem';
 import { isEqual } from 'lodash-es';
@@ -11,9 +8,9 @@ import { TreeDiff } from '@/types/treeActions';
 interface MissingNodeActionParams {
   index: number;
   nodeAdded: boolean;
-  tree: CompositionTree;
-  child: CompositionComponentNode;
-  currentNode: CompositionComponentNode;
+  tree: ExperienceTree;
+  child: ExperienceTreeNode;
+  currentNode: ExperienceTreeNode;
   parentNodeId: string;
 }
 
@@ -78,9 +75,9 @@ function matchingNodeAction({
 }
 
 interface CompareNodeParams {
-  currentNode?: CompositionComponentNode;
-  updatedNode?: CompositionComponentNode;
-  originalTree: CompositionTree;
+  currentNode?: ExperienceTreeNode;
+  updatedNode?: ExperienceTreeNode;
+  originalTree: ExperienceTree;
   differences: Array<TreeDiff | null>;
 }
 
@@ -181,9 +178,9 @@ function compareNodes({
 }
 
 export function getTreeDiffs(
-  tree1: CompositionComponentNode,
-  tree2: CompositionComponentNode,
-  originalTree: CompositionTree
+  tree1: ExperienceTreeNode,
+  tree2: ExperienceTreeNode,
+  originalTree: ExperienceTree,
 ): TreeDiff[] {
   const differences: TreeDiff[] = [];
 

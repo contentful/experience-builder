@@ -1,5 +1,5 @@
 import { DRAGGABLE_HEIGHT, DRAGGABLE_WIDTH, HITBOX, HitboxDirection } from '@/types/constants';
-import { CSSProperties } from '@contentful/experience-builder-core/types';
+import { CSSProperties } from '@contentful/experiences-core/types';
 
 const { WIDTH, HEIGHT, INITIAL_OFFSET, OFFSET_INCREMENT, MIN_HEIGHT, MIN_DEPTH_HEIGHT, DEEP_ZONE } =
   HITBOX;
@@ -8,13 +8,21 @@ interface Params {
   direction: HitboxDirection;
   domRect?: DOMRect;
   zoneDepth: number;
+  scrollY: number;
+  offsetRect?: DOMRect;
 }
 
 const calcOffsetDepth = (depth: number) => {
   return INITIAL_OFFSET - OFFSET_INCREMENT * depth;
 };
 
-export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSProperties => {
+export const getHitboxStyles = ({
+  direction,
+  zoneDepth,
+  domRect,
+  scrollY,
+  offsetRect,
+}: Params): CSSProperties => {
   if (!domRect) {
     return {
       display: 'none',
@@ -22,6 +30,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
   }
 
   const { width, height, top, left, bottom, right } = domRect;
+  const { height: offsetHeight, width: offsetWidth } = offsetRect || { height: 0, width: 0 };
 
   const MAX_SELF_HEIGHT = DRAGGABLE_HEIGHT * 2;
 
@@ -33,7 +42,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
       return {
         width,
         height: HEIGHT,
-        top: top - calcOffsetDepth(zoneDepth),
+        top: top + offsetHeight - calcOffsetDepth(zoneDepth) - scrollY,
         left,
         zIndex: 100 + zoneDepth,
       };
@@ -41,7 +50,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
       return {
         width,
         height: HEIGHT,
-        top: bottom + calcOffsetDepth(zoneDepth),
+        top: bottom + offsetHeight + calcOffsetDepth(zoneDepth) - scrollY,
         left,
         zIndex: 100 + zoneDepth,
       };
@@ -49,16 +58,16 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
       return {
         width: WIDTH,
         height: height - HEIGHT,
-        left: left - calcOffsetDepth(zoneDepth) - WIDTH / 2,
-        top: top + HEIGHT / 2,
+        left: left + offsetWidth - calcOffsetDepth(zoneDepth) - WIDTH / 2,
+        top: top + HEIGHT / 2 - scrollY,
         zIndex: 100 + zoneDepth,
       };
     case HitboxDirection.RIGHT:
       return {
         width: WIDTH,
         height: height - HEIGHT,
-        left: right - calcOffsetDepth(zoneDepth) - WIDTH / 2,
-        top: top + HEIGHT / 2,
+        left: right + offsetWidth + calcOffsetDepth(zoneDepth) - WIDTH / 2,
+        top: top + HEIGHT / 2 - scrollY,
         zIndex: 100 + zoneDepth,
       };
     case HitboxDirection.SELF_VERTICAL: {
@@ -71,7 +80,7 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
         width,
         height: selfHeight,
         left,
-        top: top + height / 2 - selfHeight / 2,
+        top: top + height / 2 - selfHeight / 2 - scrollY,
         zIndex: 1000 + zoneDepth,
       };
     }
@@ -82,8 +91,8 @@ export const getHitboxStyles = ({ direction, zoneDepth, domRect }: Params): CSSP
       return {
         width: width - DRAGGABLE_WIDTH * 2,
         height,
-        left: left + (DRAGGABLE_WIDTH * 2) / 2,
-        top,
+        left: left + DRAGGABLE_WIDTH,
+        top: top - scrollY,
         zIndex: 1000 + zoneDepth,
       };
     }

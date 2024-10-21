@@ -1,14 +1,12 @@
 import { useEditorStore } from '@/store/editor';
 import { useEntityStore } from '@/store/entityStore';
 
-import {
-  INTERNAL_EVENTS,
-  VISUAL_EDITOR_EVENTS,
-} from '@contentful/experience-builder-core/constants';
+import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
 import { useEffect, useState } from 'react';
 
 export const useInitializeEditor = () => {
   const initializeEditor = useEditorStore((state) => state.initializeEditor);
+
   const [initialized, setInitialized] = useState(false);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
 

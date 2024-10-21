@@ -1,8 +1,8 @@
 import type {
   Breakpoint,
-  CompositionComponentNode,
-  CompositionTree,
-} from '@contentful/experience-builder-core/types';
+  ExperienceTreeNode,
+  ExperienceTree,
+} from '@contentful/experiences-core/types';
 import { ROOT_ID, TreeAction } from '@/types/constants';
 import { create } from 'zustand';
 import { produce } from 'immer';
@@ -16,20 +16,17 @@ import {
 } from '@/utils/treeHelpers';
 import { getTreeDiffs } from '@/utils/getTreeDiff';
 import { treeVisit } from '@/utils/treeTraversal';
-import {
-  ASSEMBLY_NODE_TYPE,
-  DESIGN_COMPONENT_NODE_TYPE,
-} from '@contentful/experience-builder-core/constants';
+import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
 export interface TreeStore {
-  tree: CompositionTree;
+  tree: ExperienceTree;
   breakpoints: Breakpoint[];
-  updateTree: (tree: CompositionTree) => void;
-  updateTreeForced: (tree: CompositionTree) => void;
+  updateTree: (tree: ExperienceTree) => void;
+  updateTreeForced: (tree: ExperienceTree) => void;
   updateNodesByUpdatedEntity: (entityId: string) => void;
   addChild: (
     destinationIndex: number,
     destinationParentId: string,
-    node: CompositionComponentNode,
+    node: ExperienceTreeNode,
   ) => void;
   reorderChildren: (
     destinationIndex: number,
@@ -44,15 +41,15 @@ export interface TreeStore {
   ) => void;
 }
 
-const isAssemblyNode = (node: CompositionComponentNode) => {
-  return node.type === DESIGN_COMPONENT_NODE_TYPE || node.type === ASSEMBLY_NODE_TYPE;
+const isAssemblyNode = (node: ExperienceTreeNode) => {
+  return node.type === ASSEMBLY_NODE_TYPE;
 };
 
 export const useTreeStore = create<TreeStore>((set, get) => ({
   tree: {
     root: {
       children: [],
-      type: 'root',
+      type: 'root' as const,
       data: {
         breakpoints: [],
         dataSource: {},

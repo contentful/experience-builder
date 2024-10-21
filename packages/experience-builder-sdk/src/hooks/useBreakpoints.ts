@@ -1,15 +1,15 @@
 import type {
   ValuesByBreakpoint,
   Breakpoint,
-  CompositionVariableValueType,
+  PrimitiveValue,
   ResolveDesignValueType,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import {
   mediaQueryMatcher,
   getFallbackBreakpointIndex,
   getActiveBreakpointIndex,
   getValueForBreakpoint,
-} from '@contentful/experience-builder-core';
+} from '@contentful/experiences-core';
 import { useCallback, useEffect, useState } from 'react';
 
 // TODO: In order to support integrations without React, we should extract this heavy logic into simple
@@ -55,10 +55,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   );
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
-    (
-      valuesByBreakpoint: ValuesByBreakpoint,
-      variableName: string,
-    ): CompositionVariableValueType => {
+    (valuesByBreakpoint: ValuesByBreakpoint, variableName: string): PrimitiveValue => {
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,

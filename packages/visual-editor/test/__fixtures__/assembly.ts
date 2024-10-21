@@ -2,11 +2,14 @@ import {
   CONTENTFUL_COMPONENTS,
   ASSEMBLY_NODE_TYPE,
   LATEST_SCHEMA_VERSION,
-} from '@contentful/experience-builder-core/constants';
+} from '@contentful/experiences-core/constants';
 import type {
-  CompositionComponentNode,
+  ExperienceComponentSettings,
+  ExperienceEntry,
+  ExperienceTreeNode,
   SchemaVersions,
-} from '@contentful/experience-builder-core/types';
+  ValuesByBreakpoint,
+} from '@contentful/experiences-core/types';
 
 type createAssemblyEntryArgs = {
   schemaVersion: SchemaVersions;
@@ -16,10 +19,11 @@ type createAssemblyEntryArgs = {
 export const defaultAssemblyId = 'assembly-id';
 
 export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
+export const assemblyGeneratedDesignVariableName = 'cfWidth_uuid2Assembly';
 export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = defaultAssemblyId,
-}: createAssemblyEntryArgs) => {
+}: createAssemblyEntryArgs): ExperienceEntry => {
   return {
     sys: {
       id,
@@ -57,14 +61,19 @@ export const createAssemblyEntry = ({
         children: [
           {
             definitionId: CONTENTFUL_COMPONENTS.container.id,
-            variables: {},
+            variables: {
+              cfWidth: {
+                type: 'ComponentValue',
+                key: assemblyGeneratedDesignVariableName,
+              },
+            },
             children: [
               {
                 definitionId: 'custom-component',
                 variables: {
                   text: {
-                    key: assemblyGeneratedVariableName,
                     type: 'ComponentValue',
+                    key: assemblyGeneratedVariableName,
                   },
                 },
                 children: [],
@@ -84,14 +93,18 @@ export const createAssemblyEntry = ({
       componentSettings: {
         variableDefinitions: {
           [assemblyGeneratedVariableName]: {
-            id: 'text',
-            name: 'Text',
+            displayName: 'Text',
             type: 'Text',
             defaultValue: { type: 'UnboundValue', key: 'unbound_uuid1Assembly' },
-            required: false,
+          },
+          [assemblyGeneratedDesignVariableName]: {
+            displayName: 'Width',
+            type: 'Text',
+            group: 'style',
+            defaultValue: { type: 'DesignValue', valuesByBreakpoint: { desktop: '42px' } },
           },
         },
-      },
+      } satisfies ExperienceComponentSettings,
     },
   };
 };
@@ -102,6 +115,7 @@ type createAssemblyNodeArgs = {
   unboundValue?: string;
   unboundValueKey?: string;
   boundValueKey?: string;
+  designValue?: ValuesByBreakpoint;
 };
 
 export const createAssemblyNode = ({
@@ -110,8 +124,9 @@ export const createAssemblyNode = ({
   unboundValue = 'New year Eve',
   unboundValueKey = undefined,
   boundValueKey = undefined,
-}: createAssemblyNodeArgs): CompositionComponentNode => {
-  const node: CompositionComponentNode = {
+  designValue = undefined,
+}: createAssemblyNodeArgs): ExperienceTreeNode => {
+  const node: ExperienceTreeNode = {
     type: ASSEMBLY_NODE_TYPE,
     data: {
       blockId,
@@ -145,6 +160,12 @@ export const createAssemblyNode = ({
           id: 'someEntryId',
         },
       },
+    };
+  }
+  if (designValue) {
+    node.data.props[assemblyGeneratedDesignVariableName] = {
+      type: 'DesignValue',
+      valuesByBreakpoint: designValue,
     };
   }
   return node;

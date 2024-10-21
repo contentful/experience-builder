@@ -1,62 +1,60 @@
+'use client';
 import React from 'react';
 import {
   VisualEditorMode,
-  isDeprecatedExperience,
+  createExperience,
   validateExperienceBuilderConfig,
-} from '@contentful/experience-builder-core';
-import { EntityStore } from '@contentful/experience-builder-core';
-import type { DeprecatedExperience, Experience } from '@contentful/experience-builder-core/types';
-import { DeprecatedPreviewDeliveryRoot } from './blocks/preview/DeprecatedPreviewDeliveryRoot';
+} from '@contentful/experiences-core';
+import { EntityStore } from '@contentful/experiences-core';
+import type { Experience } from '@contentful/experiences-core/types';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
-import { useDetectEditorMode } from './hooks/useDetectEditorMode';
+import { useDetectCanvasMode } from './hooks/useDetectCanvasMode';
+import { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
 type ExperienceRootProps = {
-  experience?: Experience<EntityStore> | DeprecatedExperience;
+  experience?: Experience<EntityStore> | string | null;
   locale: string;
-  /**
-   * @deprecated
-   */
-  slug?: string;
   visualEditorMode?: VisualEditorMode;
 };
 
 export const ExperienceRoot = ({
   locale,
   experience,
-  slug,
   visualEditorMode = VisualEditorMode.LazyLoad,
 }: ExperienceRootProps) => {
-  const isEditorMode = useDetectEditorMode();
+  const mode = useDetectCanvasMode();
+
+  //If experience is passed in as a JSON string, recreate it to an experience object
+  const experienceObject =
+    typeof experience === 'string' ? createExperience(experience) : experience;
 
   validateExperienceBuilderConfig({
     locale,
-    isEditorMode,
+    mode,
   });
 
-  if (isEditorMode) {
-    const entityStore =
-      experience && !isDeprecatedExperience(experience) ? experience.entityStore : undefined;
+  if (mode === StudioCanvasMode.EDITOR) {
     return (
       <VisualEditorRoot
+        experience={experienceObject as Experience<EntityStore> | undefined}
         visualEditorMode={visualEditorMode}
-        initialEntities={entityStore?.entities || []}
         initialLocale={locale}
       />
     );
   }
 
-  if (!experience) return null;
-
-  if (isDeprecatedExperience(experience)) {
+  if (mode === StudioCanvasMode.READ_ONLY) {
     return (
-      <DeprecatedPreviewDeliveryRoot
-        deprecatedExperience={experience as DeprecatedExperience}
-        locale={locale}
-        slug={slug}
+      <VisualEditorRoot
+        experience={experienceObject as Experience<EntityStore> | undefined}
+        visualEditorMode={visualEditorMode}
+        initialLocale={locale}
       />
     );
   }
 
-  return <PreviewDeliveryRoot locale={locale} experience={experience} />;
+  if (!experienceObject) return null;
+
+  return <PreviewDeliveryRoot locale={locale} experience={experienceObject} />;
 };

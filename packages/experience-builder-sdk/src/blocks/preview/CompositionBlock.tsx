@@ -1,50 +1,51 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
-import { omit } from 'lodash-es';
 import {
   EntityStore,
-  isEmptyStructureWithRelativeHeight,
-  isDeepPath,
-} from '@contentful/experience-builder-core';
+  resolveHyperlinkPattern,
+  sanitizeNodeProps,
+} from '@contentful/experiences-core';
 import {
-  CF_STYLE_ATTRIBUTES,
   CONTENTFUL_COMPONENTS,
-  EMPTY_CONTAINER_HEIGHT,
-} from '@contentful/experience-builder-core/constants';
+  HYPERLINK_DEFAULT_PATTERN,
+} from '@contentful/experiences-core/constants';
 import type {
-  CompositionNode,
-  CompositionVariableValueType,
+  ComponentTreeNode,
+  DesignValue,
+  PrimitiveValue,
   ResolveDesignValueType,
   StyleProps,
-} from '@contentful/experience-builder-core/types';
+} from '@contentful/experiences-core/types';
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
+import { checkIsAssemblyNode, transformBoundContentValue } from '@contentful/experiences-core';
+import { useClassName } from '../../hooks/useClassName';
 import {
-  buildCfStyles,
-  checkIsAssemblyNode,
-  transformContentValue,
-} from '@contentful/experience-builder-core';
-import { useStyleTag } from '../../hooks/useStyleTag';
-import {
+  Assembly,
   Columns,
   ContentfulContainer,
   SingleColumn,
-} from '@contentful/experience-builder-components';
+} from '@contentful/experiences-components-react';
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
-import { Assembly } from '../../components/Assembly';
+import { Entry } from 'contentful';
+import PreviewUnboundImage from './PreviewUnboundImage';
 
 type CompositionBlockProps = {
-  node: CompositionNode;
+  node: ComponentTreeNode;
   locale: string;
   entityStore: EntityStore;
+  hyperlinkPattern?: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
+  getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
 };
 
 export const CompositionBlock = ({
   node: rawNode,
   locale,
   entityStore,
+  hyperlinkPattern,
   resolveDesignValue,
+  getPatternChildNodeClassName,
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
     () =>
@@ -79,63 +80,121 @@ export const CompositionBlock = ({
   const nodeProps = useMemo(() => {
     // Don't enrich the assembly wrapper node with props
     if (!componentRegistration || isAssembly) {
-      return {};
+      return {
+        cfSsrClassName: node.variables.cfSsrClassName
+          ? resolveDesignValue(
+              (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+              'cfSsrClassName',
+            )
+          : undefined,
+      };
     }
 
-    const propMap: Record<string, CompositionVariableValueType> = {};
+    const propMap: Record<string, PrimitiveValue> = {
+      // @ts-expect-error -- node id is being generated in ssrStyles.ts, currently missing ComponentTreeNode type
+      cfSsrClassName: node.id
+        ? // @ts-expect-error -- node id is being generated in ssrStyles.ts, currently missing ComponentTreeNode type
+          getPatternChildNodeClassName?.(node.id)
+        : node.variables.cfSsrClassName
+          ? resolveDesignValue(
+              (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+              'cfSsrClassName',
+            )
+          : undefined,
+    };
 
-    return Object.entries(node.variables).reduce((acc, [variableName, variable]) => {
-      switch (variable.type) {
-        case 'DesignValue':
-          acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
-          break;
-        case 'BoundValue': {
-          const variableDefinition = componentRegistration.definition.variables[variableName];
-          if (isDeepPath(variable.path)) {
+    const props = Object.entries(componentRegistration.definition.variables).reduce(
+      (acc, [variableName, variableDefinition]) => {
+        const variable = node.variables[variableName];
+        if (!variable) return acc;
+
+        switch (variable.type) {
+          case 'DesignValue':
+            acc[variableName] = resolveDesignValue(variable.valuesByBreakpoint, variableName);
+            break;
+          case 'BoundValue': {
             const [, uuid] = variable.path.split('/');
-            const link = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-            const boundValue = entityStore.getValueDeep(link, variable.path);
-            const value = boundValue || variableDefinition.defaultValue;
-            acc[variableName] = transformContentValue(value, variableDefinition);
+            const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
+
+            const value = transformBoundContentValue(
+              node.variables,
+              entityStore,
+              binding,
+              resolveDesignValue,
+              variableName,
+              variableDefinition,
+              variable.path,
+            );
+            acc[variableName] = value ?? variableDefinition.defaultValue;
             break;
           }
-          const [, uuid, ...path] = variable.path.split('/');
-          const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-          let value = entityStore.getValue(binding, path.slice(0, -1));
-          if (!value) {
-            const foundAssetValue = entityStore.getValue(binding, [
-              ...path.slice(0, -2),
-              'fields',
-              'file',
-            ]);
-            if (foundAssetValue) {
-              value = foundAssetValue;
+
+          case 'HyperlinkValue': {
+            const binding = entityStore.dataSource[variable.linkTargetKey];
+            const hyperlinkEntry = entityStore.getEntryOrAsset(binding, variable.linkTargetKey);
+
+            const value = resolveHyperlinkPattern(
+              componentRegistration.definition.hyperlinkPattern ||
+                hyperlinkPattern ||
+                HYPERLINK_DEFAULT_PATTERN,
+              hyperlinkEntry as Entry,
+              locale,
+            );
+            if (value) {
+              acc[variableName] = value;
             }
+            break;
           }
-          acc[variableName] = transformContentValue(value, variableDefinition);
-          break;
+          case 'UnboundValue': {
+            const uuid = variable.key;
+            acc[variableName] =
+              entityStore.unboundValues[uuid]?.value ?? variableDefinition.defaultValue;
+            break;
+          }
+          case 'ComponentValue':
+            // We're rendering a pattern entry. Content cannot be set for ComponentValue type properties
+            // directly in the pattern so we can safely use the default value
+            // This can either a design (style) or a content variable
+            acc[variableName] = variableDefinition.defaultValue;
+            break;
+          default:
+            break;
         }
-        case 'UnboundValue': {
-          const uuid = variable.key;
-          acc[variableName] = entityStore.unboundValues[uuid]?.value;
-          break;
+        return acc;
+      },
+      propMap,
+    );
+
+    if (componentRegistration.definition.slots) {
+      for (const slotId in componentRegistration.definition.slots) {
+        const slotNode = node.children.find((child) => child.slotId === slotId);
+        if (slotNode) {
+          props[slotId] = (
+            <CompositionBlock
+              node={slotNode}
+              locale={locale}
+              hyperlinkPattern={hyperlinkPattern}
+              entityStore={entityStore}
+              resolveDesignValue={resolveDesignValue}
+            />
+          );
         }
-        default:
-          break;
       }
-      return acc;
-    }, propMap);
-  }, [componentRegistration, isAssembly, node.variables, resolveDesignValue, entityStore]);
+    }
 
-  const cfStyles = buildCfStyles(nodeProps);
+    return props;
+  }, [
+    componentRegistration,
+    isAssembly,
+    node.children,
+    node.variables,
+    resolveDesignValue,
+    entityStore,
+    hyperlinkPattern,
+    locale,
+  ]);
 
-  if (
-    isEmptyStructureWithRelativeHeight(node.children.length, node.definitionId, cfStyles.height)
-  ) {
-    cfStyles.minHeight = EMPTY_CONTAINER_HEIGHT;
-  }
-
-  const { className } = useStyleTag({ styles: cfStyles });
+  const className = useClassName({ props: nodeProps, node });
 
   if (!componentRegistration) {
     return null;
@@ -143,14 +202,31 @@ export const CompositionBlock = ({
 
   const { component } = componentRegistration;
 
+  const _getPatternChildNodeClassName = (childNodeId: string) => {
+    if (isAssembly) {
+      // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
+      const classesForNode = node.variables.cfSsrClassName[childNodeId];
+      if (classesForNode) {
+        return resolveDesignValue(
+          (classesForNode as DesignValue).valuesByBreakpoint,
+          'cfSsrClassName',
+        ) as string;
+      }
+      return;
+    }
+    return getPatternChildNodeClassName?.(childNodeId);
+  };
+
   const children =
     componentRegistration.definition.children === true
-      ? node.children.map((childNode: CompositionNode, index) => {
+      ? node.children.map((childNode: ComponentTreeNode, index) => {
           return (
             <CompositionBlock
+              getPatternChildNodeClassName={_getPatternChildNodeClassName}
               node={childNode}
               key={index}
               locale={locale}
+              hyperlinkPattern={hyperlinkPattern}
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
             />
@@ -190,12 +266,19 @@ export const CompositionBlock = ({
     );
   }
 
+  if (
+    node.definitionId === CONTENTFUL_COMPONENTS.image.id &&
+    node.variables.cfImageAsset?.type === 'UnboundValue'
+  ) {
+    return <PreviewUnboundImage node={node} nodeProps={nodeProps} component={component} />;
+  }
+
   return React.createElement(
     component,
     {
-      ...omit(nodeProps, CF_STYLE_ATTRIBUTES, ['cfHyperlink', 'cfOpenInNewTab']),
+      ...sanitizeNodeProps(nodeProps),
       className,
     },
-    children,
+    children ?? (typeof nodeProps.children === 'string' ? nodeProps.children : null),
   );
 };
