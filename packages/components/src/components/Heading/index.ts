@@ -61,7 +61,7 @@ export const HeadingComponentDefinition: ComponentDefinition = {
     },
     // Component specific variables
     text: {
-      displayName: 'text',
+      displayName: 'Text',
       type: 'Text',
       description: 'The text to display in the heading.',
       defaultValue: 'Heading',
