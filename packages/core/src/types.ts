@@ -113,7 +113,7 @@ export type ComponentRegistration = {
     /** @deprecated use wrapContainer instead */
     wrapContainerTag?: keyof JSX.IntrinsicElements;
     wrapContainer?: keyof JSX.IntrinsicElements | React.ReactElement;
-    editorWrapperWidth?: React.CSSProperties['width'];
+    wrapContainerWidth?: React.CSSProperties['width'];
   };
 };
 
