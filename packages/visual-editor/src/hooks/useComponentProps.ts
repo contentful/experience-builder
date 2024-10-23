@@ -227,7 +227,7 @@ export const useComponentProps = ({
 
   // Move size styles to the wrapping div and override the component styles
   const overrideStyles: CSSProperties = {};
-  const wrapperStyles: CSSProperties = { width: options?.editorWrapperWidth };
+  const wrapperStyles: CSSProperties = { width: options?.wrapContainerWidth };
 
   if (requiresDragWrapper) {
     if (cfStyles.width) wrapperStyles.width = cfStyles.width;

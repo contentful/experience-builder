@@ -267,7 +267,7 @@ describe('useComponentProps', () => {
     };
 
     ['50%', '100%'].forEach((width) => {
-      it(`should set the wrapper width to ${width} using the component registration option editorWrapperWidth`, () => {
+      it(`should set the wrapper width to ${width} using the wrapContainerWidth option`, () => {
         const { result } = renderHook(() =>
           useComponentProps({
             node,
@@ -276,14 +276,14 @@ describe('useComponentProps', () => {
             renderDropzone,
             definition,
             userIsDragging,
-            options: { editorWrapperWidth: width },
+            options: { wrapContainerWidth: width },
           }),
         );
 
-        // The wrapper width should be set to the editorWrapperWidth
+        // The wrapper width should be set to the wrapContainerWidth value
         expect(result.current.wrapperStyles.width).toEqual(width);
 
-        // The component width should be set to 100% !important to fill the wrapper
+        // The component width should be set to 100% to fill the wrapper
         expect(result.current.componentStyles.width).toEqual('100%');
       });
     });

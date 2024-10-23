@@ -16,7 +16,7 @@ defineComponents([
       variables: {},
     },
     options: {
-      editorWrapperWidth: '50%',
+      wrapContainerWidth: '50%',
     },
   },
   {
