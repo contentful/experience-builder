@@ -48,6 +48,7 @@ type UseComponentProps = {
   resolveDesignValue: ResolveDesignValueType;
   areEntitiesFetched: boolean;
   definition?: ComponentRegistration['definition'];
+  options?: ComponentRegistration['options'];
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
   slotId?: string;
@@ -60,6 +61,7 @@ export const useComponentProps = ({
   resolveDesignValue,
   renderDropzone,
   definition,
+  options,
   userIsDragging,
   requiresDragWrapper,
 }: UseComponentProps) => {
@@ -225,28 +227,20 @@ export const useComponentProps = ({
 
   // Move size styles to the wrapping div and override the component styles
   const overrideStyles: CSSProperties = {};
-  const wrapperStyles: CSSProperties = {};
+  const wrapperStyles: CSSProperties = { width: options?.editorWrapperWidth };
+
   if (requiresDragWrapper) {
-    if (cfStyles.height) {
-      wrapperStyles.height = cfStyles.height;
-      overrideStyles.height = '100%';
-    }
-
-    if (cfStyles.width) {
-      wrapperStyles.width = cfStyles.width;
-      overrideStyles.width = '100%';
-    }
-
-    if (cfStyles.maxWidth) {
-      wrapperStyles.maxWidth = cfStyles.maxWidth;
-      overrideStyles.maxWidth = 'none';
-    }
-
-    if (cfStyles.margin) {
-      wrapperStyles.margin = cfStyles.margin;
-      overrideStyles.margin = '0';
-    }
+    if (cfStyles.width) wrapperStyles.width = cfStyles.width;
+    if (cfStyles.height) wrapperStyles.height = cfStyles.height;
+    if (cfStyles.maxWidth) wrapperStyles.maxWidth = cfStyles.maxWidth;
+    if (cfStyles.margin) wrapperStyles.margin = cfStyles.margin;
   }
+
+  // Override component styles to fill the wrapper
+  if (wrapperStyles.width) overrideStyles.width = '100%';
+  if (wrapperStyles.height) overrideStyles.height = '100%';
+  if (wrapperStyles.margin) overrideStyles.margin = '0';
+  if (wrapperStyles.maxWidth) overrideStyles.maxWidth = 'none';
 
   // Styles that will be applied to the component element
   const componentStyles = {
