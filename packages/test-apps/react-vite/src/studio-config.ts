@@ -4,8 +4,21 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
+import ColorfulBox from './components/ColorfulBox/ColorfulBox';
 
 defineComponents([
+  {
+    component: ColorfulBox,
+    definition: {
+      id: 'colorful-box',
+      name: 'Colorful Box',
+      category: 'Custom Components',
+      variables: {},
+    },
+    options: {
+      wrapContainerWidth: '50%',
+    },
+  },
   {
     component: ComponentWithChildren,
     definition: {
