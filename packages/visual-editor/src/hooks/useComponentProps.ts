@@ -13,6 +13,7 @@ import {
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
   CONTENTFUL_COMPONENTS,
+  ASSEMBLY_BLOCK_NODE_TYPE,
 } from '@contentful/experiences-core/constants';
 import type {
   StyleProps,
@@ -224,7 +225,7 @@ export const useComponentProps = ({
 
   const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
 
-  const isAssemblyBlock = node.type === 'assemblyBlock';
+  const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
   const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
 

@@ -1,4 +1,4 @@
-import type { Asset, AssetFile, Entry, UnresolvedLink } from 'contentful';
+import type { Asset, Entry, UnresolvedLink } from 'contentful';
 import { sendMessage } from '../communication/sendMessage';
 import { EditorEntityStore } from './EditorEntityStore';
 import { RequestedEntitiesMessage } from '../types';
@@ -94,11 +94,6 @@ export class EditorModeEntityStore extends EditorEntityStore {
     }
 
     const fieldValue = get<string>(entity, path);
-
-    // walk around to render asset files
-    return fieldValue && typeof fieldValue == 'object' && (fieldValue as AssetFile).url
-      ? (fieldValue as AssetFile).url
-      : fieldValue;
     return transformAssetFileToUrl(fieldValue);
   }
 }
