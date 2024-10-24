@@ -136,6 +136,7 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     },
   }),
   divider: {
+    // Don't wrap this component `withComponentWrapper`. Need to explicitly ignore dragProps
     component: Components.ContentfulDivider,
     definition: dividerDefinition,
     options: {
