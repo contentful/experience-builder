@@ -8,6 +8,7 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
+import { FoundContainer } from './components/FoundContainer';
 
 defineComponents([
   {
@@ -169,6 +170,39 @@ defineComponents([
     },
     options: {
       wrapComponent: false,
+    },
+  },
+  {
+    component: FoundContainer,
+    definition: {
+      id: 'found-container',
+      children: true,
+      name: 'Found Container',
+      category: 'Customer Components',
+      variables: {
+        display: {
+          displayName: 'Display',
+          type: 'Text',
+          group: 'style',
+          defaultValue: 'inline',
+          validations: {
+            in: [
+              {
+                value: 'inline',
+                displayName: 'inline',
+              },
+              {
+                value: 'block',
+                displayName: 'block',
+              },
+              {
+                value: 'none',
+                displayName: 'none',
+              },
+            ],
+          },
+        },
+      },
     },
   },
 ]);
