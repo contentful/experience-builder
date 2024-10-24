@@ -92,6 +92,7 @@ export const Button: React.FC<ButtonProps> = ({
     </button>
   );
 
+  // FIXME: Wrapping <button> with <a> is not ARIA conform. Instead, <a> should look like a button.
   return url ? (
     <a href={url} target={target}>
       {button}
