@@ -22,10 +22,12 @@ export const deserializePatternVariables = ({
   childNodeVariable: Record<string, ComponentPropertyValue>;
   dataSource: ExperienceDataSource;
   unboundValues: ExperienceUnboundValues;
+  exposedPropertyNameToKeyMap: Record<string, string>;
 } => {
   const childNodeVariable: Record<string, ComponentPropertyValue> = {};
   const dataSource: ExperienceDataSource = {};
   const unboundValues: ExperienceUnboundValues = {};
+  const exposedPropertyNameToKeyMap: Record<string, string> = {};
 
   for (const [variableName, variable] of Object.entries(nodeVariables)) {
     childNodeVariable[variableName] = variable;
@@ -56,10 +58,11 @@ export const deserializePatternVariables = ({
         // So far, we only automatically fallback to the defaultValue for design properties
         if (variableDefinition.group === 'style') {
           childNodeVariable[variableName] = defaultValue as DesignValue;
+          exposedPropertyNameToKeyMap[variableName] = variable.key;
         }
       }
     }
   }
 
-  return { childNodeVariable, dataSource, unboundValues };
+  return { childNodeVariable, dataSource, unboundValues, exposedPropertyNameToKeyMap };
 };
