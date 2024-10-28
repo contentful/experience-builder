@@ -1,6 +1,6 @@
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { CTFL_DRAGGING_ELEMENT, DraggablePosition } from '@/types/constants';
-import { MutableRefObject, useEffect } from 'react';
+import { MutableRefObject, useEffect, useState } from 'react';
 
 interface Params {
   draggableRef: MutableRefObject<HTMLElement | null>;
@@ -12,6 +12,9 @@ export default function useDraggablePosition({ draggableId, draggableRef, positi
   const isDraggingOnCanvas = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const draggingId = useDraggedItemStore((state) => state.onBeforeCaptureId);
   const preDragDomRect = useDraggedItemStore((state) => state.domRect);
+
+  const [top, setTop] = useState(0);
+  const [left, setLeft] = useState(0);
 
   useEffect(() => {
     const el: HTMLElement | null =
@@ -36,5 +39,9 @@ export default function useDraggablePosition({ draggableId, draggableRef, positi
     el.style.top = `${top}px`;
     el.style.width = `${domRect.width}px`;
     el.style.height = `${domRect.height}px`;
+    setLeft(left);
+    setTop(top);
   }, [draggableRef, draggableId, isDraggingOnCanvas, draggingId, position, preDragDomRect]);
+
+  return { top, left };
 }

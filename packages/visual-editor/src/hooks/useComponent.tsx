@@ -3,7 +3,6 @@ import type {
   ComponentRegistration,
   ExperienceTreeNode,
   ResolveDesignValueType,
-  DragWrapperProps,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
@@ -69,7 +68,7 @@ export const useComponent = ({
   const requiresDragWrapper =
     !isAssembly && !isStructureComponent && !componentRegistration?.options?.wrapComponent;
 
-  const { componentProps, wrapperStyles } = useComponentProps({
+  const { componentProps } = useComponentProps({
     node,
     areEntitiesFetched,
     resolveDesignValue,
@@ -79,12 +78,10 @@ export const useComponent = ({
     requiresDragWrapper,
   });
 
-  const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
+  const elementToRender = () => {
     if (!componentRegistration) {
       return <MissingComponentPlacehoder blockId={node.data.blockId} />;
     }
-
-    const { dragProps = {} } = props || {};
 
     const {
       editorMode: _editorMode,
@@ -99,29 +96,9 @@ export const useComponent = ({
     const element = React.createElement(
       ImportedComponentErrorBoundary,
       { componentId: node.data.blockId },
-      React.createElement(componentRegistration.component, {
-        ...modifiedProps,
-        dragProps,
-      }),
+      React.createElement(componentRegistration.component, modifiedProps),
     );
-
-    if (!requiresDragWrapper) {
-      return element;
-    }
-
-    const { children, innerRef, Tag = 'div', ToolTipAndPlaceholder, style, ...rest } = dragProps;
-
-    return (
-      <Tag
-        {...rest}
-        style={{ ...style, ...wrapperStyles }}
-        ref={(refNode: HTMLElement | null) => {
-          if (innerRef && refNode) innerRef(refNode);
-        }}>
-        {ToolTipAndPlaceholder}
-        {element}
-      </Tag>
-    );
+    return element;
   };
 
   return {

@@ -1,10 +1,8 @@
-import { Direction } from '@hello-pangea/dnd';
 import { create } from 'zustand';
 
 import { produce } from 'immer';
 export interface Zone {
   id: string;
-  direction: Direction;
 }
 
 interface State {

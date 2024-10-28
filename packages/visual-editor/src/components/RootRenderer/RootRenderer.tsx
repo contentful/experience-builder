@@ -1,6 +1,5 @@
 import React, { CSSProperties, useCallback, useRef, useState } from 'react';
 import { useEffect } from 'react';
-import DraggableContainer from '@/components/DraggableHelpers/DraggableComponentList';
 import type { ExperienceTree } from '@contentful/experiences-core/types';
 import { DRAGGABLE_HEIGHT, ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
@@ -8,7 +7,6 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
-import { DNDProvider } from './DNDProvider';
 import { sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
@@ -21,8 +19,6 @@ interface Props {
 export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   useEditorSubscriber();
 
-  const dragItem = useDraggedItemStore((state) => state.componentId);
-  const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
   const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
   const breakpoints = useTreeStore((state) => state.breakpoints);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
@@ -118,14 +114,8 @@ export const RootRenderer: React.FC<Props> = ({ onChange }) => {
   }, [containerRef.current]);
 
   return (
-    <DNDProvider>
-      {dragItem && <DraggableContainer id={dragItem} />}
-      <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
-        {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitbox} />}
-        <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
-        {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />}
-      </div>
-      <div data-ctfl-hitboxes />
-    </DNDProvider>
+    <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
+      <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
+    </div>
   );
 };

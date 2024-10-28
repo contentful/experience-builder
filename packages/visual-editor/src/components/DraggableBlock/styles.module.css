@@ -48,6 +48,10 @@
   outline: 2px dashed var(--exp-builder-gray300);
 }
 
+.isDraggingThisComponent {
+  opacity: 0.4 !important;
+}
+
 .Dropzone.isDestination:not(.isRoot):before {
   transition:
     outline 0.2s,

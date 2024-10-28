@@ -3,17 +3,12 @@ import {
   buildCfStyles,
   calculateNodeDefaultHeight,
   isLinkToAsset,
-  isContentfulStructureComponent,
   transformBoundContentValue,
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
   sanitizeNodeProps,
 } from '@contentful/experiences-core';
-import {
-  ASSEMBLY_NODE_TYPE,
-  EMPTY_CONTAINER_HEIGHT,
-  CONTENTFUL_COMPONENTS,
-} from '@contentful/experiences-core/constants';
+import { ASSEMBLY_NODE_TYPE, EMPTY_CONTAINER_HEIGHT } from '@contentful/experiences-core/constants';
 import type {
   StyleProps,
   PrimitiveValue,
@@ -23,7 +18,7 @@ import type {
   Link,
   DesignValue,
 } from '@contentful/experiences-core/types';
-import { CSSProperties, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
@@ -31,7 +26,6 @@ import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzon
 
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
-import { DRAG_PADDING } from '@/types/constants';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
@@ -60,8 +54,6 @@ export const useComponentProps = ({
   resolveDesignValue,
   renderDropzone,
   definition,
-  userIsDragging,
-  requiresDragWrapper,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
@@ -219,48 +211,12 @@ export const useComponentProps = ({
 
   const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
 
-  const isAssemblyBlock = node.type === 'assemblyBlock';
-  const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
-  const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
-
-  // Move size styles to the wrapping div and override the component styles
-  const overrideStyles: CSSProperties = {};
-  const wrapperStyles: CSSProperties = {};
-  if (requiresDragWrapper) {
-    if (cfStyles.height) {
-      wrapperStyles.height = cfStyles.height;
-      overrideStyles.height = '100%';
-    }
-
-    if (cfStyles.width) {
-      wrapperStyles.width = cfStyles.width;
-      overrideStyles.width = '100%';
-    }
-
-    if (cfStyles.maxWidth) {
-      wrapperStyles.maxWidth = cfStyles.maxWidth;
-      overrideStyles.maxWidth = 'none';
-    }
-
-    if (cfStyles.margin) {
-      wrapperStyles.margin = cfStyles.margin;
-      overrideStyles.margin = '0';
-    }
-  }
-
   // Styles that will be applied to the component element
   const componentStyles = {
     ...cfStyles,
-    ...overrideStyles,
     ...(isEmptyZone &&
       isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
         minHeight: EMPTY_CONTAINER_HEIGHT,
-      }),
-    ...(userIsDragging &&
-      isStructureComponent &&
-      !isSingleColumn &&
-      !isAssemblyBlock && {
-        padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
       }),
   };
 
@@ -281,13 +237,5 @@ export const useComponentProps = ({
     ...(definition?.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { componentProps, componentStyles, wrapperStyles };
+  return { componentProps, componentStyles };
 };
-
-const addExtraDropzonePadding = (padding: string) =>
-  padding
-    .split(' ')
-    .map((value) =>
-      parseFloat(value) === 0 ? `${DRAG_PADDING}px` : `calc(${value} + ${DRAG_PADDING}px)`,
-    )
-    .join(' ');
