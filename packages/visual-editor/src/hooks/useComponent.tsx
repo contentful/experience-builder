@@ -74,6 +74,7 @@ export const useComponent = ({
     resolveDesignValue,
     renderDropzone,
     definition: componentRegistration?.definition,
+    options: componentRegistration?.options,
     userIsDragging,
     requiresDragWrapper,
   });

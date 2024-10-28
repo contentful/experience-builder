@@ -42,6 +42,7 @@
 
 .isEmptyZone {
   min-height: 80px;
+  min-width: 80px;
 }
 
 .isDragging:not(.isRoot):not(.DraggableClone):before {

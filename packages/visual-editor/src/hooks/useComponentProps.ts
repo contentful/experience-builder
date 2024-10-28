@@ -42,6 +42,7 @@ type UseComponentProps = {
   resolveDesignValue: ResolveDesignValueType;
   areEntitiesFetched: boolean;
   definition?: ComponentRegistration['definition'];
+  options?: ComponentRegistration['options'];
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
   slotId?: string;

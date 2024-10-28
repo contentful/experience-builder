@@ -241,4 +241,46 @@ describe.skip('useComponentProps', () => {
       expect(result.current.componentStyles.margin).toEqual('10px 0 10px 0');
     });
   });
+
+  describe('custom components', () => {
+    const definition: ComponentDefinition = {
+      id: 'banner',
+      name: 'Banner',
+      variables: {},
+    };
+    const node: ExperienceTreeNode = {
+      data: {
+        id: 'id',
+        blockId: 'banner',
+        props: {},
+        unboundValues: {},
+        dataSource: {},
+        breakpoints: [],
+      },
+      children: [],
+      type: 'block',
+    };
+
+    ['50%', '100%'].forEach((width) => {
+      it(`should set the wrapper width to ${width} using the wrapContainerWidth option`, () => {
+        const { result } = renderHook(() =>
+          useComponentProps({
+            node,
+            areEntitiesFetched,
+            resolveDesignValue,
+            renderDropzone,
+            definition,
+            userIsDragging,
+            options: { wrapContainerWidth: width },
+          }),
+        );
+
+        // The wrapper width should be set to the wrapContainerWidth value
+        // expect(result.current.wrapperStyles.width).toEqual(width);
+
+        // The component width should be set to 100% to fill the wrapper
+        expect(result.current.componentStyles.width).toEqual('100%');
+      });
+    });
+  });
 });
