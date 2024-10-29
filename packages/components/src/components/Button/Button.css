@@ -1,0 +1,5 @@
+/* If the label is empty, still render the normal height by adding this pseudo element */
+.cf-button:empty::before {
+  content: '';
+  display: inline-block;
+}
