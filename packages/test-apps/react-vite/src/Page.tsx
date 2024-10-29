@@ -8,6 +8,7 @@ import { useContentfulConfig } from './hooks/useContentfulConfig';
 export default function Page() {
   const localeCode = 'en-US';
   const { slug = 'home-page' } = useParams<{ slug: string }>();
+
   const { config } = useContentfulConfig();
   const { client } = useContentfulClient();
 
