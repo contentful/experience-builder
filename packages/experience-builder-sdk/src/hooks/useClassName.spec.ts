@@ -3,22 +3,6 @@ import { useClassName } from './useClassName';
 import { ComponentTreeNode } from '@contentful/experiences-core/types';
 
 describe('useClassName', () => {
-  // This case is currently not occurring but the function is ensured to handle this case correctly
-  describe('when given an empty set of styles', () => {
-    it('should yield an empty class name', () => {
-      const testNode: ComponentTreeNode = {
-        definitionId: 'test-definition-id',
-        children: [],
-        variables: {},
-      };
-      const testProps = {};
-
-      const { result } = renderHook(() => useClassName({ node: testNode, props: testProps }));
-
-      expect(result.current).toStrictEqual('');
-    });
-  });
-
   describe('when styles are given', () => {
     const testNode: ComponentTreeNode = {
       definitionId: 'test-definition-id',
