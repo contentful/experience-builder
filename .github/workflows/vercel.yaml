@@ -58,11 +58,13 @@ jobs:
         run: |
           if [ ${{ github.ref_name }} = main ] || [ ${{ inputs.publish-web-apps-to-prod }} ]; then
             vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+            vercel build --token=${{ secrets.VERCEL_TOKEN }}
+            vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
           else
             vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-          fi
-          vercel build --token=${{ secrets.VERCEL_TOKEN }}
-          vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+            vercel build --token=${{ secrets.VERCEL_TOKEN }}
+            vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+          fi          
       - name: 'Deploy nextjs-marketing-demo site to Vercel'
         env:
           VERCEL_PROJECT_ID: prj_CQ1K4Pbkx5SQq2Fi9c4ZPHloOv79
@@ -70,11 +72,13 @@ jobs:
         run: |
           if [ ${{ github.ref_name }} = main ] || [ ${{ inputs.publish-web-apps-to-prod }} ]; then
             vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+            vercel build --token=${{ secrets.VERCEL_TOKEN }}
+            vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
           else
             vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-          fi
-          vercel build --token=${{ secrets.VERCEL_TOKEN }}
-          vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+            vercel build --token=${{ secrets.VERCEL_TOKEN }}
+            vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+          fi          
       - name: 'Deploy react vite template site to Vercel'
         env:
           VERCEL_PROJECT_ID: prj_HoAvIbgvZ3gYJDLCAaNsHIpBvI0k
@@ -82,9 +86,11 @@ jobs:
         run: |
           if [ ${{ github.ref_name }} = main ] || [ ${{ inputs.publish-web-apps-to-prod }} ]; then
             vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+            vercel build --token=${{ secrets.VERCEL_TOKEN }}
+            vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
           else
             vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-          fi
-          vercel build --token=${{ secrets.VERCEL_TOKEN }}
-          vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+            vercel build --token=${{ secrets.VERCEL_TOKEN }}
+            vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+          fi          
      
