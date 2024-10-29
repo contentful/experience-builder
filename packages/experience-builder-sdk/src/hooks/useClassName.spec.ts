@@ -3,10 +3,8 @@ import { useClassName } from './useClassName';
 import { ComponentTreeNode } from '@contentful/experiences-core/types';
 
 describe('useClassName', () => {
-  // TODO: address me
-  // skipped because the test incorrectly reflects the reality.
-  // buildCfStyles function never returns an empty object
-  describe.skip('when given an empty set of styles', () => {
+  // This case is currently not occurring but the function is ensured to handle this case correctly
+  describe('when given an empty set of styles', () => {
     it('should yield an empty class name', () => {
       const testNode: ComponentTreeNode = {
         definitionId: 'test-definition-id',
