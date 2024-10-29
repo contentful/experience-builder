@@ -2,6 +2,12 @@ name: Deploy demo apps to Vercel
 
 on:
   workflow_call:
+    inputs:
+      publish-web-apps-to-prod:
+        description: 'Publish web apps to prod'
+        default: false
+        required: false
+        type: boolean
     secrets:
       VERCEL_TOKEN:
         required: true
@@ -50,7 +56,7 @@ jobs:
           VERCEL_PROJECT_ID: prj_wr3mJgz9qLeHh33UaCFquePsr1hw
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          if [ ${{ github.ref_name }} = main ]; then
+          if [ ${{ github.ref_name }} = main ] || [ ${{ inputs.publish-web-apps-to-prod }} ]; then
             vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           else
             vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
@@ -62,7 +68,7 @@ jobs:
           VERCEL_PROJECT_ID: prj_CQ1K4Pbkx5SQq2Fi9c4ZPHloOv79
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          if [ ${{ github.ref_name }} = main ]; then
+          if [ ${{ github.ref_name }} = main ] || [ ${{ inputs.publish-web-apps-to-prod }} ]; then
             vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           else
             vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
@@ -74,7 +80,7 @@ jobs:
           VERCEL_PROJECT_ID: prj_HoAvIbgvZ3gYJDLCAaNsHIpBvI0k
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          if [ ${{ github.ref_name }} = main ]; then
+          if [ ${{ github.ref_name }} = main ] || [ ${{ inputs.publish-web-apps-to-prod }} ]; then
             vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           else
             vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
