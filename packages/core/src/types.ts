@@ -159,6 +159,12 @@ export type ExperienceTreeNode = {
     dataSource: ExperienceDataSource;
     unboundValues: ExperienceUnboundValues;
     breakpoints: Breakpoint[];
+    pattern?: {
+      id: string;
+      nodeId: string;
+      nodeLocation: string;
+      isVisibilityPropertyExposed: boolean;
+    };
   };
   children: ExperienceTreeNode[];
   parentId?: string;
