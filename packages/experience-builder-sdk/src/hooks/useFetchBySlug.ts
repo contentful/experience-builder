@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import type { ContentfulClientApi } from 'contentful';
 import { useFetchByBase } from './useFetchByBase';
 import { fetchBySlug } from '@contentful/experiences-core';
-import { useDetectEditorMode } from './useDetectEditorMode';
+import { useDetectCanvasMode } from './useDetectCanvasMode';
 
 export type UseFetchBySlugArgs = {
   client: ContentfulClientApi<undefined>;
@@ -20,13 +20,13 @@ export const useFetchBySlug = ({
   experienceTypeId,
   hyperlinkPattern,
 }: UseFetchBySlugArgs) => {
-  const isEditorMode = useDetectEditorMode({ isClientSide: typeof window !== 'undefined' });
+  const mode = useDetectCanvasMode({ isClientSide: typeof window !== 'undefined' });
 
   const fetchMethod = useCallback(() => {
     return fetchBySlug({ slug, localeCode, client, experienceTypeId });
   }, [slug, localeCode, client, experienceTypeId]);
 
-  const fetchResult = useFetchByBase(fetchMethod, isEditorMode);
+  const fetchResult = useFetchByBase(fetchMethod, mode);
 
   return { ...fetchResult, experience: { ...fetchResult.experience, hyperlinkPattern } };
 };

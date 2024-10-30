@@ -46,18 +46,24 @@ export const defineDesignTokens = (designTokenDefinition: DesignTokensDefinition
   Object.assign(designTokensRegistry, ensureValidCompositeValues(designTokenDefinition));
 };
 
-const templateStringRegex = /\${(.+?)}/g;
+const templateStringRegex = /\${(\w.+?)}/g;
 
 export const getDesignTokenRegistration = (breakpointValue: string, variableName: string) => {
   if (!breakpointValue) return breakpointValue;
 
   let resolvedValue = '';
-  for (const part of breakpointValue.split(' ')) {
-    const tokenValue = templateStringRegex.test(part)
-      ? resolveSimpleDesignToken(part, variableName)
-      : part;
-    resolvedValue += `${tokenValue} `;
+
+  // Match all parts of the string, including design tokens and other parts
+  const parts = breakpointValue.match(/(\${.+?}|\S+)/g);
+
+  if (parts) {
+    for (const part of parts) {
+      const isDesignToken = templateStringRegex.test(part);
+      const tokenValue = isDesignToken ? resolveSimpleDesignToken(part, variableName) : part;
+      resolvedValue += `${tokenValue} `;
+    }
   }
+
   // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
   return resolvedValue.trim();
 };
@@ -75,6 +81,7 @@ const resolveSimpleDesignToken = (templateString: string, variableName: string) 
 
     return tokenValues[tokenName];
   }
+
   if (builtInStyles[variableName]) {
     return builtInStyles[variableName].defaultValue;
   }

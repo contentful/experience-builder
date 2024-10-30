@@ -5,6 +5,7 @@ import {
   transformBorderStyle,
   transformFill,
   transformGridColumn,
+  transformVisibility,
 } from './styleTransformers';
 import { isContentfulStructureComponent } from '../components';
 import { EMPTY_CONTAINER_HEIGHT } from '../../constants';
@@ -40,6 +41,7 @@ export const buildCfStyles = ({
   cfHorizontalAlignment,
   cfVerticalAlignment,
   cfFlexDirection,
+  cfFlexReverse,
   cfFlexWrap,
   cfMargin,
   cfPadding,
@@ -64,8 +66,11 @@ export const buildCfStyles = ({
   cfTextItalic,
   cfTextUnderline,
   cfColumnSpan,
+  cfVisibility,
 }: Partial<StyleProps>): CSSProperties => {
   return {
+    boxSizing: 'border-box',
+    ...transformVisibility(cfVisibility),
     margin: cfMargin,
     padding: cfPadding,
     backgroundColor: cfBackgroundColor,
@@ -77,19 +82,19 @@ export const buildCfStyles = ({
     borderRadius: cfBorderRadius,
     gap: cfGap,
     ...transformAlignment(cfHorizontalAlignment, cfVerticalAlignment, cfFlexDirection),
-    flexDirection: cfFlexDirection,
+    flexDirection:
+      cfFlexReverse && cfFlexDirection ? `${cfFlexDirection}-reverse` : cfFlexDirection,
     flexWrap: cfFlexWrap,
     ...transformBackgroundImage(cfBackgroundImageUrl, cfBackgroundImageOptions),
     fontSize: cfFontSize,
     fontWeight: cfTextBold ? 'bold' : cfFontWeight,
-    fontStyle: cfTextItalic ? 'italic' : 'normal',
+    fontStyle: cfTextItalic ? 'italic' : undefined,
+    textDecoration: cfTextUnderline ? 'underline' : undefined,
     lineHeight: cfLineHeight,
     letterSpacing: cfLetterSpacing,
     color: cfTextColor,
     textAlign: cfTextAlign,
     textTransform: cfTextTransform,
-    textDecoration: cfTextUnderline ? 'underline' : 'none',
-    boxSizing: 'border-box',
     objectFit: cfImageOptions?.objectFit,
     objectPosition: cfImageOptions?.objectPosition,
   };

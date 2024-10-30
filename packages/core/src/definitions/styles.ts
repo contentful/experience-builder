@@ -56,6 +56,13 @@ export const builtInStyles: VariableDefinitions = {
     defaultValue: 'center',
     displayName: 'Horizontal alignment',
   },
+  cfVisibility: {
+    displayName: 'Visibility toggle',
+    type: 'Boolean',
+    group: 'style',
+    defaultValue: true,
+    description: 'The visibility of the component',
+  },
   cfMargin: {
     displayName: 'Margin',
     type: 'Text',
@@ -104,6 +111,13 @@ export const builtInStyles: VariableDefinitions = {
     group: 'style',
     description: 'The orientation of the section',
     defaultValue: 'column',
+  },
+  cfFlexReverse: {
+    displayName: 'Reverse Direction',
+    type: 'Boolean',
+    group: 'style',
+    description: 'Toggle the flex direction to be reversed',
+    defaultValue: false,
   },
   cfFlexWrap: {
     displayName: 'Wrap objects',
@@ -324,6 +338,13 @@ export const containerBuiltInStyles: VariableDefinitions = {
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
   cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
+  cfMargin: {
+    displayName: 'Margin',
+    type: 'Text',
+    group: 'style',
+    description: 'The margin of the container',
+    defaultValue: '0 auto 0 auto',
+  },
   cfMaxWidth: {
     displayName: 'Max Width',
     type: 'Text',
@@ -334,6 +355,7 @@ export const containerBuiltInStyles: VariableDefinitions = {
 };
 
 export const dividerBuiltInStyles: VariableDefinitions = {
+  cfVisibility: builtInStyles.cfVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfMargin: {
     displayName: 'Margin',
@@ -354,7 +376,7 @@ export const dividerBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The height of the divider',
-    defaultValue: '2px',
+    defaultValue: '1px',
   },
   cfMaxWidth: {
     displayName: 'Max width',
@@ -368,11 +390,12 @@ export const dividerBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The background color of the divider',
-    defaultValue: 'rgba(0, 0, 0, 0)',
+    defaultValue: 'rgba(204, 204, 204, 1)',
   },
 };
 
 export const singleColumnBuiltInStyles: VariableDefinitions = {
+  cfVisibility: builtInStyles.cfVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
@@ -471,6 +494,7 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
 };
 
 export const columnsBuiltInStyles: VariableDefinitions = {
+  cfVisibility: builtInStyles.cfVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
@@ -480,7 +504,7 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The margin of the columns',
-    defaultValue: '0 0 0 0',
+    defaultValue: '0 auto 0 auto',
   },
   cfWidth: {
     displayName: 'Width',

@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react';
-import { isContentfulStructureComponent, sendMessage } from '@contentful/experiences-core';
+import { sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from '@/hooks/useComponent';
@@ -61,7 +61,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const ref = useRef<HTMLElement | null>(null);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, elementToRender } = useComponent({
+  const { node, componentId, elementToRender, definition } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -73,16 +73,14 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     (state) => state.hoveredComponentId === componentId,
   );
   const coordinates = useSelectedInstanceCoordinates({ node });
-  const displayName = node.data.displayName;
+  const displayName = node.data.displayName || rawNode.data.displayName || definition?.name;
   const testId = `draggable-${node.data.blockId ?? 'node'}`;
   const isSelected = node.data.id === selectedNodeId;
   const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
-  const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const isSlotComponent = Boolean(node.data.slotId);
   const isDragDisabled = isAssemblyBlock || (isSingleColumn && isWrapped) || isSlotComponent;
-
   const isEmptyZone = useMemo(() => {
     return !node.children.filter((node) => node.data.slotId === slotId).length;
   }, [node.children, slotId]);
@@ -115,9 +113,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
 
   const onMouseOver = (e: React.SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
-
     if (userIsDragging) return;
-
     sendMessage(OUTGOING_EVENTS.NewHoveredElement, {
       nodeId: componentId,
     });
@@ -137,12 +133,12 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       <Tooltip
         id={componentId}
         coordinates={coordinates}
-        isAssemblyBlock={isAssemblyBlock}
+        isAssemblyBlock={isAssemblyBlock || isAssembly}
         isContainer={isContainer}
         label={displayName || 'No label specified'}
       />
       <Placeholder {...placeholder} id={componentId} />
-      {isStructureComponent && userIsDragging && (
+      {userIsDragging && !isAssemblyBlock && (
         <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
       )}
     </>
@@ -167,7 +163,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
               ref.current = refNode;
             },
             className: classNames(styles.DraggableComponent, {
-              [styles.isAssemblyBlock]: isAssemblyBlock,
+              [styles.isAssemblyBlock]: isAssemblyBlock || isAssembly,
               [styles.isDragging]: snapshot?.isDragging || userIsDragging,
               [styles.isSelected]: isSelected,
               [styles.isHoveringComponent]: isHoveredComponent,

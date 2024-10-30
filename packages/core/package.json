@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-core",
-  "version": "1.11.2",
+  "version": "1.20.0-beta.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -8,7 +8,11 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder.git"
+    "url": "git+https://github.com/contentful/experience-builder.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/experience-builder/issues"
   },
   "files": [
     "readme.md",
@@ -54,7 +58,7 @@
     "@types/lodash-es": "^4.17.12",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/coverage-v8": "^2.1.1",
     "contentful": "^10.6.4",
     "eslint": "^8.54.0",
     "happy-dom": "^13.3.8",
@@ -62,7 +66,7 @@
     "rollup-plugin-dts": "^6.1.0",
     "rollup-plugin-ts": "^3.4.5",
     "vite-tsconfig-paths": "^4.2.2",
-    "vitest": "^1.0.4"
+    "vitest": "^2.1.1"
   },
   "dependencies": {
     "@contentful/experiences-validators": "file:../validators",

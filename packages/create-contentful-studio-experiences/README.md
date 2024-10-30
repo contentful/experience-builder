@@ -21,10 +21,20 @@ cd studio-experiences-react-app
 npm run dev
 ```
 
+## Developing locally
+
+Run `npm run dev` to start the dev server that will watch and recompile the apps on changes.
+
+Once built, you can test the CLI locally by running `npm run create`, which will do the follow:
+
+- Copy the templates to the local folder
+- Run `node dist/index.js -d` to start the CLI in dev mode
+- Clean up the templates folder after the CLI has finished
+
 ## CLI Steps
 
-1. Project Type - Currently supports React.
-2. React Type - Currently supports Vite + React + TypeScript.
+1. Project Type
+2. React Type
 3. Installation Path - The generated project will be installed here.
 4. Connect to Contentful Space _(Optional)_ - Note: only spaces that have Studio Experiences enabled are eligible. See: [How to enable Experiences in a space](https://www.contentful.com/help/enable-spaces-for-experiences/).
    - Select your Contentful Organization.
@@ -50,14 +60,3 @@ npm run dev
   ```bash
   node dist/index.js --token <my_token>
   ```
-
-## Environment Variables
-
-The CLI tool automatically creates Vite environment variables for safely storing:
-
-1. Contentful Space ID: `VITE_CTFL_SPACE_ID`
-2. Contentful Environment ID: `VITE_CTFL_ENV_ID`
-3. Contentful Experience Type ID: `VITE_CTFL_EXPERIENCE_TYPE_ID`
-4. Contentful API Host: `VITE_CTFL_API_HOST`
-5. Contentful Access Token: `VITE_CTFL_ACCESS_TOKEN`
-6. Contentful Preview Token: `VITE_CTFL_PREVIEW_ACCESS_TOKEN`

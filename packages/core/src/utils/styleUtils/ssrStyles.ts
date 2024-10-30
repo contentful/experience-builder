@@ -7,7 +7,12 @@ import {
   ExperienceDataSource,
   ExperienceUnboundValues,
 } from '@contentful/experiences-validators';
-import { buildCfStyles, checkIsAssemblyNode, toCSSAttribute } from '@/utils';
+import {
+  buildCfStyles,
+  checkIsAssemblyNode,
+  isValidBreakpointValue,
+  toCSSAttribute,
+} from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
 import {
@@ -448,7 +453,7 @@ export const resolveBackgroundImageBinding = ({
     const variableDefinitionKey = variableData.key;
     const variableDefinition = componentSettings.variableDefinitions[variableDefinitionKey];
 
-    // @ts-expect-error TODO: fix the types as it thinks taht `defaultValue` is of type string
+    // @ts-expect-error TODO: Types coming from validations erroneously assume that `defaultValue` can be a primitive value (e.g. string or number)
     const defaultValueKey = variableDefinition.defaultValue?.key;
     const defaultValue = unboundValues[defaultValueKey].value;
 
@@ -590,7 +595,7 @@ export const indexByBreakpoint = ({
     for (const [breakpointId, variableValue] of Object.entries(
       resolvedVariableData.valuesByBreakpoint,
     )) {
-      if (!variableValue) {
+      if (!isValidBreakpointValue(variableValue)) {
         continue;
       }
 

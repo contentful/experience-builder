@@ -49,12 +49,12 @@ describe('deserializeAssemblyNode', () => {
       node,
       nodeId: 'random-node-id',
       parentId: 'root',
-      assemblyId: 'whatever',
-      assemblyComponentId: 'whatever',
+      patternId: 'whatever',
+      patternComponentId: 'whatever',
       nodeLocation: '0',
-      assemblyDataSource: {},
-      assemblyVariableDefinitions: {},
-      assemblyUnboundValues: assemblyEntry.fields.unboundValues,
+      patternDataSource: {},
+      patternVariableDefinitions: {},
+      patternUnboundValues: assemblyEntry.fields.unboundValues,
       componentInstanceProps: {
         [assemblyGeneratedVariableName]: {
           type: 'UnboundValue',

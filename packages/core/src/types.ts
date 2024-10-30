@@ -114,6 +114,7 @@ export type ComponentRegistration = {
     /** @deprecated use wrapContainer instead */
     wrapContainerTag?: keyof JSX.IntrinsicElements;
     wrapContainer?: keyof JSX.IntrinsicElements | React.ReactElement;
+    wrapContainerWidth?: React.CSSProperties['width'];
   };
 };
 
@@ -169,14 +170,12 @@ export type ExperienceTree = {
   root: ExperienceTreeNode;
 };
 
-export type ExternalSDKMode = 'preview' | 'delivery';
-export type InternalSDKMode = ExternalSDKMode | 'editor';
-
 /**
  * Internally defined style variables are prefix with `cf` to avoid
  * collisions with user defined variables.
  */
 export type StyleProps = {
+  cfVisibility: boolean;
   cfHorizontalAlignment: 'start' | 'end' | 'center';
   cfVerticalAlignment: 'start' | 'end' | 'center';
   cfMargin: string;
@@ -187,6 +186,7 @@ export type StyleProps = {
   cfHeight: string;
   cfFlexDirection: 'row' | 'column';
   cfFlexWrap: 'nowrap' | 'wrap';
+  cfFlexReverse: boolean;
   cfBorder: string;
   cfBorderRadius: string;
   cfGap: string;
@@ -546,6 +546,8 @@ export type OutgoingMessage = {
 type Filter<T, U> = T extends U ? T : never;
 type SelectedValueTypes = Filter<ComponentPropertyValue['type'], 'UnboundValue' | 'BoundValue'>;
 
+export type RequestReadOnlyModePayload = undefined;
+
 export type RequestEditorModePayload = undefined;
 export type ExperienceUpdatedPayload = {
   tree: ExperienceTree;
@@ -564,7 +566,7 @@ export type ComponentDraggingChangedPayload = {
 };
 
 export type IncomingComponentDragCanceledPayload = undefined;
-export type ComponentDragStartedPayload = { id: string };
+export type ComponentDragStartedPayload = { id: string; isAssembly: boolean };
 export type ComponentDragEndedPayload = undefined;
 export type IncomingComponentMoveEndedPayload = {
   mouseX: number;
@@ -600,6 +602,7 @@ export type RequestedEntitiesPayload = {
 
 type INCOMING_EVENT_PAYLOADS = {
   requestEditorMode: RequestEditorModePayload;
+  requestReadOnlyMode: RequestReadOnlyModePayload;
   componentTreeUpdated: ExperienceUpdatedPayload;
   componentDraggingChanged: ComponentDraggingChangedPayload;
   componentDragCanceled: IncomingComponentDragCanceledPayload;

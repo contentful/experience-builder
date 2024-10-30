@@ -4,8 +4,21 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
+import ColorfulBox from './components/ColorfulBox/ColorfulBox';
 
 defineComponents([
+  {
+    component: ColorfulBox,
+    definition: {
+      id: 'colorful-box',
+      name: 'Colorful Box',
+      category: 'Custom Components',
+      variables: {},
+    },
+    options: {
+      wrapContainerWidth: '50%',
+    },
+  },
   {
     component: ComponentWithChildren,
     definition: {
@@ -135,6 +148,31 @@ defineComponents([
         text: {
           displayName: 'Text',
           type: 'Text',
+          // defaultValue: 'Lorem ipsum',
+        },
+        date: {
+          displayName: 'Date',
+          type: 'Date',
+        },
+        location: {
+          displayName: 'Location',
+          type: 'Location',
+          defaultValue: { lon: -69, lat: 69 },
+        },
+        media: {
+          displayName: 'Media',
+          type: 'Media',
+          defaultValue:
+            'https://images.ctfassets.net/son9ld5ewssk/66dcJbD6GoCqwQ0ciGaCOg/6c20042a8684baedc1517fadfc3e3070/children-enabled_7x.png',
+        },
+        hyperlink: {
+          displayName: 'Hyperlink',
+          type: 'Hyperlink',
+          defaultValue: 'https://www.contentful.com',
+        },
+        richText: {
+          displayName: 'Rich Text',
+          type: 'RichText',
         },
       },
     },
@@ -161,9 +199,9 @@ defineBreakpoints([
   },
   {
     id: 'test-mobile',
-    query: '<360px',
+    query: '<576px',
     displayName: 'Mobile',
     displayIcon: 'mobile',
-    previewSize: '390px',
+    previewSize: '350px',
   },
 ]);

@@ -8,9 +8,9 @@ import {
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
   store,
+  sanitizeNodeProps,
 } from '@contentful/experiences-core';
 import {
-  CF_STYLE_ATTRIBUTES,
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
   CONTENTFUL_COMPONENTS,
@@ -26,7 +26,6 @@ import type {
 } from '@contentful/experiences-core/types';
 import { CSSProperties, useMemo } from 'react';
 import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
-import { omit } from 'lodash-es';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzone.types';
@@ -50,9 +49,11 @@ type UseComponentProps = {
   resolveDesignValue: ResolveDesignValueType;
   areEntitiesFetched: boolean;
   definition?: ComponentRegistration['definition'];
+  options?: ComponentRegistration['options'];
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
   slotId?: string;
+  requiresDragWrapper?: boolean;
 };
 
 export const useComponentProps = ({
@@ -61,7 +62,9 @@ export const useComponentProps = ({
   resolveDesignValue,
   renderDropzone,
   definition,
+  options,
   userIsDragging,
+  requiresDragWrapper,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
@@ -226,22 +229,39 @@ export const useComponentProps = ({
     renderDropzone,
   ]);
 
-  const cfStyles = buildCfStyles(props as StyleProps);
-
-  const sizeStyles: CSSProperties = {
-    width: cfStyles.width,
-    maxWidth: cfStyles.maxWidth,
-    maxHeight: cfStyles.maxHeight,
-  };
+  const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
 
   const isAssemblyBlock = node.type === 'assemblyBlock';
   const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
   const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
 
+  const { overrideStyles, wrapperStyles } = useMemo(() => {
+    // Move size styles to the wrapping div and override the component styles
+    const overrideStyles: CSSProperties = {};
+    const wrapperStyles: CSSProperties = { width: options?.wrapContainerWidth };
+
+    if (requiresDragWrapper) {
+      if (cfStyles.width) wrapperStyles.width = cfStyles.width;
+      if (cfStyles.height) wrapperStyles.height = cfStyles.height;
+      if (cfStyles.maxWidth) wrapperStyles.maxWidth = cfStyles.maxWidth;
+      if (cfStyles.margin) wrapperStyles.margin = cfStyles.margin;
+    }
+
+    // Override component styles to fill the wrapper
+    if (wrapperStyles.width) overrideStyles.width = '100%';
+    if (wrapperStyles.height) overrideStyles.height = '100%';
+    if (wrapperStyles.margin) overrideStyles.margin = '0';
+    if (wrapperStyles.maxWidth) overrideStyles.maxWidth = 'none';
+
+    return { overrideStyles, wrapperStyles };
+  }, [cfStyles, options?.wrapContainerWidth, requiresDragWrapper]);
+
   // Styles that will be applied to the component element
-  const componentClass = useEditorModeClassName({
-    styles: {
+  // This has to be memoized to avoid recreating the styles in useEditorModeClassName on every render
+  const componentStyles = useMemo(
+    () => ({
       ...cfStyles,
+      ...overrideStyles,
       ...(isEmptyZone &&
         isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
           minHeight: EMPTY_CONTAINER_HEIGHT,
@@ -252,13 +272,23 @@ export const useComponentProps = ({
         !isAssemblyBlock && {
           padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
         }),
-    },
+    }),
+    [
+      cfStyles,
+      isAssemblyBlock,
+      isEmptyZone,
+      isSingleColumn,
+      isStructureComponent,
+      node?.data.blockId,
+      overrideStyles,
+      userIsDragging,
+    ],
+  );
+
+  const componentClass = useEditorModeClassName({
+    styles: componentStyles,
     nodeId: node.data.id,
   });
-
-  //List explicit style props that will end up being passed to the component
-  const stylesToKeep = ['cfImageAsset'];
-  const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
 
   const componentProps: ResolvedComponentProps = {
     'data-cf-node-id': node.data.id,
@@ -268,11 +298,11 @@ export const useComponentProps = ({
     editorMode: true,
     node,
     renderDropzone,
-    ...omit(props, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
+    ...sanitizeNodeProps(props),
     ...(definition?.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { componentProps, sizeStyles };
+  return { componentProps, componentStyles, wrapperStyles };
 };
 
 const addExtraDropzonePadding = (padding: string) =>

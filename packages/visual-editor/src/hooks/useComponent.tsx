@@ -64,14 +64,20 @@ export const useComponent = ({
   }, [node]);
 
   const componentId = node.data.id;
+  const isAssembly = node.type === 'assembly';
+  const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
+  const requiresDragWrapper =
+    !isAssembly && !isStructureComponent && !componentRegistration?.options?.wrapComponent;
 
-  const { componentProps, sizeStyles } = useComponentProps({
+  const { componentProps, wrapperStyles } = useComponentProps({
     node,
     areEntitiesFetched,
     resolveDesignValue,
     renderDropzone,
     definition: componentRegistration?.definition,
+    options: componentRegistration?.options,
     userIsDragging,
+    requiresDragWrapper,
   });
 
   const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
@@ -88,24 +94,19 @@ export const useComponent = ({
       ...customComponentProps
     } = componentProps;
 
-    const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
-    const isAssembly = node.type === 'assembly';
     const modifiedProps =
       isStructureComponent || isAssembly ? componentProps : customComponentProps;
 
-    const requiresDragWrapper =
-      !isStructureComponent && componentRegistration.options?.wrapComponent === false;
-
     const element = React.createElement(
       ImportedComponentErrorBoundary,
-      null,
+      { componentId: node.data.blockId },
       React.createElement(componentRegistration.component, {
         ...modifiedProps,
         dragProps,
       }),
     );
 
-    if (!requiresDragWrapper || isAssembly) {
+    if (!requiresDragWrapper) {
       return element;
     }
 
@@ -114,7 +115,7 @@ export const useComponent = ({
     return (
       <Tag
         {...rest}
-        style={{ ...style, ...sizeStyles }}
+        style={{ ...style, ...wrapperStyles }}
         ref={(refNode: HTMLElement | null) => {
           if (innerRef && refNode) innerRef(refNode);
         }}>

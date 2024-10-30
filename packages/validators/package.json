@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-validators",
-  "version": "1.11.2",
+  "version": "1.20.0-beta.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -8,16 +8,22 @@
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/validators#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/contentful/experience-builder.git"
+    "url": "git+https://github.com/contentful/experience-builder.git",
+    "directory": "packages/validators"
+  },
+  "bugs": {
+    "url": "https://github.com/contentful/experience-builder/issues"
   },
   "scripts": {
-    "dev": "vite",
+    "predev": "npm run clean",
+    "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "build": "rollup -c rollup.config.mjs",
     "preview": "vite preview",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "depcruise": "depcruise src"
   },
   "files": [
     "dist/**/*.*"
@@ -33,9 +39,10 @@
     }
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^2.1.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
-    "vitest": "^1.2.2"
+    "vitest": "^2.1.1"
   },
   "dependencies": {
     "zod": "^3.22.4"

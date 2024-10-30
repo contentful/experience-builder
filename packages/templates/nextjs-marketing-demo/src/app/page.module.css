@@ -1,0 +1,11 @@
+div.layout {
+  background: var(--background);
+}
+
+header.header {
+  background: var(--background);
+}
+
+footer.footer {
+  background: #434343;
+}

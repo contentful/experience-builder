@@ -321,9 +321,9 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.ComponentDragStarted: {
-          const { id } = eventData.payload;
+          const { id, isAssembly } = eventData.payload;
           SimulateDnD.setupDrag();
-          setComponentId(id || '');
+          setComponentId(`${id}:${isAssembly}` || '');
           setDraggingOnCanvas(true);
 
           sendMessage(OUTGOING_EVENTS.ComponentSelected, {

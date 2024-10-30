@@ -1,9 +1,11 @@
 import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
-import { omit } from 'lodash-es';
-import { EntityStore, resolveHyperlinkPattern } from '@contentful/experiences-core';
 import {
-  CF_STYLE_ATTRIBUTES,
+  EntityStore,
+  resolveHyperlinkPattern,
+  sanitizeNodeProps,
+} from '@contentful/experiences-core';
+import {
   CONTENTFUL_COMPONENTS,
   HYPERLINK_DEFAULT_PATTERN,
 } from '@contentful/experiences-core/constants';
@@ -27,6 +29,7 @@ import {
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Entry } from 'contentful';
 import { store } from '@contentful/experiences-core';
+import PreviewUnboundImage from './PreviewUnboundImage';
 
 type CompositionBlockProps = {
   node: ComponentTreeNode;
@@ -274,14 +277,17 @@ export const CompositionBlock = ({
     );
   }
 
-  //List explicit style props that will end up being passed to the component
-  const stylesToKeep = ['cfImageAsset'];
-  const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.includes(style));
+  if (
+    node.definitionId === CONTENTFUL_COMPONENTS.image.id &&
+    node.variables.cfImageAsset?.type === 'UnboundValue'
+  ) {
+    return <PreviewUnboundImage node={node} nodeProps={nodeProps} component={component} />;
+  }
 
   return React.createElement(
     component,
     {
-      ...omit(nodeProps, stylesToRemove, ['cfHyperlink', 'cfOpenInNewTab', 'cfSsrClassName']),
+      ...sanitizeNodeProps(nodeProps),
       className,
     },
     children ?? (typeof nodeProps.children === 'string' ? nodeProps.children : null),

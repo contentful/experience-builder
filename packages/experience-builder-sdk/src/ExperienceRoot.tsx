@@ -9,8 +9,8 @@ import { EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
 import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
-import { useDetectEditorMode } from './hooks/useDetectEditorMode';
-import { store } from '@contentful/experiences-core';
+import { useDetectCanvasMode } from './hooks/useDetectCanvasMode';
+import { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
 type ExperienceRootProps<T = unknown> = {
   experience?: Experience<EntityStore> | string | null;
@@ -25,19 +25,28 @@ export const ExperienceRoot = ({
   visualEditorMode = VisualEditorMode.LazyLoad,
   initialStore,
 }: ExperienceRootProps) => {
-  const isEditorMode = useDetectEditorMode();
+  const mode = useDetectCanvasMode();
+
   //If experience is passed in as a JSON string, recreate it to an experience object
   const experienceObject =
     typeof experience === 'string' ? createExperience(experience) : experience;
 
   validateExperienceBuilderConfig({
     locale,
-    isEditorMode,
+    mode,
   });
 
-  store.makeStore(initialStore);
+  if (mode === StudioCanvasMode.EDITOR) {
+    return (
+      <VisualEditorRoot
+        experience={experienceObject as Experience<EntityStore> | undefined}
+        visualEditorMode={visualEditorMode}
+        initialLocale={locale}
+      />
+    );
+  }
 
-  if (isEditorMode) {
+  if (mode === StudioCanvasMode.READ_ONLY) {
     return (
       <VisualEditorRoot
         initialStore={initialStore}

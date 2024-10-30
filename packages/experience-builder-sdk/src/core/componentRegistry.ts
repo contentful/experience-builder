@@ -57,6 +57,9 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
     clone.builtInStyles = ['cfMargin'];
   }
 
+  // Enforce the presence of this property for toggling visibility on any node
+  clone.variables['cfVisibility'] = builtInStyleDefinitions['cfVisibility'];
+
   for (const style of Object.values(clone.builtInStyles || [])) {
     if (builtInStyleDefinitions[style]) {
       clone.variables[style] = builtInStyleDefinitions[style];
@@ -133,6 +136,7 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     },
   }),
   divider: {
+    // Don't wrap this component `withComponentWrapper`. Need to explicitly ignore dragProps
     component: Components.ContentfulDivider,
     definition: dividerDefinition,
     options: {
@@ -170,6 +174,7 @@ export const optionalBuiltInComponents = [
   DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id,
   DEFAULT_COMPONENT_REGISTRATIONS.richText.definition.id,
   DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id,
+  DEFAULT_COMPONENT_REGISTRATIONS.divider.definition.id,
 ];
 
 export const sendRegisteredComponentsMessage = () => {

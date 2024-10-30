@@ -28,6 +28,7 @@
 
 .Dropzone.isAssembly {
   width: 100%;
+  height: 100%;
 }
 
 .DraggableComponent:is(.Dropzone).isDragging {
@@ -41,6 +42,7 @@
 
 .isEmptyZone {
   min-height: 80px;
+  min-width: 80px;
 }
 
 .isDragging:not(.isRoot):not(.DraggableClone):before {
@@ -139,7 +141,7 @@
 .DraggableComponent:has(.isHoveringComponent):not(.isAssemblyBlock) .DraggableComponent:not(.isHoveringComponent):not(.isAssemblyBlock):before,
 .isHoveringComponent:not(.isAssemblyBlock) .DraggableComponent:not(.isAssemblyBlock):before,
 /* hovering related component in canvas */
-.DraggableComponent:not(.isDragging):hover:before,
+.DraggableComponent:not(.isAssemblyBlock):not(.isDragging):hover:before,
 .DraggableComponent:not(.isDragging):hover .DraggableComponent:before {
   outline: 2px dashed var(--exp-builder-gray500);
 }
@@ -147,7 +149,7 @@
 /* hovering component in layers tab */
 .isHoveringComponent:not(.isAssemblyBlock):before,
 /* hovering component in canvas */
-.DraggableComponent:not(.isDragging):hover:not(:has(.DraggableComponent:hover)):before {
+.DraggableComponent:not(.isAssemblyBlock):not(.isDragging):hover:not(:has(.DraggableComponent:hover)):before {
   outline: 2px solid var(--exp-builder-gray500);
 }
 

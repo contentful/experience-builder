@@ -1,65 +1,7 @@
+import { designTokensFixture } from '../../__fixtures__/designTokens';
 import { createExperience, defineDesignTokens, detachExperienceStyles } from '../../index';
-import { DesignTokensDefinition, DesignValue, ExperienceEntry } from '../../types';
+import { DesignValue, ExperienceEntry } from '../../types';
 import { Entry } from 'contentful';
-
-const designTokenRegistry: DesignTokensDefinition = {
-  color: {
-    bg: 'white',
-    font: 'black',
-    danger: 'red',
-    warning: 'orange',
-    succcess: 'green',
-  },
-  spacing: {
-    xs: '0.5 rem',
-    s: '1rem',
-    m: '1.5rem',
-    l: '2rem',
-  },
-  sizing: {
-    quarter: '25%',
-    half: '50%',
-    threeQuarters: '75%',
-    full: '100%',
-  },
-  border: {
-    borderless: {
-      width: '0px',
-      style: 'solid',
-      color: 'transparent',
-    },
-    default: {
-      width: '1px',
-      style: 'solid',
-      color: 'black',
-    },
-    bold: {
-      width: '3px',
-      style: 'solid',
-      color: 'black',
-    },
-  },
-  fontSize: {
-    default: '1rem',
-    small: '0.75rem',
-    large: '1.5rem',
-  },
-  lineHeight: {
-    default: '1.5',
-    small: '1.25',
-    large: '2',
-  },
-  letterSpacing: {
-    default: 'normal',
-    tight: '0.5px',
-    wide: '2px',
-  },
-  textColor: {
-    default: 'black',
-    muted: 'gray',
-    accent: 'blue',
-  },
-};
 
 const experienceEntry: ExperienceEntry = {
   sys: {
@@ -211,7 +153,7 @@ const experienceEntry: ExperienceEntry = {
 
 describe('custom component with builtInStyles which are supporting design tokens', () => {
   beforeEach(() => {
-    defineDesignTokens(designTokenRegistry);
+    defineDesignTokens(designTokensFixture);
   });
 
   it('should populate values with design tokens and extract the css', () => {
@@ -234,7 +176,7 @@ describe('custom component with builtInStyles which are supporting design tokens
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint
         .desktop as string,
     ).toEqual(
-      'cf-c9e1b7c280ecf05fda4ab04e16644807 cf-2c4e00b479e8209382b0814b0ba1f706 cf-bd9d9646c4500dc3f4a3a7d9974d0e40',
+      'cf-2f0de84b4bc4f950c8ee4e3adebb043c cf-3dbe542150900394de3e3d66d9b6e913 cf-37b75bb311b6fa729f3568b0212cf148',
     );
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -244,7 +186,7 @@ describe('custom component with builtInStyles which are supporting design tokens
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-c9e1b7c280ecf05fda4ab04e16644807{margin:2rem;padding:2rem;background-color:white;width:50%;height:25%;border:1px solid black;gap:2rem 2rem;font-size:1rem;font-style:normal;color:black;text-decoration:none;box-sizing:border-box;}@media(max-width:992px){.cf-2c4e00b479e8209382b0814b0ba1f706{margin:1.5rem;padding:1.5rem;background-color:black;width:75%;height:50%;border:3px solid black;gap:1.5rem 1.5rem;font-size:0.75rem;font-style:normal;color:rgba(0, 0, 0, 1);text-decoration:none;box-sizing:border-box;}}@media(max-width:576px){.cf-bd9d9646c4500dc3f4a3a7d9974d0e40{margin:1rem;padding:1rem;background-color:red;width:100%;height:100%;border:0px solid transparent;gap:1rem 1rem;font-size:1.5rem;font-style:normal;color:orange;text-decoration:none;box-sizing:border-box;}}',
+      '.cf-2f0de84b4bc4f950c8ee4e3adebb043c{box-sizing:border-box;margin:2rem;padding:2rem;background-color:white;width:50%;height:25%;border:1px solid black;gap:2rem 2rem;font-size:1rem;color:black;}@media(max-width:992px){.cf-3dbe542150900394de3e3d66d9b6e913{box-sizing:border-box;margin:1.5rem;padding:1.5rem;background-color:black;width:75%;height:50%;border:3px solid black;gap:1.5rem 1.5rem;font-size:0.75rem;color:green;}}@media(max-width:576px){.cf-37b75bb311b6fa729f3568b0212cf148{box-sizing:border-box;margin:1rem;padding:1rem;background-color:red;width:100%;height:100%;border:0px solid transparent;gap:1rem 1rem;font-size:1.5rem;color:orange;}}',
     );
   });
 });

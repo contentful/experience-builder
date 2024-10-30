@@ -859,7 +859,7 @@ describe('flattenDesignTokenRegistry', () => {
         font: 'black',
         danger: 'red',
         warning: 'orange',
-        succcess: 'green',
+        success: 'green',
       },
       spacing: {
         xs: '0.5 rem',
@@ -913,7 +913,7 @@ describe('flattenDesignTokenRegistry', () => {
       'color.font': 'black',
       'color.danger': 'red',
       'color.warning': 'orange',
-      'color.succcess': 'green',
+      'color.success': 'green',
       'spacing.xs': '0.5 rem',
       'spacing.s': '1rem',
       'spacing.m': '1.5rem',
