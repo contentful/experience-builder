@@ -7,6 +7,7 @@ import {
   transformBoundContentValue,
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
+  store,
   sanitizeNodeProps,
 } from '@contentful/experiences-core';
 import {
@@ -201,10 +202,19 @@ export const useComponentProps = ({
       }
     }
 
+    const storeProps = Object.entries(definition.store || {}).reduce(
+      (acc, [variableName]) => {
+        const value = store.getState(variableName);
+        return { ...acc, [variableName]: value };
+      },
+      {} as Record<string, unknown>,
+    );
+
     return {
       ...propsBase,
       ...extractedProps,
       ...slotProps,
+      ...storeProps,
     };
   }, [
     hyperlinkPattern,

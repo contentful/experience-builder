@@ -12,16 +12,18 @@ import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
 import { useDetectCanvasMode } from './hooks/useDetectCanvasMode';
 import { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
-type ExperienceRootProps = {
+type ExperienceRootProps<T = unknown> = {
   experience?: Experience<EntityStore> | string | null;
   locale: string;
   visualEditorMode?: VisualEditorMode;
+  initialStore?: T;
 };
 
 export const ExperienceRoot = ({
   locale,
   experience,
   visualEditorMode = VisualEditorMode.LazyLoad,
+  initialStore,
 }: ExperienceRootProps) => {
   const mode = useDetectCanvasMode();
 
@@ -47,6 +49,7 @@ export const ExperienceRoot = ({
   if (mode === StudioCanvasMode.READ_ONLY) {
     return (
       <VisualEditorRoot
+        initialStore={initialStore}
         experience={experienceObject as Experience<EntityStore> | undefined}
         visualEditorMode={visualEditorMode}
         initialLocale={locale}

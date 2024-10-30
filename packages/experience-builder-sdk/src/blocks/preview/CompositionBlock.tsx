@@ -28,6 +28,7 @@ import {
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Entry } from 'contentful';
+import { store } from '@contentful/experiences-core';
 import PreviewUnboundImage from './PreviewUnboundImage';
 
 type CompositionBlockProps = {
@@ -165,6 +166,15 @@ export const CompositionBlock = ({
       propMap,
     );
 
+    const storeProps = Object.entries(componentRegistration.definition.store || {}).reduce(
+      (acc, [variableName]) => {
+        const value = store.getState(variableName);
+
+        return { ...acc, [variableName]: value };
+      },
+      {} as Record<string, unknown>,
+    );
+
     if (componentRegistration.definition.slots) {
       for (const slotId in componentRegistration.definition.slots) {
         const slotNode = node.children.find((child) => child.slotId === slotId);
@@ -182,7 +192,7 @@ export const CompositionBlock = ({
       }
     }
 
-    return props;
+    return { ...props, ...storeProps } as typeof propMap;
   }, [
     componentRegistration,
     isAssembly,
@@ -192,6 +202,7 @@ export const CompositionBlock = ({
     entityStore,
     hyperlinkPattern,
     locale,
+    getPatternChildNodeClassName,
   ]);
 
   const className = useClassName({ props: nodeProps, node });
