@@ -153,7 +153,7 @@ export const builtInStyles: VariableDefinitions = {
     displayName: 'Hyperlink behaviour',
     type: 'Boolean',
     defaultValue: false,
-    description: 'To open hyperlink in new Tab or not',
+    description: 'Open in new tab',
   },
 };
 
