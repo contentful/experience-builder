@@ -1,12 +1,8 @@
-import { DragStart, DragUpdate } from '@hello-pangea/dnd';
 import { create } from 'zustand';
-
-export type DraggedItem = DragStart & Partial<DragUpdate>;
 
 export interface DraggedItemStore {
   componentId: string;
   hoveredComponentId?: string;
-  draggedItem?: DraggedItem;
   isDraggingOnCanvas: boolean;
   onBeforeCaptureId: string;
   mouseX: number;
@@ -17,7 +13,6 @@ export interface DraggedItemStore {
   // actions
   setComponentId: (id: string) => void;
   setHoveredComponentId: (id?: string) => void;
-  updateItem: (item?: DraggedItem) => void;
   setOnBeforeCaptureId: (draggableId: string) => void;
   setMousePosition: (x: number, y: number) => void;
   setScrollY: (y: number) => void;
@@ -40,9 +35,6 @@ export const useDraggedItemStore = create<DraggedItemStore>((set) => ({
   },
   setHoveredComponentId(id) {
     set({ hoveredComponentId: id });
-  },
-  updateItem: (item) => {
-    set({ draggedItem: item });
   },
   setDraggingOnCanvas: (isDraggingOnCanvas) => {
     set({ isDraggingOnCanvas });

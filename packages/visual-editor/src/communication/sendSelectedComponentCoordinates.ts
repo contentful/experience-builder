@@ -1,5 +1,6 @@
 import { sendMessage, getElementCoordinates } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
+import { sendComponentDragPreview } from './sendComponentDragPreview';
 
 /**
  * This function gets the element co-ordinates of a specified component in the DOM and its parent
@@ -47,6 +48,7 @@ export const sendSelectedComponentCoordinates = (instanceId?: string) => {
       childImage.addEventListener('load', handleImageLoad);
     }
 
+    sendComponentDragPreview(instanceId);
     sendUpdateSelectedComponentCoordinates();
   }
 };

@@ -23,15 +23,16 @@ import {
   ManagementEntity,
   IncomingMessage,
 } from '@contentful/experiences-core/types';
-import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
+import { sendComponentCoordinates } from '@/communication/sendComponentCoordinates';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
-import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
+import { sendComponentDragPreview } from '@/communication/sendComponentDragPreview';
+import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 
 export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
@@ -54,6 +55,7 @@ export function useEditorSubscriber() {
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
   const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
   const setScrollY = useDraggedItemStore((state) => state.setScrollY);
+  const editorTree = useTreeStore((state) => state.tree);
 
   // TODO: As we have disabled the useEffect, we can remove these states
   const [, /* isFetchingEntities */ setFetchingEntities] = useState(false);
@@ -235,6 +237,9 @@ export function useEditorSubscriber() {
           }
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
+          setTimeout(() => {
+            sendComponentCoordinates(tree);
+          }, 900);
           break;
         }
         case INCOMING_EVENTS.AssembliesRegistered: {
@@ -277,21 +282,15 @@ export function useEditorSubscriber() {
           if (selectedNodeId) {
             sendSelectedComponentCoordinates(selectedNodeId);
           }
+          setTimeout(() => {
+            sendComponentCoordinates(editorTree);
+          }, 500);
           break;
         }
         case INCOMING_EVENTS.HoverComponent: {
           const { hoveredNodeId } = eventData.payload;
           setHoveredComponentId(hoveredNodeId);
-          break;
-        }
-        case INCOMING_EVENTS.ComponentDraggingChanged: {
-          const { isDragging } = eventData.payload;
-
-          if (!isDragging) {
-            setComponentId('');
-            setDraggingOnCanvas(false);
-            SimulateDnD.reset();
-          }
+          sendComponentDragPreview(hoveredNodeId);
           break;
         }
         case INCOMING_EVENTS.UpdatedEntity: {
@@ -313,17 +312,10 @@ export function useEditorSubscriber() {
         case INCOMING_EVENTS.RequestEditorMode: {
           break;
         }
-        case INCOMING_EVENTS.ComponentDragCanceled: {
-          if (SimulateDnD.isDragging) {
-            //simulate a mouseup event to cancel the drag
-            SimulateDnD.endDrag(0, 0);
-          }
-          break;
-        }
         case INCOMING_EVENTS.ComponentDragStarted: {
-          const { id, isAssembly } = eventData.payload;
-          SimulateDnD.setupDrag();
-          setComponentId(`${id}:${isAssembly}` || '');
+          // const { id, isAssembly } = eventData.payload;
+          // SimulateDnD.setupDrag();
+          // setComponentId(`${id}:${isAssembly}` || '');
           setDraggingOnCanvas(true);
 
           sendMessage(OUTGOING_EVENTS.ComponentSelected, {
@@ -331,8 +323,19 @@ export function useEditorSubscriber() {
           });
           break;
         }
+        case INCOMING_EVENTS.RequestComponentDrag: {
+          const { nodeId } = eventData.payload;
+          sendComponentDragPreview(nodeId);
+          setComponentId(nodeId);
+          break;
+        }
+        case INCOMING_EVENTS.CanvasScroll: {
+          const { scrollY } = eventData.payload;
+          window.scrollTo(0, scrollY || 0);
+
+          break;
+        }
         case INCOMING_EVENTS.ComponentDragEnded: {
-          SimulateDnD.reset();
           setComponentId('');
           setDraggingOnCanvas(false);
           break;
@@ -341,23 +344,6 @@ export function useEditorSubscriber() {
           const { selectedNodeId: nodeId } = eventData.payload;
           setSelectedNodeId(nodeId);
           sendSelectedComponentCoordinates(nodeId);
-          break;
-        }
-        case INCOMING_EVENTS.MouseMove: {
-          const { mouseX, mouseY } = eventData.payload;
-          setMousePosition(mouseX, mouseY);
-
-          if (SimulateDnD.isDraggingOnParent && !SimulateDnD.isDragging) {
-            SimulateDnD.startDrag(mouseX, mouseY);
-          } else {
-            SimulateDnD.updateDrag(mouseX, mouseY);
-          }
-
-          break;
-        }
-        case INCOMING_EVENTS.ComponentMoveEnded: {
-          const { mouseX, mouseY } = eventData.payload;
-          SimulateDnD.endDrag(mouseX, mouseY);
           break;
         }
         default:
@@ -389,6 +375,7 @@ export function useEditorSubscriber() {
     setMousePosition,
     resetEntityStore,
     setHoveredComponentId,
+    editorTree,
   ]);
 
   /*

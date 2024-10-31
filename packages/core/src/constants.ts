@@ -20,6 +20,8 @@ export const OUTGOING_EVENTS = {
   UpdateSelectedComponentCoordinates: 'updateSelectedComponentCoordinates',
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
+  ComponentCoordinates: 'componentCoordinates',
+  ComponentDragPreview: 'componentDragPreview',
   ComponentMoveStarted: 'componentMoveStarted',
   ComponentMoveEnded: 'componentMoveEnded',
   OutsideCanvasClick: 'outsideCanvasClick',
@@ -28,8 +30,10 @@ export const OUTGOING_EVENTS = {
 } as const;
 
 export const INCOMING_EVENTS = {
+  CanvasScroll: 'canvasScrolling',
   RequestEditorMode: 'requestEditorMode',
   RequestReadOnlyMode: 'requestReadOnlyMode',
+  RequestComponentDrag: 'requestComponentDrag',
   ExperienceUpdated: 'componentTreeUpdated',
   ComponentDraggingChanged: 'componentDraggingChanged',
   ComponentDragCanceled: 'componentDragCanceled',

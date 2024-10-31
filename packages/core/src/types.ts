@@ -506,8 +506,24 @@ export type RequestEntitiesPayload = {
   locale: string;
 };
 
+export type NodeCoordinates = {
+  id: string;
+  blockId: string;
+  coordinates: DOMRect;
+};
+
+export type ComponentCoordinatesPayload = {
+  nodes: { [nodeId: string]: NodeCoordinates };
+};
+export type ComponentDragPreviewPayload = {
+  nodeId: string;
+  image: string;
+};
+
 type OUTGOING_EVENT_PAYLOADS = {
   connected: ConnectedPayload;
+  componentCoordinates: ComponentCoordinatesPayload;
+  componentDragPreview: ComponentDragPreviewPayload;
   registerDesignTokens: DesignTokensPayload;
   registeredBreakpoints: RegisteredBreakpointsPayload;
   mouseMove: MouseMovePayload;
@@ -599,9 +615,15 @@ export type RequestedEntitiesPayload = {
   entities: ManagementEntity[];
 };
 
+export type IncomingCanvasScrollPayload = {
+  scrollY: number;
+};
+
 type INCOMING_EVENT_PAYLOADS = {
+  requestComponentDrag: { nodeId: string };
   requestEditorMode: RequestEditorModePayload;
   requestReadOnlyMode: RequestReadOnlyModePayload;
+  canvasScrolling: IncomingCanvasScrollPayload;
   componentTreeUpdated: ExperienceUpdatedPayload;
   componentDraggingChanged: ComponentDraggingChangedPayload;
   componentDragCanceled: IncomingComponentDragCanceledPayload;
