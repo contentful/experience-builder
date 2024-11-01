@@ -343,7 +343,8 @@ export const containerBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The margin of the container',
-    defaultValue: '0 auto 0 auto',
+    // Note: The UI overwrites '0 Auto 0 Auto' as the default value for top-level containers
+    defaultValue: '0 0 0 0',
   },
   cfMaxWidth: {
     displayName: 'Max Width',
@@ -504,7 +505,8 @@ export const columnsBuiltInStyles: VariableDefinitions = {
     type: 'Text',
     group: 'style',
     description: 'The margin of the columns',
-    defaultValue: '0 auto 0 auto',
+    // Note: The UI overwrites '0 Auto 0 Auto' as the default value for top-level columns
+    defaultValue: '0 0 0 0',
   },
   cfWidth: {
     displayName: 'Width',
