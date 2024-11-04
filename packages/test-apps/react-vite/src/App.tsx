@@ -15,6 +15,10 @@ const router = createBrowserRouter([
     path: '/:slug',
     element: <Page />,
   },
+  {
+    path: '/:locale/:slug',
+    element: <Page />,
+  },
 ]);
 
 function App() {
