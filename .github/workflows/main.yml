@@ -11,6 +11,11 @@ on:
         required: false
         default: false
         type: boolean
+      publish-web-apps-to-prod:
+        description: 'Publish web apps to prod'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   install-build:
@@ -25,6 +30,8 @@ jobs:
   vercel:
     needs: [install-build, check]
     uses: ./.github/workflows/vercel.yaml
+    with:
+      publish-web-apps-to-prod: ${{ !!inputs.publish-web-apps-to-prod }}
     secrets:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

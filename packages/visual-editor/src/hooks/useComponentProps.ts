@@ -225,38 +225,55 @@ export const useComponentProps = ({
   const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
   const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
 
-  // Move size styles to the wrapping div and override the component styles
-  const overrideStyles: CSSProperties = {};
-  const wrapperStyles: CSSProperties = { width: options?.wrapContainerWidth };
+  const { overrideStyles, wrapperStyles } = useMemo(() => {
+    // Move size styles to the wrapping div and override the component styles
+    const overrideStyles: CSSProperties = {};
+    const wrapperStyles: CSSProperties = { width: options?.wrapContainerWidth };
 
-  if (requiresDragWrapper) {
-    if (cfStyles.width) wrapperStyles.width = cfStyles.width;
-    if (cfStyles.height) wrapperStyles.height = cfStyles.height;
-    if (cfStyles.maxWidth) wrapperStyles.maxWidth = cfStyles.maxWidth;
-    if (cfStyles.margin) wrapperStyles.margin = cfStyles.margin;
-  }
+    if (requiresDragWrapper) {
+      if (cfStyles.width) wrapperStyles.width = cfStyles.width;
+      if (cfStyles.height) wrapperStyles.height = cfStyles.height;
+      if (cfStyles.maxWidth) wrapperStyles.maxWidth = cfStyles.maxWidth;
+      if (cfStyles.margin) wrapperStyles.margin = cfStyles.margin;
+    }
 
-  // Override component styles to fill the wrapper
-  if (wrapperStyles.width) overrideStyles.width = '100%';
-  if (wrapperStyles.height) overrideStyles.height = '100%';
-  if (wrapperStyles.margin) overrideStyles.margin = '0';
-  if (wrapperStyles.maxWidth) overrideStyles.maxWidth = 'none';
+    // Override component styles to fill the wrapper
+    if (wrapperStyles.width) overrideStyles.width = '100%';
+    if (wrapperStyles.height) overrideStyles.height = '100%';
+    if (wrapperStyles.margin) overrideStyles.margin = '0';
+    if (wrapperStyles.maxWidth) overrideStyles.maxWidth = 'none';
+
+    return { overrideStyles, wrapperStyles };
+  }, [cfStyles, options?.wrapContainerWidth, requiresDragWrapper]);
 
   // Styles that will be applied to the component element
-  const componentStyles = {
-    ...cfStyles,
-    ...overrideStyles,
-    ...(isEmptyZone &&
-      isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
-        minHeight: EMPTY_CONTAINER_HEIGHT,
-      }),
-    ...(userIsDragging &&
-      isStructureComponent &&
-      !isSingleColumn &&
-      !isAssemblyBlock && {
-        padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
-      }),
-  };
+  // This has to be memoized to avoid recreating the styles in useEditorModeClassName on every render
+  const componentStyles = useMemo(
+    () => ({
+      ...cfStyles,
+      ...overrideStyles,
+      ...(isEmptyZone &&
+        isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
+          minHeight: EMPTY_CONTAINER_HEIGHT,
+        }),
+      ...(userIsDragging &&
+        isStructureComponent &&
+        !isSingleColumn &&
+        !isAssemblyBlock && {
+          padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
+        }),
+    }),
+    [
+      cfStyles,
+      isAssemblyBlock,
+      isEmptyZone,
+      isSingleColumn,
+      isStructureComponent,
+      node?.data.blockId,
+      overrideStyles,
+      userIsDragging,
+    ],
+  );
 
   const componentClass = useEditorModeClassName({
     styles: componentStyles,
