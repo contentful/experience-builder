@@ -33,7 +33,10 @@ export const transformRichText = (
     //resolve any embedded links
     const richTextDocument = value as RichTextDocument;
     richTextDocument.content.forEach((node) => {
-      if (node.nodeType === BLOCKS.EMBEDDED_ENTRY && node.data.target.sys.type === 'Link') {
+      if (
+        (node.nodeType === BLOCKS.EMBEDDED_ENTRY || node.nodeType === BLOCKS.EMBEDDED_ASSET) &&
+        node.data.target.sys.type === 'Link'
+      ) {
         const entity = entityStore.getEntityFromLink(node.data.target);
         if (entity) {
           node.data.target = entity;

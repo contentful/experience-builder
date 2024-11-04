@@ -1,6 +1,13 @@
 import { EditorModeEntityStore } from '@/entity';
 import { transformBoundContentValue } from './transformBoundContentValue';
-import { entities, assets } from '@/test/__fixtures__/entities';
+import {
+  entities,
+  assets,
+  entries,
+  entityIds,
+  entryWithEmbeddedAssetInRichText,
+  entryWithEmbeddedEntryInRichText,
+} from '@/test/__fixtures__/entities';
 import {
   BoundValue,
   ComponentDefinition,
@@ -11,7 +18,12 @@ import { vitest, it, describe } from 'vitest';
 import { UnresolvedLink } from 'contentful';
 
 const entityStore = new EditorModeEntityStore({
-  entities,
+  entities: [
+    ...entities,
+    entryWithEmbeddedEntryInRichText,
+    entryWithEmbeddedAssetInRichText,
+    ...assets,
+  ],
   locale: 'en-US',
 });
 
@@ -43,6 +55,10 @@ const variables: ComponentTreeNode['variables'] = {
   image: {
     type: 'BoundValue',
     path: '/uuid2/fields/file/~locale',
+  },
+  body: {
+    type: 'BoundValue',
+    path: '/uuid3/fields/body/~locale',
   },
 };
 
@@ -191,6 +207,78 @@ describe('transformBoundContentValue', () => {
             ],
             data: {},
             nodeType: 'paragraph',
+          },
+        ],
+        data: {},
+        nodeType: 'document',
+      });
+    });
+
+    it('when rich text has an embedded entry, it should transform the rich text and resolve the entry', () => {
+      const variableName = 'description';
+      const resolveDesignValue = vitest.fn();
+      const binding: UnresolvedLink<'Entry'> = {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_EMBEDDED_ENTRY_IN_RICH_TEXT,
+        },
+      };
+
+      const path = (variables.body as BoundValue).path;
+      const result = transformBoundContentValue(
+        variables,
+        entityStore,
+        binding,
+        resolveDesignValue,
+        variableName,
+        componentDefinition.variables.description,
+        path,
+      );
+      expect(result).toEqual({
+        content: [
+          {
+            content: [],
+            data: {
+              target: entries.find((entry) => entry.sys.id === entityIds.ENTRY1)!,
+            },
+            nodeType: 'embedded-entry-block',
+          },
+        ],
+        data: {},
+        nodeType: 'document',
+      });
+    });
+
+    it('when rich text has an embedded asset, it should transform the rich text and resolve the asset', () => {
+      const variableName = 'description';
+      const resolveDesignValue = vitest.fn();
+      const binding: UnresolvedLink<'Entry'> = {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_EMBEDDED_ASSET_IN_RICH_TEXT,
+        },
+      };
+
+      const path = (variables.body as BoundValue).path;
+      const result = transformBoundContentValue(
+        variables,
+        entityStore,
+        binding,
+        resolveDesignValue,
+        variableName,
+        componentDefinition.variables.description,
+        path,
+      );
+      expect(result).toEqual({
+        content: [
+          {
+            content: [],
+            data: {
+              target: assets.find((entry) => entry.sys.id === entityIds.ASSET1)!,
+            },
+            nodeType: 'embedded-asset-block',
           },
         ],
         data: {},
