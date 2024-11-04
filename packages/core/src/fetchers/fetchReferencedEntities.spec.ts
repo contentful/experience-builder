@@ -95,6 +95,7 @@ describe('fetchReferencedEntities', () => {
 
     expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledWith({
       locale: 'en-US',
+      include: 2,
       'sys.id[in]': entries.map((entry) => entry.sys.id),
       limit: 100,
       skip: 0,

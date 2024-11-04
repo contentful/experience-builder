@@ -34,6 +34,16 @@ export function getResolvedEntryFromLink(
       if (entity) {
         resolvedEntity.fields[fieldKey] = entity;
       }
+    } else if (field && Array.isArray(field)) {
+      resolvedEntity.fields[fieldKey] = field.map((innerField) => {
+        if (innerField && innerField.sys?.type === 'Link') {
+          const entity = entityStore.getEntityFromLink(innerField);
+          if (entity) {
+            return entity;
+          }
+        }
+        return innerField;
+      });
     }
   });
 

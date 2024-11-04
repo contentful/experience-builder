@@ -9,6 +9,7 @@ import {
   entryWithEmbeddedEntryInRichText,
   entryWithEmbeddedEntry,
   entryWithAnotherEmbeddedEntry,
+  entryWithEmbeddedEntries,
 } from '@/test/__fixtures__/entities';
 import {
   BoundValue,
@@ -23,6 +24,7 @@ const entityStore = new EditorModeEntityStore({
   entities: [
     ...entities,
     entryWithEmbeddedEntry,
+    entryWithEmbeddedEntries,
     entryWithAnotherEmbeddedEntry,
     entryWithEmbeddedEntryInRichText,
     entryWithEmbeddedAssetInRichText,
@@ -47,6 +49,9 @@ const componentDefinition: ComponentDefinition = {
     image: {
       type: 'Media',
     },
+    referencedEntries: {
+      type: 'Array',
+    },
   },
 };
 
@@ -69,7 +74,11 @@ const variables: ComponentTreeNode['variables'] = {
   },
   referencedEntry: {
     type: 'BoundValue',
-    path: '/uuid3/fields/referencedEntry/~locale',
+    path: '/uuid4/fields/referencedEntry/~locale',
+  },
+  referencedEntries: {
+    type: 'BoundValue',
+    path: '/uuid5/fields/referencedEntries/~locale',
   },
 };
 
@@ -321,7 +330,38 @@ describe('transformBoundContentValue', () => {
         path,
       );
       // @ts-expect-error -- deep referenced entry doesn't type well
-      expect(result?.fields.referencedEntry.fields.title).toEqual('Entry 1');
+      expect(result?.fields.referencedEntry.fields.title).toEqual('Entry 2');
+    });
+  });
+
+  describe('when the variable type is an "Array"', () => {
+    it('referenced entries in the array should have their references resolved', () => {
+      const variableName = 'referencedEntries';
+      const resolveDesignValue = vitest.fn();
+      const binding: UnresolvedLink<'Entry'> = {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_EMBEDDED_ENTRIES,
+        },
+      };
+
+      const path = (variables.referencedEntries as BoundValue).path;
+      const result = transformBoundContentValue(
+        variables,
+        entityStore,
+        binding,
+        resolveDesignValue,
+        variableName,
+        componentDefinition.variables.referencedEntries,
+        path,
+      );
+      // @ts-expect-error -- deep referenced entry doesn't type well
+      expect(result[0]?.fields.referencedEntry.fields.referencedEntry.fields.title).toEqual(
+        'Entry 2',
+      );
+      // @ts-expect-error -- deep referenced entry doesn't type well
+      expect(result[1]?.fields.referencedEntry.fields.title).toEqual('Entry 2');
     });
   });
 });
