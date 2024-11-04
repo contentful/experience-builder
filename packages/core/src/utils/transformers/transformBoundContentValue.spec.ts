@@ -7,6 +7,8 @@ import {
   entityIds,
   entryWithEmbeddedAssetInRichText,
   entryWithEmbeddedEntryInRichText,
+  entryWithEmbeddedEntry,
+  entryWithAnotherEmbeddedEntry,
 } from '@/test/__fixtures__/entities';
 import {
   BoundValue,
@@ -20,6 +22,8 @@ import { UnresolvedLink } from 'contentful';
 const entityStore = new EditorModeEntityStore({
   entities: [
     ...entities,
+    entryWithEmbeddedEntry,
+    entryWithAnotherEmbeddedEntry,
     entryWithEmbeddedEntryInRichText,
     entryWithEmbeddedAssetInRichText,
     ...assets,
@@ -36,6 +40,9 @@ const componentDefinition: ComponentDefinition = {
     },
     description: {
       type: 'RichText',
+    },
+    referencedEntry: {
+      type: 'Link',
     },
     image: {
       type: 'Media',
@@ -59,6 +66,10 @@ const variables: ComponentTreeNode['variables'] = {
   body: {
     type: 'BoundValue',
     path: '/uuid3/fields/body/~locale',
+  },
+  referencedEntry: {
+    type: 'BoundValue',
+    path: '/uuid3/fields/referencedEntry/~locale',
   },
 };
 
@@ -215,7 +226,7 @@ describe('transformBoundContentValue', () => {
     });
 
     it('when rich text has an embedded entry, it should transform the rich text and resolve the entry', () => {
-      const variableName = 'description';
+      const variableName = 'richText';
       const resolveDesignValue = vitest.fn();
       const binding: UnresolvedLink<'Entry'> = {
         sys: {
@@ -251,7 +262,7 @@ describe('transformBoundContentValue', () => {
     });
 
     it('when rich text has an embedded asset, it should transform the rich text and resolve the asset', () => {
-      const variableName = 'description';
+      const variableName = 'richText';
       const resolveDesignValue = vitest.fn();
       const binding: UnresolvedLink<'Entry'> = {
         sys: {
@@ -284,6 +295,33 @@ describe('transformBoundContentValue', () => {
         data: {},
         nodeType: 'document',
       });
+    });
+  });
+
+  describe('when the variable type is a "Link"', () => {
+    it('it should resolve an entry that has a reference to another entry', () => {
+      const variableName = 'referencedEntry';
+      const resolveDesignValue = vitest.fn();
+      const binding: UnresolvedLink<'Entry'> = {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_EMBEDDED_ENTRY,
+        },
+      };
+
+      const path = (variables.referencedEntry as BoundValue).path;
+      const result = transformBoundContentValue(
+        variables,
+        entityStore,
+        binding,
+        resolveDesignValue,
+        variableName,
+        componentDefinition.variables.referencedEntry,
+        path,
+      );
+      // @ts-expect-error -- deep referenced entry doesn't type well
+      expect(result?.fields.referencedEntry.fields.title).toEqual('Entry 1');
     });
   });
 });

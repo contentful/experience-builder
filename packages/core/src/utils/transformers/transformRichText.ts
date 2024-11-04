@@ -30,7 +30,7 @@ export const transformRichText = (
     };
   }
   if (typeof value === 'object' && value.nodeType === BLOCKS.DOCUMENT) {
-    //resolve any embedded links
+    //resolve any embedded links - we currently only support resolving embedded in the first entry
     const richTextDocument = value as RichTextDocument;
     richTextDocument.content.forEach((node) => {
       if (
