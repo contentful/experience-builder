@@ -84,6 +84,7 @@ describe('fetchAllEntries', () => {
     const result = await fetchAllEntries(params);
 
     expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(11, {
+      include: 2,
       'sys.id[in]': params.ids,
       locale: 'en-US',
       skip: 90,
@@ -111,6 +112,7 @@ describe('fetchAllEntries', () => {
     }
 
     expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(5, {
+      include: 2,
       'sys.id[in]': params.ids,
       locale: 'en-US',
       skip: 0,

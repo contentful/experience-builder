@@ -26,7 +26,22 @@ export function getArrayValue(
     if (typeof value === 'string') {
       return value;
     } else if (value?.sys?.type === 'Link') {
-      return entityStore.getEntityFromLink(value);
+      const resolvedEntity = entityStore.getEntityFromLink(value);
+      if (!resolvedEntity) {
+        return;
+      }
+      //resolve any embedded links - we currently only support 2 levels deep
+      const fields = resolvedEntity.fields || {};
+      Object.entries(fields).forEach(([fieldKey, field]) => {
+        if (field && field.sys?.type === 'Link') {
+          const entity = entityStore.getEntityFromLink(field);
+          if (entity) {
+            resolvedEntity.fields[fieldKey] = entity;
+          }
+        }
+      });
+
+      return resolvedEntity;
     } else {
       console.warn(`Expected value to be a string or Link, but got: ${JSON.stringify(value)}`);
       return undefined;
