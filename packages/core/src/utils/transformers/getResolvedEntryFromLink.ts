@@ -26,9 +26,8 @@ export function getResolvedEntryFromLink(
   }
 
   //resolve any embedded links - we currently only support 2 levels deep
-  const fieldKeys = Object.keys(resolvedEntity.fields || {});
-  fieldKeys.forEach((fieldKey) => {
-    const field = resolvedEntity.fields[fieldKey];
+  const fields = resolvedEntity.fields || {};
+  Object.entries(fields).forEach(([fieldKey, field]) => {
     if (field && field.sys?.type === 'Link') {
       const entity = entityStore.getEntityFromLink(field);
       if (entity) {

@@ -31,9 +31,8 @@ export function getArrayValue(
         return;
       }
       //resolve any embedded links - we currently only support 2 levels deep
-      const fieldKeys = Object.keys(resolvedEntity.fields || {});
-      fieldKeys.forEach((fieldKey) => {
-        const field = resolvedEntity.fields[fieldKey];
+      const fields = resolvedEntity.fields || {};
+      Object.entries(fields).forEach(([fieldKey, field]) => {
         if (field && field.sys?.type === 'Link') {
           const entity = entityStore.getEntityFromLink(field);
           if (entity) {
@@ -43,7 +42,6 @@ export function getArrayValue(
       });
 
       return resolvedEntity;
-      // return entityStore.getEntityFromLink(value);
     } else {
       console.warn(`Expected value to be a string or Link, but got: ${JSON.stringify(value)}`);
       return undefined;
