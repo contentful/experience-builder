@@ -67,7 +67,7 @@ export const useComponent = ({
   const isAssembly = node.type === 'assembly';
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const requiresDragWrapper =
-    !isAssembly && !isStructureComponent && !componentRegistration?.options?.wrapComponent;
+    !isAssembly && !isStructureComponent && componentRegistration?.options?.wrapComponent === false;
 
   const { componentProps, wrapperStyles } = useComponentProps({
     node,
