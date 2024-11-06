@@ -43,7 +43,7 @@ export const fetchAllEntries = async ({
       };
     }
 
-    const query = { 'sys.id[in]': ids, locale, limit, skip };
+    const query = { 'sys.id[in]': ids, locale, limit, skip, include: 2 as 2 | undefined };
 
     const {
       items,

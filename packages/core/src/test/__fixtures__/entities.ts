@@ -5,8 +5,14 @@ import type { PartialDeep } from 'type-fest';
 export const entityIds = {
   ENTRY1: 'entry1',
   ENTRY2: 'entry2',
+  ENTRY_WITH_EMBEDDED_ENTRY: 'entryWithEmbeddedEntry',
+  ENTRY_WITH_EMBEDDED_ENTRIES: 'entryWithEmbeddedEntries',
+  ENTRY_WITH_ANOTHER_EMBEDDED_ENTRY: 'entryWithAnotherEmbeddedEntry',
+  ENTRY_WITH_EMBEDDED_ENTRY_IN_RICH_TEXT: 'entryWithEmbeddedEntryInRichText',
+  ENTRY_WITH_EMBEDDED_ASSET_IN_RICH_TEXT: 'entryWithEmbeddedAssetInRichText',
   ASSET1: 'asset1',
 };
+
 export const entries: Entry[] = [
   {
     sys: {
@@ -90,6 +96,260 @@ export const entries: Entry[] = [
     },
   },
 ];
+
+export const entryWithEmbeddedEntry: Entry = {
+  sys: {
+    id: entityIds.ENTRY_WITH_EMBEDDED_ENTRY,
+    type: 'Entry',
+    contentType: {
+      sys: {
+        id: 'bar',
+        type: 'Link',
+        linkType: 'ContentType',
+      },
+    },
+    createdAt: '2020-01-01T00:00:00.000Z',
+    updatedAt: '2020-01-01T00:00:00.000Z',
+    revision: 10,
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: 'cfexampleapi',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'master',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    locale: 'en-US',
+  },
+  fields: {
+    referencedEntry: {
+      sys: {
+        type: 'Link',
+        linkType: 'Entry',
+        id: entityIds.ENTRY_WITH_ANOTHER_EMBEDDED_ENTRY,
+      },
+    },
+  },
+  metadata: {
+    tags: [],
+  },
+};
+
+export const entryWithEmbeddedEntries: Entry = {
+  sys: {
+    id: entityIds.ENTRY_WITH_EMBEDDED_ENTRIES,
+    type: 'Entry',
+    contentType: {
+      sys: {
+        id: 'bar',
+        type: 'Link',
+        linkType: 'ContentType',
+      },
+    },
+    createdAt: '2020-01-01T00:00:00.000Z',
+    updatedAt: '2020-01-01T00:00:00.000Z',
+    revision: 10,
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: 'cfexampleapi',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'master',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    locale: 'en-US',
+  },
+  fields: {
+    referencedEntries: [
+      {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_EMBEDDED_ENTRY,
+        },
+      },
+      {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_ANOTHER_EMBEDDED_ENTRY,
+        },
+      },
+    ],
+  },
+  metadata: {
+    tags: [],
+  },
+};
+
+export const entryWithAnotherEmbeddedEntry: Entry = {
+  sys: {
+    id: entityIds.ENTRY_WITH_ANOTHER_EMBEDDED_ENTRY,
+    type: 'Entry',
+    contentType: {
+      sys: {
+        id: 'bar',
+        type: 'Link',
+        linkType: 'ContentType',
+      },
+    },
+    createdAt: '2020-01-01T00:00:00.000Z',
+    updatedAt: '2020-01-01T00:00:00.000Z',
+    revision: 10,
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: 'cfexampleapi',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'master',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    locale: 'en-US',
+  },
+  fields: {
+    referencedEntry: {
+      sys: {
+        type: 'Link',
+        linkType: 'Entry',
+        id: entityIds.ENTRY2,
+      },
+    },
+  },
+  metadata: {
+    tags: [],
+  },
+};
+
+export const entryWithEmbeddedEntryInRichText: Entry = {
+  sys: {
+    id: entityIds.ENTRY_WITH_EMBEDDED_ENTRY_IN_RICH_TEXT,
+    type: 'Entry',
+    contentType: {
+      sys: {
+        id: 'bar',
+        type: 'Link',
+        linkType: 'ContentType',
+      },
+    },
+    createdAt: '2020-01-01T00:00:00.000Z',
+    updatedAt: '2020-01-01T00:00:00.000Z',
+    revision: 10,
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: 'cfexampleapi',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'master',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    locale: 'en-US',
+  },
+  fields: {
+    body: {
+      nodeType: 'document',
+      data: {},
+      content: [
+        {
+          nodeType: 'embedded-entry-block',
+          data: {
+            target: {
+              sys: {
+                id: entityIds.ENTRY1,
+                type: 'Link',
+                linkType: 'Entry',
+              },
+            },
+          },
+          content: [],
+        },
+      ],
+    },
+  },
+  metadata: {
+    tags: [],
+  },
+};
+
+export const entryWithEmbeddedAssetInRichText: Entry = {
+  sys: {
+    id: entityIds.ENTRY_WITH_EMBEDDED_ASSET_IN_RICH_TEXT,
+    type: 'Entry',
+    contentType: {
+      sys: {
+        id: 'bar',
+        type: 'Link',
+        linkType: 'ContentType',
+      },
+    },
+    createdAt: '2020-01-01T00:00:00.000Z',
+    updatedAt: '2020-01-01T00:00:00.000Z',
+    revision: 10,
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: 'cfexampleapi',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'master',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    locale: 'en-US',
+  },
+  fields: {
+    body: {
+      nodeType: 'document',
+      data: {},
+      content: [
+        {
+          nodeType: 'embedded-asset-block',
+          data: {
+            target: {
+              sys: {
+                id: entityIds.ASSET1,
+                type: 'Link',
+                linkType: 'Asset',
+              },
+            },
+          },
+          content: [],
+        },
+      ],
+    },
+  },
+  metadata: {
+    tags: [],
+  },
+};
+
 export const assets: Asset[] = [
   {
     sys: {
