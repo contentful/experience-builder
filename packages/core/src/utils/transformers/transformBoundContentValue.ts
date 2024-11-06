@@ -38,7 +38,7 @@ export const transformBoundContentValue = (
         path,
       );
     case 'RichText':
-      return transformRichText(entityOrAsset, path);
+      return transformRichText(entityOrAsset, entityStore, path);
     case 'Array':
       return getArrayValue(entityOrAsset, path, entityStore);
     case 'Link':

@@ -78,6 +78,7 @@ describe('useFetchBySlug', () => {
       });
 
       expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {
+        include: 2,
         limit: 100,
         skip: 0,
         'sys.id[in]': entries.map((entry) => entry.sys.id),
