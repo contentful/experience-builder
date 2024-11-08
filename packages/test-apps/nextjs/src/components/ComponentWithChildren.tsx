@@ -5,13 +5,11 @@ interface ComponentWithChildrenProps {
   heading: string;
 }
 
-const ComponentWithChildren: React.FC<ComponentWithChildrenProps> = async ({
+const ComponentWithChildren: React.FC<ComponentWithChildrenProps> = ({
   children,
   heading,
   ...rest
 }) => {
-  const { fact } = await fetch('https://catfact.ninja/fact').then((res) => res.json());
-
   return (
     <div
       {...rest}
@@ -38,8 +36,6 @@ const ComponentWithChildren: React.FC<ComponentWithChildrenProps> = async ({
             }}>
             {heading}
           </h1>
-          <strong>Cat Fact from a React Server Component:</strong>
-          <p>{fact}</p>
           {children}
         </div>
         <div
