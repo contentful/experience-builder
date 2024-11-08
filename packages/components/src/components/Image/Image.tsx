@@ -7,7 +7,7 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   cfImageAsset?: OptimizedImageAsset | string;
 }
 
-export const Image = ({ className = '', src, cfImageAsset, ...props }: ImageProps) => {
+export const Image: React.FC<ImageProps> = ({ className = '', src, cfImageAsset, ...props }) => {
   if (!cfImageAsset && !src) {
     return (
       <>

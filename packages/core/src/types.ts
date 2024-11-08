@@ -109,7 +109,6 @@ export type ComponentRegistration = {
   component: React.ElementType;
   definition: ComponentDefinition;
   options?: {
-    isRSC?: boolean;
     wrapComponent?: boolean;
     /** @deprecated use wrapContainer instead */
     wrapContainerTag?: keyof JSX.IntrinsicElements;
