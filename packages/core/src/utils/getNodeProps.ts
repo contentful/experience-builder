@@ -26,7 +26,6 @@ export const getNodeProps = ({
   entityStore,
   locale,
   hyperlinkPattern,
-  experience,
   resolveDesignValue,
 }: GetNodePropsParams) => {
   // Don't enrich the assembly wrapper node with props

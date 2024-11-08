@@ -4,29 +4,29 @@ import { render } from '@testing-library/react';
 
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
-import type { ComponentTreeNode, ExperienceEntry } from '@contentful/experiences-core/types';
+import type { ComponentTreeNode } from '@contentful/experiences-core/types';
 import { CompositionBlockClient } from './CompositionBlockClient';
-import type { Entry } from 'contentful';
-import { experienceEntry } from '../../../test/__fixtures__/composition';
+// import type { Entry } from 'contentful';
+// import { experienceEntry } from '../../../test/__fixtures__/composition';
 import {
-  createAssemblyEntry,
+  // createAssemblyEntry,
   defaultAssemblyId,
   assemblyGeneratedVariableName,
 } from '../../../test/__fixtures__/assembly';
-import { EntityStore } from '@contentful/experiences-core';
-import { assets, entries } from '../../../test/__fixtures__/entities';
+// import { EntityStore } from '@contentful/experiences-core';
+// import { assets, entries } from '../../../test/__fixtures__/entities';
 
 const TestComponent: React.FC<{ text: string }> = (props) => {
   return <div {...props}>{props.text}</div>;
 };
 
 describe('CompositionBlockClient', () => {
-  const emptyEntityStore = {
-    breakpoints: [],
-    dataSource: {},
-    unboundValues: {},
-    usedComponents: [],
-  } as unknown as EntityStore;
+  // const emptyEntityStore = {
+  //   breakpoints: [],
+  //   dataSource: {},
+  //   unboundValues: {},
+  //   usedComponents: [],
+  // } as unknown as EntityStore;
 
   beforeEach(() => {
     defineComponents([
@@ -104,28 +104,28 @@ describe('CompositionBlockClient', () => {
 
   it('renders assembly node', () => {
     const unboundValueKey = 'some-unbound-value-key';
-    const assemblyEntry = createAssemblyEntry({
-      id: defaultAssemblyId,
-      schemaVersion: '2023-09-28',
-    });
-    const updatedExperienceEntry = {
-      ...experienceEntry,
-      fields: {
-        ...experienceEntry.fields,
-        usedComponents: [assemblyEntry],
-        unboundValues: {
-          [unboundValueKey]: {
-            value: 'New year eve',
-          },
-        },
-      },
-    } as ExperienceEntry;
+    // const assemblyEntry = createAssemblyEntry({
+    //   id: defaultAssemblyId,
+    //   schemaVersion: '2023-09-28',
+    // });
+    // const updatedExperienceEntry = {
+    //   ...experienceEntry,
+    //   fields: {
+    //     ...experienceEntry.fields,
+    //     usedComponents: [assemblyEntry],
+    //     unboundValues: {
+    //       [unboundValueKey]: {
+    //         value: 'New year eve',
+    //       },
+    //     },
+    //   },
+    // } as ExperienceEntry;
 
-    const entityStore = new EntityStore({
-      experienceEntry: updatedExperienceEntry as unknown as Entry,
-      entities: [...entries, ...assets],
-      locale: 'en-US',
-    });
+    // const entityStore = new EntityStore({
+    //   experienceEntry: updatedExperienceEntry as unknown as Entry,
+    //   entities: [...entries, ...assets],
+    //   locale: 'en-US',
+    // });
 
     const assemblyNode: ComponentTreeNode = {
       definitionId: defaultAssemblyId,

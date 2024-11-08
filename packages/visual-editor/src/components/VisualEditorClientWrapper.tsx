@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { createExperience, EntityStore, sendMessage } from '@contentful/experiences-core';
 import SimulateDnD from '@/utils/simulateDnD';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
@@ -20,7 +20,7 @@ export const VisualEditorClientWrapper = ({
   const experience =
     typeof experienceObject === 'string' ? createExperience(experienceObject) : experienceObject;
 
-  if (!experienceObject) return null;
+  if (!experienceObject) throw new Error('NO EXP');
   const initialized = useInitializeEditor();
   const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
 
