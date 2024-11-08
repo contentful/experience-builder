@@ -2,4 +2,5 @@
 export const sdkFeatures: Record<string, unknown> = {
   hasSDKVersionUI: true,
   cfVisibility: true,
+  patternResolution: true,
 };

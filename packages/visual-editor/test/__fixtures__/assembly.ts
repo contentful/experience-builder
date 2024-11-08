@@ -1,14 +1,11 @@
 import {
   CONTENTFUL_COMPONENTS,
-  ASSEMBLY_NODE_TYPE,
   LATEST_SCHEMA_VERSION,
 } from '@contentful/experiences-core/constants';
 import type {
   ExperienceComponentSettings,
   ExperienceEntry,
-  ExperienceTreeNode,
   SchemaVersions,
-  ValuesByBreakpoint,
 } from '@contentful/experiences-core/types';
 
 type createAssemblyEntryArgs = {
@@ -107,66 +104,4 @@ export const createAssemblyEntry = ({
       } satisfies ExperienceComponentSettings,
     },
   };
-};
-
-type createAssemblyNodeArgs = {
-  id: string;
-  blockId?: string;
-  unboundValue?: string;
-  unboundValueKey?: string;
-  boundValueKey?: string;
-  designValue?: ValuesByBreakpoint;
-};
-
-export const createAssemblyNode = ({
-  id,
-  blockId = defaultAssemblyId,
-  unboundValue = 'New year Eve',
-  unboundValueKey = undefined,
-  boundValueKey = undefined,
-  designValue = undefined,
-}: createAssemblyNodeArgs): ExperienceTreeNode => {
-  const node: ExperienceTreeNode = {
-    type: ASSEMBLY_NODE_TYPE,
-    data: {
-      blockId,
-      id,
-      props: {},
-      dataSource: {},
-      unboundValues: {},
-      breakpoints: [],
-    },
-    children: [],
-    parentId: 'root',
-  };
-  if (unboundValueKey) {
-    node.data.props[assemblyGeneratedVariableName] = {
-      type: 'UnboundValue',
-      key: unboundValueKey,
-    };
-    node.data.unboundValues = {
-      [unboundValueKey]: { value: unboundValue },
-    };
-  } else if (boundValueKey) {
-    node.data.props[assemblyGeneratedVariableName] = {
-      type: 'BoundValue',
-      path: `/${boundValueKey}/fields/someFieldId/~locale`,
-    };
-    node.data.dataSource = {
-      [boundValueKey]: {
-        sys: {
-          type: 'Link',
-          linkType: 'Entry',
-          id: 'someEntryId',
-        },
-      },
-    };
-  }
-  if (designValue) {
-    node.data.props[assemblyGeneratedDesignVariableName] = {
-      type: 'DesignValue',
-      valuesByBreakpoint: designValue,
-    };
-  }
-  return node;
 };
