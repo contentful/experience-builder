@@ -1,3 +1,4 @@
+'use client';
 import React, { CSSProperties, useCallback, useRef, useState } from 'react';
 import { useEffect } from 'react';
 import DraggableContainer from '@/components/DraggableHelpers/DraggableComponentList';

@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
 import type { ComponentTreeNode, ExperienceEntry } from '@contentful/experiences-core/types';
-import { CompositionBlock } from './CompositionBlock';
+import { CompositionBlockClient } from './CompositionBlockClient';
 import type { Entry } from 'contentful';
 import { experienceEntry } from '../../../test/__fixtures__/composition';
 import {
@@ -20,7 +20,7 @@ const TestComponent: React.FC<{ text: string }> = (props) => {
   return <div {...props}>{props.text}</div>;
 };
 
-describe('CompositionBlock', () => {
+describe('CompositionBlockClient', () => {
   const emptyEntityStore = {
     breakpoints: [],
     dataSource: {},
@@ -62,19 +62,18 @@ describe('CompositionBlock', () => {
 
     // Render the component with the initial text
     render(
-      <CompositionBlock
+      <CompositionBlockClient
         node={mockExperienceTreeNode}
         locale="en-US"
-        entityStore={
-          {
-            ...emptyEntityStore,
-            unboundValues: {
-              value1: { value: 'unboundValue1' },
-              value2: { value: 1 },
-            },
-          } as unknown as EntityStore
-        }
-        resolveDesignValue={jest.fn()}
+        // entityStore={
+        //   {
+        //     ...emptyEntityStore,
+        //     unboundValues: {
+        //       value1: { value: 'unboundValue1' },
+        //       value2: { value: 1 },
+        //     },
+        //   } as unknown as EntityStore
+        // }
       />,
     );
   });
@@ -86,14 +85,7 @@ describe('CompositionBlock', () => {
       children: [],
     };
 
-    const { getByTestId } = render(
-      <CompositionBlock
-        node={sectionNode}
-        locale="en-US"
-        entityStore={emptyEntityStore}
-        resolveDesignValue={jest.fn()}
-      />,
-    );
+    const { getByTestId } = render(<CompositionBlockClient node={sectionNode} locale="en-US" />);
 
     expect(getByTestId('contentful-container')).toBeInTheDocument();
   });
@@ -105,14 +97,7 @@ describe('CompositionBlock', () => {
       children: [],
     };
 
-    const { getByTestId } = render(
-      <CompositionBlock
-        node={containerNode}
-        locale="en-US"
-        entityStore={emptyEntityStore}
-        resolveDesignValue={jest.fn()}
-      />,
-    );
+    const { getByTestId } = render(<CompositionBlockClient node={containerNode} locale="en-US" />);
 
     expect(getByTestId('contentful-container')).toBeInTheDocument();
   });
@@ -151,12 +136,7 @@ describe('CompositionBlock', () => {
     };
 
     const { getByTestId, getByText } = render(
-      <CompositionBlock
-        node={assemblyNode}
-        locale="en-US"
-        entityStore={entityStore}
-        resolveDesignValue={jest.fn()}
-      />,
+      <CompositionBlockClient node={assemblyNode} locale="en-US" />,
     );
 
     expect(getByTestId('assembly')).toBeInTheDocument();

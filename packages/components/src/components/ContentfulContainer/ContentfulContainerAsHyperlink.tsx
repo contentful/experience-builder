@@ -1,3 +1,4 @@
+'use client';
 /* eslint-disable */ /* TODO: fix eslint errors */
 import React, { RefObject } from 'react';
 

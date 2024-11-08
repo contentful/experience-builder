@@ -29,6 +29,7 @@ defineComponents([
       },
     },
     options: {
+      isRSC: true,
       wrapComponent: false,
     },
   },

@@ -1,16 +1,11 @@
-'use client';
 import React from 'react';
-import {
-  VisualEditorMode,
-  createExperience,
-  validateExperienceBuilderConfig,
-} from '@contentful/experiences-core';
+import { createExperience, VisualEditorMode } from '@contentful/experiences-core';
 import { EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
 import { PreviewDeliveryRoot } from './blocks/preview/PreviewDeliveryRoot';
+import { ExperienceCanvasDetection } from './ExperienceCanvasDetection';
+import VisualEditorClientInitialization from './blocks/editor/VisualEditorClientInitialization';
 import VisualEditorRoot from './blocks/editor/VisualEditorRoot';
-import { useDetectCanvasMode } from './hooks/useDetectCanvasMode';
-import { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
 type ExperienceRootProps = {
   experience?: Experience<EntityStore> | string | null;
@@ -18,43 +13,25 @@ type ExperienceRootProps = {
   visualEditorMode?: VisualEditorMode;
 };
 
-export const ExperienceRoot = ({
-  locale,
-  experience,
-  visualEditorMode = VisualEditorMode.LazyLoad,
-}: ExperienceRootProps) => {
-  const mode = useDetectCanvasMode();
-
-  //If experience is passed in as a JSON string, recreate it to an experience object
+export const ExperienceRoot = ({ locale, experience }: ExperienceRootProps) => {
   const experienceObject =
     typeof experience === 'string' ? createExperience(experience) : experience;
 
-  validateExperienceBuilderConfig({
-    locale,
-    mode,
-  });
+  const initialEntities = experienceObject?.entityStore?.entities || [];
 
-  if (mode === StudioCanvasMode.EDITOR) {
-    return (
-      <VisualEditorRoot
-        experience={experienceObject as Experience<EntityStore> | undefined}
-        visualEditorMode={visualEditorMode}
-        initialLocale={locale}
-      />
-    );
-  }
+  const editorRoot = (
+    <VisualEditorClientInitialization initialEntities={initialEntities} initialLocale={locale}>
+      <VisualEditorRoot experience={experience} />
+    </VisualEditorClientInitialization>
+  );
 
-  if (mode === StudioCanvasMode.READ_ONLY) {
-    return (
-      <VisualEditorRoot
-        experience={experienceObject as Experience<EntityStore> | undefined}
-        visualEditorMode={visualEditorMode}
-        initialLocale={locale}
-      />
-    );
-  }
+  const deliveryRoot = <PreviewDeliveryRoot locale={locale} experience={experience} />;
 
-  if (!experienceObject) return null;
-
-  return <PreviewDeliveryRoot locale={locale} experience={experienceObject} />;
+  return (
+    <ExperienceCanvasDetection
+      locale={locale}
+      editorRoot={editorRoot}
+      deliveryRoot={deliveryRoot}
+    />
+  );
 };

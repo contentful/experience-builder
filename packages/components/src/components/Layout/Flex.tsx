@@ -1,3 +1,4 @@
+'use client';
 import React, { MouseEventHandler, forwardRef } from 'react';
 import type * as CSS from 'csstype';
 import type { DragWrapperProps } from '@contentful/experiences-core/types';

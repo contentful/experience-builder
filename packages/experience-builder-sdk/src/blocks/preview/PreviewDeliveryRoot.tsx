@@ -1,41 +1,48 @@
 import React from 'react';
-import { EntityStore } from '@contentful/experiences-core';
+import { createExperience, EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
-import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
-import { useBreakpoints } from '../../hooks';
+import CompositionBlockWrapper from './CompositionBlockWrapper';
 
 type DeliveryRootProps = {
-  experience: Experience<EntityStore>;
+  experience?: Experience<EntityStore> | string | null;
   locale: string;
 };
 
-export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) => {
-  const { entityStore } = experience;
+export const PreviewDeliveryRoot = ({ experience, locale }: DeliveryRootProps) => {
+  const experienceObject =
+    typeof experience === 'string' ? createExperience(experience) : experience;
 
-  const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? []);
+  if (!experienceObject) return null;
+
+  const { entityStore, hyperlinkPattern } = experienceObject;
+
+  const schemaVersion = entityStore?.schemaVersion;
+
+  if (!compatibleVersions.includes(schemaVersion!)) {
+    console.warn(
+      `[experiences-sdk-react] Contentful experience schema version: ${schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
+    );
+    return null;
+  }
 
   if (!entityStore?.experienceEntryFields || !entityStore?.schemaVersion) {
     return null;
   }
 
-  if (!compatibleVersions.includes(entityStore.schemaVersion)) {
-    console.warn(
-      `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
-    );
-    return null;
-  }
+  // Render isRSC components here to be passed as props into CompositionBlockWrapper
+
+  // Add entity store method to serialize/de-serialize the entity store so it can be passed between client/server
 
   return (
     <>
       {entityStore.experienceEntryFields.componentTree.children.map((childNode, index) => (
-        <CompositionBlock
+        <CompositionBlockWrapper
+          experience={experience}
           key={index}
           node={childNode}
-          hyperlinkPattern={experience.hyperlinkPattern}
+          hyperlinkPattern={hyperlinkPattern}
           locale={locale}
-          entityStore={entityStore}
-          resolveDesignValue={resolveDesignValue}
         />
       ))}
     </>

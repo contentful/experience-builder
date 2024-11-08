@@ -1,33 +1,26 @@
+'use client';
+// Need 'use client' for now since bundling of visual editor pkg and lazy loading
+// it in results in the bundle having client code mixed into it
+// todo: update build config of visual editor to work with server components
+
 import React, { Suspense } from 'react';
-import { EntityStore, VisualEditorMode } from '@contentful/experiences-core';
+import { EntityStore } from '@contentful/experiences-core';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
-import { useInitializeVisualEditor } from '../../hooks/useInitializeVisualEditor';
 import type { Experience } from '@contentful/experiences-core/types';
 
-const VisualEditorLoader = React.lazy(() => import('./VisualEditorLoader'));
+const VisualEditorLoader = React.lazy(() => import('@contentful/experiences-visual-editor-react'));
 
 type VisualEditorRootProps = {
-  visualEditorMode: VisualEditorMode;
-  experience?: Experience<EntityStore>;
-  initialLocale: string;
+  experience?: Experience<EntityStore> | string | null;
 };
 
-export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
-  visualEditorMode,
-  experience,
-  initialLocale,
-}) => {
-  const initialEntities = experience?.entityStore?.entities || [];
-
-  useInitializeVisualEditor({
-    initialLocale,
-    initialEntities,
-  });
+export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({ experience }) => {
+  // prerender server components and pass into VisualEditorLoader to be rendered on the client
 
   return (
     <ErrorBoundary>
       <Suspense fallback={<div>Loading...</div>}>
-        <VisualEditorLoader experience={experience} visualEditorMode={visualEditorMode} />
+        <VisualEditorLoader experienceObject={experience} />
       </Suspense>
     </ErrorBoundary>
   );

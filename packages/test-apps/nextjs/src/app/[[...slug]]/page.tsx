@@ -1,6 +1,5 @@
-import Experience from '@/components/Experience';
 import { getExperience } from '@/utils/getExperience';
-import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
+import { detachExperienceStyles, ExperienceRoot } from '@contentful/experiences-sdk-react';
 import '../../studio-config';
 
 type Page = {
@@ -27,7 +26,7 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   return (
     <main style={{ width: '100%' }}>
       {stylesheet && <style data-css-ssr>{stylesheet}</style>}
-      <Experience experienceJSON={experienceJSON} locale={locale} />
+      <ExperienceRoot experience={experienceJSON} locale={locale} />
     </main>
   );
 }
