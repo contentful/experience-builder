@@ -9,7 +9,6 @@ import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
 import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
 import { Assembly } from '@contentful/experiences-components-react';
-import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
@@ -25,24 +24,12 @@ type UseComponentProps = {
 };
 
 export const useComponent = ({
-  node: rawNode,
+  node,
   resolveDesignValue,
   renderDropzone,
   userIsDragging,
 }: UseComponentProps) => {
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
-  const entityStore = useEntityStore((state) => state.entityStore);
-
-  const node = useMemo(() => {
-    if (rawNode.type === ASSEMBLY_NODE_TYPE && areEntitiesFetched) {
-      return resolveAssembly({
-        node: rawNode,
-        entityStore,
-      });
-    }
-
-    return rawNode;
-  }, [areEntitiesFetched, rawNode, entityStore]);
 
   const componentRegistration: ComponentRegistration | undefined = useMemo(() => {
     let registration = componentRegistry.get(node.data.blockId!);
