@@ -1,4 +1,3 @@
-'use client';
 import React, { CSSProperties, forwardRef } from 'react';
 import './Columns.css';
 import { combineClasses } from '../../utils/combineClasses';
