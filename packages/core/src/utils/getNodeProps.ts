@@ -1,5 +1,5 @@
 import { EntityStore } from '@/entity';
-import { ComponentRegistration, Experience, ResolveDesignValueType } from '@/types';
+import { ComponentRegistration, ResolveDesignValueType } from '@/types';
 import { ComponentTreeNode, DesignValue, PrimitiveValue } from '@contentful/experiences-validators';
 import { transformBoundContentValue } from './transformers';
 import { Entry, UnresolvedLink } from 'contentful';
@@ -15,7 +15,6 @@ interface GetNodePropsParams {
   locale: string;
   hyperlinkPattern: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
-  experience?: Experience<EntityStore> | string | null;
 }
 
 export const getNodeProps = ({

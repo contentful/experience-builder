@@ -1,22 +1,17 @@
-import React from 'react';
-import {
-  createExperience,
-  EntityStore,
-  getNodeProps,
-  getValueForBreakpoint,
-  sanitizeNodeProps,
-} from '@contentful/experiences-core';
+import React, { useMemo } from 'react';
+import { EntityStore, getNodeProps, sanitizeNodeProps } from '@contentful/experiences-core';
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import type {
   ComponentTreeNode,
   DesignValue,
-  Experience,
-  PrimitiveValue,
+  ResolveDesignValueType,
   StyleProps,
-  ValuesByBreakpoint,
 } from '@contentful/experiences-core/types';
+import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import { checkIsAssemblyNode } from '@contentful/experiences-core';
+import { useClassName } from '../../hooks/useClassName';
 import {
+  Assembly,
   Columns,
   ContentfulContainer,
   SingleColumn,
@@ -24,92 +19,103 @@ import {
 
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import PreviewUnboundImage from './PreviewUnboundImage';
-import { getRegistration } from '../../utils/getComponentRegistration';
-import CompositionBlockWrapper from './CompositionBlockWrapper';
 
 type CompositionBlockProps = {
-  experience?: Experience<EntityStore> | string | null;
   node: ComponentTreeNode;
   locale: string;
+  entityStore: EntityStore;
   hyperlinkPattern?: string | undefined;
+  resolveDesignValue: ResolveDesignValueType;
   getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
 };
 
-export const CompositionBlockServer = ({
+export const CompositionBlock = ({
   node: rawNode,
-  experience,
   locale,
+  entityStore,
   hyperlinkPattern,
+  resolveDesignValue,
   getPatternChildNodeClassName,
 }: CompositionBlockProps) => {
-  const experienceObject =
-    typeof experience === 'string' ? createExperience(experience) : experience;
+  const isAssembly = useMemo(
+    () =>
+      checkIsAssemblyNode({
+        componentId: rawNode.definitionId,
+        usedComponents: entityStore.usedComponents,
+      }),
+    [entityStore.usedComponents, rawNode.definitionId],
+  );
 
-  const entityStore = experienceObject?.entityStore;
+  const node = useMemo(() => {
+    return isAssembly
+      ? resolveAssembly({
+          node: rawNode,
+          entityStore,
+        })
+      : rawNode;
+  }, [entityStore, isAssembly, rawNode]);
 
-  // hacky, just to get the poc to run
-  if (!entityStore) throw new Error('EntityStore is required');
+  const componentRegistration = useMemo(() => {
+    const registration = getComponentRegistration(node.definitionId as string);
 
-  const breakpoints = entityStore.breakpoints ?? [];
+    if (isAssembly && !registration) {
+      return createAssemblyRegistration({
+        definitionId: node.definitionId as string,
+        component: Assembly,
+      });
+    }
+    return registration;
+  }, [isAssembly, node.definitionId]);
 
-  const isAssembly = checkIsAssemblyNode({
-    componentId: rawNode.definitionId,
-    usedComponents: entityStore.usedComponents,
-  });
+  const nodeProps = useMemo(() => {
+    const props = getNodeProps({
+      node,
+      componentRegistration,
+      isAssembly,
+      getPatternChildNodeClassName,
+      entityStore,
+      locale,
+      hyperlinkPattern,
+      resolveDesignValue,
+    });
 
-  const node = isAssembly
-    ? resolveAssembly({
-        node: rawNode,
-        entityStore,
-      })
-    : rawNode;
-
-  const componentRegistration = getRegistration(node, isAssembly);
-
-  if (!componentRegistration) {
-    return null;
-  }
-
-  const { component } = componentRegistration;
-
-  const resolveDesignValue = (
-    valuesByBreakpoint: ValuesByBreakpoint,
-    variableName: string,
-  ): PrimitiveValue => {
-    return getValueForBreakpoint(valuesByBreakpoint, breakpoints, 0, variableName);
-  };
-
-  const nodeProps = getNodeProps({
-    node,
-    componentRegistration,
-    isAssembly,
-    entityStore,
-    locale,
-    hyperlinkPattern,
-    getPatternChildNodeClassName,
-    resolveDesignValue,
-  });
-
-  const populateNodeSlots = () => {
-    if (!componentRegistration.definition.slots) return;
+    if (!componentRegistration?.definition.slots) return props;
 
     for (const slotId in componentRegistration.definition.slots) {
       const slotNode = node.children.find((child) => child.slotId === slotId);
 
       if (!slotNode) continue;
 
-      nodeProps[slotId] = (
-        <CompositionBlockWrapper
+      props[slotId] = (
+        <CompositionBlock
           node={slotNode}
           locale={locale}
           hyperlinkPattern={hyperlinkPattern}
-          experience={experience}
+          entityStore={entityStore}
+          resolveDesignValue={resolveDesignValue}
         />
       );
     }
-  };
 
-  populateNodeSlots();
+    return props;
+  }, [
+    componentRegistration,
+    isAssembly,
+    resolveDesignValue,
+    entityStore,
+    hyperlinkPattern,
+    locale,
+    getPatternChildNodeClassName,
+    node,
+  ]);
+
+  const className = useClassName({ props: nodeProps, node });
+
+  if (!componentRegistration) {
+    return null;
+  }
+
+  const { component } = componentRegistration;
 
   const _getPatternChildNodeClassName = (childNodeId: string) => {
     if (isAssembly) {
@@ -126,20 +132,18 @@ export const CompositionBlockServer = ({
     return getPatternChildNodeClassName?.(childNodeId);
   };
 
-  // Hardcode the className to the SSR class name for server component
-  const className = nodeProps.cfSsrClassName as string;
-
   const children =
     componentRegistration.definition.children === true
       ? node.children.map((childNode: ComponentTreeNode, index) => {
           return (
-            <CompositionBlockWrapper
-              experience={experience}
+            <CompositionBlock
               getPatternChildNodeClassName={_getPatternChildNodeClassName}
               node={childNode}
               key={index}
               locale={locale}
               hyperlinkPattern={hyperlinkPattern}
+              entityStore={entityStore}
+              resolveDesignValue={resolveDesignValue}
             />
           );
         })

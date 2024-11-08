@@ -16,7 +16,6 @@ export const VisualEditorRoot = ({
 
   return (
     <VisualEditorClientWrapper experienceObject={experienceObject}>
-      {/* RootRenderer can be refactored to a server component */}
       <RootRenderer />
     </VisualEditorClientWrapper>
   );

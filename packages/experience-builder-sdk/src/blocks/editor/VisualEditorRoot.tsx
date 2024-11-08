@@ -15,8 +15,6 @@ type VisualEditorRootProps = {
 };
 
 export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({ experience }) => {
-  // prerender server components and pass into VisualEditorLoader to be rendered on the client
-
   return (
     <ErrorBoundary>
       <Suspense fallback={<div>Loading...</div>}>
