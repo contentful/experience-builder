@@ -1,10 +1,15 @@
 import { ASSEMBLY_NODE_TYPE, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { useComponentProps } from './useComponentProps';
 import { ComponentDefinition, ExperienceTreeNode } from '@contentful/experiences-core/types';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
+import { useDraggedItemStore } from '@/store/draggedItem';
 import { getValueForBreakpoint } from '@contentful/experiences-core';
+
+vi.mock('@/store/draggedItem', () => ({
+  useDraggedItemStore: vi.fn(),
+}));
 
 const breakpoints = createBreakpoints();
 const desktopIndex = 0;
@@ -286,6 +291,87 @@ describe('useComponentProps', () => {
         // The component width should be set to 100% to fill the wrapper
         expect(result.current.componentStyles.width).toEqual('100%');
       });
+    });
+  });
+
+  describe('should prevent resizing element with percentage height/width when dragging', () => {
+    const definition: ComponentDefinition = {
+      id: 'banner',
+      name: 'Banner',
+      variables: {
+        cfWidth: { type: 'Text' },
+        cfHeight: { type: 'Text' },
+      },
+    };
+    const node: ExperienceTreeNode = {
+      data: {
+        id: 'id',
+        blockId: 'banner',
+        props: {
+          cfWidth: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              desktop: '50%',
+            },
+          },
+          cfHeight: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              desktop: '50%',
+            },
+          },
+        },
+        unboundValues: {},
+        dataSource: {},
+        breakpoints: [],
+      },
+      children: [],
+      type: 'block',
+    };
+
+    const nodeRect = { width: 200, height: 100 } as DOMRect;
+
+    beforeEach(() => {
+      (useDraggedItemStore as unknown as Mock).mockImplementation((selector) =>
+        selector({
+          onBeforeCaptureId: 'id',
+          domRect: nodeRect,
+        }),
+      );
+    });
+
+    it('and set wrapper max size constraint when drag wrapper is enabled', () => {
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node,
+          areEntitiesFetched: true,
+          resolveDesignValue,
+          renderDropzone,
+          definition,
+          requiresDragWrapper: true,
+          userIsDragging: true,
+        }),
+      );
+
+      expect(result.current.wrapperStyles.maxWidth).toEqual(nodeRect.width);
+      expect(result.current.wrapperStyles.maxHeight).toEqual(nodeRect.height);
+    });
+
+    it('and set component max size constraint when drag wrapper is disabled', () => {
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node,
+          areEntitiesFetched: true,
+          resolveDesignValue,
+          renderDropzone,
+          definition,
+          requiresDragWrapper: false,
+          userIsDragging: true,
+        }),
+      );
+
+      expect(result.current.componentStyles.maxWidth).toEqual(nodeRect.width);
+      expect(result.current.componentStyles.maxHeight).toEqual(nodeRect.height);
     });
   });
 });
