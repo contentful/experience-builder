@@ -17,15 +17,17 @@ import {
   breakpointsRegistry,
   optionalBuiltInStyles,
   sendMessage,
-  containerDefinition,
-  sectionDefinition,
-  columnsDefinition,
-  singleColumnDefinition,
 } from '@contentful/experiences-core';
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
-import { dividerDefinition } from '@contentful/experiences-core';
+import {
+  sectionDefinition,
+  containerDefinition,
+  columnsDefinition,
+  singleColumnDefinition,
+  dividerDefinition,
+} from '@contentful/experiences-components-react';
 
 const CssVarRegex = /var\(--[\w-]+\)/;
 

@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  containerDefinition,
-  defineBreakpoints,
-  sectionDefinition,
-} from '@contentful/experiences-core';
+import { defineBreakpoints } from '@contentful/experiences-core';
 import {
   INTERNAL_EVENTS,
   CONTENTFUL_COMPONENTS,
@@ -13,6 +9,7 @@ import {
 import * as registry from './componentRegistry';
 import type { ComponentRegistration } from '@contentful/experiences-core/types';
 import { SDK_VERSION } from '../sdkVersion';
+import { containerDefinition, sectionDefinition } from '@contentful/experiences-components-react';
 
 const TestComponent = () => {
   return <div data-test-id="test">Test</div>;
