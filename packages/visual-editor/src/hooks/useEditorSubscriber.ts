@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   sendMessage,
   getDataFromTree,
@@ -55,9 +55,6 @@ export function useEditorSubscriber() {
   const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
   const setScrollY = useDraggedItemStore((state) => state.setScrollY);
 
-  // TODO: As we have disabled the useEffect, we can remove these states
-  const [, /* isFetchingEntities */ setFetchingEntities] = useState(false);
-
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, undefined);
     // Wait a moment to ensure that the message was sent
@@ -85,11 +82,9 @@ export function useEditorSubscriber() {
       // then we can simply return and not lock the EntityStore at all.
       const startFetching = () => {
         setEntitiesFetched(false);
-        setFetchingEntities(true);
       };
       const endFetching = () => {
         setEntitiesFetched(true);
-        setFetchingEntities(false);
       };
 
       // Prepare L1 entities and deepReferences
