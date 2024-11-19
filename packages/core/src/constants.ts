@@ -111,6 +111,10 @@ export const CONTENTFUL_COMPONENTS = {
     id: 'contentful-divider',
     name: 'Divider',
   },
+  carousel: {
+    id: 'contentful-carousel',
+    name: 'Carousel',
+  },
 };
 
 export const ASSEMBLY_NODE_TYPE = 'assembly';
