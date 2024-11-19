@@ -110,8 +110,18 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
      */
     const treeDiff = getTreeDiffs({ ...currentTree.root }, { ...tree.root }, currentTree);
 
+    const currentBreakpoints = (currentTree?.root?.data?.breakpoints ?? []).slice().sort();
+    const newBreakpoints = (tree?.root?.data?.breakpoints ?? []).slice().sort();
+    let didBreakpointsChange = false;
+    if (newBreakpoints.length && newBreakpoints.length !== currentBreakpoints.length) {
+      didBreakpointsChange = newBreakpoints.some(
+        (value, index) => currentBreakpoints[index] !== value,
+      );
+    }
+
     // The current and updated tree are the same, no tree update required.
-    if (!treeDiff.length) {
+    // Special case: Breakpoints changed (e.g. empty experience gets reloaded or breakpoints updated)
+    if (!treeDiff.length && !didBreakpointsChange) {
       console.debug(
         `[exp-builder.visual-editor::updateTree()]: During smart-diffing no diffs. Skipping tree update.`,
       );
