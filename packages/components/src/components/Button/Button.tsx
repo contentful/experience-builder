@@ -1,3 +1,4 @@
+'use client';
 import { combineClasses } from '@/utils/combineClasses';
 import React from 'react';
 import './Button.css';
