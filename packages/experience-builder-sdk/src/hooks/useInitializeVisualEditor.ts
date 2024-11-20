@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { EntityStore, breakpointsRegistry } from '@contentful/experiences-core';
+import {
+  EntityStore,
+  breakpointsRegistry,
+  designTokensRegistry,
+  runBreakpointsValidation,
+} from '@contentful/experiences-core';
+import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
 import {
   componentRegistry,
   sendConnectedEventWithRegisteredComponents,
   sendRegisteredComponentsMessage,
   runRegisteredComponentValidations,
 } from '../core/componentRegistry';
-import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
-import { designTokensRegistry, runBreakpointsValidation } from '@contentful/experiences-core';
 
 type InitializeVisualEditorParams = {
   initialLocale: string;
