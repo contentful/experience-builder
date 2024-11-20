@@ -59,7 +59,14 @@ export default [
     ],
     ...bundleConfig,
   },
-  // TypeScript declaration files configuration
+  // TypeScript declaration files configuration for optional components
+  ...optionalComponentInputs.map((input) => ({
+    input,
+    output: [{ file: `dist/${path.basename(path.dirname(input))}/index.d.ts`, format: 'es' }],
+    plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
+    external: [/.css/],
+  })),
+  // TypeScript declaration files configuration for main bundle
   {
     input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],

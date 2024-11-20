@@ -15,21 +15,41 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    },
-    "./*": {
-      "import": "./dist/*/index.js",
-      "require": "./dist/*/index.js"
-    }
-  },
   "files": [
     "readme.md",
     "package.json",
     "dist/**/*.*"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./Button": {
+      "import": "./dist/Button/index.js",
+      "require": "./dist/Button/index.js"
+    },
+    "./Divider": {
+      "import": "./dist/Divider/index.js",
+      "require": "./dist/Divider/index.js"
+    },
+    "./Heading": {
+      "import": "./dist/Heading/index.js",
+      "require": "./dist/Heading/index.js"
+    },
+    "./Image": {
+      "import": "./dist/Image/index.js",
+      "require": "./dist/Image/index.js"
+    },
+    "./RichText": {
+      "import": "./dist/RichText/index.js",
+      "require": "./dist/RichText/index.js"
+    },
+    "./Text": {
+      "import": "./dist/Text/index.js",
+      "require": "./dist/Text/index.js"
+    }
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
