@@ -1,4 +1,4 @@
-@import url('../variables.css');
+@import url('../../variables.css');
 
 img.cf-placeholder-image {
   background-color: var(--cf-color-gray100);

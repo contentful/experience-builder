@@ -24,5 +24,13 @@ export default defineConfig({
       },
     },
   },
+  resolve: {
+    alias: {
+      '@contentful/experiences-visual-editor-react': resolve(
+        __dirname,
+        'node_modules/@contentful/experiences-visual-editor-react/dist/index.js',
+      ),
+    },
+  },
   plugins: [svgr(), react(), dts(), cssInjectedByJsPlugin()],
 });

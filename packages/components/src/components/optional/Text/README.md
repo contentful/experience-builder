@@ -11,7 +11,7 @@ Has a default class of `cf-text`, which can be used to style the component.
 ## Usage
 
 ```tsx
-import { Text } from '@contentful/experiences-components-react';
+import { Text } from '@contentful/experiences-components-react/Text';
 
 const MyPage = () => <Text value="Go" />;
 ```

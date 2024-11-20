@@ -26,7 +26,7 @@ describe('Text', () => {
     cy.mount(
       <Text value="My Text" data-foo="bar">
         Children text
-      </Text>
+      </Text>,
     );
     cy.get('p').should('have.attr', 'data-foo', 'bar');
   });

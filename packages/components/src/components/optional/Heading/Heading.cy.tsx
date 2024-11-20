@@ -21,7 +21,7 @@ describe('Heading', () => {
     cy.mount(
       <Heading text="Text text" type="h4">
         Children text
-      </Heading>
+      </Heading>,
     );
     cy.get('h4').contains('Text text');
   });
@@ -30,7 +30,7 @@ describe('Heading', () => {
     cy.mount(
       <Heading text="My Heading" data-foo="bar">
         Children text
-      </Heading>
+      </Heading>,
     );
     cy.get('h1').should('have.attr', 'data-foo', 'bar');
   });

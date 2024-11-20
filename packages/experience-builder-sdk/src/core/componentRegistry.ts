@@ -112,7 +112,7 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
 // Optional components are only loaded when they are needed
 const OPTIONAL_COMPONENT_REGISTRATIONS = {
   [CONTENTFUL_COMPONENTS.button.id]: () =>
-    import('@contentful/experiences-components-react').then((module) =>
+    import('@contentful/experiences-components-react/Button').then((module) =>
       enrichComponentDefinition({
         component: module.Button,
         definition: module.ButtonComponentDefinition,
@@ -122,7 +122,7 @@ const OPTIONAL_COMPONENT_REGISTRATIONS = {
       }),
     ),
   [CONTENTFUL_COMPONENTS.heading.id]: () =>
-    import('@contentful/experiences-components-react').then((module) =>
+    import('@contentful/experiences-components-react/Heading').then((module) =>
       enrichComponentDefinition({
         component: module.Heading,
         definition: module.HeadingComponentDefinition,
@@ -132,7 +132,7 @@ const OPTIONAL_COMPONENT_REGISTRATIONS = {
       }),
     ),
   [CONTENTFUL_COMPONENTS.image.id]: () =>
-    import('@contentful/experiences-components-react').then((module) =>
+    import('@contentful/experiences-components-react/Image').then((module) =>
       enrichComponentDefinition({
         component: module.Image,
         definition: module.ImageComponentDefinition,
@@ -140,7 +140,7 @@ const OPTIONAL_COMPONENT_REGISTRATIONS = {
       }),
     ),
   [CONTENTFUL_COMPONENTS.richText.id]: () =>
-    import('@contentful/experiences-components-react').then((module) =>
+    import('@contentful/experiences-components-react/RichText').then((module) =>
       enrichComponentDefinition({
         component: module.RichText,
         definition: module.RichTextComponentDefinition,
@@ -150,7 +150,7 @@ const OPTIONAL_COMPONENT_REGISTRATIONS = {
       }),
     ),
   [CONTENTFUL_COMPONENTS.text.id]: () =>
-    import('@contentful/experiences-components-react').then((module) =>
+    import('@contentful/experiences-components-react/Text').then((module) =>
       enrichComponentDefinition({
         component: module.Text,
         definition: module.TextComponentDefinition,
@@ -160,7 +160,7 @@ const OPTIONAL_COMPONENT_REGISTRATIONS = {
       }),
     ),
   [CONTENTFUL_COMPONENTS.divider.id]: () =>
-    import('@contentful/experiences-components-react').then((module) => ({
+    import('@contentful/experiences-components-react/Divider').then((module) => ({
       // Don't wrap this component `withComponentWrapper`. Need to explicitly ignore dragProps
       component: module.ContentfulDivider,
       definition: module.dividerDefinition,
