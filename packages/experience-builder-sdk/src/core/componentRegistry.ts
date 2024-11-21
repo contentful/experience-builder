@@ -333,11 +333,12 @@ export const defineComponents = (
   componentRegistrations: ComponentRegistration[],
   options?: ComponentRegistrationOptions,
 ) => {
-  // TODO: check if experimental flag is enabled before registering the carousel component...
-  componentRegistry.set(
-    CONTENTFUL_COMPONENTS.carousel.id,
-    DEFAULT_COMPONENT_REGISTRATIONS.carousel,
-  );
+  if (options?.experimentalComponents?.carousel) {
+    componentRegistry.set(
+      CONTENTFUL_COMPONENTS.carousel.id,
+      DEFAULT_COMPONENT_REGISTRATIONS.carousel,
+    );
+  }
 
   if (options?.enabledBuiltInComponents) {
     for (const id of optionalBuiltInComponents) {
