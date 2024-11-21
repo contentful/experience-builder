@@ -119,6 +119,9 @@ export type ComponentRegistration = {
 
 export type ComponentRegistrationOptions = {
   enabledBuiltInComponents?: string[];
+  experimentalComponents?: {
+    carousel?: boolean;
+  };
 };
 
 export type Binding = {
