@@ -119,6 +119,7 @@ export type ComponentRegistration = {
 
 export type ComponentRegistrationOptions = {
   enabledBuiltInComponents?: string[];
+  experimentalComponents?: Record<string, boolean>;
 };
 
 export type Binding = {
