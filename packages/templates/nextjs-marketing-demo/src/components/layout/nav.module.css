@@ -2,6 +2,10 @@ ul.menu {
   display: flex;
   flex: 1;
   justify-content: flex-end;
+}
+
+ul.menu,
+ul.mobileMenu {
   border-bottom: 1px solid transparent;
 }
 

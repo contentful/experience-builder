@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Button, Grid, Menu } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 import styles from './nav.module.css';
 
 const items = [
@@ -17,13 +18,36 @@ const items = [
   },
 ];
 
+const mobileItems = [
+  ...items,
+  {
+    key: '/contact',
+    label: <Link href="/contact">Contact</Link>,
+  },
+];
+
 const Nav: React.FC = () => {
   const pathname = usePathname();
   const [current, setCurrent] = useState(pathname);
   const screens = Grid.useBreakpoint();
 
   if (screens.xs) {
-    return null;
+    return (
+      <div className={styles.nav}>
+        <Menu
+          onClick={(e) => setCurrent(e.key)}
+          selectedKeys={[current]}
+          mode="horizontal"
+          className={styles.mobileMenu}
+          items={mobileItems}
+          overflowedIndicator={
+            <Button>
+              <MenuOutlined />
+            </Button>
+          }
+        />
+      </div>
+    );
   }
 
   return (
