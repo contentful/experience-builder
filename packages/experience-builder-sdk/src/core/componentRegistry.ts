@@ -184,7 +184,6 @@ export const optionalBuiltInComponents = [
   DEFAULT_COMPONENT_REGISTRATIONS.richText.definition.id,
   DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id,
   DEFAULT_COMPONENT_REGISTRATIONS.divider.definition.id,
-  DEFAULT_COMPONENT_REGISTRATIONS.carousel.definition.id,
 ];
 
 export const sendRegisteredComponentsMessage = () => {
@@ -416,8 +415,6 @@ export const createAssemblyRegistration = ({
  */
 export const maintainBasicComponentIdsWithoutPrefix = () => {
   optionalBuiltInComponents.forEach((id) => {
-    if (id === CONTENTFUL_COMPONENTS.carousel.id) return;
-
     if (componentRegistry.has(id) && id.startsWith('contentful-')) {
       const registeredComponent = componentRegistry.get(id)!;
       const definition = registeredComponent.definition;
