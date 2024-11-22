@@ -145,6 +145,13 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
       wrapComponent: false,
     },
   },
+  carousel: enrichComponentDefinition({
+    component: Components.Carousel,
+    definition: Components.carouselDefinition,
+    options: {
+      wrapComponent: false,
+    },
+  }),
 } satisfies Record<string, ComponentRegistration>;
 
 // pre-filling with the default component registrations
@@ -325,6 +332,13 @@ export const defineComponents = (
   componentRegistrations: ComponentRegistration[],
   options?: ComponentRegistrationOptions,
 ) => {
+  if (options?.experimentalComponents?.carousel) {
+    componentRegistry.set(
+      CONTENTFUL_COMPONENTS.carousel.id,
+      DEFAULT_COMPONENT_REGISTRATIONS.carousel,
+    );
+  }
+
   if (options?.enabledBuiltInComponents) {
     for (const id of optionalBuiltInComponents) {
       if (!options.enabledBuiltInComponents.includes(id)) {

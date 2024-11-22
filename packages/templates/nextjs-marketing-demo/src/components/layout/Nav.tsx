@@ -1,24 +1,53 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { Button, Grid, Menu } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 import styles from './nav.module.css';
 
-const { useBreakpoint } = Grid;
-
 const items = [
-  { key: 'home-page', label: 'Home' },
-  { key: 'about', label: 'About' },
-  { key: 'contact', label: 'Contact' },
-  { key: 'careers', label: 'Careers' },
+  {
+    key: '/home-page',
+    label: <Link href="/">Home</Link>,
+  },
+  {
+    key: '/about',
+    label: <Link href="/about">About</Link>,
+  },
+];
+
+const mobileItems = [
+  ...items,
+  {
+    key: '/contact',
+    label: <Link href="/contact">Contact</Link>,
+  },
 ];
 
 const Nav: React.FC = () => {
-  const [current, setCurrent] = useState('home-page');
-  const screens = useBreakpoint();
+  const pathname = usePathname();
+  const [current, setCurrent] = useState(pathname);
+  const screens = Grid.useBreakpoint();
 
   if (screens.xs) {
-    return null;
+    return (
+      <div className={styles.nav}>
+        <Menu
+          onClick={(e) => setCurrent(e.key)}
+          selectedKeys={[current]}
+          mode="horizontal"
+          className={styles.mobileMenu}
+          items={mobileItems}
+          overflowedIndicator={
+            <Button>
+              <MenuOutlined />
+            </Button>
+          }
+        />
+      </div>
+    );
   }
 
   return (
@@ -30,7 +59,9 @@ const Nav: React.FC = () => {
         className={styles.menu}
         items={items}
       />
-      <Button variant="outlined">Book now</Button>
+      <Link href="/contact">
+        <Button variant="outlined">Contact Us</Button>
+      </Link>
     </div>
   );
 };
