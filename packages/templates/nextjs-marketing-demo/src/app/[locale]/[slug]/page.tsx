@@ -25,7 +25,7 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   const { experience, error } = await getExperience(slug, locale, preview, editorMode);
 
   if (error) {
-    return <div>{error.message}</div>;
+    return <>{error.message}</>;
   }
 
   // extract the styles from the experience

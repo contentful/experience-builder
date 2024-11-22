@@ -1,6 +1,10 @@
 :root {
-  --background: #ffffff;
+  --white: #fff;
+  --black: #000;
+  --background: --white;
   --foreground: #171717;
+  --footer: #434343;
+  --sunset-orange-2: #FFE7BA;
 }
 
 html,

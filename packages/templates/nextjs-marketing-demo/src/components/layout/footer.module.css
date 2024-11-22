@@ -1,9 +1,30 @@
 ul.menu {
-  justify-content: center;
+  display: flex;
+  flex: 1;
   background-color: transparent;
   border-bottom: 1px solid transparent;
 }
 
+ul.menu :global li.ant-menu-item-selected::after,
+ul.menu :global li.ant-menu-item-active::after {
+  border-bottom-color: var(--sunset-orange-2) !important;
+}
+
 ul.menu li span {
-  color: #fff;
+  color: var(--sunset-orange-2);
+}
+
+article.heading {
+  color: var(--white);
+  padding: 0 1rem;
+}
+
+article.copyright {
+  color: var(--white);
+  padding: 0 1rem;
+  text-align: right;
+}
+
+.bottomRow {
+  padding-top: 32px;
 }
