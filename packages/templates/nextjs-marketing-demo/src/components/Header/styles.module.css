@@ -1,3 +1,10 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: inherit;
+}
+
 ul.menu {
   display: flex;
   flex: 1;

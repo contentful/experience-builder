@@ -22,9 +22,17 @@ article.heading {
 article.copyright {
   color: var(--white);
   padding: 0 1rem;
-  text-align: right;
 }
 
-.bottomRow {
-  padding-top: 32px;
+div.links {
+  min-width: 240px;
+}
+
+div.nav {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
 }

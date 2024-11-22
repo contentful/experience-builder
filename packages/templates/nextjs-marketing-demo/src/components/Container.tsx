@@ -1,8 +1,6 @@
 import { Row, Col } from 'antd';
 
-const Container: React.FC<React.PropsWithChildren> = (props) => {
-  const { children } = props;
-
+const Container: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <Row className="container">
       <Col xs={1} sm={2}></Col>

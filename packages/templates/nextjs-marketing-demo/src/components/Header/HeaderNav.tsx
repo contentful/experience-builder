@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Button, Grid, Menu } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
-import styles from './nav.module.css';
+import styles from './styles.module.css';
 
 const items = [
   {
