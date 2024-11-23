@@ -7,20 +7,28 @@ ul.menu {
 
 ul.menu :global li.ant-menu-item-selected::after,
 ul.menu :global li.ant-menu-item-active::after {
-  border-bottom-color: var(--sunset-orange-2) !important;
+  border-bottom-color: var(--orange-2) !important;
 }
 
 ul.menu li span {
-  color: var(--sunset-orange-2);
+  color: var(--orange-2);
 }
 
 article.heading {
-  color: var(--white);
+  color: var(--gray-1);
   padding: 0 1rem;
 }
 
 article.copyright {
-  color: var(--white);
+  color: var(--gray-1);
+  padding: 0 1rem;
+}
+
+article.darkText {
+  color: var(--gray-7);
+}
+
+div.debugInfo {
   padding: 0 1rem;
 }
 
@@ -35,4 +43,9 @@ div.nav {
   flex-direction: row;
   align-items: center;
   gap: 8px;
+}
+
+div.divider {
+  height: 1rem;
+  background: var(--gray-7);
 }
