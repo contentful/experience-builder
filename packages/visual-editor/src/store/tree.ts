@@ -41,10 +41,6 @@ export interface TreeStore {
   ) => void;
 }
 
-const isAssemblyNode = (node: ExperienceTreeNode) => {
-  return node.type === ASSEMBLY_NODE_TYPE;
-};
-
 export const useTreeStore = create<TreeStore>((set, get) => ({
   tree: {
     root: {
@@ -109,15 +105,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
      * rerendering the entire tree.
      */
     const treeDiff = getTreeDiffs({ ...currentTree.root }, { ...tree.root }, currentTree);
-
-    const currentBreakpoints = (currentTree?.root?.data?.breakpoints ?? []).slice().sort();
-    const newBreakpoints = (tree?.root?.data?.breakpoints ?? []).slice().sort();
-    let didBreakpointsChange = false;
-    if (newBreakpoints.length && newBreakpoints.length !== currentBreakpoints.length) {
-      didBreakpointsChange = newBreakpoints.some(
-        (value, index) => currentBreakpoints[index] !== value,
-      );
-    }
+    const didBreakpointsChange = hasBreakpointDiffs(currentTree, tree);
 
     // The current and updated tree are the same, no tree update required.
     // Special case: Breakpoints changed (e.g. empty experience gets reloaded or breakpoints updated)
@@ -191,8 +179,24 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
   },
 }));
 
+const hasBreakpointDiffs = (currentTree: ExperienceTree, newTree: ExperienceTree) => {
+  const currentBreakpoints = (currentTree?.root?.data?.breakpoints ?? []).slice().sort();
+  const newBreakpoints = (newTree?.root?.data?.breakpoints ?? []).slice().sort();
+  let didBreakpointsChange = false;
+  if (newBreakpoints.length && newBreakpoints.length !== currentBreakpoints.length) {
+    didBreakpointsChange = newBreakpoints.some(
+      (value, index) => currentBreakpoints[index] !== value,
+    );
+  }
+  return didBreakpointsChange;
+};
+
+const isAssemblyNode = (node: ExperienceTreeNode) => {
+  return node.type === ASSEMBLY_NODE_TYPE;
+};
+
 // Serialize and deserialize an object again to remove all functions and references.
 // Some people refer to this as "Plain Old JavaScript Object" (POJO) as it solely contains plain data.
-function cloneDeepAsPOJO(obj) {
+const cloneDeepAsPOJO = (obj: unknown) => {
   return JSON.parse(JSON.stringify(obj));
-}
+};
