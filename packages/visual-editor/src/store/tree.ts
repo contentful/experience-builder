@@ -17,6 +17,7 @@ import {
 import { getTreeDiffs } from '@/utils/getTreeDiff';
 import { treeVisit } from '@/utils/treeTraversal';
 import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
+import { isEqual } from 'lodash-es';
 export interface TreeStore {
   tree: ExperienceTree;
   breakpoints: Breakpoint[];
@@ -180,15 +181,11 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
 }));
 
 const hasBreakpointDiffs = (currentTree: ExperienceTree, newTree: ExperienceTree) => {
-  const currentBreakpoints = (currentTree?.root?.data?.breakpoints ?? []).slice().sort();
-  const newBreakpoints = (newTree?.root?.data?.breakpoints ?? []).slice().sort();
-  let didBreakpointsChange = false;
-  if (newBreakpoints.length && newBreakpoints.length !== currentBreakpoints.length) {
-    didBreakpointsChange = newBreakpoints.some(
-      (value, index) => currentBreakpoints[index] !== value,
-    );
-  }
-  return didBreakpointsChange;
+  const currentBreakpoints = currentTree?.root?.data?.breakpoints ?? [];
+  const newBreakpoints = newTree?.root?.data?.breakpoints ?? [];
+  // Consider any difference as a change (id, name, previewSize).
+  // Even the order of breakpoints matters as it affects the rendering in useBreakpoints.
+  return !isEqual(currentBreakpoints, newBreakpoints);
 };
 
 const isAssemblyNode = (node: ExperienceTreeNode) => {
