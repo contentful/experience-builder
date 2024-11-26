@@ -1,11 +1,19 @@
 div.layout {
   background: var(--background);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 header.header {
   background: var(--background);
 }
 
+main.content {
+  background: var(--background);
+  flex: 1;
+}
+
 footer.footer {
-  background: #434343;
+  background: var(--footer);
 }

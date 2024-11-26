@@ -13,6 +13,7 @@ import {
   ASSEMBLY_NODE_TYPE,
   EMPTY_CONTAINER_HEIGHT,
   CONTENTFUL_COMPONENTS,
+  ASSEMBLY_BLOCK_NODE_TYPE,
 } from '@contentful/experiences-core/constants';
 import type {
   StyleProps,
@@ -26,6 +27,7 @@ import type {
 import { CSSProperties, useMemo } from 'react';
 import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
 import { getUnboundValues } from '@/utils/getUnboundValues';
+import { useDraggedItemStore } from '@/store/draggedItem';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzone.types';
 
@@ -70,6 +72,8 @@ export const useComponentProps = ({
   const locale = useEditorStore((state) => state.locale);
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
+  const draggingId = useDraggedItemStore((state) => state.onBeforeCaptureId);
+  const nodeRect = useDraggedItemStore((state) => state.domRect);
 
   const isEmptyZone = !node.children.length;
 
@@ -221,7 +225,7 @@ export const useComponentProps = ({
 
   const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
 
-  const isAssemblyBlock = node.type === 'assemblyBlock';
+  const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
   const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
 
@@ -243,8 +247,26 @@ export const useComponentProps = ({
     if (wrapperStyles.margin) overrideStyles.margin = '0';
     if (wrapperStyles.maxWidth) overrideStyles.maxWidth = 'none';
 
+    // Prevent the dragging element from changing sizes when it has a percentage width or height
+    if (draggingId === node.data.id && nodeRect) {
+      if (requiresDragWrapper) {
+        if (isPercentValue(cfStyles.width)) wrapperStyles.maxWidth = nodeRect.width;
+        if (isPercentValue(cfStyles.height)) wrapperStyles.maxHeight = nodeRect.height;
+      } else {
+        if (isPercentValue(cfStyles.width)) overrideStyles.maxWidth = nodeRect.width;
+        if (isPercentValue(cfStyles.height)) overrideStyles.maxHeight = nodeRect.height;
+      }
+    }
+
     return { overrideStyles, wrapperStyles };
-  }, [cfStyles, options?.wrapContainerWidth, requiresDragWrapper]);
+  }, [
+    cfStyles,
+    options?.wrapContainerWidth,
+    requiresDragWrapper,
+    node.data.id,
+    draggingId,
+    nodeRect,
+  ]);
 
   // Styles that will be applied to the component element
   // This has to be memoized to avoid recreating the styles in useEditorModeClassName on every render
@@ -302,3 +324,6 @@ const addExtraDropzonePadding = (padding: string) =>
       parseFloat(value) === 0 ? `${DRAG_PADDING}px` : `calc(${value} + ${DRAG_PADDING}px)`,
     )
     .join(' ');
+
+const isPercentValue = (value?: string | number) =>
+  typeof value === 'string' && value.endsWith('%');

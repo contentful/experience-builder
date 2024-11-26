@@ -1,0 +1,26 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: inherit;
+}
+
+ul.menu {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+ul.menu,
+ul.mobileMenu {
+  border-bottom: 1px solid transparent;
+}
+
+.nav {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}

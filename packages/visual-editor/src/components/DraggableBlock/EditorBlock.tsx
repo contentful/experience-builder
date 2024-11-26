@@ -7,12 +7,7 @@ import type {
   ExperienceTreeNode,
   ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
-import {
-  CONTENTFUL_COMPONENTS,
-  ASSEMBLY_BLOCK_NODE_TYPE,
-  OUTGOING_EVENTS,
-  ASSEMBLY_NODE_TYPE,
-} from '@contentful/experiences-core/constants';
+import { CONTENTFUL_COMPONENTS, OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { RenderDropzoneFunction } from './Dropzone.types';
 import { Draggable } from '@hello-pangea/dnd';
 import Placeholder, { PlaceholderParams } from '@/components/DraggableHelpers/Placeholder';
@@ -61,7 +56,15 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const ref = useRef<HTMLElement | null>(null);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const { node, componentId, elementToRender, definition } = useComponent({
+  const {
+    node,
+    componentId,
+    elementToRender,
+    definition,
+    isPatternNode,
+    isPatternComponent,
+    isNestedPattern,
+  } = useComponent({
     node: rawNode,
     resolveDesignValue,
     renderDropzone,
@@ -77,10 +80,9 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   const testId = `draggable-${node.data.blockId ?? 'node'}`;
   const isSelected = node.data.id === selectedNodeId;
   const isContainer = node.data.blockId === CONTENTFUL_COMPONENTS.container.id;
-  const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
-  const isAssembly = node.type === ASSEMBLY_NODE_TYPE;
   const isSlotComponent = Boolean(node.data.slotId);
-  const isDragDisabled = isAssemblyBlock || (isSingleColumn && isWrapped) || isSlotComponent;
+  const isDragDisabled =
+    isNestedPattern || isPatternComponent || (isSingleColumn && isWrapped) || isSlotComponent;
   const isEmptyZone = useMemo(() => {
     return !node.children.filter((node) => node.data.slotId === slotId).length;
   }, [node.children, slotId]);
@@ -97,7 +99,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     if (!userIsDragging) {
       setSelectedNodeId(node.data.id);
       // if it is the assembly directly we just want to select it as a normal component
-      if (isAssembly) {
+      if (isPatternNode) {
         sendMessage(OUTGOING_EVENTS.ComponentSelected, {
           nodeId: node.data.id,
         });
@@ -133,12 +135,12 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
       <Tooltip
         id={componentId}
         coordinates={coordinates}
-        isAssemblyBlock={isAssemblyBlock || isAssembly}
+        isAssemblyBlock={isPatternNode || isPatternComponent}
         isContainer={isContainer}
         label={displayName || 'No label specified'}
       />
       <Placeholder {...placeholder} id={componentId} />
-      {userIsDragging && !isAssemblyBlock && (
+      {userIsDragging && !isPatternComponent && (
         <Hitboxes parentZoneId={zoneId} zoneId={componentId} isEmptyZone={isEmptyZone} />
       )}
     </>
@@ -163,7 +165,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
               ref.current = refNode;
             },
             className: classNames(styles.DraggableComponent, {
-              [styles.isAssemblyBlock]: isAssemblyBlock || isAssembly,
+              [styles.isAssemblyBlock]: isPatternComponent || isPatternNode,
               [styles.isDragging]: snapshot?.isDragging || userIsDragging,
               [styles.isSelected]: isSelected,
               [styles.isHoveringComponent]: isHoveredComponent,

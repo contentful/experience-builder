@@ -119,6 +119,9 @@ export type ComponentRegistration = {
 
 export type ComponentRegistrationOptions = {
   enabledBuiltInComponents?: string[];
+  experimentalComponents?: {
+    carousel?: boolean;
+  };
 };
 
 export type Binding = {
@@ -160,6 +163,13 @@ export type ExperienceTreeNode = {
     dataSource: ExperienceDataSource;
     unboundValues: ExperienceUnboundValues;
     breakpoints: Breakpoint[];
+    pattern?: {
+      id: string;
+      nodeId: string;
+      nodeLocation: string;
+      isVisibilityPropertyExposed: boolean;
+      variableNameToComponentValueKeyMap: Record<string, string>;
+    };
   };
   children: ExperienceTreeNode[];
   parentId?: string;

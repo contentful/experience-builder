@@ -20,5 +20,31 @@ export function getResolvedEntryFromLink(
 
   //Look up the reference in the entity store
   const resolvedEntity = entityStore.getEntityFromLink(value);
+
+  if (!resolvedEntity) {
+    return;
+  }
+
+  //resolve any embedded links - we currently only support 2 levels deep
+  const fields = resolvedEntity.fields || {};
+  Object.entries(fields).forEach(([fieldKey, field]) => {
+    if (field && field.sys?.type === 'Link') {
+      const entity = entityStore.getEntityFromLink(field);
+      if (entity) {
+        resolvedEntity.fields[fieldKey] = entity;
+      }
+    } else if (field && Array.isArray(field)) {
+      resolvedEntity.fields[fieldKey] = field.map((innerField) => {
+        if (innerField && innerField.sys?.type === 'Link') {
+          const entity = entityStore.getEntityFromLink(innerField);
+          if (entity) {
+            return entity;
+          }
+        }
+        return innerField;
+      });
+    }
+  });
+
   return resolvedEntity;
 }

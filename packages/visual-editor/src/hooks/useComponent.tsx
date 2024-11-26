@@ -7,15 +7,19 @@ import type {
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useComponentProps } from './useComponentProps';
-import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
+import {
+  ASSEMBLY_BLOCK_NODE_TYPE,
+  ASSEMBLY_NODE_TYPE,
+} from '@contentful/experiences-core/constants';
 import { Assembly } from '@contentful/experiences-components-react';
-import { resolveAssembly } from '@/utils/assemblyUtils';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
 import { isContentfulStructureComponent } from '@contentful/experiences-core';
 import { MissingComponentPlacehoder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
+import { useTreeStore } from '@/store/tree';
+import { getItem } from '@/utils/getItem';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -25,24 +29,13 @@ type UseComponentProps = {
 };
 
 export const useComponent = ({
-  node: rawNode,
+  node,
   resolveDesignValue,
   renderDropzone,
   userIsDragging,
 }: UseComponentProps) => {
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
-  const entityStore = useEntityStore((state) => state.entityStore);
-
-  const node = useMemo(() => {
-    if (rawNode.type === ASSEMBLY_NODE_TYPE && areEntitiesFetched) {
-      return resolveAssembly({
-        node: rawNode,
-        entityStore,
-      });
-    }
-
-    return rawNode;
-  }, [areEntitiesFetched, rawNode, entityStore]);
+  const tree = useTreeStore((state) => state.tree);
 
   const componentRegistration: ComponentRegistration | undefined = useMemo(() => {
     let registration = componentRegistry.get(node.data.blockId!);
@@ -64,10 +57,15 @@ export const useComponent = ({
   }, [node]);
 
   const componentId = node.data.id;
-  const isAssembly = node.type === 'assembly';
+  const isPatternNode = node.type === ASSEMBLY_NODE_TYPE;
+  const isPatternComponent = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
+  const parentComponentNode = getItem({ id: node.parentId! }, tree);
+  const isNestedPattern =
+    isPatternNode &&
+    [ASSEMBLY_BLOCK_NODE_TYPE, ASSEMBLY_NODE_TYPE].includes(parentComponentNode?.type ?? '');
   const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
   const requiresDragWrapper =
-    !isAssembly && !isStructureComponent && !componentRegistration?.options?.wrapComponent;
+    !isPatternNode && !isStructureComponent && !componentRegistration?.options?.wrapComponent;
 
   const { componentProps, wrapperStyles } = useComponentProps({
     node,
@@ -95,7 +93,7 @@ export const useComponent = ({
     } = componentProps;
 
     const modifiedProps =
-      isStructureComponent || isAssembly ? componentProps : customComponentProps;
+      isStructureComponent || isPatternNode ? componentProps : customComponentProps;
 
     const element = React.createElement(
       ImportedComponentErrorBoundary,
@@ -127,6 +125,11 @@ export const useComponent = ({
 
   return {
     node,
+    parentComponentNode,
+    isAssembly: isPatternNode,
+    isPatternNode,
+    isPatternComponent,
+    isNestedPattern,
     componentId,
     elementToRender,
     definition: componentRegistration?.definition,

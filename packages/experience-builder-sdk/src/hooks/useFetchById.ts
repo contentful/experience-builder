@@ -23,7 +23,10 @@ export const useFetchById = ({
 
   const fetchMethod = useCallback(() => {
     return fetchById({ id, localeCode, client, experienceTypeId });
-  }, [id, localeCode, client, experienceTypeId]);
+    // we purposely don't want to include the client in the dependencies
+    // as it can cause infinite loops if the user creates the client in the component
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, localeCode, experienceTypeId]);
 
   const fetchResult = useFetchByBase(fetchMethod, mode);
 

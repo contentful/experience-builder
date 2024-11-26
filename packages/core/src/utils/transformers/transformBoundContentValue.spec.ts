@@ -1,6 +1,16 @@
 import { EditorModeEntityStore } from '@/entity';
 import { transformBoundContentValue } from './transformBoundContentValue';
-import { entities, assets } from '@/test/__fixtures__/entities';
+import {
+  entities,
+  assets,
+  entries,
+  entityIds,
+  entryWithEmbeddedAssetInRichText,
+  entryWithEmbeddedEntryInRichText,
+  entryWithEmbeddedEntry,
+  entryWithAnotherEmbeddedEntry,
+  entryWithEmbeddedEntries,
+} from '@/test/__fixtures__/entities';
 import {
   BoundValue,
   ComponentDefinition,
@@ -11,7 +21,15 @@ import { vitest, it, describe } from 'vitest';
 import { UnresolvedLink } from 'contentful';
 
 const entityStore = new EditorModeEntityStore({
-  entities,
+  entities: [
+    ...entities,
+    entryWithEmbeddedEntry,
+    entryWithEmbeddedEntries,
+    entryWithAnotherEmbeddedEntry,
+    entryWithEmbeddedEntryInRichText,
+    entryWithEmbeddedAssetInRichText,
+    ...assets,
+  ],
   locale: 'en-US',
 });
 
@@ -25,8 +43,14 @@ const componentDefinition: ComponentDefinition = {
     description: {
       type: 'RichText',
     },
+    referencedEntry: {
+      type: 'Link',
+    },
     image: {
       type: 'Media',
+    },
+    referencedEntries: {
+      type: 'Array',
     },
   },
 };
@@ -43,6 +67,18 @@ const variables: ComponentTreeNode['variables'] = {
   image: {
     type: 'BoundValue',
     path: '/uuid2/fields/file/~locale',
+  },
+  body: {
+    type: 'BoundValue',
+    path: '/uuid3/fields/body/~locale',
+  },
+  referencedEntry: {
+    type: 'BoundValue',
+    path: '/uuid4/fields/referencedEntry/~locale',
+  },
+  referencedEntries: {
+    type: 'BoundValue',
+    path: '/uuid5/fields/referencedEntries/~locale',
   },
 };
 
@@ -196,6 +232,136 @@ describe('transformBoundContentValue', () => {
         data: {},
         nodeType: 'document',
       });
+    });
+
+    it('when rich text has an embedded entry, it should transform the rich text and resolve the entry', () => {
+      const variableName = 'richText';
+      const resolveDesignValue = vitest.fn();
+      const binding: UnresolvedLink<'Entry'> = {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_EMBEDDED_ENTRY_IN_RICH_TEXT,
+        },
+      };
+
+      const path = (variables.body as BoundValue).path;
+      const result = transformBoundContentValue(
+        variables,
+        entityStore,
+        binding,
+        resolveDesignValue,
+        variableName,
+        componentDefinition.variables.description,
+        path,
+      );
+      expect(result).toEqual({
+        content: [
+          {
+            content: [],
+            data: {
+              target: entries.find((entry) => entry.sys.id === entityIds.ENTRY1)!,
+            },
+            nodeType: 'embedded-entry-block',
+          },
+        ],
+        data: {},
+        nodeType: 'document',
+      });
+    });
+
+    it('when rich text has an embedded asset, it should transform the rich text and resolve the asset', () => {
+      const variableName = 'richText';
+      const resolveDesignValue = vitest.fn();
+      const binding: UnresolvedLink<'Entry'> = {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_EMBEDDED_ASSET_IN_RICH_TEXT,
+        },
+      };
+
+      const path = (variables.body as BoundValue).path;
+      const result = transformBoundContentValue(
+        variables,
+        entityStore,
+        binding,
+        resolveDesignValue,
+        variableName,
+        componentDefinition.variables.description,
+        path,
+      );
+      expect(result).toEqual({
+        content: [
+          {
+            content: [],
+            data: {
+              target: assets.find((entry) => entry.sys.id === entityIds.ASSET1)!,
+            },
+            nodeType: 'embedded-asset-block',
+          },
+        ],
+        data: {},
+        nodeType: 'document',
+      });
+    });
+  });
+
+  describe('when the variable type is a "Link"', () => {
+    it('it should resolve an entry that has a reference to another entry', () => {
+      const variableName = 'referencedEntry';
+      const resolveDesignValue = vitest.fn();
+      const binding: UnresolvedLink<'Entry'> = {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_EMBEDDED_ENTRY,
+        },
+      };
+
+      const path = (variables.referencedEntry as BoundValue).path;
+      const result = transformBoundContentValue(
+        variables,
+        entityStore,
+        binding,
+        resolveDesignValue,
+        variableName,
+        componentDefinition.variables.referencedEntry,
+        path,
+      );
+      // @ts-expect-error -- deep referenced entry doesn't type well
+      expect(result?.fields.referencedEntry.fields.title).toEqual('Entry 2');
+    });
+  });
+
+  describe('when the variable type is an "Array"', () => {
+    it('referenced entries in the array should have their references resolved', () => {
+      const variableName = 'referencedEntries';
+      const resolveDesignValue = vitest.fn();
+      const binding: UnresolvedLink<'Entry'> = {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_EMBEDDED_ENTRIES,
+        },
+      };
+
+      const path = (variables.referencedEntries as BoundValue).path;
+      const result = transformBoundContentValue(
+        variables,
+        entityStore,
+        binding,
+        resolveDesignValue,
+        variableName,
+        componentDefinition.variables.referencedEntries,
+        path,
+      );
+      // @ts-expect-error -- deep referenced entry doesn't type well
+      expect(result[0]?.fields.referencedEntry.fields.referencedEntry.fields.title).toEqual(
+        'Entry 2',
+      );
+      // @ts-expect-error -- deep referenced entry doesn't type well
+      expect(result[1]?.fields.referencedEntry.fields.title).toEqual('Entry 2');
     });
   });
 });
