@@ -33,7 +33,6 @@ export const PreviewDeliveryRoot = ({ experience, locale }: DeliveryRootProps) =
         <CompositionBlock
           key={index}
           node={childNode}
-          hyperlinkPattern={experience.hyperlinkPattern}
           locale={locale}
           entityStore={entityStore}
           resolveDesignValue={resolveDesignValue}
