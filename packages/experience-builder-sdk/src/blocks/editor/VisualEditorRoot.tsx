@@ -4,21 +4,15 @@
 // todo: update build config of visual editor to work with server components
 
 import React, { Suspense } from 'react';
-import { EntityStore } from '@contentful/experiences-core';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
-import type { Experience } from '@contentful/experiences-core/types';
 
 const VisualEditorLoader = React.lazy(() => import('@contentful/experiences-visual-editor-react'));
 
-type VisualEditorRootProps = {
-  experience?: Experience<EntityStore> | string | null;
-};
-
-export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({ experience }) => {
+export const VisualEditorRoot: React.FC = () => {
   return (
     <ErrorBoundary>
       <Suspense fallback={<div>Loading...</div>}>
-        <VisualEditorLoader experienceObject={experience} />
+        <VisualEditorLoader />
       </Suspense>
     </ErrorBoundary>
   );

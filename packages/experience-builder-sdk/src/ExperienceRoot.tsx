@@ -16,16 +16,13 @@ type ExperienceRootProps = {
 export const ExperienceRoot = ({ locale, experience }: ExperienceRootProps) => {
   const experienceObject =
     typeof experience === 'string' ? createExperience(experience) : experience;
-
-  const initialEntities = experienceObject?.entityStore?.entities || [];
-
   const editorRoot = (
-    <VisualEditorClientInitialization initialEntities={initialEntities} initialLocale={locale}>
-      <VisualEditorRoot experience={experience} />
+    <VisualEditorClientInitialization initialLocale={locale}>
+      <VisualEditorRoot />
     </VisualEditorClientInitialization>
   );
 
-  const deliveryRoot = <PreviewDeliveryRoot locale={locale} experience={experience} />;
+  const deliveryRoot = <PreviewDeliveryRoot locale={locale} experience={experienceObject} />;
 
   return (
     <ExperienceCanvasDetection

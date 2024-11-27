@@ -1,21 +1,18 @@
 'use client';
 import React from 'react';
-import { createExperience, EntityStore } from '@contentful/experiences-core';
+import { EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
 import { compatibleVersions } from '../../constants';
 import { CompositionBlock } from './CompositionBlock';
 import { useBreakpoints } from '../../hooks';
 
 type DeliveryRootProps = {
-  experience?: Experience<EntityStore> | string | null;
+  experience: Experience<EntityStore> | null | undefined;
   locale: string;
 };
 
 export const PreviewDeliveryRoot = ({ experience, locale }: DeliveryRootProps) => {
-  const experienceObject =
-    typeof experience === 'string' ? createExperience(experience) : experience;
-
-  const entityStore = experienceObject?.entityStore;
+  const entityStore = experience?.entityStore;
 
   const { resolveDesignValue } = useBreakpoints(entityStore?.breakpoints ?? []);
 
@@ -36,7 +33,7 @@ export const PreviewDeliveryRoot = ({ experience, locale }: DeliveryRootProps) =
         <CompositionBlock
           key={index}
           node={childNode}
-          hyperlinkPattern={experienceObject?.hyperlinkPattern}
+          hyperlinkPattern={experience.hyperlinkPattern}
           locale={locale}
           entityStore={entityStore}
           resolveDesignValue={resolveDesignValue}

@@ -8,6 +8,7 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
+import MyServerComponent from './components/MyServerComponent';
 
 defineComponents(
   [
@@ -165,6 +166,26 @@ defineComponents(
           richText: {
             displayName: 'Rich Text',
             type: 'RichText',
+          },
+        },
+      },
+      options: {
+        wrapComponent: false,
+      },
+    },
+    {
+      component: MyServerComponent,
+      definition: {
+        id: 'my-server-component',
+        thumbnailUrl: 'https://example.com/path/to/thumbnail.png', // Replace with the actual URL of the thumbnail
+        name: 'My Server Component',
+        category: 'Custom Components',
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        variables: {
+          text: {
+            displayName: 'Text',
+            type: 'Text',
+            defaultValue: 'default text',
           },
         },
       },
