@@ -1,15 +1,11 @@
-'use client';
-
 import React from 'react';
 import reactPackage from 'react/package.json';
-import { useSearchParams } from 'next/navigation';
 import { version as sdkVersion } from '@contentful/experiences-sdk-react';
 import { Divider, Flex, Typography } from 'antd';
 import styles from './styles.module.css';
 
 const FooterDebugging: React.FC = () => {
-  const searchParams = useSearchParams();
-  const isDebugMode = searchParams.has('debug');
+  const isDebugMode = process.env.NODE_ENV === 'development';
 
   if (!isDebugMode) {
     return null;
