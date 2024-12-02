@@ -59,15 +59,19 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
     clone.builtInStyles = ['cfMargin'];
   }
 
+  if (!clone.variables) {
+    clone.variables = {};
+  }
+
   // Enforce the presence of this property for toggling visibility on any node
   clone.variables['cfVisibility'] = builtInStyleDefinitions['cfVisibility'];
 
-  for (const style of Object.values(clone.builtInStyles || [])) {
+  for (const style of clone.builtInStyles || []) {
     if (builtInStyleDefinitions[style]) {
-      clone.variables[style] = builtInStyleDefinitions[style];
+      clone.variables[style] = builtInStyleDefinitions[style] as any; // TODO: fix type
     }
     if (optionalBuiltInStyles[style]) {
-      clone.variables[style] = optionalBuiltInStyles[style];
+      clone.variables[style] = optionalBuiltInStyles[style] as any; // TODO: fix type
     }
   }
   return clone;
@@ -396,7 +400,7 @@ export const createAssemblyRegistration = ({
   const definition = {
     id: definitionId,
     name: definitionName || 'Component',
-    variables: {} as ComponentDefinition['variables'],
+    variables: {},
     children: true,
     category: ASSEMBLY_DEFAULT_CATEGORY,
   };

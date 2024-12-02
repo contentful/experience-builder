@@ -1,8 +1,4 @@
-import type {
-  ComponentRegistration,
-  ComponentDefinition,
-  Link,
-} from '@contentful/experiences-core/types';
+import type { ComponentRegistration, Link } from '@contentful/experiences-core/types';
 
 import { ASSEMBLY_DEFAULT_CATEGORY } from '@contentful/experiences-core/constants';
 
@@ -42,7 +38,7 @@ export const createAssemblyRegistration = ({
   const definition = {
     id: definitionId,
     name: definitionName || 'Component',
-    variables: {} as ComponentDefinition['variables'],
+    variables: {},
     children: true,
     category: ASSEMBLY_DEFAULT_CATEGORY,
   };
