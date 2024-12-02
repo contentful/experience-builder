@@ -1,4 +1,5 @@
 import { SDK_VERSION } from './sdkVersion';
+export { SDK_VERSION as version };
 
 export { ExperienceRoot } from './ExperienceRoot';
 export { useFetchById, useFetchBySlug } from './hooks';

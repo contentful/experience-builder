@@ -3,6 +3,7 @@ import { Menu, Typography, Flex } from 'antd';
 import Container from '../Container';
 import FooterNav from './FooterNav';
 import styles from './styles.module.css';
+import FooterDebugging from './FooterDebugging';
 
 const socials = [
   { key: 'instagram', label: 'Instagram' },
@@ -26,9 +27,12 @@ const Footer: React.FC = () => {
           </Flex>
         </Flex>
         <Flex justify="flex-end" vertical={false}>
-          <Typography className={styles.copyright}>
-            Altitude Design &copy;{new Date().getFullYear()}
-          </Typography>
+          <Flex align="flex-end" vertical>
+            <Typography className={styles.copyright}>
+              Altitude Design &copy;{new Date().getFullYear()}
+            </Typography>
+            <FooterDebugging />
+          </Flex>
         </Flex>
       </Flex>
     </Container>
