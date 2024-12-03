@@ -1,5 +1,5 @@
+import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { DesignTokensDefinition } from '@/types';
-import { builtInStyles, optionalBuiltInStyles } from '../definitions/styles';
 
 export let designTokensRegistry: DesignTokensDefinition = {};
 

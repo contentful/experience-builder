@@ -98,7 +98,7 @@ export abstract class EditorEntityStore extends EntityStoreBase {
             ...message.entities.map((entity) => entity.sys.id),
             ...(message.missingEntityIds ?? []),
           ];
-          if (missing.every((id) => messageIds.find((entityId) => entityId === id))) {
+          if (missing.every((id) => messageIds.includes(id))) {
             clearTimeout(timeout);
             resolve(message.entities);
 
@@ -116,7 +116,7 @@ export abstract class EditorEntityStore extends EntityStoreBase {
 
       const timeout = setTimeout(() => {
         reject(
-          new Error(`Request for entities timed out ${this.timeoutDuration}ms} for ${cacheId}`),
+          new Error(`Request for entities timed out ${this.timeoutDuration}ms for ${cacheId}`),
         );
 
         this.cleanupPromise(cacheId);

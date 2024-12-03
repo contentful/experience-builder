@@ -1,6 +1,6 @@
 import Experience from '@/components/Experience';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import Header from '@/components/Header/Header';
+import Footer from '@/components/Footer/Footer';
 import { getExperience } from '@/getExperience';
 import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
 import { Layout } from 'antd';
@@ -25,7 +25,7 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   const { experience, error } = await getExperience(slug, locale, preview, editorMode);
 
   if (error) {
-    return <div>{error.message}</div>;
+    return <>{error.message}</>;
   }
 
   // extract the styles from the experience
