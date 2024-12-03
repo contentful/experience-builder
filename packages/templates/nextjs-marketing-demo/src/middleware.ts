@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const i18n = {
-    locales: ['en-US', 'de'],
+    locales: ['en-US', 'de-DE'],
     defaultLocale: 'en-US',
   };
 

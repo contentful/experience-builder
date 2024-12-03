@@ -33,6 +33,20 @@ export type {
   ComponentDefinitionPropertyType as ComponentDefinitionVariableType,
 } from '@contentful/experiences-validators';
 
+type ComponentDefinitionVariableTypeMap = {
+  Array: unknown[];
+  Boolean: boolean;
+  Date: string;
+  Hyperlink: string;
+  Link: Record<string, unknown>;
+  Location: { lon: number; lat: number };
+  Media: Record<string, unknown> | string;
+  Number: number;
+  Object: Record<string, unknown>;
+  RichText: string;
+  Text: string;
+};
+
 type ScrollStateKey = keyof typeof SCROLL_STATES;
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
 
@@ -56,7 +70,7 @@ export interface Link<T extends string> {
 export type VariableFormats = 'URL'; // | alphaNum | base64 | email | ipAddress
 
 export type ValidationOption<T extends ComponentDefinitionPropertyType> = {
-  value: T extends 'Text' ? string : T extends 'Number' ? number : never;
+  value: ComponentDefinitionVariableTypeMap[T];
   displayName?: string;
 };
 
@@ -72,19 +86,12 @@ export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionPr
   group?: 'style' | 'content';
   description?: string;
   displayName?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  defaultValue?: string | boolean | number | Record<any, any>; //todo: fix typings
+  defaultValue?: ComponentDefinitionVariableTypeMap[T];
 }
 
 export type ComponentDefinitionVariable<
   T extends ComponentDefinitionPropertyType = ComponentDefinitionPropertyType,
-  // K extends ComponentDefinitionVariableArrayItemType = ComponentDefinitionVariableArrayItemType
-> =
-  // T extends 'Link'
-  // ? ComponentDefinitionVariableLink
-  // : T extends 'Array'
-  // ? { items: { type: K } } & ComponentDefinitionVariableArray<K>
-  /*:*/ ComponentDefinitionVariableBase<T>;
+> = ComponentDefinitionVariableBase<T>;
 
 export type ComponentDefinition<
   T extends ComponentDefinitionPropertyType = ComponentDefinitionPropertyType,
@@ -94,8 +101,7 @@ export type ComponentDefinition<
   category?: string;
   thumbnailUrl?: string;
   hyperlinkPattern?: string;
-  variables: Partial<Record<ContainerStyleVariableName, ComponentDefinitionVariable<T>>> &
-    Record<string, ComponentDefinitionVariable<T>>;
+  variables: Partial<DesignVariableMap> & Record<string, ComponentDefinitionVariable<T>>;
   slots?: Record<string, { displayName: string }>;
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
@@ -119,6 +125,9 @@ export type ComponentRegistration = {
 
 export type ComponentRegistrationOptions = {
   enabledBuiltInComponents?: string[];
+  experimentalComponents?: {
+    carousel?: boolean;
+  };
 };
 
 export type Binding = {
@@ -217,6 +226,52 @@ export type StyleProps = {
   cfColumnSpanLock: boolean;
   cfWrapColumns: boolean;
   cfWrapColumnsCount: string;
+};
+
+/**
+ * Internally defined style variables mapped to each variable type
+ */
+export type DesignVariableTypes = {
+  cfVisibility: 'Boolean';
+  cfHorizontalAlignment: 'Text';
+  cfVerticalAlignment: 'Text';
+  cfMargin: 'Text';
+  cfPadding: 'Text';
+  cfBackgroundColor: 'Text';
+  cfWidth: 'Text';
+  cfMaxWidth: 'Text';
+  cfHeight: 'Text';
+  cfFlexDirection: 'Text';
+  cfFlexWrap: 'Text';
+  cfFlexReverse: 'Boolean';
+  cfBorder: 'Text';
+  cfBorderRadius: 'Text';
+  cfGap: 'Text';
+  cfHyperlink: 'Hyperlink';
+  cfImageAsset: 'Media';
+  cfImageOptions: 'Object';
+  cfBackgroundImageUrl: 'Media';
+  cfBackgroundImageOptions: 'Object';
+  cfOpenInNewTab: 'Boolean';
+  cfFontSize: 'Text';
+  cfFontWeight: 'Text';
+  cfLineHeight: 'Text';
+  cfLetterSpacing: 'Text';
+  cfTextColor: 'Text';
+  cfTextAlign: 'Text';
+  cfTextTransform: 'Text';
+  cfTextBold: 'Boolean';
+  cfTextItalic: 'Boolean';
+  cfTextUnderline: 'Boolean';
+  cfColumns: 'Text';
+  cfColumnSpan: 'Text';
+  cfColumnSpanLock: 'Boolean';
+  cfWrapColumns: 'Boolean';
+  cfWrapColumnsCount: 'Text';
+};
+
+export type DesignVariableMap = {
+  [K in keyof DesignVariableTypes]: ComponentDefinitionVariable<DesignVariableTypes[K]>;
 };
 
 // We might need to replace this with Record<string, string | number> when we want to be React-agnostic

@@ -1,6 +1,14 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /**
+   * Colors
+   * https://ant.design/docs/spec/colors
+   */
+  --gray-1: #fff;
+  --gray-5: #d9d9d9;
+  --gray-7: #8c8c8c;
+  --gray-9: #434343;
+  --gray-12: #141414;
+  --orange-2: #ffe7ba;
 }
 
 html,
@@ -10,8 +18,8 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--gray-12);
+  background: var(--gray-1);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

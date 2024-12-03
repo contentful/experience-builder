@@ -24,7 +24,10 @@ export const useFetchBySlug = ({
 
   const fetchMethod = useCallback(() => {
     return fetchBySlug({ slug, localeCode, client, experienceTypeId });
-  }, [slug, localeCode, client, experienceTypeId]);
+    // we purposely don't want to include the client in the dependencies as it can cause infinite loops if the
+    // user creates the client in the component
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, localeCode, experienceTypeId]);
 
   const fetchResult = useFetchByBase(fetchMethod, mode);
 

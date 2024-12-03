@@ -153,3 +153,35 @@ export const checkIsAssemblyEntry = (entry: Entry): boolean => {
 
 export const checkIsAssemblyDefinition = (component?: ComponentDefinition) =>
   component?.category === ASSEMBLY_DEFAULT_CATEGORY;
+
+interface ParsedValue {
+  value: number;
+  unit: 'px' | 'em' | 'rem';
+}
+
+export function parseCSSValue(input: string): ParsedValue | null {
+  const regex = /^(\d+(\.\d+)?)(px|em|rem)$/;
+  const match = input.match(regex);
+
+  if (match) {
+    return {
+      value: parseFloat(match[1]),
+      unit: match[3] as 'px' | 'em' | 'rem',
+    };
+  }
+
+  return null;
+}
+
+export function getTargetValueInPixels(targetWidthObject: ParsedValue) {
+  switch (targetWidthObject.unit) {
+    case 'px':
+      return targetWidthObject.value;
+    case 'em':
+      return targetWidthObject.value * 16;
+    case 'rem':
+      return targetWidthObject.value * 16;
+    default:
+      return targetWidthObject.value;
+  }
+}

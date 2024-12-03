@@ -6,11 +6,11 @@ import {
   ImageOptions,
   ResolveDesignValueType,
 } from '@/types';
-import { Asset, AssetFile } from 'contentful';
+import { Asset, AssetDetails, AssetFile } from 'contentful';
 import { getOptimizedBackgroundImageAsset } from './getOptimizedBackgroundImageAsset';
 import { getOptimizedImageAsset } from './getOptimizedImageAsset';
 import { getBoundValue } from '@/utils/transformers/getBoundValue';
-import { isDeepPath, lastPathNamedSegmentEq } from '@/utils';
+import { getTargetValueInPixels, isDeepPath, lastPathNamedSegmentEq, parseCSSValue } from '@/utils';
 import { ValidFormats } from './mediaUtils';
 
 export const transformMedia = (
@@ -21,7 +21,6 @@ export const transformMedia = (
   path: string,
 ) => {
   let value: BoundComponentPropertyTypes;
-
   // If it is not a deep path and not pointing to the file of the asset,
   // it is just pointing to a normal field and therefore we just resolve the value as normal field
   if (!isDeepPath(path) && !lastPathNamedSegmentEq(path, 'file')) {
@@ -59,7 +58,7 @@ export const transformMedia = (
   }
 
   if (variableName === 'cfBackgroundImageUrl') {
-    const width =
+    let width =
       resolveDesignValue(
         variables['cfWidth']?.type === 'DesignValue' ? variables['cfWidth'].valuesByBreakpoint : {},
         'cfWidth',
@@ -78,6 +77,16 @@ export const transformMedia = (
       return;
     }
     try {
+      // Target width (px/rem/em) will be applied to the css url if it's lower than the original image width (in px)
+      const assetDetails = asset.fields.file?.details as AssetDetails;
+
+      const assetWidth = assetDetails?.image?.width || 0; // This is always in px
+      const targetWidthObject = parseCSSValue(options.targetSize); // Contains value and unit (px/rem/em) so convert and then compare to assetWidth
+      const targetValue = targetWidthObject
+        ? getTargetValueInPixels(targetWidthObject)
+        : assetWidth;
+
+      if (targetValue < assetWidth) width = `${targetValue}px`;
       value = getOptimizedBackgroundImageAsset(
         asset.fields.file as AssetFile,
         width as string,

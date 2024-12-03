@@ -17,6 +17,7 @@ import {
 import { getTreeDiffs } from '@/utils/getTreeDiff';
 import { treeVisit } from '@/utils/treeTraversal';
 import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
+import { isEqual } from 'lodash-es';
 export interface TreeStore {
   tree: ExperienceTree;
   breakpoints: Breakpoint[];
@@ -40,10 +41,6 @@ export interface TreeStore {
     sourceParentId: string,
   ) => void;
 }
-
-const isAssemblyNode = (node: ExperienceTreeNode) => {
-  return node.type === ASSEMBLY_NODE_TYPE;
-};
 
 export const useTreeStore = create<TreeStore>((set, get) => ({
   tree: {
@@ -109,9 +106,11 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
      * rerendering the entire tree.
      */
     const treeDiff = getTreeDiffs({ ...currentTree.root }, { ...tree.root }, currentTree);
+    const didBreakpointsChange = hasBreakpointDiffs(currentTree, tree);
 
     // The current and updated tree are the same, no tree update required.
-    if (!treeDiff.length) {
+    // Special case: Breakpoints changed (e.g. empty experience gets reloaded or breakpoints updated)
+    if (!treeDiff.length && !didBreakpointsChange) {
       console.debug(
         `[exp-builder.visual-editor::updateTree()]: During smart-diffing no diffs. Skipping tree update.`,
       );
@@ -181,8 +180,20 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
   },
 }));
 
+const hasBreakpointDiffs = (currentTree: ExperienceTree, newTree: ExperienceTree) => {
+  const currentBreakpoints = currentTree?.root?.data?.breakpoints ?? [];
+  const newBreakpoints = newTree?.root?.data?.breakpoints ?? [];
+  // Consider any difference as a change (id, name, previewSize).
+  // Even the order of breakpoints matters as it affects the rendering in useBreakpoints.
+  return !isEqual(currentBreakpoints, newBreakpoints);
+};
+
+const isAssemblyNode = (node: ExperienceTreeNode) => {
+  return node.type === ASSEMBLY_NODE_TYPE;
+};
+
 // Serialize and deserialize an object again to remove all functions and references.
 // Some people refer to this as "Plain Old JavaScript Object" (POJO) as it solely contains plain data.
-function cloneDeepAsPOJO(obj) {
+const cloneDeepAsPOJO = (obj: unknown) => {
   return JSON.parse(JSON.stringify(obj));
-}
+};

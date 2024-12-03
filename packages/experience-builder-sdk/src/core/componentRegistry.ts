@@ -17,15 +17,17 @@ import {
   breakpointsRegistry,
   optionalBuiltInStyles,
   sendMessage,
-  containerDefinition,
-  sectionDefinition,
-  columnsDefinition,
-  singleColumnDefinition,
 } from '@contentful/experiences-core';
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
-import { dividerDefinition } from '@contentful/experiences-core';
+import {
+  sectionDefinition,
+  containerDefinition,
+  columnsDefinition,
+  singleColumnDefinition,
+  dividerDefinition,
+} from '@contentful/experiences-components-react';
 
 const CssVarRegex = /var\(--[\w-]+\)/;
 
@@ -57,15 +59,19 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
     clone.builtInStyles = ['cfMargin'];
   }
 
+  if (!clone.variables) {
+    clone.variables = {};
+  }
+
   // Enforce the presence of this property for toggling visibility on any node
   clone.variables['cfVisibility'] = builtInStyleDefinitions['cfVisibility'];
 
-  for (const style of Object.values(clone.builtInStyles || [])) {
+  for (const style of clone.builtInStyles || []) {
     if (builtInStyleDefinitions[style]) {
-      clone.variables[style] = builtInStyleDefinitions[style];
+      clone.variables[style] = builtInStyleDefinitions[style] as any; // TODO: fix type
     }
     if (optionalBuiltInStyles[style]) {
-      clone.variables[style] = optionalBuiltInStyles[style];
+      clone.variables[style] = optionalBuiltInStyles[style] as any; // TODO: fix type
     }
   }
   return clone;
@@ -143,6 +149,13 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
       wrapComponent: false,
     },
   },
+  carousel: enrichComponentDefinition({
+    component: Components.Carousel,
+    definition: Components.carouselDefinition,
+    options: {
+      wrapComponent: false,
+    },
+  }),
 } satisfies Record<string, ComponentRegistration>;
 
 // pre-filling with the default component registrations
@@ -323,6 +336,13 @@ export const defineComponents = (
   componentRegistrations: ComponentRegistration[],
   options?: ComponentRegistrationOptions,
 ) => {
+  if (options?.experimentalComponents?.carousel) {
+    componentRegistry.set(
+      CONTENTFUL_COMPONENTS.carousel.id,
+      DEFAULT_COMPONENT_REGISTRATIONS.carousel,
+    );
+  }
+
   if (options?.enabledBuiltInComponents) {
     for (const id of optionalBuiltInComponents) {
       if (!options.enabledBuiltInComponents.includes(id)) {
@@ -380,7 +400,7 @@ export const createAssemblyRegistration = ({
   const definition = {
     id: definitionId,
     name: definitionName || 'Component',
-    variables: {} as ComponentDefinition['variables'],
+    variables: {},
     children: true,
     category: ASSEMBLY_DEFAULT_CATEGORY,
   };

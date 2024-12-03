@@ -1,15 +1,8 @@
 import { DEFAULT_IMAGE_WIDTH } from '@/constants';
-import { ComponentDefinitionVariable, ContainerStyleVariableName } from '../types';
-
-type VariableDefinitions = Partial<
-  Record<
-    ContainerStyleVariableName,
-    ComponentDefinitionVariable<'Text' | 'Boolean' | 'Media' | 'Object' | 'Hyperlink'>
-  >
->;
+import { DesignVariableMap } from '../types';
 
 // These styles get added to every component, user custom or contentful provided
-export const builtInStyles: VariableDefinitions = {
+export const builtInStyles: Partial<DesignVariableMap> = {
   cfVerticalAlignment: {
     validations: {
       in: [
@@ -157,7 +150,7 @@ export const builtInStyles: VariableDefinitions = {
   },
 };
 
-export const optionalBuiltInStyles: VariableDefinitions = {
+export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
   cfFontSize: {
     displayName: 'Font Size',
     type: 'Text',
@@ -326,14 +319,14 @@ export const optionalBuiltInStyles: VariableDefinitions = {
   },
 };
 
-export const sectionBuiltInStyles: VariableDefinitions = {
+export const sectionBuiltInStyles: Partial<DesignVariableMap> = {
   ...builtInStyles,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
   cfBackgroundImageOptions: optionalBuiltInStyles.cfBackgroundImageOptions,
 };
 
-export const containerBuiltInStyles: VariableDefinitions = {
+export const containerBuiltInStyles: Partial<DesignVariableMap> = {
   ...builtInStyles,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundImageUrl: optionalBuiltInStyles.cfBackgroundImageUrl,
@@ -355,7 +348,7 @@ export const containerBuiltInStyles: VariableDefinitions = {
   },
 };
 
-export const dividerBuiltInStyles: VariableDefinitions = {
+export const dividerBuiltInStyles: Partial<DesignVariableMap> = {
   cfVisibility: builtInStyles.cfVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfMargin: {
@@ -395,7 +388,7 @@ export const dividerBuiltInStyles: VariableDefinitions = {
   },
 };
 
-export const singleColumnBuiltInStyles: VariableDefinitions = {
+export const singleColumnBuiltInStyles: Partial<DesignVariableMap> = {
   cfVisibility: builtInStyles.cfVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
@@ -494,7 +487,7 @@ export const singleColumnBuiltInStyles: VariableDefinitions = {
   },
 };
 
-export const columnsBuiltInStyles: VariableDefinitions = {
+export const columnsBuiltInStyles: Partial<DesignVariableMap> = {
   cfVisibility: builtInStyles.cfVisibility,
   cfBorderRadius: optionalBuiltInStyles.cfBorderRadius,
   cfBackgroundColor: optionalBuiltInStyles.cfBackgroundColor,
