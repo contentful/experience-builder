@@ -86,7 +86,7 @@ export const useComponent = ({
     const { dragProps = {} } = props || {};
 
     const {
-      editorMode: _editorMode,
+      editorMode: isInExpEditorMode,
       renderDropzone: _renderDropzone,
       node: _node,
       ...customComponentProps
@@ -101,6 +101,7 @@ export const useComponent = ({
       React.createElement(componentRegistration.component, {
         ...modifiedProps,
         dragProps,
+        isInExpEditorMode,
       }),
     );
 
