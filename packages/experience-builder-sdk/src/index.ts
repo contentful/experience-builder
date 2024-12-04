@@ -26,6 +26,6 @@ if (typeof window !== 'undefined') {
   window.__EB__.sdkVersion = SDK_VERSION;
 }
 
-export type { ComponentDefinition } from '@contentful/experiences-core/types';
+export type { Experience, ComponentDefinition } from '@contentful/experiences-core/types';
 
 export { detachExperienceStyles } from '@contentful/experiences-core';

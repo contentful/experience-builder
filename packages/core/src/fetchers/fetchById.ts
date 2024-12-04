@@ -14,23 +14,32 @@ const handleError = (generalMessage: string, error: unknown) => {
   throw Error(message);
 };
 
+type FetchByIdParams = {
+  /** instantiated client from the Contentful SDK */
+  client: ContentfulClientApi<undefined>;
+  /** id of the content type associated with the experience */
+  experienceTypeId: string;
+  /** id of the experience (defined in entry settings) */
+  id: string;
+  /** locale code to fetch the experience */
+  localeCode: string;
+  /** if the experience is being loaded in the Contentful Studio editor or not. If true, this function is a noop. */
+  isEditorMode?: boolean;
+};
+
 /**
- * Fetch experience entry using slug as the identifier
- * @param {string} experienceTypeId - id of the content type associated with the experience
- * @param {string} slug - slug of the experience (defined in entry settings)
- * @param {string} localeCode - locale code to fetch the experience. Falls back to the currently active locale in the state
+ * Fetches an experience object by its id
+ * @param {FetchByIdParams} options - options to fetch the experience
  */
 export async function fetchById({
   client,
   experienceTypeId,
   id,
   localeCode,
-}: {
-  client: ContentfulClientApi<undefined>;
-  experienceTypeId: string;
-  id: string;
-  localeCode: string;
-}) {
+  isEditorMode,
+}: FetchByIdParams) {
+  //Be a no-op if in editor mode
+  if (isEditorMode) return;
   let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
 
   try {

@@ -1,9 +1,8 @@
 import React from 'react';
-import { ExperienceRoot } from '@contentful/experiences-sdk-react';
-import type { ExperienceType } from '../getExperience';
+import { Experience, ExperienceRoot } from '@contentful/experiences-sdk-react';
 
 interface ExperienceProps {
-  experience: ExperienceType;
+  experience: Experience;
   locale: string;
 }
 
