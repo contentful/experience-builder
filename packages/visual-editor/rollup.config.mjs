@@ -4,7 +4,6 @@ import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import postcss from 'rollup-plugin-postcss';
 import postcssImport from 'postcss-import';
-import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
 export default [
   {
@@ -45,30 +44,5 @@ export default [
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
     plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
     external: [/.css/],
-  },
-  {
-    input: 'src/renderApp.tsx',
-    output: [
-      {
-        file: './dist/renderApp.js',
-        format: 'esm',
-        sourcemap: true,
-      },
-    ],
-    plugins: [
-      postcss({
-        plugins: [postcssImport()],
-        inject(cssVariableName) {
-          return `import styleInject from 'style-inject';\nstyleInject(${cssVariableName});`;
-        },
-      }),
-      nodeResolve(),
-      commonjs(),
-      injectProcessEnv({
-        NODE_ENV: 'production',
-      }),
-      typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true }),
-    ],
-    external: [],
   },
 ];
