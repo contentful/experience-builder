@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+out
+typings
+reports
+tmp
+

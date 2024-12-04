@@ -1,0 +1,15 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: experience-builder-sdk-nextjs
+  description: The official public SDK to integrate applications with the Experience Builder.
+  annotations:
+    circleci.com/project-slug: github/contentful/experience-builder
+    github.com/project-slug: contentful/experience-builder
+    contentful.com/ci-alert-slack: prd-experience-builder-alerts
+    backstage.io/source-location: url:https://github.com/contentful/experience-builder/tree/development/packages/experience-builder-sdk
+spec:
+  type: library
+  lifecycle: production
+  owner: group:team-sparks
+  system: experience-builder

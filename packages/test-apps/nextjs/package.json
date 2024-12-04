@@ -10,7 +10,7 @@
     "depcruise": "depcruise src"
   },
   "dependencies": {
-    "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
+    "@contentful/experiences-sdk-nextjs": "file:../../experience-builder-sdk-nextjs",
     "next": "14.2.10",
     "react": "^18",
     "react-dom": "^18"
