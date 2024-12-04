@@ -33,7 +33,7 @@ export type {
   ComponentDefinitionPropertyType as ComponentDefinitionVariableType,
 } from '@contentful/experiences-validators';
 
-type ComponentDefinitionVariableTypeMap = {
+export type ComponentDefinitionVariableTypeMap = {
   Array: unknown[];
   Boolean: boolean;
   Date: string;
