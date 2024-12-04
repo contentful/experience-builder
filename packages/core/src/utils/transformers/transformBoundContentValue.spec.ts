@@ -121,6 +121,7 @@ describe('transformBoundContentValue', () => {
             return {
               quality: '100%',
               format: 'jpg',
+              targetSize: '1060px',
             };
           }
           if (variableName === 'cfWidth') {
@@ -142,6 +143,37 @@ describe('transformBoundContentValue', () => {
         expect(result.url).toEqual(assets[0].fields.file?.url + '?w=1024&fm=jpg');
       });
 
+      it('should transform value to OptimizedBackgroundImageAsset to targetValue when targetValue is lower than asset width', () => {
+        const binding: UnresolvedLink<'Asset'> = {
+          sys: { type: 'Link', linkType: 'Asset', id: 'asset1' },
+        };
+        const resolveDesignValue = vitest.fn((_, variableName) => {
+          if (variableName === 'cfBackgroundImageOptions') {
+            return {
+              quality: '100%',
+              format: 'jpg',
+              targetSize: '300px',
+            };
+          }
+          if (variableName === 'cfWidth') {
+            return '1024px';
+          }
+        });
+        const variableName = 'cfBackgroundImageUrl';
+
+        const path = (variables.image as BoundValue).path;
+        const result = transformBoundContentValue(
+          variablesWithImageOptions,
+          entityStore,
+          binding,
+          resolveDesignValue,
+          variableName,
+          variableType,
+          path,
+        ) as OptimizedBackgroundImageAsset;
+        expect(result.url).toEqual(assets[0].fields.file?.url + '?w=600&fm=jpg');
+      });
+
       it('when the component doesnt have a width variable, it should still transform value to OptimizedBackgroundImageAsset', () => {
         const binding: UnresolvedLink<'Asset'> = {
           sys: { type: 'Link', linkType: 'Asset', id: 'asset1' },
@@ -151,6 +183,7 @@ describe('transformBoundContentValue', () => {
             return {
               quality: '100%',
               format: 'jpg',
+              targetSize: '1060px',
             };
           }
           if (variableName === 'cfWidth') {
