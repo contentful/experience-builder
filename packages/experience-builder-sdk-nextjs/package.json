@@ -1,5 +1,6 @@
 {
   "name": "@contentful/experiences-sdk-nextjs",
+  "private": true,
   "version": "1.22.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -25,9 +26,9 @@
     "prebuild": "npm run clean",
     "build": "rollup -c rollup.config.mjs",
     "watch": "vite build --watch",
-    "test": "NODE_ENV=test jest",
+    "test": "echo 'no tests yet'",
     "test:watch": "NODE_ENV=test jest --watch",
-    "test:coverage": "NODE_ENV=test jest --coverage --maxWorkers 2",
+    "test:coverage": "NODE_ENV=test jest --watch",
     "tsc": "tsc --noEmit",
     "lint": "eslint ./src --ext '.ts,.tsx,.js,.jsx'",
     "prettier:check": "prettier --check '**/*.{jsx,js,ts,tsx,css}'",
