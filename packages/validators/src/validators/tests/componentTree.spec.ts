@@ -275,6 +275,28 @@ describe('componentTree', () => {
       },
     );
 
+    it.each(['some-uuid', undefined])('succeeds if id is %s', (id) => {
+      const componentTree = experience.fields.componentTree[locale];
+      const child = {
+        id,
+        definitionId: 'test',
+        displayName: 'display-name',
+        variables: {},
+        children: [],
+      };
+
+      const updatedExperience = {
+        ...experience,
+        fields: {
+          ...experience.fields,
+          componentTree: { [locale]: { ...componentTree, children: [child] } },
+        },
+      };
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
+      expect(result.success).toBe(true);
+      expect(result.errors).toBeUndefined();
+    });
+
     it.each(['Test', undefined])('succeeds if displayName is %s', (displayName) => {
       const componentTree = experience.fields.componentTree[locale];
       const child = {

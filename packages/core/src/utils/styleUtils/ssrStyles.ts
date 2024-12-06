@@ -328,13 +328,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       // making sure that we respect the order of breakpoints from
       // we can achieve "desktop first" or "mobile first" approach to style over-writes
       if (patternWrapper) {
-        // @ts-expect-error -- temporarily add node ID to pick up the className during rendering in CompositionBlock
         currentNode.id = currentNode.id ?? generateRandomId(15);
         // @ts-expect-error -- valueByBreakpoint is not explicitly defined, but it's already defined in the patternWrapper styles
         patternWrapper.variables.cfSsrClassName = {
           ...(patternWrapper.variables.cfSsrClassName ?? {}),
           type: 'DesignValue',
-          // @ts-expect-error -- id is not defined in ComponentTreeNode type
           [currentNode.id]: {
             valuesByBreakpoint: {
               [breakpointIds[0]]: currentNodeClassNames.join(' '),
