@@ -70,7 +70,7 @@ export interface Link<T extends string> {
 export type VariableFormats = 'URL'; // | alphaNum | base64 | email | ipAddress
 
 export type ValidationOption<T extends ComponentDefinitionPropertyType> = {
-  value: ComponentDefinitionVariableTypeMap[T];
+  value: T extends 'Text' ? string : T extends 'Number' ? number : never;
   displayName?: string;
 };
 
