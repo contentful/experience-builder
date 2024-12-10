@@ -24,26 +24,17 @@ export const getExperience = async (
   isPreview = false,
   isEditorMode = false,
 ) => {
-  // While in editor mode, the experience is passed to the ExperienceRoot
-  // component by the editor, so we don't fetch it here
-  if (isEditorMode) {
-    return { experience: undefined, error: undefined };
-  }
-
   const client = getConfig(isPreview);
-  let experience: Awaited<ReturnType<typeof fetchBySlug>> | undefined;
-
   try {
-    experience = await fetchBySlug({
+    const experience = await fetchBySlug({
       client,
       slug,
       experienceTypeId,
       localeCode,
+      isEditorMode,
     });
+    return { experience };
   } catch (error) {
-    return { experience, error: error as Error };
+    return { experience: undefined, error: error as Error };
   }
-  return { experience, error: undefined };
 };
-
-export type ExperienceType = Awaited<ReturnType<typeof fetchBySlug>>;
