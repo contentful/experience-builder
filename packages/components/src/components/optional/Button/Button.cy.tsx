@@ -25,7 +25,7 @@ describe('<Button />', () => {
           onNavigateSpy(url, target);
         }}>
         Click Me!
-      </Button>
+      </Button>,
     );
     cy.get('button').click();
     cy.get('@onNavigateSpy').should('have.been.calledWith', 'https://www.contentful.com', '_blank');
@@ -87,7 +87,7 @@ describe('<Button />', () => {
           onClickSpy(e.currentTarget.dataset.url, e.currentTarget.dataset.target);
         }}>
         Click Me!
-      </Button>
+      </Button>,
     );
     //need to get access to the anchors click event and prevent it so the browser doesn't leave the page
     cy.get('a').then(($a) => {

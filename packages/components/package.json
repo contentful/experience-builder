@@ -15,6 +15,48 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
+  "files": [
+    "readme.md",
+    "package.json",
+    "dist/**/*.*"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./Button": {
+      "import": "./dist/Button/index.js",
+      "require": "./dist/Button/index.js",
+      "types": "./dist/Button/index.d.ts"
+    },
+    "./Divider": {
+      "import": "./dist/Divider/index.js",
+      "require": "./dist/Divider/index.js",
+      "types": "./dist/Divider/index.d.ts"
+    },
+    "./Heading": {
+      "import": "./dist/Heading/index.js",
+      "require": "./dist/Heading/index.js",
+      "types": "./dist/Heading/index.d.ts"
+    },
+    "./Image": {
+      "import": "./dist/Image/index.js",
+      "require": "./dist/Image/index.js",
+      "types": "./dist/Image/index.d.ts"
+    },
+    "./RichText": {
+      "import": "./dist/RichText/index.js",
+      "require": "./dist/RichText/index.js",
+      "types": "./dist/RichText/index.d.ts"
+    },
+    "./Text": {
+      "import": "./dist/Text/index.js",
+      "require": "./dist/Text/index.js",
+      "types": "./dist/Text/index.d.ts"
+    }
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
@@ -33,11 +75,6 @@
   },
   "author": "",
   "license": "MIT",
-  "files": [
-    "readme.md",
-    "package.json",
-    "dist/**/*.*"
-  ],
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.2.1",
@@ -59,6 +96,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-storybook": "^0.8.0",
+    "fast-glob": "^3.3.2",
     "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

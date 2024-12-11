@@ -1,4 +1,12 @@
-import * as Components from '@contentful/experiences-components-react';
+import {
+  ContentfulContainer,
+  containerDefinition,
+  sectionDefinition,
+  Columns,
+  columnsDefinition,
+  SingleColumn,
+  singleColumnDefinition,
+} from '@contentful/experiences-components-react';
 import type {
   ComponentRegistration,
   ComponentDefinition,
@@ -21,13 +29,8 @@ import {
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
 import { SDK_VERSION } from '../constants';
-import {
-  sectionDefinition,
-  containerDefinition,
-  columnsDefinition,
-  singleColumnDefinition,
-  dividerDefinition,
-} from '@contentful/experiences-components-react';
+
+let shouldMaintainBackwardsCompatibleComponentIds = false;
 
 const CssVarRegex = /var\(--[\w-]+\)/;
 
@@ -48,7 +51,7 @@ const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinit
 };
 
 const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
-  if ([CONTENTFUL_COMPONENTS.container.id].includes(componentDefinition.id)) {
+  if (componentDefinition.id === CONTENTFUL_COMPONENTS.container.id) {
     return componentDefinition;
   }
 
@@ -93,70 +96,93 @@ export const enrichComponentDefinition = ({
 
 const DEFAULT_COMPONENT_REGISTRATIONS = {
   container: {
-    component: Components.ContentfulContainer,
+    component: ContentfulContainer,
     definition: containerDefinition,
   },
   section: {
-    component: Components.ContentfulContainer,
+    component: ContentfulContainer,
     definition: sectionDefinition,
   },
   columns: {
-    component: Components.Columns,
+    component: Columns,
     definition: columnsDefinition,
   },
   singleColumn: {
-    component: Components.SingleColumn,
+    component: SingleColumn,
     definition: singleColumnDefinition,
   },
-  button: enrichComponentDefinition({
-    component: Components.Button,
-    definition: Components.ButtonComponentDefinition,
-    options: {
-      wrapComponent: false,
-    },
-  }),
-  heading: enrichComponentDefinition({
-    component: Components.Heading,
-    definition: Components.HeadingComponentDefinition,
-    options: {
-      wrapComponent: false,
-    },
-  }),
-  image: enrichComponentDefinition({
-    component: Components.Image,
-    definition: Components.ImageComponentDefinition,
-    options: { wrapComponent: false },
-  }),
-  richText: enrichComponentDefinition({
-    component: Components.RichText,
-    definition: Components.RichTextComponentDefinition,
-    options: {
-      wrapComponent: false,
-    },
-  }),
-  text: enrichComponentDefinition({
-    component: Components.Text,
-    definition: Components.TextComponentDefinition,
-    options: {
-      wrapComponent: false,
-    },
-  }),
-  divider: {
-    // Don't wrap this component `withComponentWrapper`. Need to explicitly ignore dragProps
-    component: Components.ContentfulDivider,
-    definition: dividerDefinition,
-    options: {
-      wrapComponent: false,
-    },
-  },
-  carousel: enrichComponentDefinition({
-    component: Components.Carousel,
-    definition: Components.carouselDefinition,
-    options: {
-      wrapComponent: false,
-    },
-  }),
 } satisfies Record<string, ComponentRegistration>;
+
+// Optional components are only loaded when they are needed
+const OPTIONAL_COMPONENT_REGISTRATIONS = {
+  [CONTENTFUL_COMPONENTS.button.id]: () =>
+    import('@contentful/experiences-components-react/Button').then((module) =>
+      enrichComponentDefinition({
+        component: module.Button,
+        definition: module.ButtonComponentDefinition,
+        options: {
+          wrapComponent: false,
+        },
+      }),
+    ),
+  [CONTENTFUL_COMPONENTS.heading.id]: () =>
+    import('@contentful/experiences-components-react/Heading').then((module) =>
+      enrichComponentDefinition({
+        component: module.Heading,
+        definition: module.HeadingComponentDefinition,
+        options: {
+          wrapComponent: false,
+        },
+      }),
+    ),
+  [CONTENTFUL_COMPONENTS.image.id]: () =>
+    import('@contentful/experiences-components-react/Image').then((module) =>
+      enrichComponentDefinition({
+        component: module.Image,
+        definition: module.ImageComponentDefinition,
+        options: { wrapComponent: false },
+      }),
+    ),
+  [CONTENTFUL_COMPONENTS.richText.id]: () =>
+    import('@contentful/experiences-components-react/RichText').then((module) =>
+      enrichComponentDefinition({
+        component: module.RichText,
+        definition: module.RichTextComponentDefinition,
+        options: {
+          wrapComponent: false,
+        },
+      }),
+    ),
+  [CONTENTFUL_COMPONENTS.text.id]: () =>
+    import('@contentful/experiences-components-react/Text').then((module) =>
+      enrichComponentDefinition({
+        component: module.Text,
+        definition: module.TextComponentDefinition,
+        options: {
+          wrapComponent: false,
+        },
+      }),
+    ),
+  [CONTENTFUL_COMPONENTS.divider.id]: () =>
+    import('@contentful/experiences-components-react/Divider').then((module) => ({
+      // Don't wrap this component `withComponentWrapper`. Need to explicitly ignore dragProps
+      component: module.ContentfulDivider,
+      definition: module.dividerDefinition,
+      options: {
+        wrapComponent: false,
+      },
+    })),
+
+  [CONTENTFUL_COMPONENTS.carousel.id]: () =>
+    import('@contentful/experiences-components-react/Carousel').then((module) => ({
+      // Don't wrap this component `withComponentWrapper`. Need to explicitly ignore dragProps
+      component: module.Carousel,
+      definition: module.carouselDefinition,
+      options: {
+        wrapComponent: false,
+      },
+    })),
+};
 
 // pre-filling with the default component registrations
 export const componentRegistry = new Map<string, ComponentRegistration>([
@@ -170,25 +196,7 @@ export const componentRegistry = new Map<string, ComponentRegistration>([
     DEFAULT_COMPONENT_REGISTRATIONS.singleColumn,
   ],
   [DEFAULT_COMPONENT_REGISTRATIONS.columns.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.columns],
-  [DEFAULT_COMPONENT_REGISTRATIONS.button.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.button],
-  [DEFAULT_COMPONENT_REGISTRATIONS.heading.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.heading],
-  [DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.image],
-  [
-    DEFAULT_COMPONENT_REGISTRATIONS.richText.definition.id,
-    DEFAULT_COMPONENT_REGISTRATIONS.richText,
-  ],
-  [DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.text],
-  [DEFAULT_COMPONENT_REGISTRATIONS.divider.definition.id, DEFAULT_COMPONENT_REGISTRATIONS.divider],
 ]);
-
-export const optionalBuiltInComponents = [
-  DEFAULT_COMPONENT_REGISTRATIONS.button.definition.id,
-  DEFAULT_COMPONENT_REGISTRATIONS.heading.definition.id,
-  DEFAULT_COMPONENT_REGISTRATIONS.image.definition.id,
-  DEFAULT_COMPONENT_REGISTRATIONS.richText.definition.id,
-  DEFAULT_COMPONENT_REGISTRATIONS.text.definition.id,
-  DEFAULT_COMPONENT_REGISTRATIONS.divider.definition.id,
-];
 
 export const sendRegisteredComponentsMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
@@ -327,6 +335,25 @@ export const sendConnectedEventWithRegisteredComponents = () => {
   });
 };
 
+export const initializeOptionalComponents = (options?: ComponentRegistrationOptions) => {
+  for (const [id, loadComponent] of Object.entries(OPTIONAL_COMPONENT_REGISTRATIONS)) {
+    if (componentRegistry.has(id)) continue;
+
+    if (id === CONTENTFUL_COMPONENTS.carousel.id && !options?.experimentalComponents?.carousel) {
+      continue;
+    }
+
+    if (!options?.enabledBuiltInComponents || options.enabledBuiltInComponents.includes(id)) {
+      loadComponent().then((registration) => {
+        componentRegistry.set(id, registration);
+        if (shouldMaintainBackwardsCompatibleComponentIds) {
+          registerBasicComponentIdWithoutPrefix(id);
+        }
+      });
+    }
+  }
+};
+
 /**
  * Registers multiple components and their component definitions at once
  * @param componentRegistrations - ComponentRegistration[]
@@ -336,20 +363,7 @@ export const defineComponents = (
   componentRegistrations: ComponentRegistration[],
   options?: ComponentRegistrationOptions,
 ) => {
-  if (options?.experimentalComponents?.carousel) {
-    componentRegistry.set(
-      CONTENTFUL_COMPONENTS.carousel.id,
-      DEFAULT_COMPONENT_REGISTRATIONS.carousel,
-    );
-  }
-
-  if (options?.enabledBuiltInComponents) {
-    for (const id of optionalBuiltInComponents) {
-      if (!options.enabledBuiltInComponents.includes(id)) {
-        componentRegistry.delete(id);
-      }
-    }
-  }
+  initializeOptionalComponents(options);
 
   for (const registration of componentRegistrations) {
     // Fill definitions with fallbacks values
@@ -418,16 +432,17 @@ export const createAssemblyRegistration = ({
  * will be removed in the next major release.
  */
 export const maintainBasicComponentIdsWithoutPrefix = () => {
-  optionalBuiltInComponents.forEach((id) => {
-    if (componentRegistry.has(id) && id.startsWith('contentful-')) {
-      const registeredComponent = componentRegistry.get(id)!;
-      const definition = registeredComponent.definition;
-      const newDefinition = cloneObject(definition);
-      newDefinition.name = newDefinition.name + '[OLD]';
-      const newId = id.replace('contentful-', '');
-      newDefinition.id = newId;
-      const newRegisteredComponent = { ...registeredComponent, definition: newDefinition };
-      componentRegistry.set(newId, newRegisteredComponent);
-    }
-  });
+  shouldMaintainBackwardsCompatibleComponentIds = true;
+};
+
+const registerBasicComponentIdWithoutPrefix = (id: string) => {
+  if (!componentRegistry.has(id)) return;
+
+  const registeredComponent = componentRegistry.get(id)!;
+  const newDefinition = cloneObject(registeredComponent.definition);
+  newDefinition.name = `${newDefinition.name} [OLD]`;
+  const newId = id.replace('contentful-', '');
+  newDefinition.id = newId;
+  const newRegisteredComponent = { ...registeredComponent, definition: newDefinition };
+  componentRegistry.set(newId, newRegisteredComponent);
 };

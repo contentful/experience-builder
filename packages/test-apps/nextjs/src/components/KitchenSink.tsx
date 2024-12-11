@@ -1,7 +1,7 @@
 import React from 'react';
 import { UnresolvedLink } from 'contentful';
 import { Document } from '@contentful/rich-text-types';
-import { RichText } from '@contentful/experiences-components-react';
+import { RichText } from '@contentful/experiences-components-react/RichText';
 
 interface KitchenSinkProps {
   jsonObject?: object;
