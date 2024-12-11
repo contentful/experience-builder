@@ -7,7 +7,7 @@ import postcssImport from 'postcss-import';
 import fg from 'fast-glob';
 import path from 'path';
 
-const optionalComponentInputs = fg.sync('src/components/optional/**/index.ts');
+const optionalComponents = fg.sync('src/components/optional/**/index.ts');
 
 const bundleConfig = {
   plugins: [
@@ -42,30 +42,7 @@ export default [
     ],
     ...bundleConfig,
   },
-  // Optional component bundles configuration
-  {
-    input: optionalComponentInputs,
-    output: [
-      {
-        dir: 'dist',
-        format: 'esm',
-        entryFileNames: (chunkInfo) => {
-          const componentName = path.basename(path.dirname(chunkInfo.facadeModuleId));
-          return `${componentName}/index.js`;
-        },
-        chunkFileNames: '[name]-[hash].js',
-        sourcemap: true,
-      },
-    ],
-    ...bundleConfig,
-  },
-  // TypeScript declaration files configuration for optional components
-  ...optionalComponentInputs.map((input) => ({
-    input,
-    output: [{ file: `dist/${path.basename(path.dirname(input))}/index.d.ts`, format: 'es' }],
-    plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
-    external: [/.css/],
-  })),
+
   // TypeScript declaration files configuration for main bundle
   {
     input: 'src/index.ts',
@@ -73,4 +50,37 @@ export default [
     plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
     external: [/.css/],
   },
+
+  // Separate bundles for each optional component
+  ...optionalComponents.map((filePath) => ({
+    input: filePath,
+    output: {
+      file: `dist/${path.basename(path.dirname(filePath))}/index.js`,
+      format: 'esm',
+      sourcemap: true,
+    },
+    plugins: [
+      postcss({
+        plugins: [postcssImport()],
+        inject(cssVariableName) {
+          return `import styleInject from 'style-inject';\nstyleInject(${cssVariableName});`;
+        },
+      }),
+      resolve(),
+      commonjs(),
+      typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true }),
+    ],
+    external: [/node_modules\/(?!tslib.*)/],
+  })),
+
+  // Generate type declarations for each component
+  ...optionalComponents.map((filePath) => ({
+    input: filePath,
+    output: {
+      file: `dist/${path.basename(path.dirname(filePath))}/index.d.ts`,
+      format: 'es',
+    },
+    plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
+    external: [/.css/],
+  })),
 ];
