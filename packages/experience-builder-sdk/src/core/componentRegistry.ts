@@ -62,15 +62,19 @@ const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) 
     clone.builtInStyles = ['cfMargin'];
   }
 
+  if (!clone.variables) {
+    clone.variables = {};
+  }
+
   // Enforce the presence of this property for toggling visibility on any node
   clone.variables['cfVisibility'] = builtInStyleDefinitions['cfVisibility'];
 
-  for (const style of Object.values(clone.builtInStyles || [])) {
+  for (const style of clone.builtInStyles || []) {
     if (builtInStyleDefinitions[style]) {
-      clone.variables[style] = builtInStyleDefinitions[style];
+      clone.variables[style] = builtInStyleDefinitions[style] as any; // TODO: fix type
     }
     if (optionalBuiltInStyles[style]) {
-      clone.variables[style] = optionalBuiltInStyles[style];
+      clone.variables[style] = optionalBuiltInStyles[style] as any; // TODO: fix type
     }
   }
   return clone;
@@ -164,6 +168,16 @@ const OPTIONAL_COMPONENT_REGISTRATIONS = {
       // Don't wrap this component `withComponentWrapper`. Need to explicitly ignore dragProps
       component: module.ContentfulDivider,
       definition: module.dividerDefinition,
+      options: {
+        wrapComponent: false,
+      },
+    })),
+
+  [CONTENTFUL_COMPONENTS.carousel.id]: () =>
+    import('@contentful/experiences-components-react/Carousel').then((module) => ({
+      // Don't wrap this component `withComponentWrapper`. Need to explicitly ignore dragProps
+      component: module.Carousel,
+      definition: module.carouselDefinition,
       options: {
         wrapComponent: false,
       },
@@ -321,11 +335,15 @@ export const sendConnectedEventWithRegisteredComponents = () => {
   });
 };
 
-export const initializeOptionalComponents = (enabledBuiltInComponents?: string[]) => {
+export const initializeOptionalComponents = (options?: ComponentRegistrationOptions) => {
   for (const [id, loadComponent] of Object.entries(OPTIONAL_COMPONENT_REGISTRATIONS)) {
     if (componentRegistry.has(id)) continue;
 
-    if (!enabledBuiltInComponents || enabledBuiltInComponents.includes(id)) {
+    if (id === CONTENTFUL_COMPONENTS.carousel.id && !options?.experimentalComponents?.carousel) {
+      continue;
+    }
+
+    if (!options?.enabledBuiltInComponents || options.enabledBuiltInComponents.includes(id)) {
       loadComponent().then((registration) => {
         componentRegistry.set(id, registration);
         if (shouldMaintainBackwardsCompatibleComponentIds) {
@@ -345,7 +363,7 @@ export const defineComponents = (
   componentRegistrations: ComponentRegistration[],
   options?: ComponentRegistrationOptions,
 ) => {
-  initializeOptionalComponents(options?.enabledBuiltInComponents);
+  initializeOptionalComponents(options);
 
   for (const registration of componentRegistrations) {
     // Fill definitions with fallbacks values
@@ -396,7 +414,7 @@ export const createAssemblyRegistration = ({
   const definition = {
     id: definitionId,
     name: definitionName || 'Component',
-    variables: {} as ComponentDefinition['variables'],
+    variables: {},
     children: true,
     category: ASSEMBLY_DEFAULT_CATEGORY,
   };

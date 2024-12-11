@@ -1,5 +1,9 @@
 # Contentful Experience Builder Addon
 
+## WARNING - Not currently maintained
+
+The Storybook plugin for Studio Experiences is not currently being maintained and it not currently in a working state. Use of the plugin is not advised right now.
+
 **Develop experience builder components with storybook**
 
 > Experience Builder is currently in a private alpha and not available publicly. If you are interested in participating in the alpha, please reach out to your Contentful account team.

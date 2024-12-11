@@ -91,10 +91,8 @@ export const CompositionBlock = ({
     }
 
     const propMap: Record<string, PrimitiveValue> = {
-      // @ts-expect-error -- node id is being generated in ssrStyles.ts, currently missing ComponentTreeNode type
       cfSsrClassName: node.id
-        ? // @ts-expect-error -- node id is being generated in ssrStyles.ts, currently missing ComponentTreeNode type
-          getPatternChildNodeClassName?.(node.id)
+        ? getPatternChildNodeClassName?.(node.id)
         : node.variables.cfSsrClassName
           ? resolveDesignValue(
               (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,

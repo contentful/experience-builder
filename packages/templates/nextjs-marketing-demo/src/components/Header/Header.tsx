@@ -1,6 +1,6 @@
 import React from 'react';
-import Nav from './Nav';
-import styles from './header.module.css';
+import Nav from './HeaderNav';
+import styles from './styles.module.css';
 import Logo from '@/assets/Logo.svg';
 
 const Header: React.FC = () => {
