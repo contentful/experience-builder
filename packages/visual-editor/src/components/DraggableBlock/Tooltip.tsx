@@ -9,9 +9,17 @@ interface Props {
   label: string;
   isContainer: boolean;
   isAssemblyBlock: boolean;
+  isSelected: boolean;
 }
 
-const Tooltip: React.FC<Props> = ({ coordinates, id, label, isAssemblyBlock, isContainer }) => {
+const Tooltip: React.FC<Props> = ({
+  coordinates,
+  id,
+  label,
+  isAssemblyBlock,
+  isContainer,
+  isSelected,
+}) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   const previewSize = '100%'; // This should be based on breakpoints and added to usememo dependency array
@@ -33,6 +41,10 @@ const Tooltip: React.FC<Props> = ({ coordinates, id, label, isAssemblyBlock, isC
     // Ignore eslint because we intentionally want to trigger this whenever a user clicks on a container/component which is tracked by these coordinates of the component being clicked being changed
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinates, id, tooltipRef.current]);
+
+  if (isSelected) {
+    return null;
+  }
 
   return (
     <div data-tooltip className={styles.tooltipWrapper}>
