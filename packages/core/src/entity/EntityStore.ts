@@ -5,6 +5,7 @@ import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
 import { isLink } from '@/utils/isLink';
+import { gatherUsedComponentsWithDeepRefernces } from '@/fetchers/gatherUsedComponentsWithDeepReferences';
 type EntityStoreArgs = {
   experienceEntry: ExperienceEntry | Entry;
   entities: Array<Entry | Asset>;
@@ -14,6 +15,7 @@ type EntityStoreArgs = {
 export class EntityStore extends EntityStoreBase {
   private _experienceEntry: ExperienceFields | undefined;
   private _unboundValues: ExperienceUnboundValues | undefined;
+  private _usedComponentsWithDeepReferences: ExperienceEntry[];
 
   constructor(json: string);
   constructor({ experienceEntry, entities, locale }: EntityStoreArgs);
@@ -31,6 +33,9 @@ export class EntityStore extends EntityStoreBase {
       });
       this._experienceEntry = _experienceEntry;
       this._unboundValues = _unboundValues;
+      this._usedComponentsWithDeepReferences = gatherUsedComponentsWithDeepRefernces(
+        this._experienceEntry,
+      );
     } else {
       const { experienceEntry, entities, locale } = options;
       super({ entities, locale });
@@ -38,6 +43,9 @@ export class EntityStore extends EntityStoreBase {
       if (isExperienceEntry(experienceEntry)) {
         this._experienceEntry = (experienceEntry as ExperienceEntry).fields;
         this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
+        this._usedComponentsWithDeepReferences = gatherUsedComponentsWithDeepRefernces(
+          this._experienceEntry,
+        );
       } else {
         throw new Error('Provided entry is not experience entry');
       }
@@ -69,7 +77,7 @@ export class EntityStore extends EntityStoreBase {
   }
 
   public get usedComponents() {
-    return this._experienceEntry?.usedComponents ?? [];
+    return this._usedComponentsWithDeepReferences ?? [];
   }
 
   /**

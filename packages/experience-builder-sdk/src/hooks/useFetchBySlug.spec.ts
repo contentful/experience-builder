@@ -75,6 +75,7 @@ describe('useFetchBySlug', () => {
         content_type: experienceTypeId,
         'fields.slug': slug,
         locale: localeCode,
+        include: 3,
       });
 
       expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {

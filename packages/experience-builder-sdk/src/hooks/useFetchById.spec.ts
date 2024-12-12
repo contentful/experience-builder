@@ -67,6 +67,7 @@ describe('useFetchById', () => {
         content_type: experienceTypeId,
         'sys.id': experienceEntry.sys.id,
         locale: localeCode,
+        include: 3,
       });
 
       expect(clientMock.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(1, {

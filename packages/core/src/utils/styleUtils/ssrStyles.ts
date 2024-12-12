@@ -117,7 +117,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         break;
       }
 
-      const usedComponents = experience.entityStore?.experienceEntryFields?.usedComponents ?? [];
+      const usedComponents = experience.entityStore?.usedComponents ?? [];
 
       const isPatternNode = checkIsAssemblyNode({
         componentId: currentNode.definitionId,
@@ -457,7 +457,8 @@ export const resolveBackgroundImageBinding = ({
 
     const userSetValue = componentVariablesOverwrites?.[variableDefinitionKey];
 
-    if (!userSetValue) {
+    // userSetValue is a ComponentValue we can safely return the default value
+    if (!userSetValue || userSetValue.type === 'ComponentValue') {
       return defaultValue as string | undefined;
     }
 

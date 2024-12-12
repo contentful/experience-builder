@@ -47,6 +47,7 @@ export const fetchExperienceEntry = async ({
   const entries = await client.getEntries({
     content_type: experienceTypeId,
     locale,
+    include: 3, // fetching max 3 level deep references due to nested patterns
     ...filter,
   });
 
