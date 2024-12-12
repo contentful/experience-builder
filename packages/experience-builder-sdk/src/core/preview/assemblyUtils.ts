@@ -96,7 +96,7 @@ export const resolveAssembly = ({
   }
 
   const componentId = node.definitionId as string;
-  const assembly = entityStore.experienceEntryFields?.usedComponents?.find(
+  const assembly = entityStore.usedComponents?.find(
     (component) => component.sys.id === componentId,
   );
 
