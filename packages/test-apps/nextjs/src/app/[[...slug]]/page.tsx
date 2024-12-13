@@ -9,7 +9,7 @@ type Page = {
 };
 
 export default async function ExperiencePage({ params, searchParams }: Page) {
-  const { locale = 'en-US', slug = 'home-page' } = (await params) || {};
+  const { locale = 'en-US', slug = 'home-page' } = await params;
   const { isPreview, expEditorMode } = await searchParams;
   const preview = isPreview === 'true';
   const editorMode = expEditorMode === 'true';
