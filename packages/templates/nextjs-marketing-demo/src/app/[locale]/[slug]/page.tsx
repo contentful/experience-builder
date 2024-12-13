@@ -13,13 +13,13 @@ import styles from '@/app/page.module.css';
 import '../../../studio-config';
 
 type Page = {
-  params: Promise<{ locale?: string; slug?: string; preview?: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: { locale?: string; slug?: string; preview?: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 export default async function ExperiencePage({ params, searchParams }: Page) {
-  const { locale = 'en-US', slug = 'home-page' } = await params;
-  const { isPreview, expEditorMode } = await searchParams;
+  const { locale = 'en-US', slug = 'home-page' } = params || {};
+  const { isPreview, expEditorMode } = searchParams;
   const preview = isPreview === 'true';
   const editorMode = expEditorMode === 'true';
   const { experience, error } = await getExperience(slug, locale, preview, editorMode);
