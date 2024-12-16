@@ -80,6 +80,7 @@ describe('fetchExperienceEntry', () => {
     expect(mockClient.getEntries).toHaveBeenCalledWith({
       content_type: 'books',
       locale: 'en-US',
+      include: 3,
       'fields.slug': 'slug',
     });
 
@@ -93,6 +94,7 @@ describe('fetchExperienceEntry', () => {
     expect(mockClient.getEntries).toHaveBeenCalledWith({
       content_type: 'books',
       locale: 'en-US',
+      include: 3,
       'sys.id': 'entry-id',
     });
 

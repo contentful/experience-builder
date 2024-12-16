@@ -1,5 +1,10 @@
 import { CONTENTFUL_COMPONENTS, LATEST_SCHEMA_VERSION } from '@/constants';
-import { ExperienceComponentSettings, ExperienceEntry, SchemaVersions } from '@/types';
+import {
+  ExperienceComponentSettings,
+  ExperienceEntry,
+  SchemaVersions,
+  ExperienceFields,
+} from '@/types';
 import { entityIds } from './entities';
 
 const experienceFields: ExperienceEntry['fields'] = {
@@ -273,4 +278,254 @@ export const createAssemblyEntry = ({
       } satisfies ExperienceComponentSettings,
     },
   };
+};
+
+export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
+  title: 'root-experience-1',
+  slug: 'root-experience-1',
+  componentTree: {
+    breakpoints: [
+      {
+        id: 'test-desktop',
+        query: '*',
+        displayName: 'All Sizes',
+        displayIcon: 'desktop',
+        previewSize: '100%',
+      },
+    ],
+    schemaVersion: '2023-09-28',
+    children: [
+      {
+        displayName: 'Container',
+        definitionId: 'contentful-container',
+        variables: {
+          cfBackgroundColor: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              'test-desktop': 'rgba(240, 112, 182, 1)',
+              desktop: 'rgba(240, 88, 204, 1)',
+            },
+          },
+        },
+        children: [
+          {
+            displayName: '[PN] Sample 1',
+            definitionId: '7Mzy9q1KVLJckxz7jNyNPt',
+            variables: {
+              'e-XwpdP': {
+                type: 'UnboundValue',
+                key: 'FQQM1q8hyfCKvCQjvGb0a',
+              },
+            },
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+  dataSource: {},
+  unboundValues: {},
+  usedComponents: [
+    {
+      metadata: {
+        tags: [],
+        concepts: [],
+      },
+      sys: {
+        space: {
+          sys: {
+            type: 'Link',
+            linkType: 'Space',
+            id: 'test-space',
+          },
+        },
+        type: 'Entry',
+        id: 'root-pattern-1',
+        contentType: {
+          sys: {
+            type: 'Link',
+            linkType: 'ContentType',
+            id: 'layout',
+          },
+        },
+        revision: 1,
+        createdAt: '2023-09-28T00:00:00.000Z',
+        updatedAt: '2023-09-28T00:00:00.000Z',
+        environment: {
+          sys: {
+            id: 'master',
+            type: 'Link',
+            linkType: 'Environment',
+          },
+        },
+        locale: 'en-US',
+      },
+      fields: {
+        title: 'Root Pattern 1',
+        slug: 'root-pattern-1',
+        componentTree: {
+          breakpoints: [
+            {
+              id: 'test-desktop',
+              query: '*',
+              displayName: 'All Sizes',
+              displayIcon: 'desktop',
+              previewSize: '100%',
+            },
+          ],
+          schemaVersion: '2023-09-28',
+          children: [
+            {
+              definitionId: 'contentful-container',
+              displayName: 'Container',
+              variables: {
+                cfBackgroundColor: {
+                  type: 'DesignValue',
+                  valuesByBreakpoint: {
+                    'test-desktop': 'rgba(93, 179, 91, 1)',
+                  },
+                },
+              },
+              children: [
+                {
+                  definitionId: 'ernoT986eKmaUIVK7c2vO',
+                  displayName: '[NN] sample 1',
+                  variables: {
+                    lRFhtDQ: {
+                      key: '_uKSlt2',
+                      type: 'ComponentValue',
+                    },
+                  },
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+        dataSource: {},
+        unboundValues: {},
+        componentSettings: {
+          variableDefinitions: {
+            _uKSlt2: {
+              displayName: 'Background image',
+              type: 'Media',
+              description: 'Background image for component',
+              defaultValue: {
+                key: '7VdIpMIm-BKBlFhXXlg-w',
+                type: 'UnboundValue',
+              },
+            },
+          },
+        },
+        usedComponents: [
+          {
+            metadata: {
+              tags: [],
+              concepts: [],
+            },
+            sys: {
+              space: {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Space',
+                  id: 'tofsejyzyo24',
+                },
+              },
+              type: 'Entry',
+              id: 'nested-pattern-1',
+              contentType: {
+                sys: {
+                  type: 'Link',
+                  linkType: 'ContentType',
+                  id: 'hostedLayout',
+                },
+              },
+              revision: 1,
+              environment: {
+                sys: {
+                  id: 'master',
+                  type: 'Link',
+                  linkType: 'Environment',
+                },
+              },
+              locale: 'en-US',
+              createdAt: '2023-09-28T00:00:00.000Z',
+              updatedAt: '2023-09-28T00:00:00.000Z',
+            },
+            fields: {
+              title: 'Nested Pattern 1',
+              slug: 'nested-pattern-1',
+              componentTree: {
+                breakpoints: [
+                  {
+                    id: 'test-desktop',
+                    query: '*',
+                    displayName: 'All Sizes',
+                    displayIcon: 'desktop',
+                    previewSize: '100%',
+                  },
+                ],
+                schemaVersion: '2023-09-28',
+                children: [
+                  {
+                    definitionId: 'contentful-columns',
+                    displayName: 'Columns',
+                    variables: {
+                      cfBackgroundImageUrl: {
+                        key: 'lRFhtDQ',
+                        type: 'ComponentValue',
+                      },
+                    },
+                    children: [
+                      {
+                        definitionId: 'contentful-single-column',
+                        displayName: 'Column',
+                        variables: {},
+                        children: [
+                          {
+                            definitionId: 'contentful-heading',
+                            displayName: 'Heading',
+                            variables: {},
+                            children: [],
+                          },
+                        ],
+                      },
+                      {
+                        definitionId: 'contentful-single-column',
+                        displayName: 'Column',
+                        variables: {},
+                        children: [
+                          {
+                            definitionId: 'contentful-button',
+                            displayName: 'Button',
+                            variables: {},
+                            children: [],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              dataSource: {},
+              unboundValues: {},
+              componentSettings: {
+                variableDefinitions: {
+                  lRFhtDQ: {
+                    displayName: 'Background image',
+                    type: 'Media',
+                    description: 'Background image for component',
+                    defaultValue: {
+                      key: 'z_0NfuFUKFQqHeyWPFVhX',
+                      type: 'UnboundValue',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  ],
 };
