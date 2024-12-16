@@ -90,6 +90,7 @@ export const CompositionBlock = ({
       };
     }
 
+    // TODO: remove the deep tertiaries for better clarity and maintainability
     const propMap: Record<string, PrimitiveValue> = {
       cfSsrClassName:
         node.id && getPatternChildNodeClassName
@@ -201,6 +202,7 @@ export const CompositionBlock = ({
 
   const { component } = componentRegistration;
 
+  // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {
     if (isAssembly) {
       // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
