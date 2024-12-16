@@ -91,14 +91,15 @@ export const CompositionBlock = ({
     }
 
     const propMap: Record<string, PrimitiveValue> = {
-      cfSsrClassName: node.id
-        ? getPatternChildNodeClassName?.(node.id)
-        : node.variables.cfSsrClassName
-          ? resolveDesignValue(
-              (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
-              'cfSsrClassName',
-            )
-          : undefined,
+      cfSsrClassName:
+        node.id && getPatternChildNodeClassName
+          ? getPatternChildNodeClassName?.(node.id)
+          : node.variables.cfSsrClassName
+            ? resolveDesignValue(
+                (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+                'cfSsrClassName',
+              )
+            : undefined,
     };
 
     const props = Object.entries(componentRegistration.definition.variables).reduce(
@@ -220,7 +221,9 @@ export const CompositionBlock = ({
       ? node.children.map((childNode: ComponentTreeNode, index) => {
           return (
             <CompositionBlock
-              getPatternChildNodeClassName={_getPatternChildNodeClassName}
+              getPatternChildNodeClassName={
+                getPatternChildNodeClassName && _getPatternChildNodeClassName
+              }
               node={childNode}
               key={index}
               locale={locale}
