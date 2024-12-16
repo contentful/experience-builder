@@ -222,7 +222,9 @@ export const CompositionBlock = ({
           return (
             <CompositionBlock
               getPatternChildNodeClassName={
-                getPatternChildNodeClassName && _getPatternChildNodeClassName
+                isAssembly || getPatternChildNodeClassName
+                  ? _getPatternChildNodeClassName
+                  : undefined
               }
               node={childNode}
               key={index}
