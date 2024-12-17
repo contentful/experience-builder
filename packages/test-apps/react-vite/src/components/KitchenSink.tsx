@@ -68,7 +68,7 @@ const KitchenSink: React.FC<KitchenSinkProps> = ({
         <div>
           <h3>Rich Text</h3>
           <h4>type: {typeof richText}</h4>
-          <div>{JSON.stringify(richText, null, 2)}</div>
+          <pre>{JSON.stringify(richText, null, 2)}</pre>
           <div>
             <RichText value={richText} />
           </div>
