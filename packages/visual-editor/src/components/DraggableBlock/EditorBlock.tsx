@@ -137,6 +137,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
         coordinates={coordinates}
         isAssemblyBlock={isPatternNode || isPatternComponent}
         isContainer={isContainer}
+        isSelected={isSelected}
         label={displayName || 'No label specified'}
       />
       <Placeholder {...placeholder} id={componentId} />
