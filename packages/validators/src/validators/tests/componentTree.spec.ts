@@ -275,7 +275,7 @@ describe('componentTree', () => {
       },
     );
 
-    it.each(['some-uuid', undefined])('succeeds if id is %s', (id) => {
+    it.each(['someuuid', undefined])('succeeds if id is %s', (id) => {
       const componentTree = experience.fields.componentTree[locale];
       const child = {
         id,
