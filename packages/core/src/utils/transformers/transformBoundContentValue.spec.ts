@@ -10,6 +10,7 @@ import {
   entryWithEmbeddedEntry,
   entryWithAnotherEmbeddedEntry,
   entryWithEmbeddedEntries,
+  entryWithDeeplyEmbeddedEntitiesInRichText,
 } from '@/test/__fixtures__/entities';
 import {
   BoundValue,
@@ -28,6 +29,7 @@ const entityStore = new EditorModeEntityStore({
     entryWithAnotherEmbeddedEntry,
     entryWithEmbeddedEntryInRichText,
     entryWithEmbeddedAssetInRichText,
+    entryWithDeeplyEmbeddedEntitiesInRichText,
     ...assets,
   ],
   locale: 'en-US',
@@ -260,6 +262,93 @@ describe('transformBoundContentValue', () => {
             ],
             data: {},
             nodeType: 'paragraph',
+          },
+        ],
+        data: {},
+        nodeType: 'document',
+      });
+    });
+
+    it('when rich text has a deeply embedded entry in the document node tree, it should transform the rich text and resolve the entry', () => {
+      const variableName = 'richText';
+      const resolveDesignValue = vitest.fn();
+      const binding: UnresolvedLink<'Entry'> = {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: entityIds.ENTRY_WITH_DEEPLY_EMBEDDED_ENTITIES_IN_RICH_TEXT,
+        },
+      };
+
+      const path = (variables.body as BoundValue).path;
+      const result = transformBoundContentValue(
+        variables,
+        entityStore,
+        binding,
+        resolveDesignValue,
+        variableName,
+        componentDefinition.variables.description,
+        path,
+      );
+      expect(result).toEqual({
+        content: [
+          {
+            nodeType: 'unordered-list',
+            data: {},
+            content: [
+              {
+                nodeType: 'list-item',
+                data: {},
+                content: [
+                  {
+                    nodeType: 'embedded-asset-block',
+                    data: {
+                      target: assets.find((asset) => asset.sys.id === entityIds.ASSET1)!,
+                    },
+                    content: [],
+                  },
+                ],
+              },
+              {
+                nodeType: 'list-item',
+                data: {},
+                content: [
+                  {
+                    nodeType: 'embedded-entry-block',
+                    data: {
+                      target: entries.find((entry) => entry.sys.id === entityIds.ENTRY1)!,
+                    },
+                    content: [],
+                  },
+                ],
+              },
+              {
+                nodeType: 'list-item',
+                data: {},
+                content: [
+                  {
+                    nodeType: 'asset-hyperlink',
+                    data: {
+                      target: assets.find((entry) => entry.sys.id === entityIds.ASSET1)!,
+                    },
+                    content: [],
+                  },
+                ],
+              },
+              {
+                nodeType: 'list-item',
+                data: {},
+                content: [
+                  {
+                    nodeType: 'entry-hyperlink',
+                    data: {
+                      target: entries.find((entry) => entry.sys.id === entityIds.ENTRY2)!,
+                    },
+                    content: [],
+                  },
+                ],
+              },
+            ],
           },
         ],
         data: {},
