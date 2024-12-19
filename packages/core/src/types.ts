@@ -362,7 +362,7 @@ export interface Experience<T extends EntityStore = EntityStore> {
 }
 
 export type ResolveDesignValueType = (
-  valuesByBreakpoint: ValuesByBreakpoint,
+  valuesByBreakpoint: ValuesByBreakpoint | undefined,
   variableName: string,
 ) => PrimitiveValue;
 
