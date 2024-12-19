@@ -58,7 +58,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   );
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
-    (valuesByBreakpoint: ValuesByBreakpoint, variableName: string): PrimitiveValue => {
+    (valuesByBreakpoint, variableName) => {
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,

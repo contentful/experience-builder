@@ -96,7 +96,7 @@ export const isValidBreakpointValue = (value: PrimitiveValue) => {
 };
 
 export const getValueForBreakpoint = (
-  valuesByBreakpoint: ValuesByBreakpoint,
+  valuesByBreakpoint: ValuesByBreakpoint | undefined,
   breakpoints: Breakpoint[],
   activeBreakpointIndex: number,
   variableName: string,
@@ -136,5 +136,4 @@ export const getValueForBreakpoint = (
     // Old design properties did not support breakpoints, keep for backward compatibility
     return valuesByBreakpoint;
   }
-  return undefined;
 };
