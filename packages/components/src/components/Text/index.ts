@@ -41,7 +41,7 @@ export const TextComponentDefinition: ComponentDefinition = {
       defaultValue: 'fit-content',
     },
     value: {
-      displayName: 'Value',
+      displayName: 'Text',
       description: 'The text to display. If not provided, children will be used instead.',
       type: 'Text',
       defaultValue: 'Text',
@@ -70,7 +70,7 @@ export const TextComponentDefinition: ComponentDefinition = {
       defaultValue: '',
     },
     target: {
-      displayName: 'Target',
+      displayName: 'URL behavior',
       type: 'Text',
       defaultValue: '',
     },
