@@ -134,7 +134,7 @@ export const builtInStyles: Partial<DesignVariableMap> = {
     defaultValue: '0px',
   },
   cfHyperlink: {
-    displayName: 'Hyperlink',
+    displayName: 'URL',
     type: 'Hyperlink',
     defaultValue: '',
     validations: {
@@ -143,7 +143,7 @@ export const builtInStyles: Partial<DesignVariableMap> = {
     description: 'hyperlink for section or container',
   },
   cfOpenInNewTab: {
-    displayName: 'Hyperlink behaviour',
+    displayName: 'URL behaviour',
     type: 'Boolean',
     defaultValue: false,
     description: 'Open in new tab',

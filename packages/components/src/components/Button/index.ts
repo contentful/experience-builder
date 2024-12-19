@@ -82,7 +82,7 @@ export const ButtonComponentDefinition: ComponentDefinition = {
       defaultValue: 'center',
     },
     label: {
-      displayName: 'Label',
+      displayName: 'Text',
       type: 'Text',
       defaultValue: 'Button',
     },
@@ -91,7 +91,7 @@ export const ButtonComponentDefinition: ComponentDefinition = {
       type: 'Hyperlink',
     },
     target: {
-      displayName: 'Target',
+      displayName: 'URL behavior',
       type: 'Text',
       defaultValue: '',
     },

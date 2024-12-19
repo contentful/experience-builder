@@ -56,7 +56,7 @@ export const RichTextComponentDefinition: ComponentDefinition = {
       defaultValue: 'fit-content',
     },
     value: {
-      displayName: 'Value',
+      displayName: 'Text',
       description: 'The text to display.',
       type: 'RichText',
       defaultValue: {
