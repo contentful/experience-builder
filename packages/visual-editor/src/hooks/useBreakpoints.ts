@@ -1,4 +1,9 @@
-import type { Breakpoint, ResolveDesignValueType } from '@contentful/experiences-core/types';
+import type {
+  ValuesByBreakpoint,
+  Breakpoint,
+  PrimitiveValue,
+  ResolveDesignValueType,
+} from '@contentful/experiences-core/types';
 import {
   mediaQueryMatcher,
   getFallbackBreakpointIndex,
@@ -53,7 +58,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   );
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
-    (valuesByBreakpoint, variableName) => {
+    (valuesByBreakpoint: ValuesByBreakpoint, variableName: string): PrimitiveValue => {
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,

@@ -78,23 +78,29 @@ export const CompositionBlock = ({
   }, [isAssembly, node.definitionId]);
 
   const nodeProps = useMemo(() => {
-    // In SSR, we store the className under breakpoints[0] which is resolved here to the actual string
-    const cfSsrClassNameValues = node.variables.cfSsrClassName as DesignValue | undefined;
-    const cfSsrClassName = resolveDesignValue(
-      cfSsrClassNameValues?.valuesByBreakpoint,
-      'cfSsrClassName',
-    );
-
     // Don't enrich the assembly wrapper node with props
     if (!componentRegistration || isAssembly) {
-      return { cfSsrClassName };
+      return {
+        cfSsrClassName: node.variables.cfSsrClassName
+          ? resolveDesignValue(
+              (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+              'cfSsrClassName',
+            )
+          : undefined,
+      };
     }
 
+    // TODO: remove the deep tertiaries for better clarity and maintainability
     const propMap: Record<string, PrimitiveValue> = {
       cfSsrClassName:
         node.id && getPatternChildNodeClassName
-          ? getPatternChildNodeClassName(node.id)
-          : cfSsrClassName,
+          ? getPatternChildNodeClassName?.(node.id)
+          : node.variables.cfSsrClassName
+            ? resolveDesignValue(
+                (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint,
+                'cfSsrClassName',
+              )
+            : undefined,
     };
 
     const props = Object.entries(componentRegistration.definition.variables).reduce(
@@ -178,13 +184,11 @@ export const CompositionBlock = ({
 
     return props;
   }, [
-    resolveDesignValue,
-    node.variables,
-    node.id,
-    node.children,
     componentRegistration,
     isAssembly,
-    getPatternChildNodeClassName,
+    node.children,
+    node.variables,
+    resolveDesignValue,
     entityStore,
     hyperlinkPattern,
     locale,
@@ -202,9 +206,14 @@ export const CompositionBlock = ({
   const _getPatternChildNodeClassName = (childNodeId: string) => {
     if (isAssembly) {
       // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
-      const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[childNodeId];
-      if (!classesForNode) return undefined;
-      return resolveDesignValue(classesForNode.valuesByBreakpoint, 'cfSsrClassName') as string;
+      const classesForNode = node.variables.cfSsrClassName[childNodeId];
+      if (classesForNode) {
+        return resolveDesignValue(
+          (classesForNode as DesignValue).valuesByBreakpoint,
+          'cfSsrClassName',
+        ) as string;
+      }
+      return;
     }
     return getPatternChildNodeClassName?.(childNodeId);
   };
