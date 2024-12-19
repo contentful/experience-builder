@@ -1,9 +1,4 @@
-import type {
-  ValuesByBreakpoint,
-  Breakpoint,
-  PrimitiveValue,
-  ResolveDesignValueType,
-} from '@contentful/experiences-core/types';
+import type { Breakpoint, ResolveDesignValueType } from '@contentful/experiences-core/types';
 import {
   mediaQueryMatcher,
   getFallbackBreakpointIndex,
