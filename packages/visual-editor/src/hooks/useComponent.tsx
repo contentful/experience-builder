@@ -85,23 +85,12 @@ export const useComponent = ({
 
     const { dragProps = {} } = props || {};
 
-    const {
-      editorMode: isInExpEditorMode,
-      renderDropzone: _renderDropzone,
-      node: _node,
-      ...customComponentProps
-    } = componentProps;
-
-    const modifiedProps =
-      isStructureComponent || isPatternNode ? componentProps : customComponentProps;
-
     const element = React.createElement(
       ImportedComponentErrorBoundary,
       { componentId: node.data.blockId },
       React.createElement(componentRegistration.component, {
-        ...modifiedProps,
+        ...componentProps,
         dragProps,
-        isInExpEditorMode,
       }),
     );
 

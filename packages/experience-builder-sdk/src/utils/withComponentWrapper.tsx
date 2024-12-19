@@ -47,8 +47,7 @@ export function withComponentWrapper<T>(
         {...restOfDragProps}
         ref={(refNode: HTMLElement | null) => {
           if (innerRef && refNode) innerRef(refNode);
-        }}
-        {...props}>
+        }}>
         {ToolTipAndPlaceholder}
         <Component className={classNames(classes)} {...(props as T)} />
       </div>
