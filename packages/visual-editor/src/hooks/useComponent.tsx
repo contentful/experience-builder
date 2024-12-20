@@ -17,7 +17,7 @@ import { useEntityStore } from '@/store/entityStore';
 import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
 import { isContentfulStructureComponent } from '@contentful/experiences-core';
-import { MissingComponentPlacehoder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
+import { MissingComponentPlaceholder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
 import { useTreeStore } from '@/store/tree';
 import { getItem } from '@/utils/getItem';
 
@@ -80,7 +80,7 @@ export const useComponent = ({
 
   const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
     if (!componentRegistration) {
-      return <MissingComponentPlacehoder blockId={node.data.blockId} />;
+      return <MissingComponentPlaceholder blockId={node.data.blockId} />;
     }
 
     const { dragProps = {} } = props || {};
@@ -99,6 +99,11 @@ export const useComponent = ({
     }
 
     const { children, innerRef, Tag = 'div', ToolTipAndPlaceholder, style, ...rest } = dragProps;
+    const {
+      'data-cf-node-block-id': dataCfNodeBlockId,
+      'data-cf-node-block-type': dataCfNodeBlockType,
+      'data-cf-node-id': dataCfNodeId,
+    } = componentProps;
 
     return (
       <Tag
@@ -106,7 +111,10 @@ export const useComponent = ({
         style={{ ...style, ...wrapperStyles }}
         ref={(refNode: HTMLElement | null) => {
           if (innerRef && refNode) innerRef(refNode);
-        }}>
+        }}
+        data-cf-node-id={dataCfNodeId}
+        data-cf-node-block-id={dataCfNodeBlockId}
+        data-cf-node-block-type={dataCfNodeBlockType}>
         {ToolTipAndPlaceholder}
         {element}
       </Tag>
