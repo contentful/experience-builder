@@ -1,0 +1,2 @@
+# Studio Experiences templates
+This folder contains apps that are used for copy into other projects. For example, the CLI tool will have options for the user to use specific templates which are copied from this directory. There could be tools in the Web UI in Trials for example where a user can use an out of the box project from here.
