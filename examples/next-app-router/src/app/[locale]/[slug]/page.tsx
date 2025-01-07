@@ -5,13 +5,13 @@ import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
 import '@/studio-config';
 
 type Page = {
-  params: { locale?: string; slug?: string; preview?: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ locale?: string; slug?: string; preview?: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function ExperiencePage({ params, searchParams }: Page) {
-  const { locale = 'en-US', slug = 'home-page' } = params || {};
-  const { isPreview, expEditorMode } = searchParams;
+  const { locale = 'en-US', slug = 'home-page' } = (await params) || {};
+  const { isPreview, expEditorMode } = await searchParams;
   const preview = isPreview === 'true';
   const editorMode = expEditorMode === 'true';
   const { experience, error } = await getExperience(slug, locale, preview, editorMode);
