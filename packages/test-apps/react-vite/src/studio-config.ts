@@ -5,9 +5,25 @@ import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import ColorfulBox from './components/ColorfulBox/ColorfulBox';
+import { CustomContainer } from './components/CustomContainer/CustomContainer';
 
 defineComponents(
   [
+    {
+      component: CustomContainer,
+      definition: {
+        id: 'custom-container',
+        name: 'Custom Container',
+        category: 'Custom Components',
+        children: true,
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfHeight', 'cfBackgroundColor'],
+        variables: {},
+      },
+      options: {
+        // wrapComponent: false, // disables the component wrapper
+        // wrapContainerWidth: '100%', // forces the component width to 100% in editor mode
+      },
+    },
     {
       component: ColorfulBox,
       definition: {
