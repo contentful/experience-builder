@@ -46,24 +46,6 @@ export const TextComponentDefinition: ComponentDefinition = {
       type: 'Text',
       defaultValue: 'Text',
     },
-    as: {
-      displayName: 'As',
-      description: 'Renders the text in a specific HTML tag.',
-      type: 'Text',
-      defaultValue: 'p',
-      validations: {
-        in: [
-          { value: 'p', displayName: 'p' },
-          { value: 'span', displayName: 'span' },
-          { value: 'div', displayName: 'div' },
-          { value: 'label', displayName: 'label' },
-          { value: 'caption', displayName: 'caption' },
-          { value: 'small', displayName: 'small' },
-          { value: 'strong', displayName: 'strong' },
-          { value: 'em', displayName: 'em' },
-        ],
-      },
-    },
     url: {
       displayName: 'URL',
       type: 'Text',
