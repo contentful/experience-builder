@@ -5,7 +5,6 @@ import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import ColorfulBox from './components/ColorfulBox/ColorfulBox';
-import ExpEditorMode from './components/ExpEditorMode';
 
 defineComponents(
   [
@@ -19,24 +18,6 @@ defineComponents(
       },
       options: {
         wrapContainerWidth: '50%',
-      },
-    },
-    {
-      component: ExpEditorMode,
-      definition: {
-        id: 'exp-editor-mode',
-        name: 'Exp Editor Mode',
-        category: 'Custom Components',
-        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBackgroundColor'],
-        variables: {
-          myValue: {
-            displayName: 'Value',
-            type: 'Text',
-          },
-        },
-      },
-      options: {
-        wrapComponent: false,
       },
     },
     {
