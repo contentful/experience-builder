@@ -47,10 +47,11 @@ export const TextComponentDefinition: ComponentDefinition = {
       defaultValue: 'Text',
     },
     as: {
-      displayName: 'As',
+      displayName: 'HTML tag',
       description: 'Renders the text in a specific HTML tag.',
       type: 'Text',
       defaultValue: 'p',
+      group: 'style',
       validations: {
         in: [
           { value: 'p', displayName: 'p' },
