@@ -4,7 +4,7 @@ export type MissingComponentPlaceholderProps = {
   blockId: string;
 };
 
-export const MissingComponentPlacehoder = ({ blockId }) => {
+export const MissingComponentPlaceholder = ({ blockId }) => {
   return (
     <div
       style={{
