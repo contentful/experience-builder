@@ -1,0 +1,30 @@
+{
+  "name": "gatsby-spa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "gatsby-spa",
+  "author": "ryunsong-contentful",
+  "keywords": [
+    "gatsby"
+  ],
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@contentful/experiences-sdk-react": "^1.27.1",
+    "gatsby": "^5.14.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "typescript": "^5.3.3"
+  }
+}
