@@ -113,9 +113,13 @@ const UnboundValuesSchema = z.record(
   }),
 );
 
+export const ComponentTreeNodeIdSchema = z
+  .string()
+  .regex(/^[a-zA-Z0-9]{1,8}$/, { message: 'Does not match /^[a-zA-Z0-9]{1,8}$/' });
+
 // Use helper schema to define a recursive schema with its type correctly below
 const BaseComponentTreeNodeSchema = z.object({
-  id: uuidKeySchema.optional(),
+  id: ComponentTreeNodeIdSchema.optional(),
   definitionId: DefinitionPropertyKeySchema,
   displayName: z.string().optional(),
   slotId: z.string().optional(),

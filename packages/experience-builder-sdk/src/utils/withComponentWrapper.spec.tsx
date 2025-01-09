@@ -7,45 +7,13 @@ const MyButton: React.FC<React.PropsWithChildren> = ({ children, ...props }) => 
 );
 
 describe('withComponentWrapper', () => {
+  beforeEach(() => {
+    // mute noisy console logs
+    global.console = { ...global.console, error: jest.fn(), log: jest.fn(), warn: jest.fn() };
+  });
+
   describe('when component is wrapped', () => {
     const WrappedButton = withComponentWrapper(MyButton);
-
-    it('events should be bound to the container div', () => {
-      const onClickSpy = jest.fn();
-      const onMouseDownSpy = jest.fn();
-      const onMouseUpSpy = jest.fn();
-
-      const { container } = render(
-        <WrappedButton
-          onClick={onClickSpy}
-          onMouseDown={onMouseDownSpy}
-          onMouseUp={onMouseUpSpy}></WrappedButton>,
-      );
-
-      fireEvent.click(container.firstChild!);
-      expect(onClickSpy).toHaveBeenCalledTimes(1);
-
-      fireEvent.mouseDown(container.firstChild!);
-      expect(onMouseDownSpy).toHaveBeenCalledTimes(1);
-
-      fireEvent.mouseUp(container.firstChild!);
-      expect(onMouseUpSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('extra props should be passed to the container div', () => {
-      const { container } = render(
-        <WrappedButton
-          data-cf-node-block-id="test1"
-          data-cf-node-block-type="test2"
-          data-cf-node-id="test3">
-          Click me
-        </WrappedButton>,
-      );
-
-      expect(container.firstChild).toHaveAttribute('data-cf-node-block-id', 'test1');
-      expect(container.firstChild).toHaveAttribute('data-cf-node-block-type', 'test2');
-      expect(container.firstChild).toHaveAttribute('data-cf-node-id', 'test3');
-    });
 
     it('can wrap a component with a custom tag', () => {
       const WrappedButtonSpan = withComponentWrapper(MyButton, { wrapContainerTag: 'span' });

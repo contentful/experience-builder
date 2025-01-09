@@ -67,9 +67,10 @@ export const HeadingComponentDefinition: ComponentDefinition = {
       defaultValue: 'Heading',
     },
     type: {
-      displayName: 'Type',
+      displayName: 'HTML tag',
       type: 'Text',
       defaultValue: 'h1',
+      group: 'style',
       description:
         'Determines the HTML tag of the heading. Value can be h1, h2, h3, h4, h5, or h6.',
       validations: {
