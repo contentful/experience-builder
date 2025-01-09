@@ -1,61 +1,25 @@
-import path from 'path';
-import { fetchById, detachExperienceStyles } from '@contentful/experiences-sdk-react';
+import React from 'react'
+import { ExperienceRoot, useFetchBySlug } from '@contentful/experiences-sdk-react';
 import { useContentfulClient } from '../utils/useContentfulClient';
 
-exports.createPages = async ({ graphql, actions, reporter }: any) => {
+const slug = 'ExperienceSlugExample'
+const localeCode = 'en-US';
+const experienceTypeId = process.env.GATSBY_CTFL_EXPERIENCE_TYPE || '';
+
+export default function ExperienceSlugExample() {
   const { client } = useContentfulClient();
-  const { createPage } = actions;
 
-  // Assume that your experience type id is "experience"
-  const response = await graphql(`
-    allContentfulExperience {
-      nodes {
-        contentful_id
-        slug
-        title
-        node_locale
-        sys {
-          contentType {
-            sys {
-              id
-            }
-          }
-        }
-      }
-    }
-  `);
+  const { experience, error, isLoading } = useFetchBySlug({
+    slug,
+    localeCode,
+    client,
+    experienceTypeId,
+  });
 
-  if (response.errors) {
-    // handle errors
-  }
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
 
-  const { nodes } = response.data.allContentfulExperience;
-
-  for (const node of nodes) {
-    const { slug, title, node_locale: localeCode, contentful_id, sys } = node;
-
-    const experienceEntry = await fetchById({
-        client,
-        experienceTypeId: sys.contentType.sys.id,
-        localeCode,
-        id: contentful_id
-    });
-
-    let experienceStyles = '';
-
-    if (experienceEntry) {
-      experienceStyles = detachExperienceStyles(experienceEntry) ?? '';
-    }
-
-    createPage({
-      path: `/experience/${slug}`,
-      component: path.resolve('src/templates/experiencePage.js'),
-      context: {
-        title,
-        experienceEntryJSON: JSON.stringify(experienceEntry),
-        locale: localeCode,
-        experienceStyles
-      }
-    });
-  }
-};
+  return (
+    <ExperienceRoot experience={experience} locale={localeCode} />
+  )
+}
