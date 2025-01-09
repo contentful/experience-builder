@@ -1,7 +1,7 @@
 import { ASSEMBLY_NODE_TYPE, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { useComponentProps } from './useComponentProps';
 import { ComponentDefinition, ExperienceTreeNode } from '@contentful/experiences-core/types';
-import { Mock, vi } from 'vitest';
+import { Mock, vi, it, describe } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import { useDraggedItemStore } from '@/store/draggedItem';
@@ -112,6 +112,7 @@ describe('useComponentProps', () => {
       variables: {
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
+        myValue: { type: 'Text', defaultValue: 'default' },
       },
     };
     const node: ExperienceTreeNode = {
@@ -132,8 +133,14 @@ describe('useComponentProps', () => {
               [desktop.id]: 'fit-content',
             },
           },
+          myValue: {
+            type: 'UnboundValue',
+            key: 'myValue',
+          },
         },
-        unboundValues: {},
+        unboundValues: {
+          myValue: { value: 'test' },
+        },
         dataSource: {},
         breakpoints: [],
       },
@@ -156,24 +163,61 @@ describe('useComponentProps', () => {
       expect(result.current.componentStyles.width).toEqual('50%');
       expect(result.current.componentStyles.height).toEqual('fit-content');
     });
+
+    it('should not return isInExpEditorMode for structural components', () => {
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node,
+          areEntitiesFetched,
+          resolveDesignValue,
+          renderDropzone,
+          definition,
+          userIsDragging,
+          options: { wrapComponent: false },
+        }),
+      );
+
+      expect(result.current.componentProps.isInExpEditorMode).toBeUndefined();
+    });
+
+    it('should not return unbound values in componentProps for structural components', () => {
+      vi.mock('@/store/editor', () => ({
+        useEditorStore: () => ({
+          myValue: { value: 'test' },
+        }),
+      }));
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node,
+          areEntitiesFetched,
+          resolveDesignValue,
+          renderDropzone,
+          definition,
+          userIsDragging,
+          options: { wrapComponent: false },
+        }),
+      );
+
+      expect(result.current.componentProps.myValue).toBeUndefined();
+    });
   });
 
-  describe('regular (non-structure) components', () => {
+  describe('custom components', () => {
     const definition: ComponentDefinition = {
-      id: 'box',
-      name: 'Box',
+      id: 'banner',
+      name: 'Banner',
       variables: {
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
         cfMaxWidth: { type: 'Text' },
         cfMargin: { type: 'Text' },
+        myValue: { type: 'Text', defaultValue: 'default' },
       },
     };
     const node: ExperienceTreeNode = {
       data: {
         id: 'id',
-        // This block id will identify the component as a regular (non-structure) component
-        blockId: 'box',
+        blockId: 'banner',
         props: {
           cfWidth: {
             type: 'DesignValue',
@@ -199,8 +243,14 @@ describe('useComponentProps', () => {
               [desktop.id]: '10px 0 10px 0',
             },
           },
+          myValue: {
+            type: 'UnboundValue',
+            key: 'myValue',
+          },
         },
-        unboundValues: {},
+        unboundValues: {
+          myValue: { value: 'test' },
+        },
         dataSource: {},
         breakpoints: [],
       },
@@ -250,29 +300,10 @@ describe('useComponentProps', () => {
       expect(result.current.componentStyles.maxWidth).toEqual('50%');
       expect(result.current.componentStyles.margin).toEqual('10px 0 10px 0');
     });
-  });
 
-  describe('custom components', () => {
-    const definition: ComponentDefinition = {
-      id: 'banner',
-      name: 'Banner',
-      variables: {},
-    };
-    const node: ExperienceTreeNode = {
-      data: {
-        id: 'id',
-        blockId: 'banner',
-        props: {},
-        unboundValues: {},
-        dataSource: {},
-        breakpoints: [],
-      },
-      children: [],
-      type: 'block',
-    };
-
-    ['50%', '100%'].forEach((width) => {
-      it(`should set the wrapper width to ${width} using the wrapContainerWidth option`, () => {
+    it.each(['50%', '100%'])(
+      `should set the wrapper width to %s using the wrapContainerWidth option`,
+      (width) => {
         const { result } = renderHook(() =>
           useComponentProps({
             node,
@@ -290,7 +321,44 @@ describe('useComponentProps', () => {
 
         // The component width should be set to 100% to fill the wrapper
         expect(result.current.componentStyles.width).toEqual('100%');
-      });
+      },
+    );
+
+    it('should return isInExpEditorMode as true for custom components', () => {
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node,
+          areEntitiesFetched,
+          resolveDesignValue,
+          renderDropzone,
+          definition,
+          userIsDragging,
+          options: { wrapComponent: false },
+        }),
+      );
+
+      expect(result.current.componentProps.isInExpEditorMode).toBe(true);
+    });
+
+    it('should return unbound values in componentProps for structural components', () => {
+      vi.mock('@/store/editor', () => ({
+        useEditorStore: () => ({
+          myValue: { value: 'test' },
+        }),
+      }));
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node,
+          areEntitiesFetched,
+          resolveDesignValue,
+          renderDropzone,
+          definition,
+          userIsDragging,
+          options: { wrapComponent: false },
+        }),
+      );
+
+      expect(result.current.componentProps.myValue).toBe('test');
     });
   });
 

@@ -40,9 +40,10 @@ type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'>
 export type ResolvedComponentProps = ComponentProps & {
   children?: React.JSX.Element | undefined;
   className: string;
-  editorMode: boolean;
-  node: ExperienceTreeNode;
-  renderDropzone: RenderDropzoneFunction;
+  editorMode?: boolean;
+  node?: ExperienceTreeNode;
+  renderDropzone?: RenderDropzoneFunction;
+  isInExpEditorMode?: boolean;
 };
 
 type UseComponentProps = {
@@ -228,6 +229,7 @@ export const useComponentProps = ({
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
   const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
+  const isPatternNode = node.type === ASSEMBLY_NODE_TYPE;
 
   const { overrideStyles, wrapperStyles } = useMemo(() => {
     // Move size styles to the wrapping div and override the component styles
@@ -302,19 +304,35 @@ export const useComponentProps = ({
     nodeId: node.data.id,
   });
 
-  const componentProps: ResolvedComponentProps = {
+  const sharedProps: ResolvedComponentProps = {
     'data-cf-node-id': node.data.id,
     'data-cf-node-block-id': node.data.blockId,
     'data-cf-node-block-type': node.type,
     className: (props.cfSsrClassName as string | undefined) ?? componentClass,
-    editorMode: true,
-    node,
-    renderDropzone,
-    ...sanitizeNodeProps(props),
     ...(definition?.children ? { children: renderDropzone(node) } : {}),
   };
 
-  return { componentProps, componentStyles, wrapperStyles };
+  const customComponentProps: ResolvedComponentProps = {
+    ...sharedProps,
+    isInExpEditorMode: true,
+    ...sanitizeNodeProps(props),
+  };
+
+  const structuralOrPatternComponentProps: ResolvedComponentProps = {
+    ...sharedProps,
+    editorMode: true,
+    node,
+    renderDropzone,
+  };
+
+  return {
+    componentProps:
+      isStructureComponent || isPatternNode
+        ? structuralOrPatternComponentProps
+        : customComponentProps,
+    componentStyles,
+    wrapperStyles,
+  };
 };
 
 const addExtraDropzonePadding = (padding: string) =>
