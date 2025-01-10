@@ -109,7 +109,10 @@ export const Text: React.FC<TextProps> = ({
   }
 
   return (
-    <a className="cf-text-link" href={url} {...(target ? { target } : {})}>
+    <a
+      className={combineClasses('cf-text-link', className)}
+      href={url}
+      {...(target ? { target } : {})}>
       {textAsTag}
     </a>
   );
