@@ -42,7 +42,7 @@ describe('Text', () => {
   });
 
   it('has a wrapping anchor tag with the class "cf-text-link" when a url is provided', () => {
-    cy.mount(<Text value="My Text" className="custom-class" url="#link" />);
+    cy.mount(<Text value="My Text" url="#link" />);
     cy.get('a').should('have.class', 'cf-text-link');
   });
 
