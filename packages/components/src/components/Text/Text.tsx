@@ -83,6 +83,20 @@ export const Text: React.FC<TextProps> = ({
   onClick,
   ...props
 }) => {
+  const Tag = as;
+
+  if (url) {
+    return (
+      <a
+        className={combineClasses('cf-text-link', className)}
+        href={url}
+        {...(target ? { target } : {})}
+        {...props}>
+        <Tag className="cf-text">{value ? value : children}</Tag>
+      </a>
+    );
+  }
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (onNavigate && url) {
       event.preventDefault();
@@ -91,9 +105,7 @@ export const Text: React.FC<TextProps> = ({
     onClick && onClick(event);
   };
 
-  const Tag = as;
-
-  const textAsTag = (
+  return (
     <Tag
       className={combineClasses('cf-text', className)}
       onClick={handleClick}
@@ -102,15 +114,5 @@ export const Text: React.FC<TextProps> = ({
       {...props}>
       {value ? value : children}
     </Tag>
-  );
-
-  if (!url) {
-    return textAsTag;
-  }
-
-  return (
-    <a className="cf-text-link" href={url} {...(target ? { target } : {})}>
-      {textAsTag}
-    </a>
   );
 };
