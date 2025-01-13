@@ -1,3 +1,7 @@
 .cf-text {
   white-space: pre-line;
 }
+
+.cf-text-link .cf-text {
+  margin: 0;
+}
