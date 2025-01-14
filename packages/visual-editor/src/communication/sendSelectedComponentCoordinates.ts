@@ -7,23 +7,31 @@ import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
  */
 export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   if (!instanceId) return;
-  let selectedElement = document.querySelector(`[data-cf-node-id="${instanceId}"]`);
+  let selectedElement = document.querySelector<HTMLElement>(`[data-cf-node-id="${instanceId}"]`);
+  let selectedAssemblyChild: HTMLElement | null | undefined = undefined;
+  let parent: HTMLElement | null | undefined = null;
 
-  let selectedAssemblyChild: Element | null | undefined = undefined;
+  // Use RegEx instead of split to match the last occurrence of '---' in the instanceId instead of the first one
+  const idMatch = instanceId.match(/(.*)---(.*)/);
+  const rootNodeId = idMatch?.[1] ?? instanceId;
+  const nodeLocation = idMatch?.[2];
+  const isNestedAssembly = nodeLocation && selectedElement?.dataset?.cfNodeBlockType === 'assembly';
 
-  const [rootNodeId, nodeLocation] = instanceId.split('---');
-
-  if (nodeLocation) {
-    selectedAssemblyChild = selectedElement;
-    selectedElement = document.querySelector(`[data-cf-node-id="${rootNodeId}"]`);
+  // For nested assemblied, return their selection rectangle and the upper assembly as parent
+  if (isNestedAssembly) {
+    parent = document.querySelector<HTMLElement>(`[data-cf-node-id="${rootNodeId}"]`);
+  } else {
+    // For assembly blocks, render the assembly as selected component
+    if (nodeLocation) {
+      selectedAssemblyChild = selectedElement;
+      selectedElement = document.querySelector(`[data-cf-node-id="${rootNodeId}"]`);
+    }
+    // Find the next parent of the selected element
+    parent = selectedElement?.parentElement;
   }
 
   // Finds the first parent that is a VisualEditorBlock
-  let parent = selectedElement?.parentElement;
-  while (parent) {
-    if (parent?.dataset?.cfNodeId) {
-      break;
-    }
+  while (parent && !parent.dataset?.cfNodeId) {
     parent = parent?.parentElement;
   }
 
