@@ -17,20 +17,21 @@ export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   const nodeLocation = idMatch?.[2];
   const isNestedAssembly = nodeLocation && selectedElement?.dataset?.cfNodeBlockType === 'assembly';
 
-  // For nested assemblied, return their selection rectangle and the upper assembly as parent
+  // For assembly blocks, render the assembly as selected component
+  if (!isNestedAssembly && nodeLocation) {
+    selectedAssemblyChild = selectedElement;
+    selectedElement = document.querySelector(`[data-cf-node-id="${rootNodeId}"]`);
+  }
+
+  // Find the next valid parent of the selected element
   if (isNestedAssembly) {
+    // For nested assemblies, return the upper assembly as parent
     parent = document.querySelector<HTMLElement>(`[data-cf-node-id="${rootNodeId}"]`);
   } else {
-    // For assembly blocks, render the assembly as selected component
-    if (nodeLocation) {
-      selectedAssemblyChild = selectedElement;
-      selectedElement = document.querySelector(`[data-cf-node-id="${rootNodeId}"]`);
-    }
-    // Find the next parent of the selected element
     parent = selectedElement?.parentElement;
   }
 
-  // Finds the first parent that is a VisualEditorBlock
+  // Ensure that the selection parent is a VisualEditorBlock
   while (parent && !parent.dataset?.cfNodeId) {
     parent = parent?.parentElement;
   }
