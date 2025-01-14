@@ -26,7 +26,7 @@ describe('Text', () => {
     cy.mount(
       <Text value="My Text" data-foo="bar">
         Children text
-      </Text>
+      </Text>,
     );
     cy.get('p').should('have.attr', 'data-foo', 'bar');
   });
@@ -39,5 +39,15 @@ describe('Text', () => {
   it('has a default class of "cf-text"', () => {
     cy.mount(<Text value="My Text" />);
     cy.get('p').should('have.class', 'cf-text');
+  });
+
+  it('has a wrapping anchor tag with the class "cf-text-link" when a url is provided', () => {
+    cy.mount(<Text value="My Text" url="#link" />);
+    cy.get('a').should('have.class', 'cf-text-link');
+  });
+
+  it('when className and url are provided, the className should be added to the anchor tag', () => {
+    cy.mount(<Text value="My Text" className="custom-class" url="#link" />);
+    cy.get('a').should('have.class', 'custom-class');
   });
 });
