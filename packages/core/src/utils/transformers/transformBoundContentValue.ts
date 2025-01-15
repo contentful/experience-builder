@@ -6,7 +6,7 @@ import {
 } from '@/types';
 import { transformRichText } from './transformRichText';
 import { transformMedia } from './media/transformMedia';
-import { EntityStoreBase } from '@/entity';
+import { EntityStoreBase } from '@/entity/EntityStoreBase';
 import { Asset, UnresolvedLink } from 'contentful';
 import { getBoundValue } from './getBoundValue';
 import { getResolvedEntryFromLink } from './getResolvedEntryFromLink';

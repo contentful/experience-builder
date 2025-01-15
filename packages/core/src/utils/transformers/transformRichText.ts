@@ -7,7 +7,7 @@ import {
 } from '@contentful/rich-text-types';
 import { getBoundValue } from './getBoundValue';
 import { Asset, Entry } from 'contentful';
-import { EntityStoreBase } from '@/entity';
+import { EntityStoreBase } from '@/entity/EntityStoreBase';
 
 export const transformRichText = (
   entryOrAsset: Entry | Asset,

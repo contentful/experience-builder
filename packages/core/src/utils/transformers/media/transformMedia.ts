@@ -10,8 +10,9 @@ import { Asset, AssetDetails, AssetFile } from 'contentful';
 import { getOptimizedBackgroundImageAsset } from './getOptimizedBackgroundImageAsset';
 import { getOptimizedImageAsset } from './getOptimizedImageAsset';
 import { getBoundValue } from '@/utils/transformers/getBoundValue';
-import { getTargetValueInPixels, isDeepPath, lastPathNamedSegmentEq, parseCSSValue } from '@/utils';
+import { getTargetValueInPixels, parseCSSValue } from '@/utils/utils';
 import { ValidFormats } from './mediaUtils';
+import { isDeepPath, lastPathNamedSegmentEq } from '@/utils/pathSchema';
 
 export const transformMedia = (
   asset: Asset,

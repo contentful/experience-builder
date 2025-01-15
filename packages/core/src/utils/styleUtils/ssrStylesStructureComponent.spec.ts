@@ -1,4 +1,4 @@
-import { createExperience, detachExperienceStyles } from '../../index';
+import { createExperience } from '@/fetchers/createExperience';
 import {
   ComponentTreeNode,
   DesignValue,
@@ -7,6 +7,7 @@ import {
   ExperienceUnboundValues,
 } from '../../types';
 import { Asset, Entry } from 'contentful';
+import { detachExperienceStyles } from './ssrStyles';
 
 const getExperienceEntryWithNode = ({
   node,

@@ -2,6 +2,14 @@
 module.exports = {
   forbidden: [
     {
+      name: 'no-import-main-index-barrel',
+      comment: "Don't import anything from the main src/index.ts, import from the specific module instead",
+      severity: 'warn',
+      from: {},
+      //eventually would like to update this to `index\\.(js|ts|tsx)$` to exclude importing from any barrel file
+      to: { path: ['^src/index\\.(js|ts|tsx)$'] },
+    },
+    {
       name: 'no-circular',
       // TODO: Make this an error soon
       severity: 'warn',

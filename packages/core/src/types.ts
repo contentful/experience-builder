@@ -1,6 +1,6 @@
 import type { Asset, AssetFile, ChainModifiers, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
-import { EntityStore } from './entity/EntityStore';
+// import { EntityStore } from './entity/EntityStore';
 import { Document as RichTextDocument } from '@contentful/rich-text-types';
 
 // Types for experience entry fields (as fetched in the API) are inferred by Zod schema in `@contentful/experiences-validators`
@@ -16,6 +16,7 @@ import type {
   ExperienceComponentTree,
   ComponentDefinitionPropertyType,
 } from '@contentful/experiences-validators';
+
 export type {
   ExperienceDataSource,
   ExperienceUnboundValues,
@@ -356,11 +357,10 @@ export interface HoveredElement {
   blockId: string | undefined;
 }
 
-export interface Experience<T extends EntityStore = EntityStore> {
+export interface Experience<T = unknown> {
   hyperlinkPattern?: string;
   entityStore?: T;
 }
-
 export type ResolveDesignValueType = (
   valuesByBreakpoint: ValuesByBreakpoint | undefined,
   variableName: string,

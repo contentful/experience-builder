@@ -1,4 +1,4 @@
-import { EditorModeEntityStore } from '@/entity';
+import { EditorModeEntityStore } from '@/entity/EditorModeEntityStore';
 import { transformBoundContentValue } from './transformBoundContentValue';
 import {
   entities,

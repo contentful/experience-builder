@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { experienceEntry } from '../test/__fixtures__/experience';
 import { entities } from '../test/__fixtures__/entities';
 import { DeepReference, gatherDeepReferencesFromExperienceEntry } from './DeepReference';
-import { EditorModeEntityStore } from '..';
+import { EditorModeEntityStore } from '../entity/EditorModeEntityStore';
 
 const entry = entities[0];
 const PATH = '/uuid2/fields/logo/~locale/fields/file/~locale';

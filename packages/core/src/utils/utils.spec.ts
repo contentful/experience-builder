@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { ExperienceTreeNode } from '@/types';
-import { generateRandomId, getInsertionData } from '@/utils';
+import { generateRandomId, getInsertionData } from '@/utils/utils';
 
 const dropReceiverChildNode: ExperienceTreeNode = {
   type: 'block',

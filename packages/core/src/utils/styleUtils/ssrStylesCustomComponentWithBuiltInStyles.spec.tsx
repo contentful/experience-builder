@@ -1,4 +1,5 @@
-import { createExperience, detachExperienceStyles } from '../../index';
+import { createExperience } from '../../fetchers/createExperience';
+import { detachExperienceStyles } from '../../utils/styleUtils/ssrStyles';
 import { DesignValue, ExperienceEntry } from '../../types';
 import { Entry } from 'contentful';
 

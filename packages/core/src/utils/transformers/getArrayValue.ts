@@ -1,6 +1,6 @@
 import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../get';
-import { EntityStoreBase } from '@/entity';
+import { EntityStoreBase } from '@/entity/EntityStoreBase';
 import { isArray } from 'lodash-es';
 
 export function getArrayValue(

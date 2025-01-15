@@ -1,5 +1,7 @@
 import { designTokensFixture } from '../../__fixtures__/designTokens';
-import { createExperience, defineDesignTokens, detachExperienceStyles } from '../../index';
+import { createExperience } from '../../fetchers/createExperience';
+import { defineDesignTokens } from '../../registries/designTokenRegistry';
+import { detachExperienceStyles } from '../../utils/styleUtils/ssrStyles';
 import { DesignValue, ExperienceEntry } from '../../types';
 import { Entry } from 'contentful';
 

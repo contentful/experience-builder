@@ -7,23 +7,20 @@ import {
   ExperienceDataSource,
   ExperienceUnboundValues,
 } from '@contentful/experiences-validators';
-import {
-  buildCfStyles,
-  checkIsAssemblyNode,
-  isValidBreakpointValue,
-  toCSSAttribute,
-} from '@/utils';
+// import {
+//   buildCfStyles,
+//   checkIsAssemblyNode,
+//   isValidBreakpointValue,
+//   toCSSAttribute,
+// } from '@/utils/styleUtils/';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
-import {
-  ComponentTreeNode,
-  DesignTokensDefinition,
-  Experience,
-  StyleProps,
-  Breakpoint,
-} from '@/types';
+import { ComponentTreeNode, DesignTokensDefinition, StyleProps, Breakpoint } from '@/types';
 import { CF_STYLE_ATTRIBUTES } from '@/constants';
-import { generateRandomId } from '@/utils';
+import { checkIsAssemblyNode, generateRandomId } from '@/utils/utils';
+import { buildCfStyles, toCSSAttribute } from './stylesUtils';
+import { isValidBreakpointValue } from '../breakpoints';
+import { Experience } from '@/types/Experience';
 
 type MediaQueryTemplate = Record<
   string,

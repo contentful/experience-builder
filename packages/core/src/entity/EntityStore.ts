@@ -1,5 +1,5 @@
 import type { Asset, Entry, UnresolvedLink } from 'contentful';
-import { isExperienceEntry } from '@/utils';
+import { isExperienceEntry } from '@/utils/typeguards';
 import type { ExperienceFields, ExperienceUnboundValues, ExperienceEntry } from '@/types';
 import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';

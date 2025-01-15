@@ -1,6 +1,6 @@
 import { ExperienceEntry } from '@/types';
 import { ContentfulClientApi, Entry, Asset } from 'contentful';
-import { isExperienceEntry } from '@/utils';
+import { isExperienceEntry } from '@/utils/typeguards';
 import { DeepReference, gatherDeepReferencesFromExperienceEntry } from '@/deep-binding';
 import { gatherAutoFetchedReferentsFromIncludes } from './gatherAutoFetchedReferentsFromIncludes';
 import { fetchAllEntries, fetchAllAssets } from './fetchAllEntities';
