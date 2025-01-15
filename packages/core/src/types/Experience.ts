@@ -1,6 +1,6 @@
 // import type { EntityStore } from '@/entity/EntityStore';
 
-export interface Experience {
+export interface Experience<T = unknown> {
   hyperlinkPattern?: string;
-  entityStore?: any;
+  entityStore?: T;
 }
