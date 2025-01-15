@@ -26,7 +26,7 @@ export const builtInStyles: Record<
     },
     type: 'Text',
     group: 'style',
-    description: 'The horizontal alignment of the section',
+    description: 'The vertical alignment of the section',
     defaultValue: 'center',
     displayName: 'Vertical alignment',
   },
