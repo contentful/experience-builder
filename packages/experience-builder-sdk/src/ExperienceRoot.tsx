@@ -23,9 +23,10 @@ export const ExperienceRoot = ({
   experience,
   visualEditorMode = VisualEditorMode.LazyLoad,
 }: ExperienceRootProps) => {
-  const mode = useDetectCanvasMode();
+  // This component renders client side due to the 'use client' directive
+  const mode = useDetectCanvasMode({ isClientSide: true });
 
-  //If experience is passed in as a JSON string, recreate it to an experience object
+  // If experience is passed in as a JSON string, recreate it to an experience object
   const experienceObject =
     typeof experience === 'string' ? createExperience(experience) : experience;
 
