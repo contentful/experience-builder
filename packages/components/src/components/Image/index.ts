@@ -16,7 +16,7 @@ export const ImageComponentDefinition: ComponentDefinition = {
   },
   variables: {
     alt: {
-      displayName: 'Alt',
+      displayName: 'Alt text',
       type: 'Text',
       description: 'Alternative text for the image',
     },

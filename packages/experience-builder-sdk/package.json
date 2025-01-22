@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-sdk-react",
-  "version": "1.27.1",
+  "version": "1.28.3",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -51,8 +51,7 @@
     "immer": "^10.0.3",
     "lodash-es": "^4.17.21",
     "md5": "^2.3.0",
-    "style-inject": "^0.3.0",
-    "vite-plugin-css-injected-by-js": "^3.1.1"
+    "style-inject": "^0.3.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
@@ -90,6 +89,7 @@
     "ts-jest": "^29.1.0",
     "typescript": "^5.2.2",
     "vite": "^5.4.8",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
     "vite-plugin-dts": "^4.2.2",
     "vite-plugin-svgr": "^4.1.0"
   },

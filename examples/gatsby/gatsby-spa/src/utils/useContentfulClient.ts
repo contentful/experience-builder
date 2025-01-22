@@ -1,13 +1,12 @@
 import { useMemo } from 'react';
 import { createClient } from 'contentful';
-import { useLocation } from 'react-router';
 import '../studio-config'; // Update this file to set breakpoints, design tokens, and register components
 
-export const useContentfulClient = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const isPreview = queryParams.get('isPreview') === 'true';
+type Props = {
+  isPreview?: boolean;
+}
 
+export const useContentfulClient = ({isPreview}: Props) => {
   const client = useMemo(() => {
     const clientConfig = {
       space: process.env.GATSBY_CTFL_SPACE || '',
