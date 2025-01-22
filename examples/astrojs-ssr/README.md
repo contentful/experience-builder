@@ -2,7 +2,8 @@
 
 This example demonstrates how to use [Astro](https://astro.build/) to create a server rendered page with Studio Experiences.
 
-> This example is a work-in-progress, and does not indicate that Astro is an officially supported framework for Studio Experiences. 
+[!IMPORTANT]
+This example is a work-in-progress, and does not indicate that Astro is an officially supported framework for Studio Experiences. 
 
 ## Getting started
 

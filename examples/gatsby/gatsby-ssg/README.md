@@ -2,7 +2,9 @@
 
 This example demonstrates how to use [Gatsby](https://www.gatsbyjs.com/) to create a server rendered page with Studio Experiences.
 
-> This example is a work-in-progress, and does not indicate that Gatsby is an officially supported framework for Studio Experiences. 
+
+[!IMPORTANT]
+This example is a work-in-progress, and does not indicate that Gatsby is an officially supported framework for Studio Experiences. 
 
 ## Getting started
 
@@ -41,3 +43,6 @@ npm run start
 ```
 
 The app is set up to run on `http://localhost:8000`. By default, the root URL will pull up an experience with the slug of 'home-page'. The locale will be determined by your browser settings.
+
+[!NOTE]
+Since all the Experience pages are generated at build time, you will need to run `npm run build` or `npm run start` to see the changes in the Experience pages or when adding new ones.
