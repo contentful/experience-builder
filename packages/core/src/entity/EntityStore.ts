@@ -13,7 +13,7 @@ type EntityStoreArgs = {
 };
 
 export class EntityStore extends EntityStoreBase {
-  private _experienceEntry: ExperienceFields | undefined;
+  private _experienceEntryFields: ExperienceFields | undefined;
   private _unboundValues: ExperienceUnboundValues | undefined;
   private _usedComponentsWithDeepReferences: ExperienceEntry[];
 
@@ -23,7 +23,16 @@ export class EntityStore extends EntityStoreBase {
   constructor(options: string | EntityStoreArgs) {
     if (typeof options === 'string') {
       const data = JSON.parse(options);
-      const { _experienceEntry, _unboundValues, locale, entryMap, assetMap } = data.entityStore;
+      // For SSR/SSR, the entity store is created server-side and passed to the client as a serialised JSON.
+      // So the properties in data.entityStore are equal to the attributes of this class (see `toJSON()`)
+      const {
+        _experienceEntryFields,
+        _unboundValues,
+        _usedComponentsWithDeepReferences,
+        locale,
+        entryMap,
+        assetMap,
+      } = data.entityStore;
       super({
         entities: [
           ...(Object.values(entryMap) as Entry[]),
@@ -31,20 +40,18 @@ export class EntityStore extends EntityStoreBase {
         ],
         locale,
       });
-      this._experienceEntry = _experienceEntry;
+      this._experienceEntryFields = _experienceEntryFields;
       this._unboundValues = _unboundValues;
-      this._usedComponentsWithDeepReferences = gatherUsedComponentsWithDeepRefernces(
-        this._experienceEntry,
-      );
+      this._usedComponentsWithDeepReferences = _usedComponentsWithDeepReferences;
     } else {
       const { experienceEntry, entities, locale } = options;
       super({ entities, locale });
 
       if (isExperienceEntry(experienceEntry)) {
-        this._experienceEntry = (experienceEntry as ExperienceEntry).fields;
+        this._experienceEntryFields = (experienceEntry as ExperienceEntry).fields;
         this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
         this._usedComponentsWithDeepReferences = gatherUsedComponentsWithDeepRefernces(
-          this._experienceEntry,
+          this._experienceEntryFields,
         );
       } else {
         throw new Error('Provided entry is not experience entry');
@@ -57,19 +64,19 @@ export class EntityStore extends EntityStoreBase {
   }
 
   public get experienceEntryFields() {
-    return this._experienceEntry;
+    return this._experienceEntryFields;
   }
 
   public get schemaVersion() {
-    return this._experienceEntry?.componentTree.schemaVersion;
+    return this._experienceEntryFields?.componentTree.schemaVersion;
   }
 
   public get breakpoints() {
-    return this._experienceEntry?.componentTree.breakpoints ?? [];
+    return this._experienceEntryFields?.componentTree.breakpoints ?? [];
   }
 
   public get dataSource() {
-    return this._experienceEntry?.dataSource ?? {};
+    return this._experienceEntryFields?.dataSource ?? {};
   }
 
   public get unboundValues() {
@@ -108,8 +115,9 @@ export class EntityStore extends EntityStoreBase {
 
   public toJSON() {
     return {
-      _experienceEntry: this._experienceEntry,
+      _experienceEntryFields: this._experienceEntryFields,
       _unboundValues: this._unboundValues,
+      _usedComponentsWithDeepReferences: this._usedComponentsWithDeepReferences,
       ...super.toJSON(),
     };
   }
