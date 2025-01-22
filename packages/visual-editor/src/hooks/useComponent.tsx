@@ -20,12 +20,14 @@ import { isContentfulStructureComponent } from '@contentful/experiences-core';
 import { MissingComponentPlaceholder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
 import { useTreeStore } from '@/store/tree';
 import { getItem } from '@/utils/getItem';
+import { CircularDependencyErrorPlaceholder } from '@components/DraggableHelpers/CircularDependencyErrorPlaceholder';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
+  wrappingPatternIds: Set<string>;
 };
 
 export const useComponent = ({
@@ -33,6 +35,7 @@ export const useComponent = ({
   resolveDesignValue,
   renderDropzone,
   userIsDragging,
+  wrappingPatternIds,
 }: UseComponentProps) => {
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const tree = useTreeStore((state) => state.tree);
@@ -79,11 +82,32 @@ export const useComponent = ({
   });
 
   const elementToRender = (props?: { dragProps?: DragWrapperProps; rest?: unknown }) => {
+    const { dragProps = {} } = props || {};
+    const { children, innerRef, Tag = 'div', ToolTipAndPlaceholder, style, ...rest } = dragProps;
+    const {
+      'data-cf-node-block-id': dataCfNodeBlockId,
+      'data-cf-node-block-type': dataCfNodeBlockType,
+      'data-cf-node-id': dataCfNodeId,
+    } = componentProps;
+    const refCallback = (refNode: HTMLElement | null) => {
+      if (innerRef && refNode) innerRef(refNode);
+    };
+
     if (!componentRegistration) {
       return <MissingComponentPlaceholder blockId={node.data.blockId} />;
     }
 
-    const { dragProps = {} } = props || {};
+    if (node.data.blockId && wrappingPatternIds.has(node.data.blockId)) {
+      return (
+        <CircularDependencyErrorPlaceholder
+          ref={refCallback}
+          data-cf-node-id={dataCfNodeId}
+          data-cf-node-block-id={dataCfNodeBlockId}
+          data-cf-node-block-type={dataCfNodeBlockType}
+          wrappingPatternIds={wrappingPatternIds}
+        />
+      );
+    }
 
     const element = React.createElement(
       ImportedComponentErrorBoundary,
@@ -98,20 +122,11 @@ export const useComponent = ({
       return element;
     }
 
-    const { children, innerRef, Tag = 'div', ToolTipAndPlaceholder, style, ...rest } = dragProps;
-    const {
-      'data-cf-node-block-id': dataCfNodeBlockId,
-      'data-cf-node-block-type': dataCfNodeBlockType,
-      'data-cf-node-id': dataCfNodeId,
-    } = componentProps;
-
     return (
       <Tag
         {...rest}
         style={{ ...style, ...wrapperStyles }}
-        ref={(refNode: HTMLElement | null) => {
-          if (innerRef && refNode) innerRef(refNode);
-        }}
+        ref={refCallback}
         data-cf-node-id={dataCfNodeId}
         data-cf-node-block-id={dataCfNodeBlockId}
         data-cf-node-block-type={dataCfNodeBlockType}>

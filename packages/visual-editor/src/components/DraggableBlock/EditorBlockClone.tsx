@@ -29,6 +29,7 @@ type EditorBlockCloneProps = {
   provided?: DraggableProvided;
   snapshot?: DraggableStateSnapshot;
   renderDropzone: RenderDropzoneFunction;
+  wrappingPatternIds: Set<string>;
 };
 
 export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
@@ -37,6 +38,7 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
   snapshot,
   provided,
   renderDropzone,
+  wrappingPatternIds,
 }) => {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
 
@@ -45,6 +47,7 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
     resolveDesignValue,
     renderDropzone,
     userIsDragging,
+    wrappingPatternIds,
   });
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
