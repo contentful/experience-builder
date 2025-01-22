@@ -1,5 +1,8 @@
 # Studio Experiences with Gatsby single page application example
 
+[!IMPORTANT]
+This example is a work-in-progress, and does not indicate that Gatsby is an officially supported framework for Studio Experiences. 
+
 ## 🚀 Enabling Gatsby with Experiences 
 1. **Update env.development.example for useContentfulClient.ts**
 
