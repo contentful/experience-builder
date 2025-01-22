@@ -9,7 +9,7 @@ import {
 export const transformVisibility = (value?: boolean): CSSProperties => {
   if (value === false) {
     return {
-      display: 'none',
+      display: 'none !important',
     };
   }
   // Don't explicitly set anything when visible to not overwrite values like `grid` or `flex`.
