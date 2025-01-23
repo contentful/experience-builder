@@ -15,6 +15,7 @@ import type {
   PrimitiveValue,
   ExperienceComponentTree,
   ComponentDefinitionPropertyType,
+  BindingSourceTypeEnum,
 } from '@contentful/experiences-validators';
 export type {
   ExperienceDataSource,
@@ -78,6 +79,7 @@ export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionP
   required?: boolean;
   in?: ValidationOption<T>[];
   format?: VariableFormats;
+  bindingSourceType?: BindingSourceTypeEnum;
 };
 
 export interface ComponentDefinitionVariableBase<T extends ComponentDefinitionPropertyType> {

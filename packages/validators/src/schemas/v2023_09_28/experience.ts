@@ -132,6 +132,10 @@ const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> = BaseComponentTreeN
   children: z.lazy(() => ComponentTreeNodeSchema.array()),
 });
 
+const BindingSourceTypeEnumSchema = z
+  .array(z.enum(['entry', 'asset', 'manual', 'experience']))
+  .nonempty();
+
 export const ComponentVariableSchema = z.object({
   displayName: z.string().optional(),
   type: DefinitionPropertyTypeSchema,
@@ -140,6 +144,7 @@ export const ComponentVariableSchema = z.object({
   defaultValue: PrimitiveValueSchema.or(ComponentPropertyValueSchema).optional(),
   validations: z
     .object({
+      bindingSourceType: BindingSourceTypeEnumSchema.optional(),
       required: z.boolean().optional(),
       format: z.literal('URL').optional(),
       in: z
@@ -249,3 +254,4 @@ export type BoundValue = z.infer<typeof BoundValueSchema>;
 export type UnboundValue = z.infer<typeof UnboundValueSchema>;
 export type HyperlinkValue = z.infer<typeof HyperlinkValueSchema>;
 export type ComponentValue = z.infer<typeof ComponentValueSchema>;
+export type BindingSourceTypeEnum = z.infer<typeof BindingSourceTypeEnumSchema>;
