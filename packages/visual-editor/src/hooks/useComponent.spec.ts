@@ -69,6 +69,7 @@ describe('useComponent', () => {
           resolveDesignValue,
           renderDropzone,
           userIsDragging,
+          wrappingPatternIds: new Set(),
         }),
       );
 

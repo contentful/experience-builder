@@ -31,6 +31,7 @@ type DropzoneProps = {
   className?: string;
   WrapperComponent?: ElementType | string;
   dragProps?: DragWrapperProps;
+  wrappingPatternIds?: Set<string>;
 };
 
 export function Dropzone({
@@ -40,6 +41,7 @@ export function Dropzone({
   className,
   WrapperComponent = 'div',
   dragProps,
+  wrappingPatternIds: parentWrappingPatternIds = new Set(),
   ...rest
 }: DropzoneProps) {
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
@@ -66,6 +68,19 @@ export function Dropzone({
   const isRootAssembly = node?.type === ASSEMBLY_NODE_TYPE;
   const htmlDraggableProps = getHtmlDragProps(dragProps);
   const htmlProps = getHtmlComponentProps(rest);
+
+  const wrappingPatternIds = useMemo(() => {
+    // On the top level, the node is not defined. If the root blockId is not the default string,
+    // we assume that it is the entry ID of the experience/ pattern to properly detect circular dependencies
+    if (!node && tree.root.data.blockId && tree.root.data.blockId !== ROOT_ID) {
+      return new Set([tree.root.data.blockId, ...parentWrappingPatternIds]);
+    }
+    if (isRootAssembly && node?.data.blockId) {
+      return new Set([node.data.blockId, ...parentWrappingPatternIds]);
+    }
+    return parentWrappingPatternIds;
+  }, [isRootAssembly, node, parentWrappingPatternIds, tree.root.data.blockId]);
+
   // To avoid a circular dependency, we create the recursive rendering function here and trickle it down
   const renderDropzone: RenderDropzoneFunction = useCallback(
     (node, props) => {
@@ -74,11 +89,12 @@ export function Dropzone({
           zoneId={node.data.id}
           node={node}
           resolveDesignValue={resolveDesignValue}
+          wrappingPatternIds={wrappingPatternIds}
           {...props}
         />
       );
     },
-    [resolveDesignValue],
+    [wrappingPatternIds, resolveDesignValue],
   );
 
   const renderClonedDropzone: RenderDropzoneFunction = useCallback(
@@ -89,11 +105,12 @@ export function Dropzone({
           node={node}
           resolveDesignValue={resolveDesignValue}
           renderDropzone={renderClonedDropzone}
+          wrappingPatternIds={wrappingPatternIds}
           {...props}
         />
       );
     },
-    [resolveDesignValue],
+    [resolveDesignValue, wrappingPatternIds],
   );
 
   const isDropzoneEnabled = useMemo(() => {
@@ -152,6 +169,7 @@ export function Dropzone({
           provided={provided}
           snapshot={snapshot}
           renderDropzone={renderClonedDropzone}
+          wrappingPatternIds={wrappingPatternIds}
         />
       )}>
       {(provided, snapshot) => {
@@ -200,6 +218,7 @@ export function Dropzone({
                     node={item}
                     resolveDesignValue={resolveDesignValue}
                     renderDropzone={renderDropzone}
+                    wrappingPatternIds={wrappingPatternIds}
                   />
                 ))
             )}
