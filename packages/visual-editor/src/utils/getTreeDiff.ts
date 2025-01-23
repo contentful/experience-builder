@@ -2,7 +2,7 @@ import { ExperienceTreeNode, ExperienceTree } from '@contentful/experiences-core
 
 import { getItem } from './getItem';
 import { isEqual } from 'lodash-es';
-import { ROOT_ID, TreeAction } from '@/types/constants';
+import { TreeAction } from '@/types/constants';
 import { TreeDiff } from '@/types/treeActions';
 
 interface MissingNodeActionParams {
@@ -101,13 +101,12 @@ function compareNodes({
   const nodeRemoved = currentNodeCount > updatedNodeCount;
   const nodeAdded = currentNodeCount < updatedNodeCount;
   const parentNodeId = updatedNode.data.id;
-  const isRoot = currentNode.data.id === ROOT_ID;
 
   /**
    * The data of the current node has changed, we need to update
    * this node to reflect the data change. (design, content, unbound values)
    */
-  if (!isRoot && !isEqual(currentNode.data, updatedNode.data)) {
+  if (!isEqual(currentNode.data, updatedNode.data)) {
     differences.push({
       type: TreeAction.UPDATE_NODE,
       nodeId: currentNode.data.id,

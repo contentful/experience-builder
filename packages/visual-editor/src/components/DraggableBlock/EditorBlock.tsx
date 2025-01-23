@@ -41,6 +41,7 @@ type EditorBlockProps = {
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   zoneId: string;
+  wrappingPatternIds: Set<string>;
 };
 
 export const EditorBlock: React.FC<EditorBlockProps> = ({
@@ -51,6 +52,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   zoneId,
   userIsDragging,
   placeholder,
+  wrappingPatternIds,
 }) => {
   const { slotId } = parseZoneId(zoneId);
   const ref = useRef<HTMLElement | null>(null);
@@ -69,6 +71,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     resolveDesignValue,
     renderDropzone,
     userIsDragging,
+    wrappingPatternIds,
   });
   const { isSingleColumn, isWrapped } = useSingleColumn(node, resolveDesignValue);
   const setDomRect = useDraggedItemStore((state) => state.setDomRect);

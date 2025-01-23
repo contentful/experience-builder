@@ -18,6 +18,7 @@ type DropzoneProps = {
   WrapperComponent?: ElementType | string;
   renderDropzone: RenderDropzoneFunction;
   dragProps?: DragWrapperProps;
+  wrappingPatternIds: Set<string>;
 };
 
 export function DropzoneClone({
@@ -27,6 +28,7 @@ export function DropzoneClone({
   WrapperComponent = 'div',
   renderDropzone,
   dragProps,
+  wrappingPatternIds,
   ...rest
 }: DropzoneProps) {
   const tree = useTreeStore((state) => state.tree);
@@ -72,6 +74,7 @@ export function DropzoneClone({
               node={item}
               resolveDesignValue={resolveDesignValue}
               renderDropzone={renderDropzone}
+              wrappingPatternIds={wrappingPatternIds}
             />
           );
         })}
