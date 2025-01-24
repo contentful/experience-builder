@@ -85,10 +85,16 @@ export const ButtonComponentDefinition: ComponentDefinition = {
       displayName: 'Text',
       type: 'Text',
       defaultValue: 'Button',
+      validations: {
+        bindingSourceType: ['entry', 'manual'],
+      },
     },
     url: {
       displayName: 'URL',
       type: 'Hyperlink',
+      validations: {
+        bindingSourceType: ['entry', 'experience', 'manual'],
+      },
     },
     target: {
       displayName: 'URL behavior',

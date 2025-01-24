@@ -19,6 +19,9 @@ export const ImageComponentDefinition: ComponentDefinition = {
       displayName: 'Alt text',
       type: 'Text',
       description: 'Alternative text for the image',
+      validations: {
+        bindingSourceType: ['entry', 'manual', 'asset'],
+      },
     },
   },
 };
