@@ -59,6 +59,10 @@ export class EntityStore extends EntityStoreBase {
     return this._experienceEntryFields;
   }
 
+  public get experienceEntryId() {
+    return this._experienceEntryId;
+  }
+
   public get schemaVersion() {
     return this._experienceEntryFields?.componentTree.schemaVersion;
   }
