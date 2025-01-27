@@ -1,5 +1,5 @@
 import { ExperienceEntry, ExperienceFields } from '@/types';
-export const gatherUsedComponentsWithDeepRefernces = ({
+export const resolveDeepUsedComponents = ({
   experienceEntryFields,
   parentComponents,
 }: {
@@ -19,7 +19,7 @@ export const gatherUsedComponentsWithDeepRefernces = ({
       }
 
       totalUsedComponents.push(
-        ...gatherUsedComponentsWithDeepRefernces({
+        ...resolveDeepUsedComponents({
           experienceEntryFields: component.fields,
           parentComponents: new Set([...parentComponents, component.sys.id]),
         }),

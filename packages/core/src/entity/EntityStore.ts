@@ -5,7 +5,7 @@ import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
 import { isLink } from '@/utils/isLink';
-import { gatherUsedComponentsWithDeepRefernces } from '@/fetchers/gatherUsedComponentsWithDeepReferences';
+import { resolveDeepUsedComponents } from '@/fetchers/resolveDeepUsedComponents';
 type EntityStoreArgs = {
   experienceEntry: ExperienceEntry | Entry;
   entities: Array<Entry | Asset>;
@@ -45,7 +45,7 @@ export class EntityStore extends EntityStoreBase {
       this._experienceEntryId = (experienceEntry as ExperienceEntry).sys.id;
       this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
     }
-    this._usedComponentsWithDeepReferences = gatherUsedComponentsWithDeepRefernces({
+    this._usedComponentsWithDeepReferences = resolveDeepUsedComponents({
       experienceEntryFields: this._experienceEntryFields,
       parentComponents: new Set([this._experienceEntryId!]),
     });

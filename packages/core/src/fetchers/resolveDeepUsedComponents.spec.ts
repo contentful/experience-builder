@@ -1,10 +1,10 @@
 import { ExperienceEntry } from '@/types';
 import { experienceEntryFieldsWithFilledUsedComponents } from '../test/__fixtures__/experience';
-import { gatherUsedComponentsWithDeepRefernces } from './gatherUsedComponentsWithDeepReferences';
+import { resolveDeepUsedComponents } from './resolveDeepUsedComponents';
 
-describe('fetchReferencedEntities gatherUsedComponentsWithDeepRefernces', () => {
+describe('resolveDeepUsedComponents', () => {
   it('should return an empty array if no used components are found', async () => {
-    const usedComponents = gatherUsedComponentsWithDeepRefernces({
+    const usedComponents = resolveDeepUsedComponents({
       parentComponents: new Set(),
     });
 
@@ -12,7 +12,7 @@ describe('fetchReferencedEntities gatherUsedComponentsWithDeepRefernces', () => 
   });
 
   it('should return an array of used components with deep references', async () => {
-    const usedComponents = gatherUsedComponentsWithDeepRefernces({
+    const usedComponents = resolveDeepUsedComponents({
       experienceEntryFields: experienceEntryFieldsWithFilledUsedComponents,
       parentComponents: new Set(['root-experience-1']),
     });
@@ -27,7 +27,7 @@ describe('fetchReferencedEntities gatherUsedComponentsWithDeepRefernces', () => 
     const patternLevel2 = patternLevel1.fields.usedComponents![0] as ExperienceEntry;
     patternLevel2.fields.usedComponents = [patternLevel1];
 
-    const usedComponents = gatherUsedComponentsWithDeepRefernces({
+    const usedComponents = resolveDeepUsedComponents({
       experienceEntryFields: circularExperienceFields,
       parentComponents: new Set(['root-experience-1']),
     });
