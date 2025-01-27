@@ -5,15 +5,17 @@ import {
 } from '@contentful/experiences-core/constants';
 import type {
   ExperienceComponentSettings,
+  ExperienceEntry,
   ExperienceTreeNode,
   SchemaVersions,
 } from '@contentful/experiences-core/types';
 
 type createAssemblyEntryArgs = {
-  schemaVersion: SchemaVersions;
-  id: string;
+  schemaVersion?: SchemaVersions;
+  id?: string;
 };
 
+// TODO: Rename to TEST_PATTERN_ID
 export const defaultAssemblyId = 'assembly-id';
 
 export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
@@ -21,7 +23,7 @@ export const assemblyGeneratedDesignVariableName = 'cfWidth_uuid2Assembly';
 export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = defaultAssemblyId,
-}: createAssemblyEntryArgs) => {
+}: createAssemblyEntryArgs = {}): ExperienceEntry => {
   return {
     sys: {
       id,
