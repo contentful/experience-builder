@@ -5,7 +5,7 @@ import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
 import { isLink } from '@/utils/isLink';
-import { gatherUsedComponentsWithDeepRefernces } from '@/fetchers/gatherUsedComponentsWithDeepReferences';
+import { resolveDeepUsedComponents } from '@/fetchers/resolveDeepUsedComponents';
 type EntityStoreArgs = {
   experienceEntry: ExperienceEntry | Entry;
   entities: Array<Entry | Asset>;
@@ -14,6 +14,7 @@ type EntityStoreArgs = {
 
 export class EntityStore extends EntityStoreBase {
   private _experienceEntryFields: ExperienceFields | undefined;
+  private _experienceEntryId: string | undefined;
   private _unboundValues: ExperienceUnboundValues | undefined;
   private _usedComponentsWithDeepReferences: ExperienceEntry[];
 
@@ -33,19 +34,23 @@ export class EntityStore extends EntityStoreBase {
         locale: serializedAttributes.locale,
       });
       this._experienceEntryFields = serializedAttributes._experienceEntryFields;
+      this._experienceEntryId = serializedAttributes._experienceEntryId;
       this._unboundValues = serializedAttributes._unboundValues;
     } else {
       const { experienceEntry, entities, locale } = options;
       if (!isExperienceEntry(experienceEntry)) {
         throw new Error('Provided entry is not experience entry');
       }
+
       super({ entities, locale });
       this._experienceEntryFields = (experienceEntry as ExperienceEntry).fields;
+      this._experienceEntryId = (experienceEntry as ExperienceEntry).sys.id;
       this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
     }
-    this._usedComponentsWithDeepReferences = gatherUsedComponentsWithDeepRefernces(
-      this._experienceEntryFields,
-    );
+    this._usedComponentsWithDeepReferences = resolveDeepUsedComponents({
+      experienceEntryFields: this._experienceEntryFields,
+      parentComponents: new Set([this._experienceEntryId!]),
+    });
   }
 
   public getCurrentLocale() {
@@ -54,6 +59,10 @@ export class EntityStore extends EntityStoreBase {
 
   public get experienceEntryFields() {
     return this._experienceEntryFields;
+  }
+
+  public get experienceEntryId() {
+    return this._experienceEntryId;
   }
 
   public get schemaVersion() {
@@ -105,6 +114,7 @@ export class EntityStore extends EntityStoreBase {
   public toJSON() {
     return {
       _experienceEntryFields: this._experienceEntryFields,
+      _experienceEntryId: this._experienceEntryId,
       _unboundValues: this._unboundValues,
       ...super.toJSON(),
     };

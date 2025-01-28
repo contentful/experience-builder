@@ -16,3 +16,17 @@ console.debug = (message, ...args) => {
 global.CSS = {
   supports: (k, v) => true,
 };
+
+global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
+
+// Monkey patch errors thrown by Jest trying to parse CSS.
+// Src: https://stackoverflow.com/questions/69906136/console-error-error-could-not-parse-css-stylesheet
+const originalConsoleError = console.error;
+console.error = function (...data) {
+  if (
+    typeof data[0]?.toString === 'function' &&
+    data[0].toString().includes('Error: Could not parse CSS stylesheet')
+  )
+    return;
+  originalConsoleError(...data);
+};

@@ -3,6 +3,7 @@ import { fetchExperienceEntry } from './fetchExperienceEntry';
 import { fetchReferencedEntities } from './fetchReferencedEntities';
 import { ExperienceEntry } from '@/types';
 import { ContentfulClientApi, Entry } from 'contentful';
+import { removeCircularPatternReferences } from './shared/circularityCheckers';
 
 const errorMessagesWhileFetching = {
   experience: 'Failed to fetch experience',
@@ -38,7 +39,7 @@ export async function fetchBySlug({
   localeCode,
   isEditorMode,
 }: FetchBySlugParams) {
-  //Be a no-op if in editor mode
+  // Be a no-op if in editor mode
   if (isEditorMode) return;
   let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
 
@@ -55,6 +56,8 @@ export async function fetchBySlug({
     if (!experienceEntry) {
       throw new Error(`No experience entry with slug: ${slug} exists`);
     }
+
+    removeCircularPatternReferences(experienceEntry as ExperienceEntry);
 
     try {
       const { entries, assets } = await fetchReferencedEntities({

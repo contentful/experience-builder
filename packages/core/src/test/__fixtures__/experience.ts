@@ -280,6 +280,7 @@ export const createAssemblyEntry = ({
   };
 };
 
+// TODO: Turn global fixture into a factory method to avoid cloning data on the fly
 export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
   title: 'root-experience-1',
   slug: 'root-experience-1',
