@@ -3,6 +3,7 @@ import { fetchExperienceEntry } from './fetchExperienceEntry';
 import { fetchReferencedEntities } from './fetchReferencedEntities';
 import { ExperienceEntry } from '@/types';
 import { ContentfulClientApi, Entry } from 'contentful';
+import { removeCircularReferences } from './shared/removeCircularReferences';
 
 const errorMessagesWhileFetching = {
   experience: 'Failed to fetch experience',
@@ -55,6 +56,8 @@ export async function fetchById({
     if (!experienceEntry) {
       throw new Error(`No experience entry with id: ${id} exists`);
     }
+
+    removeCircularReferences(experienceEntry as ExperienceEntry);
 
     try {
       const { entries, assets } = await fetchReferencedEntities({
