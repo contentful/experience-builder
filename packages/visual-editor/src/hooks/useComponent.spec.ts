@@ -6,7 +6,7 @@ import { getValueForBreakpoint } from '@contentful/experiences-core';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import React from 'react';
 
-const mocks = vi.hoisted(() => {
+const mocks = vi.hoisted<{ componentRegistration: ComponentRegistration }>(() => {
   return {
     componentRegistration: {
       component: () => React.createElement('div'),

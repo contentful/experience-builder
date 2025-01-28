@@ -23,6 +23,8 @@ export class EntityStore extends EntityStoreBase {
 
   constructor(options: string | EntityStoreArgs) {
     if (typeof options === 'string') {
+      // For SSR/SSG, the entity store is created server-side and passed to the client as a serialised JSON.
+      // So the properties in data.entityStore are equal to the attributes of this class (see `toJSON()`)
       const serializedAttributes = JSON.parse(options).entityStore;
       super({
         entities: [
