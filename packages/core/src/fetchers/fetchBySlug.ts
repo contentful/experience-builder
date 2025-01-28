@@ -3,7 +3,10 @@ import { fetchExperienceEntry } from './fetchExperienceEntry';
 import { fetchReferencedEntities } from './fetchReferencedEntities';
 import { ExperienceEntry } from '@/types';
 import { ContentfulClientApi, Entry } from 'contentful';
-import { removeCircularPatternReferences } from './shared/circularityCheckers';
+import {
+  removeCircularPatternReferences,
+  removeSelfReferencingDataSource,
+} from './shared/circularityCheckers';
 
 const errorMessagesWhileFetching = {
   experience: 'Failed to fetch experience',
@@ -58,6 +61,7 @@ export async function fetchBySlug({
     }
 
     removeCircularPatternReferences(experienceEntry as ExperienceEntry);
+    removeSelfReferencingDataSource(experienceEntry as ExperienceEntry);
 
     try {
       const { entries, assets } = await fetchReferencedEntities({

@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { removeCircularPatternReferences } from './circularityCheckers';
+import {
+  removeCircularPatternReferences,
+  removeSelfReferencingDataSource,
+} from './circularityCheckers';
 import { ExperienceEntry } from '@/types';
 import { experienceEntryFieldsWithFilledUsedComponents } from '@/test/__fixtures__/experience';
 
@@ -41,6 +44,32 @@ describe('circularityCheckers', () => {
     it('should not fail when stringifying as JSON', () => {
       const { circularEntry } = setup();
       expect(() => removeCircularPatternReferences(circularEntry)).not.toThrow();
+    });
+  });
+
+  describe('removeSelfReferencingDataSource', () => {
+    it('should remove self-referencing data sources', () => {
+      const circularEntry = {
+        sys: {
+          id: 'circular-entry',
+          type: 'Entry',
+        },
+        fields: {
+          dataSource: {},
+        },
+      } as ExperienceEntry;
+      // @ts-expect-error the CMA clients replaces links with entries while our types don't cover that
+      circularEntry.fields.dataSource['random-data-source-key'] = circularEntry;
+
+      removeSelfReferencingDataSource(circularEntry);
+
+      expect(circularEntry.fields.dataSource['random-data-source-key']).toEqual({
+        sys: {
+          id: 'circular-entry',
+          linkType: 'Entry',
+          type: 'Link',
+        },
+      });
     });
   });
 });
