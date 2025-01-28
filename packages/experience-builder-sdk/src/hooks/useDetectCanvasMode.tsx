@@ -20,7 +20,7 @@ type useDetectCanvasModeArgs = {
 
 export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasModeArgs = {}) => {
   const [mounted, setMounted] = useState(false);
-  const recievedModeMessage = useRef(false);
+  const receivedModeMessage = useRef(false);
   const [mode, setMode] = useState<StudioCanvasMode>(() => {
     // if we are client side and running in an iframe, then initialize to read only,
     // Editor mode can be requested later.
@@ -47,7 +47,7 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
     const isEditorMode = eventData.eventType === INCOMING_EVENTS.RequestEditorMode;
     const mode = isEditorMode ? StudioCanvasMode.EDITOR : StudioCanvasMode.READ_ONLY;
 
-    recievedModeMessage.current = true;
+    receivedModeMessage.current = true;
     setMode(mode);
 
     if (typeof window !== 'undefined') {
@@ -64,7 +64,7 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
 
   useEffect(() => {
     const handleHandshakeTimeout = () => {
-      if (!recievedModeMessage.current) {
+      if (!receivedModeMessage.current) {
         setMode(StudioCanvasMode.NONE);
       }
     };
@@ -77,14 +77,19 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
         sendMessage(OUTGOING_EVENTS.Connected, undefined);
         sendMessage(OUTGOING_EVENTS.SDKFeatures, sdkFeatures);
 
-        setTimeout(handleHandshakeTimeout, 100);
+        // FIXME: This causes a race condition by setting the mode sometimes to NONE when
+        // reloading the canvas due to a save event.
+        const handshakeTimeout = setTimeout(handleHandshakeTimeout, 100);
+
+        return () => {
+          window.removeEventListener('message', onMessage);
+          clearTimeout(handshakeTimeout);
+        };
       }
     } else {
       setMounted(true);
     }
-
-    return () => window.removeEventListener('message', onMessage);
-  }, [mounted, onMessage]);
+  }, [mode, mounted, onMessage]);
 
   return mode;
 };

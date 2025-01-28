@@ -14,11 +14,11 @@ import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
 import { Dropzone } from '@components/DraggableBlock/Dropzone';
 
-interface Props {
+interface RootRendererProperties {
   onChange?: (data: ExperienceTree) => void;
 }
 
-export const RootRenderer: React.FC<Props> = ({ onChange }) => {
+export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => {
   useEditorSubscriber();
 
   const dragItem = useDraggedItemStore((state) => state.componentId);
