@@ -1,6 +1,6 @@
 import { ExperienceEntry, Link } from '@/types';
 
-export const removeCircularReferences = (
+export const removeCircularPatternReferences = (
   experienceEntry: ExperienceEntry,
   _parentIds?: Set<string>,
 ) => {
@@ -25,7 +25,7 @@ export const removeCircularReferences = (
         return [...acc, link];
       }
       // Remove circularity for its usedComponents as well (inplace)
-      removeCircularReferences(entry, new Set([...parentIds, entry.sys.id]));
+      removeCircularPatternReferences(entry, new Set([...parentIds, entry.sys.id]));
       return [...acc, entry];
     },
     [] as Array<Link<'Entry'> | ExperienceEntry>,
