@@ -1,5 +1,12 @@
 import { ExperienceEntry, Link } from '@/types';
 
+/**
+ * The CMA client will automatically replace links with entry references.
+ * As we're including all referenced pattern entries in usedComponents, this can lead
+ * to a circular reference. This function replaces those with plain links inplace (!).
+ *
+ * @see https://github.com/contentful/contentful.js/issues/377
+ */
 export const removeCircularPatternReferences = (
   experienceEntry: ExperienceEntry,
   _parentIds?: Set<string>,
