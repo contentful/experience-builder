@@ -40,3 +40,33 @@ export const removeCircularPatternReferences = (
   // @ts-expect-error - type of usedComponents doesn't yet allow a mixed list of both links and entries
   experienceEntry.fields.usedComponents = newUsedComponents;
 };
+
+/**
+ * The CMA client will automatically replace links with entry references if they are available.
+ * While we're not fetching the data sources, a self reference would be replaced as the entry is
+ * fetched. Any circuar reference in the object breaks SSR where we have to stringify the JSON.
+ * This would fail if the object contains circular references.
+ */
+export const removeSelfReferencingDataSource = (experienceEntry: ExperienceEntry) => {
+  const dataSources = experienceEntry.fields.dataSource;
+  const newDataSource = Object.entries(dataSources).reduce(
+    (acc, [key, linkOrEntry]) => {
+      if ('fields' in linkOrEntry && linkOrEntry.sys.id === experienceEntry.sys.id) {
+        const entry = linkOrEntry as unknown as ExperienceEntry;
+        acc[key] = {
+          sys: {
+            id: entry.sys.id,
+            linkType: 'Entry',
+            type: 'Link',
+          },
+        };
+      } else {
+        const link = linkOrEntry;
+        acc[key] = link;
+      }
+      return acc;
+    },
+    {} as ExperienceEntry['fields']['dataSource'],
+  );
+  experienceEntry.fields.dataSource = newDataSource;
+};
