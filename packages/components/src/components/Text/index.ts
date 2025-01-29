@@ -45,6 +45,9 @@ export const TextComponentDefinition: ComponentDefinition = {
       description: 'The text to display. If not provided, children will be used instead.',
       type: 'Text',
       defaultValue: 'Text',
+      validations: {
+        bindingSourceType: ['manual', 'entry'],
+      },
     },
     as: {
       displayName: 'HTML tag',
@@ -69,6 +72,9 @@ export const TextComponentDefinition: ComponentDefinition = {
       displayName: 'URL',
       type: 'Text',
       defaultValue: '',
+      validations: {
+        bindingSourceType: ['entry', 'experience', 'manual'],
+      },
     },
     target: {
       displayName: 'URL behavior',

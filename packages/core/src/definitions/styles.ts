@@ -139,6 +139,7 @@ export const builtInStyles: Partial<DesignVariableMap> = {
     defaultValue: '',
     validations: {
       format: 'URL',
+      bindingSourceType: ['entry', 'experience', 'manual'],
     },
     description: 'hyperlink for section or container',
   },
@@ -185,6 +186,9 @@ export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
     displayName: 'Image',
     type: 'Media',
     description: 'Image to display',
+    validations: {
+      bindingSourceType: ['entry', 'asset', 'manual'],
+    },
   },
   cfImageOptions: {
     displayName: 'Image options',
@@ -207,6 +211,9 @@ export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
     displayName: 'Background image',
     type: 'Media',
     description: 'Background image for component',
+    validations: {
+      bindingSourceType: ['entry', 'asset', 'manual'],
+    },
   },
   cfBackgroundImageOptions: {
     displayName: 'Background image options',

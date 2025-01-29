@@ -5,7 +5,7 @@ import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
 import { isLink } from '@/utils/isLink';
-import { gatherUsedComponentsWithDeepRefernces } from '@/fetchers/gatherUsedComponentsWithDeepReferences';
+import { resolveDeepUsedComponents } from '@/fetchers/resolveDeepUsedComponents';
 type EntityStoreArgs = {
   experienceEntry: ExperienceEntry | Entry;
   entities: Array<Entry | Asset>;
@@ -13,7 +13,8 @@ type EntityStoreArgs = {
 };
 
 export class EntityStore extends EntityStoreBase {
-  private _experienceEntry: ExperienceFields | undefined;
+  private _experienceEntryFields: ExperienceFields | undefined;
+  private _experienceEntryId: string | undefined;
   private _unboundValues: ExperienceUnboundValues | undefined;
   private _usedComponentsWithDeepReferences: ExperienceEntry[];
 
@@ -22,34 +23,34 @@ export class EntityStore extends EntityStoreBase {
 
   constructor(options: string | EntityStoreArgs) {
     if (typeof options === 'string') {
-      const data = JSON.parse(options);
-      const { _experienceEntry, _unboundValues, locale, entryMap, assetMap } = data.entityStore;
+      // For SSR/SSG, the entity store is created server-side and passed to the client as a serialised JSON.
+      // So the properties in data.entityStore are equal to the attributes of this class (see `toJSON()`)
+      const serializedAttributes = JSON.parse(options).entityStore;
       super({
         entities: [
-          ...(Object.values(entryMap) as Entry[]),
-          ...(Object.values(assetMap) as Asset[]),
+          ...(Object.values(serializedAttributes.entryMap) as Entry[]),
+          ...(Object.values(serializedAttributes.assetMap) as Asset[]),
         ],
-        locale,
+        locale: serializedAttributes.locale,
       });
-      this._experienceEntry = _experienceEntry;
-      this._unboundValues = _unboundValues;
-      this._usedComponentsWithDeepReferences = gatherUsedComponentsWithDeepRefernces(
-        this._experienceEntry,
-      );
+      this._experienceEntryFields = serializedAttributes._experienceEntryFields;
+      this._experienceEntryId = serializedAttributes._experienceEntryId;
+      this._unboundValues = serializedAttributes._unboundValues;
     } else {
       const { experienceEntry, entities, locale } = options;
-      super({ entities, locale });
-
-      if (isExperienceEntry(experienceEntry)) {
-        this._experienceEntry = (experienceEntry as ExperienceEntry).fields;
-        this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
-        this._usedComponentsWithDeepReferences = gatherUsedComponentsWithDeepRefernces(
-          this._experienceEntry,
-        );
-      } else {
+      if (!isExperienceEntry(experienceEntry)) {
         throw new Error('Provided entry is not experience entry');
       }
+
+      super({ entities, locale });
+      this._experienceEntryFields = (experienceEntry as ExperienceEntry).fields;
+      this._experienceEntryId = (experienceEntry as ExperienceEntry).sys.id;
+      this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
     }
+    this._usedComponentsWithDeepReferences = resolveDeepUsedComponents({
+      experienceEntryFields: this._experienceEntryFields,
+      parentComponents: new Set([this._experienceEntryId!]),
+    });
   }
 
   public getCurrentLocale() {
@@ -57,19 +58,23 @@ export class EntityStore extends EntityStoreBase {
   }
 
   public get experienceEntryFields() {
-    return this._experienceEntry;
+    return this._experienceEntryFields;
+  }
+
+  public get experienceEntryId() {
+    return this._experienceEntryId;
   }
 
   public get schemaVersion() {
-    return this._experienceEntry?.componentTree.schemaVersion;
+    return this._experienceEntryFields?.componentTree.schemaVersion;
   }
 
   public get breakpoints() {
-    return this._experienceEntry?.componentTree.breakpoints ?? [];
+    return this._experienceEntryFields?.componentTree.breakpoints ?? [];
   }
 
   public get dataSource() {
-    return this._experienceEntry?.dataSource ?? {};
+    return this._experienceEntryFields?.dataSource ?? {};
   }
 
   public get unboundValues() {
@@ -108,7 +113,8 @@ export class EntityStore extends EntityStoreBase {
 
   public toJSON() {
     return {
-      _experienceEntry: this._experienceEntry,
+      _experienceEntryFields: this._experienceEntryFields,
+      _experienceEntryId: this._experienceEntryId,
       _unboundValues: this._unboundValues,
       ...super.toJSON(),
     };

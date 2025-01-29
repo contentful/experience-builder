@@ -51,6 +51,7 @@ const compositionFields: ExperienceEntry['fields'] = {
   },
 };
 
+// TODO: Turn global fixture into a factory method to avoid cloning data on the fly
 export const experienceEntry: ExperienceEntry = {
   sys: {
     id: 'composition-id',

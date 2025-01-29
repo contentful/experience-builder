@@ -32,6 +32,17 @@ export const useFetchByBase = (
     })();
   }, [fetchMethod, mode]);
 
+  // When a save event caused a canvas reload, the `receivedModeMessage` might time out and set the
+  // mode temporarily to NONE. If it's set to a valid mode afterward, we ignore the fetch result.
+  if (mode === StudioCanvasMode.EDITOR || mode === StudioCanvasMode.READ_ONLY) {
+    return {
+      error: undefined,
+      experience: undefined,
+      isLoading: false,
+      mode,
+    };
+  }
+
   return {
     error,
     experience,

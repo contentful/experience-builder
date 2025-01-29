@@ -59,6 +59,9 @@ export const RichTextComponentDefinition: ComponentDefinition = {
       displayName: 'Text',
       description: 'The text to display.',
       type: 'RichText',
+      validations: {
+        bindingSourceType: ['entry', 'manual'],
+      },
       defaultValue: {
         nodeType: 'document',
         data: {},
