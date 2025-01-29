@@ -1,6 +1,6 @@
-import { ContentfulClientApi, Entry } from 'contentful';
+import { ContentfulClientApi } from 'contentful';
 import { experienceEntry } from '../test/__fixtures__/experience';
-import { assets, entries } from '../test/__fixtures__/entities';
+import { assets, entityIds, entries } from '../test/__fixtures__/entities';
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { gatherDeepReferencesFromExperienceEntry } from '@/deep-binding/DeepReference';
 import { fetchReferencedEntities } from './fetchReferencedEntities';
@@ -73,55 +73,76 @@ describe('fetchReferencedEntities', () => {
     }
   });
 
-  it('should fetch referenced entities', async () => {
-    (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
-
-    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
-
-    (gatherDeepReferencesFromExperienceEntry as Mock).mockReturnValue([]);
-
-    const res = await fetchReferencedEntities({
-      client: mockClient,
-      experienceEntry: experienceEntry as unknown as Entry,
-      locale: 'en-US',
+  describe('when fetching without errors', () => {
+    beforeEach(() => {
+      (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
+      (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
+      (gatherDeepReferencesFromExperienceEntry as Mock).mockReturnValue([]);
     });
 
-    expect(mockClient.getAssets).toHaveBeenCalledWith({
-      limit: 100,
-      skip: 0,
-      locale: 'en-US',
-      'sys.id[in]': assets.map((asset) => asset.sys.id),
+    it('should fetch referenced entities', async () => {
+      const res = await fetchReferencedEntities({
+        client: mockClient,
+        experienceEntry: experienceEntry,
+        locale: 'en-US',
+      });
+
+      expect(mockClient.getAssets).toHaveBeenCalledWith({
+        limit: 100,
+        skip: 0,
+        locale: 'en-US',
+        'sys.id[in]': [entityIds.ASSET1],
+      });
+
+      expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledWith({
+        locale: 'en-US',
+        include: 2,
+        'sys.id[in]': [entityIds.ENTRY1, entityIds.ENTRY2],
+        limit: 100,
+        skip: 0,
+      });
+
+      expect(res).toEqual({
+        assets,
+        entries,
+      });
     });
 
-    expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledWith({
-      locale: 'en-US',
-      include: 2,
-      'sys.id[in]': entries.map((entry) => entry.sys.id),
-      limit: 100,
-      skip: 0,
-    });
+    it('should fetch entities only once when they occurr multiple times', async () => {
+      const testExperienceEntry = structuredClone(experienceEntry);
+      // Create a new data source with the same entry link as uuid3
+      testExperienceEntry.fields.dataSource['uuid3_duplicate'] =
+        testExperienceEntry.fields.dataSource['uuid3'];
 
-    expect(res).toEqual({
-      assets,
-      entries,
+      await fetchReferencedEntities({
+        client: mockClient,
+        experienceEntry: testExperienceEntry,
+        locale: 'en-US',
+      });
+
+      expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenCalledWith(
+        expect.objectContaining({
+          'sys.id[in]': [entityIds.ENTRY1, entityIds.ENTRY2],
+        }),
+      );
     });
   });
-});
 
-describe('fetchReferencedEntities handling deep-references', () => {
-  it('should call gatherDeepReferencesFromExperienceEntry()', async () => {
-    (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
+  describe('deep-references', () => {
+    it('should call gatherDeepReferencesFromExperienceEntry()', async () => {
+      (mockClient.getAssets as Mock).mockResolvedValue({ items: assets });
 
-    (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
+      (mockClient.withoutLinkResolution.getEntries as Mock).mockResolvedValue({ items: entries });
 
-    (gatherDeepReferencesFromExperienceEntry as Mock).mockReturnValue([]);
-    fetchReferencedEntities({
-      client: mockClient,
-      experienceEntry: experienceEntry,
-      locale: 'en-US',
+      (gatherDeepReferencesFromExperienceEntry as Mock).mockReturnValue([]);
+      fetchReferencedEntities({
+        client: mockClient,
+        experienceEntry: experienceEntry,
+        locale: 'en-US',
+      });
+
+      expect(gatherDeepReferencesFromExperienceEntry).toHaveBeenCalledOnce();
+      expect(gatherDeepReferencesFromExperienceEntry).toHaveBeenCalledWith(experienceEntry);
     });
-
-    expect(gatherDeepReferencesFromExperienceEntry).toHaveBeenCalledOnce();
-    expect(gatherDeepReferencesFromExperienceEntry).toHaveBeenCalledWith(experienceEntry);
   });
 });

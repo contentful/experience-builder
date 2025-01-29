@@ -37,24 +37,24 @@ export const fetchReferencedEntities = async ({
     experienceEntry as ExperienceEntry,
   );
 
-  const entryIds: string[] = [];
-  const assetIds: string[] = [];
+  const entryIds = new Set<string>();
+  const assetIds = new Set<string>();
 
   for (const dataBinding of Object.values((experienceEntry as ExperienceEntry).fields.dataSource)) {
     if (!('sys' in dataBinding)) {
       continue;
     }
     if (dataBinding.sys.linkType === 'Entry') {
-      entryIds.push(dataBinding.sys.id);
+      entryIds.add(dataBinding.sys.id);
     }
     if (dataBinding.sys.linkType === 'Asset') {
-      assetIds.push(dataBinding.sys.id);
+      assetIds.add(dataBinding.sys.id);
     }
   }
 
   const [entriesResponse, assetsResponse] = await Promise.all([
-    fetchAllEntries({ client, ids: entryIds, locale }),
-    fetchAllAssets({ client, ids: assetIds, locale }),
+    fetchAllEntries({ client, ids: [...entryIds], locale }),
+    fetchAllAssets({ client, ids: [...assetIds], locale }),
   ]);
 
   const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
