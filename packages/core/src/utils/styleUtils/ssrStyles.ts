@@ -94,6 +94,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentSettings,
     componentVariablesOverwrites,
     patternWrapper,
+    wrappingPatternIds,
   }: {
     componentTree: ExperienceComponentTree;
     dataSource: ExperienceDataSource;
@@ -101,6 +102,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentSettings?: ExperienceComponentSettings;
     componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
     patternWrapper?: ComponentTreeNode;
+    wrappingPatternIds: Set<string>;
   }) => {
     // traversing the tree
     const queue: ComponentTreeNode[] = [];
@@ -125,6 +127,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       });
 
       if (isPatternNode) {
+        // When detecting a circular dependency among patterns, stop to avoid an infinite loop
+        if (wrappingPatternIds.has(currentNode.definitionId)) {
+          continue;
+        }
+
         const patternEntry = usedComponents.find(
           (component) => component.sys.id === currentNode!.definitionId,
         );
@@ -176,6 +183,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           componentVariablesOverwrites: currentNode.variables,
           // pass top-level pattern node to store instance-specific child styles for rendering
           patternWrapper: currentNode,
+          wrappingPatternIds: new Set([...wrappingPatternIds, currentNode.definitionId]),
         });
         continue;
       }
@@ -357,6 +365,9 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     dataSource: experience.entityStore?.dataSource ?? {},
     unboundValues: experience.entityStore?.unboundValues ?? {},
     componentSettings: experience.entityStore?.experienceEntryFields?.componentSettings,
+    wrappingPatternIds: new Set(
+      experience.entityStore?.experienceEntryId ? [experience.entityStore.experienceEntryId] : [],
+    ),
   });
 
   // once the whole tree was traversed, for each breakpoint, I aggregate the styles

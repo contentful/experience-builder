@@ -37,6 +37,7 @@ type CompositionBlockProps = {
   hyperlinkPattern?: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
   getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
+  wrappingPatternIds?: Set<string>;
 };
 
 export const CompositionBlock = ({
@@ -46,6 +47,7 @@ export const CompositionBlock = ({
   hyperlinkPattern,
   resolveDesignValue,
   getPatternChildNodeClassName,
+  wrappingPatternIds: parentWrappingPatternIds = new Set(),
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
     () =>
@@ -64,6 +66,13 @@ export const CompositionBlock = ({
         })
       : rawNode;
   }, [entityStore, isAssembly, rawNode]);
+
+  const wrappingPatternIds = useMemo(() => {
+    if (isAssembly) {
+      return new Set([node.definitionId, ...parentWrappingPatternIds]);
+    }
+    return parentWrappingPatternIds;
+  }, [isAssembly, node, parentWrappingPatternIds]);
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.definitionId as string);
@@ -170,6 +179,7 @@ export const CompositionBlock = ({
               hyperlinkPattern={hyperlinkPattern}
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
+              wrappingPatternIds={wrappingPatternIds}
             />
           );
         }
@@ -178,21 +188,27 @@ export const CompositionBlock = ({
 
     return props;
   }, [
-    resolveDesignValue,
     node.variables,
     node.id,
     node.children,
+    resolveDesignValue,
     componentRegistration,
     isAssembly,
     getPatternChildNodeClassName,
     entityStore,
     hyperlinkPattern,
     locale,
+    wrappingPatternIds,
   ]);
 
   const className = useClassName({ props: nodeProps, node });
 
   if (!componentRegistration) {
+    return null;
+  }
+
+  // When detecting a circular dependency, we stop silently. The editor mode will render an actionable error.
+  if (parentWrappingPatternIds.has(node.definitionId)) {
     return null;
   }
 
@@ -225,6 +241,7 @@ export const CompositionBlock = ({
               hyperlinkPattern={hyperlinkPattern}
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
+              wrappingPatternIds={wrappingPatternIds}
             />
           );
         })

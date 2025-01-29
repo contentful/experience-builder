@@ -65,6 +65,9 @@ export const HeadingComponentDefinition: ComponentDefinition = {
       type: 'Text',
       description: 'The text to display in the heading.',
       defaultValue: 'Heading',
+      validations: {
+        bindingSourceType: ['entry', 'manual'],
+      },
     },
     type: {
       displayName: 'HTML tag',
