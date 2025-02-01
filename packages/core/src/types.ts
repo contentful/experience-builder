@@ -16,6 +16,7 @@ import type {
   ExperienceComponentTree,
   ComponentDefinitionPropertyType,
   BindingSourceTypeEnum,
+  PatternProperty,
 } from '@contentful/experiences-validators';
 export type {
   ExperienceDataSource,
@@ -32,6 +33,9 @@ export type {
   BoundValue,
   ComponentValue,
   ComponentDefinitionPropertyType as ComponentDefinitionVariableType,
+  PatternProperty,
+  PatternPropertyDefinition,
+  VariableMapping,
 } from '@contentful/experiences-validators';
 
 export type ComponentDefinitionVariableTypeMap = {
@@ -171,6 +175,7 @@ export type ExperienceTreeNode = {
     dataSource: ExperienceDataSource;
     unboundValues: ExperienceUnboundValues;
     breakpoints: Breakpoint[];
+    patternProperties?: Record<string, PatternProperty>;
     pattern?: {
       id: string;
       nodeId: string;

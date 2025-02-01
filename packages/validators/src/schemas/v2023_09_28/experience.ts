@@ -96,6 +96,40 @@ const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
 
+// TODO: finalized schema structure before release
+// https://contentful.atlassian.net/browse/LUMOS-523
+const VariableMappingSchema = z.object({
+  patternPropertyDefinitionId: propertyKeySchema,
+  type: z.literal('ContentTypeMapping'),
+  pathsByContentType: z.record(z.string(), z.object({ path: z.string() })),
+});
+
+const VariableMappingsSchema = z.record(propertyKeySchema, VariableMappingSchema);
+
+// TODO: finalized schema structure before release
+// https://contentful.atlassian.net/browse/LUMOS-523
+const PatternPropertyDefinitionSchema = z.object({
+  defaultValue: z.object({
+    path: z.string(),
+    type: z.literal('BoundValue'),
+  }),
+  contentTypes: z.record(z.string(), z.any()),
+});
+
+const PatternPropertyDefinitionsSchema = z.record(
+  propertyKeySchema,
+  PatternPropertyDefinitionSchema,
+);
+
+// TODO: finalized schema structure before release
+// https://contentful.atlassian.net/browse/LUMOS-523
+const PatternPropertySchema = z.object({
+  type: z.literal('BoundValue'),
+  path: z.string(),
+});
+
+const PatternPropertysSchema = z.record(propertyKeySchema, PatternPropertySchema);
+
 export const BreakpointSchema = z
   .object({
     id: propertyKeySchema,
@@ -124,6 +158,7 @@ const BaseComponentTreeNodeSchema = z.object({
   displayName: z.string().optional(),
   slotId: z.string().optional(),
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
+  patternProperties: PatternPropertysSchema.optional(),
 });
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
   children: ComponentTreeNode[];
@@ -166,6 +201,8 @@ export const ComponentVariablesSchema = z.record(
 
 const ComponentSettingsSchema = z.object({
   variableDefinitions: ComponentVariablesSchema,
+  variableMappings: VariableMappingsSchema.optional(),
+  patternPropertyDefinitions: PatternPropertyDefinitionsSchema.optional(),
 });
 
 const UsedComponentsSchema = z.array(
@@ -255,3 +292,6 @@ export type UnboundValue = z.infer<typeof UnboundValueSchema>;
 export type HyperlinkValue = z.infer<typeof HyperlinkValueSchema>;
 export type ComponentValue = z.infer<typeof ComponentValueSchema>;
 export type BindingSourceTypeEnum = z.infer<typeof BindingSourceTypeEnumSchema>;
+export type PatternPropertyDefinition = z.infer<typeof PatternPropertyDefinitionSchema>;
+export type PatternProperty = z.infer<typeof PatternPropertySchema>;
+export type VariableMapping = z.infer<typeof VariableMappingSchema>;
