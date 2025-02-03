@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Menu } from 'antd';
@@ -13,27 +13,20 @@ const items = [
   },
   {
     key: '/about',
-    label: <Link href="/about">About</Link>,
+    label: 'About',
   },
   {
     key: '/contact',
-    label: <Link href="/contact">Contact</Link>,
+    label: 'Contact',
   },
 ];
 
 const FooterNav: React.FC = () => {
   const pathname = usePathname();
-  const [current, setCurrent] = useState(pathname);
 
   return (
     <div className={styles.nav}>
-      <Menu
-        onClick={(e) => setCurrent(e.key)}
-        selectedKeys={[current]}
-        mode="horizontal"
-        className={styles.menu}
-        items={items}
-      />
+      <Menu selectedKeys={[pathname]} mode="horizontal" className={styles.menu} items={items} />
     </div>
   );
 };
