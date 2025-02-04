@@ -86,17 +86,22 @@ const ComponentValueSchema = z
   })
   .strict();
 
+// TODO: finalize schema structure before release
+// https://contentful.atlassian.net/browse/LUMOS-523
+const EmptyObjectSchema = z.object({ type: z.undefined() });
+
 const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
   DesignValueSchema,
   BoundValueSchema,
   UnboundValueSchema,
   HyperlinkValueSchema,
   ComponentValueSchema,
+  EmptyObjectSchema,
 ]);
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
 
-// TODO: finalized schema structure before release
+// TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
 const VariableMappingSchema = z.object({
   patternPropertyDefinitionId: propertyKeySchema,
@@ -106,13 +111,16 @@ const VariableMappingSchema = z.object({
 
 const VariableMappingsSchema = z.record(propertyKeySchema, VariableMappingSchema);
 
-// TODO: finalized schema structure before release
+// TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
 const PatternPropertyDefinitionSchema = z.object({
-  defaultValue: z.object({
-    path: z.string(),
-    type: z.literal('BoundValue'),
-  }),
+  defaultValue: z.union([
+    z.object({
+      path: z.string(),
+      type: z.literal('BoundValue'),
+    }),
+    z.null(),
+  ]),
   contentTypes: z.record(z.string(), z.any()),
 });
 
@@ -121,7 +129,7 @@ const PatternPropertyDefinitionsSchema = z.record(
   PatternPropertyDefinitionSchema,
 );
 
-// TODO: finalized schema structure before release
+// TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
 const PatternPropertySchema = z.object({
   type: z.literal('BoundValue'),
