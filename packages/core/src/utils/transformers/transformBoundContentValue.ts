@@ -1,6 +1,6 @@
 import {
   BoundComponentPropertyTypes,
-  ComponentDefinitionVariable,
+  ComponentDefinitionVariableType,
   ComponentTreeNode,
   ResolveDesignValueType,
 } from '@/types';
@@ -18,13 +18,13 @@ export const transformBoundContentValue = (
   binding: UnresolvedLink<'Entry' | 'Asset'>,
   resolveDesignValue: ResolveDesignValueType,
   variableName: string,
-  variableDefinition: ComponentDefinitionVariable,
+  variableType: ComponentDefinitionVariableType,
   path: string,
 ): BoundComponentPropertyTypes => {
   const entityOrAsset = entityStore.getEntryOrAsset(binding, path);
   if (!entityOrAsset) return;
 
-  switch (variableDefinition.type) {
+  switch (variableType) {
     case 'Media':
       // If we bound a normal entry field to the media variable we just return the bound value
       if (entityOrAsset.sys.type === 'Entry') {
