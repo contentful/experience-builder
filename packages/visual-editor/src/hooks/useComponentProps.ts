@@ -147,7 +147,7 @@ export const useComponentProps = ({
             binding,
             resolveDesignValue,
             variableName,
-            variableDefinition,
+            variableDefinition.type,
             variableMapping.path,
           );
 
