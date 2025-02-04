@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Button, Grid, Menu } from 'antd';
@@ -14,7 +14,7 @@ const items = [
   },
   {
     key: '/about',
-    label: <Link href="/about">About</Link>,
+    label: 'About',
   },
 ];
 
@@ -22,21 +22,19 @@ const mobileItems = [
   ...items,
   {
     key: '/contact',
-    label: <Link href="/contact">Contact</Link>,
+    label: 'Contact',
   },
 ];
 
 const Nav: React.FC = () => {
   const pathname = usePathname();
-  const [current, setCurrent] = useState(pathname);
   const screens = Grid.useBreakpoint();
 
   if (screens.xs) {
     return (
       <div className={styles.nav}>
         <Menu
-          onClick={(e) => setCurrent(e.key)}
-          selectedKeys={[current]}
+          selectedKeys={[pathname]}
           mode="horizontal"
           className={styles.mobileMenu}
           items={mobileItems}
@@ -52,16 +50,8 @@ const Nav: React.FC = () => {
 
   return (
     <div className={styles.nav}>
-      <Menu
-        onClick={(e) => setCurrent(e.key)}
-        selectedKeys={[current]}
-        mode="horizontal"
-        className={styles.menu}
-        items={items}
-      />
-      <Link href="/contact">
-        <Button variant="outlined">Contact Us</Button>
-      </Link>
+      <Menu selectedKeys={[pathname]} mode="horizontal" className={styles.menu} items={items} />
+      <Button variant="outlined">Contact Us</Button>
     </div>
   );
 };
