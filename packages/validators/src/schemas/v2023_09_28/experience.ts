@@ -86,12 +86,15 @@ const ComponentValueSchema = z
   })
   .strict();
 
+const EmptyObjectSchema = z.object({ type: z.undefined() });
+
 const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
   DesignValueSchema,
   BoundValueSchema,
   UnboundValueSchema,
   HyperlinkValueSchema,
   ComponentValueSchema,
+  EmptyObjectSchema,
 ]);
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
@@ -160,7 +163,7 @@ const BaseComponentTreeNodeSchema = z.object({
   definitionId: DefinitionPropertyKeySchema,
   displayName: z.string().optional(),
   slotId: z.string().optional(),
-  variables: z.record(propertyKeySchema, ComponentPropertyValueSchema.optional()),
+  variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
   patternProperties: PatternPropertysSchema.optional(),
 });
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
