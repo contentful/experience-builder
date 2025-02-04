@@ -109,10 +109,13 @@ const VariableMappingsSchema = z.record(propertyKeySchema, VariableMappingSchema
 // TODO: finalized schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
 const PatternPropertyDefinitionSchema = z.object({
-  defaultValue: z.object({
-    path: z.string(),
-    type: z.literal('BoundValue'),
-  }),
+  defaultValue: z.union([
+    z.object({
+      path: z.string(),
+      type: z.literal('BoundValue'),
+    }),
+    z.null(),
+  ]),
   contentTypes: z.record(z.string(), z.any()),
 });
 
@@ -157,7 +160,7 @@ const BaseComponentTreeNodeSchema = z.object({
   definitionId: DefinitionPropertyKeySchema,
   displayName: z.string().optional(),
   slotId: z.string().optional(),
-  variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
+  variables: z.record(propertyKeySchema, ComponentPropertyValueSchema.optional()),
   patternProperties: PatternPropertysSchema.optional(),
 });
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
