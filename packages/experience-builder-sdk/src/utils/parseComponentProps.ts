@@ -1,5 +1,4 @@
-import { toMediaQuery } from '@contentful/experiences-core';
-import { CF_STYLE_ATTRIBUTES } from '@contentful/experiences-core/constants';
+import { isCfStyleAttribute, toMediaQuery } from '@contentful/experiences-core';
 import {
   BoundComponentPropertyTypes,
   BoundValue,
@@ -61,7 +60,7 @@ export const parseComponentProps = ({
 
     switch (propertyValue.type) {
       case 'DesignValue': {
-        if (CF_STYLE_ATTRIBUTES.includes(propName)) {
+        if (isCfStyleAttribute(propName)) {
           // for such properties we know how to convert them to CSS, so we will build a media query from it below after the loop is over
           styleProps[propName] = propertyValue.valuesByBreakpoint;
         } else {
