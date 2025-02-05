@@ -9,6 +9,7 @@ import {
   DesignValue,
   PrimitiveValue,
 } from '@contentful/experiences-core/types';
+import { convertResolvedDesignValuesToMediaQuery } from '../hooks/useMediaQuery';
 
 /**
  * The previous logic of prop mapping was too complex and mixed different ues cases together.
@@ -111,7 +112,7 @@ export const parseComponentProps = ({
   }
 
   /**
-  * propsByBreakpoint {
+  * {
       desktop: {
         cfVerticalAlignment: 'center',
         cfHorizontalAlignment: 'center',
@@ -175,26 +176,7 @@ export const parseComponentProps = ({
    *  `
    * }
    */
-  const styleSheet = styleSheetData.reduce<{ className: Array<string>; styleSheet: string }>(
-    (acc, { breakpointCondition, className, css }) => {
-      if (acc.className.includes(className)) {
-        return acc;
-      }
-
-      const mediaQuery = toMediaQuery({
-        condition: breakpointCondition,
-        cssByClassName: { [className]: css },
-      });
-      return {
-        className: [...acc.className, className],
-        styleSheet: `${acc.styleSheet}${mediaQuery}`,
-      };
-    },
-    {
-      className: [],
-      styleSheet: '',
-    },
-  );
+  const styleSheet = convertResolvedDesignValuesToMediaQuery(styleSheetData);
 
   return {
     styleProps,

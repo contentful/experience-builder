@@ -1,20 +1,12 @@
 import React, { ReactNode, useMemo, useEffect } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import {
-  buildCfStyles,
-  designTokensRegistry,
   EntityStore,
-  flattenDesignTokenRegistry,
-  isStructureWithRelativeHeight,
-  maybePopulateDesignTokenValue,
   resolveHyperlinkPattern,
   sanitizeNodeProps,
-  toCSSAttribute,
-  toCSSString,
 } from '@contentful/experiences-core';
 import {
   CONTENTFUL_COMPONENTS,
-  EMPTY_CONTAINER_HEIGHT,
   HYPERLINK_DEFAULT_PATTERN,
 } from '@contentful/experiences-core/constants';
 import type {
@@ -37,7 +29,7 @@ import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Entry } from 'contentful';
 import PreviewUnboundImage from './PreviewUnboundImage';
 import { parseComponentProps } from '../../utils/parseComponentProps';
-import md5 from 'md5';
+import { resolveClassNamesFromBuiltInStyles } from '../../hooks/useMediaQuery';
 
 type CompositionBlockProps = {
   node: ComponentTreeNode;
@@ -176,96 +168,11 @@ export const CompositionBlock = ({
         return entityStore.unboundValues[mappingKey]?.value ?? defaultValue;
       },
       resolveClassNamesFromBuiltInStyles: (designPropsByBreakpointId) => {
-        const mapOfDesignVariableKeys = flattenDesignTokenRegistry(designTokensRegistry);
-        const breakpoints = entityStore.breakpoints;
-        const currentNodeClassNames: string[] = [];
-
-        const result: Array<{
-          className: string;
-          breakpointCondition: string;
-          css: string;
-        }> = [];
-
-        // then for each breakpoint
-        for (const breakpoint of breakpoints) {
-          const designProps = designPropsByBreakpointId[breakpoint.id];
-          if (!designProps) {
-            continue;
-          }
-
-          const propsByBreakpointWithResolvedDesignTokens = Object.entries(designProps).reduce(
-            (acc, [propName, propValue]) => {
-              return {
-                ...acc,
-                [propName]: maybePopulateDesignTokenValue(
-                  propName,
-                  propValue,
-                  mapOfDesignVariableKeys,
-                ),
-              };
-            },
-            {},
-          );
-
-          // We convert cryptic prop keys to css variables
-          // Eg: cfMargin to margin
-          const stylesForBreakpoint = buildCfStyles(propsByBreakpointWithResolvedDesignTokens);
-
-          if (
-            !node.children.length &&
-            isStructureWithRelativeHeight(node.definitionId, stylesForBreakpoint.height)
-          ) {
-            stylesForBreakpoint.minHeight = EMPTY_CONTAINER_HEIGHT;
-          }
-
-          const stylesForBreakpointWithoutUndefined: Record<string, string> = Object.fromEntries(
-            Object.entries(stylesForBreakpoint)
-              .filter(([, value]) => value !== undefined)
-              .map(([key, value]) => [toCSSAttribute(key), value]),
-          );
-
-          /**
-         * stylesForBreakpoint {
-            margin: '0 0 0 0',
-            padding: '0 0 0 0',
-            'background-color': 'rgba(246, 246, 246, 1)',
-            width: '100%',
-            height: 'fit-content',
-            'max-width': 'none',
-            border: '0px solid rgba(0, 0, 0, 0)',
-            'border-radius': '0px',
-            gap: '0px 0px',
-            'align-items': 'center',
-            'justify-content': 'safe center',
-            'flex-direction': 'column',
-            'flex-wrap': 'nowrap',
-            'font-style': 'normal',
-            'text-decoration': 'none',
-            'box-sizing': 'border-box'
-          }
-        */
-          // I create a hash of the object above because that would ensure hash stability
-          const styleHash = md5(JSON.stringify(stylesForBreakpointWithoutUndefined));
-
-          // and prefix the className to make sure the value can be processed
-          const className = `cfstyles-${styleHash}`;
-
-          // I save the generated hashes into an array to later save it in the tree node
-          // as cfSsrClassName prop
-          // making sure to avoid the duplicates in case styles for > 1 breakpoints are the same
-          if (!currentNodeClassNames.includes(className)) {
-            currentNodeClassNames.push(className);
-          }
-
-          // otherwise, save it to the stylesheet
-          result.push({
-            className,
-            breakpointCondition: breakpoint.query,
-            css: toCSSString(stylesForBreakpointWithoutUndefined),
-          });
-        }
-
-        return result;
+        return resolveClassNamesFromBuiltInStyles({
+          designPropsByBreakpointId,
+          breakpoints: entityStore.breakpoints,
+          node,
+        });
       },
     });
 
@@ -290,16 +197,9 @@ export const CompositionBlock = ({
       }
     }
 
-    // TODO: this one still needs to be run through the `resolveDesignValue` function
-    const modifiedStyleProps = Object.fromEntries(
-      Object.entries(styleProps).map(([prop, valByBreakpoint]) => [
-        prop,
-        valByBreakpoint['test-desktop'],
-      ]),
-    );
     const props: Record<string, PrimitiveValue> = {
       className: ssrProps.cfSsrClassName ?? styleSheet?.className?.join(' '),
-      ...modifiedStyleProps,
+      ...styleProps,
       ...contentProps,
       ...customDesignProps,
       ...slotsProps,
@@ -417,7 +317,14 @@ export const CompositionBlock = ({
     node.definitionId === CONTENTFUL_COMPONENTS.image.id &&
     node.variables.cfImageAsset?.type === 'UnboundValue'
   ) {
-    return <PreviewUnboundImage node={node} nodeProps={props} component={component} />;
+    return (
+      <PreviewUnboundImage
+        node={node}
+        nodeProps={props}
+        component={component}
+        breakpoints={entityStore.breakpoints}
+      />
+    );
   }
 
   return React.createElement(

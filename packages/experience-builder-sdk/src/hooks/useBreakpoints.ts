@@ -63,5 +63,5 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
     [activeBreakpointIndex, breakpoints],
   );
 
-  return { resolveDesignValue };
+  return { resolveDesignValue, activeBreakpointIndex, fallbackBreakpointIndex };
 };
