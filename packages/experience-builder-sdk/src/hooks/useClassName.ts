@@ -8,6 +8,8 @@ import {
 import { ComponentTreeNode } from '@contentful/experiences-core/types';
 import { EMPTY_CONTAINER_HEIGHT } from '@contentful/experiences-core/constants';
 
+const injectedStyles: Array<string> = [];
+
 /**
  * This hook can generate className and inject styles on a client side as a <style> tag
  * or it derives the className set on the server side
@@ -61,16 +63,26 @@ export const useClassName = ({
   return className;
 };
 
-export const useInjectStylesheet = (stylesheet: string | undefined) => {
+export const useInjectStylesheet = (stylesheet?: {
+  css: string;
+  hash: string;
+  className: string;
+}) => {
   useInsertionEffect(() => {
     if (!stylesheet) {
       return;
     }
 
+    if (injectedStyles.includes(stylesheet.hash)) {
+      return;
+    }
+
     const styleTag = document.createElement('style');
     styleTag.setAttribute('type', 'text/css');
-    styleTag.innerHTML = stylesheet;
+    styleTag.id = stylesheet.hash;
+    styleTag.innerHTML = stylesheet.css;
 
     document.head.appendChild(styleTag);
+    injectedStyles.push(stylesheet.hash);
   }, [stylesheet]);
 };

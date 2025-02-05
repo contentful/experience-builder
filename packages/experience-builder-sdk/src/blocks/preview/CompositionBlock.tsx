@@ -99,7 +99,7 @@ export const CompositionBlock = ({
     return registration;
   }, [isAssembly, node.definitionId]);
 
-  const { ssrProps, contentProps, props, styleSheet } = useMemo(() => {
+  const { ssrProps, contentProps, props, mediaQuery } = useMemo(() => {
     // In SSR, we store the className under breakpoints[0] which is resolved here to the actual string
     const cfSsrClassNameValues = node.variables.cfSsrClassName as DesignValue | undefined;
     const cfSsrClassName = resolveDesignValue(
@@ -128,7 +128,7 @@ export const CompositionBlock = ({
       contentProps = {},
       styleProps = {},
       customDesignProps = {},
-      styleSheet = { className: undefined, styleSheet: undefined },
+      mediaQuery,
     } = parseComponentProps({
       componentDefinition: componentRegistration.definition,
       node,
@@ -198,7 +198,7 @@ export const CompositionBlock = ({
     }
 
     const props: Record<string, PrimitiveValue> = {
-      className: ssrProps.cfSsrClassName ?? styleSheet?.className?.join(' '),
+      className: ssrProps.cfSsrClassName ?? mediaQuery?.className,
       ...styleProps,
       ...contentProps,
       ...customDesignProps,
@@ -211,7 +211,7 @@ export const CompositionBlock = ({
       slotsProps,
       styleProps,
       customDesignProps,
-      styleSheet,
+      mediaQuery,
       props,
     };
   }, [
@@ -232,7 +232,7 @@ export const CompositionBlock = ({
   console.log('~props', node.id, node.definitionId, props);
 
   // do not inject the stylesheet into the dom because it's already been done on the server side
-  useInjectStylesheet(ssrProps.cfSsrClassName ? undefined : styleSheet?.styleSheet);
+  useInjectStylesheet(ssrProps.cfSsrClassName ? undefined : mediaQuery);
 
   if (!componentRegistration) {
     return null;

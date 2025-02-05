@@ -28,24 +28,22 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
 }) => {
   const { wrapperStyle, imageStyle } = useMemo(() => {
     let imageStyle: Record<string, any> = {};
-    let wrapperStyle: Record<string, any> = {};
-    if (nodeProps.cfImageOptions && typeof nodeProps.cfImageOptions === 'object') {
-      imageStyle = {
-        ...nodeProps.cfImageOptions,
-        height: '100%',
-        width: '100%',
-      };
 
+    let wrapperStyle: Record<string, any> = {};
+
+    if (nodeProps.cfImageOptions && typeof nodeProps.cfImageOptions === 'object') {
       for (const [breakpointId, styles] of Object.entries(nodeProps.cfImageOptions)) {
         imageStyle[breakpointId] = {
-          ...styles,
-          height: '100%',
-          width: '100%',
+          cfImageOptions: {
+            ...styles,
+            height: '100%',
+            width: '100%',
+          },
         };
 
         wrapperStyle[breakpointId] = {
-          height: styles.height,
-          width: styles.width,
+          cfHeight: styles.height,
+          cfWidth: styles.width,
         };
       }
     }
@@ -53,26 +51,26 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
     return { imageStyle, wrapperStyle };
   }, [nodeProps.cfImageOptions]);
 
-  const wrapperCss = useMediaQuery({
+  const wrapperMedia = useMediaQuery({
     designPropsByBreakpointId: wrapperStyle,
     node,
     breakpoints,
   });
 
-  const imageCss = useMediaQuery({
+  const imageMedia = useMediaQuery({
     designPropsByBreakpointId: imageStyle,
     node,
     breakpoints,
   });
 
-  useInjectStylesheet(wrapperCss.styleSheet);
-  useInjectStylesheet(imageCss.styleSheet);
+  useInjectStylesheet(wrapperMedia);
+  useInjectStylesheet(imageMedia);
 
   return (
-    <div className={classNames('cf-preview-unbound-image', wrapperCss.className)}>
+    <div className={classNames('cf-preview-unbound-image', wrapperMedia.className)}>
       {React.createElement(component, {
         ...sanitizeNodeProps(nodeProps),
-        className: classNames(nodeProps.className, imageCss.className),
+        className: imageMedia.css ? imageMedia.className : nodeProps.className,
       })}
     </div>
   );
