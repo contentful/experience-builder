@@ -33,7 +33,6 @@ import {
   ContentfulContainer,
   SingleColumn,
 } from '@contentful/experiences-components-react';
-
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Entry } from 'contentful';
 import PreviewUnboundImage from './PreviewUnboundImage';
@@ -291,9 +290,16 @@ export const CompositionBlock = ({
       }
     }
 
+    // TODO: this one still needs to be run through the `resolveDesignValue` function
+    const modifiedStyleProps = Object.fromEntries(
+      Object.entries(styleProps).map(([prop, valByBreakpoint]) => [
+        prop,
+        valByBreakpoint['test-desktop'],
+      ]),
+    );
     const props: Record<string, PrimitiveValue> = {
       className: ssrProps.cfSsrClassName ?? styleSheet?.className?.join(' '),
-      ...styleProps,
+      ...modifiedStyleProps,
       ...contentProps,
       ...customDesignProps,
       ...slotsProps,
@@ -322,6 +328,8 @@ export const CompositionBlock = ({
     wrappingPatternIds,
     patternNodeIdsChain,
   ]);
+
+  console.log('~props', node.id, node.definitionId, props);
 
   // do not inject the stylesheet into the dom because it's already been done on the server side
   useInjectStylesheet(ssrProps.cfSsrClassName ? undefined : styleSheet?.styleSheet);
