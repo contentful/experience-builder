@@ -129,7 +129,7 @@ export const convertResolvedDesignValuesToMediaQuery = (styleSheetData: Resolved
    *  `
    * }
    */
-  const styleSheet = styleSheetData.reduce<{ className: Array<string>; styleSheet: string }>(
+  const styleSheet = styleSheetData.reduce<{ className: Array<string>; css: string }>(
     (acc, { breakpointCondition, className, css }) => {
       if (acc.className.includes(className)) {
         return acc;
@@ -141,16 +141,22 @@ export const convertResolvedDesignValuesToMediaQuery = (styleSheetData: Resolved
       });
       return {
         className: [...acc.className, className],
-        styleSheet: `${acc.styleSheet}${mediaQuery}`,
+        css: `${acc.css}${mediaQuery}`,
       };
     },
     {
       className: [],
-      styleSheet: '',
+      css: '',
     },
   );
 
-  return styleSheet;
+  const className = styleSheet.className.join(' ');
+
+  return {
+    css: styleSheet.css,
+    hash: `cf-${md5(className)}`,
+    className,
+  };
 };
 
 export const useMediaQuery = ({

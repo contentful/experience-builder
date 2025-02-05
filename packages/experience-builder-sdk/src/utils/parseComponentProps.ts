@@ -176,11 +176,11 @@ export const parseComponentProps = ({
    *  `
    * }
    */
-  const styleSheet = convertResolvedDesignValuesToMediaQuery(styleSheetData);
+  const mediaQuery = convertResolvedDesignValuesToMediaQuery(styleSheetData);
 
   return {
     styleProps,
-    styleSheet,
+    mediaQuery,
     customDesignProps,
     contentProps,
   };
