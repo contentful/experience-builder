@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-core",
-  "version": "1.30.3",
+  "version": "1.30.4-beta.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",

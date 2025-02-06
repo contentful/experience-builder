@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import {
   EntityStore,
@@ -49,6 +49,12 @@ export const CompositionBlock = ({
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
 }: CompositionBlockProps) => {
+  const [hasRendered, setHasRendered] = React.useState(false);
+
+  useEffect(() => {
+    setHasRendered(true);
+  }, []);
+
   const isAssembly = useMemo(
     () =>
       checkIsAssemblyNode({
@@ -291,6 +297,7 @@ export const CompositionBlock = ({
     {
       ...sanitizeNodeProps(nodeProps),
       className,
+      key: `${node.id}-${hasRendered}`,
     },
     children ?? (typeof nodeProps.children === 'string' ? nodeProps.children : null),
   );
