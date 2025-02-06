@@ -27,9 +27,8 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
   component,
 }) => {
   const { wrapperStyle, imageStyle } = useMemo(() => {
-    let imageStyle: Record<string, any> = {};
-
-    let wrapperStyle: Record<string, any> = {};
+    const imageStyle: Record<string, any> = {};
+    const wrapperStyle: Record<string, any> = {};
 
     if (nodeProps.cfImageOptions && typeof nodeProps.cfImageOptions === 'object') {
       for (const [breakpointId, styles] of Object.entries(nodeProps.cfImageOptions)) {

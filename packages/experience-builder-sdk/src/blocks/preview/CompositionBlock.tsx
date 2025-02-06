@@ -102,10 +102,10 @@ export const CompositionBlock = ({
   const { ssrProps, contentProps, props, mediaQuery } = useMemo(() => {
     // In SSR, we store the className under breakpoints[0] which is resolved here to the actual string
     const cfSsrClassNameValues = node.variables.cfSsrClassName as DesignValue | undefined;
-    const cfSsrClassName = resolveDesignValue(
-      cfSsrClassNameValues?.valuesByBreakpoint,
-      'cfSsrClassName',
-    ) as string | undefined;
+    const mainBreakpoint = entityStore.breakpoints[0];
+    const cfSsrClassName = cfSsrClassNameValues?.valuesByBreakpoint?.[mainBreakpoint.id] as
+      | string
+      | undefined;
 
     // Don't enrich the assembly wrapper node with props
     if (!componentRegistration || isAssembly) {
