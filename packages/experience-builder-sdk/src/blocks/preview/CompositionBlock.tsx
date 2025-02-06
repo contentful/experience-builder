@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo, useEffect } from 'react';
+import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import {
   EntityStore,
@@ -220,8 +220,6 @@ export const CompositionBlock = ({
     locale,
     wrappingPatternIds,
   ]);
-
-  console.log('~props', node.id, node.definitionId, props);
 
   // do not inject the stylesheet into the dom because it's already been done on the server side
   useInjectStylesheet(ssrProps.cfSsrClassName ? undefined : mediaQuery);
