@@ -1,4 +1,4 @@
-import { isCfStyleAttribute, toMediaQuery } from '@contentful/experiences-core';
+import { isCfStyleAttribute } from '@contentful/experiences-core';
 import {
   BoundComponentPropertyTypes,
   BoundValue,
