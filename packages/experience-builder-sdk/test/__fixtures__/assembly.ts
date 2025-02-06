@@ -4,6 +4,7 @@ import {
   LATEST_SCHEMA_VERSION,
 } from '@contentful/experiences-core/constants';
 import type {
+  ComponentTreeNode,
   ExperienceComponentSettings,
   ExperienceEntry,
   ExperienceTreeNode,
@@ -13,6 +14,7 @@ import type {
 type createAssemblyEntryArgs = {
   schemaVersion?: SchemaVersions;
   id?: string;
+  nestedPatterns?: Array<{ entry: ExperienceEntry; node: ComponentTreeNode }>;
 };
 
 // TODO: Rename to TEST_PATTERN_ID
@@ -23,6 +25,7 @@ export const assemblyGeneratedDesignVariableName = 'cfWidth_uuid2Assembly';
 export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = defaultAssemblyId,
+  nestedPatterns = [],
 }: createAssemblyEntryArgs = {}): ExperienceEntry => {
   return {
     sys: {
@@ -57,6 +60,7 @@ export const createAssemblyEntry = ({
     fields: {
       title: 'Test Composition',
       slug: 'test',
+      usedComponents: nestedPatterns?.map(({ entry }) => entry) ?? [],
       componentTree: {
         children: [
           {
@@ -79,6 +83,7 @@ export const createAssemblyEntry = ({
                 children: [],
               },
             ],
+            ...(nestedPatterns?.map(({ node }) => node) ?? []),
           },
         ],
         breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
