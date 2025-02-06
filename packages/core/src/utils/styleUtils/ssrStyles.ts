@@ -166,6 +166,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           },
         };
 
+        const resolvedComponentVariables = resolveComponentVariablesOverwrites(
+          currentNode,
+          componentVariablesOverwrites,
+        );
+
         // the node of a used pattern contains only the definitionId (id of the patter entry)
         // as well as the variables overwrites
         // the layout of a pattern is stored in it's entry
@@ -180,7 +185,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           componentSettings: patternEntry.fields.componentSettings,
           // and this is where the over-writes for the default values are stored
           // yes, I know, it's a bit confusing
-          componentVariablesOverwrites: currentNode.variables,
+          componentVariablesOverwrites: resolvedComponentVariables,
           // pass top-level pattern node to store instance-specific child styles for rendering
           patternWrapper: currentNode,
           wrappingPatternIds: new Set([...wrappingPatternIds, currentNode.definitionId]),
@@ -377,6 +382,34 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
   }, '');
 
   return styleSheet;
+};
+
+/**
+ * In case of nested patterns, we need to resolve the ComponentValue variables and overwrite them with the value
+ * stored in the parent component.
+ * @param patternNode - pattern node which contains the variables
+ * @param componentVariablesOverwrites - object which contains the variables of the parent component
+ */
+const resolveComponentVariablesOverwrites = (
+  patternNode: ComponentTreeNode,
+  componentVariablesOverwrites?: Record<string, ComponentPropertyValue>,
+): Record<string, ComponentPropertyValue> => {
+  if (!componentVariablesOverwrites) {
+    return patternNode.variables;
+  }
+
+  return Object.entries(patternNode?.variables).reduce(
+    (resolvedValues, [variableName, variableData]) => {
+      if (variableData.type === 'ComponentValue') {
+        // copying the values parent node
+        resolvedValues[variableName] = componentVariablesOverwrites?.[variableData.key];
+      } else {
+        resolvedValues[variableName] = variableData;
+      }
+      return resolvedValues;
+    },
+    {},
+  );
 };
 
 export const isCfStyleAttribute = (variableName: string): variableName is keyof StyleProps => {
