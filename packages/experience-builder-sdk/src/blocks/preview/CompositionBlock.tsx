@@ -124,6 +124,7 @@ export const CompositionBlock = ({
       customDesignProps = {},
       mediaQuery,
     } = parseComponentProps({
+      mainBreakpoint,
       componentDefinition: componentRegistration.definition,
       node,
       resolveCustomDesignValue: ({ propertyName, valuesByBreakpoint }) => {

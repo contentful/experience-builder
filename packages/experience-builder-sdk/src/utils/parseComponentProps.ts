@@ -2,6 +2,7 @@ import { isCfStyleAttribute } from '@contentful/experiences-core';
 import {
   BoundComponentPropertyTypes,
   BoundValue,
+  Breakpoint,
   ComponentDefinition,
   ComponentDefinitionVariable,
   ComponentDefinitionVariableType,
@@ -10,6 +11,10 @@ import {
   PrimitiveValue,
 } from '@contentful/experiences-core/types';
 import { convertResolvedDesignValuesToMediaQuery } from '../hooks/useMediaQuery';
+
+const isSpecialCaseCssProp = (propName: string) => {
+  return propName === 'cfBackgroundImageUrl' || propName.startsWith('cfBackgroundImageUrl_');
+};
 
 /**
  * The previous logic of prop mapping was too complex and mixed different ues cases together.
@@ -23,6 +28,7 @@ import { convertResolvedDesignValuesToMediaQuery } from '../hooks/useMediaQuery'
  * for each breakpoint
  */
 export const parseComponentProps = ({
+  mainBreakpoint,
   componentDefinition,
   node,
   resolveClassNamesFromBuiltInStyles,
@@ -31,6 +37,7 @@ export const parseComponentProps = ({
   resolveHyperlinkValue,
   resolveUnboundValue,
 }: {
+  mainBreakpoint: Breakpoint;
   node: ComponentTreeNode;
   componentDefinition: ComponentDefinition;
   resolveClassNamesFromBuiltInStyles: (
@@ -79,7 +86,15 @@ export const parseComponentProps = ({
           dataType: propDefinition.type as ComponentDefinitionVariableType,
           binding: propertyValue,
         });
-        contentProps[propName] = boundValue ?? propDefinition.defaultValue;
+
+        const propValue = boundValue ?? propDefinition.defaultValue;
+
+        if (isSpecialCaseCssProp(propName)) {
+          styleProps[propName] = { [mainBreakpoint.id]: propValue };
+        } else {
+          contentProps[propName] = propValue;
+        }
+        propValue;
         break;
       }
 
@@ -97,7 +112,12 @@ export const parseComponentProps = ({
           mappingKey: propertyValue.key,
           defaultValue: propDefinition.defaultValue,
         });
-        contentProps[propName] = unboundValue;
+
+        if (isSpecialCaseCssProp(propName)) {
+          styleProps[propName] = { [mainBreakpoint.id]: unboundValue };
+        } else {
+          contentProps[propName] = unboundValue;
+        }
         break;
       }
       case 'ComponentValue':
