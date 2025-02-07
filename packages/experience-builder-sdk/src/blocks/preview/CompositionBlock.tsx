@@ -50,7 +50,7 @@ export const CompositionBlock = ({
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
 }: CompositionBlockProps) => {
-  const [hasRendered, setHasRendered] = React.useState(false);
+  const [hasRendered, setHasRendered] = useState(false);
 
   useEffect(() => {
     setHasRendered(true);
