@@ -56,8 +56,9 @@ export const CompositionBlock = ({
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
   patternNodeIdsChain = '',
 }: CompositionBlockProps) => {
-  const [hasRendered, setHasRendered] = React.useState(false);
+  const [hasRendered, setHasRendered] = useState(false);
   patternNodeIdsChain = `${patternNodeIdsChain}${rawNode.id}`;
+
   useEffect(() => {
     setHasRendered(true);
   }, []);
