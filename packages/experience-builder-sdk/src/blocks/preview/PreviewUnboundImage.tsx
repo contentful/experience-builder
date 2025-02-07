@@ -69,7 +69,7 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
     <div className={classNames('cf-preview-unbound-image', wrapperMedia.className)}>
       {React.createElement(component, {
         ...sanitizeNodeProps(nodeProps),
-        className: imageMedia.css ? imageMedia.className : nodeProps.className,
+        className: classNames(nodeProps.className, imageMedia.className),
       })}
     </div>
   );

@@ -19,7 +19,6 @@ type ResolvedStylesheetData = Array<{
   css: string;
 }>;
 
-// TODO: move to ssrStyles.ts file and reuse it there
 export const resolveClassNamesFromBuiltInStyles = ({
   designPropsByBreakpointId,
   breakpoints,
@@ -116,7 +115,6 @@ export const resolveClassNamesFromBuiltInStyles = ({
   return result;
 };
 
-// TODO: move to ssrStyles.ts file and reuse it there
 export const convertResolvedDesignValuesToMediaQuery = (styleSheetData: ResolvedStylesheetData) => {
   /**
    * {
