@@ -1,4 +1,4 @@
-import { createExperience, detachExperienceStyles } from '../../index';
+import { Asset, Entry } from 'contentful';
 import {
   ComponentTreeNode,
   DesignValue,
@@ -6,8 +6,8 @@ import {
   ExperienceEntry,
   ExperienceUnboundValues,
 } from '../../types';
-import { Asset, Entry } from 'contentful';
-
+import { createExperience, detachExperienceStyles } from '../../index';
+import { experienceEntryFieldsWithFilledUsedComponents } from '../../test/__fixtures__/experience';
 const patternEntry: ExperienceEntry = {
   metadata: {
     tags: [],
@@ -1790,5 +1790,27 @@ describe('pattern component', () => {
 
     // Expecting if it style contains updated background color of pattern instance
     expect(styles).toMatch('background-color:rgba(270, 154, 255, 0)');
+  });
+
+  it('should resolve styles for an experience with exposed design properties of nested pattern', () => {
+    const experienceEntryWithNestedPattern = {
+      sys: {
+        id: 'test-experience-entry-id',
+        type: 'Entry',
+      },
+      fields: experienceEntryFieldsWithFilledUsedComponents,
+      metadata: {},
+    } as never as Entry;
+    const experience = createExperience({
+      experienceEntry: experienceEntryWithNestedPattern,
+      locale: 'en-US',
+      referencedEntries: [],
+      referencedAssets: [],
+    });
+
+    const styles = detachExperienceStyles(experience);
+
+    // Making sure that the extracted styles contain the updated background color for the nested pattern component
+    expect(styles).toMatch('background-color:rgba(111,  111 , 111, 0)');
   });
 });
