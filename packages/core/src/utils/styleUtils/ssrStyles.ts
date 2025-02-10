@@ -169,6 +169,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         const resolvedComponentVariables = resolveComponentVariablesOverwrites(
           currentNode,
           componentVariablesOverwrites,
+          componentSettings,
         );
 
         // the node of a used pattern contains only the definitionId (id of the patter entry)
@@ -393,6 +394,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 const resolveComponentVariablesOverwrites = (
   patternNode: ComponentTreeNode,
   componentVariablesOverwrites?: Record<string, ComponentPropertyValue>,
+  wrapperComponentSettings?: ExperienceComponentSettings,
 ): Record<string, ComponentPropertyValue> => {
   if (!componentVariablesOverwrites) {
     return patternNode.variables;
@@ -402,7 +404,13 @@ const resolveComponentVariablesOverwrites = (
     (resolvedValues, [variableName, variableData]) => {
       if (variableData.type === 'ComponentValue') {
         // copying the values parent node
-        resolvedValues[variableName] = componentVariablesOverwrites?.[variableData.key];
+        const overrideVariableData = componentVariablesOverwrites?.[variableData.key];
+
+        // variable definition of the parent pattern
+        const wrapperVariableDefinition =
+          wrapperComponentSettings?.variableDefinitions?.[variableData.key];
+        resolvedValues[variableName] =
+          overrideVariableData || wrapperVariableDefinition?.defaultValue;
       } else {
         resolvedValues[variableName] = variableData;
       }
