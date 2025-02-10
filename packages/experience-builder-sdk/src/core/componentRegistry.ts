@@ -192,9 +192,11 @@ export const optionalBuiltInComponents = [
 
 export const sendRegisteredComponentsMessage = () => {
   // Send the definitions (without components) via the connection message to the experience builder
-  const registeredDefinitions = Array.from(componentRegistry.values()).map(
-    ({ definition }) => definition,
-  );
+  const registeredDefinitions = Array.from(componentRegistry.values())
+    .map(({ definition }) => definition)
+    // Pattern definitions are empty placeholder within the SDK without variables
+    // We don't send those to the editor as they would overwrite the actual correct definitions.
+    .filter((definition) => definition.category !== ASSEMBLY_DEFAULT_CATEGORY);
 
   sendMessage(OUTGOING_EVENTS.RegisteredComponents, {
     definitions: registeredDefinitions,
