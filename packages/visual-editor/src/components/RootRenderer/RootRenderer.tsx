@@ -123,7 +123,13 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => 
       <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
         {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitbox} />}
         <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
-        {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />}
+        {userIsDragging && (
+          <>
+            <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />
+            {/* This adds extra space to the bottom of the canvas when dragging to improve hitbox targeting */}
+            <div data-ctfl-zone-id={ROOT_ID} className={styles.canvasBottomSpacer} />
+          </>
+        )}
       </div>
       <div data-ctfl-hitboxes />
     </DNDProvider>
