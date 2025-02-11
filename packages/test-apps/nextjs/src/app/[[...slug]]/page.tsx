@@ -13,21 +13,20 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   const { isPreview, expEditorMode, mode } = searchParams;
   const preview = isPreview === 'true' || mode === 'preview';
   const editorMode = expEditorMode === 'true';
-  const { experience, error } = await getExperience(slug, locale, preview, editorMode);
+  // const { experience, error } = await getExperience(slug, locale, preview, editorMode);
 
-  if (error) {
-    return <div>{error.message}</div>;
-  }
+  // if (error) {
+  //   return <div>{error.message}</div>;
+  // }
 
-  const stylesheet = experience ? detachExperienceStyles(experience) : null;
+  // const stylesheet = experience ? detachExperienceStyles(experience) : null;
 
-  // experience currently needs to be stringified manually to be passed to the component
-  const experienceJSON = experience ? JSON.stringify(experience) : null;
+  // // experience currently needs to be stringified manually to be passed to the component
+  // const experienceJSON = experience ? JSON.stringify(experience) : null;
 
   return (
     <main style={{ width: '100%' }}>
-      {stylesheet && <style data-css-ssr>{stylesheet}</style>}
-      <Experience experienceJSON={experienceJSON} locale={locale} />
+      <Experience locale={locale} />
     </main>
   );
 }
