@@ -112,6 +112,9 @@ export const getValueForBreakpoint = (
     return value;
   };
 
+  if (variableName === 'size') {
+    console.log('~valuesByBreakpoint', valuesByBreakpoint);
+  }
   if (valuesByBreakpoint instanceof Object) {
     // Assume that the values are sorted by media query to apply the cascading CSS logic
     for (let index = activeBreakpointIndex; index >= 0; index--) {
@@ -119,6 +122,9 @@ export const getValueForBreakpoint = (
       if (isValidBreakpointValue(valuesByBreakpoint[breakpointId])) {
         // If the value is defined, we use it and stop the breakpoints cascade
         if (resolveDesignTokens) {
+          if (variableName === 'size') {
+            console.log('~value', eventuallyResolveDesignTokens(valuesByBreakpoint[breakpointId]));
+          }
           return eventuallyResolveDesignTokens(valuesByBreakpoint[breakpointId]);
         }
         return valuesByBreakpoint[breakpointId];

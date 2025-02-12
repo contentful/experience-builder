@@ -50,11 +50,11 @@ export const CompositionBlock = ({
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
 }: CompositionBlockProps) => {
-  const [hasRendered, setHasRendered] = useState(false);
+  // const [hasRendered, setHasRendered] = useState(false);
 
-  useEffect(() => {
-    setHasRendered(true);
-  }, []);
+  // useEffect(() => {
+  //   setHasRendered(true);
+  // }, []);
 
   const isAssembly = useMemo(
     () =>
@@ -319,7 +319,7 @@ export const CompositionBlock = ({
   return React.createElement(
     component,
     {
-      key: Object.keys(customDesignProps).length ? `${node.id}-${hasRendered}` : node.id,
+      // key: Object.keys(customDesignProps).length ? `${node.id}-${hasRendered}` : node.id,
       ...sanitizeNodeProps(props),
     },
     children ?? (typeof props.children === 'string' ? props.children : null),

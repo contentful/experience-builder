@@ -18,6 +18,7 @@ import { useCallback, useEffect, useState } from 'react';
  */
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   const [, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
+  console.log('~initialMediaMatches', initialMediaQueryMatches);
 
   const [mediaQueryMatches, setMediaQueryMatches] =
     useState<Record<string, boolean>>(initialMediaQueryMatches);
@@ -46,12 +47,15 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   const resolveDesignValue: ResolveDesignValueType = useCallback(
     (valuesByBreakpoint, variableName) => {
       const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+      console.log('~fallbackBreakpointIndex', fallbackBreakpointIndex);
 
       const activeBreakpointIndex = getActiveBreakpointIndex(
         breakpoints,
         mediaQueryMatches,
         fallbackBreakpointIndex,
       );
+      console.log('~activeBreakpointIndex', activeBreakpointIndex);
+
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,

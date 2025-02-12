@@ -8,9 +8,46 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
+import { Button } from './components/CustomButton';
 
 defineComponents(
   [
+    {
+      component: Button,
+      definition: {
+        id: 'custom-button',
+        name: 'Custom Button',
+        variables: {
+          variant: {
+            displayName: 'Variant',
+            type: 'Text',
+            group: 'style',
+            validations: {
+              in: [
+                { value: 'default', displayName: 'Default' },
+                { value: 'destructive', displayName: 'Destructive' },
+                { value: 'outline', displayName: 'Outline' },
+                { value: 'secondary', displayName: 'Secondary' },
+                { value: 'ghost', displayName: 'Ghost' },
+              ],
+            },
+          },
+          size: {
+            displayName: 'Size',
+            type: 'Text',
+            group: 'style',
+            validations: {
+              in: [
+                { value: 'default', displayName: 'Default' },
+                { value: 'sm', displayName: 'SM' },
+                { value: 'lg', displayName: 'LG' },
+                { value: 'icon', displayName: 'Icon' },
+              ],
+            },
+          },
+        },
+      },
+    },
     {
       component: ComponentWithChildren,
       definition: {
