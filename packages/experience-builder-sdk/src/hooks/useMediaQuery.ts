@@ -92,7 +92,7 @@ export const resolveClassNamesFromBuiltInStyles = ({
           }
         */
     // I create a hash of the object above because that would ensure hash stability
-    const styleHash = md5(JSON.stringify(stylesForBreakpointWithoutUndefined));
+    const styleHash = md5(`${node.id}-${JSON.stringify(stylesForBreakpointWithoutUndefined)}`);
 
     // and prefix the className to make sure the value can be processed
     const className = `cfstyles-${styleHash}`;

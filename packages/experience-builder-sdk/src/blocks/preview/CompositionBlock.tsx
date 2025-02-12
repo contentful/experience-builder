@@ -100,7 +100,7 @@ export const CompositionBlock = ({
     return registration;
   }, [isAssembly, node.definitionId]);
 
-  const { ssrProps, contentProps, props, mediaQuery } = useMemo(() => {
+  const { ssrProps, customDesignProps, contentProps, props, mediaQuery } = useMemo(() => {
     // In SSR, we store the className under breakpoints[0] which is resolved here to the actual string
     const cfSsrClassNameValues = node.variables.cfSsrClassName as DesignValue | undefined;
     const mainBreakpoint = entityStore.breakpoints[0];
@@ -115,6 +115,7 @@ export const CompositionBlock = ({
       return {
         ssrProps,
         props,
+        customDesignProps: {},
       };
     }
 
@@ -330,8 +331,8 @@ export const CompositionBlock = ({
   return React.createElement(
     component,
     {
+      key: Object.keys(customDesignProps).length ? `${node.id}-${hasRendered}` : node.id,
       ...sanitizeNodeProps(props),
-      key: `${node.id}-${hasRendered}`,
     },
     children ?? (typeof props.children === 'string' ? props.children : null),
   );
