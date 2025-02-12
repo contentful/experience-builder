@@ -154,7 +154,6 @@ export const convertResolvedDesignValuesToMediaQuery = (styleSheetData: Resolved
 
   return {
     css: styleSheet.css,
-    hash: `cf-${md5(className)}`,
     className,
   };
 };
