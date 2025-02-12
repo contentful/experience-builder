@@ -22,8 +22,6 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   const [mediaQueryMatches, setMediaQueryMatches] =
     useState<Record<string, boolean>>(initialMediaQueryMatches);
 
-  const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
-
   // Register event listeners to update the media query states
   useEffect(() => {
     const [mediaQueryMatchers] = mediaQueryMatcher(breakpoints);
@@ -45,22 +43,25 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
     };
   }, [breakpoints]);
 
-  const activeBreakpointIndex = getActiveBreakpointIndex(
-    breakpoints,
-    mediaQueryMatches,
-    fallbackBreakpointIndex,
-  );
-
   const resolveDesignValue: ResolveDesignValueType = useCallback(
     (valuesByBreakpoint, variableName) => {
+      const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+
+      const activeBreakpointIndex = getActiveBreakpointIndex(
+        breakpoints,
+        mediaQueryMatches,
+        fallbackBreakpointIndex,
+      );
+
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,
         activeBreakpointIndex,
+        fallbackBreakpointIndex,
         variableName,
       );
     },
-    [activeBreakpointIndex, breakpoints],
+    [mediaQueryMatches, breakpoints],
   );
 
   return { resolveDesignValue };
