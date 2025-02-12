@@ -16,7 +16,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@contentful/experiences-sdk-react": "^1.27.1",
+    "@contentful/experiences-sdk-react": "^1.30.5",
     "contentful": "^11.3.2",
     "gatsby": "^5.14.1",
     "react": "^18.2.0",
