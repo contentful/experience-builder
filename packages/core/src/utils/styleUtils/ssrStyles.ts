@@ -2,6 +2,7 @@ import md5 from 'md5';
 import { Asset, Entry, UnresolvedLink } from 'contentful/dist/types/types';
 import {
   ComponentPropertyValue,
+  DesignValue,
   ExperienceComponentSettings,
   ExperienceComponentTree,
   ExperienceDataSource,
@@ -170,11 +171,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           };
         }
 
-        const resolvedComponentVariables = resolveComponentVariablesOverwrites(
-          currentNode,
+        const resolvedComponentVariables = resolveComponentVariablesOverwrites({
+          patternNode: currentNode,
           componentVariablesOverwrites,
-          componentSettings,
-        );
+          wrapperComponentSettings: componentSettings,
+        });
 
         // the node of a used pattern contains only the definitionId (id of the patter entry)
         // as well as the variables overwrites
@@ -396,28 +397,49 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
  * @param patternNode - pattern node which contains the variables
  * @param componentVariablesOverwrites - object which contains the variables of the parent component
  */
-const resolveComponentVariablesOverwrites = (
-  patternNode: ComponentTreeNode,
-  componentVariablesOverwrites?: Record<string, ComponentPropertyValue>,
-  wrapperComponentSettings?: ExperienceComponentSettings,
-): Record<string, ComponentPropertyValue> => {
+const resolveComponentVariablesOverwrites = ({
+  patternNode,
+  componentVariablesOverwrites,
+  wrapperComponentSettings,
+}: {
+  patternNode: ComponentTreeNode;
+  componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
+  wrapperComponentSettings?: ExperienceComponentSettings;
+}): Record<string, ComponentPropertyValue> => {
   if (!componentVariablesOverwrites) {
-    return patternNode.variables;
+    const properties = patternNode.variables;
+    const propertyDefinitions = wrapperComponentSettings?.variableDefinitions;
+    const resolvedProperties = Object.entries(properties).reduce(
+      (resolvedProperties, [propertyName, propertyValue]) => {
+        if (propertyValue.type === 'ComponentValue') {
+          const componentValueKey = propertyValue.key;
+          const componentDefaultValue = propertyDefinitions?.[componentValueKey].defaultValue;
+          // We're only considering design properties for styles generation
+          if ((componentDefaultValue as DesignValue)?.type === 'DesignValue') {
+            resolvedProperties[propertyName] = componentDefaultValue;
+          }
+        } else {
+          resolvedProperties[propertyName] = propertyValue;
+        }
+        return resolvedProperties;
+      },
+      {},
+    );
+    return resolvedProperties;
   }
 
   return Object.entries(patternNode?.variables).reduce(
-    (resolvedValues, [variableName, variableData]) => {
-      if (variableData.type === 'ComponentValue') {
+    (resolvedValues, [propertyName, propertyValue]) => {
+      if (propertyValue.type === 'ComponentValue') {
         // copying the values parent node
-        const overrideVariableData = componentVariablesOverwrites?.[variableData.key];
+        const overwritingValue = componentVariablesOverwrites?.[propertyValue.key];
 
         // variable definition of the parent pattern
-        const wrapperVariableDefinition =
-          wrapperComponentSettings?.variableDefinitions?.[variableData.key];
-        resolvedValues[variableName] =
-          overrideVariableData || wrapperVariableDefinition?.defaultValue;
+        const patternPropertyDefinition =
+          wrapperComponentSettings?.variableDefinitions?.[propertyValue.key];
+        resolvedValues[propertyName] = overwritingValue ?? patternPropertyDefinition?.defaultValue;
       } else {
-        resolvedValues[variableName] = variableData;
+        resolvedValues[propertyName] = propertyValue;
       }
       return resolvedValues;
     },
