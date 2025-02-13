@@ -95,6 +95,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentVariablesOverwrites,
     patternWrapper,
     wrappingPatternIds,
+    patternNodeIdsChain = '',
   }: {
     componentTree: ExperienceComponentTree;
     dataSource: ExperienceDataSource;
@@ -103,6 +104,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
     patternWrapper?: ComponentTreeNode;
     wrappingPatternIds: Set<string>;
+    patternNodeIdsChain?: string;
   }) => {
     // traversing the tree
     const queue: ComponentTreeNode[] = [];
@@ -159,12 +161,14 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           }
         }
 
-        currentNode.variables.cfSsrClassName = {
-          type: 'DesignValue',
-          valuesByBreakpoint: {
-            [breakpointIds[0]]: className,
-          },
-        };
+        if (!currentNode.variables.cfSsrClassName) {
+          currentNode.variables.cfSsrClassName = {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [breakpointIds[0]]: className,
+            },
+          };
+        }
 
         const resolvedComponentVariables = resolveComponentVariablesOverwrites(
           currentNode,
@@ -190,6 +194,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           // pass top-level pattern node to store instance-specific child styles for rendering
           patternWrapper: currentNode,
           wrappingPatternIds: new Set([...wrappingPatternIds, currentNode.definitionId]),
+          patternNodeIdsChain: `${patternNodeIdsChain}${currentNode.id}`,
         });
         continue;
       }
@@ -342,12 +347,12 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       // making sure that we respect the order of breakpoints from
       // we can achieve "desktop first" or "mobile first" approach to style over-writes
       if (patternWrapper) {
-        currentNode.id = currentNode.id ?? generateRandomId(15);
+        currentNode.id = currentNode.id || generateRandomId(5);
         // @ts-expect-error -- valueByBreakpoint is not explicitly defined, but it's already defined in the patternWrapper styles
         patternWrapper.variables.cfSsrClassName = {
           ...(patternWrapper.variables.cfSsrClassName ?? {}),
           type: 'DesignValue',
-          [currentNode.id]: {
+          [`${patternNodeIdsChain}${currentNode.id}`]: {
             valuesByBreakpoint: {
               [breakpointIds[0]]: currentNodeClassNames.join(' '),
             },
