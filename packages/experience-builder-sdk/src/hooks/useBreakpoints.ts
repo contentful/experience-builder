@@ -17,23 +17,21 @@ import { useCallback, useEffect, useState } from 'react';
  * and then decending by screen width. For mobile-first designs, the order would be ascending
  */
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
-  const [, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
-  console.log('~initialMediaQueryMatches', initialMediaQueryMatches);
-
-  const [mediaQueryMatches, setMediaQueryMatches] =
-    useState<Record<string, boolean>>(initialMediaQueryMatches);
+  const [mediaQueryMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({});
 
   // Register event listeners to update the media query states
   useEffect(() => {
     const [mediaQueryMatchers] = mediaQueryMatcher(breakpoints);
+    console.log('~mediaQueryMatchers', mediaQueryMatchers);
+
+    setMediaQueryMatches(mediaQueryMatches);
+
     const eventListeners = mediaQueryMatchers.map(({ id, signal }) => {
-      const onChange = () => {
-        console.log('~onBreakpointChange', id, signal.matches);
+      const onChange = () =>
         setMediaQueryMatches((prev) => ({
           ...prev,
           [id]: signal.matches,
         }));
-      };
 
       signal.addEventListener('change', onChange);
       return onChange;
@@ -62,6 +60,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
         console.log('~mediaQueryMatches', mediaQueryMatches);
         console.log('~activeBreakpointIndex', activeBreakpointIndex);
       }
+
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,
