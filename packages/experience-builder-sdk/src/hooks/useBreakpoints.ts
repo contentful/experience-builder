@@ -18,6 +18,7 @@ import { useCallback, useEffect, useState } from 'react';
  */
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   const [, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
+  console.log('~initialMediaQueryMatches', initialMediaQueryMatches);
 
   const [mediaQueryMatches, setMediaQueryMatches] =
     useState<Record<string, boolean>>(initialMediaQueryMatches);
@@ -26,11 +27,13 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   useEffect(() => {
     const [mediaQueryMatchers] = mediaQueryMatcher(breakpoints);
     const eventListeners = mediaQueryMatchers.map(({ id, signal }) => {
-      const onChange = () =>
+      const onChange = () => {
+        console.log('~onBreakpointChange', id, signal.matches);
         setMediaQueryMatches((prev) => ({
           ...prev,
           [id]: signal.matches,
         }));
+      };
 
       signal.addEventListener('change', onChange);
       return onChange;
@@ -52,6 +55,13 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
         mediaQueryMatches,
         fallbackBreakpointIndex,
       );
+      if (variableName === 'hide') {
+        console.log('~valuesByBreakpoint', valuesByBreakpoint);
+        console.log('~breakpoints', breakpoints);
+        console.log('~fallbackBreakpointIndex', fallbackBreakpointIndex);
+        console.log('~mediaQueryMatches', mediaQueryMatches);
+        console.log('~activeBreakpointIndex', activeBreakpointIndex);
+      }
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,
