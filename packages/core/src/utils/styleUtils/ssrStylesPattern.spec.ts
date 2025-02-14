@@ -1317,6 +1317,7 @@ describe('pattern component', () => {
   it('should extract media query css', () => {
     const patternNode: ComponentTreeNode = {
       definitionId: '4JYGAfHMSVdWkuf6kbd1n8',
+      id: 'random-id',
       variables: {
         cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
           type: 'UnboundValue',
@@ -1407,12 +1408,12 @@ describe('pattern component', () => {
         continue;
       }
 
-      //@ts-expect-error TODO: fix this
-      expect(patternWrapper.variables.cfSsrClassName[node.id]).toBeDefined();
+      const patternNodeIdsChain = `${patternNode.id}${node.id}`;
+
+      expect(patternWrapper.variables.cfSsrClassName[patternNodeIdsChain]).toBeDefined();
       expect(
-        //@ts-expect-error TODO: fix this
-        (patternWrapper.variables.cfSsrClassName[node.id] as DesignValue).valuesByBreakpoint
-          .desktop,
+        (patternWrapper.variables.cfSsrClassName[patternNodeIdsChain] as DesignValue)
+          .valuesByBreakpoint.desktop,
       ).toBeDefined();
       if (node?.children.length) {
         queue.push(...node.children);
