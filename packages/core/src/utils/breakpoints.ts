@@ -50,7 +50,7 @@ export const mediaQueryMatcher = (breakpoints: Breakpoint[]) => {
 
 export const getActiveBreakpointIndex = (
   breakpoints: Breakpoint[],
-  mediaQueryMatches: Record<string, boolean>,
+  mediaQueryMatches: Record<string, boolean> | undefined,
   fallbackBreakpointIndex: number,
 ) => {
   // The breakpoints are ordered (desktop-first: descending by screen width)
@@ -58,7 +58,7 @@ export const getActiveBreakpointIndex = (
     id,
     index,
     // The fallback breakpoint with wildcard query will always match
-    isMatch: mediaQueryMatches[id] ?? index === fallbackBreakpointIndex,
+    isMatch: mediaQueryMatches?.[id] ?? index === fallbackBreakpointIndex,
   }));
 
   // Find the last breakpoint in the list that matches (desktop-first: the narrowest one)
