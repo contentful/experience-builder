@@ -318,7 +318,9 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         }
        */
         // I create a hash of the object above because that would ensure hash stability
-        const styleHash = md5(JSON.stringify(stylesForBreakpointWithoutUndefined));
+        // Adding breakpointId to ensure not using the same IDs between breakpoints as this leads to
+        // conflicts between different breakpoint values from multiple nodes where the hash would be equal
+        const styleHash = md5(breakpointId + JSON.stringify(stylesForBreakpointWithoutUndefined));
 
         // and prefix the className to make sure the value can be processed
         const className = `cf-${styleHash}`;
