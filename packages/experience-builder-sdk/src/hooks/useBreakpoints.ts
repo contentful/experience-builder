@@ -22,10 +22,8 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   // Register event listeners to update the media query states
   useEffect(() => {
     const [mediaQueryMatchers, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
-    console.log('~mediaQueryMatchers', mediaQueryMatchers);
 
     setMediaQueryMatches(initialMediaQueryMatches);
-    console.log('~mediaQueryMatches', initialMediaQueryMatches);
 
     const eventListeners = mediaQueryMatchers.map(({ id, signal }) => {
       const onChange = () =>
@@ -54,13 +52,6 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
         mediaQueryMatches,
         fallbackBreakpointIndex,
       );
-      if (variableName === 'hide') {
-        console.log('~valuesByBreakpoint', valuesByBreakpoint);
-        console.log('~breakpoints', breakpoints);
-        console.log('~fallbackBreakpointIndex', fallbackBreakpointIndex);
-        console.log('~mediaQueryMatches', mediaQueryMatches);
-        console.log('~activeBreakpointIndex', activeBreakpointIndex);
-      }
 
       return getValueForBreakpoint(
         valuesByBreakpoint,
