@@ -1,3 +1,8 @@
+/**
+ * FIXME: Drop snapshot tests (i.e. hard comparing the full string including hash)
+ * Instead we should test specific atomic functionality. So the test doesn't fail on every
+ * single code change but only when the code change would actually break a specific functionality.
+ */
 import { createExperience, detachExperienceStyles } from '../../index';
 import { DesignValue, ExperienceEntry } from '../../types';
 import { Entry } from 'contentful';
@@ -265,7 +270,7 @@ describe('custom component with builtInStyles', () => {
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint
         .desktop as string,
     ).toEqual(
-      'cf-43029969c929a132a7ea1b42e1001911 cf-a955978470bb9d02b0495352a652f16b cf-473f663c99fb1b1a0de0e9c3735095ed',
+      'cf-56e983fb3d3088583d06a43c1ec9db69 cf-efe6b38e8d4cd64344282a12f4eb711e cf-09ce6050f4829151d97dd78522790d79',
     );
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -275,7 +280,7 @@ describe('custom component with builtInStyles', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-43029969c929a132a7ea1b42e1001911{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:black;width:100%;height:100%;max-width:none;grid-column:span 1;border:1px solid red;border-radius:0px;gap:10px 10px;align-items:center;justify-content:safe center;flex-direction:row;flex-wrap:wrap;background-image:url(https://www.contentful.com/bg-image.jpg);background-repeat:no-repeat;font-size:16px;font-weight:bold;font-style:italic;text-decoration:underline;line-height:1.5;letter-spacing:1px;color:white;text-align:center;text-transform:uppercase;}@media(max-width:992px){.cf-a955978470bb9d02b0495352a652f16b{box-sizing:border-box;margin:1rem 1rem 1rem 1rem;padding:1rem 1rem 1rem 1rem;background-color:grey;width:50%;height:50%;max-width:500px;grid-column:span 2;border:1px solid green;border-radius:2px;gap:5px 5px;align-items:top;justify-content:left;flex-direction:column;flex-wrap:nowrap;font-size:14px;font-weight:bold;font-style:italic;text-decoration:underline;line-height:1.25;letter-spacing:0.5px;color:black;text-align:left;text-transform:capitalize;}}@media(max-width:576px){.cf-473f663c99fb1b1a0de0e9c3735095ed{box-sizing:border-box;margin:1.5rem 1.5rem 1.5rem 1.5rem;padding:1.5rem 1.5rem 1.5rem 1.5rem;background-color:ashgrey;width:25%;height:25%;max-width:300px;grid-column:span 3;border:1px solid blue;border-radius:5px;gap:2px 2px;align-items:right;justify-content:bottom;flex-direction:row;flex-wrap:wrap;font-size:12px;font-weight:bold;font-style:italic;text-decoration:underline;line-height:1;letter-spacing:0px;color:grey;text-align:right;text-transform:lowercase;}}',
+      '.cf-56e983fb3d3088583d06a43c1ec9db69{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:black;width:100%;height:100%;max-width:none;grid-column:span 1;border:1px solid red;border-radius:0px;gap:10px 10px;align-items:center;justify-content:safe center;flex-direction:row;flex-wrap:wrap;background-image:url(https://www.contentful.com/bg-image.jpg);background-repeat:no-repeat;font-size:16px;font-weight:bold;font-style:italic;text-decoration:underline;line-height:1.5;letter-spacing:1px;color:white;text-align:center;text-transform:uppercase;}@media(max-width:992px){.cf-efe6b38e8d4cd64344282a12f4eb711e{box-sizing:border-box;margin:1rem 1rem 1rem 1rem;padding:1rem 1rem 1rem 1rem;background-color:grey;width:50%;height:50%;max-width:500px;grid-column:span 2;border:1px solid green;border-radius:2px;gap:5px 5px;align-items:top;justify-content:left;flex-direction:column;flex-wrap:nowrap;font-size:14px;font-weight:bold;font-style:italic;text-decoration:underline;line-height:1.25;letter-spacing:0.5px;color:black;text-align:left;text-transform:capitalize;}}@media(max-width:576px){.cf-09ce6050f4829151d97dd78522790d79{box-sizing:border-box;margin:1.5rem 1.5rem 1.5rem 1.5rem;padding:1.5rem 1.5rem 1.5rem 1.5rem;background-color:ashgrey;width:25%;height:25%;max-width:300px;grid-column:span 3;border:1px solid blue;border-radius:5px;gap:2px 2px;align-items:right;justify-content:bottom;flex-direction:row;flex-wrap:wrap;font-size:12px;font-weight:bold;font-style:italic;text-decoration:underline;line-height:1;letter-spacing:0px;color:grey;text-align:right;text-transform:lowercase;}}',
     );
   });
 });
