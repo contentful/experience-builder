@@ -21,10 +21,11 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
 
   // Register event listeners to update the media query states
   useEffect(() => {
-    const [mediaQueryMatchers] = mediaQueryMatcher(breakpoints);
+    const [mediaQueryMatchers, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
     console.log('~mediaQueryMatchers', mediaQueryMatchers);
 
-    setMediaQueryMatches(mediaQueryMatches);
+    setMediaQueryMatches(initialMediaQueryMatches);
+    console.log('~mediaQueryMatches', initialMediaQueryMatches);
 
     const eventListeners = mediaQueryMatchers.map(({ id, signal }) => {
       const onChange = () =>
