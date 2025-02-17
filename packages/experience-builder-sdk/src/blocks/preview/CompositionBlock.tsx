@@ -38,6 +38,10 @@ type CompositionBlockProps = {
   resolveDesignValue: ResolveDesignValueType;
   getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
   wrappingPatternIds?: Set<string>;
+  /**
+   * Chained IDs to ensure uniqueness across multiple instances of the same pattern
+   * when storing & accessing cfSsrClassName.
+   */
   patternNodeIdsChain?: string;
 };
 

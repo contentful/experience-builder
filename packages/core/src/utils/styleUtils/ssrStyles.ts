@@ -162,6 +162,8 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           }
         }
 
+        // When iterating over instances of the same pattern, we will iterate over the identical
+        // pattern nodes again for every instance. Make sure to not overwrite the values from previous instances.
         if (!currentNode.variables.cfSsrClassName) {
           currentNode.variables.cfSsrClassName = {
             type: 'DesignValue',
@@ -353,6 +355,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         patternWrapper.variables.cfSsrClassName = {
           ...(patternWrapper.variables.cfSsrClassName ?? {}),
           type: 'DesignValue',
+          // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
           [`${patternNodeIdsChain}${currentNode.id}`]: {
             valuesByBreakpoint: {
               [breakpointIds[0]]: currentNodeClassNames.join(' '),
@@ -406,10 +409,11 @@ const resolveComponentVariablesOverwrites = ({
   componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
   wrapperComponentSettings?: ExperienceComponentSettings;
 }): Record<string, ComponentPropertyValue> => {
+  // On the top-level pattern node, prepare the defaultValue for ComponentValues.
+  // This allows rendering pattern entries in delivery mode with the correct styles.
   if (!componentVariablesOverwrites) {
-    const properties = patternNode.variables;
     const propertyDefinitions = wrapperComponentSettings?.variableDefinitions;
-    const resolvedProperties = Object.entries(properties).reduce(
+    const resolvedProperties = Object.entries(patternNode.variables).reduce(
       (resolvedProperties, [propertyName, propertyValue]) => {
         if (propertyValue.type === 'ComponentValue') {
           const componentValueKey = propertyValue.key;
@@ -428,16 +432,18 @@ const resolveComponentVariablesOverwrites = ({
     return resolvedProperties;
   }
 
+  // For a pattern child node inside an instance, we replace the ComponentValue with the actual value
+  // which is stored on the pattern instance.
   return Object.entries(patternNode?.variables).reduce(
     (resolvedValues, [propertyName, propertyValue]) => {
       if (propertyValue.type === 'ComponentValue') {
         // copying the values parent node
         const overwritingValue = componentVariablesOverwrites?.[propertyValue.key];
 
-        // variable definition of the parent pattern
-        const patternPropertyDefinition =
+        // property definition from the parent pattern
+        const propertyDefinition =
           wrapperComponentSettings?.variableDefinitions?.[propertyValue.key];
-        resolvedValues[propertyName] = overwritingValue ?? patternPropertyDefinition?.defaultValue;
+        resolvedValues[propertyName] = overwritingValue ?? propertyDefinition?.defaultValue;
       } else {
         resolvedValues[propertyName] = propertyValue;
       }
