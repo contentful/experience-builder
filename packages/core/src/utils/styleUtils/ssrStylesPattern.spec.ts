@@ -4,7 +4,6 @@
  * single code change but only when the code change would actually break a specific functionality.
  */
 import { Asset, Entry } from 'contentful';
-import { createExperience, detachExperienceStyles } from '../../index';
 import {
   ComponentTreeNode,
   DesignValue,
