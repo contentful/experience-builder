@@ -1,5 +1,7 @@
-import { getValueForBreakpoint } from '@contentful/experiences-core';
 import { Breakpoint } from '@contentful/experiences-core/types';
+import { useBreakpoints } from './useBreakpoints';
+import { renderHook } from '@testing-library/react';
+import { mediaQueryMatcher as mockMediaQueryMatcher } from '@contentful/experiences-core';
 
 const breakpoints: Breakpoint[] = [
   {
@@ -22,37 +24,122 @@ const breakpoints: Breakpoint[] = [
   },
 ];
 
+jest.mock('@contentful/experiences-core', () => {
+  const actualModule = jest.requireActual('@contentful/experiences-core');
+
+  return {
+    ...actualModule,
+    mediaQueryMatcher: jest.fn(),
+  };
+});
+
 describe('useBreakpoints', () => {
-  describe('getValueForBreakpoint', () => {
-    it('returns the value for the current breakpoint', () => {
-      const valuesByBreakpoint = {
-        [breakpoints[0].id]: 'red',
-        [breakpoints[1].id]: 'blue',
-        [breakpoints[2].id]: 'green',
-      };
-      const value = getValueForBreakpoint(valuesByBreakpoint, breakpoints, 1, 0, 'cfColor');
-      expect(value).toBe('blue');
+  let addEventListenerMock: jest.Mock;
+  let removeEventListenerMock: jest.Mock;
+
+  beforeEach(() => {
+    addEventListenerMock = jest.fn();
+    removeEventListenerMock = jest.fn();
+
+    // Mock media query matchers
+    (mockMediaQueryMatcher as jest.Mock).mockReturnValue([
+      [
+        {
+          id: 'tablet',
+          signal: {
+            matches: false,
+            addEventListener: addEventListenerMock,
+            removeEventListener: removeEventListenerMock,
+          },
+        },
+        {
+          id: 'mobile',
+          signal: {
+            matches: false,
+            addEventListener: addEventListenerMock,
+            removeEventListener: removeEventListenerMock,
+          },
+        },
+      ],
+      { tablet: false, mobile: false }, // Initial media query matches
+    ]);
+  });
+
+  it('should initialize media query matches correctly', () => {
+    const { result } = renderHook(() => useBreakpoints(breakpoints));
+
+    expect(result.current.resolveDesignValue).toBeDefined();
+    expect(addEventListenerMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('should remove event listeners on unmount', () => {
+    const { unmount } = renderHook(() => useBreakpoints(breakpoints));
+
+    unmount();
+
+    expect(removeEventListenerMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('should return resolved design value', () => {
+    const { result } = renderHook(() => useBreakpoints(breakpoints));
+
+    const resolvedValue = result.current.resolveDesignValue(
+      { desktop: 'value1', tablet: 'value2', mobile: 'value3' },
+      'someVariable',
+    );
+
+    expect(resolvedValue).toBe('value1');
+  });
+
+  describe('when we have a mobile breakpoint', () => {
+    beforeEach(() => {
+      (mockMediaQueryMatcher as jest.Mock).mockReturnValue([
+        [
+          {
+            id: 'tablet',
+            signal: {
+              matches: true,
+              addEventListener: addEventListenerMock,
+              removeEventListener: removeEventListenerMock,
+            },
+          },
+          {
+            id: 'mobile',
+            signal: {
+              matches: true,
+              addEventListener: addEventListenerMock,
+              removeEventListener: removeEventListenerMock,
+            },
+          },
+        ],
+        { tablet: true, mobile: true }, // Initial media query matches
+      ]);
     });
 
-    it('falls back to the default breakpoint value', () => {
-      const valuesByBreakpoint = {
-        [breakpoints[0].id]: 'red',
-        [breakpoints[1].id]: 'blue',
-        [breakpoints[2].id]: 'green',
-      };
-      const value = getValueForBreakpoint(valuesByBreakpoint, breakpoints, -1, 0, 'cfColor');
-      expect(value).toBe('red');
-    });
+    it('update mediaQueryMatches correctly on rerender', () => {
+      const emptyBreakpoints: Breakpoint[] = [];
+      const { result, rerender } = renderHook(
+        (breakpoints: Breakpoint[]) => useBreakpoints(breakpoints),
+        { initialProps: emptyBreakpoints },
+      );
 
-    it('cascades through the breakpoint values', () => {
-      const valuesByBreakpoint = {
-        [breakpoints[0].id]: 'red',
-        [breakpoints[1].id]: 'blue',
-      };
-      // We ask for the mobile value but it's not defined.
-      // Thus, we expect to get the tablet value.
-      const value = getValueForBreakpoint(valuesByBreakpoint, breakpoints, 2, 0, 'cfColor');
-      expect(value).toBe('blue');
+      expect(result.current.resolveDesignValue).toBeDefined();
+
+      expect(
+        result.current.resolveDesignValue(
+          { desktop: 'value1', tablet: 'value2', mobile: 'value3' },
+          'someVariable',
+        ),
+      ).toBe(undefined);
+
+      rerender(breakpoints);
+
+      expect(
+        result.current.resolveDesignValue(
+          { desktop: 'value1', tablet: 'value2', mobile: 'value3' },
+          'someVariable',
+        ),
+      ).toBe('value3');
     });
   });
 });
