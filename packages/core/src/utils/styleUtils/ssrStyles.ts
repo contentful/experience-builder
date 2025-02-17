@@ -2,6 +2,7 @@ import md5 from 'md5';
 import { Asset, Entry, UnresolvedLink } from 'contentful/dist/types/types';
 import {
   ComponentPropertyValue,
+  DesignValue,
   ExperienceComponentSettings,
   ExperienceComponentTree,
   ExperienceDataSource,
@@ -95,6 +96,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentVariablesOverwrites,
     patternWrapper,
     wrappingPatternIds,
+    patternNodeIdsChain = '',
   }: {
     componentTree: ExperienceComponentTree;
     dataSource: ExperienceDataSource;
@@ -103,6 +105,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
     patternWrapper?: ComponentTreeNode;
     wrappingPatternIds: Set<string>;
+    patternNodeIdsChain?: string;
   }) => {
     // traversing the tree
     const queue: ComponentTreeNode[] = [];
@@ -159,12 +162,22 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           }
         }
 
-        currentNode.variables.cfSsrClassName = {
-          type: 'DesignValue',
-          valuesByBreakpoint: {
-            [breakpointIds[0]]: className,
-          },
-        };
+        // When iterating over instances of the same pattern, we will iterate over the identical
+        // pattern nodes again for every instance. Make sure to not overwrite the values from previous instances.
+        if (!currentNode.variables.cfSsrClassName) {
+          currentNode.variables.cfSsrClassName = {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [breakpointIds[0]]: className,
+            },
+          };
+        }
+
+        const nextComponentVariablesOverwrites = resolveComponentVariablesOverwrites({
+          patternNode: currentNode,
+          wrapperComponentVariablesOverwrites: componentVariablesOverwrites,
+          wrapperComponentSettings: componentSettings,
+        });
 
         // the node of a used pattern contains only the definitionId (id of the patter entry)
         // as well as the variables overwrites
@@ -180,10 +193,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           componentSettings: patternEntry.fields.componentSettings,
           // and this is where the over-writes for the default values are stored
           // yes, I know, it's a bit confusing
-          componentVariablesOverwrites: currentNode.variables,
+          componentVariablesOverwrites: nextComponentVariablesOverwrites,
           // pass top-level pattern node to store instance-specific child styles for rendering
           patternWrapper: currentNode,
           wrappingPatternIds: new Set([...wrappingPatternIds, currentNode.definitionId]),
+          patternNodeIdsChain: `${patternNodeIdsChain}${currentNode.id}`,
         });
         continue;
       }
@@ -338,12 +352,13 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       // making sure that we respect the order of breakpoints from
       // we can achieve "desktop first" or "mobile first" approach to style over-writes
       if (patternWrapper) {
-        currentNode.id = currentNode.id ?? generateRandomId(15);
+        currentNode.id = currentNode.id || generateRandomId(5);
         // @ts-expect-error -- valueByBreakpoint is not explicitly defined, but it's already defined in the patternWrapper styles
         patternWrapper.variables.cfSsrClassName = {
           ...(patternWrapper.variables.cfSsrClassName ?? {}),
           type: 'DesignValue',
-          [currentNode.id]: {
+          // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
+          [`${patternNodeIdsChain}${currentNode.id}`]: {
             valuesByBreakpoint: {
               [breakpointIds[0]]: currentNodeClassNames.join(' '),
             },
@@ -379,6 +394,93 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
   }, '');
 
   return styleSheet;
+};
+
+/**
+ * Rendering pattern nodes inside pattern entry by injecting default values from the top:
+ * When there is a ComponentValue but the recursive logic is not wrapped by a pattern node (no `componentVariablesOverwrites`),
+ * a pattern entry is rendered directly. In this case, we replace each ComponentValue with the default value from componentSettings.
+ */
+const injectDefaultValuesForComponentValues = ({
+  patternNode,
+  wrapperComponentSettings,
+}: {
+  patternNode: ComponentTreeNode;
+  wrapperComponentSettings?: ExperienceComponentSettings;
+}): Record<string, ComponentPropertyValue> => {
+  const propertyDefinitions = wrapperComponentSettings?.variableDefinitions;
+  const resolvedProperties = Object.entries(patternNode.variables).reduce(
+    (resolvedProperties, [propertyName, propertyValue]) => {
+      if (propertyValue.type === 'ComponentValue') {
+        const componentValueKey = propertyValue.key;
+        const componentDefaultValue = propertyDefinitions?.[componentValueKey].defaultValue;
+        // We're only considering design properties for styles generation
+        if ((componentDefaultValue as DesignValue)?.type === 'DesignValue') {
+          resolvedProperties[propertyName] = componentDefaultValue;
+        }
+      } else {
+        // Do nothing when it's not a ComponentValue & just keep the defined value
+        resolvedProperties[propertyName] = propertyValue;
+      }
+      return resolvedProperties;
+    },
+    {},
+  );
+  return resolvedProperties;
+};
+
+/**
+ * In case of nested patterns, we need to resolve the ComponentValue properties and overwrite them with the value
+ * stored in the parent component.
+ *
+ *
+ * @param patternNode - pattern node which contains the variables
+ * @param componentVariablesOverwrites - object which contains the variables of the parent component
+ */
+const resolveComponentVariablesOverwrites = ({
+  patternNode,
+  wrapperComponentVariablesOverwrites,
+  wrapperComponentSettings,
+}: {
+  patternNode: ComponentTreeNode;
+  wrapperComponentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
+  wrapperComponentSettings?: ExperienceComponentSettings;
+}): Record<string, ComponentPropertyValue> => {
+  // In case of rendering a pattern entry, there are no custom ComponentValues.
+  // So we pass down the default values from this pattern node down to each deeper pattern level.
+  if (!wrapperComponentVariablesOverwrites) {
+    const nextComponentVariablesOverwrites = injectDefaultValuesForComponentValues({
+      patternNode,
+      wrapperComponentSettings,
+    });
+    return nextComponentVariablesOverwrites;
+  }
+
+  // Rendering (nested) pattern node inside another pattern node (for both experience & pattern entry):
+  // The `wrapperComponentVariablesOverwrites` from the top-most pattern node is passed through to each child
+  // node (and nested pattern nodes). It replaces each ComponentValue in the subtree with either the overwrite
+  // or the default value.
+  const nextComponentVariablesOverwrites = Object.entries(patternNode?.variables).reduce(
+    (resolvedValues, [propertyName, propertyValue]) => {
+      if (propertyValue.type === 'ComponentValue') {
+        // Copying the values from the parent node
+        const overwritingValue = wrapperComponentVariablesOverwrites?.[propertyValue.key];
+        // Property definition from the parent pattern
+        const propertyDefinition =
+          wrapperComponentSettings?.variableDefinitions?.[propertyValue.key];
+
+        // The overwriting value is either a custom value from the experience or default value from a
+        // wrapping pattern node that got trickled down to this nesting level.
+        resolvedValues[propertyName] = overwritingValue ?? propertyDefinition?.defaultValue;
+      } else {
+        // Keep raw values
+        resolvedValues[propertyName] = propertyValue;
+      }
+      return resolvedValues;
+    },
+    {},
+  );
+  return nextComponentVariablesOverwrites;
 };
 
 export const isCfStyleAttribute = (variableName: string): variableName is keyof StyleProps => {

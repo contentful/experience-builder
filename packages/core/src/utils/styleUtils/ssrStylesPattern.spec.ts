@@ -3,7 +3,7 @@
  * Instead we should test specific atomic functionality. So the test doesn't fail on every
  * single code change but only when the code change would actually break a specific functionality.
  */
-import { createExperience, detachExperienceStyles } from '../../index';
+import { Asset, Entry } from 'contentful';
 import {
   ComponentTreeNode,
   DesignValue,
@@ -11,8 +11,8 @@ import {
   ExperienceEntry,
   ExperienceUnboundValues,
 } from '../../types';
-import { Asset, Entry } from 'contentful';
-
+import { createExperience, detachExperienceStyles } from '../../index';
+import { experienceEntryFieldsWithFilledUsedComponents } from '../../test/__fixtures__/experience';
 const patternEntry: ExperienceEntry = {
   metadata: {
     tags: [],
@@ -1322,6 +1322,7 @@ describe('pattern component', () => {
   it('should extract media query css', () => {
     const patternNode: ComponentTreeNode = {
       definitionId: '4JYGAfHMSVdWkuf6kbd1n8',
+      id: 'random-id',
       variables: {
         cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
           type: 'UnboundValue',
@@ -1412,12 +1413,12 @@ describe('pattern component', () => {
         continue;
       }
 
-      //@ts-expect-error TODO: fix this
-      expect(patternWrapper.variables.cfSsrClassName[node.id]).toBeDefined();
+      const patternNodeIdsChain = `${patternNode.id}${node.id}`;
+
+      expect(patternWrapper.variables.cfSsrClassName[patternNodeIdsChain]).toBeDefined();
       expect(
-        //@ts-expect-error TODO: fix this
-        (patternWrapper.variables.cfSsrClassName[node.id] as DesignValue).valuesByBreakpoint
-          .desktop,
+        (patternWrapper.variables.cfSsrClassName[patternNodeIdsChain] as DesignValue)
+          .valuesByBreakpoint.desktop,
       ).toBeDefined();
       if (node?.children.length) {
         queue.push(...node.children);
@@ -1795,5 +1796,27 @@ describe('pattern component', () => {
 
     // Expecting if it style contains updated background color of pattern instance
     expect(styles).toMatch('background-color:rgba(270, 154, 255, 0)');
+  });
+
+  it('should resolve styles for an experience with exposed design properties of nested pattern', () => {
+    const experienceEntryWithNestedPattern = {
+      sys: {
+        id: 'test-experience-entry-id',
+        type: 'Entry',
+      },
+      fields: experienceEntryFieldsWithFilledUsedComponents,
+      metadata: {},
+    } as never as Entry;
+    const experience = createExperience({
+      experienceEntry: experienceEntryWithNestedPattern,
+      locale: 'en-US',
+      referencedEntries: [],
+      referencedAssets: [],
+    });
+
+    const styles = detachExperienceStyles(experience);
+
+    // Making sure that the extracted styles contain the updated background color for the nested pattern component
+    expect(styles).toMatch('background-color:rgba(111,  111 , 111, 0)');
   });
 });
