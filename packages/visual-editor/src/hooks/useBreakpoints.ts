@@ -19,8 +19,6 @@ import { useCallback, useEffect, useState } from 'react';
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   const [mediaQueryMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({});
 
-  const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
-
   // Register event listeners to update the media query states
   useEffect(() => {
     const [mediaQueryMatchers, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
@@ -46,22 +44,25 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [breakpoints]);
 
-  const activeBreakpointIndex = getActiveBreakpointIndex(
-    breakpoints,
-    mediaQueryMatches,
-    fallbackBreakpointIndex,
-  );
-
   const resolveDesignValue: ResolveDesignValueType = useCallback(
     (valuesByBreakpoint, variableName) => {
+      const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+
+      const activeBreakpointIndex = getActiveBreakpointIndex(
+        breakpoints,
+        mediaQueryMatches,
+        fallbackBreakpointIndex,
+      );
+
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,
         activeBreakpointIndex,
+        fallbackBreakpointIndex,
         variableName,
       );
     },
-    [activeBreakpointIndex, breakpoints],
+    [mediaQueryMatches, breakpoints],
   );
 
   return { resolveDesignValue };

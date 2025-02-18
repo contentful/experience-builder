@@ -15,7 +15,7 @@ const breakpoints = createBreakpoints();
 const desktopIndex = 0;
 const desktop = breakpoints[desktopIndex];
 const resolveDesignValue = vi.fn((valuesByBreakpoint, variableName) =>
-  getValueForBreakpoint(valuesByBreakpoint, breakpoints, desktopIndex, variableName),
+  getValueForBreakpoint(valuesByBreakpoint, breakpoints, desktopIndex, desktopIndex, variableName),
 );
 const renderDropzone = vi.fn();
 const areEntitiesFetched = true;
