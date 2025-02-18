@@ -4,7 +4,9 @@ import type {
   ComponentTreeNode,
   DesignValue,
   ExperienceComponentSettings,
+  PatternProperty,
 } from '@contentful/experiences-core/types';
+import { UnresolvedLink } from 'contentful';
 
 /** While unfolding the assembly definition on the instance, this function will replace all
  * ComponentValue in the definitions tree with the actual value on the instance. */
@@ -12,10 +14,18 @@ export const deserializeAssemblyNode = ({
   node,
   componentInstanceVariables,
   assemblyVariableDefinitions,
+  assemblyPatternPropertDefinitions,
+  assemblyVariableMappings,
+  patternProperties,
+  entityStore,
 }: {
   node: ComponentTreeNode;
   componentInstanceVariables: ComponentTreeNode['variables'];
   assemblyVariableDefinitions: ExperienceComponentSettings['variableDefinitions'];
+  assemblyPatternPropertDefinitions: ExperienceComponentSettings['patternPropertyDefinitions'];
+  assemblyVariableMappings: ExperienceComponentSettings['variableMappings'];
+  patternProperties: Record<string, PatternProperty>;
+  entityStore: EntityStore;
 }): ComponentTreeNode => {
   const variables: Record<string, ComponentPropertyValue> = {};
 
@@ -26,10 +36,39 @@ export const deserializeAssemblyNode = ({
       const instanceProperty = componentInstanceVariables[componentValueKey];
       const variableDefinition = assemblyVariableDefinitions?.[componentValueKey];
       const defaultValue = variableDefinition?.defaultValue;
+      const variableMapping = assemblyVariableMappings?.[componentValueKey];
 
-      // For assembly, we look up the variable in the assembly instance and
-      // replace the ComponentValue with that one.
-      if (instanceProperty?.type === 'UnboundValue') {
+      const patternPropertyDefinition =
+        assemblyPatternPropertDefinitions?.[variableMapping?.patternPropertyDefinitionId || ''];
+      const patternProperty =
+        patternProperties?.[variableMapping?.patternPropertyDefinitionId || ''];
+      const isValidForPrebinding = patternPropertyDefinition && patternProperty && variableMapping;
+
+      if (isValidForPrebinding && instanceProperty.type === 'NoValue') {
+        const [, uuid] = patternProperty.path.split('/');
+        const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
+        const entityOrAsset = entityStore.getEntryOrAsset(binding, patternProperty.path);
+
+        let contentType = '';
+
+        if (entityOrAsset?.sys.type === 'Entry') {
+          contentType = entityOrAsset.sys.contentType.sys.id;
+        }
+
+        const fieldPath = variableMapping.pathsByContentType[contentType]?.path;
+
+        if (fieldPath) {
+          const fullPath = patternProperty.path + fieldPath;
+
+          variables[variableName] = {
+            type: 'BoundValue',
+            path: fullPath,
+          };
+        }
+
+        // For assembly, we look up the variable in the assembly instance and
+        // replace the ComponentValue with that one.
+      } else if (instanceProperty?.type === 'UnboundValue') {
         variables[variableName] = {
           type: 'UnboundValue',
           key: instanceProperty.key,
@@ -66,6 +105,10 @@ export const deserializeAssemblyNode = ({
       node: child,
       componentInstanceVariables,
       assemblyVariableDefinitions,
+      assemblyPatternPropertDefinitions,
+      assemblyVariableMappings,
+      patternProperties,
+      entityStore,
     }),
   );
 
@@ -115,6 +158,11 @@ export const resolveAssembly = ({
     },
     componentInstanceVariables: node.variables,
     assemblyVariableDefinitions: componentFields.componentSettings!.variableDefinitions,
+    assemblyPatternPropertDefinitions:
+      componentFields.componentSettings?.patternPropertyDefinitions,
+    assemblyVariableMappings: componentFields.componentSettings?.variableMappings,
+    patternProperties: node.patternProperties || {},
+    entityStore,
   });
 
   entityStore.addAssemblyUnboundValues(componentFields.unboundValues);

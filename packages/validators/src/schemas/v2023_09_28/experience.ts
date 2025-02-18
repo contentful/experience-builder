@@ -88,7 +88,7 @@ const ComponentValueSchema = z
 
 // TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
-const NoValueSchema = z.object({ type: z.literal('NoValue') });
+const NoValueSchema = z.object({ type: z.literal('NoValue') }).strict();
 
 const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
   DesignValueSchema,
