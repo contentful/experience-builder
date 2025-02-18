@@ -1,3 +1,8 @@
+/**
+ * FIXME: Drop snapshot tests (i.e. hard comparing the full string including hash)
+ * Instead we should test specific atomic functionality. So the test doesn't fail on every
+ * single code change but only when the code change would actually break a specific functionality.
+ */
 import { createExperience, detachExperienceStyles } from '../../index';
 import {
   ComponentTreeNode,
@@ -153,7 +158,7 @@ describe('section component', () => {
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.desktop as string,
     ).toEqual(
-      'cf-af0b6d3878df39339244ff4d1278fb11 cf-aa568a1f1bd7057bc8d4ad69498d82ae cf-7e4c2816c958433ffc9d8cf113ce4c6c',
+      'cf-c3b88e3d9a2c0a14abb4aae89756f03a cf-2b1553d9ba4c1c47dcc5e2fa6d922afe cf-f716508ce7bdaa5b5506b78e104f9816',
     );
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -163,7 +168,7 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-af0b6d3878df39339244ff4d1278fb11{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}@media(max-width:992px){.cf-aa568a1f1bd7057bc8d4ad69498d82ae{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-7e4c2816c958433ffc9d8cf113ce4c6c{box-sizing:border-box;}}',
+      '.cf-c3b88e3d9a2c0a14abb4aae89756f03a{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}@media(max-width:992px){.cf-2b1553d9ba4c1c47dcc5e2fa6d922afe{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-f716508ce7bdaa5b5506b78e104f9816{box-sizing:border-box;}}',
     );
   });
 
@@ -262,7 +267,7 @@ describe('section component', () => {
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.desktop as string,
     ).toEqual(
-      'cf-80a28f6ba36900c2f42e42382c0b938e cf-aa568a1f1bd7057bc8d4ad69498d82ae cf-7e4c2816c958433ffc9d8cf113ce4c6c',
+      'cf-2173f57bb737e0799fa37c2315ae4295 cf-2b1553d9ba4c1c47dcc5e2fa6d922afe cf-f716508ce7bdaa5b5506b78e104f9816',
     );
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -272,7 +277,7 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-80a28f6ba36900c2f42e42382c0b938e{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;}@media(max-width:992px){.cf-aa568a1f1bd7057bc8d4ad69498d82ae{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-7e4c2816c958433ffc9d8cf113ce4c6c{box-sizing:border-box;}}',
+      '.cf-2173f57bb737e0799fa37c2315ae4295{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;}@media(max-width:992px){.cf-2b1553d9ba4c1c47dcc5e2fa6d922afe{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-f716508ce7bdaa5b5506b78e104f9816{box-sizing:border-box;}}',
     );
     expect(styles).toContain('background-image:url(https://www.contentful.com/image1.png);');
   });
@@ -388,7 +393,7 @@ describe('section component', () => {
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.desktop as string,
     ).toEqual(
-      'cf-80a28f6ba36900c2f42e42382c0b938e cf-aa568a1f1bd7057bc8d4ad69498d82ae cf-7e4c2816c958433ffc9d8cf113ce4c6c',
+      'cf-2173f57bb737e0799fa37c2315ae4295 cf-2b1553d9ba4c1c47dcc5e2fa6d922afe cf-f716508ce7bdaa5b5506b78e104f9816',
     );
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -398,7 +403,7 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-80a28f6ba36900c2f42e42382c0b938e{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;}@media(max-width:992px){.cf-aa568a1f1bd7057bc8d4ad69498d82ae{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-7e4c2816c958433ffc9d8cf113ce4c6c{box-sizing:border-box;}}',
+      '.cf-2173f57bb737e0799fa37c2315ae4295{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;}@media(max-width:992px){.cf-2b1553d9ba4c1c47dcc5e2fa6d922afe{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-f716508ce7bdaa5b5506b78e104f9816{box-sizing:border-box;}}',
     );
 
     expect(styles).toContain('background-image:url(https://www.contentful.com/image1.png);');
