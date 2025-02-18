@@ -94,7 +94,6 @@ export const parseComponentProps = ({
         } else {
           contentProps[propName] = propValue;
         }
-        propValue;
         break;
       }
 
