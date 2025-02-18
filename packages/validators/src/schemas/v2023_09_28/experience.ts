@@ -88,7 +88,7 @@ const ComponentValueSchema = z
 
 // TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
-const EmptyObjectSchema = z.object({ type: z.undefined() });
+const NoValueSchema = z.object({ type: z.literal('NoValue') }).strict();
 
 const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
   DesignValueSchema,
@@ -96,7 +96,7 @@ const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
   UnboundValueSchema,
   HyperlinkValueSchema,
   ComponentValueSchema,
-  EmptyObjectSchema,
+  NoValueSchema,
 ]);
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
@@ -114,13 +114,12 @@ const VariableMappingsSchema = z.record(propertyKeySchema, VariableMappingSchema
 // TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
 const PatternPropertyDefinitionSchema = z.object({
-  defaultValue: z.union([
-    z.object({
+  defaultValue: z
+    .object({
       path: z.string(),
       type: z.literal('BoundValue'),
-    }),
-    z.null(),
-  ]),
+    })
+    .optional(),
   contentTypes: z.record(z.string(), z.any()),
 });
 
