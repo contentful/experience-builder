@@ -1,3 +1,8 @@
+/**
+ * FIXME: Drop snapshot tests (i.e. hard comparing the full string including hash)
+ * Instead we should test specific atomic functionality. So the test doesn't fail on every
+ * single code change but only when the code change would actually break a specific functionality.
+ */
 import { designTokensFixture } from '../../__fixtures__/designTokens';
 import { createExperience, defineDesignTokens, detachExperienceStyles } from '../../index';
 import { DesignValue, ExperienceEntry } from '../../types';
@@ -176,7 +181,7 @@ describe('custom component with builtInStyles which are supporting design tokens
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint
         .desktop as string,
     ).toEqual(
-      'cf-2f0de84b4bc4f950c8ee4e3adebb043c cf-3dbe542150900394de3e3d66d9b6e913 cf-37b75bb311b6fa729f3568b0212cf148',
+      'cf-ae92b9eb2c20a262573a8085db3dbd67 cf-1fe22311d2b832dd529a9ce5e8d77281 cf-63009ce9ca644a23e001721d6358e491',
     );
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -186,7 +191,7 @@ describe('custom component with builtInStyles which are supporting design tokens
     ).not.toBeDefined();
 
     expect(styles).toBe(
-      '.cf-2f0de84b4bc4f950c8ee4e3adebb043c{box-sizing:border-box;margin:2rem;padding:2rem;background-color:white;width:50%;height:25%;border:1px solid black;gap:2rem 2rem;font-size:1rem;color:black;}@media(max-width:992px){.cf-3dbe542150900394de3e3d66d9b6e913{box-sizing:border-box;margin:1.5rem;padding:1.5rem;background-color:black;width:75%;height:50%;border:3px solid black;gap:1.5rem 1.5rem;font-size:0.75rem;color:green;}}@media(max-width:576px){.cf-37b75bb311b6fa729f3568b0212cf148{box-sizing:border-box;margin:1rem;padding:1rem;background-color:red;width:100%;height:100%;border:0px solid transparent;gap:1rem 1rem;font-size:1.5rem;color:orange;}}',
+      '.cf-ae92b9eb2c20a262573a8085db3dbd67{box-sizing:border-box;margin:2rem;padding:2rem;background-color:white;width:50%;height:25%;border:1px solid black;gap:2rem 2rem;font-size:1rem;color:black;}@media(max-width:992px){.cf-1fe22311d2b832dd529a9ce5e8d77281{box-sizing:border-box;margin:1.5rem;padding:1.5rem;background-color:black;width:75%;height:50%;border:3px solid black;gap:1.5rem 1.5rem;font-size:0.75rem;color:green;}}@media(max-width:576px){.cf-63009ce9ca644a23e001721d6358e491{box-sizing:border-box;margin:1rem;padding:1rem;background-color:red;width:100%;height:100%;border:0px solid transparent;gap:1rem 1rem;font-size:1.5rem;color:orange;}}',
     );
   });
 });

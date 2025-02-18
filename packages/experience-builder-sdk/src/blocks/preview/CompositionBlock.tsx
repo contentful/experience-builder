@@ -38,6 +38,11 @@ type CompositionBlockProps = {
   resolveDesignValue: ResolveDesignValueType;
   getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
   wrappingPatternIds?: Set<string>;
+  /**
+   * Chained IDs to ensure uniqueness across multiple instances of the same pattern
+   * when storing & accessing cfSsrClassName.
+   */
+  patternNodeIdsChain?: string;
 };
 
 export const CompositionBlock = ({
@@ -48,9 +53,10 @@ export const CompositionBlock = ({
   resolveDesignValue,
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
+  patternNodeIdsChain = '',
 }: CompositionBlockProps) => {
   const [hasRendered, setHasRendered] = React.useState(false);
-
+  patternNodeIdsChain = `${patternNodeIdsChain}${rawNode.id}`;
   useEffect(() => {
     setHasRendered(true);
   }, []);
@@ -186,6 +192,7 @@ export const CompositionBlock = ({
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
+              patternNodeIdsChain={patternNodeIdsChain}
             />
           );
         }
@@ -205,6 +212,7 @@ export const CompositionBlock = ({
     hyperlinkPattern,
     locale,
     wrappingPatternIds,
+    patternNodeIdsChain,
   ]);
 
   const className = useClassName({ props: nodeProps, node });
@@ -223,8 +231,10 @@ export const CompositionBlock = ({
   // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {
     if (isAssembly) {
+      const nodeIdsChain = `${patternNodeIdsChain}${childNodeId}`;
       // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
-      const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[childNodeId];
+      const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[nodeIdsChain];
+
       if (!classesForNode) return undefined;
       return resolveDesignValue(classesForNode.valuesByBreakpoint, 'cfSsrClassName') as string;
     }
@@ -248,6 +258,7 @@ export const CompositionBlock = ({
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
+              patternNodeIdsChain={patternNodeIdsChain}
             />
           );
         })

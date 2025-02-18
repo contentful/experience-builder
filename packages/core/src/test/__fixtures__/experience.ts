@@ -101,15 +101,17 @@ export const experienceEntry: ExperienceEntry = {
 };
 
 type createExperienceEntryArgs = {
-  schemaVersion: SchemaVersions;
+  schemaVersion?: SchemaVersions;
+  id?: string;
 };
 
 export const createExperienceEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
+  id = 'composition-id',
 }: createExperienceEntryArgs): ExperienceEntry => {
   return {
     sys: {
-      id: 'composition-id',
+      id,
       type: 'Entry',
       contentType: {
         sys: {
@@ -304,18 +306,23 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
             type: 'DesignValue',
             valuesByBreakpoint: {
               'test-desktop': 'rgba(240, 112, 182, 1)',
-              desktop: 'rgba(240, 88, 204, 1)',
             },
           },
         },
         children: [
           {
             displayName: '[PN] Sample 1',
-            definitionId: '7Mzy9q1KVLJckxz7jNyNPt',
+            definitionId: 'root-pattern-1',
             variables: {
               'e-XwpdP': {
                 type: 'UnboundValue',
                 key: 'FQQM1q8hyfCKvCQjvGb0a',
+              },
+              'cf-bg-color-root-pattern-1': {
+                type: 'DesignValue',
+                valuesByBreakpoint: {
+                  'test-desktop': 'rgba(111,  111 , 111, 0)',
+                },
               },
             },
             children: [],
@@ -389,11 +396,15 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
               },
               children: [
                 {
-                  definitionId: 'ernoT986eKmaUIVK7c2vO',
+                  definitionId: 'nested-pattern-1',
                   displayName: '[NN] sample 1',
                   variables: {
                     lRFhtDQ: {
                       key: '_uKSlt2',
+                      type: 'ComponentValue',
+                    },
+                    'cf-bg-color-nested-pattern-1': {
+                      key: 'cf-bg-color-root-pattern-1',
                       type: 'ComponentValue',
                     },
                   },
@@ -414,6 +425,16 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
               defaultValue: {
                 key: '7VdIpMIm-BKBlFhXXlg-w',
                 type: 'UnboundValue',
+              },
+            },
+            'cf-bg-color-root-pattern-1': {
+              displayName: 'Background color',
+              type: 'Text',
+              group: 'style',
+              description: 'Background color for button',
+              defaultValue: {
+                type: 'DesignValue',
+                valuesByBreakpoint: { 'test-desktop': 'rgba(189, 147, 147, 0)' },
               },
             },
           },
@@ -499,7 +520,12 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
                           {
                             definitionId: 'contentful-button',
                             displayName: 'Button',
-                            variables: {},
+                            variables: {
+                              cfBackgroundColor: {
+                                type: 'ComponentValue', // Exposed variable from nested pattern
+                                key: 'cf-bg-color-nested-pattern-1',
+                              },
+                            },
                             children: [],
                           },
                         ],
@@ -509,7 +535,9 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
                 ],
               },
               dataSource: {},
-              unboundValues: {},
+              unboundValues: {
+                z_0NfuFUKFQqHeyWPFVhX: {},
+              },
               componentSettings: {
                 variableDefinitions: {
                   lRFhtDQ: {
@@ -519,6 +547,16 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
                     defaultValue: {
                       key: 'z_0NfuFUKFQqHeyWPFVhX',
                       type: 'UnboundValue',
+                    },
+                  },
+                  'cf-bg-color-nested-pattern-1': {
+                    displayName: 'Background color',
+                    type: 'Text',
+                    group: 'style',
+                    description: 'Background color for button',
+                    defaultValue: {
+                      type: 'DesignValue',
+                      valuesByBreakpoint: { 'test-desktop': 'rgba(0, 0, 0, 0)' },
                     },
                   },
                 },
