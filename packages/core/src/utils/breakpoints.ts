@@ -1,5 +1,5 @@
 import { getDesignTokenRegistration } from '@/registries';
-import { Breakpoint, PrimitiveValue, ValuesByBreakpoint } from '@/types';
+import { Breakpoint, PrimitiveValue, ValuesByBreakpoint, DesignValue } from '@/types';
 
 export const MEDIA_QUERY_REGEXP = /(<|>)(\d{1,})(px|cm|mm|in|pt|pc)$/;
 
@@ -136,4 +136,25 @@ export const getValueForBreakpoint = (
     // Old design properties did not support breakpoints, keep for backward compatibility
     return valuesByBreakpoint;
   }
+};
+
+/** Overwrites the default value breakpoint by breakpoint. If a breakpoint
+ * is not overwritten, it will fall back to the default. */
+export const mergeDesignValuesByBreakpoint = (
+  defaultValue: DesignValue,
+  overwriteValue: DesignValue,
+): DesignValue => {
+  const mergedValuesByBreakpoint = { ...defaultValue.valuesByBreakpoint };
+
+  for (const [breakpointId, value] of Object.entries(overwriteValue.valuesByBreakpoint)) {
+    if (!isValidBreakpointValue(value)) {
+      continue;
+    }
+    mergedValuesByBreakpoint[breakpointId] = value;
+  }
+
+  return {
+    type: 'DesignValue',
+    valuesByBreakpoint: mergedValuesByBreakpoint,
+  };
 };
