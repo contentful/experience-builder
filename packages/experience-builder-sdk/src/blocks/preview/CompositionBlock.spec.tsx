@@ -383,9 +383,10 @@ describe('CompositionBlock', () => {
       expect(screen.getByText('New year eve')).toBeInTheDocument();
     });
 
-    it.skip('renders nested patterns', () => {
-      const ssrClassName = 'cfstyles-3da2d7a8871905d8079c313b36bcf404';
+    it('renders nested patterns', () => {
+      const ssrClassName = 'cfstyles-51f2b708351ac3f1f5247426bd52b4b5 contentful-container';
       const unboundValueKey = 'some-unbound-value-key';
+      const unboundValueKey2 = 'some-unbound-value-key-2';
 
       const nestedPatternNode: ComponentTreeNode = {
         definitionId: 'nested-pattern-id',
@@ -402,7 +403,7 @@ describe('CompositionBlock', () => {
       const patternNode: ComponentTreeNode = {
         definitionId: defaultAssemblyId,
         variables: {
-          [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },
+          [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey2 },
           cfSsrClassName: {
             type: 'DesignValue',
             valuesByBreakpoint: { desktop: ssrClassName },
@@ -425,6 +426,9 @@ describe('CompositionBlock', () => {
           usedComponents: [patternEntry],
           unboundValues: {
             [unboundValueKey]: {
+              value: 'Parent pattern value',
+            },
+            [unboundValueKey2]: {
               value: 'Nested pattern value',
             },
           },
@@ -450,6 +454,7 @@ describe('CompositionBlock', () => {
       expect(screen.getAllByTestId('assembly')[0]).toHaveClass(ssrClassName);
       expect(screen.getAllByTestId('assembly')[1]).toHaveClass(ssrClassName);
       expect(screen.getAllByTestId('assembly')[1].firstChild).toHaveClass(ssrClassName);
+      expect(screen.getByText('Parent pattern value')).toBeInTheDocument();
       expect(screen.getByText('Nested pattern value')).toBeInTheDocument();
     });
   });
