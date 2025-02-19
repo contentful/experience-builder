@@ -21,7 +21,7 @@ const TestComponent: React.FC<{ text: string }> = (props) => {
 
 describe('CompositionBlock', () => {
   const emptyEntityStore = {
-    breakpoints: [],
+    breakpoints: [{ id: 'desktop', query: '*' }],
     dataSource: {},
     unboundValues: {},
     usedComponents: [],
@@ -384,30 +384,9 @@ describe('CompositionBlock', () => {
     });
 
     it('renders nested patterns', () => {
-      const ssrClassName = 'cfstyles-3da2d7a8871905d8079c313b36bcf404';
+      const ssrClassName = 'cfstyles-51f2b708351ac3f1f5247426bd52b4b5 contentful-container';
       const unboundValueKey = 'some-unbound-value-key';
-      const patternEntry = createAssemblyEntry();
-      const nestedPatternEntry = createAssemblyEntry({
-        id: 'nested-pattern-id',
-      });
-      const updatedExperienceEntry = {
-        ...experienceEntry,
-        fields: {
-          ...experienceEntry.fields,
-          usedComponents: [patternEntry, nestedPatternEntry],
-          unboundValues: {
-            [unboundValueKey]: {
-              value: 'Nested pattern value',
-            },
-          },
-        },
-      } as ExperienceEntry;
-
-      const entityStore = new EntityStore({
-        experienceEntry: updatedExperienceEntry,
-        entities: [...entries, ...assets],
-        locale: 'en-US',
-      });
+      const unboundValueKey2 = 'some-unbound-value-key-2';
 
       const nestedPatternNode: ComponentTreeNode = {
         definitionId: 'nested-pattern-id',
@@ -424,7 +403,7 @@ describe('CompositionBlock', () => {
       const patternNode: ComponentTreeNode = {
         definitionId: defaultAssemblyId,
         variables: {
-          [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },
+          [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey2 },
           cfSsrClassName: {
             type: 'DesignValue',
             valuesByBreakpoint: { desktop: ssrClassName },
@@ -433,7 +412,34 @@ describe('CompositionBlock', () => {
         children: [],
       };
 
-      patternEntry.fields.componentTree.children = [nestedPatternNode];
+      const nestedPatternEntry = createAssemblyEntry({
+        id: 'nested-pattern-id',
+      });
+      const patternEntry = createAssemblyEntry({
+        nestedPatterns: [{ entry: nestedPatternEntry, node: nestedPatternNode }],
+      });
+
+      const updatedExperienceEntry = {
+        ...experienceEntry,
+        fields: {
+          ...experienceEntry.fields,
+          usedComponents: [patternEntry],
+          unboundValues: {
+            [unboundValueKey]: {
+              value: 'Parent pattern value',
+            },
+            [unboundValueKey2]: {
+              value: 'Nested pattern value',
+            },
+          },
+        },
+      } as ExperienceEntry;
+
+      const entityStore = new EntityStore({
+        experienceEntry: updatedExperienceEntry,
+        entities: [...entries, ...assets, patternEntry as any, nestedPatternEntry as any],
+        locale: 'en-US',
+      });
 
       render(
         <CompositionBlock
@@ -448,6 +454,7 @@ describe('CompositionBlock', () => {
       expect(screen.getAllByTestId('assembly')[0]).toHaveClass(ssrClassName);
       expect(screen.getAllByTestId('assembly')[1]).toHaveClass(ssrClassName);
       expect(screen.getAllByTestId('assembly')[1].firstChild).toHaveClass(ssrClassName);
+      expect(screen.getByText('Parent pattern value')).toBeInTheDocument();
       expect(screen.getByText('Nested pattern value')).toBeInTheDocument();
     });
   });
