@@ -234,7 +234,7 @@ const THUMBNAIL_IDS = [
 
 const ComponentSettingsSchema = z.object({
   variableDefinitions: ComponentVariablesSchema,
-  thumbnailId: z.enum(THUMBNAIL_IDS),
+  thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
   variableMappings: VariableMappingsSchema.optional(),
   patternPropertyDefinitions: PatternPropertyDefinitionsSchema.optional(),
 });
