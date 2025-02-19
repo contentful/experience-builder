@@ -30,16 +30,12 @@ export const createJoinedCSSRules = (
   cssProperties: CSSProperties,
   useWhitespaces: boolean = false,
 ) => {
-  const generatedStyles = Object.entries(cssProperties)
+  const rules = Object.entries(cssProperties)
     .filter(([, value]) => value !== undefined)
-    .reduce(
-      (acc, [key, value]) =>
-        useWhitespaces
-          ? `${acc}\n${toCSSAttribute(key)}: ${value};`
-          : `${acc}${toCSSAttribute(key)}:${value};`,
-      '',
+    .map(([key, value]) =>
+      useWhitespaces ? `${toCSSAttribute(key)}: ${value};` : `${toCSSAttribute(key)}:${value};`,
     );
-  return generatedStyles;
+  return rules.join(useWhitespaces ? '\n' : '');
 };
 
 export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
