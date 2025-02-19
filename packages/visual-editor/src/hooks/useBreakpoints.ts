@@ -17,15 +17,14 @@ import { useCallback, useEffect, useState } from 'react';
  * and then decending by screen width. For mobile-first designs, the order would be ascending
  */
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
-  const [mediaQueryMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({});
+  const [, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
 
-  const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+  const [mediaQueryMatches, setMediaQueryMatches] =
+    useState<Record<string, boolean>>(initialMediaQueryMatches);
 
   // Register event listeners to update the media query states
   useEffect(() => {
-    const [mediaQueryMatchers, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
-    // Store the media query state in the beginning to initialise the state
-    setMediaQueryMatches(initialMediaQueryMatches);
+    const [mediaQueryMatchers] = mediaQueryMatcher(breakpoints);
     const eventListeners = mediaQueryMatchers.map(({ id, signal }) => {
       const onChange = () =>
         setMediaQueryMatches((prev) => ({
@@ -42,26 +41,27 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
         mediaQueryMatchers[index].signal.removeEventListener('change', eventListener);
       });
     };
-    // Only re-setup all listeners when the breakpoint definition changed
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [breakpoints]);
-
-  const activeBreakpointIndex = getActiveBreakpointIndex(
-    breakpoints,
-    mediaQueryMatches,
-    fallbackBreakpointIndex,
-  );
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
     (valuesByBreakpoint, variableName) => {
+      const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+
+      const activeBreakpointIndex = getActiveBreakpointIndex(
+        breakpoints,
+        mediaQueryMatches,
+        fallbackBreakpointIndex,
+      );
+
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,
         activeBreakpointIndex,
+        fallbackBreakpointIndex,
         variableName,
       );
     },
-    [activeBreakpointIndex, breakpoints],
+    [mediaQueryMatches, breakpoints],
   );
 
   return { resolveDesignValue };

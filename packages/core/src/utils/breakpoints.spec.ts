@@ -28,6 +28,7 @@ describe('getValueForBreakpoint for css values', () => {
         valuesByBreakpoint,
         breakpoints,
         desktopIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(desktopValue);
@@ -40,6 +41,7 @@ describe('getValueForBreakpoint for css values', () => {
         valuesByBreakpoint,
         breakpoints,
         tabletIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(tabletValue);
@@ -49,6 +51,7 @@ describe('getValueForBreakpoint for css values', () => {
         valuesByBreakpointWithoutTabletAndMobile,
         breakpoints,
         tabletIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(desktopValue);
@@ -61,6 +64,7 @@ describe('getValueForBreakpoint for css values', () => {
         valuesByBreakpoint,
         breakpoints,
         mobileIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(mobileValue);
@@ -70,6 +74,7 @@ describe('getValueForBreakpoint for css values', () => {
         valuesByBreakpointWithoutMobile,
         breakpoints,
         mobileIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(tabletValue);
@@ -79,6 +84,7 @@ describe('getValueForBreakpoint for css values', () => {
         valuesByBreakpointWithoutTabletAndMobile,
         breakpoints,
         mobileIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(desktopValue);
@@ -91,6 +97,7 @@ describe('getValueForBreakpoint for css values', () => {
         valuesByBreakpointWithoutTabletAndMobile,
         breakpoints,
         3,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(desktopValue);
@@ -135,6 +142,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpoint,
         breakpoints,
         desktopIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(desktopResolvedValue);
@@ -143,6 +151,7 @@ describe('getValueForBreakpoint for design tokens', () => {
       const value = getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,
+        desktopIndex,
         desktopIndex,
         variableName,
         false,
@@ -157,6 +166,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpoint,
         breakpoints,
         tabletIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(tabletResolvedValue);
@@ -166,6 +176,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpointWithoutTabletAndMobile,
         breakpoints,
         tabletIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(desktopResolvedValue);
@@ -176,6 +187,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpoint,
         breakpoints,
         tabletIndex,
+        desktopIndex,
         variableName,
         false,
       );
@@ -186,6 +198,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpointWithoutTabletAndMobile,
         breakpoints,
         tabletIndex,
+        desktopIndex,
         variableName,
         false,
       );
@@ -199,6 +212,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpoint,
         breakpoints,
         mobileIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(mobileResolvedValue);
@@ -208,6 +222,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpointWithoutMobile,
         breakpoints,
         mobileIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(tabletResolvedValue);
@@ -217,6 +232,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpointWithoutTabletAndMobile,
         breakpoints,
         mobileIndex,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(desktopResolvedValue);
@@ -227,6 +243,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpoint,
         breakpoints,
         mobileIndex,
+        desktopIndex,
         variableName,
         false,
       );
@@ -237,6 +254,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpointWithoutMobile,
         breakpoints,
         mobileIndex,
+        desktopIndex,
         variableName,
         false,
       );
@@ -247,6 +265,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpointWithoutTabletAndMobile,
         breakpoints,
         mobileIndex,
+        desktopIndex,
         variableName,
         false,
       );
@@ -260,6 +279,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpointWithoutTabletAndMobile,
         breakpoints,
         3,
+        desktopIndex,
         variableName,
       );
       expect(value).toEqual(desktopResolvedValue);
@@ -269,6 +289,7 @@ describe('getValueForBreakpoint for design tokens', () => {
         valuesByBreakpointWithoutTabletAndMobile,
         breakpoints,
         3,
+        desktopIndex,
         variableName,
         false,
       );

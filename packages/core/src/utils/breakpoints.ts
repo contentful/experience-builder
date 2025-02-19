@@ -99,6 +99,7 @@ export const getValueForBreakpoint = (
   valuesByBreakpoint: ValuesByBreakpoint | undefined,
   breakpoints: Breakpoint[],
   activeBreakpointIndex: number,
+  fallbackBreakpointIndex: number,
   variableName: string,
   resolveDesignTokens = true,
 ) => {
@@ -123,8 +124,7 @@ export const getValueForBreakpoint = (
         return valuesByBreakpoint[breakpointId];
       }
     }
-    // If no breakpoint matched, we search and apply the fallback breakpoint
-    const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+
     const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex]?.id;
     if (isValidBreakpointValue(valuesByBreakpoint[fallbackBreakpointId])) {
       if (resolveDesignTokens) {

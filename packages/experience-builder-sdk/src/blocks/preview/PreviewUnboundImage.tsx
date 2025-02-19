@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import type {
+  Breakpoint,
   ComponentTreeNode,
-  CSSProperties,
   PrimitiveValue,
 } from '@contentful/experiences-core/types';
 import { sanitizeNodeProps } from '@contentful/experiences-core';
-import { useClassName } from '../../hooks/useClassName';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { useInjectStylesheet } from '../../hooks/useClassName';
+import classNames from 'classnames';
 
 interface PreviewUnboundImageProps {
+  breakpoints: Breakpoint[];
   node: ComponentTreeNode;
   nodeProps: Record<PropertyKey, PrimitiveValue>;
   component: React.ElementType;
@@ -18,37 +21,55 @@ interface PreviewUnboundImageProps {
  * when the image is unbound. It applies the Image size styles to a wrapping div.
  */
 const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
+  breakpoints,
   node,
   nodeProps,
   component,
 }) => {
-  const wrapperStyle: CSSProperties = {
-    position: 'relative',
-  };
+  const { wrapperStyle, imageStyle } = useMemo(() => {
+    const imageStyle: Record<string, any> = {};
+    const wrapperStyle: Record<string, any> = {};
 
-  const modifiedNodeProps = { ...nodeProps };
-  if (typeof modifiedNodeProps.cfImageOptions === 'object') {
-    const { width, height, ...restImageOptions } = modifiedNodeProps.cfImageOptions;
+    if (nodeProps.cfImageOptions && typeof nodeProps.cfImageOptions === 'object') {
+      for (const [breakpointId, styles] of Object.entries(nodeProps.cfImageOptions)) {
+        imageStyle[breakpointId] = {
+          cfImageOptions: {
+            ...styles,
+            height: '100%',
+            width: '100%',
+          },
+        };
 
-    // Apply the Image size styles to the wrapping div
-    wrapperStyle.height = String(height);
-    wrapperStyle.width = String(width);
+        wrapperStyle[breakpointId] = {
+          cfHeight: styles.height,
+          cfWidth: styles.width,
+        };
+      }
+    }
 
-    // Set the Image height and width to 100% to fill the wrapping div
-    modifiedNodeProps.cfImageOptions = {
-      ...restImageOptions,
-      height: '100%',
-      width: '100%',
-    };
-  }
+    return { imageStyle, wrapperStyle };
+  }, [nodeProps.cfImageOptions]);
 
-  const className = useClassName({ props: modifiedNodeProps, node });
+  const wrapperMedia = useMediaQuery({
+    designPropsByBreakpointId: wrapperStyle,
+    node,
+    breakpoints,
+  });
+
+  const imageMedia = useMediaQuery({
+    designPropsByBreakpointId: imageStyle,
+    node,
+    breakpoints,
+  });
+
+  useInjectStylesheet(wrapperMedia);
+  useInjectStylesheet(imageMedia);
 
   return (
-    <div className="cf-preview-unbound-image" style={wrapperStyle}>
+    <div className={classNames('cf-preview-unbound-image', wrapperMedia.className)}>
       {React.createElement(component, {
-        ...sanitizeNodeProps(modifiedNodeProps),
-        className,
+        ...sanitizeNodeProps(nodeProps),
+        className: classNames(nodeProps.className, imageMedia.className),
       })}
     </div>
   );

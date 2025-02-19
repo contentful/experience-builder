@@ -22,7 +22,7 @@ export default function useSingleColumn(
 
     const parentNode = getItem({ id: node.parentId }, tree);
 
-    if (!parentNode) {
+    if (!parentNode || parentNode.data.blockId !== CONTENTFUL_COMPONENTS.columns.id) {
       return { isWrapped, wrapColumnsCount };
     }
 
