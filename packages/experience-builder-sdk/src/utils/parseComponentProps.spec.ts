@@ -25,7 +25,8 @@ describe('parseComponentProps', () => {
   }: {
     propertyName: string;
     valuesByBreakpoint: Record<string, string>;
-  }) => getValueForBreakpoint(valuesByBreakpoint, breakpoints, activeBreakpointIndex, propertyName);
+  }) =>
+    getValueForBreakpoint(valuesByBreakpoint, breakpoints, activeBreakpointIndex, 0, propertyName);
 
   const resolveBoundValue = () => 'resolvedBoundValue';
   const resolveHyperlinkValue = () => 'resolvedHyperlinkValue';
