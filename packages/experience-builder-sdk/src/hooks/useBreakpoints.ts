@@ -17,16 +17,14 @@ import { useCallback, useEffect, useState } from 'react';
  * and then decending by screen width. For mobile-first designs, the order would be ascending
  */
 export const useBreakpoints = (breakpoints: Breakpoint[]) => {
-  const [, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
-
-  const [mediaQueryMatches, setMediaQueryMatches] =
-    useState<Record<string, boolean>>(initialMediaQueryMatches);
-
-  const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+  const [mediaQueryMatches, setMediaQueryMatches] = useState<Record<string, boolean>>({});
 
   // Register event listeners to update the media query states
   useEffect(() => {
-    const [mediaQueryMatchers] = mediaQueryMatcher(breakpoints);
+    const [mediaQueryMatchers, initialMediaQueryMatches] = mediaQueryMatcher(breakpoints);
+
+    setMediaQueryMatches(initialMediaQueryMatches);
+
     const eventListeners = mediaQueryMatchers.map(({ id, signal }) => {
       const onChange = () =>
         setMediaQueryMatches((prev) => ({
@@ -45,22 +43,25 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
     };
   }, [breakpoints]);
 
-  const activeBreakpointIndex = getActiveBreakpointIndex(
-    breakpoints,
-    mediaQueryMatches,
-    fallbackBreakpointIndex,
-  );
-
   const resolveDesignValue: ResolveDesignValueType = useCallback(
     (valuesByBreakpoint, variableName) => {
+      const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
+
+      const activeBreakpointIndex = getActiveBreakpointIndex(
+        breakpoints,
+        mediaQueryMatches,
+        fallbackBreakpointIndex,
+      );
+
       return getValueForBreakpoint(
         valuesByBreakpoint,
         breakpoints,
         activeBreakpointIndex,
+        fallbackBreakpointIndex,
         variableName,
       );
     },
-    [activeBreakpointIndex, breakpoints],
+    [mediaQueryMatches, breakpoints],
   );
 
   return { resolveDesignValue };

@@ -100,7 +100,7 @@ describe('transformBoundContentValue', () => {
         binding,
         resolveDesignValue,
         variableName,
-        componentDefinition.variables.title,
+        componentDefinition.variables.title.type,
         path,
       );
       expect(result).toEqual(entities[0].fields.title);
@@ -139,7 +139,7 @@ describe('transformBoundContentValue', () => {
           binding,
           resolveDesignValue,
           variableName,
-          variableType,
+          variableType.type,
           path,
         ) as OptimizedBackgroundImageAsset;
         expect(result.url).toEqual(assets[0].fields.file?.url + '?w=1024&fm=jpg');
@@ -170,7 +170,7 @@ describe('transformBoundContentValue', () => {
           binding,
           resolveDesignValue,
           variableName,
-          variableType,
+          variableType.type,
           path,
         ) as OptimizedBackgroundImageAsset;
         expect(result.url).toEqual(assets[0].fields.file?.url + '?w=600&fm=jpg');
@@ -201,7 +201,7 @@ describe('transformBoundContentValue', () => {
           binding,
           resolveDesignValue,
           variableName,
-          variableType,
+          variableType.type,
           path,
         ) as OptimizedBackgroundImageAsset;
         expect(result.url).toEqual(assets[0].fields.file?.url + '?w=1024&fm=jpg');
@@ -223,7 +223,7 @@ describe('transformBoundContentValue', () => {
           binding,
           resolveDesignValue,
           variableName,
-          variableType,
+          variableType.type,
           path,
         );
         expect(result).toEqual(assets[0].fields.file?.url);
@@ -246,7 +246,7 @@ describe('transformBoundContentValue', () => {
         binding,
         resolveDesignValue,
         variableName,
-        componentDefinition.variables.description,
+        componentDefinition.variables.description.type,
         path,
       );
       expect(result).toEqual({
@@ -287,7 +287,7 @@ describe('transformBoundContentValue', () => {
         binding,
         resolveDesignValue,
         variableName,
-        componentDefinition.variables.description,
+        componentDefinition.variables.description.type,
         path,
       );
       expect(result).toEqual({
@@ -374,7 +374,7 @@ describe('transformBoundContentValue', () => {
         binding,
         resolveDesignValue,
         variableName,
-        componentDefinition.variables.description,
+        componentDefinition.variables.description.type,
         path,
       );
       expect(result).toEqual({
@@ -410,7 +410,7 @@ describe('transformBoundContentValue', () => {
         binding,
         resolveDesignValue,
         variableName,
-        componentDefinition.variables.description,
+        componentDefinition.variables.description.type,
         path,
       );
       expect(result).toEqual({
@@ -448,7 +448,7 @@ describe('transformBoundContentValue', () => {
         binding,
         resolveDesignValue,
         variableName,
-        componentDefinition.variables.referencedEntry,
+        componentDefinition.variables.referencedEntry.type,
         path,
       );
       // @ts-expect-error -- deep referenced entry doesn't type well
@@ -475,7 +475,7 @@ describe('transformBoundContentValue', () => {
         binding,
         resolveDesignValue,
         variableName,
-        componentDefinition.variables.referencedEntries,
+        componentDefinition.variables.referencedEntries.type,
         path,
       );
       // @ts-expect-error -- deep referenced entry doesn't type well

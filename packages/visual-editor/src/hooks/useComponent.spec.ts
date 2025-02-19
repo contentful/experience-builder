@@ -50,7 +50,13 @@ describe('useComponent', () => {
   const breakpoints = createBreakpoints();
   const desktopIndex = 0;
   const resolveDesignValue = vi.fn((valuesByBreakpoint, variableName) =>
-    getValueForBreakpoint(valuesByBreakpoint, breakpoints, desktopIndex, variableName),
+    getValueForBreakpoint(
+      valuesByBreakpoint,
+      breakpoints,
+      desktopIndex,
+      desktopIndex,
+      variableName,
+    ),
   );
   const userIsDragging = false;
   const renderDropzone = vi.fn();
