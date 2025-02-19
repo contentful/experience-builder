@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState, useInsertionEffect } from 'react';
 
 import {
   buildCfStyles,
@@ -59,4 +59,18 @@ export const useClassName = ({
   }, [props, node]);
 
   return className;
+};
+
+export const useInjectStylesheet = (stylesheet?: { css: string; className: string }) => {
+  useInsertionEffect(() => {
+    if (!stylesheet) {
+      return;
+    }
+
+    const styleTag = document.createElement('style');
+    styleTag.setAttribute('type', 'text/css');
+    styleTag.innerHTML = stylesheet.css;
+
+    document.head.appendChild(styleTag);
+  }, [stylesheet]);
 };

@@ -206,8 +206,34 @@ export const ComponentVariablesSchema = z.record(
   ComponentVariableSchema,
 );
 
+const THUMBNAIL_IDS = [
+  'columns',
+  'columnsPlusRight',
+  'imagesSquare',
+  'subtitles',
+  'rowsPlusBottom',
+  'userRectangle',
+  'textbox',
+  'monitorPlay',
+  'article',
+  'table',
+  'star',
+  'heartStraight',
+  'frameCorners',
+  'rows',
+  'dotsThreeOutline',
+  'listDashes',
+  'checkerBoard',
+  'gridFour',
+  'slideshow',
+  'diamondsFour',
+  'cards',
+  'textColumns',
+] as const;
+
 const ComponentSettingsSchema = z.object({
   variableDefinitions: ComponentVariablesSchema,
+  thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
   variableMappings: VariableMappingsSchema.optional(),
   patternPropertyDefinitions: PatternPropertyDefinitionsSchema.optional(),
 });
