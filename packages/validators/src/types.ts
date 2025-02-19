@@ -10,6 +10,7 @@ export type {
   ComponentPropertyValue,
   ComponentTreeNode,
   PrimitiveValue,
+  NoValue,
   DesignValue,
   UnboundValue,
   BoundValue,

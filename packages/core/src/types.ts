@@ -31,6 +31,7 @@ export type {
   DesignValue,
   UnboundValue,
   BoundValue,
+  NoValue,
   ComponentValue,
   ComponentDefinitionPropertyType as ComponentDefinitionVariableType,
   PatternProperty,

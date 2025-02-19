@@ -99,7 +99,11 @@ describe('shouldUsePrebinding', () => {
       variableMappings: {},
     } as unknown as ExperienceComponentSettings;
     const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: { path: '/entries/testEntry', type: 'BoundValue' },
+      testPatternPropertyDefinitionId: {
+        path: '/entries/testEntry',
+        type: 'BoundValue',
+        contenType: 'testContentType',
+      },
     };
     const variable = {
       type: 'NoValue',
@@ -133,7 +137,11 @@ describe('resolvePrebindingPath', () => {
       },
     } as unknown as ExperienceComponentSettings;
     const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: { path: '/entries/testEntry', type: 'BoundValue' },
+      testPatternPropertyDefinitionId: {
+        path: '/entries/testEntry',
+        type: 'BoundValue',
+        contenType: 'testContentType',
+      },
     };
     const entityStore = {
       dataSource: {

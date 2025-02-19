@@ -1,10 +1,8 @@
-import { EntityStore } from '@contentful/experiences-core';
 import {
   ComponentPropertyValue,
   ExperienceComponentSettings,
   PatternProperty,
 } from '@contentful/experiences-validators';
-import { UnresolvedLink } from 'contentful';
 
 export const shouldUsePrebinding = ({
   componentValueKey,
@@ -35,12 +33,10 @@ export const resolvePrebindingPath = ({
   componentValueKey,
   componentSettings,
   patternProperties,
-  entityStore,
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
   patternProperties: Record<string, PatternProperty>;
-  entityStore: EntityStore;
 }) => {
   const variableMapping = componentSettings.variableMappings?.[componentValueKey];
 
@@ -50,15 +46,7 @@ export const resolvePrebindingPath = ({
 
   if (!patternProperty) return '';
 
-  const [, uuid] = patternProperty.path.split('/');
-  const binding = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-  const entityOrAsset = entityStore.getEntryOrAsset(binding, patternProperty.path);
-
-  if (entityOrAsset?.sys?.type !== 'Entry') {
-    return '';
-  }
-
-  const contentType = entityOrAsset.sys.contentType.sys.id;
+  const contentType = patternProperty.contenType;
 
   const fieldPath = variableMapping.pathsByContentType[contentType]?.path;
 
