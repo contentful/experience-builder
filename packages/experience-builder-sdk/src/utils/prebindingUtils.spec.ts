@@ -1,5 +1,5 @@
 import { shouldUsePrebinding, resolvePrebindingPath } from './prebindingUtils';
-import { EntityStore } from '@contentful/experiences-core';
+
 import {
   ComponentPropertyValue,
   ExperienceComponentSettings,
@@ -99,7 +99,11 @@ describe('shouldUsePrebinding', () => {
       variableMappings: {},
     } as unknown as ExperienceComponentSettings;
     const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: { path: '/entries/testEntry', type: 'BoundValue' },
+      testPatternPropertyDefinitionId: {
+        path: '/entries/testEntry',
+        type: 'BoundValue',
+        contenType: 'testContentType',
+      },
     };
     const variable = {
       type: 'NoValue',
@@ -133,22 +137,17 @@ describe('resolvePrebindingPath', () => {
       },
     } as unknown as ExperienceComponentSettings;
     const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: { path: '/entries/testEntry', type: 'BoundValue' },
-    };
-    const entityStore = {
-      dataSource: {
-        testEntry: { sys: { type: 'Entry', contentType: { sys: { id: 'testContentType' } } } },
+      testPatternPropertyDefinitionId: {
+        path: '/entries/testEntry',
+        type: 'BoundValue',
+        contenType: 'testContentType',
       },
-      getEntryOrAsset: jest.fn().mockReturnValue({
-        sys: { type: 'Entry', contentType: { sys: { id: 'testContentType' } } },
-      }),
-    } as unknown as EntityStore;
+    };
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
       patternProperties,
-      entityStore,
     });
 
     expect(result).toBe('/entries/testEntry/fields/testField');
@@ -160,16 +159,11 @@ describe('resolvePrebindingPath', () => {
       variableMappings: {},
     } as unknown as ExperienceComponentSettings;
     const patternProperties: Record<string, PatternProperty> = {};
-    const entityStore: EntityStore = {
-      dataSource: {},
-      getEntryOrAsset: jest.fn(),
-    } as unknown as EntityStore;
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
       patternProperties,
-      entityStore,
     });
 
     expect(result).toBe('');
@@ -185,16 +179,11 @@ describe('resolvePrebindingPath', () => {
       },
     } as unknown as ExperienceComponentSettings;
     const patternProperties: Record<string, PatternProperty> = {};
-    const entityStore: EntityStore = {
-      dataSource: {},
-      getEntryOrAsset: jest.fn(),
-    } as unknown as EntityStore;
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
       patternProperties,
-      entityStore,
     });
 
     expect(result).toBe('');
@@ -212,18 +201,11 @@ describe('resolvePrebindingPath', () => {
     const patternProperties: Record<string, PatternProperty> = {
       testPatternPropertyDefinitionId: { path: '/entries/testEntry' },
     } as unknown as Record<string, PatternProperty>;
-    const entityStore: EntityStore = {
-      dataSource: {
-        testEntry: { sys: { type: 'Asset' } },
-      },
-      getEntryOrAsset: jest.fn().mockReturnValue({ sys: { type: 'Asset' } }),
-    } as unknown as EntityStore;
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
       patternProperties,
-      entityStore,
     });
 
     expect(result).toBe('');
@@ -242,20 +224,11 @@ describe('resolvePrebindingPath', () => {
     const patternProperties: Record<string, PatternProperty> = {
       testPatternPropertyDefinitionId: { path: '/entries/testEntry' },
     } as unknown as Record<string, PatternProperty>;
-    const entityStore: EntityStore = {
-      dataSource: {
-        testEntry: { sys: { type: 'Entry', contentType: { sys: { id: 'testContentType' } } } },
-      },
-      getEntryOrAsset: jest.fn().mockReturnValue({
-        sys: { type: 'Entry', contentType: { sys: { id: 'testContentType' } } },
-      }),
-    } as unknown as EntityStore;
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
       patternProperties,
-      entityStore,
     });
 
     expect(result).toBe('');

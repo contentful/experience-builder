@@ -133,6 +133,7 @@ const PatternPropertyDefinitionsSchema = z.record(
 const PatternPropertySchema = z.object({
   type: z.literal('BoundValue'),
   path: z.string(),
+  contenType: z.string(),
 });
 
 const PatternPropertysSchema = z.record(propertyKeySchema, PatternPropertySchema);
@@ -321,6 +322,7 @@ export type Breakpoint = z.infer<typeof BreakpointSchema>;
 export type PrimitiveValue = z.infer<typeof PrimitiveValueSchema>;
 export type DesignValue = z.infer<typeof DesignValueSchema>;
 export type BoundValue = z.infer<typeof BoundValueSchema>;
+export type NoValue = z.infer<typeof NoValueSchema>;
 export type UnboundValue = z.infer<typeof UnboundValueSchema>;
 export type HyperlinkValue = z.infer<typeof HyperlinkValueSchema>;
 export type ComponentValue = z.infer<typeof ComponentValueSchema>;
