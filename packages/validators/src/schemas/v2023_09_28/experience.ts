@@ -133,7 +133,7 @@ const PatternPropertyDefinitionsSchema = z.record(
 const PatternPropertySchema = z.object({
   type: z.literal('BoundValue'),
   path: z.string(),
-  contenType: z.string(),
+  contentType: z.string(),
 });
 
 const PatternPropertysSchema = z.record(propertyKeySchema, PatternPropertySchema);
