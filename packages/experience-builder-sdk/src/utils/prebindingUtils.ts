@@ -46,7 +46,7 @@ export const resolvePrebindingPath = ({
 
   if (!patternProperty) return '';
 
-  const contentType = patternProperty.contenType;
+  const contentType = patternProperty.contentType;
 
   const fieldPath = variableMapping?.pathsByContentType?.[contentType]?.path;
 
