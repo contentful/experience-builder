@@ -88,7 +88,7 @@ const ComponentValueSchema = z
 
 // TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
-const EmptyObjectSchema = z.object({ type: z.undefined() });
+const NoValueSchema = z.object({ type: z.literal('NoValue') }).strict();
 
 const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
   DesignValueSchema,
@@ -96,7 +96,7 @@ const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
   UnboundValueSchema,
   HyperlinkValueSchema,
   ComponentValueSchema,
-  EmptyObjectSchema,
+  NoValueSchema,
 ]);
 
 export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
@@ -114,13 +114,12 @@ const VariableMappingsSchema = z.record(propertyKeySchema, VariableMappingSchema
 // TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
 const PatternPropertyDefinitionSchema = z.object({
-  defaultValue: z.union([
-    z.object({
+  defaultValue: z
+    .object({
       path: z.string(),
       type: z.literal('BoundValue'),
-    }),
-    z.null(),
-  ]),
+    })
+    .optional(),
   contentTypes: z.record(z.string(), z.any()),
 });
 
@@ -134,6 +133,7 @@ const PatternPropertyDefinitionsSchema = z.record(
 const PatternPropertySchema = z.object({
   type: z.literal('BoundValue'),
   path: z.string(),
+  contentType: z.string(),
 });
 
 const PatternPropertysSchema = z.record(propertyKeySchema, PatternPropertySchema);
@@ -322,6 +322,7 @@ export type Breakpoint = z.infer<typeof BreakpointSchema>;
 export type PrimitiveValue = z.infer<typeof PrimitiveValueSchema>;
 export type DesignValue = z.infer<typeof DesignValueSchema>;
 export type BoundValue = z.infer<typeof BoundValueSchema>;
+export type NoValue = z.infer<typeof NoValueSchema>;
 export type UnboundValue = z.infer<typeof UnboundValueSchema>;
 export type HyperlinkValue = z.infer<typeof HyperlinkValueSchema>;
 export type ComponentValue = z.infer<typeof ComponentValueSchema>;
