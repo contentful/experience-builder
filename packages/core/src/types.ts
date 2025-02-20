@@ -106,6 +106,7 @@ export type ComponentDefinition<
   name: string;
   category?: string;
   thumbnailUrl?: string;
+  thumbnailId?: string;
   hyperlinkPattern?: string;
   variables: Partial<DesignVariableMap> & Record<string, ComponentDefinitionVariable<T>>;
   slots?: Record<string, { displayName: string }>;

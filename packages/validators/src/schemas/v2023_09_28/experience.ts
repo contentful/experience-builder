@@ -230,6 +230,7 @@ const THUMBNAIL_IDS = [
   'diamondsFour',
   'cards',
   'textColumns',
+  'duplex',
 ] as const;
 
 const ComponentSettingsSchema = z.object({
