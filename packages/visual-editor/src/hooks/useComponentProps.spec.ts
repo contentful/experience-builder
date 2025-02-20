@@ -324,7 +324,23 @@ describe('useComponentProps', () => {
       },
     );
 
-    it('should return isInExpEditorMode as true for custom components', () => {
+    it('should return isInExpEditorMode as true for custom components when flag is enabled', () => {
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node,
+          areEntitiesFetched,
+          resolveDesignValue,
+          renderDropzone,
+          definition,
+          userIsDragging,
+          options: { wrapComponent: false, enableCustomEditorView: true },
+        }),
+      );
+
+      expect(result.current.componentProps.isInExpEditorMode).toBe(true);
+    });
+
+    it('should not return isInExpEditorMode when the flag is not enabled', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
@@ -337,7 +353,7 @@ describe('useComponentProps', () => {
         }),
       );
 
-      expect(result.current.componentProps.isInExpEditorMode).toBe(true);
+      expect(result.current.componentProps.isInExpEditorMode).toBeUndefined();
     });
 
     it('should return unbound values in componentProps for structural components', () => {

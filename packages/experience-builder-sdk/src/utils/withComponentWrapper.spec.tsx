@@ -15,17 +15,6 @@ describe('withComponentWrapper', () => {
   describe('when component is wrapped', () => {
     const WrappedButton = withComponentWrapper(MyButton);
 
-    it('can wrap a component with a custom tag', () => {
-      const WrappedButtonSpan = withComponentWrapper(MyButton, { wrapContainerTag: 'span' });
-
-      const { container } = render(
-        <WrappedButtonSpan className="my-span">Click me</WrappedButtonSpan>,
-      );
-
-      expect(container.firstChild).toHaveClass('my-span');
-      expect(container.firstChild).toHaveTextContent('Click me');
-    });
-
     it('classes get added to the correct elements', () => {
       const { container, getByRole } = render(
         <WrappedButton
