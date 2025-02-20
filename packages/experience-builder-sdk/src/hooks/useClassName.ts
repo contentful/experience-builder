@@ -1,12 +1,7 @@
 import { useLayoutEffect, useState, useInsertionEffect } from 'react';
 
-import {
-  buildCfStyles,
-  buildStyleTag,
-  isStructureWithRelativeHeight,
-} from '@contentful/experiences-core';
+import { buildCfStylesWithSpecialCasing, buildStyleTag } from '@contentful/experiences-core';
 import { ComponentTreeNode } from '@contentful/experiences-core/types';
-import { EMPTY_CONTAINER_HEIGHT } from '@contentful/experiences-core/constants';
 
 /**
  * This hook can generate className and inject styles on a client side as a <style> tag
@@ -31,17 +26,10 @@ export const useClassName = ({
       return;
     }
 
-    const cfStyles = buildCfStyles(props);
+    const cfStyles = buildCfStylesWithSpecialCasing(props, node);
 
     if (Object.keys(cfStyles).length === 0) {
       return;
-    }
-
-    if (
-      !node.children.length &&
-      isStructureWithRelativeHeight(node.definitionId, cfStyles.height)
-    ) {
-      cfStyles.minHeight = EMPTY_CONTAINER_HEIGHT;
     }
 
     const [className, styleRule] = buildStyleTag({ styles: cfStyles });

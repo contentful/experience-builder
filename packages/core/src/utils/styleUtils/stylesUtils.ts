@@ -7,9 +7,15 @@ import {
   transformGridColumn,
   transformVisibility,
 } from './styleTransformers';
-import { isContentfulStructureComponent } from '../components';
+import { isContentfulStructureComponent, isStructureWithRelativeHeight } from '../components';
 import { EMPTY_CONTAINER_HEIGHT } from '../../constants';
-import { CSSProperties, StyleProps, PrimitiveValue, ExperienceTreeNode } from '@/types';
+import {
+  CSSProperties,
+  StyleProps,
+  PrimitiveValue,
+  ExperienceTreeNode,
+  ComponentTreeNode,
+} from '@/types';
 
 export const toCSSAttribute = (key: string) => {
   let val = key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
@@ -20,19 +26,26 @@ export const toCSSAttribute = (key: string) => {
   return val;
 };
 
-export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
-  const stylesStr = Object.entries(styles)
+export const createJoinedCSSRules = (
+  cssProperties: CSSProperties,
+  useWhitespaces: boolean = false,
+) => {
+  const generatedStyles = Object.entries(cssProperties)
     .filter(([, value]) => value !== undefined)
     .reduce(
       (acc, [key, value]) =>
-        `${acc}
-        ${toCSSAttribute(key)}: ${value};`,
+        useWhitespaces
+          ? `${acc}\n${toCSSAttribute(key)}: ${value};`
+          : `${acc}${toCSSAttribute(key)}:${value};`,
       '',
     );
+  return generatedStyles;
+};
 
-  const className = `cfstyles-${nodeId ? nodeId : md5(stylesStr)}`;
-
-  const styleRule = `.${className}{ ${stylesStr} }`;
+export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
+  const generatedStyles = createJoinedCSSRules(styles);
+  const className = `cfstyles-${nodeId ? nodeId : md5(generatedStyles)}`;
+  const styleRule = `.${className}{ ${generatedStyles} }`;
 
   return [className, styleRule];
 };
@@ -68,7 +81,7 @@ export const buildCfStyles = ({
   cfColumnSpan,
   cfVisibility,
 }: Partial<StyleProps>): CSSProperties => {
-  return {
+  const translatedRules = {
     boxSizing: 'border-box',
     ...transformVisibility(cfVisibility),
     margin: cfMargin,
@@ -98,7 +111,26 @@ export const buildCfStyles = ({
     objectFit: cfImageOptions?.objectFit,
     objectPosition: cfImageOptions?.objectPosition,
   };
+  const filteredRules = Object.fromEntries(
+    Object.entries(translatedRules).filter(([, value]) => value !== undefined),
+  );
+  return filteredRules;
 };
+
+export const buildCfStylesWithSpecialCasing = (
+  designProperties: Partial<StyleProps>,
+  node: ComponentTreeNode,
+) => {
+  const cfStyles = buildCfStyles(designProperties);
+  if (!node.children.length && isStructureWithRelativeHeight(node.definitionId, cfStyles.height)) {
+    return {
+      ...cfStyles,
+      minHeight: EMPTY_CONTAINER_HEIGHT,
+    };
+  }
+  return cfStyles;
+};
+
 /**
  * Container/section default behavior:
  * Default height => height: EMPTY_CONTAINER_HEIGHT
