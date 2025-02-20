@@ -11,21 +11,10 @@ import {
 import { buildCfStyles, checkIsAssemblyNode, isValidBreakpointValue } from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
-import {
-  ComponentTreeNode,
-  DesignTokensDefinition,
-  Experience,
-  StyleProps,
-  Breakpoint,
-} from '@/types';
+import { ComponentTreeNode, DesignTokensDefinition, Experience, StyleProps } from '@/types';
 import { CF_STYLE_ATTRIBUTES } from '@/constants';
 import { generateRandomId } from '@/utils';
 import { createJoinedCSSRules } from './stylesUtils';
-
-type MediaQueryTemplate = Record<
-  string,
-  { condition: string; cssByClassName: Record<string, string> }
->;
 
 type FlattenedDesignTokens = Record<
   string,
@@ -46,21 +35,19 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
   const { breakpoints } = experienceTreeRoot;
 
   // creating the structure which I thought would work best for aggregation
-  const mediaQueriesTemplate = breakpoints.reduce(
-    (mediaQueryTemplate: MediaQueryTemplate, breakpoint: Breakpoint) => {
-      return {
-        ...mediaQueryTemplate,
-        [breakpoint.id]: {
-          condition: breakpoint.query,
-          cssByClassName: {} as Record<string, string>,
-        },
-      };
-    },
-    {},
+  const mediaQueryDataByBreakpoint = breakpoints.reduce(
+    (mediaQueryTemplate, breakpoint) => ({
+      ...mediaQueryTemplate,
+      [breakpoint.id]: {
+        condition: breakpoint.query,
+        cssByClassName: {} as Record<string, string>,
+      },
+    }),
+    {} as Record<string, MediaQueryData>,
   );
 
   // getting the breakpoint ids
-  const breakpointIds = Object.keys(mediaQueriesTemplate);
+  const breakpointIds = Object.keys(mediaQueryDataByBreakpoint);
 
   const iterateOverTreeAndExtractStyles = ({
     componentTree,
@@ -115,30 +102,6 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
         if (!patternEntry || !('fields' in patternEntry)) {
           continue;
-        }
-
-        // TODO: Why are we creating default styles here and where are they rendered in the end?
-        const defaultPatternDivStyles = buildCfStyles({});
-        const cssRules = createJoinedCSSRules(defaultPatternDivStyles);
-
-        // Create a hash to ensure stability and prefix to make sure the value can be processed
-        const className = `cf-${md5(cssRules)}`;
-
-        for (const breakpointId of breakpointIds) {
-          if (!mediaQueriesTemplate[breakpointId].cssByClassName[className]) {
-            mediaQueriesTemplate[breakpointId].cssByClassName[className] = cssRules;
-          }
-        }
-
-        // When iterating over instances of the same pattern, we will iterate over the identical
-        // pattern nodes again for every instance. Make sure to not overwrite the values from previous instances.
-        if (!currentNode.variables.cfSsrClassName) {
-          currentNode.variables.cfSsrClassName = {
-            type: 'DesignValue',
-            valuesByBreakpoint: {
-              [breakpointIds[0]]: className,
-            },
-          };
         }
 
         const nextComponentVariablesOverwrites = resolveComponentVariablesOverwrites({
@@ -222,12 +185,12 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         }
 
         // if there is already the similar hash - no need to over-write it
-        if (mediaQueriesTemplate[breakpointId].cssByClassName[className]) {
+        if (mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className]) {
           continue;
         }
 
         // otherwise, save it to the stylesheet
-        mediaQueriesTemplate[breakpointId].cssByClassName[className] = cssRules;
+        mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className] = cssRules;
       }
 
       // all generated classNames are saved in the tree node
@@ -276,9 +239,10 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
   // once the whole tree was traversed, for each breakpoint, I aggregate the styles
   // for each generated className into one css string
-  const stylesheet = Object.entries(mediaQueriesTemplate).reduce((acc, [, breakpointPayload]) => {
-    return `${acc}${toMediaQuery(breakpointPayload as { condition: string; cssByClassName: Record<string, string> })}`;
-  }, '');
+  const stylesheet = Object.entries(mediaQueryDataByBreakpoint).reduce(
+    (acc, [, mediaQueryData]) => `${acc}${toMediaQuery(mediaQueryData)}`,
+    '',
+  );
 
   return stylesheet;
 };
@@ -637,25 +601,20 @@ export const flattenDesignTokenRegistry = (
   }, {});
 };
 
-export const toMediaQuery = (breakpointPayload: {
-  condition: string;
-  cssByClassName: Record<string, string>;
-}): string => {
-  const mediaQueryStyles = Object.entries(breakpointPayload.cssByClassName).reduce<string>(
+type MediaQueryData = { condition: string; cssByClassName: Record<string, string> };
+export const toMediaQuery = ({ condition, cssByClassName }: MediaQueryData): string => {
+  const mediaQueryStyles = Object.entries(cssByClassName).reduce<string>(
     (acc, [className, css]) => {
       return `${acc}.${className}{${css}}`;
     },
     ``,
   );
 
-  if (breakpointPayload.condition === '*') {
+  if (condition === '*') {
     return mediaQueryStyles;
   }
 
-  const [evaluation, pixelValue] = [
-    breakpointPayload.condition[0],
-    breakpointPayload.condition.substring(1),
-  ];
+  const [evaluation, pixelValue] = [condition[0], condition.substring(1)];
 
   const mediaQueryRule = evaluation === '<' ? 'max-width' : 'min-width';
 
