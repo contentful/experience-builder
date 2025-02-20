@@ -314,7 +314,9 @@ export const useComponentProps = ({
 
   const customComponentProps: ResolvedComponentProps = {
     ...sharedProps,
-    isInExpEditorMode: true,
+    // Allows custom components to render differently in the editor. This needs to be activated
+    // through options as the component has to be aware of this prop to not cause any React warnings.
+    ...(options?.enableCustomEditorView ? { isInExpEditorMode: true } : {}),
     ...sanitizeNodeProps(props),
   };
 

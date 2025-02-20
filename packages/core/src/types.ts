@@ -121,10 +121,12 @@ export type ComponentRegistration = {
   component: React.ElementType;
   definition: ComponentDefinition;
   options?: {
+    /**
+     * If true, the component receives the optional boolean property `isInExpEditorMode` to
+     * render different content between editor and delivery mode.
+     */
+    enableCustomEditorView?: boolean;
     wrapComponent?: boolean;
-    /** @deprecated use wrapContainer instead */
-    wrapContainerTag?: keyof JSX.IntrinsicElements;
-    wrapContainer?: keyof JSX.IntrinsicElements | React.ReactElement;
     wrapContainerWidth?: React.CSSProperties['width'];
   };
 };
