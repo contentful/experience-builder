@@ -102,7 +102,7 @@ describe('shouldUsePrebinding', () => {
       testPatternPropertyDefinitionId: {
         path: '/entries/testEntry',
         type: 'BoundValue',
-        contenType: 'testContentType',
+        contentType: 'testContentType',
       },
     };
     const variable = {
@@ -140,7 +140,7 @@ describe('resolvePrebindingPath', () => {
       testPatternPropertyDefinitionId: {
         path: '/entries/testEntry',
         type: 'BoundValue',
-        contenType: 'testContentType',
+        contentType: 'testContentType',
       },
     };
 
