@@ -204,6 +204,7 @@ export type ExperienceTree = {
  * collisions with user defined variables.
  */
 // FIXME: Remove content props like cfHyperlink and cfImageAsset
+// FIXME: Check whether this should be the same as CF_STYLE_ATTRIBUTES
 export type StyleProps = {
   cfVisibility: boolean;
   cfHorizontalAlignment: 'start' | 'end' | 'center';

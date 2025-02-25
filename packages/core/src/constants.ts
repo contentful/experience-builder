@@ -120,7 +120,7 @@ export const CONTENTFUL_COMPONENTS = {
 export const ASSEMBLY_NODE_TYPE = 'assembly';
 export const ASSEMBLY_DEFAULT_CATEGORY = 'Assemblies';
 export const ASSEMBLY_BLOCK_NODE_TYPE = 'assemblyBlock';
-export const ASSEMBLY_NODE_TYPES = [ASSEMBLY_NODE_TYPE, ASSEMBLY_BLOCK_NODE_TYPE] as const;
+export const ASSEMBLY_NODE_TYPES = [ASSEMBLY_NODE_TYPE, ASSEMBLY_BLOCK_NODE_TYPE];
 export const LATEST_SCHEMA_VERSION = '2023-09-28';
 export const CF_STYLE_ATTRIBUTES = [
   'cfVisibility',
@@ -163,7 +163,7 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfBackgroundImageAlignment',
   'cfBackgroundImageAlignmentVertical',
   'cfBackgroundImageAlignmentHorizontal',
-] as const;
+];
 
 export const EMPTY_CONTAINER_HEIGHT = '80px';
 
