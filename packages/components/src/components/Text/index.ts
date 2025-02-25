@@ -45,9 +45,6 @@ export const TextComponentDefinition: ComponentDefinition = {
       description: 'The text to display. If not provided, children will be used instead.',
       type: 'Text',
       defaultValue: 'Text',
-      validations: {
-        bindingSourceType: ['manual', 'entry'],
-      },
     },
     as: {
       displayName: 'HTML tag',
