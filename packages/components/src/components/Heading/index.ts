@@ -35,7 +35,7 @@ export const HeadingComponentDefinition: ComponentDefinition = {
       displayName: 'Height',
       type: 'Text',
       group: 'style',
-      description: 'The height of the button.',
+      description: 'The height of the heading.',
       defaultValue: 'fit-content',
     },
     cfFontSize: {
