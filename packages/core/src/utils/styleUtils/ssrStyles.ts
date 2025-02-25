@@ -484,7 +484,7 @@ const resolveComponentVariablesOverwrites = ({
 };
 
 export const isCfStyleAttribute = (variableName: string): variableName is keyof StyleProps => {
-  return CF_STYLE_ATTRIBUTES.includes(variableName);
+  return CF_STYLE_ATTRIBUTES.includes(variableName as (typeof CF_STYLE_ATTRIBUTES)[number]);
 };
 
 export const maybePopulateDesignTokenValue = (

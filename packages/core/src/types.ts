@@ -203,6 +203,7 @@ export type ExperienceTree = {
  * Internally defined style variables are prefix with `cf` to avoid
  * collisions with user defined variables.
  */
+// FIXME: Remove content props like cfHyperlink and cfImageAsset
 export type StyleProps = {
   cfVisibility: boolean;
   cfHorizontalAlignment: 'start' | 'end' | 'center';
@@ -245,6 +246,7 @@ export type StyleProps = {
 /**
  * Internally defined style variables mapped to each variable type
  */
+// FIXME: Remove content props like cfHyperlink and cfImageAsset
 export type DesignVariableTypes = {
   cfVisibility: 'Boolean';
   cfHorizontalAlignment: 'Text';
