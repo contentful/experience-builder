@@ -37,7 +37,7 @@ export const TextComponentDefinition: ComponentDefinition = {
       displayName: 'Height',
       type: 'Text',
       group: 'style',
-      description: 'The height of the button.',
+      description: 'The height of the text.',
       defaultValue: 'fit-content',
     },
     value: {
@@ -45,9 +45,6 @@ export const TextComponentDefinition: ComponentDefinition = {
       description: 'The text to display. If not provided, children will be used instead.',
       type: 'Text',
       defaultValue: 'Text',
-      validations: {
-        bindingSourceType: ['manual', 'entry'],
-      },
     },
     as: {
       displayName: 'HTML tag',

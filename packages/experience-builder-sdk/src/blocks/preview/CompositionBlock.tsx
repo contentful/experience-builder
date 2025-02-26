@@ -282,11 +282,7 @@ export const CompositionBlock = ({
         })
       : null;
 
-  if (
-    [CONTENTFUL_COMPONENTS.container.id, CONTENTFUL_COMPONENTS.section.id].includes(
-      node.definitionId,
-    )
-  ) {
+  if (isContainerOrSection(node.definitionId)) {
     return (
       <ContentfulContainer
         editorMode={false}
@@ -337,3 +333,10 @@ export const CompositionBlock = ({
     children ?? (typeof props.children === 'string' ? props.children : null),
   );
 };
+
+const isContainerOrSection = (
+  nodeDefinitionId: string,
+): nodeDefinitionId is 'contentful-container' | 'contentful-section' =>
+  [CONTENTFUL_COMPONENTS.container.id, CONTENTFUL_COMPONENTS.section.id].includes(
+    nodeDefinitionId as 'contentful-container' | 'contentful-section',
+  );
