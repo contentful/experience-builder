@@ -115,7 +115,7 @@ export const CONTENTFUL_COMPONENTS = {
     id: 'contentful-carousel',
     name: 'Carousel',
   },
-};
+} as const;
 
 export const ASSEMBLY_NODE_TYPE = 'assembly';
 export const ASSEMBLY_DEFAULT_CATEGORY = 'Assemblies';

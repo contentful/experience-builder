@@ -37,7 +37,7 @@ export const TextComponentDefinition: ComponentDefinition = {
       displayName: 'Height',
       type: 'Text',
       group: 'style',
-      description: 'The height of the button.',
+      description: 'The height of the text.',
       defaultValue: 'fit-content',
     },
     value: {

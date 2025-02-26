@@ -48,7 +48,7 @@ const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinit
 };
 
 const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
-  if ([CONTENTFUL_COMPONENTS.container.id].includes(componentDefinition.id)) {
+  if (componentDefinition.id === CONTENTFUL_COMPONENTS.container.id) {
     return componentDefinition;
   }
 
