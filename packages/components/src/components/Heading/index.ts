@@ -35,7 +35,7 @@ export const HeadingComponentDefinition: ComponentDefinition = {
       displayName: 'Height',
       type: 'Text',
       group: 'style',
-      description: 'The height of the button.',
+      description: 'The height of the heading.',
       defaultValue: 'fit-content',
     },
     cfFontSize: {
@@ -65,9 +65,6 @@ export const HeadingComponentDefinition: ComponentDefinition = {
       type: 'Text',
       description: 'The text to display in the heading.',
       defaultValue: 'Heading',
-      validations: {
-        bindingSourceType: ['entry', 'manual'],
-      },
     },
     type: {
       displayName: 'HTML tag',

@@ -118,6 +118,7 @@ const PatternPropertyDefinitionSchema = z.object({
     .object({
       path: z.string(),
       type: z.literal('BoundValue'),
+      contentType: z.string(),
     })
     .optional(),
   contentTypes: z.record(z.string(), z.any()),
