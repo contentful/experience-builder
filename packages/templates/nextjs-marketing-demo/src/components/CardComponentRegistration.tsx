@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card } from 'antd';
+import { ComponentRegistration } from '@contentful/experiences-sdk-react';
 
 type CardComponentProps = {
   coverSlot: React.ReactNode;
@@ -8,7 +9,7 @@ type CardComponentProps = {
   size: 'default' | 'small';
 };
 
-export const CardComponentRegistration = {
+export const CardComponentRegistration: ComponentRegistration = {
   component: ({ coverSlot, title, description, size }: CardComponentProps) => {
     return (
       <Card size={size} cover={coverSlot}>

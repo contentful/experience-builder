@@ -1,6 +1,7 @@
+import { ComponentRegistration } from '@contentful/experiences-sdk-react';
 import { Rate } from 'antd';
 
-export const RatingStarsComponentRegistration = {
+export const RatingStarsComponentRegistration: ComponentRegistration = {
   component: Rate,
   definition: {
     id: 'custom-rating',
