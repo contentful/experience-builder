@@ -107,10 +107,10 @@ export const buildCfStyles = ({
     objectFit: cfImageOptions?.objectFit,
     objectPosition: cfImageOptions?.objectPosition,
   };
-  const filteredRules = Object.fromEntries(
+  const rulesWithoutUndefined = Object.fromEntries(
     Object.entries(translatedRules).filter(([, value]) => value !== undefined),
   );
-  return filteredRules;
+  return rulesWithoutUndefined;
 };
 
 export const buildCfStylesWithSpecialCasing = (
