@@ -14,7 +14,7 @@ import { designTokensRegistry } from '@/registries';
 import { ComponentTreeNode, DesignTokensDefinition, Experience, StyleProps } from '@/types';
 import { CF_STYLE_ATTRIBUTES } from '@/constants';
 import { generateRandomId } from '@/utils';
-import { createJoinedCSSRules } from './stylesUtils';
+import { stringifyCssProperties } from './stylesUtils';
 
 type FlattenedDesignTokens = Record<
   string,
@@ -167,12 +167,12 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
         // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
         const cfStyles = buildCfStyles(propsByBreakpointWithResolvedDesignTokens);
-        const cssRules = createJoinedCSSRules(cfStyles);
+        const generatedCss = stringifyCssProperties(cfStyles);
 
         // I create a hash of the object above because that would ensure hash stability
         // Adding breakpointId to ensure not using the same IDs between breakpoints as this leads to
         // conflicts between different breakpoint values from multiple nodes where the hash would be equal
-        const styleHash = md5(breakpointId + cssRules);
+        const styleHash = md5(breakpointId + generatedCss);
 
         // and prefix the className to make sure the value can be processed
         const className = `cf-${styleHash}`;
@@ -190,7 +190,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         }
 
         // otherwise, save it to the stylesheet
-        mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className] = cssRules;
+        mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className] = generatedCss;
       }
 
       // all generated classNames are saved in the tree node

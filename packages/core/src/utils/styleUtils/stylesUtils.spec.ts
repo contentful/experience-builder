@@ -1,5 +1,5 @@
 import { ExperienceTreeNode } from '@/types';
-import { calculateNodeDefaultHeight, createJoinedCSSRules } from './stylesUtils';
+import { calculateNodeDefaultHeight, stringifyCssProperties } from './stylesUtils';
 import { describe, it, expect } from 'vitest';
 import { CONTENTFUL_COMPONENTS, EMPTY_CONTAINER_HEIGHT } from '@/constants';
 
@@ -66,7 +66,7 @@ describe('stylesUtils', () => {
     });
   });
 
-  describe('createJoinedCSSRules', () => {
+  describe('stringifyCssProperties', () => {
     it('should join a given object of css rules into a string', () => {
       const cssRules = {
         background: 'green',
@@ -74,7 +74,7 @@ describe('stylesUtils', () => {
         'font-size': '1rem',
       };
 
-      const res = createJoinedCSSRules(cssRules);
+      const res = stringifyCssProperties(cssRules);
 
       expect(res).toBe('background:green;color:white;font-size:1rem;');
     });
@@ -86,7 +86,7 @@ describe('stylesUtils', () => {
         'font-size': '1rem',
       };
 
-      const res = createJoinedCSSRules(cssRules, true);
+      const res = stringifyCssProperties(cssRules, true);
 
       expect(res).toBe('background: green;\ncolor: white;\nfont-size: 1rem;');
     });

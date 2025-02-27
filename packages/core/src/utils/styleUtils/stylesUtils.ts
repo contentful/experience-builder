@@ -26,7 +26,7 @@ export const toCSSAttribute = (key: string) => {
   return val;
 };
 
-export const createJoinedCSSRules = (
+export const stringifyCssProperties = (
   cssProperties: CSSProperties,
   useWhitespaces: boolean = false,
 ) => {
@@ -39,7 +39,7 @@ export const createJoinedCSSRules = (
 };
 
 export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
-  const generatedStyles = createJoinedCSSRules(styles);
+  const generatedStyles = stringifyCssProperties(styles);
   const className = `cfstyles-${nodeId ? nodeId : md5(generatedStyles)}`;
   const styleRule = `.${className}{ ${generatedStyles} }`;
 
@@ -77,7 +77,7 @@ export const buildCfStyles = ({
   cfColumnSpan,
   cfVisibility,
 }: Partial<StyleProps>): CSSProperties => {
-  const translatedRules = {
+  const cssProperties = {
     boxSizing: 'border-box',
     ...transformVisibility(cfVisibility),
     margin: cfMargin,
@@ -107,24 +107,26 @@ export const buildCfStyles = ({
     objectFit: cfImageOptions?.objectFit,
     objectPosition: cfImageOptions?.objectPosition,
   };
-  const rulesWithoutUndefined = Object.fromEntries(
-    Object.entries(translatedRules).filter(([, value]) => value !== undefined),
+  const cssPropertiesWithoutUndefined = Object.fromEntries(
+    Object.entries(cssProperties).filter(([, value]) => value !== undefined),
   );
-  return rulesWithoutUndefined;
+  return cssPropertiesWithoutUndefined;
 };
 
-export const buildCfStylesWithSpecialCasing = (
-  designProperties: Partial<StyleProps>,
+export const maybeAdjustStructureComponentHeight = (
+  cssProperties: CSSProperties,
   node: ComponentTreeNode,
 ) => {
-  const cfStyles = buildCfStyles(designProperties);
-  if (!node.children.length && isStructureWithRelativeHeight(node.definitionId, cfStyles.height)) {
+  if (
+    !node.children.length &&
+    isStructureWithRelativeHeight(node.definitionId, cssProperties.height)
+  ) {
     return {
-      ...cfStyles,
+      ...cssProperties,
       minHeight: EMPTY_CONTAINER_HEIGHT,
     };
   }
-  return cfStyles;
+  return cssProperties;
 };
 
 /**

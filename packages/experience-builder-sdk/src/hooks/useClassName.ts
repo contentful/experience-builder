@@ -1,6 +1,10 @@
 import { useLayoutEffect, useState, useInsertionEffect } from 'react';
 
-import { buildCfStylesWithSpecialCasing, buildStyleTag } from '@contentful/experiences-core';
+import {
+  buildCfStyles,
+  maybeAdjustStructureComponentHeight,
+  buildStyleTag,
+} from '@contentful/experiences-core';
 import { ComponentTreeNode } from '@contentful/experiences-core/types';
 
 /**
@@ -26,7 +30,7 @@ export const useClassName = ({
       return;
     }
 
-    const cfStyles = buildCfStylesWithSpecialCasing(props, node);
+    const cfStyles = maybeAdjustStructureComponentHeight(buildCfStyles(props), node);
 
     if (Object.keys(cfStyles).length === 0) {
       return;

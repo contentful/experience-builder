@@ -1,10 +1,11 @@
 import {
-  buildCfStylesWithSpecialCasing,
+  maybeAdjustStructureComponentHeight,
   designTokensRegistry,
   flattenDesignTokenRegistry,
   maybePopulateDesignTokenValue,
-  createJoinedCSSRules,
+  stringifyCssProperties,
   toMediaQuery,
+  buildCfStyles,
 } from '@contentful/experiences-core';
 import { Breakpoint, ComponentTreeNode, PrimitiveValue } from '@contentful/experiences-core/types';
 import md5 from 'md5';
@@ -48,8 +49,11 @@ export const createStylesheetsForBuiltInStyles = ({
     );
 
     // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
-    const cfStyles = buildCfStylesWithSpecialCasing(designPropertiesWithResolvedDesignTokens, node);
-    const cssRules = createJoinedCSSRules(cfStyles);
+    const cfStyles = maybeAdjustStructureComponentHeight(
+      buildCfStyles(designPropertiesWithResolvedDesignTokens),
+      node,
+    );
+    const cssRules = stringifyCssProperties(cfStyles);
 
     // Create a hash ensuring stability across nodes (and breakpoints between nodes)
     const styleHash = md5(`${node.id}}-${cssRules}`);
