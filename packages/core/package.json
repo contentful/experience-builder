@@ -21,7 +21,8 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./constants": "./dist/constants.js"
+    "./constants": "./dist/constants.js",
+    "./types": "./dist/types.d.ts"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
