@@ -76,8 +76,17 @@ export const createStylesheetsForBuiltInStyles = ({
  * It will wrap each breakpoint's CSS code in a media query (exception: default breakpoint with '*').
  *
  * **Example Input:**
+ * ```
+ * [
+ *  { className: 'cfstyles-123', breakpointCondition: '*', css: 'color:red;' },
+ *  { className: 'cfstyles-456', breakpointCondition: '<768px', css: 'color:blue;' },
+ * ]
+ * ```
  *
  * **Example Output:**
+ * ```
+ * '.cfstyles-123{color:red;}@media(max-width:768px){.cfstyles-456{color:blue;}}'
+ * ```
  */
 export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: ResolvedStylesheetData) => {
   const stylesheet = stylesheetData.reduce(

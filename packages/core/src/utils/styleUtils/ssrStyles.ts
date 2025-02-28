@@ -672,6 +672,13 @@ export const flattenDesignTokenRegistry = (
 };
 
 type MediaQueryData = { condition: string; cssByClassName: Record<string, string> };
+/**
+ * Create a single CSS string containing all class definitions for a given media query.
+ *
+ * @param condition e.g. "*", "<520px", ">520px"
+ * @param cssByClassName map of class names to CSS strings containing all rules for each class
+ * @returns joined string of all CSS class definitions wrapped into media queries
+ */
 export const toMediaQuery = ({ condition, cssByClassName }: MediaQueryData): string => {
   const mediaQueryStyles = Object.entries(cssByClassName).reduce<string>(
     (acc, [className, css]) => {
