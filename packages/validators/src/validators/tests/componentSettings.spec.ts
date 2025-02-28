@@ -1,6 +1,7 @@
 import { validateExperienceFields } from '../validateExperienceFields';
 import { experience, experiencePattern } from '../../test/__fixtures__/v2023_09_28';
 import { describe, it, expect } from 'vitest';
+import { PATTERN_THUMBNAIL_IDS } from '../../schemas/latest';
 
 const schemaVersion = '2023-09-28' as const;
 const locale = 'en-US';
@@ -96,5 +97,81 @@ describe('componentSettings', () => {
 
     expect(result.success).toBe(true);
     expect(result.errors).toBeUndefined();
+  });
+
+  it('allows to have an optional thumbnailId field', () => {
+    PATTERN_THUMBNAIL_IDS.forEach((thumbnailId) => {
+      const pattern = {
+        ...experiencePattern,
+        fields: {
+          ...experiencePattern.fields,
+          componentSettings: {
+            [locale]: {
+              variableDefinitions: {},
+              thumbnailId: thumbnailId,
+            },
+          },
+        },
+      };
+      const result = validateExperienceFields(pattern, schemaVersion);
+      expect(result.success).toBe(true);
+      expect(result.errors).toBeUndefined();
+    });
+  });
+
+  it('errors if the thumbnailId contains an unsupported value', () => {
+    const pattern = {
+      ...experiencePattern,
+      fields: {
+        ...experiencePattern.fields,
+        componentSettings: {
+          [locale]: {
+            variableDefinitions: {},
+            thumbnailId: 'poop',
+          },
+        },
+      },
+    };
+    const result = validateExperienceFields(pattern, schemaVersion);
+    expect(result.success).toBe(false);
+    expect(result.errors).toBeDefined();
+    expect(result.errors?.[0].details.startsWith('Invalid enum value.')).toBe(true);
+  });
+
+  it('allows to have an optional category field', () => {
+    const pattern = {
+      ...experiencePattern,
+      fields: {
+        ...experiencePattern.fields,
+        componentSettings: {
+          [locale]: {
+            variableDefinitions: {},
+            category: 'My fancy category',
+          },
+        },
+      },
+    };
+    const result = validateExperienceFields(pattern, schemaVersion);
+    expect(result.success).toBe(true);
+    expect(result.errors).toBeUndefined();
+  });
+
+  it('errors if the category is more than 50 characters length', () => {
+    const pattern = {
+      ...experiencePattern,
+      fields: {
+        ...experiencePattern.fields,
+        componentSettings: {
+          [locale]: {
+            variableDefinitions: {},
+            category: 'a'.repeat(51),
+          },
+        },
+      },
+    };
+    const result = validateExperienceFields(pattern, schemaVersion);
+    expect(result.success).toBe(false);
+    expect(result.errors).toBeDefined();
+    expect(result.errors?.[0].details).toBe('Category must contain at most 50 characters');
   });
 });
