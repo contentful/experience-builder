@@ -157,7 +157,9 @@ describe('section component', () => {
     ).toBeDefined();
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.desktop as string,
-    ).toEqual(expect.stringMatching(/cf-\w{32} cf-\w{32} cf-\w{32}/));
+    ).toMatchInlineSnapshot(
+      `"cf-e1a3558cb11bc2983fc0d914b8765213 cf-b2f64d90deb76cdcc276773f21d672ea cf-8187cd93307f9e0ceffff3cad17ce4d3"`,
+    );
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
     ).not.toBeDefined();
@@ -264,7 +266,9 @@ describe('section component', () => {
     ).toBeDefined();
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.desktop as string,
-    ).toEqual(expect.stringMatching(/cf-\w{32} cf-\w{32} cf-\w{32}/));
+    ).toMatchInlineSnapshot(
+      `"cf-60a721089928a3f286b08ff8117eb3a2 cf-b2f64d90deb76cdcc276773f21d672ea cf-8187cd93307f9e0ceffff3cad17ce4d3"`,
+    );
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
     ).not.toBeDefined();

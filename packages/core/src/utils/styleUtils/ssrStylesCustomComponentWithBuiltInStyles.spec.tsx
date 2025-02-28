@@ -269,7 +269,9 @@ describe('custom component with builtInStyles', () => {
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint
         .desktop as string,
-    ).toEqual(expect.stringMatching(/cf-\w{32} cf-\w{32} cf-\w{32}/));
+    ).toMatchInlineSnapshot(
+      `"cf-eeb47060b35b1a5ba6ee2610a6fc5cbe cf-b17f7f407eb3d0f0a7c91bc3f6115954 cf-e3b65f6cff2ff578a0a833ce3a93494a"`,
+    );
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
     ).not.toBeDefined();

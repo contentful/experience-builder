@@ -180,7 +180,9 @@ describe('custom component with builtInStyles which are supporting design tokens
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint
         .desktop as string,
-    ).toEqual(expect.stringMatching(/cf-\w{32} cf-\w{32} cf-\w{32}/));
+    ).toMatchInlineSnapshot(
+      `"cf-7b1d28fe46d9488fa595e4ff21270f2e cf-af21918d8656639646a9eb86a7ca06e2 cf-5a0d66d5b7e5c60dac49f3a86e4c1c8d"`,
+    );
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
     ).not.toBeDefined();
