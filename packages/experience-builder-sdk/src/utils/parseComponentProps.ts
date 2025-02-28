@@ -148,8 +148,17 @@ export const parseComponentProps = ({
     breakpoints,
     node,
   });
+  /* [Data Format] Stylesheet data provides objects containing `className`, `breakpointCondition`, and `css`.
+   * stylesheetData = [{
+   *    className: 'uniqueMD5Hash',
+   *    breakpointCondition: '<500px',
+   *    css: 'color:red;'
+   *  }, ...]
+   */
   const mediaQuery = convertResolvedDesignValuesToMediaQuery(stylesheetData);
-
+  /* [Data Format] `mediaQuery` is a joined string of all media query CSS code
+   * mediaQuery = ".cfstyles-123{color:red;}@media(max-width:768px){.cfstyles-456{color:blue;}}"
+   */
   return {
     styleProps,
     mediaQuery,
