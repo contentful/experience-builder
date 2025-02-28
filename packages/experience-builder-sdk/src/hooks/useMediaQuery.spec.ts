@@ -3,29 +3,29 @@ import { createBreakpoints } from '../../test/__fixtures__/breakpoints';
 import { createComponentTreeNode } from '../../test/__fixtures__/componentTreeNode';
 import { renderHook } from '@testing-library/react';
 import {
-  resolveClassNamesFromBuiltInStyles,
+  createStylesheetsForBuiltInStyles,
   convertResolvedDesignValuesToMediaQuery,
   useMediaQuery,
 } from './useMediaQuery';
 
-const designPropsByBreakpointId = {
+const designPropertiesByBreakpoint = {
   desktop: { cfMargin: '7px' },
   tablet: { cfMargin: '42px', cfPadding: '11px' },
 };
 const breakpoints = createBreakpoints();
 const node = createComponentTreeNode();
 
-describe('resolveClassNamesFromBuiltInStyles', () => {
+describe('createStylesheetsForBuiltInStyles', () => {
   it('returns one style sheet entry for each used breakpoint', () => {
-    const styleSheetData = resolveClassNamesFromBuiltInStyles({
-      designPropsByBreakpointId,
+    const stylesheetData = createStylesheetsForBuiltInStyles({
+      designPropertiesByBreakpoint,
       breakpoints,
       node,
     });
 
-    expect(styleSheetData).toHaveLength(2);
-    const desktop = styleSheetData[0];
-    const tablet = styleSheetData[1];
+    expect(stylesheetData).toHaveLength(2);
+    const desktop = stylesheetData[0];
+    const tablet = stylesheetData[1];
 
     expect(desktop).toEqual({
       breakpointCondition: breakpoints[0].query,
@@ -43,16 +43,16 @@ describe('resolveClassNamesFromBuiltInStyles', () => {
 
 describe('convertResolvedDesignValuesToMediaQuery', () => {
   it('converts style sheet data into the final CSS code', () => {
-    const styleSheetData = resolveClassNamesFromBuiltInStyles({
-      designPropsByBreakpointId,
+    const stylesheetData = createStylesheetsForBuiltInStyles({
+      designPropertiesByBreakpoint,
       breakpoints,
       node,
     });
 
-    const result = convertResolvedDesignValuesToMediaQuery(styleSheetData);
+    const result = convertResolvedDesignValuesToMediaQuery(stylesheetData);
 
-    const desktop = styleSheetData[0];
-    const tablet = styleSheetData[1];
+    const desktop = stylesheetData[0];
+    const tablet = stylesheetData[1];
     const expectedDesktopCss = toMediaQuery({
       condition: desktop.breakpointCondition,
       cssByClassName: { [desktop.className]: desktop.css },
@@ -72,18 +72,18 @@ describe('useMediaQuery', () => {
   it('returns the generated className and css for given design properties', () => {
     const { result } = renderHook(() =>
       useMediaQuery({
-        designPropsByBreakpointId,
+        designPropertiesByBreakpoint,
         breakpoints,
         node,
       }),
     );
 
-    const styleSheetData = resolveClassNamesFromBuiltInStyles({
-      designPropsByBreakpointId,
+    const stylesheetData = createStylesheetsForBuiltInStyles({
+      designPropertiesByBreakpoint,
       breakpoints,
       node,
     });
-    const expectedResult = convertResolvedDesignValuesToMediaQuery(styleSheetData);
+    const expectedResult = convertResolvedDesignValuesToMediaQuery(stylesheetData);
     expect(result.current).toEqual(expectedResult);
   });
 });

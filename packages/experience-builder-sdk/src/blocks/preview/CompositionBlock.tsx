@@ -29,7 +29,6 @@ import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Entry } from 'contentful';
 import PreviewUnboundImage from './PreviewUnboundImage';
 import { parseComponentProps } from '../../utils/parseComponentProps';
-import { resolveClassNamesFromBuiltInStyles } from '../../hooks/useMediaQuery';
 
 type CompositionBlockProps = {
   node: ComponentTreeNode;
@@ -132,6 +131,7 @@ export const CompositionBlock = ({
       customDesignProps = {},
       mediaQuery,
     } = parseComponentProps({
+      breakpoints: entityStore.breakpoints,
       mainBreakpoint,
       componentDefinition: componentRegistration.definition,
       node,
@@ -169,13 +169,6 @@ export const CompositionBlock = ({
       },
       resolveUnboundValue: ({ mappingKey, defaultValue }) => {
         return entityStore.unboundValues[mappingKey]?.value ?? defaultValue;
-      },
-      resolveClassNamesFromBuiltInStyles: (designPropsByBreakpointId) => {
-        return resolveClassNamesFromBuiltInStyles({
-          designPropsByBreakpointId,
-          breakpoints: entityStore.breakpoints,
-          node,
-        });
       },
     });
 
@@ -218,14 +211,12 @@ export const CompositionBlock = ({
       props,
     };
   }, [
-    node.variables,
-    node.id,
-    node.children,
-    resolveDesignValue,
+    node,
+    entityStore,
     componentRegistration,
     isAssembly,
     getPatternChildNodeClassName,
-    entityStore,
+    resolveDesignValue,
     hyperlinkPattern,
     locale,
     wrappingPatternIds,

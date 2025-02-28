@@ -51,13 +51,13 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
   }, [nodeProps.cfImageOptions]);
 
   const wrapperMedia = useMediaQuery({
-    designPropsByBreakpointId: wrapperStyle,
+    designPropertiesByBreakpoint: wrapperStyle,
     node,
     breakpoints,
   });
 
   const imageMedia = useMediaQuery({
-    designPropsByBreakpointId: imageStyle,
+    designPropertiesByBreakpoint: imageStyle,
     node,
     breakpoints,
   });

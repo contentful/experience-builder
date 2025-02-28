@@ -3,7 +3,7 @@ import { getValueForBreakpoint } from '@contentful/experiences-core';
 import { createBreakpoints } from '../../test/__fixtures__/breakpoints';
 import { createComponentDefinition } from '../../test/__fixtures__/componentDefinition';
 import { createComponentTreeNode } from '../../test/__fixtures__/componentTreeNode';
-import { resolveClassNamesFromBuiltInStyles } from '../hooks/useMediaQuery';
+import { PrimitiveValue } from '@contentful/experiences-validators';
 
 describe('parseComponentProps', () => {
   const breakpoints = createBreakpoints();
@@ -11,20 +11,12 @@ describe('parseComponentProps', () => {
   const mainBreakpoint = breakpoints[0];
   const componentDefinition = createComponentDefinition();
   const node = createComponentTreeNode();
-  const fnResolveClassNamesFromBuiltInStyles = (
-    designPropsByBreakpointId: Record<string, Record<string, unknown>>,
-  ) =>
-    resolveClassNamesFromBuiltInStyles({
-      designPropsByBreakpointId,
-      breakpoints,
-      node,
-    });
   const resolveDesignValue = ({
     propertyName,
     valuesByBreakpoint,
   }: {
     propertyName: string;
-    valuesByBreakpoint: Record<string, string>;
+    valuesByBreakpoint: Record<string, PrimitiveValue>;
   }) =>
     getValueForBreakpoint(valuesByBreakpoint, breakpoints, activeBreakpointIndex, 0, propertyName);
 
@@ -34,9 +26,9 @@ describe('parseComponentProps', () => {
 
   const defaultArguments = {
     mainBreakpoint,
+    breakpoints,
     componentDefinition,
     node,
-    resolveClassNamesFromBuiltInStyles: fnResolveClassNamesFromBuiltInStyles,
     resolveCustomDesignValue: resolveDesignValue,
     resolveBoundValue,
     resolveHyperlinkValue,

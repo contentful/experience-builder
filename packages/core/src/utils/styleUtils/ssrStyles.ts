@@ -7,29 +7,15 @@ import {
   ExperienceComponentTree,
   ExperienceDataSource,
   ExperienceUnboundValues,
+  PrimitiveValue,
 } from '@contentful/experiences-validators';
-import {
-  buildCfStyles,
-  checkIsAssemblyNode,
-  isValidBreakpointValue,
-  toCSSAttribute,
-} from '@/utils';
+import { buildCfStyles, checkIsAssemblyNode, isValidBreakpointValue } from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
-import {
-  ComponentTreeNode,
-  DesignTokensDefinition,
-  Experience,
-  StyleProps,
-  Breakpoint,
-} from '@/types';
+import { ComponentTreeNode, DesignTokensDefinition, Experience, StyleProps } from '@/types';
 import { CF_STYLE_ATTRIBUTES } from '@/constants';
 import { generateRandomId } from '@/utils';
-
-type MediaQueryTemplate = Record<
-  string,
-  { condition: string; cssByClassName: Record<string, string> }
->;
+import { stringifyCssProperties } from './stylesUtils';
 
 type FlattenedDesignTokens = Record<
   string,
@@ -47,46 +33,22 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
   const mapOfDesignVariableKeys = flattenDesignTokenRegistry(designTokensRegistry);
 
   // getting breakpoints from the entry componentTree field
-  /**
-   * breakpoints [
-      {
-        id: 'desktop',
-        query: '*',
-        displayName: 'All Sizes',
-        previewSize: '100%'
-      },
-      {
-        id: 'tablet',
-        query: '<992px',
-        displayName: 'Tablet',
-        previewSize: '820px'
-      },
-      {
-        id: 'mobile',
-        query: '<576px',
-        displayName: 'Mobile',
-        previewSize: '390px'
-      }
-    ]
-   */
   const { breakpoints } = experienceTreeRoot;
 
   // creating the structure which I thought would work best for aggregation
-  const mediaQueriesTemplate = breakpoints.reduce(
-    (mediaQueryTemplate: MediaQueryTemplate, breakpoint: Breakpoint) => {
-      return {
-        ...mediaQueryTemplate,
-        [breakpoint.id]: {
-          condition: breakpoint.query,
-          cssByClassName: {} as Record<string, string>,
-        },
-      };
-    },
-    {},
+  const mediaQueryDataByBreakpoint = breakpoints.reduce(
+    (mediaQueryTemplate, breakpoint) => ({
+      ...mediaQueryTemplate,
+      [breakpoint.id]: {
+        condition: breakpoint.query,
+        cssByClassName: {} as Record<string, string>,
+      },
+    }),
+    {} as Record<string, MediaQueryData>,
   );
 
   // getting the breakpoint ids
-  const breakpointIds = Object.keys(mediaQueriesTemplate);
+  const breakpointIds = Object.keys(mediaQueryDataByBreakpoint);
 
   const iterateOverTreeAndExtractStyles = ({
     componentTree,
@@ -143,36 +105,6 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           continue;
         }
 
-        const defaultPatternDivStyles: Record<string, string> = Object.fromEntries(
-          Object.entries(buildCfStyles({}))
-            .filter(([, value]) => value !== undefined)
-            .map(([key, value]) => [toCSSAttribute(key), value]),
-        );
-
-        // I create a hash of the object above because that would ensure hash stability
-        const styleHash = md5(JSON.stringify(defaultPatternDivStyles));
-
-        // and prefix the className to make sure the value can be processed
-        const className = `cf-${styleHash}`;
-
-        for (const breakpointId of breakpointIds) {
-          if (!mediaQueriesTemplate[breakpointId].cssByClassName[className]) {
-            mediaQueriesTemplate[breakpointId].cssByClassName[className] =
-              toCSSString(defaultPatternDivStyles);
-          }
-        }
-
-        // When iterating over instances of the same pattern, we will iterate over the identical
-        // pattern nodes again for every instance. Make sure to not overwrite the values from previous instances.
-        if (!currentNode.variables.cfSsrClassName) {
-          currentNode.variables.cfSsrClassName = {
-            type: 'DesignValue',
-            valuesByBreakpoint: {
-              [breakpointIds[0]]: className,
-            },
-          };
-        }
-
         const nextComponentVariablesOverwrites = resolveComponentVariablesOverwrites({
           patternNode: currentNode,
           wrapperComponentVariablesOverwrites: componentVariablesOverwrites,
@@ -202,36 +134,15 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         continue;
       }
 
-      /** Variables value is stored in `valuesByBreakpoint` object
-     * {
-        cfVerticalAlignment: { type: 'DesignValue', valuesByBreakpoint: { desktop: 'center' } },
-        cfHorizontalAlignment: { type: 'DesignValue', valuesByBreakpoint: { desktop: 'center' } },
-        cfMargin: { type: 'DesignValue', valuesByBreakpoint: { desktop: '0 0 0 0' } },
-        cfPadding: { type: 'DesignValue', valuesByBreakpoint: { desktop: '0 0 0 0' } },
-        cfBackgroundColor: {
-          type: 'DesignValue',
-          valuesByBreakpoint: { desktop: 'rgba(246, 246, 246, 1)' }
-        },
-        cfWidth: { type: 'DesignValue', valuesByBreakpoint: { desktop: 'fill' } },
-        cfHeight: {
-          type: 'DesignValue',
-          valuesByBreakpoint: { desktop: 'fit-content' }
-        },
-        cfMaxWidth: { type: 'DesignValue', valuesByBreakpoint: { desktop: 'none' } },
-        cfFlexDirection: { type: 'DesignValue', valuesByBreakpoint: { desktop: 'column' } },
-        cfFlexWrap: { type: 'DesignValue', valuesByBreakpoint: { desktop: 'nowrap' } },
-        cfBorder: {
-          type: 'DesignValue',
-          valuesByBreakpoint: { desktop: '0px solid rgba(0, 0, 0, 0)' }
-        },
-        cfBorderRadius: { type: 'DesignValue', valuesByBreakpoint: { desktop: '0px' } },
-        cfGap: { type: 'DesignValue', valuesByBreakpoint: { desktop: '0px 0px' } },
-        cfHyperlink: { type: 'UnboundValue', key: 'VNc49Qyepd6IzN7rmKUyS' },
-        cfOpenInNewTab: { type: 'UnboundValue', key: 'ZA5YqB2fmREQ4pTKqY5hX' },
-        cfBackgroundImageUrl: { type: 'UnboundValue', key: 'FeskH0WbYD5_RQVXX-1T8' },
-        cfBackgroundImageOptions: { type: 'DesignValue', valuesByBreakpoint: { desktop: [Object] } }
-      }
-     */
+      /* [Data format] `currentNode.variables` uses the following serialized shape:
+       * {
+       *   cfMargin: { type: 'DesignValue', valuesByBreakpoint: { desktop: '1px', tablet: '2px' } },
+       *   cfPadding: { type: 'DesignValue', valuesByBreakpoint: { desktop: '3px' } }
+       *   cfBackgroundImageUrl: { type: 'BoundValue', path: '/lUERH7tX7nJTaPX6f0udB/fields/assetReference/~locale/fields/file/~locale' }
+       *   asdf1234: { type: 'ComponentValue', key: 'qwer567' }
+       *   // ...
+       * }
+       */
 
       // so first, I convert it into a map to help me make it easier to access the values
       const propsByBreakpoint = indexByBreakpoint({
@@ -247,32 +158,21 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           );
         },
       });
-      /**
-     * propsByBreakpoint {
-        desktop: {
-          cfVerticalAlignment: 'center',
-          cfHorizontalAlignment: 'center',
-          cfMargin: '0 0 0 0',
-          cfPadding: '0 0 0 0',
-          cfBackgroundColor: 'rgba(246, 246, 246, 1)',
-          cfWidth: 'fill',
-          cfHeight: 'fit-content',
-          cfMaxWidth: 'none',
-          cfFlexDirection: 'column',
-          cfFlexWrap: 'nowrap',
-          cfBorder: '0px solid rgba(0, 0, 0, 0)',
-          cfBorderRadius: '0px',
-          cfGap: '0px 0px',
-          cfBackgroundImageOptions: { scaling: 'fill', alignment: 'left top', targetSize: '2000px' }
-        },
-        tablet: {},
-        mobile: {}
-      }
-     */
+
+      /* [Data format] `propsByBreakpoint` is a map of "breakpointId > propertyName > plainValue":
+       * {
+       *   desktop: {
+       *     cfMargin: '1px',
+       *     cfWidth: 'fill',
+       *     cfBackgroundImageUrl: 'https://example.com/image.jpg'
+       *     //...
+       *   }
+       * }
+       */
 
       const currentNodeClassNames: string[] = [];
 
-      // then for each breakpoint
+      // For each breakpoint, resolve design tokens, create the CSS and generate a unique className.
       for (const breakpointId of breakpointIds) {
         const propsByBreakpointWithResolvedDesignTokens = Object.entries(
           propsByBreakpoint[breakpointId],
@@ -287,40 +187,27 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           };
         }, {});
 
-        // We convert cryptic prop keys to css variables
-        // Eg: cfMargin to margin
-        const stylesForBreakpoint = buildCfStyles(propsByBreakpointWithResolvedDesignTokens);
+        // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
+        const cfStyles = buildCfStyles(propsByBreakpointWithResolvedDesignTokens);
 
-        const stylesForBreakpointWithoutUndefined: Record<string, string> = Object.fromEntries(
-          Object.entries(stylesForBreakpoint)
-            .filter(([, value]) => value !== undefined)
-            .map(([key, value]) => [toCSSAttribute(key), value]),
-        );
+        /* [Data format] `cfStyles` is a list of CSSProperties (React format):
+         * {
+         *   margin: '1px',
+         *   width: '100%',
+         *   backgroundImage: 'url(https://example.com/image.jpg)'
+         *   //...
+         * }
+         */
+        const generatedCss = stringifyCssProperties(cfStyles);
 
-        /**
-       * stylesForBreakpoint {
-          margin: '0 0 0 0',
-          padding: '0 0 0 0',
-          'background-color': 'rgba(246, 246, 246, 1)',
-          width: '100%',
-          height: 'fit-content',
-          'max-width': 'none',
-          border: '0px solid rgba(0, 0, 0, 0)',
-          'border-radius': '0px',
-          gap: '0px 0px',
-          'align-items': 'center',
-          'justify-content': 'safe center',
-          'flex-direction': 'column',
-          'flex-wrap': 'nowrap',
-          'font-style': 'normal',
-          'text-decoration': 'none',
-          'box-sizing': 'border-box'
-        }
-       */
+        /* [Data format] `generatedCss` is the minimized CSS string that will be added to the DOM:
+         * generatedCss = "margin: 1px;width: 100%;..."
+         */
+
         // I create a hash of the object above because that would ensure hash stability
         // Adding breakpointId to ensure not using the same IDs between breakpoints as this leads to
         // conflicts between different breakpoint values from multiple nodes where the hash would be equal
-        const styleHash = md5(breakpointId + JSON.stringify(stylesForBreakpointWithoutUndefined));
+        const styleHash = md5(breakpointId + generatedCss);
 
         // and prefix the className to make sure the value can be processed
         const className = `cf-${styleHash}`;
@@ -333,14 +220,12 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         }
 
         // if there is already the similar hash - no need to over-write it
-        if (mediaQueriesTemplate[breakpointId].cssByClassName[className]) {
+        if (mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className]) {
           continue;
         }
 
         // otherwise, save it to the stylesheet
-        mediaQueriesTemplate[breakpointId].cssByClassName[className] = toCSSString(
-          stylesForBreakpointWithoutUndefined,
-        );
+        mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className] = generatedCss;
       }
 
       // all generated classNames are saved in the tree node
@@ -389,11 +274,12 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
   // once the whole tree was traversed, for each breakpoint, I aggregate the styles
   // for each generated className into one css string
-  const styleSheet = Object.entries(mediaQueriesTemplate).reduce((acc, [, breakpointPayload]) => {
-    return `${acc}${toMediaQuery(breakpointPayload as { condition: string; cssByClassName: Record<string, string> })}`;
-  }, '');
+  const stylesheet = Object.entries(mediaQueryDataByBreakpoint).reduce(
+    (acc, [, mediaQueryData]) => `${acc}${toMediaQuery(mediaQueryData)}`,
+    '',
+  );
 
-  return styleSheet;
+  return stylesheet;
 };
 
 /**
@@ -637,6 +523,41 @@ export const resolveBackgroundImageBinding = ({
   }
 };
 
+/**
+ * Takes the initial set of properties, filters only design properties that will be mapped to CSS and
+ * re-organizes them to be indexed by breakpoint ID ("breakpoint > variable > value"). It will
+ * also resolve the design/ component values to plain values.
+ *
+ * **Example Input**
+ * ```
+ * variables = {
+ *   cfMargin: { type: 'DesignValue', valuesByBreakpoint: { desktop: '1px', tablet: '2px' } },
+ *   cfPadding: { type: 'DesignValue', valuesByBreakpoint: { desktop: '3px', mobile: '4px' } }
+ * }
+ * ```
+ *
+ * **Example Output**
+ * ```
+ * variableValuesByBreakpoints = {
+ *   desktop: {
+ *     cfMargin: '1px',
+ *     cfPadding: '3px'
+ *   },
+ *   tablet: {
+ *     cfMargin: '2px'
+ *   },
+ *   mobile: {
+ *    cfPadding: '4px'
+ *   }
+ * }
+ * ```
+ *
+ * **Note**
+ * - The property cfBackgroundImageUrl is the only content property that gets mapped to CSS as well.
+ *   It will be solely stored on the default breakpoint.
+ * - For ComponentValues, it will either take the override from the pattern instance or fallback to
+ *   the defaultValue defined in variableDefinitions.
+ */
 export const indexByBreakpoint = ({
   variables,
   breakpointIds,
@@ -654,25 +575,25 @@ export const indexByBreakpoint = ({
   componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
   componentSettings?: ExperienceComponentSettings;
 }) => {
-  const variableValuesByBreakpoints = breakpointIds.reduce<Record<string, Record<string, unknown>>>(
-    (acc, breakpointId) => {
-      return {
-        ...acc,
-        [breakpointId]: {},
-      };
-    },
-    {},
-  );
+  const variableValuesByBreakpoints = breakpointIds.reduce<
+    Record<string, Record<string, Exclude<PrimitiveValue, undefined>>>
+  >((acc, breakpointId) => {
+    return {
+      ...acc,
+      [breakpointId]: {},
+    };
+  }, {});
 
   const defaultBreakpoint = breakpointIds[0];
 
   for (const [variableName, variableData] of Object.entries(variables)) {
     // handling the special case - cfBackgroundImageUrl variable, which can be bound or unbound
-    // so, we need to resolve it here and pass it down as a css property to be convereted into the CSS
+    // so, we need to resolve it here and pass it down as a css property to be converted into the CSS
 
     // I used .startsWith() cause it can be part of a pattern node
     if (
       variableName === 'cfBackgroundImageUrl' ||
+      // TODO: Test this for nested patterns as the name might be just a random hash without the actual name (needs to be validated).
       variableName.startsWith('cfBackgroundImageUrl_')
     ) {
       const imageUrl = resolveBackgroundImageBinding({
@@ -725,17 +646,9 @@ export const indexByBreakpoint = ({
 
 /**
  * Flattens the object from
- * {
- *   color: {
- *      [key]: [value]
- *   }
- * }
- *
+ * `{ color: { [key]: [value] } }`
  * to
- *
- * {
- *  'color.key': [value]
- * }
+ * `{ 'color.key': [value] }`
  */
 export const flattenDesignTokenRegistry = (
   designTokenRegistry: DesignTokensDefinition,
@@ -758,34 +671,27 @@ export const flattenDesignTokenRegistry = (
   }, {});
 };
 
-// Replaces camelCase with kebab-case
-
-// converts the <key, value> object into a css string
-export const toCSSString = (breakpointStyles: Record<string, string>) => {
-  return Object.entries(breakpointStyles)
-    .map(([key, value]) => `${key}:${value};`)
-    .join('');
-};
-
-export const toMediaQuery = (breakpointPayload: {
-  condition: string;
-  cssByClassName: Record<string, string>;
-}): string => {
-  const mediaQueryStyles = Object.entries(breakpointPayload.cssByClassName).reduce<string>(
+type MediaQueryData = { condition: string; cssByClassName: Record<string, string> };
+/**
+ * Create a single CSS string containing all class definitions for a given media query.
+ *
+ * @param condition e.g. "*", "<520px", ">520px"
+ * @param cssByClassName map of class names to CSS strings containing all rules for each class
+ * @returns joined string of all CSS class definitions wrapped into media queries
+ */
+export const toMediaQuery = ({ condition, cssByClassName }: MediaQueryData): string => {
+  const mediaQueryStyles = Object.entries(cssByClassName).reduce<string>(
     (acc, [className, css]) => {
       return `${acc}.${className}{${css}}`;
     },
     ``,
   );
 
-  if (breakpointPayload.condition === '*') {
+  if (condition === '*') {
     return mediaQueryStyles;
   }
 
-  const [evaluation, pixelValue] = [
-    breakpointPayload.condition[0],
-    breakpointPayload.condition.substring(1),
-  ];
+  const [evaluation, pixelValue] = [condition[0], condition.substring(1)];
 
   const mediaQueryRule = evaluation === '<' ? 'max-width' : 'min-width';
 

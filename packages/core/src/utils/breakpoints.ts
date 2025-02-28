@@ -91,7 +91,9 @@ const builtInStylesWithDesignTokens = [
   'cfMaxWidth',
 ];
 
-export const isValidBreakpointValue = (value: PrimitiveValue) => {
+export const isValidBreakpointValue = (
+  value: PrimitiveValue,
+): value is Exclude<PrimitiveValue, undefined> => {
   return value !== undefined && value !== null && value !== '';
 };
 
