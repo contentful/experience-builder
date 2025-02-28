@@ -13,6 +13,7 @@ import {
 import { convertResolvedDesignValuesToMediaQuery } from '../hooks/useMediaQuery';
 import { createStylesheetsForBuiltInStyles } from '../hooks/useMediaQuery';
 
+// TODO: Test this for nested patterns as the name might be just a random hash without the actual name (needs to be validated).
 const isSpecialCaseCssProp = (propName: string) => {
   return propName === 'cfBackgroundImageUrl' || propName.startsWith('cfBackgroundImageUrl_');
 };
@@ -121,13 +122,20 @@ export const parseComponentProps = ({
       case 'ComponentValue':
         // We're rendering a pattern entry. Content cannot be set for ComponentValue type properties
         // directly in the pattern so we can safely use the default value
-        // This can either a design (style) or a content variable
+        // This can either be a design (style) or a content variable
         contentProps[propName] = propDefinition.defaultValue;
         break;
       default:
         break;
     }
   }
+  /* [Data Format] After resolving all properties, `styleProps` contains solely the plain design values
+   * styleProps = {
+   *   cfMargin: { desktop: '42px', tablet: '13px' },
+   *   cfBackgroundColor: 'rgba(246, 246, 246, 1)',
+   *   cfBackgroundImage: { desktop: 'url(https://example.com/image.jpg)' }
+   * }
+   */
 
   const stylePropsIndexedByBreakpoint = Object.entries(styleProps).reduce<
     Record<string, Record<string, PrimitiveValue>>
@@ -142,6 +150,18 @@ export const parseComponentProps = ({
 
     return acc;
   }, {});
+  /* [Data Format] `stylePropsIndexedByBreakpoint` contains the plain design values grouped by breakpoint
+   * stylePropsIndexedByBreakpoint = {
+   *   desktop: {
+   *     cfMargin: '42px',
+   *     cfBackgroundColor: 'rgba(246, 246, 246, 1)',
+   *     cfBackgroundImage: 'url(https://example.com/image.jpg)'
+   *   },
+   *   tablet: {
+   *     cfMargin: '13px'
+   *   }
+   * }
+   */
 
   const stylesheetData = createStylesheetsForBuiltInStyles({
     designPropertiesByBreakpoint: stylePropsIndexedByBreakpoint,
@@ -151,13 +171,13 @@ export const parseComponentProps = ({
   /* [Data Format] Stylesheet data provides objects containing `className`, `breakpointCondition`, and `css`.
    * stylesheetData = [{
    *    className: 'uniqueMD5Hash',
-   *    breakpointCondition: '<500px',
-   *    css: 'color:red;'
+   *    breakpointCondition: '<768px',
+   *    css: 'margin:13px;'
    *  }, ...]
    */
   const mediaQuery = convertResolvedDesignValuesToMediaQuery(stylesheetData);
   /* [Data Format] `mediaQuery` is a joined string of all media query CSS code
-   * mediaQuery = ".cfstyles-123{color:red;}@media(max-width:768px){.cfstyles-456{color:blue;}}"
+   * mediaQuery = ".cfstyles-123{margin:42px;}@media(max-width:768px){.cfstyles-456{margin:13px;}}"
    */
   return {
     styleProps,
