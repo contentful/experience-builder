@@ -2,7 +2,7 @@ import { useLayoutEffect, useState, useInsertionEffect } from 'react';
 
 import {
   buildCfStyles,
-  maybeAdjustStructureComponentHeight,
+  addMinHeightForEmptyStructures,
   buildStyleTag,
 } from '@contentful/experiences-core';
 import { ComponentTreeNode } from '@contentful/experiences-core/types';
@@ -30,7 +30,7 @@ export const useClassName = ({
       return;
     }
 
-    const cfStyles = maybeAdjustStructureComponentHeight(buildCfStyles(props), node);
+    const cfStyles = addMinHeightForEmptyStructures(buildCfStyles(props), node);
 
     if (Object.keys(cfStyles).length === 0) {
       return;

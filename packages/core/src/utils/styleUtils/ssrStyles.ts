@@ -7,6 +7,7 @@ import {
   ExperienceComponentTree,
   ExperienceDataSource,
   ExperienceUnboundValues,
+  PrimitiveValue,
 } from '@contentful/experiences-validators';
 import { buildCfStyles, checkIsAssemblyNode, isValidBreakpointValue } from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
@@ -133,6 +134,16 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         continue;
       }
 
+      /* [Data format] `currentNode.variables` uses the following serialized shape:
+       * {
+       *   cfMargin: { type: 'DesignValue', valuesByBreakpoint: { desktop: '1px', tablet: '2px' } },
+       *   cfPadding: { type: 'DesignValue', valuesByBreakpoint: { desktop: '3px' } }
+       *   cfBackgroundImageUrl: { type: 'BoundValue', path: '/lUERH7tX7nJTaPX6f0udB/fields/assetReference/~locale/fields/file/~locale' }
+       *   asdf1234: { type: 'ComponentValue', key: 'qwer567' }
+       *   // ...
+       * }
+       */
+
       // so first, I convert it into a map to help me make it easier to access the values
       const propsByBreakpoint = indexByBreakpoint({
         variables: currentNode.variables,
@@ -148,9 +159,20 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         },
       });
 
+      /* [Data format] `propsByBreakpoint` is a map of "breakpointId > propertyName > plainValue":
+       * {
+       *   desktop: {
+       *     cfMargin: '1px',
+       *     cfWidth: 'fill',
+       *     cfBackgroundImageUrl: 'https://example.com/image.jpg'
+       *     //...
+       *   }
+       * }
+       */
+
       const currentNodeClassNames: string[] = [];
 
-      // then for each breakpoint
+      // For each breakpoint, resolve design tokens, create the CSS and generate a unique className.
       for (const breakpointId of breakpointIds) {
         const propsByBreakpointWithResolvedDesignTokens = Object.entries(
           propsByBreakpoint[breakpointId],
@@ -167,7 +189,20 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
         // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
         const cfStyles = buildCfStyles(propsByBreakpointWithResolvedDesignTokens);
+
+        /* [Data format] `cfStyles` is a list of CSSProperties (React format):
+         * {
+         *   margin: '1px',
+         *   width: '100%',
+         *   backgroundImage: 'url(https://example.com/image.jpg)'
+         *   //...
+         * }
+         */
         const generatedCss = stringifyCssProperties(cfStyles);
+
+        /* [Data format] `generatedCss` is the minimized CSS string that will be added to the DOM:
+         * generatedCss = "margin: 1px;width: 100%;..."
+         */
 
         // I create a hash of the object above because that would ensure hash stability
         // Adding breakpointId to ensure not using the same IDs between breakpoints as this leads to
@@ -488,6 +523,41 @@ export const resolveBackgroundImageBinding = ({
   }
 };
 
+/**
+ * Takes the initial set of properties, filters only design properties that will be mapped to CSS and
+ * re-organizes them to be indexed by breakpoint ID ("breakpoint > variable > value"). It will
+ * also resolve the design/ component values to plain values.
+ *
+ * **Example Input**
+ * ```
+ * variables = {
+ *   cfMargin: { type: 'DesignValue', valuesByBreakpoint: { desktop: '1px', tablet: '2px' } },
+ *   cfPadding: { type: 'DesignValue', valuesByBreakpoint: { desktop: '3px', mobile: '4px' } }
+ * }
+ * ```
+ *
+ * **Example Output**
+ * ```
+ * variableValuesByBreakpoints = {
+ *   desktop: {
+ *     cfMargin: '1px',
+ *     cfPadding: '3px'
+ *   },
+ *   tablet: {
+ *     cfMargin: '2px'
+ *   },
+ *   mobile: {
+ *    cfPadding: '4px'
+ *   }
+ * }
+ * ```
+ *
+ * **Note**
+ * - The property cfBackgroundImageUrl is the only content property that gets mapped to CSS as well.
+ *   It will be solely stored on the default breakpoint.
+ * - For ComponentValues, it will either take the override from the pattern instance or fallback to
+ *   the defaultValue defined in variableDefinitions.
+ */
 export const indexByBreakpoint = ({
   variables,
   breakpointIds,
@@ -505,25 +575,25 @@ export const indexByBreakpoint = ({
   componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
   componentSettings?: ExperienceComponentSettings;
 }) => {
-  const variableValuesByBreakpoints = breakpointIds.reduce<Record<string, Record<string, unknown>>>(
-    (acc, breakpointId) => {
-      return {
-        ...acc,
-        [breakpointId]: {},
-      };
-    },
-    {},
-  );
+  const variableValuesByBreakpoints = breakpointIds.reduce<
+    Record<string, Record<string, Exclude<PrimitiveValue, undefined>>>
+  >((acc, breakpointId) => {
+    return {
+      ...acc,
+      [breakpointId]: {},
+    };
+  }, {});
 
   const defaultBreakpoint = breakpointIds[0];
 
   for (const [variableName, variableData] of Object.entries(variables)) {
     // handling the special case - cfBackgroundImageUrl variable, which can be bound or unbound
-    // so, we need to resolve it here and pass it down as a css property to be convereted into the CSS
+    // so, we need to resolve it here and pass it down as a css property to be converted into the CSS
 
     // I used .startsWith() cause it can be part of a pattern node
     if (
       variableName === 'cfBackgroundImageUrl' ||
+      // TODO: Test this for nested patterns as the name might be just a random hash without the actual name (needs to be validated).
       variableName.startsWith('cfBackgroundImageUrl_')
     ) {
       const imageUrl = resolveBackgroundImageBinding({

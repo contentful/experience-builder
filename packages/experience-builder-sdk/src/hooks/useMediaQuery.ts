@@ -1,5 +1,5 @@
 import {
-  maybeAdjustStructureComponentHeight,
+  addMinHeightForEmptyStructures,
   designTokensRegistry,
   flattenDesignTokenRegistry,
   maybePopulateDesignTokenValue,
@@ -49,7 +49,7 @@ export const createStylesheetsForBuiltInStyles = ({
     );
 
     // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
-    const cfStyles = maybeAdjustStructureComponentHeight(
+    const cfStyles = addMinHeightForEmptyStructures(
       buildCfStyles(designPropertiesWithResolvedDesignTokens),
       node,
     );
@@ -71,6 +71,14 @@ export const createStylesheetsForBuiltInStyles = ({
   return result;
 };
 
+/**
+ * Takes the CSS code for each breakpoint and merges them into a single CSS string.
+ * It will wrap each breakpoint's CSS code in a media query (exception: default breakpoint with '*').
+ *
+ * **Example Input:**
+ *
+ * **Example Output:**
+ */
 export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: ResolvedStylesheetData) => {
   const stylesheet = stylesheetData.reduce(
     (acc, { breakpointCondition, className, css }) => {
