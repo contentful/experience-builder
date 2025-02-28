@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-sdk-react",
-  "version": "1.33.2",
+  "version": "1.33.3-beta.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "typings": "./dist/src/index.d.ts",
