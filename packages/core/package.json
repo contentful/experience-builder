@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-core",
-  "version": "1.33.2",
+  "version": "1.33.3-beta.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -21,7 +21,8 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./constants": "./dist/constants.js"
+    "./constants": "./dist/constants.js",
+    "./types": "./dist/types.d.ts"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
