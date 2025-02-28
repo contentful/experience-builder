@@ -17,6 +17,17 @@ type ResolvedStylesheetData = Array<{
   css: string;
 }>;
 
+/**
+ * For each provided breakpoint, create the CSS code and a unique class name.
+ *
+ * **Example Output:**
+ * ```
+ * [
+ *   { className: 'cfstyles-123', breakpointCondition: '*', css: 'margin:42px;' },
+ *   { className: 'cfstyles-456', breakpointCondition: '<768px', css: 'margin:13px;' },
+ * ]
+ * ```
+ */
 export const createStylesheetsForBuiltInStyles = ({
   designPropertiesByBreakpoint,
   breakpoints,
@@ -47,16 +58,33 @@ export const createStylesheetsForBuiltInStyles = ({
       }),
       {},
     );
+    /* [Data Format] `designPropertiesWithResolvedDesignTokens` is a map of property name to plain design value:
+     * designPropertiesWithResolvedDesignTokens = {
+     *   cfMargin: '42px',
+     *   cfBackgroundColor: 'rgba(246, 246, 246, 1)',
+     * }
+     */
 
     // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
     const cfStyles = addMinHeightForEmptyStructures(
       buildCfStyles(designPropertiesWithResolvedDesignTokens),
       node,
     );
-    const cssRules = stringifyCssProperties(cfStyles);
+    /* [Data Format] `cfStyles` follows the shape of CSSProperties (camelCased CSS property names):
+     * cfStyles = {
+     *   margin: '42px',
+     *   backgroundColor: 'rgba(246, 246, 246, 1)',
+     * }
+     */
+
+    // Translate the map of CSSProperties into the final shape of CSS code for this specific breakpoint
+    const breakpointCss = stringifyCssProperties(cfStyles);
+    /* [Data Format] `breakpointCss`:
+     * breakpointCss = "margin:42px;background-color:rgba(246, 246, 246, 1);"
+     */
 
     // Create a hash ensuring stability across nodes (and breakpoints between nodes)
-    const styleHash = md5(`${node.id}}-${cssRules}`);
+    const styleHash = md5(`${node.id}}-${breakpointCss}`);
 
     // Create a CSS className with internal prefix to make sure the value can be processed
     const className = `cfstyles-${styleHash}`;
@@ -64,7 +92,7 @@ export const createStylesheetsForBuiltInStyles = ({
     result.push({
       className,
       breakpointCondition: breakpoint.query,
-      css: cssRules,
+      css: breakpointCss,
     });
   }
 
