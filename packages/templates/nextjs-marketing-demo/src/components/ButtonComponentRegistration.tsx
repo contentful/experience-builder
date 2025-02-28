@@ -1,12 +1,13 @@
 import { Button } from 'antd';
 import Icon from './Icon';
+import { ComponentRegistration } from '@contentful/experiences-sdk-react';
 
 type ButtonComponentProps = Omit<React.ComponentProps<typeof Button>, 'children' | 'icon'> & {
   text: string;
   icon?: React.ComponentProps<typeof Icon>['icon'];
 };
 
-export const ButtonComponentRegistration = {
+export const ButtonComponentRegistration: ComponentRegistration = {
   component: (props: ButtonComponentProps) => {
     const { color, icon, variant, text, ...rest } = props;
     return (
