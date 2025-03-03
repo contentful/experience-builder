@@ -1,4 +1,4 @@
-import { isCfStyleAttribute } from '@contentful/experiences-core';
+import { isCfStyleAttribute, debug } from '@contentful/experiences-core';
 import {
   BoundComponentPropertyTypes,
   BoundValue,
@@ -61,6 +61,8 @@ export const parseComponentProps = ({
   const styleProps: Record<string, DesignValue['valuesByBreakpoint']> = {};
   const customDesignProps: Record<string, PrimitiveValue> = {};
   const contentProps: Record<string, any> = {};
+
+  debug.log('Parsing component props for node with id: ', node.id);
 
   for (const [propName, propDefinition] of Object.entries(componentDefinition.variables)) {
     const propertyValue = node.variables[propName];

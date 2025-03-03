@@ -4,6 +4,7 @@ import {
   VisualEditorMode,
   createExperience,
   validateExperienceBuilderConfig,
+  debug as cfDebug,
 } from '@contentful/experiences-core';
 import { EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
@@ -16,14 +17,20 @@ type ExperienceRootProps = {
   experience?: Experience<EntityStore> | string | null;
   locale: string;
   visualEditorMode?: VisualEditorMode;
+  debug?: boolean;
 };
 
 export const ExperienceRoot = ({
   locale,
   experience,
   visualEditorMode = VisualEditorMode.LazyLoad,
+  debug,
 }: ExperienceRootProps) => {
   const mode = useDetectCanvasMode();
+
+  if (typeof debug === 'boolean') {
+    cfDebug.setEnabled(debug);
+  }
 
   //If experience is passed in as a JSON string, recreate it to an experience object
   const experienceObject =
