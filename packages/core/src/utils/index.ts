@@ -11,4 +11,4 @@ export * from './isLink';
 export * from './pathSchema';
 export * from './resolveHyperlinkPattern';
 export * from './sanitizeNodeProps';
-export * from './debug';
+export * from './debugLogger';

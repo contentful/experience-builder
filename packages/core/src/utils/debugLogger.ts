@@ -1,22 +1,22 @@
 const CF_DEBUG_KEY = 'cf_debug';
 
-class Debugger {
-  private static instance: Debugger | null = null;
+export class DebugLogger {
+  private static instance: DebugLogger | null = null;
   private enabled: boolean;
 
   constructor() {
-    // Default to checking localStorage for the debug mode on initialization if in browser
     if (typeof localStorage === 'undefined') {
       this.enabled = false;
       return;
     }
 
+    // Default to checking localStorage for the debug mode on initialization if in browser
     this.enabled = localStorage.getItem(CF_DEBUG_KEY) === 'true';
   }
 
-  public static getInstance(): Debugger {
+  public static getInstance(): DebugLogger {
     if (this.instance === null) {
-      this.instance = new Debugger();
+      this.instance = new DebugLogger();
     }
     return this.instance;
   }
@@ -53,7 +53,7 @@ class Debugger {
   public log = this.logger('log');
 }
 
-export const debug = Debugger.getInstance();
+export const debug = DebugLogger.getInstance();
 
 export const enableDebug = () => {
   debug.setEnabled(true);
