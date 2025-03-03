@@ -237,6 +237,7 @@ const THUMBNAIL_IDS = [
 const ComponentSettingsSchema = z.object({
   variableDefinitions: ComponentVariablesSchema,
   thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
+  category: z.string().max(50, 'Category must contain at most 50 characters').optional(),
   variableMappings: VariableMappingsSchema.optional(),
   patternPropertyDefinitions: PatternPropertyDefinitionsSchema.optional(),
 });
@@ -312,6 +313,8 @@ export const ExperienceFieldsCMAShapeSchema = z.object({
   usedComponents: localeWrapper(UsedComponentsSchema).optional(),
   componentSettings: localeWrapper(ComponentSettingsSchema).optional(),
 });
+
+export { THUMBNAIL_IDS as PATTERN_THUMBNAIL_IDS };
 
 export type ExperienceFields = z.infer<typeof ExperienceFieldsCMAShapeSchema>;
 export type ExperienceDataSource = z.infer<typeof DataSourceSchema>;
