@@ -1,3 +1,4 @@
+import { enableDebug, disableDebug } from '@contentful/experiences-core';
 import { SDK_VERSION } from './sdkVersion';
 export { SDK_VERSION as version };
 
@@ -24,6 +25,8 @@ if (typeof window !== 'undefined') {
     window.__EB__ = {};
   }
   window.__EB__.sdkVersion = SDK_VERSION;
+  window.__EB__.enableDebug = enableDebug;
+  window.__EB__.disableDebug = disableDebug;
 }
 
 export type {
