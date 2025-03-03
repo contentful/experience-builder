@@ -12,7 +12,6 @@ import {
   isCfStyleAttribute,
   maybePopulateDesignTokenValue,
   resolveBackgroundImageBinding,
-  toCSSString,
   toMediaQuery,
 } from './ssrStyles';
 
@@ -945,20 +944,6 @@ describe('flattenDesignTokenRegistry', () => {
       'textColor.muted': 'gray',
       'textColor.accent': 'blue',
     });
-  });
-});
-
-describe('toCSSString', () => {
-  it('should convert a given map of css props into a string', () => {
-    const cssProps = {
-      background: 'green',
-      color: 'white',
-      'font-size': '1rem',
-    };
-
-    const res = toCSSString(cssProps);
-
-    expect(res).toBe('background:green;color:white;font-size:1rem;');
   });
 });
 

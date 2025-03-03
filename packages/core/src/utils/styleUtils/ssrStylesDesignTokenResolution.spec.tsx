@@ -180,8 +180,8 @@ describe('custom component with builtInStyles which are supporting design tokens
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint
         .desktop as string,
-    ).toEqual(
-      'cf-ae92b9eb2c20a262573a8085db3dbd67 cf-1fe22311d2b832dd529a9ce5e8d77281 cf-63009ce9ca644a23e001721d6358e491',
+    ).toMatchInlineSnapshot(
+      `"cf-7b1d28fe46d9488fa595e4ff21270f2e cf-af21918d8656639646a9eb86a7ca06e2 cf-5a0d66d5b7e5c60dac49f3a86e4c1c8d"`,
     );
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -190,8 +190,8 @@ describe('custom component with builtInStyles which are supporting design tokens
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.mobile,
     ).not.toBeDefined();
 
-    expect(styles).toBe(
-      '.cf-ae92b9eb2c20a262573a8085db3dbd67{box-sizing:border-box;margin:2rem;padding:2rem;background-color:white;width:50%;height:25%;border:1px solid black;gap:2rem 2rem;font-size:1rem;color:black;}@media(max-width:992px){.cf-1fe22311d2b832dd529a9ce5e8d77281{box-sizing:border-box;margin:1.5rem;padding:1.5rem;background-color:black;width:75%;height:50%;border:3px solid black;gap:1.5rem 1.5rem;font-size:0.75rem;color:green;}}@media(max-width:576px){.cf-63009ce9ca644a23e001721d6358e491{box-sizing:border-box;margin:1rem;padding:1rem;background-color:red;width:100%;height:100%;border:0px solid transparent;gap:1rem 1rem;font-size:1.5rem;color:orange;}}',
+    expect(styles).toMatchInlineSnapshot(
+      `".cf-7b1d28fe46d9488fa595e4ff21270f2e{box-sizing:border-box;margin:2rem;padding:2rem;background-color:white;width:50%;height:25%;border:1px solid black;gap:2rem 2rem;font-size:1rem;color:black;}@media(max-width:992px){.cf-af21918d8656639646a9eb86a7ca06e2{box-sizing:border-box;margin:1.5rem;padding:1.5rem;background-color:black;width:75%;height:50%;border:3px solid black;gap:1.5rem 1.5rem;font-size:0.75rem;color:green;}}@media(max-width:576px){.cf-5a0d66d5b7e5c60dac49f3a86e4c1c8d{box-sizing:border-box;margin:1rem;padding:1rem;background-color:red;width:100%;height:100%;border:0px solid transparent;gap:1rem 1rem;font-size:1.5rem;color:orange;}}"`,
     );
   });
 });
