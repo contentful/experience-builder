@@ -384,7 +384,7 @@ describe('CompositionBlock', () => {
     });
 
     it('renders nested patterns', () => {
-      const ssrClassName = 'cfstyles-51f2b708351ac3f1f5247426bd52b4b5 contentful-container';
+      const ssrClassName = 'cfstyles-172c3e6faf64c49d7352080ec063acc8 contentful-container';
       const unboundValueKey = 'some-unbound-value-key';
       const unboundValueKey2 = 'some-unbound-value-key-2';
 

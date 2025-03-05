@@ -1,15 +1,13 @@
 import {
-  buildCfStyles,
+  addMinHeightForEmptyStructures,
   designTokensRegistry,
   flattenDesignTokenRegistry,
-  isStructureWithRelativeHeight,
   maybePopulateDesignTokenValue,
-  toCSSAttribute,
-  toCSSString,
+  stringifyCssProperties,
   toMediaQuery,
+  buildCfStyles,
 } from '@contentful/experiences-core';
-import { EMPTY_CONTAINER_HEIGHT } from '@contentful/experiences-core/constants';
-import { Breakpoint, ComponentTreeNode } from '@contentful/experiences-core/types';
+import { Breakpoint, ComponentTreeNode, PrimitiveValue } from '@contentful/experiences-core/types';
 import md5 from 'md5';
 import { useMemo } from 'react';
 
@@ -19,17 +17,27 @@ type ResolvedStylesheetData = Array<{
   css: string;
 }>;
 
-export const resolveClassNamesFromBuiltInStyles = ({
-  designPropsByBreakpointId,
+/**
+ * For each provided breakpoint, create the CSS code and a unique class name.
+ *
+ * **Example Output:**
+ * ```
+ * [
+ *   { className: 'cfstyles-123', breakpointCondition: '*', css: 'margin:42px;' },
+ *   { className: 'cfstyles-456', breakpointCondition: '<768px', css: 'margin:13px;' },
+ * ]
+ * ```
+ */
+export const createStylesheetsForBuiltInStyles = ({
+  designPropertiesByBreakpoint,
   breakpoints,
   node,
 }: {
-  designPropsByBreakpointId: Record<string, Record<string, any>>;
+  designPropertiesByBreakpoint: Record<string, Record<string, PrimitiveValue>>;
   breakpoints: Breakpoint[];
   node: ComponentTreeNode;
 }): ResolvedStylesheetData => {
-  const mapOfDesignVariableKeys = flattenDesignTokenRegistry(designTokensRegistry);
-  const currentNodeClassNames: string[] = [];
+  const flattenedDesignTokens = flattenDesignTokenRegistry(designTokensRegistry);
 
   const result: Array<{
     className: string;
@@ -37,143 +45,121 @@ export const resolveClassNamesFromBuiltInStyles = ({
     css: string;
   }> = [];
 
-  // then for each breakpoint
   for (const breakpoint of breakpoints) {
-    const designProps = designPropsByBreakpointId[breakpoint.id];
-    if (!designProps) {
+    const designProperties = designPropertiesByBreakpoint[breakpoint.id];
+    if (!designProperties) {
       continue;
     }
 
-    const propsByBreakpointWithResolvedDesignTokens = Object.entries(designProps).reduce(
-      (acc, [propName, propValue]) => {
-        return {
-          ...acc,
-          [propName]: maybePopulateDesignTokenValue(propName, propValue, mapOfDesignVariableKeys),
-        };
-      },
+    const designPropertiesWithResolvedDesignTokens = Object.entries(designProperties).reduce(
+      (acc, [propertyName, value]) => ({
+        ...acc,
+        [propertyName]: maybePopulateDesignTokenValue(propertyName, value, flattenedDesignTokens),
+      }),
       {},
     );
+    /* [Data Format] `designPropertiesWithResolvedDesignTokens` is a map of property name to plain design value:
+     * designPropertiesWithResolvedDesignTokens = {
+     *   cfMargin: '42px',
+     *   cfBackgroundColor: 'rgba(246, 246, 246, 1)',
+     * }
+     */
 
-    // We convert cryptic prop keys to css variables
-    // Eg: cfMargin to margin
-    const stylesForBreakpoint = buildCfStyles(propsByBreakpointWithResolvedDesignTokens);
-
-    if (
-      !node.children.length &&
-      isStructureWithRelativeHeight(node.definitionId, stylesForBreakpoint.height)
-    ) {
-      stylesForBreakpoint.minHeight = EMPTY_CONTAINER_HEIGHT;
-    }
-
-    const stylesForBreakpointWithoutUndefined: Record<string, string> = Object.fromEntries(
-      Object.entries(stylesForBreakpoint)
-        .filter(([, value]) => value !== undefined)
-        .map(([key, value]) => [toCSSAttribute(key), value]),
+    // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
+    const cfStyles = addMinHeightForEmptyStructures(
+      buildCfStyles(designPropertiesWithResolvedDesignTokens),
+      node,
     );
+    /* [Data Format] `cfStyles` follows the shape of CSSProperties (camelCased CSS property names):
+     * cfStyles = {
+     *   margin: '42px',
+     *   backgroundColor: 'rgba(246, 246, 246, 1)',
+     * }
+     */
 
-    /**
-         * stylesForBreakpoint {
-            margin: '0 0 0 0',
-            padding: '0 0 0 0',
-            'background-color': 'rgba(246, 246, 246, 1)',
-            width: '100%',
-            height: 'fit-content',
-            'max-width': 'none',
-            border: '0px solid rgba(0, 0, 0, 0)',
-            'border-radius': '0px',
-            gap: '0px 0px',
-            'align-items': 'center',
-            'justify-content': 'safe center',
-            'flex-direction': 'column',
-            'flex-wrap': 'nowrap',
-            'font-style': 'normal',
-            'text-decoration': 'none',
-            'box-sizing': 'border-box'
-          }
-        */
-    // I create a hash of the object above because that would ensure hash stability
-    const styleHash = md5(`${node.id}-${JSON.stringify(stylesForBreakpointWithoutUndefined)}`);
+    // Translate the map of CSSProperties into the final shape of CSS code for this specific breakpoint
+    const breakpointCss = stringifyCssProperties(cfStyles);
+    /* [Data Format] `breakpointCss`:
+     * breakpointCss = "margin:42px;background-color:rgba(246, 246, 246, 1);"
+     */
 
-    // and prefix the className to make sure the value can be processed
+    // Create a hash ensuring stability across nodes (and breakpoints between nodes)
+    const styleHash = md5(`${node.id}}-${breakpointCss}`);
+
+    // Create a CSS className with internal prefix to make sure the value can be processed
     const className = `cfstyles-${styleHash}`;
 
-    // I save the generated hashes into an array to later save it in the tree node
-    // as cfSsrClassName prop
-    // making sure to avoid the duplicates in case styles for > 1 breakpoints are the same
-    if (!currentNodeClassNames.includes(className)) {
-      currentNodeClassNames.push(className);
-    }
-
-    // otherwise, save it to the stylesheet
     result.push({
       className,
       breakpointCondition: breakpoint.query,
-      css: toCSSString(stylesForBreakpointWithoutUndefined),
+      css: breakpointCss,
     });
   }
 
   return result;
 };
 
-export const convertResolvedDesignValuesToMediaQuery = (styleSheetData: ResolvedStylesheetData) => {
-  /**
-   * {
-   *  className: ['cfstyles-123', 'cfstyles-456'],
-   *  styleSheet: `
-   *    @media (max-width: 1024px) {
-   *      .cfstyles-123 { color: red; }
-   *    }
-   *    @media (max-width: 768px) {
-   *      .cfstyles-456 { color: blue; }
-   *    }
-   *  `
-   * }
-   */
-  const styleSheet = styleSheetData.reduce<{ className: Array<string>; css: string }>(
+/**
+ * Takes the CSS code for each breakpoint and merges them into a single CSS string.
+ * It will wrap each breakpoint's CSS code in a media query (exception: default breakpoint with '*').
+ *
+ * **Example Input:**
+ * ```
+ * [
+ *  { className: 'cfstyles-123', breakpointCondition: '*', css: 'color:red;' },
+ *  { className: 'cfstyles-456', breakpointCondition: '<768px', css: 'color:blue;' },
+ * ]
+ * ```
+ *
+ * **Example Output:**
+ * ```
+ * '.cfstyles-123{color:red;}@media(max-width:768px){.cfstyles-456{color:blue;}}'
+ * ```
+ */
+export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: ResolvedStylesheetData) => {
+  const stylesheet = stylesheetData.reduce(
     (acc, { breakpointCondition, className, css }) => {
-      if (acc.className.includes(className)) {
+      if (acc.classNames.includes(className)) {
         return acc;
       }
 
-      const mediaQuery = toMediaQuery({
+      const mediaQueryCss = toMediaQuery({
         condition: breakpointCondition,
         cssByClassName: { [className]: css },
       });
       return {
-        className: [...acc.className, className],
-        css: `${acc.css}${mediaQuery}`,
+        classNames: [...acc.classNames, className],
+        css: `${acc.css}${mediaQueryCss}`,
       };
     },
     {
-      className: [],
+      classNames: [] as string[],
       css: '',
     },
   );
 
-  const className = styleSheet.className.join(' ');
-
   return {
-    css: styleSheet.css,
-    className,
+    css: stylesheet.css,
+    className: stylesheet.classNames.join(' '),
   };
 };
 
 export const useMediaQuery = ({
-  designPropsByBreakpointId,
+  designPropertiesByBreakpoint,
   breakpoints,
   node,
 }: {
-  designPropsByBreakpointId: Record<string, Record<string, any>>;
+  designPropertiesByBreakpoint: Record<string, Record<string, any>>;
   breakpoints: Breakpoint[];
   node: ComponentTreeNode;
 }) => {
   return useMemo(() => {
-    const styleSheetData = resolveClassNamesFromBuiltInStyles({
-      designPropsByBreakpointId,
+    const stylesheetData = createStylesheetsForBuiltInStyles({
+      designPropertiesByBreakpoint,
       breakpoints,
       node,
     });
 
-    return convertResolvedDesignValuesToMediaQuery(styleSheetData);
-  }, [designPropsByBreakpointId, breakpoints, node]);
+    return convertResolvedDesignValuesToMediaQuery(stylesheetData);
+  }, [designPropertiesByBreakpoint, breakpoints, node]);
 };
