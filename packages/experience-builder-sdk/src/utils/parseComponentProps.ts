@@ -132,7 +132,7 @@ export const parseComponentProps = ({
   /* [Data Format] After resolving all properties, `styleProps` contains solely the plain design values
    * styleProps = {
    *   cfMargin: { desktop: '42px', tablet: '13px' },
-   *   cfBackgroundColor: 'rgba(246, 246, 246, 1)',
+   *   cfBackgroundColor: { desktop: 'rgba(246, 246, 246, 1)' },
    *   cfBackgroundImage: { desktop: 'url(https://example.com/image.jpg)' }
    * }
    */
