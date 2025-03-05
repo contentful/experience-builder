@@ -27,7 +27,7 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   return (
     <main style={{ width: '100%' }}>
       {stylesheet && <style data-css-ssr>{stylesheet}</style>}
-      <Experience experienceJSON={experienceJSON} locale={locale} />
+      <Experience experienceJSON={experienceJSON} locale={locale} debug={true} />
     </main>
   );
 }

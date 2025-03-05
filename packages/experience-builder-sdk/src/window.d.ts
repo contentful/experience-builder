@@ -6,4 +6,6 @@ type EB_Store = {
   isReadOnlyMode?: boolean;
   isEditorMode?: boolean;
   sdkVersion?: string;
+  enableDebug?: () => void;
+  disableDebug?: () => void;
 };
