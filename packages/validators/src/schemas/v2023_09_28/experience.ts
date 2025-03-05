@@ -115,11 +115,16 @@ const VariableMappingsSchema = z.record(propertyKeySchema, VariableMappingSchema
 // https://contentful.atlassian.net/browse/LUMOS-523
 const PatternPropertyDefinitionSchema = z.object({
   defaultValue: z
-    .object({
-      path: z.string(),
-      type: z.literal('BoundValue'),
-      contentType: z.string(),
-    })
+    .record(
+      z.string(),
+      z.object({
+        sys: z.object({
+          type: z.literal('Link'),
+          id: z.string(),
+          linkType: z.enum(['Entry']),
+        }),
+      }),
+    )
     .optional(),
   contentTypes: z.record(z.string(), z.any()),
 });
