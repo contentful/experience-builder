@@ -11,7 +11,9 @@ import {
   PrimitiveValue,
 } from '@contentful/experiences-core/types';
 import { convertResolvedDesignValuesToMediaQuery } from '../hooks/useMediaQuery';
+import { createStylesheetsForBuiltInStyles } from '../hooks/useMediaQuery';
 
+// TODO: Test this for nested patterns as the name might be just a random hash without the actual name (needs to be validated).
 const isSpecialCaseCssProp = (propName: string) => {
   return propName === 'cfBackgroundImageUrl' || propName.startsWith('cfBackgroundImageUrl_');
 };
@@ -28,24 +30,22 @@ const isSpecialCaseCssProp = (propName: string) => {
  * for each breakpoint
  */
 export const parseComponentProps = ({
+  breakpoints,
   mainBreakpoint,
   componentDefinition,
   node,
-  resolveClassNamesFromBuiltInStyles,
   resolveCustomDesignValue,
   resolveBoundValue,
   resolveHyperlinkValue,
   resolveUnboundValue,
 }: {
+  breakpoints: Breakpoint[];
   mainBreakpoint: Breakpoint;
   node: ComponentTreeNode;
   componentDefinition: ComponentDefinition;
-  resolveClassNamesFromBuiltInStyles: (
-    propsByBreakpointId: Record<string, Record<string, PrimitiveValue>>,
-  ) => Array<{ className: string; breakpointCondition: string; css: string }>;
   resolveCustomDesignValue: (data: {
     propertyName: string;
-    valuesByBreakpoint: Record<string, any>;
+    valuesByBreakpoint: Record<string, PrimitiveValue>;
   }) => PrimitiveValue;
   resolveBoundValue: (data: {
     propertyName: string;
@@ -56,11 +56,11 @@ export const parseComponentProps = ({
   resolveUnboundValue: (data: {
     mappingKey: string;
     defaultValue: ComponentDefinitionVariable['defaultValue'];
-  }) => any;
+  }) => PrimitiveValue;
 }) => {
   const styleProps: Record<string, DesignValue['valuesByBreakpoint']> = {};
   const customDesignProps: Record<string, PrimitiveValue> = {};
-  const contentProps: Record<string, any> = {};
+  const contentProps: Record<string, PrimitiveValue> = {};
 
   for (const [propName, propDefinition] of Object.entries(componentDefinition.variables)) {
     const propertyValue = node.variables[propName];
@@ -122,36 +122,21 @@ export const parseComponentProps = ({
       case 'ComponentValue':
         // We're rendering a pattern entry. Content cannot be set for ComponentValue type properties
         // directly in the pattern so we can safely use the default value
-        // This can either a design (style) or a content variable
+        // This can either be a design (style) or a content variable
         contentProps[propName] = propDefinition.defaultValue;
         break;
       default:
         break;
     }
   }
+  /* [Data Format] After resolving all properties, `styleProps` contains solely the plain design values
+   * styleProps = {
+   *   cfMargin: { desktop: '42px', tablet: '13px' },
+   *   cfBackgroundColor: { desktop: 'rgba(246, 246, 246, 1)' },
+   *   cfBackgroundImage: { desktop: 'url(https://example.com/image.jpg)' }
+   * }
+   */
 
-  /**
-  * {
-      desktop: {
-        cfVerticalAlignment: 'center',
-        cfHorizontalAlignment: 'center',
-        cfMargin: '0 0 0 0',
-        cfPadding: '0 0 0 0',
-        cfBackgroundColor: 'rgba(246, 246, 246, 1)',
-        cfWidth: 'fill',
-        cfHeight: 'fit-content',
-        cfMaxWidth: 'none',
-        cfFlexDirection: 'column',
-        cfFlexWrap: 'nowrap',
-        cfBorder: '0px solid rgba(0, 0, 0, 0)',
-        cfBorderRadius: '0px',
-        cfGap: '0px 0px',
-        cfBackgroundImageOptions: { scaling: 'fill', alignment: 'left top', targetSize: '2000px' }
-      },
-      tablet: {},
-      mobile: {}
-    }
-  */
   const stylePropsIndexedByBreakpoint = Object.entries(styleProps).reduce<
     Record<string, Record<string, PrimitiveValue>>
   >((acc, [propName, valuesByBreakpoint]) => {
@@ -165,38 +150,35 @@ export const parseComponentProps = ({
 
     return acc;
   }, {});
-
-  /**
-   * [
-   *  {
-   *    className: 'cfstyles-123',
-   *    breakpointCondition: '<=1024px',
-   *    css: '.cfstyles-123 { color: red; }'
-   *  },
-   *  {
-   *   className: 'cfstyles-456',
-   *   breakpointCondition: '<=768px',
-   *   css: '.cfstyles-456 { color: blue; }'
-   *  }
-   * ]
-   */
-  const styleSheetData = resolveClassNamesFromBuiltInStyles(stylePropsIndexedByBreakpoint);
-
-  /**
-   * {
-   *  className: ['cfstyles-123', 'cfstyles-456'],
-   *  styleSheet: `
-   *    @media (max-width: 1024px) {
-   *      .cfstyles-123 { color: red; }
-   *    }
-   *    @media (max-width: 768px) {
-   *      .cfstyles-456 { color: blue; }
-   *    }
-   *  `
+  /* [Data Format] `stylePropsIndexedByBreakpoint` contains the plain design values grouped by breakpoint
+   * stylePropsIndexedByBreakpoint = {
+   *   desktop: {
+   *     cfMargin: '42px',
+   *     cfBackgroundColor: 'rgba(246, 246, 246, 1)',
+   *     cfBackgroundImage: 'url(https://example.com/image.jpg)'
+   *   },
+   *   tablet: {
+   *     cfMargin: '13px'
+   *   }
    * }
    */
-  const mediaQuery = convertResolvedDesignValuesToMediaQuery(styleSheetData);
 
+  const stylesheetData = createStylesheetsForBuiltInStyles({
+    designPropertiesByBreakpoint: stylePropsIndexedByBreakpoint,
+    breakpoints,
+    node,
+  });
+  /* [Data Format] Stylesheet data provides objects containing `className`, `breakpointCondition`, and `css`.
+   * stylesheetData = [{
+   *    className: 'uniqueMD5Hash',
+   *    breakpointCondition: '<768px',
+   *    css: 'margin:13px;'
+   *  }, ...]
+   */
+  const mediaQuery = convertResolvedDesignValuesToMediaQuery(stylesheetData);
+  /* [Data Format] `mediaQuery` is a joined string of all media query CSS code
+   * mediaQuery = ".cfstyles-123{margin:42px;}@media(max-width:768px){.cfstyles-456{margin:13px;}}"
+   */
   return {
     styleProps,
     mediaQuery,

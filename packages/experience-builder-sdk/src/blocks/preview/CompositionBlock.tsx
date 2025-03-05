@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useMemo, useState } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import {
   EntityStore,
@@ -29,7 +29,6 @@ import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Entry } from 'contentful';
 import PreviewUnboundImage from './PreviewUnboundImage';
 import { parseComponentProps } from '../../utils/parseComponentProps';
-import { resolveClassNamesFromBuiltInStyles } from '../../hooks/useMediaQuery';
 
 type CompositionBlockProps = {
   node: ComponentTreeNode;
@@ -56,12 +55,7 @@ export const CompositionBlock = ({
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
   patternNodeIdsChain = '',
 }: CompositionBlockProps) => {
-  const [hasRendered, setHasRendered] = useState(false);
   patternNodeIdsChain = `${patternNodeIdsChain}${rawNode.id}`;
-
-  useEffect(() => {
-    setHasRendered(true);
-  }, []);
 
   const isAssembly = useMemo(
     () =>
@@ -100,7 +94,7 @@ export const CompositionBlock = ({
     return registration;
   }, [isAssembly, node.definitionId]);
 
-  const { ssrProps, customDesignProps, contentProps, props, mediaQuery } = useMemo(() => {
+  const { ssrProps, contentProps, props, mediaQuery } = useMemo(() => {
     // In SSR, we store the className under breakpoints[0] which is resolved here to the actual string
     const cfSsrClassNameValues = node.variables.cfSsrClassName as DesignValue | undefined;
     const mainBreakpoint = entityStore.breakpoints[0];
@@ -132,6 +126,7 @@ export const CompositionBlock = ({
       customDesignProps = {},
       mediaQuery,
     } = parseComponentProps({
+      breakpoints: entityStore.breakpoints,
       mainBreakpoint,
       componentDefinition: componentRegistration.definition,
       node,
@@ -169,13 +164,6 @@ export const CompositionBlock = ({
       },
       resolveUnboundValue: ({ mappingKey, defaultValue }) => {
         return entityStore.unboundValues[mappingKey]?.value ?? defaultValue;
-      },
-      resolveClassNamesFromBuiltInStyles: (designPropsByBreakpointId) => {
-        return resolveClassNamesFromBuiltInStyles({
-          designPropsByBreakpointId,
-          breakpoints: entityStore.breakpoints,
-          node,
-        });
       },
     });
 
@@ -218,14 +206,12 @@ export const CompositionBlock = ({
       props,
     };
   }, [
-    node.variables,
-    node.id,
-    node.children,
-    resolveDesignValue,
+    node,
+    entityStore,
     componentRegistration,
     isAssembly,
     getPatternChildNodeClassName,
-    entityStore,
+    resolveDesignValue,
     hyperlinkPattern,
     locale,
     wrappingPatternIds,
@@ -327,7 +313,6 @@ export const CompositionBlock = ({
   return React.createElement(
     component,
     {
-      key: Object.keys(customDesignProps).length ? `${node.id}-${hasRendered}` : node.id,
       ...sanitizeNodeProps(props),
     },
     children ?? (typeof props.children === 'string' ? props.children : null),

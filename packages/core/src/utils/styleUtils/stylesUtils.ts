@@ -7,9 +7,15 @@ import {
   transformGridColumn,
   transformVisibility,
 } from './styleTransformers';
-import { isContentfulStructureComponent } from '../components';
+import { isContentfulStructureComponent, isStructureWithRelativeHeight } from '../components';
 import { EMPTY_CONTAINER_HEIGHT } from '../../constants';
-import { CSSProperties, StyleProps, PrimitiveValue, ExperienceTreeNode } from '@/types';
+import {
+  CSSProperties,
+  StyleProps,
+  PrimitiveValue,
+  ExperienceTreeNode,
+  ComponentTreeNode,
+} from '@/types';
 
 export const toCSSAttribute = (key: string) => {
   let val = key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
@@ -20,85 +26,125 @@ export const toCSSAttribute = (key: string) => {
   return val;
 };
 
-export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
-  const stylesStr = Object.entries(styles)
+/**
+ * Turns a list of CSSProperties into a joined CSS string that can be
+ * used for <style> tags. Per default it creates a minimized version.
+ * For editor mode, use the `useWhitespaces` flag to create a more readable version.
+ *
+ * @param cssProperties list of CSS properties
+ * @param useWhitespaces adds whitespaces and newlines between each rule
+ * @returns a string of CSS rules
+ */
+export const stringifyCssProperties = (
+  cssProperties: CSSProperties,
+  useWhitespaces: boolean = false,
+) => {
+  const rules = Object.entries(cssProperties)
     .filter(([, value]) => value !== undefined)
-    .reduce(
-      (acc, [key, value]) =>
-        `${acc}
-        ${toCSSAttribute(key)}: ${value};`,
-      '',
+    .map(([key, value]) =>
+      useWhitespaces ? `${toCSSAttribute(key)}: ${value};` : `${toCSSAttribute(key)}:${value};`,
     );
+  return rules.join(useWhitespaces ? '\n' : '');
+};
 
-  const className = `cfstyles-${nodeId ? nodeId : md5(stylesStr)}`;
-
-  const styleRule = `.${className}{ ${stylesStr} }`;
+export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeId?: string }) => {
+  const generatedStyles = stringifyCssProperties(styles, true);
+  const className = `cfstyles-${nodeId ? nodeId : md5(generatedStyles)}`;
+  const styleRule = `.${className}{ ${generatedStyles} }`;
 
   return [className, styleRule];
 };
 
-export const buildCfStyles = ({
-  cfHorizontalAlignment,
-  cfVerticalAlignment,
-  cfFlexDirection,
-  cfFlexReverse,
-  cfFlexWrap,
-  cfMargin,
-  cfPadding,
-  cfBackgroundColor,
-  cfWidth,
-  cfHeight,
-  cfMaxWidth,
-  cfBorder,
-  cfBorderRadius,
-  cfGap,
-  cfBackgroundImageUrl,
-  cfBackgroundImageOptions,
-  cfFontSize,
-  cfFontWeight,
-  cfImageOptions,
-  cfLineHeight,
-  cfLetterSpacing,
-  cfTextColor,
-  cfTextAlign,
-  cfTextTransform,
-  cfTextBold,
-  cfTextItalic,
-  cfTextUnderline,
-  cfColumnSpan,
-  cfVisibility,
-}: Partial<StyleProps>): CSSProperties => {
-  return {
+/**
+ * Takes plain design values and transforms them into CSS properties. Undefined values will
+ * be filtered out.
+ *
+ * **Example Input**
+ * ```
+ * values = {
+ *   cfVisibility: 'visible',
+ *   cfMargin: '10px',
+ *   cfFlexReverse: true,
+ *   cfImageOptions: { objectFit: 'cover' },
+ *   // ...
+ * }
+ * ```
+ * **Example Output**
+ * ```
+ * cssProperties = {
+ *   margin: '10px',
+ *   flexDirection: 'row-reverse',
+ *   objectFit: 'cover',
+ *   // ...
+ * }
+ * ```
+ */
+export const buildCfStyles = (values: Partial<StyleProps>): CSSProperties => {
+  const cssProperties = {
     boxSizing: 'border-box',
-    ...transformVisibility(cfVisibility),
-    margin: cfMargin,
-    padding: cfPadding,
-    backgroundColor: cfBackgroundColor,
-    width: transformFill(cfWidth || cfImageOptions?.width),
-    height: transformFill(cfHeight || cfImageOptions?.height),
-    maxWidth: cfMaxWidth,
-    ...transformGridColumn(cfColumnSpan),
-    ...transformBorderStyle(cfBorder),
-    borderRadius: cfBorderRadius,
-    gap: cfGap,
-    ...transformAlignment(cfHorizontalAlignment, cfVerticalAlignment, cfFlexDirection),
+    ...transformVisibility(values.cfVisibility),
+    margin: values.cfMargin,
+    padding: values.cfPadding,
+    backgroundColor: values.cfBackgroundColor,
+    width: transformFill(values.cfWidth || values.cfImageOptions?.width),
+    height: transformFill(values.cfHeight || values.cfImageOptions?.height),
+    maxWidth: values.cfMaxWidth,
+    ...transformGridColumn(values.cfColumnSpan),
+    ...transformBorderStyle(values.cfBorder),
+    borderRadius: values.cfBorderRadius,
+    gap: values.cfGap,
+    ...transformAlignment(
+      values.cfHorizontalAlignment,
+      values.cfVerticalAlignment,
+      values.cfFlexDirection,
+    ),
     flexDirection:
-      cfFlexReverse && cfFlexDirection ? `${cfFlexDirection}-reverse` : cfFlexDirection,
-    flexWrap: cfFlexWrap,
-    ...transformBackgroundImage(cfBackgroundImageUrl, cfBackgroundImageOptions),
-    fontSize: cfFontSize,
-    fontWeight: cfTextBold ? 'bold' : cfFontWeight,
-    fontStyle: cfTextItalic ? 'italic' : undefined,
-    textDecoration: cfTextUnderline ? 'underline' : undefined,
-    lineHeight: cfLineHeight,
-    letterSpacing: cfLetterSpacing,
-    color: cfTextColor,
-    textAlign: cfTextAlign,
-    textTransform: cfTextTransform,
-    objectFit: cfImageOptions?.objectFit,
-    objectPosition: cfImageOptions?.objectPosition,
+      values.cfFlexReverse && values.cfFlexDirection
+        ? `${values.cfFlexDirection}-reverse`
+        : values.cfFlexDirection,
+    flexWrap: values.cfFlexWrap,
+    ...transformBackgroundImage(values.cfBackgroundImageUrl, values.cfBackgroundImageOptions),
+    fontSize: values.cfFontSize,
+    fontWeight: values.cfTextBold ? 'bold' : values.cfFontWeight,
+    fontStyle: values.cfTextItalic ? 'italic' : undefined,
+    textDecoration: values.cfTextUnderline ? 'underline' : undefined,
+    lineHeight: values.cfLineHeight,
+    letterSpacing: values.cfLetterSpacing,
+    color: values.cfTextColor,
+    textAlign: values.cfTextAlign,
+    textTransform: values.cfTextTransform,
+    objectFit: values.cfImageOptions?.objectFit,
+    objectPosition: values.cfImageOptions?.objectPosition,
   };
+  const cssPropertiesWithoutUndefined = Object.fromEntries(
+    Object.entries(cssProperties).filter(([, value]) => value !== undefined),
+  );
+  return cssPropertiesWithoutUndefined;
 };
+
+/**
+ * **Only meant to be used in editor mode!**
+ *
+ * If the node is an empty structure component with a relative height (e.g. '100%'),
+ * it might render with a zero height. In this case, add a min height of 80px to ensure
+ * that child nodes can be added via drag & drop.
+ */
+export const addMinHeightForEmptyStructures = (
+  cssProperties: CSSProperties,
+  node: ComponentTreeNode,
+) => {
+  if (
+    !node.children.length &&
+    isStructureWithRelativeHeight(node.definitionId, cssProperties.height)
+  ) {
+    return {
+      ...cssProperties,
+      minHeight: EMPTY_CONTAINER_HEIGHT,
+    };
+  }
+  return cssProperties;
+};
+
 /**
  * Container/section default behavior:
  * Default height => height: EMPTY_CONTAINER_HEIGHT
