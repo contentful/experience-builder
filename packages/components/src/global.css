@@ -1,0 +1,6 @@
+/* Initially added with PR #253 for each component, this is now a global setting
+ * It is recommended on MDN to use this as a default for layouting.
+*/
+* {
+  box-sizing: border-box;
+}

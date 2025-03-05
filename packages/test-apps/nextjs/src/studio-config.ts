@@ -8,9 +8,14 @@ import { LinkComponent } from './components/LinkComponent';
 import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
+import { CustomButton, CustomButtonComponentDefinition } from './components/CustomButton';
 
 defineComponents(
   [
+    {
+      component: CustomButton,
+      definition: CustomButtonComponentDefinition,
+    },
     {
       component: ComponentWithChildren,
       definition: {
