@@ -17,6 +17,11 @@ type ExperienceRootProps = {
   experience?: Experience<EntityStore> | string | null;
   locale: string;
   visualEditorMode?: VisualEditorMode;
+  /** Enables extra logging in the SDK to support troubleshooting.
+   *  This option is not recommended for production enviroments as it
+   *  will result in too many unnecessary logs being produced during runtime.
+   *  Default: false
+   */
   debug?: boolean;
 };
 

@@ -39,7 +39,7 @@ export class DebugLogger {
   }
 
   // Log method for different levels (error, warn, log)
-  private logger(level: 'error' | 'log' | 'warn'): typeof console.log {
+  private logger(level: 'error' | 'log' | 'warn' | 'debug'): typeof console.log {
     return (...args) => {
       if (this.enabled) {
         console[level]('[cf-experiences-sdk]', ...args);
@@ -51,6 +51,7 @@ export class DebugLogger {
   public error = this.logger('error');
   public warn = this.logger('warn');
   public log = this.logger('log');
+  public debug = this.logger('debug');
 }
 
 export const debug = DebugLogger.getInstance();
