@@ -319,6 +319,7 @@ export const sendConnectedEventWithRegisteredComponents = () => {
     definitions: registeredDefinitions,
   });
 
+  // experience-editor rely on the registered breakpoints event being sent so we need to send it even if there are no breakpoints
   sendMessage(OUTGOING_EVENTS.RegisteredBreakpoints, {
     breakpoints: breakpointsRegistry,
   });
