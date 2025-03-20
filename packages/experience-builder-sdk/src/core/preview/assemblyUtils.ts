@@ -37,20 +37,17 @@ export const deserializeAssemblyNode = ({
         patternProperties,
         variable: instanceProperty,
       });
+      const path = resolvePrebindingPath({
+        componentSettings,
+        componentValueKey,
+        patternProperties,
+      });
 
-      if (usePrebinding) {
-        const path = resolvePrebindingPath({
-          componentSettings,
-          componentValueKey,
-          patternProperties,
-        });
-
-        if (path) {
-          variables[variableName] = {
-            type: 'BoundValue',
-            path,
-          };
-        }
+      if (usePrebinding && path) {
+        variables[variableName] = {
+          type: 'BoundValue',
+          path,
+        };
 
         // For assembly, we look up the variable in the assembly instance and
         // replace the ComponentValue with that one.
@@ -59,6 +56,8 @@ export const deserializeAssemblyNode = ({
           type: 'UnboundValue',
           key: instanceProperty.key,
         };
+      } else if (instanceProperty?.type === 'NoValue') {
+        variables[variableName] = instanceProperty;
       } else if (instanceProperty?.type === 'BoundValue') {
         variables[variableName] = {
           type: 'BoundValue',
@@ -107,10 +106,12 @@ export const deserializeAssemblyNode = ({
 
 export const resolveAssembly = ({
   node,
+  parentPatternProperties,
   entityStore,
 }: {
   node: ComponentTreeNode;
   entityStore: EntityStore;
+  parentPatternProperties: Record<string, PatternProperty>;
 }) => {
   const isAssembly = checkIsAssemblyNode({
     componentId: node.definitionId,
@@ -129,6 +130,11 @@ export const resolveAssembly = ({
   if (!assembly || !('fields' in assembly)) {
     return node;
   }
+
+  node.patternProperties = {
+    ...(node.patternProperties || {}),
+    ...(parentPatternProperties || {}),
+  };
 
   const componentFields = assembly.fields;
 

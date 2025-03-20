@@ -23,7 +23,11 @@ describe('resolveAssembly', () => {
       locale: 'en-US',
     });
 
-    const result = resolveAssembly({ node: containerNode, entityStore });
+    const result = resolveAssembly({
+      node: containerNode,
+      entityStore,
+      parentPatternProperties: {},
+    });
 
     expect(result).toBe(containerNode);
   });
@@ -37,7 +41,11 @@ describe('resolveAssembly', () => {
 
     const entityStore = {} as unknown as EntityStore;
 
-    const result = resolveAssembly({ node: containerNode, entityStore });
+    const result = resolveAssembly({
+      node: containerNode,
+      entityStore,
+      parentPatternProperties: {},
+    });
 
     expect(result).toBe(containerNode);
   });
@@ -55,7 +63,11 @@ describe('resolveAssembly', () => {
       locale: 'en-US',
     });
 
-    const result = resolveAssembly({ node: assemblyNode, entityStore });
+    const result = resolveAssembly({
+      node: assemblyNode,
+      entityStore,
+      parentPatternProperties: {},
+    });
 
     expect(result).toBe(assemblyNode);
   });
@@ -85,7 +97,11 @@ describe('resolveAssembly', () => {
         children: [],
       };
 
-      const result = resolveAssembly({ node: assemblyNode, entityStore });
+      const result = resolveAssembly({
+        node: assemblyNode,
+        entityStore,
+        parentPatternProperties: {},
+      });
 
       expect(result.children).toHaveLength(1);
       expect(result.children[0].children).toHaveLength(1);
@@ -111,7 +127,11 @@ describe('resolveAssembly', () => {
         children: [],
       };
 
-      const result = resolveAssembly({ node: assemblyNode, entityStore });
+      const result = resolveAssembly({
+        node: assemblyNode,
+        entityStore,
+        parentPatternProperties: {},
+      });
 
       expect(result.children[0].variables.cfWidth).toEqual({
         type: 'DesignValue',
@@ -126,7 +146,11 @@ describe('resolveAssembly', () => {
         children: [],
       };
 
-      const result = resolveAssembly({ node: assemblyNode, entityStore });
+      const result = resolveAssembly({
+        node: assemblyNode,
+        entityStore,
+        parentPatternProperties: {},
+      });
 
       expect(result.children[0].variables.cfWidth).toEqual({
         type: 'DesignValue',

@@ -12,6 +12,7 @@ import {
 import type {
   ComponentTreeNode,
   DesignValue,
+  PatternProperty,
   PrimitiveValue,
   ResolveDesignValueType,
   StyleProps,
@@ -43,6 +44,7 @@ type CompositionBlockProps = {
    * when storing & accessing cfSsrClassName.
    */
   patternNodeIdsChain?: string;
+  wrappingPatternProperties?: Record<string, PatternProperty>;
 };
 
 export const CompositionBlock = ({
@@ -53,6 +55,7 @@ export const CompositionBlock = ({
   resolveDesignValue,
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
+  wrappingPatternProperties: parentWrappingPatternProperties = {},
   patternNodeIdsChain = '',
 }: CompositionBlockProps) => {
   patternNodeIdsChain = `${patternNodeIdsChain}${rawNode.id}`;
@@ -71,9 +74,10 @@ export const CompositionBlock = ({
       ? resolveAssembly({
           node: rawNode,
           entityStore,
+          parentPatternProperties: parentWrappingPatternProperties,
         })
       : rawNode;
-  }, [entityStore, isAssembly, rawNode]);
+  }, [entityStore, isAssembly, rawNode, parentWrappingPatternProperties]);
 
   const wrappingPatternIds = useMemo(() => {
     if (isAssembly) {
@@ -81,6 +85,13 @@ export const CompositionBlock = ({
     }
     return parentWrappingPatternIds;
   }, [isAssembly, node, parentWrappingPatternIds]);
+
+  const wrappingPatternProperties = useMemo(() => {
+    if (isAssembly) {
+      return { ...parentWrappingPatternProperties, ...(rawNode.patternProperties || {}) };
+    }
+    return parentWrappingPatternProperties;
+  }, [isAssembly, rawNode, parentWrappingPatternProperties]);
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.definitionId as string);
@@ -181,6 +192,7 @@ export const CompositionBlock = ({
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
+              wrappingPatternProperties={wrappingPatternProperties}
               patternNodeIdsChain={patternNodeIdsChain}
             />
           );
@@ -215,6 +227,7 @@ export const CompositionBlock = ({
     hyperlinkPattern,
     locale,
     wrappingPatternIds,
+    wrappingPatternProperties,
     patternNodeIdsChain,
   ]);
 
@@ -262,6 +275,7 @@ export const CompositionBlock = ({
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
+              wrappingPatternProperties={wrappingPatternProperties}
               patternNodeIdsChain={patternNodeIdsChain}
             />
           );
