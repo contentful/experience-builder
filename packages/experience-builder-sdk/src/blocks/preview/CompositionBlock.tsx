@@ -86,6 +86,9 @@ export const CompositionBlock = ({
     return parentWrappingPatternIds;
   }, [isAssembly, node, parentWrappingPatternIds]);
 
+  // Merge the pattern properties of the current node with the parent's pattern properties
+  // to ensure nested patterns receive relevant pattern properties that were bubbled up
+  // during assembly serialization.
   const wrappingPatternProperties = useMemo(() => {
     if (isAssembly) {
       return { ...parentWrappingPatternProperties, ...(rawNode.patternProperties || {}) };

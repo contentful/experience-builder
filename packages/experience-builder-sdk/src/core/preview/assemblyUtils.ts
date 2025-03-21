@@ -101,6 +101,7 @@ export const deserializeAssemblyNode = ({
     children,
     slotId: node.slotId,
     displayName: node.displayName,
+    patternProperties: node.patternProperties,
   };
 };
 
@@ -144,6 +145,7 @@ export const resolveAssembly = ({
       id: node.id,
       variables: node.variables,
       children: componentFields.componentTree.children,
+      patternProperties: node.patternProperties || {},
     },
     componentInstanceVariables: node.variables,
     componentSettings: componentFields.componentSettings!,

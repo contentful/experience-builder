@@ -115,6 +115,46 @@ describe('resolveAssembly', () => {
       });
     });
 
+    it('should return an assembly node with parent patternProperties', () => {
+      const assemblyNode: ComponentTreeNode = {
+        definitionId: 'assembly-id',
+        variables: {},
+        children: [],
+        patternProperties: {
+          patternPropertyId: {
+            contentType: 'testContentType',
+            path: '/1230948',
+            type: 'BoundValue',
+          },
+        },
+      };
+
+      const result = resolveAssembly({
+        node: assemblyNode,
+        entityStore,
+        parentPatternProperties: {
+          parentPatternProperty: {
+            contentType: 'testContentType',
+            path: '/4091203i9',
+            type: 'BoundValue',
+          },
+        },
+      });
+
+      expect(result.patternProperties).toEqual({
+        patternPropertyId: {
+          contentType: 'testContentType',
+          path: '/1230948',
+          type: 'BoundValue',
+        },
+        parentPatternProperty: {
+          contentType: 'testContentType',
+          path: '/4091203i9',
+          type: 'BoundValue',
+        },
+      });
+    });
+
     it('resolves a style component value with the value of the assembly instance', () => {
       const assemblyNode: ComponentTreeNode = {
         definitionId: 'assembly-id',
