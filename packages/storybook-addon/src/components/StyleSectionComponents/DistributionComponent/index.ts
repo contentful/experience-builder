@@ -1,1 +1,0 @@
-export { DistributionComponent } from './DistributionComponent';

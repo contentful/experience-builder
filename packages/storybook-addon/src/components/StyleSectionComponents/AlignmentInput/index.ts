@@ -1,1 +1,0 @@
-export { AlignmentInput } from './AlignmentInput';

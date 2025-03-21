@@ -1,1 +1,0 @@
-export { SizeInput } from './SizeInput';
