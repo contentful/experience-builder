@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.0.0 (2025-03-21)
+
+### ⚠ BREAKING CHANGES
+
+- **components:** If you were previously importing styles.css from '@contentful/experiences-components-react' you no longer need to do so. This file is no longer built and can be removed safely from any apps that were importing it.
+- Any existing experiences that have a background image with a structural component will need to reset their image positioning values.
+
+- feat!(components): image component and background image use ctfl asset api for optimized images ([dbcbac0](https://github.com/contentful/experience-builder/commit/dbcbac0f6e195a00206ec6a1eb94a2dc20af904a))
+
+### Features
+
+- add base carousel component [ALT-1425] ([#842](https://github.com/contentful/experience-builder/issues/842)) ([97c6578](https://github.com/contentful/experience-builder/commit/97c6578c937a4bb2921d3d312f03e0ad386d1eef))
+- add borderRadius definition to structure components ([b2117a7](https://github.com/contentful/experience-builder/commit/b2117a703ae8b5ed603e27b481f4764b6e830a1c))
+- add nextjs marketing demo app to list of cli templates [ALT-1265] ([#761](https://github.com/contentful/experience-builder/issues/761)) ([2419c7a](https://github.com/contentful/experience-builder/commit/2419c7a83a3cae091269f18875a75926f069bcd9))
+- add useFetchBySlug, useFetchById hooks and plain js fetchBySlug and fetchById methods ([#206](https://github.com/contentful/experience-builder/issues/206)) ([9e9b72f](https://github.com/contentful/experience-builder/commit/9e9b72f2af18bc2aaf1f6ede429ad6e5d971d3a8))
+- adds background label for empty containers ([11d3f7c](https://github.com/contentful/experience-builder/commit/11d3f7cf6de6b862e0c6780e20ed0e83869bc348))
+- adds border radius for built in components ([79bb49b](https://github.com/contentful/experience-builder/commit/79bb49b01e1ee6e89e8ef2d24b342aa0b3047c8c))
+- adds divider structure component ([be2ae10](https://github.com/contentful/experience-builder/commit/be2ae1066b5674a69f41ede1d1aba69bc3a653a4))
+- adds tooltip defn for heading, text, richtext, button, and image ([887b753](https://github.com/contentful/experience-builder/commit/887b753415d0e6450545e541d8ddfef81fd71e6d))
+- **components:** add loading attribute to image component ([#577](https://github.com/contentful/experience-builder/issues/577)) ([8115c53](https://github.com/contentful/experience-builder/commit/8115c53a0a7d045f514a5681a24049487f7d1dc6))
+- **components:** built-in styles for columns [ALT-276, ALT-277] ([#316](https://github.com/contentful/experience-builder/issues/316)) ([7a057c3](https://github.com/contentful/experience-builder/commit/7a057c36e855b580262f5e368cbf5c037e8dc323))
+- **content binding redesign - sensible defaults:** add bindingSourceType validations to built in ([e4da1f5](https://github.com/contentful/experience-builder/commit/e4da1f5e6112a9c423f954171f92e075f5d806c7))
+- enable text colors for rich text component [ALT-1216] ([#736](https://github.com/contentful/experience-builder/issues/736)) ([36286da](https://github.com/contentful/experience-builder/commit/36286da5f3d507f53eb3146e7d4d854b8bf6198e))
+- implement columns component with presets and custom options [ALT-43] ([#285](https://github.com/contentful/experience-builder/issues/285)) ([dd74a5f](https://github.com/contentful/experience-builder/commit/dd74a5f409c7b4d66722d0809eba43a3cf0e1cfd))
+- implement design components with hybrid editor ([9601a9b](https://github.com/contentful/experience-builder/commit/9601a9b2365e63a4068d895cc72ffa3ccd46d10d))
+- section component [ALT-205] ([#279](https://github.com/contentful/experience-builder/issues/279)) ([aea2ac8](https://github.com/contentful/experience-builder/commit/aea2ac899dbf12e9e62ac174d84b5171ce60dbdb))
+- updates rich text component definition to hold default stylings rather than using css modules ([7ddf6ed](https://github.com/contentful/experience-builder/commit/7ddf6ed7748f383cdc6776ec68200c15500d16bf))
+
+### Bug Fixes
+
+- add border radius to image component and make border radius an optional style ([582e40e](https://github.com/contentful/experience-builder/commit/582e40e077192b0e7a07a2358119cb2f4c00c01d))
+- add missing script-inject dep to required packages ([ba16c1b](https://github.com/contentful/experience-builder/commit/ba16c1bc89b17457496ddceed055bb96eb755e54))
+- address pr comments ([5d91d47](https://github.com/contentful/experience-builder/commit/5d91d47e45130bb56070412b704236bdd5c80a59))
+- allow built-in components to be disabled [ALT-267] ([#321](https://github.com/contentful/experience-builder/issues/321)) ([453225c](https://github.com/contentful/experience-builder/commit/453225cf9c0813137441e1445754c4ed3aecd8bc))
+- apply margin to wrapperStyles when drag wrapper is enabled [ALT-1293] ([#784](https://github.com/contentful/experience-builder/issues/784)) ([dddb811](https://github.com/contentful/experience-builder/commit/dddb811da5648d58b971797d62f3563ef7e754dd))
+- change visual-sdk to build tooling of monorepo ([edf0991](https://github.com/contentful/experience-builder/commit/edf0991cc44f07429047a86a71baa950d7255ef8))
+- **components:** add className to anchor tag when passing url to the Text component [ALT-1522] ([#905](https://github.com/contentful/experience-builder/issues/905)) ([a454e24](https://github.com/contentful/experience-builder/commit/a454e24d4433ab9c6bd7632fa1df5e0fda2fcee9))
+- **components:** fix button target label for eb props ([#251](https://github.com/contentful/experience-builder/issues/251)) ([a051360](https://github.com/contentful/experience-builder/commit/a05136011f1136ef9a988fd04a01dd5ef4793c88))
+- **components:** line breaks for text built-ins [ALT-307] ([#372](https://github.com/contentful/experience-builder/issues/372)) ([068a105](https://github.com/contentful/experience-builder/commit/068a105a38370c350c846ece151ab5f426e8d22a))
+- **components:** removing styles.css file from components ([#526](https://github.com/contentful/experience-builder/issues/526)) ([5113a1a](https://github.com/contentful/experience-builder/commit/5113a1a24e0cced9df49563595f6f4ac74452c49))
+- divider not selectable in editor mode [ALT-1120] ([#714](https://github.com/contentful/experience-builder/issues/714)) ([c1fe341](https://github.com/contentful/experience-builder/commit/c1fe3415d841ae4d790eccc169deadc6c5bc8c36))
+- don't wrap rich text with an inline element ([#716](https://github.com/contentful/experience-builder/issues/716)) ([8ea4d09](https://github.com/contentful/experience-builder/commit/8ea4d09930198138891ce336f8bfb3f5a423249f))
+- dont render pseudo overlay from divider in delivery ([#987](https://github.com/contentful/experience-builder/issues/987)) ([1706722](https://github.com/contentful/experience-builder/commit/17067220c7278118d37922843adfa25ff1b33ca6))
+- dont shrink button height when empty ([79bf85d](https://github.com/contentful/experience-builder/commit/79bf85dc379dd2316247652f545cd4ab5d106f2c))
+- enable typography styles on the default Text component [ALT-144] ([#202](https://github.com/contentful/experience-builder/issues/202)) ([ec89fc3](https://github.com/contentful/experience-builder/commit/ec89fc3f888d216decfb925ebd71aff96af592c0))
+- handle leaking dragProps ([27effa0](https://github.com/contentful/experience-builder/commit/27effa0f2caa6dc0dcb88591aa3833c5e0e1e1be))
+- image component in experiences updates display name to alt text for the alt variable ([30aaf13](https://github.com/contentful/experience-builder/commit/30aaf137cec5278c90206d9ae0777fad7079ee77))
+- mob qa bug fixes ([f0f2892](https://github.com/contentful/experience-builder/commit/f0f28929b458e6c1f73a9097039d5b2729841ce9))
+- override browser hr border style + set default background color [ALT-1281] ([#777](https://github.com/contentful/experience-builder/issues/777)) ([b0fd86d](https://github.com/contentful/experience-builder/commit/b0fd86d00c53f2f51e231544b6fff3a2122ef45d))
+- remove [data-cf-node-*] attributes from components ([#315](https://github.com/contentful/experience-builder/issues/315)) ([cc0833e](https://github.com/contentful/experience-builder/commit/cc0833eb07f5d27c0ed696bef5c24cf0d258cbe0))
+- revise built-in component thumbnail urls [ALT-459] ([#413](https://github.com/contentful/experience-builder/issues/413)) ([56ab7cd](https://github.com/contentful/experience-builder/commit/56ab7cd7add426526a5ed650c3aa27b34316b466))
+- tests and linting ([c1e2e05](https://github.com/contentful/experience-builder/commit/c1e2e05ec7b1fcca14ec364f83944eae201cc1d8))
+- **text-component:** add asset and experience to binding-source-type validation ([f8e6988](https://github.com/contentful/experience-builder/commit/f8e698895a5f469cfc2cbb12616bc1f868fa96df))
+- **text-component:** add asset and experience to binding-source-type validation ([9634705](https://github.com/contentful/experience-builder/commit/9634705e07bc5e1b89f62a5673f1f42d1038a877))
+- types in visual editor [] ([#313](https://github.com/contentful/experience-builder/issues/313)) ([d71c898](https://github.com/contentful/experience-builder/commit/d71c898e2fe32b45f0003c829171e18b555a347e))
+- update background related fields to have display names of Background image and Background color ([84aecb4](https://github.com/contentful/experience-builder/commit/84aecb4cfcd4a51a29c9444d02686fa35254f30a))
+- update component tooltips to use component term instead of elements ([25db0e2](https://github.com/contentful/experience-builder/commit/25db0e2936eba1ea00a8ab0d5ae4318488243558))
+- update dep for rich-text-renderer for react v19 compat ([#869](https://github.com/contentful/experience-builder/issues/869)) ([315389a](https://github.com/contentful/experience-builder/commit/315389a63cb94aee1c4becacaccfd79b26dcefcf))
+- update display name for text variable in the Heading component [] ([#796](https://github.com/contentful/experience-builder/issues/796)) ([1386004](https://github.com/contentful/experience-builder/commit/1386004899a5fd53ddde401c6acc3a6af25125f4))
+- update font weight validations ([#213](https://github.com/contentful/experience-builder/issues/213)) ([79dbd95](https://github.com/contentful/experience-builder/commit/79dbd95339edc34c0f288b78d413e02b98ed7811))
+- update Heading component built in styles [ALT-154] ([#296](https://github.com/contentful/experience-builder/issues/296)) ([b064bfc](https://github.com/contentful/experience-builder/commit/b064bfc16a158c2ff429105cb7b856326265e151))
+- update Text component built in styles and add hyperlink options [ALT-358] ([#319](https://github.com/contentful/experience-builder/issues/319)) ([441e11e](https://github.com/contentful/experience-builder/commit/441e11ee04038a701220535d78cab621433ad483))
+- use const types and update property descriptions [] ([#1019](https://github.com/contentful/experience-builder/issues/1019)) ([7e3b57f](https://github.com/contentful/experience-builder/commit/7e3b57f378654058e0103bc5c02e5aa08d95b09b))
+- use https protocol for component thumnails ([217a108](https://github.com/contentful/experience-builder/commit/217a108f86a3f66ccbce1ca3162403530bf18c06))
+- use proper exported tyye in ContentfulContainer ([50d09ef](https://github.com/contentful/experience-builder/commit/50d09ef81037d7a264fbed5f8fa4078cd2485340))
+- **visual-editor:** canvas usability and placeholders [ALT-449] ([#414](https://github.com/contentful/experience-builder/issues/414)) ([f338605](https://github.com/contentful/experience-builder/commit/f338605f709007bd67cb49f7e236b9b7e5019977))
+- **visual-editor:** remove error around passing editor props to normal elements ([#231](https://github.com/contentful/experience-builder/issues/231)) ([4024a68](https://github.com/contentful/experience-builder/commit/4024a68b3da06919ae777c15e7d25a8a40d6c263))
+- **visual-editor:** remove wrapping div for draggable and droppables ([56e44c7](https://github.com/contentful/experience-builder/commit/56e44c737ffd3fe59dee46556083fbd3db1875a5))
+- width applied to both wrapping div and img [ALT-1293] ([#778](https://github.com/contentful/experience-builder/issues/778)) ([e0d12f6](https://github.com/contentful/experience-builder/commit/e0d12f60b18575b50bb742ce0916adad2d0a5ff1))
+
 ## [1.34.1](https://github.com/contentful/experience-builder/compare/v1.34.1-beta.0...v1.34.1) (2025-03-05)
 
 **Note:** Version bump only for package @contentful/experiences-components-react

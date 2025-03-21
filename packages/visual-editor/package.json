@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-visual-editor-react-fork",
-  "version": "1.34.1",
+  "version": "2.0.0",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
