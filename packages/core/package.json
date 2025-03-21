@@ -1,5 +1,5 @@
 {
-  "name": "@contentful/experiences-core",
+  "name": "@contentful/experiences-core-fork",
   "version": "1.34.1",
   "description": "",
   "main": "dist/index.js",

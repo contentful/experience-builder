@@ -1,5 +1,5 @@
 {
-  "name": "@contentful/experiences-validators",
+  "name": "@contentful/experiences-validators-fork",
   "version": "1.34.1",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
