@@ -155,7 +155,6 @@ export const resolveAssembly = ({
 
     const chain = md5(patternNodeIdsChain || '');
 
-    console.log('chain', chain, patternNodeIdsChain);
     const isMatchingNode = nodeId === chain;
 
     if (!isMatchingNode) continue;
