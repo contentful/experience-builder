@@ -7,6 +7,7 @@ import type {
   PatternProperty,
 } from '@contentful/experiences-core/types';
 import { resolvePrebindingPath, shouldUsePrebinding } from '../../utils/prebindingUtils';
+import { PATTERN_PROPERTY_DIVIDER } from '@contentful/experiences-core/constants';
 
 /** While unfolding the assembly definition on the instance, this function will replace all
  * ComponentValue in the definitions tree with the actual value on the instance. */
@@ -132,10 +133,28 @@ export const resolveAssembly = ({
     return node;
   }
 
-  node.patternProperties = {
+  const patternProperties: Record<string, PatternProperty> = {};
+
+  const allPatternProperties = {
+    ...parentPatternProperties,
     ...(node.patternProperties || {}),
-    ...(parentPatternProperties || {}),
   };
+
+  for (const [patternPropertyKey, patternProperty] of Object.entries(allPatternProperties)) {
+    /**
+     * Bubbled up pattern properties are a concatenation of the node id
+     * and the pattern property definition id. We need to split them so
+     * that the node only uses the pattern property definition id.
+     */
+    const [nodeId, patternPropertyDefinitionId] =
+      patternPropertyKey.split(PATTERN_PROPERTY_DIVIDER);
+
+    const isMatchingNode = nodeId === node.id;
+
+    if (!isMatchingNode) continue;
+
+    patternProperties[patternPropertyDefinitionId] = patternProperty;
+  }
 
   const componentFields = assembly.fields;
 
@@ -145,11 +164,11 @@ export const resolveAssembly = ({
       id: node.id,
       variables: node.variables,
       children: componentFields.componentTree.children,
-      patternProperties: node.patternProperties || {},
+      patternProperties,
     },
     componentInstanceVariables: node.variables,
     componentSettings: componentFields.componentSettings!,
-    patternProperties: node.patternProperties || {},
+    patternProperties,
   });
 
   entityStore.addAssemblyUnboundValues(componentFields.unboundValues);
