@@ -75,9 +75,10 @@ export const CompositionBlock = ({
           node: rawNode,
           entityStore,
           parentPatternProperties: parentWrappingPatternProperties,
+          patternNodeIdsChain,
         })
       : rawNode;
-  }, [entityStore, isAssembly, rawNode, parentWrappingPatternProperties]);
+  }, [entityStore, isAssembly, rawNode, parentWrappingPatternProperties, patternNodeIdsChain]);
 
   const wrappingPatternIds = useMemo(() => {
     if (isAssembly) {

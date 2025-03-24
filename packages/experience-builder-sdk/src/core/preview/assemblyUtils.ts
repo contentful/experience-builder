@@ -1,4 +1,5 @@
 import { checkIsAssemblyNode, EntityStore } from '@contentful/experiences-core';
+import md5 from 'md5';
 import type {
   ComponentPropertyValue,
   ComponentTreeNode,
@@ -23,7 +24,8 @@ export const deserializeAssemblyNode = ({
   patternProperties: Record<string, PatternProperty>;
 }): ComponentTreeNode => {
   const variables: Record<string, ComponentPropertyValue> = {};
-
+  // const newNodeLocation = nodeLocation === null ? `${childIndex}` : nodeLocation + '_' + childIndex;
+  // const nodeId = `${patternNodeId}---${newNodeLocation}`;
   for (const [variableName, variable] of Object.entries(node.variables)) {
     variables[variableName] = variable;
     if (variable.type === 'ComponentValue') {
@@ -109,11 +111,13 @@ export const deserializeAssemblyNode = ({
 export const resolveAssembly = ({
   node,
   parentPatternProperties,
+  patternNodeIdsChain,
   entityStore,
 }: {
   node: ComponentTreeNode;
   entityStore: EntityStore;
   parentPatternProperties: Record<string, PatternProperty>;
+  patternNodeIdsChain: string;
 }) => {
   const isAssembly = checkIsAssemblyNode({
     componentId: node.definitionId,
@@ -149,7 +153,10 @@ export const resolveAssembly = ({
     const [nodeId, patternPropertyDefinitionId] =
       patternPropertyKey.split(PATTERN_PROPERTY_DIVIDER);
 
-    const isMatchingNode = nodeId === node.id;
+    const chain = md5(patternNodeIdsChain || '');
+
+    console.log('chain', chain, patternNodeIdsChain);
+    const isMatchingNode = nodeId === chain;
 
     if (!isMatchingNode) continue;
 
