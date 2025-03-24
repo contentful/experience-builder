@@ -187,6 +187,7 @@ export type ExperienceTreeNode = {
       id: string;
       nodeId: string;
       nodeLocation: string;
+      nodeIdOnPattern: string;
       isVisibilityPropertyExposed: boolean;
       variableNameToComponentValueKeyMap: Record<string, string>;
     };
