@@ -5,7 +5,10 @@ import {
   createAssemblyEntry,
 } from '../../../test/__fixtures__/assembly';
 import { assets, entries } from '../../../test/__fixtures__/entities';
-import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
+import {
+  CONTENTFUL_COMPONENTS,
+  PATTERN_PROPERTY_DIVIDER,
+} from '@contentful/experiences-core/constants';
 import type { ComponentTreeNode } from '@contentful/experiences-core/types';
 import { EntityStore } from '@contentful/experiences-core';
 import { resolveAssembly } from './assemblyUtils';
@@ -116,12 +119,15 @@ describe('resolveAssembly', () => {
     });
 
     it('should return an assembly node with parent patternProperties', () => {
+      const patternPropertyId = 'assembly-id' + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId';
+      const patternPropertyId2 = 'assembly-id' + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId2';
       const assemblyNode: ComponentTreeNode = {
         definitionId: 'assembly-id',
+        id: 'assembly-id',
         variables: {},
         children: [],
         patternProperties: {
-          patternPropertyId: {
+          [patternPropertyId]: {
             contentType: 'testContentType',
             path: '/1230948',
             type: 'BoundValue',
@@ -133,7 +139,7 @@ describe('resolveAssembly', () => {
         node: assemblyNode,
         entityStore,
         parentPatternProperties: {
-          parentPatternProperty: {
+          [patternPropertyId2]: {
             contentType: 'testContentType',
             path: '/4091203i9',
             type: 'BoundValue',
@@ -142,12 +148,12 @@ describe('resolveAssembly', () => {
       });
 
       expect(result.patternProperties).toEqual({
-        patternPropertyId: {
+        ['patternPropertyId']: {
           contentType: 'testContentType',
           path: '/1230948',
           type: 'BoundValue',
         },
-        parentPatternProperty: {
+        ['patternPropertyId2']: {
           contentType: 'testContentType',
           path: '/4091203i9',
           type: 'BoundValue',
