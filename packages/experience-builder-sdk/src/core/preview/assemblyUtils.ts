@@ -149,12 +149,12 @@ export const resolveAssembly = ({
      * and the pattern property definition id. We need to split them so
      * that the node only uses the pattern property definition id.
      */
-    const [nodeId, patternPropertyDefinitionId] =
+    const [hashKey, patternPropertyDefinitionId] =
       patternPropertyKey.split(PATTERN_PROPERTY_DIVIDER);
 
-    const chain = md5(patternNodeIdsChain || '');
+    const hashedNodeChain = md5(patternNodeIdsChain || '');
 
-    const isMatchingNode = nodeId === chain;
+    const isMatchingNode = hashKey === hashedNodeChain;
 
     if (!isMatchingNode) continue;
 
