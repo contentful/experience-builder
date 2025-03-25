@@ -24,8 +24,7 @@ export const deserializeAssemblyNode = ({
   patternProperties: Record<string, PatternProperty>;
 }): ComponentTreeNode => {
   const variables: Record<string, ComponentPropertyValue> = {};
-  // const newNodeLocation = nodeLocation === null ? `${childIndex}` : nodeLocation + '_' + childIndex;
-  // const nodeId = `${patternNodeId}---${newNodeLocation}`;
+
   for (const [variableName, variable] of Object.entries(node.variables)) {
     variables[variableName] = variable;
     if (variable.type === 'ComponentValue') {
