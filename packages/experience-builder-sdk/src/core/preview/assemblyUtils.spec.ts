@@ -1,4 +1,5 @@
 import type { Entry } from 'contentful';
+import md5 from 'md5';
 import { experienceEntry } from '../../../test/__fixtures__/composition';
 import {
   assemblyGeneratedDesignVariableName,
@@ -30,6 +31,7 @@ describe('resolveAssembly', () => {
       node: containerNode,
       entityStore,
       parentPatternProperties: {},
+      patternNodeIdsChain: '',
     });
 
     expect(result).toBe(containerNode);
@@ -48,6 +50,7 @@ describe('resolveAssembly', () => {
       node: containerNode,
       entityStore,
       parentPatternProperties: {},
+      patternNodeIdsChain: '',
     });
 
     expect(result).toBe(containerNode);
@@ -70,6 +73,7 @@ describe('resolveAssembly', () => {
       node: assemblyNode,
       entityStore,
       parentPatternProperties: {},
+      patternNodeIdsChain: '',
     });
 
     expect(result).toBe(assemblyNode);
@@ -104,6 +108,7 @@ describe('resolveAssembly', () => {
         node: assemblyNode,
         entityStore,
         parentPatternProperties: {},
+        patternNodeIdsChain: '',
       });
 
       expect(result.children).toHaveLength(1);
@@ -119,8 +124,9 @@ describe('resolveAssembly', () => {
     });
 
     it('should return an assembly node with parent patternProperties', () => {
-      const patternPropertyId = 'assembly-id' + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId';
-      const patternPropertyId2 = 'assembly-id' + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId2';
+      const patternPropertyId = md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId';
+      const patternPropertyId2 =
+        md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId2';
       const assemblyNode: ComponentTreeNode = {
         definitionId: 'assembly-id',
         id: 'assembly-id',
@@ -138,6 +144,7 @@ describe('resolveAssembly', () => {
       const result = resolveAssembly({
         node: assemblyNode,
         entityStore,
+        patternNodeIdsChain: 'assembly-id',
         parentPatternProperties: {
           [patternPropertyId2]: {
             contentType: 'testContentType',
@@ -177,6 +184,7 @@ describe('resolveAssembly', () => {
         node: assemblyNode,
         entityStore,
         parentPatternProperties: {},
+        patternNodeIdsChain: '',
       });
 
       expect(result.children[0].variables.cfWidth).toEqual({
@@ -196,6 +204,7 @@ describe('resolveAssembly', () => {
         node: assemblyNode,
         entityStore,
         parentPatternProperties: {},
+        patternNodeIdsChain: '',
       });
 
       expect(result.children[0].variables.cfWidth).toEqual({
