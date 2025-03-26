@@ -20,13 +20,9 @@ on:
 jobs:
   install-build:
     uses: ./.github/workflows/build.yaml
-    secrets:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   check:
     needs: install-build
     uses: ./.github/workflows/check.yaml
-    secrets:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   vercel:
     needs: [install-build, check]
     uses: ./.github/workflows/vercel.yaml
