@@ -1,4 +1,5 @@
 import { checkIsAssemblyNode, EntityStore } from '@contentful/experiences-core';
+import md5 from 'md5';
 import type {
   ComponentPropertyValue,
   ComponentTreeNode,
@@ -109,11 +110,13 @@ export const deserializeAssemblyNode = ({
 export const resolveAssembly = ({
   node,
   parentPatternProperties,
+  patternNodeIdsChain,
   entityStore,
 }: {
   node: ComponentTreeNode;
   entityStore: EntityStore;
   parentPatternProperties: Record<string, PatternProperty>;
+  patternNodeIdsChain: string;
 }) => {
   const isAssembly = checkIsAssemblyNode({
     componentId: node.definitionId,
@@ -146,10 +149,12 @@ export const resolveAssembly = ({
      * and the pattern property definition id. We need to split them so
      * that the node only uses the pattern property definition id.
      */
-    const [nodeId, patternPropertyDefinitionId] =
+    const [hashKey, patternPropertyDefinitionId] =
       patternPropertyKey.split(PATTERN_PROPERTY_DIVIDER);
 
-    const isMatchingNode = nodeId === node.id;
+    const hashedNodeChain = md5(patternNodeIdsChain || '');
+
+    const isMatchingNode = hashKey === hashedNodeChain;
 
     if (!isMatchingNode) continue;
 
