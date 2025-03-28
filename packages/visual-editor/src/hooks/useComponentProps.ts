@@ -225,6 +225,7 @@ export const useComponentProps = ({
   ]);
 
   const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
+  const cfVisibility: boolean = Boolean((props as StyleProps).cfVisibility);
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
@@ -237,10 +238,15 @@ export const useComponentProps = ({
     const wrapperStyles: CSSProperties = { width: options?.wrapContainerWidth };
 
     if (requiresDragWrapper) {
-      if (cfStyles.width) wrapperStyles.width = cfStyles.width;
-      if (cfStyles.height) wrapperStyles.height = cfStyles.height;
-      if (cfStyles.maxWidth) wrapperStyles.maxWidth = cfStyles.maxWidth;
-      if (cfStyles.margin) wrapperStyles.margin = cfStyles.margin;
+      // when element is marked by user as not-visible, on that element the node `display: none !important`
+      // will be set and it will disappear. However, when such a node has a wrapper div, the wrapper
+      // should not have any css properties (at least not ones which force size), as such div should
+      // simply be a zero height wrapper around element with `display: none !important`.
+      // Hence we guard all wrapperStyles with `cfVisibility` check.
+      if (cfVisibility && cfStyles.width) wrapperStyles.width = cfStyles.width;
+      if (cfVisibility && cfStyles.height) wrapperStyles.height = cfStyles.height;
+      if (cfVisibility && cfStyles.maxWidth) wrapperStyles.maxWidth = cfStyles.maxWidth;
+      if (cfVisibility && cfStyles.margin) wrapperStyles.margin = cfStyles.margin;
     }
 
     // Override component styles to fill the wrapper
@@ -268,6 +274,7 @@ export const useComponentProps = ({
     node.data.id,
     draggingId,
     nodeRect,
+    cfVisibility,
   ]);
 
   // Styles that will be applied to the component element
