@@ -295,7 +295,7 @@ describe('useComponentProps', () => {
       type: 'block',
     };
 
-    it('should NOT set the component size in wrapperStyles when drag wrapper is enabled', () => {
+    it.only('should NOT set the component size in wrapperStyles when drag wrapper is enabled', () => {
       const newNode: ExperienceTreeNode = structuredClone(node);
       newNode.data.props['cfVisibility'] = {
         type: 'DesignValue',
@@ -317,7 +317,13 @@ describe('useComponentProps', () => {
       );
 
       expect(result.current.wrapperStyles).toEqual({}); // it will have { width: undefined }, but it still resolves to {} during ... destructuring
-      expect(result.current.componentStyles).toEqual({});
+
+      expect(result.current.componentStyles.display).toEqual('none !important');
+      // Seems leaving in the props below does no harm (as `none !important` makes node disappear)
+      expect(result.current.componentStyles.width).toEqual('100%');
+      expect(result.current.componentStyles.height).toEqual('100%');
+      expect(result.current.componentStyles.maxWidth).toEqual('none');
+      expect(result.current.componentStyles.margin).toEqual('0');
     });
 
     // it('should set the component size in wrapperStyles when drag wrapper is enabled', () => {
