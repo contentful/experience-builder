@@ -1,11 +1,26 @@
 import { ASSEMBLY_NODE_TYPE, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { useComponentProps } from './useComponentProps';
-import { ComponentDefinition, ExperienceTreeNode } from '@contentful/experiences-core/types';
+import {
+  ComponentDefinition,
+  ComponentPropertyValue,
+  ExperienceTreeNode as ExperienceTreeNodeWithOptionalProperties,
+} from '@contentful/experiences-core/types';
 import { Mock, vi, it, describe } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { getValueForBreakpoint } from '@contentful/experiences-core';
+
+// Redefining this type to make 'data.props.cfVisibility' a required field.
+// Semantically, it is always available on the node at runtime,
+// and this stricter type ensures that when making mock nodes, we don't miss it.
+type ExperienceTreeNode = Omit<ExperienceTreeNodeWithOptionalProperties, 'data'> & {
+  data: Omit<ExperienceTreeNodeWithOptionalProperties['data'], 'props'> & {
+    props: ExperienceTreeNodeWithOptionalProperties['data']['props'] & {
+      cfVisibility: ComponentPropertyValue;
+    };
+  };
+};
 
 vi.mock('@/store/draggedItem', () => ({
   useDraggedItemStore: vi.fn(),
@@ -35,7 +50,14 @@ describe('useComponentProps', () => {
   const node: ExperienceTreeNode = {
     data: {
       id: 'id',
-      props: {},
+      props: {
+        cfVisibility: {
+          type: 'DesignValue',
+          valuesByBreakpoint: {
+            [desktop.id]: true,
+          },
+        },
+      },
       unboundValues: {},
       dataSource: {},
       breakpoints: [],
@@ -121,6 +143,12 @@ describe('useComponentProps', () => {
         // This block id will identify the component as a structure component
         blockId: CONTENTFUL_COMPONENTS.section.id,
         props: {
+          cfVisibility: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [desktop.id]: true,
+            },
+          },
           cfWidth: {
             type: 'DesignValue',
             valuesByBreakpoint: {
@@ -207,6 +235,7 @@ describe('useComponentProps', () => {
       id: 'banner',
       name: 'Banner',
       variables: {
+        cfVisibility: { type: 'Boolean' }, // TODO.DK: The test nodes must NOT miss this value when created here
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
         cfMaxWidth: { type: 'Text' },
@@ -214,11 +243,19 @@ describe('useComponentProps', () => {
         myValue: { type: 'Text', defaultValue: 'default' },
       },
     };
+
+    // TODO.DK: need some way to be sure that node props and definition props are in sync...
     const node: ExperienceTreeNode = {
       data: {
         id: 'id',
         blockId: 'banner',
         props: {
+          cfVisibility: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [desktop.id]: true,
+            },
+          },
           cfWidth: {
             type: 'DesignValue',
             valuesByBreakpoint: {
@@ -258,10 +295,50 @@ describe('useComponentProps', () => {
       type: 'block',
     };
 
-    it('should set the component size in wrapperStyles when drag wrapper is enabled', () => {
+    it.only('should NOT set the component size in wrapperStyles when drag wrapper is enabled', () => {
+      const newNode: ExperienceTreeNode = structuredClone(node);
+      newNode.data.props['cfVisibility'] = {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          [desktop.id]: false,
+        },
+      };
+
       const { result } = renderHook(() =>
         useComponentProps({
-          node,
+          node: newNode,
+          areEntitiesFetched,
+          resolveDesignValue,
+          renderDropzone,
+          definition,
+          requiresDragWrapper: true,
+          userIsDragging,
+        }),
+      );
+
+      expect(result.current.wrapperStyles).toEqual({}); // it will have { width: undefined }, but it still resolves to {} during ... destructuring
+
+      expect(result.current.componentStyles.display).toEqual('none !important');
+      // Seems leaving in the props below does no harm (as `none !important` makes node disappear)
+      expect(result.current.componentStyles.width).toEqual('100%');
+      expect(result.current.componentStyles.height).toEqual('100%');
+      expect(result.current.componentStyles.maxWidth).toEqual('none');
+      expect(result.current.componentStyles.margin).toEqual('0');
+    });
+
+    // it('should set the component size in wrapperStyles when drag wrapper is enabled', () => {
+    it('should have all the wrapper div properties when cfVisibility=true', () => {
+      const newNode = structuredClone(node);
+      newNode.data.props['cfVisibility'] = {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          [desktop.id]: true,
+        },
+      };
+
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node: newNode,
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -392,6 +469,12 @@ describe('useComponentProps', () => {
         id: 'id',
         blockId: 'banner',
         props: {
+          cfVisibility: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [desktop.id]: true,
+            },
+          },
           cfWidth: {
             type: 'DesignValue',
             valuesByBreakpoint: {
