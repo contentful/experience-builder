@@ -93,6 +93,9 @@ export const useComponentProps = ({
       return propsBase;
     }
 
+    // Note, that here we iterate over DEFINITION variables, not the actual node variables
+    // this means that node may have "orphan" props, or some "newborn" props will be initialized
+    // with the default values.
     const extractedProps = Object.entries(definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variableMapping = node.data.props[variableName];
@@ -225,7 +228,7 @@ export const useComponentProps = ({
   ]);
 
   const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
-  const cfVisibility: boolean = Boolean((props as StyleProps).cfVisibility);
+  const cfVisibility: boolean = props['cfVisibility'] as boolean;
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
   const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
