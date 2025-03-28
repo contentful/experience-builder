@@ -44,6 +44,7 @@ type CompositionBlockProps = {
    * when storing & accessing cfSsrClassName.
    */
   patternNodeIdsChain?: string;
+  patternRootNodeIdsChain?: string;
   wrappingPatternProperties?: Record<string, PatternProperty>;
 };
 
@@ -57,6 +58,7 @@ export const CompositionBlock = ({
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
   wrappingPatternProperties: parentWrappingPatternProperties = {},
   patternNodeIdsChain = '',
+  patternRootNodeIdsChain: parentPatternRootNodeIdsChain = '',
 }: CompositionBlockProps) => {
   patternNodeIdsChain = `${patternNodeIdsChain}${rawNode.id}`;
 
@@ -69,15 +71,23 @@ export const CompositionBlock = ({
     [entityStore.usedComponents, rawNode.definitionId],
   );
 
+  const patternRootNodeIdsChain = useMemo(() => {
+    if (isAssembly) {
+      return `${parentPatternRootNodeIdsChain}${rawNode.id}`;
+    }
+    return parentPatternRootNodeIdsChain;
+  }, [isAssembly, parentPatternRootNodeIdsChain, rawNode.id]);
+
   const node = useMemo(() => {
     return isAssembly
       ? resolveAssembly({
           node: rawNode,
           entityStore,
           parentPatternProperties: parentWrappingPatternProperties,
+          patternNodeIdsChain: patternRootNodeIdsChain,
         })
       : rawNode;
-  }, [entityStore, isAssembly, rawNode, parentWrappingPatternProperties]);
+  }, [entityStore, isAssembly, rawNode, parentWrappingPatternProperties, patternRootNodeIdsChain]);
 
   const wrappingPatternIds = useMemo(() => {
     if (isAssembly) {
@@ -197,6 +207,7 @@ export const CompositionBlock = ({
               wrappingPatternIds={wrappingPatternIds}
               wrappingPatternProperties={wrappingPatternProperties}
               patternNodeIdsChain={patternNodeIdsChain}
+              patternRootNodeIdsChain={patternRootNodeIdsChain}
             />
           );
         }
@@ -232,6 +243,7 @@ export const CompositionBlock = ({
     wrappingPatternIds,
     wrappingPatternProperties,
     patternNodeIdsChain,
+    patternRootNodeIdsChain,
   ]);
 
   // do not inject the stylesheet into the dom because it's already been done on the server side
@@ -280,6 +292,7 @@ export const CompositionBlock = ({
               wrappingPatternIds={wrappingPatternIds}
               wrappingPatternProperties={wrappingPatternProperties}
               patternNodeIdsChain={patternNodeIdsChain}
+              patternRootNodeIdsChain={patternRootNodeIdsChain}
             />
           );
         })
