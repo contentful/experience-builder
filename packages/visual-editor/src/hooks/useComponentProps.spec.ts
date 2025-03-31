@@ -1,7 +1,8 @@
 import { ASSEMBLY_NODE_TYPE, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { useComponentProps } from './useComponentProps';
 import {
-  ComponentDefinition,
+  ComponentDefinition as ComponentDefinitionWithOptionalVariables,
+  ComponentDefinitionVariable,
   ComponentPropertyValue,
   ExperienceTreeNode as ExperienceTreeNodeWithOptionalProperties,
 } from '@contentful/experiences-core/types';
@@ -19,6 +20,15 @@ type ExperienceTreeNode = Omit<ExperienceTreeNodeWithOptionalProperties, 'data'>
     props: ExperienceTreeNodeWithOptionalProperties['data']['props'] & {
       cfVisibility: ComponentPropertyValue;
     };
+  };
+};
+
+// When defining components in tests, must make the cfVisibility variable required,
+// otherwise some tests may glitch, as when useComponentProps() logic iterates
+// over nodes variables, it actually iterates over definition variables which are present on the node.
+type ComponentDefinition = Omit<ComponentDefinitionWithOptionalVariables, 'variables'> & {
+  variables: ComponentDefinitionWithOptionalVariables['variables'] & {
+    cfVisibility: ComponentDefinitionVariable;
   };
 };
 
@@ -41,6 +51,7 @@ describe('useComponentProps', () => {
     id: 'button',
     name: 'Button',
     variables: {
+      cfVisibility: { type: 'Boolean' },
       label: {
         type: 'Text',
         defaultValue: 'Click here',
@@ -132,6 +143,7 @@ describe('useComponentProps', () => {
       id: CONTENTFUL_COMPONENTS.section.id,
       name: CONTENTFUL_COMPONENTS.section.name,
       variables: {
+        cfVisibility: { type: 'Boolean' },
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
         myValue: { type: 'Text', defaultValue: 'default' },
@@ -235,7 +247,7 @@ describe('useComponentProps', () => {
       id: 'banner',
       name: 'Banner',
       variables: {
-        cfVisibility: { type: 'Boolean' }, // TODO.DK: The test nodes must NOT miss this value when created here
+        cfVisibility: { type: 'Boolean' },
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
         cfMaxWidth: { type: 'Text' },
@@ -244,7 +256,6 @@ describe('useComponentProps', () => {
       },
     };
 
-    // TODO.DK: need some way to be sure that node props and definition props are in sync...
     const node: ExperienceTreeNode = {
       data: {
         id: 'id',
@@ -319,11 +330,16 @@ describe('useComponentProps', () => {
       expect(result.current.wrapperStyles).toEqual({}); // it will have { width: undefined }, but it still resolves to {} during ... destructuring
 
       expect(result.current.componentStyles.display).toEqual('none !important');
-      // Seems leaving in the props below does no harm (as `none !important` makes node disappear)
-      expect(result.current.componentStyles.width).toEqual('100%');
-      expect(result.current.componentStyles.height).toEqual('100%');
-      expect(result.current.componentStyles.maxWidth).toEqual('none');
-      expect(result.current.componentStyles.margin).toEqual('0');
+      // Because the element is hidden via `display: none !important`, we don't need to override the styles to 100% values
+      // like in other test cases to match the wrapper styles. The component styles stay verbatim.
+      expect(result.current.componentStyles).toEqual({
+        boxSizing: 'border-box',
+        display: 'none !important',
+        margin: '10px 0 10px 0',
+        width: '50%',
+        height: '50%',
+        maxWidth: '50%',
+      });
     });
 
     // it('should set the component size in wrapperStyles when drag wrapper is enabled', () => {
@@ -460,6 +476,7 @@ describe('useComponentProps', () => {
       id: 'banner',
       name: 'Banner',
       variables: {
+        cfVisibility: { type: 'Boolean' },
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
       },
