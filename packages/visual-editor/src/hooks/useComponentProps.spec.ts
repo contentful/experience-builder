@@ -295,7 +295,7 @@ describe('useComponentProps', () => {
       type: 'block',
     };
 
-    it.only('should NOT set the component size in wrapperStyles when drag wrapper is enabled', () => {
+    it('should NOT set the component size in wrapperStyles when drag wrapper is enabled', () => {
       const newNode: ExperienceTreeNode = structuredClone(node);
       newNode.data.props['cfVisibility'] = {
         type: 'DesignValue',
