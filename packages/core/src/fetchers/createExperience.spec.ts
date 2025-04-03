@@ -1,8 +1,29 @@
-import type { Entry } from 'contentful';
+import type { Entry, EntrySkeletonType } from 'contentful';
 import { experienceEntry } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
 import { createExperience } from './createExperience';
 import { describe, it, expect } from 'vitest';
+
+const unlocalizeEntity = <T extends EntrySkeletonType = EntrySkeletonType>(
+  entity: Entry<T>,
+  locales: string[],
+): Entry<T, 'WITH_ALL_LOCALES'> => {
+  const { fields, sys, ...rest } = entity;
+  return {
+    ...rest,
+    sys: {
+      ...sys,
+      locale: undefined,
+    },
+    fields: Object.keys(fields).reduce((acc, key) => {
+      acc[key] = locales.reduce((acc, locale) => {
+        acc[locale] = fields[key];
+        return acc;
+      }, {} as any);
+      return acc;
+    }, {} as any),
+  };
+};
 
 describe('createExperience', () => {
   it('throws an error if given entry is not an experience entry', () => {
@@ -17,6 +38,22 @@ describe('createExperience', () => {
     } catch (e) {
       expect((e as Error).message).toEqual('Provided entry is not experience entry');
     }
+  });
+
+  it('throws an error if any provided entity is not localized', () => {
+    const experienceEntryUnlocalized = unlocalizeEntity(experienceEntry as any, ['en-US', 'de']);
+    const entryUnlocalized = unlocalizeEntity(entries[0], ['en-US', 'de']);
+
+    expect(() => {
+      createExperience({
+        experienceEntry: experienceEntryUnlocalized as unknown as Entry,
+        referencedEntries: [entryUnlocalized],
+        referencedAssets: [],
+        locale: 'en-US',
+      });
+    }).toThrowError(
+      'Some of the provided content is not localized. Please localize every entity before passing it to this function.',
+    );
   });
 
   it('should return the instance of an entity store and mode', () => {

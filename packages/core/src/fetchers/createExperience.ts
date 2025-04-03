@@ -25,6 +25,11 @@ export function createExperience(options: string | createExperienceArgs): Experi
     };
   } else {
     const { experienceEntry, referencedAssets, referencedEntries, locale } = options;
+    if ([experienceEntry, ...referencedAssets, ...referencedEntries].some(isNotLocalized)) {
+      throw new Error(
+        'Some of the provided content is not localized. Please localize every entity before passing it to this function.',
+      );
+    }
     if (!isExperienceEntry(experienceEntry)) {
       throw new Error('Provided entry is not experience entry');
     }
@@ -40,3 +45,7 @@ export function createExperience(options: string | createExperienceArgs): Experi
     };
   }
 }
+
+const isNotLocalized = (entity: Entry | Asset) => {
+  return !entity.sys.locale;
+};

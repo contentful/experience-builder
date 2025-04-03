@@ -3,7 +3,9 @@ import { ContentfulClientApi, Entry } from 'contentful';
 type fetchExperienceEntryArgs = {
   client: ContentfulClientApi<undefined>;
   experienceTypeId: string;
-  locale: string;
+  /** Provide a locale if your experience contains custom localized fields. Otherwise,
+   * it will fallback to the default locale for those. */
+  locale?: string;
   identifier: {
     slug?: string;
     id?: string;
@@ -19,12 +21,6 @@ export const fetchExperienceEntry = async ({
   if (!client) {
     throw new Error(
       'Failed to fetch experience entities. Required "client" parameter was not provided',
-    );
-  }
-
-  if (!locale) {
-    throw new Error(
-      'Failed to fetch experience entities. Required "locale" parameter was not provided',
     );
   }
 

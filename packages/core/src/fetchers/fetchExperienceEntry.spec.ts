@@ -24,18 +24,14 @@ describe('fetchExperienceEntry', () => {
     );
   });
 
-  it('should throw an error if locale has not been provided', () => {
+  it('should not throw an error if locale has not been provided', () => {
     expect(
       fetchExperienceEntry({
         client: mockClient,
         experienceTypeId: 'books',
-        // @ts-expect-error intentionally setting it to undefined
-        locale: undefined,
         identifier: { slug: 'slug' },
       }),
-    ).rejects.toThrow(
-      'Failed to fetch experience entities. Required "locale" parameter was not provided',
-    );
+    ).resolves.not.toThrow();
   });
 
   it('should throw an error if experienceId has not been provided', () => {
