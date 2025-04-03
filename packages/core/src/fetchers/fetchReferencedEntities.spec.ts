@@ -44,15 +44,6 @@ describe('fetchReferencedEntities', () => {
     }
   });
 
-  it('should not throw an error if locale has not been provided', async () => {
-    expect(
-      fetchReferencedEntities({
-        client: mockClient,
-        experienceEntry: experienceEntry,
-      }),
-    ).resolves.not.toThrow();
-  });
-
   it('should throw an error if provided entry is not experience entry', async () => {
     try {
       await fetchReferencedEntities({
@@ -119,6 +110,15 @@ describe('fetchReferencedEntities', () => {
           'sys.id[in]': [entityIds.ENTRY1, entityIds.ENTRY2],
         }),
       );
+    });
+
+    it('should not throw an error if locale has not been provided', async () => {
+      expect(
+        fetchReferencedEntities({
+          client: mockClient,
+          experienceEntry: experienceEntry,
+        }),
+      ).resolves.not.toThrow();
     });
   });
 

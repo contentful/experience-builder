@@ -20,6 +20,7 @@ const patternEntry: ExperienceEntry = {
   sys: {
     id: '4JYGAfHMSVdWkuf6kbd1n8',
     type: 'Entry',
+    locale: 'en-US',
     createdAt: '2024-02-21T16:20:49.414Z',
     updatedAt: '2024-03-05T10:52:46.832Z',
     revision: 1,
@@ -630,6 +631,7 @@ const editablePatternEntry: ExperienceEntry = {
   sys: {
     id: '4JYGAfHMSVdWkuf6kbd1n8-EditablePattern',
     type: 'Entry',
+    locale: 'en-US',
     createdAt: '2024-02-21T16:20:49.414Z',
     updatedAt: '2024-03-05T10:52:46.832Z',
     revision: 1,
@@ -1256,6 +1258,7 @@ const getExperienceEntryWithNode = ({
     sys: {
       id: 'test-id',
       type: 'Entry',
+      locale: 'en-US',
       contentType: {
         sys: {
           id: 'test-content-type-id',
