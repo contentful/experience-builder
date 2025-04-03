@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Entry, EntrySkeletonType } from 'contentful';
 import { experienceEntry } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
