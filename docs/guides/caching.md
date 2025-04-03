@@ -1,6 +1,6 @@
 # Caching
 
-When using the recommended approach for initializing experiences with this SDK, the logic will take fetch the experience entry, other entries, assets, and patterns under the hood and return the final experience object.
+When using the recommended approach for initializing experiences with this SDK, the logic will fetch the experience entry, the data source (bound entries & assets), and used patterns under the hood and return the final experience object.
 
 To inject a manual caching layer in between, the SDK allows you to fetch the content on your own.
 
@@ -25,12 +25,14 @@ To cache the loaded entities and inject them manually, a custom fetcher function
 
 ```ts
 function customFetchAllEntities({ client, experienceTypeId, slug, localeCode }) {
+  // Fetch the experience entry including its used patterns (resolved links in fields.usedComponents)
   const experienceEntry = await fetchExperienceEntry({
     client,
     experienceTypeId,
     identifier: { slug },
     locale: localeCode,
   });
+  // Fetch all entries and assets that are listed in fields.dataSource
   const references = await fetchReferencedEntities({
     client,
     experienceEntry,
