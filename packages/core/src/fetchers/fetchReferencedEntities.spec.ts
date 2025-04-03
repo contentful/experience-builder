@@ -44,19 +44,13 @@ describe('fetchReferencedEntities', () => {
     }
   });
 
-  it('should throw an error if locale has not been provided', async () => {
-    try {
-      await fetchReferencedEntities({
+  it('should not throw an error if locale has not been provided', async () => {
+    expect(
+      fetchReferencedEntities({
         client: mockClient,
         experienceEntry: experienceEntry,
-        // @ts-expect-error intentionally setting it to undefined
-        locale: undefined,
-      });
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "locale" parameter was not provided',
-      );
-    }
+      }),
+    ).resolves.not.toThrow();
   });
 
   it('should throw an error if provided entry is not experience entry', async () => {

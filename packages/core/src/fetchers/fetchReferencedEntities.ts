@@ -8,7 +8,9 @@ import { fetchAllEntries, fetchAllAssets } from './fetchAllEntities';
 type FetchReferencedEntitiesArgs = {
   client: ContentfulClientApi<undefined>;
   experienceEntry: Entry | ExperienceEntry;
-  locale: string;
+  /** Leave this one empty when you're using client.withAllLocales() or
+   * only interested in the default locale. */
+  locale?: string;
 };
 
 export const fetchReferencedEntities = async ({
@@ -19,12 +21,6 @@ export const fetchReferencedEntities = async ({
   if (!client) {
     throw new Error(
       'Failed to fetch experience entities. Required "client" parameter was not provided',
-    );
-  }
-
-  if (!locale) {
-    throw new Error(
-      'Failed to fetch experience entities. Required "locale" parameter was not provided',
     );
   }
 
