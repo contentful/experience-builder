@@ -173,6 +173,7 @@ describe('resolveBackgroundImageBinding', () => {
       sys: {
         id: '456def',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         file: {
@@ -204,6 +205,7 @@ describe('resolveBackgroundImageBinding', () => {
       sys: {
         type: 'Asset',
         id: '789ghi',
+        locale: 'en-US',
       },
       fields: {
         file: {
@@ -298,6 +300,7 @@ describe('resolveBackgroundImageBinding', () => {
       sys: {
         id: 'bound-asset-id',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         file: {
@@ -353,6 +356,7 @@ describe('resolveBackgroundImageBinding', () => {
       sys: {
         id: 'bound-asset-id',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         file: {
@@ -487,6 +491,7 @@ describe('indexByBreakpoint', () => {
       sys: {
         id: '789ghi',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         file: {
@@ -699,6 +704,7 @@ describe('indexByBreakpoint', () => {
       sys: {
         id: 'bound-asset-id',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         file: {
@@ -791,6 +797,7 @@ describe('indexByBreakpoint', () => {
       sys: {
         id: 'bound-asset-id',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         file: {

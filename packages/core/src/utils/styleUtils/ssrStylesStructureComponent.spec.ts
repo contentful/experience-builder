@@ -225,6 +225,7 @@ describe('section component', () => {
       sys: {
         id: '456def',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         file: {
@@ -335,6 +336,7 @@ describe('section component', () => {
       sys: {
         id: '456def',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         file: {

@@ -1473,6 +1473,7 @@ describe('pattern component', () => {
       sys: {
         id: 'bound-asset-id',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         title: 'Test Asset',
@@ -1603,6 +1604,7 @@ describe('pattern component', () => {
       sys: {
         id: 'bound-asset-id',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         title: 'Test Asset',
@@ -1616,6 +1618,7 @@ describe('pattern component', () => {
       sys: {
         id: 'bound-entry-id',
         type: 'Entry',
+        locale: 'en-US',
       },
       fields: {
         title: 'Test Entry',
@@ -1806,6 +1809,7 @@ describe('pattern component', () => {
       sys: {
         id: 'test-experience-entry-id',
         type: 'Entry',
+        locale: 'en-US',
       },
       fields: experienceEntryFieldsWithFilledUsedComponents,
       metadata: {},
