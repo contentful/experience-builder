@@ -14,6 +14,7 @@ export const asset = {
     },
     id: '3tfemZitZGCb42qEfO1ipW',
     type: 'Asset',
+    locale: 'en-US',
     createdAt: '2023-01-25T16:22:01.053Z',
     updatedAt: '2023-06-07T13:32:40.991Z',
     environment: {
