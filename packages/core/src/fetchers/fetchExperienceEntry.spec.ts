@@ -29,7 +29,7 @@ describe('fetchExperienceEntry', () => {
 
     expect(
       fetchExperienceEntry({
-        client: mockClient,
+        client: mockClient as unknown as ContentfulClientApi<'WITH_ALL_LOCALES'>,
         experienceTypeId: 'books',
         identifier: { slug: 'slug' },
       }),
@@ -56,6 +56,7 @@ describe('fetchExperienceEntry', () => {
         client: mockClient,
         experienceTypeId: 'books',
         locale: 'en-US',
+        // @ts-expect-error intentionally setting it to an invalid value
         identifier: {},
       }),
     ).rejects.toThrow(
