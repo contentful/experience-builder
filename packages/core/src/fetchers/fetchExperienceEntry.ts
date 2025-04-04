@@ -12,9 +12,7 @@ type ClientAndLocaleParams =
     };
 
 type FetchExperienceEntryParams = {
-  /** id of the content type associated with the experience */
   experienceTypeId: string;
-  /** identifying condition to find the correct experience entry */
   identifier: { slug: string } | { id: string };
 } & ClientAndLocaleParams;
 
