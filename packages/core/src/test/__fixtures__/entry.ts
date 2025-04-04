@@ -14,6 +14,7 @@ export const entry = {
     },
     id: '7J3DNGSAIWlcxrOfC25KlX',
     type: 'Entry',
+    locale: 'en-US',
     createdAt: '2023-01-25T16:22:13.627Z',
     updatedAt: '2023-06-28T07:05:22.644Z',
     environment: {
