@@ -115,7 +115,7 @@ describe('fetchReferencedEntities', () => {
     it('should not throw an error if locale has not been provided', async () => {
       expect(
         fetchReferencedEntities({
-          client: mockClient,
+          client: mockClient as unknown as ContentfulClientApi<'WITH_ALL_LOCALES'>,
           experienceEntry: experienceEntry,
         }),
       ).resolves.not.toThrow();

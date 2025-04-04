@@ -24,7 +24,7 @@ To cache the loaded entities and inject them manually, a custom fetcher function
 ### Fetching Data
 
 ```ts
-function customFetchAllEntities({ client, experienceTypeId, slug, localeCode }) {
+async function customFetchAllEntities({ client, experienceTypeId, slug, localeCode }) {
   // Fetch the experience entry including its used patterns (resolved links in fields.usedComponents)
   const experienceEntry = await fetchExperienceEntry({
     client,
