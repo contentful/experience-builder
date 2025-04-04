@@ -177,14 +177,15 @@ export function useEditorSubscriber() {
       }
 
       const eventData = tryParseMessage(event);
-      if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
-        // Expected message: This message is handled in the EntityStore to store fetched entities
-        return;
-      }
       console.debug(
         `[experiences-sdk-react::onMessage] Received message [${eventData.eventType}]`,
         eventData,
       );
+
+      if (eventData.eventType === PostMessageMethods.REQUESTED_ENTITIES) {
+        // Expected message: This message is handled in the EntityStore to store fetched entities
+        return;
+      }
 
       switch (eventData.eventType) {
         case INCOMING_EVENTS.ExperienceUpdated: {
