@@ -10,6 +10,12 @@ export type UseCustomFetchArgs = {
   hyperlinkPattern?: string;
 };
 
+/**
+ * A hook that allows specifying a custom fetch function to retrieve an experience with all its references.
+ * @param options.fetchFn - A function that returns a promise resolving to an experience instance created with `createExperience()`
+ * @param options.hyperlinkPattern - URL Pattern for generating links for hyperlink properties on nodes pointing to other experience pages
+ * @returns loading state, error message, and the experience instance that needs to be passed to `<ExperienceRoot>`
+ */
 export const useCustomFetch = ({ fetchFn, hyperlinkPattern }: UseCustomFetchArgs) => {
   const mode = useDetectCanvasMode({ isClientSide: typeof window !== 'undefined' });
 
