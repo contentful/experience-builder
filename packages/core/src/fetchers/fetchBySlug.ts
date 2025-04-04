@@ -33,7 +33,7 @@ type FetchBySlugParams = {
 
 /**
  * Fetches an experience entry by its slug and additionally fetches all its references to return
- * an initilized experience object.
+ * an initilized experience instance.
  * @param {FetchBySlugParams} options - options to fetch the experience
  */
 export async function fetchBySlug({
