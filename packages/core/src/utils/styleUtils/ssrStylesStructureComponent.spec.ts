@@ -349,6 +349,7 @@ describe('section component', () => {
       sys: {
         id: '789ghi',
         type: 'Entry',
+        locale: 'en-US',
       },
       fields: {
         assetReference: {

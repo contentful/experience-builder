@@ -32,7 +32,8 @@ type FetchByIdParams = {
 };
 
 /**
- * Fetches an experience object by its id
+ * Fetches an experience entry by its id and additionally fetches all its references to return
+ * an initilized experience object.
  * @param {FetchByIdParams} options - options to fetch the experience
  */
 export async function fetchById({
@@ -45,6 +46,10 @@ export async function fetchById({
   //Be a no-op if in editor mode
   if (isEditorMode) return;
   let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
+
+  if (!localeCode) {
+    throw new Error('Failed to fetch by id. Required "localeCode" parameter was not provided');
+  }
 
   try {
     experienceEntry = await fetchExperienceEntry({

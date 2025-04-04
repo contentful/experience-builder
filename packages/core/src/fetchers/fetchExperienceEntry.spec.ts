@@ -25,6 +25,8 @@ describe('fetchExperienceEntry', () => {
   });
 
   it('should not throw an error if locale has not been provided', () => {
+    (mockClient.getEntries as Mock).mockResolvedValue({ items: [experienceEntry] });
+
     expect(
       fetchExperienceEntry({
         client: mockClient,
