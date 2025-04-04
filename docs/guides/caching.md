@@ -9,6 +9,8 @@ To inject a manual caching layer in between, the SDK allows you to fetch the con
 The simple setup would usually look something like this calling one of the sophisticated fetcher functions `useFetchBySlug`. While the final experience object exposes all fetched content, it doesn't provide a way to inject already fetched content but will fetch everything from the API at once.
 
 ```ts
+import { useFetchBySlug } from '@contentful/experiences-sdk-react';
+
 const { experience, error, isLoading } = useFetchBySlug({
   slug,
   localeCode: locale,
@@ -24,6 +26,12 @@ To cache the loaded entities and inject them manually, a custom fetcher function
 ### Fetching Data
 
 ```ts
+import {
+  fetchExperienceEntry,
+  fetchReferencedEntities,
+  createExperience,
+} from '@contentful/experiences-sdk-react';
+
 async function customFetchAllEntities({ client, experienceTypeId, slug, localeCode }) {
   // Fetch the experience entry including its used patterns (resolved links in fields.usedComponents)
   const experienceEntry = await fetchExperienceEntry({
@@ -55,6 +63,8 @@ You can now cache `experienceEntry` and `references` with a caching layer like R
 ### Using Cached Data
 
 ```ts
+import { useCustomFetch } from '@contentful/experiences-sdk-react';
+
 const { experience, error, isLoading } = useCustomFetch({
   fetchFn: async (): Promise<Experience<EntityStore> | undefined> => {
     const experience = await customFetchAllEntities({ client, experienceTypeId, slug, localeCode });
@@ -70,6 +80,12 @@ When using multiple locales, you might want to cache the entities for all locale
 ### Fetching Data
 
 ```ts
+import {
+  fetchExperienceEntry,
+  fetchReferencedEntities,
+  createExperience,
+} from '@contentful/experiences-sdk-react';
+
 function customFetchAllEntitiesWithAllLocales({ client, experienceTypeId, slug, localeCode }) {
   const clientWithAllLocales = client.withAllLocales;
   const experienceEntryLocales = await fetchExperienceEntry({
@@ -106,6 +122,8 @@ Notice, that you still have to provide a locale because this whole logic will al
 ### Using Cached Data
 
 ```ts
+import { useCustomFetch } from '@contentful/experiences-sdk-react';
+
 const { experience, error, isLoading } = useCustomFetch({
   fetchFn: async (): Promise<Experience<EntityStore> | undefined> => {
     const experience = customFetchAllEntitiesWithAllLocales({
