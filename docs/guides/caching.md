@@ -99,9 +99,9 @@ function customFetchAllEntitiesWithAllLocales({ client, experienceTypeId, slug, 
   });
 
   // Localize cached entities
-  const experienceEntry = localizeEntry(experienceEntryLocales, locale);
-  const referencedAssets = referencesLocales.assets.map((asset) => localizeEntry(asset, locale));
-  const referencedAssets = referencesLocales.entries.map((entry) => localizeEntry(entry, locale));
+  const experienceEntry = localizeEntity(experienceEntryLocales, locale);
+  const referencedAssets = referencesLocales.assets.map((asset) => localizeEntity(asset, locale));
+  const referencedEntries = referencesLocales.entries.map((entry) => localizeEntity(entry, locale));
 
   // Initialize experience required for <ExperienceRoot />
   const experience = createExperience({
@@ -115,7 +115,7 @@ function customFetchAllEntitiesWithAllLocales({ client, experienceTypeId, slug, 
 }
 ```
 
-When passing those multi-locale entities to `createExperience`, make sure to localize them upfront.
+When passing those multi-locale entities to `createExperience`, make sure to localize them upfront. In the provided snippet above, we use a fictive function `localizeEntity` which is not (yet) provided by Contentful. As of now, customers have to implement this on their own by resolving the `fields` attribute for a specified locale, e.g. `{"en-US": "Hello world"}` would be replaced by `"Hello world"`. In the end, the shape must match the default CDA shape, not the CMA one. The SDK function `createExperience` runs a validation check to not run on multi locale data by looking at the `sys.locale` value which needs to be provided as part of `localizeEntity` (similar to CDA).
 
 Notice, that you still have to provide a locale because this whole logic will always run in the context of a page which needs to render a specific locale.
 
