@@ -5,14 +5,29 @@ import { DeepReference, gatherDeepReferencesFromExperienceEntry } from '@/deep-b
 import { gatherAutoFetchedReferentsFromIncludes } from './gatherAutoFetchedReferentsFromIncludes';
 import { fetchAllEntries, fetchAllAssets } from './fetchAllEntities';
 
-type FetchReferencedEntitiesArgs = {
-  client: ContentfulClientApi<undefined>;
-  experienceEntry: Entry | ExperienceEntry;
-  /** Leave this one empty when you're using client.withAllLocales() or
-   * only interested in the default locale. */
-  locale?: string;
-};
+type ClientAndLocaleParams =
+  | {
+      client: ContentfulClientApi<undefined>;
+      locale?: string;
+    }
+  | {
+      client: ContentfulClientApi<'WITH_ALL_LOCALES'>;
+      /** When fetching all locales, this may not be defined */
+      locale?: undefined;
+    };
 
+type FetchReferencedEntitiesArgs = {
+  experienceEntry: Entry | ExperienceEntry;
+} & ClientAndLocaleParams;
+
+/**
+ * Fetches all entries and assets from the `dataSource` of the given experience entry. This will
+ * also consider deep references that are not listed explicitly but linked through deep binding paths.
+ * @param options.client - Instantiated client from the Contentful SDK. If this is using the `withAllLocales` modifier, you may not provide a specific locale.
+ * @param options.locale - Retrieve a specific localized version of the referenced entities. Otherwise, it will fallback to the default locale.
+ * @param options.experienceTypeId - id of the content type associated with the experience
+ * @returns object with a list of `entries` and a list of `assets`
+ */
 export const fetchReferencedEntities = async ({
   client,
   experienceEntry,
