@@ -1,6 +1,9 @@
+import dynamic from 'next/dynamic';
+
 import React from 'react';
-import { Card } from 'antd';
 import { ComponentRegistration } from '@contentful/experiences-sdk-react';
+
+const Card = dynamic(() => import('antd').then((antd) => antd.Card));
 
 type CardComponentProps = {
   coverSlot: React.ReactNode;

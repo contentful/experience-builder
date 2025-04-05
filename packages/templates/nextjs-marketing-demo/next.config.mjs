@@ -16,6 +16,9 @@ const nextConfig = {
     });
     return config;
   },
+  images: {
+    domains: ['m.media-amazon.com'], // Movie card images (OMDb API)
+  },
 };
 
 export default nextConfig;

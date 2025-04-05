@@ -2,11 +2,13 @@ import { defineComponents, defineDesignTokens } from '@contentful/experiences-sd
 import { ButtonComponentRegistration } from './components/ButtonComponentRegistration';
 import { RatingStarsComponentRegistration } from '@/components/RatingStarsComponentRegistration';
 import { CardComponentRegistration } from './components/CardComponentRegistration';
+import { MovieCardRegistration } from './components/MovieCardRegistration';
 
 defineComponents([
   ButtonComponentRegistration,
   RatingStarsComponentRegistration,
   CardComponentRegistration,
+  MovieCardRegistration,
 ]);
 
 const textColorTokens = {
