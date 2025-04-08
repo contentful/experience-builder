@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card, Skeleton, Alert } from 'antd';
-import { useMovie } from '@/context/MovieContext';
+import { useMovieQuery } from '@/lib/queries/useMovieQuery';
 
 const { Meta } = Card;
 
@@ -11,9 +11,9 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movieId }) => {
-  const { data, loading, error } = useMovie(movieId);
+  const { data, isLoading, error } = useMovieQuery(movieId);
 
-  if (loading) {
+  if (isLoading) {
     return <Skeleton active />;
   }
 

@@ -10,8 +10,10 @@ import {
   Content as LayoutContent,
 } from 'antd/es/layout/layout';
 import styles from '@/app/page.module.css';
-import { MovieProvider } from '@/context/MovieContext';
-import { prefetchMovies } from '@/context/movieApi';
+
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import { getMovieQueryOptions } from '@/lib/queries/queryOptions';
+import { getQueryClient } from '@/lib/queryClient';
 
 type Page = {
   params: { locale?: string; slug?: string; preview?: string };
@@ -23,13 +25,10 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   const { isPreview, expEditorMode } = searchParams;
   const preview = isPreview === 'true';
   const editorMode = expEditorMode === 'true';
+
   const { experience, error } = await getExperience(slug, locale, preview, editorMode);
+  if (error) return <>{error.message}</>;
 
-  if (error) {
-    return <>{error.message}</>;
-  }
-
-  // extract the styles from the experience
   const stylesheet = experience ? detachExperienceStyles(experience) : null;
 
   // TODO-STUDIO: We might want to offer a 3rd party prefetch helper that allows us
@@ -41,24 +40,26 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
     'tt0047396',
     //, 'tt0265459' // Demonstrate how this will still be loaded client-side.
   ]; // TODO: Extract these IDs dynamically from experience.componentTree
-  const prefetchedMovies = await prefetchMovies(usedMovieIds);
 
-  // experience currently needs to be stringified manually to be passed to the component
+  const queryClient = getQueryClient();
+  await Promise.all(usedMovieIds.map((id) => queryClient.prefetchQuery(getMovieQueryOptions(id))));
+
   const experienceJSON = experience ? JSON.stringify(experience) : null;
+
   return (
-    <MovieProvider initialMovies={prefetchedMovies}>
-      <Layout className={styles.layout}>
-        {stylesheet && <style>{stylesheet}</style>}
-        <LayoutHeader className={styles.header}>
-          <Header />
-        </LayoutHeader>
-        <LayoutContent className={styles.content}>
+    <Layout className={styles.layout}>
+      {stylesheet && <style>{stylesheet}</style>}
+      <LayoutHeader className={styles.header}>
+        <Header />
+      </LayoutHeader>
+      <LayoutContent className={styles.content}>
+        <HydrationBoundary state={dehydrate(queryClient)}>
           <Experience experienceJSON={experienceJSON} locale={locale} />
-        </LayoutContent>
-        <LayoutFooter className={styles.footer}>
-          <Footer />
-        </LayoutFooter>
-      </Layout>
-    </MovieProvider>
+        </HydrationBoundary>
+      </LayoutContent>
+      <LayoutFooter className={styles.footer}>
+        <Footer />
+      </LayoutFooter>
+    </Layout>
   );
 }
