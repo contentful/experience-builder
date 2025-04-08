@@ -63,6 +63,8 @@ export const useInjectStylesheet = (stylesheet?: { css: string; className: strin
     styleTag.setAttribute('type', 'text/css');
     styleTag.innerHTML = stylesheet.css;
 
+    // This might cause an error with `document.head` being undefined, e.g. when the client-side
+    // hydration in SSR applications failed and thus the document is not initialized.
     document.head.appendChild(styleTag);
   }, [stylesheet]);
 };

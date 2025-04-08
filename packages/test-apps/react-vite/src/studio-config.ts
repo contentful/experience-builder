@@ -5,6 +5,7 @@ import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import ColorfulBox from './components/ColorfulBox/ColorfulBox';
+import { ComponentUsingReferences } from './components/ComponentUsingReferences';
 
 defineComponents(
   [
@@ -40,6 +41,32 @@ defineComponents(
       },
       options: {
         wrapComponent: false,
+      },
+    },
+    {
+      component: ComponentUsingReferences,
+      definition: {
+        id: 'component-using-references',
+        name: 'Component Using References',
+        category: 'Custom Components',
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        variables: {
+          title: {
+            displayName: 'Title',
+            type: 'Text',
+          },
+          description: {
+            displayName: 'Description',
+            type: 'Text',
+          },
+          entry: {
+            displayName: 'Entry Reference',
+            type: 'Link',
+          },
+        },
+      },
+      options: {
+        wrapComponent: true,
       },
     },
     {

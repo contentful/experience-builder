@@ -1,11 +1,36 @@
 import { ASSEMBLY_NODE_TYPE, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { useComponentProps } from './useComponentProps';
-import { ComponentDefinition, ExperienceTreeNode } from '@contentful/experiences-core/types';
+import {
+  ComponentDefinition as ComponentDefinitionWithOptionalVariables,
+  ComponentDefinitionVariable,
+  ComponentPropertyValue,
+  ExperienceTreeNode as ExperienceTreeNodeWithOptionalProperties,
+} from '@contentful/experiences-core/types';
 import { Mock, vi, it, describe } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { getValueForBreakpoint } from '@contentful/experiences-core';
+
+// Redefining this type to make 'data.props.cfVisibility' a required field.
+// Semantically, it is always available on the node at runtime,
+// and this stricter type ensures that when making mock nodes, we don't miss it.
+type ExperienceTreeNode = Omit<ExperienceTreeNodeWithOptionalProperties, 'data'> & {
+  data: Omit<ExperienceTreeNodeWithOptionalProperties['data'], 'props'> & {
+    props: ExperienceTreeNodeWithOptionalProperties['data']['props'] & {
+      cfVisibility: ComponentPropertyValue;
+    };
+  };
+};
+
+// When defining components in tests, must make the cfVisibility variable required,
+// otherwise some tests may glitch, as when useComponentProps() logic iterates
+// over nodes variables, it actually iterates over definition variables which are present on the node.
+type ComponentDefinition = Omit<ComponentDefinitionWithOptionalVariables, 'variables'> & {
+  variables: ComponentDefinitionWithOptionalVariables['variables'] & {
+    cfVisibility: ComponentDefinitionVariable;
+  };
+};
 
 vi.mock('@/store/draggedItem', () => ({
   useDraggedItemStore: vi.fn(),
@@ -26,6 +51,7 @@ describe('useComponentProps', () => {
     id: 'button',
     name: 'Button',
     variables: {
+      cfVisibility: { type: 'Boolean' },
       label: {
         type: 'Text',
         defaultValue: 'Click here',
@@ -35,7 +61,14 @@ describe('useComponentProps', () => {
   const node: ExperienceTreeNode = {
     data: {
       id: 'id',
-      props: {},
+      props: {
+        cfVisibility: {
+          type: 'DesignValue',
+          valuesByBreakpoint: {
+            [desktop.id]: true,
+          },
+        },
+      },
       unboundValues: {},
       dataSource: {},
       breakpoints: [],
@@ -110,6 +143,7 @@ describe('useComponentProps', () => {
       id: CONTENTFUL_COMPONENTS.section.id,
       name: CONTENTFUL_COMPONENTS.section.name,
       variables: {
+        cfVisibility: { type: 'Boolean' },
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
         myValue: { type: 'Text', defaultValue: 'default' },
@@ -121,6 +155,12 @@ describe('useComponentProps', () => {
         // This block id will identify the component as a structure component
         blockId: CONTENTFUL_COMPONENTS.section.id,
         props: {
+          cfVisibility: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [desktop.id]: true,
+            },
+          },
           cfWidth: {
             type: 'DesignValue',
             valuesByBreakpoint: {
@@ -207,6 +247,7 @@ describe('useComponentProps', () => {
       id: 'banner',
       name: 'Banner',
       variables: {
+        cfVisibility: { type: 'Boolean' },
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
         cfMaxWidth: { type: 'Text' },
@@ -214,11 +255,18 @@ describe('useComponentProps', () => {
         myValue: { type: 'Text', defaultValue: 'default' },
       },
     };
+
     const node: ExperienceTreeNode = {
       data: {
         id: 'id',
         blockId: 'banner',
         props: {
+          cfVisibility: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [desktop.id]: true,
+            },
+          },
           cfWidth: {
             type: 'DesignValue',
             valuesByBreakpoint: {
@@ -258,10 +306,55 @@ describe('useComponentProps', () => {
       type: 'block',
     };
 
-    it('should set the component size in wrapperStyles when drag wrapper is enabled', () => {
+    it('should NOT set the component size in wrapperStyles when drag wrapper is enabled', () => {
+      const newNode: ExperienceTreeNode = structuredClone(node);
+      newNode.data.props['cfVisibility'] = {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          [desktop.id]: false,
+        },
+      };
+
       const { result } = renderHook(() =>
         useComponentProps({
-          node,
+          node: newNode,
+          areEntitiesFetched,
+          resolveDesignValue,
+          renderDropzone,
+          definition,
+          requiresDragWrapper: true,
+          userIsDragging,
+        }),
+      );
+
+      expect(result.current.wrapperStyles).toEqual({}); // it will have { width: undefined }, but it still resolves to {} during ... destructuring
+
+      expect(result.current.componentStyles.display).toEqual('none !important');
+      // Because the element is hidden via `display: none !important`, we don't need to override the styles to 100% values
+      // like in other test cases to match the wrapper styles. The component styles stay verbatim.
+      expect(result.current.componentStyles).toEqual({
+        boxSizing: 'border-box',
+        display: 'none !important',
+        margin: '10px 0 10px 0',
+        width: '50%',
+        height: '50%',
+        maxWidth: '50%',
+      });
+    });
+
+    // it('should set the component size in wrapperStyles when drag wrapper is enabled', () => {
+    it('should have all the wrapper div properties when cfVisibility=true', () => {
+      const newNode = structuredClone(node);
+      newNode.data.props['cfVisibility'] = {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          [desktop.id]: true,
+        },
+      };
+
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node: newNode,
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -383,6 +476,7 @@ describe('useComponentProps', () => {
       id: 'banner',
       name: 'Banner',
       variables: {
+        cfVisibility: { type: 'Boolean' },
         cfWidth: { type: 'Text' },
         cfHeight: { type: 'Text' },
       },
@@ -392,6 +486,12 @@ describe('useComponentProps', () => {
         id: 'id',
         blockId: 'banner',
         props: {
+          cfVisibility: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [desktop.id]: true,
+            },
+          },
           cfWidth: {
             type: 'DesignValue',
             valuesByBreakpoint: {
