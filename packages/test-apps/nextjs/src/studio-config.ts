@@ -9,6 +9,7 @@ import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import { CustomButton, CustomButtonComponentDefinition } from './components/CustomButton';
+import { AccordionSection } from './components/AccordionSection';
 
 defineComponents(
   [
@@ -105,6 +106,30 @@ defineComponents(
             type: 'Text',
           },
         },
+      },
+    },
+    {
+      component: AccordionSection,
+      definition: {
+        id: 'accordion-section',
+        name: 'Accordion Section',
+        category: 'Studio Hackday',
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        variables: {
+          entries: {
+            displayName: 'Entries',
+            type: 'Array',
+          },
+          openIndexOverride: {
+            displayName: 'Open Index',
+            type: 'Number',
+            defaultValue: 0,
+            group: 'style',
+          },
+        },
+      },
+      options: {
+        enableCustomEditorView: true,
       },
     },
     {

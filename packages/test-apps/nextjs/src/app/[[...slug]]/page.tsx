@@ -9,11 +9,11 @@ type Page = {
 };
 
 export default async function ExperiencePage({ params, searchParams }: Page) {
-  const { locale = 'en-US', slug = 'home-page' } = params || {};
-  const { isPreview, expEditorMode, mode } = searchParams;
+  const { slug = 'home-page' } = params || {};
+  const { isPreview, expEditorMode, mode, locale = 'en-US' } = searchParams;
   const preview = isPreview === 'true' || mode === 'preview';
   const editorMode = expEditorMode === 'true';
-  const { experience, error } = await getExperience(slug, locale, preview, editorMode);
+  const { experience, error } = await getExperience(slug, locale as string, preview, editorMode);
 
   if (error) {
     return <div>{error.message}</div>;
@@ -27,7 +27,7 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   return (
     <main style={{ width: '100%' }}>
       {stylesheet && <style data-css-ssr>{stylesheet}</style>}
-      <Experience experienceJSON={experienceJSON} locale={locale} debug={true} />
+      <Experience experienceJSON={experienceJSON} locale={locale as string} debug={true} />
     </main>
   );
 }
