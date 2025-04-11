@@ -23,7 +23,7 @@ const { experience, error, isLoading } = useFetchBySlug({
 
 To cache the loaded entities and inject them manually, a custom fetcher function needs to be written that uses `fetchExperienceEntry`, `fetchReferencedEntities`, and `createExperience` which are exposed from the SDK as well.
 
-### Fetching Data
+### Custom Fetching Logic
 
 ```ts
 import {
@@ -32,26 +32,33 @@ import {
   createExperience,
 } from '@contentful/experiences-sdk-react';
 
-async function customFetchAllEntities({ client, experienceTypeId, slug, localeCode }) {
+export async function customFetchAllEntities(
+  client: ContentfulClientApi<undefined>,
+  experienceTypeId: string,
+  slug: string,
+  locale: string,
+) {
   // Fetch the experience entry including its used patterns (resolved links in fields.usedComponents)
   const experienceEntry = await fetchExperienceEntry({
     client,
     experienceTypeId,
     identifier: { slug },
-    locale: localeCode,
+    locale,
   });
+  if (!experienceEntry) return;
+
   // Fetch all entries and assets that are listed in fields.dataSource
   const references = await fetchReferencedEntities({
     client,
     experienceEntry,
-    locale: localeCode,
+    locale,
   });
 
   const experience = createExperience({
     experienceEntry,
     referencedAssets: references.assets,
     referencedEntries: references.entries,
-    locale: localeCode,
+    locale,
   });
 
   return experience;
@@ -60,16 +67,13 @@ async function customFetchAllEntities({ client, experienceTypeId, slug, localeCo
 
 You can now cache `experienceEntry` and `references` with a caching layer like Redis. Later, you can pass these to `createExperience` to initialize the application.
 
-### Using Cached Data
+### Using Custom Logic for Rendering
 
 ```ts
 import { useCustomFetch } from '@contentful/experiences-sdk-react';
 
 const { experience, error, isLoading } = useCustomFetch({
-  fetchFn: async (): Promise<Experience<EntityStore> | undefined> => {
-    const experience = await customFetchAllEntities({ client, experienceTypeId, slug, localeCode });
-    return experience;
-  },
+  fetchFn: () => customFetchAllEntities(client, experienceTypeId, slug, localeCode),
 });
 ```
 
@@ -77,7 +81,7 @@ const { experience, error, isLoading } = useCustomFetch({
 
 When using multiple locales, you might want to cache the entities for all locales at once to save network load and memory consumption. You can achieve this by using the [client chain modifier](https://github.com/contentful/contentful.js/tree/master?tab=readme-ov-file#client-chain-modifiers) `client.withAllLocales` and pass this client to the fetcher functions.
 
-### Fetching Data
+### Fetching Logic
 
 ```ts
 import {
@@ -86,22 +90,27 @@ import {
   createExperience,
   localizeEntity,
 } from '@contentful/experiences-sdk-react';
+import { ContentfulClientApi } from 'contentful';
 
-const DEFAULT_LOCALE_CODE = 'en-US';
-
-function customFetchAllEntitiesWithAllLocales({ client, experienceTypeId, slug, localeCode }) {
-  const clientWithAllLocales = client.withAllLocales;
-  const experienceEntryLocales = await fetchExperienceEntry({
-    client: clientWithAllLocales,
+export async function customFetchAllEntitiesWithAllLocales(
+  client: ContentfulClientApi<undefined>,
+  experienceTypeId: string,
+  slug: string,
+  locale: string,
+) {
+  // The experience and the used patterns don't support multiple locales as the layout is the same for all cases.
+  const experienceEntry = await fetchExperienceEntry({
+    client,
     experienceTypeId,
     identifier: { slug },
   });
+  if (!experienceEntry) return;
 
-  // For resolving references, the localized experience is required. This requires the default locale code defined for your space.
-  const experienceEntry = localizeEntity(experienceEntryLocales, DEFAULT_LOCALE_CODE);
+  // Fetch all locales for the references, i.e. the page content & assets
+  const clientWithAllLocales = client.withAllLocales;
   const referencesLocales = await fetchReferencedEntities({
     client: clientWithAllLocales,
-    experienceEntry: experienceEntryLocales,
+    experienceEntry,
   });
 
   // Localize cached entities
@@ -120,23 +129,19 @@ function customFetchAllEntitiesWithAllLocales({ client, experienceTypeId, slug, 
 }
 ```
 
-When using multi-locale entities, make sure to localize them before passing to `createExperience` and `fetchReferencedEntities`. In the provided snippet above, we use the function `localizeEntity` which will resolve each field for a specified locale, e.g. `{"en-US": "Hello world"}` would be replaced by `"Hello world"`. This function is not aware of the locale settings nor the content type and thus will not apply any fallback mechanism.
+When using multi-locale entities, make sure use localized versions before passing them to `createExperience` and `fetchReferencedEntities`. In the provided snippet above, we use the function `localizeEntity` which will resolve each field for a specified locale, e.g. `{"en-US": "Hello world"}` would be replaced by `"Hello world"`. This function is not aware of the locale settings nor the content type and thus will not apply any fallback mechanism.
+
+As the page layout is only stored for the default locale code, the experience entry and its internally linked pattern entries are fetched using the regular client. If you want to retrieve custom experience fields for all locales, you can pass `clientWithAllLocales` to `fetchExperienceEntry`. In this case, you have to make sure that not only the experience entry is localized afterwards but also the patterns located at `fields.usedComponents`. Note that those can again include nested patterns.
 
 Notice, that you will have to provide a locale because this fetching logic will always run in the context of a page which needs to render a specific locale.
 
-### Using Cached Data
+### Using Custom Logic for Rendering
 
 ```ts
 import { useCustomFetch } from '@contentful/experiences-sdk-react';
 
 const { experience, error, isLoading } = useCustomFetch({
-  fetchFn: async (): Promise<Experience<EntityStore> | undefined> => {
-    const experience = customFetchAllEntitiesWithAllLocales({
-      client,
-      experienceTypeId,
-      slug,
-      localeCode,
-    });
-  },
+  fetchFn: () =>
+    customFetchAllEntitiesWithAllLocales(client, config.experienceTypeId, slug, localeCode),
 });
 ```

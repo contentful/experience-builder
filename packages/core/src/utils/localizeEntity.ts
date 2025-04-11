@@ -5,6 +5,9 @@ import { Asset, Entry } from 'contentful';
  * Note that this function does not apply a fallback to the default locale nor does it check
  * the content type for the localization setting of each field.
  * It will simply resolve each field to the requested locale.
+ *
+ * If the entity is already localized, it will return the entity as is.
+ *
  * @example
  * ```
  * const multiLocaleEntry = { fields: { title: { 'en-US': 'Hello' } } };
@@ -12,12 +15,12 @@ import { Asset, Entry } from 'contentful';
  * console.log(localizedEntry.fields.title); // 'Hello'
  * ```
  */
-export function localizeEntity(entity: Asset | Entry, locale: string) {
+export function localizeEntity<T extends Asset | Entry>(entity: T, locale: string): T {
   if (!entity || !entity.fields) {
     throw new Error('Invalid entity provided');
   }
   if (entity.sys.locale) {
-    throw new Error('Entity is already localized');
+    return entity;
   }
   const cloned = structuredClone(entity);
   // Set the requested locale as entry locale
