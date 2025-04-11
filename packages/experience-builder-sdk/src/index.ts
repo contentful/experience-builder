@@ -15,6 +15,7 @@ export {
   detachExperienceStyles,
   fetchReferencedEntities,
   fetchExperienceEntry,
+  localizeEntity,
 } from '@contentful/experiences-core';
 export {
   CONTENTFUL_COMPONENTS,

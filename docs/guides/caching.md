@@ -84,7 +84,10 @@ import {
   fetchExperienceEntry,
   fetchReferencedEntities,
   createExperience,
+  localizeEntity,
 } from '@contentful/experiences-sdk-react';
+
+const DEFAULT_LOCALE_CODE = 'en-US';
 
 function customFetchAllEntitiesWithAllLocales({ client, experienceTypeId, slug, localeCode }) {
   const clientWithAllLocales = client.withAllLocales;
@@ -93,13 +96,15 @@ function customFetchAllEntitiesWithAllLocales({ client, experienceTypeId, slug, 
     experienceTypeId,
     identifier: { slug },
   });
+
+  // For resolving references, the localized experience is required. This requires the default locale code defined for your space.
+  const experienceEntry = localizeEntity(experienceEntryLocales, DEFAULT_LOCALE_CODE);
   const referencesLocales = await fetchReferencedEntities({
     client: clientWithAllLocales,
     experienceEntry: experienceEntryLocales,
   });
 
   // Localize cached entities
-  const experienceEntry = localizeEntity(experienceEntryLocales, locale);
   const referencedAssets = referencesLocales.assets.map((asset) => localizeEntity(asset, locale));
   const referencedEntries = referencesLocales.entries.map((entry) => localizeEntity(entry, locale));
 
@@ -115,9 +120,9 @@ function customFetchAllEntitiesWithAllLocales({ client, experienceTypeId, slug, 
 }
 ```
 
-When passing those multi-locale entities to `createExperience`, make sure to localize them upfront. In the provided snippet above, we use a fictive function `localizeEntity` which is not (yet) provided by Contentful. As of now, customers have to implement this on their own by resolving the `fields` attribute for a specified locale, e.g. `{"en-US": "Hello world"}` would be replaced by `"Hello world"`. In the end, the shape must match the default CDA shape, not the CMA one. The SDK function `createExperience` runs a validation check to not run on multi locale data by looking at the `sys.locale` value which needs to be provided as part of `localizeEntity` (similar to CDA).
+When using multi-locale entities, make sure to localize them before passing to `createExperience` and `fetchReferencedEntities`. In the provided snippet above, we use the function `localizeEntity` which will resolve each field for a specified locale, e.g. `{"en-US": "Hello world"}` would be replaced by `"Hello world"`. This function is not aware of the locale settings nor the content type and thus will not apply any fallback mechanism.
 
-Notice, that you still have to provide a locale because this whole logic will always run in the context of a page which needs to render a specific locale.
+Notice, that you will have to provide a locale because this fetching logic will always run in the context of a page which needs to render a specific locale.
 
 ### Using Cached Data
 
