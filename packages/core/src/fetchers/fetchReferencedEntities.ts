@@ -24,8 +24,8 @@ type FetchReferencedEntitiesArgs = {
  * Fetches all entries and assets from the `dataSource` of the given experience entry. This will
  * also consider deep references that are not listed explicitly but linked through deep binding paths.
  * @param options.client - Instantiated client from the Contentful SDK. If this is using the `withAllLocales` modifier, you may not provide a specific locale.
+ * @param options.experienceEntry - Localized experience entry. To localize a multi locale entry, use the `localizeEntity` function.
  * @param options.locale - Retrieve a specific localized version of the referenced entities. Otherwise, it will fallback to the default locale.
- * @param options.experienceTypeId - id of the content type associated with the experience
  * @returns object with a list of `entries` and a list of `assets`
  */
 export const fetchReferencedEntities = async ({
