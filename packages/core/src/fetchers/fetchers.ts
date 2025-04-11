@@ -6,10 +6,7 @@ type fetchExperienceArgs = {
   client: ContentfulClientApi<undefined>;
   experienceTypeId: string;
   locale: string;
-  identifier: {
-    slug?: string;
-    id?: string;
-  };
+  identifier: { slug: string } | { id: string };
 };
 
 export const fetchExperience = async ({

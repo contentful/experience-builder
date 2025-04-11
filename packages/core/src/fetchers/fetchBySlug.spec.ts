@@ -12,6 +12,7 @@ const circularEntry = {
   sys: {
     id: 'circular-entry',
     type: 'Entry',
+    locale: 'en-US',
   },
   fields: structuredClone(experienceEntryFieldsWithFilledUsedComponents),
 };

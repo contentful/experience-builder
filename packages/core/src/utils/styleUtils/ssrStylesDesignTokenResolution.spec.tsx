@@ -12,6 +12,7 @@ const experienceEntry: ExperienceEntry = {
   sys: {
     id: 'test-id',
     type: 'Entry',
+    locale: 'en-US',
     contentType: {
       sys: {
         id: 'test-content-type-id',
