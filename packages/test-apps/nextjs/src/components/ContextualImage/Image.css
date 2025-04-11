@@ -1,0 +1,20 @@
+img.cf-placeholder-image {
+  background-color: var(--cf-color-gray100);
+  outline-offset: -2px;
+  outline: 2px solid rgba(var(--cf-color-gray400-rgb), 0.5);
+}
+
+svg.cf-placeholder-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: var(--cf-text-3xl);
+  width: var(--cf-text-3xl);
+  max-height: 100%;
+  max-width: 100%;
+}
+
+svg.cf-placeholder-icon path {
+  fill: var(--cf-color-gray400);
+}

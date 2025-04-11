@@ -9,7 +9,8 @@ import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import { CustomButton, CustomButtonComponentDefinition } from './components/CustomButton';
-import { AccordionSection } from './components/AccordionSection';
+import { ContextualAccordion } from './components/ContextualAccordion';
+import { ContextualImage } from './components/ContextualImage';
 
 defineComponents(
   [
@@ -109,7 +110,7 @@ defineComponents(
       },
     },
     {
-      component: AccordionSection,
+      component: ContextualAccordion,
       definition: {
         id: 'accordion-section',
         name: 'Accordion Section',
@@ -127,9 +128,41 @@ defineComponents(
             group: 'style',
           },
         },
+        slots: {
+          imageSlot: {
+            displayName: 'Image Slot',
+          },
+        },
       },
       options: {
         enableCustomEditorView: true,
+      },
+    },
+    {
+      component: ContextualImage,
+      definition: {
+        id: 'contextual-image',
+        name: 'Contextual Image',
+        category: 'Studio Hackday',
+        builtInStyles: [
+          'cfMargin',
+          'cfPadding',
+          'cfImageOptions',
+          'cfBorderRadius',
+          'cfWidth',
+          'cfMaxWidth',
+          'cfHeight',
+        ],
+        variables: {
+          alt: {
+            displayName: 'Alt text',
+            type: 'Text',
+            description: 'Alternative text for the image',
+            validations: {
+              bindingSourceType: ['entry', 'manual', 'asset'],
+            },
+          },
+        },
       },
     },
     {

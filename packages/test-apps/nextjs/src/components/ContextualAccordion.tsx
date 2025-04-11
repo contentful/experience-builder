@@ -1,7 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { CSSProperties, ReactNode, useEffect } from 'react';
 import { Entry } from 'contentful';
+import { BoundEntriesProvider, useBoundEntries } from '@/contexts/useBoundEntries';
+
+const style: Record<string, CSSProperties> = {
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 30,
+  },
+};
 
 type AccordionItemProps = {
   title: string;
@@ -23,25 +33,32 @@ const AccordionItem = ({ title, content, isOpen, onClick }: AccordionItemProps) 
   </div>
 );
 
-export const AccordionSection = ({
-  entries,
-  openIndexOverride = 0,
-  isInExpEditorMode = false,
-}: {
+export const ContextualAccordion: React.FC<{
   entries: Entry[];
   openIndexOverride: number;
   isInExpEditorMode: boolean;
-}) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  imageSlot: ReactNode;
+}> = ({ entries, ...props }) => {
+  return (
+    <BoundEntriesProvider entries={entries}>
+      <AccordionSection {...props} />
+    </BoundEntriesProvider>
+  );
+};
+const AccordionSection: React.FC<{
+  openIndexOverride: number;
+  isInExpEditorMode: boolean;
+  imageSlot: ReactNode;
+}> = ({ imageSlot, openIndexOverride = 0, isInExpEditorMode = false, ...props }) => {
+  const { entries, selectedIndex, setSelectedIndex } = useBoundEntries();
 
-  console.log('entries', entries);
-  const isOpen = (index: number) => {
+  useEffect(() => {
     if (isInExpEditorMode) {
-      return openIndexOverride.toString() === index.toString();
-    } else {
-      return openIndex === index;
+      setSelectedIndex(openIndexOverride);
     }
-  };
+  }, [isInExpEditorMode, openIndexOverride]);
+
+  const isOpen = (index: number) => selectedIndex.toString() === index.toString();
 
   const accordionData =
     entries?.map((item: any) => ({
@@ -60,16 +77,13 @@ export const AccordionSection = ({
             title={item.title}
             content={item.content}
             isOpen={isOpen(index)}
-            onClick={() => setOpenIndex(index === openIndex ? null : index)}
+            onClick={() => setSelectedIndex(index)}
           />
         ))}
       </div>
 
       <div className="flex-1 flex justify-center items-center">
-        <img
-          src={accordionData[openIndex ?? 0]?.imageUrl}
-          className="w-full max-w-md rounded-xl shadow-md"
-        />
+        <div {...props}>{imageSlot as React.ReactNode}</div>
       </div>
     </div>
   );
