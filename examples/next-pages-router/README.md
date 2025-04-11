@@ -26,11 +26,7 @@ Next, you will need to set up your environment variables. Copy the `.env.local.e
 - NEXT_PUBLIC_CTFL_ENVIRONMENT: This is the environment of your Contentful space. This can be found in Settings>General Settings. This can be found in Settings>Environments.
 - NEXT_PUBLIC_CTFL_EXPERIENCE_TYPE= This is the content type id of the Experience content type in your Contentful space. This can be found in Content Model>Experience.
 
-### Step 3: Add expEditorMode query param to the Content Preview Url
-
-In order to preview your Experiences in the Contentful web app, you will need to add the `expEditorMode` query parameter to the Content Preview URL. This parameter should be set to `true`. For example, if your Content Preview URL is `https://example.com`, you should set it to `https://example.com?expEditorMode=true`.
-
-### Step 4: Start the development server
+### Step 3: Start the development server
 
 Now that you have set up your environment variables, you can start the development server:
 
