@@ -169,6 +169,14 @@ export function Dropzone({
       ) === '100%'
     : false;
 
+  const isPatternWrapperComponentFullWidth = isRootAssembly
+    ? node.children.length === 1 &&
+      resolveDesignValue(
+        (node?.children[0]?.data.props.cfWidth as DesignValue)?.valuesByBreakpoint ?? {},
+        'cfWidth',
+      ) === '100%'
+    : false;
+
   return (
     <Droppable
       droppableId={zoneId}
@@ -205,9 +213,9 @@ export function Dropzone({
               [styles.isDestination]: isDestination && !isAssembly,
               [styles.isRoot]: isRootZone,
               [styles.isEmptyZone]: !content.length,
-              [styles.isAssembly]: isRootAssembly,
               [styles.isSlot]: Boolean(slotId),
               [styles.fullHeight]: isPatternWrapperComponentFullHeight,
+              [styles.fullWidth]: isPatternWrapperComponentFullWidth,
             })}>
             {isEmptyCanvas ? (
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
