@@ -30,12 +30,12 @@
   pointer-events: all;
 }
 
-.Dropzone.isAssembly {
-  width: 100%;
-}
-
 .Dropzone.fullHeight {
   height: 100%;
+}
+
+.Dropzone.fullWidth {
+  width: 100%;
 }
 
 .isRoot,
