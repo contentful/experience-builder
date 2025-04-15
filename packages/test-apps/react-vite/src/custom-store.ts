@@ -12,7 +12,6 @@ export const customEntityStore = {
     if (!customEntityStore.client) return undefined;
 
     const fetched = await fetchByLink(customEntityStore.client, link);
-    console.log('TK fetched', fetched);
     customEntityStore.entitiesById[link.sys.id] = fetched;
     return fetched;
   },
@@ -20,7 +19,6 @@ export const customEntityStore = {
     entities.forEach((entity) => {
       customEntityStore.entitiesById[entity.sys.id] = entity;
     });
-    console.log('TK stored everything', { entitiesById: customEntityStore.entitiesById });
   },
   setClient: (client: ContentfulClientApi<undefined>) => {
     customEntityStore.client = client;
