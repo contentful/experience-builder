@@ -24,8 +24,6 @@ export function withComponentWrapper<T>(
   Component: React.ElementType,
   options: ComponentRegistration['options'] = {
     wrapComponent: true,
-    wrapContainerTag: 'div',
-    wrapContainer: 'div',
   },
 ) {
   const Wrapped: React.FC<CFProps & T> = ({
@@ -40,8 +38,11 @@ export function withComponentWrapper<T>(
       ToolTipAndPlaceholder,
       ...restOfDragProps
     } = dragProps;
+
+    const Tag = (options.wrapContainer || options.wrapContainerTag || 'div') as string;
+
     const component = options.wrapComponent ? (
-      <div
+      <Tag
         data-component-wrapper
         className={classNames(classes, className, dragClassName)}
         {...restOfDragProps}
@@ -50,7 +51,7 @@ export function withComponentWrapper<T>(
         }}>
         {ToolTipAndPlaceholder}
         <Component className={classNames(classes)} {...(props as T)} />
-      </div>
+      </Tag>
     ) : (
       React.createElement(Component, {
         className: classNames(classes, className),
