@@ -9,13 +9,27 @@ import {
   ExperienceUnboundValues,
   PrimitiveValue,
 } from '@contentful/experiences-validators';
-import { buildCfStyles, checkIsAssemblyNode, isValidBreakpointValue } from '@/utils';
+import {
+  buildCfStyles,
+  checkIsAssemblyNode,
+  isValidBreakpointValue,
+  parseCSSValue,
+  getTargetValueInPixels,
+} from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
-import { ComponentTreeNode, DesignTokensDefinition, Experience, StyleProps } from '@/types';
-import { CF_STYLE_ATTRIBUTES } from '@/constants';
+import {
+  ComponentTreeNode,
+  DesignTokensDefinition,
+  Experience,
+  StyleProps,
+  BackgroundImageOptions,
+} from '@/types';
+import { CF_STYLE_ATTRIBUTES, SUPPORTED_IMAGE_FORMATS } from '@/constants';
 import { generateRandomId } from '@/utils';
 import { stringifyCssProperties } from './stylesUtils';
+import { getOptimizedBackgroundImageAsset } from '../transformers/media/getOptimizedBackgroundImageAsset';
+import { AssetDetails, AssetFile } from 'contentful';
 
 type FlattenedDesignTokens = Record<
   string,
@@ -427,6 +441,33 @@ export const maybePopulateDesignTokenValue = (
   return resolvedValue.trim();
 };
 
+const transformMedia = (bondAsset: Asset, width?: string, options?: BackgroundImageOptions) => {
+  try {
+    const asset = bondAsset as Asset;
+    // Target width (px/rem/em) will be applied to the css url if it's lower than the original image width (in px)
+    const assetDetails = asset.fields.file?.details as AssetDetails;
+
+    const assetWidth = assetDetails?.image?.width || 0; // This is always in px
+    if (!options) {
+      return asset.fields.file?.url as string;
+    }
+    const targetWidthObject = parseCSSValue(options.targetSize); // Contains value and unit (px/rem/em) so convert and then compare to assetWidth
+    const targetValue = targetWidthObject ? getTargetValueInPixels(targetWidthObject) : assetWidth;
+
+    if (targetValue < assetWidth) width = `${targetValue}px`;
+    const value = getOptimizedBackgroundImageAsset(
+      asset.fields.file as AssetFile,
+      width as string,
+      options.quality,
+      options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
+    );
+    return value;
+  } catch (error) {
+    console.error('Error transforming image asset', error);
+  }
+  return bondAsset.fields.file?.url as string;
+};
+
 export const resolveBackgroundImageBinding = ({
   variableData,
   getBoundEntityById,
@@ -434,6 +475,8 @@ export const resolveBackgroundImageBinding = ({
   unboundValues = {},
   componentVariablesOverwrites,
   componentSettings = { variableDefinitions: {} },
+  options,
+  width,
 }: {
   variableData: ComponentPropertyValue;
   getBoundEntityById: (id: string) => Entry | Asset | undefined;
@@ -442,7 +485,9 @@ export const resolveBackgroundImageBinding = ({
   componentSettings?: ExperienceComponentSettings;
   // patternNode.variables - a place which contains bindings scoped to the pattern
   componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
-}): string | undefined => {
+  options?: BackgroundImageOptions;
+  width?: string;
+}) => {
   if (variableData.type === 'UnboundValue') {
     const uuid = variableData.key;
     return unboundValues[uuid]?.value as string;
@@ -472,6 +517,8 @@ export const resolveBackgroundImageBinding = ({
       unboundValues,
       componentVariablesOverwrites,
       componentSettings,
+      options,
+      width,
     });
 
     return resolvedValue || (defaultValue as string | undefined);
@@ -488,7 +535,7 @@ export const resolveBackgroundImageBinding = ({
     }
 
     if (boundEntity.sys.type === 'Asset') {
-      return (boundEntity as Asset).fields.file?.url as string;
+      return transformMedia(boundEntity as Asset, width, options);
     } else {
       // '/lUERH7tX7nJTaPX6f0udB/fields/assetReference/~locale/fields/file/~locale'
       // becomes
@@ -517,9 +564,39 @@ export const resolveBackgroundImageBinding = ({
           return;
         }
 
-        return referencedAsset.fields.file?.url as string;
+        return transformMedia(referencedAsset as Asset, width, options);
       }
     }
+  }
+};
+
+const resolveImageOptimizationOptions = ({
+  variableData,
+  defaultBreakpoint,
+  componentSettings = { variableDefinitions: {} },
+  componentVariablesOverwrites,
+}: {
+  variableData: ComponentPropertyValue;
+  defaultBreakpoint: string;
+  componentSettings?: ExperienceComponentSettings;
+  componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
+}) => {
+  if (variableData?.type === 'DesignValue') {
+    return variableData.valuesByBreakpoint[defaultBreakpoint] || {};
+  } else if (variableData?.type === 'ComponentValue') {
+    const variableDefinitionKey = variableData.key;
+    const variableDefinition = componentSettings.variableDefinitions[variableDefinitionKey];
+    const defaultValue = variableDefinition.defaultValue;
+    const userSetValue = componentVariablesOverwrites?.[variableDefinitionKey];
+    if (!userSetValue || userSetValue.type === 'ComponentValue') {
+      return (defaultValue as DesignValue)?.valuesByBreakpoint[defaultBreakpoint] || {};
+    }
+    return resolveImageOptimizationOptions({
+      variableData: userSetValue,
+      defaultBreakpoint,
+      componentSettings,
+      componentVariablesOverwrites,
+    });
   }
 };
 
@@ -596,6 +673,27 @@ export const indexByBreakpoint = ({
       // TODO: Test this for nested patterns as the name might be just a random hash without the actual name (needs to be validated).
       variableName.startsWith('cfBackgroundImageUrl_')
     ) {
+      const width = resolveImageOptimizationOptions({
+        variableData: variables['cfWidth'],
+        defaultBreakpoint,
+        componentSettings,
+        componentVariablesOverwrites,
+      }) as string;
+
+      const options = resolveImageOptimizationOptions({
+        variableData: variables['cfBackgroundImageOptions'],
+        defaultBreakpoint,
+        componentSettings,
+        componentVariablesOverwrites,
+      }) as BackgroundImageOptions;
+
+      if (!options) {
+        console.error(
+          `Error transforming image asset: Required variable [cfBackgroundImageOptions] missing from component definition`,
+        );
+        continue;
+      }
+
       const imageUrl = resolveBackgroundImageBinding({
         variableData,
         getBoundEntityById,
@@ -603,6 +701,8 @@ export const indexByBreakpoint = ({
         dataSource,
         componentSettings,
         componentVariablesOverwrites,
+        width,
+        options,
       });
 
       if (imageUrl) {
