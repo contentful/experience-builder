@@ -1,7 +1,11 @@
 import React, { ElementType, useCallback, useMemo } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import { isComponentAllowedOnRoot } from '@contentful/experiences-core';
-import type { ResolveDesignValueType, DragWrapperProps } from '@contentful/experiences-core/types';
+import type {
+  ResolveDesignValueType,
+  DragWrapperProps,
+  DesignValue,
+} from '@contentful/experiences-core/types';
 import { EditorBlock } from './EditorBlock';
 import { ComponentData } from '@/types/Config';
 import { useTreeStore } from '@/store/tree';
@@ -157,6 +161,22 @@ export function Dropzone({
     return null;
   }
 
+  const isPatternWrapperComponentFullHeight = isRootAssembly
+    ? node.children.length === 1 &&
+      resolveDesignValue(
+        (node?.children[0]?.data.props.cfHeight as DesignValue)?.valuesByBreakpoint ?? {},
+        'cfHeight',
+      ) === '100%'
+    : false;
+
+  const isPatternWrapperComponentFullWidth = isRootAssembly
+    ? node.children.length === 1 &&
+      resolveDesignValue(
+        (node?.children[0]?.data.props.cfWidth as DesignValue)?.valuesByBreakpoint ?? {},
+        'cfWidth',
+      ) === '100%'
+    : false;
+
   return (
     <Droppable
       droppableId={zoneId}
@@ -193,8 +213,9 @@ export function Dropzone({
               [styles.isDestination]: isDestination && !isAssembly,
               [styles.isRoot]: isRootZone,
               [styles.isEmptyZone]: !content.length,
-              [styles.isAssembly]: isRootAssembly,
               [styles.isSlot]: Boolean(slotId),
+              [styles.fullHeight]: isPatternWrapperComponentFullHeight,
+              [styles.fullWidth]: isPatternWrapperComponentFullWidth,
             })}>
             {isEmptyCanvas ? (
               <EmptyContainer isDragging={isRootZone && userIsDragging} />
