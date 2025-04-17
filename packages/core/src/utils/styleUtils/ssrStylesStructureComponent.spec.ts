@@ -228,6 +228,11 @@ describe('section component', () => {
       fields: {
         file: {
           url: 'https://www.contentful.com/image1.png',
+          details: {
+            image: {
+              width: 2000,
+            },
+          },
         },
       },
     } as unknown as Asset;
@@ -267,7 +272,7 @@ describe('section component', () => {
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.desktop as string,
     ).toMatchInlineSnapshot(
-      `"cf-60a721089928a3f286b08ff8117eb3a2 cf-b2f64d90deb76cdcc276773f21d672ea cf-8187cd93307f9e0ceffff3cad17ce4d3"`,
+      `"cf-656070bb44687b039134d45e3a02d046 cf-b2f64d90deb76cdcc276773f21d672ea cf-8187cd93307f9e0ceffff3cad17ce4d3"`,
     );
     expect(
       (section.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -277,9 +282,11 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toMatchInlineSnapshot(
-      `".cf-60a721089928a3f286b08ff8117eb3a2{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;}@media(max-width:992px){.cf-b2f64d90deb76cdcc276773f21d672ea{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-8187cd93307f9e0ceffff3cad17ce4d3{box-sizing:border-box;}}"`,
+      `".cf-656070bb44687b039134d45e3a02d046{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png?w=2000);background-image:image-set(url(https://www.contentful.com/image1.png?w=2000) 1x,url(https://www.contentful.com/image1.png?w=2000) 2x);background-repeat:no-repeat;background-position:left top;background-size:cover;}@media(max-width:992px){.cf-b2f64d90deb76cdcc276773f21d672ea{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-8187cd93307f9e0ceffff3cad17ce4d3{box-sizing:border-box;}}"`,
     );
-    expect(styles).toContain('background-image:url(https://www.contentful.com/image1.png);');
+    expect(styles).toContain(
+      `background-image:url(${boundAset.fields.file?.url}?w=2000);background-image:image-set(url(${boundAset.fields.file?.url}?w=2000) 1x,url(${boundAset.fields.file?.url}?w=2000) 2x)`,
+    );
   });
 
   it('should resolve deep binding to an asset and get background-image in extracted css', () => {
@@ -338,6 +345,11 @@ describe('section component', () => {
       fields: {
         file: {
           url: 'https://www.contentful.com/image1.png',
+          details: {
+            image: {
+              width: 2000,
+            },
+          },
         },
       },
     } as unknown as Asset;
@@ -401,9 +413,11 @@ describe('section component', () => {
     ).not.toBeDefined();
 
     expect(styles).toMatchInlineSnapshot(
-      `".cf-60a721089928a3f286b08ff8117eb3a2{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png);background-repeat:no-repeat;background-position:left top;background-size:cover;}@media(max-width:992px){.cf-b2f64d90deb76cdcc276773f21d672ea{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-8187cd93307f9e0ceffff3cad17ce4d3{box-sizing:border-box;}}"`,
+      `".cf-656070bb44687b039134d45e3a02d046{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);width:100%;height:fit-content;max-width:none;border:black 1px solid;border-radius:0px;gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;background-image:url(https://www.contentful.com/image1.png?w=2000);background-image:image-set(url(https://www.contentful.com/image1.png?w=2000) 1x,url(https://www.contentful.com/image1.png?w=2000) 2x);background-repeat:no-repeat;background-position:left top;background-size:cover;}@media(max-width:992px){.cf-b2f64d90deb76cdcc276773f21d672ea{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;border:black 2px solid;gap:0px 0px;}}@media(max-width:576px){.cf-8187cd93307f9e0ceffff3cad17ce4d3{box-sizing:border-box;}}"`,
     );
 
-    expect(styles).toContain('background-image:url(https://www.contentful.com/image1.png);');
+    expect(styles).toContain(
+      `background-image:url(${referencedAsset.fields.file?.url}?w=2000);background-image:image-set(url(${referencedAsset.fields.file?.url}?w=2000) 1x,url(${referencedAsset.fields.file?.url}?w=2000) 2x)`,
+    );
   });
 });
