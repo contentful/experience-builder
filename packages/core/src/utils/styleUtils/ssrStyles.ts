@@ -26,7 +26,6 @@ import {
   BackgroundImageOptions,
 } from '@/types';
 import { CF_STYLE_ATTRIBUTES, SUPPORTED_IMAGE_FORMATS } from '@/constants';
-import { generateRandomId } from '@/utils';
 import { stringifyCssProperties } from './stylesUtils';
 import { getOptimizedBackgroundImageAsset } from '../transformers/media/getOptimizedBackgroundImageAsset';
 import { AssetDetails, AssetFile } from 'contentful';
