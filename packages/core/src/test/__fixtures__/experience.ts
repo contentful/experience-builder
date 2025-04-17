@@ -497,6 +497,10 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
                         key: 'lRFhtDQ',
                         type: 'ComponentValue',
                       },
+                      cfBackgroundImageOptions: {
+                        type: 'ComponentValue',
+                        key: 'lRFhtDQ-options',
+                      },
                     },
                     children: [
                       {
@@ -547,6 +551,21 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
                     defaultValue: {
                       key: 'z_0NfuFUKFQqHeyWPFVhX',
                       type: 'UnboundValue',
+                    },
+                  },
+                  'lRFhtDQ-options': {
+                    displayName: 'Background image options',
+                    type: 'Text',
+                    description: 'Background image options for component',
+                    defaultValue: {
+                      type: 'DesignValue',
+                      valuesByBreakpoint: {
+                        'test-desktop': {
+                          alignment: 'left',
+                          scaling: 'fit',
+                          targetSize: '300px',
+                        },
+                      },
                     },
                   },
                   'cf-bg-color-nested-pattern-1': {

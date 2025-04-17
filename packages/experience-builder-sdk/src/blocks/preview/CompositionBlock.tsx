@@ -270,7 +270,7 @@ export const CompositionBlock = ({
       if (!classesForNode) return undefined;
       return resolveDesignValue(classesForNode.valuesByBreakpoint, 'cfSsrClassName') as string;
     }
-    return getPatternChildNodeClassName?.(childNodeId);
+    return getPatternChildNodeClassName?.(`${node.id}${childNodeId}`);
   };
 
   const children =

@@ -73,6 +73,7 @@ const patternEntry: ExperienceEntry = {
       children: [
         {
           definitionId: 'contentful-columns',
+          id: 'column-node-id',
           variables: {
             cfMargin: {
               type: 'DesignValue',
@@ -114,6 +115,10 @@ const patternEntry: ExperienceEntry = {
               key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
               type: 'ComponentValue',
             },
+            cfBackgroundImageOptions: {
+              type: 'ComponentValue',
+              key: 'foDI5kW',
+            },
             cfGap: {
               type: 'DesignValue',
               valuesByBreakpoint: {
@@ -154,6 +159,7 @@ const patternEntry: ExperienceEntry = {
           children: [
             {
               definitionId: 'contentful-single-column',
+              id: 'column-single-column-id',
               variables: {
                 cfVerticalAlignment: {
                   type: 'DesignValue',
@@ -207,6 +213,16 @@ const patternEntry: ExperienceEntry = {
                   key: 'y-jkcH7tyRZjjY-fukECH',
                   type: 'UnboundValue',
                 },
+                cfBackgroundImageOptions: {
+                  type: 'DesignValue',
+                  valuesByBreakpoint: {
+                    desktop: {
+                      scaling: 'fit',
+                      alignment: 'left',
+                      targetSize: '300px',
+                    },
+                  },
+                },
                 cfBackgroundImageScaling: {
                   type: 'DesignValue',
                   valuesByBreakpoint: {
@@ -235,6 +251,7 @@ const patternEntry: ExperienceEntry = {
               children: [
                 {
                   definitionId: 'heading',
+                  id: 'heading-id',
                   variables: {
                     text: {
                       key: 'text_4aWMAKDfoDI5kWX7L3N-t',
@@ -283,6 +300,7 @@ const patternEntry: ExperienceEntry = {
                 },
                 {
                   definitionId: 'text',
+                  id: 'text-id',
                   variables: {
                     text: {
                       key: 'text_yZeyLCpBGe-Q5ZCQ6POKF',
@@ -377,6 +395,7 @@ const patternEntry: ExperienceEntry = {
                 },
                 {
                   definitionId: 'button',
+                  id: 'button-id',
                   variables: {
                     label: {
                       key: 'label_ReqsD8BhJLQ_-LEQQsFmf',
@@ -409,6 +428,7 @@ const patternEntry: ExperienceEntry = {
             },
             {
               definitionId: 'contentful-single-column',
+              id: 'column-single-column-id-2',
               variables: {
                 cfVerticalAlignment: {
                   type: 'DesignValue',
@@ -462,6 +482,16 @@ const patternEntry: ExperienceEntry = {
                   key: 'KAWCUcizVSEoTtSPste7S',
                   type: 'UnboundValue',
                 },
+                cfBackgroundImageOptions: {
+                  type: 'DesignValue',
+                  valuesByBreakpoint: {
+                    desktop: {
+                      scaling: 'fit',
+                      alignment: 'left',
+                      targetSize: '300px',
+                    },
+                  },
+                },
                 cfBackgroundImageScaling: {
                   type: 'DesignValue',
                   valuesByBreakpoint: {
@@ -490,6 +520,7 @@ const patternEntry: ExperienceEntry = {
               children: [
                 {
                   definitionId: 'Image',
+                  id: 'image-id',
                   variables: {
                     alt: {
                       key: 'alt_GQZDBcONTKHYmPU-nOPlw',
@@ -563,6 +594,22 @@ const patternEntry: ExperienceEntry = {
             type: 'UnboundValue',
           },
           description: 'Background image for section or container',
+        },
+        foDI5kW: {
+          displayName: 'Background Image Options',
+          type: 'Text',
+          group: 'style',
+          defaultValue: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              desktop: {
+                scaling: 'fit',
+                alignment: 'left',
+                targetSize: '300px',
+              },
+            },
+          },
+          description: 'Background image options for section or container',
         },
         'text_4aWMAKDfoDI5kWX7L3N-t': {
           displayName: 'Text',
@@ -722,6 +769,10 @@ const editablePatternEntry: ExperienceEntry = {
               key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
               type: 'ComponentValue',
             },
+            cfBackgroundImageOptions: {
+              type: 'ComponentValue',
+              key: 'foDI5kW',
+            },
             cfGap: {
               type: 'DesignValue',
               valuesByBreakpoint: {
@@ -812,6 +863,16 @@ const editablePatternEntry: ExperienceEntry = {
                 cfBackgroundImageUrl: {
                   key: 'y-jkcH7tyRZjjY-fukECH',
                   type: 'UnboundValue',
+                },
+                cfBackgroundImageOptions: {
+                  type: 'DesignValue',
+                  valuesByBreakpoint: {
+                    desktop: {
+                      scaling: 'fit',
+                      alignment: 'left',
+                      targetSize: '300px',
+                    },
+                  },
                 },
                 cfBackgroundImageScaling: {
                   type: 'DesignValue',
@@ -1068,6 +1129,16 @@ const editablePatternEntry: ExperienceEntry = {
                   key: 'KAWCUcizVSEoTtSPste7S',
                   type: 'UnboundValue',
                 },
+                cfBackgroundImageOptions: {
+                  type: 'DesignValue',
+                  valuesByBreakpoint: {
+                    desktop: {
+                      scaling: 'fit',
+                      alignment: 'left',
+                      targetSize: '300px',
+                    },
+                  },
+                },
                 cfBackgroundImageScaling: {
                   type: 'DesignValue',
                   valuesByBreakpoint: {
@@ -1181,6 +1252,22 @@ const editablePatternEntry: ExperienceEntry = {
             type: 'UnboundValue',
           },
           description: 'Background image for section or container',
+        },
+        foDI5kW: {
+          displayName: 'Background Image Options',
+          type: 'Text',
+          group: 'style',
+          defaultValue: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              desktop: {
+                scaling: 'fit',
+                alignment: 'left',
+                targetSize: '300px',
+              },
+            },
+          },
+          description: 'Background image options for section or container',
         },
         'text_4aWMAKDfoDI5kWX7L3N-t': {
           displayName: 'Text',
@@ -1328,6 +1415,16 @@ describe('pattern component', () => {
           type: 'UnboundValue',
           key: '9TLvjMnVsdRjmY1ubLNoy',
         },
+        foDI5kW: {
+          type: 'DesignValue',
+          valuesByBreakpoint: {
+            desktop: {
+              scaling: 'fit',
+              alignment: 'left',
+              targetSize: '400px',
+            },
+          },
+        },
         'text_4aWMAKDfoDI5kWX7L3N-t': {
           path: '/44VNjJs2idfY07POQ__X8/fields/title/~locale',
           type: 'BoundValue',
@@ -1403,17 +1500,30 @@ describe('pattern component', () => {
 
     const resolvedPatternEntry = experience.entityStore?.usedComponents[0] as ExperienceEntry;
     const patternWrapper = experienceEntry.fields.componentTree.children[0];
-    const queue = [...resolvedPatternEntry.fields.componentTree.children];
+    const queue = [
+      ...resolvedPatternEntry.fields.componentTree.children.map((child) => {
+        return {
+          node: child,
+          parentChain: [patternNode.id],
+        };
+      }),
+    ];
 
     expect(patternWrapper.variables.cfSsrClassName.type).toBe('DesignValue');
     while (queue.length) {
-      const node = queue.shift();
+      const queueItem = queue.shift();
+
+      if (!queueItem) {
+        continue;
+      }
+
+      const { node, parentChain } = queueItem;
 
       if (!node) {
         continue;
       }
 
-      const patternNodeIdsChain = `${patternNode.id}${node.id}`;
+      const patternNodeIdsChain = `${parentChain.join('')}${node.id}`;
 
       expect(patternWrapper.variables.cfSsrClassName[patternNodeIdsChain]).toBeDefined();
       expect(
@@ -1421,7 +1531,12 @@ describe('pattern component', () => {
           .valuesByBreakpoint.desktop,
       ).toBeDefined();
       if (node?.children.length) {
-        queue.push(...node.children);
+        queue.push(
+          ...node.children.map((child) => ({
+            node: child,
+            parentChain: [...parentChain, node.id],
+          })),
+        );
       }
     }
 
@@ -1475,6 +1590,11 @@ describe('pattern component', () => {
         title: 'Test Asset',
         file: {
           url: 'https://www.contentful.com/image-asset.jpg',
+          details: {
+            image: {
+              width: 2000,
+            },
+          },
         },
       },
     } as unknown as Asset;
@@ -1555,9 +1675,11 @@ describe('pattern component', () => {
     }
 
     expect(styles).toMatchInlineSnapshot(
-      `".cf-b273d5086ed8b6bec34c3266055cef11{box-sizing:border-box;margin:0 Auto 0 Auto;padding:10px 10px 10px 10px;background-color:rgba(255, 255, 255, 0);width:100%;max-width:1192px;border:0px outside rgba(255, 255, 255, 0);gap:10px 10px;background-image:url(https://www.contentful.com/image-asset.jpg);background-repeat:no-repeat;}.cf-1031d744e26de7b4e9422de0e74ae5cd{box-sizing:border-box;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);grid-column:span 6;border:0px outside rgba(255, 255, 255, 0);gap:0px 0px;align-items:start;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}.cf-4c0b9d7e44ec5898b6f5480ac5b1a634{box-sizing:border-box;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);grid-column:span 6;border:0px outside rgba(255, 255, 255, 0);gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}.cf-2745e04133568665b6d779d76342d59f{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;width:100%;max-width:none;}.cf-fe878a9e705110f2fee7b5698943918a{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;width:100%;max-width:none;font-size:16px;font-weight:400;line-height:20px;letter-spacing:0px;color:rgba(0, 0, 0, 1);text-align:left;text-transform:none;}.cf-0326e88429ff35544d5acf70391db2b2{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;}@media(max-width:992px){.cf-92b718a315702272accd18eb39a4a427{box-sizing:border-box;}}@media(max-width:576px){.cf-8187cd93307f9e0ceffff3cad17ce4d3{box-sizing:border-box;}}"`,
+      `".cf-23e2a2a2d1197d56d9db56446d923ee9{box-sizing:border-box;margin:0 Auto 0 Auto;padding:10px 10px 10px 10px;background-color:rgba(255, 255, 255, 0);width:100%;max-width:1192px;border:0px outside rgba(255, 255, 255, 0);gap:10px 10px;background-image:url(https://www.contentful.com/image-asset.jpg?w=600);background-image:image-set(url(https://www.contentful.com/image-asset.jpg?w=300) 1x,url(https://www.contentful.com/image-asset.jpg?w=600) 2x);background-repeat:no-repeat;background-position:left center;background-size:contain;}.cf-1031d744e26de7b4e9422de0e74ae5cd{box-sizing:border-box;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);grid-column:span 6;border:0px outside rgba(255, 255, 255, 0);gap:0px 0px;align-items:start;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}.cf-4c0b9d7e44ec5898b6f5480ac5b1a634{box-sizing:border-box;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);grid-column:span 6;border:0px outside rgba(255, 255, 255, 0);gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}.cf-2745e04133568665b6d779d76342d59f{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;width:100%;max-width:none;}.cf-fe878a9e705110f2fee7b5698943918a{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;width:100%;max-width:none;font-size:16px;font-weight:400;line-height:20px;letter-spacing:0px;color:rgba(0, 0, 0, 1);text-align:left;text-transform:none;}.cf-0326e88429ff35544d5acf70391db2b2{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;}@media(max-width:992px){.cf-92b718a315702272accd18eb39a4a427{box-sizing:border-box;}}@media(max-width:576px){.cf-8187cd93307f9e0ceffff3cad17ce4d3{box-sizing:border-box;}}"`,
     );
-    expect(styles).toContain(`background-image:url(${boundAsset.fields.file?.url})`);
+    expect(styles).toContain(
+      `background-image:url(${boundAsset.fields.file?.url}?w=600);background-image:image-set(url(${boundAsset.fields.file?.url}?w=300) 1x,url(${boundAsset.fields.file?.url}?w=600) 2x)`,
+    );
   });
 
   it('should resolve deep binding to an asset and get background-image in extracted css', () => {
@@ -1605,6 +1727,11 @@ describe('pattern component', () => {
         title: 'Test Asset',
         file: {
           url: 'https://www.contentful.com/image-asset.jpg',
+          details: {
+            image: {
+              width: 2000,
+            },
+          },
         },
       },
     } as unknown as Asset;
@@ -1702,9 +1829,11 @@ describe('pattern component', () => {
     }
 
     expect(styles).toMatchInlineSnapshot(
-      `".cf-b273d5086ed8b6bec34c3266055cef11{box-sizing:border-box;margin:0 Auto 0 Auto;padding:10px 10px 10px 10px;background-color:rgba(255, 255, 255, 0);width:100%;max-width:1192px;border:0px outside rgba(255, 255, 255, 0);gap:10px 10px;background-image:url(https://www.contentful.com/image-asset.jpg);background-repeat:no-repeat;}.cf-1031d744e26de7b4e9422de0e74ae5cd{box-sizing:border-box;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);grid-column:span 6;border:0px outside rgba(255, 255, 255, 0);gap:0px 0px;align-items:start;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}.cf-4c0b9d7e44ec5898b6f5480ac5b1a634{box-sizing:border-box;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);grid-column:span 6;border:0px outside rgba(255, 255, 255, 0);gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}.cf-2745e04133568665b6d779d76342d59f{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;width:100%;max-width:none;}.cf-fe878a9e705110f2fee7b5698943918a{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;width:100%;max-width:none;font-size:16px;font-weight:400;line-height:20px;letter-spacing:0px;color:rgba(0, 0, 0, 1);text-align:left;text-transform:none;}.cf-0326e88429ff35544d5acf70391db2b2{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;}@media(max-width:992px){.cf-92b718a315702272accd18eb39a4a427{box-sizing:border-box;}}@media(max-width:576px){.cf-8187cd93307f9e0ceffff3cad17ce4d3{box-sizing:border-box;}}"`,
+      `".cf-23e2a2a2d1197d56d9db56446d923ee9{box-sizing:border-box;margin:0 Auto 0 Auto;padding:10px 10px 10px 10px;background-color:rgba(255, 255, 255, 0);width:100%;max-width:1192px;border:0px outside rgba(255, 255, 255, 0);gap:10px 10px;background-image:url(https://www.contentful.com/image-asset.jpg?w=600);background-image:image-set(url(https://www.contentful.com/image-asset.jpg?w=300) 1x,url(https://www.contentful.com/image-asset.jpg?w=600) 2x);background-repeat:no-repeat;background-position:left center;background-size:contain;}.cf-1031d744e26de7b4e9422de0e74ae5cd{box-sizing:border-box;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);grid-column:span 6;border:0px outside rgba(255, 255, 255, 0);gap:0px 0px;align-items:start;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}.cf-4c0b9d7e44ec5898b6f5480ac5b1a634{box-sizing:border-box;padding:0 0 0 0;background-color:rgba(255, 255, 255, 0);grid-column:span 6;border:0px outside rgba(255, 255, 255, 0);gap:0px 0px;align-items:center;justify-content:safe center;flex-direction:column;flex-wrap:nowrap;}.cf-2745e04133568665b6d779d76342d59f{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;width:100%;max-width:none;}.cf-fe878a9e705110f2fee7b5698943918a{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;width:100%;max-width:none;font-size:16px;font-weight:400;line-height:20px;letter-spacing:0px;color:rgba(0, 0, 0, 1);text-align:left;text-transform:none;}.cf-0326e88429ff35544d5acf70391db2b2{box-sizing:border-box;margin:0 0 0 0;padding:0 0 0 0;}@media(max-width:992px){.cf-92b718a315702272accd18eb39a4a427{box-sizing:border-box;}}@media(max-width:576px){.cf-8187cd93307f9e0ceffff3cad17ce4d3{box-sizing:border-box;}}"`,
     );
-    expect(styles).toContain(`background-image:url(${referencedAsset.fields.file?.url})`);
+    expect(styles).toContain(
+      `background-image:url(${referencedAsset.fields.file?.url}?w=600);background-image:image-set(url(${referencedAsset.fields.file?.url}?w=300) 1x,url(${referencedAsset.fields.file?.url}?w=600) 2x)`,
+    );
   });
 
   it('should resolve styles for a pattern with exposed design properties', () => {
