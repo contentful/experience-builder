@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.36.0](https://github.com/contentful/experience-builder/compare/v1.35.1...v1.36.0) (2025-04-17)
+
+### Features
+
+- **prebinding:** prebindings with multiple pattern instances in a pattern [LUMOS-610] ([bb7d4c2](https://github.com/contentful/experience-builder/commit/bb7d4c2c0970c1d706e6e64c0a61d34174e9d4f3))
+
+### Bug Fixes
+
+- add debug log for REQUESTED_ENTITIES as well ([#1079](https://github.com/contentful/experience-builder/issues/1079)) ([fbd5fc1](https://github.com/contentful/experience-builder/commit/fbd5fc1bad21a48409b8bbc205b9b882cf67c5fe))
+
 ## [1.35.1](https://github.com/contentful/experience-builder/compare/v1.35.0...v1.35.1) (2025-03-26)
 
 ### Bug Fixes

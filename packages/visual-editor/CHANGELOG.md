@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.36.0](https://github.com/contentful/experience-builder/compare/v1.35.1...v1.36.0) (2025-04-17)
+
+### Bug Fixes
+
+- add debug log for REQUESTED_ENTITIES as well ([#1079](https://github.com/contentful/experience-builder/issues/1079)) ([fbd5fc1](https://github.com/contentful/experience-builder/commit/fbd5fc1bad21a48409b8bbc205b9b882cf67c5fe))
+- hiding nodes bug [SPA-2656] ([#1071](https://github.com/contentful/experience-builder/issues/1071)) ([7860e70](https://github.com/contentful/experience-builder/commit/7860e702eeb604777dc684ba72233e651735ae59))
+- pattern only has width 100% if its first top level node has ([fed746d](https://github.com/contentful/experience-builder/commit/fed746dcc5c6d771f1a77944a37ab6262bd2676b))
+- set pattern wrapper height to 100% only when the main component has 100% height ([#1080](https://github.com/contentful/experience-builder/issues/1080)) ([a3614ea](https://github.com/contentful/experience-builder/commit/a3614ea792095c61ccdde1232035c1da187abbac))
+
 ## [1.35.1](https://github.com/contentful/experience-builder/compare/v1.35.0...v1.35.1) (2025-03-26)
 
 **Note:** Version bump only for package @contentful/experiences-visual-editor-react
