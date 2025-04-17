@@ -286,7 +286,6 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         };
       }
 
-      // abc children
       queue.push(
         ...currentNode.children.map((child) => ({
           node: child,
@@ -461,9 +460,9 @@ export const maybePopulateDesignTokenValue = (
   return resolvedValue.trim();
 };
 
-const transformMedia = (bondAsset: Asset, width?: string, options?: BackgroundImageOptions) => {
+const transformMedia = (boundAsset: Asset, width?: string, options?: BackgroundImageOptions) => {
   try {
-    const asset = bondAsset as Asset;
+    const asset = boundAsset as Asset;
     // Target width (px/rem/em) will be applied to the css url if it's lower than the original image width (in px)
     const assetDetails = asset.fields.file?.details as AssetDetails;
 
@@ -485,7 +484,7 @@ const transformMedia = (bondAsset: Asset, width?: string, options?: BackgroundIm
   } catch (error) {
     console.error('Error transforming image asset', error);
   }
-  return bondAsset.fields.file?.url as string;
+  return boundAsset.fields.file?.url as string;
 };
 
 export const resolveBackgroundImageBinding = ({
