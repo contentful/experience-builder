@@ -608,7 +608,7 @@ const resolveImageOptimizationOptions = ({
     const defaultValue = variableDefinition.defaultValue;
     const userSetValue = componentVariablesOverwrites?.[variableDefinitionKey];
     if (!userSetValue || userSetValue.type === 'ComponentValue') {
-      return (defaultValue as DesignValue)?.valuesByBreakpoint[defaultBreakpoint] || {};
+      return (defaultValue as DesignValue)?.valuesByBreakpoint[defaultBreakpoint] || '';
     }
     return resolveImageOptimizationOptions({
       variableData: userSetValue,
