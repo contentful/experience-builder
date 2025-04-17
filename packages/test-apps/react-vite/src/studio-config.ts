@@ -7,6 +7,7 @@ import KitchenSink from './components/KitchenSink';
 import ColorfulBox from './components/ColorfulBox/ColorfulBox';
 import { ComponentUsingReferences } from './components/ComponentUsingReferences';
 import { PotionShelf } from './components/PotionShelf';
+import { NeatPotionShelf } from './components/NeatPotionShelf';
 
 defineComponents(
   [
@@ -15,6 +16,29 @@ defineComponents(
       definition: {
         id: 'dk-potion-shelf',
         name: 'Potion Shelf',
+        category: 'The Telegraph',
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        variables: {
+          potions: {
+            type: 'Array',
+            displayName: 'Potions',
+          },
+          lotions: {
+            type: 'Array',
+            displayName: 'Lotions',
+          },
+          linkProp1: {
+            type: 'Link',
+            displayName: 'LinkProp1',
+          },
+        },
+      },
+    },
+    {
+      component: NeatPotionShelf,
+      definition: {
+        id: 'dk-neat-potion-shelf',
+        name: 'Neat Potion Shelf',
         category: 'The Telegraph',
         builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
         variables: {
