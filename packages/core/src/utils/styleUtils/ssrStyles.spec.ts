@@ -60,7 +60,7 @@ describe('maybePopulateDesignTokenValue', () => {
     expect(res).toBe(`${builtInStyles.cfBackgroundColor?.defaultValue}`);
   });
 
-  it('should repalce design token variables with their values', () => {
+  it('should replace design token variables with their values', () => {
     const res = maybePopulateDesignTokenValue('cfBackgroundColor', '${color.black}', {
       'color.black': '#000000',
     });
@@ -90,7 +90,208 @@ describe('maybePopulateDesignTokenValue', () => {
     });
   });
 });
+describe('resolveBackgroundImageBinding with image optimization', () => {
+  it('should return optimized image URL when width and options are provided', () => {
+    const variableData: ComponentPropertyValue = {
+      type: 'BoundValue',
+      path: '/123abc/fields/image/~locale',
+    };
 
+    const asset: Asset = {
+      sys: {
+        id: '456def',
+        type: 'Asset',
+      },
+      fields: {
+        file: {
+          url: 'https://www.contentful.com/image1.png',
+          details: {
+            image: {
+              width: 2000,
+            },
+          },
+        },
+      },
+    } as unknown as Asset;
+
+    const res = resolveBackgroundImageBinding({
+      variableData,
+      getBoundEntityById: (id) => (id === asset.sys.id ? asset : undefined),
+      dataSource: {
+        '123abc': {
+          sys: { type: 'Link', linkType: 'Asset', id: '456def' },
+        },
+      },
+      options: {
+        targetSize: '1000px',
+        scaling: 'fit',
+        alignment: 'left',
+      },
+      width: '1000px',
+    });
+
+    expect(res).toStrictEqual({
+      file: {
+        details: {
+          image: {
+            width: 2000,
+          },
+        },
+        url: 'https://www.contentful.com/image1.png',
+      },
+      srcSet: [
+        'url(https://www.contentful.com/image1.png?w=1000) 1x',
+        'url(https://www.contentful.com/image1.png?w=2000) 2x',
+      ],
+      url: 'https://www.contentful.com/image1.png?w=2000',
+    });
+  });
+
+  it('should return srcSet for responsive images when multiple widths are provided', () => {
+    const variableData: ComponentPropertyValue = {
+      type: 'BoundValue',
+      path: '/123abc/fields/image/~locale',
+    };
+
+    const asset: Asset = {
+      sys: {
+        id: '456def',
+        type: 'Asset',
+      },
+      fields: {
+        file: {
+          url: 'https://www.contentful.com/image1.png',
+          details: {
+            image: {
+              width: 2000,
+            },
+          },
+        },
+      },
+    } as unknown as Asset;
+
+    const res = resolveBackgroundImageBinding({
+      variableData,
+      getBoundEntityById: (id) => (id === asset.sys.id ? asset : undefined),
+      dataSource: {
+        '123abc': {
+          sys: { type: 'Link', linkType: 'Asset', id: '456def' },
+        },
+      },
+      options: {
+        scaling: 'fit',
+        alignment: 'left',
+        format: 'webp',
+        targetSize: '300px',
+      },
+    });
+
+    expect(res).toEqual({
+      file: {
+        details: {
+          image: {
+            width: 2000,
+          },
+        },
+        url: 'https://www.contentful.com/image1.png',
+      },
+      srcSet: [
+        'url(https://www.contentful.com/image1.png?w=300&fm=webp) 1x',
+        'url(https://www.contentful.com/image1.png?w=600&fm=webp) 2x',
+      ],
+      url: 'https://www.contentful.com/image1.png?w=600&fm=webp',
+    });
+  });
+
+  it('should return original image URL if no optimization options are provided', () => {
+    const variableData: ComponentPropertyValue = {
+      type: 'BoundValue',
+      path: '/123abc/fields/image/~locale',
+    };
+
+    const asset: Asset = {
+      sys: {
+        id: '456def',
+        type: 'Asset',
+      },
+      fields: {
+        file: {
+          url: 'https://www.contentful.com/image1.png',
+        },
+      },
+    } as unknown as Asset;
+
+    const res = resolveBackgroundImageBinding({
+      variableData,
+      getBoundEntityById: (id) => (id === asset.sys.id ? asset : undefined),
+      dataSource: {
+        '123abc': {
+          sys: { type: 'Link', linkType: 'Asset', id: '456def' },
+        },
+      },
+    });
+
+    expect(res).toBe('https://www.contentful.com/image1.png');
+  });
+
+  it('should handle cases where target width exceeds original image width', () => {
+    const variableData: ComponentPropertyValue = {
+      type: 'BoundValue',
+      path: '/123abc/fields/image/~locale',
+    };
+
+    const asset: Asset = {
+      sys: {
+        id: '456def',
+        type: 'Asset',
+      },
+      fields: {
+        file: {
+          url: 'https://www.contentful.com/image1.png',
+          details: {
+            image: {
+              width: 800,
+            },
+          },
+        },
+      },
+    } as unknown as Asset;
+
+    const res = resolveBackgroundImageBinding({
+      variableData,
+      getBoundEntityById: (id) => (id === asset.sys.id ? asset : undefined),
+      dataSource: {
+        '123abc': {
+          sys: { type: 'Link', linkType: 'Asset', id: '456def' },
+        },
+      },
+      options: {
+        quality: '80%',
+        format: 'webp',
+        targetSize: '300px',
+        scaling: 'fill',
+        alignment: 'left',
+      },
+      width: '1000px',
+    });
+
+    expect(res).toStrictEqual({
+      file: {
+        details: {
+          image: {
+            width: 800,
+          },
+        },
+        url: 'https://www.contentful.com/image1.png',
+      },
+      srcSet: [
+        'url(https://www.contentful.com/image1.png?w=300&q=80&fm=webp) 1x',
+        'url(https://www.contentful.com/image1.png?w=600&q=80&fm=webp) 2x',
+      ],
+      url: 'https://www.contentful.com/image1.png?w=600&q=80&fm=webp',
+    });
+  });
+});
 describe('resolveBackgroundImageBinding', () => {
   it('should return undefined if bound entity is not available in entityStore', () => {
     const variableData: ComponentPropertyValue = {
@@ -481,6 +682,16 @@ describe('indexByBreakpoint', () => {
         type: 'BoundValue',
         path: '/456def/fields/file/url/~locale',
       },
+      cfBackgroundImageOptions: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: {
+            scaling: 'fit',
+            alignment: 'left',
+            targetSize: '300px',
+          },
+        },
+      },
     };
 
     const asset: Asset = {
@@ -491,6 +702,11 @@ describe('indexByBreakpoint', () => {
       fields: {
         file: {
           url: 'https://www.contentful.com/image1.png',
+          details: {
+            image: {
+              width: 2000,
+            },
+          },
         },
       },
     } as unknown as Asset;
@@ -511,7 +727,26 @@ describe('indexByBreakpoint', () => {
       desktop: {
         cfBackgroundColor: 'red',
         cfMargin: '${spacing.l}',
-        cfBackgroundImageUrl: 'https://www.contentful.com/image1.png',
+        cfBackgroundImageUrl: {
+          file: {
+            details: {
+              image: {
+                width: 2000,
+              },
+            },
+            url: 'https://www.contentful.com/image1.png',
+          },
+          srcSet: [
+            'url(https://www.contentful.com/image1.png?w=300) 1x',
+            'url(https://www.contentful.com/image1.png?w=600) 2x',
+          ],
+          url: 'https://www.contentful.com/image1.png?w=600',
+        },
+        cfBackgroundImageOptions: {
+          alignment: 'left',
+          scaling: 'fit',
+          targetSize: '300px',
+        },
       },
       tablet: {
         cfBackgroundColor: 'green',
@@ -550,6 +785,16 @@ describe('indexByBreakpoint', () => {
         type: 'UnboundValue',
         key: '456def',
       },
+      cfBackgroundImageOptions: {
+        type: 'DesignValue',
+        valuesByBreakpoint: {
+          desktop: {
+            scaling: 'fit',
+            alignment: 'left',
+            targetSize: '300px',
+          },
+        },
+      },
     };
 
     const res = indexByBreakpoint({
@@ -558,7 +803,7 @@ describe('indexByBreakpoint', () => {
       getBoundEntityById: () => undefined,
       unboundValues: {
         '456def': {
-          value: 'https://www.contentful.com/image1.png',
+          value: 'https://www.contentful.com/unboundImage1.png',
         },
       },
     });
@@ -567,7 +812,12 @@ describe('indexByBreakpoint', () => {
       desktop: {
         cfBackgroundColor: 'red',
         cfMargin: '${spacing.l}',
-        cfBackgroundImageUrl: 'https://www.contentful.com/image1.png',
+        cfBackgroundImageOptions: {
+          alignment: 'left',
+          scaling: 'fit',
+          targetSize: '300px',
+        },
+        cfBackgroundImageUrl: 'https://www.contentful.com/unboundImage1.png',
       },
       tablet: {
         cfBackgroundColor: 'green',
@@ -583,7 +833,7 @@ describe('indexByBreakpoint', () => {
   it('resolves background image for a pattern from default value', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableDefinitions: {
-        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+        randomHashValue: {
           displayName: 'Background Image',
           type: 'Text',
           defaultValue: {
@@ -591,6 +841,22 @@ describe('indexByBreakpoint', () => {
             type: 'UnboundValue',
           },
           description: 'Background image for section or container',
+        },
+        randomHashValue2: {
+          displayName: 'Background Image Options',
+          type: 'Text',
+          group: 'style',
+          description: 'Background image options',
+          defaultValue: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              desktop: {
+                scaling: 'fit',
+                alignment: 'left',
+                targetSize: '300px',
+              },
+            },
+          },
         },
       },
     };
@@ -621,7 +887,11 @@ describe('indexByBreakpoint', () => {
         },
       },
       cfBackgroundImageUrl: {
-        key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
+        key: 'randomHashValue',
+        type: 'ComponentValue',
+      },
+      cfBackgroundImageOptions: {
+        key: 'randomHashValue2',
         type: 'ComponentValue',
       },
     } as Record<string, ComponentPropertyValue>;
@@ -645,6 +915,11 @@ describe('indexByBreakpoint', () => {
         cfMaxWidth: '1192px',
         cfPadding: '10px 10px 10px 10px',
         cfBackgroundImageUrl: 'https://www.contentful.com/image1.png',
+        cfBackgroundImageOptions: {
+          alignment: 'left',
+          scaling: 'fit',
+          targetSize: '300px',
+        },
       },
     });
   });
@@ -652,7 +927,7 @@ describe('indexByBreakpoint', () => {
   it('resolves background image for a pattern from a binding to an asset', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableDefinitions: {
-        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+        randomHashValue: {
           displayName: 'Background Image',
           type: 'Text',
           defaultValue: {
@@ -660,6 +935,22 @@ describe('indexByBreakpoint', () => {
             type: 'UnboundValue',
           },
           description: 'Background image for section or container',
+        },
+        randomHashValue2: {
+          displayName: 'Background Image Options',
+          type: 'Text',
+          group: 'style',
+          description: 'Background image options',
+          defaultValue: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              desktop: {
+                scaling: 'fit',
+                alignment: 'left',
+                targetSize: '300px',
+              },
+            },
+          },
         },
       },
     };
@@ -690,7 +981,11 @@ describe('indexByBreakpoint', () => {
         },
       },
       cfBackgroundImageUrl: {
-        key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
+        key: 'randomHashValue',
+        type: 'ComponentValue',
+      },
+      cfBackgroundImageOptions: {
+        key: 'randomHashValue2',
         type: 'ComponentValue',
       },
     } as Record<string, ComponentPropertyValue>;
@@ -703,6 +998,11 @@ describe('indexByBreakpoint', () => {
       fields: {
         file: {
           url: 'https://www.contentful.com/bound-image.png',
+          details: {
+            image: {
+              width: 2000,
+            },
+          },
         },
       },
     } as unknown as Asset;
@@ -723,7 +1023,7 @@ describe('indexByBreakpoint', () => {
       },
       componentSettings,
       componentVariablesOverwrites: {
-        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+        randomHashValue: {
           type: 'BoundValue',
           path: '/vOXiBZxKPCSC9Ew1GTxkZ/fields/file/url/~locale',
         },
@@ -736,7 +1036,26 @@ describe('indexByBreakpoint', () => {
         cfWidth: 'fill',
         cfMaxWidth: '1192px',
         cfPadding: '10px 10px 10px 10px',
-        cfBackgroundImageUrl: 'https://www.contentful.com/bound-image.png',
+        cfBackgroundImageUrl: {
+          file: {
+            details: {
+              image: {
+                width: 2000,
+              },
+            },
+            url: 'https://www.contentful.com/bound-image.png',
+          },
+          srcSet: [
+            'url(https://www.contentful.com/bound-image.png?w=300) 1x',
+            'url(https://www.contentful.com/bound-image.png?w=600) 2x',
+          ],
+          url: 'https://www.contentful.com/bound-image.png?w=600',
+        },
+        cfBackgroundImageOptions: {
+          alignment: 'left',
+          scaling: 'fit',
+          targetSize: '300px',
+        },
       },
     });
   });
@@ -744,7 +1063,7 @@ describe('indexByBreakpoint', () => {
   it('resolves background image for a pattern from a deep binding to an entry', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableDefinitions: {
-        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+        randomHashValue: {
           displayName: 'Background Image',
           type: 'Text',
           defaultValue: {
@@ -752,6 +1071,22 @@ describe('indexByBreakpoint', () => {
             type: 'UnboundValue',
           },
           description: 'Background image for section or container',
+        },
+        randomHashValue2: {
+          displayName: 'Background Image Options',
+          type: 'Text',
+          group: 'style',
+          description: 'Background image options',
+          defaultValue: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              desktop: {
+                scaling: 'fit',
+                alignment: 'left',
+                targetSize: '300px',
+              },
+            },
+          },
         },
       },
     };
@@ -782,7 +1117,11 @@ describe('indexByBreakpoint', () => {
         },
       },
       cfBackgroundImageUrl: {
-        key: 'cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88',
+        key: 'randomHashValue',
+        type: 'ComponentValue',
+      },
+      cfBackgroundImageOptions: {
+        key: 'randomHashValue2',
         type: 'ComponentValue',
       },
     } as Record<string, ComponentPropertyValue>;
@@ -795,6 +1134,11 @@ describe('indexByBreakpoint', () => {
       fields: {
         file: {
           url: 'https://www.contentful.com/bound-image.png',
+          details: {
+            image: {
+              width: 1000,
+            },
+          },
         },
       },
     } as unknown as Asset;
@@ -831,7 +1175,7 @@ describe('indexByBreakpoint', () => {
       },
       componentSettings,
       componentVariablesOverwrites: {
-        cfBackgroundImageUrl_Tdhixzp1Gt91aI9uc5p88: {
+        randomHashValue: {
           type: 'BoundValue',
           path: '/vOXiBZxKPCSC9Ew1GTxkZ/fields/image/~locale/file/url/~locale',
         },
@@ -844,7 +1188,26 @@ describe('indexByBreakpoint', () => {
         cfWidth: 'fill',
         cfMaxWidth: '1192px',
         cfPadding: '10px 10px 10px 10px',
-        cfBackgroundImageUrl: 'https://www.contentful.com/bound-image.png',
+        cfBackgroundImageUrl: {
+          file: {
+            details: {
+              image: {
+                width: 1000,
+              },
+            },
+            url: 'https://www.contentful.com/bound-image.png',
+          },
+          srcSet: [
+            'url(https://www.contentful.com/bound-image.png?w=300) 1x',
+            'url(https://www.contentful.com/bound-image.png?w=600) 2x',
+          ],
+          url: 'https://www.contentful.com/bound-image.png?w=600',
+        },
+        cfBackgroundImageOptions: {
+          alignment: 'left',
+          scaling: 'fit',
+          targetSize: '300px',
+        },
       },
     });
   });
