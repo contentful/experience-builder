@@ -6,9 +6,33 @@ import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import ColorfulBox from './components/ColorfulBox/ColorfulBox';
 import { ComponentUsingReferences } from './components/ComponentUsingReferences';
+import { PotionShelf } from './components/PotionShelf';
 
 defineComponents(
   [
+    {
+      component: PotionShelf,
+      definition: {
+        id: 'dk-potion-shelf',
+        name: 'Potion Shelf',
+        category: 'The Telegraph',
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        variables: {
+          potions: {
+            type: 'Array',
+            displayName: 'Potions',
+          },
+          lotions: {
+            type: 'Array',
+            displayName: 'Lotions',
+          },
+          linkProp1: {
+            type: 'Link',
+            displayName: 'LinkProp1',
+          },
+        },
+      },
+    },
     {
       component: ColorfulBox,
       definition: {
