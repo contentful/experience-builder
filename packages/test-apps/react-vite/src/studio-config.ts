@@ -6,6 +6,7 @@ import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import ColorfulBox from './components/ColorfulBox/ColorfulBox';
 import { ComponentUsingReferences } from './components/ComponentUsingReferences';
+import { ComponentUsingDeepReferences } from './components/ComponentUsingDeepReferences';
 
 defineComponents(
   [
@@ -62,6 +63,28 @@ defineComponents(
           entry: {
             displayName: 'Entry Reference',
             type: 'Link',
+          },
+        },
+      },
+      options: {
+        wrapComponent: true,
+      },
+    },
+    {
+      component: ComponentUsingDeepReferences,
+      definition: {
+        id: 'component-using-deep-references',
+        name: '[Deep] Component Using References',
+        category: 'Custom Components',
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        variables: {
+          title: {
+            displayName: 'Title',
+            type: 'Text',
+          },
+          items: {
+            displayName: 'Entry References',
+            type: 'Array',
           },
         },
       },
