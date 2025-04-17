@@ -589,7 +589,7 @@ export const resolveBackgroundImageBinding = ({
   }
 };
 
-const resolveImageOptimizationOptions = ({
+const resolveVariable = ({
   variableData,
   defaultBreakpoint,
   componentSettings = { variableDefinitions: {} },
@@ -610,7 +610,7 @@ const resolveImageOptimizationOptions = ({
     if (!userSetValue || userSetValue.type === 'ComponentValue') {
       return (defaultValue as DesignValue)?.valuesByBreakpoint[defaultBreakpoint] || '';
     }
-    return resolveImageOptimizationOptions({
+    return resolveVariable({
       variableData: userSetValue,
       defaultBreakpoint,
       componentSettings,
@@ -692,14 +692,14 @@ export const indexByBreakpoint = ({
       // TODO: Test this for nested patterns as the name might be just a random hash without the actual name (needs to be validated).
       variableName.startsWith('cfBackgroundImageUrl_')
     ) {
-      const width = resolveImageOptimizationOptions({
+      const width = resolveVariable({
         variableData: variables['cfWidth'],
         defaultBreakpoint,
         componentSettings,
         componentVariablesOverwrites,
       }) as string;
 
-      const options = resolveImageOptimizationOptions({
+      const options = resolveVariable({
         variableData: variables['cfBackgroundImageOptions'],
         defaultBreakpoint,
         componentSettings,
