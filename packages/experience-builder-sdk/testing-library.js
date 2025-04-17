@@ -5,7 +5,7 @@ configure({ testIdAttribute: 'data-test-id' });
 
 // Monkey-patch the console debug function to not pollute the console with intended logs
 const origConsoleDebug = console.debug;
-const debugMessage = 'data sent';
+const debugMessage = '[experiences-sdk-react';
 console.debug = (message, ...args) => {
   if (`${message}`.includes(debugMessage)) {
     return;

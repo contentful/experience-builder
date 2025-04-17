@@ -32,7 +32,8 @@ type FetchBySlugParams = {
 };
 
 /**
- * Fetches an experience object by its slug
+ * Fetches an experience entry by its slug and additionally fetches all its references to return
+ * an initilized experience instance.
  * @param {FetchBySlugParams} options - options to fetch the experience
  */
 export async function fetchBySlug({
@@ -45,6 +46,10 @@ export async function fetchBySlug({
   // Be a no-op if in editor mode
   if (isEditorMode) return;
   let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
+
+  if (!localeCode) {
+    throw new Error('Failed to fetch by slug. Required "localeCode" parameter was not provided');
+  }
 
   try {
     experienceEntry = await fetchExperienceEntry({

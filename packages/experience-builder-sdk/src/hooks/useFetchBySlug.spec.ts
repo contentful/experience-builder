@@ -202,7 +202,7 @@ describe('useFetchBySlug', () => {
 
     await waitFor(() => {
       expect(result.current.error?.message).toBe(
-        'Failed to fetch experience entities. Required "locale" parameter was not provided',
+        'Failed to fetch by slug. Required "localeCode" parameter was not provided',
       );
       expect(result.current.isLoading).toBe(false);
     });
