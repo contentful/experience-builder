@@ -2,8 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { localizeEntity } from './localizeEntity';
 import { Entry } from 'contentful';
 
-// filepath: /Users/thomas.kellermeier/work/sparks/experience-builder/packages/core/src/utils/localizeEntity.test.ts
-
 describe('localizeEntity', () => {
   const locale = 'en-US';
 
