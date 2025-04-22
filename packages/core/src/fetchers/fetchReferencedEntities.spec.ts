@@ -44,22 +44,7 @@ describe('fetchReferencedEntities', () => {
     }
   });
 
-  it('should throw an error if locale has not been provided', async () => {
-    try {
-      await fetchReferencedEntities({
-        client: mockClient,
-        experienceEntry: experienceEntry,
-        // @ts-expect-error intentionally setting it to undefined
-        locale: undefined,
-      });
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "locale" parameter was not provided',
-      );
-    }
-  });
-
-  it('should throw an error if provided entry is not experience entry', async () => {
+  it('should throw an error if Provided entry is not an experience entry', async () => {
     try {
       await fetchReferencedEntities({
         client: mockClient,
@@ -125,6 +110,15 @@ describe('fetchReferencedEntities', () => {
           'sys.id[in]': [entityIds.ENTRY1, entityIds.ENTRY2],
         }),
       );
+    });
+
+    it('should not throw an error if locale has not been provided', async () => {
+      expect(
+        fetchReferencedEntities({
+          client: mockClient as unknown as ContentfulClientApi<'WITH_ALL_LOCALES'>,
+          experienceEntry: experienceEntry,
+        }),
+      ).resolves.not.toThrow();
     });
   });
 

@@ -71,6 +71,7 @@ export const experienceEntry: ExperienceEntry = {
   sys: {
     id: 'composition-id',
     type: 'Entry',
+    locale: 'en-US',
     contentType: {
       sys: {
         id: 'layout',
@@ -113,6 +114,7 @@ export const createExperienceEntry = ({
     sys: {
       id,
       type: 'Entry',
+      locale: 'en-US',
       contentType: {
         sys: {
           id: 'layout',
@@ -200,6 +202,7 @@ export const createAssemblyEntry = ({
     sys: {
       id,
       type: 'Entry',
+      locale: 'en-US',
       contentType: {
         sys: {
           id: 'layout',

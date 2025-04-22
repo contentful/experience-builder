@@ -26,6 +26,7 @@ const getExperienceEntryWithNode = ({
     sys: {
       id: 'test-id',
       type: 'Entry',
+      locale: 'en-US',
       contentType: {
         sys: {
           id: 'test-content-type-id',
@@ -224,6 +225,7 @@ describe('section component', () => {
       sys: {
         id: '456def',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         file: {
@@ -341,6 +343,7 @@ describe('section component', () => {
       sys: {
         id: '456def',
         type: 'Asset',
+        locale: 'en-US',
       },
       fields: {
         file: {
@@ -358,6 +361,7 @@ describe('section component', () => {
       sys: {
         id: '789ghi',
         type: 'Entry',
+        locale: 'en-US',
       },
       fields: {
         assetReference: {
