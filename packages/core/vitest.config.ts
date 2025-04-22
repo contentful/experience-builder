@@ -4,7 +4,12 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   //@ts-expect-error ignore
-  plugins: [tsconfigPaths()],
+  plugins: [
+    tsconfigPaths({
+      // Don't parse other tsconfig files outside of this package
+      ignoreConfigErrors: true,
+    }),
+  ],
   test: {
     globals: true,
     coverage: {
