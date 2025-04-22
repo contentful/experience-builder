@@ -2,6 +2,7 @@ import type { Asset, Entry } from 'contentful';
 import { isExperienceEntry } from '@/utils';
 import type { Experience } from '@/types';
 import { EntityStore } from '@/entity/EntityStore';
+import { entityCache } from '@/entity/entityCacheStore';
 
 type CreateExperienceParams = {
   experienceEntry: Entry;
@@ -30,6 +31,9 @@ export function createExperience(
 ): Experience<EntityStore> {
   if (typeof options === 'string') {
     const entityStore = new EntityStore(options);
+
+    entityCache.getState().resetEntityStore(entityStore);
+
     return {
       entityStore,
     };
@@ -49,6 +53,8 @@ export function createExperience(
       entities: [...referencedEntries, ...referencedAssets],
       locale,
     });
+
+    entityCache.getState().resetEntityStore(entityStore);
 
     return {
       entityStore,

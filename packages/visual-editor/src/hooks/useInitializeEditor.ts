@@ -1,5 +1,5 @@
 import { useEditorStore } from '@/store/editor';
-import { useEntityStore } from '@/store/entityStore';
+import { EditorModeEntityStore, useEntityStore } from '@contentful/experiences-core';
 
 import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
 import { useEffect, useState } from 'react';
@@ -29,7 +29,8 @@ export const useInitializeEditor = () => {
 
       // if entities is set to [], then everything will still work as EntityStore will
       // request entities on demand via ▲REQUEST_ENTITY
-      resetEntityStore(initialLocale, entities);
+      const newEntityStore = new EditorModeEntityStore({ locale: initialLocale, entities });
+      resetEntityStore(newEntityStore);
       setInitialized(true);
     };
 
