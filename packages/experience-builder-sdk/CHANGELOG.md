@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.35.1](https://github.com/contentful/experience-builder/compare/v1.35.0...v1.35.1) (2025-03-26)
+
+### Bug Fixes
+
+- trivial typo fix to test release process ([bbca38a](https://github.com/contentful/experience-builder/commit/bbca38aa512d40cc0f9bd6cd4ec207736e6a4b5f))
+
+## [1.35.0](https://github.com/contentful/experience-builder/compare/v1.35.0-beta.0...v1.35.0) (2025-03-24)
+
+**Note:** Version bump only for package @contentful/experiences-sdk-react
+
 ## [1.34.1](https://github.com/contentful/experience-builder/compare/v1.34.1-beta.0...v1.34.1) (2025-03-05)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react

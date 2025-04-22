@@ -11,8 +11,6 @@ on:
     secrets:
       VAULT_URL:
         required: true
-      NPM_TOKEN:
-        required: true
 
 jobs:
   publish:
@@ -59,8 +57,8 @@ jobs:
             packages/templates/nextjs-marketing-demo/.next
             packages/templates/react-vite-ts/dist
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
-      - name: Authenticate with private NPM and GH package
-        run: echo -e "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}\n//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
+      - name: Authenticate with private GH package
+        run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
       # We only want to publish if there are changes to any package. Since the lerna --force-publish flag publishes even if there are no changes
@@ -85,11 +83,11 @@ jobs:
           git config user.email "${{ github.actor}}@users.noreply.github.com"
 
           if [ ${{ inputs.publish-prerelease }} ]; then
-            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid prerelease-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --no-changelog --no-push --yes --no-private --dist-tag prerelease --allow-branch ${{ github.ref_name }}
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid prerelease-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --no-changelog --no-push --yes --no-private --dist-tag prerelease --allow-branch ${{ github.ref_name }} --git-tag-command="echo 'skipping git tag for prereleases'"
           elif [ ${{ github.ref_name }} = development ]; then
-            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --dist-tag dev --no-changelog --no-push --yes --no-private 
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid dev-$(date +%Y%m%dT%H%M)-$(git rev-parse HEAD | cut -c1-7) --dist-tag dev --no-changelog --no-push --yes --no-private --git-tag-command="echo 'skipping git tag for prereleases'"
           elif [ ${{ github.ref_name }} = next ]; then
-            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid beta --dist-tag next --no-changelog --yes --no-private
+            npx lerna publish --conventional-commits --conventional-prerelease --exact --force-publish --preid beta --dist-tag next --no-changelog --yes --no-private --git-tag-command="echo 'skipping git tag for prereleases'"
           else
             npx lerna publish --conventional-commits --conventional-graduate --exact --force-publish --yes --no-private --dist-tag latest --create-release github
           fi
