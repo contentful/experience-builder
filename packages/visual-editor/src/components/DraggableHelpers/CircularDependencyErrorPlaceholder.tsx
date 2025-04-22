@@ -1,4 +1,4 @@
-import { useEntityStore } from '@/store/entityStore';
+import { useEntityStore } from '@contentful/experiences-core';
 import React, { forwardRef, HTMLAttributes } from 'react';
 
 type CircularDependencyErrorPlaceholderProperties = HTMLAttributes<HTMLDivElement> & {

@@ -6,6 +6,8 @@ export { ExperienceRoot } from './ExperienceRoot';
 export { useFetchById, useFetchBySlug, useCustomFetch } from './hooks';
 export { defineComponents } from './core/componentRegistry';
 export {
+  entityCache,
+  useEntityStore,
   defineDesignTokens,
   defineBreakpoints,
   VisualEditorMode,

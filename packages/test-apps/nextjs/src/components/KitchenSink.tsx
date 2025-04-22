@@ -2,6 +2,7 @@ import React from 'react';
 import { UnresolvedLink } from 'contentful';
 import { Document } from '@contentful/rich-text-types';
 import { RichText } from '@contentful/experiences-components-react';
+import { entityCache } from '@contentful/experiences-sdk-react';
 
 interface KitchenSinkProps {
   jsonObject?: object;
@@ -34,6 +35,11 @@ const KitchenSink: React.FC<KitchenSinkProps> = ({
   richText,
   ...props
 }) => {
+  const resolvedEntryReference = entityCache.getState().resolveEntity(entryReference);
+
+  console.log('resolvedEntryReference', entryReference, resolvedEntryReference);
+  console.log('allFetchedStuff', entityCache.getState().entityStore.entities);
+
   return (
     <div {...props}>
       <h1>Kitchen Sink</h1>

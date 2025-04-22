@@ -9,7 +9,7 @@ import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema'
  * Can be extended for the different loading behaviours (editor, production, ..)
  */
 export abstract class EntityStoreBase {
-  protected locale: string;
+  public locale: string;
   protected entryMap = new Map<string, Entry>();
   protected assetMap = new Map<string, Asset>();
 

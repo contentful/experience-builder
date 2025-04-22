@@ -9,6 +9,7 @@ import {
   isStructureWithRelativeHeight,
   sanitizeNodeProps,
   transformVisibility,
+  useEntityStore,
 } from '@contentful/experiences-core';
 import {
   ASSEMBLY_NODE_TYPE,
@@ -29,7 +30,6 @@ import { CSSProperties, useMemo } from 'react';
 import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzone.types';
 import { maybeMergePatternDefaultDesignValues } from '@/utils/maybeMergePatternDefaultDesignValues';
 
