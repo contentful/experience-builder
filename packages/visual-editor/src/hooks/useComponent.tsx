@@ -13,10 +13,9 @@ import {
 } from '@contentful/experiences-core/constants';
 import { Assembly } from '@contentful/experiences-components-react';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
-import { useEntityStore } from '@/store/entityStore';
 import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
-import { isContentfulStructureComponent } from '@contentful/experiences-core';
+import { isContentfulStructureComponent, useEntityStore } from '@contentful/experiences-core';
 import { MissingComponentPlaceholder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
 import { useTreeStore } from '@/store/tree';
 import { getItem } from '@/utils/getItem';
