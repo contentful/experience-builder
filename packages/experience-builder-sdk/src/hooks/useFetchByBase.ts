@@ -4,10 +4,19 @@ import { EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
 import { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
+// Typing the response explicitly ensures a stable interface for all fetchers
+// and creates more readable type definitions for the SDK consumers.
+type UseFetchByBaseResponse = {
+  error: Error | undefined;
+  experience: Experience<EntityStore> | undefined;
+  isLoading: boolean;
+  mode: StudioCanvasMode;
+};
+
 export const useFetchByBase = (
   fetchMethod: () => Promise<Experience<EntityStore> | undefined>,
   mode: StudioCanvasMode,
-) => {
+): UseFetchByBaseResponse => {
   const [experience, setExperience] = useState<Experience<EntityStore>>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error>();
