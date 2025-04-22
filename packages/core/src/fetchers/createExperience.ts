@@ -37,11 +37,11 @@ export function createExperience(
     const { experienceEntry, referencedAssets, referencedEntries, locale } = options;
     if ([experienceEntry, ...referencedAssets, ...referencedEntries].some(isNotLocalized)) {
       throw new Error(
-        'Some of the provided content is not localized. Please localize every entity before passing it to this function.',
+        'Some of the provided content is not localized. Please localize every entity before passing it to this function. Note that this is solely determined by `sys.locale` being set respectively.',
       );
     }
     if (!isExperienceEntry(experienceEntry)) {
-      throw new Error('Provided entry is not experience entry');
+      throw new Error('Provided entry is not an experience entry');
     }
 
     const entityStore = new EntityStore({
@@ -56,6 +56,9 @@ export function createExperience(
   }
 }
 
+// Following the API shape, we check the `sys.locale` property as we can't rely on the shape of
+// fields to determine whether it's localized or not.
+// See CDA documentation mentioning it here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes
 const isNotLocalized = (entity: Entry | Asset) => {
   return !entity.sys.locale;
 };

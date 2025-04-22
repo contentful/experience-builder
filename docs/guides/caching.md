@@ -129,7 +129,8 @@ export async function customFetchAllEntitiesWithAllLocales(
 }
 ```
 
-When using multi-locale entities, make sure use localized versions before passing them to `createExperience` and `fetchReferencedEntities`. In the provided snippet above, we use the function `localizeEntity` which will resolve each field for a specified locale, e.g. `{"en-US": "Hello world"}` would be replaced by `"Hello world"`. This function is not aware of the locale settings nor the content type and thus will not apply any fallback mechanism.
+When using multi-locale entities, make sure to use localized versions before passing them to `createExperience` and `fetchReferencedEntities`. In the provided snippet above, we use the function `localizeEntity` which will resolve each field for a specified locale, e.g. `{"en-US": "Hello world"}` would be replaced by `"Hello world"`. This function is not aware of the locale settings nor the content type and thus will not apply any fallback mechanism.
+Notice that `localizeEntity` defines `sys.locale` as this is the only reliable indicator to differentiate localized and unlocalized entities.
 
 As the page layout is only stored for the default locale code, the experience entry and its internally linked pattern entries are fetched using the regular client. If you want to retrieve custom experience fields for all locales, you can pass `clientWithAllLocales` to `fetchExperienceEntry`. In this case, you have to make sure that not only the experience entry is localized afterwards but also the patterns located at `fields.usedComponents`. Note that those can again include nested patterns.
 
