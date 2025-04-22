@@ -44,7 +44,7 @@ describe('fetchReferencedEntities', () => {
     }
   });
 
-  it('should throw an error if provided entry is not experience entry', async () => {
+  it('should throw an error if Provided entry is not an experience entry', async () => {
     try {
       await fetchReferencedEntities({
         client: mockClient,
