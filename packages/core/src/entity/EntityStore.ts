@@ -39,7 +39,7 @@ export class EntityStore extends EntityStoreBase {
     } else {
       const { experienceEntry, entities, locale } = options;
       if (!isExperienceEntry(experienceEntry)) {
-        throw new Error('Provided entry is not experience entry');
+        throw new Error('Provided entry is not an experience entry');
       }
 
       super({ entities, locale });

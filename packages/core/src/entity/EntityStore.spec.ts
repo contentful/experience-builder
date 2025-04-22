@@ -17,7 +17,7 @@ describe('EntityStore', () => {
       new EntityStore({ experienceEntry: entries[0], entities: [], locale });
       throw new Error('Should not reach this point');
     } catch (e) {
-      expect((e as Error).message).toEqual('Provided entry is not experience entry');
+      expect((e as Error).message).toEqual('Provided entry is not an experience entry');
     }
   });
 
