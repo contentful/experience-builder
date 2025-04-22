@@ -1,5 +1,5 @@
 {
-  "name": "create-contentful-studio-experiences",
+  "name": "@contentful/create-contentful-studio-experiences",
   "version": "1.36.0-beta.2",
   "description": "A CLI tool to get up and running with Contentful Studio Experiences quickly",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-contentful-studio-experiences#readme",
@@ -12,6 +12,9 @@
     "url": "https://github.com/contentful/experience-builder/issues"
   },
   "type": "module",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "main": "./dist/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/index.d.ts",
