@@ -1,4 +1,4 @@
-import { Asset, Entry, Link } from 'contentful';
+import { Asset, Entry } from 'contentful';
 import React from 'react';
 type ShallowEntry = Entry;
 type NeatPotionShelfProps = {

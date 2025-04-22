@@ -8,6 +8,7 @@ import {
   DeepReference,
   isLink,
   EditorModeEntityStore,
+  useEntityStore,
 } from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
@@ -29,7 +30,6 @@ import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
-import { useEntityStore } from '@/store/entityStore';
 import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
 
@@ -200,7 +200,7 @@ export function useEditorSubscriber() {
 
           let newEntityStore = entityStore;
           if (entityStore.locale !== locale) {
-            newEntityStore = resetEntityStore(locale);
+            newEntityStore = resetEntityStore(new EditorModeEntityStore({ locale, entities: [] }));
             setLocale(locale);
           }
 
@@ -216,7 +216,11 @@ export function useEditorSubscriber() {
             if (changedValueType === 'BoundValue') {
               const newDataSource = { ...dataSource, ...changedNode.data.dataSource };
               setDataSource(newDataSource);
-              await fetchMissingEntities(newEntityStore, newDataSource, tree);
+              await fetchMissingEntities(
+                newEntityStore as EditorModeEntityStore,
+                newDataSource,
+                tree,
+              );
             } else if (changedValueType === 'UnboundValue') {
               setUnboundValues({
                 ...unboundValues,
@@ -227,7 +231,7 @@ export function useEditorSubscriber() {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
-            await fetchMissingEntities(newEntityStore, dataSource, tree);
+            await fetchMissingEntities(newEntityStore as EditorModeEntityStore, dataSource, tree);
           }
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
