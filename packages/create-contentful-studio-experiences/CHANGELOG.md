@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.37.0](https://github.com/contentful/experience-builder/compare/v1.36.0...v1.37.0) (2025-04-23)
+
+### Bug Fixes
+
+- publish create package to github registry ([#1098](https://github.com/contentful/experience-builder/issues/1098)) ([c14ac85](https://github.com/contentful/experience-builder/commit/c14ac850d366e12b274846d0d8f48cd6cc39c303))
+- use contentful scope for create package ([224386e](https://github.com/contentful/experience-builder/commit/224386e7f24b539b0e37e11a6e816c40b9a1e133))
+
 ## [1.36.0](https://github.com/contentful/experience-builder/compare/v1.35.1...v1.36.0) (2025-04-17)
 
 **Note:** Version bump only for package create-contentful-studio-experiences

@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.37.0](https://github.com/contentful/experience-builder/compare/v1.36.0...v1.37.0) (2025-04-23)
+
+### Features
+
+- add localizeEntity and update docs ([060cda2](https://github.com/contentful/experience-builder/commit/060cda2179e7768d02102ee4d4af2bcdab155255))
+- add new fetcher hook useCustomFetch that enables caching ([914551c](https://github.com/contentful/experience-builder/commit/914551cd1288cac292a880148470f32da3d54503))
+
+### Bug Fixes
+
+- add locale in fixtures ([66fc810](https://github.com/contentful/experience-builder/commit/66fc81095a0ac2b3a775c3a057583c6c519059c4))
+- add locale in fixtures ([b5661e8](https://github.com/contentful/experience-builder/commit/b5661e873ff7d8b9528216f73406c47bd5769389))
+- adjust error checks for tests and export functions correctly ([78d1ccd](https://github.com/contentful/experience-builder/commit/78d1ccdb84571f2d94b8d358208290f7572c2157))
+- adjust interface for new union type ([c066466](https://github.com/contentful/experience-builder/commit/c066466df79e1f6c4f23f4889edf3e0456f18586))
+- correct tests to reflect reality ([69a909a](https://github.com/contentful/experience-builder/commit/69a909a0f1dec77ca1f2d8e96cc2d4249f45b1e9))
+- error message ([dd71fc3](https://github.com/contentful/experience-builder/commit/dd71fc3f7daa13e4796e07375e541ed883649226))
+- publish create package to github registry ([#1098](https://github.com/contentful/experience-builder/issues/1098)) ([c14ac85](https://github.com/contentful/experience-builder/commit/c14ac850d366e12b274846d0d8f48cd6cc39c303))
+- resolve background image optimization in SSR [SPA-2698] ([#1093](https://github.com/contentful/experience-builder/issues/1093)) ([f9ffd36](https://github.com/contentful/experience-builder/commit/f9ffd36fdc00c23a5bf40b05a991cb4bcd031521))
+- silent eslint warnings ([2b0d666](https://github.com/contentful/experience-builder/commit/2b0d666166760059c07f5509586950278f594066))
+- update lock file for new package name ([0d885ee](https://github.com/contentful/experience-builder/commit/0d885eeb58f0b4ba3db203515b320f0ab7165c5f))
+- use contentful scope for create package ([224386e](https://github.com/contentful/experience-builder/commit/224386e7f24b539b0e37e11a6e816c40b9a1e133))
+
 ## [1.36.0](https://github.com/contentful/experience-builder/compare/v1.35.1...v1.36.0) (2025-04-17)
 
 ### Features

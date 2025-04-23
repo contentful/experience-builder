@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.37.0](https://github.com/contentful/experience-builder/compare/v1.36.0...v1.37.0) (2025-04-23)
+
+### Features
+
+- add localizeEntity and update docs ([060cda2](https://github.com/contentful/experience-builder/commit/060cda2179e7768d02102ee4d4af2bcdab155255))
+- add new fetcher hook useCustomFetch that enables caching ([914551c](https://github.com/contentful/experience-builder/commit/914551cd1288cac292a880148470f32da3d54503))
+
+### Bug Fixes
+
+- add locale in fixtures ([66fc810](https://github.com/contentful/experience-builder/commit/66fc81095a0ac2b3a775c3a057583c6c519059c4))
+- adjust error checks for tests and export functions correctly ([78d1ccd](https://github.com/contentful/experience-builder/commit/78d1ccdb84571f2d94b8d358208290f7572c2157))
+- resolve background image optimization in SSR [SPA-2698] ([#1093](https://github.com/contentful/experience-builder/issues/1093)) ([f9ffd36](https://github.com/contentful/experience-builder/commit/f9ffd36fdc00c23a5bf40b05a991cb4bcd031521))
+
 ## [1.36.0](https://github.com/contentful/experience-builder/compare/v1.35.1...v1.36.0) (2025-04-17)
 
 ### Features
