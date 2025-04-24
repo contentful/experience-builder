@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.37.1](https://github.com/contentful/experience-builder/compare/v1.37.0...v1.37.1) (2025-04-24)
+
+### Bug Fixes
+
+- not throw logic error if a resolved entity was detected ([#1101](https://github.com/contentful/experience-builder/issues/1101)) ([#1107](https://github.com/contentful/experience-builder/issues/1107)) ([041ea13](https://github.com/contentful/experience-builder/commit/041ea13ab6816c37ed3ba7caaa3203f1353ded85))
+
 ## [1.37.0](https://github.com/contentful/experience-builder/compare/v1.36.0...v1.37.0) (2025-04-23)
 
 ### Features
