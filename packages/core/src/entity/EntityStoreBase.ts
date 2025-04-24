@@ -113,6 +113,7 @@ export abstract class EntityStoreBase {
   }
 
   protected addEntity(entity: Entry | Asset): void {
+    console.log('ADDING ENTITY', entity.sys.id, entity.sys.type);
     if (this.isAsset(entity)) {
       this.assetMap.set(entity.sys.id, entity);
     } else {

@@ -10,6 +10,7 @@ import { DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { ASSEMBLY_BLOCK_NODE_TYPE } from '@contentful/experiences-core/constants';
 import classNames from 'classnames';
+import { EntityStoreBase } from '@contentful/experiences-core';
 
 function getStyle(style: CSSProperties = {}, snapshot?: DraggableStateSnapshot) {
   if (!snapshot?.isDropAnimating) {
@@ -25,6 +26,7 @@ function getStyle(style: CSSProperties = {}, snapshot?: DraggableStateSnapshot) 
 
 type EditorBlockCloneProps = {
   node: ExperienceTreeNode;
+  entityStore: EntityStoreBase;
   resolveDesignValue: ResolveDesignValueType;
   provided?: DraggableProvided;
   snapshot?: DraggableStateSnapshot;
@@ -34,6 +36,7 @@ type EditorBlockCloneProps = {
 
 export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
   node: rawNode,
+  entityStore,
   resolveDesignValue,
   snapshot,
   provided,
@@ -44,6 +47,7 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
 
   const { node, elementToRender } = useComponent({
     node: rawNode,
+    entityStore,
     resolveDesignValue,
     renderDropzone,
     userIsDragging,

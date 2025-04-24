@@ -28,7 +28,7 @@ export function getArrayValue(
     } else if (value?.sys?.type === 'Link') {
       const resolvedEntity = entityStore.getEntityFromLink(value);
       if (!resolvedEntity) {
-        return;
+        return value;
       }
       return resolvedEntity;
     } else {

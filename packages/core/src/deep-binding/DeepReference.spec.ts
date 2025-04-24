@@ -47,7 +47,7 @@ describe('DeepReference', () => {
       });
 
       const entityStore = new EditorModeEntityStore({ entities: [entry], locale: 'en-US' });
-      const referent = deepReference.extractReferent(entityStore);
+      const referent = deepReference.extractReferent();
 
       expect(referent).toEqual({
         sys: {
@@ -65,7 +65,7 @@ describe('DeepReference', () => {
       });
 
       const entityStore = new EditorModeEntityStore({ entities: [], locale: 'en-US' });
-      const referent = deepReference.extractReferent(entityStore);
+      const referent = deepReference.extractReferent();
 
       expect(referent).toBeUndefined();
     });
@@ -77,7 +77,7 @@ describe('DeepReference', () => {
       });
 
       const entityStore = new EditorModeEntityStore({ entities: [entry], locale: 'en-US' });
-      const referent = deepReference.extractReferent(entityStore);
+      const referent = deepReference.extractReferent();
 
       expect(referent).toBeUndefined();
     });
@@ -89,7 +89,7 @@ describe('DeepReference', () => {
       });
 
       const entityStore = new EditorModeEntityStore({ entities: [entry], locale: 'en-US' });
-      const referent = deepReference.extractReferent(entityStore);
+      const referent = deepReference.extractReferent();
 
       expect(referent).toBeUndefined();
     });

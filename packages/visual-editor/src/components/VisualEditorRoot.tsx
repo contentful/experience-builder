@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { EntityStore, sendMessage } from '@contentful/experiences-core';
+import { entityCacheStore, EntityStore, sendMessage } from '@contentful/experiences-core';
 import { RootRenderer } from './RootRenderer/RootRenderer';
 import SimulateDnD from '@/utils/simulateDnD';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
@@ -10,7 +10,13 @@ import { useDraggedItemStore } from '@/store/draggedItem';
 import type { Experience } from '@contentful/experiences-core/types';
 import { useEditorStore } from '@/store/editor';
 
-export const VisualEditorRoot = ({ experience }: { experience?: Experience<EntityStore> }) => {
+export const VisualEditorRoot = ({
+  experience,
+  entityCache = entityCacheStore,
+}: {
+  experience?: Experience<EntityStore>;
+  entityCache?: typeof entityCacheStore;
+}) => {
   const initialized = useInitializeEditor();
   const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
 
@@ -60,5 +66,5 @@ export const VisualEditorRoot = ({ experience }: { experience?: Experience<Entit
 
   if (!initialized) return null;
 
-  return <RootRenderer />;
+  return <RootRenderer entityCache={entityCache} />;
 };

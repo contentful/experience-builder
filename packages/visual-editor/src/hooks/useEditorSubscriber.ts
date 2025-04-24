@@ -8,7 +8,7 @@ import {
   DeepReference,
   isLink,
   EditorModeEntityStore,
-  useEntityStore,
+  entityCacheStore,
 } from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
@@ -33,10 +33,12 @@ import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/s
 import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
 
-export function useEditorSubscriber() {
-  const entityStore = useEntityStore((state) => state.entityStore);
-  const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
-  const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
+export function useEditorSubscriber(entityCache: typeof entityCacheStore) {
+  const entityStore = entityCache((state) => state.entityStore);
+  const areEntitiesFetched = entityCache((state) => state.areEntitiesFetched);
+  const setEntitiesFetched = entityCache((state) => state.setEntitiesFetched);
+  const resetEntityStore = entityCache((state) => state.resetEntityStore);
+
   const { updateTree, updateNodesByUpdatedEntity } = useTreeStore((state) => ({
     updateTree: state.updateTree,
     updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
@@ -48,7 +50,6 @@ export function useEditorSubscriber() {
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
   const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
@@ -109,7 +110,7 @@ export function useEditorSubscriber() {
        */
       const isMissingL2Entities = (deepReferences: DeepReference[]): boolean => {
         const referentLinks = deepReferences
-          .map((deepReference) => deepReference.extractReferent(entityStore))
+          .map((deepReference) => deepReference.extractReferent())
           .filter(isLink);
         const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
         return Boolean(missingAssetIds.length) || Boolean(missingEntryIds.length);
@@ -132,7 +133,7 @@ export function useEditorSubscriber() {
        */
       const fillupL2 = async ({ deepReferences }: { deepReferences: DeepReference[] }) => {
         const referentLinks = deepReferences
-          .map((deepReference) => deepReference.extractReferent(entityStore))
+          .map((deepReference) => deepReference.extractReferent())
           .filter(isLink);
         const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
         await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });
@@ -147,6 +148,8 @@ export function useEditorSubscriber() {
           startFetching();
           await fillupL2({ deepReferences });
         }
+
+        console.log('ENTITY_STORE_AFTER_FILLUP', entityStore);
       } catch (error) {
         console.error('[experiences-sdk-react] Failed fetching entities');
         console.error(error);
@@ -200,8 +203,9 @@ export function useEditorSubscriber() {
 
           let newEntityStore = entityStore;
           if (entityStore.locale !== locale) {
-            newEntityStore = resetEntityStore(new EditorModeEntityStore({ locale, entities: [] }));
+            newEntityStore = new EditorModeEntityStore({ locale, entities: [] });
             setLocale(locale);
+            resetEntityStore(newEntityStore);
           }
 
           // Below are mutually exclusive cases
@@ -233,6 +237,13 @@ export function useEditorSubscriber() {
             setUnboundValues(unboundValues);
             await fetchMissingEntities(newEntityStore as EditorModeEntityStore, dataSource, tree);
           }
+
+          console.log(
+            'NEW_ENTITY_STORE_AFTER_FILLUP',
+            newEntityStore,
+            entityCacheStore.getState().entityStore,
+          );
+
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
           break;

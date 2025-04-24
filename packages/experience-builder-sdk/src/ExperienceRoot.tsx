@@ -5,6 +5,7 @@ import {
   createExperience,
   validateExperienceBuilderConfig,
   debug as cfDebug,
+  entityCacheStore,
 } from '@contentful/experiences-core';
 import { EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
