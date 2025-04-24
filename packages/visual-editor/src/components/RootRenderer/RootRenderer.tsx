@@ -9,17 +9,18 @@ import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { DNDProvider } from './DNDProvider';
-import { sendMessage } from '@contentful/experiences-core';
+import { entityCacheStore, sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
 import { Dropzone } from '@components/DraggableBlock/Dropzone';
 
 interface RootRendererProperties {
   onChange?: (data: ExperienceTree) => void;
+  entityCache: typeof entityCacheStore;
 }
 
-export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => {
-  useEditorSubscriber();
+export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange, entityCache }) => {
+  useEditorSubscriber(entityCache);
 
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
@@ -117,12 +118,18 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef.current]);
 
+  const entityStore = entityCache((state) => state.entityStore);
+
   return (
     <DNDProvider>
       {dragItem && <DraggableContainer id={dragItem} />}
       <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
         {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitbox} />}
-        <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
+        <Dropzone
+          zoneId={ROOT_ID}
+          resolveDesignValue={resolveDesignValue}
+          entityStore={entityStore}
+        />
         {userIsDragging && (
           <>
             <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />

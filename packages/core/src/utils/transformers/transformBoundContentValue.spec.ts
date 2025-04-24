@@ -440,7 +440,6 @@ describe('transformBoundContentValue', () => {
         componentDefinition.variables.referencedEntry.type,
         path,
       );
-      // @ts-expect-error -- deep referenced entry doesn't type well
       expect(result?.fields.referencedEntry.fields.title).toEqual('Entry 2');
     });
   });
@@ -467,11 +466,9 @@ describe('transformBoundContentValue', () => {
         componentDefinition.variables.referencedEntries.type,
         path,
       );
-      // @ts-expect-error -- deep referenced entry doesn't type well
       expect(result[0]?.fields.referencedEntry.fields.referencedEntry.fields.title).toEqual(
         'Entry 2',
       );
-      // @ts-expect-error -- deep referenced entry doesn't type well
       expect(result[1]?.fields.referencedEntry.fields.title).toEqual('Entry 2');
     });
   });

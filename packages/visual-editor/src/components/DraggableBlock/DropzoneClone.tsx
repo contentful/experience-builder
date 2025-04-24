@@ -9,9 +9,11 @@ import { RenderDropzoneFunction } from './Dropzone.types';
 import { EditorBlockClone } from './EditorBlockClone';
 import { parseZoneId } from '@/utils/zone';
 import { getHtmlComponentProps, getHtmlDragProps } from '@/utils/getComponentProps';
+import { EntityStoreBase } from '@contentful/experiences-core';
 
 type DropzoneProps = {
   zoneId: string;
+  entityStore: EntityStoreBase;
   node?: ComponentData;
   resolveDesignValue?: ResolveDesignValueType;
   className?: string;
@@ -23,6 +25,7 @@ type DropzoneProps = {
 
 export function DropzoneClone({
   node,
+  entityStore,
   zoneId,
   resolveDesignValue,
   WrapperComponent = 'div',
@@ -70,6 +73,7 @@ export function DropzoneClone({
 
           return (
             <EditorBlockClone
+              entityStore={entityStore}
               key={componentId}
               node={item}
               resolveDesignValue={resolveDesignValue}

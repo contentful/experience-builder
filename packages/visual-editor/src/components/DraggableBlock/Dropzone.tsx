@@ -1,6 +1,6 @@
 import React, { ElementType, useCallback, useMemo } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-import { isComponentAllowedOnRoot } from '@contentful/experiences-core';
+import { EntityStoreBase, isComponentAllowedOnRoot } from '@contentful/experiences-core';
 import type {
   ResolveDesignValueType,
   DragWrapperProps,
@@ -36,6 +36,7 @@ type DropzoneProps = {
   WrapperComponent?: ElementType | string;
   dragProps?: DragWrapperProps;
   wrappingPatternIds?: Set<string>;
+  entityStore: EntityStoreBase;
 };
 
 export function Dropzone({
@@ -45,6 +46,7 @@ export function Dropzone({
   className,
   WrapperComponent = 'div',
   dragProps,
+  entityStore,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
   ...rest
 }: DropzoneProps) {
@@ -91,6 +93,7 @@ export function Dropzone({
       return (
         <Dropzone
           zoneId={node.data.id}
+          entityStore={entityStore}
           node={node}
           resolveDesignValue={resolveDesignValue}
           wrappingPatternIds={wrappingPatternIds}
@@ -105,6 +108,7 @@ export function Dropzone({
     (node, props) => {
       return (
         <DropzoneClone
+          entityStore={entityStore}
           zoneId={node.data.id}
           node={node}
           resolveDesignValue={resolveDesignValue}
@@ -184,6 +188,7 @@ export function Dropzone({
       isDropDisabled={!isDropzoneEnabled}
       renderClone={(provided, snapshot, rubic) => (
         <EditorBlockClone
+          entityStore={entityStore}
           node={content[rubic.source.index]}
           resolveDesignValue={resolveDesignValue}
           provided={provided}
@@ -224,6 +229,7 @@ export function Dropzone({
                 .filter((node) => node.data.slotId === slotId)
                 .map((item, i) => (
                   <EditorBlock
+                    entityStore={entityStore}
                     placeholder={{
                       isDraggingOver: snapshot?.isDraggingOver,
                       totalIndexes: content.length,

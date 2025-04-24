@@ -139,6 +139,8 @@ export abstract class EditorEntityStore extends EntityStoreBase {
 
     const result = (await newPromise) as Array<Entry> | Array<Asset>;
 
+    console.log('PROMISE_RESOLVED', result);
+
     result.forEach((value) => {
       this.addEntity(value);
     });
