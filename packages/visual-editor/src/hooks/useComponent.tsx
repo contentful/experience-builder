@@ -15,15 +15,21 @@ import { Assembly } from '@contentful/experiences-components-react';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
-import { isContentfulStructureComponent, useEntityStore } from '@contentful/experiences-core';
+import {
+  isContentfulStructureComponent,
+  entityCacheStore,
+  EntityStoreBase,
+} from '@contentful/experiences-core';
 import { MissingComponentPlaceholder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
 import { useTreeStore } from '@/store/tree';
 import { getItem } from '@/utils/getItem';
 import { CircularDependencyErrorPlaceholder } from '@components/DraggableHelpers/CircularDependencyErrorPlaceholder';
 import { Entry } from 'contentful';
+import { useStore } from 'zustand';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
+  entityStore: EntityStoreBase;
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
@@ -32,13 +38,14 @@ type UseComponentProps = {
 
 export const useComponent = ({
   node,
+  entityStore,
   resolveDesignValue,
   renderDropzone,
   userIsDragging,
   wrappingPatternIds,
 }: UseComponentProps) => {
-  const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
-  const entityStore = useEntityStore((state) => state.entityStore);
+  useStore(entityCacheStore, (state) => state.areEntitiesFetched);
+  const areEntitiesFetched = useStore(entityCacheStore, (state) => state.areEntitiesFetched);
   const tree = useTreeStore((state) => state.tree);
 
   const componentRegistration: ComponentRegistration | undefined = useMemo(() => {
@@ -73,6 +80,7 @@ export const useComponent = ({
 
   const { componentProps, wrapperStyles } = useComponentProps({
     node,
+    entityStore,
     areEntitiesFetched,
     resolveDesignValue,
     renderDropzone,
@@ -110,27 +118,27 @@ export const useComponent = ({
       );
     }
 
-    const services = {
-      hello() {
-        console.log('hello');
-      },
-      getEntityStore() {
-        return entityStore;
-      },
-      entityStore, // TODO: should we expose it here or just use getter?
-      resolveLinksUpToLevel3(shallowEntry: Entry): Entry {
-        const resolvedEntry = structuredClone(shallowEntry);
-        for (const [field, fieldValue] of Object.entries(resolvedEntry.fields)) {
-          if (fieldValue && fieldValue.sys?.type === 'Link') {
-            const resolvedEntryOrAsset = entityStore.getEntryOrAsset(fieldValue, ''); // no need for field, as it is only for deep binding
-            if (resolvedEntryOrAsset) {
-              resolvedEntry.fields[field] = resolvedEntryOrAsset;
-            }
-          }
-        }
-        return resolvedEntry;
-      },
-    };
+    // const services = {
+    //   hello() {
+    //     console.log('hello');
+    //   },
+    //   getEntityStore() {
+    //     return entityStore;
+    //   },
+    //   entityStore, // TODO: should we expose it here or just use getter?
+    //   resolveLinksUpToLevel3(shallowEntry: Entry): Entry {
+    //     const resolvedEntry = structuredClone(shallowEntry);
+    //     for (const [field, fieldValue] of Object.entries(resolvedEntry.fields)) {
+    //       if (fieldValue && fieldValue.sys?.type === 'Link') {
+    //         const resolvedEntryOrAsset = entityStore.getEntryOrAsset(fieldValue, ''); // no need for field, as it is only for deep binding
+    //         if (resolvedEntryOrAsset) {
+    //           resolvedEntry.fields[field] = resolvedEntryOrAsset;
+    //         }
+    //       }
+    //     }
+    //     return resolvedEntry;
+    //   },
+    // };
 
     const element = React.createElement(
       ImportedComponentErrorBoundary,
@@ -138,7 +146,7 @@ export const useComponent = ({
       React.createElement(componentRegistration.component, {
         ...componentProps,
         dragProps,
-        services,
+        // services,
       }),
     );
 

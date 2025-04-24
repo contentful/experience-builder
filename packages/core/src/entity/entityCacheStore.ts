@@ -14,29 +14,46 @@ export interface EntityState {
   resolveEntity: <T extends 'Entry' | 'Asset'>(
     link?: UnresolvedLink<T>,
   ) => Entry | Asset | undefined;
-  resetEntityStore: (entityStore: EntityStoreBase) => EntityStoreBase;
+  resetEntityStore: (entityStore: EntityStoreBase) => void;
 }
 
-export const entityCache = create<EntityState>((set) => ({
-  entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
+export const entityCacheStore = create<EntityState>((set, get) => ({
+  entityStore: new EditorModeEntityStore({ locale: 'lol', entities: [] }),
   areEntitiesFetched: false,
 
   setEntitiesFetched(fetched) {
     set({ areEntitiesFetched: fetched });
   },
-  resolveEntity<T extends 'Entry' | 'Asset'>(link?: UnresolvedLink<T>): Entry | Asset | undefined {
+  resolveEntity<T extends 'Entry' | 'Asset'>(link?: UnresolvedLink<T>) {
     if (!link) return undefined;
-    return this.entityStore.getEntityFromLink(link);
+
+    const { entityStore } = get();
+
+    console.log('entityCache.entityStore', entityStore);
+    return entityStore.getEntityFromLink(link);
   },
-  resetEntityStore(entityStore: EntityStoreBase): EntityStoreBase {
+  resetEntityStore(entityStore) {
+    try {
+      throw new Error('Test');
+    } catch (e) {
+      console.log('reset caused by', (e as Error).stack);
+    }
+    console.log('resetting entity store with', entityStore);
     console.debug(`[experiences-sdk-react] Resetting entity store`);
     set({
       entityStore,
       areEntitiesFetched: false,
     });
-
-    return entityStore;
   },
 }));
 
-export { entityCache as useEntityStore };
+function maybeResolveLink(link: UnresolvedLink<'Entry'>): Entry | undefined;
+function maybeResolveLink(link: UnresolvedLink<'Asset'>): Asset | undefined;
+function maybeResolveLink(
+  link: UnresolvedLink<'Entry'> | UnresolvedLink<'Asset'>,
+): Entry | Asset | undefined;
+function maybeResolveLink(link: UnresolvedLink<'Entry' | 'Asset'>) {
+  return entityCacheStore.getState().resolveEntity(link);
+}
+
+export { maybeResolveLink };
