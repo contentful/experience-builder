@@ -203,11 +203,6 @@ export abstract class EntityStoreBase {
           }
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = entity; // we move up
-        } else {
-          // TODO: Eg. when someone changed the schema and the field is not a link anymore, what should we return then?
-          throw new Error(
-            `LogicError: Invalid value of a field we consider a reference field. Cannot resolve field ${field} of a fieldset as it is not a link, neither undefined.`,
-          );
         }
       }
       return {
