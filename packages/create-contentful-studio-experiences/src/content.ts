@@ -604,7 +604,7 @@ export const getExperienceEntryDemoReqBody = (title: string, slug: string) => ({
         },
         XFjLtoeKIQFBAegSpmkSu: {
           value:
-            'Read more: https://github.com/contentful/experience-builder/tree/development/packages/create-contentful-studio-experiences',
+            'Read more: https://github.com/contentful/experience-builder/tree/development/packages/create-studio-experiences',
         },
         'ch6sZSVEQy9a4x_tYv-pG': {
           value: false,

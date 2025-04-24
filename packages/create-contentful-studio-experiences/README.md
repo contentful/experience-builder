@@ -1,4 +1,4 @@
-# @contentful/create-contentful-studio-experiences
+# @contentful/create-studio-experiences
 
 This package is a CLI tool to bootstrap a [React, Vite & TypeScript](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) app that renders [Studio Experiences](https://www.contentful.com/developers/docs/experiences/what-are-experiences/).
 
@@ -11,7 +11,7 @@ A Contentful Space that has Studio Experiences enabled. See: [How to enable Expe
 To create a Contentful Studio Experiences project, run this command and follow the prompts.
 
 ```bash
-npm init @contentful/contentful-studio-experiences
+npm init @contentful/studio-experiences
 ```
 
 Navigate to your project directory and start the server. After that, you can manage your Experiences in Contentful.
