@@ -17,7 +17,7 @@ import { Mock, vi, it, describe } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { getValueForBreakpoint } from '@contentful/experiences-core';
+import { EditorModeEntityStore, getValueForBreakpoint } from '@contentful/experiences-core';
 
 // Redefining this type to make 'data.props.cfVisibility' a required field.
 // Semantically, it is always available on the node at runtime,
@@ -136,6 +136,7 @@ describe('useComponentProps', () => {
     const { result } = renderHook(() =>
       useComponentProps({
         node: { ...node, type: ASSEMBLY_NODE_TYPE },
+        entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
         areEntitiesFetched,
         resolveDesignValue,
         renderDropzone,
@@ -211,6 +212,7 @@ describe('useComponentProps', () => {
     const { result } = renderHook(() =>
       useComponentProps({
         node,
+        entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
         areEntitiesFetched,
         resolveDesignValue,
         renderDropzone,
@@ -240,6 +242,7 @@ describe('useComponentProps', () => {
             },
           },
         },
+        entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
         areEntitiesFetched,
         resolveDesignValue,
         renderDropzone,
@@ -305,6 +308,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -321,6 +325,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -342,6 +347,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -431,6 +437,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node: newNode,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -468,6 +475,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node: newNode,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -492,6 +500,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -513,6 +522,7 @@ describe('useComponentProps', () => {
         const { result } = renderHook(() =>
           useComponentProps({
             node,
+            entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
             areEntitiesFetched,
             resolveDesignValue,
             renderDropzone,
@@ -534,6 +544,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -550,6 +561,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -571,6 +583,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -641,6 +654,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched: true,
           resolveDesignValue,
           renderDropzone,
@@ -658,6 +672,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched: true,
           resolveDesignValue,
           renderDropzone,

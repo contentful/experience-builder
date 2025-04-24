@@ -20,7 +20,7 @@ export const transformBoundContentValue = (
   variableName: string,
   variableType: ComponentDefinitionVariableType,
   path: string,
-): BoundComponentPropertyTypes => {
+): any => {
   const entityOrAsset = entityStore.getEntryOrAsset(binding, path);
   if (!entityOrAsset) return;
 

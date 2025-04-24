@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react';
-import { sendMessage } from '@contentful/experiences-core';
+import { EntityStoreBase, sendMessage } from '@contentful/experiences-core';
 import { useSelectedInstanceCoordinates } from '@/hooks/useSelectedInstanceCoordinates';
 import { useEditorStore } from '@/store/editor';
 import { useComponent } from '@/hooks/useComponent';
@@ -35,6 +35,7 @@ function getStyle(style, snapshot) {
 type EditorBlockProps = {
   placeholder: PlaceholderParams;
   node: ExperienceTreeNode;
+  entityStore: EntityStoreBase;
   index: number;
   userIsDragging: boolean;
   draggingNewComponent: boolean | undefined;
@@ -46,6 +47,7 @@ type EditorBlockProps = {
 
 export const EditorBlock: React.FC<EditorBlockProps> = ({
   node: rawNode,
+  entityStore,
   resolveDesignValue,
   renderDropzone,
   index,
@@ -68,6 +70,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
     isNestedPattern,
   } = useComponent({
     node: rawNode,
+    entityStore,
     resolveDesignValue,
     renderDropzone,
     userIsDragging,

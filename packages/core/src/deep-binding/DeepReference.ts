@@ -9,7 +9,7 @@ import {
 import { isDeepPath, parseDataSourcePathWithL1DeepBindings } from '@/utils/pathSchema';
 import { treeVisit } from '@/utils/treeTraversal';
 import { isLink } from '@/utils/isLink';
-import { EntityStoreBase } from '@/entity/EntityStoreBase';
+import { maybeResolveLink } from '@/entity';
 
 type DeepReferenceOpts = {
   path: string;
@@ -41,8 +41,8 @@ export class DeepReference {
    * Extracts referent from the path, using EntityStore as source of
    * entities during the resolution path.
    */
-  extractReferent(entityStore: EntityStoreBase): Link<'Asset' | 'Entry'> | undefined {
-    const headEntity = entityStore.getEntityFromLink(this.entityLink);
+  extractReferent(): Link<'Asset' | 'Entry'> | undefined {
+    const headEntity = maybeResolveLink(this.entityLink as any);
 
     const maybeReferentLink = headEntity?.fields[this.field] as
       | Link<'Entry'>

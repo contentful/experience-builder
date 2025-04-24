@@ -1,4 +1,4 @@
-import { useEntityStore } from '@contentful/experiences-core';
+import { maybeResolveLink } from '@contentful/experiences-core';
 import React, { forwardRef, HTMLAttributes } from 'react';
 
 type CircularDependencyErrorPlaceholderProperties = HTMLAttributes<HTMLDivElement> & {
@@ -9,8 +9,6 @@ export const CircularDependencyErrorPlaceholder = forwardRef<
   HTMLDivElement,
   CircularDependencyErrorPlaceholderProperties
 >(({ wrappingPatternIds, ...props }, ref) => {
-  const entityStore = useEntityStore((state) => state.entityStore);
-
   return (
     <div
       {...props}
@@ -28,7 +26,7 @@ export const CircularDependencyErrorPlaceholder = forwardRef<
       <ul>
         {Array.from(wrappingPatternIds).map((patternId) => {
           const entryLink = { sys: { type: 'Link', linkType: 'Entry', id: patternId } } as const;
-          const entry = entityStore.getEntityFromLink(entryLink);
+          const entry = maybeResolveLink(entryLink);
           const entryTitle = entry?.fields?.title;
           const text = entryTitle ? `${entryTitle} (${patternId})` : patternId;
           return <li key={patternId}>{text}</li>;
