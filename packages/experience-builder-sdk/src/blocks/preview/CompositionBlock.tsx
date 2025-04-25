@@ -340,33 +340,10 @@ export const CompositionBlock = ({
     );
   }
 
-  // const services = {
-  //   hello() {
-  //     console.log('hello');
-  //   },
-  //   getEntityStore() {
-  //     return entityStore;
-  //   },
-  //   entityStore, // TODO: should we expose it here or just use getter?
-  //   resolveLinksUpToLevel3(shallowEntry: Entry): Entry {
-  //     const resolvedEntry = structuredClone(shallowEntry);
-  //     for (const [field, fieldValue] of Object.entries(resolvedEntry.fields)) {
-  //       if (fieldValue && fieldValue.sys?.type === 'Link') {
-  //         const resolvedEntryOrAsset = entityStore.getEntryOrAsset(fieldValue, ''); // no need for field, as it is only for deep binding
-  //         if (resolvedEntryOrAsset) {
-  //           resolvedEntry.fields[field] = resolvedEntryOrAsset;
-  //         }
-  //       }
-  //     }
-  //     return resolvedEntry;
-  //   },
-  // };
-
   return React.createElement(
     component,
     {
       ...sanitizeNodeProps(props),
-      // services,
     },
     children ?? (typeof props.children === 'string' ? props.children : null),
   );

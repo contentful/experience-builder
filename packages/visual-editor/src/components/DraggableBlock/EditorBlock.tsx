@@ -36,6 +36,7 @@ type EditorBlockProps = {
   placeholder: PlaceholderParams;
   node: ExperienceTreeNode;
   entityStore: EntityStoreBase;
+  areEntitiesFetched: boolean;
   index: number;
   userIsDragging: boolean;
   draggingNewComponent: boolean | undefined;
@@ -48,6 +49,7 @@ type EditorBlockProps = {
 export const EditorBlock: React.FC<EditorBlockProps> = ({
   node: rawNode,
   entityStore,
+  areEntitiesFetched,
   resolveDesignValue,
   renderDropzone,
   index,
@@ -71,6 +73,7 @@ export const EditorBlock: React.FC<EditorBlockProps> = ({
   } = useComponent({
     node: rawNode,
     entityStore,
+    areEntitiesFetched,
     resolveDesignValue,
     renderDropzone,
     userIsDragging,

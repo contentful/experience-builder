@@ -9,7 +9,7 @@ import {
 import { isDeepPath, parseDataSourcePathWithL1DeepBindings } from '@/utils/pathSchema';
 import { treeVisit } from '@/utils/treeTraversal';
 import { isLink } from '@/utils/isLink';
-import { maybeResolveLink } from '@/entity';
+import { inMemoryEntities } from '@/entity';
 
 type DeepReferenceOpts = {
   path: string;
@@ -42,7 +42,7 @@ export class DeepReference {
    * entities during the resolution path.
    */
   extractReferent(): Link<'Asset' | 'Entry'> | undefined {
-    const headEntity = maybeResolveLink(this.entityLink as any);
+    const headEntity = inMemoryEntities.maybeResolveLink(this.entityLink as any);
 
     const maybeReferentLink = headEntity?.fields[this.field] as
       | Link<'Entry'>
