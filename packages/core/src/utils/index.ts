@@ -10,6 +10,7 @@ export * from './resolveHyperlinkPattern';
 export * from './sanitizeNodeProps';
 export * from './styleUtils';
 export * from './transformers';
+export * from './treeTraversal';
 export * from './typeguards';
 export * from './utils';
 export * from './validations';
