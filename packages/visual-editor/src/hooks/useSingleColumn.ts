@@ -9,42 +9,28 @@ export default function useSingleColumn(
   resolveDesignValue: ResolveDesignValueType,
 ) {
   const tree = useTreeStore((store) => store.tree);
-
   const isSingleColumn = node.data.blockId === CONTENTFUL_COMPONENTS.singleColumn.id;
 
-  const { isWrapped, wrapColumnsCount } = useMemo(() => {
-    let isWrapped = false;
-    let wrapColumnsCount = 0;
-
+  const isWrapped = useMemo(() => {
     if (!node.parentId || !isSingleColumn) {
-      return { isWrapped, wrapColumnsCount };
+      return false;
     }
 
     const parentNode = getItem({ id: node.parentId }, tree);
-
     if (!parentNode || parentNode.data.blockId !== CONTENTFUL_COMPONENTS.columns.id) {
-      return { isWrapped, wrapColumnsCount };
+      return false;
     }
 
-    const { cfWrapColumns, cfWrapColumnsCount } = parentNode.data.props;
-
-    if (cfWrapColumns.type === 'DesignValue') {
-      isWrapped = resolveDesignValue(cfWrapColumns.valuesByBreakpoint, 'cfWrapColumns') as boolean;
+    const { cfWrapColumns } = parentNode.data.props;
+    if (cfWrapColumns.type !== 'DesignValue') {
+      return false;
     }
 
-    if (cfWrapColumnsCount.type === 'DesignValue') {
-      wrapColumnsCount = resolveDesignValue(
-        cfWrapColumnsCount.valuesByBreakpoint,
-        'cfWrapColumnsCount',
-      ) as number;
-    }
-
-    return { isWrapped, wrapColumnsCount };
+    return resolveDesignValue(cfWrapColumns.valuesByBreakpoint, 'cfWrapColumns') as boolean;
   }, [tree, node, isSingleColumn, resolveDesignValue]);
 
   return {
     isSingleColumn,
     isWrapped,
-    wrapColumnsCount,
   };
 }
