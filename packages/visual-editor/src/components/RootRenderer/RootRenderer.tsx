@@ -9,18 +9,21 @@ import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { DNDProvider } from './DNDProvider';
-import { entityCacheStore, sendMessage } from '@contentful/experiences-core';
+import { inMemoryEntitiesStore, sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
 import { Dropzone } from '@components/DraggableBlock/Dropzone';
 
 interface RootRendererProperties {
   onChange?: (data: ExperienceTree) => void;
-  entityCache: typeof entityCacheStore;
+  inMemoryEntitiesStore: typeof inMemoryEntitiesStore;
 }
 
-export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange, entityCache }) => {
-  useEditorSubscriber(entityCache);
+export const RootRenderer: React.FC<RootRendererProperties> = ({
+  onChange,
+  inMemoryEntitiesStore,
+}) => {
+  useEditorSubscriber(inMemoryEntitiesStore);
 
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
@@ -118,7 +121,8 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange, entit
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef.current]);
 
-  const entityStore = entityCache((state) => state.entityStore);
+  const entityStore = inMemoryEntitiesStore((state) => state.entityStore);
+  const areEntitiesFetched = inMemoryEntitiesStore((state) => state.areEntitiesFetched);
 
   return (
     <DNDProvider>
@@ -129,6 +133,7 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange, entit
           zoneId={ROOT_ID}
           resolveDesignValue={resolveDesignValue}
           entityStore={entityStore}
+          areEntitiesFetched={areEntitiesFetched}
         />
         {userIsDragging && (
           <>

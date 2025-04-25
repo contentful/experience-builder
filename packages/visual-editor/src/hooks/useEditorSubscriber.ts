@@ -8,7 +8,7 @@ import {
   DeepReference,
   isLink,
   EditorModeEntityStore,
-  entityCacheStore,
+  inMemoryEntitiesStore,
 } from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
@@ -33,7 +33,7 @@ import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/s
 import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
 
-export function useEditorSubscriber(entityCache: typeof entityCacheStore) {
+export function useEditorSubscriber(entityCache: typeof inMemoryEntitiesStore) {
   const entityStore = entityCache((state) => state.entityStore);
   const areEntitiesFetched = entityCache((state) => state.areEntitiesFetched);
   const setEntitiesFetched = entityCache((state) => state.setEntitiesFetched);
@@ -148,8 +148,6 @@ export function useEditorSubscriber(entityCache: typeof entityCacheStore) {
           startFetching();
           await fillupL2({ deepReferences });
         }
-
-        console.log('ENTITY_STORE_AFTER_FILLUP', entityStore);
       } catch (error) {
         console.error('[experiences-sdk-react] Failed fetching entities');
         console.error(error);
@@ -237,12 +235,6 @@ export function useEditorSubscriber(entityCache: typeof entityCacheStore) {
             setUnboundValues(unboundValues);
             await fetchMissingEntities(newEntityStore as EditorModeEntityStore, dataSource, tree);
           }
-
-          console.log(
-            'NEW_ENTITY_STORE_AFTER_FILLUP',
-            newEntityStore,
-            entityCacheStore.getState().entityStore,
-          );
 
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);

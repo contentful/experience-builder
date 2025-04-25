@@ -2,7 +2,7 @@ import React from 'react';
 import { UnresolvedLink } from 'contentful';
 import { Document } from '@contentful/rich-text-types';
 import { RichText } from '@contentful/experiences-components-react';
-import { maybeResolveLink } from '@contentful/experiences-sdk-react';
+import { inMemoryEntities } from '@contentful/experiences-sdk-react';
 
 interface KitchenSinkProps {
   jsonObject?: object;
@@ -35,11 +35,7 @@ const KitchenSink: React.FC<KitchenSinkProps> = ({
   richText,
   ...props
 }) => {
-  const resolvedEntryReference = maybeResolveLink(entryReference!);
-
-  console.log('~resolvedEntryReference', entryReference, resolvedEntryReference);
-
-  console.log('~listReference', listReference);
+  const resolvedEntryReference = inMemoryEntities.maybeResolveLink(entryReference!);
 
   return (
     <div {...props}>

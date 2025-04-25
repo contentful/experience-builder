@@ -39,7 +39,6 @@ export const PotionShelf: React.FC<PotionShelfProps> = (props: PotionShelfProps)
 
   const renderPotionComponent = (potion: PotionL2, index: number) => {
     const { title, image, ingredientPrimary } = potion.fields;
-    console.log(`;; potion.fields: `, { fields: potion.fields });
     const src = image.fields?.file?.url as string;
 
     return (
