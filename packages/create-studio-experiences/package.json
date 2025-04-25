@@ -1,12 +1,12 @@
 {
-  "name": "@contentful/create-contentful-studio-experiences",
+  "name": "@contentful/create-studio-experiences",
   "version": "1.37.1",
   "description": "A CLI tool to get up and running with Contentful Studio Experiences quickly",
-  "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-contentful-studio-experiences#readme",
+  "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-studio-experiences#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/contentful/experience-builder.git",
-    "directory": "packages/create-contentful-studio-experiences"
+    "directory": "packages/create-studio-experiences"
   },
   "bugs": {
     "url": "https://github.com/contentful/experience-builder/issues"
@@ -41,7 +41,7 @@
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test": "echo \"Error: no test specified\" && exit 1",
     "depcruise": "depcruise src",
-    "create-contentful-studio-experiences": "node dist/index.js"
+    "create-studio-experiences": "node dist/index.js"
   },
   "author": "Contentful GmbH",
   "license": "MIT",
@@ -51,7 +51,7 @@
     "typescript": "^5.2.2"
   },
   "bin": {
-    "create-contentful-studio-experiences": "./dist/index.js"
+    "create-studio-experiences": "./dist/index.js"
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",
