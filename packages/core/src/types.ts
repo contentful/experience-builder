@@ -158,14 +158,7 @@ export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>;
 /** Type of a single node of the experience tree exchanged via postMessage between the SDK and Contentful Web app */
 export type ExperienceTreeNode = {
   // TODO: add conditional typing magic to reduce the number of optionals
-  type:
-    | 'block'
-    | 'root'
-    | 'editorRoot'
-    | 'designComponent'
-    | 'designComponentBlock'
-    | 'assembly'
-    | 'assemblyBlock';
+  type: 'block' | 'root' | 'assembly' | 'assemblyBlock';
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
