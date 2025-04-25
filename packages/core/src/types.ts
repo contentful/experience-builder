@@ -628,8 +628,6 @@ export type RequestReadOnlyModePayload = undefined;
 export type RequestEditorModePayload = undefined;
 export type ExperienceUpdatedPayload = {
   tree: ExperienceTree;
-  /** @deprecated in favor of assemblies */
-  designComponents?: ExperienceUsedComponents;
   assemblies?: ExperienceUsedComponents;
   locale: string;
   /** @deprecated maybe? */
