@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react';
-import { entityCacheStore, EntityStore, sendMessage } from '@contentful/experiences-core';
+import {
+  inMemoryEntitiesStore as defaultInMemoryEntitiesStore,
+  EntityStore,
+  sendMessage,
+} from '@contentful/experiences-core';
 import { RootRenderer } from './RootRenderer/RootRenderer';
 import SimulateDnD from '@/utils/simulateDnD';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
@@ -12,12 +16,12 @@ import { useEditorStore } from '@/store/editor';
 
 export const VisualEditorRoot = ({
   experience,
-  entityCache = entityCacheStore,
+  inMemoryEntitiesStore = defaultInMemoryEntitiesStore,
 }: {
   experience?: Experience<EntityStore>;
-  entityCache?: typeof entityCacheStore;
+  inMemoryEntitiesStore?: typeof defaultInMemoryEntitiesStore;
 }) => {
-  const initialized = useInitializeEditor();
+  const initialized = useInitializeEditor(inMemoryEntitiesStore);
   const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
 
   const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
@@ -65,5 +69,5 @@ export const VisualEditorRoot = ({
 
   if (!initialized) return null;
 
-  return <RootRenderer entityCache={entityCache} />;
+  return <RootRenderer inMemoryEntitiesStore={inMemoryEntitiesStore} />;
 };

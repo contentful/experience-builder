@@ -9,7 +9,6 @@ import {
   isStructureWithRelativeHeight,
   sanitizeNodeProps,
   transformVisibility,
-  entityCacheStore,
   EntityStoreBase,
 } from '@contentful/experiences-core';
 import {

@@ -1,4 +1,4 @@
-import { maybeResolveLink } from '@contentful/experiences-core';
+import { inMemoryEntities } from '@contentful/experiences-core';
 import React, { forwardRef, HTMLAttributes } from 'react';
 
 type CircularDependencyErrorPlaceholderProperties = HTMLAttributes<HTMLDivElement> & {
@@ -26,7 +26,7 @@ export const CircularDependencyErrorPlaceholder = forwardRef<
       <ul>
         {Array.from(wrappingPatternIds).map((patternId) => {
           const entryLink = { sys: { type: 'Link', linkType: 'Entry', id: patternId } } as const;
-          const entry = maybeResolveLink(entryLink);
+          const entry = inMemoryEntities.maybeResolveLink(entryLink);
           const entryTitle = entry?.fields?.title;
           const text = entryTitle ? `${entryTitle} (${patternId})` : patternId;
           return <li key={patternId}>{text}</li>;

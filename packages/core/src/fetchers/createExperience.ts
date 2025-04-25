@@ -2,7 +2,7 @@ import type { Asset, Entry } from 'contentful';
 import { isExperienceEntry } from '@/utils';
 import type { Experience } from '@/types';
 import { EntityStore } from '@/entity/EntityStore';
-import { entityCacheStore } from '@/entity/entityCacheStore';
+import { inMemoryEntitiesStore } from '@/entity/InMemoryEntities';
 
 type CreateExperienceParams = {
   experienceEntry: Entry;
@@ -51,7 +51,7 @@ export function createExperience(
     });
   }
 
-  entityCacheStore.getState().resetEntityStore(entityStore);
+  inMemoryEntitiesStore.getState().resetEntityStore(entityStore);
   return {
     entityStore,
   };

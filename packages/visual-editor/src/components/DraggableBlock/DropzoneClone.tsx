@@ -14,6 +14,7 @@ import { EntityStoreBase } from '@contentful/experiences-core';
 type DropzoneProps = {
   zoneId: string;
   entityStore: EntityStoreBase;
+  areEntitiesFetched: boolean;
   node?: ComponentData;
   resolveDesignValue?: ResolveDesignValueType;
   className?: string;
@@ -32,6 +33,7 @@ export function DropzoneClone({
   renderDropzone,
   dragProps,
   wrappingPatternIds,
+  areEntitiesFetched,
   ...rest
 }: DropzoneProps) {
   const tree = useTreeStore((state) => state.tree);
@@ -74,6 +76,7 @@ export function DropzoneClone({
           return (
             <EditorBlockClone
               entityStore={entityStore}
+              areEntitiesFetched={areEntitiesFetched}
               key={componentId}
               node={item}
               resolveDesignValue={resolveDesignValue}

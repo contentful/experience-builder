@@ -27,6 +27,7 @@ function getStyle(style: CSSProperties = {}, snapshot?: DraggableStateSnapshot) 
 type EditorBlockCloneProps = {
   node: ExperienceTreeNode;
   entityStore: EntityStoreBase;
+  areEntitiesFetched: boolean;
   resolveDesignValue: ResolveDesignValueType;
   provided?: DraggableProvided;
   snapshot?: DraggableStateSnapshot;
@@ -37,6 +38,7 @@ type EditorBlockCloneProps = {
 export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
   node: rawNode,
   entityStore,
+  areEntitiesFetched,
   resolveDesignValue,
   snapshot,
   provided,
@@ -48,6 +50,7 @@ export const EditorBlockClone: React.FC<EditorBlockCloneProps> = ({
   const { node, elementToRender } = useComponent({
     node: rawNode,
     entityStore,
+    areEntitiesFetched,
     resolveDesignValue,
     renderDropzone,
     userIsDragging,

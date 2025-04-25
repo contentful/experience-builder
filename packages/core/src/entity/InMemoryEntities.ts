@@ -3,7 +3,7 @@ import { EntityStoreBase } from './EntityStoreBase';
 import { EditorModeEntityStore } from './EditorModeEntityStore';
 import { Asset, Entry, UnresolvedLink } from 'contentful';
 
-export interface EntityState {
+export interface InMemoryEntitiesState {
   entityStore: EntityStoreBase;
   // Set to true when entities were fetched from the parent app.
   // Reset to false when we receive a tree update and need to validate
@@ -17,7 +17,7 @@ export interface EntityState {
   resetEntityStore: (entityStore: EntityStoreBase) => void;
 }
 
-export const entityCacheStore = create<EntityState>((set, get) => ({
+export const inMemoryEntitiesStore = create<InMemoryEntitiesState>((set, get) => ({
   entityStore: new EditorModeEntityStore({ locale: 'lol', entities: [] }),
   areEntitiesFetched: false,
 
@@ -29,17 +29,9 @@ export const entityCacheStore = create<EntityState>((set, get) => ({
 
     const { entityStore } = get();
 
-    console.log('entityCache.entityStore', entityStore);
     return entityStore.getEntityFromLink(link);
   },
   resetEntityStore(entityStore) {
-    try {
-      throw new Error('Test');
-    } catch (e) {
-      console.log('reset caused by', (e as Error).stack);
-    }
-    console.log('resetting entity store with', entityStore);
-    console.debug(`[experiences-sdk-react] Resetting entity store`);
     set({
       entityStore,
       areEntitiesFetched: false,
@@ -47,13 +39,57 @@ export const entityCacheStore = create<EntityState>((set, get) => ({
   },
 }));
 
+function isLink(data: any): data is UnresolvedLink<'Entry' | 'Asset'> {
+  if (!data) {
+    return false;
+  }
+
+  if (!data.sys || !data.sys.type || !data.sys.linkType) {
+    return false;
+  }
+
+  return data.sys.type === 'Link' && ['Entry', 'Asset'].includes(data.sys.linkType);
+}
+
 function maybeResolveLink(link: UnresolvedLink<'Entry'>): Entry | undefined;
 function maybeResolveLink(link: UnresolvedLink<'Asset'>): Asset | undefined;
 function maybeResolveLink(
   link: UnresolvedLink<'Entry'> | UnresolvedLink<'Asset'>,
 ): Entry | Asset | undefined;
-function maybeResolveLink(link: UnresolvedLink<'Entry' | 'Asset'>) {
-  return entityCacheStore.getState().resolveEntity(link);
+function maybeResolveLink(maybeLink: UnresolvedLink<'Entry' | 'Asset'>) {
+  if (!isLink(maybeLink)) {
+    console.warn(
+      'maybeResolveLink function must receive Link shape. Provided argument does not match the Link shape: ',
+      maybeLink,
+    );
+    return undefined;
+  }
+  return inMemoryEntitiesStore.getState().resolveEntity(maybeLink);
 }
 
-export { maybeResolveLink };
+function addEntities(entities: Array<Entry>): void;
+function addEntities(entities: Array<Asset>): void;
+function addEntities(entities: Array<Entry | Asset>): void;
+function addEntities(entities: Array<Entry> | Array<Asset> | Array<Entry | Asset>): void {
+  if (!Array.isArray(entities) || entities.length === 0) {
+    return;
+  }
+
+  const { entityStore } = inMemoryEntitiesStore.getState();
+  const definedEntities = entities.filter(Boolean);
+
+  for (const entity of definedEntities) {
+    entityStore.updateEntity(entity);
+  }
+}
+
+const inMemoryEntities = {
+  maybeResolveLink,
+  addEntities,
+};
+
+const useInMemoryEntities = () => {
+  return inMemoryEntities;
+};
+
+export { inMemoryEntities, useInMemoryEntities };
