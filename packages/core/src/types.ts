@@ -111,6 +111,9 @@ export type ComponentDefinition<
   hyperlinkPattern?: string;
   variables: Partial<DesignVariableMap> & Record<string, ComponentDefinitionVariable<T>>;
   slots?: Record<string, { displayName: string }>;
+  // FIXME: While it's technically possible, we don't want to allow using built-in content props via
+  // the styles configuration. We should split this up in the future into content and style and adjust
+  // components like `Container` for that.
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
   tooltip?: {
@@ -195,7 +198,8 @@ export type ExperienceTree = {
  * Internally defined style variables are prefix with `cf` to avoid
  * collisions with user defined variables.
  */
-// FIXME: Remove content props like cfHyperlink and cfImageAsset
+// FIXME: Move content props cfHyperlink, cfImageAsset, cfBackgroundImageUrl, and cfOpenInNewTab into
+// a separate type. Requires refactoring as currently this is used for `builtInStyles`.
 // FIXME: Check whether this should be the same as CF_STYLE_ATTRIBUTES
 export type StyleProps = {
   cfVisibility: boolean;
@@ -239,7 +243,8 @@ export type StyleProps = {
 /**
  * Internally defined style variables mapped to each variable type
  */
-// FIXME: Remove content props like cfHyperlink and cfImageAsset
+// FIXME: Move content props cfHyperlink, cfImageAsset, cfBackgroundImageUrl, and cfOpenInNewTab into
+// a separate type. Requires refactoring as currently this is used for `builtInStyles`.
 export type DesignVariableTypes = {
   cfVisibility: 'Boolean';
   cfHorizontalAlignment: 'Text';
