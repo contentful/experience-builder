@@ -2,18 +2,9 @@ import {
   transformAlignment,
   transformBackgroundImage,
   transformBorderStyle,
-  transformFill,
   transformGridColumn,
 } from './styleTransformers';
 
-describe('transformFill', () => {
-  it('sets the fill to 100% if fill is "full"', () => {
-    expect(transformFill('fill')).toEqual('100%');
-  });
-  it('returns the value if fill is not "full"', () => {
-    expect(transformFill('contain')).toEqual('contain');
-  });
-});
 describe('transformGridColumn', () => {
   it('returns empty object if span is not defined', () => {
     expect(transformGridColumn()).toEqual({});
