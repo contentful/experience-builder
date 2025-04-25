@@ -630,8 +630,6 @@ export type ExperienceUpdatedPayload = {
   tree: ExperienceTree;
   assemblies?: ExperienceUsedComponents;
   locale: string;
-  /** @deprecated maybe? */
-  defaultLocaleCode?: string;
   changedNode?: ExperienceTreeNode;
   changedValueType?: SelectedValueTypes;
 };
