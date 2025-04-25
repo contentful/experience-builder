@@ -1,21 +1,13 @@
+'use client';
 import { Asset, Entry, UnresolvedLink } from 'contentful';
-import React from 'react';
-import { maybeResolveLink } from '@contentful/experiences-core';
+import React, { useEffect, useState } from 'react';
+import { inMemoryEntities } from '@contentful/experiences-core';
+import { useFetchReference } from '@/app/hooks/useFetchReference';
 
 type ShallowEntry = Entry;
 type NeatPotionShelfProps = {
   potions: ShallowEntry[]; // with unresolved links
   linkProp1: ShallowEntry;
-  services: {
-    hello: () => void;
-    getEntityStore: () => EntityStore;
-    entityStore: EntityStore; // TODO: should we expose it here or just use getter?
-    resolveLinksUpToLevel3: (shallowEntry: ShallowEntry) => Entry;
-  };
-};
-
-type EntityStore = {
-  getEntryOrAsset(link: unknown, deepPath: string): undefined | Entry | Asset;
 };
 
 type PotionL2 = {
@@ -29,38 +21,55 @@ type PotionL2 = {
 type Ingredient = {
   fields: {
     title: string;
+    primaryImage: UnresolvedLink<'Asset'>;
   };
 };
 
 export const NeatPotionShelf: React.FC<NeatPotionShelfProps> = (props: NeatPotionShelfProps) => {
+  const [flag, setFlag] = useState(false);
   const shallowPotions = (props.potions || []).filter(Boolean) as unknown as ShallowEntry[]; // guard against undefined values which appear for a moment right after user clicking on binding
   // const { entityStore } = props.services;
-
-  // console.log('~entityStore', entityStore, entityCache.getState().entityStore);
 
   // const potions = shallowPotions.map((p) => resolveLinksUpToLevel3(p));
   const potions = shallowPotions;
 
+  const { fetchLink } = useFetchReference();
+
   const renderPotionComponent = (potion: PotionL2, index: number) => {
     const { title, image, ingredientPrimary } = potion.fields;
 
-    const resolvedImage = maybeResolveLink(image);
+    const resolvedImage = inMemoryEntities.maybeResolveLink(image);
 
     if (!resolvedImage) {
       console.error('Image not resolved', image);
-      const resolvedImage = maybeResolveLink(image);
+      const resolvedImage = inMemoryEntities.maybeResolveLink(image);
       return null;
     }
 
-    const resolvedPrimaryIngredient = maybeResolveLink(ingredientPrimary);
+    const resolvedPrimaryIngredient = inMemoryEntities.maybeResolveLink(ingredientPrimary);
 
     if (!resolvedPrimaryIngredient) {
       console.error('Primary ingredient not resolved', ingredientPrimary);
-      const resolvedPrimaryIngredient = maybeResolveLink(ingredientPrimary);
+      const resolvedPrimaryIngredient = inMemoryEntities.maybeResolveLink(ingredientPrimary);
       return null;
     }
 
     const src = (resolvedImage as Asset).fields?.file?.url as string;
+
+    const primaryIngredientsImageLink = (resolvedPrimaryIngredient as any as Ingredient).fields
+      ?.primaryImage;
+
+    useEffect(() => {
+      if (primaryIngredientsImageLink?.sys.type === 'Link') {
+        fetchLink(primaryIngredientsImageLink).then((resolvedPrimaryIngredientsImage) => {
+          inMemoryEntities.addEntities([resolvedPrimaryIngredientsImage!]);
+          console.log('Fetched primary ingredient image', resolvedPrimaryIngredientsImage);
+          setFlag((flag) => !flag);
+        });
+      }
+    }, [primaryIngredientsImageLink, fetchLink]);
+
+    const primaryIngredientsImage = inMemoryEntities.maybeResolveLink(primaryIngredientsImageLink);
 
     return (
       <li key={index}>
@@ -81,6 +90,10 @@ export const NeatPotionShelf: React.FC<NeatPotionShelfProps> = (props: NeatPotio
               {title} and primary ingredient ={' '}
               {(resolvedPrimaryIngredient as any as Ingredient).fields?.title}
             </h5>
+            <img
+              src={primaryIngredientsImage?.fields.file?.url as string}
+              alt="Primary Ingredient"
+            />
           </section>
         </article>
       </li>

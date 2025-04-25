@@ -8,7 +8,6 @@ import {
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
   sanitizeNodeProps,
-  entityCacheStore,
   EntityStoreBase,
 } from '@contentful/experiences-core';
 import {

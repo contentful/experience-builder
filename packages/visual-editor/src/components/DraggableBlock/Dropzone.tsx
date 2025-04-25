@@ -37,6 +37,7 @@ type DropzoneProps = {
   dragProps?: DragWrapperProps;
   wrappingPatternIds?: Set<string>;
   entityStore: EntityStoreBase;
+  areEntitiesFetched: boolean;
 };
 
 export function Dropzone({
@@ -47,6 +48,7 @@ export function Dropzone({
   WrapperComponent = 'div',
   dragProps,
   entityStore,
+  areEntitiesFetched,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
   ...rest
 }: DropzoneProps) {
@@ -97,6 +99,7 @@ export function Dropzone({
           node={node}
           resolveDesignValue={resolveDesignValue}
           wrappingPatternIds={wrappingPatternIds}
+          areEntitiesFetched={areEntitiesFetched}
           {...props}
         />
       );
@@ -109,6 +112,7 @@ export function Dropzone({
       return (
         <DropzoneClone
           entityStore={entityStore}
+          areEntitiesFetched={areEntitiesFetched}
           zoneId={node.data.id}
           node={node}
           resolveDesignValue={resolveDesignValue}
@@ -189,6 +193,7 @@ export function Dropzone({
       renderClone={(provided, snapshot, rubic) => (
         <EditorBlockClone
           entityStore={entityStore}
+          areEntitiesFetched={areEntitiesFetched}
           node={content[rubic.source.index]}
           resolveDesignValue={resolveDesignValue}
           provided={provided}
@@ -230,6 +235,7 @@ export function Dropzone({
                 .map((item, i) => (
                   <EditorBlock
                     entityStore={entityStore}
+                    areEntitiesFetched={areEntitiesFetched}
                     placeholder={{
                       isDraggingOver: snapshot?.isDraggingOver,
                       totalIndexes: content.length,

@@ -77,6 +77,7 @@ describe('useComponent', () => {
         useComponent({
           node,
           entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
+          areEntitiesFetched: true,
           resolveDesignValue,
           renderDropzone,
           userIsDragging,
