@@ -129,8 +129,6 @@ export type ComponentRegistration = {
      */
     enableCustomEditorView?: boolean;
     wrapComponent?: boolean;
-    /** @deprecated use wrapContainer instead */
-    wrapContainerTag?: keyof JSX.IntrinsicElements;
     wrapContainer?: keyof JSX.IntrinsicElements | React.ReactElement;
     wrapContainerWidth?: React.CSSProperties['width'];
   };
