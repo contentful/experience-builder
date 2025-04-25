@@ -10,7 +10,10 @@ import {
   Content as LayoutContent,
 } from 'antd/es/layout/layout';
 import styles from '@/app/page.module.css';
-import '../../../studio-config';
+
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import { getMovieQueryOptions } from '@/lib/queries/queryOptions';
+import { getQueryClient } from '@/lib/queryClient';
 
 type Page = {
   params: { locale?: string; slug?: string; preview?: string };
@@ -22,17 +25,27 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   const { isPreview, expEditorMode } = searchParams;
   const preview = isPreview === 'true';
   const editorMode = expEditorMode === 'true';
+
   const { experience, error } = await getExperience(slug, locale, preview, editorMode);
+  if (error) return <>{error.message}</>;
 
-  if (error) {
-    return <>{error.message}</>;
-  }
-
-  // extract the styles from the experience
   const stylesheet = experience ? detachExperienceStyles(experience) : null;
 
-  // experience currently needs to be stringified manually to be passed to the component
+  // TODO-STUDIO: We might want to offer a 3rd party prefetch helper that allows us
+  //  to mark some component registration variables as relevant for 3rd party data.
+  //  This should invoke some custom callback(s) where the customer can do their
+  //  3rd party data prefetching for SSR.
+  const usedMovieIds = [
+    'tt1621444',
+    'tt0047396',
+    //, 'tt0265459' // Demonstrate how this will still be loaded client-side.
+  ]; // TODO: Extract these IDs dynamically from experience.componentTree
+
+  const queryClient = getQueryClient();
+  await Promise.all(usedMovieIds.map((id) => queryClient.prefetchQuery(getMovieQueryOptions(id))));
+
   const experienceJSON = experience ? JSON.stringify(experience) : null;
+
   return (
     <Layout className={styles.layout}>
       {stylesheet && <style>{stylesheet}</style>}
@@ -40,7 +53,9 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
         <Header />
       </LayoutHeader>
       <LayoutContent className={styles.content}>
-        <Experience experienceJSON={experienceJSON} locale={locale} />
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <Experience experienceJSON={experienceJSON} locale={locale} />
+        </HydrationBoundary>
       </LayoutContent>
       <LayoutFooter className={styles.footer}>
         <Footer />
