@@ -1,19 +1,12 @@
-import { Asset, Entry } from 'contentful';
 import React from 'react';
+import { Asset, Entry, UnresolvedLink } from 'contentful';
+import { inMemoryEntities } from '@contentful/experiences-sdk-react';
+
 type ShallowEntry = Entry;
 type NeatPotionShelfProps = {
   potions: ShallowEntry[]; // with unresolved links
+  lotions: ShallowEntry[]; // with unresolved links
   linkProp1: ShallowEntry;
-  services: {
-    hello: () => void;
-    getEntityStore: () => EntityStore;
-    entityStore: EntityStore; // TODO: should we expose it here or just use getter?
-    resolveLinksUpToLevel3: (shallowEntry: ShallowEntry) => Entry;
-  };
-};
-
-type EntityStore = {
-  getEntryOrAsset(link: unknown, deepPath: string): undefined | Entry | Asset;
 };
 
 type PotionL2 = {
@@ -21,6 +14,7 @@ type PotionL2 = {
     title: string;
     image: Asset;
     ingredientPrimary: Ingredient;
+    ingredients: Array<Ingredient>;
   };
 };
 
@@ -30,53 +24,152 @@ type Ingredient = {
   };
 };
 
-export const NeatPotionShelf: React.FC<NeatPotionShelfProps> = (props: NeatPotionShelfProps) => {
-  const shallowPotions = (props.potions || []).filter(Boolean) as unknown as ShallowEntry[]; // guard against undefined values which appear for a moment right after user clicking on binding
-  const { resolveLinksUpToLevel3 } = props.services;
+const isLink = (value: unknown): value is UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'> => {
+  return (
+    null !== value &&
+    typeof value === 'object' &&
+    'sys' in value &&
+    (value as UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'>).sys?.type === 'Link'
+  );
+};
 
-  const potions = shallowPotions.map((p) => resolveLinksUpToLevel3(p));
-  // const potions = shallowPotions;
+const isEntry = (value: unknown): value is Entry => {
+  return (
+    null !== value &&
+    typeof value === 'object' &&
+    'sys' in value &&
+    (value as Entry).sys?.type === 'Entry'
+  );
+};
+
+const isAsset = (value: unknown): value is Asset => {
+  return (
+    null !== value &&
+    typeof value === 'object' &&
+    'sys' in value &&
+    (value as Asset).sys?.type === 'Asset'
+  );
+};
+
+// TODO: how does it classify empty arrays?
+const isArrayOfLinks = (
+  value: unknown,
+): value is Array<UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'>> => {
+  return Array.isArray(value) && value.every((item) => isLink(item));
+};
+
+const resolveLinkOrArrayOrPassthrough = (
+  fieldValue: unknown | UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'>,
+) => {
+  if (isLink(fieldValue)) {
+    return inMemoryEntities.maybeResolveLink(
+      fieldValue as unknown as UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'>,
+    );
+  }
+
+  if (isArrayOfLinks(fieldValue)) {
+    return fieldValue.map((link) => inMemoryEntities.maybeResolveLink(link));
+  }
+
+  // we just pass through the value
+  return fieldValue;
+};
+
+// TODO: maybe we can return some kind of calculation, as to - how many links failed to resolve?
+const copyAndResolveEntityToLevel3 = (entity: Entry | Asset): Entry | Asset => {
+  if (isAsset(entity)) {
+    return structuredClone(entity);
+  }
+  if (isEntry(entity)) {
+    const e = structuredClone(entity) as Entry;
+    for (const [fname, value] of Object.entries(e.fields)) {
+      // @ts-expect-error casting unkonwn
+      e.fields[fname] = resolveLinkOrArrayOrPassthrough(value); // default behaviour when link is not resolved is to return undefined
+    }
+    return e;
+  }
+
+  // everything else just pass through, but copy
+  return structuredClone(entity);
+};
+
+export const NeatPotionShelf: React.FC<NeatPotionShelfProps> = (props: NeatPotionShelfProps) => {
+  console.log(`;;; passed potions (as is, maybe undefined): `, props.potions);
+  const shallowPotions = (props.potions || []).filter(Boolean) as unknown as ShallowEntry[]; // guard against undefined values which appear for a moment right after user clicking on binding
+  console.log(`;;; shallow potions: `, shallowPotions);
+  const potions = shallowPotions.map((p) => copyAndResolveEntityToLevel3(p));
+  console.log(`;;; resolved potions: `, potions);
 
   const renderPotionComponent = (potion: PotionL2, index: number) => {
-    const { title, image, ingredientPrimary } = potion.fields;
+    const { title, image, ingredientPrimary, ingredients } = potion.fields;
     const src = image.fields?.file?.url as string;
 
     return (
-      <li key={index}>
-        <article style={{ display: 'flex', flexDirection: 'row' }}>
-          <section id="image">
-            <img
-              style={{
-                width: '100px',
-                height: '100px',
-                maxWidth: '100%',
-              }}
-              src={src}
-              alt={title}
-            />
-          </section>
-          <section id="details">
-            <h5>
-              {title} and primary ingredient = {ingredientPrimary?.fields?.title}
-            </h5>
-          </section>
-        </article>
-      </li>
+      <article key={index} style={{ display: 'flex', flexDirection: 'row' }}>
+        <section id="image">
+          <img
+            style={{
+              width: '100px',
+              height: '100px',
+              maxWidth: '100%',
+            }}
+            src={src}
+            alt={title}
+          />
+        </section>
+        <div style={{ border: '1px solid black', padding: '10px' }}>
+          <p>
+            <b>{title}</b> (L2)
+          </p>
+          <p>
+            primary ingredient (L3): <b>{ingredientPrimary?.fields?.title}</b>
+          </p>
+        </div>
+        <div style={{ border: '1px solid black', padding: '10px' }}>
+          Ingredients (L3 Array):
+          <ul>
+            {ingredients?.map((ingredient, index) => (
+              <li key={index}>
+                <b>{ingredient.fields?.title}</b>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
     );
   };
+
+  const noPotions = potions.length === 0;
+  // const potionsAreLinksAndNotShallowEntries = potions.some((p) => isLink(p));
+  const potionsAreShallowEntries = potions.some((p) => isEntry(p));
+
+  if (noPotions) {
+    return (
+      <div>
+        <h2>Potions</h2>
+        <div>No potions were bound</div>
+      </div>
+    );
+  }
+
+  if (!potionsAreShallowEntries) {
+    return (
+      <div>
+        <h2>Potions</h2>
+        <div>Potions should be shallow entries, but they seem to be links</div>
+        <pre style={{ fontSize: '9px' }}>{JSON.stringify(shallowPotions, null, 2)}</pre>
+      </div>
+    );
+  }
 
   return (
     <div>
       <h2>Potions</h2>
-      {potions.length > 0 ? (
-        <ul>
-          {potions.map((potion, index) =>
-            renderPotionComponent(potion as unknown as PotionL2, index),
-          )}
-        </ul>
-      ) : (
-        <div>No potions found</div>
-      )}
+      <div>
+        {potions.map((potion, index) =>
+          renderPotionComponent(potion as unknown as PotionL2, index),
+        )}
+      </div>
     </div>
   );
 };
