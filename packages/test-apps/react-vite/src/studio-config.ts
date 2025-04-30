@@ -54,6 +54,10 @@ defineComponents(
             type: 'Link',
             displayName: 'LinkProp1',
           },
+          singlePotion: {
+            type: 'Link',
+            displayName: 'Single Potion',
+          },
         },
       },
     },
