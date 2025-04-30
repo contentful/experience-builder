@@ -7,6 +7,7 @@ type NeatPotionShelfProps = {
   potions: ShallowEntry[]; // with unresolved links
   lotions: ShallowEntry[]; // with unresolved links
   linkProp1: ShallowEntry;
+  singlePotion: ShallowEntry;
 };
 
 type PotionL2 = {
@@ -76,7 +77,12 @@ const resolveLinkOrArrayOrPassthrough = (
 };
 
 // TODO: maybe we can return some kind of calculation, as to - how many links failed to resolve?
-const copyAndResolveEntityToLevel3 = (entity: Entry | Asset): Entry | Asset => {
+const copyAndResolveEntityToLevel3 = (
+  entity: Entry | Asset | undefined,
+): Entry | Asset | undefined => {
+  if (entity === undefined) {
+    return undefined;
+  }
   if (isAsset(entity)) {
     return structuredClone(entity);
   }
@@ -94,11 +100,17 @@ const copyAndResolveEntityToLevel3 = (entity: Entry | Asset): Entry | Asset => {
 };
 
 export const NeatPotionShelf: React.FC<NeatPotionShelfProps> = (props: NeatPotionShelfProps) => {
-  console.log(`;;; passed potions (as is, maybe undefined): `, props.potions);
+  // potions: Array
+  // console.log(`;;; passed potions (as is, maybe undefined): `, props.potions);
   const shallowPotions = (props.potions || []).filter(Boolean) as unknown as ShallowEntry[]; // guard against undefined values which appear for a moment right after user clicking on binding
-  console.log(`;;; shallow potions: `, shallowPotions);
+  // console.log(`;;; shallow potions: `, shallowPotions);
   const potions = shallowPotions.map((p) => copyAndResolveEntityToLevel3(p));
-  console.log(`;;; resolved potions: `, potions);
+  // console.log(`;;; resolved potions: `, potions);
+
+  // singlePotion
+  console.log(`;;; passed singlePotion (as is, maybe undefined): `, props.singlePotion);
+  const singlePotion = copyAndResolveEntityToLevel3(props.singlePotion);
+  console.log(`;;; resolved singlePotion: `, singlePotion);
 
   const renderPotionComponent = (potion: PotionL2, index: number) => {
     const { title, image, ingredientPrimary, ingredients } = potion.fields;
@@ -139,37 +151,91 @@ export const NeatPotionShelf: React.FC<NeatPotionShelfProps> = (props: NeatPotio
     );
   };
 
-  const noPotions = potions.length === 0;
-  // const potionsAreLinksAndNotShallowEntries = potions.some((p) => isLink(p));
-  const potionsAreShallowEntries = potions.some((p) => isEntry(p));
+  const renderPotions = () => {
+    const noPotions = potions.length === 0;
+    // const potionsAreLinksAndNotShallowEntries = potions.some((p) => isLink(p));
+    const potionsAreShallowEntries = potions.some((p) => isEntry(p));
 
-  if (noPotions) {
+    if (noPotions) {
+      return (
+        <div>
+          <h2>Potions</h2>
+          <div>No potions were bound</div>
+        </div>
+      );
+    }
+
+    if (!potionsAreShallowEntries) {
+      return (
+        <div>
+          <h2>Potions</h2>
+          <div>Potions should be shallow entries, but they seem to be links</div>
+          <pre style={{ fontSize: '9px' }}>{JSON.stringify(shallowPotions, null, 2)}</pre>
+        </div>
+      );
+    }
+
     return (
       <div>
         <h2>Potions</h2>
-        <div>No potions were bound</div>
+        <div>
+          {potions.map((potion, index) =>
+            renderPotionComponent(potion as unknown as PotionL2, index),
+          )}
+        </div>
       </div>
     );
-  }
+  };
 
-  if (!potionsAreShallowEntries) {
+  const renderSinglePotion = () => {
+    const noSinglePotion = singlePotion === undefined;
+    const singlePotionIsLink = isLink(singlePotion);
+    const singlePotionIsShallowEntry = isEntry(singlePotion);
+
+    if (noSinglePotion) {
+      return (
+        <div>
+          <h2>Single Potion</h2>
+          <div>No single potion was bound</div>
+        </div>
+      );
+    }
+
+    if (singlePotionIsLink) {
+      return (
+        <div>
+          <h2>Single Potion</h2>
+          <div>Single potion should be shallow entry, but it seems to be a link</div>
+          <pre style={{ fontSize: '9px' }}>{JSON.stringify(singlePotion, null, 2)}</pre>
+        </div>
+      );
+    }
+
+    if (!singlePotionIsShallowEntry) {
+      return (
+        <div>
+          <h2>Single Potion</h2>
+          <div>
+            Single potion should be shallow entry, but it seems to be something else (eg. Asset or
+            Experience)
+          </div>
+          <pre style={{ fontSize: '9px' }}>{JSON.stringify(singlePotion, null, 2)}</pre>
+        </div>
+      );
+    }
+
     return (
       <div>
-        <h2>Potions</h2>
-        <div>Potions should be shallow entries, but they seem to be links</div>
-        <pre style={{ fontSize: '9px' }}>{JSON.stringify(shallowPotions, null, 2)}</pre>
+        <h2>Single Potion</h2>
+        {renderPotionComponent(singlePotion as unknown as PotionL2, 0)}
       </div>
     );
-  }
-
+  };
   return (
     <div>
-      <h2>Potions</h2>
-      <div>
-        {potions.map((potion, index) =>
-          renderPotionComponent(potion as unknown as PotionL2, index),
-        )}
-      </div>
+      <h1>Neat Potion Shelf</h1>
+      {renderPotions()}
+      {renderSinglePotion()}
     </div>
   );
 };
