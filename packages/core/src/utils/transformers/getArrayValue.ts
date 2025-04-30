@@ -28,7 +28,12 @@ export function getArrayValue(
     } else if (value?.sys?.type === 'Link') {
       const resolvedEntity = entityStore.getEntityFromLink(value);
       if (!resolvedEntity) {
-        return value;
+        // seems that returning `undefined` will be more consistent, as it implies:
+        // there's no data in the entityStore during path resolution and best thing is to wait
+        // until next render cycle during EDITOR mode. Bound links is something we guaranteed to resolve.
+        // Passing link, implies that user has to try to resolve it themselves.
+        return;
+        // return value;
       }
       return resolvedEntity;
     } else {
