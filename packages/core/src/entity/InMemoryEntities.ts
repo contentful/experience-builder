@@ -1,0 +1,95 @@
+import { create } from 'zustand';
+import { EntityStoreBase } from './EntityStoreBase';
+import { EditorModeEntityStore } from './EditorModeEntityStore';
+import { Asset, Entry, UnresolvedLink } from 'contentful';
+
+export interface InMemoryEntitiesState {
+  entityStore: EntityStoreBase;
+  // Set to true when entities were fetched from the parent app.
+  // Reset to false when we receive a tree update and need to validate
+  // again whether all necessary entities are fetched.
+  areEntitiesFetched: boolean;
+  // updaters
+  setEntitiesFetched: (fetched: boolean) => void;
+  resolveEntity: <T extends 'Entry' | 'Asset'>(
+    link?: UnresolvedLink<T>,
+  ) => Entry | Asset | undefined;
+  resetEntityStore: (entityStore: EntityStoreBase) => void;
+}
+
+export const inMemoryEntitiesStore = create<InMemoryEntitiesState>((set, get) => ({
+  entityStore: new EditorModeEntityStore({ locale: 'lol', entities: [] }),
+  areEntitiesFetched: false,
+
+  setEntitiesFetched(fetched) {
+    set({ areEntitiesFetched: fetched });
+  },
+  resolveEntity<T extends 'Entry' | 'Asset'>(link?: UnresolvedLink<T>) {
+    if (!link) return undefined;
+
+    const { entityStore } = get();
+
+    return entityStore.getEntityFromLink(link);
+  },
+  resetEntityStore(entityStore) {
+    set({
+      entityStore,
+      areEntitiesFetched: false,
+    });
+  },
+}));
+
+function isLink(data: any): data is UnresolvedLink<'Entry' | 'Asset'> {
+  if (!data) {
+    return false;
+  }
+
+  if (!data.sys || !data.sys.type || !data.sys.linkType) {
+    return false;
+  }
+
+  return data.sys.type === 'Link' && ['Entry', 'Asset'].includes(data.sys.linkType);
+}
+
+function maybeResolveLink(link: UnresolvedLink<'Entry'>): Entry | undefined;
+function maybeResolveLink(link: UnresolvedLink<'Asset'>): Asset | undefined;
+function maybeResolveLink(
+  link: UnresolvedLink<'Entry'> | UnresolvedLink<'Asset'>,
+): Entry | Asset | undefined;
+function maybeResolveLink(maybeLink: UnresolvedLink<'Entry' | 'Asset'>) {
+  if (!isLink(maybeLink)) {
+    console.warn(
+      'maybeResolveLink function must receive Link shape. Provided argument does not match the Link shape: ',
+      maybeLink,
+    );
+    return undefined;
+  }
+  return inMemoryEntitiesStore.getState().resolveEntity(maybeLink);
+}
+
+function addEntities(entities: Array<Entry>): void;
+function addEntities(entities: Array<Asset>): void;
+function addEntities(entities: Array<Entry | Asset>): void;
+function addEntities(entities: Array<Entry> | Array<Asset> | Array<Entry | Asset>): void {
+  if (!Array.isArray(entities) || entities.length === 0) {
+    return;
+  }
+
+  const { entityStore } = inMemoryEntitiesStore.getState();
+  const definedEntities = entities.filter(Boolean);
+
+  for (const entity of definedEntities) {
+    entityStore.updateEntity(entity);
+  }
+}
+
+const inMemoryEntities = {
+  maybeResolveLink,
+  addEntities,
+};
+
+const useInMemoryEntities = () => {
+  return inMemoryEntities;
+};
+
+export { inMemoryEntities, useInMemoryEntities };

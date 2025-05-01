@@ -9,9 +9,57 @@ import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import { CustomButton, CustomButtonComponentDefinition } from './components/CustomButton';
+import { NeatPotionShelf } from './components/NeatPotionShelf';
+import { PotionShelf } from './components/PotionShelf';
 
 defineComponents(
   [
+    {
+      component: PotionShelf,
+      definition: {
+        id: 'dk-potion-shelf',
+        name: 'Potion Shelf',
+        category: 'The Telegraph',
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        variables: {
+          potions: {
+            type: 'Array',
+            displayName: 'Potions',
+          },
+          lotions: {
+            type: 'Array',
+            displayName: 'Lotions',
+          },
+          linkProp1: {
+            type: 'Link',
+            displayName: 'LinkProp1',
+          },
+        },
+      },
+    },
+    {
+      component: NeatPotionShelf,
+      definition: {
+        id: 'dk-neat-potion-shelf',
+        name: 'Neat Potion Shelf',
+        category: 'The Telegraph',
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        variables: {
+          potions: {
+            type: 'Array',
+            displayName: 'Potions',
+          },
+          lotions: {
+            type: 'Array',
+            displayName: 'Lotions',
+          },
+          linkProp1: {
+            type: 'Link',
+            displayName: 'LinkProp1',
+          },
+        },
+      },
+    },
     {
       component: CustomButton,
       definition: CustomButtonComponentDefinition,

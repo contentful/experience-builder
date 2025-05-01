@@ -13,17 +13,23 @@ import {
 } from '@contentful/experiences-core/constants';
 import { Assembly } from '@contentful/experiences-components-react';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
-import { useEntityStore } from '@/store/entityStore';
 import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
-import { isContentfulStructureComponent } from '@contentful/experiences-core';
+import {
+  isContentfulStructureComponent,
+  inMemoryEntitiesStore,
+  EntityStoreBase,
+} from '@contentful/experiences-core';
 import { MissingComponentPlaceholder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
 import { useTreeStore } from '@/store/tree';
 import { getItem } from '@/utils/getItem';
 import { CircularDependencyErrorPlaceholder } from '@components/DraggableHelpers/CircularDependencyErrorPlaceholder';
+import { useStore } from 'zustand';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
+  entityStore: EntityStoreBase;
+  areEntitiesFetched: boolean;
   resolveDesignValue: ResolveDesignValueType;
   renderDropzone: RenderDropzoneFunction;
   userIsDragging: boolean;
@@ -32,12 +38,13 @@ type UseComponentProps = {
 
 export const useComponent = ({
   node,
+  entityStore,
+  areEntitiesFetched,
   resolveDesignValue,
   renderDropzone,
   userIsDragging,
   wrappingPatternIds,
 }: UseComponentProps) => {
-  const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const tree = useTreeStore((state) => state.tree);
 
   const componentRegistration: ComponentRegistration | undefined = useMemo(() => {
@@ -72,6 +79,7 @@ export const useComponent = ({
 
   const { componentProps, wrapperStyles } = useComponentProps({
     node,
+    entityStore,
     areEntitiesFetched,
     resolveDesignValue,
     renderDropzone,

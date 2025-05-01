@@ -413,6 +413,8 @@ export type BoundComponentPropertyTypes =
   | OptimizedBackgroundImageAsset
   | OptimizedImageAsset
   | Link<'Asset'>
+  | Link<'Entry'>
+  | Array<Link<'Asset' | 'Entry'>>
   | Entry
   | Asset
   | (string | Entry | Asset<ChainModifiers, string> | undefined)[]

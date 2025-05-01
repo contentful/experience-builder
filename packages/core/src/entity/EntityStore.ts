@@ -53,10 +53,6 @@ export class EntityStore extends EntityStoreBase {
     });
   }
 
-  public getCurrentLocale() {
-    return this.locale;
-  }
-
   public get experienceEntryFields() {
     return this._experienceEntryFields;
   }
