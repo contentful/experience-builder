@@ -3,7 +3,7 @@ import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';
 import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema';
-
+import { deepFreeze } from '@/utils/freeze';
 /**
  * Base Store for entities
  * Can be extended for the different loading behaviours (editor, production, ..)
@@ -114,9 +114,11 @@ export abstract class EntityStoreBase {
 
   protected addEntity(entity: Entry | Asset): void {
     if (this.isAsset(entity)) {
-      this.assetMap.set(entity.sys.id, entity);
+      // cloned and frozen
+      this.assetMap.set(entity.sys.id, deepFreeze(entity));
     } else {
-      this.entryMap.set(entity.sys.id, entity);
+      // cloned and frozen
+      this.entryMap.set(entity.sys.id, deepFreeze(entity));
     }
   }
 
