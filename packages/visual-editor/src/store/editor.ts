@@ -34,8 +34,7 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   dataSource: {},
   hyperLinkPattern: undefined,
   unboundValues: {},
-  isDragging: false,
-  dragItem: '',
+
   selectedNodeId: null,
   locale: null,
   setHyperLinkPattern: (pattern: string) => {

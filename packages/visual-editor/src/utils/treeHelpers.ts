@@ -1,5 +1,4 @@
 import type { ExperienceTreeNode } from '@contentful/experiences-core/types';
-import { isEqual } from 'lodash-es';
 import { getChildFromTree } from './getItem';
 
 export function updateNode(
@@ -29,54 +28,6 @@ export function replaceNode(
   }
 
   node.children.forEach((childNode) => replaceNode(indexToReplace, updatedNode, childNode));
-}
-
-export function reorderChildrenNodes(
-  nodeId: string,
-  updatedChildren: ExperienceTreeNode[],
-  node: ExperienceTreeNode,
-) {
-  if (node.data.id === nodeId) {
-    node.children = updatedChildren;
-    return;
-  }
-
-  node.children.forEach((childNode) => reorderChildrenNodes(nodeId, updatedChildren, childNode));
-}
-
-export function addChildToNode(
-  nodeId: string,
-  oldChildren: ExperienceTreeNode[],
-  updatedChildren: ExperienceTreeNode[],
-  node: ExperienceTreeNode,
-) {
-  if (node.data.id !== nodeId) {
-    node.children.forEach((childNode) =>
-      addChildToNode(nodeId, oldChildren, updatedChildren, childNode),
-    );
-  }
-
-  let changed = false;
-
-  oldChildren.forEach((child, i) => {
-    if (isEqual(child, updatedChildren[i])) {
-      return;
-    }
-
-    changed = true;
-    addChildNode(i, node.data.id, updatedChildren[i], node);
-  });
-
-  if (!changed) {
-    // we iterated over the old children and didn't introduce a change.
-    // that means the child node is added to the end of the array.
-    addChildNode(
-      oldChildren.length,
-      node.data.id,
-      updatedChildren[updatedChildren.length - 1],
-      node,
-    );
-  }
 }
 
 export function removeChildNode(
