@@ -8,6 +8,7 @@ import {
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
   sanitizeNodeProps,
+  mergeDesignValuesByBreakpoint,
 } from '@contentful/experiences-core';
 import {
   ASSEMBLY_NODE_TYPE,
@@ -34,6 +35,7 @@ import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzon
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 import { DRAG_PADDING } from '@/types/constants';
+import { componentRegistry } from '@/store/registries';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
@@ -99,6 +101,7 @@ export const useComponentProps = ({
     const extractedProps = Object.entries(definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variableMapping = node.data.props[variableName];
+
         if (!variableMapping) {
           return {
             ...acc,
@@ -106,11 +109,18 @@ export const useComponentProps = ({
           };
         }
 
+        /* variableMapping {
+          type: 'DesignValue',
+          valuesByBreakpoint: {
+            desktop: '300px',
+            // tablet: '300px',
+            // mobile: '300px',
+          },
+        }
+        */
         if (variableMapping.type === 'DesignValue') {
-          const valuesByBreakpoint = resolveDesignValue(
-            variableMapping.valuesByBreakpoint,
-            variableName,
-          );
+          const value = calculateDesignVariableValue({ variableName, variableMapping, node });
+          const valuesByBreakpoint = resolveDesignValue(value, variableName);
           const designValue =
             variableName === 'cfHeight'
               ? calculateNodeDefaultHeight({
@@ -357,3 +367,33 @@ const addExtraDropzonePadding = (padding: string) =>
 
 const isPercentValue = (value?: string | number) =>
   typeof value === 'string' && value.endsWith('%');
+
+const calculateDesignVariableValue = ({
+  variableName,
+  variableMapping,
+  node,
+}: {
+  variableName: string;
+  variableMapping: DesignValue;
+  node: ExperienceTreeNode;
+}) => {
+  if (node.type === ASSEMBLY_BLOCK_NODE_TYPE) {
+    const patternId = node.data.pattern?.id;
+    const exposedProperyName = node['exposedPropertyNameToKeyMap'][variableName];
+    if (!exposedProperyName || !patternId) {
+      return variableMapping.valuesByBreakpoint;
+    }
+
+    const exposedVariableDefinition =
+      componentRegistry.get(patternId)?.definition.variables[exposedProperyName];
+
+    const exposedDefaultValue = exposedVariableDefinition?.defaultValue;
+
+    const mergedDesignValue = mergeDesignValuesByBreakpoint(
+      exposedDefaultValue as DesignValue,
+      variableMapping,
+    );
+    return mergedDesignValue.valuesByBreakpoint;
+  }
+  return variableMapping.valuesByBreakpoint;
+};
