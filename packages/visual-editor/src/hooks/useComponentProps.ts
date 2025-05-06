@@ -242,6 +242,7 @@ export const useComponentProps = ({
     unboundValues,
     entityStore,
     renderDropzone,
+    findNodeById,
   ]);
 
   const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
