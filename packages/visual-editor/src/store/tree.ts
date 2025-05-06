@@ -179,7 +179,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
       }),
     );
   },
-
+  // breadth first search
   findNodeById(nodeId?: string): ExperienceTreeNode | null {
     if (!nodeId) {
       return null;

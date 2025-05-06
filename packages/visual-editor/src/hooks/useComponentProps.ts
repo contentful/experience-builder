@@ -36,6 +36,7 @@ import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 import { DRAG_PADDING } from '@/types/constants';
 import { componentRegistry } from '@/store/registries';
+import { useTreeStore } from '@/store/tree';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
@@ -77,6 +78,7 @@ export const useComponentProps = ({
   const entityStore = useEntityStore((state) => state.entityStore);
   const draggingId = useDraggedItemStore((state) => state.onBeforeCaptureId);
   const nodeRect = useDraggedItemStore((state) => state.domRect);
+  const findNodeById = useTreeStore((state) => state.findNodeById);
 
   const isEmptyZone = !node.children.length;
 
@@ -119,7 +121,12 @@ export const useComponentProps = ({
         }
         */
         if (variableMapping.type === 'DesignValue') {
-          const value = calculateDesignVariableValue({ variableName, variableMapping, node });
+          const value = calculateDesignVariableValue({
+            variableName,
+            variableMapping,
+            node,
+            findNodeById,
+          });
           const valuesByBreakpoint = resolveDesignValue(value, variableName);
           const designValue =
             variableName === 'cfHeight'
@@ -372,13 +379,16 @@ const calculateDesignVariableValue = ({
   variableName,
   variableMapping,
   node,
+  findNodeById,
 }: {
+  findNodeById: (nodeId?: string) => ExperienceTreeNode | null;
   variableName: string;
   variableMapping: DesignValue;
   node: ExperienceTreeNode;
 }) => {
   if (node.type === ASSEMBLY_BLOCK_NODE_TYPE) {
     const patternId = node.data.pattern?.id;
+
     const exposedProperyName = node['exposedPropertyNameToKeyMap'][variableName];
     if (!exposedProperyName || !patternId) {
       return variableMapping.valuesByBreakpoint;
@@ -387,7 +397,22 @@ const calculateDesignVariableValue = ({
     const exposedVariableDefinition =
       componentRegistry.get(patternId)?.definition.variables[exposedProperyName];
 
-    const exposedDefaultValue = exposedVariableDefinition?.defaultValue;
+    let exposedDefaultValue = exposedVariableDefinition?.defaultValue;
+    let parentPatternNode = findNodeById(node.data.pattern?.nodeId);
+
+    while (parentPatternNode) {
+      const parentPatternId = parentPatternNode.data.pattern?.id;
+      const nextKey = parentPatternNode['exposedPropertyNameToKeyMap'][exposedProperyName];
+
+      if (!parentPatternId || !nextKey) {
+        break;
+      }
+      const parentPatternVariableDefinition =
+        componentRegistry.get(parentPatternId)?.definition.variables[nextKey];
+
+      exposedDefaultValue = parentPatternVariableDefinition?.defaultValue;
+      parentPatternNode = findNodeById(parentPatternNode.data.pattern?.nodeId);
+    }
 
     const mergedDesignValue = mergeDesignValuesByBreakpoint(
       exposedDefaultValue as DesignValue,
