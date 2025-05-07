@@ -876,7 +876,7 @@ describe('indexByBreakpoint', () => {
       cfWidth: {
         type: 'DesignValue',
         valuesByBreakpoint: {
-          desktop: 'fill',
+          desktop: '100%',
         },
       },
       cfMaxWidth: {
@@ -916,7 +916,7 @@ describe('indexByBreakpoint', () => {
     expect(res).toEqual({
       desktop: {
         cfMargin: '0 Auto 0 Auto',
-        cfWidth: 'fill',
+        cfWidth: '100%',
         cfMaxWidth: '1192px',
         cfPadding: '10px 10px 10px 10px',
         cfBackgroundImageUrl: 'https://www.contentful.com/image1.png',
@@ -970,7 +970,7 @@ describe('indexByBreakpoint', () => {
       cfWidth: {
         type: 'DesignValue',
         valuesByBreakpoint: {
-          desktop: 'fill',
+          desktop: '100%',
         },
       },
       cfMaxWidth: {
@@ -1039,7 +1039,7 @@ describe('indexByBreakpoint', () => {
     expect(res).toEqual({
       desktop: {
         cfMargin: '0 Auto 0 Auto',
-        cfWidth: 'fill',
+        cfWidth: '100%',
         cfMaxWidth: '1192px',
         cfPadding: '10px 10px 10px 10px',
         cfBackgroundImageUrl: {
@@ -1107,7 +1107,7 @@ describe('indexByBreakpoint', () => {
       cfWidth: {
         type: 'DesignValue',
         valuesByBreakpoint: {
-          desktop: 'fill',
+          desktop: '100%',
         },
       },
       cfMaxWidth: {
@@ -1192,7 +1192,7 @@ describe('indexByBreakpoint', () => {
     expect(res).toEqual({
       desktop: {
         cfMargin: '0 Auto 0 Auto',
-        cfWidth: 'fill',
+        cfWidth: '100%',
         cfMaxWidth: '1192px',
         cfPadding: '10px 10px 10px 10px',
         cfBackgroundImageUrl: {

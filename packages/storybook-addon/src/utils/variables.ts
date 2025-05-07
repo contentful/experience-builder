@@ -79,14 +79,14 @@ export const builtInStyles: Record<
     type: 'Text',
     group: 'style',
     description: 'The width of the section',
-    defaultValue: 'fill',
+    defaultValue: '100%',
   },
   cfHeight: {
     displayName: 'Height',
     type: 'Text',
     group: 'style',
     description: 'The height of the section',
-    defaultValue: 'fill',
+    defaultValue: '100%',
   },
   cfMaxWidth: {
     displayName: 'Max Width',

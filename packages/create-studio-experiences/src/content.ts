@@ -465,7 +465,7 @@ export const getExperienceEntryDemoReqBody = (title: string, slug: string) => ({
               cfWidth: {
                 type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'fill',
+                  desktop: '100%',
                 },
               },
               cfBorder: {

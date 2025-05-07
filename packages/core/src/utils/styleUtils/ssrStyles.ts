@@ -192,7 +192,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
        * {
        *   desktop: {
        *     cfMargin: '1px',
-       *     cfWidth: 'fill',
+       *     cfWidth: '100%',
        *     cfBackgroundImageUrl: 'https://example.com/image.jpg'
        *     //...
        *   }
