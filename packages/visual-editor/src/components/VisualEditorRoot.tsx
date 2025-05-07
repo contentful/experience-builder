@@ -45,7 +45,7 @@ export const VisualEditorRoot = ({ experience }: { experience?: Experience<Entit
       SimulateDnD.updateDrag(e.clientX, e.clientY);
 
       sendMessage(OUTGOING_EVENTS.MouseMove, {
-        clientX: e.pageX,
+        clientX: e.pageX - window.scrollX,
         clientY: e.pageY - window.scrollY,
       });
     };
@@ -55,8 +55,7 @@ export const VisualEditorRoot = ({ experience }: { experience?: Experience<Entit
     return () => {
       document.removeEventListener('mousemove', onMouseMove);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setHoveringZone, setMousePosition]);
 
   if (!initialized) return null;
 
