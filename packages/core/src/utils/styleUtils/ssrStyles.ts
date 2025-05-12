@@ -331,12 +331,6 @@ const injectDefaultValuesForComponentValues = ({
   const propertyDefinitions = wrapperComponentSettings?.variableDefinitions;
   const resolvedProperties = Object.entries(patternNode.variables).reduce(
     (resolvedProperties, [propertyName, propertyValue]) => {
-      if (propertyValue.type === 'DesignValue') {
-        console.log('TK', {
-          propertyName,
-          propertyValue,
-        });
-      }
       if (propertyValue.type === 'ComponentValue') {
         const componentValueKey = propertyValue.key;
         const componentDefaultValue = propertyDefinitions?.[componentValueKey].defaultValue;
