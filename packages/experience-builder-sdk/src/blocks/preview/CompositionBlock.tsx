@@ -153,6 +153,7 @@ export const CompositionBlock = ({
       breakpoints: entityStore.breakpoints,
       mainBreakpoint,
       componentDefinition: componentRegistration.definition,
+      patternNodeIdsChain,
       node,
       resolveCustomDesignValue: ({ propertyName, valuesByBreakpoint }) => {
         return resolveDesignValue(valuesByBreakpoint, propertyName);
@@ -336,6 +337,7 @@ export const CompositionBlock = ({
         nodeProps={props}
         component={component}
         breakpoints={entityStore.breakpoints}
+        patternNodeIdsChain={patternNodeIdsChain}
       />
     );
   }

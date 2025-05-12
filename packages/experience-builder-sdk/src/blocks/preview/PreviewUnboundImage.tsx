@@ -9,12 +9,13 @@ import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useInjectStylesheet } from '../../hooks/useClassName';
 import classNames from 'classnames';
 
-interface PreviewUnboundImageProps {
+type PreviewUnboundImageProps = {
   breakpoints: Breakpoint[];
   node: ComponentTreeNode;
   nodeProps: Record<PropertyKey, PrimitiveValue>;
   component: React.ElementType;
-}
+  patternNodeIdsChain: string;
+};
 
 /**
  * This component is used to render a placeholder Image component in the preview
@@ -25,6 +26,7 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
   node,
   nodeProps,
   component,
+  patternNodeIdsChain,
 }) => {
   const { wrapperStyle, imageStyle } = useMemo(() => {
     const imageStyle: Record<string, any> = {};
@@ -54,12 +56,14 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
     designPropertiesByBreakpoint: wrapperStyle,
     node,
     breakpoints,
+    patternNodeIdsChain,
   });
 
   const imageMedia = useMediaQuery({
     designPropertiesByBreakpoint: imageStyle,
     node,
     breakpoints,
+    patternNodeIdsChain,
   });
 
   useInjectStylesheet(wrapperMedia);
