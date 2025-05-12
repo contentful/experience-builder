@@ -15,8 +15,8 @@ import {
   updateNode,
 } from '@/utils/treeHelpers';
 import { getTreeDiffs } from '@/utils/getTreeDiff';
-import { treeVisit } from '@/utils/treeTraversal';
 import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
+import { treeVisit } from '@contentful/experiences-core';
 import { isEqual } from 'lodash-es';
 export interface TreeStore {
   tree: ExperienceTree;
