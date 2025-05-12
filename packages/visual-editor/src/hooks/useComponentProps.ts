@@ -8,7 +8,6 @@ import {
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
   sanitizeNodeProps,
-  mergeDesignValuesByBreakpoint,
 } from '@contentful/experiences-core';
 import {
   ASSEMBLY_NODE_TYPE,
@@ -31,11 +30,11 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzone.types';
+import { maybeMergePatternDefaultDesignValues } from '@/utils/patternUtils';
 
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 import { DRAG_PADDING } from '@/types/constants';
-import { componentRegistry } from '@/store/registries';
 import { useTreeStore } from '@/store/tree';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
@@ -111,17 +110,8 @@ export const useComponentProps = ({
           };
         }
 
-        /* variableMapping {
-          type: 'DesignValue',
-          valuesByBreakpoint: {
-            desktop: '300px',
-            // tablet: '300px',
-            // mobile: '300px',
-          },
-        }
-        */
         if (variableMapping.type === 'DesignValue') {
-          const value = calculateDesignVariableValue({
+          const value = maybeMergePatternDefaultDesignValues({
             variableName,
             variableMapping,
             node,
@@ -375,51 +365,3 @@ const addExtraDropzonePadding = (padding: string) =>
 
 const isPercentValue = (value?: string | number) =>
   typeof value === 'string' && value.endsWith('%');
-
-const calculateDesignVariableValue = ({
-  variableName,
-  variableMapping,
-  node,
-  findNodeById,
-}: {
-  findNodeById: (nodeId?: string) => ExperienceTreeNode | null;
-  variableName: string;
-  variableMapping: DesignValue;
-  node: ExperienceTreeNode;
-}) => {
-  if (node.type === ASSEMBLY_BLOCK_NODE_TYPE) {
-    const patternId = node.data.pattern?.id;
-
-    const exposedProperyName = node['exposedPropertyNameToKeyMap'][variableName];
-    if (!exposedProperyName || !patternId) {
-      return variableMapping.valuesByBreakpoint;
-    }
-
-    const exposedVariableDefinition =
-      componentRegistry.get(patternId)?.definition.variables[exposedProperyName];
-
-    let exposedDefaultValue = exposedVariableDefinition?.defaultValue;
-    let parentPatternNode = findNodeById(node.data.pattern?.nodeId);
-
-    while (parentPatternNode) {
-      const parentPatternId = parentPatternNode.data.pattern?.id;
-      const nextKey = parentPatternNode['exposedPropertyNameToKeyMap'][exposedProperyName];
-
-      if (!parentPatternId || !nextKey) {
-        break;
-      }
-      const parentPatternVariableDefinition =
-        componentRegistry.get(parentPatternId)?.definition.variables[nextKey];
-
-      exposedDefaultValue = parentPatternVariableDefinition?.defaultValue;
-      parentPatternNode = findNodeById(parentPatternNode.data.pattern?.nodeId);
-    }
-
-    const mergedDesignValue = mergeDesignValuesByBreakpoint(
-      exposedDefaultValue as DesignValue,
-      variableMapping,
-    );
-    return mergedDesignValue.valuesByBreakpoint;
-  }
-  return variableMapping.valuesByBreakpoint;
-};
