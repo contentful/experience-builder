@@ -19,6 +19,8 @@ import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { getValueForBreakpoint } from '@contentful/experiences-core';
 
+const PATTERN_BACKGROUND_COLOR_KEY = '7tZxaxR';
+
 // Redefining this type to make 'data.props.cfVisibility' a required field.
 // Semantically, it is always available on the node at runtime,
 // and this stricter type ensures that when making mock nodes, we don't miss it.
@@ -54,7 +56,7 @@ const mocks = vi.hoisted<{ componentRegistration: ComponentRegistration }>(() =>
         name: 'Pattern Name',
         category: 'Assemblies',
         variables: {
-          '7tZxaxR': {
+          [PATTERN_BACKGROUND_COLOR_KEY]: {
             displayName: 'Background color',
             type: 'Text',
             group: 'style',
@@ -173,7 +175,7 @@ describe('useComponentProps', () => {
       },
       type: ASSEMBLY_BLOCK_NODE_TYPE,
       exposedPropertyNameToKeyMap: {
-        cfBackgroundColor: '7tZxaxR',
+        cfBackgroundColor: PATTERN_BACKGROUND_COLOR_KEY,
       },
     };
 
