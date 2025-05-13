@@ -45,8 +45,6 @@ const breakpoints = createBreakpoints();
 const desktopIndex = 0;
 const desktop = breakpoints[desktopIndex];
 
-const PATTERN_BACKGROUND_COLOR_KEY = '7tZxaxR';
-
 const mocks = vi.hoisted<{ componentRegistration: ComponentRegistration }>(() => {
   return {
     componentRegistration: {
@@ -56,7 +54,7 @@ const mocks = vi.hoisted<{ componentRegistration: ComponentRegistration }>(() =>
         name: 'Pattern Name',
         category: 'Assemblies',
         variables: {
-          [PATTERN_BACKGROUND_COLOR_KEY]: {
+          '7tZxaxR': {
             displayName: 'Background color',
             type: 'Text',
             group: 'style',
@@ -175,7 +173,7 @@ describe('useComponentProps', () => {
       },
       type: ASSEMBLY_BLOCK_NODE_TYPE,
       exposedPropertyNameToKeyMap: {
-        cfBackgroundColor: PATTERN_BACKGROUND_COLOR_KEY,
+        cfBackgroundColor: '7tZxaxR',
       },
     };
 
