@@ -6,7 +6,7 @@ import type {
 } from '@contentful/experiences-core/types';
 import { sanitizeNodeProps } from '@contentful/experiences-core';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
-import { useInjectStylesheet } from '../../hooks/useClassName';
+import { useInjectStylesheet } from '../../hooks/useInjectStylesheet';
 import classNames from 'classnames';
 
 interface PreviewUnboundImageProps {
@@ -62,8 +62,8 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
     breakpoints,
   });
 
-  useInjectStylesheet(wrapperMedia);
-  useInjectStylesheet(imageMedia);
+  useInjectStylesheet(wrapperMedia.css);
+  useInjectStylesheet(imageMedia.css);
 
   return (
     <div className={classNames('cf-preview-unbound-image', wrapperMedia.className)}>

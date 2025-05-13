@@ -19,7 +19,7 @@ import type {
 } from '@contentful/experiences-core/types';
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import { checkIsAssemblyNode, transformBoundContentValue } from '@contentful/experiences-core';
-import { useInjectStylesheet } from '../../hooks/useClassName';
+import { useInjectStylesheet } from '../../hooks/useInjectStylesheet';
 import {
   Assembly,
   Columns,
@@ -247,7 +247,7 @@ export const CompositionBlock = ({
   ]);
 
   // do not inject the stylesheet into the dom because it's already been done on the server side
-  useInjectStylesheet(ssrProps.cfSsrClassName ? undefined : mediaQuery);
+  useInjectStylesheet(ssrProps.cfSsrClassName ? undefined : mediaQuery?.css);
 
   if (!componentRegistration) {
     return null;
