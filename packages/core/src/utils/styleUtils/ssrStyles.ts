@@ -35,11 +35,6 @@ type FlattenedDesignTokens = Record<
   string | { width?: string; style?: string; color?: string }
 >;
 
-type QueueItem = {
-  node: ComponentTreeNode;
-  patternNodeIds: string[];
-};
-
 export const detachExperienceStyles = (experience: Experience): string | undefined => {
   const experienceTreeRoot = experience.entityStore?.experienceEntryFields
     ?.componentTree as ExperienceComponentTree;
@@ -88,23 +83,13 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     wrappingPatternNodeIds?: string[];
   }) => {
     // traversing the tree
-    const queue: QueueItem[] = [];
+    const queue: ComponentTreeNode[] = [];
 
-    queue.push(
-      ...componentTree.children.map((child) => ({
-        node: child,
-        patternNodeIds: [...wrappingPatternNodeIds],
-      })),
-    );
+    queue.push(...componentTree.children);
 
     // for each tree node
     while (queue.length) {
-      const queueItem = queue.shift();
-      if (!queueItem) {
-        break;
-      }
-      const { node: currentNode, patternNodeIds } = queueItem;
-
+      const currentNode = queue.shift();
       if (!currentNode) {
         break;
       }
@@ -115,11 +100,6 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         componentId: currentNode.definitionId,
         usedComponents,
       });
-
-      const currentPatternNodeIds = isPatternNode
-        ? [...patternNodeIds, currentNode.id || '']
-        : [...patternNodeIds];
-      const currentPatternNodeIdsChain = currentPatternNodeIds.join('');
 
       if (isPatternNode) {
         // When detecting a circular dependency among patterns, stop to avoid an infinite loop
@@ -159,7 +139,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           // pass top-level pattern node to store instance-specific child styles for rendering
           patternWrapper: currentNode,
           wrappingPatternIds: new Set([...wrappingPatternIds, currentNode.definitionId]),
-          wrappingPatternNodeIds: currentPatternNodeIds,
+          wrappingPatternNodeIds: [...wrappingPatternNodeIds, currentNode.id || ''],
         });
         continue;
       }
@@ -273,7 +253,8 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           ...(patternWrapper.variables.cfSsrClassName ?? {}),
           type: 'DesignValue',
           // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
-          [currentPatternNodeIdsChain]: {
+          // e.g. `outerPatternNodeId-innerPatternNodeId-currentNodeId`
+          [`${wrappingPatternNodeIds.join('-')}-${currentNode.id}`]: {
             valuesByBreakpoint: {
               [breakpointIds[0]]: currentNodeClassNames.join(' '),
             },
@@ -288,12 +269,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         };
       }
 
-      queue.push(
-        ...currentNode.children.map((child) => ({
-          node: child,
-          patternNodeIds: currentPatternNodeIds,
-        })),
-      );
+      queue.push(...currentNode.children);
     }
   };
 
