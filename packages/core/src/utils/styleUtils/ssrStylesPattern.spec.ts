@@ -1503,43 +1503,21 @@ describe('pattern component', () => {
 
     const resolvedPatternEntry = experience.entityStore?.usedComponents[0] as ExperienceEntry;
     const patternWrapper = experienceEntry.fields.componentTree.children[0];
-    const queue = [
-      ...resolvedPatternEntry.fields.componentTree.children.map((child) => {
-        return {
-          node: child,
-          parentChain: [patternNode.id],
-        };
-      }),
-    ];
+    const queue = [...resolvedPatternEntry.fields.componentTree.children];
 
     expect(patternWrapper.variables.cfSsrClassName.type).toBe('DesignValue');
     while (queue.length) {
-      const queueItem = queue.shift();
-
-      if (!queueItem) {
+      const currentNode = queue.shift();
+      if (!currentNode) {
         continue;
       }
 
-      const { node, parentChain } = queueItem;
-
-      if (!node) {
-        continue;
-      }
-
-      const patternNodeIdsChain = `${parentChain.join('')}${node.id}`;
-
-      expect(patternWrapper.variables.cfSsrClassName[patternNodeIdsChain]).toBeDefined();
-      expect(
-        (patternWrapper.variables.cfSsrClassName[patternNodeIdsChain] as DesignValue)
-          .valuesByBreakpoint.desktop,
-      ).toBeDefined();
-      if (node?.children.length) {
-        queue.push(
-          ...node.children.map((child) => ({
-            node: child,
-            parentChain: [...parentChain, node.id],
-          })),
-        );
+      const ssrNodeKey = `${patternNode.id}-${currentNode.id}`;
+      const cfSsrClassName = patternWrapper.variables.cfSsrClassName as DesignValue;
+      expect(cfSsrClassName).toHaveProperty(ssrNodeKey);
+      expect((cfSsrClassName[ssrNodeKey] as DesignValue).valuesByBreakpoint.desktop).toBeDefined();
+      if (currentNode?.children.length) {
+        queue.push(...currentNode.children);
       }
     }
 
@@ -1655,23 +1633,16 @@ describe('pattern component', () => {
     // so the next code traverses over the pattern nodes and checks for the classname property
     while (queue.length) {
       const node = queue.shift();
-
       if (!node) {
         continue;
       }
 
-      expect(node.variables.cfSsrClassName).toBeDefined();
-      expect(node.variables.cfSsrClassName.type).toBe('DesignValue');
-      expect(
-        (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.desktop,
-      ).toBeDefined();
-
-      expect(
-        (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
-      ).not.toBeDefined();
-      expect(
-        (node.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.mobile,
-      ).not.toBeDefined();
+      const cfSsrClassName = node.variables.cfSsrClassName as DesignValue;
+      expect(cfSsrClassName).toBeDefined();
+      expect(cfSsrClassName.type).toBe('DesignValue');
+      expect(cfSsrClassName.valuesByBreakpoint.desktop).toBeDefined();
+      expect(cfSsrClassName.valuesByBreakpoint.tablet).not.toBeDefined();
+      expect(cfSsrClassName.valuesByBreakpoint.mobile).not.toBeDefined();
 
       if (node?.children.length) {
         queue.push(...node.children);
