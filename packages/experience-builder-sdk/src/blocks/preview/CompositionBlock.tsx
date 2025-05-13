@@ -38,6 +38,7 @@ type CompositionBlockProps = {
   hyperlinkPattern?: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
   getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
+  /** Set of definition IDs of wrapping patterns to prevent circular dependencies. */
   wrappingPatternIds?: Set<string>;
   /**
    * Chained IDs to ensure uniqueness across multiple instances of the same pattern
@@ -56,7 +57,7 @@ export const CompositionBlock = ({
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
   wrappingPatternProperties: parentWrappingPatternProperties = {},
-  patternNodeIdsChain: parentPatternRootNodeIdsChain = '',
+  patternNodeIdsChain: parentPatternNodeIdsChain = '',
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
     () =>
@@ -69,10 +70,10 @@ export const CompositionBlock = ({
 
   const patternNodeIdsChain = useMemo(() => {
     if (isAssembly) {
-      return `${parentPatternRootNodeIdsChain}${rawNode.id}`;
+      return `${parentPatternNodeIdsChain}${rawNode.id}`;
     }
-    return parentPatternRootNodeIdsChain;
-  }, [isAssembly, parentPatternRootNodeIdsChain, rawNode.id]);
+    return parentPatternNodeIdsChain;
+  }, [isAssembly, parentPatternNodeIdsChain, rawNode.id]);
 
   const node = useMemo(() => {
     return isAssembly
@@ -288,7 +289,6 @@ export const CompositionBlock = ({
               wrappingPatternIds={wrappingPatternIds}
               wrappingPatternProperties={wrappingPatternProperties}
               patternNodeIdsChain={patternNodeIdsChain}
-              q
             />
           );
         })
