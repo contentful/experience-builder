@@ -43,7 +43,7 @@ type CompositionBlockProps = {
    * Chained IDs to ensure uniqueness across multiple instances of the same pattern
    * when storing & accessing cfSsrClassName.
    */
-  patternRootNodeIdsChain?: string;
+  patternNodeIdsChain?: string;
   wrappingPatternProperties?: Record<string, PatternProperty>;
 };
 
@@ -56,7 +56,7 @@ export const CompositionBlock = ({
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
   wrappingPatternProperties: parentWrappingPatternProperties = {},
-  patternRootNodeIdsChain: parentPatternRootNodeIdsChain = '',
+  patternNodeIdsChain: parentPatternRootNodeIdsChain = '',
 }: CompositionBlockProps) => {
   const isAssembly = useMemo(
     () =>
@@ -67,7 +67,7 @@ export const CompositionBlock = ({
     [entityStore.usedComponents, rawNode.definitionId],
   );
 
-  const patternRootNodeIdsChain = useMemo(() => {
+  const patternNodeIdsChain = useMemo(() => {
     if (isAssembly) {
       return `${parentPatternRootNodeIdsChain}${rawNode.id}`;
     }
@@ -80,10 +80,10 @@ export const CompositionBlock = ({
           node: rawNode,
           entityStore,
           parentPatternProperties: parentWrappingPatternProperties,
-          patternNodeIdsChain: patternRootNodeIdsChain,
+          patternNodeIdsChain: patternNodeIdsChain,
         })
       : rawNode;
-  }, [entityStore, isAssembly, rawNode, parentWrappingPatternProperties, patternRootNodeIdsChain]);
+  }, [entityStore, isAssembly, rawNode, parentWrappingPatternProperties, patternNodeIdsChain]);
 
   const wrappingPatternIds = useMemo(() => {
     if (isAssembly) {
@@ -203,7 +203,7 @@ export const CompositionBlock = ({
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
               wrappingPatternProperties={wrappingPatternProperties}
-              patternRootNodeIdsChain={patternRootNodeIdsChain}
+              patternNodeIdsChain={patternNodeIdsChain}
             />
           );
         }
@@ -238,7 +238,7 @@ export const CompositionBlock = ({
     locale,
     wrappingPatternIds,
     wrappingPatternProperties,
-    patternRootNodeIdsChain,
+    patternNodeIdsChain,
   ]);
 
   // do not inject the stylesheet into the dom because it's already been done on the server side
@@ -258,7 +258,7 @@ export const CompositionBlock = ({
   // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {
     if (isAssembly) {
-      const currentPatternNodeIdsChain = `${patternRootNodeIdsChain}${childNodeId}`;
+      const currentPatternNodeIdsChain = `${patternNodeIdsChain}${childNodeId}`;
       const classesForNode: DesignValue | undefined =
         // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
         node.variables.cfSsrClassName?.[currentPatternNodeIdsChain];
@@ -287,7 +287,7 @@ export const CompositionBlock = ({
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
               wrappingPatternProperties={wrappingPatternProperties}
-              patternRootNodeIdsChain={patternRootNodeIdsChain}
+              patternNodeIdsChain={patternNodeIdsChain}
               q
             />
           );
