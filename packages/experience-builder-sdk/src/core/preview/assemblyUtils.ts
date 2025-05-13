@@ -1,4 +1,4 @@
-import { EntityStore } from '@contentful/experiences-core';
+import { EntityStore, mergeDesignValuesByBreakpoint } from '@contentful/experiences-core';
 import md5 from 'md5';
 import type {
   ComponentPropertyValue,
@@ -71,10 +71,10 @@ export const deserializeAssemblyNode = ({
           linkTargetKey: instanceProperty.linkTargetKey,
         };
       } else if (instanceProperty?.type === 'DesignValue') {
-        variables[variableName] = {
-          type: 'DesignValue',
-          valuesByBreakpoint: instanceProperty.valuesByBreakpoint,
-        };
+        variables[variableName] = mergeDesignValuesByBreakpoint(
+          defaultValue as DesignValue,
+          instanceProperty,
+        );
       } else if (!instanceProperty && defaultValue) {
         // So far, we only automatically fallback to the defaultValue for design properties
         if (variableDefinition.group === 'style') {

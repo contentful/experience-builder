@@ -127,6 +127,9 @@ export const parseComponentProps = ({
         // We're rendering a pattern entry. Content cannot be set for ComponentValue type properties
         // directly in the pattern so we can safely use the default value
         // This can either be a design (style) or a content variable
+        // FIXME: When previewing a pattern entry along with its nested patterns, the design values are not correctly resolved.
+        // To support that, we could replace all ComponentValues with the actual design values initially or try to do the recursive
+        // lookup in here.
         contentProps[propName] = propDefinition.defaultValue;
         break;
       default:

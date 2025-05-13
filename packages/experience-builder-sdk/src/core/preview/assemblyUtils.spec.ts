@@ -146,13 +146,13 @@ describe('resolveAssembly', () => {
       });
     });
 
-    it('resolves a style component value with the value of the assembly instance', () => {
+    it('resolves a style component value by merging the instance value with the default one', () => {
       const assemblyNode: ComponentTreeNode = {
         definitionId: 'assembly-id',
         variables: {
           [assemblyGeneratedDesignVariableName]: {
             type: 'DesignValue',
-            valuesByBreakpoint: { desktop: '99px' },
+            valuesByBreakpoint: { desktop: '99px', tablet: '11px' },
           },
         },
         children: [],
@@ -167,7 +167,7 @@ describe('resolveAssembly', () => {
 
       expect(result.children[0].variables.cfWidth).toEqual({
         type: 'DesignValue',
-        valuesByBreakpoint: { desktop: '99px' },
+        valuesByBreakpoint: { desktop: '99px', tablet: '11px', mobile: '24px' },
       });
     });
 
@@ -187,7 +187,7 @@ describe('resolveAssembly', () => {
 
       expect(result.children[0].variables.cfWidth).toEqual({
         type: 'DesignValue',
-        valuesByBreakpoint: { desktop: '42px' },
+        valuesByBreakpoint: { desktop: '42px', mobile: '24px' },
       });
     });
   });
