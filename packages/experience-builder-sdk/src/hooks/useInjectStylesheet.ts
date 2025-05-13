@@ -20,7 +20,7 @@ export const useInjectStylesheet = (css?: string) => {
     document.head.appendChild(styleTag);
 
     return () => {
-      document.head.removeChild(styleTag);
+      styleTag.parentNode?.removeChild(styleTag);
     };
   }, [css]);
 };
