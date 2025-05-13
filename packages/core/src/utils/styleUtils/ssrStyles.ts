@@ -37,7 +37,7 @@ type FlattenedDesignTokens = Record<
 
 type QueueItem = {
   node: ComponentTreeNode;
-  parentChain: string[];
+  patternNodeIds: string[];
 };
 
 export const detachExperienceStyles = (experience: Experience): string | undefined => {
@@ -76,7 +76,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentVariablesOverwrites,
     patternWrapper,
     wrappingPatternIds,
-    parentChainArr = [],
+    wrappingPatternNodeIds = [],
   }: {
     componentTree: ExperienceComponentTree;
     dataSource: ExperienceDataSource;
@@ -85,7 +85,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
     patternWrapper?: ComponentTreeNode;
     wrappingPatternIds: Set<string>;
-    parentChainArr?: string[];
+    wrappingPatternNodeIds?: string[];
   }) => {
     // traversing the tree
     const queue: QueueItem[] = [];
@@ -93,7 +93,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     queue.push(
       ...componentTree.children.map((child) => ({
         node: child,
-        parentChain: [...parentChainArr],
+        patternNodeIds: [...wrappingPatternNodeIds],
       })),
     );
 
@@ -103,14 +103,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       if (!queueItem) {
         break;
       }
-      const { node: currentNode, parentChain } = queueItem;
+      const { node: currentNode, patternNodeIds } = queueItem;
 
       if (!currentNode) {
         break;
       }
-
-      const currentNodeParentChain = [...parentChain, currentNode.id || ''];
-      const currentPatternNodeIdsChain = currentNodeParentChain.join('');
 
       const usedComponents = experience.entityStore?.usedComponents ?? [];
 
@@ -118,6 +115,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         componentId: currentNode.definitionId,
         usedComponents,
       });
+
+      const currentPatternNodeIds = isPatternNode
+        ? [...patternNodeIds, currentNode.id || '']
+        : [...patternNodeIds];
+      const currentPatternNodeIdsChain = currentPatternNodeIds.join('');
 
       if (isPatternNode) {
         // When detecting a circular dependency among patterns, stop to avoid an infinite loop
@@ -157,8 +159,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           // pass top-level pattern node to store instance-specific child styles for rendering
           patternWrapper: currentNode,
           wrappingPatternIds: new Set([...wrappingPatternIds, currentNode.definitionId]),
-
-          parentChainArr: currentNodeParentChain,
+          wrappingPatternNodeIds: currentPatternNodeIds,
         });
         continue;
       }
@@ -290,7 +291,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       queue.push(
         ...currentNode.children.map((child) => ({
           node: child,
-          parentChain: currentNodeParentChain,
+          patternNodeIds: currentPatternNodeIds,
         })),
       );
     }
