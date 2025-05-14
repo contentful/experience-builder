@@ -4,4 +4,5 @@ export const sdkFeatures: Record<string, unknown> = {
   hasVersionHistory: true,
   cfVisibility: true,
   patternResolution: true,
+  patternBreakpointDesignValues: true,
 };
