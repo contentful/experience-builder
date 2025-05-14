@@ -31,10 +31,12 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzone.types';
+import { maybeMergePatternDefaultDesignValues } from '@/utils/maybeMergePatternDefaultDesignValues';
 
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 import { DRAG_PADDING } from '@/types/constants';
+import { useTreeStore } from '@/store/tree';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
@@ -76,6 +78,7 @@ export const useComponentProps = ({
   const entityStore = useEntityStore((state) => state.entityStore);
   const draggingId = useDraggedItemStore((state) => state.onBeforeCaptureId);
   const nodeRect = useDraggedItemStore((state) => state.domRect);
+  const findNodeById = useTreeStore((state) => state.findNodeById);
 
   const isEmptyZone = !node.children.length;
 
@@ -99,6 +102,7 @@ export const useComponentProps = ({
     const extractedProps = Object.entries(definition.variables).reduce(
       (acc, [variableName, variableDefinition]) => {
         const variableMapping = node.data.props[variableName];
+
         if (!variableMapping) {
           return {
             ...acc,
@@ -107,10 +111,13 @@ export const useComponentProps = ({
         }
 
         if (variableMapping.type === 'DesignValue') {
-          const valuesByBreakpoint = resolveDesignValue(
-            variableMapping.valuesByBreakpoint,
+          const value = maybeMergePatternDefaultDesignValues({
             variableName,
-          );
+            variableMapping,
+            node,
+            findNodeById,
+          });
+          const valuesByBreakpoint = resolveDesignValue(value, variableName);
           const designValue =
             variableName === 'cfHeight'
               ? calculateNodeDefaultHeight({
@@ -225,6 +232,7 @@ export const useComponentProps = ({
     unboundValues,
     entityStore,
     renderDropzone,
+    findNodeById,
   ]);
 
   const cfStyles = useMemo(
