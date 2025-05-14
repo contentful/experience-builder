@@ -4,4 +4,6 @@ export const sdkFeatures: Record<string, unknown> = {
   hasVersionHistory: true,
   cfVisibility: true,
   patternResolution: true,
+  // [SPA-2602] allow merging the default and overwriting design values for patterns by breakpoint
+  patternBreakpointDesignValues: true,
 };
