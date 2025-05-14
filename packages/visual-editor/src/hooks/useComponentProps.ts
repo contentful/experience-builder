@@ -30,7 +30,7 @@ import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzone.types';
-import { maybeMergePatternDefaultDesignValues } from '@/utils/patternUtils';
+import { maybeMergePatternDefaultDesignValues } from '@/utils/maybeMergePatternDefaultDesignValues';
 
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
