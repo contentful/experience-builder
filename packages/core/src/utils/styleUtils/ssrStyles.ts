@@ -233,10 +233,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
          * generatedCss = "margin: 1px;width: 100%;..."
          */
 
-        // I create a hash of the object above because that would ensure hash stability
-        // Adding breakpointId to ensure not using the same IDs between breakpoints as this leads to
+        // - Adding breakpointId to ensure not using the same IDs between breakpoints as this leads to
         // conflicts between different breakpoint values from multiple nodes where the hash would be equal
-        const styleHash = md5(breakpointId + generatedCss);
+        // - Adding wrapping pattern nodes IDs to avoid conflicts between similar nested patterns as those
+        // could override each others CSS for some breakpoints just through the order of `<style>` tags in the DOM.
+        const styleHash = md5(currentPatternNodeIdsChain + breakpointId + generatedCss);
 
         // and prefix the className to make sure the value can be processed
         const className = `cf-${styleHash}`;

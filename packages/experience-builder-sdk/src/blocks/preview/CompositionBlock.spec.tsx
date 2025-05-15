@@ -384,7 +384,8 @@ describe('CompositionBlock', () => {
     });
 
     it('renders nested patterns', () => {
-      const ssrClassName = 'cfstyles-172c3e6faf64c49d7352080ec063acc8 contentful-container';
+      // TODO: Turn the check for the class name hash into an inline snapshot test
+      const ssrClassName = 'cfstyles-d5bd6a1538827378ca005e2dbed681ca contentful-container';
       const unboundValueKey = 'some-unbound-value-key';
       const unboundValueKey2 = 'some-unbound-value-key-2';
 
