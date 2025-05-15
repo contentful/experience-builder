@@ -1,4 +1,4 @@
-import { checkIsAssemblyNode, EntityStore } from '@contentful/experiences-core';
+import { EntityStore } from '@contentful/experiences-core';
 import md5 from 'md5';
 import type {
   ComponentPropertyValue,
@@ -118,15 +118,6 @@ export const resolveAssembly = ({
   parentPatternProperties: Record<string, PatternProperty>;
   patternNodeIdsChain: string;
 }) => {
-  const isAssembly = checkIsAssemblyNode({
-    componentId: node.definitionId,
-    usedComponents: entityStore.usedComponents,
-  });
-
-  if (!isAssembly) {
-    return node;
-  }
-
   const componentId = node.definitionId as string;
   const assembly = entityStore.usedComponents?.find(
     (component) => component.sys.id === componentId,

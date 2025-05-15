@@ -32,10 +32,12 @@ export const createStylesheetsForBuiltInStyles = ({
   designPropertiesByBreakpoint,
   breakpoints,
   node,
+  patternNodeIdsChain,
 }: {
   designPropertiesByBreakpoint: Record<string, Record<string, PrimitiveValue>>;
   breakpoints: Breakpoint[];
   node: ComponentTreeNode;
+  patternNodeIdsChain?: string;
 }): ResolvedStylesheetData => {
   const flattenedDesignTokens = flattenDesignTokenRegistry(designTokensRegistry);
 
@@ -84,7 +86,9 @@ export const createStylesheetsForBuiltInStyles = ({
      */
 
     // Create a hash ensuring stability across nodes (and breakpoints between nodes)
-    const styleHash = md5(`${node.id}}-${breakpointCss}`);
+    const styleHash = patternNodeIdsChain
+      ? md5(`${patternNodeIdsChain}-${node.id}}-${breakpointCss}`)
+      : md5(`${node.id}-${breakpointCss}`);
 
     // Create a CSS className with internal prefix to make sure the value can be processed
     const className = `cfstyles-${styleHash}`;
@@ -148,18 +152,21 @@ export const useMediaQuery = ({
   designPropertiesByBreakpoint,
   breakpoints,
   node,
+  patternNodeIdsChain,
 }: {
   designPropertiesByBreakpoint: Record<string, Record<string, any>>;
   breakpoints: Breakpoint[];
   node: ComponentTreeNode;
+  patternNodeIdsChain?: string;
 }) => {
   return useMemo(() => {
     const stylesheetData = createStylesheetsForBuiltInStyles({
       designPropertiesByBreakpoint,
       breakpoints,
       node,
+      patternNodeIdsChain,
     });
 
     return convertResolvedDesignValuesToMediaQuery(stylesheetData);
-  }, [designPropertiesByBreakpoint, breakpoints, node]);
+  }, [designPropertiesByBreakpoint, breakpoints, node, patternNodeIdsChain]);
 };
