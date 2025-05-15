@@ -140,9 +140,6 @@ export const checkIsAssemblyNode = ({
   return usedComponents.some((usedComponent) => usedComponent.sys.id === componentId);
 };
 
-/** @deprecated use `checkIsAssemblyNode` instead. Will be removed with SDK v5. */
-export const checkIsAssembly = checkIsAssemblyNode;
-
 /**
  * This check assumes that the entry is already ensured to be an experience, i.e. the
  * content type of the entry is an experience type with the necessary annotations.

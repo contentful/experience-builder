@@ -85,7 +85,7 @@ const patternEntry: ExperienceEntry = {
             cfWidth: {
               type: 'DesignValue',
               valuesByBreakpoint: {
-                desktop: 'fill',
+                desktop: '100%',
               },
             },
             cfMaxWidth: {
@@ -287,7 +287,7 @@ const patternEntry: ExperienceEntry = {
                     cfWidth: {
                       type: 'DesignValue',
                       valuesByBreakpoint: {
-                        desktop: 'fill',
+                        desktop: '100%',
                       },
                     },
                     cfMaxWidth: {
@@ -322,7 +322,7 @@ const patternEntry: ExperienceEntry = {
                     cfWidth: {
                       type: 'DesignValue',
                       valuesByBreakpoint: {
-                        desktop: 'fill',
+                        desktop: '100%',
                       },
                     },
                     cfMaxWidth: {
@@ -742,7 +742,7 @@ const editablePatternEntry: ExperienceEntry = {
             cfWidth: {
               type: 'DesignValue',
               valuesByBreakpoint: {
-                desktop: 'fill',
+                desktop: '100%',
               },
             },
             cfMaxWidth: {
@@ -938,7 +938,7 @@ const editablePatternEntry: ExperienceEntry = {
                     cfWidth: {
                       type: 'DesignValue',
                       valuesByBreakpoint: {
-                        desktop: 'fill',
+                        desktop: '100%',
                       },
                     },
                     cfMaxWidth: {
@@ -972,7 +972,7 @@ const editablePatternEntry: ExperienceEntry = {
                     cfWidth: {
                       type: 'DesignValue',
                       valuesByBreakpoint: {
-                        desktop: 'fill',
+                        desktop: '100%',
                       },
                     },
                     cfMaxWidth: {

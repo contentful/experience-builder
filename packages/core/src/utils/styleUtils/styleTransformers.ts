@@ -17,12 +17,6 @@ export const transformVisibility = (value?: boolean): CSSProperties => {
   return {};
 };
 
-// TODO: Remove in next major version v2 since the change is 17 months old
-// Keep this for backwards compatibility - deleting this would be a breaking change
-// because existing components on a users experience will have the width value as fill
-// rather than 100%
-export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
-
 export const transformGridColumn = (span?: string): CSSProperties => {
   if (!span) {
     return {};

@@ -127,13 +127,13 @@ export const experience = {
               cfWidth: {
                 type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'fill',
+                  desktop: '100%',
                 },
               },
               cfHeight: {
                 type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'fill',
+                  desktop: '100%',
                 },
               },
               cfMaxWidth: {
