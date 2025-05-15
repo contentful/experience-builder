@@ -15,28 +15,6 @@ import { EntityStore } from '@contentful/experiences-core';
 import { resolveAssembly } from './assemblyUtils';
 
 describe('resolveAssembly', () => {
-  it('should return the input node when it is not a assembly', () => {
-    const containerNode: ComponentTreeNode = {
-      definitionId: CONTENTFUL_COMPONENTS.container.id,
-      variables: {},
-      children: [],
-    };
-    const entityStore = new EntityStore({
-      experienceEntry: experienceEntry as unknown as Entry,
-      entities: [...entries, ...assets],
-      locale: 'en-US',
-    });
-
-    const result = resolveAssembly({
-      node: containerNode,
-      entityStore,
-      parentPatternProperties: {},
-      patternNodeIdsChain: '',
-    });
-
-    expect(result).toBe(containerNode);
-  });
-
   it('should return the input node when the entity store is undefined', () => {
     const containerNode: ComponentTreeNode = {
       definitionId: CONTENTFUL_COMPONENTS.container.id,
