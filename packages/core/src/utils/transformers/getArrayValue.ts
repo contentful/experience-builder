@@ -28,19 +28,13 @@ export function getArrayValue(
     } else if (value?.sys?.type === 'Link') {
       const resolvedEntity = entityStore.getEntityFromLink(value);
       if (!resolvedEntity) {
+        // seems that returning `undefined` will be more consistent, as it implies:
+        // there's no data in the entityStore during path resolution and best thing is to wait
+        // until next render cycle during EDITOR mode. Bound links is something we guaranteed to resolve.
+        // Passing link, implies that user has to try to resolve it themselves.
         return;
+        // return value;
       }
-      //resolve any embedded links - we currently only support 2 levels deep
-      const fields = resolvedEntity.fields || {};
-      Object.entries(fields).forEach(([fieldKey, field]) => {
-        if (field && field.sys?.type === 'Link') {
-          const entity = entityStore.getEntityFromLink(field);
-          if (entity) {
-            resolvedEntity.fields[fieldKey] = entity;
-          }
-        }
-      });
-
       return resolvedEntity;
     } else {
       console.warn(`Expected value to be a string or Link, but got: ${JSON.stringify(value)}`);

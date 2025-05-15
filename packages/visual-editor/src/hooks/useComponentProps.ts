@@ -8,6 +8,7 @@ import {
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
   sanitizeNodeProps,
+  EntityStoreBase,
 } from '@contentful/experiences-core';
 import {
   ASSEMBLY_NODE_TYPE,
@@ -28,12 +29,12 @@ import { CSSProperties, useMemo } from 'react';
 import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { useEntityStore } from '@/store/entityStore';
 import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzone.types';
 
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 import { DRAG_PADDING } from '@/types/constants';
+import { useStore } from 'zustand';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
@@ -48,6 +49,7 @@ export type ResolvedComponentProps = ComponentProps & {
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
+  entityStore: EntityStoreBase;
   resolveDesignValue: ResolveDesignValueType;
   areEntitiesFetched: boolean;
   definition?: ComponentRegistration['definition'];
@@ -60,6 +62,7 @@ type UseComponentProps = {
 
 export const useComponentProps = ({
   node,
+  entityStore,
   areEntitiesFetched,
   resolveDesignValue,
   renderDropzone,
@@ -72,7 +75,6 @@ export const useComponentProps = ({
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
   const locale = useEditorStore((state) => state.locale);
   const dataSource = useEditorStore((state) => state.dataSource);
-  const entityStore = useEntityStore((state) => state.entityStore);
   const draggingId = useDraggedItemStore((state) => state.onBeforeCaptureId);
   const nodeRect = useDraggedItemStore((state) => state.domRect);
 
