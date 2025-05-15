@@ -575,7 +575,14 @@ export type UpdateSelectedComponentCoordinatesPayload = {
   selectedAssemblyChildCoordinates?: DOMRect;
   parentCoordinates?: DOMRect;
 };
-export type CanvasScrollPayload = (typeof SCROLL_STATES)[keyof typeof SCROLL_STATES];
+// TODO: experience-builder-sdk 1.38.0+ backwards compatibility change - remoce ScrollState on major version
+type CanvasScrollPayload =
+  | ScrollState
+  | {
+      scrollState: ScrollState;
+      scrollX: number;
+      scrollY: number;
+    };
 export type ComponentMoveStartedPayload = undefined;
 export type ComponentMoveEndedPayload = undefined;
 export type OutsideCanvasClickPayload = { outsideCanvasClick: boolean };

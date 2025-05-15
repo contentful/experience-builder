@@ -394,13 +394,21 @@ export function useEditorSubscriber() {
     let timeoutId = 0;
     let isScrolling = false;
 
+    const sendScrollMessage = (scrollState: (typeof SCROLL_STATES)[keyof typeof SCROLL_STATES]) => {
+      sendMessage(OUTGOING_EVENTS.CanvasScroll, {
+        scrollState,
+        scrollY: window.scrollY,
+        scrollX: window.scrollX,
+      });
+    };
+
     const onScroll = () => {
       setScrollY(window.scrollY);
       if (isScrolling === false) {
-        sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.Start);
+        sendScrollMessage(SCROLL_STATES.Start);
       }
 
-      sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.IsScrolling);
+      sendScrollMessage(SCROLL_STATES.IsScrolling);
       isScrolling = true;
 
       clearTimeout(timeoutId);
@@ -411,7 +419,7 @@ export function useEditorSubscriber() {
         }
 
         isScrolling = false;
-        sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.End);
+        sendScrollMessage(SCROLL_STATES.End);
 
         /**
          * On scroll end, send new co-ordinates of selected node
