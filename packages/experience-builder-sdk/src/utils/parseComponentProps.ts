@@ -45,10 +45,7 @@ export const parseComponentProps = ({
   componentDefinition: ComponentDefinition;
   patternNodeIdsChain?: string;
   node: ComponentTreeNode;
-  resolveCustomDesignValue: (data: {
-    propertyName: string;
-    valuesByBreakpoint: Record<string, PrimitiveValue>;
-  }) => PrimitiveValue;
+  resolveCustomDesignValue: (valuesByBreakpoint: Record<string, PrimitiveValue>) => PrimitiveValue;
   resolveBoundValue: (data: {
     propertyName: string;
     dataType: ComponentDefinitionVariableType;
@@ -77,10 +74,7 @@ export const parseComponentProps = ({
           styleProps[propName] = propertyValue.valuesByBreakpoint;
         } else {
           // for custom design props, the value will be resolved with the javascript per breakpoint at runtime
-          customDesignProps[propName] = resolveCustomDesignValue({
-            propertyName: propName,
-            valuesByBreakpoint: propertyValue.valuesByBreakpoint,
-          });
+          customDesignProps[propName] = resolveCustomDesignValue(propertyValue.valuesByBreakpoint);
         }
         break;
       }
