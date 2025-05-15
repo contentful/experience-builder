@@ -35,27 +35,36 @@ describe('PreviewDeliveryRoot', () => {
     expect(container.childElementCount).toBe(0);
   });
 
-  it('throws an error if experience the schema version is not compatible', () => {
-    // @ts-expect-error testing an unsupported version
-    const experienceEntryMock = createExperienceEntry({ schemaVersion: '2023-06-27' });
-
-    const entityStore = new EntityStore({
-      experienceEntry: experienceEntryMock as unknown as Entry,
-      entities: [...entries, ...assets],
-      locale,
+  describe('when the schema version is not compatible', () => {
+    let consoleWarnSpy: jest.SpyInstance;
+    beforeEach(() => {
+      consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     });
+    afterEach(() => {
+      consoleWarnSpy.mockRestore();
+    });
+    it('throws an error', () => {
+      // @ts-expect-error testing an unsupported version
+      const experienceEntryMock = createExperienceEntry({ schemaVersion: '2023-06-27' });
 
-    const experience: Experience<EntityStore> = {
-      entityStore,
-    };
+      const entityStore = new EntityStore({
+        experienceEntry: experienceEntryMock as unknown as Entry,
+        entities: [...entries, ...assets],
+        locale,
+      });
 
-    const consoleWarnSpy = jest.spyOn(console, 'warn');
+      const experience: Experience<EntityStore> = {
+        entityStore,
+      };
 
-    render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
+      const consoleWarnSpy = jest.spyOn(console, 'warn');
 
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
-    );
+      render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
+      );
+    });
   });
 
   it('renders the composition block', () => {

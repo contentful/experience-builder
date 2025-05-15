@@ -1,6 +1,3 @@
-import type { ComponentDefinition } from '@contentful/experiences-core/types';
-import { ASSEMBLY_DEFAULT_CATEGORY } from '@contentful/experiences-core/constants';
-
 export type Breakpoints = Array<BreakpointItem>;
 
 export type Rect = {
@@ -22,9 +19,6 @@ export const isRelativePreviewSize = (width: string) => {
   // For now, we solely allow 100% as relative value
   return width === '100%';
 };
-
-export const checkIsDesignComponentDefinition = (component?: ComponentDefinition) =>
-  component?.category === ASSEMBLY_DEFAULT_CATEGORY;
 
 export const getTooltipPositions = ({
   previewSize,

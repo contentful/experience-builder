@@ -25,6 +25,7 @@
     "prepare": "husky install",
     "build": "lerna run build",
     "start": "lerna run --stream start",
+    "dev": "lerna run --stream dev",
     "prettier:check": "lerna run prettier:check",
     "cm": "git-cz",
     "depcruise": "lerna run depcruise"

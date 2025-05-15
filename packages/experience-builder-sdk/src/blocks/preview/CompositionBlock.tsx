@@ -19,7 +19,7 @@ import type {
 } from '@contentful/experiences-core/types';
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import { checkIsAssemblyNode, transformBoundContentValue } from '@contentful/experiences-core';
-import { useInjectStylesheet } from '../../hooks/useClassName';
+import { useInjectStylesheet } from '../../hooks/useInjectStylesheet';
 import {
   Assembly,
   Columns,
@@ -153,6 +153,7 @@ export const CompositionBlock = ({
       breakpoints: entityStore.breakpoints,
       mainBreakpoint,
       componentDefinition: componentRegistration.definition,
+      patternNodeIdsChain,
       node,
       resolveCustomDesignValue: ({ propertyName, valuesByBreakpoint }) => {
         return resolveDesignValue(valuesByBreakpoint, propertyName);
@@ -247,7 +248,7 @@ export const CompositionBlock = ({
   ]);
 
   // do not inject the stylesheet into the dom because it's already been done on the server side
-  useInjectStylesheet(ssrProps.cfSsrClassName ? undefined : mediaQuery);
+  useInjectStylesheet(ssrProps.cfSsrClassName ? undefined : mediaQuery?.css);
 
   if (!componentRegistration) {
     return null;
@@ -336,6 +337,7 @@ export const CompositionBlock = ({
         nodeProps={props}
         component={component}
         breakpoints={entityStore.breakpoints}
+        patternNodeIdsChain={patternNodeIdsChain}
       />
     );
   }
