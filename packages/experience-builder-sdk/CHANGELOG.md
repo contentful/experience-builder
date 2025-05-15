@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.37.2](https://github.com/contentful/experience-builder/compare/v1.37.1...v1.37.2) (2025-05-15)
+
+### Bug Fixes
+
+- remove style nodes from the DOM in the cleanup function of the injection hook [SPA-2765] ([#1122](https://github.com/contentful/experience-builder/issues/1122)) ([f8869f4](https://github.com/contentful/experience-builder/commit/f8869f45d16d0288687a62d81a8e5a1409ae13a7))
+- unique nested classnames [SPA-2766] ([#1121](https://github.com/contentful/experience-builder/issues/1121)) ([4c9ed48](https://github.com/contentful/experience-builder/commit/4c9ed48370746c54a9386373dc73ae372afd3c56))
+
 ## [1.37.1](https://github.com/contentful/experience-builder/compare/v1.37.0...v1.37.1) (2025-04-24)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react

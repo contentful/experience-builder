@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.37.2](https://github.com/contentful/experience-builder/compare/v1.37.1...v1.37.2) (2025-05-15)
+
+### Features
+
+- add top-level dev script ([55ecf70](https://github.com/contentful/experience-builder/commit/55ecf70945f5bf38df5c53137bb7e2bd3658637f))
+
+### Bug Fixes
+
+- [SPA-2694] consider iframe horizontal scroll when sending mouse move position ([#1118](https://github.com/contentful/experience-builder/issues/1118)) ([0515759](https://github.com/contentful/experience-builder/commit/0515759b2e46e485fc85f00dc305864dae8ee453))
+- add relative position wrapper for misaligned image placeholder ([#1119](https://github.com/contentful/experience-builder/issues/1119)) ([61f8c85](https://github.com/contentful/experience-builder/commit/61f8c85967a2bdcc983ff1f1175ec5ee4c4857fc))
+- remove style nodes from the DOM in the cleanup function of the injection hook [SPA-2765] ([#1122](https://github.com/contentful/experience-builder/issues/1122)) ([f8869f4](https://github.com/contentful/experience-builder/commit/f8869f45d16d0288687a62d81a8e5a1409ae13a7))
+- remove unused variable from useSingleColumn hook ([#1106](https://github.com/contentful/experience-builder/issues/1106)) ([cfcf3a2](https://github.com/contentful/experience-builder/commit/cfcf3a2cbb5f7e2b881f6a2b5d7da8ff408f9bba))
+- unique nested classnames [SPA-2766] ([#1121](https://github.com/contentful/experience-builder/issues/1121)) ([4c9ed48](https://github.com/contentful/experience-builder/commit/4c9ed48370746c54a9386373dc73ae372afd3c56))
+
 ## [1.37.1](https://github.com/contentful/experience-builder/compare/v1.37.0...v1.37.1) (2025-04-24)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.37.2](https://github.com/contentful/experience-builder/compare/v1.37.1...v1.37.2) (2025-05-15)
+
+### Bug Fixes
+
+- add relative position wrapper for misaligned image placeholder ([#1119](https://github.com/contentful/experience-builder/issues/1119)) ([61f8c85](https://github.com/contentful/experience-builder/commit/61f8c85967a2bdcc983ff1f1175ec5ee4c4857fc))
+
 ## [1.37.1](https://github.com/contentful/experience-builder/compare/v1.37.0...v1.37.1) (2025-04-24)
 
 **Note:** Version bump only for package @contentful/experiences-components-react

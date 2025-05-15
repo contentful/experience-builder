@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.37.2](https://github.com/contentful/experience-builder/compare/v1.37.1...v1.37.2) (2025-05-15)
+
+### Bug Fixes
+
+- remove unused variable from useSingleColumn hook ([#1106](https://github.com/contentful/experience-builder/issues/1106)) ([cfcf3a2](https://github.com/contentful/experience-builder/commit/cfcf3a2cbb5f7e2b881f6a2b5d7da8ff408f9bba))
+- unique nested classnames [SPA-2766] ([#1121](https://github.com/contentful/experience-builder/issues/1121)) ([4c9ed48](https://github.com/contentful/experience-builder/commit/4c9ed48370746c54a9386373dc73ae372afd3c56))
+
 ## [1.37.1](https://github.com/contentful/experience-builder/compare/v1.37.0...v1.37.1) (2025-04-24)
 
 ### Bug Fixes
