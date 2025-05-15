@@ -259,15 +259,13 @@ export const CompositionBlock = ({
   // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {
     if (isAssembly) {
-      const currentPatternNodeIdsChain = `${patternNodeIdsChain}${childNodeId}`;
-      const classesForNode: DesignValue | undefined =
-        // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
-        node.variables.cfSsrClassName?.[currentPatternNodeIdsChain];
-
+      const nodeIdsChain = `${patternNodeIdsChain}${childNodeId}`;
+      // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
+      const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[nodeIdsChain];
       if (!classesForNode) return undefined;
       return resolveDesignValue(classesForNode.valuesByBreakpoint, 'cfSsrClassName') as string;
     }
-    return getPatternChildNodeClassName?.(`${node.id}${childNodeId}`);
+    return getPatternChildNodeClassName?.(childNodeId);
   };
 
   const children =
