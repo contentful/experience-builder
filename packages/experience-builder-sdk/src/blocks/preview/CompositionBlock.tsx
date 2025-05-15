@@ -155,9 +155,7 @@ export const CompositionBlock = ({
       componentDefinition: componentRegistration.definition,
       patternNodeIdsChain,
       node,
-      // The property name is only used for built-in styles to resolve design tokens.
-      // So we can ignore it here and just pass 'custom'.
-      resolveCustomDesignValue: (valuesByBreakpoint) => resolveDesignValue(valuesByBreakpoint),
+      resolveDesignValue,
       resolveBoundValue: ({ binding, propertyName, dataType }) => {
         const [, uuid] = binding.path.split('/');
         const boundEntityLink = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;

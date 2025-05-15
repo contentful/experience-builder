@@ -107,9 +107,14 @@ export const getValueForBreakpoint = (
    * cfBorder, cfBorderRadius, cfFontSize, cfLineHeight, cfLetterSpacing,
    * cfTextColor, cfMaxWidth
    */
-  propertyName?: string,
+  propertyName: string | undefined,
+  resolveDesignTokens = true,
 ) => {
   const eventuallyResolveDesignTokens = (value: PrimitiveValue) => {
+    // This is used externally in the web app to determine the original persisted value
+    if (!resolveDesignTokens) {
+      return value;
+    }
     // For some built-in design properties, we support design tokens
     if (propertyName && builtInStylesWithDesignTokens.includes(propertyName)) {
       return getDesignTokenRegistration(value as string, propertyName);
