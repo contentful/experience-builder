@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { EntityStoreBase } from './EntityStoreBase';
-import { EditorModeEntityStore } from './EditorModeEntityStore';
 import { Asset, Entry, UnresolvedLink } from 'contentful';
+import { UninitializedEntityStore } from './UninitializedEntityStore';
 
 export interface InMemoryEntitiesState {
   entityStore: EntityStoreBase;
@@ -18,7 +18,11 @@ export interface InMemoryEntitiesState {
 }
 
 export const inMemoryEntitiesStore = create<InMemoryEntitiesState>((set, get) => ({
-  entityStore: new EditorModeEntityStore({ locale: 'lol', entities: [] }),
+  // The UninitializedEntityStore is a placeholder instance and is here to highlight the
+  // // fact that it's not used by anything until during loading lifecycle it'sreplaced by real entity store:
+  //   - in Preview+Delivery mode: right after we fetch Expereince and it entities
+  //   - in EDITOR (VisualEditor) mode: right after the VisualEditor is async imported and initialize event happens
+  entityStore: new UninitializedEntityStore(),
   areEntitiesFetched: false,
 
   setEntitiesFetched(fetched) {
