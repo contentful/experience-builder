@@ -2,7 +2,6 @@ import React from 'react';
 import { UnresolvedLink } from 'contentful';
 import { Document } from '@contentful/rich-text-types';
 import { RichText } from '@contentful/experiences-components-react';
-import { inMemoryEntities } from '@contentful/experiences-sdk-react';
 
 interface KitchenSinkProps {
   jsonObject?: object;
@@ -35,8 +34,6 @@ const KitchenSink: React.FC<KitchenSinkProps> = ({
   richText,
   ...props
 }) => {
-  const resolvedEntryReference = inMemoryEntities.maybeResolveLink(entryReference!);
-
   return (
     <div {...props}>
       <h1>Kitchen Sink</h1>
