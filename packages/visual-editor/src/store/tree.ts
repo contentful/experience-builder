@@ -40,7 +40,6 @@ export interface TreeStore {
     sourceIndex: number,
     sourceParentId: string,
   ) => void;
-  findNodeById(nodeId?: string): ExperienceTreeNode | null;
 }
 
 export const useTreeStore = create<TreeStore>((set, get) => ({
@@ -178,33 +177,6 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
         );
       }),
     );
-  },
-  // breadth first search
-  findNodeById(nodeId?: string): ExperienceTreeNode | null {
-    if (!nodeId) {
-      return null;
-    }
-
-    const rootNode = get().tree.root;
-
-    const visitedNodeIds: string[] = [];
-    const queue: ExperienceTreeNode[] = [];
-    let currentNode = rootNode;
-
-    queue.push(currentNode);
-
-    while (queue.length) {
-      currentNode = queue.shift()!;
-      visitedNodeIds.push(currentNode.data.id);
-
-      if (currentNode.data.id === nodeId) {
-        return currentNode;
-      }
-
-      queue.push(...currentNode.children);
-    }
-
-    return null;
   },
 }));
 
