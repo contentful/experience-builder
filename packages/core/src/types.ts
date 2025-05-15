@@ -111,6 +111,9 @@ export type ComponentDefinition<
   hyperlinkPattern?: string;
   variables: Partial<DesignVariableMap> & Record<string, ComponentDefinitionVariable<T>>;
   slots?: Record<string, { displayName: string }>;
+  // FIXME: While it's technically possible, we don't want to allow using built-in content props via
+  // the styles configuration. We should split this up in the future into content and style and adjust
+  // components like `Container` for that.
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
   children?: boolean;
   tooltip?: {
@@ -129,8 +132,6 @@ export type ComponentRegistration = {
      */
     enableCustomEditorView?: boolean;
     wrapComponent?: boolean;
-    /** @deprecated use wrapContainer instead */
-    wrapContainerTag?: keyof JSX.IntrinsicElements;
     wrapContainer?: keyof JSX.IntrinsicElements | React.ReactElement;
     wrapContainerWidth?: React.CSSProperties['width'];
   };
@@ -160,14 +161,7 @@ export type DataSourceEntryValueType = Link<'Entry' | 'Asset'>;
 /** Type of a single node of the experience tree exchanged via postMessage between the SDK and Contentful Web app */
 export type ExperienceTreeNode = {
   // TODO: add conditional typing magic to reduce the number of optionals
-  type:
-    | 'block'
-    | 'root'
-    | 'editorRoot'
-    | 'designComponent'
-    | 'designComponentBlock'
-    | 'assembly'
-    | 'assemblyBlock';
+  type: 'block' | 'root' | 'assembly' | 'assemblyBlock';
   data: {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
@@ -204,7 +198,8 @@ export type ExperienceTree = {
  * Internally defined style variables are prefix with `cf` to avoid
  * collisions with user defined variables.
  */
-// FIXME: Remove content props like cfHyperlink and cfImageAsset
+// FIXME: Move content props cfHyperlink, cfImageAsset, cfBackgroundImageUrl, and cfOpenInNewTab into
+// a separate type. Requires refactoring as currently this is used for `builtInStyles`.
 // FIXME: Check whether this should be the same as CF_STYLE_ATTRIBUTES
 export type StyleProps = {
   cfVisibility: boolean;
@@ -248,7 +243,8 @@ export type StyleProps = {
 /**
  * Internally defined style variables mapped to each variable type
  */
-// FIXME: Remove content props like cfHyperlink and cfImageAsset
+// FIXME: Move content props cfHyperlink, cfImageAsset, cfBackgroundImageUrl, and cfOpenInNewTab into
+// a separate type. Requires refactoring as currently this is used for `builtInStyles`.
 export type DesignVariableTypes = {
   cfVisibility: 'Boolean';
   cfHorizontalAlignment: 'Text';
@@ -630,12 +626,8 @@ export type RequestReadOnlyModePayload = undefined;
 export type RequestEditorModePayload = undefined;
 export type ExperienceUpdatedPayload = {
   tree: ExperienceTree;
-  /** @deprecated in favor of assemblies */
-  designComponents?: ExperienceUsedComponents;
   assemblies?: ExperienceUsedComponents;
   locale: string;
-  /** @deprecated maybe? */
-  defaultLocaleCode?: string;
   changedNode?: ExperienceTreeNode;
   changedValueType?: SelectedValueTypes;
 };

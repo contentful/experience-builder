@@ -3,7 +3,6 @@ import {
   transformAlignment,
   transformBackgroundImage,
   transformBorderStyle,
-  transformFill,
   transformGridColumn,
   transformVisibility,
 } from './styleTransformers';
@@ -86,8 +85,8 @@ export const buildCfStyles = (values: Partial<StyleProps>): CSSProperties => {
     margin: values.cfMargin,
     padding: values.cfPadding,
     backgroundColor: values.cfBackgroundColor,
-    width: transformFill(values.cfWidth || values.cfImageOptions?.width),
-    height: transformFill(values.cfHeight || values.cfImageOptions?.height),
+    width: values.cfWidth || values.cfImageOptions?.width,
+    height: values.cfHeight || values.cfImageOptions?.height,
     maxWidth: values.cfMaxWidth,
     ...transformGridColumn(values.cfColumnSpan),
     ...transformBorderStyle(values.cfBorder),

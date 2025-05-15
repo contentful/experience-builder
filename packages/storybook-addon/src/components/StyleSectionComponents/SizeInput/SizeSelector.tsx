@@ -15,13 +15,11 @@ type SizeSelectorProps = {
   label: string;
 };
 
-type SizingOptions = 'fill' | 'fixed' | 'fit' | 'relative';
+type SizingOptions = 'fixed' | 'fit';
 
 const sizingOptions: { id: SizingOptions; displayValue: string }[] = [
-  { id: 'fill', displayValue: 'Fill' },
   { id: 'fixed', displayValue: 'Fixed' },
   { id: 'fit', displayValue: 'Fit' },
-  { id: 'relative', displayValue: 'Relative' },
 ];
 
 const fitSizingOptions = [
@@ -31,10 +29,6 @@ const fitSizingOptions = [
 ];
 
 const transformValuesBySizingOption = (sizingOption: SizingOptions, value: string) => {
-  if (sizingOption === 'fill') {
-    return 'fill';
-  }
-
   if (sizingOption === 'fixed') {
     return EMPTY_CONTAINER_HEIGHT;
   }
@@ -43,18 +37,12 @@ const transformValuesBySizingOption = (sizingOption: SizingOptions, value: strin
     return 'fit-content';
   }
 
-  if (sizingOption === 'relative') {
-    return '100%';
-  }
-
   return value;
 };
 
 /**
- * We have four sizing options: Fit, Fixed, Fill and Relative (3F-R)
- * Fill is auto, i.e filling the height/width of the parent
- * Fixed has a number input with a px unit of measurement
- * Relative also has a number input with a % unit of measurement
+ * We have two sizing options: Fit and Fixed
+ * Fixed has a number input (e.g. with px or %)
  * Fit has 3 options, as seen in `fitSizingOptions`
  */
 export const SizeSelector = ({ variableName, variableDefinition, label }: SizeSelectorProps) => {
@@ -65,21 +53,17 @@ export const SizeSelector = ({ variableName, variableDefinition, label }: SizeSe
 
   const value = useMemo(() => {
     return valueFromState;
-  }, [valueFromState, variableName]);
+  }, [valueFromState]);
 
   const { onDesignValueChanged } = useCompositionCanvasSubscriber();
 
   const selectedOption: SizingOptions | undefined = useMemo(() => {
-    if (value === 'fill') {
-      return 'fill';
-    }
-
     if (fitSizingOptions.some((option) => option.id === value)) {
       return 'fit';
     }
 
     if (value.endsWith('%')) {
-      return 'relative';
+      return 'fixed';
     }
 
     if (value.endsWith('px')) {
@@ -114,10 +98,6 @@ export const SizeSelector = ({ variableName, variableDefinition, label }: SizeSe
             ))}
           </Select>
         );
-      }
-
-      if (selectedOption === 'fill') {
-        return <TextInput aria-label={label} value="Auto" isDisabled={true} />;
       }
 
       const numberInputValue = value.split(/px|%/)[0];
