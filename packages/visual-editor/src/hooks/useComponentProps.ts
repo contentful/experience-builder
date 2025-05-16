@@ -35,7 +35,6 @@ import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzon
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 import { DRAG_PADDING } from '@/types/constants';
-import { useStore } from 'zustand';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
