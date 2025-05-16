@@ -15,16 +15,11 @@ import { Assembly } from '@contentful/experiences-components-react';
 import { componentRegistry, createAssemblyRegistration } from '@/store/registries';
 import { ImportedComponentErrorBoundary } from '@components/DraggableHelpers/ImportedComponentErrorBoundary';
 import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
-import {
-  isContentfulStructureComponent,
-  inMemoryEntitiesStore,
-  EntityStoreBase,
-} from '@contentful/experiences-core';
+import { isContentfulStructureComponent, type EntityStoreBase } from '@contentful/experiences-core';
 import { MissingComponentPlaceholder } from '@components/DraggableHelpers/MissingComponentPlaceholder';
 import { useTreeStore } from '@/store/tree';
 import { getItem } from '@/utils/getItem';
 import { CircularDependencyErrorPlaceholder } from '@components/DraggableHelpers/CircularDependencyErrorPlaceholder';
-import { useStore } from 'zustand';
 
 type UseComponentProps = {
   node: ExperienceTreeNode;

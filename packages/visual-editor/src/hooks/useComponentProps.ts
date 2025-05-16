@@ -36,7 +36,6 @@ import { maybeMergePatternDefaultDesignValues } from '@/utils/maybeMergePatternD
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 import { DRAG_PADDING } from '@/types/constants';
-import { useStore } from 'zustand';
 import { useTreeStore } from '@/store/tree';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
