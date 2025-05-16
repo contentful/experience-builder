@@ -104,7 +104,7 @@ export function Dropzone({
         />
       );
     },
-    [wrappingPatternIds, resolveDesignValue],
+    [wrappingPatternIds, resolveDesignValue, entityStore, areEntitiesFetched],
   );
 
   const renderClonedDropzone: RenderDropzoneFunction = useCallback(
@@ -122,7 +122,7 @@ export function Dropzone({
         />
       );
     },
-    [resolveDesignValue, wrappingPatternIds],
+    [resolveDesignValue, wrappingPatternIds, entityStore, areEntitiesFetched],
   );
 
   const isDropzoneEnabled = useMemo(() => {
