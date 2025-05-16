@@ -43,16 +43,23 @@ export const inMemoryEntitiesStore = create<InMemoryEntitiesState>((set, get) =>
   },
 }));
 
-function isLink(data: any): data is UnresolvedLink<'Entry' | 'Asset'> {
+function isLink(data: unknown): data is UnresolvedLink<'Entry' | 'Asset'> {
   if (!data) {
     return false;
   }
 
-  if (!data.sys || !data.sys.type || !data.sys.linkType) {
+  const maybeLink = data as {
+    sys?: {
+      type?: string;
+      linkType?: string;
+    };
+  };
+
+  if (!maybeLink.sys || !maybeLink.sys.type || !maybeLink.sys.linkType) {
     return false;
   }
 
-  return data.sys.type === 'Link' && ['Entry', 'Asset'].includes(data.sys.linkType);
+  return maybeLink.sys.type === 'Link' && ['Entry', 'Asset'].includes(maybeLink.sys.linkType);
 }
 
 // function maybeResolveLink(link: unknown): Entry | undefined;
