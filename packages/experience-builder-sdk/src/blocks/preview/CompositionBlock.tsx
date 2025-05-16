@@ -259,7 +259,7 @@ export const CompositionBlock = ({
     return null;
   }
 
-  const { component } = componentRegistration;
+  const { component: component } = componentRegistration;
 
   // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {

@@ -1,5 +1,4 @@
 import {
-  BoundComponentPropertyTypes,
   ComponentDefinitionVariableType,
   ComponentTreeNode,
   ResolveDesignValueType,
@@ -20,7 +19,8 @@ export const transformBoundContentValue = (
   variableName: string,
   variableType: ComponentDefinitionVariableType,
   path: string,
-): BoundComponentPropertyTypes => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): any => {
   const entityOrAsset = entityStore.getEntryOrAsset(binding, path);
   if (!entityOrAsset) return;
 
