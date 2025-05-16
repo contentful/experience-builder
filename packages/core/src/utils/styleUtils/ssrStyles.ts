@@ -181,6 +181,9 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
        */
 
       const currentNodeClassNames: string[] = [];
+      // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
+      // e.g. `outerPatternNodeId-innerPatternNodeId-currentNodeId`
+      const currentNodeIdsChain = `${wrappingPatternNodeIds.join('-')}-${currentNode.id}`;
 
       // For each breakpoint, resolve design tokens, create the CSS and generate a unique className.
       for (const breakpointId of breakpointIds) {
@@ -218,7 +221,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         // conflicts between different breakpoint values from multiple nodes where the hash would be equal
         // - Adding wrapping pattern nodes IDs to avoid conflicts between similar nested patterns as those
         // could override each others CSS for some breakpoints just through the order of `<style>` tags in the DOM.
-        const styleHash = md5(currentPatternNodeIdsChain + breakpointId + generatedCss);
+        const styleHash = md5(currentNodeIdsChain + breakpointId + generatedCss);
 
         // and prefix the className to make sure the value can be processed
         const className = `cf-${styleHash}`;
@@ -252,9 +255,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         patternWrapper.variables.cfSsrClassName = {
           ...(patternWrapper.variables.cfSsrClassName ?? {}),
           type: 'DesignValue',
-          // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
-          // e.g. `outerPatternNodeId-innerPatternNodeId-currentNodeId`
-          [`${wrappingPatternNodeIds.join('-')}-${currentNode.id}`]: {
+          [currentNodeIdsChain]: {
             valuesByBreakpoint: {
               [breakpointIds[0]]: currentNodeClassNames.join(' '),
             },
