@@ -2,11 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { useComponent } from './useComponent';
 import { ComponentRegistration, ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { vi, it, describe, expect } from 'vitest';
-import {
-  EditorModeEntityStore,
-  EntityStoreBase,
-  getValueForBreakpoint,
-} from '@contentful/experiences-core';
+import { EditorModeEntityStore, getValueForBreakpoint } from '@contentful/experiences-core';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import React from 'react';
 
