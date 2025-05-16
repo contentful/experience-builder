@@ -10,12 +10,15 @@ type NeatPotionShelfProps = {
   singlePotion: ShallowEntry;
 };
 
+// DK.TODO: it seems that all of the fields can be optional, even scalar, as only upon publishing validation
+//          happens for the entries. Which means that in DRAFT mode (which is what Studio EDITOR displays)
+//          any of the fields can be undefined. (even 'title' probably)
 type PotionL2 = {
   fields: {
-    title: string;
-    image: Asset;
-    ingredientPrimary: Ingredient;
-    ingredients: Array<Ingredient>;
+    title: string; // TODO: should `title` be optional?
+    image?: Asset;
+    ingredientPrimary?: Ingredient;
+    ingredients?: Array<Ingredient>;
   };
 };
 
@@ -101,20 +104,24 @@ const copyAndResolveEntityToLevel3 = (
 
 export const NeatPotionShelf: React.FC<NeatPotionShelfProps> = (props: NeatPotionShelfProps) => {
   // potions: Array
-  // console.log(`;;; passed potions (as is, maybe undefined): `, props.potions);
+  console.log(`;;; passed potions (as is, maybe undefined): `, props.potions);
   const shallowPotions = (props.potions || []).filter(Boolean) as unknown as ShallowEntry[]; // guard against undefined values which appear for a moment right after user clicking on binding
-  // console.log(`;;; shallow potions: `, shallowPotions);
+  props.potions && console.log(`;;; shallow potions: `, shallowPotions);
   const potions = shallowPotions.map((p) => copyAndResolveEntityToLevel3(p));
-  // console.log(`;;; resolved potions: `, potions);
+  props.potions && console.log(`;;; resolved potions: `, potions);
 
   // singlePotion
-  console.log(`;;; passed singlePotion (as is, maybe undefined): `, props.singlePotion);
+  console.log(`,,, passed singlePotion (as is, maybe undefined): `, props.singlePotion);
   const singlePotion = copyAndResolveEntityToLevel3(props.singlePotion);
-  console.log(`;;; resolved singlePotion: `, singlePotion);
+  console.log(`,,, resolved singlePotion: `, singlePotion);
 
   const renderPotionComponent = (potion: PotionL2, index: number) => {
+    if (!potion) {
+      return <div key={index}>Logic error: Potion at index [${index}] is undefined</div>;
+    }
     const { title, image, ingredientPrimary, ingredients } = potion.fields;
-    const src = image.fields?.file?.url as string;
+    // const src = image.fields?.file?.url as string; // image may be optional on the field
+    const src = image?.fields?.file?.url as string;
 
     return (
       <article key={index} style={{ display: 'flex', flexDirection: 'row' }}>
@@ -142,7 +149,11 @@ export const NeatPotionShelf: React.FC<NeatPotionShelfProps> = (props: NeatPotio
           <ul>
             {ingredients?.map((ingredient, index) => (
               <li key={index}>
-                <b>{ingredient.fields?.title}</b>
+                {!ingredient ? (
+                  <div>Ingredient at index [{index}] not set</div>
+                ) : (
+                  <b>{ingredient.fields?.title}</b>
+                )}
               </li>
             ))}
           </ul>
