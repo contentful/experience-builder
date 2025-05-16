@@ -106,7 +106,10 @@ export const createAssemblyEntry = ({
             displayName: 'Width',
             type: 'Text',
             group: 'style',
-            defaultValue: { type: 'DesignValue', valuesByBreakpoint: { desktop: '42px' } },
+            defaultValue: {
+              type: 'DesignValue',
+              valuesByBreakpoint: { desktop: '42px', mobile: '24px' },
+            },
           },
         },
       } satisfies ExperienceComponentSettings,
