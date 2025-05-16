@@ -9,7 +9,7 @@ import {
 import { isDeepPath, parseDataSourcePathWithL1DeepBindings } from '@/utils/pathSchema';
 import { treeVisit } from '@/utils/treeTraversal';
 import { isLink } from '@/utils/isLink';
-import type { EntityFromLink, InMemoryEntitiesService } from '@/entity';
+import type { EntityFromLink } from '@/entity';
 
 type DeepReferenceOpts = {
   path: string;
