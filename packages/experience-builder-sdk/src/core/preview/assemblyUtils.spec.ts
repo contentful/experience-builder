@@ -28,7 +28,7 @@ describe('resolveAssembly', () => {
       node: containerNode,
       entityStore,
       parentPatternProperties: {},
-      patternNodeIdsChain: '',
+      patternRootNodeIdsChain: '',
     });
 
     expect(result).toBe(containerNode);
@@ -51,7 +51,7 @@ describe('resolveAssembly', () => {
       node: assemblyNode,
       entityStore,
       parentPatternProperties: {},
-      patternNodeIdsChain: '',
+      patternRootNodeIdsChain: '',
     });
 
     expect(result).toBe(assemblyNode);
@@ -86,7 +86,7 @@ describe('resolveAssembly', () => {
         node: assemblyNode,
         entityStore,
         parentPatternProperties: {},
-        patternNodeIdsChain: '',
+        patternRootNodeIdsChain: '',
       });
 
       expect(result.children).toHaveLength(1);
@@ -122,7 +122,7 @@ describe('resolveAssembly', () => {
       const result = resolveAssembly({
         node: assemblyNode,
         entityStore,
-        patternNodeIdsChain: 'assembly-id',
+        patternRootNodeIdsChain: 'assembly-id',
         parentPatternProperties: {
           [patternPropertyId2]: {
             contentType: 'testContentType',
@@ -162,7 +162,7 @@ describe('resolveAssembly', () => {
         node: assemblyNode,
         entityStore,
         parentPatternProperties: {},
-        patternNodeIdsChain: '',
+        patternRootNodeIdsChain: '',
       });
 
       expect(result.children[0].variables.cfWidth).toEqual({
@@ -182,7 +182,7 @@ describe('resolveAssembly', () => {
         node: assemblyNode,
         entityStore,
         parentPatternProperties: {},
-        patternNodeIdsChain: '',
+        patternRootNodeIdsChain: '',
       });
 
       expect(result.children[0].variables.cfWidth).toEqual({
