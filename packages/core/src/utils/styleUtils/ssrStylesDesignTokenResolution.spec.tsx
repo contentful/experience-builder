@@ -182,7 +182,7 @@ describe('custom component with builtInStyles which are supporting design tokens
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint
         .desktop as string,
     ).toMatchInlineSnapshot(
-      `"cf-7b1d28fe46d9488fa595e4ff21270f2e cf-af21918d8656639646a9eb86a7ca06e2 cf-5a0d66d5b7e5c60dac49f3a86e4c1c8d"`,
+      `"cf-4358e928a5303f513d58e3060af6626a cf-72c02deca5ee8290242fe8179899fea2 cf-afcdf4e0169a3af4f368deea5f35e56c"`,
     );
     expect(
       (customComponent.variables.cfSsrClassName as DesignValue).valuesByBreakpoint.tablet,
@@ -192,7 +192,7 @@ describe('custom component with builtInStyles which are supporting design tokens
     ).not.toBeDefined();
 
     expect(styles).toMatchInlineSnapshot(
-      `".cf-7b1d28fe46d9488fa595e4ff21270f2e{box-sizing:border-box;margin:2rem;padding:2rem;background-color:white;width:50%;height:25%;border:1px solid black;gap:2rem 2rem;font-size:1rem;color:black;}@media(max-width:992px){.cf-af21918d8656639646a9eb86a7ca06e2{box-sizing:border-box;margin:1.5rem;padding:1.5rem;background-color:black;width:75%;height:50%;border:3px solid black;gap:1.5rem 1.5rem;font-size:0.75rem;color:green;}}@media(max-width:576px){.cf-5a0d66d5b7e5c60dac49f3a86e4c1c8d{box-sizing:border-box;margin:1rem;padding:1rem;background-color:red;width:100%;height:100%;border:0px solid transparent;gap:1rem 1rem;font-size:1.5rem;color:orange;}}"`,
+      `".cf-4358e928a5303f513d58e3060af6626a{box-sizing:border-box;margin:2rem;padding:2rem;background-color:white;width:50%;height:25%;border:1px solid black;gap:2rem 2rem;font-size:1rem;color:black;}@media(max-width:992px){.cf-72c02deca5ee8290242fe8179899fea2{box-sizing:border-box;margin:1.5rem;padding:1.5rem;background-color:black;width:75%;height:50%;border:3px solid black;gap:1.5rem 1.5rem;font-size:0.75rem;color:green;}}@media(max-width:576px){.cf-afcdf4e0169a3af4f368deea5f35e56c{box-sizing:border-box;margin:1rem;padding:1rem;background-color:red;width:100%;height:100%;border:0px solid transparent;gap:1rem 1rem;font-size:1.5rem;color:orange;}}"`,
     );
   });
 });
