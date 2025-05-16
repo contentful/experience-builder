@@ -11,10 +11,14 @@ export function getResolvedEntryFromLink(
     return entryOrAsset;
   }
 
-  const value = get<UnresolvedLink<'Entry'>>(entryOrAsset, path.split('/').slice(2, -1));
+  const fieldName = path.split('/').slice(2, -1);
+  const value = get<UnresolvedLink<'Entry'>>(entryOrAsset, fieldName);
 
   if (value?.sys.type !== 'Link') {
-    console.warn(`Expected a link to a reference, but got: ${JSON.stringify(value)}`);
+    console.warn(
+      `When attempting to follow link in field '${fieldName}' of entity, the value is expected to be a link, but got: ${JSON.stringify(value)}`,
+      { entity: entryOrAsset },
+    );
     return;
   }
 
