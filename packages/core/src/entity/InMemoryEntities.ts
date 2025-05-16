@@ -55,12 +55,16 @@ function isLink(data: any): data is UnresolvedLink<'Entry' | 'Asset'> {
   return data.sys.type === 'Link' && ['Entry', 'Asset'].includes(data.sys.linkType);
 }
 
-function maybeResolveLink(link: UnresolvedLink<'Entry'>): Entry | undefined;
-function maybeResolveLink(link: UnresolvedLink<'Asset'>): Asset | undefined;
+// function maybeResolveLink(link: unknown): Entry | undefined;
+// function maybeResolveLink(link: unknown): Asset | undefined;
+// function maybeResolveLink(link: UnresolvedLink<'Entry'>): Entry | undefined;
+// function maybeResolveLink(link: UnresolvedLink<'Asset'>): Asset | undefined;
+// function maybeResolveLink(
+//   link: UnresolvedLink<'Entry'> | UnresolvedLink<'Asset'>,
+// ): Entry | Asset | undefined;
 function maybeResolveLink(
-  link: UnresolvedLink<'Entry'> | UnresolvedLink<'Asset'>,
-): Entry | Asset | undefined;
-function maybeResolveLink(maybeLink: UnresolvedLink<'Entry' | 'Asset'>) {
+  maybeLink: UnresolvedLink<'Entry' | 'Asset'> | unknown,
+): Entry | Asset | undefined {
   if (!isLink(maybeLink)) {
     console.warn(
       'maybeResolveLink function must receive Link shape. Provided argument does not match the Link shape: ',
@@ -91,6 +95,8 @@ const inMemoryEntities = {
   maybeResolveLink,
   addEntities,
 };
+
+export type InMemoryEntitiesService = typeof inMemoryEntities;
 
 const useInMemoryEntities = () => {
   return inMemoryEntities;
