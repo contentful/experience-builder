@@ -4,7 +4,11 @@ import { render, screen } from '@testing-library/react';
 
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
-import type { ComponentTreeNode, ExperienceEntry } from '@contentful/experiences-core/types';
+import type {
+  ComponentTreeNode,
+  DesignValue,
+  ExperienceEntry,
+} from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { experienceEntry } from '../../../test/__fixtures__/composition';
 import {
@@ -384,24 +388,32 @@ describe('CompositionBlock', () => {
     });
 
     it('renders nested patterns', () => {
-      // TODO: Turn the check for the class name hash into an inline snapshot test
-      const ssrClassName = 'cfstyles-d5bd6a1538827378ca005e2dbed681ca contentful-container';
+      const ssrClassName = 'cfstyles-1random_hash1';
+      const nestedSsrClassName = 'cfstyles-2random_hash2';
+      const nestedChildSsrClassName = 'cfstyles-3random_hash3 contentful-container';
       const unboundValueKey = 'some-unbound-value-key';
       const unboundValueKey2 = 'some-unbound-value-key-2';
 
       const nestedPatternNode: ComponentTreeNode = {
+        id: 'test-nested-pattern-node-id',
         definitionId: 'nested-pattern-id',
         variables: {
           [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey },
           cfSsrClassName: {
             type: 'DesignValue',
-            valuesByBreakpoint: { desktop: ssrClassName },
-          },
+            valuesByBreakpoint: { desktop: nestedSsrClassName },
+            // Format: `${outerPatternId}${nestedPatternId}-${containerId}`
+            'test-pattern-node-idtest-nested-pattern-node-id-test-container-id': {
+              type: 'DesignValue',
+              valuesByBreakpoint: { desktop: nestedChildSsrClassName },
+            },
+          } as DesignValue,
         },
         children: [],
       };
 
       const patternNode: ComponentTreeNode = {
+        id: 'test-pattern-node-id',
         definitionId: defaultAssemblyId,
         variables: {
           [assemblyGeneratedVariableName]: { type: 'UnboundValue', key: unboundValueKey2 },
@@ -447,14 +459,14 @@ describe('CompositionBlock', () => {
           node={patternNode}
           locale="en-US"
           entityStore={entityStore}
-          resolveDesignValue={jest.fn()}
+          resolveDesignValue={(valuesByBreakpoint) => valuesByBreakpoint?.desktop}
         />,
       );
 
       expect(screen.getAllByTestId('assembly')).toHaveLength(2);
       expect(screen.getAllByTestId('assembly')[0]).toHaveClass(ssrClassName);
-      expect(screen.getAllByTestId('assembly')[1]).toHaveClass(ssrClassName);
-      expect(screen.getAllByTestId('assembly')[1].firstChild).toHaveClass(ssrClassName);
+      expect(screen.getAllByTestId('assembly')[1]).toHaveClass(nestedSsrClassName);
+      expect(screen.getAllByTestId('assembly')[1].firstChild).toHaveClass(nestedChildSsrClassName);
       expect(screen.getByText('Parent pattern value')).toBeInTheDocument();
       expect(screen.getByText('Nested pattern value')).toBeInTheDocument();
     });
