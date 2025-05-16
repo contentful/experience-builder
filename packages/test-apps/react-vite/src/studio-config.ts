@@ -8,15 +8,22 @@ import ColorfulBox from './components/ColorfulBox/ColorfulBox';
 import { ComponentUsingReferences } from './components/ComponentUsingReferences';
 import { PotionShelf } from './components/PotionShelf';
 import { NeatPotionShelf } from './components/NeatPotionShelf';
-import BindToCollectionExampleComponent, {
-  BindToCollectionExampleComponentDefinition,
-} from './components/BindToCollectionExample';
+import {
+  ResolveManuallyComponent,
+  ResolveManuallyComponentDefinition,
+  ShallowComponent,
+  ShallowComponentDefinition,
+} from './components/BindingToReferences';
 
 defineComponents(
   [
     {
-      component: BindToCollectionExampleComponent,
-      definition: BindToCollectionExampleComponentDefinition,
+      component: ResolveManuallyComponent,
+      definition: ResolveManuallyComponentDefinition,
+    },
+    {
+      component: ShallowComponent,
+      definition: ShallowComponentDefinition,
     },
     {
       component: PotionShelf,
