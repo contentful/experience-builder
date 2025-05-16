@@ -38,6 +38,14 @@ const stringifyCompact = (obj: unknown) => {
       // return value;
       return `➡️${value.linkType?.toLowerCase()}://${value.id}`;
     }
+    if (['componentTree', 'dataSource', 'unboundValues'].includes(key)) {
+      return '{ ... }';
+    }
+
+    if (key === 'sys') {
+      return `{ ..., id: ${value?.id} }`;
+    }
+
     if (key === 'sys' || key === 'metadata') {
       return undefined;
     }
