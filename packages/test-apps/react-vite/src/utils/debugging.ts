@@ -16,6 +16,13 @@ export const stringifyCompact = (obj: unknown) => {
     if (key === 'sys' || key === 'metadata') {
       return undefined;
     }
+
+    if (value !== null && typeof value === 'object') {
+      if (value?.nodeType === 'document') {
+        return `{ ..., 📜 nodeType: ${value?.nodeType} }`; // richText document we make compact
+      }
+    }
+
     return value;
   };
 
