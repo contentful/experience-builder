@@ -110,7 +110,7 @@ export function useEditorSubscriber(entityCache: typeof inMemoryEntitiesStore) {
        */
       const isMissingL2Entities = (deepReferences: DeepReference[]): boolean => {
         const referentLinks = deepReferences
-          .map((deepReference) => deepReference.extractReferent())
+          .map((deepReference) => deepReference.extractReferent(entityStore))
           .filter(isLink);
         const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
         return Boolean(missingAssetIds.length) || Boolean(missingEntryIds.length);
@@ -133,7 +133,7 @@ export function useEditorSubscriber(entityCache: typeof inMemoryEntitiesStore) {
        */
       const fillupL2 = async ({ deepReferences }: { deepReferences: DeepReference[] }) => {
         const referentLinks = deepReferences
-          .map((deepReference) => deepReference.extractReferent())
+          .map((deepReference) => deepReference.extractReferent(entityStore))
           .filter(isLink);
         const { missingAssetIds, missingEntryIds } = entityStore.getMissingEntityIds(referentLinks);
         await entityStore.fetchEntities({ missingAssetIds, missingEntryIds });

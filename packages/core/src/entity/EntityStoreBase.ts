@@ -4,11 +4,16 @@ import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';
 import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema';
 import { deepFreeze } from '@/utils/freeze';
+
+export interface EntityFromLink {
+  getEntityFromLink(link: UnresolvedLink<'Entry' | 'Asset'>): Asset | Entry | undefined;
+}
+
 /**
  * Base Store for entities
  * Can be extended for the different loading behaviours (editor, production, ..)
  */
-export abstract class EntityStoreBase {
+export abstract class EntityStoreBase implements EntityFromLink {
   public locale: string;
   protected entryMap = new Map<string, Entry>();
   protected assetMap = new Map<string, Asset>();
