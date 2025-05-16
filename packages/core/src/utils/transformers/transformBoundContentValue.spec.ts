@@ -179,6 +179,7 @@ describe('transformBoundContentValue', () => {
           sys: { type: 'Link', linkType: 'Asset', id: 'asset1' },
         };
         const adjustedVariablesWithImageOptions = cloneDeep(variablesWithImageOptions);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         adjustedVariablesWithImageOptions.cfWidth.valuesByBreakpoint.desktop = undefined as any;
         const variableName = 'cfBackgroundImageUrl';
 
