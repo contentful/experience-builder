@@ -430,10 +430,10 @@ describe('transformBoundContentValue', () => {
   });
 
   describe('when the variable type is a "Link"', () => {
-    it('it should resolve an entry that has a reference to another entry', () => {
+    it('it should resolve reference to L2 and return L2 entry with unresolved references', () => {
       const variableName = 'referencedEntry';
       const resolveDesignValue = vitest.fn();
-      const binding: UnresolvedLink<'Entry'> = {
+      const linkToHeadEntityL1: UnresolvedLink<'Entry'> = {
         sys: {
           type: 'Link',
           linkType: 'Entry',
@@ -442,16 +442,36 @@ describe('transformBoundContentValue', () => {
       };
 
       const path = (variables.referencedEntry as BoundValue).path;
-      const result = transformBoundContentValue(
+      const entityLevel2 = transformBoundContentValue(
         variables,
         entityStore,
-        binding,
+        linkToHeadEntityL1,
         resolveDesignValue,
         variableName,
         componentDefinition.variables.referencedEntry.type,
         path,
       );
-      expect(result?.fields.referencedEntry.fields.title).toEqual('Entry 2');
+
+      // assert that we resolved L2 entity by following L1-entity's references
+      expect(entityLevel2.sys).toEqual(
+        expect.objectContaining({
+          id: 'entryWithAnotherEmbeddedEntry',
+          type: 'Entry',
+        }),
+      );
+
+      // assert that L2 entity has scalar fields
+      expect(entityLevel2.fields['title']).toEqual('Title for entryWithAnotherEmbeddedEntry');
+
+      // asset that references from L2 to L3 are NOT resolved
+      expect(entityLevel2?.fields.referencedEntry.sys).toEqual({
+        id: 'entry2',
+        linkType: 'Entry',
+        type: 'Link',
+      });
+
+      // Here L3 entities used to be resolved before (pre SDK v2)
+      // expect(result?.fields.referencedEntry.fields.title).toEqual('Entry 2');
     });
   });
 
@@ -459,7 +479,7 @@ describe('transformBoundContentValue', () => {
     it('referenced entries in the array should have their references resolved', () => {
       const variableName = 'referencedEntries';
       const resolveDesignValue = vitest.fn();
-      const binding: UnresolvedLink<'Entry'> = {
+      const linkToHeadEntityL1: UnresolvedLink<'Entry'> = {
         sys: {
           type: 'Link',
           linkType: 'Entry',
@@ -468,19 +488,51 @@ describe('transformBoundContentValue', () => {
       };
 
       const path = (variables.referencedEntries as BoundValue).path;
-      const result = transformBoundContentValue(
+      const arrayOfEntitiesL2 = transformBoundContentValue(
         variables,
         entityStore,
-        binding,
+        linkToHeadEntityL1,
         resolveDesignValue,
         variableName,
         componentDefinition.variables.referencedEntries.type,
         path,
       );
-      expect(result[0]?.fields.referencedEntry.fields.referencedEntry.fields.title).toEqual(
-        'Entry 2',
+      expect(arrayOfEntitiesL2).toHaveLength(2);
+      expect(arrayOfEntitiesL2[0]?.sys).toEqual(
+        expect.objectContaining({
+          id: 'entryWithEmbeddedEntry',
+          type: 'Entry',
+        }),
       );
-      expect(result[1]?.fields.referencedEntry.fields.title).toEqual('Entry 2');
+
+      expect(arrayOfEntitiesL2[1]?.sys).toEqual(
+        expect.objectContaining({
+          id: 'entryWithAnotherEmbeddedEntry',
+          type: 'Entry',
+        }),
+      );
+
+      // assert that L2 entity has scalar fields
+      expect(arrayOfEntitiesL2[0]?.fields.title).toEqual('Title for entryWithEmbeddedEntry');
+      expect(arrayOfEntitiesL2[1]?.fields.title).toEqual('Title for entryWithAnotherEmbeddedEntry');
+
+      // assert that references from L2 to L3 are NOT resolved
+      expect(arrayOfEntitiesL2[0]?.fields.referencedEntry.sys).toEqual({
+        id: 'entryWithAnotherEmbeddedEntry',
+        linkType: 'Entry',
+        type: 'Link',
+      });
+      expect(arrayOfEntitiesL2[1]?.fields.referencedEntry.sys).toEqual({
+        id: 'entry2',
+        linkType: 'Entry',
+        type: 'Link',
+      });
+
+      // Those used to be tests that L3 entities were resolved (pre SDK v2)
+      // expect(arrayOfEntitiesL2[0]?.fields.referencedEntry.fields.referencedEntry.fields.title).toEqual(
+      //   'Entry 2',
+      // );
+      // expect(arrayOfEntitiesL2[1]?.fields.referencedEntry.fields.title).toEqual('Entry 2');
     });
   });
 });
