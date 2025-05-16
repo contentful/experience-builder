@@ -8,9 +8,16 @@ import ColorfulBox from './components/ColorfulBox/ColorfulBox';
 import { ComponentUsingReferences } from './components/ComponentUsingReferences';
 import { PotionShelf } from './components/PotionShelf';
 import { NeatPotionShelf } from './components/NeatPotionShelf';
+import BindToCollectionExampleComponent, {
+  BindToCollectionExampleComponentDefinition,
+} from './components/BindToCollectionExample';
 
 defineComponents(
   [
+    {
+      component: BindToCollectionExampleComponent,
+      definition: BindToCollectionExampleComponentDefinition,
+    },
     {
       component: PotionShelf,
       definition: {
@@ -40,7 +47,7 @@ defineComponents(
         id: 'dk-neat-potion-shelf',
         name: 'Neat Potion Shelf',
         category: 'The Telegraph',
-        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfBackgroundColor'],
         variables: {
           potions: {
             type: 'Array',
