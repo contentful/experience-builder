@@ -110,13 +110,13 @@ export const deserializeAssemblyNode = ({
 export const resolveAssembly = ({
   node,
   parentPatternProperties,
-  patternNodeIdsChain,
+  patternRootNodeIdsChain,
   entityStore,
 }: {
   node: ComponentTreeNode;
   entityStore: EntityStore;
   parentPatternProperties: Record<string, PatternProperty>;
-  patternNodeIdsChain: string;
+  patternRootNodeIdsChain: string;
 }) => {
   const componentId = node.definitionId as string;
   const assembly = entityStore.usedComponents?.find(
@@ -143,7 +143,7 @@ export const resolveAssembly = ({
     const [hashKey, patternPropertyDefinitionId] =
       patternPropertyKey.split(PATTERN_PROPERTY_DIVIDER);
 
-    const hashedNodeChain = md5(patternNodeIdsChain || '');
+    const hashedNodeChain = md5(patternRootNodeIdsChain || '');
 
     const isMatchingNode = hashKey === hashedNodeChain;
 

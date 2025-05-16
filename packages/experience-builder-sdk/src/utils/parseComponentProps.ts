@@ -33,7 +33,7 @@ export const parseComponentProps = ({
   breakpoints,
   mainBreakpoint,
   componentDefinition,
-  patternNodeIdsChain,
+  patternRootNodeIdsChain,
   node,
   resolveCustomDesignValue,
   resolveBoundValue,
@@ -43,7 +43,7 @@ export const parseComponentProps = ({
   breakpoints: Breakpoint[];
   mainBreakpoint: Breakpoint;
   componentDefinition: ComponentDefinition;
-  patternNodeIdsChain?: string;
+  patternRootNodeIdsChain?: string;
   node: ComponentTreeNode;
   resolveCustomDesignValue: (data: {
     propertyName: string;
@@ -171,7 +171,7 @@ export const parseComponentProps = ({
     designPropertiesByBreakpoint: stylePropsIndexedByBreakpoint,
     breakpoints,
     node,
-    patternNodeIdsChain,
+    patternRootNodeIdsChain,
   });
   /* [Data Format] Stylesheet data provides objects containing `className`, `breakpointCondition`, and `css`.
    * stylesheetData = [{
