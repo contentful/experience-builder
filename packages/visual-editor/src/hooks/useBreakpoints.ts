@@ -44,7 +44,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
   }, [breakpoints]);
 
   const resolveDesignValue: ResolveDesignValueType = useCallback(
-    (valuesByBreakpoint, variableName) => {
+    (valuesByBreakpoint, propertyName) => {
       const fallbackBreakpointIndex = getFallbackBreakpointIndex(breakpoints);
 
       const activeBreakpointIndex = getActiveBreakpointIndex(
@@ -58,7 +58,7 @@ export const useBreakpoints = (breakpoints: Breakpoint[]) => {
         breakpoints,
         activeBreakpointIndex,
         fallbackBreakpointIndex,
-        variableName,
+        propertyName,
       );
     },
     [mediaQueryMatches, breakpoints],

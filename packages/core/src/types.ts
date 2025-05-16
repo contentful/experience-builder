@@ -381,7 +381,7 @@ export interface Experience<T extends EntityStore = EntityStore> {
 
 export type ResolveDesignValueType = (
   valuesByBreakpoint: ValuesByBreakpoint | undefined,
-  variableName: string,
+  propertyName?: string,
 ) => PrimitiveValue;
 
 // The 'contentful' package only exposes CDA types while we received CMA ones in editor mode

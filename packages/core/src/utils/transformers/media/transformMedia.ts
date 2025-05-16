@@ -34,7 +34,6 @@ export const transformMedia = (
       variables[optionsVariableName]?.type === 'DesignValue'
         ? variables[optionsVariableName].valuesByBreakpoint
         : {},
-      optionsVariableName,
     ) as ImageOptions | undefined;
     if (!options) {
       console.error(
@@ -68,7 +67,6 @@ export const transformMedia = (
       variables[optionsVariableName]?.type === 'DesignValue'
         ? variables[optionsVariableName].valuesByBreakpoint
         : {},
-      optionsVariableName,
     ) as BackgroundImageOptions | undefined;
     if (!options) {
       console.error(

@@ -37,7 +37,7 @@ export const useDropzoneDirection = ({ resolveDesignValue, node, zoneId }: Param
         return 'vertical';
       }
 
-      const direction = resolveDesignValue(designValues.valuesByBreakpoint, 'cfFlexDirection');
+      const direction = resolveDesignValue(designValues.valuesByBreakpoint);
 
       if (direction === 'row') {
         return 'horizontal';

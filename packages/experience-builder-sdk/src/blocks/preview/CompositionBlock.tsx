@@ -155,9 +155,7 @@ export const CompositionBlock = ({
       componentDefinition: componentRegistration.definition,
       patternNodeIdsChain,
       node,
-      resolveCustomDesignValue: ({ propertyName, valuesByBreakpoint }) => {
-        return resolveDesignValue(valuesByBreakpoint, propertyName);
-      },
+      resolveDesignValue,
       resolveBoundValue: ({ binding, propertyName, dataType }) => {
         const [, uuid] = binding.path.split('/');
         const boundEntityLink = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
@@ -269,7 +267,7 @@ export const CompositionBlock = ({
       const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[nodeIdsChain];
 
       if (!classesForNode) return undefined;
-      return resolveDesignValue(classesForNode.valuesByBreakpoint, 'cfSsrClassName') as string;
+      return resolveDesignValue(classesForNode.valuesByBreakpoint) as string;
     }
     return getPatternChildNodeClassName?.(`${node.id}${childNodeId}`);
   };
