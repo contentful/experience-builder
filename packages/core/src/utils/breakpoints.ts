@@ -107,7 +107,7 @@ export const getValueForBreakpoint = (
    * cfBorder, cfBorderRadius, cfFontSize, cfLineHeight, cfLetterSpacing,
    * cfTextColor, cfMaxWidth
    */
-  propertyName: string | undefined,
+  propertyName?: string,
   resolveDesignTokens = true,
 ) => {
   const eventuallyResolveDesignTokens = (value: PrimitiveValue) => {

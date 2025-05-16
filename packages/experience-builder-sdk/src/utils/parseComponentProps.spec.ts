@@ -3,7 +3,7 @@ import { getValueForBreakpoint } from '@contentful/experiences-core';
 import { createBreakpoints } from '../../test/__fixtures__/breakpoints';
 import { createComponentDefinition } from '../../test/__fixtures__/componentDefinition';
 import { createComponentTreeNode } from '../../test/__fixtures__/componentTreeNode';
-import { PrimitiveValue } from '@contentful/experiences-validators';
+import { ValuesByBreakpoint } from '@contentful/experiences-validators';
 
 describe('parseComponentProps', () => {
   const breakpoints = createBreakpoints();
@@ -11,7 +11,7 @@ describe('parseComponentProps', () => {
   const mainBreakpoint = breakpoints[0];
   const componentDefinition = createComponentDefinition();
   const node = createComponentTreeNode();
-  const resolveDesignValue = (valuesByBreakpoint: Record<string, PrimitiveValue>) =>
+  const resolveDesignValue = (valuesByBreakpoint: ValuesByBreakpoint | undefined) =>
     getValueForBreakpoint(valuesByBreakpoint, breakpoints, activeBreakpointIndex, 0);
 
   const resolveBoundValue = () => 'resolvedBoundValue';
