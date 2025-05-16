@@ -1,16 +1,17 @@
 import React from 'react';
-import { Entry } from 'contentful';
+import type { Asset, Entry } from 'contentful';
 import { type ComponentDefinition } from '@contentful/experiences-sdk-react';
+import { stringifyCompact } from '../utils/debugging';
 
 // In SDK pre v2 SDK, for Array and Link type variables, they will be automatically resolved to L3.
 // In Preview+Delivery mode this works as expected.
 // In EDITOR mode this works only with the new PR https://github.com/contentful/user_interface/pull/26604
 // without this PR you will see that in EDITOR mode L3 is not resolved (but L2 is).
-type EntryResolvedToLevel3 = Entry;
+type Item = Entry | Asset;
 
 type BindToCollectionExampleComponentProps = {
-  items: EntryResolvedToLevel3[];
-  singleItem: EntryResolvedToLevel3;
+  items: Item[];
+  singleItem: Item;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -31,53 +32,16 @@ export const BindToCollectionExampleComponentDefinition: ComponentDefinition = {
   },
 };
 
-const stringifyCompact = (obj: unknown) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const omitSysAndMetadataToRemoveNoise = (key: string, value: any) => {
-    if (key === 'sys' && (value as { type?: string })?.type === 'Link') {
-      // return value;
-      return `➡️${value.linkType?.toLowerCase()}://${value.id}`;
-    }
-    if (['componentTree', 'dataSource', 'unboundValues'].includes(key)) {
-      return '{ ... }';
-    }
-
-    if (key === 'sys') {
-      return `{ ..., id: ${value?.id} }`;
-    }
-
-    if (key === 'sys' || key === 'metadata') {
-      return undefined;
-    }
-    return value;
-  };
-
-  if (typeof obj === 'string') {
-    return obj;
-  }
-  if (undefined === obj) {
-    return 'undefined';
-  }
-  if (obj === null) {
-    return 'null';
-  }
-  return JSON.stringify(obj, omitSysAndMetadataToRemoveNoise, 2);
-};
-
 export const BindToCollectionExampleComponent: React.FC<BindToCollectionExampleComponentProps> = (
   props: BindToCollectionExampleComponentProps,
 ) => {
   return (
     <div>
-      <h2>
-        Collection of items <small>(omitting `sys` and `metadata` fields)</small>
-      </h2>
+      <h2>Collection of items</h2>
       <div>
         <pre style={{ fontSize: '9px' }}>{stringifyCompact(props.items)}</pre>
       </div>
-      <h2>
-        Single item <small>(omitting `sys` and `metadata` fields)</small>
-      </h2>
+      <h2>Single item</h2>
       <div>
         <pre style={{ fontSize: '9px' }}>{stringifyCompact(props.singleItem)}</pre>
       </div>
