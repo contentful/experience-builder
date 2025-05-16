@@ -70,6 +70,7 @@ export const CompositionBlock = ({
 
   const patternNodeIdsChain = useMemo(() => {
     if (isAssembly) {
+      // Pattern nodes are chained without a separator (following the format for prebinding/patternProperties)
       return `${parentPatternNodeIdsChain}${rawNode.id}`;
     }
     return parentPatternNodeIdsChain;
@@ -259,7 +260,7 @@ export const CompositionBlock = ({
   // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {
     if (isAssembly) {
-      const nodeIdsChain = `${patternNodeIdsChain}${childNodeId}`;
+      const nodeIdsChain = `${patternNodeIdsChain}-${childNodeId}`;
       // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
       const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[nodeIdsChain];
       if (!classesForNode) return undefined;

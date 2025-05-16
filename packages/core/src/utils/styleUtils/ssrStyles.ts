@@ -182,8 +182,9 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
       const currentNodeClassNames: string[] = [];
       // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
-      // e.g. `outerPatternNodeId-innerPatternNodeId-currentNodeId`
-      const currentNodeIdsChain = `${wrappingPatternNodeIds.join('-')}-${currentNode.id}`;
+      // e.g. `{outerPatternNodeId}{innerPatternNodeId}-{currentNodeId}`
+      // (!) Notice that the chain of patterns (before the dash) follows the format of prebinding/ patternProperties
+      const currentNodeIdsChain = `${wrappingPatternNodeIds.join('')}-${currentNode.id}`;
 
       // For each breakpoint, resolve design tokens, create the CSS and generate a unique className.
       for (const breakpointId of breakpointIds) {
