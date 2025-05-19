@@ -1,23 +1,6 @@
 import type { Entry, Asset, UnresolvedLink } from 'contentful';
 import { inMemoryEntities } from '@contentful/experiences-sdk-react';
-import { isLink, isArrayOfLinks, isAsset, isEntry } from './basic';
-
-export const resolveLinkOrArrayOrPassthrough = (
-  fieldValue: unknown | UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'>,
-) => {
-  if (isLink(fieldValue)) {
-    return inMemoryEntities.maybeResolveLink(
-      fieldValue as unknown as UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'>,
-    );
-  }
-
-  if (isArrayOfLinks(fieldValue)) {
-    return fieldValue.map((link) => inMemoryEntities.maybeResolveLink(link));
-  }
-
-  // we just pass through the value
-  return fieldValue;
-};
+import { isLink, isArrayOfLinks, isAsset, isEntry } from './typeGuards';
 
 // TODO: maybe we can return some kind of calculation, as to - how many links failed to resolve?
 export const copyAndResolveEntityToLevel3 = (
@@ -40,4 +23,21 @@ export const copyAndResolveEntityToLevel3 = (
 
   // everything else just pass through, but copy
   return structuredClone(entity);
+};
+
+export const resolveLinkOrArrayOrPassthrough = (
+  fieldValue: unknown | UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'>,
+) => {
+  if (isLink(fieldValue)) {
+    return inMemoryEntities.maybeResolveLink(
+      fieldValue as unknown as UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'>,
+    );
+  }
+
+  if (isArrayOfLinks(fieldValue)) {
+    return fieldValue.map((link) => inMemoryEntities.maybeResolveLink(link));
+  }
+
+  // we just pass through the value
+  return fieldValue;
 };
