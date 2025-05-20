@@ -1,41 +1,31 @@
 import { type SchemaVersions } from '../types';
 import { ValidatorReturnValue } from './ValidatorReturnValue';
-import { ExperienceSchema_2023_09_28 } from '../schemas';
+import { PatternSchema_2023_09_28 } from '../schemas';
 import { zodToContentfulError, CodeNames } from '@/utils/zodToContentfulError';
-import { ExperienceEntry } from '@contentful/experiences-core/types';
-import { validatePatternFields } from '@/validators/validatePatternFields';
 
 const VERSION_SCHEMAS = {
-  '2023-09-28': ExperienceSchema_2023_09_28,
+  '2023-09-28': PatternSchema_2023_09_28,
 };
-
-function isPattern(experience: ExperienceEntry): boolean {
-  return experience.fields.componentSettings !== undefined;
-}
 
 /**
  *
- * @param experience The experience entry to validate
+ * @param pattern The pattern entry to validate
  * @param schemaVersionOverride Optional override for the schema version to validate against.
- * By default, the schema version is read from the experience entry
+ * By default, the schema version is read from the pattern entry
  * @returns object with success property and optional errors array
  */
-export const validateExperienceFields = (
+export const validatePatternFields = (
   // TODO: type this as Entry when the type is exposed
-  experience: any,
+  pattern: any,
   schemaVersionOverride?: SchemaVersions,
 ): ValidatorReturnValue => {
-  // If this is a pattern, use the pattern validator
-  if (isPattern(experience)) {
-    return validatePatternFields(experience, schemaVersionOverride);
-  }
-
   let schemaVersion: SchemaVersions | undefined;
+
   if (schemaVersionOverride) {
     schemaVersion = schemaVersionOverride;
-  } else if (experience.fields.componentTree) {
-    const locale = Object.keys(experience.fields.componentTree)[0];
-    schemaVersion = experience.fields.componentTree[locale].schemaVersion;
+  } else if (pattern.fields.componentTree) {
+    const locale = Object.keys(pattern.fields.componentTree)[0];
+    schemaVersion = pattern.fields.componentTree[locale].schemaVersion;
   }
 
   const schema = schemaVersion && VERSION_SCHEMAS[schemaVersion];
@@ -46,7 +36,7 @@ export const validateExperienceFields = (
       errors: [
         {
           name: schemaVersion ? CodeNames.In : CodeNames.Required,
-          expected: ['2023-09-28'],
+          expected: Object.keys(VERSION_SCHEMAS),
           value: schemaVersion,
           path: ['fields', 'componentTree', 'schemaVersion'],
           details: schemaVersion
@@ -58,10 +48,11 @@ export const validateExperienceFields = (
   }
 
   const fieldsToValidate = {
-    componentTree: experience.fields.componentTree,
-    dataSource: experience.fields.dataSource,
-    unboundValues: experience.fields.unboundValues,
-    usedComponents: experience.fields.usedComponents,
+    componentTree: pattern.fields.componentTree,
+    dataSource: pattern.fields.dataSource,
+    unboundValues: pattern.fields.unboundValues,
+    usedComponents: pattern.fields.usedComponents,
+    componentSettings: pattern.fields.componentSettings,
   };
 
   const result = schema.safeParse(fieldsToValidate);

@@ -1,6 +1,8 @@
-import { experience, experiencePattern } from '../../test/__fixtures__/v2023_09_28';
+import { experience, experiencePattern } from '@/test/__fixtures__/v2023_09_28';
 import { describe, it, expect } from 'vitest';
 import { validateExperienceFields } from '../validateExperienceFields';
+import * as validatePattern from '@/validators/validatePatternFields';
+import { vi } from 'vitest';
 
 const schemaVersion = '2023-09-28' as const;
 
@@ -46,15 +48,18 @@ describe(`${schemaVersion} version`, () => {
     expect(result.success).toBe(true);
   });
 
-  it('should validate the pattern successfully', () => {
-    const result = validateExperienceFields(experiencePattern, schemaVersion);
-
-    expect(result.success).toBe(true);
+  it('should not use pattern validator to validate experience', () => {
+    const validatePatternFields = vi.spyOn(validatePattern, 'validatePatternFields');
+    const _ = validateExperienceFields(experience, schemaVersion);
+    expect(validatePatternFields).not.toHaveBeenCalled();
   });
 
-  it('should read the schema version from the componentTree if no override is provided', () => {
-    const result = validateExperienceFields(experiencePattern);
-
-    expect(result.success).toBe(true);
+  it('should use pattern validator to validate pattern', () => {
+    const validatePatternFields = vi
+      .spyOn(validatePattern, 'validatePatternFields')
+      .mockReturnValue('mocked result' as any);
+    const result = validateExperienceFields(experiencePattern as any, schemaVersion);
+    expect(validatePatternFields).toHaveBeenCalledWith(experiencePattern, schemaVersion);
+    expect(result).toEqual('mocked result');
   });
 });
