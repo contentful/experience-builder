@@ -357,6 +357,8 @@ export type ExperienceEntry = {
   metadata: Entry['metadata'];
 };
 
+export type { Entry } from 'contentful';
+
 export interface RawCoordinates {
   left: number;
   top: number;
