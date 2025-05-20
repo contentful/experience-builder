@@ -1,9 +1,8 @@
 import type { Entry, Asset, UnresolvedLink } from 'contentful';
 import { inMemoryEntities } from '@contentful/experiences-sdk-react';
 import { isLink, isArrayOfLinks, isAsset, isEntry } from './typeGuards';
-
 // TODO: maybe we can return some kind of calculation, as to - how many links failed to resolve?
-export const copyAndResolveEntityToLevel3 = (
+export const resolveEntityReferences = (
   entity: Entry | Asset | undefined,
 ): Entry | Asset | undefined => {
   if (entity === undefined) {

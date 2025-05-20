@@ -76,17 +76,17 @@ const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => {
   // Essentially it simply means making copy of the shallow item, and replacing
   // all of it's link fields with the actual objects representing assets/entries. (only asset in this case).
 
-  const itemsResolved = items.map((item) => {
+  const itemsResolved = items.map((entry) => {
     // NOTE: It is important to always make a copy of the original shallowItem
     //       as the shallow item is frozen with Object.freeze() and cannot be modified.
     //       Here I am making copy by recreating the object, but you can use structuredClone(item) as well.
     const resolvedItem: ItemResolved = {
       sys: {
-        id: item.sys.id,
+        id: entry.sys.id,
       },
       fields: {
-        title: item.fields.title,
-        description: item.fields.description,
+        title: entry.fields.title,
+        description: entry.fields.description,
         image: createDummyAssetShape({ fakeUrl: 'https://via.placeholder.com/150' }),
       },
     };
