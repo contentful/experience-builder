@@ -1,6 +1,10 @@
 import React from 'react';
 import { Asset, Entry } from 'contentful';
-import { resolveEntityReferences, isEntry, isLink } from '../resolutionUtilities';
+import {
+  resolveEntityReferences,
+  isEntry,
+  isLink,
+} from '../binding-to-reference-fields/resolutionUtils';
 
 type ShallowEntry = Entry;
 type NeatPotionShelfProps = {
