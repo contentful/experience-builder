@@ -1,6 +1,7 @@
 import React from 'react';
 import { resolveEntityReferences, isAsset } from './resolutionUtils';
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
+import styles from './styles.module.css';
 
 type ItemFields = {
   title: string;
@@ -19,9 +20,9 @@ type StudioCollectionProps = {
   items: Item[];
 };
 
-const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => {
+export const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => {
   if (items === undefined) {
-    return <div className="studio-collection-empty">No items available</div>;
+    return <div className={styles.studioCollectionEmpty}>No items available</div>;
   }
 
   const itemsResolved: Array<Item> = items
@@ -29,7 +30,7 @@ const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => {
     .filter(Boolean) as Array<Item>; // remove items which resolution (there should not be any)
 
   return (
-    <div className="studio-collection" style={studioCollectionStyle}>
+    <div className={styles.studioCollection}>
       {itemsResolved.map((resolvedItem) => (
         <StudioItem key={resolvedItem!.sys.id} item={resolvedItem} />
       ))}
@@ -45,58 +46,20 @@ const StudioItem: React.FC<StudioItemProps> = ({ item }) => {
   const itemFields: ItemFields = item.fields as ItemFields;
 
   return (
-    <div className="studio-item" style={studioItemStyle}>
-      <img src={image?.fields?.file?.url as string} alt={itemFields.title} style={imageStyle} />
-      <div style={contentStyle}>
+    <div className={styles.studioItem}>
+      <img
+        src={image?.fields?.file?.url as string}
+        alt={itemFields.title}
+        className={styles.image}
+      />
+      <div className={styles.content}>
         <h3>{itemFields.title}</h3>
         <p>{itemFields.description}</p>
-        <button style={buttonStyle}>Explore</button>
+        <button className={styles.button}>Explore</button>
       </div>
     </div>
   );
 };
-
-const studioItemStyle: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  border: '1px solid #ccc',
-  borderRadius: '8px',
-  overflow: 'hidden',
-  width: '200px',
-  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-};
-
-const imageStyle: React.CSSProperties = {
-  height: '60%',
-  objectFit: 'cover',
-  width: '100%',
-};
-
-const contentStyle: React.CSSProperties = {
-  padding: '16px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: '8px',
-};
-
-const buttonStyle: React.CSSProperties = {
-  marginTop: '8px',
-  padding: '8px 16px',
-  backgroundColor: '#007BFF',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer',
-};
-
-const studioCollectionStyle: React.CSSProperties = {
-  display: 'flex',
-  gap: '16px',
-  flexWrap: 'wrap',
-};
-
-export { StudioCollection, StudioItem };
 
 function createPlaceholderAsset({ url }: { url: string }): Asset {
   return {
