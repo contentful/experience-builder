@@ -2,7 +2,7 @@ import React from 'react';
 import type { Asset, Entry } from 'contentful';
 import { type ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { stringifyCompact } from '../../utils/debugging';
-import { resolveEntityReferences } from '../../resolutionUtilities';
+import { resolveEntityReferences } from '../../binding-to-reference-fields/resolutionUtils';
 
 type Item = Entry | Asset;
 
