@@ -1,5 +1,5 @@
 import React from 'react';
-import { resolveEntityReferences, isAsset } from '../../../resolutionUtilities';
+import { resolveEntityReferences, isAsset } from '../resolutionUtilities';
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
 
 type ItemFields = {
