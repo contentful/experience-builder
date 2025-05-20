@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Asset, UnresolvedLink } from 'contentful';
+import styles from './styles.module.css';
 
 type ItemShallow = {
   sys: { id: string };
@@ -40,26 +41,9 @@ type StudioCollectionProps = {
   items: ItemShallow[];
 };
 
-const StudioItem: React.FC<StudioItemProps> = ({ item }) => {
-  return (
-    <div className="studio-item" style={studioItemStyle}>
-      <img
-        src={item.fields.image?.fields?.file?.url as string}
-        alt={item.fields.title}
-        style={imageStyle}
-      />
-      <div style={contentStyle}>
-        <h3>{item.fields.title}</h3>
-        <p>{item.fields.description}</p>
-        <button style={buttonStyle}>Explore</button>
-      </div>
-    </div>
-  );
-};
-
-const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => {
+export const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => {
   if (items === undefined) {
-    return <div className="studio-collection-empty">No items available</div>;
+    return <div className={styles.studioCollectionEmpty}>No items available</div>;
   }
 
   // WARNING: SHALLOW ITEMS
@@ -94,7 +78,7 @@ const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => {
   });
 
   return (
-    <div className="studio-collection" style={studioCollectionStyle}>
+    <div className={styles.studioCollection}>
       {itemsResolved.map((resolvedItem) => (
         <StudioItem key={resolvedItem.sys.id} item={resolvedItem} />
       ))}
@@ -102,47 +86,22 @@ const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => {
   );
 };
 
-const studioItemStyle: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  border: '1px solid #ccc',
-  borderRadius: '8px',
-  overflow: 'hidden',
-  width: '200px',
-  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+const StudioItem: React.FC<StudioItemProps> = ({ item }) => {
+  return (
+    <div className={styles.studioItem}>
+      <img
+        src={item.fields.image?.fields?.file?.url as string}
+        alt={item.fields.title}
+        className={styles.image}
+      />
+      <div className={styles.content}>
+        <h3>{item.fields.title}</h3>
+        <p>{item.fields.description}</p>
+        <button className={styles.button}>Explore</button>
+      </div>
+    </div>
+  );
 };
-
-const imageStyle: React.CSSProperties = {
-  height: '60%',
-  objectFit: 'cover',
-  width: '100%',
-};
-
-const contentStyle: React.CSSProperties = {
-  padding: '16px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: '8px',
-};
-
-const buttonStyle: React.CSSProperties = {
-  marginTop: '8px',
-  padding: '8px 16px',
-  backgroundColor: '#007BFF',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer',
-};
-
-const studioCollectionStyle: React.CSSProperties = {
-  display: 'flex',
-  gap: '16px',
-  flexWrap: 'wrap',
-};
-
-export { StudioCollection, StudioItem };
 
 function createDummyAssetShape({ fakeUrl }: { fakeUrl: string }): Asset {
   return {
