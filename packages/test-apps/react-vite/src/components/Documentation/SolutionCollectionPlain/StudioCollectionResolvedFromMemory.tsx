@@ -1,12 +1,11 @@
 import React from 'react';
-import { copyAndResolveEntityToLevel3, isAsset } from '../../../resolutionUtilities';
+import { resolveEntityReferences, isAsset } from '../../../resolutionUtilities';
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
 
 type ItemFields = {
   title: string;
   description: string;
   image: Asset;
-  bob: string;
 };
 
 type ItemSkeleton = EntrySkeletonType<ItemFields, 'myContentTypeId'>;
@@ -26,7 +25,7 @@ const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => {
   }
 
   const itemsResolved: Array<Item> = items
-    .map((item) => copyAndResolveEntityToLevel3(item))
+    .map((item) => resolveEntityReferences(item))
     .filter(Boolean) as Array<Item>; // remove items which resolution (there should not be any)
 
   return (

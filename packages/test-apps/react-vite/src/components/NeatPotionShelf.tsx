@@ -1,6 +1,6 @@
 import React from 'react';
 import { Asset, Entry } from 'contentful';
-import { copyAndResolveEntityToLevel3, isEntry, isLink } from '../resolutionUtilities';
+import { resolveEntityReferences, isEntry, isLink } from '../resolutionUtilities';
 
 type ShallowEntry = Entry;
 type NeatPotionShelfProps = {
@@ -33,12 +33,12 @@ export const NeatPotionShelf: React.FC<NeatPotionShelfProps> = (props: NeatPotio
   console.log(`;;; passed potions (as is, maybe undefined): `, props.potions);
   const shallowPotions = (props.potions || []).filter(Boolean) as unknown as ShallowEntry[]; // guard against undefined values which appear for a moment right after user clicking on binding
   props.potions && console.log(`;;; shallow potions: `, shallowPotions);
-  const potions = shallowPotions.map((p) => copyAndResolveEntityToLevel3(p));
+  const potions = shallowPotions.map((p) => resolveEntityReferences(p));
   props.potions && console.log(`;;; resolved potions: `, potions);
 
   // singlePotion
   console.log(`,,, passed singlePotion (as is, maybe undefined): `, props.singlePotion);
-  const singlePotion = copyAndResolveEntityToLevel3(props.singlePotion);
+  const singlePotion = resolveEntityReferences(props.singlePotion);
   console.log(`,,, resolved singlePotion: `, singlePotion);
 
   const renderPotionComponent = (potion: PotionL2, index: number) => {

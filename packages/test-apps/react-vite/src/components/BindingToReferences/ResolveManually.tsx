@@ -2,7 +2,7 @@ import React from 'react';
 import type { Asset, Entry } from 'contentful';
 import { type ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { stringifyCompact } from '../../utils/debugging';
-import { copyAndResolveEntityToLevel3 } from '../../resolutionUtilities';
+import { resolveEntityReferences } from '../../resolutionUtilities';
 
 type Item = Entry | Asset;
 
@@ -36,11 +36,9 @@ export const ResolveManuallyComponent: React.FC<ResolveManuallyProps> = (
 
   // could be undefined...
   const items = (shallowItems || []).map((shallowItem) =>
-    copyAndResolveEntityToLevel3(shallowItem || undefined),
+    resolveEntityReferences(shallowItem || undefined),
   ); // forcing null to undefined
-  const singleItem = shallowSingleItem
-    ? copyAndResolveEntityToLevel3(shallowSingleItem)
-    : undefined;
+  const singleItem = shallowSingleItem ? resolveEntityReferences(shallowSingleItem) : undefined;
   return (
     <div>
       <h2>Collection of items</h2>
