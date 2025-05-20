@@ -11,6 +11,7 @@ export function getArrayValue(
   entryOrAsset: Entry | Asset,
   path: string,
   entityStore: EntityStoreBase,
+  cache?: Map<string, Array<Entry | Asset>>,
 ) {
   // NOTE: Not sure if we need this if-statement,
   // as it is NOT possible to bind to Array variable an Asset
@@ -33,33 +34,84 @@ export function getArrayValue(
     return;
   }
 
-  const result = arrayValue
-    .map((value) => {
-      if (typeof value === 'string') {
-        return value; // NOTE: not sure when array elements can be strings?
-      } else if (value?.sys?.type === 'Link') {
-        const resolvedEntity = entityStore.getEntityFromLink(value);
-        if (!resolvedEntity) {
-          // seems that returning `undefined` will be more consistent, as it implies:
-          // there's no data in the entityStore during path resolution and best thing is to wait
-          // until next render cycle during EDITOR mode. Bound links is something we guaranteed to resolve.
-          // Passing link, implies that user has to try to resolve it themselves.
-          return;
-          // return value;
-        }
-        return resolvedEntity;
-      } else {
-        console.warn(`Expected value to be a string or Link, but got: ${JSON.stringify(value)}`);
-        return undefined;
-      }
-    })
-    .filter(excludeUndefined);
+  const isArrayOfLinks = arrayValue.every(
+    (value) => (value as UnresolvedLink<'Asset' | 'Entry'>)?.sys?.type === 'Link',
+  );
+  const isArrayOfStrings = arrayValue.every((value) => typeof value === 'string');
 
-  // eg. imagine you have multi-referene field with 3 links to archived entries,
-  //     all of them will be undefined on previous step and will be filtered out
-  //     of resultWithoutUndefined. Instead of passing to component an empty array,
-  //     we pass undefined. This means that develloper making custom component
-  //     does not have to handle empty array case. But only undefiened, which signals:
-  //     user didn't bind anything; user bound to reference field which is unset; all references are archived
-  return result.length > 0 ? result : undefined;
+  const isSupportedArray = isArrayOfLinks || isArrayOfStrings;
+
+  if (!isSupportedArray) {
+    console.warn(
+      `A field '${fieldName}' of an entity was bound to an Array variable. Expected value of that field to be an array of strings or links, but got: ${JSON.stringify(arrayValue)}`,
+      { entity: entryOrAsset },
+    );
+    return;
+  }
+
+  if (isArrayOfStrings) {
+    return arrayValue;
+  } /* if (isArrayOfLinks) */ else {
+    const result = arrayValue
+      .map((value) => {
+        if (typeof value === 'string') {
+          return value; // NOTE: not sure when array elements can be strings?
+        } else if (value?.sys?.type === 'Link') {
+          const resolvedEntity = entityStore.getEntityFromLink(value);
+          if (!resolvedEntity) {
+            // seems that returning `undefined` will be more consistent, as it implies:
+            // there's no data in the entityStore during path resolution and best thing is to wait
+            // until next render cycle during EDITOR mode. Bound links is something we guaranteed to resolve.
+            // Passing link, implies that user has to try to resolve it themselves.
+            return;
+            // return value;
+          }
+          return resolvedEntity;
+        } else {
+          console.warn(`Expected value to be a string or Link, but got: ${JSON.stringify(value)}`);
+          return undefined;
+        }
+      })
+      .filter(excludeUndefined) as Array<Entry | Asset>;
+
+    if (result.length === 0) {
+      // eg. imagine you have multi-referene field with 3 links to archived entries,
+      //     all of them will be undefined on previous step and will be filtered out
+      //     of resultWithoutUndefined. Instead of passing to component an empty array,
+      //     we pass undefined. This means that develloper making custom component
+      //     does not have to handle empty array case. But only undefiened, which signals:
+      //     user didn't bind anything; user bound to reference field which is unset; all references are archived
+
+      return undefined;
+    }
+
+    const ids = result.map((item) => item.sys.id);
+    const sortedUniqueIds = [...new Set(ids)].sort();
+    const key = `${entryOrAsset.sys.id}-${path}-${sortedUniqueIds.join(',')}`;
+    if (cache?.has(key)) {
+      // even if entities have changed, their keys are still the same,
+      // however the object references are different, so we need to check item by item
+
+      const cachedItems = cache.get(key)!;
+      if (cachedItems.length !== result.length) {
+        // due to some duplication, those are different arrays  so we need to update cache
+        cache.set(key, result);
+        return result;
+      }
+      // now I need to iterate over all of them, piece by piece...
+      for (let i = 0; i < cachedItems.length; i++) {
+        if (cachedItems[i] !== result[i]) {
+          // some item was updated, so we need to update cache
+          cache.set(key, result);
+          return result;
+        }
+      }
+
+      return cachedItems; // same items, to keep referential integrity,
+      // we return from cache. Keep in mind those are simply refrences
+      // to objects in entityStore, so they ARE frozen with Object.freeze()
+    }
+    cache?.set(key, result);
+    return result;
+  }
 }

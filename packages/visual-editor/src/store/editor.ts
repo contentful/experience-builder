@@ -6,6 +6,7 @@ import type {
   DesignTokensDefinition,
 } from '@contentful/experiences-core/types';
 import { create } from 'zustand';
+import type { Entry, Asset } from 'contentful';
 import { componentRegistry } from './registries';
 import { isEqual } from 'lodash-es';
 
@@ -28,6 +29,7 @@ export interface EditorStore {
   setSelectedNodeId: (id: string) => void;
 
   initializeEditor: (params: InitEditorParams) => void;
+  cacheForRefentialIntegrityOfPropsPassedToComponents: Map<string, Array<Asset | Entry>>;
 }
 
 export const useEditorStore = create<EditorStore>((set, get) => ({
@@ -37,6 +39,7 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
 
   selectedNodeId: null,
   locale: null,
+  cacheForRefentialIntegrityOfPropsPassedToComponents: new Map(),
   setHyperLinkPattern: (pattern: string) => {
     set({ hyperLinkPattern: pattern });
   },

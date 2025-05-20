@@ -76,6 +76,9 @@ export const useComponentProps = ({
   const dataSource = useEditorStore((state) => state.dataSource);
   const draggingId = useDraggedItemStore((state) => state.onBeforeCaptureId);
   const nodeRect = useDraggedItemStore((state) => state.domRect);
+  const cacheForRefentialIntegrityOfPropsPassedToComponents = useEditorStore(
+    (state) => state.cacheForRefentialIntegrityOfPropsPassedToComponents,
+  );
 
   const isEmptyZone = !node.children.length;
 
@@ -153,6 +156,7 @@ export const useComponentProps = ({
             variableName,
             variableDefinition.type,
             variableMapping.path,
+            cacheForRefentialIntegrityOfPropsPassedToComponents,
           );
 
           // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
