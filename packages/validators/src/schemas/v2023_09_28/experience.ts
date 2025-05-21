@@ -123,6 +123,7 @@ export type HyperlinkValue = z.infer<typeof HyperlinkValueSchema>;
 export type ComponentValue = z.infer<typeof ComponentValueSchema>;
 export type BindingSourceTypeEnum = z.infer<typeof BindingSourceTypeEnumSchema>;
 export type PatternProperty = z.infer<typeof PatternPropertySchema>;
+export { breakpointsRefinement };
 
 // Re-exports for compatibility. Remove when no longer needed
 export { PATTERN_THUMBNAIL_IDS } from './pattern'; // re-export for compatibility
