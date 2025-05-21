@@ -2,14 +2,13 @@ import { type SchemaVersions } from '../types';
 import { ValidatorReturnValue } from './ValidatorReturnValue';
 import { ExperienceSchema_2023_09_28 } from '../schemas';
 import { zodToContentfulError, CodeNames } from '@/utils/zodToContentfulError';
-import { ExperienceEntry } from '@contentful/experiences-core/types';
 import { validatePatternFields } from '@/validators/validatePatternFields';
 
 const VERSION_SCHEMAS = {
   '2023-09-28': ExperienceSchema_2023_09_28,
 };
 
-function isPattern(experience: ExperienceEntry): boolean {
+function isPattern(experience: any): boolean {
   return experience.fields.componentSettings !== undefined;
 }
 
