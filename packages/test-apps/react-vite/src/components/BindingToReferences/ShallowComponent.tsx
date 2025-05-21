@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { Asset, Entry } from 'contentful';
 import { type ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { stringifyCompact } from '../../utils/debugging';
@@ -30,17 +30,44 @@ export const ShallowComponentDefinition: ComponentDefinition = {
 };
 
 export const ShallowComponent: React.FC<ShallowComponentProps> = (props: ShallowComponentProps) => {
+  const [messages, setMessages] = React.useState<string[]>([]);
+
+  // @ts-expect-error development only
+  window.myItems = window.myItems || [];
+  const addMessage = (message: string) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+  };
+
+  useEffect(() => {
+    return () => console.warn(';;Unmounting ShallowComponent');
+  }, []);
+
+  useEffect(() => {
+    addMessage(`Props items: ${JSON.stringify(props.items)}`);
+    // @ts-expect-error development only
+    window.myItems.push(props.items);
+    return () => {
+      console.warn(
+        ';;Change in props.items oldValue=',
+        props.items?.map((item) => item.sys.id),
+      );
+    };
+  }, [props.items]);
+
   return (
-    <div>
-      <h2>Collection of items</h2>
+    <>
+      <pre style={{ fontSize: '9px' }}>{messages.join('\n')}</pre>
       <div>
-        <pre style={{ fontSize: '9px' }}>{stringifyCompact(props.items)}</pre>
+        <h2>Collection of items</h2>
+        <div>
+          <pre style={{ fontSize: '9px' }}>{stringifyCompact(props.items)}</pre>
+        </div>
+        <h2>Single item</h2>
+        <div>
+          <pre style={{ fontSize: '9px' }}>{stringifyCompact(props.singleItem)}</pre>
+        </div>
       </div>
-      <h2>Single item</h2>
-      <div>
-        <pre style={{ fontSize: '9px' }}>{stringifyCompact(props.singleItem)}</pre>
-      </div>
-    </div>
+    </>
   );
 };
 

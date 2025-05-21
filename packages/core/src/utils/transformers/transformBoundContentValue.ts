@@ -6,7 +6,7 @@ import {
 import { transformRichText } from './transformRichText';
 import { transformMedia } from './media/transformMedia';
 import { EntityStoreBase } from '@/entity';
-import { Asset, UnresolvedLink } from 'contentful';
+import type { Asset, Entry, UnresolvedLink } from 'contentful';
 import { getBoundValue } from './getBoundValue';
 import { getResolvedEntryFromLink } from './getResolvedEntryFromLink';
 import { getArrayValue } from './getArrayValue';
@@ -19,6 +19,7 @@ export const transformBoundContentValue = (
   variableName: string,
   variableType: ComponentDefinitionVariableType,
   path: string,
+  cache?: Map<string, Array<Asset | Entry>>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any => {
   const entityOrAsset = entityStore.getEntryOrAsset(binding, path);
@@ -40,7 +41,7 @@ export const transformBoundContentValue = (
     case 'RichText':
       return transformRichText(entityOrAsset, entityStore, path);
     case 'Array':
-      return getArrayValue(entityOrAsset, path, entityStore);
+      return getArrayValue(entityOrAsset, path, entityStore, cache);
     case 'Link':
       return getResolvedEntryFromLink(entityOrAsset, path, entityStore);
     default:
