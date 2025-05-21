@@ -8,6 +8,7 @@ const VERSION_SCHEMAS = {
   '2023-09-28': ExperienceSchema_2023_09_28,
 };
 
+// TODO: fix typing when the Entry type is exposed
 function isPattern(experience: any): boolean {
   return experience.fields.componentSettings !== undefined;
 }
