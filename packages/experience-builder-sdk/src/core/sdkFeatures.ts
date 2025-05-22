@@ -4,4 +4,6 @@ export const sdkFeatures: Record<string, unknown> = {
   hasVersionHistory: true,
   cfVisibility: true,
   patternResolution: true,
+  // DND is moving to the host application enabling smoother native event handling
+  nativeDnd: true,
 };
