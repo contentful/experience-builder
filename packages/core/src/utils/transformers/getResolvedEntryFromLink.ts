@@ -22,37 +22,16 @@ export function getResolvedEntryFromLink(
     return;
   }
 
-  //Look up the reference in the entity store
-  // DK.TODO: Should we make this structured clone or not? When we were resolving links, we needed that.
-  //          do we ever provide components with transformed entities? (when we were resolving links we did)
-  //          but now, as we're not resolving them, we may simply provide frozen original entities...
-  //          (that at least provides referential integrity).
-  const resolvedEntity = structuredClone(entityStore.getEntityFromLink(value));
+  // no need to make structuredClone(entityStore.getEntityFromLink(value)) because
+  // we provide component with the original Object.frozen object of the entity.
+  // As we don't resolve L3 and don't mutate the entity before returning anymore,
+  // we don't need to make a copy of the entity. And even provide better referential integrity
+  // for the component for the same entity.
+  const resolvedEntity = entityStore.getEntityFromLink(value);
 
   if (!resolvedEntity) {
     return;
   }
-
-  // //resolve any embedded links - we currently only support 2 levels deep
-  // const fields = resolvedEntity.fields || {};
-  // Object.entries(fields).forEach(([fieldKey, field]) => {
-  //   if (field && field.sys?.type === 'Link') {
-  //     const entity = entityStore.getEntityFromLink(field);
-  //     if (entity) {
-  //       resolvedEntity.fields[fieldKey] = entity;
-  //     }
-  //   } else if (field && Array.isArray(field)) {
-  //     resolvedEntity.fields[fieldKey] = field.map((innerField) => {
-  //       if (innerField && innerField.sys?.type === 'Link') {
-  //         const entity = entityStore.getEntityFromLink(innerField);
-  //         if (entity) {
-  //           return entity;
-  //         }
-  //       }
-  //       return innerField;
-  //     });
-  //   }
-  // });
 
   return resolvedEntity;
 }
