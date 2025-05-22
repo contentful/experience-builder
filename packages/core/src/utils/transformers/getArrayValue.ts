@@ -14,7 +14,7 @@ export function getArrayValue(
 ) {
   // NOTE: Not sure if we need this if-statement,
   // as it is NOT possible to bind to Array variable an Asset
-  // (as Assets don't have multi-reference fields)
+  // (as Assets don't have multi-reference fields) unless it's a degenerate case.
   if (entryOrAsset.sys.type === 'Asset') {
     return entryOrAsset;
   }
@@ -36,16 +36,15 @@ export function getArrayValue(
   const result = arrayValue
     .map((value) => {
       if (typeof value === 'string') {
-        return value; // NOTE: not sure when array elements can be strings?
+        return value; // handles case where Text array is bound (in [Content Model] tab of the platform, select Text and make it a list)
       } else if (value?.sys?.type === 'Link') {
         const resolvedEntity = entityStore.getEntityFromLink(value);
         if (!resolvedEntity) {
-          // seems that returning `undefined` will be more consistent, as it implies:
-          // there's no data in the entityStore during path resolution and best thing is to wait
-          // until next render cycle during EDITOR mode. Bound links is something we guaranteed to resolve.
-          // Passing link, implies that user has to try to resolve it themselves.
+          // We return undefined, which means that entity wasn't availble in the Entity Store due to:
+          //  - because it's archived entity (and they normally wouldn't be sent to the Entity Store)
+          //  - bug where some entity wasn't added to the Entity Store
+          //  BTW, deleted entities shouldn't even be possible here as they require CT deletion first and that shouldn't allow us to load them at all)
           return;
-          // return value;
         }
         return resolvedEntity;
       } else {

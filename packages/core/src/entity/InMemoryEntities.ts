@@ -62,13 +62,6 @@ function isLink(data: unknown): data is UnresolvedLink<'Entry' | 'Asset'> {
   return maybeLink.sys.type === 'Link' && ['Entry', 'Asset'].includes(maybeLink.sys.linkType);
 }
 
-// function maybeResolveLink(link: unknown): Entry | undefined;
-// function maybeResolveLink(link: unknown): Asset | undefined;
-// function maybeResolveLink(link: UnresolvedLink<'Entry'>): Entry | undefined;
-// function maybeResolveLink(link: UnresolvedLink<'Asset'>): Asset | undefined;
-// function maybeResolveLink(
-//   link: UnresolvedLink<'Entry'> | UnresolvedLink<'Asset'>,
-// ): Entry | Asset | undefined;
 function maybeResolveLink(
   maybeLink: UnresolvedLink<'Entry' | 'Asset'> | unknown,
 ): Entry | Asset | undefined {
