@@ -5,5 +5,5 @@ export const sdkFeatures: Record<string, unknown> = {
   cfVisibility: true,
   patternResolution: true,
   // DND is moving to the host application enabling smoother native event handling
-  nativeDnd: true,
+  dndMigration: true,
 };
