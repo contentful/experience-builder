@@ -37,7 +37,9 @@ export const transformRichText = (
   }
   if (typeof value === 'object' && value.nodeType === BLOCKS.DOCUMENT) {
     // resolve any links to assets/entries/hyperlinks
-    const richTextDocument = value as RichTextDocument;
+    // we need to clone, as we want to keep the original Entity in the EntityStore intact,
+    // and resolveLinks() is mutating the node object.
+    const richTextDocument = structuredClone(value) as RichTextDocument;
     resolveLinks(richTextDocument, entityStore);
     return richTextDocument;
   }

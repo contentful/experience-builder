@@ -2,10 +2,21 @@ import { describe, it, expect } from 'vitest';
 import { experienceEntry } from '../test/__fixtures__/experience';
 import { entities } from '../test/__fixtures__/entities';
 import { DeepReference, gatherDeepReferencesFromExperienceEntry } from './DeepReference';
-import { EditorModeEntityStore } from '..';
+import { EntityFromLink } from '..';
+import { Asset, Entry, UnresolvedLink } from 'contentful';
 
 const entry = entities[0];
 const PATH = '/uuid2/fields/logo/~locale/fields/file/~locale';
+
+class MockEntityStore implements EntityFromLink {
+  private entities: Array<Entry | Asset>;
+  constructor(entities: Array<Entry | Asset>) {
+    this.entities = [...entities];
+  }
+  getEntityFromLink(link: UnresolvedLink<'Entry' | 'Asset'>): Asset | Entry | undefined {
+    return this.entities.find((entity) => entity.sys.id === link.sys.id);
+  }
+}
 
 describe('DeepReference', () => {
   it('should create deep reference', () => {
@@ -46,8 +57,7 @@ describe('DeepReference', () => {
         dataSource: experienceEntry.fields.dataSource,
       });
 
-      const entityStore = new EditorModeEntityStore({ entities: [entry], locale: 'en-US' });
-      const referent = deepReference.extractReferent(entityStore);
+      const referent = deepReference.extractReferent(new MockEntityStore([entry]));
 
       expect(referent).toEqual({
         sys: {
@@ -64,7 +74,7 @@ describe('DeepReference', () => {
         dataSource: experienceEntry.fields.dataSource,
       });
 
-      const entityStore = new EditorModeEntityStore({ entities: [], locale: 'en-US' });
+      const entityStore = new MockEntityStore([]);
       const referent = deepReference.extractReferent(entityStore);
 
       expect(referent).toBeUndefined();
@@ -76,7 +86,7 @@ describe('DeepReference', () => {
         dataSource: experienceEntry.fields.dataSource,
       });
 
-      const entityStore = new EditorModeEntityStore({ entities: [entry], locale: 'en-US' });
+      const entityStore = new MockEntityStore([entry]);
       const referent = deepReference.extractReferent(entityStore);
 
       expect(referent).toBeUndefined();
@@ -88,7 +98,7 @@ describe('DeepReference', () => {
         dataSource: experienceEntry.fields.dataSource,
       });
 
-      const entityStore = new EditorModeEntityStore({ entities: [entry], locale: 'en-US' });
+      const entityStore = new MockEntityStore([entry]);
       const referent = deepReference.extractReferent(entityStore);
 
       expect(referent).toBeUndefined();

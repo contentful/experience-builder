@@ -1,25 +1,23 @@
 import { useEditorStore } from '@/store/editor';
-import { useEntityStore } from '@/store/entityStore';
+import {
+  EditorModeEntityStore,
+  inMemoryEntitiesStore as defaultInMemoryEntitiesStore,
+} from '@contentful/experiences-core';
 
 import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
 import { useEffect, useState } from 'react';
+import { useStore } from 'zustand';
 
-export const useInitializeEditor = () => {
+export const useInitializeEditor = (inMemoryEntitiesStore: typeof defaultInMemoryEntitiesStore) => {
   const initializeEditor = useEditorStore((state) => state.initializeEditor);
 
   const [initialized, setInitialized] = useState(false);
-  const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
+  const resetEntityStore = useStore(inMemoryEntitiesStore, (state) => state.resetEntityStore);
 
   useEffect(() => {
     const onVisualEditorInitialize = (event) => {
       if (!event.detail) return;
-      const {
-        componentRegistry,
-        designTokens,
-        locale: initialLocale,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        entities,
-      } = event.detail;
+      const { componentRegistry, designTokens, locale: initialLocale, entities } = event.detail;
 
       initializeEditor({
         initialLocale,
@@ -29,7 +27,7 @@ export const useInitializeEditor = () => {
 
       // if entities is set to [], then everything will still work as EntityStore will
       // request entities on demand via ▲REQUEST_ENTITY
-      resetEntityStore(initialLocale, entities);
+      resetEntityStore(new EditorModeEntityStore({ locale: initialLocale, entities }));
       setInitialized(true);
     };
 

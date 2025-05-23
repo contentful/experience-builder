@@ -1,6 +1,6 @@
 import React, { ElementType, useCallback, useMemo } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-import { isComponentAllowedOnRoot } from '@contentful/experiences-core';
+import { EntityStoreBase, isComponentAllowedOnRoot } from '@contentful/experiences-core';
 import type {
   ResolveDesignValueType,
   DragWrapperProps,
@@ -36,6 +36,8 @@ type DropzoneProps = {
   WrapperComponent?: ElementType | string;
   dragProps?: DragWrapperProps;
   wrappingPatternIds?: Set<string>;
+  entityStore: EntityStoreBase;
+  areEntitiesFetched: boolean;
 };
 
 export function Dropzone({
@@ -45,6 +47,8 @@ export function Dropzone({
   className,
   WrapperComponent = 'div',
   dragProps,
+  entityStore,
+  areEntitiesFetched,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
   ...rest
 }: DropzoneProps) {
@@ -91,20 +95,24 @@ export function Dropzone({
       return (
         <Dropzone
           zoneId={node.data.id}
+          entityStore={entityStore}
           node={node}
           resolveDesignValue={resolveDesignValue}
           wrappingPatternIds={wrappingPatternIds}
+          areEntitiesFetched={areEntitiesFetched}
           {...props}
         />
       );
     },
-    [wrappingPatternIds, resolveDesignValue],
+    [wrappingPatternIds, resolveDesignValue, entityStore, areEntitiesFetched],
   );
 
   const renderClonedDropzone: RenderDropzoneFunction = useCallback(
     (node, props) => {
       return (
         <DropzoneClone
+          entityStore={entityStore}
+          areEntitiesFetched={areEntitiesFetched}
           zoneId={node.data.id}
           node={node}
           resolveDesignValue={resolveDesignValue}
@@ -114,7 +122,7 @@ export function Dropzone({
         />
       );
     },
-    [resolveDesignValue, wrappingPatternIds],
+    [resolveDesignValue, wrappingPatternIds, entityStore, areEntitiesFetched],
   );
 
   const isDropzoneEnabled = useMemo(() => {
@@ -184,6 +192,8 @@ export function Dropzone({
       isDropDisabled={!isDropzoneEnabled}
       renderClone={(provided, snapshot, rubic) => (
         <EditorBlockClone
+          entityStore={entityStore}
+          areEntitiesFetched={areEntitiesFetched}
           node={content[rubic.source.index]}
           resolveDesignValue={resolveDesignValue}
           provided={provided}
@@ -224,6 +234,8 @@ export function Dropzone({
                 .filter((node) => node.data.slotId === slotId)
                 .map((item, i) => (
                   <EditorBlock
+                    entityStore={entityStore}
+                    areEntitiesFetched={areEntitiesFetched}
                     placeholder={{
                       isDraggingOver: snapshot?.isDraggingOver,
                       totalIndexes: content.length,
