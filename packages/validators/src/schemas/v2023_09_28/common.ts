@@ -1,5 +1,6 @@
-import { z } from 'zod';
+import { z, ZodTypeAny } from 'zod';
 import { Breakpoint } from '@/schemas/v2023_09_28/experience';
+import { SchemaVersions } from '@/schemas/schemaVersions';
 
 export const DefinitionPropertyTypeSchema = z.enum([
   'Text',
@@ -162,3 +163,85 @@ export const ComponentValueSchema = z
   .strict();
 
 export const NoValueSchema = z.object({ type: z.literal('NoValue') }).strict();
+
+export const ComponentPropertyValueSchema = z.discriminatedUnion('type', [
+  DesignValueSchema,
+  BoundValueSchema,
+  UnboundValueSchema,
+  HyperlinkValueSchema,
+  ComponentValueSchema,
+  NoValueSchema,
+]);
+
+export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema>;
+
+// TODO: finalize schema structure before release
+// https://contentful.atlassian.net/browse/LUMOS-523
+export const PatternPropertySchema = z.object({
+  type: z.literal('BoundValue'),
+  path: z.string(),
+  contentType: z.string(),
+});
+
+export const PatternPropertiesSchema = z.record(propertyKeySchema, PatternPropertySchema);
+
+export const BreakpointSchema = z
+  .object({
+    id: propertyKeySchema,
+    query: z.string().regex(/^\*$|^<[0-9*]+px$/),
+    previewSize: z.string(),
+    displayName: z.string(),
+    displayIcon: z.enum(['desktop', 'tablet', 'mobile']).optional(),
+  })
+  .strict();
+
+// Use helper schema to define a recursive schema with its type correctly below
+export const BaseComponentTreeNodeSchema = z.object({
+  id: ComponentTreeNodeIdSchema.optional(),
+  definitionId: DefinitionPropertyKeySchema,
+  displayName: z.string().optional(),
+  slotId: z.string().optional(),
+  variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
+  patternProperties: PatternPropertiesSchema.optional(),
+});
+
+export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
+  children: ComponentTreeNode[];
+};
+
+export const ComponentVariableSchema = z.object({
+  displayName: z.string().optional(),
+  type: DefinitionPropertyTypeSchema,
+  description: z.string().optional(),
+  group: z.string().optional(),
+  defaultValue: PrimitiveValueSchema.or(ComponentPropertyValueSchema).optional(),
+  validations: z
+    .object({
+      bindingSourceType: BindingSourceTypeEnumSchema.optional(),
+      required: z.boolean().optional(),
+      format: z.literal('URL').optional(),
+      in: z
+        .array(
+          z.object({
+            value: z.union([z.string(), z.number()]),
+            displayName: z.string().optional(),
+          }),
+        )
+        .optional(),
+    })
+    .optional(),
+});
+
+export const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> =
+  BaseComponentTreeNodeSchema.extend({
+    children: z.lazy(() => ComponentTreeNodeSchema.array()),
+  });
+
+export const ComponentTreeSchema = z
+  .object({
+    breakpoints: z.array(BreakpointSchema).superRefine(breakpointsRefinement),
+    children: z.array(ComponentTreeNodeSchema),
+    schemaVersion: SchemaVersions,
+  })
+  .strict();
+export const localeWrapper = (fieldSchema: ZodTypeAny) => z.record(z.string(), fieldSchema);

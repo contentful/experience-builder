@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ComponentVariableSchema } from './v2023_09_28/experience';
 import {
+  ComponentVariableSchema,
   DefinitionPropertyKeySchema,
   DefinitionPropertyTypeSchema,
   PrimitiveValueSchema,
