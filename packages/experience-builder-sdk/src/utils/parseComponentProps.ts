@@ -9,6 +9,7 @@ import {
   ComponentTreeNode,
   DesignValue,
   PrimitiveValue,
+  ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
 import { convertResolvedDesignValuesToMediaQuery } from '../hooks/useMediaQuery';
 import { createStylesheetsForBuiltInStyles } from '../hooks/useMediaQuery';
@@ -33,9 +34,9 @@ export const parseComponentProps = ({
   breakpoints,
   mainBreakpoint,
   componentDefinition,
-  patternNodeIdsChain,
+  patternRootNodeIdsChain,
   node,
-  resolveCustomDesignValue,
+  resolveDesignValue,
   resolveBoundValue,
   resolveHyperlinkValue,
   resolveUnboundValue,
@@ -43,12 +44,9 @@ export const parseComponentProps = ({
   breakpoints: Breakpoint[];
   mainBreakpoint: Breakpoint;
   componentDefinition: ComponentDefinition;
-  patternNodeIdsChain?: string;
+  patternRootNodeIdsChain?: string;
   node: ComponentTreeNode;
-  resolveCustomDesignValue: (data: {
-    propertyName: string;
-    valuesByBreakpoint: Record<string, PrimitiveValue>;
-  }) => PrimitiveValue;
+  resolveDesignValue: ResolveDesignValueType;
   resolveBoundValue: (data: {
     propertyName: string;
     dataType: ComponentDefinitionVariableType;
@@ -77,10 +75,7 @@ export const parseComponentProps = ({
           styleProps[propName] = propertyValue.valuesByBreakpoint;
         } else {
           // for custom design props, the value will be resolved with the javascript per breakpoint at runtime
-          customDesignProps[propName] = resolveCustomDesignValue({
-            propertyName: propName,
-            valuesByBreakpoint: propertyValue.valuesByBreakpoint,
-          });
+          customDesignProps[propName] = resolveDesignValue(propertyValue.valuesByBreakpoint);
         }
         break;
       }
@@ -171,7 +166,7 @@ export const parseComponentProps = ({
     designPropertiesByBreakpoint: stylePropsIndexedByBreakpoint,
     breakpoints,
     node,
-    patternNodeIdsChain,
+    patternRootNodeIdsChain,
   });
   /* [Data Format] Stylesheet data provides objects containing `className`, `breakpointCondition`, and `css`.
    * stylesheetData = [{

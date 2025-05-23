@@ -64,6 +64,7 @@ export const createAssemblyEntry = ({
       componentTree: {
         children: [
           {
+            id: 'test-container-id',
             definitionId: CONTENTFUL_COMPONENTS.container.id,
             variables: {
               cfWidth: {
@@ -73,6 +74,7 @@ export const createAssemblyEntry = ({
             },
             children: [
               {
+                id: 'test-custom-component-id',
                 definitionId: 'custom-component',
                 variables: {
                   text: {
