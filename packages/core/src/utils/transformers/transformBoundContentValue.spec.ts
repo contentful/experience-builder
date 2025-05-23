@@ -20,6 +20,7 @@ import {
 } from '@/types';
 import { vitest, it, describe } from 'vitest';
 import { UnresolvedLink } from 'contentful';
+import { cloneDeep } from 'lodash-es';
 
 const entityStore = new EditorModeEntityStore({
   entities: [
@@ -113,23 +114,28 @@ describe('transformBoundContentValue', () => {
     describe('when the variable is a cfBackgroundImageOptions', () => {
       const variablesWithImageOptions = {
         ...variables,
+        cfBackgroundImageOptions: {
+          type: 'DesignValue' as const,
+          valuesByBreakpoint: {
+            desktop: {
+              quality: '100%',
+              format: 'jpg',
+              targetSize: '1060px',
+            },
+          },
+        },
+        cfWidth: {
+          type: 'DesignValue' as const,
+          valuesByBreakpoint: {
+            desktop: '1024px',
+          },
+        },
       };
+      const resolveDesignValue = (valuesByBreakpoint) => valuesByBreakpoint.desktop;
       it('should transform value to OptimizedBackgroundImageAsset', () => {
         const binding: UnresolvedLink<'Asset'> = {
           sys: { type: 'Link', linkType: 'Asset', id: 'asset1' },
         };
-        const resolveDesignValue = vitest.fn((_, variableName) => {
-          if (variableName === 'cfBackgroundImageOptions') {
-            return {
-              quality: '100%',
-              format: 'jpg',
-              targetSize: '1060px',
-            };
-          }
-          if (variableName === 'cfWidth') {
-            return '1024px';
-          }
-        });
         const variableName = 'cfBackgroundImageUrl';
 
         const path = (variables.image as BoundValue).path;
@@ -149,23 +155,15 @@ describe('transformBoundContentValue', () => {
         const binding: UnresolvedLink<'Asset'> = {
           sys: { type: 'Link', linkType: 'Asset', id: 'asset1' },
         };
-        const resolveDesignValue = vitest.fn((_, variableName) => {
-          if (variableName === 'cfBackgroundImageOptions') {
-            return {
-              quality: '100%',
-              format: 'jpg',
-              targetSize: '300px',
-            };
-          }
-          if (variableName === 'cfWidth') {
-            return '1024px';
-          }
-        });
+        const adjustedVariablesWithImageOptions = cloneDeep(variablesWithImageOptions);
+        adjustedVariablesWithImageOptions.cfBackgroundImageOptions.valuesByBreakpoint.desktop.targetSize =
+          '300px';
+
         const variableName = 'cfBackgroundImageUrl';
 
         const path = (variables.image as BoundValue).path;
         const result = transformBoundContentValue(
-          variablesWithImageOptions,
+          adjustedVariablesWithImageOptions,
           entityStore,
           binding,
           resolveDesignValue,
@@ -180,23 +178,14 @@ describe('transformBoundContentValue', () => {
         const binding: UnresolvedLink<'Asset'> = {
           sys: { type: 'Link', linkType: 'Asset', id: 'asset1' },
         };
-        const resolveDesignValue = vitest.fn((_, variableName) => {
-          if (variableName === 'cfBackgroundImageOptions') {
-            return {
-              quality: '100%',
-              format: 'jpg',
-              targetSize: '1060px',
-            };
-          }
-          if (variableName === 'cfWidth') {
-            return undefined; // cfWidth is not defined
-          }
-        });
+        const adjustedVariablesWithImageOptions = cloneDeep(variablesWithImageOptions);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        adjustedVariablesWithImageOptions.cfWidth.valuesByBreakpoint.desktop = undefined as any;
         const variableName = 'cfBackgroundImageUrl';
 
         const path = (variables.image as BoundValue).path;
         const result = transformBoundContentValue(
-          variablesWithImageOptions,
+          adjustedVariablesWithImageOptions,
           entityStore,
           binding,
           resolveDesignValue,

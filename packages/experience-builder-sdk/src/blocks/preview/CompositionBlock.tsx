@@ -153,9 +153,7 @@ export const CompositionBlock = ({
       componentDefinition: componentRegistration.definition,
       patternRootNodeIdsChain,
       node,
-      resolveCustomDesignValue: ({ propertyName, valuesByBreakpoint }) => {
-        return resolveDesignValue(valuesByBreakpoint, propertyName);
-      },
+      resolveDesignValue,
       resolveBoundValue: ({ binding, propertyName, dataType }) => {
         const [, uuid] = binding.path.split('/');
         const boundEntityLink = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
@@ -264,7 +262,7 @@ export const CompositionBlock = ({
       // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
       const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[nodeIdsChain];
       if (!classesForNode) return undefined;
-      return resolveDesignValue(classesForNode.valuesByBreakpoint, 'cfSsrClassName') as string;
+      return resolveDesignValue(classesForNode.valuesByBreakpoint) as string;
     }
     return getPatternChildNodeClassName?.(childNodeId);
   };
