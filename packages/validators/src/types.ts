@@ -15,6 +15,8 @@ export type {
   UnboundValue,
   BoundValue,
   ComponentValue,
+  PatternFields,
+  PatternProperty,
 } from './schemas/latest';
 export type { ComponentDefinitionPropertyType } from './schemas/componentDefinition';
 export type { SchemaVersions } from './schemas/schemaVersions';
