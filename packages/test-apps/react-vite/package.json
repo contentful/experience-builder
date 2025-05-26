@@ -12,8 +12,8 @@
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "preview": "vite preview",
     "depcruise": "depcruise src",
-    "copy-to-examples": "rsync -av src/binding-to-reference-fields/ ../../../examples/binding-to-reference-fields/",
-    "copy-from-examples": "rsync -av ../../../examples/binding-to-reference-fields/ src/binding-to-reference-fields/"
+    "copy-to-examples": "rsync -av src/binding-to-reference-fields.ignore/ ../../../examples/binding-to-reference-fields/",
+    "copy-from-examples": "rsync -av ../../../examples/binding-to-reference-fields/ src/binding-to-reference-fields.ignore/"
   },
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
