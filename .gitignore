@@ -33,6 +33,8 @@ vite.config.ts.timestamp-*
 .pnp.*
 
 tmp/
+.gist.json
+*.ignore
 
 .vercel
 
