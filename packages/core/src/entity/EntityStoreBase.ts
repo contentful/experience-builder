@@ -171,7 +171,11 @@ export abstract class EntityStoreBase implements EntityFromLink {
     const resolveFieldset = (
       unresolvedFieldset: Array<[null, string, string?]>,
       headEntry: Entry | Asset,
-    ) => {
+    ): {
+      resolvedFieldset: Array<[Entry | Asset, string, string?]>;
+      isFullyResolved: boolean;
+      reason?: string;
+    } => {
       const resolvedFieldset: Array<[Entry | Asset, string, string?]> = [];
       let entityToResolveFieldsFrom: Entry | Asset = headEntry;
       for (let i = 0; i < unresolvedFieldset.length; i++) {
