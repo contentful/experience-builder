@@ -43,7 +43,7 @@ type PropsV2 = {
 export const ComponentUsingSdkV1: React.FC<PropsV1> = ({ item }) => {
   return (
     <div>
-      <img src={item?.fields.image?.fields.file?.url} alt={item?.fields.title} />
+      <img src={item?.fields.image?.fields.file?.url as string} alt={item?.fields.title} />
       <div>
         <h3>{item?.fields.title}</h3>
         <p>{item?.fields.description}</p>
@@ -55,15 +55,15 @@ export const ComponentUsingSdkV1: React.FC<PropsV1> = ({ item }) => {
 
 // In SDK v2 the component receives an item, which is an Entry with unresolved references.
 // Thus the image field is a link object, which needs to be replaced with the actual asset object.
-export const ComponentUsingSdkV2: React.FC<PropsV2> = ({ item }) => {
+export const ComponentUsingSdkV2: React.FC<PropsV2> = ({ item: itemWithUnresolvedReferences }) => {
 
   // Must make copy! as `item` is marked as immutable by the SDK via Object.freeze().
-  const itemResolved: ItemWithManuallyResolvedReferences = structuredClone(item) as ItemWithManuallyResolvedReferences;
-  itemResolved.fields.image = inMemoryEntities.maybeResolveLink(item.fields.image);
+  const item: ItemWithManuallyResolvedReferences = structuredClone(itemWithUnresolvedReferences) as ItemWithManuallyResolvedReferences;
+  item.fields.image = inMemoryEntities.maybeResolveLink(item.fields.image);
 
   return (
     <div>
-      <img src={item?.fields.image?.fields.file?.url} alt={item?.fields.title} />
+      <img src={item?.fields.image?.fields.file?.url as string} alt={item?.fields.title} />
       <div>
         <h3>{item?.fields.title}</h3>
         <p>{item?.fields.description}</p>
