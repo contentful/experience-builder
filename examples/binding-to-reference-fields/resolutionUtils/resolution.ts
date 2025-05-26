@@ -1,7 +1,7 @@
 import type { Entry, Asset, UnresolvedLink } from 'contentful';
 import { inMemoryEntities, isAsset, isEntry, isArrayOfLinks, isLink } from '@contentful/experiences-sdk-react';
 
-export const resolveEntityReferences = (
+export const resolveEntityLinks = (
   entity: Entry | Asset | undefined,
 ): Entry | Asset | undefined => {
   if (entity === undefined) {
