@@ -18,6 +18,10 @@ export {
   fetchReferencedEntities,
   fetchExperienceEntry,
   localizeEntity,
+  isArrayOfLinks,
+  isLink,
+  isAsset,
+  isEntry,
 } from '@contentful/experiences-core';
 export {
   CONTENTFUL_COMPONENTS,
