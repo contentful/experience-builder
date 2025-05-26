@@ -1,6 +1,6 @@
 // --- UsingUtility.tsx ---
 import React from 'react';
-import { resolveEntityReferences, isAsset } from './resolutionUtils';
+import { resolveEntityLinks, isAsset } from './resolutionUtils';
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
 import styles from './styles.module.css';
 
@@ -27,7 +27,7 @@ export const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => 
   }
 
   const itemsResolved: Array<Item> = items
-    .map((item) => resolveEntityReferences(item))
+    .map((item) => resolveEntityLinks(item))
     .filter(Boolean) as Array<Item>; // remove items which resolution (there should not be any)
 
   return (
