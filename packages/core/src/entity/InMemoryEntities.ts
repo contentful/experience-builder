@@ -63,13 +63,10 @@ function isLink(data: unknown): data is UnresolvedLink<'Entry' | 'Asset'> {
 }
 
 function maybeResolveLink(maybeLink: UnresolvedLink<'Entry'>): Entry | undefined;
-function maybeResolveLink(maybeLink: UnresolvedLink<'Asset'> | unknown): Asset | undefined;
-function maybeResolveLink(
-  maybeLink: UnresolvedLink<'Entry'> | UnresolvedLink<'Asset'>,
-): Entry | Asset | undefined;
-function maybeResolveLink(
-  maybeLink: UnresolvedLink<'Entry' | 'Asset'> | unknown,
-): Entry | Asset | undefined {
+function maybeResolveLink(maybeLink: UnresolvedLink<'Asset'>): Asset | undefined;
+function maybeResolveLink(maybeLink: UnresolvedLink<'Asset' | 'Entry'>): Asset | Entry | undefined;
+function maybeResolveLink(maybeLink: unknown): Entry | Asset | undefined;
+function maybeResolveLink(maybeLink: unknown): Entry | Asset | undefined {
   if (!isLink(maybeLink)) {
     console.warn(
       'maybeResolveLink function must receive Link shape. Provided argument does not match the Link shape: ',
@@ -79,10 +76,6 @@ function maybeResolveLink(
   }
   return inMemoryEntitiesStore.getState().resolveEntity(maybeLink);
 }
-
-// Order matters! Those wildcard (with unknown) overloads must be at the end
-// function maybeResolveLink(maybeLink: unknown): Entry | undefined;
-// function maybeResolveLink(maybeLink: unknown): Asset | undefined;
 
 function addEntities(entities: Array<Entry>): void;
 function addEntities(entities: Array<Asset>): void;
