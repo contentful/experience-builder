@@ -1,3 +1,4 @@
+// --- UsingUtility.tsx ---
 import React from 'react';
 import { resolveEntityReferences, isAsset } from './resolutionUtils';
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
