@@ -1,14 +1,11 @@
 import React, { CSSProperties, useCallback, useRef, useState } from 'react';
 import { useEffect } from 'react';
-import DraggableContainer from '@/components/DraggableHelpers/DraggableComponentList';
 import type { ExperienceTree } from '@contentful/experiences-core/types';
-import { DRAGGABLE_HEIGHT, ROOT_ID } from '@/types/constants';
+import { ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
-import { useDraggedItemStore } from '@/store/draggedItem';
 import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
-import { DNDProvider } from './DNDProvider';
 import { sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
@@ -18,25 +15,18 @@ interface RootRendererProperties {
   onChange?: (data: ExperienceTree) => void;
 }
 
+// TODO; Check if this is still required
+const DRAGGABLE_HEIGHT = 30;
+
 export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => {
   useEditorSubscriber();
 
-  const dragItem = useDraggedItemStore((state) => state.componentId);
-  const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
-  const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
   const breakpoints = useTreeStore((state) => state.breakpoints);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const containerRef = useRef<HTMLDivElement>(null);
   const { resolveDesignValue } = useBreakpoints(breakpoints);
   const [containerStyles, setContainerStyles] = useState<CSSProperties>({});
   const tree = useTreeStore((state) => state.tree);
-
-  const handleMouseOver = useCallback(() => {
-    // Remove hover state set by UI when mouse is over canvas
-    setHoveredComponentId();
-    // Remove hover styling from components in the layers tab
-    sendMessage(OUTGOING_EVENTS.NewHoveredElement, {});
-  }, [setHoveredComponentId]);
 
   const handleClickOutside = useCallback(
     (e: MouseEvent) => {
@@ -99,13 +89,6 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => 
   }, [tree, onChange]);
 
   useEffect(() => {
-    window.addEventListener('mouseover', handleMouseOver);
-    return () => {
-      window.removeEventListener('mouseover', handleMouseOver);
-    };
-  }, [handleMouseOver]);
-
-  useEffect(() => {
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);
@@ -118,20 +101,10 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => 
   }, [containerRef.current]);
 
   return (
-    <DNDProvider>
-      {dragItem && <DraggableContainer id={dragItem} />}
+    <>
       <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
-        {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitbox} />}
-        <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
-        {userIsDragging && (
-          <>
-            <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />
-            {/* This adds extra space to the bottom of the canvas when dragging to improve hitbox targeting */}
-            <div data-ctfl-zone-id={ROOT_ID} className={styles.canvasBottomSpacer} />
-          </>
-        )}
+        <Dropzone node={tree.root} resolveDesignValue={resolveDesignValue} />
       </div>
-      <div data-ctfl-hitboxes />
-    </DNDProvider>
+    </>
   );
 };

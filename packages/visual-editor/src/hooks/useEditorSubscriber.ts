@@ -26,11 +26,9 @@ import {
 import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
-import { useDraggedItemStore } from '@/store/draggedItem';
 import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
-import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
 
 export function useEditorSubscriber() {
@@ -49,11 +47,6 @@ export function useEditorSubscriber() {
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
-  const setComponentId = useDraggedItemStore((state) => state.setComponentId);
-  const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
-  const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
-  const setMousePosition = useDraggedItemStore((state) => state.setMousePosition);
-  const setScrollY = useDraggedItemStore((state) => state.setScrollY);
 
   const reloadApp = () => {
     sendMessage(OUTGOING_EVENTS.CanvasReload, undefined);
@@ -276,18 +269,13 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.HoverComponent: {
-          const { hoveredNodeId } = eventData.payload;
-          setHoveredComponentId(hoveredNodeId);
+          console.debug('[experiences-sdk-react::onMessage] Ignoring HoverComponent event');
           break;
         }
         case INCOMING_EVENTS.ComponentDraggingChanged: {
-          const { isDragging } = eventData.payload;
-
-          if (!isDragging) {
-            setComponentId('');
-            setDraggingOnCanvas(false);
-            SimulateDnD.reset();
-          }
+          console.debug(
+            '[experiences-sdk-react::onMessage] Ignoring ComponentDraggingChanged event',
+          );
           break;
         }
         case INCOMING_EVENTS.UpdatedEntity: {
@@ -310,27 +298,15 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.ComponentDragCanceled: {
-          if (SimulateDnD.isDragging) {
-            //simulate a mouseup event to cancel the drag
-            SimulateDnD.endDrag(0, 0);
-          }
+          console.debug('[experiences-sdk-react::onMessage] Ignoring ComponentDragCanceled event');
           break;
         }
         case INCOMING_EVENTS.ComponentDragStarted: {
-          const { id, isAssembly } = eventData.payload;
-          SimulateDnD.setupDrag();
-          setComponentId(`${id}:${isAssembly}` || '');
-          setDraggingOnCanvas(true);
-
-          sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-            nodeId: '',
-          });
+          console.debug('[experiences-sdk-react::onMessage] Ignoring ComponentDragStarted event');
           break;
         }
         case INCOMING_EVENTS.ComponentDragEnded: {
-          SimulateDnD.reset();
-          setComponentId('');
-          setDraggingOnCanvas(false);
+          console.debug('[experiences-sdk-react::onMessage] Ignoring ComponentDragEnded event');
           break;
         }
         case INCOMING_EVENTS.SelectComponent: {
@@ -340,20 +316,11 @@ export function useEditorSubscriber() {
           break;
         }
         case INCOMING_EVENTS.MouseMove: {
-          const { mouseX, mouseY } = eventData.payload;
-          setMousePosition(mouseX, mouseY);
-
-          if (SimulateDnD.isDraggingOnParent && !SimulateDnD.isDragging) {
-            SimulateDnD.startDrag(mouseX, mouseY);
-          } else {
-            SimulateDnD.updateDrag(mouseX, mouseY);
-          }
-
+          console.debug('[experiences-sdk-react::onMessage] Ignoring MouseMove event');
           break;
         }
         case INCOMING_EVENTS.ComponentMoveEnded: {
-          const { mouseX, mouseY } = eventData.payload;
-          SimulateDnD.endDrag(mouseX, mouseY);
+          console.debug('[experiences-sdk-react::onMessage] Ignoring ComponentMoveEnded event');
           break;
         }
         default:
@@ -370,8 +337,6 @@ export function useEditorSubscriber() {
     };
   }, [
     entityStore,
-    setComponentId,
-    setDraggingOnCanvas,
     setDataSource,
     setLocale,
     setSelectedNodeId,
@@ -382,9 +347,7 @@ export function useEditorSubscriber() {
     unboundValues,
     updateTree,
     updateNodesByUpdatedEntity,
-    setMousePosition,
     resetEntityStore,
-    setHoveredComponentId,
   ]);
 
   /*
@@ -395,7 +358,6 @@ export function useEditorSubscriber() {
     let isScrolling = false;
 
     const onScroll = () => {
-      setScrollY(window.scrollY);
       if (isScrolling === false) {
         sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.Start);
       }
@@ -428,5 +390,5 @@ export function useEditorSubscriber() {
       window.removeEventListener('scroll', onScroll, { capture: true });
       clearTimeout(timeoutId);
     };
-  }, [selectedNodeId, setScrollY]);
+  }, [selectedNodeId]);
 }

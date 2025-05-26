@@ -6,10 +6,9 @@ import {
   ComponentPropertyValue,
   ExperienceTreeNode as ExperienceTreeNodeWithOptionalProperties,
 } from '@contentful/experiences-core/types';
-import { Mock, vi, it, describe } from 'vitest';
+import { vi, it, describe } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
-import { useDraggedItemStore } from '@/store/draggedItem';
 import { getValueForBreakpoint } from '@contentful/experiences-core';
 
 // Redefining this type to make 'data.props.cfVisibility' a required field.
@@ -44,7 +43,6 @@ const resolveDesignValue = vi.fn((valuesByBreakpoint, variableName) =>
 );
 const renderDropzone = vi.fn();
 const areEntitiesFetched = true;
-const userIsDragging = false;
 
 describe('useComponentProps', () => {
   const definition: ComponentDefinition = {
@@ -78,7 +76,6 @@ describe('useComponentProps', () => {
   };
   it('should return empty object when node type is ASSEMBLY_NODE_TYPE', () => {
     const areEntitiesFetched = true;
-    const userIsDragging = false;
 
     const { result } = renderHook(() =>
       useComponentProps({
@@ -87,7 +84,6 @@ describe('useComponentProps', () => {
         resolveDesignValue,
         renderDropzone,
         definition,
-        userIsDragging,
       }),
     );
 
@@ -102,7 +98,6 @@ describe('useComponentProps', () => {
         resolveDesignValue,
         renderDropzone,
         definition,
-        userIsDragging,
       }),
     );
 
@@ -111,7 +106,6 @@ describe('useComponentProps', () => {
 
   it('should return definition default value when type is ComponentValue', () => {
     const areEntitiesFetched = true;
-    const userIsDragging = false;
 
     const { result } = renderHook(() =>
       useComponentProps({
@@ -131,7 +125,6 @@ describe('useComponentProps', () => {
         resolveDesignValue,
         renderDropzone,
         definition,
-        userIsDragging,
       }),
     );
 
@@ -196,7 +189,6 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
-          userIsDragging,
         }),
       );
 
@@ -212,7 +204,6 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
-          userIsDragging,
           options: { wrapComponent: false },
         }),
       );
@@ -233,7 +224,6 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
-          userIsDragging,
           options: { wrapComponent: false },
         }),
       );
@@ -322,12 +312,8 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
-          requiresDragWrapper: true,
-          userIsDragging,
         }),
       );
-
-      expect(result.current.wrapperStyles).toEqual({}); // it will have { width: undefined }, but it still resolves to {} during ... destructuring
 
       expect(result.current.componentStyles.display).toEqual('none !important');
       // Because the element is hidden via `display: none !important`, we don't need to override the styles to 100% values
@@ -359,15 +345,8 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
-          requiresDragWrapper: true,
-          userIsDragging,
         }),
       );
-
-      expect(result.current.wrapperStyles.width).toEqual('50%');
-      expect(result.current.wrapperStyles.height).toEqual('50%');
-      expect(result.current.wrapperStyles.maxWidth).toEqual('50%');
-      expect(result.current.wrapperStyles.margin).toEqual('10px 0 10px 0');
 
       expect(result.current.componentStyles.width).toEqual('100%');
       expect(result.current.componentStyles.height).toEqual('100%');
@@ -383,8 +362,6 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
-          requiresDragWrapper: false,
-          userIsDragging,
         }),
       );
 
@@ -404,13 +381,12 @@ describe('useComponentProps', () => {
             resolveDesignValue,
             renderDropzone,
             definition,
-            userIsDragging,
             options: { wrapContainerWidth: width },
           }),
         );
 
         // The wrapper width should be set to the wrapContainerWidth value
-        expect(result.current.wrapperStyles.width).toEqual(width);
+        // expect(result.current.wrapperStyles.width).toEqual(width);
 
         // The component width should be set to 100% to fill the wrapper
         expect(result.current.componentStyles.width).toEqual('100%');
@@ -425,7 +401,6 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
-          userIsDragging,
           options: { wrapComponent: false, enableCustomEditorView: true },
         }),
       );
@@ -441,7 +416,6 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
-          userIsDragging,
           options: { wrapComponent: false },
         }),
       );
@@ -462,7 +436,6 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
-          userIsDragging,
           options: { wrapComponent: false },
         }),
       );
@@ -515,32 +488,6 @@ describe('useComponentProps', () => {
 
     const nodeRect = { width: 200, height: 100 } as DOMRect;
 
-    beforeEach(() => {
-      (useDraggedItemStore as unknown as Mock).mockImplementation((selector) =>
-        selector({
-          onBeforeCaptureId: 'id',
-          domRect: nodeRect,
-        }),
-      );
-    });
-
-    it('and set wrapper max size constraint when drag wrapper is enabled', () => {
-      const { result } = renderHook(() =>
-        useComponentProps({
-          node,
-          areEntitiesFetched: true,
-          resolveDesignValue,
-          renderDropzone,
-          definition,
-          requiresDragWrapper: true,
-          userIsDragging: true,
-        }),
-      );
-
-      expect(result.current.wrapperStyles.maxWidth).toEqual(nodeRect.width);
-      expect(result.current.wrapperStyles.maxHeight).toEqual(nodeRect.height);
-    });
-
     it('and set component max size constraint when drag wrapper is disabled', () => {
       const { result } = renderHook(() =>
         useComponentProps({
@@ -549,8 +496,6 @@ describe('useComponentProps', () => {
           resolveDesignValue,
           renderDropzone,
           definition,
-          requiresDragWrapper: false,
-          userIsDragging: true,
         }),
       );
 

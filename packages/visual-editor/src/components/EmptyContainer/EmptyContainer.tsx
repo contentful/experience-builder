@@ -2,19 +2,9 @@ import React from 'react';
 import styles from './EmptyContainer.module.css';
 import classNames from 'classnames';
 
-export interface EmptyContainerProps {
-  isFirst?: boolean;
-  isDragging?: boolean;
-  isHoveringOnRoot?: boolean;
-}
-
-export const EmptyContainer = ({ isDragging }: EmptyContainerProps) => {
+export const EmptyContainer = () => {
   return (
-    <div
-      className={classNames(styles.container, {
-        [styles.highlight]: isDragging,
-      })}
-      data-type="empty-container">
+    <div className={classNames(styles.container)} data-type="empty-container">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="37"

@@ -58,7 +58,6 @@ describe('useComponent', () => {
       variableName,
     ),
   );
-  const userIsDragging = false;
   const renderDropzone = vi.fn();
 
   beforeEach(() => {});
@@ -74,7 +73,6 @@ describe('useComponent', () => {
           node,
           resolveDesignValue,
           renderDropzone,
-          userIsDragging,
           wrappingPatternIds: new Set(),
         }),
       );

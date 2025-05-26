@@ -9,12 +9,7 @@ import {
   isStructureWithRelativeHeight,
   sanitizeNodeProps,
 } from '@contentful/experiences-core';
-import {
-  ASSEMBLY_NODE_TYPE,
-  EMPTY_CONTAINER_HEIGHT,
-  CONTENTFUL_COMPONENTS,
-  ASSEMBLY_BLOCK_NODE_TYPE,
-} from '@contentful/experiences-core/constants';
+import { ASSEMBLY_NODE_TYPE, EMPTY_CONTAINER_HEIGHT } from '@contentful/experiences-core/constants';
 import type {
   StyleProps,
   PrimitiveValue,
@@ -24,16 +19,14 @@ import type {
   Link,
   DesignValue,
 } from '@contentful/experiences-core/types';
-import { CSSProperties, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
 import { getUnboundValues } from '@/utils/getUnboundValues';
-import { useDraggedItemStore } from '@/store/draggedItem';
 import { useEntityStore } from '@/store/entityStore';
-import type { RenderDropzoneFunction } from '@/components/DraggableBlock/Dropzone.types';
 
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
-import { DRAG_PADDING } from '@/types/constants';
+import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
 
 type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
@@ -52,10 +45,8 @@ type UseComponentProps = {
   areEntitiesFetched: boolean;
   definition?: ComponentRegistration['definition'];
   options?: ComponentRegistration['options'];
-  renderDropzone: RenderDropzoneFunction;
-  userIsDragging: boolean;
   slotId?: string;
-  requiresDragWrapper?: boolean;
+  renderDropzone: RenderDropzoneFunction;
 };
 
 export const useComponentProps = ({
@@ -65,16 +56,12 @@ export const useComponentProps = ({
   renderDropzone,
   definition,
   options,
-  userIsDragging,
-  requiresDragWrapper,
 }: UseComponentProps) => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
   const locale = useEditorStore((state) => state.locale);
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
-  const draggingId = useDraggedItemStore((state) => state.onBeforeCaptureId);
-  const nodeRect = useDraggedItemStore((state) => state.domRect);
 
   const isEmptyZone = !node.children.length;
 
@@ -203,7 +190,7 @@ export const useComponentProps = ({
     if (definition.slots) {
       for (const slotId in definition.slots) {
         slotProps[slotId] = renderDropzone(node, {
-          zoneId: [node.data.id, slotId].join('|'),
+          slotId,
         });
       }
     }
@@ -227,86 +214,18 @@ export const useComponentProps = ({
   ]);
 
   const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
-  const cfVisibility: boolean = props['cfVisibility'] as boolean;
 
-  const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;
-  const isSingleColumn = node?.data.blockId === CONTENTFUL_COMPONENTS.columns.id;
   const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
   const isPatternNode = node.type === ASSEMBLY_NODE_TYPE;
 
-  const { overrideStyles, wrapperStyles } = useMemo(() => {
-    // Move size styles to the wrapping div and override the component styles
-    const overrideStyles: CSSProperties = {};
-    const wrapperStyles: CSSProperties = { width: options?.wrapContainerWidth };
-
-    if (requiresDragWrapper) {
-      // when element is marked by user as not-visible, on that element the node `display: none !important`
-      // will be set and it will disappear. However, when such a node has a wrapper div, the wrapper
-      // should not have any css properties (at least not ones which force size), as such div should
-      // simply be a zero height wrapper around element with `display: none !important`.
-      // Hence we guard all wrapperStyles with `cfVisibility` check.
-      if (cfVisibility && cfStyles.width) wrapperStyles.width = cfStyles.width;
-      if (cfVisibility && cfStyles.height) wrapperStyles.height = cfStyles.height;
-      if (cfVisibility && cfStyles.maxWidth) wrapperStyles.maxWidth = cfStyles.maxWidth;
-      if (cfVisibility && cfStyles.margin) wrapperStyles.margin = cfStyles.margin;
-    }
-
-    // Override component styles to fill the wrapper
-    if (wrapperStyles.width) overrideStyles.width = '100%';
-    if (wrapperStyles.height) overrideStyles.height = '100%';
-    if (wrapperStyles.margin) overrideStyles.margin = '0';
-    if (wrapperStyles.maxWidth) overrideStyles.maxWidth = 'none';
-
-    // Prevent the dragging element from changing sizes when it has a percentage width or height
-    if (draggingId === node.data.id && nodeRect) {
-      if (requiresDragWrapper) {
-        if (isPercentValue(cfStyles.width)) wrapperStyles.maxWidth = nodeRect.width;
-        if (isPercentValue(cfStyles.height)) wrapperStyles.maxHeight = nodeRect.height;
-      } else {
-        if (isPercentValue(cfStyles.width)) overrideStyles.maxWidth = nodeRect.width;
-        if (isPercentValue(cfStyles.height)) overrideStyles.maxHeight = nodeRect.height;
-      }
-    }
-
-    return { overrideStyles, wrapperStyles };
-  }, [
-    cfStyles,
-    options?.wrapContainerWidth,
-    requiresDragWrapper,
-    node.data.id,
-    draggingId,
-    nodeRect,
-    cfVisibility,
-  ]);
-
   // Styles that will be applied to the component element
-  // This has to be memoized to avoid recreating the styles in useEditorModeClassName on every render
-  const componentStyles = useMemo(
-    () => ({
-      ...cfStyles,
-      ...overrideStyles,
-      ...(isEmptyZone &&
-        isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
-          minHeight: EMPTY_CONTAINER_HEIGHT,
-        }),
-      ...(userIsDragging &&
-        isStructureComponent &&
-        !isSingleColumn &&
-        !isAssemblyBlock && {
-          padding: addExtraDropzonePadding(cfStyles.padding?.toString() || '0 0 0 0'),
-        }),
-    }),
-    [
-      cfStyles,
-      isAssemblyBlock,
-      isEmptyZone,
-      isSingleColumn,
-      isStructureComponent,
-      node?.data.blockId,
-      overrideStyles,
-      userIsDragging,
-    ],
-  );
+  const componentStyles = {
+    ...cfStyles,
+    ...(isEmptyZone &&
+      isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
+        minHeight: EMPTY_CONTAINER_HEIGHT,
+      }),
+  };
 
   const componentClass = useEditorModeClassName({
     styles: componentStyles,
@@ -342,17 +261,5 @@ export const useComponentProps = ({
         ? structuralOrPatternComponentProps
         : customComponentProps,
     componentStyles,
-    wrapperStyles,
   };
 };
-
-const addExtraDropzonePadding = (padding: string) =>
-  padding
-    .split(' ')
-    .map((value) =>
-      parseFloat(value) === 0 ? `${DRAG_PADDING}px` : `calc(${value} + ${DRAG_PADDING}px)`,
-    )
-    .join(' ');
-
-const isPercentValue = (value?: string | number) =>
-  typeof value === 'string' && value.endsWith('%');
