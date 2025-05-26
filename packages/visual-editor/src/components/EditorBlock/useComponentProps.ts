@@ -18,54 +18,48 @@ import type {
   ComponentRegistration,
   Link,
   DesignValue,
+  StructureComponentProps,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
-import { useEditorModeClassName } from '@/hooks/useEditorModeClassName';
+import { useEditorModeClassName } from './useEditorModeClassName';
 import { getUnboundValues } from '@/utils/getUnboundValues';
 import { useEntityStore } from '@/store/entityStore';
 
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
-import { RenderDropzoneFunction } from '@components/DraggableBlock/Dropzone.types';
 
-type ComponentProps = StyleProps | Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
+type BaseComponentProps = Partial<StyleProps> &
+  Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
-export type ResolvedComponentProps = ComponentProps & {
-  children?: React.JSX.Element | undefined;
-  className: string;
-  editorMode?: boolean;
-  node?: ExperienceTreeNode;
-  renderDropzone?: RenderDropzoneFunction;
-  isInExpEditorMode?: boolean;
-};
+type ResolvedComponentProps = StructureComponentProps<
+  BaseComponentProps & {
+    className: string;
+    isInExpEditorMode?: boolean;
+  }
+>;
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
   resolveDesignValue: ResolveDesignValueType;
-  areEntitiesFetched: boolean;
   definition?: ComponentRegistration['definition'];
   options?: ComponentRegistration['options'];
   slotId?: string;
-  renderDropzone: RenderDropzoneFunction;
 };
 
 export const useComponentProps = ({
   node,
-  areEntitiesFetched,
   resolveDesignValue,
-  renderDropzone,
   definition,
   options,
-}: UseComponentProps) => {
+}: UseComponentProps): { componentProps: ResolvedComponentProps } => {
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const hyperlinkPattern = useEditorStore((state) => state.hyperLinkPattern);
   const locale = useEditorStore((state) => state.locale);
   const dataSource = useEditorStore((state) => state.dataSource);
   const entityStore = useEntityStore((state) => state.entityStore);
+  const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
 
-  const isEmptyZone = !node.children.length;
-
-  const props: ComponentProps = useMemo(() => {
+  const props: BaseComponentProps = useMemo(() => {
     const propsBase = {
       cfSsrClassName: node.data.props.cfSsrClassName
         ? (resolveDesignValue(
@@ -186,19 +180,9 @@ export const useComponentProps = ({
       {},
     );
 
-    const slotProps: Record<string, React.JSX.Element> = {};
-    if (definition.slots) {
-      for (const slotId in definition.slots) {
-        slotProps[slotId] = renderDropzone(node, {
-          slotId,
-        });
-      }
-    }
-
     return {
       ...propsBase,
       ...extractedProps,
-      ...slotProps,
     };
   }, [
     hyperlinkPattern,
@@ -210,56 +194,53 @@ export const useComponentProps = ({
     areEntitiesFetched,
     unboundValues,
     entityStore,
-    renderDropzone,
   ]);
 
   const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
 
-  const isStructureComponent = isContentfulStructureComponent(node?.data.blockId);
-  const isPatternNode = node.type === ASSEMBLY_NODE_TYPE;
-
   // Styles that will be applied to the component element
-  const componentStyles = {
-    ...cfStyles,
-    ...(isEmptyZone &&
-      isStructureWithRelativeHeight(node?.data.blockId, cfStyles.height) && {
-        minHeight: EMPTY_CONTAINER_HEIGHT,
-      }),
-  };
+  const componentStyles = useMemo(
+    () => ({
+      ...cfStyles,
+      ...(!node.children.length &&
+        isStructureWithRelativeHeight(node.data.blockId, cfStyles.height) && {
+          minHeight: EMPTY_CONTAINER_HEIGHT,
+        }),
+    }),
+    [cfStyles, node.children.length, node.data.blockId],
+  );
 
-  const componentClass = useEditorModeClassName({
+  const cfCsrClassName = useEditorModeClassName({
     styles: componentStyles,
     nodeId: node.data.id,
   });
 
-  const sharedProps: ResolvedComponentProps = {
-    'data-cf-node-id': node.data.id,
-    'data-cf-node-block-id': node.data.blockId,
-    'data-cf-node-block-type': node.type,
-    className: (props.cfSsrClassName as string | undefined) ?? componentClass,
-    ...(definition?.children ? { children: renderDropzone(node) } : {}),
-  };
+  const componentProps = useMemo(() => {
+    const sharedProps = {
+      'data-cf-node-id': node.data.id,
+      'data-cf-node-block-id': node.data.blockId,
+      'data-cf-node-block-type': node.type,
+      className: (props.cfSsrClassName as string | undefined) ?? cfCsrClassName,
+    };
 
-  const customComponentProps: ResolvedComponentProps = {
-    ...sharedProps,
-    // Allows custom components to render differently in the editor. This needs to be activated
-    // through options as the component has to be aware of this prop to not cause any React warnings.
-    ...(options?.enableCustomEditorView ? { isInExpEditorMode: true } : {}),
-    ...sanitizeNodeProps(props),
-  };
+    // Only pass `editorMode` and `node` to structure components and assembly root nodes.
+    const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
+    if (isStructureComponent) {
+      return {
+        ...sharedProps,
+        editorMode: true as const,
+        node,
+      };
+    }
 
-  const structuralOrPatternComponentProps: ResolvedComponentProps = {
-    ...sharedProps,
-    editorMode: true,
-    node,
-    renderDropzone,
-  };
+    return {
+      ...sharedProps,
+      // Allows custom components to render differently in the editor. This needs to be activated
+      // through options as the component has to be aware of this prop to not cause any React warnings.
+      ...(options?.enableCustomEditorView ? { isInExpEditorMode: true } : {}),
+      ...sanitizeNodeProps(props),
+    };
+  }, [cfCsrClassName, node, options?.enableCustomEditorView, props]);
 
-  return {
-    componentProps:
-      isStructureComponent || isPatternNode
-        ? structuralOrPatternComponentProps
-        : customComponentProps,
-    componentStyles,
-  };
+  return { componentProps };
 };

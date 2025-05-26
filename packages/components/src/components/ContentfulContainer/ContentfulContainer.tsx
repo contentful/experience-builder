@@ -6,6 +6,7 @@ import { ContentfulContainerAsHyperlink } from './ContentfulContainerAsHyperlink
 import type { ContentfulContainerAsHyperlinkProps } from './ContentfulContainerAsHyperlink';
 import { combineClasses } from '../../utils/combineClasses';
 import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
+import { extractRenderProps } from '@/utils/extractRenderProps';
 
 export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (props) => {
   const { className, editorMode, children, cfHyperlink } = props;
@@ -14,7 +15,7 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
     return <ContentfulContainerAsHyperlink {...props}>{children}</ContentfulContainerAsHyperlink>;
   }
 
-  if (editorMode === false) {
+  if (!editorMode) {
     return (
       <Flex
         data-test-id="contentful-container"
@@ -36,7 +37,8 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
         className,
         'contentful-container',
         isEmpty ? (isSection ? 'contentful-section-label' : 'contentful-container-label') : '',
-      )}>
+      )}
+      {...extractRenderProps(props)}>
       {children}
     </Flex>
   );

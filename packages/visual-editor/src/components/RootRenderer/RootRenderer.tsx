@@ -1,15 +1,15 @@
 import React, { CSSProperties, useCallback, useRef, useState } from 'react';
 import { useEffect } from 'react';
 import type { ExperienceTree } from '@contentful/experiences-core/types';
-import { ROOT_ID } from '@/types/constants';
 import { useTreeStore } from '@/store/tree';
-import styles from './render.module.css';
+import styles from './RootRenderer.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
-import { Dropzone } from '@components/DraggableBlock/Dropzone';
+import { EditorBlock } from '@components/EditorBlock';
+import { EmptyCanvasMessage } from '@components/EmptyCanvasMessage';
 
 interface RootRendererProperties {
   onChange?: (data: ExperienceTree) => void;
@@ -29,10 +29,9 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => 
   const tree = useTreeStore((state) => state.tree);
 
   const handleClickOutside = useCallback(
-    (e: MouseEvent) => {
-      const element = e.target as HTMLElement;
-
-      const isRoot = element.getAttribute('data-ctfl-zone-id') === ROOT_ID;
+    (event: MouseEvent) => {
+      const element = event.target as HTMLElement;
+      const isRoot = element.getAttribute('data-ctfl-root');
       const clickedOnCanvas = element.closest(`[data-ctfl-root]`);
 
       if (clickedOnCanvas && !isRoot) {
@@ -102,8 +101,22 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => 
 
   return (
     <>
-      <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
-        <Dropzone node={tree.root} resolveDesignValue={resolveDesignValue} />
+      <div
+        data-ctfl-root
+        className={styles.rootContainer}
+        ref={containerRef}
+        style={containerStyles}>
+        {!tree.root.children.length ? (
+          <EmptyCanvasMessage />
+        ) : (
+          tree.root.children.map((topLevelChildNode) => (
+            <EditorBlock
+              key={topLevelChildNode.data.id}
+              node={topLevelChildNode}
+              resolveDesignValue={resolveDesignValue}
+            />
+          ))
+        )}
       </div>
     </>
   );

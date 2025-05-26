@@ -1,37 +1,30 @@
 import { combineClasses } from '@/utils/combineClasses';
 import React from 'react';
-import { SingleColumnProps } from './ColumnTypes';
 import { Flex } from '@components/Layout/Flex';
+import { StructureComponentProps } from '@contentful/experiences-core/types';
+import { extractRenderProps } from '@/utils/extractRenderProps';
+
+type SingleColumnProps = StructureComponentProps<{
+  className?: string;
+}>;
 
 export const SingleColumn: React.FC<SingleColumnProps> = (props) => {
-  const { className, editorMode, children } = props;
+  const { className, editorMode } = props;
 
-  if (editorMode === false) {
-    return <Flex className={className}>{children}</Flex>;
+  if (!editorMode) {
+    return <Flex className={className}>{props.children}</Flex>;
   }
 
-  const {
-    renderDropzone,
-    node,
-    className: _className,
-    dragProps = {},
-    cfColumnSpan,
-    editorMode: edit,
-    ...editorProps
-  } = props;
-
+  const { node, children } = props;
   const isEmpty = !node.children.length;
-
-  return renderDropzone(node, {
-    ['data-test-id']: 'contentful-single-column',
-    id: 'ContentfulSingleColumn',
-    className: combineClasses(
-      'cf-single-column-wrapper',
-      className,
-      isEmpty ? 'cf-single-column-label' : '',
-    ),
-    WrapperComponent: Flex,
-    dragProps,
-    ...editorProps,
-  });
+  const mixedClassName = combineClasses(
+    'cf-single-column-wrapper',
+    className,
+    isEmpty ? 'cf-single-column-label' : '',
+  );
+  return (
+    <Flex className={mixedClassName} {...extractRenderProps(props)}>
+      {children}
+    </Flex>
+  );
 };

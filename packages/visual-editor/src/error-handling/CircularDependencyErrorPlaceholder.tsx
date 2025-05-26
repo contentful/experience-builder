@@ -1,19 +1,23 @@
 import { useEntityStore } from '@/store/entityStore';
-import React, { HTMLAttributes } from 'react';
+import { ExperienceTreeNode } from '@contentful/experiences-core/types';
+import React from 'react';
 
-type CircularDependencyErrorPlaceholderProperties = HTMLAttributes<HTMLDivElement> & {
+type CircularDependencyErrorPlaceholderProperties = {
+  node: ExperienceTreeNode;
   wrappingPatternIds: Set<string>;
 };
 
 export const CircularDependencyErrorPlaceholder = ({
+  node,
   wrappingPatternIds,
-  ...props
 }: CircularDependencyErrorPlaceholderProperties) => {
   const entityStore = useEntityStore((state) => state.entityStore);
 
   return (
     <div
-      {...props}
+      data-cf-node-id={node.data.id}
+      data-cf-node-block-id={node.data.blockId}
+      data-cf-node-block-type={node.type}
       data-cf-node-error="circular-pattern-dependency"
       style={{
         border: '1px solid red',

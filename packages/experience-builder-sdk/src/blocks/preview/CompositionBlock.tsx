@@ -294,7 +294,6 @@ export const CompositionBlock = ({
   if (isContainerOrSection(node.definitionId)) {
     return (
       <ContentfulContainer
-        editorMode={false}
         cfHyperlink={(contentProps as StyleProps).cfHyperlink}
         cfOpenInNewTab={(contentProps as StyleProps).cfOpenInNewTab}
         className={props.className as string | undefined}>
@@ -304,18 +303,12 @@ export const CompositionBlock = ({
   }
 
   if (node.definitionId === CONTENTFUL_COMPONENTS.columns.id) {
-    return (
-      <Columns editorMode={false} className={props.className as string | undefined}>
-        {children}
-      </Columns>
-    );
+    return <Columns className={props.className as string | undefined}>{children}</Columns>;
   }
 
   if (node.definitionId === CONTENTFUL_COMPONENTS.singleColumn.id) {
     return (
-      <SingleColumn editorMode={false} className={props.className as string | undefined}>
-        {children}
-      </SingleColumn>
+      <SingleColumn className={props.className as string | undefined}>{children}</SingleColumn>
     );
   }
 

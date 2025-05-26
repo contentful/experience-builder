@@ -7,6 +7,7 @@ import { ASSEMBLY_NODE_TYPE, OUTGOING_EVENTS } from '@contentful/experiences-cor
  */
 export const sendSelectedComponentCoordinates = (instanceId?: string) => {
   const selection = getSelectionNodes(instanceId);
+  console.log('TK instanceId', instanceId, selection);
 
   if (selection?.target) {
     const sendUpdateSelectedComponentCoordinates = () => {

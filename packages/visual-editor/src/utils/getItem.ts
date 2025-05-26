@@ -1,7 +1,7 @@
 import type { ExperienceTreeNode, ExperienceTree } from '@contentful/experiences-core/types';
 import { ROOT_ID } from '../types/constants';
 
-export type ItemSelector = {
+type ItemSelector = {
   id: string;
 };
 
