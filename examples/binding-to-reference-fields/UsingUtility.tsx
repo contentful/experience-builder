@@ -1,6 +1,7 @@
 // --- UsingUtility.tsx ---
 import React from 'react';
-import { resolveEntityLinks, isAsset } from './resolutionUtils';
+import { resolveEntityLinks } from './resolutionUtils';
+import { isAsset } from '@contentful/experiences-sdk-react';
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
 import styles from './styles.module.css';
 
