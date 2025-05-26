@@ -171,7 +171,11 @@ export abstract class EntityStoreBase implements EntityFromLink {
     const resolveFieldset = (
       unresolvedFieldset: Array<[null, string, string?]>,
       headEntry: Entry | Asset,
-    ) => {
+    ): {
+      resolvedFieldset: Array<[Entry | Asset, string, string?]>;
+      isFullyResolved: boolean;
+      reason?: string;
+    } => {
       const resolvedFieldset: Array<[Entry | Asset, string, string?]> = [];
       let entityToResolveFieldsFrom: Entry | Asset = headEntry;
       for (let i = 0; i < unresolvedFieldset.length; i++) {
@@ -213,7 +217,7 @@ export abstract class EntityStoreBase implements EntityFromLink {
         } else {
           // Eg. when someone changed the schema and the field is not a link anymore, we signal that we cannot resolve it
           return {
-            resolveFieldset,
+            resolvedFieldset,
             isFullyResolved: false,
             reason: `Cannot resolve field Link<${entityToResolveFieldsFrom.sys.type}>(sys.id=${entityToResolveFieldsFrom.sys.id}).fields[${field}] as field value is not a link, but of type ${typeof fieldValue} with value ${JSON.stringify(fieldValue)}`,
           };
