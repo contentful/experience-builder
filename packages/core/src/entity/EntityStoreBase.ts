@@ -211,10 +211,12 @@ export abstract class EntityStoreBase implements EntityFromLink {
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = entity; // we move up
         } else {
-          // TODO: Eg. when someone changed the schema and the field is not a link anymore, what should we return then?
-          throw new Error(
-            `LogicError: Invalid value of a field we consider a reference field. Cannot resolve field ${field} of a fieldset as it is not a link, neither undefined.`,
-          );
+          // Eg. when someone changed the schema and the field is not a link anymore, we signal that we cannot resolve it
+          return {
+            resolveFieldset,
+            isFullyResolved: false,
+            reason: `Cannot resolve field Link<${entityToResolveFieldsFrom.sys.type}>(sys.id=${entityToResolveFieldsFrom.sys.id}).fields[${field}] as field value is not a link, but of type ${typeof fieldValue} with value ${JSON.stringify(fieldValue)}`,
+          };
         }
       }
       return {
