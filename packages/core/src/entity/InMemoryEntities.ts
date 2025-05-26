@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { EntityStoreBase } from './EntityStoreBase';
 import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { UninitializedEntityStore } from './UninitializedEntityStore';
+import { isLink } from '../utils/isLink';
 
 export interface InMemoryEntitiesState {
   entityStore: EntityStoreBase;
@@ -42,25 +43,6 @@ export const inMemoryEntitiesStore = create<InMemoryEntitiesState>((set, get) =>
     });
   },
 }));
-
-function isLink(data: unknown): data is UnresolvedLink<'Entry' | 'Asset'> {
-  if (!data) {
-    return false;
-  }
-
-  const maybeLink = data as {
-    sys?: {
-      type?: string;
-      linkType?: string;
-    };
-  };
-
-  if (!maybeLink.sys || !maybeLink.sys.type || !maybeLink.sys.linkType) {
-    return false;
-  }
-
-  return maybeLink.sys.type === 'Link' && ['Entry', 'Asset'].includes(maybeLink.sys.linkType);
-}
 
 function maybeResolveLink(maybeLink: UnresolvedLink<'Entry'>): Entry | undefined;
 function maybeResolveLink(maybeLink: UnresolvedLink<'Asset'>): Asset | undefined;
