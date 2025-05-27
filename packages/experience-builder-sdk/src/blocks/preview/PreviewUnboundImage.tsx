@@ -14,7 +14,7 @@ type PreviewUnboundImageProps = {
   node: ComponentTreeNode;
   nodeProps: Record<PropertyKey, PrimitiveValue>;
   component: React.ElementType;
-  patternNodeIdsChain: string;
+  patternRootNodeIdsChain: string;
 };
 
 /**
@@ -26,7 +26,7 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
   node,
   nodeProps,
   component,
-  patternNodeIdsChain,
+  patternRootNodeIdsChain,
 }) => {
   const { wrapperStyle, imageStyle } = useMemo(() => {
     const imageStyle: Record<string, any> = {};
@@ -56,14 +56,14 @@ const PreviewUnboundImage: React.FC<PreviewUnboundImageProps> = ({
     designPropertiesByBreakpoint: wrapperStyle,
     node,
     breakpoints,
-    patternNodeIdsChain,
+    patternRootNodeIdsChain,
   });
 
   const imageMedia = useMediaQuery({
     designPropertiesByBreakpoint: imageStyle,
     node,
     breakpoints,
-    patternNodeIdsChain,
+    patternRootNodeIdsChain,
   });
 
   useInjectStylesheet(wrapperMedia.css);

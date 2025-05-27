@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.38.0](https://github.com/contentful/experience-builder/compare/v1.37.2...v1.38.0) (2025-05-23)
+
+### Bug Fixes
+
+- dont chain every node in the IDs chain ([bcc5916](https://github.com/contentful/experience-builder/commit/bcc59160d04b8adc51d77dd04569bcf71e4e4b54))
+- match ID chain for prebinding and SSR class lookup ([4c1d7f3](https://github.com/contentful/experience-builder/commit/4c1d7f3c7c809c2b0a13ea631a36b9c05d300c6a))
+- only consider pattern node ids for the so called chain ([96e8f2a](https://github.com/contentful/experience-builder/commit/96e8f2a30b0b8ff027f9c0417f4a717b6d3849e8))
+
 ## [1.37.2](https://github.com/contentful/experience-builder/compare/v1.37.1...v1.37.2) (2025-05-15)
 
 ### Bug Fixes

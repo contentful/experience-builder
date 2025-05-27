@@ -35,11 +35,6 @@ type FlattenedDesignTokens = Record<
   string | { width?: string; style?: string; color?: string }
 >;
 
-type QueueItem = {
-  node: ComponentTreeNode;
-  parentChain: string[];
-};
-
 export const detachExperienceStyles = (experience: Experience): string | undefined => {
   const experienceTreeRoot = experience.entityStore?.experienceEntryFields
     ?.componentTree as ExperienceComponentTree;
@@ -76,7 +71,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentVariablesOverwrites,
     patternWrapper,
     wrappingPatternIds,
-    parentChainArr = [],
+    wrappingPatternNodeIds = [],
   }: {
     componentTree: ExperienceComponentTree;
     dataSource: ExperienceDataSource;
@@ -85,32 +80,19 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
     patternWrapper?: ComponentTreeNode;
     wrappingPatternIds: Set<string>;
-    parentChainArr?: string[];
+    wrappingPatternNodeIds?: string[];
   }) => {
     // traversing the tree
-    const queue: QueueItem[] = [];
+    const queue: ComponentTreeNode[] = [];
 
-    queue.push(
-      ...componentTree.children.map((child) => ({
-        node: child,
-        parentChain: [...parentChainArr],
-      })),
-    );
+    queue.push(...componentTree.children);
 
     // for each tree node
     while (queue.length) {
-      const queueItem = queue.shift();
-      if (!queueItem) {
-        break;
-      }
-      const { node: currentNode, parentChain } = queueItem;
-
+      const currentNode = queue.shift();
       if (!currentNode) {
         break;
       }
-
-      const currentNodeParentChain = [...parentChain, currentNode.id || ''];
-      const currentPatternNodeIdsChain = currentNodeParentChain.join('');
 
       const usedComponents = experience.entityStore?.usedComponents ?? [];
 
@@ -157,8 +139,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           // pass top-level pattern node to store instance-specific child styles for rendering
           patternWrapper: currentNode,
           wrappingPatternIds: new Set([...wrappingPatternIds, currentNode.definitionId]),
-
-          parentChainArr: currentNodeParentChain,
+          wrappingPatternNodeIds: [...wrappingPatternNodeIds, currentNode.id || ''],
         });
         continue;
       }
@@ -200,6 +181,10 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
        */
 
       const currentNodeClassNames: string[] = [];
+      // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
+      // e.g. `{outerPatternNodeId}{innerPatternNodeId}-{currentNodeId}`
+      // (!) Notice that the chain of patterns (before the dash) follows the format of prebinding/ patternProperties
+      const currentNodeIdsChain = `${wrappingPatternNodeIds.join('')}-${currentNode.id}`;
 
       // For each breakpoint, resolve design tokens, create the CSS and generate a unique className.
       for (const breakpointId of breakpointIds) {
@@ -237,7 +222,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         // conflicts between different breakpoint values from multiple nodes where the hash would be equal
         // - Adding wrapping pattern nodes IDs to avoid conflicts between similar nested patterns as those
         // could override each others CSS for some breakpoints just through the order of `<style>` tags in the DOM.
-        const styleHash = md5(currentPatternNodeIdsChain + breakpointId + generatedCss);
+        const styleHash = md5(currentNodeIdsChain + breakpointId + generatedCss);
 
         // and prefix the className to make sure the value can be processed
         const className = `cf-${styleHash}`;
@@ -271,8 +256,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         patternWrapper.variables.cfSsrClassName = {
           ...(patternWrapper.variables.cfSsrClassName ?? {}),
           type: 'DesignValue',
-          // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
-          [currentPatternNodeIdsChain]: {
+          [currentNodeIdsChain]: {
             valuesByBreakpoint: {
               [breakpointIds[0]]: currentNodeClassNames.join(' '),
             },
@@ -287,12 +271,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         };
       }
 
-      queue.push(
-        ...currentNode.children.map((child) => ({
-          node: child,
-          parentChain: currentNodeParentChain,
-        })),
-      );
+      queue.push(...currentNode.children);
     }
   };
 

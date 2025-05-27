@@ -38,12 +38,12 @@ type CompositionBlockProps = {
   hyperlinkPattern?: string | undefined;
   resolveDesignValue: ResolveDesignValueType;
   getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
+  /** Set of definition IDs of wrapping patterns to prevent circular dependencies. */
   wrappingPatternIds?: Set<string>;
   /**
    * Chained IDs to ensure uniqueness across multiple instances of the same pattern
    * when storing & accessing cfSsrClassName.
    */
-  patternNodeIdsChain?: string;
   patternRootNodeIdsChain?: string;
   wrappingPatternProperties?: Record<string, PatternProperty>;
 };
@@ -57,11 +57,8 @@ export const CompositionBlock = ({
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
   wrappingPatternProperties: parentWrappingPatternProperties = {},
-  patternNodeIdsChain = '',
   patternRootNodeIdsChain: parentPatternRootNodeIdsChain = '',
 }: CompositionBlockProps) => {
-  patternNodeIdsChain = `${patternNodeIdsChain}${rawNode.id}`;
-
   const isAssembly = useMemo(
     () =>
       checkIsAssemblyNode({
@@ -73,6 +70,7 @@ export const CompositionBlock = ({
 
   const patternRootNodeIdsChain = useMemo(() => {
     if (isAssembly) {
+      // Pattern nodes are chained without a separator (following the format for prebinding/patternProperties)
       return `${parentPatternRootNodeIdsChain}${rawNode.id}`;
     }
     return parentPatternRootNodeIdsChain;
@@ -84,7 +82,7 @@ export const CompositionBlock = ({
           node: rawNode,
           entityStore,
           parentPatternProperties: parentWrappingPatternProperties,
-          patternNodeIdsChain: patternRootNodeIdsChain,
+          patternRootNodeIdsChain,
         })
       : rawNode;
   }, [entityStore, isAssembly, rawNode, parentWrappingPatternProperties, patternRootNodeIdsChain]);
@@ -153,11 +151,9 @@ export const CompositionBlock = ({
       breakpoints: entityStore.breakpoints,
       mainBreakpoint,
       componentDefinition: componentRegistration.definition,
-      patternNodeIdsChain,
+      patternRootNodeIdsChain,
       node,
-      resolveCustomDesignValue: ({ propertyName, valuesByBreakpoint }) => {
-        return resolveDesignValue(valuesByBreakpoint, propertyName);
-      },
+      resolveDesignValue,
       resolveBoundValue: ({ binding, propertyName, dataType }) => {
         const [, uuid] = binding.path.split('/');
         const boundEntityLink = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
@@ -207,7 +203,6 @@ export const CompositionBlock = ({
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
               wrappingPatternProperties={wrappingPatternProperties}
-              patternNodeIdsChain={patternNodeIdsChain}
               patternRootNodeIdsChain={patternRootNodeIdsChain}
             />
           );
@@ -243,7 +238,6 @@ export const CompositionBlock = ({
     locale,
     wrappingPatternIds,
     wrappingPatternProperties,
-    patternNodeIdsChain,
     patternRootNodeIdsChain,
   ]);
 
@@ -264,14 +258,13 @@ export const CompositionBlock = ({
   // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {
     if (isAssembly) {
-      const nodeIdsChain = `${patternNodeIdsChain}${childNodeId}`;
+      const nodeIdsChain = `${patternRootNodeIdsChain}-${childNodeId}`;
       // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
       const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[nodeIdsChain];
-
       if (!classesForNode) return undefined;
-      return resolveDesignValue(classesForNode.valuesByBreakpoint, 'cfSsrClassName') as string;
+      return resolveDesignValue(classesForNode.valuesByBreakpoint) as string;
     }
-    return getPatternChildNodeClassName?.(`${node.id}${childNodeId}`);
+    return getPatternChildNodeClassName?.(childNodeId);
   };
 
   const children =
@@ -292,7 +285,6 @@ export const CompositionBlock = ({
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
               wrappingPatternProperties={wrappingPatternProperties}
-              patternNodeIdsChain={patternNodeIdsChain}
               patternRootNodeIdsChain={patternRootNodeIdsChain}
             />
           );
@@ -337,7 +329,7 @@ export const CompositionBlock = ({
         nodeProps={props}
         component={component}
         breakpoints={entityStore.breakpoints}
-        patternNodeIdsChain={patternNodeIdsChain}
+        patternRootNodeIdsChain={patternRootNodeIdsChain}
       />
     );
   }

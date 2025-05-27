@@ -26,7 +26,7 @@ export default function useSingleColumn(
       return false;
     }
 
-    return resolveDesignValue(cfWrapColumns.valuesByBreakpoint, 'cfWrapColumns') as boolean;
+    return resolveDesignValue(cfWrapColumns.valuesByBreakpoint) as boolean;
   }, [tree, node, isSingleColumn, resolveDesignValue]);
 
   return {

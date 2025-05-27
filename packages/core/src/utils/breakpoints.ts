@@ -102,13 +102,22 @@ export const getValueForBreakpoint = (
   breakpoints: Breakpoint[],
   activeBreakpointIndex: number,
   fallbackBreakpointIndex: number,
-  variableName: string,
+  /** Provide the name for built-in styles to replace design tokens. Supported properties are:
+   * cfMargin, cfPadding, cfGap, cfWidth, cfHeight, cfBackgroundColor,
+   * cfBorder, cfBorderRadius, cfFontSize, cfLineHeight, cfLetterSpacing,
+   * cfTextColor, cfMaxWidth
+   */
+  propertyName?: string,
   resolveDesignTokens = true,
 ) => {
   const eventuallyResolveDesignTokens = (value: PrimitiveValue) => {
+    // This is used externally in the web app to determine the original persisted value
+    if (!resolveDesignTokens) {
+      return value;
+    }
     // For some built-in design properties, we support design tokens
-    if (builtInStylesWithDesignTokens.includes(variableName)) {
-      return getDesignTokenRegistration(value as string, variableName);
+    if (propertyName && builtInStylesWithDesignTokens.includes(propertyName)) {
+      return getDesignTokenRegistration(value as string, propertyName);
     }
     // For all other properties, we just return the breakpoint-specific value
     return value;
@@ -120,19 +129,13 @@ export const getValueForBreakpoint = (
       const breakpointId = breakpoints[index]?.id;
       if (isValidBreakpointValue(valuesByBreakpoint[breakpointId])) {
         // If the value is defined, we use it and stop the breakpoints cascade
-        if (resolveDesignTokens) {
-          return eventuallyResolveDesignTokens(valuesByBreakpoint[breakpointId]);
-        }
-        return valuesByBreakpoint[breakpointId];
+        return eventuallyResolveDesignTokens(valuesByBreakpoint[breakpointId]);
       }
     }
 
     const fallbackBreakpointId = breakpoints[fallbackBreakpointIndex]?.id;
     if (isValidBreakpointValue(valuesByBreakpoint[fallbackBreakpointId])) {
-      if (resolveDesignTokens) {
-        return eventuallyResolveDesignTokens(valuesByBreakpoint[fallbackBreakpointId]);
-      }
-      return valuesByBreakpoint[fallbackBreakpointId];
+      return eventuallyResolveDesignTokens(valuesByBreakpoint[fallbackBreakpointId]);
     }
   } else {
     // Old design properties did not support breakpoints, keep for backward compatibility

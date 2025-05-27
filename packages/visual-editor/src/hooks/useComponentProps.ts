@@ -84,7 +84,6 @@ export const useComponentProps = ({
       cfSsrClassName: node.data.props.cfSsrClassName
         ? (resolveDesignValue(
             (node.data.props.cfSsrClassName as DesignValue).valuesByBreakpoint,
-            'cfSsrClassName',
           ) as string)
         : undefined,
     };

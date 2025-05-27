@@ -126,7 +126,16 @@ const PatternPropertyDefinitionSchema = z.object({
       }),
     )
     .optional(),
-  contentTypes: z.record(z.string(), z.any()),
+  contentTypes: z.record(
+    z.string(),
+    z.object({
+      sys: z.object({
+        type: z.literal('Link'),
+        id: z.string(),
+        linkType: z.enum(['ContentType']),
+      }),
+    }),
+  ),
 });
 
 const PatternPropertyDefinitionsSchema = z.record(

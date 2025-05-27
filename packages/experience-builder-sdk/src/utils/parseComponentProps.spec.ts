@@ -3,7 +3,7 @@ import { getValueForBreakpoint } from '@contentful/experiences-core';
 import { createBreakpoints } from '../../test/__fixtures__/breakpoints';
 import { createComponentDefinition } from '../../test/__fixtures__/componentDefinition';
 import { createComponentTreeNode } from '../../test/__fixtures__/componentTreeNode';
-import { PrimitiveValue } from '@contentful/experiences-validators';
+import { ValuesByBreakpoint } from '@contentful/experiences-validators';
 
 describe('parseComponentProps', () => {
   const breakpoints = createBreakpoints();
@@ -11,14 +11,8 @@ describe('parseComponentProps', () => {
   const mainBreakpoint = breakpoints[0];
   const componentDefinition = createComponentDefinition();
   const node = createComponentTreeNode();
-  const resolveDesignValue = ({
-    propertyName,
-    valuesByBreakpoint,
-  }: {
-    propertyName: string;
-    valuesByBreakpoint: Record<string, PrimitiveValue>;
-  }) =>
-    getValueForBreakpoint(valuesByBreakpoint, breakpoints, activeBreakpointIndex, 0, propertyName);
+  const resolveDesignValue = (valuesByBreakpoint: ValuesByBreakpoint | undefined) =>
+    getValueForBreakpoint(valuesByBreakpoint, breakpoints, activeBreakpointIndex, 0);
 
   const resolveBoundValue = () => 'resolvedBoundValue';
   const resolveHyperlinkValue = () => 'resolvedHyperlinkValue';
@@ -29,7 +23,7 @@ describe('parseComponentProps', () => {
     breakpoints,
     componentDefinition,
     node,
-    resolveCustomDesignValue: resolveDesignValue,
+    resolveDesignValue,
     resolveBoundValue,
     resolveHyperlinkValue,
     resolveUnboundValue,
