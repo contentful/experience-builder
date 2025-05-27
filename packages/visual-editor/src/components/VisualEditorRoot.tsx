@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import {
+  type InMemoryEntitiesStore,
   inMemoryEntitiesStore as defaultInMemoryEntitiesStore,
   EntityStore,
   sendMessage,
@@ -19,7 +20,7 @@ export const VisualEditorRoot = ({
   inMemoryEntitiesStore = defaultInMemoryEntitiesStore,
 }: {
   experience?: Experience<EntityStore>;
-  inMemoryEntitiesStore?: typeof defaultInMemoryEntitiesStore;
+  inMemoryEntitiesStore?: InMemoryEntitiesStore;
 }) => {
   const initialized = useInitializeEditor(inMemoryEntitiesStore);
   const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);

@@ -8,7 +8,7 @@ import {
   DeepReference,
   isLink,
   EditorModeEntityStore,
-  inMemoryEntitiesStore,
+  type InMemoryEntitiesStore,
 } from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
@@ -33,7 +33,7 @@ import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/s
 import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
 
-export function useEditorSubscriber(entityCache: typeof inMemoryEntitiesStore) {
+export function useEditorSubscriber(entityCache: InMemoryEntitiesStore) {
   const entityStore = entityCache((state) => state.entityStore);
   const areEntitiesFetched = entityCache((state) => state.areEntitiesFetched);
   const setEntitiesFetched = entityCache((state) => state.setEntitiesFetched);

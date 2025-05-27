@@ -42,3 +42,5 @@ export const inMemoryEntitiesStore = create<InMemoryEntitiesState>((set, get) =>
     });
   },
 }));
+
+export type InMemoryEntitiesStore = typeof inMemoryEntitiesStore;
