@@ -1,6 +1,4 @@
 import React, { useMemo } from 'react';
-import { useTreeStore } from '@/store/tree';
-import { ROOT_ID } from '@/types/constants';
 import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
 import {
   ComponentRegistration,
@@ -27,20 +25,13 @@ export function EditorBlock({
   resolveDesignValue,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
 }: NodeBlockProps) {
-  const tree = useTreeStore((state) => state.tree);
   const isRootAssemblyNode = node.type === ASSEMBLY_NODE_TYPE;
-
   const wrappingPatternIds = useMemo(() => {
-    // On the top level, the node is not defined. If the root blockId is not the default string,
-    // we assume that it is the entry ID of the experience/ pattern to properly detect circular dependencies
-    if (!node && tree.root.data.blockId && tree.root.data.blockId !== ROOT_ID) {
-      return new Set([tree.root.data.blockId, ...parentWrappingPatternIds]);
-    }
     if (isRootAssemblyNode && node.data.blockId) {
       return new Set([node.data.blockId, ...parentWrappingPatternIds]);
     }
     return parentWrappingPatternIds;
-  }, [isRootAssemblyNode, node, parentWrappingPatternIds, tree.root.data.blockId]);
+  }, [isRootAssemblyNode, node, parentWrappingPatternIds]);
 
   const componentRegistration = useComponentRegistration(node);
 

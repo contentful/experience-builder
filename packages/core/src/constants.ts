@@ -1,3 +1,4 @@
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export const SCROLL_STATES = {
   Start: 'scrollStart',
   IsScrolling: 'isScrolling',
@@ -8,14 +9,19 @@ export const OUTGOING_EVENTS = {
   Connected: 'connected',
   DesignTokens: 'registerDesignTokens',
   RegisteredBreakpoints: 'registeredBreakpoints',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   MouseMove: 'mouseMove',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   ComponentSelected: 'componentSelected',
   RegisteredComponents: 'registeredComponents',
   RequestComponentTreeUpdate: 'requestComponentTreeUpdate',
   CanvasReload: 'canvasReload',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   UpdateSelectedComponentCoordinates: 'updateSelectedComponentCoordinates',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   CanvasScroll: 'canvasScrolling',
   CanvasError: 'canvasError',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   OutsideCanvasClick: 'outsideCanvasClick',
   SDKFeatures: 'sdkFeatures',
   RequestEntities: 'REQUEST_ENTITIES',
@@ -25,17 +31,26 @@ export const INCOMING_EVENTS = {
   RequestEditorMode: 'requestEditorMode',
   RequestReadOnlyMode: 'requestReadOnlyMode',
   ExperienceUpdated: 'componentTreeUpdated',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   ComponentDraggingChanged: 'componentDraggingChanged',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   ComponentDragCanceled: 'componentDragCanceled',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   ComponentDragStarted: 'componentDragStarted',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   ComponentDragEnded: 'componentDragEnded',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   ComponentMoveEnded: 'componentMoveEnded',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   CanvasResized: 'canvasResized',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   SelectComponent: 'selectComponent',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
   AssembliesAdded: 'assembliesAdded',
   AssembliesRegistered: 'assembliesRegistered',
+  /** @deprecated will be removed when dropping backward compatibility for old DND */
   MouseMove: 'mouseMove',
   RequestedEntities: 'REQUESTED_ENTITIES',
 } as const;

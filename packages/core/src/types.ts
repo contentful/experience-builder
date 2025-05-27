@@ -54,6 +54,7 @@ export type ComponentDefinitionVariableTypeMap = {
 };
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
 
 type OutgoingEventKey = keyof typeof OUTGOING_EVENTS;
@@ -593,23 +594,31 @@ export type ExperienceUpdatedPayload = {
   changedValueType?: SelectedValueTypes;
 };
 
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type ComponentDraggingChangedPayload = {
   isDragging: boolean;
 };
 
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type IncomingComponentDragCanceledPayload = undefined;
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type ComponentDragStartedPayload = { id: string; isAssembly: boolean };
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type ComponentDragEndedPayload = undefined;
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type IncomingComponentMoveEndedPayload = {
   mouseX: number;
   mouseY: number;
 };
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type CanvasResizedPayload = {
   selectedNodeId: string;
 };
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type SelectComponentPayload = {
   selectedNodeId: string;
 };
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type HoverComponentPayload = {
   hoveredNodeId: string;
 };
@@ -624,6 +633,7 @@ export type AssembliesAddedPayload = {
 export type AssembliesRegisteredPayload = {
   assemblies: ComponentDefinition[];
 };
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type IncomingMouseMovePayload = {
   mouseX: number;
   mouseY: number;

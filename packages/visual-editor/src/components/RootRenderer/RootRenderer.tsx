@@ -1,111 +1,26 @@
-import React, { CSSProperties, useCallback, useRef, useState } from 'react';
-import { useEffect } from 'react';
-import type { ExperienceTree } from '@contentful/experiences-core/types';
+import React, { useRef } from 'react';
 import { useTreeStore } from '@/store/tree';
 import styles from './RootRenderer.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
-import { sendMessage } from '@contentful/experiences-core';
-import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
-import { useEditorStore } from '@/store/editor';
 import { EditorBlock } from '@components/EditorBlock';
 import { EmptyCanvasMessage } from '@components/EmptyCanvasMessage';
+import { ROOT_ID } from '@/types/constants';
 
-interface RootRendererProperties {
-  onChange?: (data: ExperienceTree) => void;
-}
-
-// TODO; Check if this is still required
-const DRAGGABLE_HEIGHT = 30;
-
-export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => {
+export const RootRenderer = () => {
   useEditorSubscriber();
-
   const breakpoints = useTreeStore((state) => state.breakpoints);
-  const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const containerRef = useRef<HTMLDivElement>(null);
   const { resolveDesignValue } = useBreakpoints(breakpoints);
-  const [containerStyles, setContainerStyles] = useState<CSSProperties>({});
   const tree = useTreeStore((state) => state.tree);
-
-  const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
-      const element = event.target as HTMLElement;
-      const isRoot = element.getAttribute('data-ctfl-root');
-      const clickedOnCanvas = element.closest(`[data-ctfl-root]`);
-
-      if (clickedOnCanvas && !isRoot) {
-        return;
-      }
-
-      sendMessage(OUTGOING_EVENTS.OutsideCanvasClick, {
-        outsideCanvasClick: true,
-      });
-      sendMessage(OUTGOING_EVENTS.ComponentSelected, {
-        nodeId: '',
-      });
-      setSelectedNodeId('');
-    },
-    [setSelectedNodeId],
-  );
-
-  const handleResizeCanvas = useCallback(() => {
-    const parentElement = containerRef.current?.parentElement;
-    if (!parentElement) {
-      return;
-    }
-
-    let siblingHeight = 0;
-
-    for (const child of parentElement.children) {
-      if (!child.hasAttribute('data-ctfl-root')) {
-        siblingHeight += child.getBoundingClientRect().height;
-      }
-    }
-
-    if (!siblingHeight) {
-      /**
-       * DRAGGABLE_HEIGHT is subtracted here due to an uninteded scrolling effect
-       * when dragging a new component onto the canvas
-       *
-       * The DRAGGABLE_HEIGHT is then added as margin bottom to offset this value
-       * so that visually there is no difference to the user.
-       */
-      setContainerStyles({
-        minHeight: `${window.innerHeight - DRAGGABLE_HEIGHT}px`,
-      });
-      return;
-    }
-
-    setContainerStyles({
-      minHeight: `${window.innerHeight - siblingHeight}px`,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [containerRef.current]);
-
-  useEffect(() => {
-    if (onChange) onChange(tree);
-  }, [tree, onChange]);
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [handleClickOutside]);
-
-  useEffect(() => {
-    handleResizeCanvas();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [containerRef.current]);
+  // If the root blockId is defined but not the default string, it is the entry ID
+  // of the experience/ pattern to properly detect circular dependencies.
+  const rootBlockId = tree.root.data.blockId ?? ROOT_ID;
+  const wrappingPatternIds = rootBlockId !== ROOT_ID ? new Set([rootBlockId]) : new Set<string>();
 
   return (
     <>
-      <div
-        data-ctfl-root
-        className={styles.rootContainer}
-        ref={containerRef}
-        style={containerStyles}>
+      <div data-ctfl-root className={styles.rootContainer} ref={containerRef}>
         {!tree.root.children.length ? (
           <EmptyCanvasMessage />
         ) : (
@@ -114,6 +29,7 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => 
               key={topLevelChildNode.data.id}
               node={topLevelChildNode}
               resolveDesignValue={resolveDesignValue}
+              wrappingPatternIds={wrappingPatternIds}
             />
           ))
         )}

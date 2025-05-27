@@ -12,7 +12,6 @@ import {
 import {
   OUTGOING_EVENTS,
   INCOMING_EVENTS,
-  SCROLL_STATES,
   PostMessageMethods,
 } from '@contentful/experiences-core/constants';
 import {
@@ -23,7 +22,6 @@ import {
   ManagementEntity,
   IncomingMessage,
 } from '@contentful/experiences-core/types';
-import { sendSelectedComponentCoordinates } from '@/communication/sendSelectedComponentCoordinates';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { Assembly } from '@contentful/experiences-components-react';
@@ -44,8 +42,6 @@ export function useEditorSubscriber() {
   const setLocale = useEditorStore((state) => state.setLocale);
   const setUnboundValues = useEditorStore((state) => state.setUnboundValues);
   const setDataSource = useEditorStore((state) => state.setDataSource);
-  const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
-  const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
   const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
 
   const reloadApp = () => {
@@ -261,23 +257,6 @@ export function useEditorSubscriber() {
 
           break;
         }
-        case INCOMING_EVENTS.CanvasResized: {
-          const { selectedNodeId } = eventData.payload;
-          if (selectedNodeId) {
-            sendSelectedComponentCoordinates(selectedNodeId);
-          }
-          break;
-        }
-        case INCOMING_EVENTS.HoverComponent: {
-          console.debug('[experiences-sdk-react::onMessage] Ignoring HoverComponent event');
-          break;
-        }
-        case INCOMING_EVENTS.ComponentDraggingChanged: {
-          console.debug(
-            '[experiences-sdk-react::onMessage] Ignoring ComponentDraggingChanged event',
-          );
-          break;
-        }
         case INCOMING_EVENTS.UpdatedEntity: {
           const { entity: updatedEntity, shouldRerender } = eventData.payload;
           if (updatedEntity) {
@@ -297,32 +276,6 @@ export function useEditorSubscriber() {
         case INCOMING_EVENTS.RequestEditorMode: {
           break;
         }
-        case INCOMING_EVENTS.ComponentDragCanceled: {
-          console.debug('[experiences-sdk-react::onMessage] Ignoring ComponentDragCanceled event');
-          break;
-        }
-        case INCOMING_EVENTS.ComponentDragStarted: {
-          console.debug('[experiences-sdk-react::onMessage] Ignoring ComponentDragStarted event');
-          break;
-        }
-        case INCOMING_EVENTS.ComponentDragEnded: {
-          console.debug('[experiences-sdk-react::onMessage] Ignoring ComponentDragEnded event');
-          break;
-        }
-        case INCOMING_EVENTS.SelectComponent: {
-          const { selectedNodeId: nodeId } = eventData.payload;
-          setSelectedNodeId(nodeId);
-          sendSelectedComponentCoordinates(nodeId);
-          break;
-        }
-        case INCOMING_EVENTS.MouseMove: {
-          console.debug('[experiences-sdk-react::onMessage] Ignoring MouseMove event');
-          break;
-        }
-        case INCOMING_EVENTS.ComponentMoveEnded: {
-          console.debug('[experiences-sdk-react::onMessage] Ignoring ComponentMoveEnded event');
-          break;
-        }
         default:
           console.error(
             `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${(eventData as IncomingMessage).eventType}]`,
@@ -339,7 +292,6 @@ export function useEditorSubscriber() {
     entityStore,
     setDataSource,
     setLocale,
-    setSelectedNodeId,
     dataSource,
     areEntitiesFetched,
     fetchMissingEntities,
@@ -349,46 +301,4 @@ export function useEditorSubscriber() {
     updateNodesByUpdatedEntity,
     resetEntityStore,
   ]);
-
-  /*
-   * Handles on scroll business
-   */
-  useEffect(() => {
-    let timeoutId = 0;
-    let isScrolling = false;
-
-    const onScroll = () => {
-      if (isScrolling === false) {
-        sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.Start);
-      }
-
-      sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.IsScrolling);
-      isScrolling = true;
-
-      clearTimeout(timeoutId);
-
-      timeoutId = window.setTimeout(() => {
-        if (isScrolling === false) {
-          return;
-        }
-
-        isScrolling = false;
-        sendMessage(OUTGOING_EVENTS.CanvasScroll, SCROLL_STATES.End);
-
-        /**
-         * On scroll end, send new co-ordinates of selected node
-         */
-        if (selectedNodeId) {
-          sendSelectedComponentCoordinates(selectedNodeId);
-        }
-      }, 150);
-    };
-
-    window.addEventListener('scroll', onScroll, { capture: true, passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', onScroll, { capture: true });
-      clearTimeout(timeoutId);
-    };
-  }, [selectedNodeId]);
 }
