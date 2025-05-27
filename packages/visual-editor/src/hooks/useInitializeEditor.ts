@@ -1,14 +1,11 @@
 import { useEditorStore } from '@/store/editor';
-import {
-  EditorModeEntityStore,
-  inMemoryEntitiesStore as defaultInMemoryEntitiesStore,
-} from '@contentful/experiences-core';
+import { EditorModeEntityStore, type InMemoryEntitiesStore } from '@contentful/experiences-core';
 
 import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
 import { useEffect, useState } from 'react';
 import { useStore } from 'zustand';
 
-export const useInitializeEditor = (inMemoryEntitiesStore: typeof defaultInMemoryEntitiesStore) => {
+export const useInitializeEditor = (inMemoryEntitiesStore: InMemoryEntitiesStore) => {
   const initializeEditor = useEditorStore((state) => state.initializeEditor);
 
   const [initialized, setInitialized] = useState(false);

@@ -9,14 +9,14 @@ import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { DNDProvider } from './DNDProvider';
-import { inMemoryEntitiesStore, sendMessage } from '@contentful/experiences-core';
+import { type InMemoryEntitiesStore, sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
 import { Dropzone } from '@components/DraggableBlock/Dropzone';
 
 interface RootRendererProperties {
   onChange?: (data: ExperienceTree) => void;
-  inMemoryEntitiesStore: typeof inMemoryEntitiesStore;
+  inMemoryEntitiesStore: InMemoryEntitiesStore;
 }
 
 export const RootRenderer: React.FC<RootRendererProperties> = ({
