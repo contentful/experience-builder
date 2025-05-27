@@ -2,7 +2,7 @@ import type { Asset, Entry } from 'contentful';
 import { isExperienceEntry } from '@/utils';
 import type { Experience } from '@/types';
 import { EntityStore } from '@/entity/EntityStore';
-import { inMemoryEntitiesStore } from '@/entity/InMemoryEntities';
+import { inMemoryEntitiesStore } from '@/entity/InMemoryEntitiesStore';
 
 type CreateExperienceParams = {
   experienceEntry: Entry;

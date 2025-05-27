@@ -1,6 +1,6 @@
 import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { isLink } from '../utils/isLink';
-import { inMemoryEntitiesStore } from './InMemoryEntities';
+import { inMemoryEntitiesStore } from './InMemoryEntitiesStore';
 
 function maybeResolveLink(maybeLink: UnresolvedLink<'Entry'>): Entry | undefined;
 function maybeResolveLink(maybeLink: UnresolvedLink<'Asset'>): Asset | undefined;
@@ -38,7 +38,7 @@ const inMemoryEntities = {
   addEntities,
 };
 
-export type InMemoryEntitiesService = typeof inMemoryEntities;
+export type InMemoryEntitiesPublicApi = typeof inMemoryEntities;
 
 const useInMemoryEntities = () => {
   return inMemoryEntities;
