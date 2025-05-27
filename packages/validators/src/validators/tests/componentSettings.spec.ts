@@ -1,7 +1,7 @@
 import { validateExperienceFields } from '@/validators';
 import { experience, experiencePattern } from '@/test/__fixtures__/v2023_09_28';
 import { describe, it, expect } from 'vitest';
-import { PATTERN_THUMBNAIL_IDS } from '@/schemas/latest';
+import { THUMBNAIL_IDS } from '@/schemas/v2023_09_28/pattern';
 
 const schemaVersion = '2023-09-28' as const;
 const locale = 'en-US';
@@ -100,7 +100,7 @@ describe('componentSettings', () => {
   });
 
   it('allows to have an optional thumbnailId field', () => {
-    PATTERN_THUMBNAIL_IDS.forEach((thumbnailId) => {
+    THUMBNAIL_IDS.forEach((thumbnailId) => {
       const pattern = {
         ...experiencePattern,
         fields: {

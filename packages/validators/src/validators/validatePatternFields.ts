@@ -2,6 +2,7 @@ import { type SchemaVersions } from '../types';
 import { ValidatorReturnValue } from './ValidatorReturnValue';
 import { PatternSchema_2023_09_28 } from '../schemas';
 import { zodToContentfulError, CodeNames } from '@/utils/zodToContentfulError';
+import type { EntryProps } from 'contentful-management';
 
 const VERSION_SCHEMAS = {
   '2023-09-28': PatternSchema_2023_09_28,
@@ -15,8 +16,7 @@ const VERSION_SCHEMAS = {
  * @returns object with success property and optional errors array
  */
 export const validatePatternFields = (
-  // TODO: type this as Entry when the type is exposed
-  pattern: any,
+  pattern: EntryProps,
   schemaVersionOverride?: SchemaVersions,
 ): ValidatorReturnValue => {
   let schemaVersion: SchemaVersions | undefined;

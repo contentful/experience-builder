@@ -1,3 +1,5 @@
+import { EntryProps } from 'contentful-management';
+
 export const experience = {
   metadata: {
     tags: [],
@@ -312,4 +314,4 @@ export const experience = {
       },
     },
   },
-};
+} as EntryProps;

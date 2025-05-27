@@ -3,6 +3,7 @@ import { ValidatorReturnValue } from './ValidatorReturnValue';
 import { ExperienceSchema_2023_09_28 } from '../schemas';
 import { zodToContentfulError, CodeNames } from '@/utils/zodToContentfulError';
 import { validatePatternFields } from '@/validators/validatePatternFields';
+import type { EntryProps } from 'contentful-management';
 
 const VERSION_SCHEMAS = {
   '2023-09-28': ExperienceSchema_2023_09_28,
@@ -21,8 +22,7 @@ function isPattern(experience: any): boolean {
  * @returns object with success property and optional errors array
  */
 export const validateExperienceFields = (
-  // TODO: type this as Entry when the type is exposed
-  experience: any,
+  experience: EntryProps,
   schemaVersionOverride?: SchemaVersions,
 ): ValidatorReturnValue => {
   // If this is a pattern, use the pattern validator

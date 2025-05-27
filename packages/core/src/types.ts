@@ -1,6 +1,6 @@
 import type { Asset, AssetFile, ChainModifiers, Entry } from 'contentful';
 import { SCROLL_STATES, OUTGOING_EVENTS, INCOMING_EVENTS, INTERNAL_EVENTS } from '@/constants';
-import { EntityStore } from './entity/EntityStore';
+import { EntityStore } from '@/entity';
 import { Document as RichTextDocument } from '@contentful/rich-text-types';
 
 // Types for experience entry fields (as fetched in the API) are inferred by Zod schema in `@contentful/experiences-validators`
@@ -356,8 +356,6 @@ export type ExperienceEntry = {
   fields: ExperienceFields;
   metadata: Entry['metadata'];
 };
-
-export type { Entry } from 'contentful';
 
 export interface RawCoordinates {
   left: number;

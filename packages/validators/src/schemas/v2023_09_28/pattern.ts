@@ -9,7 +9,7 @@ import {
   UsedComponentsSchema,
 } from '../v2023_09_28/common';
 
-const THUMBNAIL_IDS = [
+export const THUMBNAIL_IDS = [
   'columns',
   'columnsPlusRight',
   'imagesSquare',
@@ -97,8 +97,6 @@ export const PatternFieldsCMAShapeSchema = z.object({
   usedComponents: localeWrapper(UsedComponentsSchema).optional(),
   componentSettings: localeWrapper(ComponentSettingsSchema),
 });
-
-export { THUMBNAIL_IDS as PATTERN_THUMBNAIL_IDS };
 
 export type PatternFields = z.infer<typeof PatternFieldsCMAShapeSchema>;
 export type PatternPropertyDefinition = z.infer<typeof PatternPropertyDefinitionSchema>;

@@ -5,9 +5,16 @@ export { ComponentPropertyValue } from '@/schemas/v2023_09_28/common';
 export { PatternPropertySchema } from '@/schemas/v2023_09_28/common';
 export { PatternPropertiesSchema } from '@/schemas/v2023_09_28/common';
 export { BreakpointSchema } from '@/schemas/v2023_09_28/common';
-export { BaseComponentTreeNodeSchema } from '@/schemas/v2023_09_28/common';
 export { ComponentTreeNode } from '@/schemas/v2023_09_28/common';
 export { ComponentVariableSchema } from '@/schemas/v2023_09_28/common';
 export { ComponentTreeNodeSchema } from '@/schemas/v2023_09_28/common';
 export { ComponentTreeSchema } from '@/schemas/v2023_09_28/common';
 export { localeWrapper } from '@/schemas/v2023_09_28/common';
+export {
+  /**
+   * @deprecated Use `PatternComponentSettings` instead. This will be removed in the next major version
+   */
+  PatternComponentSettings as ExperienceComponentSettings,
+  PatternComponentSettings,
+  VariableMapping,
+} from './v2023_09_28/pattern';

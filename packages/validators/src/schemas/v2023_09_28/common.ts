@@ -196,7 +196,7 @@ export const BreakpointSchema = z
   .strict();
 
 // Use helper schema to define a recursive schema with its type correctly below
-export const BaseComponentTreeNodeSchema = z.object({
+const BaseComponentTreeNodeSchema = z.object({
   id: ComponentTreeNodeIdSchema.optional(),
   definitionId: DefinitionPropertyKeySchema,
   displayName: z.string().optional(),
