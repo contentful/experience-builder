@@ -19,7 +19,7 @@ import {
   OptimizedBackgroundImageAsset,
 } from '@/types';
 import { vitest, it, describe } from 'vitest';
-import { UnresolvedLink } from 'contentful';
+import type { UnresolvedLink, Asset, Entry } from 'contentful';
 import { cloneDeep } from 'lodash-es';
 
 const entityStore = new EditorModeEntityStore({
@@ -439,7 +439,7 @@ describe('transformBoundContentValue', () => {
         variableName,
         componentDefinition.variables.referencedEntry.type,
         path,
-      );
+      ) as Entry;
 
       // assert that we resolved L2 entity by following L1-entity's references
       expect(entityLevel2.sys).toEqual(
@@ -453,7 +453,8 @@ describe('transformBoundContentValue', () => {
       expect(entityLevel2.fields['title']).toEqual('Title for entryWithAnotherEmbeddedEntry');
 
       // asset that references from L2 to L3 are NOT resolved
-      expect(entityLevel2?.fields.referencedEntry.sys).toEqual({
+      const referencedEntry = entityLevel2?.fields.referencedEntry as Entry;
+      expect(referencedEntry.sys).toEqual({
         id: 'entry2',
         linkType: 'Entry',
         type: 'Link',
@@ -485,7 +486,7 @@ describe('transformBoundContentValue', () => {
         variableName,
         componentDefinition.variables.referencedEntries.type,
         path,
-      );
+      ) as Array<Entry | Asset>;
       expect(arrayOfEntitiesL2).toHaveLength(2);
       expect(arrayOfEntitiesL2[0]?.sys).toEqual(
         expect.objectContaining({
@@ -506,12 +507,16 @@ describe('transformBoundContentValue', () => {
       expect(arrayOfEntitiesL2[1]?.fields.title).toEqual('Title for entryWithAnotherEmbeddedEntry');
 
       // assert that references from L2 to L3 are NOT resolved
-      expect(arrayOfEntitiesL2[0]?.fields.referencedEntry.sys).toEqual({
+      expect(
+        (arrayOfEntitiesL2[0]?.fields as { referencedEntry: Entry }).referencedEntry.sys,
+      ).toEqual({
         id: 'entryWithAnotherEmbeddedEntry',
         linkType: 'Entry',
         type: 'Link',
       });
-      expect(arrayOfEntitiesL2[1]?.fields.referencedEntry.sys).toEqual({
+      expect(
+        (arrayOfEntitiesL2[1]?.fields as { referencedEntry: Entry }).referencedEntry.sys,
+      ).toEqual({
         id: 'entry2',
         linkType: 'Entry',
         type: 'Link',

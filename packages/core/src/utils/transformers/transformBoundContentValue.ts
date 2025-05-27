@@ -2,6 +2,7 @@ import {
   ComponentDefinitionVariableType,
   ComponentTreeNode,
   ResolveDesignValueType,
+  BoundComponentPropertyTypes,
 } from '@/types';
 import { transformRichText } from './transformRichText';
 import { transformMedia } from './media/transformMedia';
@@ -19,8 +20,7 @@ export const transformBoundContentValue = (
   variableName: string,
   variableType: ComponentDefinitionVariableType,
   path: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): any => {
+): BoundComponentPropertyTypes => {
   const entityOrAsset = entityStore.getEntryOrAsset(binding, path);
   if (!entityOrAsset) return;
 
