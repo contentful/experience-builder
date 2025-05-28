@@ -6,14 +6,7 @@ import type {
 import { ROOT_ID, TreeAction } from '@/types/constants';
 import { create } from 'zustand';
 import { produce } from 'immer';
-import {
-  addChildNode,
-  removeChildNode,
-  reorderChildNode,
-  reparentChildNode,
-  replaceNode,
-  updateNode,
-} from '@/utils/treeHelpers';
+import { addChildNode, removeChildNode, replaceNode, updateNode } from '@/utils/treeHelpers';
 import { getTreeDiffs } from '@/utils/getTreeDiff';
 import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
 import { treeVisit } from '@contentful/experiences-core';
@@ -22,24 +15,7 @@ export interface TreeStore {
   tree: ExperienceTree;
   breakpoints: Breakpoint[];
   updateTree: (tree: ExperienceTree) => void;
-  updateTreeForced: (tree: ExperienceTree) => void;
   updateNodesByUpdatedEntity: (entityId: string) => void;
-  addChild: (
-    destinationIndex: number,
-    destinationParentId: string,
-    node: ExperienceTreeNode,
-  ) => void;
-  reorderChildren: (
-    destinationIndex: number,
-    destinationParentId: string,
-    sourceIndex: number,
-  ) => void;
-  reparentChild: (
-    destinationIndex: number,
-    destinationParentId: string,
-    sourceIndex: number,
-    sourceParentId: string,
-  ) => void;
 }
 
 export const useTreeStore = create<TreeStore>((set, get) => ({
@@ -77,20 +53,6 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
     );
   },
 
-  /**
-   * NOTE: this is for debugging purposes only as it causes ugly canvas flash.
-   *
-   * Force updates entire tree. Usually shouldn't be used as updateTree()
-   * uses smart update algorithm based on diffs. But for troubleshooting
-   * you may want to force update the tree so leaving this in.
-   */
-  updateTreeForced: (tree) => {
-    set({
-      tree,
-      // Breakpoints must be updated, as we receive completely new tree with possibly new breakpoints
-      breakpoints: tree?.root?.data?.breakpoints || [],
-    });
-  },
   updateTree: (tree) => {
     const currentTree = get().tree;
 
@@ -148,33 +110,6 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
         });
 
         state.breakpoints = tree?.root?.data?.breakpoints || [];
-      }),
-    );
-  },
-  addChild: (index, parentId, node) => {
-    set(
-      produce((state: TreeStore) => {
-        addChildNode(index, parentId, node, state.tree.root);
-      }),
-    );
-  },
-  reorderChildren: (destinationIndex, destinationParentId, sourceIndex) => {
-    set(
-      produce((state: TreeStore) => {
-        reorderChildNode(sourceIndex, destinationIndex, destinationParentId, state.tree.root);
-      }),
-    );
-  },
-  reparentChild: (destinationIndex, destinationParentId, sourceIndex, sourceParentId) => {
-    set(
-      produce((state: TreeStore) => {
-        reparentChildNode(
-          sourceIndex,
-          destinationIndex,
-          sourceParentId,
-          destinationParentId,
-          state.tree.root,
-        );
       }),
     );
   },

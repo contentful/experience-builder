@@ -9,10 +9,6 @@
   display: none; /* Safari and Chrome */
 }
 
-.cf-single-column-wrapper {
-  position: relative;
-}
-
 .cf-container-wrapper {
   position: relative;
   width: 100%;
