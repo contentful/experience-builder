@@ -14,6 +14,8 @@ export interface InMemoryEntitiesState {
   resolveEntity: <T extends 'Entry' | 'Asset'>(
     link?: UnresolvedLink<T>,
   ) => Entry | Asset | undefined;
+  resolveAssetById: (assetId?: string) => Asset | undefined;
+  resolveEntryById: (entryId?: string) => Entry | undefined;
   resetEntityStore: (entityStore: EntityStoreBase) => void;
 }
 
@@ -27,6 +29,18 @@ export const inMemoryEntitiesStore = create<InMemoryEntitiesState>((set, get) =>
 
   setEntitiesFetched(fetched) {
     set({ areEntitiesFetched: fetched });
+  },
+  resolveAssetById(assetId?: string) {
+    if (!assetId) return undefined;
+
+    const { entityStore } = get();
+
+    return entityStore.getAssetById(assetId);
+  },
+  resolveEntryById(entryId?: string) {
+    if (!entryId) return undefined;
+    const { entityStore } = get();
+    return entityStore.getEntryById(entryId);
   },
   resolveEntity<T extends 'Entry' | 'Asset'>(link?: UnresolvedLink<T>) {
     if (!link) return undefined;
