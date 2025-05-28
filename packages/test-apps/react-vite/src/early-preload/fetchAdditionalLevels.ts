@@ -1,0 +1,111 @@
+import type { Experience } from '@contentful/experiences-sdk-react';
+import type { ContentfulClientApi, Asset, Entry, UnresolvedLink } from 'contentful';
+import { inMemoryEntities } from '@contentful/experiences-sdk-react';
+import { extractUnresolvedLinksFromExperience } from '@contentful/experiences-core';
+import { referencesOf } from './referencesOf';
+
+type EntitiesToFetch = {
+  assetsToFetch: string[];
+  entriesToFetch: string[];
+};
+
+export const fetchAdditionalLevels = async (
+  depth: number,
+  experience: Experience,
+  localeCode: string,
+  client: ContentfulClientApi<undefined>,
+) => {
+  // As first step we extract reference to L4 entities and kick off recursive fetching
+
+  const addToMemory = (entities: Array<Entry | Asset>) => {
+    // This function is a placeholder for whatever in-memory storage you are using
+    // to store fetched entities. It should add the entity to your in-memory cache.
+    // For example, if you are using a custom in-memory store, you might do:
+    // inMemoryEntities.addEntity(entity);
+    // For this example, we will just log the entity.
+    console.log('Adding entities:', entities);
+    inMemoryEntities.addEntities(entities);
+  };
+
+  const { assetIds, entryIds } = extractUnresolvedLinksFromExperience(experience);
+
+  await fetchLevel(depth, { assetsToFetch: assetIds, entriesToFetch: entryIds });
+
+  async function fetchLevel(depth: number, { assetsToFetch, entriesToFetch }: EntitiesToFetch) {
+    if (depth <= 0) {
+      return;
+    }
+
+    // TODO: parallelize taking pagination into account
+    const { items: assetItems } = await client.getAssets({
+      'sys.id[in]': assetsToFetch,
+      locale: localeCode,
+      limit: 1000,
+      skip: 0,
+    });
+
+    const { items: entryItems } = await client.getEntries({
+      'sys.id[in]': entriesToFetch,
+      locale: localeCode,
+      limit: 1000,
+      skip: 0,
+    });
+
+    // entryItems.forEach((entry) => {
+    //   entry.fields = {
+    //     ...omit(entry.fields, 'allIngredients', 'allAuthors'),
+    //   }
+    // });
+
+    addToMemory([...assetItems, ...entryItems]);
+
+    {
+      const [referencedEntryIds, referencedAssetIds] =
+        extractReferencesFromEntriesAsIds(entryItems);
+
+      // extract the ones which are in memory...
+      const entriesToFetch = referencedEntryIds.filter(
+        (entryId) => !inMemoryEntities.hasEntry(entryId),
+      );
+
+      const assetsToFetch = referencedAssetIds.filter(
+        (assetId) => !inMemoryEntities.hasAsset(assetId),
+      );
+
+      await fetchLevel(depth - 1, {
+        entriesToFetch,
+        assetsToFetch,
+      });
+    }
+  }
+};
+
+export function extractReferencesFromEntriesAsIds(
+  entries: Array<Entry>,
+): [string[], string[], string[]] {
+  const [uniqueEntries, uniqueAssets, uniqueReferences] = extractReferencesFromEntries(entries);
+
+  const entryIds = uniqueEntries.map((link) => link.sys.id);
+  const assetIds = uniqueAssets.map((link) => link.sys.id);
+  const referenceIds = uniqueReferences.map((link) => link.sys.id);
+
+  return [entryIds, assetIds, referenceIds];
+}
+
+export function extractReferencesFromEntries(
+  entries: Array<Entry>,
+): [UnresolvedLink<'Entry'>[], UnresolvedLink<'Asset'>[], UnresolvedLink<'Entry' | 'Asset'>[]] {
+  const allReferences = entries.flatMap((entry) => referencesOf(entry));
+
+  const uniqueReferences = Array.from(new Set(allReferences)); // same reference can be in multiple entries, thus can be repeated
+
+  const uniqueAssets = uniqueReferences.filter(
+    (link) => link.sys.linkType === 'Asset',
+  ) as UnresolvedLink<'Asset'>[];
+
+  const uniqueEntries = uniqueReferences.filter(
+    (link) => link.sys.linkType === 'Entry',
+  ) as UnresolvedLink<'Entry'>[];
+
+  return [uniqueEntries, uniqueAssets, uniqueReferences] as const;
+}
