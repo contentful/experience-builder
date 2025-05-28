@@ -1,4 +1,4 @@
-import { EntryProps } from 'contentful-management';
+import type { EntryProps } from 'contentful-management';
 
 export const experience = {
   metadata: {
