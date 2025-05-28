@@ -28,6 +28,7 @@ import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 import { UnresolvedLink } from 'contentful';
+import { sendCanvasGeometryUpdatedMessage } from '@components/RootRenderer/sendCanvasGeometryUpdatedMessage';
 
 export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
@@ -220,6 +221,7 @@ export function useEditorSubscriber() {
           }
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
+          sendCanvasGeometryUpdatedMessage(tree);
           break;
         }
         case INCOMING_EVENTS.AssembliesRegistered: {
