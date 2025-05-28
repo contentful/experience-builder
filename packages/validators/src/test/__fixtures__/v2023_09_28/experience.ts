@@ -1,3 +1,5 @@
+import type { EntryProps } from 'contentful-management';
+
 export const experience = {
   metadata: {
     tags: [],
@@ -11,6 +13,7 @@ export const experience = {
       },
     },
     id: '64AN4WV1fN0myahCWSOUhq',
+    revision: 1,
     type: 'Entry',
     createdAt: '2024-02-06T15:05:23.137Z',
     updatedAt: '2024-02-06T15:09:54.939Z',
@@ -311,4 +314,4 @@ export const experience = {
       },
     },
   },
-};
+} as EntryProps;

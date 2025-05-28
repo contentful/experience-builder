@@ -4,7 +4,7 @@ import {
   DefinitionPropertyKeySchema,
   DefinitionPropertyTypeSchema,
   PrimitiveValueSchema,
-} from './v2023_09_28/experience';
+} from './v2023_09_28/common';
 
 export const ComponentDefinitionSchema = z.object({
   id: DefinitionPropertyKeySchema,

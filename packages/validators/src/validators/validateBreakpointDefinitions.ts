@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { BreakpointSchema, breakpointsRefinement } from '../schemas/latest';
 import { ValidatorReturnValue } from './ValidatorReturnValue';
-import { zodToContentfulError } from '../utils/zodToContentfulError';
+import { zodToContentfulError } from '@/utils/zodToContentfulError';
 
 export const validateBreakpointsDefinition = (breakpoints): ValidatorReturnValue => {
   const result = z
