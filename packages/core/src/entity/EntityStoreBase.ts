@@ -98,6 +98,24 @@ export abstract class EntityStoreBase implements EntityFromLink {
     return resolvedEntity;
   }
 
+  public getAssetById(assetId: string): Asset | undefined {
+    const asset = this.assetMap.get(assetId);
+    if (!asset) {
+      console.warn(`Asset with ID "${assetId}" is not found in the store`);
+      return;
+    }
+    return asset;
+  }
+
+  public getEntryById(entryId: string): Entry | undefined {
+    const entry = this.entryMap.get(entryId);
+    if (!entry) {
+      console.warn(`Entry with ID "${entryId}" is not found in the store`);
+      return;
+    }
+    return entry;
+  }
+
   protected getEntitiesFromMap(type: 'Entry' | 'Asset', ids: string[]) {
     const resolved: Array<Entry | Asset<ChainModifiers, string>> = [];
     const missing: string[] = [];
