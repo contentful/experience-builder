@@ -1,75 +1,39 @@
-/* eslint-disable */ /* TODO: fix eslint errors */
-import React, { RefObject } from 'react';
-
-import type {
-  ExperienceTreeNode,
-  ExperienceDataSource,
-  ExperienceUnboundValues,
-  StyleProps,
-  DragWrapperProps,
-} from '@contentful/experiences-core/types';
-
-import { EntityStore } from '@contentful/experiences-core';
+import React from 'react';
+import type { StructureComponentProps, StyleProps } from '@contentful/experiences-core/types';
 import { combineClasses } from '../../utils/combineClasses';
+import { extractRenderProps } from '@/utils/extractRenderProps';
 
-export type ContentfulContainerAsHyperlinkProps<EditorMode = boolean> = (EditorMode extends true
-  ? {
-      editorMode?: EditorMode;
-      node: ExperienceTreeNode;
-      dataSource?: ExperienceDataSource;
-      unboundValues?: ExperienceUnboundValues;
-      resolveDesignValue?: any;
-      entityStore?: RefObject<EntityStore>;
-      areEntitiesFetched?: boolean;
-      renderDropzone: (node: ExperienceTreeNode, props?: Record<string, any>) => React.ReactNode;
-    }
-  : {
-      editorMode: EditorMode;
-    }) & {
-  children?: React.ReactNode;
+export type ContentfulContainerAsHyperlinkProps = StructureComponentProps<{
   className?: string;
   cfHyperlink?: StyleProps['cfHyperlink'];
   cfOpenInNewTab?: StyleProps['cfOpenInNewTab'];
-  WrapperComponent?: React.ElementType;
-  dragProps?: DragWrapperProps;
-};
+}>;
 
 export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyperlinkProps> = (
   props,
 ) => {
-  const { cfHyperlink, cfOpenInNewTab, editorMode, className, children } = props;
-
-  if (editorMode === false) {
-    let anchorTagProps = {};
-    if (cfOpenInNewTab) {
-      anchorTagProps = {
+  const { cfHyperlink, cfOpenInNewTab, editorMode, className, children, ...otherProps } = props;
+  const eventHandlingProps = editorMode === true ? { onClick: stopEventPropagation } : {};
+  const anchorTagProps = cfOpenInNewTab
+    ? {
         target: '_blank',
         rel: 'noopener noreferrer',
-      };
-    }
+      }
+    : {};
 
-    return (
-      <a
-        className={combineClasses(className, 'contentful-container', 'contentful-container-link')}
-        href={cfHyperlink}
-        {...anchorTagProps}>
-        {children}
-      </a>
-    );
-  }
+  return (
+    <a
+      className={combineClasses(className, 'contentful-container', 'contentful-container-link')}
+      href={cfHyperlink}
+      {...anchorTagProps}
+      {...eventHandlingProps}
+      {...extractRenderProps(otherProps)}>
+      {children}
+    </a>
+  );
+};
 
-  const { renderDropzone, node } = props;
-
-  const stopPropagationInEditorMode = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    e.stopPropagation();
-    e.preventDefault();
-  };
-
-  return renderDropzone(node, {
-    ['data-test-id']: 'contentful-container',
-    className: combineClasses(className, 'contentful-container', 'contentful-container-link'),
-    zoneId: node.data.id,
-    WrapperComponent: 'a',
-    onClick: stopPropagationInEditorMode,
-  });
+const stopEventPropagation = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  event.stopPropagation();
+  event.preventDefault();
 };
