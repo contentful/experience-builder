@@ -4,7 +4,7 @@
   "version": "1.38.0",
   "command": {
     "version": {
-      "allowBranch": ["main", "next", "development"],
+      "allowBranch": ["main", "next", "development", "v3-prerelease"],
       "conventionalCommits": true,
       "message": "chore(release): updated release notes and package versions [ci skip]",
       "ignoreChanges": [
