@@ -33,12 +33,12 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
   return (
     <Flex
       data-test-id="contentful-container"
+      {...extractRenderProps(props)}
       className={combineClasses(
         className,
         'contentful-container',
         isEmpty ? (isSection ? 'contentful-section-label' : 'contentful-container-label') : '',
-      )}
-      {...extractRenderProps(props)}>
+      )}>
       {children}
     </Flex>
   );

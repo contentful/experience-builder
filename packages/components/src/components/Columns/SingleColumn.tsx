@@ -23,7 +23,7 @@ export const SingleColumn: React.FC<SingleColumnProps> = (props) => {
     isEmpty ? 'cf-single-column-label' : '',
   );
   return (
-    <Flex className={mixedClassName} {...extractRenderProps(props)}>
+    <Flex {...extractRenderProps(props)} className={mixedClassName}>
       {children}
     </Flex>
   );
