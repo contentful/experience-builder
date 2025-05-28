@@ -1,19 +1,17 @@
 import { inMemoryEntities } from '@contentful/experiences-core';
-import React, { forwardRef, HTMLAttributes } from 'react';
+import React, { HTMLAttributes } from 'react';
 
 type CircularDependencyErrorPlaceholderProperties = HTMLAttributes<HTMLDivElement> & {
   wrappingPatternIds: Set<string>;
 };
 
-export const CircularDependencyErrorPlaceholder = forwardRef<
-  HTMLDivElement,
-  CircularDependencyErrorPlaceholderProperties
->(({ wrappingPatternIds, ...props }, ref) => {
+export const CircularDependencyErrorPlaceholder = ({
+  wrappingPatternIds,
+  ...props
+}: CircularDependencyErrorPlaceholderProperties) => {
   return (
     <div
       {...props}
-      // Pass through ref to avoid DND errors being logged
-      ref={ref}
       data-cf-node-error="circular-pattern-dependency"
       style={{
         border: '1px solid red',
@@ -34,6 +32,4 @@ export const CircularDependencyErrorPlaceholder = forwardRef<
       </ul>
     </div>
   );
-});
-
-CircularDependencyErrorPlaceholder.displayName = 'CircularDependencyErrorPlaceholder';
+};

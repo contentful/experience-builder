@@ -1,26 +1,15 @@
 import React from 'react';
-import styles from './EmptyContainer.module.css';
-import classNames from 'classnames';
+import styles from './EmptyCanvasMessage.module.css';
 
-export interface EmptyContainerProps {
-  isFirst?: boolean;
-  isDragging?: boolean;
-  isHoveringOnRoot?: boolean;
-}
-
-export const EmptyContainer = ({ isDragging }: EmptyContainerProps) => {
+export const EmptyCanvasMessage = () => {
   return (
-    <div
-      className={classNames(styles.container, {
-        [styles.highlight]: isDragging,
-      })}
-      data-type="empty-container">
+    <div className={styles['empty-canvas-container']} data-type="empty-container">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="37"
         height="36"
         fill="none"
-        className={styles.icon}>
+        className={styles['empty-canvas-icon']}>
         <rect
           width="11.676"
           height="11.676"
@@ -61,7 +50,7 @@ export const EmptyContainer = ({ isDragging }: EmptyContainerProps) => {
         />
       </svg>
 
-      <span className={styles.label}>Add components to begin</span>
+      <span className={styles['empty-canvas-label']}>Add components to begin</span>
     </div>
   );
 };
