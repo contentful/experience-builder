@@ -28,9 +28,10 @@ import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { useEntityStore } from '@/store/entityStore';
 import { UnresolvedLink } from 'contentful';
-import { sendCanvasGeometryUpdatedMessage } from '@components/RootRenderer/sendCanvasGeometryUpdatedMessage';
 
-export function useEditorSubscriber() {
+export function useEditorSubscriber(
+  manuallyFireCanvasGeometryUpdate: (tree: ExperienceTree) => void,
+) {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
@@ -221,7 +222,7 @@ export function useEditorSubscriber() {
           }
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
-          sendCanvasGeometryUpdatedMessage(tree);
+          manuallyFireCanvasGeometryUpdate(tree);
           break;
         }
         case INCOMING_EVENTS.AssembliesRegistered: {
@@ -302,5 +303,6 @@ export function useEditorSubscriber() {
     updateTree,
     updateNodesByUpdatedEntity,
     resetEntityStore,
+    manuallyFireCanvasGeometryUpdate,
   ]);
 }

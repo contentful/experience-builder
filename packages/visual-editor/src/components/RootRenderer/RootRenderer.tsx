@@ -6,13 +6,16 @@ import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { EditorBlock } from '@components/EditorBlock';
 import { EmptyCanvasMessage } from '@components/EmptyCanvasMessage';
 import { ROOT_ID } from '@/types/constants';
+import { useCanvasGeometryUpdates } from './useCanvasGeometryUpdates';
 
 export const RootRenderer = () => {
-  useEditorSubscriber();
-  const breakpoints = useTreeStore((state) => state.breakpoints);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { resolveDesignValue } = useBreakpoints(breakpoints);
   const tree = useTreeStore((state) => state.tree);
+  const { manuallyFireCanvasGeometryUpdate } = useCanvasGeometryUpdates(tree);
+  useEditorSubscriber(manuallyFireCanvasGeometryUpdate);
+
+  const breakpoints = useTreeStore((state) => state.breakpoints);
+  const { resolveDesignValue } = useBreakpoints(breakpoints);
+  const containerRef = useRef<HTMLDivElement>(null);
   // If the root blockId is defined but not the default string, it is the entry ID
   // of the experience/ pattern to properly detect circular dependencies.
   const rootBlockId = tree.root.data.blockId ?? ROOT_ID;

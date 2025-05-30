@@ -1,21 +1,30 @@
 import { sendMessage, getElementCoordinates } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
-import { ExperienceTree, ExperienceTreeNode } from '@contentful/experiences-core/types';
+import {
+  CanvasGeometryUpdateSourceEvent,
+  ExperienceTree,
+  ExperienceTreeNode,
+} from '@contentful/experiences-core/types';
+
 /**
  * This function gets the element co-ordinates of a specified component in the DOM and its parent
  * and sends the DOM Rect to the client app
  */
-export const sendCanvasGeometryUpdatedMessage = (tree: ExperienceTree) => {
-  console.log('sending...', tree);
+export const sendCanvasGeometryUpdatedMessage = async (
+  tree: ExperienceTree,
+  sourceEvent: CanvasGeometryUpdateSourceEvent,
+) => {
   const nodeRecords: Record<
     string,
     { coordinates: Pick<DOMRect, 'x' | 'y' | 'width' | 'height'> }
   > = {};
   const scrollX = window.scrollX;
   const scrollY = window.scrollY;
+
+  await waitForAllImagesToBeLoaded();
+
   const getNodeCoordinates = (node: ExperienceTreeNode) => {
     const selectedElement = document.querySelector(`[data-cf-node-id="${node.data.id}"]`);
-    console.log({ selectedElement, 'node.data.id': node.data.id });
     if (selectedElement) {
       const rect = getElementCoordinates(selectedElement);
       nodeRecords[node.data.id] = {
@@ -25,8 +34,6 @@ export const sendCanvasGeometryUpdatedMessage = (tree: ExperienceTree) => {
           width: rect.width,
           height: rect.height,
         },
-        // blockId: node.data.blockId || '',
-        // id: node.data.id,
       };
     }
     if (node.children.length) {
@@ -42,5 +49,32 @@ export const sendCanvasGeometryUpdatedMessage = (tree: ExperienceTree) => {
       height: document.documentElement.scrollHeight,
     },
     nodes: nodeRecords,
+    sourceEvent,
   });
+};
+
+const waitForAllImagesToBeLoaded = () => {
+  // If the target contains an image, wait for this image to be loaded before sending the coordinates
+  const allImageNodes = document.querySelectorAll('img');
+  return Promise.all(
+    Array.from(allImageNodes).map((imageNode) => {
+      if (imageNode.complete) {
+        return Promise.resolve();
+      }
+      return new Promise<void>((resolve, reject) => {
+        const handleImageLoad = (event: Event | ErrorEvent) => {
+          imageNode.removeEventListener('load', handleImageLoad);
+          imageNode.removeEventListener('error', handleImageLoad);
+          if (event.type === 'error') {
+            console.warn('Image failed to load:', imageNode);
+            reject();
+          } else {
+            resolve();
+          }
+        };
+        imageNode.addEventListener('load', handleImageLoad);
+        imageNode.addEventListener('error', handleImageLoad);
+      });
+    }),
+  );
 };
