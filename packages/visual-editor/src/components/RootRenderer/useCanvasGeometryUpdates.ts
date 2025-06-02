@@ -16,12 +16,10 @@ import {
  * - Unbinding an image and rendering again the placeholder image (fires no mutation event)
  * - Zoom in/out (via pinch, keyboard, browser extension)
  *
- *
  * TODO: We don't consider scrolling and block pointer-events. However, this could happened
  * through keyboard, browser extensions, or custom components. We should listen to this
  * event and undo the scrolling.
  */
-
 export const useCanvasGeometryUpdates = (tree: ExperienceTree) => {
   const debouncedUpdateGeometry = useMemo(
     () =>
@@ -36,6 +34,9 @@ export const useCanvasGeometryUpdates = (tree: ExperienceTree) => {
         100,
         {
           leading: true,
+          // To be sure, we recalculate it at the end of the frame again. Though, we couldn't
+          // yet show the need for this. So we might be able to drop this later to boost performance.
+          trailing: true,
         },
       ),
     [],
