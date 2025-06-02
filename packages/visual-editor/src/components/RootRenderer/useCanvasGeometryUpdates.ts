@@ -26,7 +26,7 @@ export const useCanvasGeometryUpdates = (tree: ExperienceTree) => {
   const debouncedUpdateGeometry = useMemo(
     () =>
       debounce(
-        (tree: ExperienceTree, sourceEvent: CanvasGeometryUpdateSourceEvent) => {
+        (tree: ExperienceTree, sourceEvent?: CanvasGeometryUpdateSourceEvent) => {
           // When the DOM changed, we still need to wait for the next frame to ensure that
           // rendering is complete (e.g. this is required when deleting a node).
           window.requestAnimationFrame(() => {
@@ -63,7 +63,7 @@ export const useCanvasGeometryUpdates = (tree: ExperienceTree) => {
   // Allows manually firing the update for scenarios that don't trigger a mutation event,
   // such as when unbinding an image source and falling back to a placeholder image.
   const manuallyFireCanvasGeometryUpdate = useCallback(
-    (tree: ExperienceTree) => debouncedUpdateGeometry(tree, 'manual'),
+    (tree: ExperienceTree) => debouncedUpdateGeometry(tree),
     [debouncedUpdateGeometry],
   );
 

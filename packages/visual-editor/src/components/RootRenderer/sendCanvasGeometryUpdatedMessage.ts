@@ -6,55 +6,53 @@ import {
   ExperienceTreeNode,
 } from '@contentful/experiences-core/types';
 
+type NodeToCoordinatesMap = Record<
+  string,
+  { coordinates: Pick<DOMRect, 'x' | 'y' | 'width' | 'height'> }
+>;
+
 /**
  * This function gets the element co-ordinates of a specified component in the DOM and its parent
- * and sends the DOM Rect to the client app
+ * and sends the DOM Rect to the client app.
  */
 export const sendCanvasGeometryUpdatedMessage = async (
   tree: ExperienceTree,
-  sourceEvent: CanvasGeometryUpdateSourceEvent,
+  sourceEvent?: CanvasGeometryUpdateSourceEvent,
 ) => {
-  const nodeRecords: Record<
-    string,
-    { coordinates: Pick<DOMRect, 'x' | 'y' | 'width' | 'height'> }
-  > = {};
-  const scrollX = window.scrollX;
-  const scrollY = window.scrollY;
-
+  const nodeToCoordinatesMap: NodeToCoordinatesMap = {};
   await waitForAllImagesToBeLoaded();
-
-  const getNodeCoordinates = (node: ExperienceTreeNode) => {
-    const selectedElement = document.querySelector(`[data-cf-node-id="${node.data.id}"]`);
-    if (selectedElement) {
-      const rect = getElementCoordinates(selectedElement);
-      nodeRecords[node.data.id] = {
-        coordinates: {
-          x: rect.x + scrollX,
-          y: rect.y + scrollY,
-          width: rect.width,
-          height: rect.height,
-        },
-      };
-    }
-    if (node.children.length) {
-      for (const child of node.children) {
-        getNodeCoordinates(child);
-      }
-    }
-  };
-  getNodeCoordinates(tree.root);
+  collectNodeCoordinates(tree.root, nodeToCoordinatesMap);
   sendMessage(OUTGOING_EVENTS.CanvasGeometryUpdated, {
     size: {
       width: document.documentElement.scrollWidth,
       height: document.documentElement.scrollHeight,
     },
-    nodes: nodeRecords,
+    nodes: nodeToCoordinatesMap,
     sourceEvent,
   });
 };
 
+const collectNodeCoordinates = (
+  node: ExperienceTreeNode,
+  nodeToCoordinatesMap: NodeToCoordinatesMap,
+) => {
+  const selectedElement = document.querySelector(`[data-cf-node-id="${node.data.id}"]`);
+  if (selectedElement) {
+    const rect = getElementCoordinates(selectedElement);
+    nodeToCoordinatesMap[node.data.id] = {
+      coordinates: {
+        x: rect.x + window.scrollX,
+        y: rect.y + window.scrollY,
+        width: rect.width,
+        height: rect.height,
+      },
+    };
+  }
+  node.children.forEach((child) => collectNodeCoordinates(child, nodeToCoordinatesMap));
+};
+
 const waitForAllImagesToBeLoaded = () => {
-  // If the target contains an image, wait for this image to be loaded before sending the coordinates
+  // If the document contains an image, wait for this image to be loaded before collecting & sending all geometry data.
   const allImageNodes = document.querySelectorAll('img');
   return Promise.all(
     Array.from(allImageNodes).map((imageNode) => {

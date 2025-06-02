@@ -564,11 +564,11 @@ type OUTGOING_EVENT_PAYLOADS = {
   canvasGeometryUpdated: {
     size: { width: number; height: number };
     nodes: Record<string, { coordinates: Pick<DOMRect, 'x' | 'y' | 'width' | 'height'> }>;
-    sourceEvent: CanvasGeometryUpdateSourceEvent;
+    sourceEvent?: CanvasGeometryUpdateSourceEvent;
   };
 };
 
-export type CanvasGeometryUpdateSourceEvent = 'resize' | 'mutation' | 'manual';
+export type CanvasGeometryUpdateSourceEvent = 'resize' | 'mutation';
 
 export type SendMessageParams = <T extends OutgoingEvent>(
   eventType: T,
