@@ -1,11 +1,35 @@
 const CF_DEBUG_KEY = 'cf_debug';
 
+/**
+ * To ensure that the localStorage API can be used safely, we check
+ * for availability (e.g. undefined in Node.js). Additionally, we
+ * check if the localStorage can be used as some browsers throw a
+ * SecurityError (e.g. Brave or Chromium with specific settings).
+ */
+const checkLocalStorageAvailability = () => {
+  if (typeof localStorage === 'undefined' || localStorage === null) {
+    return false;
+  }
+  try {
+    // Attempt to set and remove an item to check if localStorage is enabled
+    const TEST_KEY = 'cf_test_local_storage';
+    localStorage.setItem(TEST_KEY, 'yes');
+    if (localStorage.getItem(TEST_KEY) === 'yes') {
+      localStorage.removeItem(TEST_KEY);
+      return true;
+    } else {
+      return false;
+    }
+  } catch (_error) {
+    return false;
+  }
+};
 export class DebugLogger {
   private static instance: DebugLogger | null = null;
   private enabled: boolean;
 
   constructor() {
-    if (typeof localStorage === 'undefined') {
+    if (!checkLocalStorageAvailability()) {
       this.enabled = false;
       return;
     }

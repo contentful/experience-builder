@@ -107,11 +107,27 @@ jobs:
             git pull
             git rebase next
             git push origin
+            git checkout v3-prerelease
+             git pull
+            { # try
+              git rebase development &&
+              git push origin
+            } || { # catch
+              echo "⚠️  Silently failed to update v3-prerelease"
+            }
           elif [ ${{ github.ref_name }} = next ]; then
             git checkout development
             git pull
             git rebase next
             git push origin
+            git checkout v3-prerelease
+             git pull
+            { # try
+              git rebase development &&
+              git push origin
+            } || { # catch
+              echo "⚠️  Silently failed to update v3-prerelease"
+            }
           elif [ ${{ github.ref_name }} = development ]; then
              git checkout v3-prerelease
              git pull

@@ -18,7 +18,7 @@
   "dependencies": {
     "@contentful/experiences-sdk-react": "^1.28.1",
     "contentful": "^11.4.3",
-    "gatsby": "^5.14.1",
+    "gatsby": "^5.14.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.5.2"
@@ -32,6 +32,9 @@
   "overrides": {
     "gatsby": {
       "path-to-regexp": "0.1.12"
+    },
+    "@parcel/core": {
+      "base-x": "3.0.11"
     }
   }
 }
