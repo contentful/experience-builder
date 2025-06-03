@@ -30,7 +30,7 @@ export const useCanvasGeometryUpdates = ({
   const debouncedUpdateGeometry = useMemo(
     () =>
       debounce(
-        (tree: ExperienceTree, sourceEvent?: CanvasGeometryUpdateSourceEvent) => {
+        (tree: ExperienceTree, sourceEvent: CanvasGeometryUpdateSourceEvent) => {
           // When the DOM changed, we still need to wait for the next frame to ensure that
           // rendering is complete (e.g. this is required when deleting a node).
           window.requestAnimationFrame(() => {
