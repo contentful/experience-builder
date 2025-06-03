@@ -63,10 +63,10 @@ export const useCanvasGeometryUpdates = (tree: ExperienceTree) => {
 
   // Allows manually firing the update for scenarios that don't trigger a mutation event,
   // such as when unbinding an image source and falling back to a placeholder image.
-  const manuallyFireCanvasGeometryUpdate = useCallback(
+  const sendCanvasGeometryUpdate = useCallback(
     (tree: ExperienceTree) => debouncedUpdateGeometry(tree),
     [debouncedUpdateGeometry],
   );
 
-  return { manuallyFireCanvasGeometryUpdate };
+  return { sendCanvasGeometryUpdate };
 };

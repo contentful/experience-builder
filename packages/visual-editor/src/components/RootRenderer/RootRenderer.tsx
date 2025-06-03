@@ -10,8 +10,8 @@ import { useCanvasGeometryUpdates } from './useCanvasGeometryUpdates';
 
 export const RootRenderer = () => {
   const tree = useTreeStore((state) => state.tree);
-  const { manuallyFireCanvasGeometryUpdate } = useCanvasGeometryUpdates(tree);
-  useEditorSubscriber(manuallyFireCanvasGeometryUpdate);
+  const { sendCanvasGeometryUpdate } = useCanvasGeometryUpdates(tree);
+  useEditorSubscriber(sendCanvasGeometryUpdate);
 
   const breakpoints = useTreeStore((state) => state.breakpoints);
   const { resolveDesignValue } = useBreakpoints(breakpoints);
