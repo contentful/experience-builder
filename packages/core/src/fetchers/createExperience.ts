@@ -11,6 +11,13 @@ type CreateExperienceParams = {
   locale: string;
 };
 
+// Following the API shape, we check the `sys.locale` property as we can't rely on the shape of
+// fields to determine whether it's localized or not.
+// See CDA documentation mentioning it here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes
+const isNotLocalized = (entity: Entry | Asset) => {
+  return !entity.sys.locale;
+};
+
 /**
  * Create an experience instance using a serialized version of the entity store for SSR purposes.
  * @param {string} json - JSON representation of the experience
@@ -55,10 +62,3 @@ export function createExperience(
     };
   }
 }
-
-// Following the API shape, we check the `sys.locale` property as we can't rely on the shape of
-// fields to determine whether it's localized or not.
-// See CDA documentation mentioning it here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes
-const isNotLocalized = (entity: Entry | Asset) => {
-  return !entity.sys.locale;
-};

@@ -20,18 +20,6 @@ const isValidJsonObject = (s: string) => {
   }
 };
 
-export const doesMismatchMessageSchema = (event: MessageEvent): false | string => {
-  try {
-    tryParseMessage(event);
-    return false;
-  } catch (e) {
-    if (e instanceof ParseError) {
-      return e.message;
-    }
-    throw e;
-  }
-};
-
 export const tryParseMessage = (event: MessageEvent): IncomingMessage => {
   if (!event.data) {
     throw new ParseError('Field event.data is missing');
@@ -70,6 +58,18 @@ export const tryParseMessage = (event: MessageEvent): IncomingMessage => {
   }
 
   return eventData as IncomingMessage;
+};
+
+export const doesMismatchMessageSchema = (event: MessageEvent): false | string => {
+  try {
+    tryParseMessage(event);
+    return false;
+  } catch (e) {
+    if (e instanceof ParseError) {
+      return e.message;
+    }
+    throw e;
+  }
 };
 
 export const validateExperienceBuilderConfig = ({

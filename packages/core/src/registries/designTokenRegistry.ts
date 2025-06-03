@@ -48,26 +48,6 @@ export const defineDesignTokens = (designTokenDefinition: DesignTokensDefinition
 
 const templateStringRegex = /\${(\w.+?)}/g;
 
-export const getDesignTokenRegistration = (breakpointValue: string, variableName: string) => {
-  if (!breakpointValue) return breakpointValue;
-
-  let resolvedValue = '';
-
-  // Match all parts of the string, including design tokens and other parts
-  const parts = breakpointValue.match(/(\${.+?}|\S+)/g);
-
-  if (parts) {
-    for (const part of parts) {
-      const isDesignToken = templateStringRegex.test(part);
-      const tokenValue = isDesignToken ? resolveSimpleDesignToken(part, variableName) : part;
-      resolvedValue += `${tokenValue} `;
-    }
-  }
-
-  // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
-  return resolvedValue.trim();
-};
-
 const resolveSimpleDesignToken = (templateString: string, variableName: string) => {
   const nonTemplateValue = templateString.replace(templateStringRegex, '$1');
   const [tokenCategory, tokenName] = nonTemplateValue.split('.');
@@ -89,6 +69,26 @@ const resolveSimpleDesignToken = (templateString: string, variableName: string) 
     return optionalBuiltInStyles[variableName].defaultValue;
   }
   return '0px';
+};
+
+export const getDesignTokenRegistration = (breakpointValue: string, variableName: string) => {
+  if (!breakpointValue) return breakpointValue;
+
+  let resolvedValue = '';
+
+  // Match all parts of the string, including design tokens and other parts
+  const parts = breakpointValue.match(/(\${.+?}|\S+)/g);
+
+  if (parts) {
+    for (const part of parts) {
+      const isDesignToken = templateStringRegex.test(part);
+      const tokenValue = isDesignToken ? resolveSimpleDesignToken(part, variableName) : part;
+      resolvedValue += `${tokenValue} `;
+    }
+  }
+
+  // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
+  return resolvedValue.trim();
 };
 
 // Used in unit tests to reset the design token registry

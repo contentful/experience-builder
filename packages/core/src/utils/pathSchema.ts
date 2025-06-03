@@ -4,58 +4,31 @@
 
 import { Asset, Entry } from 'contentful';
 
-export type UnresolvedFieldset = Array<[null, string, string?]>;
-export type Fieldset = Array<[Entry | Asset, string, string?]>;
+const chunkSegments = (
+  segments: string[],
+  { startNextChunkOnElementEqualTo }: { startNextChunkOnElementEqualTo: string },
+): Array<string[]> => {
+  const chunks: Array<string[]> = [];
+  let currentChunk: string[] = [];
 
-export const parseDataSourcePathIntoFieldset = (path: string): UnresolvedFieldset => {
-  const parsedPath = parseDeepPath(path);
+  const isSegmentBeginningOfChunk = (segment: string) => segment === startNextChunkOnElementEqualTo;
+  const excludeEmptyChunks = (chunk: string[]) => chunk.length > 0;
 
-  if (null === parsedPath) {
-    throw new Error(`Cannot parse path '${path}' as deep path`);
+  for (let i = 0; i < segments.length; i++) {
+    const isInitialElement = i === 0;
+    const segment = segments[i];
+    if (isInitialElement) {
+      currentChunk = [segment];
+    } else if (isSegmentBeginningOfChunk(segment)) {
+      chunks.push(currentChunk);
+      currentChunk = [segment];
+    } else {
+      currentChunk.push(segment);
+    }
   }
+  chunks.push(currentChunk);
 
-  return parsedPath.fields.map((field) => [null, field, '~locale']);
-};
-
-/**
- * Parse path into components, supports  L1 references (one reference follow) atm.
- * @param path from data source. eg. `/uuid123/fields/image/~locale/fields/file/~locale`
- *                               eg. `/uuid123/fields/file/~locale/fields/title/~locale`
- * @returns
- */
-export const parseDataSourcePathWithL1DeepBindings = (
-  path: string,
-): {
-  key: string;
-  field: string;
-  referentField: string;
-} => {
-  const parsedPath = parseDeepPath(path);
-
-  if (null === parsedPath) {
-    throw new Error(`Cannot parse path '${path}' as deep path`);
-  }
-
-  return {
-    key: parsedPath.key,
-    field: parsedPath.fields[0],
-    referentField: parsedPath.fields[1],
-  };
-};
-
-/**
- * Detects if paths is valid deep-path, like:
- *  - /gV6yKXp61hfYrR7rEyKxY/fields/mainStory/~locale/fields/cover/~locale/fields/title/~locale
- * or regular, like:
- *  - /6J8eA60yXwdm5eyUh9fX6/fields/mainStory/~locale
- * @returns
- */
-export const isDeepPath = (deepPathCandidate: string): boolean => {
-  const deepPathParsed = parseDeepPath(deepPathCandidate);
-  if (!deepPathParsed) {
-    return false;
-  }
-  return deepPathParsed.fields.length > 1;
+  return chunks.filter(excludeEmptyChunks);
 };
 
 type DeepPathParsed = {
@@ -116,31 +89,58 @@ const parseDeepPath = (deepPathCandidate: string): DeepPathParsed | null => {
   };
 };
 
-const chunkSegments = (
-  segments: string[],
-  { startNextChunkOnElementEqualTo }: { startNextChunkOnElementEqualTo: string },
-): Array<string[]> => {
-  const chunks: Array<string[]> = [];
-  let currentChunk: string[] = [];
+export type UnresolvedFieldset = Array<[null, string, string?]>;
+export type Fieldset = Array<[Entry | Asset, string, string?]>;
 
-  const isSegmentBeginningOfChunk = (segment: string) => segment === startNextChunkOnElementEqualTo;
-  const excludeEmptyChunks = (chunk: string[]) => chunk.length > 0;
+export const parseDataSourcePathIntoFieldset = (path: string): UnresolvedFieldset => {
+  const parsedPath = parseDeepPath(path);
 
-  for (let i = 0; i < segments.length; i++) {
-    const isInitialElement = i === 0;
-    const segment = segments[i];
-    if (isInitialElement) {
-      currentChunk = [segment];
-    } else if (isSegmentBeginningOfChunk(segment)) {
-      chunks.push(currentChunk);
-      currentChunk = [segment];
-    } else {
-      currentChunk.push(segment);
-    }
+  if (null === parsedPath) {
+    throw new Error(`Cannot parse path '${path}' as deep path`);
   }
-  chunks.push(currentChunk);
 
-  return chunks.filter(excludeEmptyChunks);
+  return parsedPath.fields.map((field) => [null, field, '~locale']);
+};
+
+/**
+ * Parse path into components, supports  L1 references (one reference follow) atm.
+ * @param path from data source. eg. `/uuid123/fields/image/~locale/fields/file/~locale`
+ *                               eg. `/uuid123/fields/file/~locale/fields/title/~locale`
+ * @returns
+ */
+export const parseDataSourcePathWithL1DeepBindings = (
+  path: string,
+): {
+  key: string;
+  field: string;
+  referentField: string;
+} => {
+  const parsedPath = parseDeepPath(path);
+
+  if (null === parsedPath) {
+    throw new Error(`Cannot parse path '${path}' as deep path`);
+  }
+
+  return {
+    key: parsedPath.key,
+    field: parsedPath.fields[0],
+    referentField: parsedPath.fields[1],
+  };
+};
+
+/**
+ * Detects if paths is valid deep-path, like:
+ *  - /gV6yKXp61hfYrR7rEyKxY/fields/mainStory/~locale/fields/cover/~locale/fields/title/~locale
+ * or regular, like:
+ *  - /6J8eA60yXwdm5eyUh9fX6/fields/mainStory/~locale
+ * @returns
+ */
+export const isDeepPath = (deepPathCandidate: string): boolean => {
+  const deepPathParsed = parseDeepPath(deepPathCandidate);
+  if (!deepPathParsed) {
+    return false;
+  }
+  return deepPathParsed.fields.length > 1;
 };
 
 export const lastPathNamedSegmentEq = (path: string, expectedName: string) => {

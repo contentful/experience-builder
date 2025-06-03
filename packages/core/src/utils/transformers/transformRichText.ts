@@ -9,6 +9,29 @@ import { getBoundValue } from './getBoundValue';
 import { Asset, Entry } from 'contentful';
 import { EntityStoreBase } from '@/entity';
 
+type Node = Block | Inline | Text;
+
+const isLinkTarget = (node: Node): boolean => {
+  return node?.data?.target?.sys?.type === 'Link';
+};
+
+const resolveLinks = (node: Node, entityStore: EntityStoreBase): void => {
+  if (!node) return;
+
+  // Resolve link if current node has one
+  if (isLinkTarget(node)) {
+    const entity = entityStore.getEntityFromLink(node.data.target);
+    if (entity) {
+      node.data.target = entity;
+    }
+  }
+
+  // Process content array if it exists
+  if ('content' in node && Array.isArray(node.content)) {
+    node.content.forEach((childNode) => resolveLinks(childNode, entityStore));
+  }
+};
+
 export const transformRichText = (
   entryOrAsset: Entry | Asset,
   entityStore: EntityStoreBase,
@@ -42,27 +65,4 @@ export const transformRichText = (
     return richTextDocument;
   }
   return undefined;
-};
-
-type Node = Block | Inline | Text;
-
-const isLinkTarget = (node: Node): boolean => {
-  return node?.data?.target?.sys?.type === 'Link';
-};
-
-const resolveLinks = (node: Node, entityStore: EntityStoreBase): void => {
-  if (!node) return;
-
-  // Resolve link if current node has one
-  if (isLinkTarget(node)) {
-    const entity = entityStore.getEntityFromLink(node.data.target);
-    if (entity) {
-      node.data.target = entity;
-    }
-  }
-
-  // Process content array if it exists
-  if ('content' in node && Array.isArray(node.content)) {
-    node.content.forEach((childNode) => resolveLinks(childNode, entityStore));
-  }
 };

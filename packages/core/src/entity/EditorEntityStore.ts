@@ -99,6 +99,7 @@ export abstract class EditorEntityStore extends EntityStoreBase {
             ...(message.missingEntityIds ?? []),
           ];
           if (missing.every((id) => messageIds.includes(id))) {
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             clearTimeout(timeout);
             resolve(message.entities);
 

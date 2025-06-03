@@ -1,19 +1,5 @@
 import { Entry } from 'contentful';
 
-export const resolveHyperlinkPattern = (
-  pattern: string,
-  entry: Entry | null,
-  locale: string | null,
-) => {
-  if (!entry || !locale) return null;
-  const variables = {
-    entry,
-    locale,
-  };
-
-  return buildTemplate({ template: pattern, context: variables });
-};
-
 function getValue(obj, path) {
   return path
     .replace(/\[/g, '.')
@@ -72,3 +58,17 @@ export function buildTemplate({
       })
   );
 }
+
+export const resolveHyperlinkPattern = (
+  pattern: string,
+  entry: Entry | null,
+  locale: string | null,
+) => {
+  if (!entry || !locale) return null;
+  const variables = {
+    entry,
+    locale,
+  };
+
+  return buildTemplate({ template: pattern, context: variables });
+};
