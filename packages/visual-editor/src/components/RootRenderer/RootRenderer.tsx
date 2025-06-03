@@ -7,6 +7,7 @@ import { EditorBlock } from '@components/EditorBlock';
 import { EmptyCanvasMessage } from '@components/EmptyCanvasMessage';
 import { ROOT_ID } from '@/types/constants';
 import { type InMemoryEntitiesStore } from '@contentful/experiences-core';
+import { useCanvasGeometryUpdates } from './useCanvasGeometryUpdates';
 
 type RootRendererProperties = {
   inMemoryEntitiesStore: InMemoryEntitiesStore;
@@ -14,10 +15,12 @@ type RootRendererProperties = {
 
 export const RootRenderer = ({ inMemoryEntitiesStore }: RootRendererProperties) => {
   useEditorSubscriber(inMemoryEntitiesStore);
-  const breakpoints = useTreeStore((state) => state.breakpoints);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { resolveDesignValue } = useBreakpoints(breakpoints);
+  const rootContainerRef = useRef<HTMLDivElement>(null);
   const tree = useTreeStore((state) => state.tree);
+  useCanvasGeometryUpdates({ tree, rootContainerRef });
+
+  const breakpoints = useTreeStore((state) => state.breakpoints);
+  const { resolveDesignValue } = useBreakpoints(breakpoints);
   // If the root blockId is defined but not the default string, it is the entry ID
   // of the experience/ pattern to properly detect circular dependencies.
   const rootBlockId = tree.root.data.blockId ?? ROOT_ID;
@@ -28,7 +31,7 @@ export const RootRenderer = ({ inMemoryEntitiesStore }: RootRendererProperties) 
 
   return (
     <>
-      <div data-ctfl-root className={styles.rootContainer} ref={containerRef}>
+      <div data-ctfl-root className={styles.rootContainer} ref={rootContainerRef}>
         {!tree.root.children.length ? (
           <EmptyCanvasMessage />
         ) : (
