@@ -14,7 +14,7 @@ module.exports = {
     react: {
       version: 'detect',
     },
-  },  
+  },
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -25,9 +25,14 @@ module.exports = {
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint'],
   rules: {
+    'react/prop-types': 'off',
     'react-hooks/exhaustive-deps': 'warn',
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "ignoreRestSiblings": true }],
-    "react/prop-types": "off",
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { argsIgnorePattern: '^_', ignoreRestSiblings: true },
+    ],
+    '@typescript-eslint/no-use-before-define': 'error',
   },
-}
+};
