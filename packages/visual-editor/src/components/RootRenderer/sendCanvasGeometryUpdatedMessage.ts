@@ -24,8 +24,8 @@ export const sendCanvasGeometryUpdatedMessage = async (
   collectNodeCoordinates(tree.root, nodeToCoordinatesMap);
   sendMessage(OUTGOING_EVENTS.CanvasGeometryUpdated, {
     size: {
-      width: document.documentElement.scrollWidth,
-      height: document.documentElement.scrollHeight,
+      width: document.documentElement.offsetWidth,
+      height: document.documentElement.offsetHeight,
     },
     nodes: nodeToCoordinatesMap,
     sourceEvent,
