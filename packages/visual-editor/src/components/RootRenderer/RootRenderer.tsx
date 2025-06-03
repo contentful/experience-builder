@@ -9,13 +9,13 @@ import { ROOT_ID } from '@/types/constants';
 import { useCanvasGeometryUpdates } from './useCanvasGeometryUpdates';
 
 export const RootRenderer = () => {
+  const rootContainerRef = useRef<HTMLDivElement>(null);
   const tree = useTreeStore((state) => state.tree);
-  const { sendCanvasGeometryUpdate } = useCanvasGeometryUpdates(tree);
-  useEditorSubscriber(sendCanvasGeometryUpdate);
+  useCanvasGeometryUpdates({ tree, rootContainerRef });
+  useEditorSubscriber();
 
   const breakpoints = useTreeStore((state) => state.breakpoints);
   const { resolveDesignValue } = useBreakpoints(breakpoints);
-  const containerRef = useRef<HTMLDivElement>(null);
   // If the root blockId is defined but not the default string, it is the entry ID
   // of the experience/ pattern to properly detect circular dependencies.
   const rootBlockId = tree.root.data.blockId ?? ROOT_ID;
@@ -23,7 +23,7 @@ export const RootRenderer = () => {
 
   return (
     <>
-      <div data-ctfl-root className={styles.rootContainer} ref={containerRef}>
+      <div data-ctfl-root className={styles.rootContainer} ref={rootContainerRef}>
         {!tree.root.children.length ? (
           <EmptyCanvasMessage />
         ) : (

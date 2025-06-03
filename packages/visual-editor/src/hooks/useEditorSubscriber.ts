@@ -29,7 +29,7 @@ import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/s
 import { useEntityStore } from '@/store/entityStore';
 import { UnresolvedLink } from 'contentful';
 
-export function useEditorSubscriber(sendCanvasGeometryUpdate: (tree: ExperienceTree) => void) {
+export function useEditorSubscriber() {
   const entityStore = useEntityStore((state) => state.entityStore);
   const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
   const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
@@ -220,7 +220,6 @@ export function useEditorSubscriber(sendCanvasGeometryUpdate: (tree: ExperienceT
           }
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
-          sendCanvasGeometryUpdate(tree);
           break;
         }
         case INCOMING_EVENTS.AssembliesRegistered: {
@@ -301,6 +300,5 @@ export function useEditorSubscriber(sendCanvasGeometryUpdate: (tree: ExperienceT
     updateTree,
     updateNodesByUpdatedEntity,
     resetEntityStore,
-    sendCanvasGeometryUpdate,
   ]);
 }

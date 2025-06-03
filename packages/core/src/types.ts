@@ -564,7 +564,7 @@ type OUTGOING_EVENT_PAYLOADS = {
   canvasGeometryUpdated: {
     size: { width: number; height: number };
     nodes: Record<string, { coordinates: Pick<DOMRect, 'x' | 'y' | 'width' | 'height'> }>;
-    sourceEvent?: CanvasGeometryUpdateSourceEvent;
+    sourceEvent: CanvasGeometryUpdateSourceEvent;
   };
 };
 
