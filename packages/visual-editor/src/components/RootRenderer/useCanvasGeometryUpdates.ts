@@ -55,26 +55,24 @@ export const useCanvasGeometryUpdates = ({
     treeRef.current = tree;
   }, [tree]);
 
+  // Handling window resize events
   useEffect(() => {
-    if (!rootContainerRef.current) return;
     const resizeEventListener = () => debouncedUpdateGeometry(treeRef.current, 'resize');
     window.addEventListener('resize', resizeEventListener);
+    return () => window.removeEventListener('resize', resizeEventListener);
+  }, [debouncedUpdateGeometry]);
 
-    // In some cases like duplication of a node, this fires two mutation events which both are
-    // required. The final coordinates might be available at the first or the second invocation.
-    const observer = new MutationObserver(() => {
-      debouncedUpdateGeometry(treeRef.current, 'mutation');
-    });
-
+  // Handling DOM mutations
+  useEffect(() => {
+    if (!rootContainerRef.current) return;
+    const observer = new MutationObserver(() =>
+      debouncedUpdateGeometry(treeRef.current, 'mutation'),
+    );
     observer.observe(rootContainerRef.current, {
       childList: true,
       subtree: true,
       attributes: true,
     });
-
-    return () => {
-      window.removeEventListener('resize', resizeEventListener);
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [debouncedUpdateGeometry, rootContainerRef]);
 };
