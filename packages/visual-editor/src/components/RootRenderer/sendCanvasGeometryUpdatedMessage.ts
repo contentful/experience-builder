@@ -17,7 +17,7 @@ type NodeToCoordinatesMap = Record<
  */
 export const sendCanvasGeometryUpdatedMessage = async (
   tree: ExperienceTree,
-  sourceEvent?: CanvasGeometryUpdateSourceEvent,
+  sourceEvent: CanvasGeometryUpdateSourceEvent,
 ) => {
   const nodeToCoordinatesMap: NodeToCoordinatesMap = {};
   await waitForAllImagesToBeLoaded();
