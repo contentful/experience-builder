@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.39.0](https://github.com/contentful/experience-builder/compare/v1.38.0...v1.39.0) (2025-06-03)
+
+### Features
+
+- split pattern and experience schemas ([3e696e5](https://github.com/contentful/experience-builder/commit/3e696e578c4cb786f68967e4ae62350aef5efa4e))
+- update package-lock.json to include vite-tsconfig-paths ([bb2e1fb](https://github.com/contentful/experience-builder/commit/bb2e1fbc2ffe220ccfb1b1b889d363f63b41f083))
+
+### Bug Fixes
+
+- add contentful-management as explicit dependency ([8250e62](https://github.com/contentful/experience-builder/commit/8250e6278a1d41f8f2381bfeaeee8698583156e1))
+- bump base-x dep to non-vulnerable version ([#1142](https://github.com/contentful/experience-builder/issues/1142)) ([140c77e](https://github.com/contentful/experience-builder/commit/140c77e34312a740e743d9b70b6b003ad75f575a))
+- consolidate more validators into "common" ([1076645](https://github.com/contentful/experience-builder/commit/1076645739b5add2939e7f9ae097643964a05531))
+- **core:** handle null or disabled localStorage [SPA-2838] [ZEND-6469] ([#1145](https://github.com/contentful/experience-builder/issues/1145)) ([ecbd0d2](https://github.com/contentful/experience-builder/commit/ecbd0d26e1e2394da25127f4ae1b45ccc4507c91))
+- export VariableMapping from the correct location ([6a832e0](https://github.com/contentful/experience-builder/commit/6a832e005caa287226213de61cef956b94c5527f))
+- fix ts errors ([6f59b33](https://github.com/contentful/experience-builder/commit/6f59b334ac7c3fcf9f51e24b74dd121095da78b5))
+- fix ts errors ([f8dcf0e](https://github.com/contentful/experience-builder/commit/f8dcf0edac61e83b9730e3bb51a8e9d06b524cb0))
+- fix ts errors ([fce12ab](https://github.com/contentful/experience-builder/commit/fce12abc2cde13dc82a4a1bd9402e8c42945de4a))
+
 ## [1.38.0](https://github.com/contentful/experience-builder/compare/v1.37.2...v1.38.0) (2025-05-23)
 
 ### Features

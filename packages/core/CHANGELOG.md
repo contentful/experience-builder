@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.39.0](https://github.com/contentful/experience-builder/compare/v1.38.0...v1.39.0) (2025-06-03)
+
+### Features
+
+- split pattern and experience schemas ([3e696e5](https://github.com/contentful/experience-builder/commit/3e696e578c4cb786f68967e4ae62350aef5efa4e))
+
+### Bug Fixes
+
+- **core:** handle null or disabled localStorage [SPA-2838] [ZEND-6469] ([#1145](https://github.com/contentful/experience-builder/issues/1145)) ([ecbd0d2](https://github.com/contentful/experience-builder/commit/ecbd0d26e1e2394da25127f4ae1b45ccc4507c91))
+
 ## [1.38.0](https://github.com/contentful/experience-builder/compare/v1.37.2...v1.38.0) (2025-05-23)
 
 ### Bug Fixes
