@@ -28,7 +28,7 @@ describe('debugLogger', () => {
   });
 
   it('should get initialised to the localStorage value if localStorage present', () => {
-    vi.spyOn(localStorage, 'getItem').mockReturnValue('true');
+    localStorage.setItem('cf_debug', 'true');
     const debug2 = new DebugLogger();
     expect(debug2.getEnabled()).toBe(true);
   });
