@@ -18,6 +18,10 @@ export const builtInStyles: Partial<DesignVariableMap> = {
           value: 'end',
           displayName: 'Align right',
         },
+        {
+          value: 'stretch',
+          displayName: 'Stretch',
+        },
       ],
     },
     type: 'Text',
@@ -40,6 +44,10 @@ export const builtInStyles: Partial<DesignVariableMap> = {
         {
           value: 'end',
           displayName: 'Align bottom',
+        },
+        {
+          value: 'stretch',
+          displayName: 'Stretch',
         },
       ],
     },
@@ -416,6 +424,10 @@ export const singleColumnBuiltInStyles: Partial<DesignVariableMap> = {
           value: 'end',
           displayName: 'Align right',
         },
+        {
+          value: 'stretch',
+          displayName: 'Stretch',
+        },
       ],
     },
     type: 'Text',
@@ -438,6 +450,10 @@ export const singleColumnBuiltInStyles: Partial<DesignVariableMap> = {
         {
           value: 'end',
           displayName: 'Align bottom',
+        },
+        {
+          value: 'stretch',
+          displayName: 'Stretch',
         },
       ],
     },

@@ -22,6 +22,10 @@ export const builtInStyles: Record<
           value: 'end',
           displayName: 'Align right',
         },
+        {
+          value: 'stretch',
+          displayName: 'Stretch',
+        },
       ],
     },
     type: 'Text',
@@ -44,6 +48,10 @@ export const builtInStyles: Record<
         {
           value: 'end',
           displayName: 'Align bottom',
+        },
+        {
+          value: 'stretch',
+          displayName: 'Stretch',
         },
       ],
     },

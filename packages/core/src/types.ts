@@ -208,8 +208,8 @@ export type ExperienceTree = {
 // FIXME: Check whether this should be the same as CF_STYLE_ATTRIBUTES
 export type StyleProps = {
   cfVisibility: boolean;
-  cfHorizontalAlignment: 'start' | 'end' | 'center';
-  cfVerticalAlignment: 'start' | 'end' | 'center';
+  cfHorizontalAlignment: 'start' | 'end' | 'center' | 'stretch';
+  cfVerticalAlignment: 'start' | 'end' | 'center' | 'stretch';
   cfMargin: string;
   cfPadding: string;
   cfBackgroundColor: string;
