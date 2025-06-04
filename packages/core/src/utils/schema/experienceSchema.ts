@@ -9,7 +9,7 @@ const excludeAssets = (link: Link<'Asset' | 'Entry'>) => link.sys.linkType !== '
  * Parses experience data and extracts unresolved links to assets and entries.
  * TODO: currently it only follows links from the dataSource... (which is L2, but how do we get to L4).
  */
-export const extractUnresolvedLinksFromExperience = (experience: Experience) => {
+export const extractLeafLinksReferencedFromExperience = (experience: Experience) => {
   const assetLinks: Link<'Asset'>[] = [];
   const entryLinks: Link<'Entry'>[] = [];
 
