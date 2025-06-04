@@ -126,18 +126,6 @@ const patternEntry: ExperienceEntry = {
                 desktop: '10px 10px',
               },
             },
-            cfBackgroundImageScaling: {
-              type: 'DesignValue',
-              valuesByBreakpoint: {
-                desktop: 'fit',
-              },
-            },
-            cfBackgroundImageAlignment: {
-              type: 'DesignValue',
-              valuesByBreakpoint: {
-                desktop: 'left top',
-              },
-            },
             cfColumns: {
               type: 'DesignValue',
               valuesByBreakpoint: {
@@ -219,21 +207,9 @@ const patternEntry: ExperienceEntry = {
                   valuesByBreakpoint: {
                     desktop: {
                       scaling: 'fit',
-                      alignment: 'left',
+                      alignment: 'left center',
                       targetSize: '300px',
                     },
-                  },
-                },
-                cfBackgroundImageScaling: {
-                  type: 'DesignValue',
-                  valuesByBreakpoint: {
-                    desktop: 'fit',
-                  },
-                },
-                cfBackgroundImageAlignment: {
-                  type: 'DesignValue',
-                  valuesByBreakpoint: {
-                    desktop: 'left top',
                   },
                 },
                 cfColumnSpan: {
@@ -488,21 +464,9 @@ const patternEntry: ExperienceEntry = {
                   valuesByBreakpoint: {
                     desktop: {
                       scaling: 'fit',
-                      alignment: 'left',
+                      alignment: 'left center',
                       targetSize: '300px',
                     },
-                  },
-                },
-                cfBackgroundImageScaling: {
-                  type: 'DesignValue',
-                  valuesByBreakpoint: {
-                    desktop: 'fit',
-                  },
-                },
-                cfBackgroundImageAlignment: {
-                  type: 'DesignValue',
-                  valuesByBreakpoint: {
-                    desktop: 'left top',
                   },
                 },
                 cfColumnSpan: {
@@ -605,7 +569,7 @@ const patternEntry: ExperienceEntry = {
             valuesByBreakpoint: {
               desktop: {
                 scaling: 'fit',
-                alignment: 'left',
+                alignment: 'left center',
                 targetSize: '300px',
               },
             },
@@ -781,18 +745,6 @@ const editablePatternEntry: ExperienceEntry = {
                 desktop: '10px 10px',
               },
             },
-            cfBackgroundImageScaling: {
-              type: 'DesignValue',
-              valuesByBreakpoint: {
-                desktop: 'fit',
-              },
-            },
-            cfBackgroundImageAlignment: {
-              type: 'DesignValue',
-              valuesByBreakpoint: {
-                desktop: 'left top',
-              },
-            },
             cfColumns: {
               type: 'DesignValue',
               valuesByBreakpoint: {
@@ -871,21 +823,9 @@ const editablePatternEntry: ExperienceEntry = {
                   valuesByBreakpoint: {
                     desktop: {
                       scaling: 'fit',
-                      alignment: 'left',
+                      alignment: 'left center',
                       targetSize: '300px',
                     },
-                  },
-                },
-                cfBackgroundImageScaling: {
-                  type: 'DesignValue',
-                  valuesByBreakpoint: {
-                    desktop: 'fit',
-                  },
-                },
-                cfBackgroundImageAlignment: {
-                  type: 'DesignValue',
-                  valuesByBreakpoint: {
-                    desktop: 'left top',
                   },
                 },
                 cfColumnSpan: {
@@ -1136,21 +1076,9 @@ const editablePatternEntry: ExperienceEntry = {
                   valuesByBreakpoint: {
                     desktop: {
                       scaling: 'fit',
-                      alignment: 'left',
+                      alignment: 'left center',
                       targetSize: '300px',
                     },
-                  },
-                },
-                cfBackgroundImageScaling: {
-                  type: 'DesignValue',
-                  valuesByBreakpoint: {
-                    desktop: 'fit',
-                  },
-                },
-                cfBackgroundImageAlignment: {
-                  type: 'DesignValue',
-                  valuesByBreakpoint: {
-                    desktop: 'left top',
                   },
                 },
                 cfColumnSpan: {
@@ -1264,7 +1192,7 @@ const editablePatternEntry: ExperienceEntry = {
             valuesByBreakpoint: {
               desktop: {
                 scaling: 'fit',
-                alignment: 'left',
+                alignment: 'left center',
                 targetSize: '300px',
               },
             },
@@ -1423,7 +1351,7 @@ describe('pattern component', () => {
           valuesByBreakpoint: {
             desktop: {
               scaling: 'fit',
-              alignment: 'left',
+              alignment: 'left center',
               targetSize: '400px',
             },
           },

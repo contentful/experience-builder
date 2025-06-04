@@ -176,18 +176,6 @@ export const experience = {
                 type: 'UnboundValue',
                 key: '36j5IQjr3FKEQ4Yvyd034',
               },
-              cfBackgroundImageScaling: {
-                type: 'DesignValue',
-                valuesByBreakpoint: {
-                  desktop: 'fit',
-                },
-              },
-              cfBackgroundImageAlignment: {
-                type: 'DesignValue',
-                valuesByBreakpoint: {
-                  desktop: 'left top',
-                },
-              },
               cfHyperlink: {
                 type: 'UnboundValue',
                 key: 'raxHlcBnR-MgVXZ0BNdVz',
