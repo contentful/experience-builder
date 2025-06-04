@@ -98,7 +98,6 @@ export const transformBackgroundImage = (
     }
     let [horizontalAlignment, verticalAlignment] = alignment.trim().split(/\s+/, 2);
 
-    // TODO: drop this backward compatibility in the next major version as we don't use single values since a year ago
     // Special case for handling single values
     // for backwards compatibility with single values 'right','left', 'center', 'top','bottom'
     if (horizontalAlignment && !verticalAlignment) {
@@ -129,8 +128,8 @@ export const transformBackgroundImage = (
       }
     }
 
-    const isHorizontalValid = ['left', 'right', 'center', 'stretch'].includes(horizontalAlignment);
-    const isVerticalValid = ['top', 'bottom', 'center', 'stretch'].includes(verticalAlignment);
+    const isHorizontalValid = ['left', 'right', 'center'].includes(horizontalAlignment);
+    const isVerticalValid = ['top', 'bottom', 'center'].includes(verticalAlignment);
 
     horizontalAlignment = isHorizontalValid ? horizontalAlignment : 'left';
     verticalAlignment = isVerticalValid ? verticalAlignment : 'top';
