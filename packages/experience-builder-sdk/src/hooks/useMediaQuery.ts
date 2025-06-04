@@ -15,6 +15,7 @@ type ResolvedStylesheetData = Array<{
   className: string;
   breakpointCondition: string;
   css: string;
+  visibilityCss?: string;
 }>;
 
 /**
@@ -41,13 +42,23 @@ export const createStylesheetsForBuiltInStyles = ({
 }): ResolvedStylesheetData => {
   const flattenedDesignTokens = flattenDesignTokenRegistry(designTokensRegistry);
 
+  // When the node is hidden  for any breakpoint, we need to handle this separately with a disjunct media query.
+  const isAnyVisibilityValueHidden = Object.values(designPropertiesByBreakpoint).some(
+    (designProperties) => designProperties.cfVisibility === false,
+  );
+  // We always need an explicit value when using disjunct media queries
+  // Example: desktop uses "false" and tablet is undefined -> we need to set `display: none` for tablet as well.
+  let previousVisibilityValue: boolean | undefined;
+
   const result: Array<{
     className: string;
     breakpointCondition: string;
     css: string;
+    visibilityCss?: string;
   }> = [];
 
   for (const breakpoint of breakpoints) {
+    let visibilityCss: string | undefined;
     const designProperties = designPropertiesByBreakpoint[breakpoint.id];
     if (!designProperties) {
       continue;
@@ -56,9 +67,13 @@ export const createStylesheetsForBuiltInStyles = ({
     const designPropertiesWithResolvedDesignTokens = Object.entries(designProperties).reduce(
       (acc, [propertyName, value]) => ({
         ...acc,
-        [propertyName]: maybePopulateDesignTokenValue(propertyName, value, flattenedDesignTokens),
+        [propertyName]: maybePopulateDesignTokenValue(
+          propertyName,
+          value,
+          flattenedDesignTokens,
+        ) as string,
       }),
-      {},
+      {} as Record<string, PrimitiveValue>,
     );
     /* [Data Format] `designPropertiesWithResolvedDesignTokens` is a map of property name to plain design value:
      * designPropertiesWithResolvedDesignTokens = {
@@ -66,6 +81,19 @@ export const createStylesheetsForBuiltInStyles = ({
      *   cfBackgroundColor: 'rgba(246, 246, 246, 1)',
      * }
      */
+
+    // Special case for visibility to override any custom `display` values but only for a specific breakpoint.
+    if (isAnyVisibilityValueHidden) {
+      const visibilityValue =
+        (designPropertiesWithResolvedDesignTokens.cfVisibility as boolean | undefined) ??
+        previousVisibilityValue;
+      previousVisibilityValue = visibilityValue;
+      if (visibilityValue === false) {
+        visibilityCss = 'display:none !important;';
+      } else {
+        visibilityCss = '';
+      }
+    }
 
     // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
     const cfStyles = addMinHeightForEmptyStructures(
@@ -97,10 +125,50 @@ export const createStylesheetsForBuiltInStyles = ({
       className,
       breakpointCondition: breakpoint.query,
       css: breakpointCss,
+      visibilityCss,
     });
   }
 
   return result;
+};
+
+/**
+ * Turns a condition like `<768px` or `>1024px` into a media query rule.
+ * For example, `<768px` becomes `max-width:768px` and `>1024px` becomes `min-width:1024px`.
+ */
+const toMediaQueryRule = (condition: string) => {
+  const [evaluation, pixelValue] = [condition[0], condition.substring(1)];
+  const mediaQueryRule = evaluation === '<' ? 'max-width' : 'min-width';
+  return `(${mediaQueryRule}:${pixelValue})`;
+};
+
+const toDisjunctMediaQuery = ({
+  className,
+  condition,
+  nextCondition,
+  css,
+}: {
+  className: string;
+  condition: string;
+  nextCondition?: string;
+  css?: string;
+}) => {
+  if (!css) {
+    return '';
+  }
+  if (!nextCondition) {
+    return toMediaQuery({
+      condition,
+      cssByClassName: { [className]: css },
+    });
+  }
+  const nextRule = toMediaQueryRule(nextCondition);
+  if (condition === '*') {
+    return `@media not ${nextRule}{.${className}{${css}}}`;
+  }
+
+  const currentRule = toMediaQueryRule(condition);
+  return `@media ${currentRule} and (not ${nextRule}){.${className}{${css}}}`;
 };
 
 /**
@@ -122,9 +190,20 @@ export const createStylesheetsForBuiltInStyles = ({
  */
 export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: ResolvedStylesheetData) => {
   const stylesheet = stylesheetData.reduce(
-    (acc, { breakpointCondition, className, css }) => {
+    (acc, { breakpointCondition, className, css, visibilityCss }, index) => {
+      const wrapperMediaQueryCss = toDisjunctMediaQuery({
+        condition: breakpointCondition,
+        className,
+        css: visibilityCss,
+        // Assuming that it starts with the * breakpoint
+        nextCondition: stylesheetData[index + 1]?.breakpointCondition,
+      });
+
       if (acc.classNames.includes(className)) {
-        return acc;
+        return {
+          classNames: acc.classNames,
+          css: `${acc.css}${wrapperMediaQueryCss}`,
+        };
       }
 
       const mediaQueryCss = toMediaQuery({
@@ -133,7 +212,7 @@ export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: Resolved
       });
       return {
         classNames: [...acc.classNames, className],
-        css: `${acc.css}${mediaQueryCss}`,
+        css: `${acc.css}${mediaQueryCss}${wrapperMediaQueryCss}`,
       };
     },
     {
