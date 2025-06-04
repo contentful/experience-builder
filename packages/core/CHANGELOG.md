@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.40.0](https://github.com/contentful/experience-builder/compare/v1.39.0...v1.40.0) (2025-06-04)
+
+### Features
+
+- stretch option for vertical and horizontal alignment [SPA-2836] ([#1150](https://github.com/contentful/experience-builder/issues/1150)) ([fc115de](https://github.com/contentful/experience-builder/commit/fc115ded7cc8e9ac0b9259235abc5fc03dc01830))
+
 ## [1.39.0](https://github.com/contentful/experience-builder/compare/v1.38.0...v1.39.0) (2025-06-03)
 
 ### Features

@@ -1,6 +1,6 @@
 {
   "name": "@contentful/create-studio-experiences",
-  "version": "1.40.0-beta.0",
+  "version": "1.40.0",
   "description": "A CLI tool to get up and running with Contentful Studio Experiences quickly",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/create-studio-experiences#readme",
   "repository": {
