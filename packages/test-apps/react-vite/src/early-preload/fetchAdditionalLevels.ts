@@ -1,6 +1,7 @@
 import type { Experience } from '@contentful/experiences-sdk-react';
 import type { ContentfulClientApi, Asset, Entry } from 'contentful';
 import { inMemoryEntities } from '@contentful/experiences-sdk-react';
+// TODO: move the function to experience-core when it is ready
 // import { extractLeafLinksReferencedFromExperience } from '@contentful/experiences-core';
 import { extractLeafLinksReferencedFromExperience } from './experienceSchema';
 import { extractReferencesFromEntriesAsIds } from './referencesOf';
@@ -24,7 +25,10 @@ export const fetchAdditionalLevels = async (
     // For example, if you are using a custom in-memory store, you might do:
     // inMemoryEntities.addEntity(entity);
     // For this example, we will just log the entity.
-    console.log('Adding entities:', entities);
+    if (entities.length === 0) {
+      return;
+    }
+    console.log(';;Adding entities:', entities);
     inMemoryEntities.addEntities(entities);
   };
 
@@ -37,23 +41,36 @@ export const fetchAdditionalLevels = async (
       return;
     }
 
-    // TODO: parallelize taking pagination into account
-    const { items: assetItems } = await client.getAssets({
-      'sys.id[in]': assetsToFetch,
-      locale: localeCode,
-      limit: 1000,
-      skip: 0,
-    });
+    const assetItems = await (async () => {
+      if (assetsToFetch.length === 0) {
+        return [];
+      }
+      // TODO: parallelize taking pagination into account
+      const { items: assetItems } = await client.getAssets({
+        'sys.id[in]': assetsToFetch,
+        locale: localeCode,
+        limit: 1000,
+        skip: 0,
+      });
+      return assetItems;
+    })();
 
-    // TODO: important we should fetch them WITHOUT link resolution,
-    // as we're going to be reinserting them into the in-memory store...
-    const { items: entryItems } = await client.withoutLinkResolution.getEntries({
-      'sys.id[in]': entriesToFetch,
-      locale: localeCode,
-      limit: 1000,
-      skip: 0,
-    });
+    const entryItems = await (async () => {
+      if (entriesToFetch.length === 0) {
+        return [];
+      }
+      // TODO: important we should fetch them WITHOUT link resolution,
+      // as we're going to be reinserting them into the in-memory store...
+      const { items: entryItems } = await client.withoutLinkResolution.getEntries({
+        'sys.id[in]': entriesToFetch,
+        locale: localeCode,
+        limit: 1000,
+        skip: 0,
+      });
+      return entryItems;
+    })();
 
+    // TODO: should we have some custom logic to omit certain fields?
     // entryItems.forEach((entry) => {
     //   entry.fields = {
     //     ...omit(entry.fields, 'allIngredients', 'allAuthors'),
