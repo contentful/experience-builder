@@ -23,7 +23,7 @@ export function ComponentUsingReferences({
         <div className={styles.entryReference}>
           <i>Reference</i>
           {stringFields.map(([key, value]) => (
-            <div>
+            <div key={key}>
               <b>{key}</b>
               <div>
                 {'> '}
