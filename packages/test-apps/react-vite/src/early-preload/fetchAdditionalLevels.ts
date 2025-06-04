@@ -1,8 +1,9 @@
 import type { Experience } from '@contentful/experiences-sdk-react';
-import type { ContentfulClientApi, Asset, Entry, UnresolvedLink } from 'contentful';
+import type { ContentfulClientApi, Asset, Entry } from 'contentful';
 import { inMemoryEntities } from '@contentful/experiences-sdk-react';
-import { extractUnresolvedLinksFromExperience } from '@contentful/experiences-core';
-import { referencesOf } from './referencesOf';
+// import { extractLeafLinksReferencedFromExperience } from '@contentful/experiences-core';
+import { extractLeafLinksReferencedFromExperience } from './experienceSchema';
+import { extractReferencesFromEntriesAsIds } from './referencesOf';
 
 type EntitiesToFetch = {
   assetsToFetch: string[];
@@ -27,7 +28,7 @@ export const fetchAdditionalLevels = async (
     inMemoryEntities.addEntities(entities);
   };
 
-  const { assetIds, entryIds } = extractUnresolvedLinksFromExperience(experience);
+  const { assetIds, entryIds } = extractLeafLinksReferencedFromExperience(experience);
 
   await fetchLevel(depth, { assetsToFetch: assetIds, entriesToFetch: entryIds });
 
@@ -44,7 +45,9 @@ export const fetchAdditionalLevels = async (
       skip: 0,
     });
 
-    const { items: entryItems } = await client.getEntries({
+    // TODO: important we should fetch them WITHOUT link resolution,
+    // as we're going to be reinserting them into the in-memory store...
+    const { items: entryItems } = await client.withoutLinkResolution.getEntries({
       'sys.id[in]': entriesToFetch,
       locale: localeCode,
       limit: 1000,
@@ -63,7 +66,7 @@ export const fetchAdditionalLevels = async (
       const [referencedEntryIds, referencedAssetIds] =
         extractReferencesFromEntriesAsIds(entryItems);
 
-      // extract the ones which are in memory...
+      // narrow down to the ones which are NOT yet in memory...
       const entriesToFetch = referencedEntryIds.filter(
         (entryId) => !inMemoryEntities.hasEntry(entryId),
       );
@@ -79,33 +82,3 @@ export const fetchAdditionalLevels = async (
     }
   }
 };
-
-export function extractReferencesFromEntriesAsIds(
-  entries: Array<Entry>,
-): [string[], string[], string[]] {
-  const [uniqueEntries, uniqueAssets, uniqueReferences] = extractReferencesFromEntries(entries);
-
-  const entryIds = uniqueEntries.map((link) => link.sys.id);
-  const assetIds = uniqueAssets.map((link) => link.sys.id);
-  const referenceIds = uniqueReferences.map((link) => link.sys.id);
-
-  return [entryIds, assetIds, referenceIds];
-}
-
-export function extractReferencesFromEntries(
-  entries: Array<Entry>,
-): [UnresolvedLink<'Entry'>[], UnresolvedLink<'Asset'>[], UnresolvedLink<'Entry' | 'Asset'>[]] {
-  const allReferences = entries.flatMap((entry) => referencesOf(entry));
-
-  const uniqueReferences = Array.from(new Set(allReferences)); // same reference can be in multiple entries, thus can be repeated
-
-  const uniqueAssets = uniqueReferences.filter(
-    (link) => link.sys.linkType === 'Asset',
-  ) as UnresolvedLink<'Asset'>[];
-
-  const uniqueEntries = uniqueReferences.filter(
-    (link) => link.sys.linkType === 'Entry',
-  ) as UnresolvedLink<'Entry'>[];
-
-  return [uniqueEntries, uniqueAssets, uniqueReferences] as const;
-}
