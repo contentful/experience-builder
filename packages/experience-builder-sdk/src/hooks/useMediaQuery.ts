@@ -13,8 +13,10 @@ import { useMemo } from 'react';
 
 type ResolvedStylesheetData = Array<{
   className: string;
+  wrapperClassName?: string;
   breakpointCondition: string;
   css: string;
+  wrapperCss?: string;
 }>;
 
 /**
@@ -41,13 +43,21 @@ export const createStylesheetsForBuiltInStyles = ({
 }): ResolvedStylesheetData => {
   const flattenedDesignTokens = flattenDesignTokenRegistry(designTokensRegistry);
 
+  const isAnyVisibilityValueHidden = Object.values(designPropertiesByBreakpoint).some(
+    (designProperties) => designProperties.cfVisibility === false,
+  );
+
   const result: Array<{
     className: string;
+    wrapperClassName?: string;
     breakpointCondition: string;
     css: string;
+    wrapperCss?: string;
   }> = [];
 
   for (const breakpoint of breakpoints) {
+    let wrapperClassName: string | undefined;
+    let wrapperCss: string | undefined;
     const designProperties = designPropertiesByBreakpoint[breakpoint.id];
     if (!designProperties) {
       continue;
@@ -56,9 +66,13 @@ export const createStylesheetsForBuiltInStyles = ({
     const designPropertiesWithResolvedDesignTokens = Object.entries(designProperties).reduce(
       (acc, [propertyName, value]) => ({
         ...acc,
-        [propertyName]: maybePopulateDesignTokenValue(propertyName, value, flattenedDesignTokens),
+        [propertyName]: maybePopulateDesignTokenValue(
+          propertyName,
+          value,
+          flattenedDesignTokens,
+        ) as string,
       }),
-      {},
+      {} as Record<string, PrimitiveValue>,
     );
     /* [Data Format] `designPropertiesWithResolvedDesignTokens` is a map of property name to plain design value:
      * designPropertiesWithResolvedDesignTokens = {
@@ -66,6 +80,19 @@ export const createStylesheetsForBuiltInStyles = ({
      *   cfBackgroundColor: 'rgba(246, 246, 246, 1)',
      * }
      */
+    if (isAnyVisibilityValueHidden) {
+      // If the node has a visibility property, we need to create a wrapper className
+      // to apply the visibility styles.
+      if ((designPropertiesWithResolvedDesignTokens.cfVisibility as unknown) === false) {
+        wrapperCss = 'display:none;';
+      } else {
+        wrapperCss = 'display:contents;';
+      }
+      const styleHash = patternRootNodeIdsChain
+        ? md5(`${patternRootNodeIdsChain}-${node.id}}-${wrapperCss}-${breakpoint.id}`)
+        : md5(`${node.id}-${wrapperCss}-${breakpoint.id}`);
+      wrapperClassName = `cfwrapper-${styleHash}`;
+    }
 
     // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
     const cfStyles = addMinHeightForEmptyStructures(
@@ -95,8 +122,10 @@ export const createStylesheetsForBuiltInStyles = ({
 
     result.push({
       className,
+      wrapperClassName,
       breakpointCondition: breakpoint.query,
       css: breakpointCss,
+      wrapperCss,
     });
   }
 
@@ -122,9 +151,24 @@ export const createStylesheetsForBuiltInStyles = ({
  */
 export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: ResolvedStylesheetData) => {
   const stylesheet = stylesheetData.reduce(
-    (acc, { breakpointCondition, className, css }) => {
+    (acc, { breakpointCondition, className, wrapperClassName, css, wrapperCss }) => {
+      const wrapperMediaQueryCss =
+        wrapperClassName && wrapperCss
+          ? toMediaQuery({
+              condition: breakpointCondition,
+              cssByClassName: { [wrapperClassName]: wrapperCss },
+            })
+          : '';
+      const wrapperClassNames = wrapperMediaQueryCss
+        ? [...acc.wrapperClassNames, wrapperClassName!]
+        : acc.wrapperClassNames;
+
       if (acc.classNames.includes(className)) {
-        return acc;
+        return {
+          classNames: acc.classNames,
+          wrapperClassNames,
+          css: `${acc.css}${wrapperMediaQueryCss}`,
+        };
       }
 
       const mediaQueryCss = toMediaQuery({
@@ -133,11 +177,13 @@ export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: Resolved
       });
       return {
         classNames: [...acc.classNames, className],
-        css: `${acc.css}${mediaQueryCss}`,
+        wrapperClassNames,
+        css: `${acc.css}${mediaQueryCss}${wrapperMediaQueryCss}`,
       };
     },
     {
       classNames: [] as string[],
+      wrapperClassNames: [] as string[],
       css: '',
     },
   );
@@ -145,6 +191,7 @@ export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: Resolved
   return {
     css: stylesheet.css,
     className: stylesheet.classNames.join(' '),
+    wrapperClassName: stylesheet.wrapperClassNames.join(' '),
   };
 };
 

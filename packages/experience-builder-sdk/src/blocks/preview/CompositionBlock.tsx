@@ -293,29 +293,35 @@ export const CompositionBlock = ({
 
   if (isContainerOrSection(node.definitionId)) {
     return (
-      <ContentfulContainer
-        editorMode={false}
-        cfHyperlink={(contentProps as StyleProps).cfHyperlink}
-        cfOpenInNewTab={(contentProps as StyleProps).cfOpenInNewTab}
-        className={props.className as string | undefined}>
-        {children}
-      </ContentfulContainer>
+      <VisibilityWrapper className={mediaQuery?.wrapperClassName}>
+        <ContentfulContainer
+          editorMode={false}
+          cfHyperlink={(contentProps as StyleProps).cfHyperlink}
+          cfOpenInNewTab={(contentProps as StyleProps).cfOpenInNewTab}
+          className={props.className as string | undefined}>
+          {children}
+        </ContentfulContainer>
+      </VisibilityWrapper>
     );
   }
 
   if (node.definitionId === CONTENTFUL_COMPONENTS.columns.id) {
     return (
-      <Columns editorMode={false} className={props.className as string | undefined}>
-        {children}
-      </Columns>
+      <VisibilityWrapper className={mediaQuery?.wrapperClassName}>
+        <Columns editorMode={false} className={props.className as string | undefined}>
+          {children}
+        </Columns>
+      </VisibilityWrapper>
     );
   }
 
   if (node.definitionId === CONTENTFUL_COMPONENTS.singleColumn.id) {
     return (
-      <SingleColumn editorMode={false} className={props.className as string | undefined}>
-        {children}
-      </SingleColumn>
+      <VisibilityWrapper className={mediaQuery?.wrapperClassName}>
+        <SingleColumn editorMode={false} className={props.className as string | undefined}>
+          {children}
+        </SingleColumn>
+      </VisibilityWrapper>
     );
   }
 
@@ -324,23 +330,48 @@ export const CompositionBlock = ({
     node.variables.cfImageAsset?.type === 'UnboundValue'
   ) {
     return (
-      <PreviewUnboundImage
-        node={node}
-        nodeProps={props}
-        component={component}
-        breakpoints={entityStore.breakpoints}
-        patternRootNodeIdsChain={patternRootNodeIdsChain}
-      />
+      <VisibilityWrapper className={mediaQuery?.wrapperClassName}>
+        <PreviewUnboundImage
+          node={node}
+          nodeProps={props}
+          component={component}
+          breakpoints={entityStore.breakpoints}
+          patternRootNodeIdsChain={patternRootNodeIdsChain}
+        />
+      </VisibilityWrapper>
     );
   }
 
-  return React.createElement(
-    component,
-    {
-      ...sanitizeNodeProps(props),
-    },
-    children ?? (typeof props.children === 'string' ? props.children : null),
+  return (
+    <VisibilityWrapper className={mediaQuery?.wrapperClassName}>
+      <RenderedComponent component={component} nodeProps={sanitizeNodeProps(props)}>
+        {children ?? (typeof props.children === 'string' ? props.children : null)}
+      </RenderedComponent>
+    </VisibilityWrapper>
   );
+};
+
+const VisibilityWrapper = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: ReactNode;
+}) => {
+  if (!className) return <>{children}</>;
+  return <div className={className}>{children}</div>;
+};
+
+const RenderedComponent = ({
+  component,
+  nodeProps,
+  children,
+}: {
+  component: React.ElementType;
+  nodeProps: Record<string, PrimitiveValue>;
+  children?: ReactNode;
+}) => {
+  return React.createElement(component, nodeProps, children);
 };
 
 const isContainerOrSection = (
