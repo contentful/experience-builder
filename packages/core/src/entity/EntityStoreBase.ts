@@ -181,7 +181,7 @@ export abstract class EntityStoreBase {
           break;
         }
 
-        const fieldValue = get<string | UnresolvedLink<'Entry' | 'Asset'>>(
+        const fieldValue = get<string | UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset>(
           entityToResolveFieldsFrom,
           ['fields', field],
         );
@@ -203,6 +203,9 @@ export abstract class EntityStoreBase {
           }
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = entity; // we move up
+        } else if (typeof fieldValue === 'object' && this.isAsset(fieldValue)) {
+          resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
+          entityToResolveFieldsFrom = fieldValue; // we move up
         }
       }
       return {
@@ -227,6 +230,7 @@ export abstract class EntityStoreBase {
       unresolvedFieldset,
       headEntity,
     );
+
     if (!isFullyResolved) {
       reason &&
         console.debug(
