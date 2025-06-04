@@ -21,12 +21,8 @@ import {
  */
 type UseCanvasGeometryUpdatesParams = {
   tree: ExperienceTree;
-  rootContainerRef: React.RefObject<HTMLDivElement>;
 };
-export const useCanvasGeometryUpdates = ({
-  tree,
-  rootContainerRef,
-}: UseCanvasGeometryUpdatesParams) => {
+export const useCanvasGeometryUpdates = ({ tree }: UseCanvasGeometryUpdatesParams) => {
   const debouncedUpdateGeometry = useMemo(
     () =>
       debounce(
@@ -64,15 +60,14 @@ export const useCanvasGeometryUpdates = ({
 
   // Handling DOM mutations
   useEffect(() => {
-    if (!rootContainerRef.current) return;
     const observer = new MutationObserver(() =>
       debouncedUpdateGeometry(treeRef.current, 'mutation'),
     );
-    observer.observe(rootContainerRef.current, {
+    observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
       attributes: true,
     });
     return () => observer.disconnect();
-  }, [debouncedUpdateGeometry, rootContainerRef]);
+  }, [debouncedUpdateGeometry]);
 };
