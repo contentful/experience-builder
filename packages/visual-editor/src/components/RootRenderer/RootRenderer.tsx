@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useTreeStore } from '@/store/tree';
 import styles from './RootRenderer.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
@@ -9,9 +9,8 @@ import { ROOT_ID } from '@/types/constants';
 import { useCanvasGeometryUpdates } from './useCanvasGeometryUpdates';
 
 export const RootRenderer = () => {
-  const rootContainerRef = useRef<HTMLDivElement>(null);
   const tree = useTreeStore((state) => state.tree);
-  useCanvasGeometryUpdates({ tree, rootContainerRef });
+  useCanvasGeometryUpdates({ tree });
   useEditorSubscriber();
 
   const breakpoints = useTreeStore((state) => state.breakpoints);
@@ -23,7 +22,7 @@ export const RootRenderer = () => {
 
   return (
     <>
-      <div data-ctfl-root className={styles.rootContainer} ref={rootContainerRef}>
+      <div data-ctfl-root className={styles.rootContainer}>
         {!tree.root.children.length ? (
           <EmptyCanvasMessage />
         ) : (
