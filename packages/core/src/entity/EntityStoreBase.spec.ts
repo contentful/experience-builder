@@ -5,7 +5,6 @@ const entityIds = {
   ENTRY1: 'entry1',
   ENTRY2: 'entry2',
   ENTRY3: 'entry3',
-  ENTRY4: 'entry4',
   ASSET1: 'asset1',
 };
 const entities = [
@@ -13,6 +12,8 @@ const entities = [
     fields: {
       title: 'Entry 1',
       logo: { sys: { id: entityIds.ASSET1, linkType: 'Asset', type: 'Link' } },
+      // Since [SPA-2697], reference fields might already be resolved entities
+      thumbnail: assets[0],
     },
   }),
   createEntry(entityIds.ENTRY2, {
@@ -94,6 +95,26 @@ describe('EntityStoreBase', () => {
             '/some-uuid/fields/nonexisting/~locale/fields/file/~locale',
           ),
         ).toBeUndefined();
+      });
+
+      describe('when the referenced entity is already resolved', () => {
+        it('should return the referenced entity', () => {
+          expect(
+            store.getEntryOrAsset(
+              { sys: { id: entityIds.ENTRY1, linkType: 'Entry', type: 'Link' } },
+              '/some-uuid/fields/thumbnail/~locale/fields/file/~locale',
+            ),
+          ).toEqual(assets[0]);
+        });
+
+        it('should return the two levels deep referenced entity', () => {
+          expect(
+            store.getEntryOrAsset(
+              { sys: { id: entityIds.ENTRY2, linkType: 'Entry', type: 'Link' } },
+              '/some-uuid/fields/reference1/~locale/fields/thumbnail/~locale/fields/file/~locale',
+            ),
+          ).toEqual(assets[0]);
+        });
       });
     });
   });
