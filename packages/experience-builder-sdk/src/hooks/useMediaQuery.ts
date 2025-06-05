@@ -178,14 +178,14 @@ const toDisjunctMediaQuery = ({
  * **Example Input:**
  * ```
  * [
- *  { className: 'cfstyles-123', breakpointCondition: '*', css: 'color:red;' },
+ *  { className: 'cfstyles-123', breakpointCondition: '*', css: 'color:red;', visibilityCss: 'display:none !important;' },
  *  { className: 'cfstyles-456', breakpointCondition: '<768px', css: 'color:blue;' },
  * ]
  * ```
  *
  * **Example Output:**
  * ```
- * '.cfstyles-123{color:red;}@media(max-width:768px){.cfstyles-456{color:blue;}}'
+ * '.cfstyles-123{color:red;}@media not (max-width:768px){.cfstyles-123{display:none !important;}}@media(max-width:768px){.cfstyles-456{color:blue;}}'
  * ```
  */
 export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: ResolvedStylesheetData) => {
