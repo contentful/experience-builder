@@ -6,6 +6,17 @@ import {
   BackgroundImageAlignmentOption,
 } from '@/types';
 
+/** Turn the visibility value into a style object that can be used for inline styles in React */
+export const transformVisibility = (value?: boolean): CSSProperties => {
+  if (value === false) {
+    return {
+      display: 'none !important',
+    };
+  }
+  // Don't explicitly set anything when visible to not overwrite values like `grid` or `flex`.
+  return {};
+};
+
 // TODO: Remove in next major version v2 since the change is 17 months old
 // Keep this for backwards compatibility - deleting this would be a breaking change
 // because existing components on a users experience will have the width value as fill
