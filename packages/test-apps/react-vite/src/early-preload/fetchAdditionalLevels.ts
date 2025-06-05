@@ -1,10 +1,10 @@
 import type { Experience } from '@contentful/experiences-sdk-react';
 import type { ContentfulClientApi, Asset, Entry } from 'contentful';
 import { inMemoryEntities } from '@contentful/experiences-sdk-react';
-// TODO: move the function to experience-core when it is ready
-// import { extractLeafLinksReferencedFromExperience } from '@contentful/experiences-core';
-import { extractLeafLinksReferencedFromExperience } from './experienceSchema';
-import { extractReferencesFromEntriesAsIds } from './referencesOf';
+import {
+  extractReferencesFromEntriesAsIds,
+  extractLeafLinksReferencedFromExperience,
+} from '@contentful/experiences-core';
 
 type EntitiesToFetch = {
   assetsToFetch: string[];
@@ -59,8 +59,8 @@ export const fetchAdditionalLevels = async (
       if (entriesToFetch.length === 0) {
         return [];
       }
-      // TODO: important we should fetch them WITHOUT link resolution,
-      // as we're going to be reinserting them into the in-memory store...
+      // Important that we should fetch Entries WITHOUT link resolution,
+      // as that's the format that in-memory store expects.
       const { items: entryItems } = await client.withoutLinkResolution.getEntries({
         'sys.id[in]': entriesToFetch,
         locale: localeCode,
@@ -70,7 +70,7 @@ export const fetchAdditionalLevels = async (
       return entryItems;
     })();
 
-    // TODO: should we have some custom logic to omit certain fields?
+    // Example: Here you can add custom logic to omit certain fields
     // entryItems.forEach((entry) => {
     //   entry.fields = {
     //     ...omit(entry.fields, 'allIngredients', 'allAuthors'),
