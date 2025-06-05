@@ -4,7 +4,7 @@ type Link<T extends 'Asset' | 'Entry' = 'Asset' | 'Entry'> = UnresolvedLink<T>;
 
 export type FnShouldFollowReferencesOfEntryField = (fieldName: string, entry: Entry) => boolean;
 
-const uniqueById = <T extends { sys: { id: string } }>(arr: Array<T>): T[] => {
+export const uniqueById = <T extends { sys: { id: string } }>(arr: Array<T>): T[] => {
   const map = new Map<string, T>();
   arr.forEach((item) => map.set(item.sys.id, item));
   return [...map.values()];
@@ -64,3 +64,33 @@ export const referencesOf = (
   }
   return uniqueById(references);
 };
+
+export function extractReferencesFromEntriesAsIds(
+  entries: Array<Entry>,
+): [string[], string[], string[]] {
+  const [uniqueEntries, uniqueAssets, uniqueReferences] = extractReferencesFromEntries(entries);
+
+  const entryIds = uniqueEntries.map((link) => link.sys.id);
+  const assetIds = uniqueAssets.map((link) => link.sys.id);
+  const referenceIds = uniqueReferences.map((link) => link.sys.id);
+
+  return [entryIds, assetIds, referenceIds] as const;
+}
+
+export function extractReferencesFromEntries(
+  entries: Array<Entry>,
+): [UnresolvedLink<'Entry'>[], UnresolvedLink<'Asset'>[], UnresolvedLink<'Entry' | 'Asset'>[]] {
+  const allReferences = entries.flatMap((entry) => referencesOf(entry));
+
+  const uniqueReferences = Array.from(new Set(allReferences)); // same reference can be in multiple entries, thus can be repeated
+
+  const uniqueAssets = uniqueReferences.filter(
+    (link) => link.sys.linkType === 'Asset',
+  ) as UnresolvedLink<'Asset'>[];
+
+  const uniqueEntries = uniqueReferences.filter(
+    (link) => link.sys.linkType === 'Entry',
+  ) as UnresolvedLink<'Entry'>[];
+
+  return [uniqueEntries, uniqueAssets, uniqueReferences] as const;
+}
