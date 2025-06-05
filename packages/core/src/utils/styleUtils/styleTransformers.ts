@@ -6,6 +6,7 @@ import {
   BackgroundImageAlignmentOption,
 } from '@/types';
 
+/** Turn the visibility value into a style object that can be used for inline styles in React */
 export const transformVisibility = (value?: boolean): CSSProperties => {
   if (value === false) {
     return {

@@ -8,6 +8,7 @@ import {
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
   sanitizeNodeProps,
+  transformVisibility,
 } from '@contentful/experiences-core';
 import {
   ASSEMBLY_NODE_TYPE,
@@ -226,7 +227,14 @@ export const useComponentProps = ({
     renderDropzone,
   ]);
 
-  const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
+  const cfStyles = useMemo(
+    () => ({
+      ...buildCfStyles(props as StyleProps),
+      // This is not handled by buildCfStyles as it requires separate disjunct media queries in preview mode
+      ...transformVisibility((props as StyleProps).cfVisibility),
+    }),
+    [props],
+  );
   const cfVisibility: boolean = props['cfVisibility'] as boolean;
 
   const isAssemblyBlock = node.type === ASSEMBLY_BLOCK_NODE_TYPE;

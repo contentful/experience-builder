@@ -336,9 +336,7 @@ export const CompositionBlock = ({
 
   return React.createElement(
     component,
-    {
-      ...sanitizeNodeProps(props),
-    },
+    sanitizeNodeProps(props),
     children ?? (typeof props.children === 'string' ? props.children : null),
   );
 };
