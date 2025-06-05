@@ -17,6 +17,22 @@ function maybeResolveLink(maybeLink: unknown): Entry | Asset | undefined {
   return inMemoryEntitiesStore.getState().resolveEntity(maybeLink);
 }
 
+function maybeResolveByAssetId(assetId: string): Asset | undefined {
+  return inMemoryEntitiesStore.getState().resolveAssetById(assetId);
+}
+
+function maybeResolveByEntryId(entryId: string): Entry | undefined {
+  return inMemoryEntitiesStore.getState().resolveEntryById(entryId);
+}
+
+function hasEntry(entryId: string): boolean {
+  return Boolean(maybeResolveByEntryId(entryId));
+}
+
+function hasAsset(assetId: string): boolean {
+  return Boolean(maybeResolveByAssetId(assetId));
+}
+
 function addEntities(entities: Array<Entry>): void;
 function addEntities(entities: Array<Asset>): void;
 function addEntities(entities: Array<Entry | Asset>): void;
@@ -35,6 +51,10 @@ function addEntities(entities: Array<Entry> | Array<Asset> | Array<Entry | Asset
 
 const inMemoryEntities = {
   maybeResolveLink,
+  maybeResolveByAssetId,
+  maybeResolveByEntryId,
+  hasEntry,
+  hasAsset,
   addEntities,
 };
 
