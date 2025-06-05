@@ -6,6 +6,7 @@ import { ExperienceRoot, useFetchBySlug } from '@contentful/experiences-sdk-reac
 import { useContentfulClient } from './hooks/useContentfulClient';
 import { useContentfulConfig } from './hooks/useContentfulConfig';
 import { fetchAdditionalLevels } from './early-preload/fetchAdditionalLevels';
+import { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
 export default function Page() {
   const { slug = 'home-page', locale } = useParams<{ slug: string; locale?: string }>();
@@ -19,6 +20,7 @@ export default function Page() {
     experience,
     error: experienceLoadingError,
     isLoading,
+    mode,
   } = useFetchBySlug({
     slug,
     localeCode,
@@ -42,6 +44,16 @@ export default function Page() {
           experienceLoadingError,
         );
         return;
+      }
+      if (mode !== StudioCanvasMode.NONE) {
+        console.warn(
+          `;;[effectFetchAdditional] Experience is EDITOR or READ_ONLY (${mode}), skipping fetching additional levels.`,
+        );
+        return;
+      } else {
+        console.warn(
+          `;;[effectFetchAdditional] Experience is in NONE ✅ mode (${mode}), fetching additional levels...`,
+        );
       }
 
       // Due to https://contentful.atlassian.net/browse/SPA-2841 we cannot rely on `isLoading` and `experienceLoadingError`
@@ -69,35 +81,56 @@ export default function Page() {
 
       async function earlyPreload() {
         try {
-          await fetchAdditionalLevels(2, experience, localeCode, client);
+          await fetchAdditionalLevels(3, experience, localeCode, client);
+          await new Promise((resolve) => setTimeout(resolve, 3000)); // Adding delay, for demonstration in the UI that we are loading something extra
           setAreAllAdditionalLevelsFetched(true);
         } catch (error) {
-          // what do we handle here?
+          // you can decide yourself how to handle failed loading
           console.error('Error fetching additional levels:', error);
-          throw error; // rethrow to let the error boundary handle it
+          throw error;
         }
       }
       earlyPreload();
-      // TODO: how to handle cancelling of the effect?
       return () => {
-        console.warn(
-          ';;[effectFetchAdditional] Effect cleanup. (wonder why we had to cancel this; probably fetching is in progress)',
-        );
+        console.warn(';;[effectFetchAdditional] Effect cleanup.');
       };
     },
     [
       experience,
       isLoading,
       experienceLoadingError,
+      mode,
       areAllAdditionalLevelsFetched,
       client,
       localeCode,
     ],
   );
 
+  const shouldShowBannerAboutLoadingAdditionalLevels =
+    mode === StudioCanvasMode.NONE && !areAllAdditionalLevelsFetched;
+
   if (isLoading) return <div>Loading...</div>;
 
   if (experienceLoadingError) return <div>{experienceLoadingError.message}</div>;
 
-  return <ExperienceRoot experience={experience} locale={localeCode} />;
+  return (
+    <>
+      {!shouldShowBannerAboutLoadingAdditionalLevels ? null : (
+        <h3
+          style={{
+            background: 'black',
+            color: 'white',
+            position: 'fixed',
+            left: '0',
+            top: '0',
+            width: '100%',
+            margin: '0',
+            padding: '16px',
+          }}>
+          Loading additional levels... <sup>(won't trigger on hot-reload)</sup>
+        </h3>
+      )}
+      <ExperienceRoot experience={experience} locale={localeCode} />
+    </>
+  );
 }
