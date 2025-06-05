@@ -203,7 +203,7 @@ export abstract class EntityStoreBase {
           }
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = entity; // we move up
-        } else if (this.isAsset(fieldValue)) {
+        } else if (this.isAsset(fieldValue) || this.isEntry(fieldValue)) {
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = fieldValue; // we move up
         }
@@ -248,6 +248,15 @@ export abstract class EntityStoreBase {
       typeof value === 'object' &&
       'sys' in value &&
       (value as Asset).sys?.type === 'Asset'
+    );
+  }
+
+  private isEntry(value: unknown): value is Entry {
+    return (
+      null !== value &&
+      typeof value === 'object' &&
+      'sys' in value &&
+      (value as Entry).sys?.type === 'Entry'
     );
   }
 
