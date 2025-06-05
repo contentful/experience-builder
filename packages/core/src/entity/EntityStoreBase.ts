@@ -206,6 +206,12 @@ export abstract class EntityStoreBase {
         } else if (this.isAsset(fieldValue) || this.isEntry(fieldValue)) {
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = fieldValue; // we move up
+        } else {
+          return {
+            resolvedFieldset,
+            isFullyResolved: false,
+            reason: `Deep path points to an invalid field value of type '${typeof fieldValue}' (value=${fieldValue})`,
+          };
         }
       }
       return {
