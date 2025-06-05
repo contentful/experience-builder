@@ -195,7 +195,7 @@ export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: Resolved
         condition: breakpointCondition,
         className,
         css: visibilityCss,
-        // Assuming that it starts with the * breakpoint
+        // Validation ensures that it starts with the '*' breakpoint
         nextCondition: stylesheetData[index + 1]?.breakpointCondition,
       });
 
