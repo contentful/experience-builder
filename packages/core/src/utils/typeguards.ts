@@ -14,6 +14,10 @@ export const isExperienceEntry = (entry: ExperienceEntry | Entry): entry is Expe
   );
 };
 
+export const isPatternEntry = (entry: Entry | ExperienceEntry): entry is ExperienceEntry => {
+  return isExperienceEntry(entry) && !!entry.fields?.componentSettings; // signals that this is pattern (not experience) entry
+};
+
 export const isEntry = (value: unknown): value is Entry => {
   return (
     null !== value &&
