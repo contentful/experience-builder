@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.40.1](https://github.com/contentful/experience-builder/compare/v1.40.0...v1.40.1) (2025-06-06)
+
+### Bug Fixes
+
+- **delivery:** use disjunct media queries to only hide for explicit breakpoints [SPA-2782[ ([#1158](https://github.com/contentful/experience-builder/issues/1158)) ([83179af](https://github.com/contentful/experience-builder/commit/83179af1e99d7d4718f725a8d45b1244bc538892))
+
 ## [1.40.0](https://github.com/contentful/experience-builder/compare/v1.39.0...v1.40.0) (2025-06-04)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react
