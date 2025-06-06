@@ -129,6 +129,7 @@ export const entryWithEmbeddedEntry: Entry = {
     locale: 'en-US',
   },
   fields: {
+    title: `Title for ${entityIds.ENTRY_WITH_EMBEDDED_ENTRY}`,
     referencedEntry: {
       sys: {
         type: 'Link',
@@ -189,6 +190,7 @@ export const entryWithEmbeddedEntries: Entry = {
         },
       },
     ],
+    title: 'This is title for entry with embedded entries (plural)',
   },
   metadata: {
     tags: [],
@@ -226,6 +228,7 @@ export const entryWithAnotherEmbeddedEntry: Entry = {
     locale: 'en-US',
   },
   fields: {
+    title: `Title for ${entityIds.ENTRY_WITH_ANOTHER_EMBEDDED_ENTRY}`,
     referencedEntry: {
       sys: {
         type: 'Link',

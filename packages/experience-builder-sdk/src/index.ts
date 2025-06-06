@@ -6,6 +6,8 @@ export { ExperienceRoot } from './ExperienceRoot';
 export { useFetchById, useFetchBySlug, useCustomFetch } from './hooks';
 export { defineComponents } from './core/componentRegistry';
 export {
+  inMemoryEntities,
+  useInMemoryEntities,
   defineDesignTokens,
   defineBreakpoints,
   VisualEditorMode,
@@ -16,6 +18,10 @@ export {
   fetchReferencedEntities,
   fetchExperienceEntry,
   localizeEntity,
+  isArrayOfLinks,
+  isLink,
+  isAsset,
+  isEntry,
 } from '@contentful/experiences-core';
 export {
   CONTENTFUL_COMPONENTS,

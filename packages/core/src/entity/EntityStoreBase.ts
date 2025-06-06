@@ -3,13 +3,18 @@ import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';
 import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema';
+import { deepFreeze } from '@/utils/freeze';
+
+export interface EntityFromLink {
+  getEntityFromLink(link: UnresolvedLink<'Entry' | 'Asset'>): Asset | Entry | undefined;
+}
 
 /**
  * Base Store for entities
  * Can be extended for the different loading behaviours (editor, production, ..)
  */
-export abstract class EntityStoreBase {
-  protected locale: string;
+export abstract class EntityStoreBase implements EntityFromLink {
+  public locale: string;
   protected entryMap = new Map<string, Entry>();
   protected assetMap = new Map<string, Asset>();
 
@@ -114,9 +119,11 @@ export abstract class EntityStoreBase {
 
   protected addEntity(entity: Entry | Asset): void {
     if (this.isAsset(entity)) {
-      this.assetMap.set(entity.sys.id, entity);
+      // cloned and frozen
+      this.assetMap.set(entity.sys.id, deepFreeze(structuredClone(entity)));
     } else {
-      this.entryMap.set(entity.sys.id, entity);
+      // cloned and frozen
+      this.entryMap.set(entity.sys.id, deepFreeze(structuredClone(entity)));
     }
   }
 
@@ -164,7 +171,11 @@ export abstract class EntityStoreBase {
     const resolveFieldset = (
       unresolvedFieldset: Array<[null, string, string?]>,
       headEntry: Entry | Asset,
-    ) => {
+    ): {
+      resolvedFieldset: Array<[Entry | Asset, string, string?]>;
+      isFullyResolved: boolean;
+      reason?: string;
+    } => {
       const resolvedFieldset: Array<[Entry | Asset, string, string?]> = [];
       let entityToResolveFieldsFrom: Entry | Asset = headEntry;
       for (let i = 0; i < unresolvedFieldset.length; i++) {

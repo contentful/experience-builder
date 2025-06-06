@@ -253,7 +253,7 @@ export const CompositionBlock = ({
     return null;
   }
 
-  const { component } = componentRegistration;
+  const { component: component } = componentRegistration;
 
   // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {
@@ -336,7 +336,9 @@ export const CompositionBlock = ({
 
   return React.createElement(
     component,
-    sanitizeNodeProps(props),
+    {
+      ...sanitizeNodeProps(props),
+    },
     children ?? (typeof props.children === 'string' ? props.children : null),
   );
 };

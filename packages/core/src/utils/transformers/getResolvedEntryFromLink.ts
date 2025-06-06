@@ -11,40 +11,27 @@ export function getResolvedEntryFromLink(
     return entryOrAsset;
   }
 
-  const value = get<UnresolvedLink<'Entry'>>(entryOrAsset, path.split('/').slice(2, -1));
+  const fieldName = path.split('/').slice(2, -1);
+  const value = get<UnresolvedLink<'Entry'>>(entryOrAsset, fieldName);
 
   if (value?.sys.type !== 'Link') {
-    console.warn(`Expected a link to a reference, but got: ${JSON.stringify(value)}`);
+    console.warn(
+      `When attempting to follow link in field '${fieldName}' of entity, the value is expected to be a link, but got: ${JSON.stringify(value)}`,
+      { entity: entryOrAsset },
+    );
     return;
   }
 
-  //Look up the reference in the entity store
+  // no need to make structuredClone(entityStore.getEntityFromLink(value)) because
+  // we provide component with the original Object.frozen object of the entity.
+  // As we don't resolve L3 and don't mutate the entity before returning anymore,
+  // we don't need to make a copy of the entity. And even provide better referential integrity
+  // for the component for the same entity.
   const resolvedEntity = entityStore.getEntityFromLink(value);
 
   if (!resolvedEntity) {
     return;
   }
-
-  //resolve any embedded links - we currently only support 2 levels deep
-  const fields = resolvedEntity.fields || {};
-  Object.entries(fields).forEach(([fieldKey, field]) => {
-    if (field && field.sys?.type === 'Link') {
-      const entity = entityStore.getEntityFromLink(field);
-      if (entity) {
-        resolvedEntity.fields[fieldKey] = entity;
-      }
-    } else if (field && Array.isArray(field)) {
-      resolvedEntity.fields[fieldKey] = field.map((innerField) => {
-        if (innerField && innerField.sys?.type === 'Link') {
-          const entity = entityStore.getEntityFromLink(innerField);
-          if (entity) {
-            return entity;
-          }
-        }
-        return innerField;
-      });
-    }
-  });
 
   return resolvedEntity;
 }
