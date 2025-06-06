@@ -120,10 +120,10 @@ export abstract class EntityStoreBase implements EntityFromLink {
   protected addEntity(entity: Entry | Asset): void {
     if (this.isAsset(entity)) {
       // cloned and frozen
-      this.assetMap.set(entity.sys.id, deepFreeze(entity));
+      this.assetMap.set(entity.sys.id, deepFreeze(structuredClone(entity)));
     } else {
       // cloned and frozen
-      this.entryMap.set(entity.sys.id, deepFreeze(entity));
+      this.entryMap.set(entity.sys.id, deepFreeze(structuredClone(entity)));
     }
   }
 

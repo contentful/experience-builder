@@ -1,5 +1,6 @@
-import { assets, createEntry } from '@/test/__fixtures__/entities';
+import { assets, createAsset, createEntry } from '@/test/__fixtures__/entities';
 import { EntityStoreBase } from './EntityStoreBase';
+import { Asset, Entry } from 'contentful';
 
 const entityIds = {
   ENTRY1: 'entry1',
@@ -26,8 +27,16 @@ const entities = [
   ...assets,
 ];
 
+const entitiesBy = (id: string) => entities.find((e) => e.sys.id === id);
+
 const LOCALE = 'en-US';
-class TestEntityStore extends EntityStoreBase {}
+class TestEntityStore extends EntityStoreBase {
+  constructor(...args: ConstructorParameters<typeof EntityStoreBase>) {
+    super(...args);
+  }
+  // make protected method public for testing
+  public $addEntity: EntityStoreBase['addEntity'] = (...args) => super.addEntity(...args);
+}
 
 describe('EntityStoreBase', () => {
   let store: TestEntityStore;
@@ -116,6 +125,126 @@ describe('EntityStoreBase', () => {
           ).toEqual(assets[0]);
         });
       });
+    });
+  });
+
+  describe('addEntity() when adding entity to store', () => {
+    it('should have added a copy of the Entry, not the original', () => {
+      const newEntry = createEntry('newEntry', { fields: { title: 'New Entry' } });
+      store.$addEntity(newEntry);
+      expect(store.entities).toContainEqual(newEntry); // equal by all the contents, not by reference
+
+      // should NOT have referential equality to the original entity
+      const foundEntry = store.entities.find((e) => e.sys.id === newEntry.sys.id);
+      expect(foundEntry).not.toBe(newEntry);
+    });
+
+    it('should have added a copy of the Asset, not the original', () => {
+      const newAsset = createAsset('newAsset', { fields: { title: 'New Asset' } });
+      store.$addEntity(newAsset);
+      expect(store.entities).toContainEqual(newAsset); // equal by all the contents, not by reference
+
+      // should NOT have referential equality to the original entity
+      const foundAsset = store.entities.find((e) => e.sys.id === newAsset.sys.id);
+      expect(foundAsset).not.toBe(newAsset);
+    });
+
+    it('should not freeze the original Entry argument', () => {
+      const newEntry = createEntry('newEntry', { fields: { title: 'New Entry' } });
+      store.$addEntity(newEntry);
+      expect(store.entities).toContainEqual(newEntry); // equal by all the contents, not by reference
+      expect(Object.isFrozen(newEntry)).toBe(false);
+    });
+
+    it('should not freeze the original Asset argument', () => {
+      const newAsset = createAsset('newAsset', { fields: { title: 'New Asset' } });
+      store.$addEntity(newAsset);
+      expect(store.entities).toContainEqual(newAsset); // equal by all the contents, not by reference
+      expect(Object.isFrozen(newAsset)).toBe(false);
+    });
+
+    it('should have Entry in the store Object.freezed', () => {
+      const newEntry = createEntry('newEntry', { fields: { title: 'New Entry' } });
+      store.$addEntity(newEntry);
+      const foundEntry: Entry | undefined = store.entities.find(
+        (e) => e.sys.id === newEntry.sys.id,
+      ) as Entry | undefined;
+      expect(foundEntry).toBeDefined();
+      expect(Object.isFrozen(foundEntry)).toBe(true);
+
+      // Try to mutate a properties of recurisvely frozen object and expect it to throw in strict mode
+
+      expect(() => {
+        foundEntry!.fields.title = 'Should throw';
+      }).toThrow("Cannot assign to read only property 'title' of object '#<Object>'");
+
+      expect(() => {
+        (foundEntry as unknown as { newProp: number })!.newProp = 123;
+      }).toThrow('Cannot add property newProp, object is not extensible');
+
+      expect(() => {
+        delete foundEntry!.fields.title;
+      }).toThrow("Cannot delete property 'title' of #<Object>");
+
+      expect(() => {
+        foundEntry!.fields['anotherField'] = 'Should throw';
+      }).toThrow('Cannot add property anotherField, object is not extensible');
+
+      // Try to mutate sys property and expect it to throw
+      expect(() => {
+        foundEntry!.sys.id = 'mutated';
+      }).toThrow("Cannot assign to read only property 'id' of object '#<Object>'");
+    });
+
+    it('should have Asset in the store Object.freezed', () => {
+      const newAsset = createAsset('newAsset', { fields: { title: 'New Asset' } });
+      store.$addEntity(newAsset);
+
+      // should NOT have referential equality to the original entity
+      const foundAsset: Asset | undefined = store.entities.find(
+        (e) => e.sys.id === newAsset.sys.id,
+      ) as Asset;
+      expect(foundAsset).toBeDefined();
+      expect(Object.isFrozen(foundAsset)).toBe(true);
+      // Try to mutate a properties of recurisvely frozen object and expect it to throw in strict mode
+      expect(() => {
+        foundAsset!.fields.title = 'Should throw';
+      }).toThrow("Cannot assign to read only property 'title' of object '#<Object>'");
+      expect(() => {
+        (foundAsset as unknown as { newProp: number })!.newProp = 123;
+      }).toThrow('Cannot add property newProp, object is not extensible');
+      expect(() => {
+        delete foundAsset!.fields.title;
+      }).toThrow("Cannot delete property 'title' of #<Object>");
+      expect(() => {
+        foundAsset!.fields['anotherField'] = 'Should throw';
+      }).toThrow('Cannot add property anotherField, object is not extensible');
+      // Try to mutate sys property and expect it to throw
+      expect(() => {
+        foundAsset!.sys.id = 'mutated';
+      }).toThrow("Cannot assign to read only property 'id' of object '#<Object>'");
+    });
+
+    it('should update an existing Entry in the store', () => {
+      const entry1 = entitiesBy(entityIds.ENTRY1);
+      expect(store.entities).toContainEqual(entry1);
+
+      const updatedEntry = createEntry(entityIds.ENTRY1, {
+        fields: { title: 'Updated Entry 1' },
+      });
+      store.$addEntity(updatedEntry);
+      expect(store.entities).toContainEqual(updatedEntry);
+    });
+
+    it('should update an existing Asset in the store', () => {
+      const asset1 = entitiesBy(entityIds.ASSET1);
+      expect(store.entities).toContainEqual(asset1);
+
+      const updatedAsset = createAsset(entityIds.ASSET1, {
+        fields: { title: 'Updated Asset 1' },
+      });
+      store.$addEntity(updatedAsset);
+      expect(store.entities).toContainEqual(updatedAsset);
     });
   });
 });
