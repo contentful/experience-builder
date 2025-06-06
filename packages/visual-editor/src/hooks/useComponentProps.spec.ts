@@ -184,6 +184,7 @@ describe('useComponentProps', () => {
     const { result } = renderHook(() =>
       useComponentProps({
         node: patternBlockNode as unknown as ExperienceTreeNode,
+        entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
         areEntitiesFetched,
         resolveDesignValue,
         renderDropzone,
