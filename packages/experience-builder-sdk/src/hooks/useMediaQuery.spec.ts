@@ -86,4 +86,50 @@ describe('useMediaQuery', () => {
     const expectedResult = convertResolvedDesignValuesToMediaQuery(stylesheetData);
     expect(result.current).toEqual(expectedResult);
   });
+
+  describe('when using visibility styles', () => {
+    const designPropertiesByBreakpoint = {
+      desktop: { cfMargin: '7px', cfVisibility: false },
+      tablet: { cfMargin: '42px' },
+      mobile: { cfVisibility: true },
+    };
+
+    it("doesn't add them to the regular CSS code", () => {
+      const [desktop, tablet, mobile] = createStylesheetsForBuiltInStyles({
+        designPropertiesByBreakpoint,
+        breakpoints,
+        node,
+      });
+      expect(desktop.css).not.toContain('display:');
+      expect(tablet.css).not.toContain('display:');
+      expect(mobile.css).not.toContain('display:');
+    });
+
+    it('creates explicit visibility styles for each breakpoint', () => {
+      const [desktop, tablet, mobile] = createStylesheetsForBuiltInStyles({
+        designPropertiesByBreakpoint,
+        breakpoints,
+        node,
+      });
+      expect(desktop.visibilityCss).toEqual('display:none !important;');
+      expect(tablet.visibilityCss).toEqual('display:none !important;');
+      expect(mobile.visibilityCss).toEqual('');
+    });
+
+    it('creates disjunct media queries for each breakpoint', () => {
+      const stylesheetData = createStylesheetsForBuiltInStyles({
+        designPropertiesByBreakpoint,
+        breakpoints,
+        node,
+      });
+      const [desktop, tablet] = stylesheetData;
+      const expectedResult = convertResolvedDesignValuesToMediaQuery(stylesheetData);
+      expect(expectedResult.css).toContain(
+        `@media not (max-width:992px){.${desktop.className}{display:none !important;}}`,
+      );
+      expect(expectedResult.css).toContain(
+        `@media (max-width:992px) and (not (max-width:576px)){.${tablet.className}{display:none !important;}}`,
+      );
+    });
+  });
 });

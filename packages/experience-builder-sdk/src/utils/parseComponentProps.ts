@@ -173,6 +173,7 @@ export const parseComponentProps = ({
    *    className: 'uniqueMD5Hash',
    *    breakpointCondition: '<768px',
    *    css: 'margin:13px;'
+   *    visibilityCss: 'display:none !important;'
    *  }, ...]
    */
   const mediaQuery = convertResolvedDesignValuesToMediaQuery(stylesheetData);

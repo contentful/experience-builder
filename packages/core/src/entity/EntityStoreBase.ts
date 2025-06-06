@@ -181,7 +181,7 @@ export abstract class EntityStoreBase {
           break;
         }
 
-        const fieldValue = get<string | UnresolvedLink<'Entry' | 'Asset'>>(
+        const fieldValue = get<string | UnresolvedLink<'Entry' | 'Asset'> | Entry | Asset>(
           entityToResolveFieldsFrom,
           ['fields', field],
         );
@@ -203,6 +203,15 @@ export abstract class EntityStoreBase {
           }
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = entity; // we move up
+        } else if (this.isAsset(fieldValue) || this.isEntry(fieldValue)) {
+          resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
+          entityToResolveFieldsFrom = fieldValue; // we move up
+        } else {
+          return {
+            resolvedFieldset,
+            isFullyResolved: false,
+            reason: `Deep path points to an invalid field value of type '${typeof fieldValue}' (value=${fieldValue})`,
+          };
         }
       }
       return {
@@ -227,6 +236,7 @@ export abstract class EntityStoreBase {
       unresolvedFieldset,
       headEntity,
     );
+
     if (!isFullyResolved) {
       reason &&
         console.debug(
@@ -238,8 +248,22 @@ export abstract class EntityStoreBase {
     return leafEntity;
   }
 
-  private isAsset(entity: Entry | Asset): entity is Asset {
-    return entity.sys.type === 'Asset';
+  private isAsset(value: unknown): value is Asset {
+    return (
+      null !== value &&
+      typeof value === 'object' &&
+      'sys' in value &&
+      (value as Asset).sys?.type === 'Asset'
+    );
+  }
+
+  private isEntry(value: unknown): value is Entry {
+    return (
+      null !== value &&
+      typeof value === 'object' &&
+      'sys' in value &&
+      (value as Entry).sys?.type === 'Entry'
+    );
   }
 
   private getEntity(type: 'Asset' | 'Entry', id: string) {
