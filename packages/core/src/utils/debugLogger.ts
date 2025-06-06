@@ -7,10 +7,11 @@ const CF_DEBUG_KEY = 'cf_debug';
  * SecurityError (e.g. Brave or Chromium with specific settings).
  */
 const checkLocalStorageAvailability = () => {
-  if (typeof localStorage === 'undefined' || localStorage === null) {
-    return false;
-  }
   try {
+    // Even the typeof check can throw an error in an agressive browser like Brave (requires using the deprecated flag #block-all-cookies-toggle)
+    if (typeof localStorage === 'undefined' || localStorage === null) {
+      return false;
+    }
     // Attempt to set and remove an item to check if localStorage is enabled
     const TEST_KEY = 'cf_test_local_storage';
     localStorage.setItem(TEST_KEY, 'yes');
