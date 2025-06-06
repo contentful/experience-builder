@@ -433,10 +433,6 @@ export type OptimizedBackgroundImageAsset = {
 export type ImageObjectFitOption = 'contain' | 'cover' | 'none';
 
 export type ImageObjectPositionOption =
-  | 'left'
-  | 'right'
-  | 'top'
-  | 'bottom'
   | 'left top'
   | 'left center'
   | 'left bottom'
@@ -463,10 +459,6 @@ export type ImageOptions = {
 export type BackgroundImageScalingOption = 'fit' | 'fill' | 'tile';
 
 export type BackgroundImageAlignmentOption =
-  | 'left'
-  | 'right'
-  | 'top'
-  | 'bottom'
   | 'left top'
   | 'left center'
   | 'left bottom'

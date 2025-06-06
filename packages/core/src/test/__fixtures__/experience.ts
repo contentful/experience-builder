@@ -564,7 +564,7 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
                       type: 'DesignValue',
                       valuesByBreakpoint: {
                         'test-desktop': {
-                          alignment: 'left',
+                          alignment: 'left center',
                           scaling: 'fit',
                           targetSize: '300px',
                         },
