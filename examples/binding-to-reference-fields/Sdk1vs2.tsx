@@ -59,7 +59,7 @@ export const ComponentUsingSdkV2: React.FC<PropsV2> = ({ item: itemWithUnresolve
 
   // Must make copy! as `item` is marked as immutable by the SDK via Object.freeze().
   const item: ItemWithManuallyResolvedReferences = structuredClone(itemWithUnresolvedReferences) as ItemWithManuallyResolvedReferences;
-  item.fields.image = inMemoryEntities.maybeResolveLink(item.fields.image);
+  item.fields.image = inMemoryEntities.maybeResolveLink(item.fields.image) as Asset | undefined;
 
   return (
     <div>
