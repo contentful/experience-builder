@@ -128,7 +128,7 @@ describe('useMediaQuery', () => {
         `@media not (max-width:992px){.${desktop.className}{display:none !important;}}`,
       );
       expect(expectedResult.css).toContain(
-        `@media (max-width:992px) and (not (max-width:576px)){.${tablet.className}{display:none !important;}}`,
+        `@media(max-width:992px) and (not (max-width:576px)){.${tablet.className}{display:none !important;}}`,
       );
     });
   });
