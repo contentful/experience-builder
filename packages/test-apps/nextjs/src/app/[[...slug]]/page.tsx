@@ -1,7 +1,8 @@
 import Experience from '@/components/Experience';
-import { getExperience } from '@/utils/getExperience';
+import { getExperience, getConfig as createClientWithConfig } from '@/utils/getExperience';
 import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
 import '../../studio-config';
+import { fetchAdditionalLevels } from '@/utils/earlyPreload';
 
 type Page = {
   params: { locale?: string; slug?: string; preview?: string };
@@ -15,8 +16,19 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   const editorMode = expEditorMode === 'true';
   const { experience, error } = await getExperience(slug, locale, preview, editorMode);
 
+  const client = createClientWithConfig(preview);
+
   if (error) {
     return <div>{error.message}</div>;
+  }
+
+  if (experience) {
+    // experience is loaded by getExperience() because it is in Preview+Delivery mode,
+    // when it EDITOR+READ_ONLY mode, it return undefined, as experience would be postMessage'd from the Studio.
+    console.log(
+      `;;[page] Fetching additional levels for experience: ${experience.entityStore?.experienceEntryId} with slug: ${slug} and locale: ${locale}`,
+    );
+    await fetchAdditionalLevels(3, experience, locale, client);
   }
 
   const stylesheet = experience ? detachExperienceStyles(experience) : null;
