@@ -6,6 +6,7 @@ import {
   stringifyCssProperties,
   toMediaQuery,
   buildCfStyles,
+  transformVisibility,
 } from '@contentful/experiences-core';
 import { Breakpoint, ComponentTreeNode, PrimitiveValue } from '@contentful/experiences-core/types';
 import md5 from 'md5';
@@ -42,7 +43,7 @@ export const createStylesheetsForBuiltInStyles = ({
 }): ResolvedStylesheetData => {
   const flattenedDesignTokens = flattenDesignTokenRegistry(designTokensRegistry);
 
-  // When the node is hidden  for any breakpoint, we need to handle this separately with a disjunct media query.
+  // When the node is hidden for any breakpoint, we need to handle this separately with a disjunct media query.
   const isAnyVisibilityValueHidden = Object.values(designPropertiesByBreakpoint).some(
     (designProperties) => designProperties.cfVisibility === false,
   );
@@ -88,11 +89,8 @@ export const createStylesheetsForBuiltInStyles = ({
         (designPropertiesWithResolvedDesignTokens.cfVisibility as boolean | undefined) ??
         previousVisibilityValue;
       previousVisibilityValue = visibilityValue;
-      if (visibilityValue === false) {
-        visibilityCss = 'display:none !important;';
-      } else {
-        visibilityCss = '';
-      }
+      const visibilityStyles = transformVisibility(visibilityValue);
+      visibilityCss = stringifyCssProperties(visibilityStyles);
     }
 
     // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
@@ -133,45 +131,6 @@ export const createStylesheetsForBuiltInStyles = ({
 };
 
 /**
- * Turns a condition like `<768px` or `>1024px` into a media query rule.
- * For example, `<768px` becomes `max-width:768px` and `>1024px` becomes `min-width:1024px`.
- */
-const toMediaQueryRule = (condition: string) => {
-  const [evaluation, pixelValue] = [condition[0], condition.substring(1)];
-  const mediaQueryRule = evaluation === '<' ? 'max-width' : 'min-width';
-  return `(${mediaQueryRule}:${pixelValue})`;
-};
-
-const toDisjunctMediaQuery = ({
-  className,
-  condition,
-  nextCondition,
-  css,
-}: {
-  className: string;
-  condition: string;
-  nextCondition?: string;
-  css?: string;
-}) => {
-  if (!css) {
-    return '';
-  }
-  if (!nextCondition) {
-    return toMediaQuery({
-      condition,
-      cssByClassName: { [className]: css },
-    });
-  }
-  const nextRule = toMediaQueryRule(nextCondition);
-  if (condition === '*') {
-    return `@media not ${nextRule}{.${className}{${css}}}`;
-  }
-
-  const currentRule = toMediaQueryRule(condition);
-  return `@media ${currentRule} and (not ${nextRule}){.${className}{${css}}}`;
-};
-
-/**
  * Takes the CSS code for each breakpoint and merges them into a single CSS string.
  * It will wrap each breakpoint's CSS code in a media query (exception: default breakpoint with '*').
  *
@@ -191,28 +150,23 @@ const toDisjunctMediaQuery = ({
 export const convertResolvedDesignValuesToMediaQuery = (stylesheetData: ResolvedStylesheetData) => {
   const stylesheet = stylesheetData.reduce(
     (acc, { breakpointCondition, className, css, visibilityCss }, index) => {
-      const wrapperMediaQueryCss = toDisjunctMediaQuery({
-        condition: breakpointCondition,
-        className,
-        css: visibilityCss,
-        // Validation ensures that it starts with the '*' breakpoint
-        nextCondition: stylesheetData[index + 1]?.breakpointCondition,
-      });
-
       if (acc.classNames.includes(className)) {
-        return {
-          classNames: acc.classNames,
-          css: `${acc.css}${wrapperMediaQueryCss}`,
-        };
+        return acc;
       }
 
       const mediaQueryCss = toMediaQuery({
         condition: breakpointCondition,
         cssByClassName: { [className]: css },
       });
+      const visibilityMediaQueryCss = toMediaQuery({
+        condition: breakpointCondition,
+        cssByClassName: { [className]: visibilityCss ?? '' },
+        // Validation ensures that it starts with the '*' breakpoint
+        nextCondition: stylesheetData[index + 1]?.breakpointCondition,
+      });
       return {
         classNames: [...acc.classNames, className],
-        css: `${acc.css}${mediaQueryCss}${wrapperMediaQueryCss}`,
+        css: `${acc.css}${mediaQueryCss}${visibilityMediaQueryCss}`,
       };
     },
     {
