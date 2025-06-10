@@ -15,6 +15,8 @@ import {
   isValidBreakpointValue,
   parseCSSValue,
   getTargetValueInPixels,
+  transformVisibility,
+  // FIXME: Importing the parents parent folder creates a circular dependency
 } from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
@@ -29,6 +31,7 @@ import { CF_STYLE_ATTRIBUTES, SUPPORTED_IMAGE_FORMATS } from '@/constants';
 import { stringifyCssProperties } from './stylesUtils';
 import { getOptimizedBackgroundImageAsset } from '../transformers/media/getOptimizedBackgroundImageAsset';
 import { AssetDetails, AssetFile } from 'contentful';
+import { toMediaQuery } from './toMediaQuery';
 
 type FlattenedDesignTokens = Record<
   string,
@@ -54,10 +57,18 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       ...mediaQueryTemplate,
       [breakpoint.id]: {
         condition: breakpoint.query,
-        cssByClassName: {} as Record<string, string>,
+        cssByClassName: {},
+        visibilityCssByClassName: {},
       },
     }),
-    {} as Record<string, MediaQueryData>,
+    {} as Record<
+      string,
+      {
+        condition: string;
+        cssByClassName: Record<string, string>;
+        visibilityCssByClassName: Record<string, string>;
+      }
+    >,
   );
 
   // getting the breakpoint ids
@@ -169,6 +180,14 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         },
       });
 
+      // When the node is hidden for any breakpoint, we need to handle this separately with a disjunct media query.
+      const isAnyVisibilityValueHidden = Object.values(propsByBreakpoint).some(
+        (designProperties) => designProperties.cfVisibility === false,
+      );
+      // We always need an explicit value when using disjunct media queries
+      // Example: desktop uses "false" and tablet is undefined -> we need to set `display: none` for tablet as well.
+      let previousVisibilityValue: boolean | undefined;
+
       /* [Data format] `propsByBreakpoint` is a map of "breakpointId > propertyName > plainValue":
        * {
        *   desktop: {
@@ -199,7 +218,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
               mapOfDesignVariableKeys,
             ),
           };
-        }, {});
+        }, {} as Partial<StyleProps>);
 
         // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
         const cfStyles = buildCfStyles(propsByBreakpointWithResolvedDesignTokens);
@@ -234,13 +253,23 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           currentNodeClassNames.push(className);
         }
 
-        // if there is already the similar hash - no need to over-write it
-        if (mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className]) {
-          continue;
+        // Only if the hash was not used yet, save the CSS to the stylesheet
+        if (!mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className]) {
+          mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className] = generatedCss;
         }
 
-        // otherwise, save it to the stylesheet
-        mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className] = generatedCss;
+        // Special case for visibility to override any custom `display` values but only for a specific breakpoint.
+        if (isAnyVisibilityValueHidden) {
+          const visibilityValue =
+            propsByBreakpointWithResolvedDesignTokens.cfVisibility ?? previousVisibilityValue;
+          previousVisibilityValue = visibilityValue;
+          const visibilityStyles = transformVisibility(visibilityValue);
+          const visibilityCss = stringifyCssProperties(visibilityStyles);
+          if (!mediaQueryDataByBreakpoint[breakpointId].visibilityCssByClassName[className]) {
+            mediaQueryDataByBreakpoint[breakpointId].visibilityCssByClassName[className] =
+              visibilityCss;
+          }
+        }
       }
 
       // all generated classNames are saved in the tree node
@@ -287,8 +316,21 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
   // once the whole tree was traversed, for each breakpoint, I aggregate the styles
   // for each generated className into one css string
-  const stylesheet = Object.entries(mediaQueryDataByBreakpoint).reduce(
-    (acc, [, mediaQueryData]) => `${acc}${toMediaQuery(mediaQueryData)}`,
+  const stylesheet = Object.values(mediaQueryDataByBreakpoint).reduce(
+    (acc, { condition, cssByClassName, visibilityCssByClassName }, index) => {
+      const mediaQueryCss = toMediaQuery({ cssByClassName, condition });
+
+      // Handle visibility separately to use disjunct media queries ("if desktop but not tablet ...")
+      // Enables to hide on one breakpoint but render any unknown custom `display` value on another breakpoint.
+      const visibilityMediaQueryCss = toMediaQuery({
+        cssByClassName: visibilityCssByClassName,
+        condition,
+        // Breakpoint validation ensures that it starts with the '*' breakpoint
+        nextCondition: Object.values(mediaQueryDataByBreakpoint)[index + 1]?.condition,
+      });
+
+      return `${acc}${mediaQueryCss}${visibilityMediaQueryCss}`;
+    },
     '',
   );
 
@@ -768,31 +810,4 @@ export const flattenDesignTokenRegistry = (
       ...tokensWithCategory,
     };
   }, {});
-};
-
-type MediaQueryData = { condition: string; cssByClassName: Record<string, string> };
-/**
- * Create a single CSS string containing all class definitions for a given media query.
- *
- * @param condition e.g. "*", "<520px", ">520px"
- * @param cssByClassName map of class names to CSS strings containing all rules for each class
- * @returns joined string of all CSS class definitions wrapped into media queries
- */
-export const toMediaQuery = ({ condition, cssByClassName }: MediaQueryData): string => {
-  const mediaQueryStyles = Object.entries(cssByClassName).reduce<string>(
-    (acc, [className, css]) => {
-      return `${acc}.${className}{${css}}`;
-    },
-    ``,
-  );
-
-  if (condition === '*') {
-    return mediaQueryStyles;
-  }
-
-  const [evaluation, pixelValue] = [condition[0], condition.substring(1)];
-
-  const mediaQueryRule = evaluation === '<' ? 'max-width' : 'min-width';
-
-  return `@media(${mediaQueryRule}:${pixelValue}){${mediaQueryStyles}}`;
 };
