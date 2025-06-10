@@ -115,8 +115,10 @@ export abstract class EntityStoreBase {
   protected addEntity(entity: Entry | Asset): void {
     if (this.isAsset(entity)) {
       this.assetMap.set(entity.sys.id, entity);
-    } else {
+    } else if (this.isEntry(entity)) {
       this.entryMap.set(entity.sys.id, entity);
+    } else {
+      console.warn('Attempted to add an entity that is neither Asset nor Entry:', entity);
     }
   }
 
