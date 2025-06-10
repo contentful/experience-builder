@@ -5,7 +5,7 @@ import './styles.css';
 import { ExperienceRoot, useFetchBySlug } from '@contentful/experiences-sdk-react';
 import { useContentfulClient } from './hooks/useContentfulClient';
 import { useContentfulConfig } from './hooks/useContentfulConfig';
-import { fetchAdditionalLevels } from './early-preload/fetchAdditionalLevels';
+import { fetchAdditionalLevels } from './utils/fetchAdditionalLevels';
 import { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
 export default function Page() {
