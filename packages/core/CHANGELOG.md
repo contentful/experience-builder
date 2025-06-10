@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.40.2](https://github.com/contentful/experience-builder/compare/v1.40.1...v1.40.2) (2025-06-10)
+
+### Bug Fixes
+
+- **core:** consolidate CSS generation for cfVisibility in SSR and CSR [SPA-2782] ([#1166](https://github.com/contentful/experience-builder/issues/1166)) ([ebbee81](https://github.com/contentful/experience-builder/commit/ebbee812dc1766c0a173e5c71c8bfdb28c7cd6ea))
+- move typeof check to try catch block as well ([7358ebd](https://github.com/contentful/experience-builder/commit/7358ebddac5a715c89b30054300a204c580c0a16))
+
 ## [1.40.1](https://github.com/contentful/experience-builder/compare/v1.40.0...v1.40.1) (2025-06-06)
 
 ### Bug Fixes
