@@ -180,7 +180,6 @@ export type ComponentPropertyValue = z.infer<typeof ComponentPropertyValueSchema
 export const PatternPropertySchema = z.object({
   type: z.literal('BoundValue'),
   path: z.string(),
-  contentType: z.string(),
 });
 
 export const PatternPropertiesSchema = z.record(propertyKeySchema, PatternPropertySchema);
