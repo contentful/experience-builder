@@ -20,15 +20,9 @@ import type {
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import { checkIsAssemblyNode, transformBoundContentValue } from '@contentful/experiences-core';
 import { useInjectStylesheet } from '../../hooks/useInjectStylesheet';
-import {
-  Assembly,
-  Columns,
-  ContentfulContainer,
-  SingleColumn,
-} from '@contentful/experiences-components-react';
+import { Assembly, ContentfulContainer } from '@contentful/experiences-components-react';
 import { resolveAssembly } from '../../core/preview/assemblyUtils';
 import { Entry } from 'contentful';
-import PreviewUnboundImage from './PreviewUnboundImage';
 import { parseComponentProps } from '../../utils/parseComponentProps';
 
 type CompositionBlockProps = {
@@ -291,6 +285,7 @@ export const CompositionBlock = ({
         })
       : null;
 
+  // TODO: we might be able to remove this special case as well by not dropping the two props in the sanitizeNodeProps function
   if (isContainerOrSection(node.definitionId)) {
     return (
       <ContentfulContainer
@@ -299,31 +294,6 @@ export const CompositionBlock = ({
         className={props.className as string | undefined}>
         {children}
       </ContentfulContainer>
-    );
-  }
-
-  if (node.definitionId === CONTENTFUL_COMPONENTS.columns.id) {
-    return <Columns className={props.className as string | undefined}>{children}</Columns>;
-  }
-
-  if (node.definitionId === CONTENTFUL_COMPONENTS.singleColumn.id) {
-    return (
-      <SingleColumn className={props.className as string | undefined}>{children}</SingleColumn>
-    );
-  }
-
-  if (
-    node.definitionId === CONTENTFUL_COMPONENTS.image.id &&
-    node.variables.cfImageAsset?.type === 'UnboundValue'
-  ) {
-    return (
-      <PreviewUnboundImage
-        node={node}
-        nodeProps={props}
-        component={component}
-        breakpoints={entityStore.breakpoints}
-        patternRootNodeIdsChain={patternRootNodeIdsChain}
-      />
     );
   }
 
