@@ -53,6 +53,13 @@ describe('useFetchById', () => {
       },
     });
 
+    expect(result.current).toEqual({
+      error: undefined,
+      experience: undefined,
+      isLoading: true,
+      mode: StudioCanvasMode.NONE,
+    });
+
     await waitFor(() => {
       const store = result.current;
 
