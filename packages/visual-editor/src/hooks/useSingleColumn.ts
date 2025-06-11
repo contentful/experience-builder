@@ -22,7 +22,7 @@ export default function useSingleColumn(
     }
 
     const { cfWrapColumns } = parentNode.data.props;
-    if (cfWrapColumns.type !== 'DesignValue') {
+    if (cfWrapColumns?.type !== 'DesignValue') {
       return false;
     }
 
