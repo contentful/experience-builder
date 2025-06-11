@@ -70,7 +70,8 @@ export const fetchAdditionalLevels = async (
       return entryItems;
     })();
 
-    // Example: Here you can add custom logic to omit certain fields
+    // Reduce overfetching: Here you can add custom logic to omit certain fields
+    // to reduce overfetching result. Fields have to be omitted manually.
     // entryItems.forEach((entry) => {
     //   entry.fields = {
     //     ...omit(entry.fields, 'allIngredients', 'allAuthors'),
