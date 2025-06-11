@@ -35,7 +35,7 @@ describe('parseComponentProps', () => {
       // One CSS class per breakpoint
       className: expect.stringMatching(/^cfstyles-\w{32} cfstyles-\w{32}$/),
       css: expect.stringMatching(
-        /\.cfstyles-\w{32}{box-sizing:border-box;background-color:rgba\(255, 0, 0, 1\);}@media\(max-width:992px\){\.cfstyles-\w{32}{box-sizing:border-box;background-color:rgba\(0, 255, 0, 1\);}}/,
+        /\.cfstyles-\w{32}{background-color:rgba\(255, 0, 0, 1\);}@media\(max-width:992px\){\.cfstyles-\w{32}{background-color:rgba\(0, 255, 0, 1\);}}/,
       ),
     });
   });

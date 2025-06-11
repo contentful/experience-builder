@@ -1,7 +1,6 @@
 .contentful-container {
   position: relative;
   display: flex;
-  box-sizing: border-box;
   pointer-events: all;
 }
 
