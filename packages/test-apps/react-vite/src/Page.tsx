@@ -29,82 +29,51 @@ export default function Page() {
     hyperlinkPattern: '/{entry.fields.slug}',
   });
 
-  // techincally here I should be able to start loading additional levels...
-  useEffect(
-    function ƒFetchAdditional() {
-      // Due to bug https://contentful.atlassian.net/browse/SPA-2841 this will be false on initial-render
-      // and additional checks (like !experience or !experience.entityStore) are needed.
-      if (isLoading) {
-        console.warn(';;[effectFetchAdditional] Experience is still loading...');
-        return;
-      }
-      if (experienceLoadingError) {
-        console.error(
-          ';;[effectFetchAdditional] Error loading experience:',
-          experienceLoadingError,
-        );
-        return;
-      }
-      if (mode !== StudioCanvasMode.NONE) {
-        console.warn(
-          `;;[effectFetchAdditional] Experience is EDITOR or READ_ONLY (${mode}), skipping fetching additional levels.`,
-        );
-        return;
-      } else {
-        console.warn(
-          `;;[effectFetchAdditional] Experience is in NONE ✅ mode (${mode}), fetching additional levels...`,
-        );
-      }
+  // This effect is used to fetch additional levels early
+  useEffect(() => {
+    if (isLoading) {
+      console.warn(';;[effectFetchAdditional] Experience is still loading...');
+      return;
+    }
+    if (experienceLoadingError) {
+      console.error(';;[effectFetchAdditional] Error loading experience:', experienceLoadingError);
+      return;
+    }
 
-      // Due to https://contentful.atlassian.net/browse/SPA-2841 we cannot rely on `isLoading` and `experienceLoadingError`
-      // so we need another way to check if the experience is ready.
+    if (!experience) {
+      console.warn(';;[effectFetchAdditional] Experience is falsy');
+      return;
+    }
 
-      // However, due to another bug https://contentful.atlassian.net/browse/SPA-2842, we cannot rely on `experience` being truthy as
-      // signal that the experience is loaded.
-      if (!experience) {
-        console.warn(';;[effectFetchAdditional] Experience is falsy');
-        return;
-      }
+    if (areAllAdditionalLevelsFetched) {
+      console.warn(';;[effectFetchAdditional] All additional levels already fetched, skipping');
+      return;
+    }
 
-      // As hack around bugs https://contentful.atlassian.net/browse/SPA-2842
-      // Instead of relying on `experience` being truthy, we can rely on `experience.entityStore` being truthy
-      // to signal that the experience is loaded.
-      if (!experience.entityStore) {
-        console.warn(';;[effectFetchAdditional] Experience does not have an entity store');
-        return;
+    async function earlyPreload() {
+      try {
+        await fetchAdditionalLevels(3, experience, localeCode, client);
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // Adding delay, for demonstration in the UI that we are loading something extra
+        setAreAllAdditionalLevelsFetched(true);
+      } catch (error) {
+        // you can decide yourself how to handle failed loading
+        console.error('Error fetching additional levels:', error);
+        throw error;
       }
-
-      if (areAllAdditionalLevelsFetched) {
-        console.warn(';;[effectFetchAdditional] All additional levels already fetched, skipping');
-        return;
-      }
-
-      async function earlyPreload() {
-        try {
-          await fetchAdditionalLevels(3, experience, localeCode, client);
-          await new Promise((resolve) => setTimeout(resolve, 3000)); // Adding delay, for demonstration in the UI that we are loading something extra
-          setAreAllAdditionalLevelsFetched(true);
-        } catch (error) {
-          // you can decide yourself how to handle failed loading
-          console.error('Error fetching additional levels:', error);
-          throw error;
-        }
-      }
-      earlyPreload();
-      return () => {
-        console.warn(';;[effectFetchAdditional] Effect cleanup.');
-      };
-    },
-    [
-      experience,
-      isLoading,
-      experienceLoadingError,
-      mode,
-      areAllAdditionalLevelsFetched,
-      client,
-      localeCode,
-    ],
-  );
+    }
+    earlyPreload();
+    return () => {
+      console.warn(';;[effectFetchAdditional] Effect cleanup.');
+    };
+  }, [
+    experience,
+    isLoading,
+    experienceLoadingError,
+    mode,
+    areAllAdditionalLevelsFetched,
+    client,
+    localeCode,
+  ]);
 
   const shouldShowBannerAboutLoadingAdditionalLevels =
     mode === StudioCanvasMode.NONE && !areAllAdditionalLevelsFetched;
