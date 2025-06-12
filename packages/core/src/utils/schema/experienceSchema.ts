@@ -3,8 +3,8 @@ import type { Entry, Asset } from 'contentful';
 import { referencesOf, uniqueById } from './referencesOf';
 import { isLinkToAsset, isLinkToEntry, isAsset, isPatternEntry } from '@/utils';
 
-const excludeAssets = (entity: Entry | Asset) => !isAsset(entity);
-const excludePatternEntries = (entry: Entry) => !isPatternEntry(entry);
+const excludeAssets = (entity: Entry | Asset): entity is Entry => !isAsset(entity);
+const excludePatternEntries = (entry: Entry): entry is Entry => !isPatternEntry(entry);
 
 /**
  * Parses experience and extracts all leaf links that are referenced from the experience.
@@ -29,13 +29,14 @@ export const extractLeafLinksReferencedFromExperience = (experience: Experience)
     );
   }
 
-  const entriesWithPatterns: Entry[] = experience.entityStore.entities.filter(
-    excludeAssets,
-  ) as Entry[];
-
-  // We want only leaf links which can be used for binding.
-  // Pattern entries point to other patterns, and we don't want to consider them as parents of leaf links.
-  const entries = entriesWithPatterns.filter(excludePatternEntries) as Entry[];
+  // We want only leaf links which can be used for binding. We use two filters:
+  // excludeAssets:         because assets do not have references, so we don't need to traverse them
+  // excludePatternEntries: because EntityStore happens to also store pattern-entries.
+  //                        Those point to other patterns, and we don't want to consider them as
+  //                        parents of leaf links pointing to actual data carrying entries used for binding.
+  const entries: Entry[] = experience.entityStore.entities
+    .filter(excludeAssets)
+    .filter(excludePatternEntries);
 
   // We assume that ALL of the entries in the experience
   for (const entry of entries) {

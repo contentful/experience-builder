@@ -25,7 +25,6 @@ export const referencesOf = (
 ): UnresolvedLink<'Asset' | 'Entry'>[] => {
   const references: Link<'Asset' | 'Entry'>[] = [];
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleArray = (fieldValue: Array<unknown>, _fieldName: string) => {
     for (const item of fieldValue) {
       if (isObject(item) && (item as Link).sys?.type === 'Link') {
@@ -34,7 +33,6 @@ export const referencesOf = (
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleLink = (fieldValue: Link<'Asset' | 'Entry'>, _fieldName: string) => {
     references.push(fieldValue);
   };
@@ -65,6 +63,8 @@ export const referencesOf = (
   return uniqueById(references);
 };
 
+// -- REFERENCE EXTRACTION UTILITIES --
+
 export function extractReferencesFromEntriesAsIds(
   entries: Array<Entry>,
 ): [string[], string[], string[]] {
@@ -82,7 +82,7 @@ export function extractReferencesFromEntries(
 ): [UnresolvedLink<'Entry'>[], UnresolvedLink<'Asset'>[], UnresolvedLink<'Entry' | 'Asset'>[]] {
   const allReferences = entries.flatMap((entry) => referencesOf(entry));
 
-  const uniqueReferences = Array.from(new Set(allReferences)); // same reference can be in multiple entries, thus can be repeated
+  const uniqueReferences = uniqueById(allReferences);
 
   const uniqueAssets = uniqueReferences.filter(
     (link) => link.sys.linkType === 'Asset',

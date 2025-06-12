@@ -39,7 +39,7 @@ export const isAsset = (value: unknown): value is Asset => {
 /**
  * Checks if the values is an array of links.
  * Note: we use convention where empty arrays are considered valid "arrays of links"
- * as they don't contractict the type definition.
+ * as they don't contradict the type definition.
  */
 export const isArrayOfLinks = (
   value: unknown,
