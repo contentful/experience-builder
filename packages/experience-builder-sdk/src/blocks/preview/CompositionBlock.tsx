@@ -60,7 +60,7 @@ export const CompositionBlock = ({
   wrappingPatternProperties: parentWrappingPatternProperties = {},
   patternRootNodeIdsChain: parentPatternRootNodeIdsChain = '',
 }: CompositionBlockProps) => {
-  const isPatternNode = useMemo(() => {
+  const isAssemblyNode = useMemo(() => {
     return checkIsAssemblyNode({
       componentId: rawNode.definitionId,
       usedComponents: entityStore.usedComponents,
@@ -72,15 +72,15 @@ export const CompositionBlock = ({
   }, [entityStore]);
 
   const patternRootNodeIdsChain = useMemo(() => {
-    if (isPatternNode) {
+    if (isAssemblyNode) {
       // Pattern nodes are chained without a separator (following the format for prebinding/patternProperties)
       return `${parentPatternRootNodeIdsChain}${rawNode.id}`;
     }
     return parentPatternRootNodeIdsChain;
-  }, [isPatternNode, parentPatternRootNodeIdsChain, rawNode.id]);
+  }, [isAssemblyNode, parentPatternRootNodeIdsChain, rawNode.id]);
 
   const node = useMemo(() => {
-    return isPatternNode
+    return isAssemblyNode
       ? resolveAssembly({
           node: rawNode,
           entityStore,
@@ -95,44 +95,41 @@ export const CompositionBlock = ({
         : rawNode;
   }, [
     entityStore,
-    isPatternNode,
+    isAssemblyNode,
     isExperienceAPattern,
     rawNode,
     parentWrappingPatternProperties,
     patternRootNodeIdsChain,
   ]);
-  console.log('patternRootNodeIdsChain', patternRootNodeIdsChain);
-  console.log('node', node);
-  console.log('entityStore', entityStore);
 
   const wrappingPatternIds = useMemo(() => {
-    if (isPatternNode) {
+    if (isAssemblyNode) {
       return new Set([node.definitionId, ...parentWrappingPatternIds]);
     }
     return parentWrappingPatternIds;
-  }, [isPatternNode, node, parentWrappingPatternIds]);
+  }, [isAssemblyNode, node, parentWrappingPatternIds]);
 
   // Merge the pattern properties of the current node with the parent's pattern properties
   // to ensure nested patterns receive relevant pattern properties that were bubbled up
   // during assembly serialization.
   const wrappingPatternProperties = useMemo(() => {
-    if (isPatternNode) {
+    if (isAssemblyNode) {
       return { ...parentWrappingPatternProperties, ...(rawNode.patternProperties || {}) };
     }
     return parentWrappingPatternProperties;
-  }, [isPatternNode, rawNode, parentWrappingPatternProperties]);
+  }, [isAssemblyNode, rawNode, parentWrappingPatternProperties]);
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.definitionId as string);
 
-    if (isPatternNode && !registration) {
+    if (isAssemblyNode && !registration) {
       return createAssemblyRegistration({
         definitionId: node.definitionId as string,
         component: Assembly,
       });
     }
     return registration;
-  }, [isPatternNode, node.definitionId]);
+  }, [isAssemblyNode, node.definitionId]);
 
   const { ssrProps, contentProps, props, mediaQuery } = useMemo(() => {
     // In SSR, we store the className under breakpoints[0] which is resolved here to the actual string
@@ -143,7 +140,7 @@ export const CompositionBlock = ({
       | undefined;
 
     // Don't enrich the assembly wrapper node with props
-    if (!componentRegistration || isPatternNode) {
+    if (!componentRegistration || isAssemblyNode) {
       const ssrProps = { cfSsrClassName };
       const props: Record<string, PrimitiveValue> = { className: cfSsrClassName };
       return {
@@ -249,7 +246,7 @@ export const CompositionBlock = ({
     node,
     entityStore,
     componentRegistration,
-    isPatternNode,
+    isAssemblyNode,
     getPatternChildNodeClassName,
     resolveDesignValue,
     hyperlinkPattern,
@@ -275,7 +272,7 @@ export const CompositionBlock = ({
 
   // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {
-    if (isPatternNode) {
+    if (isAssemblyNode) {
       const nodeIdsChain = `${patternRootNodeIdsChain}-${childNodeId}`;
       // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
       const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[nodeIdsChain];
@@ -291,7 +288,7 @@ export const CompositionBlock = ({
           return (
             <CompositionBlock
               getPatternChildNodeClassName={
-                isPatternNode || getPatternChildNodeClassName
+                isAssemblyNode || getPatternChildNodeClassName
                   ? _getPatternChildNodeClassName
                   : undefined
               }

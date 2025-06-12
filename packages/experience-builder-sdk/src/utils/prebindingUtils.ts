@@ -92,10 +92,22 @@ export const resolvePrebindingVariablesForPatternNode = ({
         ];
       const [[contentTypeId, defaultEntryLink]] = Object.entries(mapping?.defaultValue || {});
       if (contentTypeId in (mapping?.contentTypes || {})) {
-        const path = prebinding?.pathsByContentType?.[contentTypeId]?.path || '';
+        const path = resolvePrebindingPath({
+          componentValueKey,
+          entityStore,
+          componentSettings: (entityStore.experienceEntryFields?.componentSettings ||
+            {}) as ExperienceComponentSettings,
+          patternProperties: {
+            [mappingId]: {
+              path: `/${defaultEntryLink.sys.id}`,
+              type: 'BoundValue',
+            },
+          },
+        });
+
         variables[variableName] = {
           type: 'BoundValue',
-          path: `/${defaultEntryLink.sys.id}${path}`,
+          path,
         };
       }
     }
