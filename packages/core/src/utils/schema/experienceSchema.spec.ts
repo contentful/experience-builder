@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { extractLeafLinksReferencedFromExperience } from './experienceSchema';
 import type { Experience, Link } from '@/types';
-import type { Entry, Asset } from 'contentful';
+import type { Entry } from 'contentful';
 
 describe('extractLeafLinksReferencedFromExperience', () => {
   it('should throw error if entityStore is not present', () => {
