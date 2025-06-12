@@ -30,13 +30,13 @@ describe('createStylesheetsForBuiltInStyles', () => {
     expect(desktop).toEqual({
       breakpointCondition: breakpoints[0].query,
       className: expect.stringMatching(/^cfstyles-\w{32}$/),
-      css: 'box-sizing:border-box;margin:7px;',
+      css: 'margin:7px;',
     });
 
     expect(tablet).toEqual({
       breakpointCondition: breakpoints[1].query,
       className: expect.stringMatching(/^cfstyles-\w{32}$/),
-      css: 'box-sizing:border-box;margin:42px;padding:11px;',
+      css: 'margin:42px;padding:11px;',
     });
   });
 });

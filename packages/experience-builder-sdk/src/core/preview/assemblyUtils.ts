@@ -17,11 +17,13 @@ export const deserializeAssemblyNode = ({
   componentInstanceVariables,
   componentSettings,
   patternProperties,
+  entityStore,
 }: {
   node: ComponentTreeNode;
   componentInstanceVariables: ComponentTreeNode['variables'];
   componentSettings: ExperienceComponentSettings;
   patternProperties: Record<string, PatternProperty>;
+  entityStore: EntityStore;
 }): ComponentTreeNode => {
   const variables: Record<string, ComponentPropertyValue> = {};
 
@@ -43,6 +45,7 @@ export const deserializeAssemblyNode = ({
         componentSettings,
         componentValueKey,
         patternProperties,
+        entityStore,
       });
 
       if (usePrebinding && path) {
@@ -93,6 +96,7 @@ export const deserializeAssemblyNode = ({
       componentInstanceVariables,
       componentSettings,
       patternProperties,
+      entityStore,
     }),
   );
 
@@ -165,6 +169,7 @@ export const resolveAssembly = ({
     componentInstanceVariables: node.variables,
     componentSettings: componentFields.componentSettings!,
     patternProperties,
+    entityStore,
   });
 
   entityStore.addAssemblyUnboundValues(componentFields.unboundValues);

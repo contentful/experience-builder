@@ -35,10 +35,12 @@ export const resolvePrebindingPath = ({
   componentValueKey,
   componentSettings,
   patternProperties,
+  entityStore,
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
   patternProperties: Record<string, PatternProperty>;
+  entityStore: EntityStore;
 }) => {
   const variableMapping = componentSettings.variableMappings?.[componentValueKey];
 
@@ -48,7 +50,15 @@ export const resolvePrebindingPath = ({
 
   if (!patternProperty) return '';
 
-  const contentType = patternProperty.contentType;
+  const dataSourceKey = patternProperty.path.split('/')[1];
+
+  const entityLink = entityStore.dataSource[dataSourceKey];
+  if (!entityLink) return '';
+
+  const entity = entityStore.getEntityFromLink(entityLink);
+  if (!entity || entity.sys.type === 'Asset') return '';
+
+  const contentType = entity.sys.contentType.sys.id;
 
   const fieldPath = variableMapping?.pathsByContentType?.[contentType]?.path;
 
