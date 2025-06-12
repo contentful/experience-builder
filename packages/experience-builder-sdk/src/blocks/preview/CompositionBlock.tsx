@@ -80,19 +80,21 @@ export const CompositionBlock = ({
   }, [isAssemblyNode, parentPatternRootNodeIdsChain, rawNode.id]);
 
   const node = useMemo(() => {
-    return isAssemblyNode
-      ? resolveAssembly({
-          node: rawNode,
-          entityStore,
-          parentPatternProperties: parentWrappingPatternProperties,
-          patternRootNodeIdsChain,
-        })
-      : isExperienceAPattern
-        ? resolvePrebindingVariablesForPatternNode({
-            node: rawNode,
-            entityStore,
-          })
-        : rawNode;
+    if (isAssemblyNode) {
+      return resolveAssembly({
+        node: rawNode,
+        entityStore,
+        parentPatternProperties: parentWrappingPatternProperties,
+        patternRootNodeIdsChain,
+      });
+    } else if (isExperienceAPattern) {
+      return resolvePrebindingVariablesForPatternNode({
+        node: rawNode,
+        entityStore,
+      });
+    } else {
+      return rawNode;
+    }
   }, [
     entityStore,
     isAssemblyNode,
