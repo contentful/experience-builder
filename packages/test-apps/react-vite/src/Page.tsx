@@ -50,7 +50,7 @@ export default function Page() {
       return;
     }
 
-    async function earlyPreload() {
+    async function earlyPreload(experience: Parameters<typeof fetchAdditionalLevels>[1]) {
       try {
         await fetchAdditionalLevels(3, experience, localeCode, client);
         await new Promise((resolve) => setTimeout(resolve, 3000)); // Adding delay, for demonstration in the UI that we are loading something extra
@@ -61,7 +61,7 @@ export default function Page() {
         throw error;
       }
     }
-    earlyPreload();
+    earlyPreload(experience);
     return () => {
       console.warn(';;[effectFetchAdditional] Effect cleanup.');
     };
