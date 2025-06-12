@@ -1,3 +1,5 @@
+import { EntityStore } from '@contentful/experiences-core';
+import { experienceEntry, entities } from '../../test/__fixtures__';
 import { shouldUsePrebinding, resolvePrebindingPath } from './prebindingUtils';
 
 import {
@@ -5,6 +7,12 @@ import {
   ExperienceComponentSettings,
   PatternProperty,
 } from '@contentful/experiences-validators';
+
+const entityStore = new EntityStore({
+  experienceEntry,
+  entities,
+  locale: 'en-US',
+});
 
 describe('shouldUsePrebinding', () => {
   it('should return true when all conditions are met', () => {
@@ -102,7 +110,6 @@ describe('shouldUsePrebinding', () => {
       testPatternPropertyDefinitionId: {
         path: '/entries/testEntry',
         type: 'BoundValue',
-        contentType: 'testContentType',
       },
     };
     const variable = {
@@ -121,6 +128,8 @@ describe('shouldUsePrebinding', () => {
 });
 
 describe('resolvePrebindingPath', () => {
+  const dataSourceKey = 'uuid2';
+
   it('should return the correct path when all conditions are met', () => {
     const componentValueKey = 'testKey';
     const componentSettings = {
@@ -138,9 +147,8 @@ describe('resolvePrebindingPath', () => {
     } as unknown as ExperienceComponentSettings;
     const patternProperties: Record<string, PatternProperty> = {
       testPatternPropertyDefinitionId: {
-        path: '/entries/testEntry',
+        path: `/${dataSourceKey}`,
         type: 'BoundValue',
-        contentType: 'testContentType',
       },
     };
 
@@ -148,9 +156,10 @@ describe('resolvePrebindingPath', () => {
       componentValueKey,
       componentSettings,
       patternProperties,
+      entityStore,
     });
 
-    expect(result).toBe('/entries/testEntry/fields/testField');
+    expect(result).toBe(`/${dataSourceKey}/fields/testField`);
   });
 
   it('should return an empty string when variableMapping is missing', () => {
@@ -164,6 +173,7 @@ describe('resolvePrebindingPath', () => {
       componentValueKey,
       componentSettings,
       patternProperties,
+      entityStore,
     });
 
     expect(result).toBe('');
@@ -184,6 +194,7 @@ describe('resolvePrebindingPath', () => {
       componentValueKey,
       componentSettings,
       patternProperties,
+      entityStore,
     });
 
     expect(result).toBe('');
@@ -199,13 +210,14 @@ describe('resolvePrebindingPath', () => {
       },
     } as unknown as ExperienceComponentSettings;
     const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: { path: '/entries/testEntry' },
+      testPatternPropertyDefinitionId: { path: `/${dataSourceKey}` },
     } as unknown as Record<string, PatternProperty>;
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
       patternProperties,
+      entityStore,
     });
 
     expect(result).toBe('');
@@ -222,13 +234,41 @@ describe('resolvePrebindingPath', () => {
       },
     } as unknown as ExperienceComponentSettings;
     const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: { path: '/entries/testEntry' },
+      testPatternPropertyDefinitionId: { path: `/${dataSourceKey}` },
     } as unknown as Record<string, PatternProperty>;
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
       patternProperties,
+      entityStore,
+    });
+
+    expect(result).toBe('');
+  });
+  it('should return an empty string when the entity is not found', () => {
+    // Simulate a missing entity by using a non-existent dataSourceKey
+    const dataSourceKey = 'nonExistentDataSourceKey';
+    const componentValueKey = 'testKey';
+    const componentSettings: ExperienceComponentSettings = {
+      variableMappings: {
+        testKey: {
+          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          pathsByContentType: {
+            testContentType: { path: '/fields/testField' },
+          },
+        },
+      },
+    } as unknown as ExperienceComponentSettings;
+    const patternProperties: Record<string, PatternProperty> = {
+      testPatternPropertyDefinitionId: { path: `/${dataSourceKey}` },
+    } as unknown as Record<string, PatternProperty>;
+
+    const result = resolvePrebindingPath({
+      componentValueKey,
+      componentSettings,
+      patternProperties,
+      entityStore,
     });
 
     expect(result).toBe('');
