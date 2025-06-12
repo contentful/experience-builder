@@ -71,8 +71,7 @@ export const resolvePrebindingVariablesForPatternNode = ({
       const componentValueKey = variable.key;
       const prebinding =
         entityStore.experienceEntryFields?.componentSettings?.variableMappings?.[componentValueKey];
-      const isValidForPrebinding = Boolean(prebinding);
-      if (!isValidForPrebinding) {
+      if (!prebinding) {
         continue;
       }
 
@@ -82,7 +81,7 @@ export const resolvePrebindingVariablesForPatternNode = ({
           mappingId
         ];
       const [[contentTypeId, defaultEntryLink]] = Object.entries(mapping?.defaultValue || {});
-      if (isValidForPrebinding && contentTypeId in (mapping?.contentTypes || {})) {
+      if (contentTypeId in (mapping?.contentTypes || {})) {
         const path = prebinding?.pathsByContentType?.[contentTypeId]?.path || '';
         variables[variableName] = {
           type: 'BoundValue',
