@@ -1,5 +1,7 @@
+import { EntityStore } from '@contentful/experiences-core';
 import {
   ComponentPropertyValue,
+  ComponentTreeNode,
   ExperienceComponentSettings,
   PatternProperty,
 } from '@contentful/experiences-validators';
@@ -53,4 +55,51 @@ export const resolvePrebindingPath = ({
   if (!fieldPath) return '';
 
   return patternProperty.path + fieldPath;
+};
+
+export const resolvePrebindingVariablesForPatternNode = ({
+  node,
+  entityStore,
+}: {
+  node: ComponentTreeNode;
+  entityStore: EntityStore;
+}): ComponentTreeNode => {
+  const variables: Record<string, ComponentPropertyValue> = {};
+  for (const [variableName, variable] of Object.entries(node.variables)) {
+    variables[variableName] = variable;
+    if (variable.type === 'ComponentValue') {
+      const componentValueKey = variable.key;
+      const prebinding =
+        entityStore.experienceEntryFields?.componentSettings?.variableMappings?.[componentValueKey];
+      const isValidForPrebinding = Boolean(prebinding);
+      if (!isValidForPrebinding) {
+        continue;
+      }
+
+      const mappingId = prebinding?.patternPropertyDefinitionId || '';
+      const mapping =
+        entityStore.experienceEntryFields?.componentSettings?.patternPropertyDefinitions?.[
+          mappingId
+        ];
+      const [[contentTypeId, defaultEntryLink]] = Object.entries(mapping?.defaultValue || {});
+      if (isValidForPrebinding && contentTypeId in (mapping?.contentTypes || {})) {
+        const path = prebinding?.pathsByContentType?.[contentTypeId]?.path || '';
+        variables[variableName] = {
+          type: 'BoundValue',
+          path: `/${defaultEntryLink.sys.id}${path}`,
+        };
+      }
+    }
+  }
+
+  return {
+    ...node,
+    variables,
+    children: node.children.map((child) =>
+      resolvePrebindingVariablesForPatternNode({
+        node: child,
+        entityStore,
+      }),
+    ),
+  };
 };
