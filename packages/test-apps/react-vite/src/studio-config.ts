@@ -147,7 +147,7 @@ defineComponents(
         children: true,
         name: 'Kitchen Sink',
         category: 'Custom Components',
-        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfHeight'],
         variables: {
           jsonObject: {
             displayName: 'Json',
@@ -185,22 +185,48 @@ defineComponents(
           location: {
             displayName: 'Location',
             type: 'Location',
-            defaultValue: { lon: -69, lat: 69 },
+            // defaultValue: { lon: -69, lat: 69 },
           },
           media: {
             displayName: 'Media',
             type: 'Media',
-            defaultValue:
-              'https://images.ctfassets.net/son9ld5ewssk/66dcJbD6GoCqwQ0ciGaCOg/6c20042a8684baedc1517fadfc3e3070/children-enabled_7x.png',
+            // defaultValue:
+            //   'https://images.ctfassets.net/son9ld5ewssk/66dcJbD6GoCqwQ0ciGaCOg/6c20042a8684baedc1517fadfc3e3070/children-enabled_7x.png',
           },
           hyperlink: {
             displayName: 'Hyperlink',
             type: 'Hyperlink',
-            defaultValue: 'https://www.contentful.com',
+            // defaultValue: 'https://www.contentful.com',
           },
           richText: {
             displayName: 'Rich Text',
             type: 'RichText',
+          },
+          overflow: {
+            displayName: 'Overflow',
+            type: 'Text',
+            defaultValue: '',
+            group: 'style',
+            validations: {
+              in: [
+                {
+                  value: '',
+                  displayName: 'Initial',
+                },
+                {
+                  value: 'hidden',
+                  displayName: 'Hidden',
+                },
+                {
+                  value: 'visible',
+                  displayName: 'Visible',
+                },
+                {
+                  value: 'auto',
+                  displayName: 'Auto',
+                },
+              ],
+            },
           },
         },
       },

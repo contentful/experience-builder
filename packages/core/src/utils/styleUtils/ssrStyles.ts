@@ -233,6 +233,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
          */
         const generatedCss = stringifyCssProperties(cfStyles);
 
+        if (!generatedCss && !isAnyVisibilityValueHidden) {
+          // If there are no styles to apply, skip this breakpoint completely including the class name
+          continue;
+        }
+
         /* [Data format] `generatedCss` is the minimized CSS string that will be added to the DOM:
          * generatedCss = "margin: 1px;width: 100%;..."
          */

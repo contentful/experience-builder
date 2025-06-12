@@ -1,5 +1,7 @@
 import { Asset, AssetFile, Entry } from 'contentful';
 
+export const CONTENT_TYPE_ID = 'testContentType';
+
 export const entityIds = {
   ENTRY1: 'entry1',
   ENTRY2: 'entry2',
@@ -12,7 +14,7 @@ export const entries: Entry[] = [
       type: 'Entry',
       contentType: {
         sys: {
-          id: 'bar',
+          id: CONTENT_TYPE_ID,
           type: 'Link',
           linkType: 'ContentType',
         },
@@ -49,7 +51,7 @@ export const entries: Entry[] = [
       type: 'Entry',
       contentType: {
         sys: {
-          id: 'bar',
+          id: CONTENT_TYPE_ID,
           type: 'Link',
           linkType: 'ContentType',
         },

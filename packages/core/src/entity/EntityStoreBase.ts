@@ -3,6 +3,7 @@ import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';
 import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema';
+import { isAsset, isEntry } from '@/utils/entityTypeChecks';
 
 /**
  * Base Store for entities
@@ -50,9 +51,13 @@ export abstract class EntityStoreBase {
         return;
       }
       entity = resolvedEntity;
-    } else {
+    } else if (isAsset(linkOrEntryOrAsset) || isEntry(linkOrEntryOrAsset)) {
       // We already have the complete entity in preview & delivery (resolved by the CMA client)
       entity = linkOrEntryOrAsset;
+    } else {
+      throw new Error(
+        `Unexpected object when resolving entity: ${JSON.stringify(linkOrEntryOrAsset)}`,
+      );
     }
     return entity;
   }
@@ -113,10 +118,14 @@ export abstract class EntityStoreBase {
   }
 
   protected addEntity(entity: Entry | Asset): void {
-    if (this.isAsset(entity)) {
+    if (isAsset(entity)) {
       this.assetMap.set(entity.sys.id, entity);
-    } else {
+    } else if (isEntry(entity)) {
       this.entryMap.set(entity.sys.id, entity);
+    } else {
+      throw new Error(
+        `Attempted to add an entity to the store that is neither Asset nor Entry: '${JSON.stringify(entity)}'`,
+      );
     }
   }
 
@@ -203,7 +212,7 @@ export abstract class EntityStoreBase {
           }
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = entity; // we move up
-        } else if (this.isAsset(fieldValue) || this.isEntry(fieldValue)) {
+        } else if (isAsset(fieldValue) || isEntry(fieldValue)) {
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = fieldValue; // we move up
         } else {
@@ -246,24 +255,6 @@ export abstract class EntityStoreBase {
     }
     const [leafEntity] = resolvedFieldset[resolvedFieldset.length - 1];
     return leafEntity;
-  }
-
-  private isAsset(value: unknown): value is Asset {
-    return (
-      null !== value &&
-      typeof value === 'object' &&
-      'sys' in value &&
-      (value as Asset).sys?.type === 'Asset'
-    );
-  }
-
-  private isEntry(value: unknown): value is Entry {
-    return (
-      null !== value &&
-      typeof value === 'object' &&
-      'sys' in value &&
-      (value as Entry).sys?.type === 'Entry'
-    );
   }
 
   private getEntity(type: 'Asset' | 'Entry', id: string) {
