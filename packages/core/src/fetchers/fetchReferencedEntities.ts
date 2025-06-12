@@ -63,15 +63,6 @@ export const fetchReferencedEntities = async ({
     }
   }
 
-  const patternPropertyDefinitions =
-    experienceEntry.fields.componentSettings?.patternPropertyDefinitions || {};
-  const defaultPrebindingValue = Object.values(patternPropertyDefinitions).find(
-    (it) => it.defaultValue,
-  )?.defaultValue;
-  if (defaultPrebindingValue) {
-    entryIds.add(Object.values(defaultPrebindingValue)[0]?.sys.id);
-  }
-
   const [entriesResponse, assetsResponse] = await Promise.all([
     fetchAllEntries({ client, ids: [...entryIds], locale }),
     fetchAllAssets({ client, ids: [...assetIds], locale }),
