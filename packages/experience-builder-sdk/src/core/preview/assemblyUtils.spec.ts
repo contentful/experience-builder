@@ -112,7 +112,6 @@ describe('resolveAssembly', () => {
         children: [],
         patternProperties: {
           [patternPropertyId]: {
-            contentType: 'testContentType',
             path: '/1230948',
             type: 'BoundValue',
           },
@@ -125,7 +124,6 @@ describe('resolveAssembly', () => {
         patternRootNodeIdsChain: 'assembly-id',
         parentPatternProperties: {
           [patternPropertyId2]: {
-            contentType: 'testContentType',
             path: '/4091203i9',
             type: 'BoundValue',
           },
@@ -134,12 +132,10 @@ describe('resolveAssembly', () => {
 
       expect(result.patternProperties).toEqual({
         ['patternPropertyId']: {
-          contentType: 'testContentType',
           path: '/1230948',
           type: 'BoundValue',
         },
         ['patternPropertyId2']: {
-          contentType: 'testContentType',
           path: '/4091203i9',
           type: 'BoundValue',
         },
