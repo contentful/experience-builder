@@ -14,17 +14,24 @@ export function getResolvedEntryFromLink(
     throw new Error(`Expected an Entry or Asset, but got: ${JSON.stringify(entryOrAsset)}`);
   }
 
-  const value = get<UnresolvedLink<'Entry'>>(entryOrAsset, path.split('/').slice(2, -1));
+  const value = get<UnresolvedLink<'Entry'> | Entry | Asset>(
+    entryOrAsset,
+    path.split('/').slice(2, -1),
+  );
 
-  if (value?.sys.type !== 'Link') {
+  let resolvedEntity: Entry | Asset | undefined;
+
+  if (isAsset(value) || isEntry(value)) {
+    // In some cases, reference fields are already resolved
+    resolvedEntity = value;
+  } else if (value?.sys.type === 'Link') {
+    // Look up the reference in the entity store
+    resolvedEntity = entityStore.getEntityFromLink(value);
+    if (!resolvedEntity) {
+      return;
+    }
+  } else {
     console.warn(`Expected a link to a reference, but got: ${JSON.stringify(value)}`);
-    return;
-  }
-
-  //Look up the reference in the entity store
-  const resolvedEntity = entityStore.getEntityFromLink(value);
-
-  if (!resolvedEntity) {
     return;
   }
 
