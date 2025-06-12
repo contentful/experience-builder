@@ -1,14 +1,17 @@
 import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../get';
 import { EntityStoreBase } from '@/entity';
+import { isAsset, isEntry } from '../entityTypeChecks';
 
 export function getResolvedEntryFromLink(
   entryOrAsset: Entry | Asset,
   path: string,
   entityStore: EntityStoreBase,
 ) {
-  if (entryOrAsset.sys.type === 'Asset') {
+  if (isAsset(entryOrAsset)) {
     return entryOrAsset;
+  } else if (!isEntry(entryOrAsset)) {
+    throw new Error(`Expected an Entry or Asset, but got: ${JSON.stringify(entryOrAsset)}`);
   }
 
   const value = get<UnresolvedLink<'Entry'>>(entryOrAsset, path.split('/').slice(2, -1));
