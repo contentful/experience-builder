@@ -57,7 +57,7 @@ describe('transformBackgroundImage', () => {
     expect(
       transformBackgroundImage('url("image.jpg")', {
         scaling: 'fit',
-        alignment: 'bottom',
+        alignment: 'center bottom',
         targetSize: '500px',
       }),
     ).toEqual({
