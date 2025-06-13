@@ -32,21 +32,19 @@ export default function Page() {
   // This effect is used to fetch additional levels early
   useEffect(() => {
     if (isLoading) {
-      console.warn(';;[effectFetchAdditional] Experience is still loading...');
       return;
     }
     if (experienceLoadingError) {
-      console.error(';;[effectFetchAdditional] Error loading experience:', experienceLoadingError);
       return;
     }
 
     if (!experience) {
-      console.warn(';;[effectFetchAdditional] Experience is falsy');
+      // if we got past isLoading and experienceLoadingError checks, but experience is still undefined,
+      // this means that we are in EDITOR mode (not Preview+Delivery mode).
       return;
     }
 
     if (areAllAdditionalLevelsFetched) {
-      console.warn(';;[effectFetchAdditional] All additional levels already fetched, skipping');
       return;
     }
 
@@ -62,9 +60,6 @@ export default function Page() {
       }
     }
     earlyPreload(experience);
-    return () => {
-      console.warn(';;[effectFetchAdditional] Effect cleanup.');
-    };
   }, [
     experience,
     isLoading,

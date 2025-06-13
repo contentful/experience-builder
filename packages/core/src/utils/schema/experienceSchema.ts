@@ -61,10 +61,6 @@ export const extractLeafLinksReferencedFromExperience = (experience: Experience)
   const dedupedAssetLinks = uniqueById(assetLinks);
   const dedupedEntryLinks = uniqueById(entryLinks);
 
-  console.warn(
-    `;;[extractLeafLinksReferencedFromExperience] Found ${dedupedAssetLinks.length} asset links and ${dedupedEntryLinks.length} entry links in the experience.`,
-  );
-
   return {
     assetLinks: dedupedAssetLinks,
     entryLinks: dedupedEntryLinks,

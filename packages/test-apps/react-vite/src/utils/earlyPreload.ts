@@ -28,7 +28,6 @@ export const fetchAdditionalLevels = async (
     if (entities.length === 0) {
       return;
     }
-    console.log(';;Adding entities:', entities);
     inMemoryEntities.addEntities(entities);
   };
 
