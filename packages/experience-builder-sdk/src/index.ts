@@ -22,6 +22,8 @@ export {
   isLink,
   isAsset,
   isEntry,
+  isLinkToAsset,
+  isLinkToEntry,
 } from '@contentful/experiences-core';
 export {
   CONTENTFUL_COMPONENTS,

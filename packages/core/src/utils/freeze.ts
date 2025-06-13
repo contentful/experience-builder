@@ -1,4 +1,4 @@
-export function deepFreeze(obj) {
+export function deepFreeze<T>(obj: T): Readonly<T> {
   const propNames = Object.getOwnPropertyNames(obj);
 
   for (const name of propNames) {
