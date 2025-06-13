@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.41.0](https://github.com/contentful/experience-builder/compare/v1.40.2...v1.41.0) (2025-06-13)
+
+### Features
+
+- remove explicit border box [SPA-2792] ([#1173](https://github.com/contentful/experience-builder/issues/1173)) ([85aabd5](https://github.com/contentful/experience-builder/commit/85aabd525a5f0bd961fc011bb02409eff1b0a227))
+
+### Bug Fixes
+
+- handle entry fields being already resolved links ([#1176](https://github.com/contentful/experience-builder/issues/1176)) ([5a7de24](https://github.com/contentful/experience-builder/commit/5a7de24342c552889f2f513c16ce690693e8c63d))
+- handle unexpected json data gracefully ([556fd40](https://github.com/contentful/experience-builder/commit/556fd40f7fe5c100a7b8e534df5c9b29ed9295b4))
+- handle unexpected scenarios gracefully or render better error message ([#1170](https://github.com/contentful/experience-builder/issues/1170)) ([618fdd9](https://github.com/contentful/experience-builder/commit/618fdd9681a62eb8dd4f57c9bc6947d2c61dac74))
+- remove contentType attribute from PatternProperty schema ([#1172](https://github.com/contentful/experience-builder/issues/1172)) ([ddef0ff](https://github.com/contentful/experience-builder/commit/ddef0ffa0c12afd9133a4392b45b67962b1b7fbd))
+- **validators:** remove unused full EntryProps type [SPA-2753] ([#1169](https://github.com/contentful/experience-builder/issues/1169)) ([7389339](https://github.com/contentful/experience-builder/commit/73893395d81afa2fb6bd81b3317debc4c0b46c9e))
+
 ## [1.40.2](https://github.com/contentful/experience-builder/compare/v1.40.1...v1.40.2) (2025-06-10)
 
 ### Bug Fixes
