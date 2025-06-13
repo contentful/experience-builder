@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.41.0](https://github.com/contentful/experience-builder/compare/v1.40.2...v1.41.0) (2025-06-13)
+
+### Features
+
+- remove explicit border box [SPA-2792] ([#1173](https://github.com/contentful/experience-builder/issues/1173)) ([85aabd5](https://github.com/contentful/experience-builder/commit/85aabd525a5f0bd961fc011bb02409eff1b0a227))
+
 ## [1.40.2](https://github.com/contentful/experience-builder/compare/v1.40.1...v1.40.2) (2025-06-10)
 
 **Note:** Version bump only for package @contentful/experiences-components-react
