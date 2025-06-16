@@ -73,7 +73,6 @@ export const resolveMaybePrebindingDefaultValuePath = ({
   componentValueKey: string;
   entityStore: EntityStore;
 }): string | undefined => {
-  console.log(entityStore);
   const prebinding =
     entityStore.experienceEntryFields?.componentSettings?.variableMappings?.[componentValueKey];
   if (!prebinding) return;
