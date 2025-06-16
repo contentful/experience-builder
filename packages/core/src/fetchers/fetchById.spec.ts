@@ -112,6 +112,7 @@ describe('fetchById', () => {
           experienceEntry: expect.objectContaining({
             fields: expect.objectContaining({
               dataSource: expect.objectContaining({
+                ...createExperienceEntry({}).fields.dataSource,
                 prebound: {
                   sys: {
                     id: 'prebound-id',
