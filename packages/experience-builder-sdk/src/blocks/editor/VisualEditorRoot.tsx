@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { EntityStore, VisualEditorMode } from '@contentful/experiences-core';
+import { EntityStore, IframeLoading, VisualEditorMode } from '@contentful/experiences-core';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { useInitializeVisualEditor } from '../../hooks/useInitializeVisualEditor';
 import type { Experience } from '@contentful/experiences-core/types';
@@ -26,7 +26,7 @@ export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
 
   return (
     <ErrorBoundary>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<IframeLoading />}>
         <VisualEditorLoader experience={experience} visualEditorMode={visualEditorMode} />
       </Suspense>
     </ErrorBoundary>
