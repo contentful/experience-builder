@@ -127,19 +127,26 @@ export const parseComponentProps = ({
         }
         break;
       }
-      case 'ComponentValue':
+      case 'ComponentValue': {
         // We're rendering a pattern entry. Content cannot be set for ComponentValue type properties
         // directly in the pattern so we can safely use the default value
         // This can either be a design (style) or a content variable
         // Where prebinding is used, we resolve like they are a BoundValue
-        contentProps[propName] =
+        const propValue =
           resolvePrebindingValue({
             propertyName: propName,
             mappingKey: propertyValue.key,
             dataType: propDefinition.type,
             resolveBoundValue,
           }) || propDefinition.defaultValue;
+
+        if (isSpecialCaseCssProp(propName)) {
+          styleProps[propName] = { [mainBreakpoint.id]: propValue };
+        } else {
+          contentProps[propName] = propValue;
+        }
         break;
+      }
       default:
         break;
     }
