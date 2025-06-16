@@ -10,20 +10,20 @@ import { ExperienceEntry } from '@/types';
 import * as attachPrebindingDefaultValueAsDataSourceMock from './attachPrebindingDefaultValueAsDataSource';
 import * as fetchers from './fetchReferencedEntities';
 
-describe('fetchBySlug', () => {
-  let experienceEntry = createExperienceEntry({});
-  const circularEntry = {
-    sys: {
-      id: 'circular-entry',
-      type: 'Entry',
-      locale: 'en-US',
-    },
-    fields: structuredClone(experienceEntryFieldsWithFilledUsedComponents),
-  };
-  const patternLevel1 = circularEntry.fields.usedComponents![0] as ExperienceEntry;
-  const patternLevel2 = patternLevel1.fields.usedComponents![0] as ExperienceEntry;
-  patternLevel2.fields.usedComponents = [patternLevel1];
+let experienceEntry = createExperienceEntry({});
+const circularEntry = {
+  sys: {
+    id: 'circular-entry',
+    type: 'Entry',
+    locale: 'en-US',
+  },
+  fields: structuredClone(experienceEntryFieldsWithFilledUsedComponents),
+};
+const patternLevel1 = circularEntry.fields.usedComponents![0] as ExperienceEntry;
+const patternLevel2 = patternLevel1.fields.usedComponents![0] as ExperienceEntry;
+patternLevel2.fields.usedComponents = [patternLevel1];
 
+describe('fetchBySlug', () => {
   const mockClient = {
     getAssets: vi.fn(),
     getEntries: vi.fn(),

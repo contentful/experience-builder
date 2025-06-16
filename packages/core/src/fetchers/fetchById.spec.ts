@@ -7,6 +7,8 @@ import { describe, beforeEach, it, expect, vi } from 'vitest';
 import * as attachPrebindingDefaultValueAsDataSourceMock from './attachPrebindingDefaultValueAsDataSource';
 import * as fetchers from './fetchReferencedEntities';
 
+let experienceEntry = createExperienceEntry({});
+
 describe('fetchById', () => {
   const mockClient = {
     getAssets: vi.fn(),
@@ -19,7 +21,6 @@ describe('fetchById', () => {
   const experienceTypeId = 'experienceTypeId';
   const id = 'abc123';
   const localeCode = 'en-US';
-  let experienceEntry = createExperienceEntry({});
 
   beforeEach(() => {
     experienceEntry = createExperienceEntry({});
