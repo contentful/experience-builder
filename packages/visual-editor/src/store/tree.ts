@@ -19,6 +19,7 @@ import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
 import { treeVisit } from '@contentful/experiences-core';
 import { isEqual } from 'lodash-es';
 export interface TreeStore {
+  isReady: boolean;
   tree: ExperienceTree;
   breakpoints: Breakpoint[];
   updateTree: (tree: ExperienceTree) => void;
@@ -43,6 +44,7 @@ export interface TreeStore {
 }
 
 export const useTreeStore = create<TreeStore>((set, get) => ({
+  isReady: false,
   tree: {
     root: {
       children: [],
@@ -89,6 +91,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
       tree,
       // Breakpoints must be updated, as we receive completely new tree with possibly new breakpoints
       breakpoints: tree?.root?.data?.breakpoints || [],
+      isReady: true,
     });
   },
   updateTree: (tree) => {
@@ -148,6 +151,7 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
         });
 
         state.breakpoints = tree?.root?.data?.breakpoints || [];
+        state.isReady = true;
       }),
     );
   },
