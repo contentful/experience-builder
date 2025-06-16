@@ -12,9 +12,9 @@ import {
 } from '@contentful/experiences-core/constants';
 import type { ComponentTreeNode } from '@contentful/experiences-core/types';
 import { EntityStore } from '@contentful/experiences-core';
-import { resolveAssembly } from './assemblyUtils';
+import { resolvePattern } from './assemblyUtils';
 
-describe('resolveAssembly', () => {
+describe('resolvePattern', () => {
   it('should return the input node when the entity store is undefined', () => {
     const containerNode: ComponentTreeNode = {
       definitionId: CONTENTFUL_COMPONENTS.container.id,
@@ -24,7 +24,7 @@ describe('resolveAssembly', () => {
 
     const entityStore = {} as unknown as EntityStore;
 
-    const result = resolveAssembly({
+    const result = resolvePattern({
       node: containerNode,
       entityStore,
       parentPatternProperties: {},
@@ -47,7 +47,7 @@ describe('resolveAssembly', () => {
       locale: 'en-US',
     });
 
-    const result = resolveAssembly({
+    const result = resolvePattern({
       node: assemblyNode,
       entityStore,
       parentPatternProperties: {},
@@ -82,7 +82,7 @@ describe('resolveAssembly', () => {
         children: [],
       };
 
-      const result = resolveAssembly({
+      const result = resolvePattern({
         node: assemblyNode,
         entityStore,
         parentPatternProperties: {},
@@ -118,7 +118,7 @@ describe('resolveAssembly', () => {
         },
       };
 
-      const result = resolveAssembly({
+      const result = resolvePattern({
         node: assemblyNode,
         entityStore,
         patternRootNodeIdsChain: 'assembly-id',
@@ -154,7 +154,7 @@ describe('resolveAssembly', () => {
         children: [],
       };
 
-      const result = resolveAssembly({
+      const result = resolvePattern({
         node: assemblyNode,
         entityStore,
         parentPatternProperties: {},
@@ -174,7 +174,7 @@ describe('resolveAssembly', () => {
         children: [],
       };
 
-      const result = resolveAssembly({
+      const result = resolvePattern({
         node: assemblyNode,
         entityStore,
         parentPatternProperties: {},

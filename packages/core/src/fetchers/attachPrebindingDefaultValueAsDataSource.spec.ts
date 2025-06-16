@@ -5,12 +5,20 @@ import { ExperienceEntry } from '@/types';
 import { describe, it, expect, vi } from 'vitest';
 
 describe('attachPrebindingDefaultValueAsDataSource', () => {
-  const mockIsExperienceEntry = vi.spyOn(utils, 'isExperienceEntry');
+  const mockCheckIsAssemblyEntry = vi.spyOn(utils, 'checkIsAssemblyEntry');
   let experience = createExperienceEntry({});
 
   afterEach(() => {
     vi.clearAllMocks();
     experience = createExperienceEntry({});
+  });
+
+  it('should return early if not a pattern', () => {
+    const experience = {} as unknown as ExperienceEntry;
+
+    mockCheckIsAssemblyEntry.mockReturnValue(false);
+
+    expect(attachPrebindingDefaultValueAsDataSource(experience)).toBeUndefined();
   });
 
   it('should attach default prebinding value to dataSource', () => {
@@ -37,7 +45,7 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
       dataSource: {},
     };
 
-    mockIsExperienceEntry.mockReturnValue(true);
+    mockCheckIsAssemblyEntry.mockReturnValue(true);
 
     attachPrebindingDefaultValueAsDataSource(experience);
 
@@ -48,16 +56,6 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
         linkType: 'Entry',
       },
     });
-  });
-
-  it('should throw if not an experience entry', () => {
-    const invalidExperience = {} as unknown as ExperienceEntry;
-
-    mockIsExperienceEntry.mockReturnValue(false);
-
-    expect(() => attachPrebindingDefaultValueAsDataSource(invalidExperience)).toThrow(
-      /does not match experience entry schema/,
-    );
   });
 
   it('should do nothing if no default prebinding value exists', () => {
@@ -78,7 +76,7 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
       },
     };
 
-    mockIsExperienceEntry.mockReturnValue(true);
+    mockCheckIsAssemblyEntry.mockReturnValue(true);
 
     attachPrebindingDefaultValueAsDataSource(experience);
 

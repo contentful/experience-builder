@@ -17,6 +17,7 @@ describe('parseComponentProps', () => {
   const resolveBoundValue = () => 'resolvedBoundValue';
   const resolveHyperlinkValue = () => 'resolvedHyperlinkValue';
   const resolveUnboundValue = () => 'resolvedUnboundValue';
+  const resolvePrebindingValue = () => 'resolvePrebindingValue';
 
   const defaultArguments = {
     mainBreakpoint,
@@ -27,6 +28,7 @@ describe('parseComponentProps', () => {
     resolveBoundValue,
     resolveHyperlinkValue,
     resolveUnboundValue,
+    resolvePrebindingValue,
   };
 
   it('returns CSS code including media query', () => {

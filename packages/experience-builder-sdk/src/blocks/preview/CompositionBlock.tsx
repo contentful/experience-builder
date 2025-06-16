@@ -1,9 +1,12 @@
 import React, { ReactNode, useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import {
+  checkIsAssemblyEntry,
+  checkIsAssemblyNode,
   EntityStore,
   resolveHyperlinkPattern,
   sanitizeNodeProps,
+  transformBoundContentValue,
 } from '@contentful/experiences-core';
 import {
   CONTENTFUL_COMPONENTS,
@@ -18,7 +21,6 @@ import type {
   StyleProps,
 } from '@contentful/experiences-core/types';
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
-import { checkIsAssemblyNode, transformBoundContentValue } from '@contentful/experiences-core';
 import { useInjectStylesheet } from '../../hooks/useInjectStylesheet';
 import {
   Assembly,
@@ -26,8 +28,8 @@ import {
   ContentfulContainer,
   SingleColumn,
 } from '@contentful/experiences-components-react';
-import { resolveAssembly } from '../../core/preview/assemblyUtils';
-import { resolvePrebindingVariablesForPatternNode } from '../../utils/prebindingUtils';
+import { resolvePattern } from '../../core/preview/assemblyUtils';
+import { resolveMaybePrebindingDefaultValuePath } from '../../utils/prebindingUtils';
 import { Entry } from 'contentful';
 import PreviewUnboundImage from './PreviewUnboundImage';
 import { parseComponentProps } from '../../utils/parseComponentProps';
@@ -60,78 +62,72 @@ export const CompositionBlock = ({
   wrappingPatternProperties: parentWrappingPatternProperties = {},
   patternRootNodeIdsChain: parentPatternRootNodeIdsChain = '',
 }: CompositionBlockProps) => {
-  const isAssemblyNode = useMemo(() => {
+  const isPatternNode = useMemo(() => {
     return checkIsAssemblyNode({
       componentId: rawNode.definitionId,
       usedComponents: entityStore.usedComponents,
     });
   }, [entityStore.usedComponents, rawNode.definitionId]);
 
-  const isExperienceAPattern = useMemo(() => {
-    return Boolean(entityStore.experienceEntryFields?.componentSettings);
+  const isPatternEntry = useMemo(() => {
+    return checkIsAssemblyEntry({ fields: entityStore.experienceEntryFields } as unknown as Entry);
   }, [entityStore]);
 
   const patternRootNodeIdsChain = useMemo(() => {
-    if (isAssemblyNode) {
+    if (isPatternNode) {
       // Pattern nodes are chained without a separator (following the format for prebinding/patternProperties)
       return `${parentPatternRootNodeIdsChain}${rawNode.id}`;
     }
     return parentPatternRootNodeIdsChain;
-  }, [isAssemblyNode, parentPatternRootNodeIdsChain, rawNode.id]);
+  }, [isPatternNode, parentPatternRootNodeIdsChain, rawNode.id]);
 
   const node = useMemo(() => {
-    if (isAssemblyNode) {
-      return resolveAssembly({
+    if (isPatternNode) {
+      return resolvePattern({
         node: rawNode,
         entityStore,
         parentPatternProperties: parentWrappingPatternProperties,
         patternRootNodeIdsChain,
-      });
-    } else if (isExperienceAPattern) {
-      return resolvePrebindingVariablesForPatternNode({
-        node: rawNode,
-        entityStore,
       });
     } else {
       return rawNode;
     }
   }, [
     entityStore,
-    isAssemblyNode,
-    isExperienceAPattern,
+    isPatternNode,
     rawNode,
     parentWrappingPatternProperties,
     patternRootNodeIdsChain,
   ]);
 
   const wrappingPatternIds = useMemo(() => {
-    if (isAssemblyNode) {
+    if (isPatternNode) {
       return new Set([node.definitionId, ...parentWrappingPatternIds]);
     }
     return parentWrappingPatternIds;
-  }, [isAssemblyNode, node, parentWrappingPatternIds]);
+  }, [isPatternNode, node, parentWrappingPatternIds]);
 
   // Merge the pattern properties of the current node with the parent's pattern properties
   // to ensure nested patterns receive relevant pattern properties that were bubbled up
   // during assembly serialization.
   const wrappingPatternProperties = useMemo(() => {
-    if (isAssemblyNode) {
+    if (isPatternNode) {
       return { ...parentWrappingPatternProperties, ...(rawNode.patternProperties || {}) };
     }
     return parentWrappingPatternProperties;
-  }, [isAssemblyNode, rawNode, parentWrappingPatternProperties]);
+  }, [isPatternNode, rawNode, parentWrappingPatternProperties]);
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.definitionId as string);
 
-    if (isAssemblyNode && !registration) {
+    if (isPatternNode && !registration) {
       return createAssemblyRegistration({
         definitionId: node.definitionId as string,
         component: Assembly,
       });
     }
     return registration;
-  }, [isAssemblyNode, node.definitionId]);
+  }, [isPatternNode, node.definitionId]);
 
   const { ssrProps, contentProps, props, mediaQuery } = useMemo(() => {
     // In SSR, we store the className under breakpoints[0] which is resolved here to the actual string
@@ -142,7 +138,7 @@ export const CompositionBlock = ({
       | undefined;
 
     // Don't enrich the assembly wrapper node with props
-    if (!componentRegistration || isAssemblyNode) {
+    if (!componentRegistration || isPatternNode) {
       const ssrProps = { cfSsrClassName };
       const props: Record<string, PrimitiveValue> = { className: cfSsrClassName };
       return {
@@ -203,6 +199,26 @@ export const CompositionBlock = ({
       resolveUnboundValue: ({ mappingKey, defaultValue }) => {
         return entityStore.unboundValues[mappingKey]?.value ?? defaultValue;
       },
+      resolvePrebindingValue: ({ mappingKey, propertyName, dataType, resolveBoundValue }) => {
+        if (isPatternEntry) {
+          const path = resolveMaybePrebindingDefaultValuePath({
+            propertyName,
+            componentValueKey: mappingKey,
+            entityStore,
+          });
+
+          if (path) {
+            return resolveBoundValue({
+              propertyName,
+              dataType,
+              binding: {
+                type: 'BoundValue',
+                path,
+              },
+            });
+          }
+        }
+      },
     });
 
     const slotsProps: Record<string, ReactNode> = {};
@@ -246,9 +262,10 @@ export const CompositionBlock = ({
     };
   }, [
     node,
+    isPatternEntry,
     entityStore,
     componentRegistration,
-    isAssemblyNode,
+    isPatternNode,
     getPatternChildNodeClassName,
     resolveDesignValue,
     hyperlinkPattern,
@@ -274,7 +291,7 @@ export const CompositionBlock = ({
 
   // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {
-    if (isAssemblyNode) {
+    if (isPatternNode) {
       const nodeIdsChain = `${patternRootNodeIdsChain}-${childNodeId}`;
       // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
       const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[nodeIdsChain];
@@ -290,7 +307,7 @@ export const CompositionBlock = ({
           return (
             <CompositionBlock
               getPatternChildNodeClassName={
-                isAssemblyNode || getPatternChildNodeClassName
+                isPatternNode || getPatternChildNodeClassName
                   ? _getPatternChildNodeClassName
                   : undefined
               }

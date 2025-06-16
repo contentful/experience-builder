@@ -1,5 +1,6 @@
 import { ExperienceEntry } from '@/types';
-import { isExperienceEntry } from '@/utils';
+import { checkIsAssemblyEntry } from '@/utils';
+import { Entry } from 'contentful';
 
 /**
  * Attaches the default prebinding value (if any) to the experience entry's dataSource.
@@ -11,10 +12,9 @@ import { isExperienceEntry } from '@/utils';
 export const attachPrebindingDefaultValueAsDataSource = (
   experienceEntry: ExperienceEntry,
 ): void => {
-  if (!isExperienceEntry(experienceEntry)) {
-    throw new Error(
-      'Failed to attach default prebinding value to data source. Provided "experienceEntry" does not match experience entry schema',
-    );
+  if (!checkIsAssemblyEntry(experienceEntry as Entry)) {
+    // Only supported for pattern entries since experience entries don't define pattern properties.
+    return;
   }
 
   const patternDefs = experienceEntry.fields.componentSettings?.patternPropertyDefinitions ?? {};

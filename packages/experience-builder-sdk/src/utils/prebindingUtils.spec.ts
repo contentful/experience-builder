@@ -1,12 +1,16 @@
 import { EntityStore } from '@contentful/experiences-core';
 import { experienceEntry, entities } from '../../test/__fixtures__';
-import { shouldUsePrebinding, resolvePrebindingPath } from './prebindingUtils';
-
+import {
+  shouldUsePrebinding,
+  resolvePrebindingPath,
+  resolveMaybePrebindingDefaultValuePath,
+} from './prebindingUtils';
 import {
   ComponentPropertyValue,
   ExperienceComponentSettings,
   PatternProperty,
 } from '@contentful/experiences-validators';
+import { ExperienceEntry } from '@contentful/experiences-core/types';
 
 const entityStore = new EntityStore({
   experienceEntry,
@@ -272,5 +276,103 @@ describe('resolvePrebindingPath', () => {
     });
 
     expect(result).toBe('');
+  });
+});
+
+describe('resolveMaybePrebindingDefaultValuePath', () => {
+  const dataSourceKey = 'uuid2';
+
+  const createEntityStoreWithComponentSettings = (
+    componentSettingsOverrides: Partial<ExperienceComponentSettings>,
+  ) => {
+    return new EntityStore({
+      experienceEntry: {
+        ...experienceEntry,
+        fields: {
+          ...experienceEntry.fields,
+          componentSettings: {
+            ...experienceEntry.fields.componentSettings,
+            patternPropertyDefinitions: {
+              testPatternPropertyDefinitionId: {
+                defaultValue: {
+                  testContentType: {
+                    sys: { id: dataSourceKey, type: 'Link', linkType: 'Entry' },
+                  },
+                },
+                contentTypes: {
+                  testContentType: {},
+                },
+              },
+            },
+            variableMappings: {
+              testKey: {
+                type: 'ContentTypeMapping',
+                patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+                pathsByContentType: {
+                  testContentType: { path: '/fields/testField' },
+                },
+              },
+            },
+            ...componentSettingsOverrides,
+          },
+        },
+      } as unknown as ExperienceEntry,
+      entities,
+      locale: 'en-US',
+    });
+  };
+
+  it('should return the correct path when defaultValue is set and all conditions are met', () => {
+    const result = resolveMaybePrebindingDefaultValuePath({
+      componentValueKey: 'testKey',
+      entityStore: createEntityStoreWithComponentSettings({}),
+    });
+
+    expect(result).toBe(`/${dataSourceKey}/fields/testField`);
+  });
+
+  it('should return undefined when variableMapping is missing', () => {
+    const modifiedEntityStore = createEntityStoreWithComponentSettings({
+      variableMappings: {},
+    });
+
+    const result = resolveMaybePrebindingDefaultValuePath({
+      componentValueKey: 'testKey',
+      entityStore: modifiedEntityStore,
+    });
+
+    expect(result).toBeUndefined();
+  });
+
+  it('should return undefined when patternPropertyDefinition is missing', () => {
+    const modifiedEntityStore = createEntityStoreWithComponentSettings({
+      patternPropertyDefinitions: {},
+    });
+
+    const result = resolveMaybePrebindingDefaultValuePath({
+      componentValueKey: 'testKey',
+      entityStore: modifiedEntityStore,
+    });
+
+    expect(result).toBeUndefined();
+  });
+
+  it('should return undefined when defaultValue is missing', () => {
+    const modifiedEntityStore = createEntityStoreWithComponentSettings({
+      patternPropertyDefinitions: {
+        testPatternPropertyDefinitionId: {
+          contentTypes: {
+            testContentType: {},
+          },
+        },
+      },
+    } as unknown as ExperienceComponentSettings);
+
+    const result = resolveMaybePrebindingDefaultValuePath({
+      componentValueKey: 'testKey',
+      entityStore: modifiedEntityStore,
+    });
+
+    expect(result).toBeUndefined();
   });
 });
