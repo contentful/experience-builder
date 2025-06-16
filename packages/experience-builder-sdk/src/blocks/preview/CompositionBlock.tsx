@@ -202,7 +202,6 @@ export const CompositionBlock = ({
       resolvePrebindingValue: ({ mappingKey, propertyName, dataType, resolveBoundValue }) => {
         if (isPatternEntry) {
           const path = resolveMaybePrebindingDefaultValuePath({
-            propertyName,
             componentValueKey: mappingKey,
             entityStore,
           });
