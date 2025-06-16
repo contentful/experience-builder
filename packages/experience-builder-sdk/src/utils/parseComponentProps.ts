@@ -136,7 +136,7 @@ export const parseComponentProps = ({
             mappingKey: propertyValue.key,
             dataType: propDefinition.type,
             resolveBoundValue,
-          }) || propDefinition.defaultValue;
+          }) ?? propDefinition.defaultValue;
 
         if (isSpecialCaseCssProp(propName)) {
           styleProps[propName] = { [mainBreakpoint.id]: propValue };
