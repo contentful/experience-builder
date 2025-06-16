@@ -1,9 +1,27 @@
 import React, { ErrorInfo, ReactElement } from 'react';
 import { sendMessage } from '@contentful/experiences-core';
-import '../styles/ErrorBoundary.css';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 ('use client');
+
+const styles = {
+  errorMessage: {
+    margin: '24px',
+    fontSize: 'var(--exp-builder-font-size-m)',
+    fontFamily: 'var(--exp-builder-font-stack-primary)',
+    color: 'var(--exp-builder-red800)',
+    padding: '16px',
+    backgroundColor: 'var(--exp-builder-red200)',
+  },
+  title: {
+    marginTop: 0,
+    fontSize: 'var(--exp-builder-font-size-l)',
+  },
+  moreDetails: {
+    cursor: 'pointer',
+    color: 'var(--exp-builder-blue700)',
+  },
+};
 
 export class ErrorBoundary extends React.Component<
   { children: ReactElement },
@@ -30,8 +48,8 @@ export class ErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="cf-error-message">
-          <h2 className="title">{`Something went wrong while rendering the experience`}</h2>
+        <div style={styles.errorMessage}>
+          <h2 style={styles.title}>{`Something went wrong while rendering the experience`}</h2>
           <div>
             The Experience Builder SDK has encountered an error. It may be that the SDK has not been
             set up properly or an imported component has thrown this error. Try to refresh the page
@@ -46,7 +64,7 @@ export class ErrorBoundary extends React.Component<
           </div>
           <br />
           <span
-            className="more-details"
+            style={styles.moreDetails}
             onClick={() =>
               this.setState((prevState) => ({
                 showErrorDetails: !prevState.showErrorDetails,

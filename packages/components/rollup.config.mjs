@@ -18,9 +18,8 @@ export default [
     plugins: [
       postcss({
         plugins: [postcssImport()],
-        inject(cssVariableName) {
-          return `import styleInject from 'style-inject';\nstyleInject(${cssVariableName});`;
-        },
+        extract: true,
+        minimize: !process.env.DEV,
       }),
       resolve(),
       commonjs(),
