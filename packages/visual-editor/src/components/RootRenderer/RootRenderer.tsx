@@ -9,7 +9,7 @@ import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { DNDProvider } from './DNDProvider';
-import { sendMessage } from '@contentful/experiences-core';
+import { IframeLoading, sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
 import { Dropzone } from '@components/DraggableBlock/Dropzone';
@@ -30,6 +30,7 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => 
   const { resolveDesignValue } = useBreakpoints(breakpoints);
   const [containerStyles, setContainerStyles] = useState<CSSProperties>({});
   const tree = useTreeStore((state) => state.tree);
+  const isTreeReady = useTreeStore((state) => state.isReady);
 
   const handleMouseOver = useCallback(() => {
     // Remove hover state set by UI when mouse is over canvas
@@ -116,6 +117,10 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => 
     handleResizeCanvas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef.current]);
+
+  if (!isTreeReady) {
+    return <IframeLoading />;
+  }
 
   return (
     <DNDProvider>

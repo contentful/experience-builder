@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { EntityStore, VisualEditorMode } from '@contentful/experiences-core';
+import { EntityStore, IframeLoading, VisualEditorMode } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
 
 type VisualEditorLoaderProps = {
@@ -33,7 +33,7 @@ export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({
     }
   }, [visualEditorMode]);
 
-  if (!VisualEditor) return null;
+  if (!VisualEditor) return <IframeLoading />;
 
   return <VisualEditor experience={experience} />;
 };

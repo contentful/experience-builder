@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { EntityStore, sendMessage } from '@contentful/experiences-core';
+import { EntityStore, IframeLoading, sendMessage } from '@contentful/experiences-core';
 import { RootRenderer } from './RootRenderer/RootRenderer';
 import SimulateDnD from '@/utils/simulateDnD';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
@@ -57,7 +57,7 @@ export const VisualEditorRoot = ({ experience }: { experience?: Experience<Entit
     };
   }, [setHoveringZone, setMousePosition]);
 
-  if (!initialized) return null;
+  if (!initialized) return <IframeLoading />;
 
   return <RootRenderer />;
 };
