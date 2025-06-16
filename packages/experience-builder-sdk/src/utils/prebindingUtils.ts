@@ -73,22 +73,22 @@ export const resolveMaybePrebindingDefaultValuePath = ({
   componentValueKey: string;
   entityStore: EntityStore;
 }): string | undefined => {
-  const prebinding =
-    entityStore.experienceEntryFields?.componentSettings?.variableMappings?.[componentValueKey];
+  if (!entityStore.experienceEntryFields?.componentSettings) return;
+
+  const componentSettings = entityStore.experienceEntryFields.componentSettings;
+  const prebinding = componentSettings.variableMappings?.[componentValueKey];
   if (!prebinding) return;
 
-  const mappingId = prebinding?.patternPropertyDefinitionId || '';
-  const mapping =
-    entityStore.experienceEntryFields?.componentSettings?.patternPropertyDefinitions?.[mappingId];
+  const mappingId = prebinding.patternPropertyDefinitionId || '';
+  const mapping = componentSettings.patternPropertyDefinitions?.[mappingId];
   if (!mapping || !mapping?.defaultValue) return;
 
-  const [[contentTypeId, defaultEntryLink]] = Object.entries(mapping?.defaultValue || {});
-  if (contentTypeId in (mapping?.contentTypes || {})) {
+  const [[contentTypeId, defaultEntryLink]] = Object.entries(mapping.defaultValue);
+  if (contentTypeId in mapping.contentTypes) {
     return resolvePrebindingPath({
       componentValueKey,
       entityStore,
-      componentSettings: (entityStore.experienceEntryFields?.componentSettings ||
-        {}) as ExperienceComponentSettings,
+      componentSettings,
       patternProperties: {
         [mappingId]: {
           path: `/${defaultEntryLink.sys.id}`,
