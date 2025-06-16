@@ -10,28 +10,28 @@ import { ExperienceEntry } from '@/types';
 import * as attachPrebindingDefaultValueAsDataSourceMock from './attachPrebindingDefaultValueAsDataSource';
 import * as fetchers from './fetchReferencedEntities';
 
-let experienceEntry = createExperienceEntry({});
-const circularEntry = {
-  sys: {
-    id: 'circular-entry',
-    type: 'Entry',
-    locale: 'en-US',
-  },
-  fields: structuredClone(experienceEntryFieldsWithFilledUsedComponents),
-};
-const patternLevel1 = circularEntry.fields.usedComponents![0] as ExperienceEntry;
-const patternLevel2 = patternLevel1.fields.usedComponents![0] as ExperienceEntry;
-patternLevel2.fields.usedComponents = [patternLevel1];
-
-const mockClient = {
-  getAssets: vi.fn(),
-  getEntries: vi.fn(),
-  withoutLinkResolution: {
-    getEntries: vi.fn(),
-  },
-} as unknown as ContentfulClientApi<undefined>;
-
 describe('fetchBySlug', () => {
+  let experienceEntry = createExperienceEntry({});
+  const circularEntry = {
+    sys: {
+      id: 'circular-entry',
+      type: 'Entry',
+      locale: 'en-US',
+    },
+    fields: structuredClone(experienceEntryFieldsWithFilledUsedComponents),
+  };
+  const patternLevel1 = circularEntry.fields.usedComponents![0] as ExperienceEntry;
+  const patternLevel2 = patternLevel1.fields.usedComponents![0] as ExperienceEntry;
+  patternLevel2.fields.usedComponents = [patternLevel1];
+
+  const mockClient = {
+    getAssets: vi.fn(),
+    getEntries: vi.fn(),
+    withoutLinkResolution: {
+      getEntries: vi.fn(),
+    },
+  } as unknown as ContentfulClientApi<undefined>;
+
   const experienceTypeId = 'experienceTypeId';
   const slug = 'slug';
   const localeCode = 'en-US';
