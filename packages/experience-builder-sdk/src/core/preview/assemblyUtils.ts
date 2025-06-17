@@ -10,9 +10,9 @@ import type {
 import { resolvePrebindingPath, shouldUsePrebinding } from '../../utils/prebindingUtils';
 import { PATTERN_PROPERTY_DIVIDER } from '@contentful/experiences-core/constants';
 
-/** While unfolding the assembly definition on the instance, this function will replace all
+/** While unfolding the pattern definition on the instance, this function will replace all
  * ComponentValue in the definitions tree with the actual value on the instance. */
-export const deserializeAssemblyNode = ({
+export const deserializePatternNode = ({
   node,
   componentInstanceVariables,
   componentSettings,
@@ -91,7 +91,7 @@ export const deserializeAssemblyNode = ({
   }
 
   const children: ComponentTreeNode[] = node.children.map((child) =>
-    deserializeAssemblyNode({
+    deserializePatternNode({
       node: child,
       componentInstanceVariables,
       componentSettings,
@@ -111,7 +111,7 @@ export const deserializeAssemblyNode = ({
   };
 };
 
-export const resolveAssembly = ({
+export const resolvePattern = ({
   node,
   parentPatternProperties,
   patternRootNodeIdsChain,
@@ -158,7 +158,7 @@ export const resolveAssembly = ({
 
   const componentFields = assembly.fields;
 
-  const deserializedNode = deserializeAssemblyNode({
+  const deserializedNode = deserializePatternNode({
     node: {
       definitionId: node.definitionId,
       id: node.id,

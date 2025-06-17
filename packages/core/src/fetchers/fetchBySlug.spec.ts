@@ -2,12 +2,15 @@ import { ContentfulClientApi } from 'contentful';
 import { fetchBySlug } from './fetchBySlug';
 import { describe, beforeEach, it, expect, vi } from 'vitest';
 import {
-  experienceEntry,
+  createExperienceEntry,
   experienceEntryFieldsWithFilledUsedComponents,
 } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
 import { ExperienceEntry } from '@/types';
+import * as attachPrebindingDefaultValueAsDataSourceMock from './attachPrebindingDefaultValueAsDataSource';
+import * as fetchers from './fetchReferencedEntities';
 
+let experienceEntry = createExperienceEntry({});
 const circularEntry = {
   sys: {
     id: 'circular-entry',
@@ -20,26 +23,27 @@ const patternLevel1 = circularEntry.fields.usedComponents![0] as ExperienceEntry
 const patternLevel2 = patternLevel1.fields.usedComponents![0] as ExperienceEntry;
 patternLevel2.fields.usedComponents = [patternLevel1];
 
-const mockClient = {
-  getAssets: vi.fn(),
-  getEntries: vi.fn(),
-  withoutLinkResolution: {
-    getEntries: vi.fn(),
-  },
-} as unknown as ContentfulClientApi<undefined>;
-
 describe('fetchBySlug', () => {
+  const mockClient = {
+    getAssets: vi.fn(),
+    getEntries: vi.fn(),
+    withoutLinkResolution: {
+      getEntries: vi.fn(),
+    },
+  } as unknown as ContentfulClientApi<undefined>;
+
   const experienceTypeId = 'experienceTypeId';
   const slug = 'slug';
   const localeCode = 'en-US';
 
   beforeEach(() => {
+    experienceEntry = createExperienceEntry({});
     vi.mock('./fetchExperienceEntry', () => {
       const fetchExperienceEntry = async (options) => {
         if (options?.identifier?.slug === 'circular-slug') {
           return circularEntry;
         }
-        return experienceEntry;
+        return createExperienceEntry({});
       };
       return {
         fetchExperienceEntry,
@@ -47,13 +51,17 @@ describe('fetchBySlug', () => {
     });
 
     vi.mock('./fetchReferencedEntities', () => {
-      const fetchReferencedEntities = async () => {
+      const fetchReferencedEntities = vi.fn(async () => {
         return { entries, assets };
-      };
+      });
       return {
         fetchReferencedEntities,
       };
     });
+
+    vi.mock('./attachPrebindingDefaultValueAsDataSource', () => ({
+      attachPrebindingDefaultValueAsDataSource: vi.fn(),
+    }));
   });
 
   describe('when in editor mode', () => {
@@ -110,6 +118,77 @@ describe('fetchBySlug', () => {
             },
           },
         ]);
+      });
+    });
+
+    describe('when the API returns an experience with prebinding default value not as a datasource', () => {
+      const isEditorMode = false;
+      beforeEach(() => {
+        vi.clearAllMocks();
+      });
+
+      it('should attach prebinding default value as a data source', async () => {
+        vi.mocked(
+          attachPrebindingDefaultValueAsDataSourceMock.attachPrebindingDefaultValueAsDataSource,
+        ).mockImplementationOnce((entry: ExperienceEntry) => {
+          entry.fields.dataSource = {
+            ...entry.fields.dataSource,
+            prebound: {
+              sys: {
+                id: 'prebound-id',
+                type: 'Link',
+                linkType: 'Entry',
+              },
+            },
+          };
+        });
+
+        await fetchBySlug({
+          client: mockClient,
+          experienceTypeId,
+          slug,
+          localeCode,
+          isEditorMode,
+        });
+
+        expect(fetchers.fetchReferencedEntities).toHaveBeenCalledWith(
+          expect.objectContaining({
+            experienceEntry: expect.objectContaining({
+              fields: expect.objectContaining({
+                dataSource: expect.objectContaining({
+                  ...createExperienceEntry({}).fields.dataSource,
+                  prebound: {
+                    sys: {
+                      id: 'prebound-id',
+                      type: 'Link',
+                      linkType: 'Entry',
+                    },
+                  },
+                }),
+              }),
+            }),
+          }),
+        );
+      });
+
+      it('should not attach prebinding default value as a data source if attachPrebindingDefaultValueAsDataSource does not populate it', async () => {
+        await fetchBySlug({
+          client: mockClient,
+          experienceTypeId,
+          slug,
+          localeCode,
+          isEditorMode,
+        });
+
+        expect(fetchers.fetchReferencedEntities).toHaveBeenCalledWith(
+          expect.objectContaining({
+            experienceEntry: expect.objectContaining({
+              fields: expect.objectContaining({
+                dataSource: createExperienceEntry({}).fields.dataSource,
+              }),
+            }),
+          }),
+        );
       });
     });
   });
