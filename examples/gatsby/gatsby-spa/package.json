@@ -31,7 +31,8 @@
   },
   "overrides": {
     "gatsby": {
-      "path-to-regexp": "0.1.12"
+      "path-to-regexp": "0.1.12",
+      "multer": "^2.0.1"
     },
     "@parcel/core": {
       "base-x": "3.0.11"
