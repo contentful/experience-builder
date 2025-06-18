@@ -29,6 +29,8 @@ import {
   dividerDefinition,
 } from '@contentful/experiences-components-react';
 
+import '@contentful/experiences-components-react/dist/index.css';
+
 const CssVarRegex = /var\(--[\w-]+\)/;
 
 const cloneObject = <T>(targetObject: T): T => {

@@ -2,10 +2,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
-import postcss from 'rollup-plugin-postcss';
-import postcssImport from 'postcss-import';
 import nodeExternals from 'rollup-plugin-node-externals';
 import preserveDirectives from 'rollup-plugin-preserve-directives';
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 export default [
   {
@@ -19,29 +18,27 @@ export default [
       },
     ],
     plugins: [
+      peerDepsExternal(),
       preserveDirectives(),
       nodeExternals(),
-      postcss({
-        plugins: [postcssImport()],
-        inject(cssVariableName) {
-          return `import styleInject from 'style-inject';\nstyleInject(${cssVariableName});`;
-        },
-      }),
       resolve(),
       commonjs(),
       typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true }),
     ],
     onwarn(log, handler) {
       //swallow warnings about using 'use client' directive
-      if (log.message.indexOf('Module level directives cause errors when bundled, "use client"') > -1) {
+      if (
+        log.message.indexOf('Module level directives cause errors when bundled, "use client"') > -1
+      ) {
         return;
       }
-      handler(log)
+      handler(log);
     },
   },
   {
     input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
+    external: ['@contentful/experiences-components-react/dist/index.css'],
     plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
   },
 ];
