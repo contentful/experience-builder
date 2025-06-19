@@ -1,6 +1,6 @@
 import { experience, experiencePattern } from '@/test/__fixtures__/v2023_09_28';
 import { describe, it, expect } from 'vitest';
-import { validateExperienceFields } from '../validateExperienceFields';
+import { validateExperienceFields } from '@/validators';
 import * as validatePattern from '@/validators/validatePatternFields';
 import { vi } from 'vitest';
 
