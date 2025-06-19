@@ -38,14 +38,14 @@ export const THUMBNAIL_IDS = [
 // TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
 const VariableMappingSchema = z.object({
-  patternPropertyDefinitionId: propertyKeySchema,
+  parameterDefinitionId: propertyKeySchema,
   type: z.literal('ContentTypeMapping'),
   pathsByContentType: z.record(z.string(), z.object({ path: z.string() })),
 });
 
 // TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
-const PatternPropertyDefinitionSchema = z.object({
+const ParameterDefinitionSchema = z.object({
   defaultValue: z
     .record(
       z.string(),
@@ -70,10 +70,7 @@ const PatternPropertyDefinitionSchema = z.object({
   ),
 });
 
-export const PatternPropertyDefinitionsSchema = z.record(
-  propertyKeySchema,
-  PatternPropertyDefinitionSchema,
-);
+export const ParameterDefinitionsSchema = z.record(propertyKeySchema, ParameterDefinitionSchema);
 
 const VariableMappingsSchema = z.record(propertyKeySchema, VariableMappingSchema);
 
@@ -87,7 +84,7 @@ const ComponentSettingsSchema = z.object({
   thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
   category: z.string().max(50, 'Category must contain at most 50 characters').optional(),
   variableMappings: VariableMappingsSchema.optional(),
-  patternPropertyDefinitions: PatternPropertyDefinitionsSchema.optional(),
+  parameterDefinitions: ParameterDefinitionsSchema.optional(),
 });
 
 export const PatternFieldsCMAShapeSchema = z.object({
@@ -99,6 +96,6 @@ export const PatternFieldsCMAShapeSchema = z.object({
 });
 
 export type PatternFields = z.infer<typeof PatternFieldsCMAShapeSchema>;
-export type PatternPropertyDefinition = z.infer<typeof PatternPropertyDefinitionSchema>;
+export type PatternPropertyDefinition = z.infer<typeof ParameterDefinitionSchema>;
 export type VariableMapping = z.infer<typeof VariableMappingSchema>;
 export type PatternComponentSettings = z.infer<typeof ComponentSettingsSchema>;

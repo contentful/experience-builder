@@ -1,11 +1,11 @@
 import type { Entry } from 'contentful';
 import md5 from 'md5';
-import { experienceEntry } from '../../../test/__fixtures__/composition';
+import { experienceEntry } from '../../../test/__fixtures__';
 import {
   assemblyGeneratedDesignVariableName,
   createAssemblyEntry,
-} from '../../../test/__fixtures__/assembly';
-import { assets, entries } from '../../../test/__fixtures__/entities';
+} from '../../../test/__fixtures__';
+import { assets, entries } from '../../../test/__fixtures__';
 import {
   CONTENTFUL_COMPONENTS,
   PATTERN_PROPERTY_DIVIDER,
@@ -101,7 +101,7 @@ describe('resolvePattern', () => {
       });
     });
 
-    it('should return an assembly node with parent patternProperties', () => {
+    it('should return an assembly node with parent parameters', () => {
       const patternPropertyId = md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId';
       const patternPropertyId2 =
         md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId2';
@@ -110,7 +110,7 @@ describe('resolvePattern', () => {
         id: 'assembly-id',
         variables: {},
         children: [],
-        patternProperties: {
+        parameters: {
           [patternPropertyId]: {
             path: '/1230948',
             type: 'BoundValue',
@@ -130,7 +130,7 @@ describe('resolvePattern', () => {
         },
       });
 
-      expect(result.patternProperties).toEqual({
+      expect(result.parameters).toEqual({
         ['patternPropertyId']: {
           path: '/1230948',
           type: 'BoundValue',

@@ -182,7 +182,7 @@ export const PatternPropertySchema = z.object({
   path: z.string(),
 });
 
-export const PatternPropertiesSchema = z.record(propertyKeySchema, PatternPropertySchema);
+export const ParametersSchema = z.record(propertyKeySchema, PatternPropertySchema);
 
 export const BreakpointSchema = z
   .object({
@@ -201,7 +201,7 @@ const BaseComponentTreeNodeSchema = z.object({
   displayName: z.string().optional(),
   slotId: z.string().optional(),
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
-  patternProperties: PatternPropertiesSchema.optional(),
+  parameters: ParametersSchema.optional(),
 });
 
 export type ComponentTreeNode = z.infer<typeof BaseComponentTreeNodeSchema> & {
