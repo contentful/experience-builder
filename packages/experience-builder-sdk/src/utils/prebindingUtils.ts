@@ -8,21 +8,21 @@ import {
 export const shouldUsePrebinding = ({
   componentValueKey,
   componentSettings,
-  patternProperties,
+  parameters,
   variable,
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
-  patternProperties: Record<string, PatternProperty>;
+  parameters: Record<string, PatternProperty>;
   variable: ComponentPropertyValue;
 }) => {
-  const { patternPropertyDefinitions, variableMappings } = componentSettings;
+  const { parameterDefinitions, variableMappings } = componentSettings;
 
   const variableMapping = variableMappings?.[componentValueKey];
 
   const patternPropertyDefinition =
-    patternPropertyDefinitions?.[variableMapping?.patternPropertyDefinitionId || ''];
-  const patternProperty = patternProperties?.[variableMapping?.patternPropertyDefinitionId || ''];
+    parameterDefinitions?.[variableMapping?.parameterDefinitionId || ''];
+  const patternProperty = parameters?.[variableMapping?.parameterDefinitionId || ''];
 
   const isValidForPrebinding =
     !!patternPropertyDefinition && !!patternProperty && !!variableMapping;
@@ -33,19 +33,19 @@ export const shouldUsePrebinding = ({
 export const resolvePrebindingPath = ({
   componentValueKey,
   componentSettings,
-  patternProperties,
+  parameters,
   entityStore,
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
-  patternProperties: Record<string, PatternProperty>;
+  parameters: Record<string, PatternProperty>;
   entityStore: EntityStore;
 }) => {
   const variableMapping = componentSettings.variableMappings?.[componentValueKey];
 
   if (!variableMapping) return '';
 
-  const patternProperty = patternProperties?.[variableMapping.patternPropertyDefinitionId];
+  const patternProperty = parameters?.[variableMapping.parameterDefinitionId];
 
   if (!patternProperty) return '';
 
@@ -79,8 +79,8 @@ export const resolveMaybePrebindingDefaultValuePath = ({
   const prebinding = componentSettings.variableMappings?.[componentValueKey];
   if (!prebinding) return;
 
-  const mappingId = prebinding.patternPropertyDefinitionId || '';
-  const mapping = componentSettings.patternPropertyDefinitions?.[mappingId];
+  const mappingId = prebinding.parameterDefinitionId || '';
+  const mapping = componentSettings.parameterDefinitions?.[mappingId];
   if (!mapping || !mapping?.defaultValue) return;
 
   const [[contentTypeId, defaultEntryLink]] = Object.entries(mapping.defaultValue);
@@ -89,7 +89,7 @@ export const resolveMaybePrebindingDefaultValuePath = ({
       componentValueKey,
       entityStore,
       componentSettings,
-      patternProperties: {
+      parameters: {
         [mappingId]: {
           path: `/${defaultEntryLink.sys.id}`,
           type: 'BoundValue',

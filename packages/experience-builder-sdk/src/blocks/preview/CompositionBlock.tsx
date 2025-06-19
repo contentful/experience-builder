@@ -1,5 +1,6 @@
 import React, { ReactNode, useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
+import { Entry } from 'contentful';
 import {
   checkIsAssemblyEntry,
   checkIsAssemblyNode,
@@ -30,7 +31,6 @@ import {
 } from '@contentful/experiences-components-react';
 import { resolvePattern } from '../../core/preview/assemblyUtils';
 import { resolveMaybePrebindingDefaultValuePath } from '../../utils/prebindingUtils';
-import { Entry } from 'contentful';
 import PreviewUnboundImage from './PreviewUnboundImage';
 import { parseComponentProps } from '../../utils/parseComponentProps';
 
@@ -75,7 +75,7 @@ export const CompositionBlock = ({
 
   const patternRootNodeIdsChain = useMemo(() => {
     if (isPatternNode) {
-      // Pattern nodes are chained without a separator (following the format for prebinding/patternProperties)
+      // Pattern nodes are chained without a separator (following the format for prebinding/parameters)
       return `${parentPatternRootNodeIdsChain}${rawNode.id}`;
     }
     return parentPatternRootNodeIdsChain;
@@ -112,7 +112,7 @@ export const CompositionBlock = ({
   // during assembly serialization.
   const wrappingPatternProperties = useMemo(() => {
     if (isPatternNode) {
-      return { ...parentWrappingPatternProperties, ...(rawNode.patternProperties || {}) };
+      return { ...parentWrappingPatternProperties, ...(rawNode.parameters || {}) };
     }
     return parentWrappingPatternProperties;
   }, [isPatternNode, rawNode, parentWrappingPatternProperties]);
@@ -170,7 +170,7 @@ export const CompositionBlock = ({
       resolveBoundValue: ({ binding, propertyName, dataType }) => {
         const [, uuid] = binding.path.split('/');
         const boundEntityLink = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-        const boundValue = transformBoundContentValue(
+        return transformBoundContentValue(
           node.variables,
           entityStore,
           boundEntityLink,
@@ -179,22 +179,18 @@ export const CompositionBlock = ({
           dataType,
           binding.path,
         );
-
-        return boundValue;
       },
       resolveHyperlinkValue: ({ linkTargetKey }) => {
         const boundEntity = entityStore.dataSource[linkTargetKey];
         const hyperlinkEntry = entityStore.getEntryOrAsset(boundEntity, linkTargetKey);
 
-        const value = resolveHyperlinkPattern(
+        return resolveHyperlinkPattern(
           componentRegistration.definition.hyperlinkPattern ||
             hyperlinkPattern ||
             HYPERLINK_DEFAULT_PATTERN,
           hyperlinkEntry as Entry,
           locale,
         );
-
-        return value;
       },
       resolveUnboundValue: ({ mappingKey, defaultValue }) => {
         return entityStore.unboundValues[mappingKey]?.value ?? defaultValue;

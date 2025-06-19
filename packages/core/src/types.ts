@@ -182,7 +182,7 @@ export type ExperienceTreeNode = {
     dataSource: ExperienceDataSource;
     unboundValues: ExperienceUnboundValues;
     breakpoints: Breakpoint[];
-    patternProperties?: Record<string, PatternProperty>;
+    parameters?: Record<string, PatternProperty>;
     pattern?: {
       id: string;
       nodeId: string;
