@@ -14,11 +14,45 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
   });
 
   it('should return early if not a pattern', () => {
-    const experience = {} as unknown as ExperienceEntry;
+    const getterStub = vi.fn();
+    const experience = {
+      get fields() {
+        getterStub();
+        return {
+          componentSettings: {
+            parameterDefinitions: {},
+            variableDefinitions: {},
+          },
+          dataSource: {},
+        };
+      },
+    } as unknown as ExperienceEntry;
 
     mockCheckIsAssemblyEntry.mockReturnValue(false);
 
-    expect(attachPrebindingDefaultValueAsDataSource(experience)).toBeUndefined();
+    attachPrebindingDefaultValueAsDataSource(experience);
+    expect(getterStub).not.toHaveBeenCalled();
+  });
+
+  it('should not return early if a pattern', () => {
+    const getterStub = vi.fn();
+    const experience = {
+      get fields() {
+        getterStub();
+        return {
+          componentSettings: {
+            parameterDefinitions: {},
+            variableDefinitions: {},
+          },
+          dataSource: {},
+        };
+      },
+    } as unknown as ExperienceEntry;
+
+    mockCheckIsAssemblyEntry.mockReturnValue(true);
+
+    attachPrebindingDefaultValueAsDataSource(experience);
+    expect(getterStub).toHaveBeenCalled();
   });
 
   it('should attach default prebinding value to dataSource', () => {
@@ -26,7 +60,7 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
     experience.fields = {
       ...experience.fields,
       componentSettings: {
-        patternPropertyDefinitions: {
+        parameterDefinitions: {
           someField: {
             defaultValue: {
               defaultBinding: {
@@ -64,7 +98,7 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
       fields: {
         ...experience.fields,
         componentSettings: {
-          patternPropertyDefinitions: {
+          parameterDefinitions: {
             someField: {
               contentTypes: {},
               defaultValue: undefined,

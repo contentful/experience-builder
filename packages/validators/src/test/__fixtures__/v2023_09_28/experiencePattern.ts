@@ -294,7 +294,7 @@ export const experiencePattern = {
     },
     componentSettings: {
       'en-US': {
-        patternPropertyDefinitions: {
+        parameterDefinitions: {
           '8v3GB67qF5f': {
             defaultValue: {
               productFeatureTopic: {
