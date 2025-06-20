@@ -27,7 +27,7 @@ describe('resolvePattern', () => {
     const result = resolvePattern({
       node: containerNode,
       entityStore,
-      parentPatternProperties: {},
+      parentParameters: {},
       patternRootNodeIdsChain: '',
     });
 
@@ -50,7 +50,7 @@ describe('resolvePattern', () => {
     const result = resolvePattern({
       node: assemblyNode,
       entityStore,
-      parentPatternProperties: {},
+      parentParameters: {},
       patternRootNodeIdsChain: '',
     });
 
@@ -85,7 +85,7 @@ describe('resolvePattern', () => {
       const result = resolvePattern({
         node: assemblyNode,
         entityStore,
-        parentPatternProperties: {},
+        parentParameters: {},
         patternRootNodeIdsChain: '',
       });
 
@@ -102,16 +102,15 @@ describe('resolvePattern', () => {
     });
 
     it('should return an assembly node with parent parameters', () => {
-      const patternPropertyId = md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId';
-      const patternPropertyId2 =
-        md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId2';
+      const parameterId = md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'parameterId';
+      const parameterId2 = md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'parameterId2';
       const assemblyNode: ComponentTreeNode = {
         definitionId: 'assembly-id',
         id: 'assembly-id',
         variables: {},
         children: [],
         parameters: {
-          [patternPropertyId]: {
+          [parameterId]: {
             path: '/1230948',
             type: 'BoundValue',
           },
@@ -122,8 +121,8 @@ describe('resolvePattern', () => {
         node: assemblyNode,
         entityStore,
         patternRootNodeIdsChain: 'assembly-id',
-        parentPatternProperties: {
-          [patternPropertyId2]: {
+        parentParameters: {
+          [parameterId2]: {
             path: '/4091203i9',
             type: 'BoundValue',
           },
@@ -131,11 +130,11 @@ describe('resolvePattern', () => {
       });
 
       expect(result.parameters).toEqual({
-        ['patternPropertyId']: {
+        ['parameterId']: {
           path: '/1230948',
           type: 'BoundValue',
         },
-        ['patternPropertyId2']: {
+        ['parameterId2']: {
           path: '/4091203i9',
           type: 'BoundValue',
         },
@@ -157,7 +156,7 @@ describe('resolvePattern', () => {
       const result = resolvePattern({
         node: assemblyNode,
         entityStore,
-        parentPatternProperties: {},
+        parentParameters: {},
         patternRootNodeIdsChain: '',
       });
 
@@ -177,7 +176,7 @@ describe('resolvePattern', () => {
       const result = resolvePattern({
         node: assemblyNode,
         entityStore,
-        parentPatternProperties: {},
+        parentParameters: {},
         patternRootNodeIdsChain: '',
       });
 
