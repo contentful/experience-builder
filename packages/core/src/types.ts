@@ -35,7 +35,7 @@ export type {
   ComponentValue,
   ComponentDefinitionPropertyType as ComponentDefinitionVariableType,
   PatternProperty,
-  PatternPropertyDefinition,
+  ParameterDefinition,
   VariableMapping,
 } from '@contentful/experiences-validators';
 
