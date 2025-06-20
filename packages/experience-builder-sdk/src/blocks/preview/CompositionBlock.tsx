@@ -16,7 +16,7 @@ import {
 import type {
   ComponentTreeNode,
   DesignValue,
-  PatternProperty,
+  Parameter,
   PrimitiveValue,
   ResolveDesignValueType,
   StyleProps,
@@ -48,7 +48,7 @@ type CompositionBlockProps = {
    * when storing & accessing cfSsrClassName.
    */
   patternRootNodeIdsChain?: string;
-  wrappingPatternProperties?: Record<string, PatternProperty>;
+  wrappingParameters?: Record<string, Parameter>;
 };
 
 export const CompositionBlock = ({
@@ -59,7 +59,7 @@ export const CompositionBlock = ({
   resolveDesignValue,
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
-  wrappingPatternProperties: parentWrappingPatternProperties = {},
+  wrappingParameters: parentWrappingParameters = {},
   patternRootNodeIdsChain: parentPatternRootNodeIdsChain = '',
 }: CompositionBlockProps) => {
   const isPatternNode = useMemo(() => {
@@ -86,19 +86,13 @@ export const CompositionBlock = ({
       return resolvePattern({
         node: rawNode,
         entityStore,
-        parentPatternProperties: parentWrappingPatternProperties,
+        parentParameters: parentWrappingParameters,
         patternRootNodeIdsChain,
       });
     } else {
       return rawNode;
     }
-  }, [
-    entityStore,
-    isPatternNode,
-    rawNode,
-    parentWrappingPatternProperties,
-    patternRootNodeIdsChain,
-  ]);
+  }, [entityStore, isPatternNode, rawNode, parentWrappingParameters, patternRootNodeIdsChain]);
 
   const wrappingPatternIds = useMemo(() => {
     if (isPatternNode) {
@@ -110,12 +104,12 @@ export const CompositionBlock = ({
   // Merge the pattern properties of the current node with the parent's pattern properties
   // to ensure nested patterns receive relevant pattern properties that were bubbled up
   // during assembly serialization.
-  const wrappingPatternProperties = useMemo(() => {
+  const wrappingParameters = useMemo(() => {
     if (isPatternNode) {
-      return { ...parentWrappingPatternProperties, ...(rawNode.parameters || {}) };
+      return { ...parentWrappingParameters, ...(rawNode.parameters || {}) };
     }
-    return parentWrappingPatternProperties;
-  }, [isPatternNode, rawNode, parentWrappingPatternProperties]);
+    return parentWrappingParameters;
+  }, [isPatternNode, rawNode, parentWrappingParameters]);
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.definitionId as string);
@@ -230,7 +224,7 @@ export const CompositionBlock = ({
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
-              wrappingPatternProperties={wrappingPatternProperties}
+              wrappingParameters={wrappingParameters}
               patternRootNodeIdsChain={patternRootNodeIdsChain}
             />
           );
@@ -266,7 +260,7 @@ export const CompositionBlock = ({
     hyperlinkPattern,
     locale,
     wrappingPatternIds,
-    wrappingPatternProperties,
+    wrappingParameters,
     patternRootNodeIdsChain,
   ]);
 
@@ -313,7 +307,7 @@ export const CompositionBlock = ({
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
-              wrappingPatternProperties={wrappingPatternProperties}
+              wrappingParameters={wrappingParameters}
               patternRootNodeIdsChain={patternRootNodeIdsChain}
             />
           );

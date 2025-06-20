@@ -5,7 +5,7 @@ import type {
   ComponentTreeNode,
   DesignValue,
   ExperienceComponentSettings,
-  PatternProperty,
+  Parameter,
 } from '@contentful/experiences-core/types';
 import { resolvePrebindingPath, shouldUsePrebinding } from '../../utils/prebindingUtils';
 import { PATTERN_PROPERTY_DIVIDER } from '@contentful/experiences-core/constants';
@@ -22,7 +22,7 @@ export const deserializePatternNode = ({
   node: ComponentTreeNode;
   componentInstanceVariables: ComponentTreeNode['variables'];
   componentSettings: ExperienceComponentSettings;
-  parameters: Record<string, PatternProperty>;
+  parameters: Record<string, Parameter>;
   entityStore: EntityStore;
 }): ComponentTreeNode => {
   const variables: Record<string, ComponentPropertyValue> = {};
@@ -113,13 +113,13 @@ export const deserializePatternNode = ({
 
 export const resolvePattern = ({
   node,
-  parentPatternProperties,
+  parentParameters,
   patternRootNodeIdsChain,
   entityStore,
 }: {
   node: ComponentTreeNode;
   entityStore: EntityStore;
-  parentPatternProperties: Record<string, PatternProperty>;
+  parentParameters: Record<string, Parameter>;
   patternRootNodeIdsChain: string;
 }) => {
   const componentId = node.definitionId as string;
@@ -131,20 +131,20 @@ export const resolvePattern = ({
     return node;
   }
 
-  const parameters: Record<string, PatternProperty> = {};
+  const parameters: Record<string, Parameter> = {};
 
-  const allPatternProperties = {
-    ...parentPatternProperties,
+  const allParameters = {
+    ...parentParameters,
     ...(node.parameters || {}),
   };
 
-  for (const [patternPropertyKey, patternProperty] of Object.entries(allPatternProperties)) {
+  for (const [parameterKey, parameter] of Object.entries(allParameters)) {
     /**
      * Bubbled up pattern properties are a concatenation of the node id
      * and the pattern property definition id. We need to split them so
      * that the node only uses the pattern property definition id.
      */
-    const [hashKey, parameterDefinitionId] = patternPropertyKey.split(PATTERN_PROPERTY_DIVIDER);
+    const [hashKey, parameterDefinitionId] = parameterKey.split(PATTERN_PROPERTY_DIVIDER);
 
     const hashedNodeChain = md5(patternRootNodeIdsChain || '');
 
@@ -152,7 +152,7 @@ export const resolvePattern = ({
 
     if (!isMatchingNode) continue;
 
-    parameters[parameterDefinitionId] = patternProperty;
+    parameters[parameterDefinitionId] = parameter;
   }
 
   const componentFields = assembly.fields;

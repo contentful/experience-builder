@@ -2,7 +2,7 @@ import { EntityStore } from '@contentful/experiences-core';
 import {
   ComponentPropertyValue,
   ExperienceComponentSettings,
-  PatternProperty,
+  Parameter,
 } from '@contentful/experiences-validators';
 
 export const shouldUsePrebinding = ({
@@ -13,19 +13,17 @@ export const shouldUsePrebinding = ({
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
-  parameters: Record<string, PatternProperty>;
+  parameters: Record<string, Parameter>;
   variable: ComponentPropertyValue;
 }) => {
   const { parameterDefinitions, variableMappings } = componentSettings;
 
   const variableMapping = variableMappings?.[componentValueKey];
 
-  const patternPropertyDefinition =
-    parameterDefinitions?.[variableMapping?.parameterDefinitionId || ''];
-  const patternProperty = parameters?.[variableMapping?.parameterDefinitionId || ''];
+  const parameterDefinition = parameterDefinitions?.[variableMapping?.parameterDefinitionId || ''];
+  const parameter = parameters?.[variableMapping?.parameterDefinitionId || ''];
 
-  const isValidForPrebinding =
-    !!patternPropertyDefinition && !!patternProperty && !!variableMapping;
+  const isValidForPrebinding = !!parameterDefinition && !!parameter && !!variableMapping;
 
   return isValidForPrebinding && variable?.type === 'NoValue';
 };
@@ -38,18 +36,18 @@ export const resolvePrebindingPath = ({
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
-  parameters: Record<string, PatternProperty>;
+  parameters: Record<string, Parameter>;
   entityStore: EntityStore;
 }) => {
   const variableMapping = componentSettings.variableMappings?.[componentValueKey];
 
   if (!variableMapping) return '';
 
-  const patternProperty = parameters?.[variableMapping.parameterDefinitionId];
+  const parameter = parameters?.[variableMapping.parameterDefinitionId];
 
-  if (!patternProperty) return '';
+  if (!parameter) return '';
 
-  const dataSourceKey = patternProperty.path.split('/')[1];
+  const dataSourceKey = parameter.path.split('/')[1];
 
   const entityLink = entityStore.dataSource[dataSourceKey];
   if (!entityLink) return '';
@@ -63,7 +61,7 @@ export const resolvePrebindingPath = ({
 
   if (!fieldPath) return '';
 
-  return patternProperty.path + fieldPath;
+  return parameter.path + fieldPath;
 };
 
 export const resolveMaybePrebindingDefaultValuePath = ({
