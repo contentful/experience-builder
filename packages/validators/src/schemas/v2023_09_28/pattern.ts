@@ -96,6 +96,6 @@ export const PatternFieldsCMAShapeSchema = z.object({
 });
 
 export type PatternFields = z.infer<typeof PatternFieldsCMAShapeSchema>;
-export type PatternPropertyDefinition = z.infer<typeof ParameterDefinitionSchema>;
+export type ParameterDefinition = z.infer<typeof ParameterDefinitionSchema>;
 export type VariableMapping = z.infer<typeof VariableMappingSchema>;
 export type PatternComponentSettings = z.infer<typeof ComponentSettingsSchema>;
