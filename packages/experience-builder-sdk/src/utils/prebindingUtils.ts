@@ -1,4 +1,5 @@
 import { EntityStore } from '@contentful/experiences-core';
+import { SIDELOADED_PREFIX } from '@contentful/experiences-core/constants';
 import {
   ComponentPropertyValue,
   ExperienceComponentSettings,
@@ -73,28 +74,28 @@ export const resolveMaybePrebindingDefaultValuePath = ({
   componentValueKey: string;
   entityStore: EntityStore;
 }): string | undefined => {
-  if (!entityStore.experienceEntryFields?.componentSettings) return;
+  const variableMapping = entityStore._variableMappings?.[componentValueKey];
+  if (!variableMapping) return;
 
-  const componentSettings = entityStore.experienceEntryFields.componentSettings;
-  const prebinding = componentSettings.variableMappings?.[componentValueKey];
-  if (!prebinding) return;
+  const ppdID = variableMapping.patternPropertyDefinitionId || '';
+  const ppd = entityStore._patternPropertyDefinitions?.[ppdID];
+  if (!ppd || !ppd?.defaultValue) return;
 
-  const mappingId = prebinding.patternPropertyDefinitionId || '';
-  const mapping = componentSettings.patternPropertyDefinitions?.[mappingId];
-  if (!mapping || !mapping?.defaultValue) return;
+  const [[contentTypeId, defaultEntryLink]] = Object.entries(ppd.defaultValue);
+  if (contentTypeId in ppd.contentTypes) {
+    const entity = entityStore.getEntityFromLink(defaultEntryLink);
+    if (!entity || entity.sys.type === 'Asset') {
+      // some glitch in definition and asset was used as default value
+      return;
+    }
 
-  const [[contentTypeId, defaultEntryLink]] = Object.entries(mapping.defaultValue);
-  if (contentTypeId in mapping.contentTypes) {
-    return resolvePrebindingPath({
-      componentValueKey,
-      entityStore,
-      componentSettings,
-      patternProperties: {
-        [mappingId]: {
-          path: `/${defaultEntryLink.sys.id}`,
-          type: 'BoundValue',
-        },
-      },
-    });
+    const fieldPath = variableMapping?.pathsByContentType?.[contentTypeId]?.path;
+    if (!fieldPath) {
+      // probably shouldn't happen
+      return;
+    }
+    const fullDefaultValuePath = `/${SIDELOADED_PREFIX}${defaultEntryLink.sys.id}${fieldPath}`;
+    console.log(`;; Prebinding default value path: ${fullDefaultValuePath}`);
+    return fullDefaultValuePath;
   }
 };

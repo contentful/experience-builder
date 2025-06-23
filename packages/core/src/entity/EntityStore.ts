@@ -1,6 +1,11 @@
 import type { Asset, Entry, UnresolvedLink } from 'contentful';
 import { isExperienceEntry } from '@/utils';
-import type { ExperienceFields, ExperienceUnboundValues, ExperienceEntry } from '@/types';
+import type {
+  ExperienceFields,
+  ExperienceUnboundValues,
+  ExperienceEntry,
+  ExperienceComponentSettings,
+} from '@/types';
 import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
@@ -12,11 +17,16 @@ type EntityStoreArgs = {
   locale: string;
 };
 
+type PatternPropertyDefinitions = ExperienceComponentSettings['patternPropertyDefinitions'];
+type VariableMappings = ExperienceComponentSettings['variableMappings'];
+
 export class EntityStore extends EntityStoreBase {
   private _experienceEntryFields: ExperienceFields | undefined;
   private _experienceEntryId: string | undefined;
   private _unboundValues: ExperienceUnboundValues | undefined;
   private _usedComponentsWithDeepReferences: ExperienceEntry[];
+  public _patternPropertyDefinitions: PatternPropertyDefinitions;
+  public _variableMappings: VariableMappings;
 
   constructor(json: string);
   constructor({ experienceEntry, entities, locale }: EntityStoreArgs);
@@ -33,6 +43,10 @@ export class EntityStore extends EntityStoreBase {
         ],
         locale: serializedAttributes.locale,
       });
+      this._patternPropertyDefinitions = {};
+      this._variableMappings = {};
+      // TODO: need to figure how to register prebinding presets from the PARENT PATTERN and NESTED PATTERNS
+
       this._experienceEntryFields = serializedAttributes._experienceEntryFields;
       this._experienceEntryId = serializedAttributes._experienceEntryId;
       this._unboundValues = serializedAttributes._unboundValues;
@@ -43,10 +57,40 @@ export class EntityStore extends EntityStoreBase {
       }
 
       super({ entities, locale });
+      this._patternPropertyDefinitions = {};
+      this._variableMappings = {};
       this._experienceEntryFields = (experienceEntry as ExperienceEntry).fields;
       this._experienceEntryId = (experienceEntry as ExperienceEntry).sys.id;
       this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
+
+      // Register prebinding presets from the PARENT PATTERN
+      this._patternPropertyDefinitions = Object.assign(
+        this._patternPropertyDefinitions,
+        (experienceEntry as ExperienceEntry).fields.componentSettings?.patternPropertyDefinitions ||
+          {},
+      );
+      this._variableMappings = Object.assign(
+        this._variableMappings,
+        (experienceEntry as ExperienceEntry).fields.componentSettings?.variableMappings || {},
+      );
+      // Register prebinding presets from the NESTED PATTERNS
+      const usedComponentLinks = (experienceEntry as ExperienceEntry).fields?.usedComponents ?? [];
+      const usedComponents: ExperienceEntry[] = usedComponentLinks
+        .map((component) => (isLink(component) ? this.getEntityFromLink(component) : component))
+        .filter((component): component is ExperienceEntry => component !== undefined); // TODO: do we need to filter stuff out here? (what if the component is not found?)
+
+      usedComponents.forEach((patternEntry) => {
+        this._patternPropertyDefinitions = {
+          ...this._patternPropertyDefinitions,
+          ...patternEntry.fields.componentSettings?.patternPropertyDefinitions,
+        };
+        this._variableMappings = {
+          ...this._variableMappings,
+          ...patternEntry.fields.componentSettings?.variableMappings,
+        };
+      });
     }
+
     this._usedComponentsWithDeepReferences = resolveDeepUsedComponents({
       experienceEntryFields: this._experienceEntryFields,
       parentComponents: new Set([this._experienceEntryId!]),

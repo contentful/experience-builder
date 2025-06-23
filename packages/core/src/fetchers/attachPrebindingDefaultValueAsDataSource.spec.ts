@@ -1,5 +1,5 @@
 import * as utils from '@/utils';
-import { attachPrebindingDefaultValueAsDataSource } from './attachPrebindingDefaultValueAsDataSource';
+import { sideloadPrebindingDefaultValues } from './sideloading';
 import { createExperienceEntry } from '@/test/__fixtures__/experience';
 import { ExperienceEntry } from '@/types';
 import { describe, it, expect, vi } from 'vitest';
@@ -18,7 +18,7 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
 
     mockCheckIsAssemblyEntry.mockReturnValue(false);
 
-    expect(attachPrebindingDefaultValueAsDataSource(experience)).toBeUndefined();
+    expect(sideloadPrebindingDefaultValues(experience)).toBeUndefined();
   });
 
   it('should attach default prebinding value to dataSource', () => {
@@ -47,7 +47,7 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
 
     mockCheckIsAssemblyEntry.mockReturnValue(true);
 
-    attachPrebindingDefaultValueAsDataSource(experience);
+    sideloadPrebindingDefaultValues(experience);
 
     expect(experience.fields.dataSource[defaultId]).toEqual({
       sys: {
@@ -78,7 +78,7 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
 
     mockCheckIsAssemblyEntry.mockReturnValue(true);
 
-    attachPrebindingDefaultValueAsDataSource(experience);
+    sideloadPrebindingDefaultValues(experience);
 
     expect(experience.fields.dataSource).toEqual({});
   });

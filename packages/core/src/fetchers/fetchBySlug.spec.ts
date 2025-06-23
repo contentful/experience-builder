@@ -7,7 +7,7 @@ import {
 } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
 import { ExperienceEntry } from '@/types';
-import * as attachPrebindingDefaultValueAsDataSourceMock from './attachPrebindingDefaultValueAsDataSource';
+import * as attachPrebindingDefaultValueAsDataSourceMock from './sideloading';
 import * as fetchers from './fetchReferencedEntities';
 
 let experienceEntry = createExperienceEntry({});
@@ -129,7 +129,7 @@ describe('fetchBySlug', () => {
 
       it('should attach prebinding default value as a data source', async () => {
         vi.mocked(
-          attachPrebindingDefaultValueAsDataSourceMock.attachPrebindingDefaultValueAsDataSource,
+          attachPrebindingDefaultValueAsDataSourceMock.sideloadPrebindingDefaultValues,
         ).mockImplementationOnce((entry: ExperienceEntry) => {
           entry.fields.dataSource = {
             ...entry.fields.dataSource,
