@@ -13,6 +13,15 @@ export default [
         file: './dist/index.js',
         format: 'esm',
         sourcemap: true,
+        sourcemapPathTransform: (relativePath) => {
+          // For an unknown reason, the sourcemap creates invalid paths for files inside this
+          // module. This is a workaround to fix the paths and solve the following warning message:
+          // > 'Sourcemap for ".../components/dist/index.js" points to missing source files'
+          if (relativePath.startsWith('../../src')) {
+            return relativePath.replace('../../src', '../src');
+          }
+          return relativePath;
+        },
       },
     ],
     plugins: [
