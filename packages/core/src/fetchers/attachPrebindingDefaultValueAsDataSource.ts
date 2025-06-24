@@ -19,11 +19,14 @@ export const attachPrebindingDefaultValueAsDataSource = (
 
   const patternDefs = experienceEntry.fields.componentSettings?.parameterDefinitions ?? {};
   const defaultPrebinding = Object.values(patternDefs).find(
-    (def) => def.defaultValue,
-  )?.defaultValue;
+    (def) => def?.defaultSource,
+  )?.defaultSource;
 
-  const [value] = Object.values(defaultPrebinding ?? {});
-  const id = value?.sys?.id;
+  const { link, type } = defaultPrebinding ?? {};
+
+  if (!link || !type) return;
+
+  const id = link.sys?.id;
 
   if (!id) return;
 
@@ -32,7 +35,7 @@ export const attachPrebindingDefaultValueAsDataSource = (
     [id]: {
       sys: {
         type: 'Link',
-        linkType: 'Entry',
+        linkType: type,
         id,
       },
     },

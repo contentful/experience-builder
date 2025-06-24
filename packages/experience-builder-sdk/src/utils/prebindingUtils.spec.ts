@@ -294,8 +294,10 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
             ...experienceEntry.fields.componentSettings,
             parameterDefinitions: {
               testParameterId: {
-                defaultValue: {
-                  testContentType: {
+                defaultSourcs: {
+                  contentTypeId: 'testContentType',
+                  type: 'Entry',
+                  link: {
                     sys: { id: dataSourceKey, type: 'Link', linkType: 'Entry' },
                   },
                 },

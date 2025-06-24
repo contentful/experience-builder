@@ -46,17 +46,18 @@ const VariableMappingSchema = z.object({
 // TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
 const ParameterDefinitionSchema = z.object({
-  defaultValue: z
-    .record(
-      z.string(),
-      z.object({
-        sys: z.object({
+  defaultSource: z
+    .strictObject({
+      type: z.enum(['Entry']),
+      contentTypeId: z.string(),
+      link: z.strictObject({
+        sys: z.strictObject({
           type: z.literal('Link'),
           id: z.string(),
           linkType: z.enum(['Entry']),
         }),
       }),
-    )
+    })
     .optional(),
   contentTypes: z.record(
     z.string(),
