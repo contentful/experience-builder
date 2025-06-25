@@ -13,9 +13,12 @@ type PatternPropertyDefinitions = ExperienceComponentSettings['patternPropertyDe
  * This ensures that any default values defined in pattern property definitions are included
  * in the dataSource, so that linked entities can be fetched and resolved correctly.
  * Without this, defaults may be omitted, resulting in unresolved references during binding.
+ *
  * @returns The number of sideloaded default values, or false if the entry is not a pattern.
  */
 export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): false | number => {
+  let sideloadedCount = 0;
+
   const addDefaultValueToDataSource = (ppdID: string, ppd: PatternPropertyDefinition) => {
     if (!ppd.defaultValue) {
       // prebinding preset doesn't have default value, which is perfectly fine
@@ -30,10 +33,6 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
 
     const defaultEntryId = defaultEntryLink.sys.id;
 
-    console.log(
-      `;; Sideloading default value for ppd(${ppdID})  defaultEntryId(${defaultEntryId})`,
-      defaultEntryLink,
-    );
     // Throw in the link to the default-entry into the dataSource, this way
     // we rely on the mechanism of fetchReferencedEntities() to "sideload" them.
     // Keep in mind that dataSource will be available as EntityStore.dataSource
@@ -53,6 +52,8 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
         },
       },
     };
+
+    sideloadedCount++;
   };
 
   if (!checkIsAssemblyEntry(patternEntry as Entry)) {
@@ -60,14 +61,11 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
     return false;
   }
 
-  let sideloadedCount = 0;
-
   // Sideload all default values for the parent pattern
   const definitions: PatternPropertyDefinitions =
     patternEntry.fields.componentSettings?.patternPropertyDefinitions ?? {};
 
   Object.entries(definitions).forEach(([ppdID, ppd]) => {
-    sideloadedCount++;
     addDefaultValueToDataSource(ppdID, ppd);
   });
 
@@ -82,7 +80,6 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
       nestedPatternEntry.fields.componentSettings?.patternPropertyDefinitions ?? {};
 
     Object.entries(nestedPatternDefs).forEach(([ppdID, ppd]) => {
-      sideloadedCount++;
       addDefaultValueToDataSource(ppdID, ppd);
     });
   });

@@ -260,6 +260,60 @@ describe('sideloadPrebindingDefaultValues', () => {
 
       expect(parentPattern.fields.dataSource).toEqual({});
     });
+
+    it('should do nothing if no default prebinding is not a valid link', () => {
+      parentPattern = {
+        ...parentPattern,
+        fields: {
+          ...parentPattern.fields,
+          componentSettings: {
+            patternPropertyDefinitions: {
+              ppdId111: {
+                contentTypes: {
+                  ct111: {
+                    sys: {
+                      id: 'ct111',
+                      type: 'Link',
+                      linkType: 'ContentType',
+                    },
+                  },
+                },
+                defaultValue: {
+                  ct111: {
+                    // Anything that's not a valid link
+                    sys: {
+                      id: 'ct111',
+                      // @ts-expect-error forcing an invalid type for testing
+                      type: 'NOT_A_LINK',
+                      linkType: 'Entry', // This is not a valid link for defaultValue
+                    },
+                  },
+                },
+              },
+            },
+            variableDefinitions: {
+              someField: {
+                type: 'Text',
+              },
+            },
+            variableMappings: {
+              someField: {
+                type: 'ContentTypeMapping',
+                patternPropertyDefinitionId: 'ppdId111',
+                pathsByContentType: {},
+              },
+            },
+          },
+          dataSource: {},
+        },
+      };
+
+      mockCheckIsAssemblyEntry.mockReturnValue(true);
+
+      expect(sideloadPrebindingDefaultValues(parentPattern)).toBe(0);
+
+      expect(parentPattern.fields.dataSource).toEqual({});
+    });
   });
 
   describe('to sideload prebinding default value - when parent pattern has nested patterns', () => {

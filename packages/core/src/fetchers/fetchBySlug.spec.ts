@@ -7,7 +7,7 @@ import {
 } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
 import { ExperienceEntry } from '@/types';
-import * as attachPrebindingDefaultValueAsDataSourceMock from './sideloading';
+import * as sideloadingMock from './sideloading';
 import * as fetchers from './fetchReferencedEntities';
 
 let experienceEntry = createExperienceEntry({});
@@ -61,6 +61,10 @@ describe('fetchBySlug', () => {
 
     vi.mock('./attachPrebindingDefaultValueAsDataSource', () => ({
       attachPrebindingDefaultValueAsDataSource: vi.fn(),
+    }));
+
+    vi.mock('./sideloading', () => ({
+      sideloadPrebindingDefaultValues: vi.fn(),
     }));
   });
 
@@ -128,20 +132,21 @@ describe('fetchBySlug', () => {
       });
 
       it('should attach prebinding default value as a data source', async () => {
-        vi.mocked(
-          attachPrebindingDefaultValueAsDataSourceMock.sideloadPrebindingDefaultValues,
-        ).mockImplementationOnce((entry: ExperienceEntry) => {
-          entry.fields.dataSource = {
-            ...entry.fields.dataSource,
-            prebound: {
-              sys: {
-                id: 'prebound-id',
-                type: 'Link',
-                linkType: 'Entry',
+        vi.mocked(sideloadingMock.sideloadPrebindingDefaultValues).mockImplementationOnce(
+          (entry: ExperienceEntry): false | number => {
+            entry.fields.dataSource = {
+              ...entry.fields.dataSource,
+              sideloaded_preboundDefaultEntry123: {
+                sys: {
+                  id: 'preboundDefaultEntry123',
+                  type: 'Link',
+                  linkType: 'Entry',
+                },
               },
-            },
-          };
-        });
+            };
+            return 1; // Indicating one sideloaded default value
+          },
+        );
 
         await fetchBySlug({
           client: mockClient,
@@ -157,9 +162,9 @@ describe('fetchBySlug', () => {
               fields: expect.objectContaining({
                 dataSource: expect.objectContaining({
                   ...createExperienceEntry({}).fields.dataSource,
-                  prebound: {
+                  sideloaded_preboundDefaultEntry123: {
                     sys: {
-                      id: 'prebound-id',
+                      id: 'preboundDefaultEntry123',
                       type: 'Link',
                       linkType: 'Entry',
                     },
