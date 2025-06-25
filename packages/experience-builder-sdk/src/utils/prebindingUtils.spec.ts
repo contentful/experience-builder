@@ -1,5 +1,5 @@
 import { EntityStore } from '@contentful/experiences-core';
-import { experienceEntry, entities } from '../../test/__fixtures__';
+import { experienceEntry, entities, createEntry } from '../../test/__fixtures__';
 import {
   shouldUsePrebinding,
   resolvePrebindingPath,
@@ -280,7 +280,9 @@ describe('resolvePrebindingPath', () => {
 });
 
 describe('resolveMaybePrebindingDefaultValuePath', () => {
-  const dataSourceKey = 'uuid2';
+  // const dataSourceKey = 'uuid2';
+  const defaultEntryId = 'defaultEntry123';
+  const sideloadedDefaultEntryDataSourceKey = 'sideloaded_defaultEntry123';
 
   const createEntityStoreWithComponentSettings = (
     componentSettingsOverrides: Partial<ExperienceComponentSettings>,
@@ -296,11 +298,17 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
               testPatternPropertyDefinitionId: {
                 defaultValue: {
                   testContentType: {
-                    sys: { id: dataSourceKey, type: 'Link', linkType: 'Entry' },
+                    sys: { id: defaultEntryId, type: 'Link', linkType: 'Entry' },
                   },
                 },
                 contentTypes: {
-                  testContentType: {},
+                  testContentType: {
+                    sys: {
+                      type: 'Link',
+                      id: 'testContentType',
+                      linkType: 'ContentType',
+                    },
+                  },
                 },
               },
             },
@@ -315,6 +323,17 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
             },
             ...componentSettingsOverrides,
           },
+          dataSource: {
+            ...experienceEntry.fields.dataSource,
+            // we need to simulate that the default entry is sideloaded
+            [sideloadedDefaultEntryDataSourceKey]: {
+              sys: {
+                id: defaultEntryId,
+                type: 'Link',
+                linkType: 'Entry',
+              },
+            },
+          },
         },
       } as unknown as ExperienceEntry,
       entities,
@@ -323,12 +342,115 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
   };
 
   it('should return the correct path when defaultValue is set and all conditions are met', () => {
+    const localEntityStore = createEntityStoreWithComponentSettings({});
+    // Simulate sideloading of the default entry into the entity store
+    localEntityStore.updateEntity(createEntry(defaultEntryId));
+
     const result = resolveMaybePrebindingDefaultValuePath({
       componentValueKey: 'testKey',
-      entityStore: createEntityStoreWithComponentSettings({}),
+      entityStore: localEntityStore,
     });
 
-    expect(result).toBe(`/${dataSourceKey}/fields/testField`);
+    expect(result).toBe(`/${sideloadedDefaultEntryDataSourceKey}/fields/testField`);
+  });
+
+  it('should return undefined when default value entry was not sideloaded into EntityStore', () => {
+    const localEntityStore = createEntityStoreWithComponentSettings({});
+
+    // Notice, we do NOT sideload the default entry here
+    // localEntityStore.updateEntity(createEntry(defaultEntryId));
+
+    const result = resolveMaybePrebindingDefaultValuePath({
+      componentValueKey: 'testKey',
+      entityStore: localEntityStore,
+    });
+
+    expect(result).toBeUndefined();
+  });
+
+  it('should return undefined when variableMapping does not have info for contentType used with default value', () => {
+    const localEntityStore = createEntityStoreWithComponentSettings({
+      patternPropertyDefinitions: {
+        testPatternPropertyDefinitionId: {
+          defaultValue: {
+            testContentType: {
+              sys: { id: defaultEntryId, type: 'Link', linkType: 'Entry' },
+            },
+          },
+          contentTypes: {
+            testContentType: {
+              sys: {
+                type: 'Link',
+                id: 'testContentType',
+                linkType: 'ContentType',
+              },
+            },
+          },
+        },
+      },
+      variableMappings: {
+        testKey: {
+          type: 'ContentTypeMapping',
+          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          pathsByContentType: {
+            MANGLE_SO_THAT_IT_DOES_NOT_MATCH_testContentType: { path: '/fields/testField' },
+          },
+        },
+      },
+    });
+
+    // Notice, we do NOT sideload the default entry here
+    // localEntityStore.updateEntity(createEntry(defaultEntryId));
+
+    const result = resolveMaybePrebindingDefaultValuePath({
+      componentValueKey: 'testKey',
+      entityStore: localEntityStore,
+    });
+
+    expect(result).toBeUndefined();
+  });
+
+  it('should return undefined when field path is not set', () => {
+    const localEntityStore = createEntityStoreWithComponentSettings({
+      patternPropertyDefinitions: {
+        testPatternPropertyDefinitionId: {
+          defaultValue: {
+            testContentType: {
+              sys: { id: defaultEntryId, type: 'Link', linkType: 'Entry' },
+            },
+          },
+          contentTypes: {
+            testContentType: {
+              sys: {
+                type: 'Link',
+                id: 'testContentType',
+                linkType: 'ContentType',
+              },
+            },
+          },
+        },
+      },
+      variableMappings: {
+        testKey: {
+          type: 'ContentTypeMapping',
+          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          pathsByContentType: {
+            // @ts-expect-error simulating missing field path
+            testContentType: { path: undefined }, // or empty string ''
+          },
+        },
+      },
+    });
+
+    // Need to sideload entry, otherwise we wont get to final logic of resolveMaybePrebindingDefaultValuePath()
+    localEntityStore.updateEntity(createEntry(defaultEntryId));
+
+    const result = resolveMaybePrebindingDefaultValuePath({
+      componentValueKey: 'testKey',
+      entityStore: localEntityStore,
+    });
+
+    expect(result).toBeUndefined();
   });
 
   it('should return undefined when variableMapping is missing', () => {

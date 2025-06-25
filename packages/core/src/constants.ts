@@ -179,3 +179,5 @@ export enum PostMessageMethods {
 export const SUPPORTED_IMAGE_FORMATS = ['jpg', 'png', 'webp', 'gif', 'avif'] as const;
 
 export const PATTERN_PROPERTY_DIVIDER = '-----';
+
+export const SIDELOADED_PREFIX = 'sideloaded_';
