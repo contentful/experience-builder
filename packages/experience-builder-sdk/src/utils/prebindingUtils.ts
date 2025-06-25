@@ -74,28 +74,40 @@ export const resolveMaybePrebindingDefaultValuePath = ({
   componentValueKey: string;
   entityStore: EntityStore;
 }): string | undefined => {
-  const variableMapping = entityStore._variableMappings?.[componentValueKey];
+  const variableMapping = entityStore.variableMappings[componentValueKey];
   if (!variableMapping) return;
 
-  const ppdID = variableMapping.patternPropertyDefinitionId || '';
-  const ppd = entityStore._patternPropertyDefinitions?.[ppdID];
-  if (!ppd || !ppd?.defaultValue) return;
+  const ppdID = variableMapping.patternPropertyDefinitionId;
+  const ppd = entityStore.patternPropertyDefinitions[ppdID];
+  if (!ppd) {
+    // probably shouldn't happen, as if ppd is not defined, then variableMapping should not be defined either
+    return;
+  }
+  if (!ppd.defaultValue) {
+    // pretty normal, ppds are not required to have default values
+    return;
+  }
 
   const [[contentTypeId, defaultEntryLink]] = Object.entries(ppd.defaultValue);
   if (contentTypeId in ppd.contentTypes) {
     const entity = entityStore.getEntityFromLink(defaultEntryLink);
-    if (!entity || entity.sys.type === 'Asset') {
-      // some glitch in definition and asset was used as default value
+    if (!entity) {
+      // looks like sideloading of the prebinding default value didn't work as expected.
+      // And didn't sideload the entry into entityStore (and didn't add it's sideloaded_dsKey to the entityStore.dataSource)
+      return;
+    }
+    if (entity.sys.type === 'Asset') {
+      // really shouldn't happen, as ATM UI allows for default prebinding values to only be entries.
       return;
     }
 
-    const fieldPath = variableMapping?.pathsByContentType?.[contentTypeId]?.path;
+    const fieldPath = variableMapping.pathsByContentType[contentTypeId]?.path;
     if (!fieldPath) {
-      // probably shouldn't happen
+      // Maybe content type mismatch between variableMapping and ppd or something. If you observe an example document it here.
       return;
     }
+
     const fullDefaultValuePath = `/${SIDELOADED_PREFIX}${defaultEntryLink.sys.id}${fieldPath}`;
-    console.log(`;; Prebinding default value path: ${fullDefaultValuePath}`);
     return fullDefaultValuePath;
   }
 };

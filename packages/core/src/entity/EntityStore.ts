@@ -17,16 +17,18 @@ type EntityStoreArgs = {
   locale: string;
 };
 
-type PatternPropertyDefinitions = ExperienceComponentSettings['patternPropertyDefinitions'];
-type VariableMappings = ExperienceComponentSettings['variableMappings'];
+type PatternPropertyDefinitions = NonNullable<
+  ExperienceComponentSettings['patternPropertyDefinitions']
+>;
+type VariableMappings = NonNullable<ExperienceComponentSettings['variableMappings']>;
 
 export class EntityStore extends EntityStoreBase {
   private _experienceEntryFields: ExperienceFields | undefined;
   private _experienceEntryId: string | undefined;
   private _unboundValues: ExperienceUnboundValues | undefined;
   private _usedComponentsWithDeepReferences: ExperienceEntry[];
-  public _patternPropertyDefinitions: PatternPropertyDefinitions;
-  public _variableMappings: VariableMappings;
+  private _patternPropertyDefinitions: PatternPropertyDefinitions;
+  private _variableMappings: VariableMappings;
 
   constructor(json: string);
   constructor({ experienceEntry, entities, locale }: EntityStoreArgs);
@@ -99,6 +101,14 @@ export class EntityStore extends EntityStoreBase {
 
   public getCurrentLocale() {
     return this.locale;
+  }
+
+  public get variableMappings() {
+    return this._variableMappings;
+  }
+
+  public get patternPropertyDefinitions() {
+    return this._patternPropertyDefinitions;
   }
 
   public get experienceEntryFields() {
