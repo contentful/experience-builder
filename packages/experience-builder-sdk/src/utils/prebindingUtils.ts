@@ -96,14 +96,10 @@ export const resolveMaybePrebindingDefaultValuePath = ({
       // And didn't sideload the entry into entityStore (and didn't add it's sideloaded_dsKey to the entityStore.dataSource)
       return;
     }
-    if (entity.sys.type === 'Asset') {
-      // really shouldn't happen, as ATM UI allows for default prebinding values to only be entries.
-      return;
-    }
 
-    const fieldPath = variableMapping.pathsByContentType[contentTypeId]?.path;
+    const fieldPath = variableMapping.pathsByContentType[contentTypeId].path;
     if (!fieldPath) {
-      // Maybe content type mismatch between variableMapping and ppd or something. If you observe an example document it here.
+      // Path not found or degenerate shape (e.g. empty string '')
       return;
     }
 
