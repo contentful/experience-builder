@@ -1,5 +1,6 @@
 import React, { ReactNode, useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
+import { Entry } from 'contentful';
 import {
   checkIsAssemblyEntry,
   checkIsAssemblyNode,
@@ -15,7 +16,7 @@ import {
 import type {
   ComponentTreeNode,
   DesignValue,
-  PatternProperty,
+  Parameter,
   PrimitiveValue,
   ResolveDesignValueType,
   StyleProps,
@@ -30,7 +31,6 @@ import {
 } from '@contentful/experiences-components-react';
 import { resolvePattern } from '../../core/preview/assemblyUtils';
 import { resolveMaybePrebindingDefaultValuePath } from '../../utils/prebindingUtils';
-import { Entry } from 'contentful';
 import PreviewUnboundImage from './PreviewUnboundImage';
 import { parseComponentProps } from '../../utils/parseComponentProps';
 
@@ -48,7 +48,7 @@ type CompositionBlockProps = {
    * when storing & accessing cfSsrClassName.
    */
   patternRootNodeIdsChain?: string;
-  wrappingPatternProperties?: Record<string, PatternProperty>;
+  wrappingParameters?: Record<string, Parameter>;
 };
 
 export const CompositionBlock = ({
@@ -59,7 +59,7 @@ export const CompositionBlock = ({
   resolveDesignValue,
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
-  wrappingPatternProperties: parentWrappingPatternProperties = {},
+  wrappingParameters: parentWrappingParameters = {},
   patternRootNodeIdsChain: parentPatternRootNodeIdsChain = '',
 }: CompositionBlockProps) => {
   const isPatternNode = useMemo(() => {
@@ -75,7 +75,7 @@ export const CompositionBlock = ({
 
   const patternRootNodeIdsChain = useMemo(() => {
     if (isPatternNode) {
-      // Pattern nodes are chained without a separator (following the format for prebinding/patternProperties)
+      // Pattern nodes are chained without a separator (following the format for prebinding/parameters)
       return `${parentPatternRootNodeIdsChain}${rawNode.id}`;
     }
     return parentPatternRootNodeIdsChain;
@@ -86,19 +86,13 @@ export const CompositionBlock = ({
       return resolvePattern({
         node: rawNode,
         entityStore,
-        parentPatternProperties: parentWrappingPatternProperties,
+        parentParameters: parentWrappingParameters,
         patternRootNodeIdsChain,
       });
     } else {
       return rawNode;
     }
-  }, [
-    entityStore,
-    isPatternNode,
-    rawNode,
-    parentWrappingPatternProperties,
-    patternRootNodeIdsChain,
-  ]);
+  }, [entityStore, isPatternNode, rawNode, parentWrappingParameters, patternRootNodeIdsChain]);
 
   const wrappingPatternIds = useMemo(() => {
     if (isPatternNode) {
@@ -110,12 +104,12 @@ export const CompositionBlock = ({
   // Merge the pattern properties of the current node with the parent's pattern properties
   // to ensure nested patterns receive relevant pattern properties that were bubbled up
   // during assembly serialization.
-  const wrappingPatternProperties = useMemo(() => {
+  const wrappingParameters = useMemo(() => {
     if (isPatternNode) {
-      return { ...parentWrappingPatternProperties, ...(rawNode.patternProperties || {}) };
+      return { ...parentWrappingParameters, ...(rawNode.parameters || {}) };
     }
-    return parentWrappingPatternProperties;
-  }, [isPatternNode, rawNode, parentWrappingPatternProperties]);
+    return parentWrappingParameters;
+  }, [isPatternNode, rawNode, parentWrappingParameters]);
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.definitionId as string);
@@ -170,7 +164,7 @@ export const CompositionBlock = ({
       resolveBoundValue: ({ binding, propertyName, dataType }) => {
         const [, uuid] = binding.path.split('/');
         const boundEntityLink = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-        const boundValue = transformBoundContentValue(
+        return transformBoundContentValue(
           node.variables,
           entityStore,
           boundEntityLink,
@@ -179,22 +173,18 @@ export const CompositionBlock = ({
           dataType,
           binding.path,
         );
-
-        return boundValue;
       },
       resolveHyperlinkValue: ({ linkTargetKey }) => {
         const boundEntity = entityStore.dataSource[linkTargetKey];
         const hyperlinkEntry = entityStore.getEntryOrAsset(boundEntity, linkTargetKey);
 
-        const value = resolveHyperlinkPattern(
+        return resolveHyperlinkPattern(
           componentRegistration.definition.hyperlinkPattern ||
             hyperlinkPattern ||
             HYPERLINK_DEFAULT_PATTERN,
           hyperlinkEntry as Entry,
           locale,
         );
-
-        return value;
       },
       resolveUnboundValue: ({ mappingKey, defaultValue }) => {
         return entityStore.unboundValues[mappingKey]?.value ?? defaultValue;
@@ -234,7 +224,7 @@ export const CompositionBlock = ({
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
-              wrappingPatternProperties={wrappingPatternProperties}
+              wrappingParameters={wrappingParameters}
               patternRootNodeIdsChain={patternRootNodeIdsChain}
             />
           );
@@ -270,7 +260,7 @@ export const CompositionBlock = ({
     hyperlinkPattern,
     locale,
     wrappingPatternIds,
-    wrappingPatternProperties,
+    wrappingParameters,
     patternRootNodeIdsChain,
   ]);
 
@@ -317,7 +307,7 @@ export const CompositionBlock = ({
               entityStore={entityStore}
               resolveDesignValue={resolveDesignValue}
               wrappingPatternIds={wrappingPatternIds}
-              wrappingPatternProperties={wrappingPatternProperties}
+              wrappingParameters={wrappingParameters}
               patternRootNodeIdsChain={patternRootNodeIdsChain}
             />
           );

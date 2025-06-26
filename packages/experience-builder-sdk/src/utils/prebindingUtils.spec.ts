@@ -8,7 +8,7 @@ import {
 import {
   ComponentPropertyValue,
   ExperienceComponentSettings,
-  PatternProperty,
+  Parameter,
 } from '@contentful/experiences-validators';
 import { ExperienceEntry } from '@contentful/experiences-core/types';
 
@@ -22,18 +22,18 @@ describe('shouldUsePrebinding', () => {
   it('should return true when all conditions are met', () => {
     const componentValueKey = 'testKey';
     const componentSettings = {
-      patternPropertyDefinitions: {
-        testPatternPropertyDefinitionId: {},
+      parameterDefinitions: {
+        testParameterId: {},
       },
       variableMappings: {
         testKey: {
-          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          parameterId: 'testParameterId',
         },
       },
     } as unknown as ExperienceComponentSettings;
-    const patternProperties = {
-      testPatternPropertyDefinitionId: {},
-    } as unknown as Record<string, PatternProperty>;
+    const parameters = {
+      testParameterId: {},
+    } as unknown as Record<string, Parameter>;
     const variable = {
       type: 'NoValue',
     } as unknown as ComponentPropertyValue;
@@ -41,26 +41,26 @@ describe('shouldUsePrebinding', () => {
     const result = shouldUsePrebinding({
       componentValueKey,
       componentSettings,
-      patternProperties,
+      parameters: parameters,
       variable,
     });
 
     expect(result).toBe(true);
   });
 
-  it('should return false when patternPropertyDefinition is missing', () => {
+  it('should return false when parameterDefinition is missing', () => {
     const componentValueKey = 'testKey';
     const componentSettings = {
-      patternPropertyDefinitions: {},
+      parameterDefinitions: {},
       variableMappings: {
         testKey: {
-          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          parameterId: 'testParameterId',
         },
       },
     } as unknown as ExperienceComponentSettings;
-    const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: {},
-    } as unknown as Record<string, PatternProperty>;
+    const parameters: Record<string, Parameter> = {
+      testParameterId: {},
+    } as unknown as Record<string, Parameter>;
     const variable = {
       type: 'NoValue',
     } as unknown as ComponentPropertyValue;
@@ -68,26 +68,26 @@ describe('shouldUsePrebinding', () => {
     const result = shouldUsePrebinding({
       componentValueKey,
       componentSettings,
-      patternProperties,
+      parameters,
       variable,
     });
 
     expect(result).toBe(false);
   });
 
-  it('should return false when patternProperty is missing', () => {
+  it('should return false when parameter is missing', () => {
     const componentValueKey = 'testKey';
     const componentSettings: ExperienceComponentSettings = {
-      patternPropertyDefinitions: {
-        testPatternPropertyDefinitionId: {},
+      parameterDefinitions: {
+        testParameterId: {},
       },
       variableMappings: {
         testKey: {
-          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          parameterId: 'testParameterId',
         },
       },
     } as unknown as ExperienceComponentSettings;
-    const patternProperties: Record<string, PatternProperty> = {};
+    const parameters: Record<string, Parameter> = {};
     const variable = {
       type: 'NoValue',
     } as unknown as ComponentPropertyValue;
@@ -95,7 +95,7 @@ describe('shouldUsePrebinding', () => {
     const result = shouldUsePrebinding({
       componentValueKey,
       componentSettings,
-      patternProperties,
+      parameters,
       variable,
     });
 
@@ -105,13 +105,13 @@ describe('shouldUsePrebinding', () => {
   it('should return false when variableMapping is missing', () => {
     const componentValueKey = 'testKey';
     const componentSettings = {
-      patternPropertyDefinitions: {
-        testPatternPropertyDefinitionId: {},
+      parameterDefinitions: {
+        testParameterId: {},
       },
       variableMappings: {},
     } as unknown as ExperienceComponentSettings;
-    const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: {
+    const parameters: Record<string, Parameter> = {
+      testParameterId: {
         path: '/entries/testEntry',
         type: 'BoundValue',
       },
@@ -123,7 +123,7 @@ describe('shouldUsePrebinding', () => {
     const result = shouldUsePrebinding({
       componentValueKey,
       componentSettings,
-      patternProperties,
+      parameters: parameters,
       variable,
     });
 
@@ -137,20 +137,20 @@ describe('resolvePrebindingPath', () => {
   it('should return the correct path when all conditions are met', () => {
     const componentValueKey = 'testKey';
     const componentSettings = {
-      patternPropertyDefinitions: {},
+      parameterDefinitions: {},
       variableDefinitions: {},
       variableMappings: {
         testKey: {
           type: 'ContentTypeMapping',
-          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          parameterId: 'testParameterId',
           pathsByContentType: {
             testContentType: { path: '/fields/testField' },
           },
         },
       },
     } as unknown as ExperienceComponentSettings;
-    const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: {
+    const parameters: Record<string, Parameter> = {
+      testParameterId: {
         path: `/${dataSourceKey}`,
         type: 'BoundValue',
       },
@@ -159,7 +159,7 @@ describe('resolvePrebindingPath', () => {
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
-      patternProperties,
+      parameters: parameters,
       entityStore,
     });
 
@@ -171,33 +171,33 @@ describe('resolvePrebindingPath', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableMappings: {},
     } as unknown as ExperienceComponentSettings;
-    const patternProperties: Record<string, PatternProperty> = {};
+    const parameters: Record<string, Parameter> = {};
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
-      patternProperties,
+      parameters: parameters,
       entityStore,
     });
 
     expect(result).toBe('');
   });
 
-  it('should return an empty string when patternProperties is missing', () => {
+  it('should return an empty string when parameters is missing', () => {
     const componentValueKey = 'testKey';
     const componentSettings: ExperienceComponentSettings = {
       variableMappings: {
         testKey: {
-          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          parameterId: 'testParameterId',
         },
       },
     } as unknown as ExperienceComponentSettings;
-    const patternProperties: Record<string, PatternProperty> = {};
+    const parameters: Record<string, Parameter> = {};
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
-      patternProperties,
+      parameters: parameters,
       entityStore,
     });
 
@@ -209,18 +209,18 @@ describe('resolvePrebindingPath', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableMappings: {
         testKey: {
-          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          parameterId: 'testParameterId',
         },
       },
     } as unknown as ExperienceComponentSettings;
-    const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: { path: `/${dataSourceKey}` },
-    } as unknown as Record<string, PatternProperty>;
+    const parameters: Record<string, Parameter> = {
+      testParameterId: { path: `/${dataSourceKey}` },
+    } as unknown as Record<string, Parameter>;
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
-      patternProperties,
+      parameters: parameters,
       entityStore,
     });
 
@@ -232,19 +232,19 @@ describe('resolvePrebindingPath', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableMappings: {
         testKey: {
-          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          parameterId: 'testParameterId',
           pathsByContentType: {},
         },
       },
     } as unknown as ExperienceComponentSettings;
-    const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: { path: `/${dataSourceKey}` },
-    } as unknown as Record<string, PatternProperty>;
+    const parameters: Record<string, Parameter> = {
+      testParameterId: { path: `/${dataSourceKey}` },
+    } as unknown as Record<string, Parameter>;
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
-      patternProperties,
+      parameters: parameters,
       entityStore,
     });
 
@@ -257,21 +257,21 @@ describe('resolvePrebindingPath', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableMappings: {
         testKey: {
-          patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+          parameterId: 'testParameterId',
           pathsByContentType: {
             testContentType: { path: '/fields/testField' },
           },
         },
       },
     } as unknown as ExperienceComponentSettings;
-    const patternProperties: Record<string, PatternProperty> = {
-      testPatternPropertyDefinitionId: { path: `/${dataSourceKey}` },
-    } as unknown as Record<string, PatternProperty>;
+    const parameters: Record<string, Parameter> = {
+      testParameterId: { path: `/${dataSourceKey}` },
+    } as unknown as Record<string, Parameter>;
 
     const result = resolvePrebindingPath({
       componentValueKey,
       componentSettings,
-      patternProperties,
+      parameters: parameters,
       entityStore,
     });
 
@@ -292,8 +292,8 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
           ...experienceEntry.fields,
           componentSettings: {
             ...experienceEntry.fields.componentSettings,
-            patternPropertyDefinitions: {
-              testPatternPropertyDefinitionId: {
+            parameterDefinitions: {
+              testParameterId: {
                 defaultValue: {
                   testContentType: {
                     sys: { id: dataSourceKey, type: 'Link', linkType: 'Entry' },
@@ -307,7 +307,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
             variableMappings: {
               testKey: {
                 type: 'ContentTypeMapping',
-                patternPropertyDefinitionId: 'testPatternPropertyDefinitionId',
+                parameterId: 'testParameterId',
                 pathsByContentType: {
                   testContentType: { path: '/fields/testField' },
                 },
@@ -344,9 +344,9 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     expect(result).toBeUndefined();
   });
 
-  it('should return undefined when patternPropertyDefinition is missing', () => {
+  it('should return undefined when parameterDefinition is missing', () => {
     const modifiedEntityStore = createEntityStoreWithComponentSettings({
-      patternPropertyDefinitions: {},
+      parameterDefinitions: {},
     });
 
     const result = resolveMaybePrebindingDefaultValuePath({
@@ -359,8 +359,8 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
 
   it('should return undefined when defaultValue is missing', () => {
     const modifiedEntityStore = createEntityStoreWithComponentSettings({
-      patternPropertyDefinitions: {
-        testPatternPropertyDefinitionId: {
+      parameterDefinitions: {
+        testParameterId: {
           contentTypes: {
             testContentType: {},
           },
