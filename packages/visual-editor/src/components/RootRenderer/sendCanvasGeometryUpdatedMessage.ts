@@ -1,4 +1,4 @@
-import { sendMessage, getElementCoordinates } from '@contentful/experiences-core';
+import { sendMessage, getElementCoordinates, isElementHidden } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import {
   CanvasGeometryUpdateSourceEvent,
@@ -39,6 +39,11 @@ const collectNodeCoordinates = (
   const selectedElement = document.querySelector(`[data-cf-node-id="${node.data.id}"]`);
   if (selectedElement) {
     const rect = getElementCoordinates(selectedElement);
+
+    if (isElementHidden(rect)) {
+      return;
+    }
+
     nodeToCoordinatesMap[node.data.id] = {
       coordinates: {
         x: rect.x + window.scrollX,
