@@ -144,7 +144,7 @@ export const resolvePattern = ({
      * and the pattern property definition id. We need to split them so
      * that the node only uses the pattern property definition id.
      */
-    const [hashKey, parameterDefinitionId] = parameterKey.split(PATTERN_PROPERTY_DIVIDER);
+    const [hashKey, parameterId] = parameterKey.split(PATTERN_PROPERTY_DIVIDER);
 
     const hashedNodeChain = md5(patternRootNodeIdsChain || '');
 
@@ -152,7 +152,7 @@ export const resolvePattern = ({
 
     if (!isMatchingNode) continue;
 
-    parameters[parameterDefinitionId] = parameter;
+    parameters[parameterId] = parameter;
   }
 
   const componentFields = assembly.fields;

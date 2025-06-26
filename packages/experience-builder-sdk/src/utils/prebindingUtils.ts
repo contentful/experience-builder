@@ -20,8 +20,8 @@ export const shouldUsePrebinding = ({
 
   const variableMapping = variableMappings?.[componentValueKey];
 
-  const parameterDefinition = parameterDefinitions?.[variableMapping?.parameterDefinitionId || ''];
-  const parameter = parameters?.[variableMapping?.parameterDefinitionId || ''];
+  const parameterDefinition = parameterDefinitions?.[variableMapping?.parameterId || ''];
+  const parameter = parameters?.[variableMapping?.parameterId || ''];
 
   const isValidForPrebinding = !!parameterDefinition && !!parameter && !!variableMapping;
 
@@ -43,7 +43,7 @@ export const resolvePrebindingPath = ({
 
   if (!variableMapping) return '';
 
-  const parameter = parameters?.[variableMapping.parameterDefinitionId];
+  const parameter = parameters?.[variableMapping.parameterId];
 
   if (!parameter) return '';
 
@@ -77,7 +77,7 @@ export const resolveMaybePrebindingDefaultValuePath = ({
   const prebinding = componentSettings.variableMappings?.[componentValueKey];
   if (!prebinding) return;
 
-  const mappingId = prebinding.parameterDefinitionId || '';
+  const mappingId = prebinding.parameterId || '';
   const mapping = componentSettings.parameterDefinitions?.[mappingId];
   if (!mapping || !mapping?.defaultValue) return;
 

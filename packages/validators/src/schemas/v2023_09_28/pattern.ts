@@ -38,7 +38,7 @@ export const THUMBNAIL_IDS = [
 // TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
 const VariableMappingSchema = z.object({
-  parameterDefinitionId: propertyKeySchema,
+  parameterId: propertyKeySchema,
   type: z.literal('ContentTypeMapping'),
   pathsByContentType: z.record(z.string(), z.object({ path: z.string() })),
 });

@@ -23,16 +23,16 @@ describe('shouldUsePrebinding', () => {
     const componentValueKey = 'testKey';
     const componentSettings = {
       parameterDefinitions: {
-        testParameterDefinitionId: {},
+        testParameterId: {},
       },
       variableMappings: {
         testKey: {
-          parameterDefinitionId: 'testParameterDefinitionId',
+          parameterId: 'testParameterId',
         },
       },
     } as unknown as ExperienceComponentSettings;
     const parameters = {
-      testParameterDefinitionId: {},
+      testParameterId: {},
     } as unknown as Record<string, Parameter>;
     const variable = {
       type: 'NoValue',
@@ -54,12 +54,12 @@ describe('shouldUsePrebinding', () => {
       parameterDefinitions: {},
       variableMappings: {
         testKey: {
-          parameterDefinitionId: 'testParameterDefinitionId',
+          parameterId: 'testParameterId',
         },
       },
     } as unknown as ExperienceComponentSettings;
     const parameters: Record<string, Parameter> = {
-      testParameterDefinitionId: {},
+      testParameterId: {},
     } as unknown as Record<string, Parameter>;
     const variable = {
       type: 'NoValue',
@@ -79,11 +79,11 @@ describe('shouldUsePrebinding', () => {
     const componentValueKey = 'testKey';
     const componentSettings: ExperienceComponentSettings = {
       parameterDefinitions: {
-        testParameterDefinitionId: {},
+        testParameterId: {},
       },
       variableMappings: {
         testKey: {
-          parameterDefinitionId: 'testParameterDefinitionId',
+          parameterId: 'testParameterId',
         },
       },
     } as unknown as ExperienceComponentSettings;
@@ -106,12 +106,12 @@ describe('shouldUsePrebinding', () => {
     const componentValueKey = 'testKey';
     const componentSettings = {
       parameterDefinitions: {
-        testParameterDefinitionId: {},
+        testParameterId: {},
       },
       variableMappings: {},
     } as unknown as ExperienceComponentSettings;
     const parameters: Record<string, Parameter> = {
-      testParameterDefinitionId: {
+      testParameterId: {
         path: '/entries/testEntry',
         type: 'BoundValue',
       },
@@ -142,7 +142,7 @@ describe('resolvePrebindingPath', () => {
       variableMappings: {
         testKey: {
           type: 'ContentTypeMapping',
-          parameterDefinitionId: 'testParameterDefinitionId',
+          parameterId: 'testParameterId',
           pathsByContentType: {
             testContentType: { path: '/fields/testField' },
           },
@@ -150,7 +150,7 @@ describe('resolvePrebindingPath', () => {
       },
     } as unknown as ExperienceComponentSettings;
     const parameters: Record<string, Parameter> = {
-      testParameterDefinitionId: {
+      testParameterId: {
         path: `/${dataSourceKey}`,
         type: 'BoundValue',
       },
@@ -188,7 +188,7 @@ describe('resolvePrebindingPath', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableMappings: {
         testKey: {
-          parameterDefinitionId: 'testParameterDefinitionId',
+          parameterId: 'testParameterId',
         },
       },
     } as unknown as ExperienceComponentSettings;
@@ -209,12 +209,12 @@ describe('resolvePrebindingPath', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableMappings: {
         testKey: {
-          parameterDefinitionId: 'testParameterDefinitionId',
+          parameterId: 'testParameterId',
         },
       },
     } as unknown as ExperienceComponentSettings;
     const parameters: Record<string, Parameter> = {
-      testParameterDefinitionId: { path: `/${dataSourceKey}` },
+      testParameterId: { path: `/${dataSourceKey}` },
     } as unknown as Record<string, Parameter>;
 
     const result = resolvePrebindingPath({
@@ -232,13 +232,13 @@ describe('resolvePrebindingPath', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableMappings: {
         testKey: {
-          parameterDefinitionId: 'testParameterDefinitionId',
+          parameterId: 'testParameterId',
           pathsByContentType: {},
         },
       },
     } as unknown as ExperienceComponentSettings;
     const parameters: Record<string, Parameter> = {
-      testParameterDefinitionId: { path: `/${dataSourceKey}` },
+      testParameterId: { path: `/${dataSourceKey}` },
     } as unknown as Record<string, Parameter>;
 
     const result = resolvePrebindingPath({
@@ -257,7 +257,7 @@ describe('resolvePrebindingPath', () => {
     const componentSettings: ExperienceComponentSettings = {
       variableMappings: {
         testKey: {
-          parameterDefinitionId: 'testParameterDefinitionId',
+          parameterId: 'testParameterId',
           pathsByContentType: {
             testContentType: { path: '/fields/testField' },
           },
@@ -265,7 +265,7 @@ describe('resolvePrebindingPath', () => {
       },
     } as unknown as ExperienceComponentSettings;
     const parameters: Record<string, Parameter> = {
-      testParameterDefinitionId: { path: `/${dataSourceKey}` },
+      testParameterId: { path: `/${dataSourceKey}` },
     } as unknown as Record<string, Parameter>;
 
     const result = resolvePrebindingPath({
@@ -293,7 +293,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
           componentSettings: {
             ...experienceEntry.fields.componentSettings,
             parameterDefinitions: {
-              testParameterDefinitionId: {
+              testParameterId: {
                 defaultValue: {
                   testContentType: {
                     sys: { id: dataSourceKey, type: 'Link', linkType: 'Entry' },
@@ -307,7 +307,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
             variableMappings: {
               testKey: {
                 type: 'ContentTypeMapping',
-                parameterDefinitionId: 'testParameterDefinitionId',
+                parameterId: 'testParameterId',
                 pathsByContentType: {
                   testContentType: { path: '/fields/testField' },
                 },
@@ -360,7 +360,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
   it('should return undefined when defaultValue is missing', () => {
     const modifiedEntityStore = createEntityStoreWithComponentSettings({
       parameterDefinitions: {
-        testParameterDefinitionId: {
+        testParameterId: {
           contentTypes: {
             testContentType: {},
           },
