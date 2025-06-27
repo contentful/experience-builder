@@ -17,7 +17,8 @@ export const attachPrebindingDefaultValueAsDataSource = (
     return;
   }
 
-  const patternDefs = experienceEntry.fields.componentSettings?.parameterDefinitions ?? {};
+  const patternDefs =
+    experienceEntry.fields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions ?? {};
   const defaultPrebinding = Object.values(patternDefs).find(
     (def) => def.defaultSource,
   )?.defaultSource;

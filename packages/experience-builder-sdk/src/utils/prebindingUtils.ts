@@ -16,7 +16,8 @@ export const shouldUsePrebinding = ({
   parameters: Record<string, Parameter>;
   variable: ComponentPropertyValue;
 }) => {
-  const { parameterDefinitions, variableMappings } = componentSettings;
+  const { prebindingDefinitions } = componentSettings;
+  const { parameterDefinitions, variableMappings } = prebindingDefinitions?.[0] || {};
 
   const variableMapping = variableMappings?.[componentValueKey];
 
@@ -39,7 +40,10 @@ export const resolvePrebindingPath = ({
   parameters: Record<string, Parameter>;
   entityStore: EntityStore;
 }) => {
-  const variableMapping = componentSettings.variableMappings?.[componentValueKey];
+  const prebindingDefinition = componentSettings.prebindingDefinitions?.[0];
+  if (!prebindingDefinition) return '';
+
+  const variableMapping = prebindingDefinition.variableMappings?.[componentValueKey];
 
   if (!variableMapping) return '';
 
@@ -74,11 +78,15 @@ export const resolveMaybePrebindingDefaultValuePath = ({
   if (!entityStore.experienceEntryFields?.componentSettings) return;
 
   const componentSettings = entityStore.experienceEntryFields.componentSettings;
-  const mapping = componentSettings.variableMappings?.[componentValueKey];
+
+  const prebindingDefinition = componentSettings.prebindingDefinitions?.[0];
+  if (!prebindingDefinition) return '';
+
+  const mapping = prebindingDefinition.variableMappings?.[componentValueKey];
   if (!mapping) return;
 
   const mappingId = mapping.parameterId || '';
-  const prebinding = componentSettings.parameterDefinitions?.[mappingId];
+  const prebinding = prebindingDefinition.parameterDefinitions?.[mappingId];
   if (!prebinding || !prebinding?.defaultSource) return;
 
   const { contentTypeId, link } = prebinding.defaultSource;

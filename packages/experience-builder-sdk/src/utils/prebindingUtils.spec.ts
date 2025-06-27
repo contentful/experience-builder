@@ -335,7 +335,13 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
 
   it('should return undefined when variableMapping is missing', () => {
     const modifiedEntityStore = createEntityStoreWithComponentSettings({
-      variableMappings: {},
+      prebindingDefinitions: [
+        {
+          id: 'prebindingId',
+          parameterDefinitions: {},
+          variableMappings: {},
+        },
+      ],
     });
 
     const result = resolveMaybePrebindingDefaultValuePath({
@@ -348,7 +354,13 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
 
   it('should return undefined when parameterDefinition is missing', () => {
     const modifiedEntityStore = createEntityStoreWithComponentSettings({
-      parameterDefinitions: {},
+      prebindingDefinitions: [
+        {
+          id: 'prebindingId',
+          parameterDefinitions: {},
+          variableMappings: {},
+        },
+      ],
     });
 
     const result = resolveMaybePrebindingDefaultValuePath({
