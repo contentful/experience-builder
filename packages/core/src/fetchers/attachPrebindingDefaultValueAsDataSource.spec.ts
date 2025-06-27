@@ -60,22 +60,27 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
     experience.fields = {
       ...experience.fields,
       componentSettings: {
-        parameterDefinitions: {
-          someField: {
-            defaultSource: {
-              contentTypeId: 'defaultBindingCt',
-              type: 'Entry',
-              link: {
-                sys: {
-                  id: defaultId,
-                  type: 'Link',
-                  linkType: 'Entry',
+        prebindingDefinitions: [
+          {
+            id: 'prebindingId',
+            parameterDefinitions: {
+              someField: {
+                defaultSource: {
+                  contentTypeId: 'defaultBindingCt',
+                  type: 'Entry',
+                  link: {
+                    sys: {
+                      id: defaultId,
+                      type: 'Link',
+                      linkType: 'Entry',
+                    },
+                  },
                 },
+                contentTypes: {},
               },
             },
-            contentTypes: {},
           },
-        },
+        ],
         variableDefinitions: {},
       },
       dataSource: {},
@@ -100,12 +105,17 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
       fields: {
         ...experience.fields,
         componentSettings: {
-          parameterDefinitions: {
-            someField: {
-              contentTypes: {},
-              defaultSource: undefined,
+          prebindingDefinitions: [
+            {
+              id: 'prebindingId',
+              parameterDefinitions: {
+                someField: {
+                  contentTypes: {},
+                  defaultSource: undefined,
+                },
+              },
             },
-          },
+          ],
           variableDefinitions: {},
         },
         dataSource: {},

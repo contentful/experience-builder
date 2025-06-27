@@ -80,13 +80,20 @@ export const ComponentVariablesSchema = z.record(
   ComponentVariableSchema,
 );
 
-const ComponentSettingsSchema = z.object({
-  variableDefinitions: ComponentVariablesSchema,
-  thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
-  category: z.string().max(50, 'Category must contain at most 50 characters').optional(),
+export const PrebindingDefinitionSchema = z.object({
+  id: propertyKeySchema,
   variableMappings: VariableMappingsSchema.optional(),
-  parameterDefinitions: ParameterDefinitionsSchema.optional(),
+  parameterDefinitions: ParameterDefinitionsSchema,
 });
+
+const ComponentSettingsSchema = z
+  .object({
+    variableDefinitions: ComponentVariablesSchema,
+    thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
+    category: z.string().max(50, 'Category must contain at most 50 characters').optional(),
+    prebindingDefinitions: z.array(PrebindingDefinitionSchema).optional(),
+  })
+  .strict();
 
 export const PatternFieldsCMAShapeSchema = z.object({
   componentTree: localeWrapper(ComponentTreeSchema),
