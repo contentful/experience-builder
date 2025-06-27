@@ -12,26 +12,25 @@ import {
 import {
   buildCfStyles,
   checkIsAssemblyNode,
+  getTargetValueInPixels,
   isValidBreakpointValue,
   parseCSSValue,
-  getTargetValueInPixels,
+  stringifyCssProperties,
+  toMediaQuery,
   transformVisibility,
-  // FIXME: Importing the parents parent folder creates a circular dependency
 } from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
 import {
+  BackgroundImageOptions,
   ComponentTreeNode,
   DesignTokensDefinition,
   Experience,
   StyleProps,
-  BackgroundImageOptions,
 } from '@/types';
 import { CF_STYLE_ATTRIBUTES, SUPPORTED_IMAGE_FORMATS } from '@/constants';
-import { stringifyCssProperties } from './stylesUtils';
 import { getOptimizedBackgroundImageAsset } from '../transformers/media/getOptimizedBackgroundImageAsset';
 import { AssetDetails, AssetFile } from 'contentful';
-import { toMediaQuery } from './toMediaQuery';
 
 type FlattenedDesignTokens = Record<
   string,
@@ -186,7 +185,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       );
       // We always need an explicit value when using disjunct media queries
       // Example: desktop uses "false" and tablet is undefined -> we need to set `display: none` for tablet as well.
-      let previousVisibilityValue: boolean | undefined;
+      let previousVisibilityValue: boolean | undefined = undefined;
 
       /* [Data format] `propsByBreakpoint` is a map of "breakpointId > propertyName > plainValue":
        * {
@@ -202,7 +201,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       const currentNodeClassNames: string[] = [];
       // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
       // e.g. `{outerPatternNodeId}{innerPatternNodeId}-{currentNodeId}`
-      // (!) Notice that the chain of patterns (before the dash) follows the format of prebinding/ patternProperties
+      // (!) Notice that the chain of patterns (before the dash) follows the format of prebinding/ parameters
       const currentNodeIdsChain = `${wrappingPatternNodeIds.join('')}-${currentNode.id}`;
 
       // For each breakpoint, resolve design tokens, create the CSS and generate a unique className.
@@ -321,7 +320,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
   // once the whole tree was traversed, for each breakpoint, I aggregate the styles
   // for each generated className into one css string
-  const stylesheet = Object.values(mediaQueryDataByBreakpoint).reduce(
+  return Object.values(mediaQueryDataByBreakpoint).reduce(
     (acc, { condition, cssByClassName, visibilityCssByClassName }, index) => {
       const mediaQueryCss = toMediaQuery({ cssByClassName, condition });
 
@@ -338,8 +337,6 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     },
     '',
   );
-
-  return stylesheet;
 };
 
 /**
@@ -355,7 +352,7 @@ const injectDefaultValuesForComponentValues = ({
   wrapperComponentSettings?: ExperienceComponentSettings;
 }): Record<string, ComponentPropertyValue> => {
   const propertyDefinitions = wrapperComponentSettings?.variableDefinitions;
-  const resolvedProperties = Object.entries(patternNode.variables).reduce(
+  return Object.entries(patternNode.variables).reduce(
     (resolvedProperties, [propertyName, propertyValue]) => {
       if (propertyValue.type === 'ComponentValue') {
         const componentValueKey = propertyValue.key;
@@ -372,7 +369,6 @@ const injectDefaultValuesForComponentValues = ({
     },
     {},
   );
-  return resolvedProperties;
 };
 
 /**
@@ -395,18 +391,17 @@ const resolveComponentVariablesOverwrites = ({
   // In case of rendering a pattern entry, there are no custom ComponentValues.
   // So we pass down the default values from this pattern node down to each deeper pattern level.
   if (!wrapperComponentVariablesOverwrites) {
-    const nextComponentVariablesOverwrites = injectDefaultValuesForComponentValues({
+    return injectDefaultValuesForComponentValues({
       patternNode,
       wrapperComponentSettings,
     });
-    return nextComponentVariablesOverwrites;
   }
 
   // Rendering (nested) pattern node inside another pattern node (for both experience & pattern entry):
   // The `wrapperComponentVariablesOverwrites` from the top-most pattern node is passed through to each child
   // node (and nested pattern nodes). It replaces each ComponentValue in the subtree with either the overwrite
   // or the default value.
-  const nextComponentVariablesOverwrites = Object.entries(patternNode?.variables).reduce(
+  return Object.entries(patternNode?.variables).reduce(
     (resolvedValues, [propertyName, propertyValue]) => {
       if (propertyValue.type === 'ComponentValue') {
         // Copying the values from the parent node
@@ -426,7 +421,6 @@ const resolveComponentVariablesOverwrites = ({
     },
     {},
   );
-  return nextComponentVariablesOverwrites;
 };
 
 export const isCfStyleAttribute = (variableName: string): variableName is keyof StyleProps => {
@@ -501,13 +495,12 @@ const transformMedia = (boundAsset: Asset, width?: string, options?: BackgroundI
     const targetValue = targetWidthObject ? getTargetValueInPixels(targetWidthObject) : assetWidth;
 
     if (targetValue < assetWidth) width = `${targetValue}px`;
-    const value = getOptimizedBackgroundImageAsset(
+    return getOptimizedBackgroundImageAsset(
       asset.fields.file as AssetFile,
       width as string,
       options.quality,
       options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
     );
-    return value;
   } catch (error) {
     console.error('Error transforming image asset', error);
   }

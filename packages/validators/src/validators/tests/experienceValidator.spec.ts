@@ -1,6 +1,6 @@
 import { experience, experiencePattern } from '@/test/__fixtures__/v2023_09_28';
 import { describe, it, expect } from 'vitest';
-import { validateExperienceFields } from '../validateExperienceFields';
+import { validateExperienceFields } from '@/validators';
 import * as validatePattern from '@/validators/validatePatternFields';
 import { vi } from 'vitest';
 
@@ -22,13 +22,13 @@ describe(`${schemaVersion} version`, () => {
     expect(error?.details).toBe(`The property "${field}" is required here`);
   });
 
-  it('should return an error if patternPropertyDefinitions contentTypes do not use a link reference', () => {
+  it('should return an error if parameterDefinitions contentTypes do not use a link reference', () => {
     const clonedExperiencePattern = JSON.parse(JSON.stringify(experiencePattern));
     // @ts-ignore - force type for invalid contentTypes test
-    clonedExperiencePattern.fields.componentSettings['en-US'].patternPropertyDefinitions[
+    clonedExperiencePattern.fields.componentSettings['en-US'].parameterDefinitions[
       '8v3GB67qF5f'
     ].contentTypes.productFeatureTopic = {
-      ...clonedExperiencePattern.fields.componentSettings['en-US'].patternPropertyDefinitions[
+      ...clonedExperiencePattern.fields.componentSettings['en-US'].parameterDefinitions[
         '8v3GB67qF5f'
       ].contentTypes.productFeatureTopic.sys,
     };
