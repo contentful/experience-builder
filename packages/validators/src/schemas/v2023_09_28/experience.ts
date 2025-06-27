@@ -11,7 +11,7 @@ import {
   HyperlinkValueSchema,
   localeWrapper,
   NoValueSchema,
-  PatternPropertySchema,
+  ParameterSchema,
   PrimitiveValueSchema,
   UnboundValueSchema,
   UnboundValuesSchema,
@@ -41,5 +41,5 @@ export type UnboundValue = z.infer<typeof UnboundValueSchema>;
 export type HyperlinkValue = z.infer<typeof HyperlinkValueSchema>;
 export type ComponentValue = z.infer<typeof ComponentValueSchema>;
 export type BindingSourceTypeEnum = z.infer<typeof BindingSourceTypeEnumSchema>;
-export type PatternProperty = z.infer<typeof PatternPropertySchema>;
+export type Parameter = z.infer<typeof ParameterSchema>;
 export { breakpointsRefinement };

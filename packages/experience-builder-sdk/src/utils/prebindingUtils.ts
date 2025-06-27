@@ -2,30 +2,28 @@ import { EntityStore } from '@contentful/experiences-core';
 import {
   ComponentPropertyValue,
   ExperienceComponentSettings,
-  PatternProperty,
+  Parameter,
 } from '@contentful/experiences-validators';
 
 export const shouldUsePrebinding = ({
   componentValueKey,
   componentSettings,
-  patternProperties,
+  parameters,
   variable,
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
-  patternProperties: Record<string, PatternProperty>;
+  parameters: Record<string, Parameter>;
   variable: ComponentPropertyValue;
 }) => {
-  const { patternPropertyDefinitions, variableMappings } = componentSettings;
+  const { parameterDefinitions, variableMappings } = componentSettings;
 
   const variableMapping = variableMappings?.[componentValueKey];
 
-  const patternPropertyDefinition =
-    patternPropertyDefinitions?.[variableMapping?.patternPropertyDefinitionId || ''];
-  const patternProperty = patternProperties?.[variableMapping?.patternPropertyDefinitionId || ''];
+  const parameterDefinition = parameterDefinitions?.[variableMapping?.parameterId || ''];
+  const parameter = parameters?.[variableMapping?.parameterId || ''];
 
-  const isValidForPrebinding =
-    !!patternPropertyDefinition && !!patternProperty && !!variableMapping;
+  const isValidForPrebinding = !!parameterDefinition && !!parameter && !!variableMapping;
 
   return isValidForPrebinding && variable?.type === 'NoValue';
 };
@@ -33,23 +31,23 @@ export const shouldUsePrebinding = ({
 export const resolvePrebindingPath = ({
   componentValueKey,
   componentSettings,
-  patternProperties,
+  parameters,
   entityStore,
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
-  patternProperties: Record<string, PatternProperty>;
+  parameters: Record<string, Parameter>;
   entityStore: EntityStore;
 }) => {
   const variableMapping = componentSettings.variableMappings?.[componentValueKey];
 
   if (!variableMapping) return '';
 
-  const patternProperty = patternProperties?.[variableMapping.patternPropertyDefinitionId];
+  const parameter = parameters?.[variableMapping.parameterId];
 
-  if (!patternProperty) return '';
+  if (!parameter) return '';
 
-  const dataSourceKey = patternProperty.path.split('/')[1];
+  const dataSourceKey = parameter.path.split('/')[1];
 
   const entityLink = entityStore.dataSource[dataSourceKey];
   if (!entityLink) return '';
@@ -63,5 +61,38 @@ export const resolvePrebindingPath = ({
 
   if (!fieldPath) return '';
 
-  return patternProperty.path + fieldPath;
+  return parameter.path + fieldPath;
+};
+
+export const resolveMaybePrebindingDefaultValuePath = ({
+  componentValueKey,
+  entityStore,
+}: {
+  componentValueKey: string;
+  entityStore: EntityStore;
+}): string | undefined => {
+  if (!entityStore.experienceEntryFields?.componentSettings) return;
+
+  const componentSettings = entityStore.experienceEntryFields.componentSettings;
+  const prebinding = componentSettings.variableMappings?.[componentValueKey];
+  if (!prebinding) return;
+
+  const mappingId = prebinding.parameterId || '';
+  const mapping = componentSettings.parameterDefinitions?.[mappingId];
+  if (!mapping || !mapping?.defaultValue) return;
+
+  const [[contentTypeId, defaultEntryLink]] = Object.entries(mapping.defaultValue);
+  if (contentTypeId in mapping.contentTypes) {
+    return resolvePrebindingPath({
+      componentValueKey,
+      entityStore,
+      componentSettings,
+      parameters: {
+        [mappingId]: {
+          path: `/${defaultEntryLink.sys.id}`,
+          type: 'BoundValue',
+        },
+      },
+    });
+  }
 };

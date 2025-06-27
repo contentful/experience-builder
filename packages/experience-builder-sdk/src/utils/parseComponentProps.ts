@@ -30,6 +30,12 @@ const isSpecialCaseCssProp = (propName: string) => {
  * 4) Those DesignValue props which can NOT be converted to CSS (custom design props) should be resolved dynamically
  * for each breakpoint
  */
+type ResolveBoundValueType = (data: {
+  propertyName: string;
+  dataType: ComponentDefinitionVariableType;
+  binding: BoundValue;
+}) => BoundComponentPropertyTypes;
+
 export const parseComponentProps = ({
   breakpoints,
   mainBreakpoint,
@@ -40,6 +46,7 @@ export const parseComponentProps = ({
   resolveBoundValue,
   resolveHyperlinkValue,
   resolveUnboundValue,
+  resolvePrebindingValue,
 }: {
   breakpoints: Breakpoint[];
   mainBreakpoint: Breakpoint;
@@ -47,15 +54,17 @@ export const parseComponentProps = ({
   patternRootNodeIdsChain?: string;
   node: ComponentTreeNode;
   resolveDesignValue: ResolveDesignValueType;
-  resolveBoundValue: (data: {
-    propertyName: string;
-    dataType: ComponentDefinitionVariableType;
-    binding: BoundValue;
-  }) => BoundComponentPropertyTypes;
+  resolveBoundValue: ResolveBoundValueType;
   resolveHyperlinkValue: (data: { linkTargetKey: string }) => string | null;
   resolveUnboundValue: (data: {
     mappingKey: string;
     defaultValue: ComponentDefinitionVariable['defaultValue'];
+  }) => PrimitiveValue;
+  resolvePrebindingValue: (data: {
+    propertyName: string;
+    mappingKey: string;
+    dataType: ComponentDefinitionVariableType;
+    resolveBoundValue: ResolveBoundValueType;
   }) => PrimitiveValue;
 }) => {
   const styleProps: Record<string, DesignValue['valuesByBreakpoint']> = {};
@@ -118,12 +127,24 @@ export const parseComponentProps = ({
         }
         break;
       }
-      case 'ComponentValue':
-        // We're rendering a pattern entry. Content cannot be set for ComponentValue type properties
-        // directly in the pattern so we can safely use the default value
-        // This can either be a design (style) or a content variable
-        contentProps[propName] = propDefinition.defaultValue;
+      case 'ComponentValue': {
+        // This can either be a design (style) or a content property.
+        // Where prebinding is used, we resolve like they are a BoundValue.
+        const propValue =
+          resolvePrebindingValue({
+            propertyName: propName,
+            mappingKey: propertyValue.key,
+            dataType: propDefinition.type,
+            resolveBoundValue,
+          }) ?? propDefinition.defaultValue;
+
+        if (isSpecialCaseCssProp(propName)) {
+          styleProps[propName] = { [mainBreakpoint.id]: propValue };
+        } else {
+          contentProps[propName] = propValue;
+        }
         break;
+      }
       default:
         break;
     }
