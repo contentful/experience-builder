@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.42.0](https://github.com/contentful/experience-builder/compare/v1.41.0...v1.42.0) (2025-06-27)
+
+### Features
+
+- resolves pre bound field mappings in preview mode [SPA-2852] ([#1184](https://github.com/contentful/experience-builder/issues/1184)) ([3f313ab](https://github.com/contentful/experience-builder/commit/3f313ab8774b5bd829c264d09b00586e82ba8725))
+
 ## [1.41.0](https://github.com/contentful/experience-builder/compare/v1.40.2...v1.41.0) (2025-06-13)
 
 ### Features
