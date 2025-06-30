@@ -5,7 +5,7 @@ import { checkIsAssemblyEntry, isLink } from '@/utils';
 import { SIDELOADED_PREFIX } from '@/constants';
 
 type PatternEntry = ExperienceEntry; // alias for clarity
-type ParameterDefinitions = ExperienceComponentSettings['parameterDefinitions'];
+type ParameterDefinitions = Record<string, ParameterDefinition>;
 
 /**
  * Attaches the default prebinding value (if any) to the experience entry's dataSource.
@@ -73,7 +73,7 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
 
   // Sideload all default values for the parent pattern
   const definitions: ParameterDefinitions =
-    patternEntry.fields.componentSettings?.parameterDefinitions ?? {};
+    patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions ?? {};
 
   Object.entries(definitions).forEach(([id, definition]) => {
     addDefaultValueToDataSource(id, definition);
@@ -87,7 +87,8 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
 
   nestedPatternEntries.forEach((nestedPatternEntry) => {
     const nestedParameterDefinitions: ParameterDefinitions =
-      nestedPatternEntry.fields.componentSettings?.parameterDefinitions ?? {};
+      nestedPatternEntry.fields.componentSettings?.prebindingDefinitions?.[0]
+        .parameterDefinitions ?? {};
 
     Object.entries(nestedParameterDefinitions).forEach(([id, definition]) => {
       addDefaultValueToDataSource(id, definition);
