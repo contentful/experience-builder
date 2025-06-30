@@ -23,12 +23,12 @@ type PatternPropertyDefinitions = NonNullable<
 type VariableMappings = NonNullable<ExperienceComponentSettings['variableMappings']>;
 
 export class EntityStore extends EntityStoreBase {
-  private _experienceEntryFields: ExperienceFields | undefined;
-  private _experienceEntryId: string | undefined;
-  private _unboundValues: ExperienceUnboundValues | undefined;
-  private _usedComponentsWithDeepReferences: ExperienceEntry[];
-  private _patternPropertyDefinitions: PatternPropertyDefinitions;
-  private _variableMappings: VariableMappings;
+  /* serialized */ private _experienceEntryFields: ExperienceFields | undefined;
+  /* serialized */ private _experienceEntryId: string | undefined;
+  /* serialized */ private _unboundValues: ExperienceUnboundValues | undefined;
+  /* derived    */ private _usedComponentsWithDeepReferences: ExperienceEntry[];
+  /* derived    */ private _patternPropertyDefinitions: PatternPropertyDefinitions;
+  /* derived    */ private _variableMappings: VariableMappings;
 
   constructor(json: string);
   constructor({ experienceEntry, entities, locale }: EntityStoreArgs);
@@ -75,7 +75,7 @@ export class EntityStore extends EntityStoreBase {
         this._variableMappings,
         (experienceEntry as ExperienceEntry).fields.componentSettings?.variableMappings || {},
       );
-      // Register prebinding presets from the NESTED PATTERNS
+      // Register prebinding presets from the N1 NESTED PATTERNS
       const usedComponentLinks = (experienceEntry as ExperienceEntry).fields?.usedComponents ?? [];
       const usedComponents: ExperienceEntry[] = usedComponentLinks
         .map((component) => (isLink(component) ? this.getEntityFromLink(component) : component))
