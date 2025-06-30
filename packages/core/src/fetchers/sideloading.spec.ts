@@ -34,10 +34,12 @@ describe('sideloadPrebindingDefaultValues', () => {
       parentPattern.fields = {
         ...parentPattern.fields,
         componentSettings: {
-          patternPropertyDefinitions: {
+          parameterDefinitions: {
             ppdId111: {
-              defaultValue: {
-                ct111: {
+              defaultSource: {
+                type: 'Entry',
+                contentTypeId: 'ct111',
+                link: {
                   sys: {
                     id: defaultEntryId,
                     type: 'Link',
@@ -64,7 +66,7 @@ describe('sideloadPrebindingDefaultValues', () => {
           variableMappings: {
             someField: {
               type: 'ContentTypeMapping',
-              patternPropertyDefinitionId: 'ppdId111',
+              parameterId: 'ppdId111',
               pathsByContentType: {},
             },
           },
@@ -112,10 +114,12 @@ describe('sideloadPrebindingDefaultValues', () => {
       parentPattern.fields = {
         ...parentPattern.fields,
         componentSettings: {
-          patternPropertyDefinitions: {
+          parameterDefinitions: {
             ppdId111: {
-              defaultValue: {
-                ct111: {
+              defaultSource: {
+                type: 'Entry',
+                contentTypeId: 'ct111',
+                link: {
                   sys: {
                     id: defaultEntryIdForCt111,
                     type: 'Link',
@@ -134,8 +138,10 @@ describe('sideloadPrebindingDefaultValues', () => {
               },
             },
             ppdId222: {
-              defaultValue: {
-                ct222: {
+              defaultSource: {
+                type: 'Entry',
+                contentTypeId: 'ct222',
+                link: {
                   sys: {
                     id: defaultEntryIdForCt222,
                     type: 'Link',
@@ -165,12 +171,12 @@ describe('sideloadPrebindingDefaultValues', () => {
           variableMappings: {
             someField: {
               type: 'ContentTypeMapping',
-              patternPropertyDefinitionId: 'ppdId111',
+              parameterId: 'ppdId111',
               pathsByContentType: {},
             },
             someField222: {
               type: 'ContentTypeMapping',
-              patternPropertyDefinitionId: 'ppdId222',
+              parameterId: 'ppdId222',
               pathsByContentType: {},
             },
           },
@@ -223,7 +229,7 @@ describe('sideloadPrebindingDefaultValues', () => {
         fields: {
           ...parentPattern.fields,
           componentSettings: {
-            patternPropertyDefinitions: {
+            parameterDefinitions: {
               ppdId111: {
                 contentTypes: {
                   ct111: {
@@ -234,7 +240,7 @@ describe('sideloadPrebindingDefaultValues', () => {
                     },
                   },
                 },
-                defaultValue: undefined,
+                defaultSource: undefined,
               },
             },
             variableDefinitions: {
@@ -245,7 +251,7 @@ describe('sideloadPrebindingDefaultValues', () => {
             variableMappings: {
               someField: {
                 type: 'ContentTypeMapping',
-                patternPropertyDefinitionId: 'ppdId111',
+                parameterId: 'ppdId111',
                 pathsByContentType: {},
               },
             },
@@ -267,7 +273,7 @@ describe('sideloadPrebindingDefaultValues', () => {
         fields: {
           ...parentPattern.fields,
           componentSettings: {
-            patternPropertyDefinitions: {
+            parameterDefinitions: {
               ppdId111: {
                 contentTypes: {
                   ct111: {
@@ -278,14 +284,15 @@ describe('sideloadPrebindingDefaultValues', () => {
                     },
                   },
                 },
-                defaultValue: {
-                  ct111: {
-                    // Anything that's not a valid link
+                defaultSource: {
+                  type: 'Entry',
+                  contentTypeId: 'ct111',
+                  link: {
                     sys: {
-                      id: 'ct111',
+                      id: 'this-should-be-invalid-link',
                       // @ts-expect-error forcing an invalid type for testing
                       type: 'NOT_A_LINK',
-                      linkType: 'Entry', // This is not a valid link for defaultValue
+                      linkType: 'Entry',
                     },
                   },
                 },
@@ -299,7 +306,7 @@ describe('sideloadPrebindingDefaultValues', () => {
             variableMappings: {
               someField: {
                 type: 'ContentTypeMapping',
-                patternPropertyDefinitionId: 'ppdId111',
+                parameterId: 'ppdId111',
                 pathsByContentType: {},
               },
             },
@@ -323,10 +330,12 @@ describe('sideloadPrebindingDefaultValues', () => {
       n1pattern = createPatternEntry({ id: 'n1pattern123' });
       n1pattern.fields.componentSettings = {
         ...n1pattern.fields.componentSettings, // eg. to preserve .variableDefinitions
-        patternPropertyDefinitions: {
+        parameterDefinitions: {
           n1ppd111: {
-            defaultValue: {
-              n1ct111: {
+            defaultSource: {
+              type: 'Entry',
+              contentTypeId: 'n1ct111',
+              link: {
                 sys: {
                   id: n1DefaultEntryId,
                   type: 'Link',
@@ -353,7 +362,7 @@ describe('sideloadPrebindingDefaultValues', () => {
         variableMappings: {
           n1someField: {
             type: 'ContentTypeMapping',
-            patternPropertyDefinitionId: 'n1ppd111',
+            parameterId: 'n1ppd111',
             pathsByContentType: {},
           },
         },
@@ -365,10 +374,12 @@ describe('sideloadPrebindingDefaultValues', () => {
       parentPattern.fields = {
         ...parentPattern.fields,
         componentSettings: {
-          patternPropertyDefinitions: {
+          parameterDefinitions: {
             ppdId111: {
-              defaultValue: {
-                ct111: {
+              defaultSource: {
+                type: 'Entry',
+                contentTypeId: 'ct111',
+                link: {
                   sys: {
                     id: defaultEntryId,
                     type: 'Link',
@@ -395,7 +406,7 @@ describe('sideloadPrebindingDefaultValues', () => {
           variableMappings: {
             someField: {
               type: 'ContentTypeMapping',
-              patternPropertyDefinitionId: 'ppdId111',
+              parameterId: 'ppdId111',
               pathsByContentType: {},
             },
           },
