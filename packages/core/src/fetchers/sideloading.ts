@@ -1,11 +1,11 @@
 import type { Entry } from 'contentful';
 import type { ExperienceEntry, ExperienceComponentSettings } from '@/types';
-import type { PatternPropertyDefinition } from '@contentful/experiences-validators';
+import type { ParameterDefinition } from '@contentful/experiences-validators';
 import { checkIsAssemblyEntry, isLink } from '@/utils';
 import { SIDELOADED_PREFIX } from '@/constants';
 
 type PatternEntry = ExperienceEntry; // alias for clarity
-type PatternPropertyDefinitions = ExperienceComponentSettings['patternPropertyDefinitions'];
+type ParameterDefinitions = ExperienceComponentSettings['parameterDefinitions'];
 
 /**
  * Attaches the default prebinding value (if any) to the experience entry's dataSource.
@@ -19,19 +19,29 @@ type PatternPropertyDefinitions = ExperienceComponentSettings['patternPropertyDe
 export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): false | number => {
   let sideloadedCount = 0;
 
-  const addDefaultValueToDataSource = (ppdID: string, ppd: PatternPropertyDefinition) => {
-    if (!ppd.defaultValue) {
+  const addDefaultValueToDataSource = (_definitionId: string, definition: ParameterDefinition) => {
+    if (!definition.defaultSource) {
       // prebinding preset doesn't have default value, which is perfectly fine
       return;
     }
-    const [[, defaultEntryLink]] = Object.entries(ppd.defaultValue);
 
-    if (!isLink(defaultEntryLink)) {
+    const {
+      contentTypeId,
+      link,
+      type, // Today, it means that defaultSource is a link to a Contentful Entry, but in the future it could be a link to third party resource or smth.
+      // this .type enumeration will not have the same meaning as `Link#sys#linkType`.
+    } = definition.defaultSource;
+    // const [[, defaultEntryLink]] = Object.entries(definition.defaultValue); // TODO: this is extracting of the default value...  I need to adjust it to the way it is done in DanV's PR
+
+    if (!isLink(link)) {
       // default value is not a link, maybe due to a bug
       return;
     }
 
-    const defaultEntryId = defaultEntryLink.sys.id;
+    if (!type || !contentTypeId) {
+      // broken data structure, unlikely to happen, only due to a bug
+      return;
+    }
 
     // Throw in the link to the default-entry into the dataSource, this way
     // we rely on the mechanism of fetchReferencedEntities() to "sideload" them.
@@ -43,12 +53,12 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
     // eg. { type: 'BoundValue', path: '/sideloaded_uuid/fields/title' }
     patternEntry.fields.dataSource = {
       ...patternEntry.fields.dataSource,
-      [`${SIDELOADED_PREFIX}${defaultEntryId}`]: {
+      [`${SIDELOADED_PREFIX}${link.sys.id}`]: {
         // to highlight that this is a sideloaded entry, we prefix it
         sys: {
           type: 'Link',
-          linkType: 'Entry', // TODO: this can be taking type from the ppd  { link , type }
-          id: defaultEntryId,
+          linkType: link.sys.linkType,
+          id: link.sys.id,
         },
       },
     };
@@ -62,11 +72,11 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
   }
 
   // Sideload all default values for the parent pattern
-  const definitions: PatternPropertyDefinitions =
-    patternEntry.fields.componentSettings?.patternPropertyDefinitions ?? {};
+  const definitions: ParameterDefinitions =
+    patternEntry.fields.componentSettings?.parameterDefinitions ?? {};
 
-  Object.entries(definitions).forEach(([ppdID, ppd]) => {
-    addDefaultValueToDataSource(ppdID, ppd);
+  Object.entries(definitions).forEach(([id, definition]) => {
+    addDefaultValueToDataSource(id, definition);
   });
 
   // Sideload all default values for the L1 nested patterns
@@ -76,11 +86,11 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
   );
 
   nestedPatternEntries.forEach((nestedPatternEntry) => {
-    const nestedPatternDefs: PatternPropertyDefinitions =
-      nestedPatternEntry.fields.componentSettings?.patternPropertyDefinitions ?? {};
+    const nestedParameterDefinitions: ParameterDefinitions =
+      nestedPatternEntry.fields.componentSettings?.parameterDefinitions ?? {};
 
-    Object.entries(nestedPatternDefs).forEach(([ppdID, ppd]) => {
-      addDefaultValueToDataSource(ppdID, ppd);
+    Object.entries(nestedParameterDefinitions).forEach(([id, definition]) => {
+      addDefaultValueToDataSource(id, definition);
     });
   });
 
