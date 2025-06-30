@@ -90,8 +90,9 @@ export const ComponentVariablesSchema = z.record(
 export const PrebindingDefinitionSchema = z
   .object({
     id: propertyKeySchema,
-    variableMappings: VariableMappingsSchema.optional(),
     parameterDefinitions: ParameterDefinitionsSchema,
+    variableMappings: VariableMappingsSchema.optional(),
+    allowedVariableOverrides: z.array(z.string()).optional(),
   })
   .strict();
 
