@@ -22,14 +22,19 @@ describe('shouldUsePrebinding', () => {
   it('should return true when all conditions are met', () => {
     const componentValueKey = 'testKey';
     const componentSettings = {
-      parameterDefinitions: {
-        testParameterId: {},
-      },
-      variableMappings: {
-        testKey: {
-          parameterId: 'testParameterId',
+      prebindingDefinitions: [
+        {
+          id: 'prebindingDefinition1',
+          parameterDefinitions: {
+            testParameterId: {},
+          },
+          variableMappings: {
+            testKey: {
+              parameterId: 'testParameterId',
+            },
+          },
         },
-      },
+      ],
     } as unknown as ExperienceComponentSettings;
     const parameters = {
       testParameterId: {},
@@ -137,17 +142,22 @@ describe('resolvePrebindingPath', () => {
   it('should return the correct path when all conditions are met', () => {
     const componentValueKey = 'testKey';
     const componentSettings = {
-      parameterDefinitions: {},
       variableDefinitions: {},
-      variableMappings: {
-        testKey: {
-          type: 'ContentTypeMapping',
-          parameterId: 'testParameterId',
-          pathsByContentType: {
-            testContentType: { path: '/fields/testField' },
+      prebindingDefinitions: [
+        {
+          id: 'prebindingDefinition1',
+          parameterDefinitions: {},
+          variableMappings: {
+            testKey: {
+              type: 'ContentTypeMapping',
+              parameterId: 'testParameterId',
+              pathsByContentType: {
+                testContentType: { path: '/fields/testField' },
+              },
+            },
           },
         },
-      },
+      ],
     } as unknown as ExperienceComponentSettings;
     const parameters: Record<string, Parameter> = {
       testParameterId: {
@@ -295,29 +305,34 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
           ...experienceEntry.fields,
           componentSettings: {
             ...experienceEntry.fields.componentSettings,
-            parameterDefinitions: {
-              testParameterId: {
-                defaultSource: {
-                  contentTypeId: 'testContentType',
-                  type: 'Entry',
-                  link: {
-                    sys: { id: defaultEntryId, type: 'Link', linkType: 'Entry' },
+            prebindingDefinitions: [
+              {
+                id: 'prebindingDefinition1',
+                parameterDefinitions: {
+                  testParameterId: {
+                    defaultSource: {
+                      contentTypeId: 'testContentType',
+                      type: 'Entry',
+                      link: {
+                        sys: { id: defaultEntryId, type: 'Link', linkType: 'Entry' },
+                      },
+                    },
+                    contentTypes: {
+                      testContentType: {},
+                    },
                   },
                 },
-                contentTypes: {
-                  testContentType: {},
+                variableMappings: {
+                  testKey: {
+                    type: 'ContentTypeMapping',
+                    parameterId: 'testParameterId',
+                    pathsByContentType: {
+                      testContentType: { path: '/fields/testField' },
+                    },
+                  },
                 },
               },
-            },
-            variableMappings: {
-              testKey: {
-                type: 'ContentTypeMapping',
-                parameterId: 'testParameterId',
-                pathsByContentType: {
-                  testContentType: { path: '/fields/testField' },
-                },
-              },
-            },
+            ],
             ...componentSettingsOverrides,
           },
           dataSource: {
@@ -469,7 +484,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     const modifiedEntityStore = createEntityStoreWithComponentSettings({
       prebindingDefinitions: [
         {
-          id: 'testPrebindingDefinitionId',
+          id: 'prebindingId',
           parameterDefinitions: {},
           variableMappings: {},
         },
@@ -488,8 +503,9 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     const modifiedEntityStore = createEntityStoreWithComponentSettings({
       prebindingDefinitions: [
         {
-          id: 'testPrebindingDefinitionId',
+          id: 'prebindingId',
           parameterDefinitions: {},
+          variableMappings: {},
         },
       ],
     });
@@ -506,7 +522,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     const modifiedEntityStore = createEntityStoreWithComponentSettings({
       prebindingDefinitions: [
         {
-          id: 'testPrebindingDefinitionId',
+          id: 'prebindingDefinition1',
           parameterDefinitions: {
             testParameterId: {
               contentTypes: {

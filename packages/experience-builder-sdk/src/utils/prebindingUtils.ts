@@ -17,7 +17,8 @@ export const shouldUsePrebinding = ({
   parameters: Record<string, Parameter>;
   variable: ComponentPropertyValue;
 }) => {
-  const { parameterDefinitions, variableMappings } = componentSettings;
+  const { prebindingDefinitions } = componentSettings;
+  const { parameterDefinitions, variableMappings } = prebindingDefinitions?.[0] || {};
 
   const variableMapping = variableMappings?.[componentValueKey];
 
@@ -40,7 +41,10 @@ export const resolvePrebindingPath = ({
   parameters: Record<string, Parameter>;
   entityStore: EntityStore;
 }) => {
-  const variableMapping = componentSettings.variableMappings?.[componentValueKey];
+  const prebindingDefinition = componentSettings.prebindingDefinitions?.[0];
+  if (!prebindingDefinition) return '';
+
+  const variableMapping = prebindingDefinition.variableMappings?.[componentValueKey];
 
   if (!variableMapping) return '';
 
