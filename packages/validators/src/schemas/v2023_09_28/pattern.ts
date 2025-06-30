@@ -80,11 +80,22 @@ export const ComponentVariablesSchema = z.record(
   ComponentVariableSchema,
 );
 
-export const PrebindingDefinitionSchema = z.object({
-  id: propertyKeySchema,
-  variableMappings: VariableMappingsSchema.optional(),
-  parameterDefinitions: ParameterDefinitionsSchema,
-});
+export const PassToNodeSchema = z
+  .object({
+    nodeId: propertyKeySchema,
+    parameterId: propertyKeySchema,
+    prebindingId: propertyKeySchema,
+  })
+  .strict();
+
+export const PrebindingDefinitionSchema = z
+  .object({
+    id: propertyKeySchema,
+    variableMappings: VariableMappingsSchema.optional(),
+    parameterDefinitions: ParameterDefinitionsSchema,
+    passToNodes: z.array(PassToNodeSchema).optional(),
+  })
+  .strict();
 
 const ComponentSettingsSchema = z
   .object({
