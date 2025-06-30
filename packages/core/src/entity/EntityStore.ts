@@ -1,6 +1,11 @@
 import type { Asset, Entry, UnresolvedLink } from 'contentful';
 import { isExperienceEntry } from '@/utils';
-import type { ExperienceFields, ExperienceUnboundValues, ExperienceEntry } from '@/types';
+import type {
+  ExperienceFields,
+  ExperienceUnboundValues,
+  ExperienceEntry,
+  ExperienceComponentSettings,
+} from '@/types';
 import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
@@ -12,11 +17,16 @@ type EntityStoreArgs = {
   locale: string;
 };
 
+type ParameterDefinitions = NonNullable<ExperienceComponentSettings['parameterDefinitions']>;
+type VariableMappings = NonNullable<ExperienceComponentSettings['variableMappings']>;
+
 export class EntityStore extends EntityStoreBase {
-  private _experienceEntryFields: ExperienceFields | undefined;
-  private _experienceEntryId: string | undefined;
-  private _unboundValues: ExperienceUnboundValues | undefined;
-  private _usedComponentsWithDeepReferences: ExperienceEntry[];
+  /* serialized */ private _experienceEntryFields: ExperienceFields | undefined;
+  /* serialized */ private _experienceEntryId: string | undefined;
+  /* serialized */ private _unboundValues: ExperienceUnboundValues | undefined;
+  /* derived    */ private _usedComponentsWithDeepReferences: ExperienceEntry[];
+  /* derived    */ private _parameterDefinitions: ParameterDefinitions;
+  /* derived    */ private _variableMappings: VariableMappings;
 
   constructor(json: string);
   constructor({ experienceEntry, entities, locale }: EntityStoreArgs);
@@ -33,6 +43,9 @@ export class EntityStore extends EntityStoreBase {
         ],
         locale: serializedAttributes.locale,
       });
+      this._parameterDefinitions = {};
+      this._variableMappings = {};
+      // TODO: need to figure how to register prebinding presets from the PARENT PATTERN and NESTED PATTERNS
       this._experienceEntryFields = serializedAttributes._experienceEntryFields;
       this._experienceEntryId = serializedAttributes._experienceEntryId;
       this._unboundValues = serializedAttributes._unboundValues;
@@ -43,9 +56,36 @@ export class EntityStore extends EntityStoreBase {
       }
 
       super({ entities, locale });
+      this._parameterDefinitions = {};
+      this._variableMappings = {};
       this._experienceEntryFields = (experienceEntry as ExperienceEntry).fields;
       this._experienceEntryId = (experienceEntry as ExperienceEntry).sys.id;
       this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
+      // Register prebinding presets from the PARENT PATTERN
+      this._parameterDefinitions = Object.assign(
+        this._parameterDefinitions,
+        (experienceEntry as ExperienceEntry).fields.componentSettings?.parameterDefinitions || {},
+      );
+      this._variableMappings = Object.assign(
+        this._variableMappings,
+        (experienceEntry as ExperienceEntry).fields.componentSettings?.variableMappings || {},
+      );
+      // Register prebinding presets from the N1 NESTED PATTERNS
+      const usedComponentLinks = (experienceEntry as ExperienceEntry).fields?.usedComponents ?? [];
+      const usedComponents: ExperienceEntry[] = usedComponentLinks
+        .map((component) => (isLink(component) ? this.getEntityFromLink(component) : component))
+        .filter((component): component is ExperienceEntry => component !== undefined); // TODO: do we need to filter stuff out here? (what if the component is not found?)
+
+      usedComponents.forEach((patternEntry) => {
+        this._parameterDefinitions = {
+          ...this._parameterDefinitions,
+          ...patternEntry.fields.componentSettings?.parameterDefinitions,
+        };
+        this._variableMappings = {
+          ...this._variableMappings,
+          ...patternEntry.fields.componentSettings?.variableMappings,
+        };
+      });
     }
     this._usedComponentsWithDeepReferences = resolveDeepUsedComponents({
       experienceEntryFields: this._experienceEntryFields,
@@ -55,6 +95,14 @@ export class EntityStore extends EntityStoreBase {
 
   public getCurrentLocale() {
     return this.locale;
+  }
+
+  public get variableMappings() {
+    return this._variableMappings;
+  }
+
+  public get parameterDefinitions() {
+    return this._parameterDefinitions;
   }
 
   public get experienceEntryFields() {
