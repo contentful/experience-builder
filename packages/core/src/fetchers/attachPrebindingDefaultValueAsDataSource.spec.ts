@@ -62,8 +62,10 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
       componentSettings: {
         parameterDefinitions: {
           someField: {
-            defaultValue: {
-              defaultBinding: {
+            defaultSource: {
+              contentTypeId: 'defaultBindingCt',
+              type: 'Entry',
+              link: {
                 sys: {
                   id: defaultId,
                   type: 'Link',
@@ -101,7 +103,7 @@ describe('attachPrebindingDefaultValueAsDataSource', () => {
           parameterDefinitions: {
             someField: {
               contentTypes: {},
-              defaultValue: undefined,
+              defaultSource: undefined,
             },
           },
           variableDefinitions: {},
