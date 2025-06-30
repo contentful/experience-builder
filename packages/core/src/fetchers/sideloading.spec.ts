@@ -17,15 +17,24 @@ describe('sideloadPrebindingDefaultValues', () => {
   });
 
   it('should return early if not a pattern', () => {
-    // We intentionally mock experience as denerate shape {}, to ensure that upon
-    // failing to return early, an exception will be thrown eg.
-    // during accessing `experience.fields.componentSettings`
-    // because `fields` is not defined.
-    const experience = {} as unknown as ExperienceEntry;
+    const getterStub = vi.fn();
+    const experience = {
+      get fields() {
+        getterStub();
+        return {
+          componentSettings: {
+            parameterDefinitions: {},
+            variableDefinitions: {},
+          },
+          dataSource: {},
+        };
+      },
+    } as unknown as ExperienceEntry;
 
     mockCheckIsAssemblyEntry.mockReturnValue(false);
 
     expect(sideloadPrebindingDefaultValues(experience)).toBe(false);
+    expect(getterStub).not.toHaveBeenCalled();
   });
 
   describe('to sideload prebinding default value - when parent pattern does not have any nested patterns', () => {
