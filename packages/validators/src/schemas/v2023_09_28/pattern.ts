@@ -43,8 +43,14 @@ const VariableMappingSchema = z.object({
   pathsByContentType: z.record(z.string(), z.object({ path: z.string() })),
 });
 
-// TODO: finalize schema structure before release
-// https://contentful.atlassian.net/browse/LUMOS-523
+export const PassToNodeSchema = z
+  .object({
+    nodeId: propertyKeySchema,
+    parameterId: propertyKeySchema,
+    prebindingId: propertyKeySchema,
+  })
+  .strict();
+
 const ParameterDefinitionSchema = z.object({
   defaultSource: z
     .strictObject({
@@ -69,6 +75,7 @@ const ParameterDefinitionSchema = z.object({
       }),
     }),
   ),
+  passToNodes: z.array(PassToNodeSchema).optional(),
 });
 
 export const ParameterDefinitionsSchema = z.record(propertyKeySchema, ParameterDefinitionSchema);
@@ -80,13 +87,23 @@ export const ComponentVariablesSchema = z.record(
   ComponentVariableSchema,
 );
 
-const ComponentSettingsSchema = z.object({
-  variableDefinitions: ComponentVariablesSchema,
-  thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
-  category: z.string().max(50, 'Category must contain at most 50 characters').optional(),
-  variableMappings: VariableMappingsSchema.optional(),
-  parameterDefinitions: ParameterDefinitionsSchema.optional(),
-});
+export const PrebindingDefinitionSchema = z
+  .object({
+    id: propertyKeySchema,
+    parameterDefinitions: ParameterDefinitionsSchema,
+    variableMappings: VariableMappingsSchema.optional(),
+    allowedVariableOverrides: z.array(z.string()).optional(),
+  })
+  .strict();
+
+const ComponentSettingsSchema = z
+  .object({
+    variableDefinitions: ComponentVariablesSchema,
+    thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
+    category: z.string().max(50, 'Category must contain at most 50 characters').optional(),
+    prebindingDefinitions: z.array(PrebindingDefinitionSchema).max(1).optional(),
+  })
+  .strict();
 
 export const PatternFieldsCMAShapeSchema = z.object({
   componentTree: localeWrapper(ComponentTreeSchema),

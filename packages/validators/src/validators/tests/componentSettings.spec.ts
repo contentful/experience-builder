@@ -174,4 +174,67 @@ describe('componentSettings', () => {
     expect(result.errors).toBeDefined();
     expect(result.errors?.[0].details).toBe('Category must contain at most 50 characters');
   });
+
+  describe('prebindingDefinitions', () => {
+    it('allows to have an optional prebindingDefinitions field', () => {
+      const pattern = {
+        ...experiencePattern,
+        fields: {
+          ...experiencePattern.fields,
+          componentSettings: {
+            [locale]: {
+              variableDefinitions: {},
+              prebindingDefinitions: [],
+            },
+          },
+        },
+      };
+      const result = validateExperienceFields(pattern, schemaVersion);
+      expect(result.success).toBe(true);
+      expect(result.errors).toBeUndefined();
+    });
+
+    it('errors if prebindingDefinitions is not an array', () => {
+      const pattern = {
+        ...experiencePattern,
+        fields: {
+          ...experiencePattern.fields,
+          componentSettings: {
+            [locale]: {
+              variableDefinitions: {},
+              prebindingDefinitions: { id: '1', parameterDefinitions: {} },
+            },
+          },
+        },
+      };
+      const result = validateExperienceFields(pattern, schemaVersion);
+      expect(result.success).toBe(false);
+      expect(result.errors).toBeDefined();
+      expect(result.errors?.[0].details).toBe(
+        'The type of "prebindingDefinitions" is incorrect, expected type: array',
+      );
+    });
+
+    it('errors if prebindingDefinitions is not an array of length 1', () => {
+      const pattern = {
+        ...experiencePattern,
+        fields: {
+          ...experiencePattern.fields,
+          componentSettings: {
+            [locale]: {
+              variableDefinitions: {},
+              prebindingDefinitions: [
+                { id: '1', parameterDefinitions: {} },
+                { id: '2', parameterDefinitions: {} },
+              ],
+            },
+          },
+        },
+      };
+      const result = validateExperienceFields(pattern, schemaVersion);
+      expect(result.success).toBe(false);
+      expect(result.errors).toBeDefined();
+      expect(result.errors?.[0].details).toBe('Array must contain at most 1 element(s)');
+    });
+  });
 });
