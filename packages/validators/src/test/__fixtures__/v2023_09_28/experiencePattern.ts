@@ -296,8 +296,10 @@ export const experiencePattern = {
       'en-US': {
         parameterDefinitions: {
           '8v3GB67qF5f': {
-            defaultValue: {
-              productFeatureTopic: {
+            defaultSource: {
+              contentTypeId: 'productFeatureTopic',
+              type: 'Entry',
+              link: {
                 sys: {
                   id: '2hpuOIh8POJcekFdOLlaDa',
                   linkType: 'Entry',
