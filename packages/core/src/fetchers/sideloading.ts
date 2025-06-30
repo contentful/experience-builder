@@ -1,5 +1,5 @@
 import type { Entry } from 'contentful';
-import type { ExperienceEntry, ExperienceComponentSettings } from '@/types';
+import type { ExperienceEntry } from '@/types';
 import type { ParameterDefinition } from '@contentful/experiences-validators';
 import { checkIsAssemblyEntry, isLink } from '@/utils';
 import { SIDELOADED_PREFIX } from '@/constants';
