@@ -4,7 +4,8 @@ import type {
   ExperienceFields,
   ExperienceUnboundValues,
   ExperienceEntry,
-  ExperienceComponentSettings,
+  VariableMapping,
+  ParameterDefinition,
 } from '@/types';
 import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';
@@ -17,8 +18,8 @@ type EntityStoreArgs = {
   locale: string;
 };
 
-type ParameterDefinitions = NonNullable<ExperienceComponentSettings['parameterDefinitions']>;
-type VariableMappings = NonNullable<ExperienceComponentSettings['variableMappings']>;
+type ParameterDefinitions = NonNullable<Record<string, ParameterDefinition>>;
+type VariableMappings = NonNullable<Record<string, VariableMapping>>;
 
 export class EntityStore extends EntityStoreBase {
   /* serialized */ private _experienceEntryFields: ExperienceFields | undefined;
@@ -64,11 +65,13 @@ export class EntityStore extends EntityStoreBase {
       // Register prebinding presets from the PARENT PATTERN
       this._parameterDefinitions = Object.assign(
         this._parameterDefinitions,
-        (experienceEntry as ExperienceEntry).fields.componentSettings?.parameterDefinitions || {},
+        (experienceEntry as ExperienceEntry).fields.componentSettings?.prebindingDefinitions?.[0]
+          .parameterDefinitions || {},
       );
       this._variableMappings = Object.assign(
         this._variableMappings,
-        (experienceEntry as ExperienceEntry).fields.componentSettings?.variableMappings || {},
+        (experienceEntry as ExperienceEntry).fields.componentSettings?.prebindingDefinitions?.[0]
+          .variableMappings || {},
       );
       // Register prebinding presets from the N1 NESTED PATTERNS
       const usedComponentLinks = (experienceEntry as ExperienceEntry).fields?.usedComponents ?? [];
@@ -79,11 +82,11 @@ export class EntityStore extends EntityStoreBase {
       usedComponents.forEach((patternEntry) => {
         this._parameterDefinitions = {
           ...this._parameterDefinitions,
-          ...patternEntry.fields.componentSettings?.parameterDefinitions,
+          ...patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions,
         };
         this._variableMappings = {
           ...this._variableMappings,
-          ...patternEntry.fields.componentSettings?.variableMappings,
+          ...patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].variableMappings,
         };
       });
     }
