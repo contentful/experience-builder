@@ -47,9 +47,9 @@ export class EntityStore extends EntityStoreBase {
       this._hoistedParameterDefinitions = {};
       this._hoistedVariableMappings = {};
       // TODO: need to figure how to register prebinding presets from the PARENT PATTERN and NESTED PATTERNS
-      this._experienceEntryFields = serializedAttributes._experienceEntryFields;
-      this._experienceEntryId = serializedAttributes._experienceEntryId;
-      this._unboundValues = serializedAttributes._unboundValues;
+      this._experienceEntryFields = serializedAttributes._experienceEntryFields as ExperienceFields; // non-broken deserialization always should result in valid ExperienceFields
+      this._experienceEntryId = serializedAttributes._experienceEntryId as string; // // non-broken deserialization always should result in valid experienceEntryId
+      this._unboundValues = serializedAttributes._unboundValues as ExperienceUnboundValues; // non-broken deserialization always should result in valid unboundValues
     } else {
       const { experienceEntry, entities, locale } = options;
       if (!isExperienceEntry(experienceEntry)) {
@@ -59,41 +59,74 @@ export class EntityStore extends EntityStoreBase {
       super({ entities, locale });
       this._hoistedParameterDefinitions = {};
       this._hoistedVariableMappings = {};
-      this._experienceEntryFields = (experienceEntry as ExperienceEntry).fields;
-      this._experienceEntryId = (experienceEntry as ExperienceEntry).sys.id;
-      this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
-      // Register prebinding presets from the PARENT PATTERN
-      this._hoistedParameterDefinitions = Object.assign(
-        this._hoistedParameterDefinitions,
-        (experienceEntry as ExperienceEntry).fields.componentSettings?.prebindingDefinitions?.[0]
-          .parameterDefinitions || {},
-      );
-      this._hoistedVariableMappings = Object.assign(
-        this._hoistedVariableMappings,
-        (experienceEntry as ExperienceEntry).fields.componentSettings?.prebindingDefinitions?.[0]
-          .variableMappings || {},
-      );
-      // Register prebinding presets from the N1 NESTED PATTERNS
-      const usedComponentLinks = (experienceEntry as ExperienceEntry).fields?.usedComponents ?? [];
+      this._experienceEntryFields = experienceEntry.fields;
+      this._experienceEntryId = experienceEntry.sys.id;
+      this._unboundValues = experienceEntry.fields.unboundValues;
+    }
+
+    // DERIVE ENTITY STORE INSTANCE VARIBLES
+    // Register prebindings
+    {
+      const usedComponentLinks = this._experienceEntryFields.usedComponents ?? [];
       const usedComponents: ExperienceEntry[] = usedComponentLinks
         .map((component) => (isLink(component) ? this.getEntityFromLink(component) : component))
         .filter((component): component is ExperienceEntry => component !== undefined); // TODO: do we need to filter stuff out here? (what if the component is not found?)
-
-      usedComponents.forEach((patternEntry) => {
-        this._hoistedParameterDefinitions = {
-          ...this._hoistedParameterDefinitions,
-          ...patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions,
-        };
-        this._hoistedVariableMappings = {
-          ...this._hoistedVariableMappings,
-          ...patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].variableMappings,
-        };
-      });
+      this._hoistedParameterDefinitions = EntityStore.calculateHoistedParameterDefinitions(
+        this._experienceEntryFields,
+        usedComponents,
+      );
+      this._hoistedVariableMappings = EntityStore.calculateHoistedVariableMappings(
+        this._experienceEntryFields,
+        usedComponents,
+      );
     }
+
+    // Register deep references
     this._usedComponentsWithDeepReferences = resolveDeepUsedComponents({
       experienceEntryFields: this._experienceEntryFields,
       parentComponents: new Set([this._experienceEntryId!]),
     });
+  }
+
+  private static calculateHoistedParameterDefinitions(
+    parentEntryFields: ExperienceFields,
+    usedComponents: ExperienceEntry[],
+  ): ParameterDefinitions {
+    let hoistedDefinitions: ParameterDefinitions = {};
+    hoistedDefinitions = Object.assign(
+      hoistedDefinitions,
+      parentEntryFields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions || {},
+    );
+
+    usedComponents.forEach((patternEntry) => {
+      hoistedDefinitions = {
+        ...hoistedDefinitions,
+        ...patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions,
+      };
+    });
+
+    return hoistedDefinitions;
+  }
+
+  private static calculateHoistedVariableMappings(
+    parentEntryFields: ExperienceFields,
+    usedComponents: ExperienceEntry[],
+  ): VariableMappings {
+    let hoistedMappings: VariableMappings = {};
+
+    hoistedMappings = Object.assign(
+      hoistedMappings,
+      parentEntryFields.componentSettings?.prebindingDefinitions?.[0].variableMappings || {},
+    );
+
+    usedComponents.forEach((patternEntry) => {
+      hoistedMappings = {
+        ...hoistedMappings,
+        ...patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].variableMappings,
+      };
+    });
+
+    return hoistedMappings;
   }
 
   public getCurrentLocale() {
