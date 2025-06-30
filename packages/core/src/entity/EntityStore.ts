@@ -25,8 +25,8 @@ export class EntityStore extends EntityStoreBase {
   /* serialized */ private _experienceEntryId: string | undefined;
   /* serialized */ private _unboundValues: ExperienceUnboundValues | undefined;
   /* derived    */ private _usedComponentsWithDeepReferences: ExperienceEntry[];
-  /* derived    */ private _parameterDefinitions: ParameterDefinitions;
-  /* derived    */ private _variableMappings: VariableMappings;
+  /* derived    */ private _hoistedParameterDefinitions: ParameterDefinitions; // Hoisted, because they contain parameter definitions also from child patterns
+  /* derived    */ private _hoistedVariableMappings: VariableMappings; // Hoisted, because they contain variable mappings also from child patterns
 
   constructor(json: string);
   constructor({ experienceEntry, entities, locale }: EntityStoreArgs);
@@ -43,8 +43,8 @@ export class EntityStore extends EntityStoreBase {
         ],
         locale: serializedAttributes.locale,
       });
-      this._parameterDefinitions = {};
-      this._variableMappings = {};
+      this._hoistedParameterDefinitions = {};
+      this._hoistedVariableMappings = {};
       // TODO: need to figure how to register prebinding presets from the PARENT PATTERN and NESTED PATTERNS
       this._experienceEntryFields = serializedAttributes._experienceEntryFields;
       this._experienceEntryId = serializedAttributes._experienceEntryId;
@@ -56,18 +56,18 @@ export class EntityStore extends EntityStoreBase {
       }
 
       super({ entities, locale });
-      this._parameterDefinitions = {};
-      this._variableMappings = {};
+      this._hoistedParameterDefinitions = {};
+      this._hoistedVariableMappings = {};
       this._experienceEntryFields = (experienceEntry as ExperienceEntry).fields;
       this._experienceEntryId = (experienceEntry as ExperienceEntry).sys.id;
       this._unboundValues = (experienceEntry as ExperienceEntry).fields.unboundValues;
       // Register prebinding presets from the PARENT PATTERN
-      this._parameterDefinitions = Object.assign(
-        this._parameterDefinitions,
+      this._hoistedParameterDefinitions = Object.assign(
+        this._hoistedParameterDefinitions,
         (experienceEntry as ExperienceEntry).fields.componentSettings?.parameterDefinitions || {},
       );
-      this._variableMappings = Object.assign(
-        this._variableMappings,
+      this._hoistedVariableMappings = Object.assign(
+        this._hoistedVariableMappings,
         (experienceEntry as ExperienceEntry).fields.componentSettings?.variableMappings || {},
       );
       // Register prebinding presets from the N1 NESTED PATTERNS
@@ -77,12 +77,12 @@ export class EntityStore extends EntityStoreBase {
         .filter((component): component is ExperienceEntry => component !== undefined); // TODO: do we need to filter stuff out here? (what if the component is not found?)
 
       usedComponents.forEach((patternEntry) => {
-        this._parameterDefinitions = {
-          ...this._parameterDefinitions,
+        this._hoistedParameterDefinitions = {
+          ...this._hoistedParameterDefinitions,
           ...patternEntry.fields.componentSettings?.parameterDefinitions,
         };
-        this._variableMappings = {
-          ...this._variableMappings,
+        this._hoistedVariableMappings = {
+          ...this._hoistedVariableMappings,
           ...patternEntry.fields.componentSettings?.variableMappings,
         };
       });
@@ -97,12 +97,12 @@ export class EntityStore extends EntityStoreBase {
     return this.locale;
   }
 
-  public get variableMappings() {
-    return this._variableMappings;
+  public get hoistedVariableMappings() {
+    return this._hoistedVariableMappings;
   }
 
-  public get parameterDefinitions() {
-    return this._parameterDefinitions;
+  public get hoistedParameterDefinitions() {
+    return this._hoistedParameterDefinitions;
   }
 
   public get experienceEntryFields() {

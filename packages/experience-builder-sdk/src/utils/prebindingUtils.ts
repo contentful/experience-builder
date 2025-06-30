@@ -72,11 +72,11 @@ export const resolveMaybePrebindingDefaultValuePath = ({
   componentValueKey: string;
   entityStore: EntityStore;
 }): string | undefined => {
-  const variableMapping = entityStore.variableMappings[componentValueKey];
+  const variableMapping = entityStore.hoistedVariableMappings[componentValueKey];
   if (!variableMapping) return;
 
   const pdID = variableMapping.parameterId;
-  const prebindingDefinition = entityStore.parameterDefinitions[pdID];
+  const prebindingDefinition = entityStore.hoistedParameterDefinitions[pdID];
 
   if (!prebindingDefinition) {
     // probably shouldn't happen, as if ppd is not defined, then variableMapping should not be defined either
