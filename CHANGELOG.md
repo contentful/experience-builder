@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.42.2](https://github.com/contentful/experience-builder/compare/v1.42.1...v1.42.2) (2025-06-30)
+
+**Note:** Version bump only for package @contentful/experience
+
+## [1.42.1](https://github.com/contentful/experience-builder/compare/v1.42.0...v1.42.1) (2025-06-30)
+
+**Note:** Version bump only for package @contentful/experience
+
+## [1.42.0](https://github.com/contentful/experience-builder/compare/v1.41.0...v1.42.0) (2025-06-27)
+
+### Features
+
+- resolves pre bound field mappings in preview mode [SPA-2852] ([#1184](https://github.com/contentful/experience-builder/issues/1184)) ([3f313ab](https://github.com/contentful/experience-builder/commit/3f313ab8774b5bd829c264d09b00586e82ba8725))
+
+### Bug Fixes
+
+- bundle CSS and add it directly to the HTML [SPA-2865] ([#1182](https://github.com/contentful/experience-builder/issues/1182)) ([2ccc3ab](https://github.com/contentful/experience-builder/commit/2ccc3abaa5da0ec7c33c560c7ff73c287e6aa6bf))
+
 ## [1.41.0](https://github.com/contentful/experience-builder/compare/v1.40.2...v1.41.0) (2025-06-13)
 
 ### Features
