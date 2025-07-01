@@ -63,6 +63,10 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
       },
     };
 
+    console.log(
+      `;;Sideloaded '${SIDELOADED_PREFIX}${link.sys.id}'`,
+      patternEntry.fields.dataSource[`${SIDELOADED_PREFIX}${link.sys.id}`],
+    );
     sideloadedCount++;
   };
 
@@ -75,22 +79,41 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
   const definitions: ParameterDefinitions =
     patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions ?? {};
 
+  // Sideload prebinding values for the L1 parent pattern aka `pA`
   Object.entries(definitions).forEach(([id, definition]) => {
     addDefaultValueToDataSource(id, definition);
   });
 
-  // Sideload all default values for the L1 nested patterns
-  const nestedPatternEntries = (patternEntry.fields.usedComponents || []).filter(
+  // Sideload all default values for the L2 nested patterns, patterns aka`pB`
+  const nestedPatternEntriesLevel2 = (patternEntry.fields.usedComponents || []).filter(
     (component): component is PatternEntry =>
       component !== undefined && checkIsAssemblyEntry(component as Entry),
   );
 
-  nestedPatternEntries.forEach((nestedPatternEntry) => {
-    const nestedParameterDefinitions: ParameterDefinitions =
-      nestedPatternEntry.fields.componentSettings?.prebindingDefinitions?.[0]
-        .parameterDefinitions ?? {};
+  nestedPatternEntriesLevel2.forEach((patternEntry: ExperienceEntry) => {
+    const parameterDefinitions: ParameterDefinitions =
+      patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions ?? {};
 
-    Object.entries(nestedParameterDefinitions).forEach(([id, definition]) => {
+    Object.entries(parameterDefinitions).forEach(([id, definition]) => {
+      addDefaultValueToDataSource(id, definition);
+    });
+  });
+
+  // Sideload all default values for the L3 nested patterns, patterns aka `pC`
+  const nestedPatternEntriesLevel3 = nestedPatternEntriesLevel2.flatMap((patternEntryLevel2) => {
+    const usedComponents = patternEntryLevel2.fields.usedComponents || [];
+    const filteredUsedComponents = usedComponents.filter(
+      (component): component is PatternEntry =>
+        component !== undefined && checkIsAssemblyEntry(component as Entry), // here we assume that due to fetchReferencedEntities() loading with include=2 we already have those resolved to entries
+    );
+    return filteredUsedComponents;
+  });
+
+  nestedPatternEntriesLevel3.forEach((patternEntry: ExperienceEntry) => {
+    const parameterDefinitions: ParameterDefinitions =
+      patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions ?? {};
+
+    Object.entries(parameterDefinitions).forEach(([id, definition]) => {
       addDefaultValueToDataSource(id, definition);
     });
   });
