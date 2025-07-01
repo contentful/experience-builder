@@ -32,9 +32,7 @@ export const inMemoryEntitiesStore = create<InMemoryEntitiesState>((set, get) =>
   },
   resolveAssetById(assetId?: string) {
     if (!assetId) return undefined;
-
     const { entityStore } = get();
-
     return entityStore.getAssetById(assetId);
   },
   resolveEntryById(entryId?: string) {
@@ -44,9 +42,7 @@ export const inMemoryEntitiesStore = create<InMemoryEntitiesState>((set, get) =>
   },
   resolveEntity<T extends 'Entry' | 'Asset'>(link?: UnresolvedLink<T>) {
     if (!link) return undefined;
-
     const { entityStore } = get();
-
     return entityStore.getEntityFromLink(link);
   },
   resetEntityStore(entityStore) {
