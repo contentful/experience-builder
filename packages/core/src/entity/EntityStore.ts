@@ -93,15 +93,43 @@ export class EntityStore extends EntityStoreBase {
     usedComponents: ExperienceEntry[],
   ): ParameterDefinitions {
     let hoistedDefinitions: ParameterDefinitions = {};
+
+    // --------------------
+    // Hoist prebinding for the L1 parent pattern aka `pA`
+    // --------------------
     hoistedDefinitions = Object.assign(
       hoistedDefinitions,
       parentEntryFields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions || {},
     );
 
-    usedComponents.forEach((patternEntry) => {
+    // --------------------
+    // Hoist prebinding for the L2 nested patterns, patterns aka`pB`
+    // --------------------
+    usedComponents.forEach((patternEntryLevel2) => {
       hoistedDefinitions = {
         ...hoistedDefinitions,
-        ...patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].parameterDefinitions,
+        ...patternEntryLevel2.fields.componentSettings?.prebindingDefinitions?.[0]
+          .parameterDefinitions,
+      };
+    });
+
+    // --------------------
+    // Hoist prebinding for L3 nested patterns, patterns aka `pC`
+    // --------------------
+    const usedComponentsLevel3 = usedComponents.flatMap((patternEntryLevel2) => {
+      const usedComponents = patternEntryLevel2.fields.usedComponents || [];
+      const filteredUsedComponents = usedComponents.filter(
+        (component): component is ExperienceEntry =>
+          component !== undefined && isExperienceEntry(component as Entry), // here we assume that due to fetchReferencedEntities() loading with include=2 we already have those resolved to entries
+      );
+      return filteredUsedComponents;
+    });
+
+    usedComponentsLevel3.forEach((patternEntryLevel3) => {
+      hoistedDefinitions = {
+        ...hoistedDefinitions,
+        ...patternEntryLevel3.fields.componentSettings?.prebindingDefinitions?.[0]
+          .parameterDefinitions,
       };
     });
 
@@ -114,15 +142,40 @@ export class EntityStore extends EntityStoreBase {
   ): VariableMappings {
     let hoistedMappings: VariableMappings = {};
 
+    // --------------------
+    // Hoist prebinding for the L1 parent pattern aka `pA`
+    // --------------------
     hoistedMappings = Object.assign(
       hoistedMappings,
       parentEntryFields.componentSettings?.prebindingDefinitions?.[0].variableMappings || {},
     );
 
-    usedComponents.forEach((patternEntry) => {
+    // --------------------
+    // Hoist prebinding for the L2 nested patterns, patterns aka`pB`
+    // --------------------
+    usedComponents.forEach((patternEntryLevel2) => {
       hoistedMappings = {
         ...hoistedMappings,
-        ...patternEntry.fields.componentSettings?.prebindingDefinitions?.[0].variableMappings,
+        ...patternEntryLevel2.fields.componentSettings?.prebindingDefinitions?.[0].variableMappings,
+      };
+    });
+
+    // --------------------
+    // Hoist prebinding for L3 nested patterns, patterns aka `pC`
+    // --------------------
+    const usedComponentsLevel3 = usedComponents.flatMap((patternEntryLevel2) => {
+      const usedComponents = patternEntryLevel2.fields.usedComponents || [];
+      const filteredUsedComponents = usedComponents.filter(
+        (component): component is ExperienceEntry =>
+          component !== undefined && isExperienceEntry(component as Entry), // here we assume that due to fetchReferencedEntities() loading with include=2 we already have those resolved to entries
+      );
+      return filteredUsedComponents;
+    });
+
+    usedComponentsLevel3.forEach((patternEntryLevel3) => {
+      hoistedMappings = {
+        ...hoistedMappings,
+        ...patternEntryLevel3.fields.componentSettings?.prebindingDefinitions?.[0].variableMappings,
       };
     });
 
