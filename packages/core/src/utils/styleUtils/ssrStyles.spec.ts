@@ -12,7 +12,6 @@ import {
   isCfStyleAttribute,
   maybePopulateDesignTokenValue,
   resolveBackgroundImageBinding,
-  toMediaQuery,
 } from './ssrStyles';
 
 describe('isCfStyleAttribute', () => {
@@ -1314,49 +1313,5 @@ describe('flattenDesignTokenRegistry', () => {
       'textColor.muted': 'gray',
       'textColor.accent': 'blue',
     });
-  });
-});
-
-describe('toMediaQuery', () => {
-  it('should return css for default breakpoint without wrapping it into a media query', () => {
-    const res = toMediaQuery({
-      condition: '*',
-      cssByClassName: {
-        className1: 'background:green;color:white;font-size:1rem;',
-        className2: 'background:red;color:black;font-size:1.5rem;',
-      },
-    });
-
-    expect(res).toBe(
-      '.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}',
-    );
-  });
-
-  it('should wrap styles for non default breakpoint into a media query', () => {
-    const res = toMediaQuery({
-      condition: '<950px',
-      cssByClassName: {
-        className1: 'background:green;color:white;font-size:1rem;',
-        className2: 'background:red;color:black;font-size:1.5rem;',
-      },
-    });
-
-    expect(res).toBe(
-      '@media(max-width:950px){.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}}',
-    );
-  });
-
-  it('should support min-width media query rule', () => {
-    const res = toMediaQuery({
-      condition: '>950px',
-      cssByClassName: {
-        className1: 'background:green;color:white;font-size:1rem;',
-        className2: 'background:red;color:black;font-size:1.5rem;',
-      },
-    });
-
-    expect(res).toBe(
-      '@media(min-width:950px){.className1{background:green;color:white;font-size:1rem;}.className2{background:red;color:black;font-size:1.5rem;}}',
-    );
   });
 });

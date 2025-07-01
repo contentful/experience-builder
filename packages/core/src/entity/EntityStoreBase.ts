@@ -3,6 +3,7 @@ import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';
 import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema';
+import { isAsset, isEntry } from '@/utils/entityTypeChecks';
 import { deepFreeze } from '@/utils/freeze';
 
 export interface EntityFromLink {
@@ -14,9 +15,9 @@ export interface EntityFromLink {
  * Can be extended for the different loading behaviours (editor, production, ..)
  */
 export abstract class EntityStoreBase implements EntityFromLink {
-  public locale: string;
-  protected entryMap = new Map<string, Entry>();
-  protected assetMap = new Map<string, Asset>();
+  /* serialized */ public locale: string;
+  /* serialized */ protected entryMap = new Map<string, Entry>();
+  /* serialized */ protected assetMap = new Map<string, Asset>();
 
   constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
     this.locale = locale;
@@ -55,9 +56,13 @@ export abstract class EntityStoreBase implements EntityFromLink {
         return;
       }
       entity = resolvedEntity;
-    } else {
+    } else if (isAsset(linkOrEntryOrAsset) || isEntry(linkOrEntryOrAsset)) {
       // We already have the complete entity in preview & delivery (resolved by the CMA client)
       entity = linkOrEntryOrAsset;
+    } else {
+      throw new Error(
+        `Unexpected object when resolving entity: ${JSON.stringify(linkOrEntryOrAsset)}`,
+      );
     }
     return entity;
   }
@@ -118,12 +123,16 @@ export abstract class EntityStoreBase implements EntityFromLink {
   }
 
   protected addEntity(entity: Entry | Asset): void {
-    if (this.isAsset(entity)) {
+    if (isAsset(entity)) {
       // cloned and frozen
       this.assetMap.set(entity.sys.id, deepFreeze(structuredClone(entity)));
-    } else {
+    } else if (isEntry(entity)) {
       // cloned and frozen
       this.entryMap.set(entity.sys.id, deepFreeze(structuredClone(entity)));
+    } else {
+      throw new Error(
+        `Attempted to add an entity to the store that is neither Asset nor Entry: '${JSON.stringify(entity)}'`,
+      );
     }
   }
 
@@ -214,7 +223,7 @@ export abstract class EntityStoreBase implements EntityFromLink {
           }
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = entity; // we move up
-        } else if (this.isAsset(fieldValue) || this.isEntry(fieldValue)) {
+        } else if (isAsset(fieldValue) || isEntry(fieldValue)) {
           resolvedFieldset.push([entityToResolveFieldsFrom, field, _localeQualifier]);
           entityToResolveFieldsFrom = fieldValue; // we move up
         } else {
@@ -257,24 +266,6 @@ export abstract class EntityStoreBase implements EntityFromLink {
     }
     const [leafEntity] = resolvedFieldset[resolvedFieldset.length - 1];
     return leafEntity;
-  }
-
-  private isAsset(value: unknown): value is Asset {
-    return (
-      null !== value &&
-      typeof value === 'object' &&
-      'sys' in value &&
-      (value as Asset).sys?.type === 'Asset'
-    );
-  }
-
-  private isEntry(value: unknown): value is Entry {
-    return (
-      null !== value &&
-      typeof value === 'object' &&
-      'sys' in value &&
-      (value as Entry).sys?.type === 'Entry'
-    );
   }
 
   private getEntity(type: 'Asset' | 'Entry', id: string) {

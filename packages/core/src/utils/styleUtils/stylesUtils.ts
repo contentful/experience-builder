@@ -79,7 +79,6 @@ export const buildStyleTag = ({ styles, nodeId }: { styles: CSSProperties; nodeI
  */
 export const buildCfStyles = (values: Partial<StyleProps>): CSSProperties => {
   const cssProperties = {
-    boxSizing: 'border-box',
     margin: values.cfMargin,
     padding: values.cfPadding,
     backgroundColor: values.cfBackgroundColor,

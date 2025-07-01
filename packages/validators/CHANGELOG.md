@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.42.2](https://github.com/contentful/experience-builder/compare/v1.42.1...v1.42.2) (2025-06-30)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
+## [1.42.1](https://github.com/contentful/experience-builder/compare/v1.42.0...v1.42.1) (2025-06-30)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
+## [1.42.0](https://github.com/contentful/experience-builder/compare/v1.41.0...v1.42.0) (2025-06-27)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
+## [1.41.0](https://github.com/contentful/experience-builder/compare/v1.40.2...v1.41.0) (2025-06-13)
+
+### Bug Fixes
+
+- remove contentType attribute from PatternProperty schema ([#1172](https://github.com/contentful/experience-builder/issues/1172)) ([ddef0ff](https://github.com/contentful/experience-builder/commit/ddef0ffa0c12afd9133a4392b45b67962b1b7fbd))
+- **validators:** remove unused full EntryProps type [SPA-2753] ([#1169](https://github.com/contentful/experience-builder/issues/1169)) ([7389339](https://github.com/contentful/experience-builder/commit/73893395d81afa2fb6bd81b3317debc4c0b46c9e))
+
+## [1.40.2](https://github.com/contentful/experience-builder/compare/v1.40.1...v1.40.2) (2025-06-10)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
 ## [1.40.1](https://github.com/contentful/experience-builder/compare/v1.40.0...v1.40.1) (2025-06-06)
 
 **Note:** Version bump only for package @contentful/experiences-validators

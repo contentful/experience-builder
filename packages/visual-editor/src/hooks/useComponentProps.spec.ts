@@ -454,7 +454,6 @@ describe('useComponentProps', () => {
       // Because the element is hidden via `display: none !important`, we don't need to override the styles to 100% values
       // like in other test cases to match the wrapper styles. The component styles stay verbatim.
       expect(result.current.componentStyles).toEqual({
-        boxSizing: 'border-box',
         display: 'none !important',
         margin: '10px 0 10px 0',
         width: '50%',

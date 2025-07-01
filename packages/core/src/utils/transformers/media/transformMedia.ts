@@ -10,6 +10,7 @@ import { Asset, AssetDetails, AssetFile } from 'contentful';
 import { getOptimizedBackgroundImageAsset } from './getOptimizedBackgroundImageAsset';
 import { getOptimizedImageAsset } from './getOptimizedImageAsset';
 import { getBoundValue } from '@/utils/transformers/getBoundValue';
+// FIXME: Importing the parents parent folder is creating a circular dependency
 import { getTargetValueInPixels, isDeepPath, lastPathNamedSegmentEq, parseCSSValue } from '@/utils';
 import { ValidFormats } from './mediaUtils';
 

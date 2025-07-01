@@ -5,23 +5,25 @@ import type {
   ComponentTreeNode,
   DesignValue,
   ExperienceComponentSettings,
-  PatternProperty,
+  Parameter,
 } from '@contentful/experiences-core/types';
 import { resolvePrebindingPath, shouldUsePrebinding } from '../../utils/prebindingUtils';
 import { PATTERN_PROPERTY_DIVIDER } from '@contentful/experiences-core/constants';
 
-/** While unfolding the assembly definition on the instance, this function will replace all
+/** While unfolding the pattern definition on the instance, this function will replace all
  * ComponentValue in the definitions tree with the actual value on the instance. */
-export const deserializeAssemblyNode = ({
+export const deserializePatternNode = ({
   node,
   componentInstanceVariables,
   componentSettings,
-  patternProperties,
+  parameters,
+  entityStore,
 }: {
   node: ComponentTreeNode;
   componentInstanceVariables: ComponentTreeNode['variables'];
   componentSettings: ExperienceComponentSettings;
-  patternProperties: Record<string, PatternProperty>;
+  parameters: Record<string, Parameter>;
+  entityStore: EntityStore;
 }): ComponentTreeNode => {
   const variables: Record<string, ComponentPropertyValue> = {};
 
@@ -36,13 +38,14 @@ export const deserializeAssemblyNode = ({
       const usePrebinding = shouldUsePrebinding({
         componentSettings,
         componentValueKey,
-        patternProperties,
+        parameters: parameters,
         variable: instanceProperty,
       });
       const path = resolvePrebindingPath({
         componentSettings,
         componentValueKey,
-        patternProperties,
+        parameters: parameters,
+        entityStore,
       });
 
       if (usePrebinding && path) {
@@ -88,11 +91,12 @@ export const deserializeAssemblyNode = ({
   }
 
   const children: ComponentTreeNode[] = node.children.map((child) =>
-    deserializeAssemblyNode({
+    deserializePatternNode({
       node: child,
       componentInstanceVariables,
       componentSettings,
-      patternProperties,
+      parameters,
+      entityStore,
     }),
   );
 
@@ -103,19 +107,19 @@ export const deserializeAssemblyNode = ({
     children,
     slotId: node.slotId,
     displayName: node.displayName,
-    patternProperties: node.patternProperties,
+    parameters: node.parameters,
   };
 };
 
-export const resolveAssembly = ({
+export const resolvePattern = ({
   node,
-  parentPatternProperties,
+  parentParameters,
   patternRootNodeIdsChain,
   entityStore,
 }: {
   node: ComponentTreeNode;
   entityStore: EntityStore;
-  parentPatternProperties: Record<string, PatternProperty>;
+  parentParameters: Record<string, Parameter>;
   patternRootNodeIdsChain: string;
 }) => {
   const componentId = node.definitionId as string;
@@ -127,21 +131,20 @@ export const resolveAssembly = ({
     return node;
   }
 
-  const patternProperties: Record<string, PatternProperty> = {};
+  const parameters: Record<string, Parameter> = {};
 
-  const allPatternProperties = {
-    ...parentPatternProperties,
-    ...(node.patternProperties || {}),
+  const allParameters = {
+    ...parentParameters,
+    ...(node.parameters || {}),
   };
 
-  for (const [patternPropertyKey, patternProperty] of Object.entries(allPatternProperties)) {
+  for (const [parameterKey, parameter] of Object.entries(allParameters)) {
     /**
      * Bubbled up pattern properties are a concatenation of the node id
      * and the pattern property definition id. We need to split them so
      * that the node only uses the pattern property definition id.
      */
-    const [hashKey, patternPropertyDefinitionId] =
-      patternPropertyKey.split(PATTERN_PROPERTY_DIVIDER);
+    const [hashKey, parameterId] = parameterKey.split(PATTERN_PROPERTY_DIVIDER);
 
     const hashedNodeChain = md5(patternRootNodeIdsChain || '');
 
@@ -149,22 +152,23 @@ export const resolveAssembly = ({
 
     if (!isMatchingNode) continue;
 
-    patternProperties[patternPropertyDefinitionId] = patternProperty;
+    parameters[parameterId] = parameter;
   }
 
   const componentFields = assembly.fields;
 
-  const deserializedNode = deserializeAssemblyNode({
+  const deserializedNode = deserializePatternNode({
     node: {
       definitionId: node.definitionId,
       id: node.id,
       variables: node.variables,
       children: componentFields.componentTree.children,
-      patternProperties,
+      parameters: parameters,
     },
     componentInstanceVariables: node.variables,
     componentSettings: componentFields.componentSettings!,
-    patternProperties,
+    parameters: parameters,
+    entityStore,
   });
 
   entityStore.addAssemblyUnboundValues(componentFields.unboundValues);

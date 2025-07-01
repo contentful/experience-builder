@@ -1,20 +1,20 @@
 import type { Entry } from 'contentful';
 import md5 from 'md5';
-import { experienceEntry } from '../../../test/__fixtures__/composition';
+import { experienceEntry } from '../../../test/__fixtures__';
 import {
   assemblyGeneratedDesignVariableName,
   createAssemblyEntry,
-} from '../../../test/__fixtures__/assembly';
-import { assets, entries } from '../../../test/__fixtures__/entities';
+} from '../../../test/__fixtures__';
+import { assets, entries } from '../../../test/__fixtures__';
 import {
   CONTENTFUL_COMPONENTS,
   PATTERN_PROPERTY_DIVIDER,
 } from '@contentful/experiences-core/constants';
 import type { ComponentTreeNode } from '@contentful/experiences-core/types';
 import { EntityStore } from '@contentful/experiences-core';
-import { resolveAssembly } from './assemblyUtils';
+import { resolvePattern } from './assemblyUtils';
 
-describe('resolveAssembly', () => {
+describe('resolvePattern', () => {
   it('should return the input node when the entity store is undefined', () => {
     const containerNode: ComponentTreeNode = {
       definitionId: CONTENTFUL_COMPONENTS.container.id,
@@ -24,10 +24,10 @@ describe('resolveAssembly', () => {
 
     const entityStore = {} as unknown as EntityStore;
 
-    const result = resolveAssembly({
+    const result = resolvePattern({
       node: containerNode,
       entityStore,
-      parentPatternProperties: {},
+      parentParameters: {},
       patternRootNodeIdsChain: '',
     });
 
@@ -47,10 +47,10 @@ describe('resolveAssembly', () => {
       locale: 'en-US',
     });
 
-    const result = resolveAssembly({
+    const result = resolvePattern({
       node: assemblyNode,
       entityStore,
-      parentPatternProperties: {},
+      parentParameters: {},
       patternRootNodeIdsChain: '',
     });
 
@@ -82,10 +82,10 @@ describe('resolveAssembly', () => {
         children: [],
       };
 
-      const result = resolveAssembly({
+      const result = resolvePattern({
         node: assemblyNode,
         entityStore,
-        parentPatternProperties: {},
+        parentParameters: {},
         patternRootNodeIdsChain: '',
       });
 
@@ -101,45 +101,40 @@ describe('resolveAssembly', () => {
       });
     });
 
-    it('should return an assembly node with parent patternProperties', () => {
-      const patternPropertyId = md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId';
-      const patternPropertyId2 =
-        md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'patternPropertyId2';
+    it('should return an assembly node with parent parameters', () => {
+      const parameterId = md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'parameterId';
+      const parameterId2 = md5('assembly-id') + PATTERN_PROPERTY_DIVIDER + 'parameterId2';
       const assemblyNode: ComponentTreeNode = {
         definitionId: 'assembly-id',
         id: 'assembly-id',
         variables: {},
         children: [],
-        patternProperties: {
-          [patternPropertyId]: {
-            contentType: 'testContentType',
+        parameters: {
+          [parameterId]: {
             path: '/1230948',
             type: 'BoundValue',
           },
         },
       };
 
-      const result = resolveAssembly({
+      const result = resolvePattern({
         node: assemblyNode,
         entityStore,
         patternRootNodeIdsChain: 'assembly-id',
-        parentPatternProperties: {
-          [patternPropertyId2]: {
-            contentType: 'testContentType',
+        parentParameters: {
+          [parameterId2]: {
             path: '/4091203i9',
             type: 'BoundValue',
           },
         },
       });
 
-      expect(result.patternProperties).toEqual({
-        ['patternPropertyId']: {
-          contentType: 'testContentType',
+      expect(result.parameters).toEqual({
+        ['parameterId']: {
           path: '/1230948',
           type: 'BoundValue',
         },
-        ['patternPropertyId2']: {
-          contentType: 'testContentType',
+        ['parameterId2']: {
           path: '/4091203i9',
           type: 'BoundValue',
         },
@@ -158,10 +153,10 @@ describe('resolveAssembly', () => {
         children: [],
       };
 
-      const result = resolveAssembly({
+      const result = resolvePattern({
         node: assemblyNode,
         entityStore,
-        parentPatternProperties: {},
+        parentParameters: {},
         patternRootNodeIdsChain: '',
       });
 
@@ -178,10 +173,10 @@ describe('resolveAssembly', () => {
         children: [],
       };
 
-      const result = resolveAssembly({
+      const result = resolvePattern({
         node: assemblyNode,
         entityStore,
-        parentPatternProperties: {},
+        parentParameters: {},
         patternRootNodeIdsChain: '',
       });
 

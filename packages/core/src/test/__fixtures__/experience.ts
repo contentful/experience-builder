@@ -197,7 +197,7 @@ export const assemblyGeneratedDesignVariableName = 'cfWidth_uuid2Assembly';
 export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = 'assembly-id',
-}: createExperienceEntryArgs & { id: string }) => {
+}: createExperienceEntryArgs & { id: string }): ExperienceEntry => {
   return {
     sys: {
       id,

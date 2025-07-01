@@ -10,6 +10,52 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **core:** deep binding resolution with reference field already being a resolve entity [SPA-2843] ([#1156](https://github.com/contentful/experience-builder/issues/1156)) ([fb1d2c5](https://github.com/contentful/experience-builder/commit/fb1d2c53f1ab6f0a73f0c6253415b0ecef79ff04))
 - **delivery:** use disjunct media queries to only hide for explicit breakpoints [SPA-2782[ ([#1158](https://github.com/contentful/experience-builder/issues/1158)) ([83179af](https://github.com/contentful/experience-builder/commit/83179af1e99d7d4718f725a8d45b1244bc538892))
 
+## [1.42.2](https://github.com/contentful/experience-builder/compare/v1.42.1...v1.42.2) (2025-06-30)
+
+**Note:** Version bump only for package @contentful/experience
+
+## [1.42.1](https://github.com/contentful/experience-builder/compare/v1.42.0...v1.42.1) (2025-06-30)
+
+**Note:** Version bump only for package @contentful/experience
+
+## [1.42.0](https://github.com/contentful/experience-builder/compare/v1.41.0...v1.42.0) (2025-06-27)
+
+### Features
+
+- resolves pre bound field mappings in preview mode [SPA-2852] ([#1184](https://github.com/contentful/experience-builder/issues/1184)) ([3f313ab](https://github.com/contentful/experience-builder/commit/3f313ab8774b5bd829c264d09b00586e82ba8725))
+
+### Bug Fixes
+
+- bundle CSS and add it directly to the HTML [SPA-2865] ([#1182](https://github.com/contentful/experience-builder/issues/1182)) ([2ccc3ab](https://github.com/contentful/experience-builder/commit/2ccc3abaa5da0ec7c33c560c7ff73c287e6aa6bf))
+
+## [1.41.0](https://github.com/contentful/experience-builder/compare/v1.40.2...v1.41.0) (2025-06-13)
+
+### Features
+
+- remove explicit border box [SPA-2792] ([#1173](https://github.com/contentful/experience-builder/issues/1173)) ([85aabd5](https://github.com/contentful/experience-builder/commit/85aabd525a5f0bd961fc011bb02409eff1b0a227))
+
+### Bug Fixes
+
+- handle entry fields being already resolved links ([#1176](https://github.com/contentful/experience-builder/issues/1176)) ([5a7de24](https://github.com/contentful/experience-builder/commit/5a7de24342c552889f2f513c16ce690693e8c63d))
+- handle unexpected json data gracefully ([556fd40](https://github.com/contentful/experience-builder/commit/556fd40f7fe5c100a7b8e534df5c9b29ed9295b4))
+- handle unexpected scenarios gracefully or render better error message ([#1170](https://github.com/contentful/experience-builder/issues/1170)) ([618fdd9](https://github.com/contentful/experience-builder/commit/618fdd9681a62eb8dd4f57c9bc6947d2c61dac74))
+- remove contentType attribute from PatternProperty schema ([#1172](https://github.com/contentful/experience-builder/issues/1172)) ([ddef0ff](https://github.com/contentful/experience-builder/commit/ddef0ffa0c12afd9133a4392b45b67962b1b7fbd))
+- **validators:** remove unused full EntryProps type [SPA-2753] ([#1169](https://github.com/contentful/experience-builder/issues/1169)) ([7389339](https://github.com/contentful/experience-builder/commit/73893395d81afa2fb6bd81b3317debc4c0b46c9e))
+
+## [1.40.2](https://github.com/contentful/experience-builder/compare/v1.40.1...v1.40.2) (2025-06-10)
+
+### Bug Fixes
+
+- **core:** consolidate CSS generation for cfVisibility in SSR and CSR [SPA-2782] ([#1166](https://github.com/contentful/experience-builder/issues/1166)) ([ebbee81](https://github.com/contentful/experience-builder/commit/ebbee812dc1766c0a173e5c71c8bfdb28c7cd6ea))
+- move typeof check to try catch block as well ([7358ebd](https://github.com/contentful/experience-builder/commit/7358ebddac5a715c89b30054300a204c580c0a16))
+
+## [1.40.1](https://github.com/contentful/experience-builder/compare/v1.40.0...v1.40.1) (2025-06-06)
+
+### Bug Fixes
+
+- **core:** deep binding resolution with reference field already being a resolve entity [SPA-2843] ([#1156](https://github.com/contentful/experience-builder/issues/1156)) ([fb1d2c5](https://github.com/contentful/experience-builder/commit/fb1d2c53f1ab6f0a73f0c6253415b0ecef79ff04))
+- **delivery:** use disjunct media queries to only hide for explicit breakpoints [SPA-2782[ ([#1158](https://github.com/contentful/experience-builder/issues/1158)) ([83179af](https://github.com/contentful/experience-builder/commit/83179af1e99d7d4718f725a8d45b1244bc538892))
+
 ## [1.40.0](https://github.com/contentful/experience-builder/compare/v1.39.0...v1.40.0) (2025-06-04)
 
 ### Features

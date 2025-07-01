@@ -26,6 +26,8 @@
     "build": "lerna run build",
     "start": "lerna run --stream start",
     "dev": "lerna run --stream dev",
+    "nextjs:dev": "lerna run dev --scope=nextjs",
+    "react-vite:dev": "lerna run dev --scope=react-vite-test-app",
     "prettier:check": "lerna run prettier:check",
     "cm": "git-cz",
     "depcruise": "lerna run depcruise"

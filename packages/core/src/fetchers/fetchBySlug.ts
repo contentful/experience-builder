@@ -7,6 +7,7 @@ import {
   removeCircularPatternReferences,
   removeSelfReferencingDataSource,
 } from './shared/circularityCheckers';
+import { sideloadPrebindingDefaultValues } from './sideloading';
 
 const errorMessagesWhileFetching = {
   experience: 'Failed to fetch experience',
@@ -67,6 +68,7 @@ export async function fetchBySlug({
 
     removeCircularPatternReferences(experienceEntry as ExperienceEntry);
     removeSelfReferencingDataSource(experienceEntry as ExperienceEntry);
+    sideloadPrebindingDefaultValues(experienceEntry as ExperienceEntry);
 
     try {
       const { entries, assets } = await fetchReferencedEntities({

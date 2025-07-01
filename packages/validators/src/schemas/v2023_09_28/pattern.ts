@@ -38,25 +38,32 @@ export const THUMBNAIL_IDS = [
 // TODO: finalize schema structure before release
 // https://contentful.atlassian.net/browse/LUMOS-523
 const VariableMappingSchema = z.object({
-  patternPropertyDefinitionId: propertyKeySchema,
+  parameterId: propertyKeySchema,
   type: z.literal('ContentTypeMapping'),
   pathsByContentType: z.record(z.string(), z.object({ path: z.string() })),
 });
 
-// TODO: finalize schema structure before release
-// https://contentful.atlassian.net/browse/LUMOS-523
-const PatternPropertyDefinitionSchema = z.object({
-  defaultValue: z
-    .record(
-      z.string(),
-      z.object({
-        sys: z.object({
+export const PassToNodeSchema = z
+  .object({
+    nodeId: propertyKeySchema,
+    parameterId: propertyKeySchema,
+    prebindingId: propertyKeySchema,
+  })
+  .strict();
+
+const ParameterDefinitionSchema = z.object({
+  defaultSource: z
+    .strictObject({
+      type: z.enum(['Entry']),
+      contentTypeId: z.string(),
+      link: z.strictObject({
+        sys: z.strictObject({
           type: z.literal('Link'),
           id: z.string(),
           linkType: z.enum(['Entry']),
         }),
       }),
-    )
+    })
     .optional(),
   contentTypes: z.record(
     z.string(),
@@ -68,12 +75,10 @@ const PatternPropertyDefinitionSchema = z.object({
       }),
     }),
   ),
+  passToNodes: z.array(PassToNodeSchema).optional(),
 });
 
-export const PatternPropertyDefinitionsSchema = z.record(
-  propertyKeySchema,
-  PatternPropertyDefinitionSchema,
-);
+export const ParameterDefinitionsSchema = z.record(propertyKeySchema, ParameterDefinitionSchema);
 
 const VariableMappingsSchema = z.record(propertyKeySchema, VariableMappingSchema);
 
@@ -82,13 +87,23 @@ export const ComponentVariablesSchema = z.record(
   ComponentVariableSchema,
 );
 
-const ComponentSettingsSchema = z.object({
-  variableDefinitions: ComponentVariablesSchema,
-  thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
-  category: z.string().max(50, 'Category must contain at most 50 characters').optional(),
-  variableMappings: VariableMappingsSchema.optional(),
-  patternPropertyDefinitions: PatternPropertyDefinitionsSchema.optional(),
-});
+export const PrebindingDefinitionSchema = z
+  .object({
+    id: propertyKeySchema,
+    parameterDefinitions: ParameterDefinitionsSchema,
+    variableMappings: VariableMappingsSchema.optional(),
+    allowedVariableOverrides: z.array(z.string()).optional(),
+  })
+  .strict();
+
+const ComponentSettingsSchema = z
+  .object({
+    variableDefinitions: ComponentVariablesSchema,
+    thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
+    category: z.string().max(50, 'Category must contain at most 50 characters').optional(),
+    prebindingDefinitions: z.array(PrebindingDefinitionSchema).max(1).optional(),
+  })
+  .strict();
 
 export const PatternFieldsCMAShapeSchema = z.object({
   componentTree: localeWrapper(ComponentTreeSchema),
@@ -99,6 +114,6 @@ export const PatternFieldsCMAShapeSchema = z.object({
 });
 
 export type PatternFields = z.infer<typeof PatternFieldsCMAShapeSchema>;
-export type PatternPropertyDefinition = z.infer<typeof PatternPropertyDefinitionSchema>;
+export type ParameterDefinition = z.infer<typeof ParameterDefinitionSchema>;
 export type VariableMapping = z.infer<typeof VariableMappingSchema>;
 export type PatternComponentSettings = z.infer<typeof ComponentSettingsSchema>;

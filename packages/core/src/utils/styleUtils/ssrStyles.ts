@@ -12,22 +12,24 @@ import {
 import {
   buildCfStyles,
   checkIsAssemblyNode,
+  getTargetValueInPixels,
   isValidBreakpointValue,
   parseCSSValue,
-  getTargetValueInPixels,
+  stringifyCssProperties,
+  toMediaQuery,
+  transformVisibility,
   mergeDesignValuesByBreakpoint,
 } from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
 import {
+  BackgroundImageOptions,
   ComponentTreeNode,
   DesignTokensDefinition,
   Experience,
   StyleProps,
-  BackgroundImageOptions,
 } from '@/types';
 import { CF_STYLE_ATTRIBUTES, SUPPORTED_IMAGE_FORMATS } from '@/constants';
-import { stringifyCssProperties } from './stylesUtils';
 import { getOptimizedBackgroundImageAsset } from '../transformers/media/getOptimizedBackgroundImageAsset';
 import { AssetDetails, AssetFile } from 'contentful';
 
@@ -55,10 +57,18 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       ...mediaQueryTemplate,
       [breakpoint.id]: {
         condition: breakpoint.query,
-        cssByClassName: {} as Record<string, string>,
+        cssByClassName: {},
+        visibilityCssByClassName: {},
       },
     }),
-    {} as Record<string, MediaQueryData>,
+    {} as Record<
+      string,
+      {
+        condition: string;
+        cssByClassName: Record<string, string>;
+        visibilityCssByClassName: Record<string, string>;
+      }
+    >,
   );
 
   // getting the breakpoint ids
@@ -170,6 +180,14 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         },
       });
 
+      // When the node is hidden for any breakpoint, we need to handle this separately with a disjunct media query.
+      const isAnyVisibilityValueHidden = Object.values(propsByBreakpoint).some(
+        (designProperties) => designProperties.cfVisibility === false,
+      );
+      // We always need an explicit value when using disjunct media queries
+      // Example: desktop uses "false" and tablet is undefined -> we need to set `display: none` for tablet as well.
+      let previousVisibilityValue: boolean | undefined = undefined;
+
       /* [Data format] `propsByBreakpoint` is a map of "breakpointId > propertyName > plainValue":
        * {
        *   desktop: {
@@ -184,7 +202,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       const currentNodeClassNames: string[] = [];
       // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
       // e.g. `{outerPatternNodeId}{innerPatternNodeId}-{currentNodeId}`
-      // (!) Notice that the chain of patterns (before the dash) follows the format of prebinding/ patternProperties
+      // (!) Notice that the chain of patterns (before the dash) follows the format of prebinding/ parameters
       const currentNodeIdsChain = `${wrappingPatternNodeIds.join('')}-${currentNode.id}`;
 
       // For each breakpoint, resolve design tokens, create the CSS and generate a unique className.
@@ -200,7 +218,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
               mapOfDesignVariableKeys,
             ),
           };
-        }, {});
+        }, {} as Partial<StyleProps>);
 
         // Convert CF-specific property names to CSS variables, e.g. `cfMargin` -> `margin`
         const cfStyles = buildCfStyles(propsByBreakpointWithResolvedDesignTokens);
@@ -214,6 +232,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
          * }
          */
         const generatedCss = stringifyCssProperties(cfStyles);
+
+        if (!generatedCss && !isAnyVisibilityValueHidden) {
+          // If there are no styles to apply, skip this breakpoint completely including the class name
+          continue;
+        }
 
         /* [Data format] `generatedCss` is the minimized CSS string that will be added to the DOM:
          * generatedCss = "margin: 1px;width: 100%;..."
@@ -235,13 +258,23 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           currentNodeClassNames.push(className);
         }
 
-        // if there is already the similar hash - no need to over-write it
-        if (mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className]) {
-          continue;
+        // Only if the hash was not used yet, save the CSS to the stylesheet
+        if (!mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className]) {
+          mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className] = generatedCss;
         }
 
-        // otherwise, save it to the stylesheet
-        mediaQueryDataByBreakpoint[breakpointId].cssByClassName[className] = generatedCss;
+        // Special case for visibility to override any custom `display` values but only for a specific breakpoint.
+        if (isAnyVisibilityValueHidden) {
+          const visibilityValue =
+            propsByBreakpointWithResolvedDesignTokens.cfVisibility ?? previousVisibilityValue;
+          previousVisibilityValue = visibilityValue;
+          const visibilityStyles = transformVisibility(visibilityValue);
+          const visibilityCss = stringifyCssProperties(visibilityStyles);
+          if (!mediaQueryDataByBreakpoint[breakpointId].visibilityCssByClassName[className]) {
+            mediaQueryDataByBreakpoint[breakpointId].visibilityCssByClassName[className] =
+              visibilityCss;
+          }
+        }
       }
 
       // all generated classNames are saved in the tree node
@@ -288,12 +321,23 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
 
   // once the whole tree was traversed, for each breakpoint, I aggregate the styles
   // for each generated className into one css string
-  const stylesheet = Object.entries(mediaQueryDataByBreakpoint).reduce(
-    (acc, [, mediaQueryData]) => `${acc}${toMediaQuery(mediaQueryData)}`,
+  return Object.values(mediaQueryDataByBreakpoint).reduce(
+    (acc, { condition, cssByClassName, visibilityCssByClassName }, index) => {
+      const mediaQueryCss = toMediaQuery({ cssByClassName, condition });
+
+      // Handle visibility separately to use disjunct media queries ("if desktop but not tablet ...")
+      // Enables to hide on one breakpoint but render any unknown custom `display` value on another breakpoint.
+      const visibilityMediaQueryCss = toMediaQuery({
+        cssByClassName: visibilityCssByClassName,
+        condition,
+        // Breakpoint validation ensures that it starts with the '*' breakpoint
+        nextCondition: Object.values(mediaQueryDataByBreakpoint)[index + 1]?.condition,
+      });
+
+      return `${acc}${mediaQueryCss}${visibilityMediaQueryCss}`;
+    },
     '',
   );
-
-  return stylesheet;
 };
 
 /**
@@ -309,7 +353,7 @@ const injectDefaultValuesForComponentValues = ({
   wrapperComponentSettings?: ExperienceComponentSettings;
 }): Record<string, ComponentPropertyValue> => {
   const propertyDefinitions = wrapperComponentSettings?.variableDefinitions;
-  const resolvedProperties = Object.entries(patternNode.variables).reduce(
+  return Object.entries(patternNode.variables).reduce(
     (resolvedProperties, [propertyName, propertyValue]) => {
       if (propertyValue.type === 'ComponentValue') {
         const componentValueKey = propertyValue.key;
@@ -326,7 +370,6 @@ const injectDefaultValuesForComponentValues = ({
     },
     {},
   );
-  return resolvedProperties;
 };
 
 /**
@@ -349,18 +392,17 @@ const resolveComponentVariablesOverwrites = ({
   // In case of rendering a pattern entry, there are no custom ComponentValues.
   // So we pass down the default values from this pattern node down to each deeper pattern level.
   if (!wrapperComponentVariablesOverwrites) {
-    const nextComponentVariablesOverwrites = injectDefaultValuesForComponentValues({
+    return injectDefaultValuesForComponentValues({
       patternNode,
       wrapperComponentSettings,
     });
-    return nextComponentVariablesOverwrites;
   }
 
   // Rendering (nested) pattern node inside another pattern node (for both experience & pattern entry):
   // The `wrapperComponentVariablesOverwrites` from the top-most pattern node is passed through to each child
   // node (and nested pattern nodes). It replaces each ComponentValue in the subtree with either the overwrite
   // or the default value.
-  const nextComponentVariablesOverwrites = Object.entries(patternNode?.variables).reduce(
+  return Object.entries(patternNode?.variables).reduce(
     (resolvedValues, [propertyName, propertyValue]) => {
       if (propertyValue.type === 'ComponentValue') {
         // Copying the values from the parent node
@@ -383,7 +425,6 @@ const resolveComponentVariablesOverwrites = ({
     },
     {},
   );
-  return nextComponentVariablesOverwrites;
 };
 
 export const isCfStyleAttribute = (variableName: string): variableName is keyof StyleProps => {
@@ -458,13 +499,12 @@ const transformMedia = (boundAsset: Asset, width?: string, options?: BackgroundI
     const targetValue = targetWidthObject ? getTargetValueInPixels(targetWidthObject) : assetWidth;
 
     if (targetValue < assetWidth) width = `${targetValue}px`;
-    const value = getOptimizedBackgroundImageAsset(
+    return getOptimizedBackgroundImageAsset(
       asset.fields.file as AssetFile,
       width as string,
       options.quality,
       options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
     );
-    return value;
   } catch (error) {
     console.error('Error transforming image asset', error);
   }
@@ -781,7 +821,7 @@ type MediaQueryData = { condition: string; cssByClassName: Record<string, string
  * @param cssByClassName map of class names to CSS strings containing all rules for each class
  * @returns joined string of all CSS class definitions wrapped into media queries
  */
-export const toMediaQuery = ({ condition, cssByClassName }: MediaQueryData): string => {
+export const XXXtoMediaQuery = ({ condition, cssByClassName }: MediaQueryData): string => {
   const mediaQueryStyles = Object.entries(cssByClassName).reduce<string>(
     (acc, [className, css]) => {
       return `${acc}.${className}{${css}}`;
@@ -799,21 +839,3 @@ export const toMediaQuery = ({ condition, cssByClassName }: MediaQueryData): str
 
   return `@media(${mediaQueryRule}:${pixelValue}){${mediaQueryStyles}}`;
 };
-
-function mergeDefaultAndOverwriteValues(
-  defaultValue: ComponentPropertyValue,
-  overwriteValue?: ComponentPropertyValue,
-): ComponentPropertyValue;
-function mergeDefaultAndOverwriteValues(
-  defaultValue?: ComponentPropertyValue,
-  overwriteValue?: ComponentPropertyValue,
-): ComponentPropertyValue | undefined;
-function mergeDefaultAndOverwriteValues(
-  defaultValue?: ComponentPropertyValue,
-  overwriteValue?: ComponentPropertyValue,
-): ComponentPropertyValue | undefined {
-  if (defaultValue?.type === 'DesignValue' && overwriteValue?.type === 'DesignValue') {
-    return mergeDesignValuesByBreakpoint(defaultValue, overwriteValue);
-  }
-  return overwriteValue ?? defaultValue;
-}

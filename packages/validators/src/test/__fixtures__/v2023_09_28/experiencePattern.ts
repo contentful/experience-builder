@@ -291,28 +291,35 @@ export const experiencePattern = {
     },
     componentSettings: {
       'en-US': {
-        patternPropertyDefinitions: {
-          '8v3GB67qF5f': {
-            defaultValue: {
-              productFeatureTopic: {
-                sys: {
-                  id: '2hpuOIh8POJcekFdOLlaDa',
-                  linkType: 'Entry',
-                  type: 'Link',
+        prebindingDefinitions: [
+          {
+            id: 'prebindingDefinition1',
+            parameterDefinitions: {
+              '8v3GB67qF5f': {
+                defaultSource: {
+                  contentTypeId: 'productFeatureTopic',
+                  type: 'Entry',
+                  link: {
+                    sys: {
+                      id: '2hpuOIh8POJcekFdOLlaDa',
+                      linkType: 'Entry',
+                      type: 'Link',
+                    },
+                  },
                 },
-              },
-            },
-            contentTypes: {
-              productFeatureTopic: {
-                sys: {
-                  id: 'productFeatureTopic',
-                  type: 'Link',
-                  linkType: 'ContentType',
+                contentTypes: {
+                  productFeatureTopic: {
+                    sys: {
+                      id: 'productFeatureTopic',
+                      type: 'Link',
+                      linkType: 'ContentType',
+                    },
+                  },
                 },
               },
             },
           },
-        },
+        ],
         variableDefinitions: {
           cfBackgroundImageUrl_AtBrirchNbwfpkWlSfTD6: {
             displayName: 'Background image',
