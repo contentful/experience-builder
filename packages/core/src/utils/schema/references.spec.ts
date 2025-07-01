@@ -3,7 +3,7 @@ import {
   referencesOf,
   extractReferencesFromEntries,
   extractReferencesFromEntriesAsIds,
-} from './referencesOf';
+} from './references';
 import type { Entry } from 'contentful';
 
 describe('referencesOf', () => {
