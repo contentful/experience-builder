@@ -10,9 +10,9 @@ import { isAsset, isEntry } from '@/utils/entityTypeChecks';
  * Can be extended for the different loading behaviours (editor, production, ..)
  */
 export abstract class EntityStoreBase {
-  protected locale: string;
-  protected entryMap = new Map<string, Entry>();
-  protected assetMap = new Map<string, Asset>();
+  /* serialized */ protected locale: string;
+  /* serialized */ protected entryMap = new Map<string, Entry>();
+  /* serialized */ protected assetMap = new Map<string, Asset>();
 
   constructor({ entities, locale }: { entities: Array<Entry | Asset>; locale: string }) {
     this.locale = locale;
