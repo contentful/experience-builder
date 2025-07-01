@@ -46,7 +46,6 @@ export class EntityStore extends EntityStoreBase {
       });
       this._hoistedParameterDefinitions = {};
       this._hoistedVariableMappings = {};
-      // TODO: need to figure how to register prebinding presets from the PARENT PATTERN and NESTED PATTERNS
       this._experienceEntryFields = serializedAttributes._experienceEntryFields as ExperienceFields; // non-broken deserialization always should result in valid ExperienceFields
       this._experienceEntryId = serializedAttributes._experienceEntryId as string; // // non-broken deserialization always should result in valid experienceEntryId
       this._unboundValues = serializedAttributes._unboundValues as ExperienceUnboundValues; // non-broken deserialization always should result in valid unboundValues
@@ -70,7 +69,7 @@ export class EntityStore extends EntityStoreBase {
       const usedComponentLinks = this._experienceEntryFields.usedComponents ?? [];
       const usedComponents: ExperienceEntry[] = usedComponentLinks
         .map((component) => (isLink(component) ? this.getEntityFromLink(component) : component))
-        .filter((component): component is ExperienceEntry => component !== undefined); // TODO: do we need to filter stuff out here? (what if the component is not found?)
+        .filter((component): component is ExperienceEntry => component !== undefined);
       this._hoistedParameterDefinitions = EntityStore.calculateHoistedParameterDefinitions(
         this._experienceEntryFields,
         usedComponents,

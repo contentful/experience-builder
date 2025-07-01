@@ -28,10 +28,9 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
     const {
       contentTypeId,
       link,
-      type, // Today, it means that defaultSource is a link to a Contentful Entry, but in the future it could be a link to third party resource or smth.
+      type, // At the time of writing, it means that defaultSource is a link to a Contentful Entry, but in the future it could be a link to third party resource or smth.
       // this .type enumeration will not have the same meaning as `Link#sys#linkType`.
     } = definition.defaultSource;
-    // const [[, defaultEntryLink]] = Object.entries(definition.defaultValue); // TODO: this is extracting of the default value...  I need to adjust it to the way it is done in DanV's PR
 
     if (!isLink(link)) {
       // default value is not a link, maybe due to a bug
@@ -62,11 +61,6 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
         },
       },
     };
-
-    console.log(
-      `;;Sideloaded '${SIDELOADED_PREFIX}${link.sys.id}'`,
-      patternEntry.fields.dataSource[`${SIDELOADED_PREFIX}${link.sys.id}`],
-    );
     sideloadedCount++;
   };
 
