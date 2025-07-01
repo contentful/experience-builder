@@ -35,6 +35,6 @@ Now that you have set up your environment variables, you can start the developme
 npm run dev
 ```
 
-The app is set up to run on `http://localhost:4321`. By default, the root URL will pull up an experience with the slug of 'home-page'. The locale will be determined by your browser settings.
+The app is set up to run on `http://localhost:3000`. By default, the root URL will pull up an experience with the slug of 'home-page'. The locale will be determined by your browser settings.
 
 For the localization, this app uses the built in [i18n](https://docs.astro.build/en/guides/internationalization/) routing of Astro. You can configure locales by adding them to the `i18n` section in the `astro.config.mjs` file.

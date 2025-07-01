@@ -53,6 +53,7 @@ jobs:
       #     limit-access-to-actor: true
       - name: 'Deploy vite test-app site to Vercel'
         env:
+          # Domain: experience-builder-test-app.colorfuldemo.com
           VERCEL_PROJECT_ID: prj_wr3mJgz9qLeHh33UaCFquePsr1hw
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
@@ -64,9 +65,10 @@ jobs:
             vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
             vercel build --token=${{ secrets.VERCEL_TOKEN }}
             vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-          fi          
+          fi
       - name: 'Deploy nextjs-marketing-demo site to Vercel'
         env:
+          # Domain: studio-nextjs-marketing-demo.colorfuldemo.com
           VERCEL_PROJECT_ID: prj_CQ1K4Pbkx5SQq2Fi9c4ZPHloOv79
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
@@ -78,9 +80,10 @@ jobs:
             vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
             vercel build --token=${{ secrets.VERCEL_TOKEN }}
             vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-          fi          
+          fi
       - name: 'Deploy react vite template site to Vercel'
         env:
+          # Domain studio-react-vite-template.colorfuldemo.com
           VERCEL_PROJECT_ID: prj_HoAvIbgvZ3gYJDLCAaNsHIpBvI0k
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
@@ -92,5 +95,4 @@ jobs:
             vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
             vercel build --token=${{ secrets.VERCEL_TOKEN }}
             vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-          fi          
-     
+          fi

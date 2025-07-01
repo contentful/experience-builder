@@ -81,7 +81,6 @@
     "relative-deps": "^1.0.7",
     "rollup-plugin-dts": "^6.1.0",
     "rollup-plugin-node-externals": "^7.0.1",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-preserve-directives": "^0.4.0",
     "semantic-release": "23.0.2",
     "ts-jest": "^29.1.0",
