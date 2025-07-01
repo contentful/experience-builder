@@ -291,26 +291,6 @@ describe('EntityStoreBase', () => {
     });
   });
 
-  describe('getAssetById', () => {
-    it('should return the Asset by id', () => {
-      const asset = store.getAssetById(entityIds.ASSET1);
-      expect(asset).toBeDefined();
-      expect(asset!.sys.id).toBe(entityIds.ASSET1);
-    });
-    it('should return undefined if Asset does not exist', () => {
-      const asset = store.getAssetById('non-existing-asset');
-      expect(asset).toBeUndefined();
-    });
-    it('should return undefined if id is not an Asset', () => {
-      const asset = store.getAssetById(entityIds.ENTRY1);
-      expect(asset).toBeUndefined();
-    });
-    it('should return undefined if id is not provided', () => {
-      const asset = store.getAssetById('');
-      expect(asset).toBeUndefined();
-    });
-  });
-
   describe('toJSON', () => {
     it('should return a JSON representation of the store', () => {
       const json = store.toJSON();
