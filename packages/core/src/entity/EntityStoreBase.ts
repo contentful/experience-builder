@@ -3,7 +3,7 @@ import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';
 import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema';
-import { isAsset, isEntry } from '@/utils/entityTypeChecks';
+import { isAsset, isEntry } from '@/utils/typeguards';
 import { deepFreeze } from '@/utils/freeze';
 
 export interface EntityFromLink {

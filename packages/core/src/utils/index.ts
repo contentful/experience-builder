@@ -14,4 +14,3 @@ export * from './treeTraversal';
 export * from './typeguards';
 export * from './utils';
 export * from './validations';
-export * from './entityTypeChecks';
