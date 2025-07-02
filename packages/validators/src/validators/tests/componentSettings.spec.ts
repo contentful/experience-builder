@@ -176,7 +176,25 @@ describe('componentSettings', () => {
   });
 
   describe('prebindingDefinitions', () => {
-    it('requires prebindingDefinitions field to be defined', () => {
+    it('allows prebindingDefinitions to be empty optional', () => {
+      const pattern = {
+        ...experiencePattern,
+        fields: {
+          ...experiencePattern.fields,
+          componentSettings: {
+            [locale]: {
+              variableDefinitions: {},
+              prebindingDefinitions: undefined,
+            },
+          },
+        },
+      };
+      const result = validateExperienceFields(pattern, schemaVersion);
+      expect(result.success).toBe(true);
+      expect(result.errors).toBeUndefined();
+    });
+
+    it('requires prebindingDefinitions field to not be empty array', () => {
       const pattern = {
         ...experiencePattern,
         fields: {
