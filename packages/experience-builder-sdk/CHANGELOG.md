@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.42.3](https://github.com/contentful/experience-builder/compare/v1.42.2...v1.42.3) (2025-07-02)
+
+### Bug Fixes
+
+- makes in Preview+Delivery mode default value for nested pattern's prebinding work (scope applies to when pattern nests pattern, not experience embeds pattern) [SPA-2853] ([#1202](https://github.com/contentful/experience-builder/issues/1202)) ([7e94407](https://github.com/contentful/experience-builder/commit/7e944074b49a3ec83a7d8ef5836cc0150ddfbd99))
+- ship CSS-in-JS instead of importing CSS for Nextjs support [SPA-2865] ([#1205](https://github.com/contentful/experience-builder/issues/1205)) ([c516f4d](https://github.com/contentful/experience-builder/commit/c516f4dbb582a33cf02bd26d699a92941e94de8e))
+
 ## [1.42.2](https://github.com/contentful/experience-builder/compare/v1.42.1...v1.42.2) (2025-06-30)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react

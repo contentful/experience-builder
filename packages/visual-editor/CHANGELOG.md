@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.42.3](https://github.com/contentful/experience-builder/compare/v1.42.2...v1.42.3) (2025-07-02)
+
+### Bug Fixes
+
+- ship CSS-in-JS instead of importing CSS for Nextjs support [SPA-2865] ([#1205](https://github.com/contentful/experience-builder/issues/1205)) ([c516f4d](https://github.com/contentful/experience-builder/commit/c516f4dbb582a33cf02bd26d699a92941e94de8e))
+
 ## [1.42.2](https://github.com/contentful/experience-builder/compare/v1.42.1...v1.42.2) (2025-06-30)
 
 **Note:** Version bump only for package @contentful/experiences-visual-editor-react
