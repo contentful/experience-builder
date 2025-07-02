@@ -4,7 +4,6 @@ import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import nodeExternals from 'rollup-plugin-node-externals';
 import preserveDirectives from 'rollup-plugin-preserve-directives';
-import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 export default [
   {
@@ -18,7 +17,6 @@ export default [
       },
     ],
     plugins: [
-      peerDepsExternal(),
       preserveDirectives(),
       nodeExternals(),
       resolve(),
@@ -38,7 +36,6 @@ export default [
   {
     input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
-    external: ['@contentful/experiences-components-react/dist/index.css'],
     plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
   },
 ];
