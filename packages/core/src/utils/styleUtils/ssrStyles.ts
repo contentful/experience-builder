@@ -543,6 +543,7 @@ export const resolveBackgroundImageBinding = ({
     // @ts-expect-error TODO: Types coming from validations erroneously assume that `defaultValue` can be a primitive value (e.g. string or number)
     const defaultValueKey = variableDefinition.defaultValue?.key;
     const defaultValue = unboundValues[defaultValueKey].value;
+
     const overwriteValue = componentVariablesOverwrites?.[variableDefinitionKey];
 
     // overwriteValue is a ComponentValue we can safely return the default value
@@ -813,29 +814,20 @@ export const flattenDesignTokenRegistry = (
   }, {});
 };
 
-type MediaQueryData = { condition: string; cssByClassName: Record<string, string> };
-/**
- * Create a single CSS string containing all class definitions for a given media query.
- *
- * @param condition e.g. "*", "<520px", ">520px"
- * @param cssByClassName map of class names to CSS strings containing all rules for each class
- * @returns joined string of all CSS class definitions wrapped into media queries
- */
-export const XXXtoMediaQuery = ({ condition, cssByClassName }: MediaQueryData): string => {
-  const mediaQueryStyles = Object.entries(cssByClassName).reduce<string>(
-    (acc, [className, css]) => {
-      return `${acc}.${className}{${css}}`;
-    },
-    ``,
-  );
-
-  if (condition === '*') {
-    return mediaQueryStyles;
+function mergeDefaultAndOverwriteValues(
+  defaultValue: ComponentPropertyValue,
+  overwriteValue?: ComponentPropertyValue,
+): ComponentPropertyValue;
+function mergeDefaultAndOverwriteValues(
+  defaultValue?: ComponentPropertyValue,
+  overwriteValue?: ComponentPropertyValue,
+): ComponentPropertyValue | undefined;
+function mergeDefaultAndOverwriteValues(
+  defaultValue?: ComponentPropertyValue,
+  overwriteValue?: ComponentPropertyValue,
+): ComponentPropertyValue | undefined {
+  if (defaultValue?.type === 'DesignValue' && overwriteValue?.type === 'DesignValue') {
+    return mergeDesignValuesByBreakpoint(defaultValue, overwriteValue);
   }
-
-  const [evaluation, pixelValue] = [condition[0], condition.substring(1)];
-
-  const mediaQueryRule = evaluation === '<' ? 'max-width' : 'min-width';
-
-  return `@media(${mediaQueryRule}:${pixelValue}){${mediaQueryStyles}}`;
-};
+  return overwriteValue ?? defaultValue;
+}
