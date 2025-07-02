@@ -1,6 +1,9 @@
 import type { Asset, Entry } from 'contentful';
 import { entities, entityIds, entries } from '../test/__fixtures__/entities';
-import { experienceEntry } from '../test/__fixtures__/experience';
+import {
+  experienceEntry as baseExperienceEntry,
+  createExperienceEntry,
+} from '../test/__fixtures__/experience';
 import { describe, it, expect } from 'vitest';
 
 import { EntityStore } from './EntityStore';
@@ -8,6 +11,47 @@ import { EntityStore } from './EntityStore';
 const locale = 'en-US';
 
 describe('EntityStore', () => {
+  let experienceEntry;
+
+  beforeEach(() => {
+    experienceEntry = structuredClone(baseExperienceEntry);
+    experienceEntry.fields.componentSettings = {
+      prebindingDefinitions: [
+        {
+          id: 'testPrebinding',
+          parameterDefinitions: {
+            testParam: {
+              contentTypes: {
+                ct111: {
+                  sys: {
+                    id: 'ct111',
+                    type: 'Link',
+                    linkType: 'ContentType',
+                  },
+                },
+              },
+            },
+          },
+          variableMappings: {
+            testVariable: {
+              type: 'ContentTypeMapping',
+              parameterId: 'testParam',
+              pathsByContentType: {
+                ct111: {
+                  path: '/fields/title',
+                },
+              },
+            },
+          },
+        },
+      ],
+      variableDefinitions: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        testVariable: {} as any,
+      },
+    };
+  });
+
   it('should be defined', () => {
     expect(EntityStore).toBeDefined();
   });
@@ -34,6 +78,30 @@ describe('EntityStore', () => {
     expect(store.breakpoints).toEqual(experienceEntry.fields.componentTree.breakpoints);
     expect(store.dataSource).toEqual(experienceEntry.fields.dataSource);
     expect(store.unboundValues).toEqual(experienceEntry.fields.unboundValues);
+    expect(store.hoistedParameterDefinitions).toEqual({
+      testParam: {
+        contentTypes: {
+          ct111: {
+            sys: {
+              id: 'ct111',
+              linkType: 'ContentType',
+              type: 'Link',
+            },
+          },
+        },
+      },
+    });
+    expect(store.hoistedVariableMappings).toEqual({
+      testVariable: {
+        parameterId: 'testParam',
+        pathsByContentType: {
+          ct111: {
+            path: '/fields/title',
+          },
+        },
+        type: 'ContentTypeMapping',
+      },
+    });
     expect(store.getCurrentLocale()).toBe(locale);
   });
 
@@ -152,6 +220,29 @@ describe('EntityStore', () => {
           'file',
         ]),
       ).toBe('assetFileUrl');
+    });
+  });
+
+  describe('serialize/deserialize:', () => {
+    it('should have as result of deserialization an instance of the EntityStore identical to the serialized one', () => {
+      const experienceEntry = createExperienceEntry({
+        id: 'testExperienceEntry',
+      });
+
+      const entityStore = new EntityStore({
+        experienceEntry: experienceEntry,
+        entities,
+        locale,
+      });
+      expect(entityStore).toBeDefined();
+
+      // Seems that during SSR it's the zustand mechanisms wire into NextJS hydration lifecycle
+      // and will nest `entityStore` in the hydrated state like this
+      // `{ entityStore: { _experienceEntryFields: ..., ... } }`
+      const serializedZustandStore = JSON.stringify({ entityStore }, null, 2);
+      const deserializedEntityStore = new EntityStore(serializedZustandStore);
+
+      expect(deserializedEntityStore).toEqual(entityStore); // deep equality check of object instances
     });
   });
 });

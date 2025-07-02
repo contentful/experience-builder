@@ -4,3 +4,5 @@ export * from './entities';
 export * from './breakpoints';
 export * from './componentDefinition';
 export * from './componentTreeNode';
+export * from './createEntry';
+export * from './createAsset';

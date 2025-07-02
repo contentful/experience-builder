@@ -1,4 +1,5 @@
-import { EntityStore } from '@contentful/experiences-core';
+import { type EntityStore, isLink } from '@contentful/experiences-core';
+import { SIDELOADED_PREFIX } from '@contentful/experiences-core/constants';
 import {
   ComponentPropertyValue,
   ExperienceComponentSettings,
@@ -75,32 +76,43 @@ export const resolveMaybePrebindingDefaultValuePath = ({
   componentValueKey: string;
   entityStore: EntityStore;
 }): string | undefined => {
-  if (!entityStore.experienceEntryFields?.componentSettings) return;
+  const variableMapping = entityStore.hoistedVariableMappings[componentValueKey];
+  if (!variableMapping) return;
 
-  const componentSettings = entityStore.experienceEntryFields.componentSettings;
+  const pdID = variableMapping.parameterId;
+  const prebindingDefinition = entityStore.hoistedParameterDefinitions[pdID];
 
-  const prebindingDefinition = componentSettings.prebindingDefinitions?.[0];
-  if (!prebindingDefinition) return '';
+  if (!prebindingDefinition) {
+    // probably shouldn't happen, as if ppd is not defined, then variableMapping should not be defined either
+    return;
+  }
+  if (!prebindingDefinition.defaultSource) {
+    // pretty normal, prebinding definitions are not required to have default source
+    return;
+  }
 
-  const mapping = prebindingDefinition.variableMappings?.[componentValueKey];
-  if (!mapping) return;
+  const { contentTypeId, link: defaultEntryLink } = prebindingDefinition.defaultSource;
 
-  const mappingId = mapping.parameterId || '';
-  const prebinding = prebindingDefinition.parameterDefinitions?.[mappingId];
-  if (!prebinding || !prebinding?.defaultSource) return;
+  if (!isLink(defaultEntryLink)) {
+    // just extra safety check, defaultEntryLink should always be a link
+    return;
+  }
 
-  const { contentTypeId, link } = prebinding.defaultSource;
-  if (contentTypeId in prebinding.contentTypes) {
-    return resolvePrebindingPath({
-      componentValueKey,
-      entityStore,
-      componentSettings,
-      parameters: {
-        [mappingId]: {
-          path: `/${link.sys.id}`,
-          type: 'BoundValue',
-        },
-      },
-    });
+  if (contentTypeId in prebindingDefinition.contentTypes) {
+    const entity = entityStore.getEntityFromLink(defaultEntryLink);
+    if (!entity) {
+      // looks like sideloading of the prebinding default value didn't work as expected.
+      // And didn't sideload the entry into entityStore (and didn't add it's sideloaded_dsKey to the entityStore.dataSource)
+      return;
+    }
+
+    const fieldPath = variableMapping.pathsByContentType[contentTypeId].path;
+    if (!fieldPath) {
+      // Path not found or degenerate shape (e.g. empty string '')
+      return;
+    }
+
+    const fullDefaultValuePath = `/${SIDELOADED_PREFIX}${defaultEntryLink.sys.id}${fieldPath}`;
+    return fullDefaultValuePath;
   }
 };

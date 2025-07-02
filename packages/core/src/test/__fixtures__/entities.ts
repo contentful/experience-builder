@@ -559,7 +559,7 @@ export const createEntry = (id: string, overrides?: PartialDeep<Entry>): Entry =
         tags: [],
       },
     },
-    overrides,
+    overrides as Entry, // otherwise PartialDeep<Entry> is not compatible with Entry
   );
 };
 
@@ -587,12 +587,13 @@ export const createAsset = (id: string, overrides?: PartialDeep<Asset>): Asset =
           },
         },
         locale: 'en-US',
+        contentSourceMaps: {},
       },
       fields: {},
       metadata: {
         tags: [],
       },
     },
-    overrides,
+    overrides as Asset, // otherwise PartialDeep<Asset> is not compatible with Asset
   );
 };
