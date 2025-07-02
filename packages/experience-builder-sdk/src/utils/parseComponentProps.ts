@@ -11,8 +11,8 @@ import {
   PrimitiveValue,
   ResolveDesignValueType,
 } from '@contentful/experiences-core/types';
-import { convertResolvedDesignValuesToMediaQuery } from '../hooks/useMediaQuery';
-import { createStylesheetsForBuiltInStyles } from '../hooks/useMediaQuery';
+import { convertResolvedDesignValuesToMediaQuery } from '../core/styles/convertResolvedDesignValuesToMediaQuery';
+import { createStylesheetsForBuiltInStyles } from '../core/styles/createStylesheetsForBuiltInStyles';
 
 // TODO: Test this for nested patterns as the name might be just a random hash without the actual name (needs to be validated).
 /**
