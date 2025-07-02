@@ -1,7 +1,7 @@
 import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../get';
 import { EntityStoreBase } from '@/entity';
-import { isAsset, isEntry } from '../entityTypeChecks';
+import { isAsset, isEntry } from '../typeguards';
 
 export function getResolvedEntryFromLink(
   entryOrAsset: Entry | Asset,
