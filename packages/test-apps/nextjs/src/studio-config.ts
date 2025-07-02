@@ -9,9 +9,23 @@ import { CustomImageComponent } from './components/CustomImageComponent';
 import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import { CustomButton, CustomButtonComponentDefinition } from './components/CustomButton';
+import {
+  ResolveManuallyComponent,
+  ResolveManuallyComponentDefinition,
+  ShallowComponent,
+  ShallowComponentDefinition,
+} from './components/BindingToReferences';
 
 defineComponents(
   [
+    {
+      component: ResolveManuallyComponent,
+      definition: ResolveManuallyComponentDefinition,
+    },
+    {
+      component: ShallowComponent,
+      definition: ShallowComponentDefinition,
+    },
     {
       component: CustomButton,
       definition: CustomButtonComponentDefinition,

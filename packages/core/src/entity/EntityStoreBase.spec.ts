@@ -247,4 +247,63 @@ describe('EntityStoreBase', () => {
       expect(store.entities).toContainEqual(updatedAsset);
     });
   });
+
+  describe('getAssetById', () => {
+    it('should return the Asset by id', () => {
+      const asset = store.getAssetById(entityIds.ASSET1);
+      expect(asset).toBeDefined();
+      expect(asset!.sys.id).toBe(entityIds.ASSET1);
+    });
+    it('should return undefined if Asset does not exist', () => {
+      const asset = store.getAssetById('non-existing-asset');
+      expect(asset).toBeUndefined();
+    });
+    it('should return undefined if id is not an Asset', () => {
+      const asset = store.getAssetById(entityIds.ENTRY1);
+      expect(asset).toBeUndefined();
+    });
+    it('should return undefined if id is not provided', () => {
+      const asset = store.getAssetById('');
+      expect(asset).toBeUndefined();
+    });
+  });
+
+  describe('getEntryById', () => {
+    it('should return the Entry by id', () => {
+      const entry = store.getEntryById(entityIds.ENTRY1);
+      expect(entry).toBeDefined();
+      expect(entry!.sys.id).toBe(entityIds.ENTRY1);
+    });
+
+    it('should return undefined if Entry does not exist', () => {
+      const entry = store.getEntryById('non-existing-entry');
+      expect(entry).toBeUndefined();
+    });
+
+    it('should return undefined if id is not an Entry', () => {
+      const entry = store.getEntryById(entityIds.ASSET1);
+      expect(entry).toBeUndefined();
+    });
+
+    it('should return undefined if id is not provided', () => {
+      const entry = store.getEntryById('');
+      expect(entry).toBeUndefined();
+    });
+  });
+
+  describe('toJSON', () => {
+    it('should return a JSON representation of the store', () => {
+      const json = store.toJSON();
+      expect(json).toEqual({
+        entryMap: {
+          [entityIds.ENTRY1]: entitiesBy(entityIds.ENTRY1),
+          [entityIds.ENTRY2]: entitiesBy(entityIds.ENTRY2),
+        },
+        assetMap: {
+          [entityIds.ASSET1]: entitiesBy(entityIds.ASSET1),
+        },
+        locale: LOCALE,
+      });
+    });
+  });
 });
