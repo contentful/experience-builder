@@ -24,6 +24,10 @@ export {
   isEntry,
   isLinkToAsset,
   isLinkToEntry,
+  // Early preload utilities
+  extractLeafLinksReferencedFromExperience,
+  extractReferencesFromEntries,
+  extractReferencesFromEntriesAsIds,
 } from '@contentful/experiences-core';
 export {
   CONTENTFUL_COMPONENTS,

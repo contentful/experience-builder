@@ -1,10 +1,10 @@
 import type { Experience } from '@contentful/experiences-sdk-react';
 import type { ContentfulClientApi, Asset, Entry } from 'contentful';
-import { inMemoryEntities } from '@contentful/experiences-sdk-react';
 import {
+  inMemoryEntities,
   extractReferencesFromEntriesAsIds,
   extractLeafLinksReferencedFromExperience,
-} from '@contentful/experiences-core';
+} from '@contentful/experiences-sdk-react';
 
 type EntitiesToFetch = {
   assetsToFetch: string[];
