@@ -31,7 +31,7 @@ export const maybeMergePatternDefaultDesignValues = ({
     const exposedVariableDefinition =
       componentRegistry.get(patternId)?.definition.variables[exposedPropertyName];
 
-    let exposedDefaultValue = exposedVariableDefinition?.defaultValue as DesignValue;
+    let exposedDefaultValue = exposedVariableDefinition?.defaultValue as DesignValue | undefined;
     let parentPatternNode = findNodeById(node.data.pattern?.nodeId);
 
     while (parentPatternNode) {
@@ -45,14 +45,14 @@ export const maybeMergePatternDefaultDesignValues = ({
         componentRegistry.get(parentPatternId)?.definition.variables[nextKey];
 
       exposedDefaultValue = mergeDesignValuesByBreakpoint(
-        parentPatternVariableDefinition?.defaultValue as DesignValue,
+        parentPatternVariableDefinition?.defaultValue as DesignValue | undefined,
         exposedDefaultValue,
       );
       parentPatternNode = findNodeById(parentPatternNode.data.pattern?.nodeId);
     }
 
     const mergedDesignValue = mergeDesignValuesByBreakpoint(exposedDefaultValue, variableMapping);
-    return mergedDesignValue.valuesByBreakpoint;
+    return mergedDesignValue?.valuesByBreakpoint;
   }
   return variableMapping.valuesByBreakpoint;
 };
