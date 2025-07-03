@@ -1,8 +1,8 @@
 import {
-  BoundComponentPropertyTypes,
   ComponentDefinitionVariableType,
   ComponentTreeNode,
   ResolveDesignValueType,
+  BoundComponentPropertyTypes,
 } from '@/types';
 import { transformRichText } from './transformRichText';
 import { transformMedia } from './media/transformMedia';

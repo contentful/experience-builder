@@ -17,14 +17,13 @@ interface CFProps extends React.HtmlHTMLAttributes<HTMLElement> {
  * Sets up a component to be consumed by Experience Builder. This function can be used to wrap a component with a container component, or to pass props to the component directly.
  * @param Component Component to be used by Experience Builder.
  * @param options Options for the `withComponentWrapper` function.
- * @default { wrapComponent: true, wrapContainerTag: 'div' }
+ * @default { wrapComponent: true, wrapContainer: 'div' }
  * @returns A component that can be passed to `defineComponents`.
  */
 export function withComponentWrapper<T>(
   Component: React.ElementType,
   options: ComponentRegistration['options'] = {
     wrapComponent: true,
-    wrapContainerTag: 'div',
     wrapContainer: 'div',
   },
 ) {

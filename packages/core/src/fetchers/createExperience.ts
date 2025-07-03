@@ -2,6 +2,7 @@ import type { Asset, Entry } from 'contentful';
 import { isExperienceEntry } from '@/utils';
 import type { Experience } from '@/types';
 import { EntityStore } from '@/entity/EntityStore';
+import { inMemoryEntitiesStore } from '@/entity/InMemoryEntitiesStore';
 
 type CreateExperienceParams = {
   experienceEntry: Entry;
@@ -28,11 +29,10 @@ export function createExperience(options: CreateExperienceParams): Experience<En
 export function createExperience(
   options: string | CreateExperienceParams,
 ): Experience<EntityStore> {
+  let entityStore: EntityStore;
+
   if (typeof options === 'string') {
-    const entityStore = new EntityStore(options);
-    return {
-      entityStore,
-    };
+    entityStore = new EntityStore(options);
   } else {
     const { experienceEntry, referencedAssets, referencedEntries, locale } = options;
     if ([experienceEntry, ...referencedAssets, ...referencedEntries].some(isNotLocalized)) {
@@ -44,16 +44,17 @@ export function createExperience(
       throw new Error('Provided entry is not an experience entry');
     }
 
-    const entityStore = new EntityStore({
+    entityStore = new EntityStore({
       experienceEntry,
       entities: [...referencedEntries, ...referencedAssets],
       locale,
     });
-
-    return {
-      entityStore,
-    };
   }
+
+  inMemoryEntitiesStore.getState().resetEntityStore(entityStore);
+  return {
+    entityStore,
+  };
 }
 
 // Following the API shape, we check the `sys.locale` property as we can't rely on the shape of

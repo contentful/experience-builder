@@ -30,5 +30,16 @@ export const useFetchById = ({
 
   const fetchResult = useFetchByBase(fetchMethod, mode);
 
-  return { ...fetchResult, experience: { ...fetchResult.experience, hyperlinkPattern } };
+  if (!fetchResult.experience) {
+    return fetchResult;
+  }
+
+  // enriches fetchResult.experience with the hyperlinkPattern, only when fetchResult.experience exists
+  return {
+    ...fetchResult,
+    experience: {
+      ...fetchResult.experience,
+      hyperlinkPattern,
+    },
+  };
 };

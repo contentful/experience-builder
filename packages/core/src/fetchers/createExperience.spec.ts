@@ -67,6 +67,6 @@ describe('createExperience', () => {
 
     expect(experience.entityStore).toBeDefined();
     expect(experience.entityStore?.experienceEntryFields).toEqual(experienceEntry.fields);
-    expect(experience.entityStore?.getCurrentLocale()).toBe('en-US');
+    expect(experience.entityStore?.locale).toBe('en-US');
   });
 });
