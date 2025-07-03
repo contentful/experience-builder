@@ -75,7 +75,7 @@ export const deserializePatternNode = ({
         };
       } else if (instanceProperty?.type === 'DesignValue') {
         variables[variableName] = mergeDesignValuesByBreakpoint(
-          defaultValue as DesignValue,
+          defaultValue as DesignValue | undefined,
           instanceProperty,
         );
       } else if (!instanceProperty && defaultValue) {
