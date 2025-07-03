@@ -3,12 +3,12 @@ import React from 'react';
 import type { Asset, Entry } from 'contentful';
 import {
   type ComponentDefinition,
-  inMemoryEntities,
   isAsset,
   isEntry,
   isArrayOfLinks,
   isLinkToAsset,
   isLinkToEntry,
+  useInMemoryEntities,
 } from '@contentful/experiences-sdk-react';
 import { stringifyCompact } from '../../utils/debugging';
 
@@ -41,16 +41,17 @@ export const ResolveManuallyComponent: React.FC<ResolveManuallyProps> = (
 ) => {
   const { items: shallowItems, singleItem: shallowSingleItem } = props;
 
+  const { maybeResolveLink } = useInMemoryEntities();
   // could be undefined when:
   //  - user didn't bind
   //  - bound to empty reference
   //  - bound to reference to archived entity
   //  - bound to array which only contains references to archived entities
   const items = (shallowItems || []).map((shallowItem) =>
-    resolveEntityLinksRecursively(shallowItem || undefined, 3),
+    resolveEntityLinksRecursively(shallowItem || undefined, 3, maybeResolveLink),
   );
   const singleItem = shallowSingleItem
-    ? resolveEntityLinksRecursively(shallowSingleItem, 3)
+    ? resolveEntityLinksRecursively(shallowSingleItem, 3, maybeResolveLink)
     : undefined;
   return (
     <div>
@@ -81,6 +82,7 @@ export default ResolveManuallyComponent;
 function resolveEntityLinksRecursively(
   roEntity: Entry | Asset | undefined,
   depth: number,
+  maybeResolveLink: (link: unknown) => Entry | Asset | undefined,
 ): Entry | Asset | undefined {
   if (depth <= 0) {
     return structuredClone(roEntity);
@@ -95,25 +97,30 @@ function resolveEntityLinksRecursively(
     const e = structuredClone(roEntity);
     for (const [fname, value] of Object.entries(e.fields)) {
       if (isLinkToEntry(value)) {
-        const roEntity = inMemoryEntities.maybeResolveLink(value);
+        const roEntity = maybeResolveLink(value);
         if (roEntity) {
           // you can skip check and overwrite unresolved links with undefined.
-          const resolvedEntity = resolveEntityLinksRecursively(roEntity, depth - 1);
+          const resolvedEntity = resolveEntityLinksRecursively(
+            roEntity,
+            depth - 1,
+            maybeResolveLink,
+          );
           e.fields[fname] = resolvedEntity;
         }
       } else if (isArrayOfLinks(value)) {
-        const arrayOfRoEntities = value
-          .map((link) => inMemoryEntities.maybeResolveLink(link))
-          .filter(Boolean) as (Entry | Asset)[]; // filter out undefined values for links that are not in memory (not loaded or archived);
+        const arrayOfRoEntities = value.map((link) => maybeResolveLink(link)).filter(Boolean) as (
+          | Entry
+          | Asset
+        )[]; // filter out undefined values for links that are not in memory (not loaded or archived);
         const arrayOfResolvedEntities = arrayOfRoEntities.map((roEntity) => {
-          return resolveEntityLinksRecursively(roEntity, depth - 1);
+          return resolveEntityLinksRecursively(roEntity, depth - 1, maybeResolveLink);
         });
         if (arrayOfResolvedEntities.length) {
           // you can skip check and overwrite array of links, even if none of them resolved successfully.
           e.fields[fname] = arrayOfResolvedEntities;
         }
       } else if (isLinkToAsset(value)) {
-        const roAsset = inMemoryEntities.maybeResolveLink(value);
+        const roAsset = maybeResolveLink(value);
         if (roAsset) {
           // you can skip check and overwrite unresolved asset links with undefined
           e.fields[fname] = structuredClone(roAsset); // we just pass through the asset, no need to resolve further
