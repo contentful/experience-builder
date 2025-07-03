@@ -1,9 +1,15 @@
 import type { Link } from '@/types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isLinkToAsset = (variable: any): variable is Link<'Asset'> => {
-  if (!variable) return false;
-  if (typeof variable !== 'object') return false;
+export const isLinkToAsset = (variable: unknown): variable is Link<'Asset'> => {
+  if (variable === null || typeof variable !== 'object') return false;
+
+  // The `'prop' in` pattern is informing TypeScript of the object shape, no need to cast `as`.
+  if (!('sys' in variable)) return false;
+  if (variable.sys === null || typeof variable.sys !== 'object') return false;
+
+  if (!('linkType' in variable.sys)) return false;
+  if (!('id' in variable.sys)) return false;
+  if (!('type' in variable.sys)) return false;
 
   return (
     variable.sys?.linkType === 'Asset' &&

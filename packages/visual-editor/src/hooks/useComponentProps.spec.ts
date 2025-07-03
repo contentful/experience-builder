@@ -1,16 +1,23 @@
-import { ASSEMBLY_NODE_TYPE, CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
+import React from 'react';
+import {
+  ASSEMBLY_BLOCK_NODE_TYPE,
+  ASSEMBLY_NODE_TYPE,
+  CONTENTFUL_COMPONENTS,
+} from '@contentful/experiences-core/constants';
 import { useComponentProps } from './useComponentProps';
 import {
   ComponentDefinition as ComponentDefinitionWithOptionalVariables,
   ComponentDefinitionVariable,
   ComponentPropertyValue,
   ExperienceTreeNode as ExperienceTreeNodeWithOptionalProperties,
+  ComponentRegistration,
 } from '@contentful/experiences-core/types';
+
 import { Mock, vi, it, describe } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import { useDraggedItemStore } from '@/store/draggedItem';
-import { getValueForBreakpoint } from '@contentful/experiences-core';
+import { EditorModeEntityStore, getValueForBreakpoint } from '@contentful/experiences-core';
 
 // Redefining this type to make 'data.props.cfVisibility' a required field.
 // Semantically, it is always available on the node at runtime,
@@ -21,6 +28,8 @@ type ExperienceTreeNode = Omit<ExperienceTreeNodeWithOptionalProperties, 'data'>
       cfVisibility: ComponentPropertyValue;
     };
   };
+} & {
+  exposedPropertyNameToKeyMap?: Record<string, string>;
 };
 
 // When defining components in tests, must make the cfVisibility variable required,
@@ -32,15 +41,59 @@ type ComponentDefinition = Omit<ComponentDefinitionWithOptionalVariables, 'varia
   };
 };
 
+const breakpoints = createBreakpoints();
+const desktopIndex = 0;
+const desktop = breakpoints[desktopIndex];
+
+const mocks = vi.hoisted<{ componentRegistration: ComponentRegistration }>(() => {
+  return {
+    componentRegistration: {
+      component: () => React.createElement('div'),
+      definition: {
+        id: 'pattern-id',
+        name: 'Pattern Name',
+        category: 'Assemblies',
+        variables: {
+          '7tZxaxR': {
+            displayName: 'Background color',
+            type: 'Text',
+            group: 'style',
+            description: 'The background color of the section',
+            defaultValue: {
+              type: 'DesignValue',
+              valuesByBreakpoint: {
+                desktop: 'white',
+                tablet: 'green',
+                mobile: 'blue',
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+});
+
 vi.mock('@/store/draggedItem', () => ({
   useDraggedItemStore: vi.fn(),
 }));
 
-const breakpoints = createBreakpoints();
-const desktopIndex = 0;
-const desktop = breakpoints[desktopIndex];
+vi.mock('@/store/registries', () => ({
+  componentRegistry: new Map<string, ComponentRegistration>([
+    ['pattern-id', mocks.componentRegistration],
+  ]),
+}));
+
+let activeBreakpointIndex = desktopIndex;
+
 const resolveDesignValue = vi.fn((valuesByBreakpoint, variableName) =>
-  getValueForBreakpoint(valuesByBreakpoint, breakpoints, desktopIndex, desktopIndex, variableName),
+  getValueForBreakpoint(
+    valuesByBreakpoint,
+    breakpoints,
+    activeBreakpointIndex,
+    desktopIndex,
+    variableName,
+  ),
 );
 const renderDropzone = vi.fn();
 const areEntitiesFetched = true;
@@ -83,6 +136,7 @@ describe('useComponentProps', () => {
     const { result } = renderHook(() =>
       useComponentProps({
         node: { ...node, type: ASSEMBLY_NODE_TYPE },
+        entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
         areEntitiesFetched,
         resolveDesignValue,
         renderDropzone,
@@ -94,10 +148,72 @@ describe('useComponentProps', () => {
     expect(Object.keys(result.current.componentProps)).not.toContain('label');
   });
 
+  it('should resolve design value when node type is ASSEMBLY_BLOCK_NODE_TYPE', () => {
+    const areEntitiesFetched = true;
+    const userIsDragging = false;
+    const patternBlockNode = {
+      ...node,
+      data: {
+        ...node.data,
+        props: {
+          cfBackgroundColor: {
+            type: 'DesignValue',
+            valuesByBreakpoint: {
+              [desktop.id]: 'red',
+            },
+          },
+        },
+        pattern: {
+          id: 'pattern-id',
+          nodeId: 'pattern-node-id',
+          nodeIdOnPattern: 'pattern-node-id',
+          nodeLocation: '0_0',
+          isVisibilityPropertyExposed: true,
+          variableNameToComponentValueKeyMap: {},
+        },
+      },
+      type: ASSEMBLY_BLOCK_NODE_TYPE,
+      exposedPropertyNameToKeyMap: {
+        cfBackgroundColor: '7tZxaxR',
+      },
+    };
+
+    // changing the active breakpoint to non-desktop
+    activeBreakpointIndex = 1;
+
+    const { result } = renderHook(() =>
+      useComponentProps({
+        node: patternBlockNode as unknown as ExperienceTreeNode,
+        entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
+        areEntitiesFetched,
+        resolveDesignValue,
+        renderDropzone,
+        definition: {
+          ...definition,
+          variables: {
+            ...definition.variables,
+            cfBackgroundColor: {
+              displayName: 'Background color',
+              type: 'Text',
+              group: 'style',
+              description: 'The background color of the section',
+              defaultValue: 'rgba(0, 0, 0, 0)',
+            },
+          },
+        },
+        userIsDragging,
+      }),
+    );
+
+    // making sure that the design value is resolved to the correct pattern variable definition value
+    expect(result.current.componentStyles.backgroundColor).toEqual('green');
+  });
+
   it('should return props with default values when variableMapping is falsy', () => {
     const { result } = renderHook(() =>
       useComponentProps({
         node,
+        entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
         areEntitiesFetched,
         resolveDesignValue,
         renderDropzone,
@@ -127,6 +243,7 @@ describe('useComponentProps', () => {
             },
           },
         },
+        entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
         areEntitiesFetched,
         resolveDesignValue,
         renderDropzone,
@@ -192,6 +309,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -208,6 +326,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -229,6 +348,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -318,6 +438,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node: newNode,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -354,6 +475,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node: newNode,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -378,6 +500,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -399,6 +522,7 @@ describe('useComponentProps', () => {
         const { result } = renderHook(() =>
           useComponentProps({
             node,
+            entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
             areEntitiesFetched,
             resolveDesignValue,
             renderDropzone,
@@ -420,6 +544,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -436,6 +561,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -457,6 +583,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched,
           resolveDesignValue,
           renderDropzone,
@@ -527,6 +654,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched: true,
           resolveDesignValue,
           renderDropzone,
@@ -544,6 +672,7 @@ describe('useComponentProps', () => {
       const { result } = renderHook(() =>
         useComponentProps({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
           areEntitiesFetched: true,
           resolveDesignValue,
           renderDropzone,

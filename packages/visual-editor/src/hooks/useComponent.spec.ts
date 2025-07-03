@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { useComponent } from './useComponent';
 import { ComponentRegistration, ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { vi, it, describe, expect } from 'vitest';
-import { getValueForBreakpoint } from '@contentful/experiences-core';
+import { EditorModeEntityStore, getValueForBreakpoint } from '@contentful/experiences-core';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import React from 'react';
 
@@ -72,6 +72,8 @@ describe('useComponent', () => {
       const { result } = renderHook(() =>
         useComponent({
           node,
+          entityStore: new EditorModeEntityStore({ locale: 'en-US', entities: [] }),
+          areEntitiesFetched: true,
           resolveDesignValue,
           renderDropzone,
           userIsDragging,

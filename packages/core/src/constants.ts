@@ -155,14 +155,6 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfTextBold',
   'cfTextItalic',
   'cfTextUnderline',
-  // For backwards compatibility
-  // we need to keep those in this constant array
-  // so that omit() in <VisualEditorBlock> and <CompositionBlock>
-  // can filter them out and not pass as props
-  'cfBackgroundImageScaling',
-  'cfBackgroundImageAlignment',
-  'cfBackgroundImageAlignmentVertical',
-  'cfBackgroundImageAlignmentHorizontal',
 ];
 
 export const EMPTY_CONTAINER_HEIGHT = '80px';
