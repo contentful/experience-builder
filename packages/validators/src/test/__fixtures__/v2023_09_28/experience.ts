@@ -125,13 +125,13 @@ export const experience = {
               cfWidth: {
                 type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'fill',
+                  desktop: '100%',
                 },
               },
               cfHeight: {
                 type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'fill',
+                  desktop: '100%',
                 },
               },
               cfMaxWidth: {
@@ -173,18 +173,6 @@ export const experience = {
               cfBackgroundImageUrl: {
                 type: 'UnboundValue',
                 key: '36j5IQjr3FKEQ4Yvyd034',
-              },
-              cfBackgroundImageScaling: {
-                type: 'DesignValue',
-                valuesByBreakpoint: {
-                  desktop: 'fit',
-                },
-              },
-              cfBackgroundImageAlignment: {
-                type: 'DesignValue',
-                valuesByBreakpoint: {
-                  desktop: 'left top',
-                },
               },
               cfHyperlink: {
                 type: 'UnboundValue',

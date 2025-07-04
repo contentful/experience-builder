@@ -3,14 +3,19 @@ import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';
 import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema';
-import { isAsset, isEntry } from '@/utils/entityTypeChecks';
+import { isAsset, isEntry } from '@/utils/typeguards';
+import { deepFreeze } from '@/utils/freeze';
+
+export interface EntityFromLink {
+  getEntityFromLink(link: UnresolvedLink<'Entry' | 'Asset'>): Asset | Entry | undefined;
+}
 
 /**
  * Base Store for entities
  * Can be extended for the different loading behaviours (editor, production, ..)
  */
-export abstract class EntityStoreBase {
-  /* serialized */ protected locale: string;
+export abstract class EntityStoreBase implements EntityFromLink {
+  /* serialized */ public locale: string;
   /* serialized */ protected entryMap = new Map<string, Entry>();
   /* serialized */ protected assetMap = new Map<string, Asset>();
 
@@ -98,6 +103,24 @@ export abstract class EntityStoreBase {
     return resolvedEntity;
   }
 
+  public getAssetById(assetId: string): Asset | undefined {
+    const asset = this.assetMap.get(assetId);
+    if (!asset) {
+      console.warn(`Asset with ID "${assetId}" is not found in the store`);
+      return;
+    }
+    return asset;
+  }
+
+  public getEntryById(entryId: string): Entry | undefined {
+    const entry = this.entryMap.get(entryId);
+    if (!entry) {
+      console.warn(`Entry with ID "${entryId}" is not found in the store`);
+      return;
+    }
+    return entry;
+  }
+
   protected getEntitiesFromMap(type: 'Entry' | 'Asset', ids: string[]) {
     const resolved: Array<Entry | Asset<ChainModifiers, string>> = [];
     const missing: string[] = [];
@@ -119,9 +142,11 @@ export abstract class EntityStoreBase {
 
   protected addEntity(entity: Entry | Asset): void {
     if (isAsset(entity)) {
-      this.assetMap.set(entity.sys.id, entity);
+      // cloned and frozen
+      this.assetMap.set(entity.sys.id, deepFreeze(structuredClone(entity)));
     } else if (isEntry(entity)) {
-      this.entryMap.set(entity.sys.id, entity);
+      // cloned and frozen
+      this.entryMap.set(entity.sys.id, deepFreeze(structuredClone(entity)));
     } else {
       throw new Error(
         `Attempted to add an entity to the store that is neither Asset nor Entry: '${JSON.stringify(entity)}'`,
@@ -173,7 +198,11 @@ export abstract class EntityStoreBase {
     const resolveFieldset = (
       unresolvedFieldset: Array<[null, string, string?]>,
       headEntry: Entry | Asset,
-    ) => {
+    ): {
+      resolvedFieldset: Array<[Entry | Asset, string, string?]>;
+      isFullyResolved: boolean;
+      reason?: string;
+    } => {
       const resolvedFieldset: Array<[Entry | Asset, string, string?]> = [];
       let entityToResolveFieldsFrom: Entry | Asset = headEntry;
       for (let i = 0; i < unresolvedFieldset.length; i++) {

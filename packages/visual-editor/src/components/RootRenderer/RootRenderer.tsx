@@ -9,17 +9,21 @@ import styles from './render.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { DNDProvider } from './DNDProvider';
-import { sendMessage } from '@contentful/experiences-core';
+import { type InMemoryEntitiesStore, sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import { useEditorStore } from '@/store/editor';
 import { Dropzone } from '@components/DraggableBlock/Dropzone';
 
 interface RootRendererProperties {
   onChange?: (data: ExperienceTree) => void;
+  inMemoryEntitiesStore: InMemoryEntitiesStore;
 }
 
-export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => {
-  useEditorSubscriber();
+export const RootRenderer: React.FC<RootRendererProperties> = ({
+  onChange,
+  inMemoryEntitiesStore,
+}) => {
+  useEditorSubscriber(inMemoryEntitiesStore);
 
   const dragItem = useDraggedItemStore((state) => state.componentId);
   const userIsDragging = useDraggedItemStore((state) => state.isDraggingOnCanvas);
@@ -117,12 +121,20 @@ export const RootRenderer: React.FC<RootRendererProperties> = ({ onChange }) => 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef.current]);
 
+  const entityStore = inMemoryEntitiesStore((state) => state.entityStore);
+  const areEntitiesFetched = inMemoryEntitiesStore((state) => state.areEntitiesFetched);
+
   return (
     <DNDProvider>
       {dragItem && <DraggableContainer id={dragItem} />}
       <div data-ctfl-root className={styles.container} ref={containerRef} style={containerStyles}>
         {userIsDragging && <div data-ctfl-zone-id={ROOT_ID} className={styles.hitbox} />}
-        <Dropzone zoneId={ROOT_ID} resolveDesignValue={resolveDesignValue} />
+        <Dropzone
+          zoneId={ROOT_ID}
+          resolveDesignValue={resolveDesignValue}
+          entityStore={entityStore}
+          areEntitiesFetched={areEntitiesFetched}
+        />
         {userIsDragging && (
           <>
             <div data-ctfl-zone-id={ROOT_ID} className={styles.hitboxLower} />

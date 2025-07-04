@@ -102,6 +102,7 @@ describe('EntityStore', () => {
         type: 'ContentTypeMapping',
       },
     });
+    expect(store.locale).toBe(locale);
     expect(store.getCurrentLocale()).toBe(locale);
   });
 
@@ -118,7 +119,7 @@ describe('EntityStore', () => {
     expect(store.breakpoints).toEqual(experienceEntry.fields.componentTree.breakpoints);
     expect(store.dataSource).toEqual(experienceEntry.fields.dataSource);
     expect(store.unboundValues).toEqual(experienceEntry.fields.unboundValues);
-    expect(store.getCurrentLocale()).toBe(locale);
+    expect(store.locale).toBe(locale);
   });
 
   describe('getValue', () => {

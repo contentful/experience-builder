@@ -57,7 +57,7 @@ describe('useFetchBySlug', () => {
 
     expect(result.current).toEqual({
       error: undefined,
-      experience: { hyperlinkPattern: undefined },
+      experience: undefined,
       isLoading: true,
       mode: StudioCanvasMode.NONE,
     });
@@ -131,7 +131,7 @@ describe('useFetchBySlug', () => {
     await waitFor(() => expect(result.current.error).toBeUndefined());
   });
 
-  it('should return an error if multiple experience entries were found, then when slug changes to only one entry, then the error should be undefined', async () => {
+  it('should return an error if multiple experience entries were found, then when slug changes to just one entry, then the error should be undefined', async () => {
     clientMock.getEntries = jest
       .fn()
       .mockResolvedValue({ items: [experienceEntry, experienceEntry] });

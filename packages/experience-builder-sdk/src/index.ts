@@ -4,8 +4,10 @@ export { SDK_VERSION as version };
 
 export { ExperienceRoot } from './ExperienceRoot';
 export { useFetchById, useFetchBySlug, useCustomFetch } from './hooks';
-export { defineComponents, maintainBasicComponentIdsWithoutPrefix } from './core/componentRegistry';
+export { defineComponents } from './core/componentRegistry';
 export {
+  inMemoryEntities,
+  useInMemoryEntities,
   defineDesignTokens,
   defineBreakpoints,
   VisualEditorMode,
@@ -16,6 +18,16 @@ export {
   fetchReferencedEntities,
   fetchExperienceEntry,
   localizeEntity,
+  isArrayOfLinks,
+  isLink,
+  isAsset,
+  isEntry,
+  isLinkToAsset,
+  isLinkToEntry,
+  // Early preload utilities
+  extractLeafLinksReferencedFromExperience,
+  extractReferencesFromEntries,
+  extractReferencesFromEntriesAsIds,
 } from '@contentful/experiences-core';
 export {
   CONTENTFUL_COMPONENTS,

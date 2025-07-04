@@ -59,15 +59,7 @@ describe('sideloadPrebindingDefaultValues', () => {
                       },
                     },
                   },
-                  contentTypes: {
-                    ct111: {
-                      sys: {
-                        id: 'ct111',
-                        type: 'Link',
-                        linkType: 'ContentType',
-                      },
-                    },
-                  },
+                  contentTypes: ['ct111'],
                 },
               },
               variableMappings: {
@@ -144,15 +136,7 @@ describe('sideloadPrebindingDefaultValues', () => {
                       },
                     },
                   },
-                  contentTypes: {
-                    ct111: {
-                      sys: {
-                        id: 'ct111',
-                        type: 'Link',
-                        linkType: 'ContentType',
-                      },
-                    },
-                  },
+                  contentTypes: ['ct111'],
                 },
                 ppdId222: {
                   defaultSource: {
@@ -166,15 +150,7 @@ describe('sideloadPrebindingDefaultValues', () => {
                       },
                     },
                   },
-                  contentTypes: {
-                    ct222: {
-                      sys: {
-                        id: 'ct222',
-                        type: 'Link',
-                        linkType: 'ContentType',
-                      },
-                    },
-                  },
+                  contentTypes: ['ct222'],
                 },
               },
               variableMappings: {
@@ -253,15 +229,7 @@ describe('sideloadPrebindingDefaultValues', () => {
                 id: 'prebindingDefinition1',
                 parameterDefinitions: {
                   ppdId111: {
-                    contentTypes: {
-                      ct111: {
-                        sys: {
-                          id: 'ct111',
-                          type: 'Link',
-                          linkType: 'ContentType',
-                        },
-                      },
-                    },
+                    contentTypes: ['ct111'],
                     defaultSource: undefined,
                   },
                 },
@@ -302,15 +270,7 @@ describe('sideloadPrebindingDefaultValues', () => {
                 id: 'prebindingDefinition1',
                 parameterDefinitions: {
                   ppdId111: {
-                    contentTypes: {
-                      ct111: {
-                        sys: {
-                          id: 'ct111',
-                          type: 'Link',
-                          linkType: 'ContentType',
-                        },
-                      },
-                    },
+                    contentTypes: ['ct111'],
                     defaultSource: {
                       type: 'Entry',
                       contentTypeId: 'ct111',
@@ -375,15 +335,7 @@ describe('sideloadPrebindingDefaultValues', () => {
                     },
                   },
                 },
-                contentTypes: {
-                  n1ct111: {
-                    sys: {
-                      id: 'n1ct111',
-                      type: 'Link',
-                      linkType: 'ContentType',
-                    },
-                  },
-                },
+                contentTypes: ['n1ct111'],
               },
             },
             variableMappings: {
@@ -424,15 +376,7 @@ describe('sideloadPrebindingDefaultValues', () => {
                       },
                     },
                   },
-                  contentTypes: {
-                    ct111: {
-                      sys: {
-                        id: 'ct111',
-                        type: 'Link',
-                        linkType: 'ContentType',
-                      },
-                    },
-                  },
+                  contentTypes: ['ct111'],
                 },
               },
               variableMappings: {

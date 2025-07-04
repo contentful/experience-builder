@@ -13,19 +13,29 @@ type UseFetchByBaseResponse = {
   mode: StudioCanvasMode;
 };
 
+/**
+ * If SDK is detects that it is managed by the Studio Canvas,
+ * it's in "supervised mode" and should not fetch the experience explicitly.
+ * (Instead, it will be passed via postMessage from the Studio Canvas.)
+ */
+const isSupervisedMode = (mode: StudioCanvasMode): boolean => {
+  return mode === StudioCanvasMode.EDITOR || mode === StudioCanvasMode.READ_ONLY;
+};
+
 export const useFetchByBase = (
   fetchMethod: () => Promise<Experience<EntityStore> | undefined>,
   mode: StudioCanvasMode,
 ): UseFetchByBaseResponse => {
   const [experience, setExperience] = useState<Experience<EntityStore>>();
-  const [isLoading, setIsLoading] = useState(false);
+  // Must set depending on mode, otherwise it will always start with isLoading=false on initial render cycle.
+  const [isLoading, setIsLoading] = useState(isSupervisedMode(mode) ? false : true);
   const [error, setError] = useState<Error>();
 
   useEffect(() => {
     (async () => {
       // if we are in editor/read only mode, we don't want to fetch the experience here
       // it is passed via postMessage instead
-      if (mode === StudioCanvasMode.EDITOR || mode === StudioCanvasMode.READ_ONLY) {
+      if (isSupervisedMode(mode)) {
         return;
       }
       setIsLoading(true);
@@ -43,7 +53,7 @@ export const useFetchByBase = (
 
   // When a save event caused a canvas reload, the `receivedModeMessage` might time out and set the
   // mode temporarily to NONE. If it's set to a valid mode afterward, we ignore the fetch result.
-  if (mode === StudioCanvasMode.EDITOR || mode === StudioCanvasMode.READ_ONLY) {
+  if (isSupervisedMode(mode)) {
     return {
       error: undefined,
       experience: undefined,

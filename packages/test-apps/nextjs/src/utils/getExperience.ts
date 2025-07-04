@@ -8,7 +8,7 @@ const environment = process.env.NEXT_PUBLIC_CTFL_ENVIRONMENT!;
 const experienceTypeId = process.env.NEXT_PUBLIC_CTFL_EXPERIENCE_TYPE!;
 const domain = process.env.NEXT_PUBLIC_CTFL_DOMAIN || 'contentful.com';
 
-const getConfig = (isPreview: boolean) => {
+export const getConfig = (isPreview: boolean) => {
   const client = createClient({
     space,
     environment,

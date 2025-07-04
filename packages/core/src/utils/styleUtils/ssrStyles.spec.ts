@@ -124,7 +124,7 @@ describe('resolveBackgroundImageBinding with image optimization', () => {
       options: {
         targetSize: '1000px',
         scaling: 'fit',
-        alignment: 'left',
+        alignment: 'left center',
       },
       width: '1000px',
     });
@@ -179,7 +179,7 @@ describe('resolveBackgroundImageBinding with image optimization', () => {
       },
       options: {
         scaling: 'fit',
-        alignment: 'left',
+        alignment: 'left center',
         format: 'webp',
         targetSize: '300px',
       },
@@ -269,7 +269,7 @@ describe('resolveBackgroundImageBinding with image optimization', () => {
         format: 'webp',
         targetSize: '300px',
         scaling: 'fill',
-        alignment: 'left',
+        alignment: 'left center',
       },
       width: '1000px',
     });
@@ -690,7 +690,7 @@ describe('indexByBreakpoint', () => {
         valuesByBreakpoint: {
           desktop: {
             scaling: 'fit',
-            alignment: 'left',
+            alignment: 'left center',
             targetSize: '300px',
           },
         },
@@ -747,7 +747,7 @@ describe('indexByBreakpoint', () => {
           url: 'https://www.contentful.com/image1.png?w=600',
         },
         cfBackgroundImageOptions: {
-          alignment: 'left',
+          alignment: 'left center',
           scaling: 'fit',
           targetSize: '300px',
         },
@@ -794,7 +794,7 @@ describe('indexByBreakpoint', () => {
         valuesByBreakpoint: {
           desktop: {
             scaling: 'fit',
-            alignment: 'left',
+            alignment: 'left center',
             targetSize: '300px',
           },
         },
@@ -817,7 +817,7 @@ describe('indexByBreakpoint', () => {
         cfBackgroundColor: 'red',
         cfMargin: '${spacing.l}',
         cfBackgroundImageOptions: {
-          alignment: 'left',
+          alignment: 'left center',
           scaling: 'fit',
           targetSize: '300px',
         },
@@ -856,7 +856,7 @@ describe('indexByBreakpoint', () => {
             valuesByBreakpoint: {
               desktop: {
                 scaling: 'fit',
-                alignment: 'left',
+                alignment: 'left center',
                 targetSize: '300px',
               },
             },
@@ -875,7 +875,7 @@ describe('indexByBreakpoint', () => {
       cfWidth: {
         type: 'DesignValue',
         valuesByBreakpoint: {
-          desktop: 'fill',
+          desktop: '100%',
         },
       },
       cfMaxWidth: {
@@ -915,12 +915,12 @@ describe('indexByBreakpoint', () => {
     expect(res).toEqual({
       desktop: {
         cfMargin: '0 Auto 0 Auto',
-        cfWidth: 'fill',
+        cfWidth: '100%',
         cfMaxWidth: '1192px',
         cfPadding: '10px 10px 10px 10px',
         cfBackgroundImageUrl: 'https://www.contentful.com/image1.png',
         cfBackgroundImageOptions: {
-          alignment: 'left',
+          alignment: 'left center',
           scaling: 'fit',
           targetSize: '300px',
         },
@@ -950,7 +950,7 @@ describe('indexByBreakpoint', () => {
             valuesByBreakpoint: {
               desktop: {
                 scaling: 'fit',
-                alignment: 'left',
+                alignment: 'left center',
                 targetSize: '300px',
               },
             },
@@ -969,7 +969,7 @@ describe('indexByBreakpoint', () => {
       cfWidth: {
         type: 'DesignValue',
         valuesByBreakpoint: {
-          desktop: 'fill',
+          desktop: '100%',
         },
       },
       cfMaxWidth: {
@@ -1038,7 +1038,7 @@ describe('indexByBreakpoint', () => {
     expect(res).toEqual({
       desktop: {
         cfMargin: '0 Auto 0 Auto',
-        cfWidth: 'fill',
+        cfWidth: '100%',
         cfMaxWidth: '1192px',
         cfPadding: '10px 10px 10px 10px',
         cfBackgroundImageUrl: {
@@ -1057,7 +1057,7 @@ describe('indexByBreakpoint', () => {
           url: 'https://www.contentful.com/bound-image.png?w=600',
         },
         cfBackgroundImageOptions: {
-          alignment: 'left',
+          alignment: 'left center',
           scaling: 'fit',
           targetSize: '300px',
         },
@@ -1087,7 +1087,7 @@ describe('indexByBreakpoint', () => {
             valuesByBreakpoint: {
               desktop: {
                 scaling: 'fit',
-                alignment: 'left',
+                alignment: 'left center',
                 targetSize: '300px',
               },
             },
@@ -1106,7 +1106,7 @@ describe('indexByBreakpoint', () => {
       cfWidth: {
         type: 'DesignValue',
         valuesByBreakpoint: {
-          desktop: 'fill',
+          desktop: '100%',
         },
       },
       cfMaxWidth: {
@@ -1191,7 +1191,7 @@ describe('indexByBreakpoint', () => {
     expect(res).toEqual({
       desktop: {
         cfMargin: '0 Auto 0 Auto',
-        cfWidth: 'fill',
+        cfWidth: '100%',
         cfMaxWidth: '1192px',
         cfPadding: '10px 10px 10px 10px',
         cfBackgroundImageUrl: {
@@ -1210,7 +1210,7 @@ describe('indexByBreakpoint', () => {
           url: 'https://www.contentful.com/bound-image.png?w=600',
         },
         cfBackgroundImageOptions: {
-          alignment: 'left',
+          alignment: 'left center',
           scaling: 'fit',
           targetSize: '300px',
         },

@@ -47,7 +47,7 @@ export const MaxWidthInput = ({
 
   // Regular expression pattern to check if the width uses a relative value (e.g., %, vw, vh)
   // You can only set max-width, if the width is absolute.
-  const isDisabled = widthValue !== 'fill' && FixedSpacingValueRegexp.test(widthValue);
+  const isDisabled = FixedSpacingValueRegexp.test(widthValue);
 
   return (
     <Grid columns="86px 2fr" columnGap="spacingXs" justifyContent="center" className={styles.grid}>
@@ -56,7 +56,7 @@ export const MaxWidthInput = ({
         isDisabled={isDisabled}
         onBlur={onInputBlur}
         onChange={onInputChange}
-        value={value === 'fill' ? '100%' : value}
+        value={value}
       />
     </Grid>
   );

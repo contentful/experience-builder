@@ -176,7 +176,25 @@ describe('componentSettings', () => {
   });
 
   describe('prebindingDefinitions', () => {
-    it('allows to have an optional prebindingDefinitions field', () => {
+    it('allows prebindingDefinitions to be empty optional', () => {
+      const pattern = {
+        ...experiencePattern,
+        fields: {
+          ...experiencePattern.fields,
+          componentSettings: {
+            [locale]: {
+              variableDefinitions: {},
+              prebindingDefinitions: undefined,
+            },
+          },
+        },
+      };
+      const result = validateExperienceFields(pattern, schemaVersion);
+      expect(result.success).toBe(true);
+      expect(result.errors).toBeUndefined();
+    });
+
+    it('requires prebindingDefinitions field to not be empty array', () => {
       const pattern = {
         ...experiencePattern,
         fields: {
@@ -190,8 +208,9 @@ describe('componentSettings', () => {
         },
       };
       const result = validateExperienceFields(pattern, schemaVersion);
-      expect(result.success).toBe(true);
-      expect(result.errors).toBeUndefined();
+      expect(result.success).toBe(false);
+      expect(result.errors).toBeDefined();
+      expect(result.errors?.[0].details).toBe('Array must contain exactly 1 element(s)');
     });
 
     it('errors if prebindingDefinitions is not an array', () => {
@@ -234,7 +253,7 @@ describe('componentSettings', () => {
       const result = validateExperienceFields(pattern, schemaVersion);
       expect(result.success).toBe(false);
       expect(result.errors).toBeDefined();
-      expect(result.errors?.[0].details).toBe('Array must contain at most 1 element(s)');
+      expect(result.errors?.[0].details).toBe('Array must contain exactly 1 element(s)');
     });
   });
 });

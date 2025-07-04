@@ -17,12 +17,6 @@ export const transformVisibility = (value?: boolean): CSSProperties => {
   return {};
 };
 
-// TODO: Remove in next major version v2 since the change is 17 months old
-// Keep this for backwards compatibility - deleting this would be a breaking change
-// because existing components on a users experience will have the width value as fill
-// rather than 100%
-export const transformFill = (value?: string) => (value === 'fill' ? '100%' : value);
-
 export const transformGridColumn = (span?: string): CSSProperties => {
   if (!span) {
     return {};
@@ -98,36 +92,6 @@ export const transformBackgroundImage = (
       return;
     }
     let [horizontalAlignment, verticalAlignment] = alignment.trim().split(/\s+/, 2);
-
-    // Special case for handling single values
-    // for backwards compatibility with single values 'right','left', 'center', 'top','bottom'
-    if (horizontalAlignment && !verticalAlignment) {
-      const singleValue = horizontalAlignment;
-      switch (singleValue) {
-        case 'left':
-          horizontalAlignment = 'left';
-          verticalAlignment = 'center';
-          break;
-        case 'right':
-          horizontalAlignment = 'right';
-          verticalAlignment = 'center';
-          break;
-        case 'center':
-          horizontalAlignment = 'center';
-          verticalAlignment = 'center';
-          break;
-        case 'top':
-          horizontalAlignment = 'center';
-          verticalAlignment = 'top';
-          break;
-        case 'bottom':
-          horizontalAlignment = 'center';
-          verticalAlignment = 'bottom';
-          break;
-        default:
-        // just fall down to the normal validation logic for horiz and vert
-      }
-    }
 
     const isHorizontalValid = ['left', 'right', 'center'].includes(horizontalAlignment);
     const isVerticalValid = ['top', 'bottom', 'center'].includes(verticalAlignment);

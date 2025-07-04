@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { EntityStore, VisualEditorMode } from '@contentful/experiences-core';
+import {
+  type InMemoryEntitiesStore,
+  type EntityStore,
+  inMemoryEntitiesStore,
+  VisualEditorMode,
+} from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
 
 type VisualEditorLoaderProps = {
@@ -9,11 +14,11 @@ type VisualEditorLoaderProps = {
 
 export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({
   visualEditorMode,
-
   experience,
 }) => {
   const [VisualEditor, setVisualEditor] = useState<React.ComponentType<{
     experience?: Experience<EntityStore>;
+    inMemoryEntitiesStore?: InMemoryEntitiesStore;
   }> | null>(null);
 
   useEffect(() => {
@@ -35,7 +40,7 @@ export const VisualEditorLoader: React.FC<VisualEditorLoaderProps> = ({
 
   if (!VisualEditor) return null;
 
-  return <VisualEditor experience={experience} />;
+  return <VisualEditor experience={experience} inMemoryEntitiesStore={inMemoryEntitiesStore} />;
 };
 
 export default VisualEditorLoader;

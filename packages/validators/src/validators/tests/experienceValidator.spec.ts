@@ -22,24 +22,29 @@ describe(`${schemaVersion} version`, () => {
     expect(error?.details).toBe(`The property "${field}" is required here`);
   });
 
-  it('should return an error if parameterDefinitions contentTypes do not use a link reference', () => {
+  it('should return an error if parameterDefinitions contentTypes is not an array of string', () => {
     const clonedExperiencePattern = JSON.parse(JSON.stringify(experiencePattern));
     clonedExperiencePattern.fields.componentSettings[
       'en-US'
-    ].prebindingDefinitions[0].parameterDefinitions[
-      '8v3GB67qF5f'
-    ].contentTypes.productFeatureTopic = {
-      ...clonedExperiencePattern.fields.componentSettings['en-US'].prebindingDefinitions[0]
-        .parameterDefinitions['8v3GB67qF5f'].contentTypes.productFeatureTopic.sys,
-    };
+    ].prebindingDefinitions[0].parameterDefinitions['8v3GB67qF5f'].contentTypes = [
+      {
+        productFeatureTopic: {
+          sys: {
+            id: 'productFeatureTopic',
+            type: 'Link',
+            linkType: 'ContentType',
+          },
+        },
+      },
+    ];
     const result = validateExperienceFields(clonedExperiencePattern, schemaVersion);
 
     expect(result.success).toBe(false);
     expect(result.errors).toBeDefined();
     const error = result.errors?.[0];
 
-    expect(error?.name).toBe('required');
-    expect(error?.details).toBe(`The property "sys" is required here`);
+    expect(error?.name).toBe('type');
+    expect(error?.details).toBe(`The type of "0" is incorrect, expected type: string`);
   });
 
   it('should validate the experience successfully', () => {

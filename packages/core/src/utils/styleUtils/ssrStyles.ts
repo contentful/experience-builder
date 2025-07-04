@@ -18,6 +18,7 @@ import {
   stringifyCssProperties,
   toMediaQuery,
   transformVisibility,
+  mergeDesignValuesByBreakpoint,
 } from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
@@ -191,7 +192,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
        * {
        *   desktop: {
        *     cfMargin: '1px',
-       *     cfWidth: 'fill',
+       *     cfWidth: '100%',
        *     cfBackgroundImageUrl: 'https://example.com/image.jpg'
        *     //...
        *   }
@@ -409,10 +410,13 @@ const resolveComponentVariablesOverwrites = ({
         // Property definition from the parent pattern
         const propertyDefinition =
           wrapperComponentSettings?.variableDefinitions?.[propertyValue.key];
-
+        const defaultValue = propertyDefinition?.defaultValue as ComponentPropertyValue | undefined;
         // The overwriting value is either a custom value from the experience or default value from a
         // wrapping pattern node that got trickled down to this nesting level.
-        resolvedValues[propertyName] = overwritingValue ?? propertyDefinition?.defaultValue;
+        resolvedValues[propertyName] = mergeDefaultAndOverwriteValues(
+          defaultValue,
+          overwritingValue,
+        );
       } else {
         // Keep raw values
         resolvedValues[propertyName] = propertyValue;
@@ -540,17 +544,17 @@ export const resolveBackgroundImageBinding = ({
     const defaultValueKey = variableDefinition.defaultValue?.key;
     const defaultValue = unboundValues[defaultValueKey].value;
 
-    const userSetValue = componentVariablesOverwrites?.[variableDefinitionKey];
+    const overwriteValue = componentVariablesOverwrites?.[variableDefinitionKey];
 
-    // userSetValue is a ComponentValue we can safely return the default value
-    if (!userSetValue || userSetValue.type === 'ComponentValue') {
+    // overwriteValue is a ComponentValue we can safely return the default value
+    if (!overwriteValue || overwriteValue.type === 'ComponentValue') {
       return defaultValue as string | undefined;
     }
 
-    // at this point userSetValue will either be type of 'DesignValue' or 'BoundValue'
+    // at this point overwriteValue will either be type of 'DesignValue' or 'BoundValue'
     // so we recursively run resolution again to resolve it
     const resolvedValue = resolveBackgroundImageBinding({
-      variableData: userSetValue,
+      variableData: overwriteValue,
       getBoundEntityById,
       dataSource,
       unboundValues,
@@ -755,10 +759,10 @@ export const indexByBreakpoint = ({
 
     if (variableData.type === 'ComponentValue') {
       const variableDefinition = componentSettings?.variableDefinitions[variableData.key];
-      if (variableDefinition.group === 'style' && variableDefinition.defaultValue !== undefined) {
-        const overrideVariableData = componentVariablesOverwrites?.[variableData.key];
-        resolvedVariableData =
-          overrideVariableData || (variableDefinition.defaultValue as ComponentPropertyValue);
+      const defaultValue = variableDefinition.defaultValue as ComponentPropertyValue;
+      if (variableDefinition.group === 'style' && defaultValue !== undefined) {
+        const overwriteVariableData = componentVariablesOverwrites?.[variableData.key];
+        resolvedVariableData = mergeDefaultAndOverwriteValues(defaultValue, overwriteVariableData);
       }
     }
 
@@ -809,3 +813,21 @@ export const flattenDesignTokenRegistry = (
     };
   }, {});
 };
+
+function mergeDefaultAndOverwriteValues(
+  defaultValue: ComponentPropertyValue,
+  overwriteValue?: ComponentPropertyValue,
+): ComponentPropertyValue;
+function mergeDefaultAndOverwriteValues(
+  defaultValue?: ComponentPropertyValue,
+  overwriteValue?: ComponentPropertyValue,
+): ComponentPropertyValue | undefined;
+function mergeDefaultAndOverwriteValues(
+  defaultValue?: ComponentPropertyValue,
+  overwriteValue?: ComponentPropertyValue,
+): ComponentPropertyValue | undefined {
+  if (defaultValue?.type === 'DesignValue' && overwriteValue?.type === 'DesignValue') {
+    return mergeDesignValuesByBreakpoint(defaultValue, overwriteValue);
+  }
+  return overwriteValue ?? defaultValue;
+}
