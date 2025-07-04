@@ -65,16 +65,7 @@ const ParameterDefinitionSchema = z.object({
       }),
     })
     .optional(),
-  contentTypes: z.record(
-    z.string(),
-    z.object({
-      sys: z.object({
-        type: z.literal('Link'),
-        id: z.string(),
-        linkType: z.enum(['ContentType']),
-      }),
-    }),
-  ),
+  contentTypes: z.array(z.string()),
   passToNodes: z.array(PassToNodeSchema).optional(),
 });
 
@@ -101,7 +92,7 @@ const ComponentSettingsSchema = z
     variableDefinitions: ComponentVariablesSchema,
     thumbnailId: z.enum(THUMBNAIL_IDS).optional(),
     category: z.string().max(50, 'Category must contain at most 50 characters').optional(),
-    prebindingDefinitions: z.array(PrebindingDefinitionSchema).max(1).optional(),
+    prebindingDefinitions: z.array(PrebindingDefinitionSchema).length(1).optional(),
   })
   .strict();
 

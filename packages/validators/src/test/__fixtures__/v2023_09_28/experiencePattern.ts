@@ -307,13 +307,16 @@ export const experiencePattern = {
                     },
                   },
                 },
-                contentTypes: {
+                contentTypes: ['productFeatureTopic'],
+              },
+            },
+            variableMappings: {
+              'text_1_IVYl8rYJEzWW8xPfmT-': {
+                parameterId: '8v3GB67qF5f',
+                type: 'ContentTypeMapping',
+                pathsByContentType: {
                   productFeatureTopic: {
-                    sys: {
-                      id: 'productFeatureTopic',
-                      type: 'Link',
-                      linkType: 'ContentType',
-                    },
+                    path: '/fields/text/~locale/',
                   },
                 },
               },

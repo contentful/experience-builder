@@ -395,15 +395,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
                   sys: { id: defaultEntryId, type: 'Link', linkType: 'Entry' },
                 },
               },
-              contentTypes: {
-                testContentType: {
-                  sys: {
-                    type: 'Link',
-                    id: 'testContentType',
-                    linkType: 'ContentType',
-                  },
-                },
-              },
+              contentTypes: ['testContentType'],
             },
           },
           variableMappings: {
@@ -444,15 +436,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
                   sys: { id: defaultEntryId, type: 'Link', linkType: 'Entry' },
                 },
               },
-              contentTypes: {
-                testContentType: {
-                  sys: {
-                    type: 'Link',
-                    id: 'testContentType',
-                    linkType: 'ContentType',
-                  },
-                },
-              },
+              contentTypes: ['testContentType'],
             },
           },
           variableMappings: {
