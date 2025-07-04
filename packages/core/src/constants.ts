@@ -167,7 +167,7 @@ export const CF_STYLE_ATTRIBUTES = [
   'cfTextUnderline',
 ];
 
-export const EMPTY_CONTAINER_HEIGHT = '80px';
+export const EMPTY_CONTAINER_SIZE = '80px';
 
 export const HYPERLINK_DEFAULT_PATTERN = `/{locale}/{entry.fields.slug}/`;
 
