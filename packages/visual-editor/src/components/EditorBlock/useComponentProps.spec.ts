@@ -16,6 +16,7 @@ import { vi, it, describe } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import { EditorModeEntityStore, getValueForBreakpoint } from '@contentful/experiences-core';
+import { useEditorModeClassName } from './useEditorModeClassName';
 
 // Redefining this type to make 'data.props.cfVisibility' a required field.
 // Semantically, it is always available on the node at runtime,
@@ -77,6 +78,8 @@ vi.mock('@/store/registries', () => ({
     ['pattern-id', mocks.componentRegistration],
   ]),
 }));
+
+vi.mock('./useEditorModeClassName', { spy: true });
 
 let activeBreakpointIndex = desktopIndex;
 
@@ -174,7 +177,10 @@ describe('useComponentProps', () => {
     // changing the active breakpoint to non-desktop
     activeBreakpointIndex = 1;
 
-    const { result } = renderHook(() =>
+    // Clear previous calls before running the test
+    (useEditorModeClassName as jest.Mock).mockClear();
+
+    renderHook(() =>
       useComponentProps({
         node: patternBlockNode as unknown as ExperienceTreeNode,
         entityStore,
@@ -197,7 +203,13 @@ describe('useComponentProps', () => {
     );
 
     // making sure that the design value is resolved to the correct pattern variable definition value
-    expect(result.current.componentProps.backgroundColor).toEqual('green');
+    expect(useEditorModeClassName).toHaveBeenCalledWith(
+      expect.objectContaining({
+        styles: {
+          backgroundColor: 'green',
+        },
+      }),
+    );
   });
 
   it('should return props with default values when variableMapping is falsy', () => {
