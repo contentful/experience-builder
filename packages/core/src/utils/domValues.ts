@@ -14,6 +14,11 @@ export const findOutermostCoordinates = (first: Rect, second: Rect) => {
   };
 };
 
+export const isElementHidden = (rect: DOMRect): boolean => {
+  /** if the rect has no size and position, its element is not rendered in the DOM */
+  return rect.width === 0 && rect.height === 0 && rect.x === 0 && rect.y === 0;
+};
+
 export const getElementCoordinates = (element: Element): DOMRect => {
   const rect = element.getBoundingClientRect();
 
