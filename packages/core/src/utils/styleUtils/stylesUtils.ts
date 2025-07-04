@@ -6,7 +6,7 @@ import {
   transformGridColumn,
 } from './styleTransformers';
 import { isContentfulStructureComponent, isStructureWithRelativeHeight } from '../components';
-import { EMPTY_CONTAINER_HEIGHT } from '../../constants';
+import { EMPTY_CONTAINER_SIZE } from '../../constants';
 import {
   CSSProperties,
   StyleProps,
@@ -135,7 +135,7 @@ export const addMinHeightForEmptyStructures = (
   ) {
     return {
       ...cssProperties,
-      minHeight: EMPTY_CONTAINER_HEIGHT,
+      minHeight: EMPTY_CONTAINER_SIZE,
     };
   }
   return cssProperties;
@@ -143,7 +143,7 @@ export const addMinHeightForEmptyStructures = (
 
 /**
  * Container/section default behavior:
- * Default height => height: EMPTY_CONTAINER_HEIGHT
+ * Default height => height: EMPTY_CONTAINER_SIZE
  * If a container component has children => height: 'fit-content'
  */
 export const calculateNodeDefaultHeight = ({
@@ -163,5 +163,5 @@ export const calculateNodeDefaultHeight = ({
     return '100%';
   }
 
-  return EMPTY_CONTAINER_HEIGHT;
+  return EMPTY_CONTAINER_SIZE;
 };
