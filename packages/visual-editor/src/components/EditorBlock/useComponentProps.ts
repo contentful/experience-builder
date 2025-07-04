@@ -10,7 +10,7 @@ import {
   sanitizeNodeProps,
   EntityStoreBase,
 } from '@contentful/experiences-core';
-import { ASSEMBLY_NODE_TYPE, EMPTY_CONTAINER_HEIGHT } from '@contentful/experiences-core/constants';
+import { ASSEMBLY_NODE_TYPE, EMPTY_CONTAINER_SIZE } from '@contentful/experiences-core/constants';
 import type {
   StyleProps,
   PrimitiveValue,
@@ -208,16 +208,26 @@ export const useComponentProps = ({
 
   const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
 
+  const shouldRenderEmptySpaceWithMinSize = useMemo(() => {
+    if (node.children.length) return false;
+
+    // Render with minimum height and with in those two scenarios:
+    if (isStructureWithRelativeHeight(node.data.blockId, cfStyles.height)) return true;
+    if (definition?.children) return true;
+
+    return false;
+  }, [cfStyles.height, definition?.children, node.children.length, node.data.blockId]);
+
   // Styles that will be applied to the component element
   const componentStyles = useMemo(
     () => ({
       ...cfStyles,
-      ...(!node.children.length &&
-        isStructureWithRelativeHeight(node.data.blockId, cfStyles.height) && {
-          minHeight: EMPTY_CONTAINER_HEIGHT,
-        }),
+      ...(shouldRenderEmptySpaceWithMinSize && {
+        minHeight: EMPTY_CONTAINER_SIZE,
+        minWidth: EMPTY_CONTAINER_SIZE,
+      }),
     }),
-    [cfStyles, node.children.length, node.data.blockId],
+    [cfStyles, shouldRenderEmptySpaceWithMinSize],
   );
 
   const cfCsrClassName = useEditorModeClassName({
