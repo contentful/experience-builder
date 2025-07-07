@@ -8,6 +8,7 @@ import {
   DeepReference,
   isLink,
   EditorModeEntityStore,
+  type InMemoryEntitiesStore,
 } from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
@@ -29,14 +30,15 @@ import { useEditorStore } from '@/store/editor';
 import { useDraggedItemStore } from '@/store/draggedItem';
 import { Assembly } from '@contentful/experiences-components-react';
 import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
-import { useEntityStore } from '@/store/entityStore';
 import SimulateDnD from '@/utils/simulateDnD';
 import { UnresolvedLink } from 'contentful';
 
-export function useEditorSubscriber() {
-  const entityStore = useEntityStore((state) => state.entityStore);
-  const areEntitiesFetched = useEntityStore((state) => state.areEntitiesFetched);
-  const setEntitiesFetched = useEntityStore((state) => state.setEntitiesFetched);
+export function useEditorSubscriber(entityCache: InMemoryEntitiesStore) {
+  const entityStore = entityCache((state) => state.entityStore);
+  const areEntitiesFetched = entityCache((state) => state.areEntitiesFetched);
+  const setEntitiesFetched = entityCache((state) => state.setEntitiesFetched);
+  const resetEntityStore = entityCache((state) => state.resetEntityStore);
+
   const { updateTree, updateNodesByUpdatedEntity } = useTreeStore((state) => ({
     updateTree: state.updateTree,
     updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
@@ -48,7 +50,6 @@ export function useEditorSubscriber() {
   const setDataSource = useEditorStore((state) => state.setDataSource);
   const setSelectedNodeId = useEditorStore((state) => state.setSelectedNodeId);
   const selectedNodeId = useEditorStore((state) => state.selectedNodeId);
-  const resetEntityStore = useEntityStore((state) => state.resetEntityStore);
   const setComponentId = useDraggedItemStore((state) => state.setComponentId);
   const setHoveredComponentId = useDraggedItemStore((state) => state.setHoveredComponentId);
   const setDraggingOnCanvas = useDraggedItemStore((state) => state.setDraggingOnCanvas);
@@ -200,8 +201,9 @@ export function useEditorSubscriber() {
 
           let newEntityStore = entityStore;
           if (entityStore.locale !== locale) {
-            newEntityStore = resetEntityStore(locale);
+            newEntityStore = new EditorModeEntityStore({ locale, entities: [] });
             setLocale(locale);
+            resetEntityStore(newEntityStore);
           }
 
           // Below are mutually exclusive cases
@@ -216,7 +218,11 @@ export function useEditorSubscriber() {
             if (changedValueType === 'BoundValue') {
               const newDataSource = { ...dataSource, ...changedNode.data.dataSource };
               setDataSource(newDataSource);
-              await fetchMissingEntities(newEntityStore, newDataSource, tree);
+              await fetchMissingEntities(
+                newEntityStore as EditorModeEntityStore,
+                newDataSource,
+                tree,
+              );
             } else if (changedValueType === 'UnboundValue') {
               setUnboundValues({
                 ...unboundValues,
@@ -227,8 +233,9 @@ export function useEditorSubscriber() {
             const { dataSource, unboundValues } = getDataFromTree(tree);
             setDataSource(dataSource);
             setUnboundValues(unboundValues);
-            await fetchMissingEntities(newEntityStore, dataSource, tree);
+            await fetchMissingEntities(newEntityStore as EditorModeEntityStore, dataSource, tree);
           }
+
           // Update the tree when all necessary data is fetched and ready for rendering.
           updateTree(tree);
           break;

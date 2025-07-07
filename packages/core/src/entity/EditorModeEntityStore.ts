@@ -10,7 +10,6 @@ import { transformAssetFileToUrl } from './value-transformers';
 const REQUEST_TIMEOUT = 10000;
 
 export class EditorModeEntityStore extends EditorEntityStore {
-  public locale: string;
   constructor({ entities, locale }: { entities: Array<Asset | Entry>; locale: string }) {
     console.debug(
       `[experiences-sdk-react] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
@@ -45,7 +44,6 @@ export class EditorModeEntityStore extends EditorEntityStore {
     };
 
     super({ entities, sendMessage, subscribe, locale, timeoutDuration: REQUEST_TIMEOUT });
-    this.locale = locale;
   }
   /**
    * This function collects and returns the list of requested entries and assets. Additionally, it checks

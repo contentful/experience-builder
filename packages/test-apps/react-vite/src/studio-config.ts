@@ -6,9 +6,23 @@ import NestedSlots from './components/NestedSlots';
 import KitchenSink from './components/KitchenSink';
 import ColorfulBox from './components/ColorfulBox/ColorfulBox';
 import { ComponentUsingReferences } from './components/ComponentUsingReferences';
+import {
+  ResolveManuallyComponent,
+  ResolveManuallyComponentDefinition,
+  ShallowComponent,
+  ShallowComponentDefinition,
+} from './components/BindingToReferences';
 
 defineComponents(
   [
+    {
+      component: ResolveManuallyComponent,
+      definition: ResolveManuallyComponentDefinition,
+    },
+    {
+      component: ShallowComponent,
+      definition: ShallowComponentDefinition,
+    },
     {
       component: ColorfulBox,
       definition: {

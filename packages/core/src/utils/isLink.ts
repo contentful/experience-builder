@@ -10,8 +10,9 @@ export const isLink = (
     sys?: {
       id?: string;
       type?: string;
+      linkType?: string;
     };
   };
 
-  return Boolean(link.sys?.id) && link.sys?.type === 'Link';
+  return Boolean(link.sys?.id) && link.sys?.type === 'Link' && Boolean(link.sys?.linkType);
 };

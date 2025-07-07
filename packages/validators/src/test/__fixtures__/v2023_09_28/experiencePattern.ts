@@ -113,13 +113,13 @@ export const experiencePattern = {
               cfWidth: {
                 type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'fill',
+                  desktop: '100%',
                 },
               },
               cfHeight: {
                 type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'fill',
+                  desktop: '100%',
                 },
               },
               cfMaxWidth: {
@@ -162,16 +162,13 @@ export const experiencePattern = {
                 key: 'cfBackgroundImageUrl_AtBrirchNbwfpkWlSfTD6',
                 type: 'ComponentValue',
               },
-              cfBackgroundImageScaling: {
+              cfBackgroundImageOptions: {
                 type: 'DesignValue',
                 valuesByBreakpoint: {
-                  desktop: 'fit',
-                },
-              },
-              cfBackgroundImageAlignment: {
-                type: 'DesignValue',
-                valuesByBreakpoint: {
-                  desktop: 'left top',
+                  desktop: {
+                    scaling: 'fit',
+                    alignment: 'left top',
+                  },
                 },
               },
               cfHyperlink: {
@@ -310,13 +307,16 @@ export const experiencePattern = {
                     },
                   },
                 },
-                contentTypes: {
+                contentTypes: ['productFeatureTopic'],
+              },
+            },
+            variableMappings: {
+              'text_1_IVYl8rYJEzWW8xPfmT-': {
+                parameterId: '8v3GB67qF5f',
+                type: 'ContentTypeMapping',
+                pathsByContentType: {
                   productFeatureTopic: {
-                    sys: {
-                      id: 'productFeatureTopic',
-                      type: 'Link',
-                      linkType: 'ContentType',
-                    },
+                    path: '/fields/text/~locale/',
                   },
                 },
               },
