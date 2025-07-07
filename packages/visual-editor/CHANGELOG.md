@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0](https://github.com/contentful/experience-builder/compare/v1.42.3...v2.0.0) (2025-07-07)
+
+### ⚠ BREAKING CHANGES
+
+- manually resolving links [SPA-2754] PR to merge into v2-prerelease branch (#1139)
+- merge breakpoint defaults for visual editor and SSR [SPA-2602] (#1125)
+
+### Features
+
+- manually resolving links [SPA-2754] PR to merge into v2-prerelease branch ([#1139](https://github.com/contentful/experience-builder/issues/1139)) ([7e472c3](https://github.com/contentful/experience-builder/commit/7e472c3ff5c61778e6dd1b256b5a8d05bc5df6ec)), closes [#1109](https://github.com/contentful/experience-builder/issues/1109)
+
+### Bug Fixes
+
+- handle undefined defaultvalue in merge functionality ([#1211](https://github.com/contentful/experience-builder/issues/1211)) ([709c21e](https://github.com/contentful/experience-builder/commit/709c21e1ba093af3034757854cb47b5fb85dc831))
+- merge breakpoint defaults for visual editor and SSR [SPA-2602] ([#1125](https://github.com/contentful/experience-builder/issues/1125)) ([d60171d](https://github.com/contentful/experience-builder/commit/d60171d26923a38673cb5f062c04024ffd9fe588))
+
 ## [1.42.3](https://github.com/contentful/experience-builder/compare/v1.42.2...v1.42.3) (2025-07-02)
 
 ### Bug Fixes

@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0](https://github.com/contentful/experience-builder/compare/v1.42.3...v2.0.0) (2025-07-07)
+
+### ⚠ BREAKING CHANGES
+
+- manually resolving links [SPA-2754] PR to merge into v2-prerelease branch (#1139)
+- merge breakpoint defaults for visual editor and SSR [SPA-2602] (#1125)
+
+### Features
+
+- early preload [SPA-2755] ([#1141](https://github.com/contentful/experience-builder/issues/1141)) ([9101809](https://github.com/contentful/experience-builder/commit/91018091940ac0fe442d6fd7c0a4977aa5048ce9))
+- manually resolving links [SPA-2754] PR to merge into v2-prerelease branch ([#1139](https://github.com/contentful/experience-builder/issues/1139)) ([7e472c3](https://github.com/contentful/experience-builder/commit/7e472c3ff5c61778e6dd1b256b5a8d05bc5df6ec)), closes [#1109](https://github.com/contentful/experience-builder/issues/1109)
+
+### Bug Fixes
+
+- handle undefined defaultvalue in merge functionality ([#1211](https://github.com/contentful/experience-builder/issues/1211)) ([709c21e](https://github.com/contentful/experience-builder/commit/709c21e1ba093af3034757854cb47b5fb85dc831))
+- makes isLoading dependent on the mode; adds tests ([#1163](https://github.com/contentful/experience-builder/issues/1163)) ([850580f](https://github.com/contentful/experience-builder/commit/850580f10e191b14f4c118d7acad40ef499cb420))
+- merge breakpoint defaults for visual editor and SSR [SPA-2602] ([#1125](https://github.com/contentful/experience-builder/issues/1125)) ([d60171d](https://github.com/contentful/experience-builder/commit/d60171d26923a38673cb5f062c04024ffd9fe588))
+- merge override and default styles in CSR preview mode ([4ca87d3](https://github.com/contentful/experience-builder/commit/4ca87d3bb315c76d0b97af7b0a9651eb54cb3e85))
+- only enriching experience with hyperlinkPattern for when experience is loaded ([#1164](https://github.com/contentful/experience-builder/issues/1164)) ([7242394](https://github.com/contentful/experience-builder/commit/7242394f58cc7e266cc542f20aff5241d3e1b2ec))
+
 ## [1.42.3](https://github.com/contentful/experience-builder/compare/v1.42.2...v1.42.3) (2025-07-02)
 
 ### Bug Fixes

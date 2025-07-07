@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0](https://github.com/contentful/experience-builder/compare/v1.42.3...v2.0.0) (2025-07-07)
+
+### ⚠ BREAKING CHANGES
+
+- manually resolving links [SPA-2754] PR to merge into v2-prerelease branch (#1139)
+
+### Features
+
+- manually resolving links [SPA-2754] PR to merge into v2-prerelease branch ([#1139](https://github.com/contentful/experience-builder/issues/1139)) ([7e472c3](https://github.com/contentful/experience-builder/commit/7e472c3ff5c61778e6dd1b256b5a8d05bc5df6ec)), closes [#1109](https://github.com/contentful/experience-builder/issues/1109)
+
+### Bug Fixes
+
+- remove old backgroundImage properties [SPA-2836] ([#1151](https://github.com/contentful/experience-builder/issues/1151)) ([9f7404b](https://github.com/contentful/experience-builder/commit/9f7404be6f2fb2b1b01028ed0e80b42894fae89d))
+
 ## [1.42.3](https://github.com/contentful/experience-builder/compare/v1.42.2...v1.42.3) (2025-07-02)
 
 **Note:** Version bump only for package @contentful/experiences-validators

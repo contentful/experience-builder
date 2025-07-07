@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0](https://github.com/contentful/experience-builder/compare/v1.42.3...v2.0.0) (2025-07-07)
+
+### ⚠ BREAKING CHANGES
+
+- manually resolving links [SPA-2754] PR to merge into v2-prerelease branch (#1139)
+- merge breakpoint defaults for visual editor and SSR [SPA-2602] (#1125)
+
+### Features
+
+- early preload [SPA-2755] ([#1141](https://github.com/contentful/experience-builder/issues/1141)) ([9101809](https://github.com/contentful/experience-builder/commit/91018091940ac0fe442d6fd7c0a4977aa5048ce9))
+- manually resolving links [SPA-2754] PR to merge into v2-prerelease branch ([#1139](https://github.com/contentful/experience-builder/issues/1139)) ([7e472c3](https://github.com/contentful/experience-builder/commit/7e472c3ff5c61778e6dd1b256b5a8d05bc5df6ec)), closes [#1109](https://github.com/contentful/experience-builder/issues/1109)
+
+### Bug Fixes
+
+- adds ssrStyles.ts as per Thomases merge ([7f8f776](https://github.com/contentful/experience-builder/commit/7f8f776ce23acbfc943affc7641a7b1c9e24bfc4))
+- forgot to rename ./entityTypeChecks->typeguards ([4c664be](https://github.com/contentful/experience-builder/commit/4c664bef2d654a228385060f31cae8af790a324d))
+- handle undefined defaultvalue in merge functionality ([#1211](https://github.com/contentful/experience-builder/issues/1211)) ([709c21e](https://github.com/contentful/experience-builder/commit/709c21e1ba093af3034757854cb47b5fb85dc831))
+- merge breakpoint defaults for visual editor and SSR [SPA-2602] ([#1125](https://github.com/contentful/experience-builder/issues/1125)) ([d60171d](https://github.com/contentful/experience-builder/commit/d60171d26923a38673cb5f062c04024ffd9fe588))
+- remove old backgroundImage properties [SPA-2836] ([#1151](https://github.com/contentful/experience-builder/issues/1151)) ([9f7404b](https://github.com/contentful/experience-builder/commit/9f7404be6f2fb2b1b01028ed0e80b42894fae89d))
+- replaces entityTypeChecks with typeguards ([bd8a494](https://github.com/contentful/experience-builder/commit/bd8a494e0e328c624d798ae1eede981eeb436a2e))
+
 ## [1.42.3](https://github.com/contentful/experience-builder/compare/v1.42.2...v1.42.3) (2025-07-02)
 
 ### Bug Fixes
