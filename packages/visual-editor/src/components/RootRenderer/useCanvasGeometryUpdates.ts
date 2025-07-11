@@ -63,6 +63,8 @@ export const useCanvasGeometryUpdates = ({ tree }: UseCanvasGeometryUpdatesParam
     const observer = new MutationObserver(() =>
       debouncedUpdateGeometry(treeRef.current, 'mutation'),
     );
+    // send initial geometry in case the tree is empty
+    debouncedUpdateGeometry(treeRef.current, 'mutation');
     observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
