@@ -19,13 +19,11 @@ export interface EditorStore {
   hyperLinkPattern?: string;
   setHyperLinkPattern: (pattern: string) => void;
   locale: string | null;
-  selectedNodeId: string | null;
   unboundValues: ExperienceUnboundValues;
   // updaters
   setDataSource: (data: ExperienceDataSource) => void;
   setUnboundValues: (values: ExperienceUnboundValues) => void;
   setLocale: (locale: string) => void;
-  setSelectedNodeId: (id: string) => void;
 
   initializeEditor: (params: InitEditorParams) => void;
 }
@@ -35,13 +33,9 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   hyperLinkPattern: undefined,
   unboundValues: {},
 
-  selectedNodeId: null,
   locale: null,
   setHyperLinkPattern: (pattern: string) => {
     set({ hyperLinkPattern: pattern });
-  },
-  setSelectedNodeId: (id: string) => {
-    set({ selectedNodeId: id });
   },
   setDataSource(data) {
     const dataSource = get().dataSource;

@@ -8,15 +8,3 @@
 .cf-divider hr {
   border: none;
 }
-
-/* For the editor mode add this 10px tolerance to make it easier picking up the divider component.
- * Using the DND zone as precondition makes sure that we don't render this pseudo element in delivery. */
-[data-ctfl-zone-id='root'] .cf-divider::before {
-  content: "";
-  position: absolute;
-  top: -5px;
-  left: -5px;
-  bottom: -5px;
-  right: -5px;
-  pointer-events: all;
-}
