@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@contentful/experiences-sdk-react": "^1.41.0",
+    "@contentful/experiences-sdk-react": "^1.42.3",
     "contentful": "^11.3.2",
     "next": "15.2.4",
     "react": "19.0.0",
