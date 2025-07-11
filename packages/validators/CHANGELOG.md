@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/contentful/experience-builder/compare/v2.0.0...v2.0.1) (2025-07-11)
+
+**Note:** Version bump only for package @contentful/experiences-validators
+
 ## [2.0.0](https://github.com/contentful/experience-builder/compare/v1.42.3...v2.0.0) (2025-07-07)
 
 ### ⚠ BREAKING CHANGES

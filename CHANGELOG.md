@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/contentful/experience-builder/compare/v2.0.0...v2.0.1) (2025-07-11)
+
+### Bug Fixes
+
+- remove unnecessary node removal check in getTreeDiff function ([df67176](https://github.com/contentful/experience-builder/commit/df67176ff0313ff8ab180274c0f8e340d73cad97))
+- remove unnecessary node removal check in getTreeDiff function ([#1220](https://github.com/contentful/experience-builder/issues/1220)) ([f1681f8](https://github.com/contentful/experience-builder/commit/f1681f89e743122aa90eb58a7001e182496490f0))
+
 ## [2.0.0](https://github.com/contentful/experience-builder/compare/v1.42.3...v2.0.0) (2025-07-07)
 
 ### ⚠ BREAKING CHANGES
