@@ -15,6 +15,15 @@ import { convertResolvedDesignValuesToMediaQuery } from '../hooks/useMediaQuery'
 import { createStylesheetsForBuiltInStyles } from '../hooks/useMediaQuery';
 
 // TODO: Test this for nested patterns as the name might be just a random hash without the actual name (needs to be validated).
+/**
+ * Checks if prop is a "siamese" prop. So far we have only one such prop: `cfBackgroundImageUrl`.
+ * It is considered "siamese" because despite being a content variable, it always goes in pair
+ * (is coupled) with the `cfBackgroundImageOptions` design variable. Without presence of the
+ * `cfBackgroundImageUrl` the `cfBackgroundImageOptions` is useless (and is not going to be
+ * rendered by the styleTransformers.ts#transformBackgroundImageUrl()).
+ *
+ * Because of this coupling, we need to create an "ephemeral" cfBackgroundImageUrl style(!) prop.
+ */
 const isSpecialCaseCssProp = (propName: string) => {
   return propName === 'cfBackgroundImageUrl' || propName.startsWith('cfBackgroundImageUrl_');
 };
@@ -38,7 +47,6 @@ type ResolveBoundValueType = (data: {
 
 export const parseComponentProps = ({
   breakpoints,
-  mainBreakpoint,
   componentDefinition,
   patternRootNodeIdsChain,
   node,
@@ -102,7 +110,7 @@ export const parseComponentProps = ({
           // Here we create kind of "fake" style property out of a bound value.
           // As bound values are breakpoint-universal (they apply to all breakpoints),
           // but styleProps are breakpoint-specific, we need to ensure that
-          // semantically our "fake" style property will be universall as well,
+          // semantically our "fake" emphemeral style property will be universall as well,
           // by expanding it to all the breakpoints. This is important as
           // styleTransformers.ts#transformBackgroundImageUrl() expects
           // cfBackgroundImageUrl to be present for all breakpoints
@@ -148,7 +156,6 @@ export const parseComponentProps = ({
           }) ?? propDefinition.defaultValue;
 
         if (isSpecialCaseCssProp(propName)) {
-          // TODO: should I fix it here?
           styleProps[propName] = Object.fromEntries(breakpoints.map((b) => [b.id, propValue]));
         } else {
           contentProps[propName] = propValue;
@@ -211,7 +218,6 @@ export const parseComponentProps = ({
   /* [Data Format] `mediaQuery` is a joined string of all media query CSS code
    * mediaQuery = ".cfstyles-123{margin:42px;}@media(max-width:768px){.cfstyles-456{margin:13px;}}"
    */
-  console.error(`;; `, JSON.stringify(styleProps, null, 2));
   return {
     styleProps,
     mediaQuery,

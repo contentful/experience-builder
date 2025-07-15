@@ -5,6 +5,14 @@ export const createComponentDefinition = (): ComponentDefinition => ({
   name: 'TestComponent',
   builtInStyles: ['cfBackgroundColor'],
   variables: {
+    cfBackgroundImageUrl: {
+      type: 'Media',
+      displayName: 'Background Image',
+    },
+    cfBackgroundImageOptions: {
+      type: 'Object',
+      group: 'style',
+    },
     cfBackgroundColor: {
       type: 'Text',
       displayName: 'Background Color',
