@@ -98,7 +98,16 @@ export const parseComponentProps = ({
         const propValue = boundValue ?? propDefinition.defaultValue;
 
         if (isSpecialCaseCssProp(propName)) {
-          styleProps[propName] = { [mainBreakpoint.id]: propValue };
+          // styleProps[propName] = { [mainBreakpoint.id]: propValue };
+          // Here we create kind of "fake" style property out of a bound value.
+          // As bound values are breakpoint-universal (they apply to all breakpoints),
+          // but styleProps are breakpoint-specific, we need to ensure that
+          // semantically our "fake" style property will be universall as well,
+          // by expanding it to all the breakpoints. This is important as
+          // styleTransformers.ts#transformBackgroundImageUrl() expects
+          // cfBackgroundImageUrl to be present for all breakpoints
+          // where cfBackgroundImageOptions is present.
+          styleProps[propName] = Object.fromEntries(breakpoints.map((b) => [b.id, propValue]));
         } else {
           contentProps[propName] = propValue;
         }
@@ -121,7 +130,7 @@ export const parseComponentProps = ({
         });
 
         if (isSpecialCaseCssProp(propName)) {
-          styleProps[propName] = { [mainBreakpoint.id]: unboundValue };
+          styleProps[propName] = Object.fromEntries(breakpoints.map((b) => [b.id, unboundValue]));
         } else {
           contentProps[propName] = unboundValue;
         }
@@ -139,7 +148,8 @@ export const parseComponentProps = ({
           }) ?? propDefinition.defaultValue;
 
         if (isSpecialCaseCssProp(propName)) {
-          styleProps[propName] = { [mainBreakpoint.id]: propValue };
+          // TODO: should I fix it here?
+          styleProps[propName] = Object.fromEntries(breakpoints.map((b) => [b.id, propValue]));
         } else {
           contentProps[propName] = propValue;
         }
@@ -201,6 +211,7 @@ export const parseComponentProps = ({
   /* [Data Format] `mediaQuery` is a joined string of all media query CSS code
    * mediaQuery = ".cfstyles-123{margin:42px;}@media(max-width:768px){.cfstyles-456{margin:13px;}}"
    */
+  console.error(`;; `, JSON.stringify(styleProps, null, 2));
   return {
     styleProps,
     mediaQuery,
