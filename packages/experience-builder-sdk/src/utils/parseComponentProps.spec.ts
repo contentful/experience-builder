@@ -2,8 +2,13 @@ import { parseComponentProps } from './parseComponentProps';
 import { getValueForBreakpoint } from '@contentful/experiences-core';
 import { createBreakpoints } from '../../test/__fixtures__/breakpoints';
 import { createComponentDefinition } from '../../test/__fixtures__/componentDefinition';
-import { createComponentTreeNode } from '../../test/__fixtures__/componentTreeNode';
+import {
+  createComponentTreeNode,
+  createComponentTreeNodeWithCfBackgroundImageUrl,
+} from '../../test/__fixtures__/componentTreeNode';
 import { ValuesByBreakpoint } from '@contentful/experiences-validators';
+
+type ParseComponentPropsArg0 = Parameters<typeof parseComponentProps>[0];
 
 describe('parseComponentProps', () => {
   const breakpoints = createBreakpoints();
@@ -17,9 +22,9 @@ describe('parseComponentProps', () => {
   const resolveBoundValue = () => 'resolvedBoundValue';
   const resolveHyperlinkValue = () => 'resolvedHyperlinkValue';
   const resolveUnboundValue = () => 'resolvedUnboundValue';
-  const resolvePrebindingValue = () => 'resolvePrebindingValue';
+  const resolvePrebindingValue = () => 'resolvedPrebindingValue';
 
-  const defaultArguments = {
+  const defaultArguments: Parameters<typeof parseComponentProps>[0] = {
     mainBreakpoint,
     breakpoints,
     componentDefinition,
@@ -60,6 +65,141 @@ describe('parseComponentProps', () => {
     const result = parseComponentProps(defaultArguments);
     expect(result.contentProps).toEqual({
       text: 'resolvedBoundValue',
+    });
+  });
+
+  describe('to handle special case of "siamese"  cfBackgroundImageUrl and cfBackgroundImageOptions cf-styles', () => {
+    describe('we create "fake" ephemeral cfBackgroundImageUrl style prop with all breakpoints', () => {
+      it('when cfBackgroundImageUrl is BoundValue', () => {
+        jest.resetModules();
+
+        const _createStylesheetsForBuiltInStyles = jest.fn();
+        const _convertResolvedDesignValuesToMediaQuery = jest.fn();
+
+        jest.doMock('../hooks/useMediaQuery', () => ({
+          createStylesheetsForBuiltInStyles: _createStylesheetsForBuiltInStyles,
+          convertResolvedDesignValuesToMediaQuery: _convertResolvedDesignValuesToMediaQuery,
+        }));
+
+        const newArguments: ParseComponentPropsArg0 = {
+          mainBreakpoint,
+          breakpoints,
+          componentDefinition,
+          node: createComponentTreeNodeWithCfBackgroundImageUrl(),
+          resolveDesignValue,
+          resolveBoundValue,
+          resolveHyperlinkValue,
+          resolveUnboundValue,
+          resolvePrebindingValue,
+        };
+
+        // Re-import after mocking
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { parseComponentProps } = require('./parseComponentProps');
+        const result = parseComponentProps(newArguments);
+        expect(_createStylesheetsForBuiltInStyles).toHaveBeenCalledTimes(1);
+        expect(_convertResolvedDesignValuesToMediaQuery).toHaveBeenCalledTimes(1);
+        expect(result.styleProps).toEqual(
+          expect.objectContaining({
+            // ensures that we create "fake" styleProp with all breakpoints expanded
+            cfBackgroundImageUrl: {
+              desktop: 'resolvedBoundValue',
+              tablet: 'resolvedBoundValue',
+              mobile: 'resolvedBoundValue',
+            },
+          }),
+        );
+      });
+      it('when cfBackgroundImageUrl is UnboundValue', () => {
+        jest.resetModules();
+
+        const _createStylesheetsForBuiltInStyles = jest.fn();
+        const _convertResolvedDesignValuesToMediaQuery = jest.fn();
+
+        jest.doMock('../hooks/useMediaQuery', () => ({
+          createStylesheetsForBuiltInStyles: _createStylesheetsForBuiltInStyles,
+          convertResolvedDesignValuesToMediaQuery: _convertResolvedDesignValuesToMediaQuery,
+        }));
+
+        const newArguments: ParseComponentPropsArg0 = {
+          mainBreakpoint,
+          breakpoints,
+          componentDefinition,
+          node: createComponentTreeNodeWithCfBackgroundImageUrl(),
+          resolveDesignValue,
+          resolveBoundValue,
+          resolveHyperlinkValue,
+          resolveUnboundValue,
+          resolvePrebindingValue,
+        };
+
+        newArguments.node.variables.cfBackgroundImageUrl = {
+          type: 'UnboundValue',
+          key: 'uv123',
+        };
+
+        // Re-import after mocking
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { parseComponentProps } = require('./parseComponentProps');
+        const result = parseComponentProps(newArguments);
+        expect(_createStylesheetsForBuiltInStyles).toHaveBeenCalledTimes(1);
+        expect(_convertResolvedDesignValuesToMediaQuery).toHaveBeenCalledTimes(1);
+        expect(result.styleProps).toEqual(
+          expect.objectContaining({
+            // ensures that we create "fake" styleProp with all breakpoints expanded
+            cfBackgroundImageUrl: {
+              desktop: 'resolvedUnboundValue',
+              tablet: 'resolvedUnboundValue',
+              mobile: 'resolvedUnboundValue',
+            },
+          }),
+        );
+      });
+      it('when cfBackgroundImageUrl is ComponentValue', () => {
+        jest.resetModules();
+
+        const _createStylesheetsForBuiltInStyles = jest.fn();
+        const _convertResolvedDesignValuesToMediaQuery = jest.fn();
+
+        jest.doMock('../hooks/useMediaQuery', () => ({
+          createStylesheetsForBuiltInStyles: _createStylesheetsForBuiltInStyles,
+          convertResolvedDesignValuesToMediaQuery: _convertResolvedDesignValuesToMediaQuery,
+        }));
+
+        const newArguments: ParseComponentPropsArg0 = {
+          mainBreakpoint,
+          breakpoints,
+          componentDefinition,
+          node: createComponentTreeNodeWithCfBackgroundImageUrl(),
+          resolveDesignValue,
+          resolveBoundValue,
+          resolveHyperlinkValue,
+          resolveUnboundValue,
+          resolvePrebindingValue,
+        };
+
+        newArguments.node.variables.cfBackgroundImageUrl = {
+          type: 'ComponentValue',
+          key: 'patternVar123',
+        };
+
+        // Re-import after mocking
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { parseComponentProps } = require('./parseComponentProps');
+        const result = parseComponentProps(newArguments);
+        expect(_createStylesheetsForBuiltInStyles).toHaveBeenCalledTimes(1);
+        expect(_convertResolvedDesignValuesToMediaQuery).toHaveBeenCalledTimes(1);
+        expect(result.styleProps).toEqual(
+          expect.objectContaining({
+            // ensures that we create "fake" styleProp with all breakpoints expanded
+            cfBackgroundImageUrl: {
+              desktop: 'resolvedPrebindingValue',
+              tablet: 'resolvedPrebindingValue',
+              mobile: 'resolvedPrebindingValue',
+            },
+          }),
+        );
+      });
     });
   });
 });
