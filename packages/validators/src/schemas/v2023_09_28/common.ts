@@ -173,6 +173,15 @@ export const BoundValueSchema = z
   .object({
     type: z.literal('BoundValue'),
     path: z.string(),
+    isPrebound: z.literal(true).optional(),
+    pathsByContentType: z
+      .record(
+        z.string(),
+        z.object({
+          path: z.string(),
+        }),
+      )
+      .optional(),
   })
   .strict();
 

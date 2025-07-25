@@ -131,26 +131,46 @@ export const useComponentProps = ({
           };
         } else if (variableMapping.type === 'BoundValue') {
           const [, uuid, path] = variableMapping.path.split('/');
-          const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
+          const link = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
-          const variableDefinition = definition.variables[variableName];
-          let boundValue = transformBoundContentValue(
-            node.data.props,
-            entityStore,
-            binding,
-            resolveDesignValue,
-            variableName,
-            variableDefinition.type,
-            variableMapping.path,
-          );
+          let boundValue: ReturnType<typeof transformBoundContentValue>;
+
+          if (link && variableMapping.isPrebound) {
+            let path: string = variableMapping.path;
+            const boundEntity = entityStore.getEntityFromLink(link);
+            if (boundEntity?.sys.type === 'Entry') {
+              const contentTypeId = boundEntity.sys.contentType.sys.id;
+              path = variableMapping.pathsByContentType?.[contentTypeId]?.path ?? path;
+            }
+            boundValue = transformBoundContentValue(
+              node.data.props,
+              entityStore,
+              link,
+              resolveDesignValue,
+              variableName,
+              variableDefinition.type,
+              path,
+            );
+          } else {
+            const variableDefinition = definition.variables[variableName];
+            boundValue = transformBoundContentValue(
+              node.data.props,
+              entityStore,
+              link,
+              resolveDesignValue,
+              variableName,
+              variableDefinition.type,
+              variableMapping.path,
+            );
+          }
 
           // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
           // If no 'boundValue' is found, we also attempt to extract the value associated with the second-to-last item in the path.
           // If successful, it means we have identified the linked asset.
 
-          if (!boundValue) {
+          if (!boundValue && path) {
             const maybeBoundAsset = areEntitiesFetched
-              ? entityStore.getValue(binding, path.split('/').slice(0, -2))
+              ? entityStore.getValue(link, path.split('/').slice(0, -2))
               : undefined;
 
             if (isLinkToAsset(maybeBoundAsset)) {
