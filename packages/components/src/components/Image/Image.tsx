@@ -12,8 +12,8 @@ export const Image: React.FC<ImageProps> = ({ className = '', src, cfImageAsset,
     return (
       <div className={combineClasses('cf-placeholder-wrapper', className)}>
         <img
-          className={'cf-placeholder-image'}
-          src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAA"
+          className="cf-placeholder-image"
+          src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxJyBoZWlnaHQ9JzEnLz4="
           {...props}
         />
         <svg
