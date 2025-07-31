@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.2](https://github.com/contentful/experience-builder/compare/v2.0.1...v2.0.2) (2025-07-31)
+
+### Bug Fixes
+
+- avoid native missing image indicator cross-browser & show corner radius on placeholder image ([#1229](https://github.com/contentful/experience-builder/issues/1229)) ([bdd93eb](https://github.com/contentful/experience-builder/commit/bdd93eb781a2c35c78d09354b8b5ae9ffeb2cc33))
+
 ## [2.0.1](https://github.com/contentful/experience-builder/compare/v2.0.0...v2.0.1) (2025-07-11)
 
 **Note:** Version bump only for package @contentful/experiences-components-react

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.2](https://github.com/contentful/experience-builder/compare/v2.0.1...v2.0.2) (2025-07-31)
+
+### Bug Fixes
+
+- add zustand in the core package's dependencies ([067fbce](https://github.com/contentful/experience-builder/commit/067fbce3c36ed23da79b23e3ef21ce8cb6217e34))
+
 ## [2.0.1](https://github.com/contentful/experience-builder/compare/v2.0.0...v2.0.1) (2025-07-11)
 
 **Note:** Version bump only for package @contentful/experiences-core
