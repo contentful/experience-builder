@@ -9,6 +9,7 @@ import {
   isStructureWithRelativeHeight,
   sanitizeNodeProps,
   EntityStoreBase,
+  transformVisibility,
 } from '@contentful/experiences-core';
 import { ASSEMBLY_NODE_TYPE, EMPTY_CONTAINER_SIZE } from '@contentful/experiences-core/constants';
 import type {
@@ -206,7 +207,15 @@ export const useComponentProps = ({
     findNodeById,
   ]);
 
-  const cfStyles = useMemo(() => buildCfStyles(props as StyleProps), [props]);
+  const cfStyles = useMemo(
+    () => ({
+      ...buildCfStyles(props as StyleProps),
+      // The visibility needs to be transformed separately as it requires
+      // a special handling for preview & SSR rendering (not here though).
+      ...transformVisibility(props.cfVisibility),
+    }),
+    [props],
+  );
 
   const shouldRenderEmptySpaceWithMinSize = useMemo(() => {
     if (node.children.length) return false;
