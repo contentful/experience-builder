@@ -63,5 +63,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "overrides": {
+    "form-data": "4.0.4"
   }
 }
