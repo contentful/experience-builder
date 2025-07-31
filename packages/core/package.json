@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-core",
-  "version": "2.0.1",
+  "version": "2.0.2-beta.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -71,7 +71,8 @@
   },
   "dependencies": {
     "@contentful/experiences-validators": "file:../validators",
-    "@contentful/rich-text-types": "^17.0.0"
+    "@contentful/rich-text-types": "^17.0.0",
+    "zustand": "^4.4.7"
   },
   "peerDependencies": {
     "contentful": ">=10.6.0"
