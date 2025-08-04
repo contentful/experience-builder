@@ -1,4 +1,5 @@
-import { useCallback } from 'react';
+'use client';
+import { useCallback, useEffect } from 'react';
 import type { ContentfulClientApi } from 'contentful';
 import { useFetchByBase } from './useFetchByBase';
 import { fetchBySlug } from '@contentful/experiences-core';
@@ -29,7 +30,13 @@ export const useFetchBySlug = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, localeCode, experienceTypeId]);
 
-  console.log('TK rendering', { mode });
+  console.log('TK rendering', { mode, typeofw: typeof window });
+  useEffect(() => {
+    console.log('TK MOUNTED');
+    return () => {
+      console.log('TK UNMOUNTED');
+    };
+  }, []);
   const fetchResult = useFetchByBase(fetchMethod, mode);
 
   if (!fetchResult.experience) {

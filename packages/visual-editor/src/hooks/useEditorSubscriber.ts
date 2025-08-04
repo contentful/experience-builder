@@ -191,7 +191,7 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
 
           let newEntityStore = entityStore;
           // If entityStore is an instance of EntityStore, we need to initialize the editor version of it
-          console.log('TK check', entityStore instanceof EntityStore);
+          console.log('TK check', { entityStore }, entityStore instanceof EntityStore);
           if (entityStore instanceof EntityStore || entityStore.locale !== locale) {
             newEntityStore = new EditorModeEntityStore({ locale, entities: [] });
             setLocale(locale);
