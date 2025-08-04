@@ -18,13 +18,13 @@ type useDetectCanvasModeArgs = {
   isClientSide?: boolean;
 };
 
-export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasModeArgs = {}) => {
+export const useDetectCanvasMode = ({ isClientSide }: useDetectCanvasModeArgs = {}) => {
   const [mounted, setMounted] = useState(false);
   const receivedModeMessage = useRef(false);
   const [mode, setMode] = useState<StudioCanvasMode>(() => {
     // if we are client side and running in an iframe, then initialize to read only,
     // Editor mode can be requested later.
-    console.log('TK init mode', {
+    console.log('TK init mode state', {
       isClientSide,
       inIframe: inIframe(),
     });
@@ -70,7 +70,10 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
 
   useEffect(() => {
     const handleHandshakeTimeout = () => {
-      console.log('TK Handshake timeout', { receivedModeMessage: receivedModeMessage.current });
+      console.log('TK Handshake timeout', {
+        receivedModeMessage: receivedModeMessage.current,
+        mode,
+      });
       if (!receivedModeMessage.current) {
         setMode(StudioCanvasMode.NONE);
       }

@@ -46,6 +46,8 @@ export const ExperienceRoot = ({
     mode,
   });
 
+  console.log('TK rendering ExperienceRoot', { mode, experienceObject });
+
   if (mode === StudioCanvasMode.EDITOR || mode === StudioCanvasMode.READ_ONLY) {
     return (
       <VisualEditorRoot
