@@ -15,6 +15,7 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   const preview = isPreview === 'true' || mode === 'preview';
   const editorMode = expEditorMode === 'true';
   const { experience, error } = await getExperience(slug, locale, preview, editorMode);
+  console.log('TK', { searchParams, editorMode, experience });
 
   const client = createClientWithConfig(preview);
 

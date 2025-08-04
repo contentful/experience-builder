@@ -195,6 +195,21 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
             resetEntityStore(newEntityStore);
           }
 
+          console.log('TK Exp Updated', {
+            locales: {
+              locale,
+              oldLocale: entityStore.locale,
+            },
+            stores: {
+              entityStore,
+              newEntityStore,
+              o: (entityStore as EditorModeEntityStore).getMissingEntityIds,
+              n: (newEntityStore as EditorModeEntityStore).getMissingEntityIds,
+            },
+            eventData,
+            tree,
+          });
+
           // Below are mutually exclusive cases
           if (changedNode) {
             /**
