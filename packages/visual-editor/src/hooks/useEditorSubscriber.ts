@@ -9,7 +9,6 @@ import {
   isLink,
   EditorModeEntityStore,
   type InMemoryEntitiesStore,
-  EntityStore,
 } from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
