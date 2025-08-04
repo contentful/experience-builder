@@ -31,6 +31,8 @@ export function createExperience(
 ): Experience<EntityStore> {
   let entityStore: EntityStore;
 
+  console.log('TK createExperience', { options });
+
   if (typeof options === 'string') {
     entityStore = new EntityStore(options);
   } else {
