@@ -24,6 +24,10 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
   const [mode, setMode] = useState<StudioCanvasMode>(() => {
     // if we are client side and running in an iframe, then initialize to read only,
     // Editor mode can be requested later.
+    console.log('TK init mode', {
+      isClientSide,
+      inIframe: inIframe(),
+    });
     if (isClientSide && inIframe()) {
       return StudioCanvasMode.READ_ONLY;
     } else {
@@ -33,9 +37,11 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
 
   const onMessage = useCallback((event: MessageEvent) => {
     if (doesMismatchMessageSchema(event)) {
+      console.log('TK message schema mismatch');
       return;
     }
     const eventData = tryParseMessage(event);
+    console.log('TK message event', eventData.eventType, { eventData });
     const isRequestingCanvasMode =
       eventData.eventType === INCOMING_EVENTS.RequestEditorMode ||
       eventData.eventType === INCOMING_EVENTS.RequestReadOnlyMode;

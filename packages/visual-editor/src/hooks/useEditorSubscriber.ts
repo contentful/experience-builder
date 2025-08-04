@@ -9,6 +9,7 @@ import {
   isLink,
   EditorModeEntityStore,
   type InMemoryEntitiesStore,
+  EntityStore,
 } from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
@@ -189,7 +190,9 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
           }
 
           let newEntityStore = entityStore;
-          if (entityStore.locale !== locale) {
+          // If entityStore is an instance of EntityStore, we need to initialize the editor version of it
+          console.log('TK check', entityStore instanceof EntityStore);
+          if (entityStore instanceof EntityStore || entityStore.locale !== locale) {
             newEntityStore = new EditorModeEntityStore({ locale, entities: [] });
             setLocale(locale);
             resetEntityStore(newEntityStore);
