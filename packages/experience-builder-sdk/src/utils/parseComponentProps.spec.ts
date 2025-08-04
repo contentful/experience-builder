@@ -73,11 +73,14 @@ describe('parseComponentProps', () => {
       it('when cfBackgroundImageUrl is BoundValue', () => {
         jest.resetModules();
 
-        const _createStylesheetsForBuiltInStyles = jest.fn();
+        const _createStylesheetsForBuiltInStyles = jest.fn(() => []);
         const _convertResolvedDesignValuesToMediaQuery = jest.fn();
 
-        jest.doMock('../hooks/useMediaQuery', () => ({
+        jest.doMock('../core/styles/createStylesheetsForBuiltInStyles', () => ({
           createStylesheetsForBuiltInStyles: _createStylesheetsForBuiltInStyles,
+        }));
+
+        jest.doMock('../core/styles/convertResolvedDesignValuesToMediaQuery', () => ({
           convertResolvedDesignValuesToMediaQuery: _convertResolvedDesignValuesToMediaQuery,
         }));
 
@@ -116,8 +119,11 @@ describe('parseComponentProps', () => {
         const _createStylesheetsForBuiltInStyles = jest.fn();
         const _convertResolvedDesignValuesToMediaQuery = jest.fn();
 
-        jest.doMock('../hooks/useMediaQuery', () => ({
+        jest.doMock('../core/styles/createStylesheetsForBuiltInStyles', () => ({
           createStylesheetsForBuiltInStyles: _createStylesheetsForBuiltInStyles,
+        }));
+
+        jest.doMock('../core/styles/convertResolvedDesignValuesToMediaQuery', () => ({
           convertResolvedDesignValuesToMediaQuery: _convertResolvedDesignValuesToMediaQuery,
         }));
 
@@ -161,8 +167,11 @@ describe('parseComponentProps', () => {
         const _createStylesheetsForBuiltInStyles = jest.fn();
         const _convertResolvedDesignValuesToMediaQuery = jest.fn();
 
-        jest.doMock('../hooks/useMediaQuery', () => ({
+        jest.doMock('../core/styles/createStylesheetsForBuiltInStyles', () => ({
           createStylesheetsForBuiltInStyles: _createStylesheetsForBuiltInStyles,
+        }));
+
+        jest.doMock('../core/styles/convertResolvedDesignValuesToMediaQuery', () => ({
           convertResolvedDesignValuesToMediaQuery: _convertResolvedDesignValuesToMediaQuery,
         }));
 
