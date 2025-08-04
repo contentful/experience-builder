@@ -29,6 +29,7 @@ export const useFetchBySlug = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, localeCode, experienceTypeId]);
 
+  console.log('TK rendering', { mode });
   const fetchResult = useFetchByBase(fetchMethod, mode);
 
   if (!fetchResult.experience) {
