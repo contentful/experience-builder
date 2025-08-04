@@ -70,6 +70,7 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
 
   useEffect(() => {
     const handleHandshakeTimeout = () => {
+      console.log('TK Handshake timeout', { receivedModeMessage: receivedModeMessage.current });
       if (!receivedModeMessage.current) {
         setMode(StudioCanvasMode.NONE);
       }

@@ -22,6 +22,8 @@ export const useInitializeEditor = (inMemoryEntitiesStore: InMemoryEntitiesStore
         designTokens,
       });
 
+      console.log('TK Init editor store');
+
       // if entities is set to [], then everything will still work as EntityStore will
       // request entities on demand via ▲REQUEST_ENTITY
       resetEntityStore(new EditorModeEntityStore({ locale: initialLocale, entities }));
@@ -44,6 +46,7 @@ export const useInitializeEditor = (inMemoryEntitiesStore: InMemoryEntitiesStore
 
     // Dispatch Visual Editor Ready event
     window.dispatchEvent(new CustomEvent(VISUAL_EDITOR_EVENTS.Ready));
+    console.log('TK Dispatching Visual Editor Ready event');
   }, [initialized]);
 
   return initialized;

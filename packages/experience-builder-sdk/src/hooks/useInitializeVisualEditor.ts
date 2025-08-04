@@ -52,6 +52,7 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
 
   useEffect(() => {
     const onVisualEditorReady = () => {
+      console.log('TK Dispatching Visual Editor Init event');
       window.dispatchEvent(
         new CustomEvent(INTERNAL_EVENTS.VisualEditorInitialize, {
           detail: {
