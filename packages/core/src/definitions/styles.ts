@@ -265,7 +265,7 @@ export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
     validations: {
       in: [
         {
-          value: 'left',
+          value: 'start',
           displayName: 'Align left',
         },
         {
@@ -273,7 +273,7 @@ export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
           displayName: 'Align center',
         },
         {
-          value: 'right',
+          value: 'end',
           displayName: 'Align right',
         },
       ],
@@ -282,7 +282,7 @@ export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
     type: 'Text',
     group: 'style',
     description: 'The text alignment of the element',
-    defaultValue: 'left',
+    defaultValue: 'start',
   },
   cfTextTransform: {
     validations: {
