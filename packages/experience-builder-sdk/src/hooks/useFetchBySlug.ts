@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type { ContentfulClientApi } from 'contentful';
 import { useFetchByBase } from './useFetchByBase';
 import { fetchBySlug } from '@contentful/experiences-core';
@@ -22,6 +22,7 @@ export const useFetchBySlug = ({
   hyperlinkPattern,
 }: UseFetchBySlugArgs) => {
   const mode = useDetectCanvasMode({ isClientSide: typeof window !== 'undefined' });
+  const myId = useRef(Math.random());
 
   const fetchMethod = useCallback(() => {
     return fetchBySlug({ slug, localeCode, client, experienceTypeId });
@@ -32,9 +33,13 @@ export const useFetchBySlug = ({
 
   console.log('TK rendering useFetchBySlug', { mode });
   useEffect(() => {
-    console.log('TK MOUNTED');
+    const id = myId.current;
+    console.log('TK MOUNTED', id);
+    const interval = setInterval(() => {
+      console.log('TK {heartbeat}', id, myId.current);
+    }, 1000);
     return () => {
-      console.log('TK UNMOUNTED');
+      console.log('TK UNMOUNTED', id, myId.current);
     };
   }, []);
   const fetchResult = useFetchByBase(fetchMethod, mode);

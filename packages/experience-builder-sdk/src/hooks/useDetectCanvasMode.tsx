@@ -20,13 +20,14 @@ type useDetectCanvasModeArgs = {
 
 export const useDetectCanvasMode = ({ isClientSide }: useDetectCanvasModeArgs = {}) => {
   const [mounted, setMounted] = useState(false);
-  const receivedModeMessage = useRef(false);
+  const handshakeTimeout = useRef<NodeJS.Timeout>();
   const [mode, setMode] = useState<StudioCanvasMode>(() => {
     // if we are client side and running in an iframe, then initialize to read only,
     // Editor mode can be requested later.
     console.log('TK init mode state', {
       isClientSide,
       inIframe: inIframe(),
+      typeofw: typeof window,
     });
     if (isClientSide && inIframe()) {
       return StudioCanvasMode.READ_ONLY;
@@ -53,7 +54,7 @@ export const useDetectCanvasMode = ({ isClientSide }: useDetectCanvasModeArgs = 
     const isEditorMode = eventData.eventType === INCOMING_EVENTS.RequestEditorMode;
     const mode = isEditorMode ? StudioCanvasMode.EDITOR : StudioCanvasMode.READ_ONLY;
 
-    receivedModeMessage.current = true;
+    clearTimeout(handshakeTimeout.current);
     setMode(mode);
 
     if (typeof window !== 'undefined') {
@@ -71,12 +72,10 @@ export const useDetectCanvasMode = ({ isClientSide }: useDetectCanvasModeArgs = 
   useEffect(() => {
     const handleHandshakeTimeout = () => {
       console.log('TK Handshake timeout', {
-        receivedModeMessage: receivedModeMessage.current,
+        timeoutIsRunning: !!handshakeTimeout.current,
         mode,
       });
-      if (!receivedModeMessage.current) {
-        setMode(StudioCanvasMode.NONE);
-      }
+      setMode(StudioCanvasMode.NONE);
     };
 
     // Only run check after component is mounted on the client to avoid hydration ssr issues
@@ -89,11 +88,11 @@ export const useDetectCanvasMode = ({ isClientSide }: useDetectCanvasModeArgs = 
 
         // FIXME: This causes a race condition by setting the mode sometimes to NONE when
         // reloading the canvas due to a save event.
-        const handshakeTimeout = setTimeout(handleHandshakeTimeout, 30);
+        handshakeTimeout.current = setTimeout(handleHandshakeTimeout, 100);
 
         return () => {
           window.removeEventListener('message', onMessage);
-          clearTimeout(handshakeTimeout);
+          clearTimeout(handshakeTimeout.current);
         };
       }
     } else {

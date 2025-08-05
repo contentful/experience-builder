@@ -190,8 +190,8 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
 
           let newEntityStore = entityStore;
           // If entityStore is an instance of EntityStore, we need to initialize the editor version of it
-          console.log('TK check', {
-            isEditor: !!(entityStore as EditorModeEntityStore).getMissingEntityIds,
+          console.log('TK useEditorSubscriber on tree update', {
+            isEditorStore: !!(entityStore as EditorModeEntityStore).getMissingEntityIds,
             entityStore,
           });
           if (
@@ -203,7 +203,7 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
             resetEntityStore(newEntityStore);
           }
 
-          console.log('TK Exp Updated', {
+          console.log('TK received Exp Updated message', {
             locales: {
               locale,
               oldLocale: entityStore.locale,
