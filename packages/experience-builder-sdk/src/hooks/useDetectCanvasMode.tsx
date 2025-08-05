@@ -89,7 +89,7 @@ export const useDetectCanvasMode = ({ isClientSide }: useDetectCanvasModeArgs = 
 
         // FIXME: This causes a race condition by setting the mode sometimes to NONE when
         // reloading the canvas due to a save event.
-        const handshakeTimeout = setTimeout(handleHandshakeTimeout, 100);
+        const handshakeTimeout = setTimeout(handleHandshakeTimeout, 30);
 
         return () => {
           window.removeEventListener('message', onMessage);
