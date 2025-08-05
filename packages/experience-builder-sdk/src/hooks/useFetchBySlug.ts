@@ -39,6 +39,7 @@ export const useFetchBySlug = ({
       console.log('TK {heartbeat}', id, myId.current);
     }, 1000);
     return () => {
+      clearInterval(interval);
       console.log('TK UNMOUNTED', id, myId.current);
     };
   }, []);
