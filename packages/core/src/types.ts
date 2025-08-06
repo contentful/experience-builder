@@ -558,7 +558,7 @@ type OUTGOING_EVENT_PAYLOADS = {
   };
 };
 
-export type CanvasGeometryUpdateSourceEvent = 'resize' | 'mutation';
+export type CanvasGeometryUpdateSourceEvent = 'resize' | 'mutation' | 'imageLoad';
 
 export type SendMessageParams = <T extends OutgoingEvent>(
   eventType: T,
