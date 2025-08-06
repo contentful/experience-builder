@@ -65,7 +65,7 @@ const ParameterDefinitionSchema = z.object({
       }),
     })
     .optional(),
-  contentTypes: z.array(z.string()),
+  contentTypes: z.array(z.string()).min(1),
   passToNodes: z.array(PassToNodeSchema).optional(),
 });
 

@@ -31,4 +31,20 @@ describe(`${schemaVersion} version`, () => {
 
     expect(result.success).toBe(true);
   });
+
+  it('should return an error when contentTypes array is empty', () => {
+    const clonedPattern = JSON.parse(JSON.stringify(experiencePattern));
+    clonedPattern.fields.componentSettings['en-US'].prebindingDefinitions[0].parameterDefinitions[
+      '8v3GB67qF5f'
+    ].contentTypes = [];
+
+    const result = validatePatternFields(clonedPattern, schemaVersion);
+
+    expect(result.success).toBe(false);
+    expect(result.errors).toBeDefined();
+    const error = result.errors?.[0];
+
+    expect(error?.name).toBe('size');
+    expect(error?.details).toBe('Array must contain at least 1 element(s)');
+  });
 });
