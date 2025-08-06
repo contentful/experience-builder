@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.0](https://github.com/contentful/experience-builder/compare/v2.0.2...v3.0.0) (2025-08-06)
+
+### Features
+
+- added validation for patterns to have at least one content type ([#1245](https://github.com/contentful/experience-builder/issues/1245)) ([dde0a31](https://github.com/contentful/experience-builder/commit/dde0a31aa5679f303daa3a5af47b97765b508a14))
+
 ## [2.0.2](https://github.com/contentful/experience-builder/compare/v2.0.1...v2.0.2) (2025-07-31)
 
 **Note:** Version bump only for package @contentful/experiences-validators

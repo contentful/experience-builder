@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.0](https://github.com/contentful/experience-builder/compare/v2.0.2...v3.0.0) (2025-08-06)
+
+### ⚠ BREAKING CHANGES
+
+- move DND to the host application and ensure WYSIWYG experience [SPA-2744] (#1216)
+
+### Features
+
+- added validation for patterns to have at least one content type ([#1245](https://github.com/contentful/experience-builder/issues/1245)) ([dde0a31](https://github.com/contentful/experience-builder/commit/dde0a31aa5679f303daa3a5af47b97765b508a14))
+- move DND to the host application and ensure WYSIWYG experience [SPA-2744] ([#1216](https://github.com/contentful/experience-builder/issues/1216)) ([f97eb57](https://github.com/contentful/experience-builder/commit/f97eb57de3c33aa8f6f354979ad03f6255d92bd1)), closes [#1134](https://github.com/contentful/experience-builder/issues/1134) [#1138](https://github.com/contentful/experience-builder/issues/1138) [#1134](https://github.com/contentful/experience-builder/issues/1134) [#1144](https://github.com/contentful/experience-builder/issues/1144) [#1149](https://github.com/contentful/experience-builder/issues/1149) [#1155](https://github.com/contentful/experience-builder/issues/1155) [#1193](https://github.com/contentful/experience-builder/issues/1193) [#1171](https://github.com/contentful/experience-builder/issues/1171) [#1219](https://github.com/contentful/experience-builder/issues/1219)
+
+### Bug Fixes
+
+- text align validation from left right to start end [SPA-3060] ([#1243](https://github.com/contentful/experience-builder/issues/1243)) ([ad32c9f](https://github.com/contentful/experience-builder/commit/ad32c9f3ff9e09488d2f025fefe1b5191f9d2730))
+
 ## [2.0.2](https://github.com/contentful/experience-builder/compare/v2.0.1...v2.0.2) (2025-07-31)
 
 ### Bug Fixes
