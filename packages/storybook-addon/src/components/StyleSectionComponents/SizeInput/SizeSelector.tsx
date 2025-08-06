@@ -4,7 +4,7 @@ import { Grid, Select, Text, TextInput } from '@contentful/f36-components';
 import { useVariableState } from '@/hooks/useVariableState';
 import { styles } from './styles';
 import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
-import { EMPTY_CONTAINER_HEIGHT } from '@contentful/experiences-core/constants';
+import { EMPTY_CONTAINER_SIZE } from '@contentful/experiences-core/constants';
 
 const heightVariableName = 'cfHeight';
 const widthVariableName = 'cfWidth';
@@ -30,7 +30,7 @@ const fitSizingOptions = [
 
 const transformValuesBySizingOption = (sizingOption: SizingOptions, value: string) => {
   if (sizingOption === 'fixed') {
-    return EMPTY_CONTAINER_HEIGHT;
+    return EMPTY_CONTAINER_SIZE;
   }
 
   if (sizingOption === 'fit') {

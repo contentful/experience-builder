@@ -15,11 +15,6 @@
 
 .cf-single-column-wrapper {
   position: relative;
-  display: flex;
-}
-
-.cf-single-column {
-  pointer-events: all;
 }
 
 .cf-single-column-wrapper:after {

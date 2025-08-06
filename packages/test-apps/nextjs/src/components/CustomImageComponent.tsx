@@ -1,8 +1,8 @@
-export function CustomImageComponent(props: { src: string }) {
+export function CustomImageComponent({ src, ...rest }: { src: string }) {
   return (
-    <>
-      <img src={props.src} style={{ height: '100px', width: '100px' }} />
-      <span>{props.src}</span>
-    </>
+    <div {...rest}>
+      <img src={src} style={{ height: '100px', width: '100px' }} />
+      <span>{src}</span>
+    </div>
   );
 }

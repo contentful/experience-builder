@@ -54,6 +54,7 @@ export type ComponentDefinitionVariableTypeMap = {
 };
 
 type ScrollStateKey = keyof typeof SCROLL_STATES;
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type ScrollState = (typeof SCROLL_STATES)[ScrollStateKey];
 
 type OutgoingEventKey = keyof typeof OUTGOING_EVENTS;
@@ -228,7 +229,7 @@ export type StyleProps = {
   cfLineHeight: string;
   cfLetterSpacing: string;
   cfTextColor: string;
-  cfTextAlign: 'left' | 'center' | 'right';
+  cfTextAlign: 'start' | 'center' | 'end';
   cfTextTransform: 'none' | 'capitalize' | 'uppercase' | 'lowercase';
   cfTextBold: boolean;
   cfTextItalic: boolean;
@@ -479,53 +480,6 @@ export type BackgroundImageOptions = {
   targetSize: string;
 };
 
-interface DraggableProvidedDraggableProps {
-  'data-rfd-draggable-context-id'?: string;
-  'data-rfd-draggable-id'?: string;
-}
-
-interface DraggableProvidedDragHandleProps {
-  'data-rfd-drag-handle-draggable-id'?: string;
-  'data-rfd-drag-handle-context-id'?: string;
-}
-
-export type WrapperTags = keyof Pick<
-  JSX.IntrinsicElements,
-  | 'div'
-  | 'span'
-  | 'section'
-  | 'article'
-  | 'aside'
-  | 'p'
-  | 'h1'
-  | 'h2'
-  | 'h3'
-  | 'h4'
-  | 'h5'
-  | 'h6'
-  | 'header'
-  | 'footer'
-  | 'nav'
-  | 'main'
->;
-
-export interface DragWrapperProps
-  extends DraggableProvidedDragHandleProps,
-    DraggableProvidedDraggableProps,
-    React.HTMLAttributes<HTMLElement>,
-    React.PropsWithChildren {
-  'data-cf-node-id'?: string;
-  'data-ctfl-draggable-id'?: string;
-  'data-test-id'?: string;
-  'data-cf-node-block-id'?: string;
-  'data-cf-node-block-type'?: string;
-  'data-ctfl-dragging-element'?: string;
-  innerRef?: (refNode: HTMLElement) => void;
-  wrapComponent?: boolean;
-  Tag?: WrapperTags;
-  ToolTipAndPlaceholder?: React.ReactNode;
-}
-
 export type ConnectedPayload =
   | undefined
   | { sdkVersion: string; definitions: ComponentDefinition[] };
@@ -597,7 +551,14 @@ type OUTGOING_EVENT_PAYLOADS = {
   outsideCanvasClick: OutsideCanvasClickPayload;
   sdkFeatures: SDKFeaturesPayload;
   REQUEST_ENTITIES: RequestEntitiesPayload;
+  canvasGeometryUpdated: {
+    size: { width: number; height: number };
+    nodes: Record<string, { coordinates: Pick<DOMRect, 'x' | 'y' | 'width' | 'height'> }>;
+    sourceEvent: CanvasGeometryUpdateSourceEvent;
+  };
 };
+
+export type CanvasGeometryUpdateSourceEvent = 'resize' | 'mutation';
 
 export type SendMessageParams = <T extends OutgoingEvent>(
   eventType: T,
@@ -626,23 +587,31 @@ export type ExperienceUpdatedPayload = {
   changedValueType?: SelectedValueTypes;
 };
 
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type ComponentDraggingChangedPayload = {
   isDragging: boolean;
 };
 
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type IncomingComponentDragCanceledPayload = undefined;
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type ComponentDragStartedPayload = { id: string; isAssembly: boolean };
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type ComponentDragEndedPayload = undefined;
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type IncomingComponentMoveEndedPayload = {
   mouseX: number;
   mouseY: number;
 };
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type CanvasResizedPayload = {
   selectedNodeId: string;
 };
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type SelectComponentPayload = {
   selectedNodeId: string;
 };
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type HoverComponentPayload = {
   hoveredNodeId: string;
 };
@@ -657,6 +626,7 @@ export type AssembliesAddedPayload = {
 export type AssembliesRegisteredPayload = {
   assemblies: ComponentDefinition[];
 };
+/** @deprecated will be removed when dropping backward compatibility for old DND */
 export type IncomingMouseMovePayload = {
   mouseX: number;
   mouseY: number;
@@ -690,3 +660,16 @@ export type IncomingMessage = {
     payload: INCOMING_EVENT_PAYLOADS[K];
   };
 }[keyof INCOMING_EVENT_PAYLOADS];
+
+type StructuralEditorModeProps =
+  | {
+      editorMode: true;
+      node: ExperienceTreeNode;
+    }
+  | {
+      editorMode?: false;
+    };
+
+export type StructureComponentProps<OtherProps> = React.PropsWithChildren<
+  StructuralEditorModeProps & OtherProps
+>;
