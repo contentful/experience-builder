@@ -229,7 +229,7 @@ export type StyleProps = {
   cfLineHeight: string;
   cfLetterSpacing: string;
   cfTextColor: string;
-  cfTextAlign: 'left' | 'center' | 'right';
+  cfTextAlign: 'start' | 'center' | 'end';
   cfTextTransform: 'none' | 'capitalize' | 'uppercase' | 'lowercase';
   cfTextBold: boolean;
   cfTextItalic: boolean;
