@@ -266,7 +266,7 @@ export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
       in: [
         {
           value: 'start',
-          displayName: 'Align left',
+          displayName: 'Align start',
         },
         {
           value: 'center',
@@ -274,7 +274,7 @@ export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
         },
         {
           value: 'end',
-          displayName: 'Align right',
+          displayName: 'Align end',
         },
       ],
     },
