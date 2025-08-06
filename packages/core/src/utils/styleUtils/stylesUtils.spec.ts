@@ -1,7 +1,7 @@
 import { ExperienceTreeNode } from '@/types';
 import { calculateNodeDefaultHeight, stringifyCssProperties } from './stylesUtils';
 import { describe, it, expect } from 'vitest';
-import { CONTENTFUL_COMPONENTS, EMPTY_CONTAINER_HEIGHT } from '@/constants';
+import { CONTENTFUL_COMPONENTS, EMPTY_CONTAINER_SIZE } from '@/constants';
 
 describe('stylesUtils', () => {
   describe('calculateNodeDefaultHeight', () => {
@@ -40,7 +40,7 @@ describe('stylesUtils', () => {
         value: 'auto',
       });
 
-      expect(result).toBe(EMPTY_CONTAINER_HEIGHT);
+      expect(result).toBe(EMPTY_CONTAINER_SIZE);
     });
 
     it('should return "100%" when container has a non-container child', () => {

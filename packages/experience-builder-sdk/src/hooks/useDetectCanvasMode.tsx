@@ -77,9 +77,13 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
         sendMessage(OUTGOING_EVENTS.Connected, undefined);
         sendMessage(OUTGOING_EVENTS.SDKFeatures, sdkFeatures);
 
+        // If in iframe, we wait long to avoid setting preview mode accidentally in editor mode
+        // when switching from v2 to v3
+        const handshakeDelay = inIframe() ? 2000 : 100;
+
         // FIXME: This causes a race condition by setting the mode sometimes to NONE when
         // reloading the canvas due to a save event.
-        const handshakeTimeout = setTimeout(handleHandshakeTimeout, 100);
+        const handshakeTimeout = setTimeout(handleHandshakeTimeout, handshakeDelay);
 
         return () => {
           window.removeEventListener('message', onMessage);

@@ -1,5 +1,4 @@
 import type { ExperienceTreeNode } from '@contentful/experiences-core/types';
-import { getChildFromTree } from './getItem';
 
 export function updateNode(
   nodeId: string,
@@ -67,41 +66,4 @@ export function addChildNode(
   node.children.forEach((childNode) =>
     addChildNode(indexToAdd, parentNodeId, nodeToAdd, childNode),
   );
-}
-
-export function reorderChildNode(
-  oldIndex: number,
-  newIndex: number,
-  parentNodeId: string,
-  node: ExperienceTreeNode,
-) {
-  if (node.data.id === parentNodeId) {
-    // Remove the child from the old position
-    const [childToMove] = node.children.splice(oldIndex, 1);
-
-    // Insert the child at the new position
-    node.children.splice(newIndex, 0, childToMove);
-    return;
-  }
-
-  node.children.forEach((childNode) =>
-    reorderChildNode(oldIndex, newIndex, parentNodeId, childNode),
-  );
-}
-
-export function reparentChildNode(
-  oldIndex: number,
-  newIndex: number,
-  sourceNodeId: string,
-  destinationNodeId: string,
-  node: ExperienceTreeNode,
-) {
-  const nodeToMove = getChildFromTree(sourceNodeId, oldIndex, node);
-
-  if (!nodeToMove) {
-    return;
-  }
-
-  removeChildNode(oldIndex, nodeToMove.data.id, sourceNodeId, node);
-  addChildNode(newIndex, destinationNodeId, nodeToMove, node);
 }

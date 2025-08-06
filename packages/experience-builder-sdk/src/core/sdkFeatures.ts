@@ -6,4 +6,6 @@ export const sdkFeatures: Record<string, unknown> = {
   patternResolution: true,
   // [SPA-2602] allow merging the default and overwriting design values for patterns by breakpoint
   patternBreakpointDesignValues: true,
+  // DND is moving to the host application enabling smoother native event handling
+  dndMigration: true,
 };
