@@ -26,6 +26,7 @@ export const OUTGOING_EVENTS = {
   SDKFeatures: 'sdkFeatures',
   RequestEntities: 'REQUEST_ENTITIES',
   CanvasGeometryUpdated: 'canvasGeometryUpdated',
+  CanvasPan: 'canvasPan',
 } as const;
 
 export const INCOMING_EVENTS = {
