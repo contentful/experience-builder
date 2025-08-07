@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.0](https://github.com/contentful/experience-builder/compare/v3.0.0...v3.1.0) (2025-08-07)
+
+### Features
+
+- [] prepare SDK to delegate pan to the canvas ([#1249](https://github.com/contentful/experience-builder/issues/1249)) ([78e6af6](https://github.com/contentful/experience-builder/commit/78e6af69c114ea0c03f909c20782d335dbdd93c0))
+
+### Bug Fixes
+
+- [SPA-3075] send canvas geometry on image load separately ([#1248](https://github.com/contentful/experience-builder/issues/1248)) ([c928267](https://github.com/contentful/experience-builder/commit/c9282671638ec7b09370317e866e4f38a5d0feba))
+
 ## [3.0.0](https://github.com/contentful/experience-builder/compare/v2.0.2...v3.0.0) (2025-08-06)
 
 ### ⚠ BREAKING CHANGES
