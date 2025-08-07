@@ -79,6 +79,7 @@ export const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx)
       code: z.ZodIssueCode.custom,
       message: `The first breakpoint should include the following attributes: { "query": "*" }`,
     });
+    return;
   }
 
   // Return early if there's only one generic breakpoint
@@ -95,6 +96,7 @@ export const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx)
       code: z.ZodIssueCode.custom,
       message: `Breakpoint IDs must be unique`,
     });
+    return;
   }
 
   // Skip the first one which is guaranteed to be a wildcard query
