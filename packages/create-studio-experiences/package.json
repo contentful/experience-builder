@@ -39,7 +39,6 @@
     "build": "tsc",
     "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "depcruise": "depcruise src",
     "create-studio-experiences": "node dist/index.js"
   },
