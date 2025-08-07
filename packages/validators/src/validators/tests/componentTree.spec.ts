@@ -123,11 +123,6 @@ describe('componentTree', () => {
           name: 'custom',
           path: ['componentTree', 'en-US', 'breakpoints'],
         },
-        {
-          details: 'Breakpoints should be ordered from largest to smallest pixel value',
-          name: 'custom',
-          path: ['componentTree', 'en-US', 'breakpoints'],
-        },
       ];
       expect(result.success).toBe(false);
       expect(result.errors).toEqual(expectedErrors);
@@ -155,7 +150,33 @@ describe('componentTree', () => {
       expect(result.success).toBe(false);
       expect(error?.name).toBe('custom');
       expect(error?.details).toBe(
-        'Breakpoints should be ordered from largest to smallest pixel value',
+        'When using a desktop-first strategy, all breakpoints must have strictly decreasing pixel values',
+      );
+    });
+
+    it(`fails if breakpoints are not ordered from smallest to largest`, () => {
+      const breakpoints = [
+        { id: 'mobile', query: '*', previewSize: 'small', displayName: 'Mobile' },
+        { id: 'desktop', query: '>1024px', previewSize: 'large', displayName: 'Desktop' },
+        { id: 'tablet', query: '>768px', previewSize: 'medium', displayName: 'Tablet' },
+      ];
+      const componentTree = experience.fields.componentTree[locale];
+      const updatedExperience = {
+        ...experience,
+        fields: {
+          ...experience.fields,
+          componentTree: { [locale]: { ...componentTree, breakpoints } },
+        },
+      };
+      const result = validateExperienceFields(updatedExperience, schemaVersion);
+
+      expect(result.success).toBe(false);
+      const error = result.errors?.[0];
+
+      expect(result.success).toBe(false);
+      expect(error?.name).toBe('custom');
+      expect(error?.details).toBe(
+        'When using a mobile-first strategy, all breakpoints must have strictly increasing pixel values',
       );
     });
 

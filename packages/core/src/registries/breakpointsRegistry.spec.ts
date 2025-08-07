@@ -45,22 +45,23 @@ describe('runBreakpointsValidation', () => {
         previewSize: '100%',
       },
       {
+        id: 'test-mobile',
+        query: '<576px',
+        displayName: 'Mobile',
+        previewSize: '390px',
+      },
+      {
         id: 'test-tablet',
         query: '<982px',
         displayName: 'Tablet',
         previewSize: '820px',
       },
-      {
-        id: 'test-mobile',
-        query: '<1000px',
-        displayName: 'Mobile',
-        previewSize: '390px',
-      },
     ]);
 
     const errors = [
       {
-        details: 'Breakpoints should be ordered from largest to smallest pixel value',
+        details:
+          'When using a desktop-first strategy, all breakpoints must have strictly decreasing pixel values',
         name: 'custom',
         path: [],
       },
@@ -71,7 +72,7 @@ describe('runBreakpointsValidation', () => {
     expect(() => registry.runBreakpointsValidation()).toThrow(error);
   });
 
-  it('does not throw an error if no breakpoint definition is invalid', () => {
+  it('does not throw an error when providing valid desktop-first breakpoint definitions', () => {
     registry.defineBreakpoints([
       {
         id: 'test-desktop',
@@ -90,6 +91,31 @@ describe('runBreakpointsValidation', () => {
         query: '<576px',
         displayName: 'Mobile',
         previewSize: '390px',
+      },
+    ]);
+
+    expect(() => registry.runBreakpointsValidation()).not.toThrow();
+  });
+
+  it('does not throw an error when providing valid mobile-first breakpoint definitions', () => {
+    registry.defineBreakpoints([
+      {
+        id: 'test-mobile',
+        query: '*',
+        displayName: 'Mobile',
+        previewSize: '390px',
+      },
+      {
+        id: 'test-tablet',
+        query: '>576px',
+        displayName: 'Tablet',
+        previewSize: '820px',
+      },
+      {
+        id: 'test-desktop',
+        query: '>982px',
+        displayName: 'All Sizes',
+        previewSize: '100%',
       },
     ]);
 
