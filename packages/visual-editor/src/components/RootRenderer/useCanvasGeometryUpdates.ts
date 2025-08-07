@@ -8,6 +8,8 @@ import {
   CanvasGeometryUpdateSourceEvent,
   ExperienceTree,
 } from '@contentful/experiences-core/types';
+import { sendMessage } from '@contentful/experiences-core';
+import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 /*
  * Scenarios to consider:
@@ -119,4 +121,21 @@ export const useCanvasGeometryUpdates = ({ tree }: UseCanvasGeometryUpdatesParam
       isCurrent = false;
     };
   }, [allImages, loadedImages, debouncedUpdateGeometry]);
+
+  // Delegate scrolling to the canvas
+  useEffect(() => {
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      sendMessage(OUTGOING_EVENTS.CanvasPan, {
+        ctrlKey: e.ctrlKey,
+        metaKey: e.metaKey,
+        clientX: e.clientX,
+        clientY: e.clientY,
+        deltaX: e.deltaX,
+        deltaY: e.deltaY,
+      });
+    };
+    document.addEventListener('wheel', onWheel, { passive: false });
+    return () => document.removeEventListener('wheel', onWheel);
+  }, []);
 };

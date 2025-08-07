@@ -556,6 +556,14 @@ type OUTGOING_EVENT_PAYLOADS = {
     nodes: Record<string, { coordinates: Pick<DOMRect, 'x' | 'y' | 'width' | 'height'> }>;
     sourceEvent: CanvasGeometryUpdateSourceEvent;
   };
+  canvasPan: {
+    ctrlKey: boolean;
+    metaKey: boolean;
+    clientX: number;
+    clientY: number;
+    deltaX: number;
+    deltaY: number;
+  };
 };
 
 export type CanvasGeometryUpdateSourceEvent = 'resize' | 'mutation' | 'imageLoad';
