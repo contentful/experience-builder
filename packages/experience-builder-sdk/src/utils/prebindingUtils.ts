@@ -1,10 +1,6 @@
 import { type EntityStore, isLink } from '@contentful/experiences-core';
 import { SIDELOADED_PREFIX } from '@contentful/experiences-core/constants';
-import {
-  ComponentPropertyValue,
-  ExperienceComponentSettings,
-  Parameter,
-} from '@contentful/experiences-validators';
+import { ExperienceComponentSettings, Parameter } from '@contentful/experiences-validators';
 
 export const shouldUsePrebinding = ({
   componentValueKey,
@@ -14,7 +10,6 @@ export const shouldUsePrebinding = ({
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
   parameters: Record<string, Parameter>;
-  variable: ComponentPropertyValue;
 }) => {
   const { prebindingDefinitions } = componentSettings;
   const { parameterDefinitions, variableMappings, allowedVariableOverrides } =

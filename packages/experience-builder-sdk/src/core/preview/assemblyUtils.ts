@@ -39,7 +39,6 @@ export const deserializePatternNode = ({
         componentSettings,
         componentValueKey,
         parameters: parameters,
-        variable: instanceProperty,
       });
       const path = resolvePrebindingPath({
         componentSettings,
