@@ -9,7 +9,7 @@ import {
   ExperienceTree,
 } from '@contentful/experiences-core/types';
 import { sendMessage } from '@contentful/experiences-core';
-import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
+import { OUTGOING_EVENTS, StudioCanvasMode } from '@contentful/experiences-core/constants';
 
 /*
  * Scenarios to consider:
@@ -26,8 +26,9 @@ import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
  */
 type UseCanvasGeometryUpdatesParams = {
   tree: ExperienceTree;
+  canvasMode?: StudioCanvasMode;
 };
-export const useCanvasGeometryUpdates = ({ tree }: UseCanvasGeometryUpdatesParams) => {
+export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometryUpdatesParams) => {
   const debouncedUpdateGeometry = useMemo(
     () =>
       debounce(
@@ -124,6 +125,8 @@ export const useCanvasGeometryUpdates = ({ tree }: UseCanvasGeometryUpdatesParam
 
   // Delegate scrolling to the canvas
   useEffect(() => {
+    if (canvasMode !== StudioCanvasMode.EDITOR) return;
+
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       sendMessage(OUTGOING_EVENTS.CanvasPan, {
@@ -137,5 +140,5 @@ export const useCanvasGeometryUpdates = ({ tree }: UseCanvasGeometryUpdatesParam
     };
     document.addEventListener('wheel', onWheel, { passive: false });
     return () => document.removeEventListener('wheel', onWheel);
-  }, []);
+  }, [canvasMode]);
 };

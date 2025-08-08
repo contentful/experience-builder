@@ -3,17 +3,20 @@ import { EntityStore, VisualEditorMode } from '@contentful/experiences-core';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { useInitializeVisualEditor } from '../../hooks/useInitializeVisualEditor';
 import type { Experience } from '@contentful/experiences-core/types';
+import type { StudioCanvasMode } from '@contentful/experiences-core/constants';
 
 const VisualEditorLoader = React.lazy(() => import('./VisualEditorLoader'));
 
 type VisualEditorRootProps = {
   visualEditorMode: VisualEditorMode;
+  canvasMode?: StudioCanvasMode;
   experience?: Experience<EntityStore>;
   initialLocale: string;
 };
 
 export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
   visualEditorMode,
+  canvasMode,
   experience,
   initialLocale,
 }) => {
@@ -27,7 +30,11 @@ export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
   return (
     <ErrorBoundary>
       <Suspense fallback={<div>Loading...</div>}>
-        <VisualEditorLoader experience={experience} visualEditorMode={visualEditorMode} />
+        <VisualEditorLoader
+          experience={experience}
+          visualEditorMode={visualEditorMode}
+          canvasMode={canvasMode}
+        />
       </Suspense>
     </ErrorBoundary>
   );

@@ -4,6 +4,7 @@ import {
   inMemoryEntitiesStore as defaultInMemoryEntitiesStore,
   EntityStore,
 } from '@contentful/experiences-core';
+import type { StudioCanvasMode } from '@contentful/experiences-core/constants';
 import { RootRenderer } from './RootRenderer/RootRenderer';
 import { useInitializeEditor } from '@/hooks/useInitializeEditor';
 import type { Experience } from '@contentful/experiences-core/types';
@@ -12,9 +13,11 @@ import { useEditorStore } from '@/store/editor';
 export const VisualEditorRoot = ({
   experience,
   inMemoryEntitiesStore = defaultInMemoryEntitiesStore,
+  canvasMode,
 }: {
   experience?: Experience<EntityStore>;
   inMemoryEntitiesStore?: InMemoryEntitiesStore;
+  canvasMode?: StudioCanvasMode;
 }) => {
   const initialized = useInitializeEditor(inMemoryEntitiesStore);
   const setHyperLinkPattern = useEditorStore((state) => state.setHyperLinkPattern);
@@ -27,5 +30,5 @@ export const VisualEditorRoot = ({
 
   if (!initialized) return null;
 
-  return <RootRenderer inMemoryEntitiesStore={inMemoryEntitiesStore} />;
+  return <RootRenderer inMemoryEntitiesStore={inMemoryEntitiesStore} canvasMode={canvasMode} />;
 };
