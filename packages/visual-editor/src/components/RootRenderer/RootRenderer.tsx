@@ -7,16 +7,18 @@ import { EditorBlock } from '@components/EditorBlock';
 import { EmptyCanvasMessage } from '@components/EmptyCanvasMessage';
 import { ROOT_ID } from '@/types/constants';
 import { type InMemoryEntitiesStore } from '@contentful/experiences-core';
+import type { StudioCanvasMode } from '@contentful/experiences-core/constants';
 import { useCanvasGeometryUpdates } from './useCanvasGeometryUpdates';
 
 type RootRendererProperties = {
   inMemoryEntitiesStore: InMemoryEntitiesStore;
+  canvasMode?: StudioCanvasMode;
 };
 
-export const RootRenderer = ({ inMemoryEntitiesStore }: RootRendererProperties) => {
+export const RootRenderer = ({ inMemoryEntitiesStore, canvasMode }: RootRendererProperties) => {
   useEditorSubscriber(inMemoryEntitiesStore);
   const tree = useTreeStore((state) => state.tree);
-  useCanvasGeometryUpdates({ tree });
+  useCanvasGeometryUpdates({ tree, canvasMode });
 
   const breakpoints = useTreeStore((state) => state.breakpoints);
   const { resolveDesignValue } = useBreakpoints(breakpoints);
