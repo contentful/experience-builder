@@ -53,7 +53,7 @@ export const getActiveBreakpointIndex = (
   mediaQueryMatches: Record<string, boolean>,
   fallbackBreakpointIndex: number,
 ) => {
-  // The breakpoints are ordered (desktop-first: descending by screen width)
+  // The breakpoints are ordered (desktop-first: descending by screen width, mobile-first: ascending by screen width).
   const breakpointsWithMatches = breakpoints.map(({ id }, index) => ({
     id,
     index,
@@ -61,13 +61,13 @@ export const getActiveBreakpointIndex = (
     isMatch: mediaQueryMatches[id] ?? index === fallbackBreakpointIndex,
   }));
 
-  // Find the last breakpoint in the list that matches (desktop-first: the narrowest one)
+  // Find the last breakpoint in the list that matches (desktop-first: the narrowest one, mobile-first: the widest one)
   const mostSpecificIndex = findLast(breakpointsWithMatches, ({ isMatch }) => isMatch)?.index;
   return mostSpecificIndex ?? fallbackBreakpointIndex;
 };
 
 export const getFallbackBreakpointIndex = (breakpoints: Breakpoint[]) => {
-  // We assume that there will be a single breakpoint which uses the wildcard query.
+  // The validation ensures that there will be exactly one breakpoint using the wildcard query.
   // If there is none, we just take the first one in the list.
   return Math.max(
     breakpoints.findIndex(({ query }) => query === '*'),
@@ -179,3 +179,34 @@ export function mergeDesignValuesByBreakpoint(
     valuesByBreakpoint: mergedValuesByBreakpoint,
   };
 }
+
+export const BREAKPOINT_STRATEGY_DESKTOP_FIRST = 'desktop-first';
+export const BREAKPOINT_STRATEGY_MOBILE_FIRST = 'mobile-first';
+export type BreakpointStrategy =
+  | typeof BREAKPOINT_STRATEGY_DESKTOP_FIRST
+  | typeof BREAKPOINT_STRATEGY_MOBILE_FIRST
+  | undefined;
+
+/**
+ * Detects the breakpoint strategy based on the provided breakpoints.
+ *
+ * @param breakpoints The array of breakpoints to analyze.
+ * @returns The detected breakpoint strategy or undefined if not determinable.
+ */
+export const detectBreakpointStrategy = (breakpoints: Breakpoint[]): BreakpointStrategy => {
+  if (breakpoints.length < 2) {
+    return undefined;
+  }
+
+  const hasMobileFirst = breakpoints.slice(1).every((bp) => bp.query.startsWith('>'));
+  if (hasMobileFirst) {
+    return BREAKPOINT_STRATEGY_MOBILE_FIRST;
+  }
+
+  const hasDesktopFirst = breakpoints.slice(1).every((bp) => bp.query.startsWith('<'));
+  if (hasDesktopFirst) {
+    return BREAKPOINT_STRATEGY_DESKTOP_FIRST;
+  }
+
+  return undefined;
+};
