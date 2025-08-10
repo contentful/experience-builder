@@ -115,7 +115,17 @@ export type ComponentDefinition<
   // FIXME: While it's technically possible, we don't want to allow using built-in content props via
   // the styles configuration. We should split this up in the future into content and style and adjust
   // components like `Container` for that.
+  /**
+   * List of built-in styles that can be applied to the component.
+   *
+   * Note that the property 'cfVisibility' is enforced on every component to control its visibility.
+   * @example ['cfWidth', 'cfPadding']
+   * @default ['cfMargin']
+   */
   builtInStyles?: Array<keyof Omit<StyleProps, 'cfHyperlink' | 'cfOpenInNewTab'>>;
+  /** Component allows passing child components inside it.
+   * @default false
+   */
   children?: boolean;
   tooltip?: {
     imageUrl?: string;
@@ -132,13 +142,26 @@ export type ComponentRegistration = {
      * render different content between editor and delivery mode.
      */
     enableCustomEditorView?: boolean;
+    /**
+     * @deprecated Using a wrapper is not recommended. Please migrate your components layout
+     * to work without this setting as it will be removed in the next major release v4. */
     wrapComponent?: boolean;
-    wrapContainer?: keyof JSX.IntrinsicElements | React.ReactElement;
+    /**
+     * @deprecated Using a wrapper is not recommended. Please migrate your components layout
+     * to work without this setting as it will be removed in the next major release v4. */
+    wrapContainer?: keyof JSX.IntrinsicElements;
+    /**
+     * @deprecated This option is not supported anymore and will be fully removed in the
+     * next major release v4. */
     wrapContainerWidth?: React.CSSProperties['width'];
   };
 };
 
 export type ComponentRegistrationOptions = {
+  /**
+   * Restrict the list of built-in components to a defined set of IDs.
+   * @example ['contentful-container', 'contentful-button']
+   */
   enabledBuiltInComponents?: string[];
   experimentalComponents?: {
     carousel?: boolean;
