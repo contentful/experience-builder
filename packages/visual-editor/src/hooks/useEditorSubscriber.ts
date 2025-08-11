@@ -283,10 +283,15 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
         case INCOMING_EVENTS.RequestEditorMode: {
           break;
         }
-        default:
-          console.error(
-            `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${(eventData as IncomingMessage).eventType}]`,
-          );
+        default: {
+          const knownEvents = Object.values(INCOMING_EVENTS);
+          const isDeprecatedMessage = knownEvents.includes(eventData.eventType);
+          if (!isDeprecatedMessage) {
+            console.error(
+              `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${(eventData as IncomingMessage).eventType}]`,
+            );
+          }
+        }
       }
     };
 
