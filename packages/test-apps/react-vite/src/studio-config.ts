@@ -31,9 +31,6 @@ defineComponents(
         category: 'Custom Components',
         variables: {},
       },
-      options: {
-        wrapContainerWidth: '50%',
-      },
     },
     {
       component: ComponentWithChildren,
