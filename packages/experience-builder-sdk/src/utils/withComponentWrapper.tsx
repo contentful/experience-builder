@@ -1,16 +1,13 @@
 import { ComponentRegistration } from '@contentful/experiences-core/types';
-import classNames from 'classnames';
 import React from 'react';
 interface CFProps extends React.HtmlHTMLAttributes<HTMLElement> {
   /**
    * Classes to be applied to the container component if `wrapComponent` is true, or directly to the child component if false.
    */
   className?: string;
-  /**
-   * Classes to be applied to the child component if `wrapComponent` is true, or directly to the child component if false.
-   */
-  classes?: string;
-  dragProps?: any;
+  'data-cf-node-id': string;
+  'data-cf-node-block-id': string;
+  'data-cf-node-block-type': string;
 }
 
 /**
@@ -22,39 +19,34 @@ interface CFProps extends React.HtmlHTMLAttributes<HTMLElement> {
  */
 export function withComponentWrapper<T>(
   Component: React.ElementType,
-  options: ComponentRegistration['options'] = {
-    wrapComponent: true,
-    wrapContainer: 'div',
-  },
+  options: ComponentRegistration['options'] = {},
 ) {
-  const Wrapped: React.FC<CFProps & T> = ({
-    classes = '',
-    className = '',
-    dragProps = {},
-    ...props
-  }) => {
+  const mergedOptions = {
+    // Merge default values with overwriting options
+    wrapComponent: true,
+    wrapContainer: 'div' as keyof JSX.IntrinsicElements,
+    ...options,
+  };
+  const Wrapped: React.FC<CFProps & T> = (props) => {
+    const Tag = mergedOptions.wrapContainer;
     const {
-      innerRef,
-      className: dragClassName,
-      ToolTipAndPlaceholder,
-      ...restOfDragProps
-    } = dragProps;
-    const component = options.wrapComponent ? (
-      <div
+      className = '',
+      'data-cf-node-id': dataCfNodeId,
+      'data-cf-node-block-id': dataCfNodeBlockId,
+      'data-cf-node-block-type': dataCfNodeBlockType,
+      ...componentProps
+    } = props;
+    const component = mergedOptions.wrapComponent ? (
+      <Tag
         data-component-wrapper
-        className={classNames(classes, className, dragClassName)}
-        {...restOfDragProps}
-        ref={(refNode: HTMLElement | null) => {
-          if (innerRef && refNode) innerRef(refNode);
-        }}>
-        {ToolTipAndPlaceholder}
-        <Component className={classNames(classes)} {...(props as T)} />
-      </div>
+        className={className}
+        data-cf-node-id={dataCfNodeId}
+        data-cf-node-block-id={dataCfNodeBlockId}
+        data-cf-node-block-type={dataCfNodeBlockType}>
+        <Component {...componentProps} />
+      </Tag>
     ) : (
-      React.createElement(Component, {
-        className: classNames(classes, className),
-        ...(props as T),
-      })
+      React.createElement(Component, props)
     );
     return component;
   };

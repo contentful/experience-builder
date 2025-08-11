@@ -1,33 +1,36 @@
 import { type EntityStore, isLink } from '@contentful/experiences-core';
 import { SIDELOADED_PREFIX } from '@contentful/experiences-core/constants';
-import {
-  ComponentPropertyValue,
-  ExperienceComponentSettings,
-  Parameter,
-} from '@contentful/experiences-validators';
+import { ExperienceComponentSettings, Parameter } from '@contentful/experiences-validators';
 
 export const shouldUsePrebinding = ({
   componentValueKey,
   componentSettings,
   parameters,
-  variable,
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
   parameters: Record<string, Parameter>;
-  variable: ComponentPropertyValue;
 }) => {
   const { prebindingDefinitions } = componentSettings;
-  const { parameterDefinitions, variableMappings } = prebindingDefinitions?.[0] || {};
+  const { parameterDefinitions, variableMappings, allowedVariableOverrides } =
+    prebindingDefinitions?.[0] || {};
 
   const variableMapping = variableMappings?.[componentValueKey];
 
   const parameterDefinition = parameterDefinitions?.[variableMapping?.parameterId || ''];
   const parameter = parameters?.[variableMapping?.parameterId || ''];
 
-  const isValidForPrebinding = !!parameterDefinition && !!parameter && !!variableMapping;
+  const isValidForPrebinding =
+    !!parameterDefinition &&
+    !!parameter &&
+    !!variableMapping &&
+    !!allowedVariableOverrides &&
+    Array.isArray(allowedVariableOverrides);
 
-  return isValidForPrebinding && variable?.type === 'NoValue';
+  const isForDirectBindingOnly = (allowedVariableOverrides: string[]) =>
+    allowedVariableOverrides.includes(componentValueKey); // removed 'NoValue' check
+
+  return isValidForPrebinding && !isForDirectBindingOnly(allowedVariableOverrides);
 };
 
 export const resolvePrebindingPath = ({

@@ -21,10 +21,16 @@ export const sendCanvasGeometryUpdatedMessage = async (
 ) => {
   const nodeToCoordinatesMap: NodeToCoordinatesMap = {};
   collectNodeCoordinates(tree.root, nodeToCoordinatesMap);
+
+  const rootRect = document.documentElement.getBoundingClientRect();
+  const bodyRect = document.body.getBoundingClientRect();
+  const width = Math.max(document.documentElement.offsetWidth, rootRect.width, bodyRect.width);
+  const height = Math.max(document.documentElement.offsetHeight, rootRect.height, bodyRect.height);
+
   sendMessage(OUTGOING_EVENTS.CanvasGeometryUpdated, {
     size: {
-      width: document.documentElement.offsetWidth,
-      height: document.documentElement.offsetHeight,
+      width,
+      height,
     },
     nodes: nodeToCoordinatesMap,
     sourceEvent,

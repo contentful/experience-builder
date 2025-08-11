@@ -53,7 +53,6 @@
     "prebuild": "npm run clean",
     "build": "tsup",
     "build:watch": "npm run build --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "run-p build:watch 'storybook --quiet'",
     "prerelease": "zx scripts/prepublish-checks.mjs",
     "release": "npm run build && auto shipit",

@@ -5,11 +5,7 @@ import {
   resolvePrebindingPath,
   resolveMaybePrebindingDefaultValuePath,
 } from './prebindingUtils';
-import {
-  ComponentPropertyValue,
-  ExperienceComponentSettings,
-  Parameter,
-} from '@contentful/experiences-validators';
+import { ExperienceComponentSettings, Parameter } from '@contentful/experiences-validators';
 import { ExperienceEntry } from '@contentful/experiences-core/types';
 
 const entityStore = new EntityStore({
@@ -21,36 +17,90 @@ const entityStore = new EntityStore({
 describe('shouldUsePrebinding', () => {
   it('should return true when all conditions are met', () => {
     const componentValueKey = 'testKey';
-    const componentSettings = {
+    const componentSettings: ExperienceComponentSettings = {
       prebindingDefinitions: [
         {
           id: 'prebindingDefinition1',
           parameterDefinitions: {
-            testParameterId: {},
+            testParameterId: {
+              contentTypes: ['ct111'],
+            },
           },
           variableMappings: {
             testKey: {
+              type: 'ContentTypeMapping',
+              pathsByContentType: {
+                ct111: {
+                  path: '...',
+                },
+              },
               parameterId: 'testParameterId',
             },
           },
+          allowedVariableOverrides: ['variableOnlyForDirectBinding'],
         },
       ],
-    } as unknown as ExperienceComponentSettings;
-    const parameters = {
-      testParameterId: {},
-    } as unknown as Record<string, Parameter>;
-    const variable = {
-      type: 'NoValue',
-    } as unknown as ComponentPropertyValue;
-
+      // no need to define each variable definition here as usually they're needed for
+      // plugging the default values, which we don't do under this test
+      variableDefinitions: {},
+    };
+    const parameters: Record<string, Parameter> = {
+      testParameterId: {
+        type: 'BoundValue',
+        path: '/dsKey123',
+      },
+    };
     const result = shouldUsePrebinding({
       componentValueKey,
       componentSettings,
       parameters: parameters,
-      variable,
     });
 
     expect(result).toBe(true);
+  });
+
+  it('should return false when target variable is included within `allowedVariableOverrides`', () => {
+    const componentValueKey = 'testKeyThatIsAlsoIncludedInAllowedVariableOverrides';
+    const componentSettings: ExperienceComponentSettings = {
+      prebindingDefinitions: [
+        {
+          id: 'prebindingDefinition1',
+          parameterDefinitions: {
+            testParameterId: {
+              contentTypes: ['ct111'],
+            },
+          },
+          variableMappings: {
+            testKey: {
+              type: 'ContentTypeMapping',
+              pathsByContentType: {
+                ct111: {
+                  path: '...',
+                },
+              },
+              parameterId: 'testParameterId',
+            },
+          },
+          allowedVariableOverrides: ['testKeyThatIsAlsoIncludedInAllowedVariableOverrides'],
+        },
+      ],
+      // no need to define each variable definition here as usually they're needed for
+      // plugging the default values, which we don't do under this test
+      variableDefinitions: {},
+    };
+    const parameters: Record<string, Parameter> = {
+      testParameterId: {
+        type: 'BoundValue',
+        path: '/dsKey123',
+      },
+    };
+    const result = shouldUsePrebinding({
+      componentValueKey,
+      componentSettings,
+      parameters,
+    });
+
+    expect(result).toBe(false);
   });
 
   it('should return false when parameterDefinition is missing', () => {
@@ -66,15 +116,11 @@ describe('shouldUsePrebinding', () => {
     const parameters: Record<string, Parameter> = {
       testParameterId: {},
     } as unknown as Record<string, Parameter>;
-    const variable = {
-      type: 'NoValue',
-    } as unknown as ComponentPropertyValue;
 
     const result = shouldUsePrebinding({
       componentValueKey,
       componentSettings,
       parameters,
-      variable,
     });
 
     expect(result).toBe(false);
@@ -93,15 +139,11 @@ describe('shouldUsePrebinding', () => {
       },
     } as unknown as ExperienceComponentSettings;
     const parameters: Record<string, Parameter> = {};
-    const variable = {
-      type: 'NoValue',
-    } as unknown as ComponentPropertyValue;
 
     const result = shouldUsePrebinding({
       componentValueKey,
       componentSettings,
       parameters,
-      variable,
     });
 
     expect(result).toBe(false);
@@ -121,15 +163,11 @@ describe('shouldUsePrebinding', () => {
         type: 'BoundValue',
       },
     };
-    const variable = {
-      type: 'NoValue',
-    } as unknown as ComponentPropertyValue;
 
     const result = shouldUsePrebinding({
       componentValueKey,
       componentSettings,
       parameters: parameters,
-      variable,
     });
 
     expect(result).toBe(false);
