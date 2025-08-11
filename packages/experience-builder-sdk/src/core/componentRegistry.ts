@@ -48,10 +48,6 @@ const applyComponentDefinitionFallbacks = (componentDefinition: ComponentDefinit
 };
 
 const applyBuiltInStyleDefinitions = (componentDefinition: ComponentDefinition) => {
-  if (componentDefinition.id === CONTENTFUL_COMPONENTS.container.id) {
-    return componentDefinition;
-  }
-
   const clone = cloneObject(componentDefinition);
 
   // set margin built-in style by default
@@ -141,14 +137,13 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
       wrapComponent: false,
     },
   }),
-  divider: {
-    // Don't wrap this component `withComponentWrapper`. Need to explicitly ignore dragProps
+  divider: enrichComponentDefinition({
     component: Components.ContentfulDivider,
     definition: dividerDefinition,
     options: {
       wrapComponent: false,
     },
-  },
+  }),
   carousel: enrichComponentDefinition({
     component: Components.Carousel,
     definition: Components.carouselDefinition,

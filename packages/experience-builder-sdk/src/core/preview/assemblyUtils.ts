@@ -39,7 +39,6 @@ export const deserializePatternNode = ({
         componentSettings,
         componentValueKey,
         parameters: parameters,
-        variable: instanceProperty,
       });
       const path = resolvePrebindingPath({
         componentSettings,
@@ -62,7 +61,11 @@ export const deserializePatternNode = ({
           key: instanceProperty.key,
         };
       } else if (instanceProperty?.type === 'NoValue') {
-        variables[variableName] = instanceProperty;
+        throw new Error(
+          `Unexpected NoValue for variable "${variableName}" when deserializing pattern "${node.definitionId}". ` +
+            `This can only happen if you created experience in pre-release version of prebinding and experience contains NoValue properties. ` +
+            `Resave experience to fix this issue.`,
+        );
       } else if (instanceProperty?.type === 'BoundValue') {
         variables[variableName] = {
           type: 'BoundValue',

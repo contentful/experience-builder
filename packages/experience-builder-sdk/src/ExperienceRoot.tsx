@@ -52,6 +52,7 @@ export const ExperienceRoot = ({
         experience={experienceObject as Experience<EntityStore> | undefined}
         visualEditorMode={visualEditorMode}
         initialLocale={locale}
+        canvasMode={mode}
       />
     );
   }
