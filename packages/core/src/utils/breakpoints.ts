@@ -180,11 +180,11 @@ export function mergeDesignValuesByBreakpoint(
   };
 }
 
-export const BREAKPOINT_STRATEGY_DESKTOP_FIRST = 'desktop-first';
-export const BREAKPOINT_STRATEGY_MOBILE_FIRST = 'mobile-first';
-export type BreakpointStrategy =
-  | typeof BREAKPOINT_STRATEGY_DESKTOP_FIRST
-  | typeof BREAKPOINT_STRATEGY_MOBILE_FIRST
+export const BREAKPOINTS_STRATEGY_DESKTOP_FIRST = 'desktop-first';
+export const BREAKPOINTS_STRATEGY_MOBILE_FIRST = 'mobile-first';
+export type BreakpointsStrategy =
+  | typeof BREAKPOINTS_STRATEGY_DESKTOP_FIRST
+  | typeof BREAKPOINTS_STRATEGY_MOBILE_FIRST
   | undefined;
 
 /**
@@ -193,19 +193,19 @@ export type BreakpointStrategy =
  * @param breakpoints The array of breakpoints to analyze.
  * @returns The detected breakpoint strategy or undefined if not determinable.
  */
-export const detectBreakpointStrategy = (breakpoints: Breakpoint[]): BreakpointStrategy => {
+export const detectBreakpointsStrategy = (breakpoints: Breakpoint[]): BreakpointsStrategy => {
   if (breakpoints.length < 2) {
     return undefined;
   }
 
   const hasMobileFirst = breakpoints.slice(1).every((bp) => bp.query.startsWith('>'));
   if (hasMobileFirst) {
-    return BREAKPOINT_STRATEGY_MOBILE_FIRST;
+    return BREAKPOINTS_STRATEGY_MOBILE_FIRST;
   }
 
   const hasDesktopFirst = breakpoints.slice(1).every((bp) => bp.query.startsWith('<'));
   if (hasDesktopFirst) {
-    return BREAKPOINT_STRATEGY_DESKTOP_FIRST;
+    return BREAKPOINTS_STRATEGY_DESKTOP_FIRST;
   }
 
   return undefined;

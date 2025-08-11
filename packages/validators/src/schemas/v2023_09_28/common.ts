@@ -83,8 +83,8 @@ export const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx)
   }
 
   // Return early if there's only one generic breakpoint
-  const hasNoBreakpointStrategy = value.length === 1;
-  if (hasNoBreakpointStrategy) {
+  const hasNoBreakpointsStrategy = value.length === 1;
+  if (hasNoBreakpointsStrategy) {
     return;
   }
 

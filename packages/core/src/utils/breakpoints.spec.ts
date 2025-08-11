@@ -1,7 +1,7 @@
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import { designTokensFixture } from '@/__fixtures__/designTokens';
 import {
-  detectBreakpointStrategy,
+  detectBreakpointsStrategy,
   getActiveBreakpointIndex,
   getValueForBreakpoint,
   mediaQueryMatcher,
@@ -343,22 +343,22 @@ describe('mediaQueryMatcher', () => {
   });
 });
 
-describe('detectBreakpointStrategy', () => {
+describe('detectBreakpointsStrategy', () => {
   it('should return the correct strategy for desktop-first breakpoints', () => {
     const breakpoints = createBreakpoints('desktop-first');
-    const strategy = detectBreakpointStrategy(breakpoints);
+    const strategy = detectBreakpointsStrategy(breakpoints);
     expect(strategy).toEqual('desktop-first');
   });
 
   it('should return the correct strategy for mobile-first breakpoints', () => {
     const breakpoints = createBreakpoints('mobile-first');
-    const strategy = detectBreakpointStrategy(breakpoints);
+    const strategy = detectBreakpointsStrategy(breakpoints);
     expect(strategy).toEqual('mobile-first');
   });
 
   it('should return no strategy when there is only one wildcard breakpoint', () => {
     const breakpoints = createBreakpoints('desktop-first').slice(0, 1);
-    const strategy = detectBreakpointStrategy(breakpoints);
+    const strategy = detectBreakpointsStrategy(breakpoints);
     expect(strategy).toEqual(undefined);
   });
 });
