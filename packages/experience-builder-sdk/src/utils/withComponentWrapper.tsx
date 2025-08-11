@@ -24,7 +24,7 @@ export function withComponentWrapper<T>(
   const mergedOptions = {
     // Merge default values with overwriting options
     wrapComponent: true,
-    wrapContainer: 'div',
+    wrapContainer: 'div' as keyof JSX.IntrinsicElements,
     ...options,
   };
   const Wrapped: React.FC<CFProps & T> = (props) => {
