@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/contentful/experience-builder/compare/v3.1.0...v3.1.1) (2025-08-11)
+
+### Bug Fixes
+
+- [] use multiple sources for iframe size ([#1259](https://github.com/contentful/experience-builder/issues/1259)) ([5fd6747](https://github.com/contentful/experience-builder/commit/5fd67474a32684f7dab004f17cfda681965ffb6c))
+- [SPA-3086] delegate scroll only if the mode is editor ([#1256](https://github.com/contentful/experience-builder/issues/1256)) ([028392b](https://github.com/contentful/experience-builder/commit/028392bc5d96450fb9c12a28d1aefa4ddaa1fc08))
+- dont log errors when facing deprecated events ([#1258](https://github.com/contentful/experience-builder/issues/1258)) ([ddc6cd6](https://github.com/contentful/experience-builder/commit/ddc6cd66f84ebc7c21fd5c3675e9cf0cf207b50c))
+
 ## [3.1.0](https://github.com/contentful/experience-builder/compare/v3.0.0...v3.1.0) (2025-08-07)
 
 ### Features

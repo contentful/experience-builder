@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/contentful/experience-builder/compare/v3.1.0...v3.1.1) (2025-08-11)
+
+**Note:** Version bump only for package @contentful/experiences-components-react
+
 ## [3.1.0](https://github.com/contentful/experience-builder/compare/v3.0.0...v3.1.0) (2025-08-07)
 
 **Note:** Version bump only for package @contentful/experiences-components-react

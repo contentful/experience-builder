@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/contentful/experience-builder/compare/v3.1.0...v3.1.1) (2025-08-11)
+
+### Bug Fixes
+
+- [SPA-3086] delegate scroll only if the mode is editor ([#1256](https://github.com/contentful/experience-builder/issues/1256)) ([028392b](https://github.com/contentful/experience-builder/commit/028392bc5d96450fb9c12a28d1aefa4ddaa1fc08))
+- remove NoValue to detect bound instance variables, and rely on `allowedVariableOverrides` instead ([#1254](https://github.com/contentful/experience-builder/issues/1254)) ([3a55c60](https://github.com/contentful/experience-builder/commit/3a55c60ca6fbcac1dae140066914df2c2644e4c7))
+
 ## [3.1.0](https://github.com/contentful/experience-builder/compare/v3.0.0...v3.1.0) (2025-08-07)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react
