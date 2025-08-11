@@ -142,13 +142,7 @@ export type ComponentRegistration = {
      * render different content between editor and delivery mode.
      */
     enableCustomEditorView?: boolean;
-    /**
-     * @deprecated Using a wrapper is not recommended. Please migrate your components layout
-     * to work without this setting as it will be removed in the next major release v4. */
     wrapComponent?: boolean;
-    /**
-     * @deprecated Using a wrapper is not recommended. Please migrate your components layout
-     * to work without this setting as it will be removed in the next major release v4. */
     wrapContainer?: keyof JSX.IntrinsicElements;
     /**
      * @deprecated This option is not supported anymore and will be fully removed in the
