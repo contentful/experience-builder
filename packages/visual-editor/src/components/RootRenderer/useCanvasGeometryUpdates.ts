@@ -71,10 +71,14 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
 
   // Handling window resize events
   useEffect(() => {
-    const resizeEventListener = () => debouncedUpdateGeometry(treeRef.current, 'resize');
+    const resizeEventListener = () => {
+      debouncedUpdateGeometry(treeRef.current, 'resize');
+      // find all images on resize
+      debouncedCollectImages();
+    };
     window.addEventListener('resize', resizeEventListener);
     return () => window.removeEventListener('resize', resizeEventListener);
-  }, [debouncedUpdateGeometry]);
+  }, [debouncedCollectImages, debouncedUpdateGeometry]);
 
   const [{ allImages, loadedImages }, setImages] = useState(() => {
     const allImages = findAllImages();
@@ -107,13 +111,13 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
 
     allImages.forEach(async (imageNode) => {
       const lastSrc = loadedImages.get(imageNode);
-      if (lastSrc === imageNode.src) {
+      if (lastSrc === imageNode.currentSrc) {
         return;
       }
       // update the geometry after each image is loaded, as it can shift the layout
       await waitForImageToBeLoaded(imageNode);
       if (isCurrent) {
-        loadedImages.set(imageNode, imageNode.src);
+        loadedImages.set(imageNode, imageNode.currentSrc);
         debouncedUpdateGeometry(treeRef.current, 'imageLoad');
       }
     });
