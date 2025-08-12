@@ -79,42 +79,79 @@ export const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx)
       code: z.ZodIssueCode.custom,
       message: `The first breakpoint should include the following attributes: { "query": "*" }`,
     });
+    return;
   }
 
-  const hasDuplicateIds = value.some((currentBreakpoint, currentBreakpointIndex) => {
-    // check if the current breakpoint id is found in the rest of the array
-    const breakpointIndex = value.findIndex((breakpoint) => breakpoint.id === currentBreakpoint.id);
-    return breakpointIndex !== currentBreakpointIndex;
-  });
+  // Return early if there's only one generic breakpoint
+  const hasNoBreakpointsStrategy = value.length === 1;
+  if (hasNoBreakpointsStrategy) {
+    return;
+  }
 
+  // Check if any breakpoint id occurs twice
+  const ids = value.map((breakpoint) => breakpoint.id);
+  const hasDuplicateIds = new Set(ids).size !== ids.length;
   if (hasDuplicateIds) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: `Breakpoint IDs must be unique`,
     });
+    return;
   }
 
-  // Extract the queries boundary by removing the special characters around it
-  const queries = value.map((bp) =>
-    bp.query === '*' ? bp.query : parseInt(bp.query.replace(/px|<|>/, '')),
-  );
+  // Skip the first one which is guaranteed to be a wildcard query
+  const nonBaseBreakpoints = value.slice(1);
+  const isMobileFirstStrategy = nonBaseBreakpoints[0].query.startsWith('>');
+  const isDesktopFirstStrategy = nonBaseBreakpoints[0].query.startsWith('<');
 
-  // sort updates queries array in place so we need to create a copy
-  const originalQueries = [...queries];
-  queries.sort((q1, q2) => {
-    if (q1 === '*') {
-      return -1;
+  if (isMobileFirstStrategy) {
+    const areOperatorsEqual = nonBaseBreakpoints.every(({ query }) => query.startsWith('>'));
+    if (!areOperatorsEqual) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Breakpoint queries must be in the format ">[size]px" for mobile-first strategy`,
+      });
     }
-    if (q2 === '*') {
-      return 1;
-    }
-    return q1 > q2 ? -1 : 1;
-  });
 
-  if (originalQueries.join('') !== queries.join('')) {
+    // Extract the queries boundary by removing the special characters around it
+    const queries = nonBaseBreakpoints.map((bp) => parseInt(bp.query.replace(/px|<|>/, '')));
+
+    // Starting with the third breakpoint, check that every query is higher than the one above
+    const isIncreasing = queries.every(
+      (value, index, array) => index === 0 || value > array[index - 1],
+    );
+    if (!isIncreasing) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `When using a mobile-first strategy, all breakpoints must have strictly increasing pixel values`,
+      });
+    }
+  } else if (isDesktopFirstStrategy) {
+    const areOperatorsEqual = nonBaseBreakpoints.every(({ query }) => query.startsWith('<'));
+    if (!areOperatorsEqual) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Breakpoint queries must be in the format "<[size]px" for desktop-first strategy`,
+      });
+    }
+
+    // Extract the queries boundary by removing the special characters around it
+    const queries = nonBaseBreakpoints.map((bp) => parseInt(bp.query.replace(/px|<|>/, '')));
+
+    // Starting with the third breakpoint, check that every query is lower than the one above
+    const isDecreasing = queries.every(
+      (value, index, array) => index === 0 || value < array[index - 1],
+    );
+    if (!isDecreasing) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `When using a desktop-first strategy, all breakpoints must have strictly decreasing pixel values`,
+      });
+    }
+  } else if (!isMobileFirstStrategy && !isDesktopFirstStrategy) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: `Breakpoints should be ordered from largest to smallest pixel value`,
+      message: `You may only use a mobile-first or desktop-first strategy for breakpoints using '<' or '>' queries`,
     });
   }
 };
@@ -187,7 +224,7 @@ export const ParametersSchema = z.record(propertyKeySchema, ParameterSchema);
 export const BreakpointSchema = z
   .object({
     id: propertyKeySchema,
-    query: z.string().regex(/^\*$|^<[0-9*]+px$/),
+    query: z.string().regex(/^\*$|^[<>][0-9*]+px$/),
     previewSize: z.string(),
     displayName: z.string(),
     displayIcon: z.enum(['desktop', 'tablet', 'mobile']).optional(),
