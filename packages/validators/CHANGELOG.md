@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.0](https://github.com/contentful/experience-builder/compare/v3.1.1...v3.2.0) (2025-08-12)
+
+### Features
+
+- allow mobile-first breakpoint definitions [SPA-3041] ([#1253](https://github.com/contentful/experience-builder/issues/1253)) ([c477cd9](https://github.com/contentful/experience-builder/commit/c477cd9fb5460dd7a9849f9408431e14d8d864ed))
+
 ## [3.1.1](https://github.com/contentful/experience-builder/compare/v3.1.0...v3.1.1) (2025-08-11)
 
 **Note:** Version bump only for package @contentful/experiences-validators

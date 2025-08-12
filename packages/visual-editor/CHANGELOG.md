@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.0](https://github.com/contentful/experience-builder/compare/v3.1.1...v3.2.0) (2025-08-12)
+
+### Bug Fixes
+
+- [SPA-3095] send correct geometry on image load ([#1262](https://github.com/contentful/experience-builder/issues/1262)) ([66fa8cb](https://github.com/contentful/experience-builder/commit/66fa8cb9fc1b48689a06f938801690dda35022c0))
+
 ## [3.1.1](https://github.com/contentful/experience-builder/compare/v3.1.0...v3.1.1) (2025-08-11)
 
 ### Bug Fixes
