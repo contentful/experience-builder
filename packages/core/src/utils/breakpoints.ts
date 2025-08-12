@@ -23,7 +23,7 @@ const findLast = <T>(
   array: Array<T>,
   predicate: Parameters<Array<T>['find']>[0],
 ): T | undefined => {
-  return array.reverse().find(predicate);
+  return [...array].reverse().find(predicate);
 };
 
 // Initialise media query matchers. This won't include the always matching fallback breakpoint.
