@@ -54,10 +54,10 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
     () =>
       debounce(
         () => {
-          return Array.from(document.querySelectorAll('img'));
+          setImages((prev) => ({ ...prev, allImages: findAllImages() }));
         },
         300,
-        { leading: true, trailing: true },
+        { trailing: true },
       ),
     [],
   );
@@ -77,8 +77,8 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
   }, [debouncedUpdateGeometry]);
 
   const [{ allImages, loadedImages }, setImages] = useState(() => {
-    const allImages = debouncedCollectImages();
-    const loadedImages = new WeakSet<HTMLImageElement>();
+    const allImages = findAllImages();
+    const loadedImages = new WeakMap<HTMLImageElement, string>();
     return { allImages, loadedImages };
   });
 
@@ -88,8 +88,7 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
       debouncedUpdateGeometry(treeRef.current, 'mutation');
 
       // find all images on any DOM change
-      const allImages = debouncedCollectImages();
-      setImages((prevState) => ({ ...prevState, allImages }));
+      debouncedCollectImages();
     });
     // send initial geometry in case the tree is empty
     debouncedUpdateGeometry(treeRef.current, 'mutation');
@@ -107,13 +106,14 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
     let isCurrent = true;
 
     allImages.forEach(async (imageNode) => {
-      if (loadedImages.has(imageNode)) {
+      const lastSrc = loadedImages.get(imageNode);
+      if (lastSrc === imageNode.src) {
         return;
       }
       // update the geometry after each image is loaded, as it can shift the layout
       await waitForImageToBeLoaded(imageNode);
       if (isCurrent) {
-        loadedImages.add(imageNode);
+        loadedImages.set(imageNode, imageNode.src);
         debouncedUpdateGeometry(treeRef.current, 'imageLoad');
       }
     });
@@ -142,3 +142,7 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
     return () => document.removeEventListener('wheel', onWheel);
   }, [canvasMode]);
 };
+
+function findAllImages() {
+  return Array.from(document.querySelectorAll('img'));
+}
