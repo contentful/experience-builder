@@ -62,7 +62,7 @@ const collectNodeCoordinates = (
 };
 
 export function waitForImageToBeLoaded(imageNode: HTMLImageElement) {
-  if (imageNode.complete) {
+  if (imageNode.complete && (imageNode.naturalWidth > 0 || imageNode.naturalHeight > 0)) {
     return Promise.resolve();
   }
   return new Promise<void>((resolve, reject) => {
