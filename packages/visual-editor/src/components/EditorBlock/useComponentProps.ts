@@ -21,6 +21,7 @@ import type {
   Link,
   DesignValue,
   StructureComponentProps,
+  ComponentPropertyValue,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useEditorModeClassName } from './useEditorModeClassName';
@@ -40,6 +41,19 @@ type ResolvedComponentProps = StructureComponentProps<
     isInExpEditorMode?: boolean;
   }
 >;
+
+type PreboundVariable = {
+  type: 'BoundValue';
+  path: string;
+  isPrebound: boolean;
+  pathsByContentType?: Record<string, { path: string }>;
+};
+
+const isPreboundProp = (variable: ComponentPropertyValue): variable is PreboundVariable => {
+  return (
+    variable.type === 'BoundValue' && typeof (variable as PreboundVariable).isPrebound === 'boolean'
+  );
+};
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -139,7 +153,7 @@ export const useComponentProps = ({
 
           // starting from here, if the prop is of type 'BoundValue', and has prebinding
           // we are going to resolve the incomplete path
-          if (link && variableMapping.isPrebound) {
+          if (link && isPreboundProp(variableMapping) && variableMapping.isPrebound) {
             let prebindingPath: string = variableMapping.path;
             // we get the entry by the dataSource key in the incomplete path
             const boundEntity = entityStore.getEntityFromLink(link);
