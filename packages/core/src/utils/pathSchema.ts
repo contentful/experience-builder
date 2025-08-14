@@ -2,7 +2,21 @@
  * This module encapsulates format of the path to a deep reference.
  */
 
+import { BoundValue, ComponentPropertyValue } from '@contentful/experiences-validators';
 import { Asset, Entry } from 'contentful';
+
+export type PreboundVariable = {
+  type: 'BoundValue';
+  path: string;
+  isPrebound: boolean;
+  pathsByContentType: Record<string, { path: string }>;
+};
+
+export const isPreboundProp = (variable: ComponentPropertyValue): variable is PreboundVariable => {
+  return (
+    variable.type === 'BoundValue' && typeof (variable as PreboundVariable).isPrebound === 'boolean'
+  );
+};
 
 export type UnresolvedFieldset = Array<[null, string, string?]>;
 export type Fieldset = Array<[Entry | Asset, string, string?]>;
@@ -56,6 +70,49 @@ export const isDeepPath = (deepPathCandidate: string): boolean => {
     return false;
   }
   return deepPathParsed.fields.length > 1;
+};
+
+export const isDeepPrebinding = (boundValueProperty: BoundValue): boolean => {
+  if (!boundValueProperty?.path || boundValueProperty.type !== 'BoundValue') {
+    return false;
+  }
+
+  if (!isPreboundProp(boundValueProperty)) {
+    return false;
+  }
+
+  if (isDeepPath(boundValueProperty.path)) {
+    return true;
+  }
+
+  const hasDeepPathByContentType = Object.values(boundValueProperty.pathsByContentType || {}).some(
+    (val) => isDeepPath(val.path),
+  );
+
+  return hasDeepPathByContentType;
+};
+
+export const getPrebindingPathBySourceEntry = (
+  preboundValueProperty: PreboundVariable,
+  getHeadEntityByDataSourceKey: (id: string) => Entry | Asset | undefined,
+): string | undefined => {
+  if (!isPreboundProp(preboundValueProperty)) {
+    return undefined;
+  }
+
+  // incomplete path due to several content types and not known default source
+  const [, dataSourceKey] = preboundValueProperty.path.split('/');
+  if (!dataSourceKey) {
+    return undefined;
+  }
+
+  const headEntity = getHeadEntityByDataSourceKey(dataSourceKey);
+  if (headEntity?.sys.type !== 'Entry') {
+    return undefined;
+  }
+
+  const contentTypeId = headEntity.sys.contentType.sys.id;
+  return preboundValueProperty.pathsByContentType?.[contentTypeId]?.path;
 };
 
 type DeepPathParsed = {

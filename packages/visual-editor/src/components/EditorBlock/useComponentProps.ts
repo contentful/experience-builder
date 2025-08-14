@@ -10,6 +10,8 @@ import {
   sanitizeNodeProps,
   EntityStoreBase,
   transformVisibility,
+  isPreboundProp,
+  getPrebindingPathBySourceEntry,
 } from '@contentful/experiences-core';
 import { ASSEMBLY_NODE_TYPE, EMPTY_CONTAINER_SIZE } from '@contentful/experiences-core/constants';
 import type {
@@ -21,7 +23,6 @@ import type {
   Link,
   DesignValue,
   StructureComponentProps,
-  ComponentPropertyValue,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useEditorModeClassName } from './useEditorModeClassName';
@@ -41,19 +42,6 @@ type ResolvedComponentProps = StructureComponentProps<
     isInExpEditorMode?: boolean;
   }
 >;
-
-type PreboundVariable = {
-  type: 'BoundValue';
-  path: string;
-  isPrebound: boolean;
-  pathsByContentType?: Record<string, { path: string }>;
-};
-
-const isPreboundProp = (variable: ComponentPropertyValue): variable is PreboundVariable => {
-  return (
-    variable.type === 'BoundValue' && typeof (variable as PreboundVariable).isPrebound === 'boolean'
-  );
-};
 
 type UseComponentProps = {
   node: ExperienceTreeNode;
@@ -150,20 +138,15 @@ export const useComponentProps = ({
           const link = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
           let boundValue: ReturnType<typeof transformBoundContentValue>;
-
           // starting from here, if the prop is of type 'BoundValue', and has prebinding
           // we are going to resolve the incomplete path
           if (link && isPreboundProp(variableMapping) && variableMapping.isPrebound) {
-            let prebindingPath: string = variableMapping.path;
-            // we get the entry by the dataSource key in the incomplete path
-            const boundEntity = entityStore.getEntityFromLink(link);
-            // if it points at an entry, it allows us to reduce the set of prebound content types to the one we target
-            if (boundEntity?.sys.type === 'Entry') {
-              const contentTypeId = boundEntity.sys.contentType.sys.id;
-              // so we replace the incomplete path with the complete, relative to the content type of the source entry
-              prebindingPath =
-                variableMapping.pathsByContentType?.[contentTypeId]?.path ?? prebindingPath;
-            }
+            const prebindingPath =
+              getPrebindingPathBySourceEntry(variableMapping, (dataSourceKey) => {
+                const link = dataSource[dataSourceKey];
+
+                return entityStore.getEntityFromLink(link);
+              }) ?? variableMapping.path;
             // this allows us to resolve it regularly
             boundValue = transformBoundContentValue(
               node.data.props,
