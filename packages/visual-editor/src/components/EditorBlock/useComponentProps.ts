@@ -10,6 +10,8 @@ import {
   sanitizeNodeProps,
   EntityStoreBase,
   transformVisibility,
+  isPreboundProp,
+  getPrebindingPathBySourceEntry,
 } from '@contentful/experiences-core';
 import { ASSEMBLY_NODE_TYPE, EMPTY_CONTAINER_SIZE } from '@contentful/experiences-core/constants';
 import type {
@@ -130,27 +132,52 @@ export const useComponentProps = ({
             ),
           };
         } else if (variableMapping.type === 'BoundValue') {
-          const [, uuid, path] = variableMapping.path.split('/');
-          const binding = dataSource[uuid] as Link<'Entry' | 'Asset'>;
+          // maybePath, because prebound props would have the type 'BoundValue' but the path would be incomplete
+          // eg: "/uuid" vs "/uuid/fields/[fileName]/~locale" as the regular BoundValue would have
+          const [, uuid, maybePath] = variableMapping.path.split('/');
+          const link = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
-          const variableDefinition = definition.variables[variableName];
-          let boundValue = transformBoundContentValue(
-            node.data.props,
-            entityStore,
-            binding,
-            resolveDesignValue,
-            variableName,
-            variableDefinition.type,
-            variableMapping.path,
-          );
+          let boundValue: ReturnType<typeof transformBoundContentValue>;
+          // starting from here, if the prop is of type 'BoundValue', and has prebinding
+          // we are going to resolve the incomplete path
+          if (link && isPreboundProp(variableMapping) && variableMapping.isPrebound) {
+            const prebindingPath =
+              getPrebindingPathBySourceEntry(variableMapping, (dataSourceKey) => {
+                const link = dataSource[dataSourceKey];
+
+                return entityStore.getEntityFromLink(link);
+              }) ?? variableMapping.path;
+
+            // this allows us to resolve it regularly
+            boundValue = transformBoundContentValue(
+              node.data.props,
+              entityStore,
+              link,
+              resolveDesignValue,
+              variableName,
+              variableDefinition.type,
+              prebindingPath,
+            );
+          } else {
+            // here we resolve the regular bound value
+            const variableDefinition = definition.variables[variableName];
+            boundValue = transformBoundContentValue(
+              node.data.props,
+              entityStore,
+              link,
+              resolveDesignValue,
+              variableName,
+              variableDefinition.type,
+              variableMapping.path,
+            );
+          }
 
           // In some cases, there may be an asset linked in the path, so we need to consider this scenario:
           // If no 'boundValue' is found, we also attempt to extract the value associated with the second-to-last item in the path.
           // If successful, it means we have identified the linked asset.
-
-          if (!boundValue) {
+          if (!boundValue && maybePath) {
             const maybeBoundAsset = areEntitiesFetched
-              ? entityStore.getValue(binding, path.split('/').slice(0, -2))
+              ? entityStore.getValue(link, maybePath.split('/').slice(0, -2))
               : undefined;
 
             if (isLinkToAsset(maybeBoundAsset)) {

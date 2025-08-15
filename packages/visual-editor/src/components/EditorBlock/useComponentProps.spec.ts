@@ -17,6 +17,7 @@ import { renderHook } from '@testing-library/react';
 import { createBreakpoints } from '@/__fixtures__/breakpoints';
 import { EditorModeEntityStore, getValueForBreakpoint } from '@contentful/experiences-core';
 import { useEditorModeClassName } from './useEditorModeClassName';
+import * as editorStore from '@/store/editor';
 
 // Redefining this type to make 'data.props.cfVisibility' a required field.
 // Semantically, it is always available on the node at runtime,
@@ -73,6 +74,8 @@ const mocks = vi.hoisted<{ componentRegistration: ComponentRegistration }>(() =>
   };
 });
 
+let useEditorStoreMock: jest.SpyInstance;
+
 vi.mock('@/store/registries', () => ({
   componentRegistry: new Map<string, ComponentRegistration>([
     ['pattern-id', mocks.componentRegistration],
@@ -96,6 +99,14 @@ const resolveDesignValue = vi.fn((valuesByBreakpoint, variableName) =>
 const areEntitiesFetched = true;
 
 describe('useComponentProps', () => {
+  beforeEach(() => {
+    // @ts-expect-error not important
+    useEditorStoreMock = vi.spyOn(editorStore, 'useEditorStore');
+  });
+
+  afterEach(() => {
+    useEditorStoreMock.mockReset();
+  });
   const definition: ComponentDefinition = {
     id: 'button',
     name: 'Button',
@@ -317,11 +328,9 @@ describe('useComponentProps', () => {
     });
 
     it('should not return unbound values in componentProps for structural components', () => {
-      vi.mock('@/store/editor', () => ({
-        useEditorStore: () => ({
-          myValue: { value: 'test' },
-        }),
-      }));
+      useEditorStoreMock.mockReturnValue({
+        myValue: { value: 'test' },
+      });
       const { result } = renderHook(() =>
         useComponentProps({
           node,
@@ -334,6 +343,206 @@ describe('useComponentProps', () => {
       );
 
       expect(result.current.componentProps.myValue).toBeUndefined();
+    });
+  });
+
+  describe('when preboundValue is provided', () => {
+    beforeEach(() => {
+      useEditorStoreMock.mockReturnValue({
+        uuid1: {
+          sys: {
+            id: 'entry1',
+            linkType: 'Entry',
+            type: 'Link',
+          },
+        },
+      });
+    });
+
+    it('should resolve prebound variables with incomplete paths', () => {
+      const definition: ComponentDefinition = {
+        id: 'custom-component',
+        name: 'Stub component',
+        variables: {
+          cfVisibility: {
+            type: 'Boolean',
+          },
+          variable: {
+            type: 'Media',
+          },
+        },
+      };
+      const entityStore = new EditorModeEntityStore({
+        entities: [
+          {
+            // @ts-expect-error not important
+            sys: {
+              id: 'entry1',
+              type: 'Entry',
+              contentType: {
+                sys: {
+                  id: 'contentTypeId1',
+                  type: 'Link',
+                  linkType: 'ContentType',
+                },
+              },
+            },
+            fields: {
+              imageRef: {
+                sys: {
+                  id: 'asset1',
+                  type: 'Link',
+                  linkType: 'Asset',
+                },
+              },
+            },
+          },
+          {
+            // @ts-expect-error not important
+            sys: {
+              id: 'asset1',
+              type: 'Asset',
+            },
+            fields: {
+              file: {
+                url: 'https://example.com/cat.jpg',
+              },
+            },
+          },
+        ],
+        locale: 'en-US',
+      });
+      const stub = vi.fn();
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node: {
+            type: 'block',
+            data: {
+              dataSource: {
+                uuid1: {
+                  sys: {
+                    id: 'entry1',
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              },
+              props: {
+                variable: {
+                  type: 'BoundValue',
+                  path: '/uuid1',
+                  // @ts-expect-error not important
+                  isPrebound: true,
+                  pathsByContentType: {
+                    contentTypeId1: {
+                      path: '/uuid1/fields/imageRef/~locale/fields/file/~locale',
+                      isPrebound: true,
+                    },
+                    contentTypeId2: {
+                      path: '/uuid2/fields/catImage/~locale/fields/file/~locale',
+                      isPrebound: true,
+                    },
+                  },
+                },
+              },
+            },
+            children: [],
+          },
+          entityStore,
+          areEntitiesFetched,
+          stub,
+          definition,
+        }),
+      );
+
+      expect(result.current.componentProps.variable).toBe('https://example.com/cat.jpg');
+    });
+
+    it('should return undefined if the deep bound asset isnt link on the prebinding source entry', () => {
+      const definition: ComponentDefinition = {
+        id: 'custom-component',
+        name: 'Stub component',
+        variables: {
+          cfVisibility: {
+            type: 'Boolean',
+          },
+          variable: {
+            type: 'Media',
+          },
+        },
+      };
+      const entityStore = new EditorModeEntityStore({
+        entities: [
+          {
+            // @ts-expect-error not important
+            sys: {
+              id: 'entry1',
+              type: 'Entry',
+              contentType: {
+                sys: {
+                  id: 'contentTypeId1',
+                  type: 'Link',
+                  linkType: 'ContentType',
+                },
+              },
+            },
+            fields: {
+              imageRef: {
+                sys: {
+                  id: 'asset1',
+                  type: 'Link',
+                  linkType: 'Asset',
+                },
+              },
+            },
+          },
+        ],
+        locale: 'en-US',
+      });
+      const stub = vi.fn();
+      const { result } = renderHook(() =>
+        useComponentProps({
+          node: {
+            type: 'block',
+            data: {
+              dataSource: {
+                uuid1: {
+                  sys: {
+                    id: 'entry1',
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              },
+              props: {
+                variable: {
+                  type: 'BoundValue',
+                  path: '/uuid1',
+                  // @ts-expect-error not important
+                  isPrebound: true,
+                  pathsByContentType: {
+                    contentTypeId1: {
+                      path: '/uuid1/fields/imageRef/~locale/fields/file/~locale',
+                      isPrebound: true,
+                    },
+                    contentTypeId2: {
+                      path: '/uuid2/fields/catImage/~locale/fields/file/~locale',
+                      isPrebound: true,
+                    },
+                  },
+                },
+              },
+            },
+            children: [],
+          },
+          entityStore,
+          areEntitiesFetched,
+          stub,
+          definition,
+        }),
+      );
+
+      expect(result.current.componentProps.variable).toBe(undefined);
     });
   });
 
@@ -432,11 +641,10 @@ describe('useComponentProps', () => {
     });
 
     it('should return unbound values in componentProps for structural components', () => {
-      vi.mock('@/store/editor', () => ({
-        useEditorStore: () => ({
-          myValue: { value: 'test' },
-        }),
-      }));
+      useEditorStoreMock.mockReturnValue({
+        myValue: { value: 'test' },
+      });
+
       const { result } = renderHook(() =>
         useComponentProps({
           node,

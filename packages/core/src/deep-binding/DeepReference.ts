@@ -6,10 +6,16 @@ import {
   ComponentTreeNode,
   Link,
 } from '@/types';
-import { isDeepPath, parseDataSourcePathWithL1DeepBindings } from '@/utils/pathSchema';
+import {
+  getPrebindingPathBySourceEntry,
+  isDeepPath,
+  isDeepPrebinding,
+  isPreboundProp,
+  parseDataSourcePathWithL1DeepBindings,
+} from '@/utils/pathSchema';
 import { treeVisit } from '@/utils/treeTraversal';
 import { isLink } from '@/utils/isLink';
-import type { EntityFromLink } from '@/entity';
+import type { EntityFromLink, EntityStoreBase } from '@/entity';
 
 type DeepReferenceOpts = {
   path: string;
@@ -106,6 +112,7 @@ export function gatherDeepReferencesFromExperienceEntry(
 export function gatherDeepReferencesFromTree(
   startingNode: ExperienceTreeNode,
   dataSource: ExperienceDataSource,
+  getEntityFromLink: EntityStoreBase['getEntityFromLink'],
 ): DeepReference[] {
   const deepReferences: Array<DeepReference> = [];
 
@@ -114,14 +121,33 @@ export function gatherDeepReferencesFromTree(
 
     for (const [, variableMapping] of Object.entries(node.data.props)) {
       if (variableMapping.type !== 'BoundValue') continue;
-      if (!isDeepPath(variableMapping.path)) continue;
 
-      deepReferences.push(
-        DeepReference.from({
-          path: variableMapping.path,
-          dataSource,
-        }),
-      );
+      if (isDeepPath(variableMapping.path)) {
+        deepReferences.push(
+          DeepReference.from({
+            path: variableMapping.path,
+            dataSource,
+          }),
+        );
+      } else if (isPreboundProp(variableMapping) && isDeepPrebinding(variableMapping)) {
+        const getEntityByDataSourceKey = (dataSourceKey: string) => {
+          const entityLink = dataSource[dataSourceKey];
+          if (!entityLink) return undefined;
+          return getEntityFromLink(entityLink);
+        };
+
+        const deepPrebindingPath = getPrebindingPathBySourceEntry(
+          variableMapping,
+          getEntityByDataSourceKey,
+        );
+        if (!deepPrebindingPath) continue;
+        deepReferences.push(
+          DeepReference.from({
+            path: deepPrebindingPath,
+            dataSource,
+          }),
+        );
+      }
     }
   });
 
