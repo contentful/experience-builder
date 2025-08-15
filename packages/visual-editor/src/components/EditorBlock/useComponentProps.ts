@@ -147,6 +147,7 @@ export const useComponentProps = ({
 
                 return entityStore.getEntityFromLink(link);
               }) ?? variableMapping.path;
+
             // this allows us to resolve it regularly
             boundValue = transformBoundContentValue(
               node.data.props,

@@ -14,7 +14,9 @@ export type PreboundVariable = {
 
 export const isPreboundProp = (variable: ComponentPropertyValue): variable is PreboundVariable => {
   return (
-    variable.type === 'BoundValue' && typeof (variable as PreboundVariable).isPrebound === 'boolean'
+    variable.type === 'BoundValue' &&
+    typeof (variable as PreboundVariable).isPrebound === 'boolean' &&
+    !!(variable as PreboundVariable).pathsByContentType
   );
 };
 
