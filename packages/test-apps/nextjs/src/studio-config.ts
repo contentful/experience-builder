@@ -201,25 +201,32 @@ defineComponents(
 
 defineBreakpoints([
   {
-    id: 'test-desktop',
+    id: 'test-mobile',
     query: '*',
-    displayName: 'All Sizes',
-    displayIcon: 'desktop',
-    previewSize: '100%',
+    displayName: 'Mobile',
+    displayIcon: 'mobile',
+    previewSize: '350px',
   },
   {
     id: 'test-tablet',
-    query: '<982px',
+    query: '>576px',
     displayName: 'Tablet',
     displayIcon: 'tablet',
     previewSize: '820px',
   },
   {
-    id: 'test-mobile',
-    query: '<576px',
-    displayName: 'Mobile',
-    displayIcon: 'mobile',
-    previewSize: '390px',
+    id: 'test-desktop',
+    query: '>982px',
+    displayName: 'Desktop',
+    displayIcon: 'desktop',
+    previewSize: '100%',
+  },
+  {
+    id: 'test-large-screen',
+    query: '>1200px',
+    displayName: 'Large Screen',
+    displayIcon: 'desktop',
+    previewSize: '100%',
   },
 ]);
 

@@ -1,4 +1,8 @@
-import { defineComponents, defineDesignTokens } from '@contentful/experiences-sdk-react';
+import {
+  defineBreakpoints,
+  defineComponents,
+  defineDesignTokens,
+} from '@contentful/experiences-sdk-react';
 import { ButtonComponentRegistration } from './components/ButtonComponentRegistration';
 import { RatingStarsComponentRegistration } from '@/components/RatingStarsComponentRegistration';
 import { CardComponentRegistration } from './components/CardComponentRegistration';
@@ -137,3 +141,34 @@ defineDesignTokens({
     },
   },
 });
+
+defineBreakpoints([
+  {
+    id: 'test-mobile',
+    query: '*',
+    displayName: 'Mobile',
+    displayIcon: 'mobile',
+    previewSize: '350px',
+  },
+  {
+    id: 'test-tablet',
+    query: '>576px',
+    displayName: 'Tablet',
+    displayIcon: 'tablet',
+    previewSize: '820px',
+  },
+  {
+    id: 'test-desktop',
+    query: '>982px',
+    displayName: 'Desktop',
+    displayIcon: 'desktop',
+    previewSize: '100%',
+  },
+  {
+    id: 'test-large-screen',
+    query: '>1200px',
+    displayName: 'Large Screen',
+    displayIcon: 'desktop',
+    previewSize: '100%',
+  },
+]);
