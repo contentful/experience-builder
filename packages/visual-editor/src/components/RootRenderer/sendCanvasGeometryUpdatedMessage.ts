@@ -25,7 +25,12 @@ export const sendCanvasGeometryUpdatedMessage = async (
   const rootRect = document.documentElement.getBoundingClientRect();
   const bodyRect = document.body.getBoundingClientRect();
   const width = Math.max(document.documentElement.offsetWidth, rootRect.width, bodyRect.width);
-  const height = Math.max(document.documentElement.offsetHeight, rootRect.height, bodyRect.height);
+  const height = Math.max(
+    document.documentElement.offsetHeight,
+    rootRect.height,
+    bodyRect.height,
+    measureBodyContentHeight(),
+  );
 
   sendMessage(OUTGOING_EVENTS.CanvasGeometryUpdated, {
     size: {
@@ -79,4 +84,38 @@ export function waitForImageToBeLoaded(imageNode: HTMLImageElement) {
     imageNode.addEventListener('load', handleImageLoad);
     imageNode.addEventListener('error', handleImageLoad);
   });
+}
+
+// calculates the content height by finding the deepest node in the first 2 levels of the body
+function measureBodyContentHeight(depth = 2, node: Element = document.body): number {
+  if (depth <= 0) return 0;
+
+  let height = 0;
+
+  for (const element of node.children) {
+    const rect = element.getBoundingClientRect();
+    const style = window.getComputedStyle(element);
+
+    const isHidden =
+      (rect.width === 0 && rect.height === 0) ||
+      style.display === 'none' ||
+      style.visibility === 'hidden';
+
+    // ignore relative positioned elements that are anchored to the bottom,
+    // as this can cause infinite height
+    const isBottomAnchored =
+      (style.position === 'fixed' ||
+        style.position === 'absolute' ||
+        style.position === 'relative' ||
+        style.position === 'sticky') &&
+      parseFloat(style.bottom) < 0;
+
+    if (isHidden || isBottomAnchored) {
+      continue;
+    }
+
+    height = Math.max(height, Math.ceil(rect.bottom), measureBodyContentHeight(depth - 1, element));
+  }
+
+  return height;
 }
