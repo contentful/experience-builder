@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.0](https://github.com/contentful/experience-builder/compare/v3.2.0...v3.3.0) (2025-08-20)
+
+### Features
+
+- handle prebinding on variables [SPA-2922] ([#1250](https://github.com/contentful/experience-builder/issues/1250)) ([fd92026](https://github.com/contentful/experience-builder/commit/fd920261045d1b9c4a31b08d2b782eebbd7ce128))
+
+### Bug Fixes
+
+- [ZEND-6782] calculate 100% page size ([#1271](https://github.com/contentful/experience-builder/issues/1271)) ([7f01669](https://github.com/contentful/experience-builder/commit/7f01669ccda310d6c629bc1294b7db02183743d1))
+- remove error in regex and turn it into a TS template literal ([96ae46b](https://github.com/contentful/experience-builder/commit/96ae46bb17c57eee706df16d1f9a52ffd70fe380))
+- **test-app:** demo custom container [SPA-3145] ([#1272](https://github.com/contentful/experience-builder/issues/1272)) ([2778f41](https://github.com/contentful/experience-builder/commit/2778f41743b3b9087b8824be88f6a4610227e240))
+
 ## [3.2.0](https://github.com/contentful/experience-builder/compare/v3.1.1...v3.2.0) (2025-08-12)
 
 ### Features

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.0](https://github.com/contentful/experience-builder/compare/v3.2.0...v3.3.0) (2025-08-20)
+
+### Bug Fixes
+
+- **test-app:** demo custom container [SPA-3145] ([#1272](https://github.com/contentful/experience-builder/issues/1272)) ([2778f41](https://github.com/contentful/experience-builder/commit/2778f41743b3b9087b8824be88f6a4610227e240))
+
 ## [3.2.0](https://github.com/contentful/experience-builder/compare/v3.1.1...v3.2.0) (2025-08-12)
 
 **Note:** Version bump only for package @contentful/experiences-components-react

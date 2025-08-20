@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.0](https://github.com/contentful/experience-builder/compare/v3.2.0...v3.3.0) (2025-08-20)
+
+### Bug Fixes
+
+- remove error in regex and turn it into a TS template literal ([96ae46b](https://github.com/contentful/experience-builder/commit/96ae46bb17c57eee706df16d1f9a52ffd70fe380))
+
 ## [3.2.0](https://github.com/contentful/experience-builder/compare/v3.1.1...v3.2.0) (2025-08-12)
 
 ### Features
