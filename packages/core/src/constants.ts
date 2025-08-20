@@ -172,8 +172,6 @@ export const EMPTY_CONTAINER_SIZE = '80px';
 
 export const HYPERLINK_DEFAULT_PATTERN = `/{locale}/{entry.fields.slug}/`;
 
-export const DEFAULT_IMAGE_WIDTH = '500px';
-
 export enum PostMessageMethods {
   REQUEST_ENTITIES = 'REQUEST_ENTITIES',
   REQUESTED_ENTITIES = 'REQUESTED_ENTITIES',

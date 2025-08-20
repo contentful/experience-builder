@@ -371,19 +371,19 @@ describe('sendConnectedEventWithRegisteredComponents', () => {
     const customBreakpoints = [
       {
         id: 'test-desktop',
-        query: '*',
+        query: '*' as const,
         displayName: 'All Sizes',
         previewSize: '100%',
       },
       {
         id: 'test-tablet',
-        query: '<982px',
+        query: '<982px' as const,
         displayName: 'Tablet',
         previewSize: '820px',
       },
       {
         id: 'test-mobile',
-        query: '<576px',
+        query: '<576px' as const,
         displayName: 'Mobile',
         previewSize: '390px',
       },

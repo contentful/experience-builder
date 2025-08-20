@@ -221,10 +221,14 @@ export const ParameterSchema = z.object({
 
 export const ParametersSchema = z.record(propertyKeySchema, ParameterSchema);
 
+type BreakpointQuery = '*' | `>${number}px` | `<${number}px`;
+const BREAKPOINT_QUERY_REGEX = /^\*$|^[<>][0-9]+px$/;
+
 export const BreakpointSchema = z
   .object({
     id: propertyKeySchema,
-    query: z.string().regex(/^\*$|^[<>][0-9*]+px$/),
+    // Can be replace with z.templateLiteral when upgrading to zod v4
+    query: z.string().refine((s): s is BreakpointQuery => BREAKPOINT_QUERY_REGEX.test(s)),
     previewSize: z.string(),
     displayName: z.string(),
     displayIcon: z.enum(['desktop', 'tablet', 'mobile']).optional(),

@@ -1,12 +1,144 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { experienceEntry } from '../test/__fixtures__/experience';
 import { entities } from '../test/__fixtures__/entities';
-import { DeepReference, gatherDeepReferencesFromExperienceEntry } from './DeepReference';
-import { EntityFromLink } from '..';
+import {
+  DeepReference,
+  gatherDeepReferencesFromExperienceEntry,
+  gatherDeepReferencesFromTree,
+} from './DeepReference';
+import { EntityFromLink, PreboundVariable } from '..';
 import { Asset, Entry, UnresolvedLink } from 'contentful';
+import { ExperienceDataSource, ExperienceTreeNode } from '@/types';
 
 const entry = entities[0];
 const PATH = '/uuid2/fields/logo/~locale/fields/file/~locale';
+
+const getPrebindingSubTree = ({ withFullPath }: { withFullPath: boolean }) => {
+  const childNodeWithprebinding: ExperienceTreeNode = {
+    type: 'block',
+    data: {
+      id: 'node-2',
+      unboundValues: {},
+      dataSource: {
+        uuid2: {
+          sys: {
+            id: 'entry2',
+            linkType: 'Entry',
+            type: 'Link',
+          },
+        },
+      },
+      props: {
+        prop2: {
+          type: 'BoundValue',
+          path: withFullPath ? '/uuid2/fields/productPhoto/~locale/fields/file/~locale' : '/uuid2',
+          // @ts-expect-error not typed. see below
+          isPrebound: true,
+          pathsByContentType: {
+            contentTypeId2: {
+              path: '/uuid2/fields/logo/~locale/fields/file/~locale',
+            },
+            contentTypeId3: {
+              path: '/uuid2/fields/productPhoto/~locale/fields/file/~locale',
+            },
+          },
+        },
+      },
+    },
+    children: [],
+  };
+  const subtreeWithPrebinding: ExperienceTreeNode = {
+    type: 'block',
+    data: {
+      id: 'node-1',
+      unboundValues: {},
+      dataSource: {
+        uuid1: {
+          sys: {
+            id: 'entry1',
+            linkType: 'Entry',
+            type: 'Link',
+          },
+        },
+      },
+      props: {
+        prop1: {
+          type: 'BoundValue',
+          path: withFullPath ? '/uuid1/fields/imageRef/~locale/fields/file/~locale' : '/uuid1',
+          // @ts-expect-error not typed, since prebound variable is not serialized
+          // hence, only possible in the editor mode
+          isPrebound: true,
+          pathsByContentType: {
+            contentTypeId1: {
+              path: '/uuid1/fields/imageRef/~locale/fields/file/~locale',
+            },
+            contentTypeId2: {
+              path: '/uuid1/fields/logo/~locale/fields/file/~locale',
+            },
+          } as unknown as PreboundVariable,
+        },
+      },
+    },
+    parentId: 'root',
+    children: [childNodeWithprebinding],
+  };
+
+  const getEntityFromLinkStub = vi.fn().mockImplementation((link) => {
+    const result: Entry = {
+      // @ts-expect-error we don't care of the accuracy here
+      sys: {
+        id: link.sys.id,
+        type: link.sys.linkType,
+      },
+    };
+
+    if (link.sys.id === 'entry1') {
+      (result.sys.contentType = {
+        sys: {
+          id: 'contentTypeId1',
+          type: 'Link',
+          linkType: 'ContentType',
+        },
+      }),
+        (result.fields = {
+          imageRef: {
+            sys: {
+              id: 'asset1',
+              type: 'Link',
+              linkType: 'Asset',
+            },
+          },
+        });
+    } else if (link.sys.id === 'entry2') {
+      (result.sys.contentType = {
+        sys: {
+          id: 'contentTypeId3',
+          type: 'Link',
+          linkType: 'ContentType',
+        },
+      }),
+        (result.fields = {
+          productPhoto: {
+            sys: {
+              id: 'asset2',
+              type: 'Link',
+              linkType: 'Asset',
+            },
+          },
+        });
+    } else if (link.sys.linkType === 'Asset') {
+      result.fields = {
+        file: {
+          url: `https://contentful.com/${link.sys.id}.jpg`,
+        },
+      };
+    }
+
+    return result;
+  });
+
+  return { subtreeWithPrebinding, getEntityFromLinkStub };
+};
 
 class MockEntityStore implements EntityFromLink {
   private entities: Array<Entry | Asset>;
@@ -123,5 +255,95 @@ describe('gatherDeepReferencesFromExperienceEntry', () => {
       field: 'logo',
       referentField: 'file',
     });
+  });
+});
+
+describe('gatherDeepReferencesFromTree', () => {
+  it('should include deep prebindings in the main path', () => {
+    const dataSource: ExperienceDataSource = {
+      uuid1: {
+        sys: {
+          id: 'entry1',
+          linkType: 'Entry',
+          type: 'Link',
+        },
+      },
+      uuid2: {
+        sys: {
+          id: 'entry2',
+          linkType: 'Entry',
+          type: 'Link',
+        },
+      },
+    };
+
+    const { subtreeWithPrebinding, getEntityFromLinkStub } = getPrebindingSubTree({
+      withFullPath: true,
+    });
+    const deepReferences = gatherDeepReferencesFromTree(
+      subtreeWithPrebinding,
+      dataSource,
+      getEntityFromLinkStub,
+    );
+    expect(deepReferences).toHaveLength(2);
+    expect(deepReferences[0].headEntityId).toBe('entry1');
+    expect(deepReferences[0].originalPath).toBe(
+      '/uuid1/fields/imageRef/~locale/fields/file/~locale',
+    );
+    expect(deepReferences[1].headEntityId).toBe('entry2');
+    expect(deepReferences[1].originalPath).toBe(
+      '/uuid2/fields/productPhoto/~locale/fields/file/~locale',
+    );
+  });
+
+  it('should include deep prebindings in the pathsByContentType with source entry assigned', () => {
+    const dataSource: ExperienceDataSource = {
+      uuid1: {
+        sys: {
+          id: 'entry1',
+          linkType: 'Entry',
+          type: 'Link',
+        },
+      },
+      uuid2: {
+        sys: {
+          id: 'entry2',
+          linkType: 'Entry',
+          type: 'Link',
+        },
+      },
+    };
+
+    const { subtreeWithPrebinding, getEntityFromLinkStub } = getPrebindingSubTree({
+      withFullPath: false,
+    });
+    const deepReferences = gatherDeepReferencesFromTree(
+      subtreeWithPrebinding,
+      dataSource,
+      getEntityFromLinkStub,
+    );
+    expect(deepReferences).toHaveLength(2);
+    expect(deepReferences[0].headEntityId).toBe('entry1');
+    expect(deepReferences[0].originalPath).toBe(
+      '/uuid1/fields/imageRef/~locale/fields/file/~locale',
+    );
+    expect(deepReferences[1].headEntityId).toBe('entry2');
+    expect(deepReferences[1].originalPath).toBe(
+      '/uuid2/fields/productPhoto/~locale/fields/file/~locale',
+    );
+  });
+
+  it('should not include deep prebindings in the pathsByContentType without source entry assigned', () => {
+    const dataSource: ExperienceDataSource = {};
+
+    const { subtreeWithPrebinding, getEntityFromLinkStub } = getPrebindingSubTree({
+      withFullPath: false,
+    });
+    const deepReferences = gatherDeepReferencesFromTree(
+      subtreeWithPrebinding,
+      dataSource,
+      getEntityFromLinkStub,
+    );
+    expect(deepReferences).toHaveLength(0);
   });
 });

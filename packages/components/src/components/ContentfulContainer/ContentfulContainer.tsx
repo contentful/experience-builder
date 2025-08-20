@@ -9,7 +9,7 @@ import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { extractRenderProps } from '@/utils/extractRenderProps';
 
 export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (props) => {
-  const { className, editorMode, children, cfHyperlink } = props;
+  const { className, editorMode, children, cfHyperlink, ...otherProps } = props;
 
   if (cfHyperlink) {
     return <ContentfulContainerAsHyperlink {...props}>{children}</ContentfulContainerAsHyperlink>;
@@ -19,6 +19,7 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
     return (
       <Flex
         data-test-id="contentful-container"
+        {...extractRenderProps(otherProps)}
         className={combineClasses(className, 'contentful-container')}>
         {children}
       </Flex>

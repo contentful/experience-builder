@@ -1,4 +1,3 @@
-import { DEFAULT_IMAGE_WIDTH } from '@/constants';
 import { DesignVariableMap } from '../types';
 
 // These styles get added to every component, user custom or contentful provided
@@ -203,9 +202,9 @@ export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
     type: 'Object',
     group: 'style',
     defaultValue: {
-      width: DEFAULT_IMAGE_WIDTH,
+      width: '100%',
       height: '100%',
-      targetSize: DEFAULT_IMAGE_WIDTH,
+      targetSize: 'unset',
     },
   },
   cfBackgroundColor: {
