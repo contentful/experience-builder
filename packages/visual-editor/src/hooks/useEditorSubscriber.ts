@@ -82,7 +82,6 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
         ...Object.values(newDataSource),
         ...assembliesRegistry.values(), // we count assemblies here as "L1 entities", for convenience. Even though they're not headEntities.
       ];
-      const deepReferences = gatherDeepReferencesFromTree(tree.root, newDataSource);
 
       /**
        * Checks only for _missing_ L1 entities
@@ -133,6 +132,12 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
           startFetching();
           await fillupL1({ entityLinksL1 });
         }
+
+        const deepReferences = gatherDeepReferencesFromTree(
+          tree.root,
+          newDataSource,
+          entityStore.getEntityFromLink.bind(entityStore),
+        );
         if (isMissingL2Entities(deepReferences)) {
           startFetching();
           await fillupL2({ deepReferences });
