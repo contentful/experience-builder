@@ -12,9 +12,17 @@ import {
   ShallowComponent,
   ShallowComponentDefinition,
 } from './components/BindingToReferences';
+import { CustomContainer, customContainerDefinition } from './components/CustomContainer';
 
 defineComponents(
   [
+    {
+      component: CustomContainer,
+      definition: customContainerDefinition,
+      options: {
+        wrapComponent: false,
+      },
+    },
     {
       component: ResolveManuallyComponent,
       definition: ResolveManuallyComponentDefinition,
