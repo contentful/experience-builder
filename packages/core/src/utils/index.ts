@@ -16,3 +16,4 @@ export * from './typeguards';
 export * from './utils';
 export * from './validations';
 export * from './schema';
+export * from './splitDirectAndSlotChildren';

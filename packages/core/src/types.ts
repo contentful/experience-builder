@@ -111,6 +111,8 @@ export type ComponentDefinition<
   thumbnailId?: string;
   hyperlinkPattern?: string;
   variables: Partial<DesignVariableMap> & Record<string, ComponentDefinitionVariable<T>>;
+  /** Render child components in specified slots. This is an advanced version of the `children`
+   * configuration. We don't recommend using both together, as it can lead to unexpected behavior. */
   slots?: Record<string, { displayName: string }>;
   // FIXME: While it's technically possible, we don't want to allow using built-in content props via
   // the styles configuration. We should split this up in the future into content and style and adjust
