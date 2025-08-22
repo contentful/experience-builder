@@ -1,4 +1,5 @@
 import { Asset, Entry } from 'contentful';
+import { cloneDeep } from 'lodash-es';
 
 /**
  * Localizes the provided entry or asset to match the regular format of CDA/CPA entities.
@@ -26,7 +27,7 @@ export function localizeEntity<T extends Asset | Entry>(entity: T, locale: strin
   if (entity.sys.locale) {
     return entity;
   }
-  const cloned = structuredClone(entity);
+  const cloned = cloneDeep(entity);
   // Set the requested locale as entry locale to follow the API shape:
   // https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes
   cloned.sys.locale = locale;

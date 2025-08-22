@@ -72,6 +72,7 @@
   "dependencies": {
     "@contentful/experiences-validators": "file:../validators",
     "@contentful/rich-text-types": "^17.0.0",
+    "lodash-es": "^4.17.21",
     "zustand": "^4.4.7"
   },
   "peerDependencies": {
