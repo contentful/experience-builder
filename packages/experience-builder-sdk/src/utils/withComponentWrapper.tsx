@@ -10,6 +10,19 @@ interface CFProps extends React.HtmlHTMLAttributes<HTMLElement> {
   'data-cf-node-block-type': string;
 }
 
+// NOTE: We're use this as a default for `options`. When only one option is explicitly defined,
+// all other default options are dropped as we're not merging the provided options with the default ones.
+// We started merging both options with SDK v3 but many customers wouldn't upgrade as it suddenly added
+// wrappers to their components because they only set the options to `{ wrapContainerWidth: "100%" }`.
+// With v2, it results in `wrapComponent` being undefined but with v3, it resulted in it being `true` and
+// thus causing unexpected layout changes.
+// We rolled back that change to let customers migrate smoothly for now but will adjust this behaviour with
+// v4.
+const DEFAULT_OPTIONS = {
+  wrapComponent: true,
+  wrapContainer: 'div' as keyof JSX.IntrinsicElements,
+};
+
 /**
  * Sets up a component to be consumed by Experience Builder. This function can be used to wrap a component with a container component, or to pass props to the component directly.
  * @param Component Component to be used by Experience Builder.
@@ -19,16 +32,10 @@ interface CFProps extends React.HtmlHTMLAttributes<HTMLElement> {
  */
 export function withComponentWrapper<T>(
   Component: React.ElementType,
-  options: ComponentRegistration['options'] = {},
+  options: ComponentRegistration['options'] = DEFAULT_OPTIONS,
 ) {
-  const mergedOptions = {
-    // Merge default values with overwriting options
-    wrapComponent: true,
-    wrapContainer: 'div' as keyof JSX.IntrinsicElements,
-    ...options,
-  };
   const Wrapped: React.FC<CFProps & T> = (props) => {
-    const Tag = mergedOptions.wrapContainer;
+    const Tag = options.wrapContainer ?? 'div';
     const {
       className = '',
       'data-cf-node-id': dataCfNodeId,
@@ -36,7 +43,7 @@ export function withComponentWrapper<T>(
       'data-cf-node-block-type': dataCfNodeBlockType,
       ...componentProps
     } = props;
-    const component = mergedOptions.wrapComponent ? (
+    const component = options.wrapComponent ? (
       <Tag
         data-component-wrapper
         className={className}
