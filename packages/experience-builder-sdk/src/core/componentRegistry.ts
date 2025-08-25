@@ -349,9 +349,9 @@ export const defineComponents = (
     }
   }
 
-  if (options?.__enableOldTextAlignmentValues) {
+  if (options?.__disableTextAlignmentTransform) {
     defineSdkOptions({
-      __enableOldTextAlignmentValues: true,
+      __disableTextAlignmentTransform: true,
     });
   }
 

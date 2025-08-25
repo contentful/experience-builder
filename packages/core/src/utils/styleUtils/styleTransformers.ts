@@ -134,7 +134,7 @@ export const transformTextAlign = (
   const sdkOptions = getSdkOptions();
   // New behavior: translate left/right to start/end
   // Customer can opt-out by activating this global option toggle
-  if (!sdkOptions.__enableOldTextAlignmentValues) {
+  if (!sdkOptions.__disableTextAlignmentTransform) {
     if (value === 'left') return 'start';
     if (value === 'right') return 'end';
   }

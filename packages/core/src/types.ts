@@ -170,7 +170,7 @@ export type ComponentRegistrationOptions = {
    * customers can opt-out by setting this flag.
    * @deprecated This is a temporary solution and will be removed in a future major version.
    */
-  __enableOldTextAlignmentValues?: boolean;
+  __disableTextAlignmentTransform?: boolean;
 };
 
 export type Binding = {
@@ -376,7 +376,7 @@ export type DesignTokensDefinition = {
 } & RecursiveDesignTokenDefinition;
 
 export type SdkOptions = {
-  __enableOldTextAlignmentValues?: ComponentRegistrationOptions['__enableOldTextAlignmentValues'];
+  __disableTextAlignmentTransform?: ComponentRegistrationOptions['__disableTextAlignmentTransform'];
 };
 
 /** Type of experience entry JSON data structure as returned by CPA/CDA */
