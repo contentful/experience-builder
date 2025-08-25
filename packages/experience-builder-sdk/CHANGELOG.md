@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.4.0](https://github.com/contentful/experience-builder/compare/v3.3.0...v3.4.0) (2025-08-25)
+
+### Features
+
+- automatically translate text alignment to be RTL aware [SPA-3060] ([#1280](https://github.com/contentful/experience-builder/issues/1280)) ([8bcc4b9](https://github.com/contentful/experience-builder/commit/8bcc4b9bad54b79600d1310cf372c274368689d6))
+
+### Bug Fixes
+
+- dont merge default with defined options ([#1278](https://github.com/contentful/experience-builder/issues/1278)) ([34ae1b3](https://github.com/contentful/experience-builder/commit/34ae1b32b58de9c625bd113890ea603466f29e69))
+- render slot children only once in preview [SPA-3147] ([#1275](https://github.com/contentful/experience-builder/issues/1275)) ([bc8206a](https://github.com/contentful/experience-builder/commit/bc8206a6b049e3f7459570e27bd900f111d7aef9))
+
 ## [3.3.0](https://github.com/contentful/experience-builder/compare/v3.2.0...v3.3.0) (2025-08-20)
 
 ### Bug Fixes
