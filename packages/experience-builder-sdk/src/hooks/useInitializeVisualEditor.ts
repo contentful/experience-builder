@@ -7,7 +7,11 @@ import {
   runRegisteredComponentValidations,
 } from '../core/componentRegistry';
 import { INTERNAL_EVENTS, VISUAL_EDITOR_EVENTS } from '@contentful/experiences-core/constants';
-import { designTokensRegistry, runBreakpointsValidation } from '@contentful/experiences-core';
+import {
+  designTokensRegistry,
+  runBreakpointsValidation,
+  sdkOptionsRegistry,
+} from '@contentful/experiences-core';
 
 type InitializeVisualEditorParams = {
   initialLocale: string;
@@ -58,6 +62,7 @@ export const useInitializeVisualEditor = (params: InitializeVisualEditorParams) 
             componentRegistry,
             designTokens: designTokensRegistry,
             breakpoints: breakpointsRegistry,
+            sdkOptions: sdkOptionsRegistry,
             locale,
             entities: initialEntities ?? [],
           },

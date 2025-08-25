@@ -1,9 +1,10 @@
-import { defineDesignTokens } from '@contentful/experiences-core';
+import { defineDesignTokens, defineSdkOptions } from '@contentful/experiences-core';
 import type {
   ComponentRegistration,
   ExperienceDataSource,
   ExperienceUnboundValues,
   DesignTokensDefinition,
+  SdkOptions,
 } from '@contentful/experiences-core/types';
 import { create } from 'zustand';
 import { componentRegistry } from './registries';
@@ -12,6 +13,7 @@ import { isEqual } from 'lodash-es';
 export interface InitEditorParams {
   componentRegistry: Map<string, ComponentRegistration>;
   designTokens: DesignTokensDefinition;
+  sdkOptions: SdkOptions;
   initialLocale: string;
 }
 export interface EditorStore {
@@ -57,13 +59,21 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
 
     set({ locale });
   },
-  initializeEditor({ componentRegistry: initialRegistry, designTokens, initialLocale }) {
+  initializeEditor({
+    componentRegistry: initialRegistry,
+    designTokens,
+    sdkOptions,
+    initialLocale,
+  }) {
     initialRegistry.forEach((registration) => {
       componentRegistry.set(registration.definition.id, registration);
     });
 
     // Re-register the design tokens with the Visual Editor's instance of the experiences-core package
     defineDesignTokens(designTokens);
+
+    // Same copy over from one instance to the other is necessary for the sdk options
+    defineSdkOptions(sdkOptions);
 
     set({ locale: initialLocale });
   },

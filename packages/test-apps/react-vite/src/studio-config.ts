@@ -260,6 +260,7 @@ defineComponents(
     experimentalComponents: {
       carousel: true,
     },
+    __disableTextAlignmentTransform: true,
   },
 );
 
