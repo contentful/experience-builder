@@ -68,7 +68,8 @@ defineComponents(
         id: 'component-using-references',
         name: 'Component Using References',
         category: 'Custom Components',
-        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        // Don't provide cfWidth as it's hardcoded inside the component (typical use case)
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfMaxWidth'],
         variables: {
           title: {
             displayName: 'Title',
@@ -106,6 +107,7 @@ defineComponents(
             displayName: 'Slot 2',
           },
         },
+        children: true,
       },
     },
     {
@@ -258,6 +260,7 @@ defineComponents(
     experimentalComponents: {
       carousel: true,
     },
+    __disableTextAlignmentTransform: true,
   },
 );
 

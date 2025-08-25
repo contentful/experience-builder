@@ -31,6 +31,8 @@ import {
   fetchReferencedEntities,
   createExperience,
 } from '@contentful/experiences-sdk-react';
+import type { ContentfulClientApi } from 'contentful';
+import type { ExperienceEntry } from '@contentful/experiences-core/types';
 
 export async function customFetchAllEntities(
   client: ContentfulClientApi<undefined>,
@@ -46,6 +48,9 @@ export async function customFetchAllEntities(
     locale,
   });
   if (!experienceEntry) return;
+
+  // Run internal checks and data preprocessing necessary for rendering
+  prepareExperienceEntry(experienceEntry as ExperienceEntry);
 
   // Fetch all entries and assets that are listed in fields.dataSource
   const references = await fetchReferencedEntities({
@@ -90,7 +95,8 @@ import {
   createExperience,
   localizeEntity,
 } from '@contentful/experiences-sdk-react';
-import { ContentfulClientApi } from 'contentful';
+import type { ContentfulClientApi } from 'contentful';
+import type { ExperienceEntry } from '@contentful/experiences-core/types';
 
 export async function customFetchAllEntitiesWithAllLocales(
   client: ContentfulClientApi<undefined>,
@@ -105,6 +111,9 @@ export async function customFetchAllEntitiesWithAllLocales(
     identifier: { slug },
   });
   if (!experienceEntry) return;
+
+  // Run internal checks and data preprocessing necessary for rendering
+  prepareExperienceEntry(experienceEntry as ExperienceEntry);
 
   // Fetch all locales for the references, i.e. the page content & assets
   const clientWithAllLocales = client.withAllLocales;

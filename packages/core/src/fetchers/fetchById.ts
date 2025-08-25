@@ -3,11 +3,7 @@ import { fetchExperienceEntry } from './fetchExperienceEntry';
 import { fetchReferencedEntities } from './fetchReferencedEntities';
 import { ExperienceEntry } from '@/types';
 import { ContentfulClientApi, Entry } from 'contentful';
-import {
-  removeCircularPatternReferences,
-  removeSelfReferencingDataSource,
-} from './shared/circularityCheckers';
-import { sideloadPrebindingDefaultValues } from './sideloading';
+import { prepareExperienceEntry } from './shared/prepareExperienceEntry';
 
 const errorMessagesWhileFetching = {
   experience: 'Failed to fetch experience',
@@ -66,9 +62,7 @@ export async function fetchById({
       throw new Error(`No experience entry with id: ${id} exists`);
     }
 
-    removeCircularPatternReferences(experienceEntry as ExperienceEntry);
-    removeSelfReferencingDataSource(experienceEntry as ExperienceEntry);
-    sideloadPrebindingDefaultValues(experienceEntry as ExperienceEntry);
+    prepareExperienceEntry(experienceEntry as ExperienceEntry);
 
     try {
       const { entries, assets } = await fetchReferencedEntities({

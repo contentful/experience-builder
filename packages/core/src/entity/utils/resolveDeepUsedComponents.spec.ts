@@ -1,5 +1,5 @@
 import { ExperienceEntry } from '@/types';
-import { experienceEntryFieldsWithFilledUsedComponents } from '../test/__fixtures__/experience';
+import { experienceEntryFieldsWithFilledUsedComponents } from '../../test/__fixtures__/experience';
 import { resolveDeepUsedComponents } from './resolveDeepUsedComponents';
 
 describe('resolveDeepUsedComponents', () => {
