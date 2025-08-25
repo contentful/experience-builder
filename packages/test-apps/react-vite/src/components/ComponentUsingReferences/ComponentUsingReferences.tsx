@@ -16,7 +16,7 @@ export function ComponentUsingReferences({
 }: ComponentUsingReferencesProperties) {
   const stringFields = collectStringFields(entry);
   return (
-    <div {...rest}>
+    <div {...rest} style={{ width: '100%' }}>
       <h2>{title}</h2>
       <p>{description}</p>
       {stringFields.length > 0 && (
