@@ -1,4 +1,4 @@
-import { getSdkOptions } from '@/registries/optionsRegistry';
+import { getSdkOptions } from '@/registries/sdkOptionsRegistry';
 import {
   StyleProps,
   CSSProperties,
@@ -132,7 +132,6 @@ export const transformTextAlign = (
 ): undefined | CSSProperties['textAlign'] => {
   if (!value) return undefined;
   const sdkOptions = getSdkOptions();
-  console.log('TK transform text align', { sdkOptions, value });
   // New behavior: translate left/right to start/end
   // Customer can opt-out by activating this global option toggle
   if (!sdkOptions.__enableOldTextAlignmentValues) {

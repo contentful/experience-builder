@@ -1,3 +1,3 @@
 export * from './designTokenRegistry';
 export * from './breakpointsRegistry';
-export * from './optionsRegistry';
+export * from './sdkOptionsRegistry';

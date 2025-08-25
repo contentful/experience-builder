@@ -258,6 +258,7 @@ defineComponents(
     experimentalComponents: {
       carousel: true,
     },
+    __enableOldTextAlignmentValues: true,
   },
 );
 

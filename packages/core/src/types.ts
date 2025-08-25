@@ -375,6 +375,10 @@ export type DesignTokensDefinition = {
   >;
 } & RecursiveDesignTokenDefinition;
 
+export type SdkOptions = {
+  __enableOldTextAlignmentValues?: ComponentRegistrationOptions['__enableOldTextAlignmentValues'];
+};
+
 /** Type of experience entry JSON data structure as returned by CPA/CDA */
 export type ExperienceEntry = {
   sys: Entry['sys'];
