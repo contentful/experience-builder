@@ -11,7 +11,7 @@ import { EntityStoreBase } from './EntityStoreBase';
 import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
 import { isLink } from '@/utils/isLink';
-import { resolveDeepUsedComponents } from '@/fetchers/resolveDeepUsedComponents';
+import { resolveDeepUsedComponents } from '@/entity/utils/resolveDeepUsedComponents';
 type EntityStoreArgs = {
   experienceEntry: ExperienceEntry | Entry;
   entities: Array<Entry | Asset>;

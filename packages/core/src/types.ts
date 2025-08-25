@@ -111,6 +111,8 @@ export type ComponentDefinition<
   thumbnailId?: string;
   hyperlinkPattern?: string;
   variables: Partial<DesignVariableMap> & Record<string, ComponentDefinitionVariable<T>>;
+  /** Render child components in specified slots. This is an advanced version of the `children`
+   * configuration. We don't recommend using both together, as it can lead to unexpected behavior. */
   slots?: Record<string, { displayName: string }>;
   // FIXME: While it's technically possible, we don't want to allow using built-in content props via
   // the styles configuration. We should split this up in the future into content and style and adjust
@@ -160,6 +162,17 @@ export type ComponentRegistrationOptions = {
   experimentalComponents?: {
     carousel?: boolean;
   };
+  /**
+   * Originally, the persisted values for `cfTextAlign` were plainly rendered
+   * when generating the CSS code for a components styles. To enable right-to-left
+   * directions natively, the alignment values were recently switched from
+   * `left`/`right` to `start`/`end`. To save customers from manually replacing old
+   * with new alignment values in every experience, we're translating them automatically
+   * in the rendering logic as well. If this new behaviour introduces any issues,
+   * customers can opt-out by setting this flag.
+   * @deprecated This is a temporary solution and will be removed in a future major version.
+   */
+  __disableTextAlignmentTransform?: boolean;
 };
 
 export type Binding = {
@@ -363,6 +376,10 @@ export type DesignTokensDefinition = {
     }
   >;
 } & RecursiveDesignTokenDefinition;
+
+export type SdkOptions = {
+  __disableTextAlignmentTransform?: ComponentRegistrationOptions['__disableTextAlignmentTransform'];
+};
 
 /** Type of experience entry JSON data structure as returned by CPA/CDA */
 export type ExperienceEntry = {

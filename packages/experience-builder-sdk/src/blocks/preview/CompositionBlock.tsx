@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { Entry } from 'contentful';
 import {
@@ -8,6 +8,7 @@ import {
   resolveHyperlinkPattern,
   sanitizeNodeProps,
   transformBoundContentValue,
+  splitDirectAndSlotChildren,
 } from '@contentful/experiences-core';
 import {
   CONTENTFUL_COMPONENTS,
@@ -132,7 +133,6 @@ export const CompositionBlock = ({
       return {
         ssrProps,
         props,
-        customDesignProps: {},
       };
     }
 
@@ -204,42 +204,16 @@ export const CompositionBlock = ({
       },
     });
 
-    const slotsProps: Record<string, ReactNode> = {};
-
-    if (componentRegistration.definition.slots) {
-      for (const slotId in componentRegistration.definition.slots) {
-        const slotNode = node.children.find((child) => child.slotId === slotId);
-        if (slotNode) {
-          slotsProps[slotId] = (
-            <CompositionBlock
-              node={slotNode}
-              locale={locale}
-              hyperlinkPattern={hyperlinkPattern}
-              entityStore={entityStore}
-              resolveDesignValue={resolveDesignValue}
-              wrappingPatternIds={wrappingPatternIds}
-              wrappingParameters={wrappingParameters}
-              patternRootNodeIdsChain={patternRootNodeIdsChain}
-            />
-          );
-        }
-      }
-    }
-
     const props: Record<string, PrimitiveValue> = {
       className: ssrProps.cfSsrClassName ?? mediaQuery?.className,
       ...styleProps,
       ...contentProps,
       ...customDesignProps,
-      ...slotsProps,
     };
 
     return {
       ssrProps,
       contentProps,
-      slotsProps,
-      styleProps,
-      customDesignProps,
       mediaQuery,
       props,
     };
@@ -253,8 +227,6 @@ export const CompositionBlock = ({
     resolveDesignValue,
     hyperlinkPattern,
     locale,
-    wrappingPatternIds,
-    wrappingParameters,
     patternRootNodeIdsChain,
   ]);
 
@@ -284,29 +256,39 @@ export const CompositionBlock = ({
     return getPatternChildNodeClassName?.(childNodeId);
   };
 
-  const children =
-    componentRegistration.definition.children === true
-      ? node.children.map((childNode: ComponentTreeNode, index) => {
-          return (
-            <CompositionBlock
-              getPatternChildNodeClassName={
-                isPatternNode || getPatternChildNodeClassName
-                  ? _getPatternChildNodeClassName
-                  : undefined
-              }
-              node={childNode}
-              key={index}
-              locale={locale}
-              hyperlinkPattern={hyperlinkPattern}
-              entityStore={entityStore}
-              resolveDesignValue={resolveDesignValue}
-              wrappingPatternIds={wrappingPatternIds}
-              wrappingParameters={wrappingParameters}
-              patternRootNodeIdsChain={patternRootNodeIdsChain}
-            />
-          );
-        })
-      : null;
+  const { slotNodesMap, directChildNodes } = splitDirectAndSlotChildren(
+    node.children,
+    componentRegistration.definition,
+  );
+
+  const renderChildNode = (childNode: ComponentTreeNode) => (
+    <CompositionBlock
+      getPatternChildNodeClassName={
+        isPatternNode || getPatternChildNodeClassName ? _getPatternChildNodeClassName : undefined
+      }
+      node={childNode}
+      key={childNode.id}
+      locale={locale}
+      hyperlinkPattern={hyperlinkPattern}
+      entityStore={entityStore}
+      resolveDesignValue={resolveDesignValue}
+      wrappingPatternIds={wrappingPatternIds}
+      wrappingParameters={wrappingParameters}
+      patternRootNodeIdsChain={patternRootNodeIdsChain}
+    />
+  );
+
+  const renderedSlotNodesMap = Object.entries(slotNodesMap).reduce(
+    (acc, [slotId, nodes]) => {
+      if (nodes?.length) {
+        acc[slotId] = <>{nodes.map((slotChildNode) => renderChildNode(slotChildNode))}</>;
+      }
+      return acc;
+    },
+    {} as Record<string, React.JSX.Element>,
+  );
+
+  const renderedChildren = directChildNodes?.map((childNode) => renderChildNode(childNode));
 
   // TODO: we might be able to remove this special case as well by not dropping the two props in the sanitizeNodeProps function
   if (isContainerOrSection(node.definitionId)) {
@@ -315,7 +297,7 @@ export const CompositionBlock = ({
         cfHyperlink={(contentProps as StyleProps).cfHyperlink}
         cfOpenInNewTab={(contentProps as StyleProps).cfOpenInNewTab}
         className={props.className as string | undefined}>
-        {children}
+        {renderedChildren}
       </ContentfulContainer>
     );
   }
@@ -324,8 +306,9 @@ export const CompositionBlock = ({
     component,
     {
       ...sanitizeNodeProps(props),
+      ...renderedSlotNodesMap,
     },
-    children ?? (typeof props.children === 'string' ? props.children : null),
+    renderedChildren,
   );
 };
 

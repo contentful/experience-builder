@@ -7,7 +7,7 @@ import {
 } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
 import { ExperienceEntry } from '@/types';
-import * as sideloadingMock from './sideloading';
+import * as sideloadingMock from './shared/sideloading';
 import * as fetchers from './fetchReferencedEntities';
 
 let experienceEntry = createExperienceEntry({});
@@ -63,7 +63,7 @@ describe('fetchBySlug', () => {
       attachPrebindingDefaultValueAsDataSource: vi.fn(),
     }));
 
-    vi.mock('./sideloading', () => ({
+    vi.mock('./shared/sideloading', () => ({
       sideloadPrebindingDefaultValues: vi.fn(),
     }));
   });

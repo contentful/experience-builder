@@ -4,7 +4,7 @@ import { fetchById } from './fetchById';
 import { createExperienceEntry } from '../test/__fixtures__/experience';
 import { assets, entries } from '../test/__fixtures__/entities';
 import { describe, beforeEach, it, expect, vi } from 'vitest';
-import * as sideloadingMock from './sideloading';
+import * as sideloadingMock from './shared/sideloading';
 import * as fetchers from './fetchReferencedEntities';
 
 let experienceEntry = createExperienceEntry({});
@@ -42,7 +42,7 @@ describe('fetchById', () => {
       };
     });
 
-    vi.mock('./sideloading', () => ({
+    vi.mock('./shared/sideloading', () => ({
       sideloadPrebindingDefaultValues: vi.fn(),
     }));
   });

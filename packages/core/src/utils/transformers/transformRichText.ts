@@ -8,6 +8,7 @@ import {
 import { getBoundValue } from './getBoundValue';
 import { Asset, Entry } from 'contentful';
 import { EntityStoreBase } from '@/entity';
+import { cloneDeep } from 'lodash-es';
 
 export const transformRichText = (
   entryOrAsset: Entry | Asset,
@@ -39,7 +40,7 @@ export const transformRichText = (
     // resolve any links to assets/entries/hyperlinks
     // we need to clone, as we want to keep the original Entity in the EntityStore intact,
     // and resolveLinks() is mutating the node object.
-    const richTextDocument = structuredClone(value) as RichTextDocument;
+    const richTextDocument = cloneDeep(value) as RichTextDocument;
     resolveLinks(richTextDocument, entityStore);
     return richTextDocument;
   }

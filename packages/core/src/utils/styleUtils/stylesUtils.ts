@@ -4,6 +4,7 @@ import {
   transformBackgroundImage,
   transformBorderStyle,
   transformGridColumn,
+  transformTextAlign,
 } from './styleTransformers';
 import { isContentfulStructureComponent, isStructureWithRelativeHeight } from '../components';
 import { EMPTY_CONTAINER_SIZE } from '../../constants';
@@ -107,7 +108,7 @@ export const buildCfStyles = (values: Partial<StyleProps>): CSSProperties => {
     lineHeight: values.cfLineHeight,
     letterSpacing: values.cfLetterSpacing,
     color: values.cfTextColor,
-    textAlign: values.cfTextAlign,
+    textAlign: transformTextAlign(values.cfTextAlign),
     textTransform: values.cfTextTransform,
     objectFit: values.cfImageOptions?.objectFit,
     objectPosition: values.cfImageOptions?.objectPosition,

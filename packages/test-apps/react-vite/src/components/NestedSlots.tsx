@@ -6,6 +6,7 @@ const style: Record<string, CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: 30,
+    flexWrap: 'wrap',
   },
   row: {
     width: '100%',
@@ -27,9 +28,15 @@ const style: Record<string, CSSProperties> = {
 interface NestedSlotsProps {
   childrenSlot1: React.ReactNode;
   childrenSlot2: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const NestedSlots: React.FC<NestedSlotsProps> = ({ childrenSlot1, childrenSlot2, ...props }) => {
+const NestedSlots: React.FC<NestedSlotsProps> = ({
+  childrenSlot1,
+  childrenSlot2,
+  children,
+  ...props
+}) => {
   return (
     <div id="NestedSlots" style={style.container} {...props}>
       <div style={style.row}>
@@ -42,6 +49,7 @@ const NestedSlots: React.FC<NestedSlotsProps> = ({ childrenSlot1, childrenSlot2,
           {childrenSlot2}
         </div>
       </div>
+      <div>{children}</div>
     </div>
   );
 };

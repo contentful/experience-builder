@@ -1,4 +1,5 @@
 import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
+import { cloneDeep } from 'lodash-es';
 
 import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';
@@ -143,10 +144,10 @@ export abstract class EntityStoreBase implements EntityFromLink {
   protected addEntity(entity: Entry | Asset): void {
     if (isAsset(entity)) {
       // cloned and frozen
-      this.assetMap.set(entity.sys.id, deepFreeze(structuredClone(entity)));
+      this.assetMap.set(entity.sys.id, deepFreeze(cloneDeep(entity)));
     } else if (isEntry(entity)) {
       // cloned and frozen
-      this.entryMap.set(entity.sys.id, deepFreeze(structuredClone(entity)));
+      this.entryMap.set(entity.sys.id, deepFreeze(cloneDeep(entity)));
     } else {
       throw new Error(
         `Attempted to add an entity to the store that is neither Asset nor Entry: '${JSON.stringify(entity)}'`,
