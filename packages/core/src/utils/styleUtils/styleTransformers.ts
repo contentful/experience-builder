@@ -1,3 +1,4 @@
+import { getSdkOptions } from '@/registries/optionsRegistry';
 import {
   StyleProps,
   CSSProperties,
@@ -124,4 +125,19 @@ export const transformBackgroundImage = (
     backgroundPosition: matchBackgroundPosition(cfBackgroundImageOptions?.alignment),
     backgroundSize: matchBackgroundSize(cfBackgroundImageOptions?.scaling),
   };
+};
+
+export const transformTextAlign = (
+  value?: CSSProperties['textAlign'],
+): undefined | CSSProperties['textAlign'] => {
+  if (!value) return undefined;
+  const sdkOptions = getSdkOptions();
+  console.log('TK transform text align', { sdkOptions, value });
+  // New behavior: translate left/right to start/end
+  // Customer can opt-out by activating this global option toggle
+  if (!sdkOptions.__enableOldTextAlignmentValues) {
+    if (value === 'left') return 'start';
+    if (value === 'right') return 'end';
+  }
+  return value;
 };

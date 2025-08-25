@@ -17,6 +17,7 @@ import {
   breakpointsRegistry,
   optionalBuiltInStyles,
   sendMessage,
+  defineSdkOptions,
 } from '@contentful/experiences-core';
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
@@ -346,6 +347,12 @@ export const defineComponents = (
         componentRegistry.delete(id);
       }
     }
+  }
+
+  if (options?.__enableOldTextAlignmentValues) {
+    defineSdkOptions({
+      __enableOldTextAlignmentValues: true,
+    });
   }
 
   for (const registration of componentRegistrations) {
