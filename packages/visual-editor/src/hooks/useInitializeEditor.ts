@@ -14,12 +14,19 @@ export const useInitializeEditor = (inMemoryEntitiesStore: InMemoryEntitiesStore
   useEffect(() => {
     const onVisualEditorInitialize = (event) => {
       if (!event.detail) return;
-      const { componentRegistry, designTokens, locale: initialLocale, entities } = event.detail;
+      const {
+        componentRegistry,
+        designTokens,
+        sdkOptions,
+        locale: initialLocale,
+        entities,
+      } = event.detail;
 
       initializeEditor({
         initialLocale,
         componentRegistry,
         designTokens,
+        sdkOptions,
       });
 
       // if entities is set to [], then everything will still work as EntityStore will

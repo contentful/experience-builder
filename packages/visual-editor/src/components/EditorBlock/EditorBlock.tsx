@@ -13,7 +13,7 @@ import {
 import styles from './EditorBlock.module.css';
 import { useComponentRegistration } from './useComponentRegistration';
 import { useComponentProps } from './useComponentProps';
-import { EntityStoreBase } from '@contentful/experiences-core';
+import { EntityStoreBase, splitDirectAndSlotChildren } from '@contentful/experiences-core';
 
 type EditorBlockProps = {
   node: ExperienceTreeNode;
@@ -48,52 +48,45 @@ export function EditorBlock({
     return <CircularDependencyErrorPlaceholder wrappingPatternIds={wrappingPatternIds} />;
   }
 
-  const slotNodes: Record<string, React.JSX.Element> = {};
-  for (const slotId in componentRegistration.definition.slots) {
-    const nodes = node.children.filter((child) => child.data.slotId === slotId);
-    slotNodes[slotId] =
-      nodes.length === 0 ? (
-        <div className={styles.emptySlot} />
-      ) : (
-        <>
-          {nodes.map((slotChildNode) => (
-            <EditorBlock
-              key={slotChildNode.data.id}
-              node={slotChildNode}
-              resolveDesignValue={resolveDesignValue}
-              wrappingPatternIds={wrappingPatternIds}
-              entityStore={entityStore}
-              areEntitiesFetched={areEntitiesFetched}
-            />
-          ))}
-        </>
-      );
-  }
+  const { slotNodesMap, directChildNodes } = splitDirectAndSlotChildren(
+    node.children,
+    componentRegistration.definition,
+  );
 
-  const children = componentRegistration.definition.children
-    ? node.children
-        .filter((node) => node.data.slotId === undefined)
-        .map((childNode) => (
-          <EditorBlock
-            key={childNode.data.id}
-            node={childNode}
-            resolveDesignValue={resolveDesignValue}
-            wrappingPatternIds={wrappingPatternIds}
-            entityStore={entityStore}
-            areEntitiesFetched={areEntitiesFetched}
-          />
-        ))
-    : null;
+  const renderChildNode = (childNode: ExperienceTreeNode) => (
+    <EditorBlock
+      key={childNode.data.id}
+      node={childNode}
+      resolveDesignValue={resolveDesignValue}
+      wrappingPatternIds={wrappingPatternIds}
+      entityStore={entityStore}
+      areEntitiesFetched={areEntitiesFetched}
+    />
+  );
+
+  const renderedSlotNodesMap = Object.entries(slotNodesMap).reduce(
+    (acc, [slotId, nodes]) => {
+      if (nodes?.length) {
+        acc[slotId] = <>{nodes.map((slotChildNode) => renderChildNode(slotChildNode))}</>;
+      } else {
+        acc[slotId] = <div className={styles.emptySlot} />;
+      }
+      return acc;
+    },
+    {} as Record<string, React.JSX.Element>,
+  );
+
+  const renderedChildren = directChildNodes?.map((childNode) => renderChildNode(childNode));
 
   return (
     <RegistrationComponent
       node={node}
       resolveDesignValue={resolveDesignValue}
       componentRegistration={componentRegistration}
-      slotNodes={slotNodes}
+      slotNodes={renderedSlotNodesMap}
       entityStore={entityStore}
       areEntitiesFetched={areEntitiesFetched}>
-      {children}
+      {renderedChildren}
     </RegistrationComponent>
   );
 }
