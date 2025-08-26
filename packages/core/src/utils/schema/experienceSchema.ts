@@ -1,7 +1,7 @@
 import type { Experience, Link } from '@/types';
 import type { Entry, Asset } from 'contentful';
 import { referencesOf, uniqueById } from './references';
-import { isLinkToAsset, isLinkToEntry, isAsset, isPatternEntry } from '@/utils';
+import { isLinkToAsset, isLinkToEntry, isAsset, isPatternEntry, debug } from '@/utils';
 
 const excludeAssets = (entity: Entry | Asset): entity is Entry => !isAsset(entity);
 const excludePatternEntries = (entry: Entry): entry is Entry => !isPatternEntry(entry);
@@ -51,8 +51,8 @@ export const extractLeafLinksReferencedFromExperience = (experience: Experience)
           entryLinks.push(ref);
         }
       } else {
-        console.warn(
-          `Unexpected reference type found in entry "${entry.sys.id}": ${JSON.stringify(ref)}`,
+        debug.warn(
+          `[experience-core::experienceSchema] Unexpected reference type found in entry "${entry.sys.id}": ${JSON.stringify(ref)}`,
         );
       }
     }

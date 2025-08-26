@@ -1,4 +1,9 @@
-import { sendMessage, getElementCoordinates, isElementHidden } from '@contentful/experiences-core';
+import {
+  sendMessage,
+  getElementCoordinates,
+  isElementHidden,
+  debug,
+} from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import {
   CanvasGeometryUpdateSourceEvent,
@@ -75,7 +80,10 @@ export function waitForImageToBeLoaded(imageNode: HTMLImageElement) {
       imageNode.removeEventListener('load', handleImageLoad);
       imageNode.removeEventListener('error', handleImageLoad);
       if (event.type === 'error') {
-        console.warn('Image failed to load:', imageNode);
+        debug.warn(
+          '[experiences-visual-editor-react::canvasGeometry] Image failed to load:',
+          imageNode,
+        );
         reject();
       } else {
         resolve();

@@ -4,6 +4,7 @@
 
 import { BoundValue, ComponentPropertyValue } from '@contentful/experiences-validators';
 import { Asset, Entry } from 'contentful';
+import { debug } from './debugLogger';
 
 export type PreboundVariable = {
   type: 'BoundValue';
@@ -208,8 +209,8 @@ export const lastPathNamedSegmentEq = (path: string, expectedName: string) => {
   const segments = path.split('/');
 
   if (segments.length < 2) {
-    console.warn(
-      `[experiences-sdk-react] Attempting to check whether last named segment of the path (${path}) equals to '${expectedName}', but the path doesn't have enough segments.`,
+    debug.warn(
+      `[experiences-core::pathSchema] Attempting to check whether last named segment of the path (${path}) equals to '${expectedName}', but the path doesn't have enough segments.`,
     );
     return false;
   }

@@ -27,9 +27,7 @@ export const resolveLinkOrArrayOrPassthrough = (
   fieldValue: unknown | UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'>,
 ) => {
   if (isLink(fieldValue)) {
-    return inMemoryEntities.maybeResolveLink(
-      fieldValue as unknown as UnresolvedLink<'Asset'> | UnresolvedLink<'Entry'>,
-    );
+    return inMemoryEntities.maybeResolveLink(fieldValue);
   }
 
   if (isArrayOfLinks(fieldValue)) {

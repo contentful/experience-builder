@@ -11,7 +11,13 @@ import { getOptimizedBackgroundImageAsset } from './getOptimizedBackgroundImageA
 import { getOptimizedImageAsset } from './getOptimizedImageAsset';
 import { getBoundValue } from '@/utils/transformers/getBoundValue';
 // FIXME: Importing the parents parent folder is creating a circular dependency
-import { getTargetValueInPixels, isDeepPath, lastPathNamedSegmentEq, parseCSSValue } from '@/utils';
+import {
+  debug,
+  getTargetValueInPixels,
+  isDeepPath,
+  lastPathNamedSegmentEq,
+  parseCSSValue,
+} from '@/utils';
 import { ValidFormats } from './mediaUtils';
 
 export const transformMedia = (
@@ -37,8 +43,8 @@ export const transformMedia = (
         : {},
     ) as ImageOptions | undefined;
     if (!options) {
-      console.error(
-        `Error transforming image asset: Required variable [${optionsVariableName}] missing from component definition`,
+      debug.error(
+        `[experiences-core::transformMedia] Error transforming image asset: Required variable [${optionsVariableName}] missing from component definition`,
       );
       return;
     }
@@ -52,7 +58,7 @@ export const transformMedia = (
       });
       return value;
     } catch (error) {
-      console.error('Error transforming image asset', error);
+      debug.error('[experiences-core::transformMedia] Error transforming image asset', error);
     }
     return;
   }
@@ -70,8 +76,8 @@ export const transformMedia = (
         : {},
     ) as BackgroundImageOptions | undefined;
     if (!options) {
-      console.error(
-        `Error transforming image asset: Required variable [${optionsVariableName}] missing from component definition`,
+      debug.error(
+        `[experiences-core::transformMedia] Error transforming image asset: Required variable [${optionsVariableName}] missing from component definition`,
       );
       return;
     }
@@ -94,7 +100,7 @@ export const transformMedia = (
       );
       return value;
     } catch (error) {
-      console.error('Error transforming image asset', error);
+      debug.error('[experiences-core::transformMedia] Error transforming image asset', error);
     }
     return;
   }

@@ -71,7 +71,7 @@ export const StudioCollection: React.FC<StudioCollectionProps> = ({ items }) => 
       fields: {
         title: itemWithUnresolvedReference.fields.title,
         description: itemWithUnresolvedReference.fields.description,
-        image: inMemoryEntities.maybeResolveLink(itemWithUnresolvedReference.fields.image) as unknown as Asset|undefined,
+        image: itemWithUnresolvedReference.fields.image ? inMemoryEntities.maybeResolveLink(itemWithUnresolvedReference.fields.image) : undefined,
       },
     };
     return resolvedItem;
