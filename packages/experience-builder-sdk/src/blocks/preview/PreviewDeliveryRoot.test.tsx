@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { EntityStore } from '@contentful/experiences-core';
+import { debug, EntityStore } from '@contentful/experiences-core';
 import { PreviewDeliveryRoot } from './PreviewDeliveryRoot';
 import type { Experience } from '@contentful/experiences-core/types';
 import { createExperienceEntry } from '../../../test/__fixtures__/composition';
@@ -38,7 +38,7 @@ describe('PreviewDeliveryRoot', () => {
   describe('when the schema version is not compatible', () => {
     let consoleWarnSpy: jest.SpyInstance;
     beforeEach(() => {
-      consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      consoleWarnSpy = jest.spyOn(debug, 'warn').mockImplementation(() => {});
     });
     afterEach(() => {
       consoleWarnSpy.mockRestore();
@@ -57,7 +57,7 @@ describe('PreviewDeliveryRoot', () => {
         entityStore,
       };
 
-      const consoleWarnSpy = jest.spyOn(console, 'warn');
+      const consoleWarnSpy = jest.spyOn(debug, 'warn');
 
       render(<PreviewDeliveryRoot locale={locale} experience={experience} />);
 
