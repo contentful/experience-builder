@@ -61,7 +61,7 @@ export class DebugLogger {
     if (!checkLocalStorageAvailability()) {
       return;
     }
-    if (this.activeLevel === 'debug') {
+    if (this.activeLevel === 'debug' || this.activeLevel === 'log') {
       localStorage.setItem(CF_DEBUG_KEY, 'true');
     } else {
       localStorage.removeItem(CF_DEBUG_KEY);
@@ -70,10 +70,10 @@ export class DebugLogger {
 
   // Log method for different levels (error, warn, log)
   private logger(level: DEBUG_LEVEL): typeof console.log {
-    const levelPriority = DEBUG_LEVELS_HIERARCHY.indexOf(level);
-    const activeLevelPriority = DEBUG_LEVELS_HIERARCHY.indexOf(this.activeLevel);
-    const enabled = levelPriority <= activeLevelPriority;
     return (...args: unknown[]) => {
+      const levelPriority = DEBUG_LEVELS_HIERARCHY.indexOf(level);
+      const activeLevelPriority = DEBUG_LEVELS_HIERARCHY.indexOf(this.activeLevel);
+      const enabled = levelPriority <= activeLevelPriority;
       if (enabled) {
         console[level](...args);
       }
