@@ -94,6 +94,7 @@ export default function Page() {
           Loading additional levels... <sup>(won't trigger on hot-reload)</sup>
         </h3>
       )}
+
       <ExperienceRoot experience={experience} locale={localeCode} />
     </>
   );
