@@ -79,7 +79,10 @@ export const parseComponentProps = ({
   const customDesignProps: Record<string, PrimitiveValue> = {};
   const contentProps: Record<string, PrimitiveValue> = {};
 
-  debug.log('Parsing component props for node with id: ', node.id);
+  debug.log(
+    '[experiences-sdk-react::parseComponentProps] Parsing component props for node with id: ',
+    node.id,
+  );
 
   for (const [propName, propDefinition] of Object.entries(componentDefinition.variables)) {
     const propertyValue = node.variables[propName];

@@ -19,7 +19,7 @@ function maybeResolveLink(maybeLink: NonNullable<unknown>): Entry | Asset | unde
 function maybeResolveLink(maybeLink: NonNullable<unknown>): Entry | Asset | undefined {
   if (!isLink(maybeLink)) {
     debug.warn(
-      'maybeResolveLink function must receive Link shape. Provided argument does not match the Link shape: ',
+      '[experiences-core::InMemoryEntitiesStore] maybeResolveLink function must receive Link shape. Provided argument does not match the Link shape: ',
       maybeLink,
     );
     return undefined;

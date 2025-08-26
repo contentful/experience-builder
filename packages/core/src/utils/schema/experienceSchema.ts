@@ -52,7 +52,7 @@ export const extractLeafLinksReferencedFromExperience = (experience: Experience)
         }
       } else {
         debug.warn(
-          `[experience-core::experienceSchema] Unexpected reference type found in entry "${entry.sys.id}": ${JSON.stringify(ref)}`,
+          `[experiences-core::experienceSchema] Unexpected reference type found in entry "${entry.sys.id}": ${JSON.stringify(ref)}`,
         );
       }
     }

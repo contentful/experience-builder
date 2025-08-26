@@ -507,7 +507,7 @@ const transformMedia = (boundAsset: Asset, width?: string, options?: BackgroundI
       options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
     );
   } catch (error) {
-    debug.error('[experience-core::ssrStyles] Error transforming image asset', error);
+    debug.error('[experiences-core::ssrStyles] Error transforming image asset', error);
   }
   return boundAsset.fields.file?.url as string;
 };
@@ -733,7 +733,7 @@ export const indexByBreakpoint = ({
 
       if (!options) {
         debug.error(
-          '[experience-core::ssrStyles] Error transforming image asset: Required variable [cfBackgroundImageOptions] missing from component definition',
+          '[experiences-core::ssrStyles] Error transforming image asset: Required variable [cfBackgroundImageOptions] missing from component definition',
         );
         continue;
       }
