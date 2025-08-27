@@ -34,7 +34,7 @@ export const ExperienceRoot = ({
   const mode = useDetectCanvasMode();
 
   if (typeof debug === 'boolean') {
-    cfDebug.setEnabled(debug);
+    cfDebug.setActiveLevel(debug ? 'debug' : 'warn');
   }
 
   //If experience is passed in as a JSON string, recreate it to an experience object
