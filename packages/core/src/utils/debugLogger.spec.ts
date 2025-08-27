@@ -1,14 +1,14 @@
 import { debug, DebugLogger } from './debugLogger';
 import { describe, it, expect, vi } from 'vitest';
 
-describe.only('debugLogger', () => {
+describe('debugLogger', () => {
   it('should not log anything if debug is not enabled', () => {
     const consoleLogSpy = vi.spyOn(console, 'log');
     debug.log('test');
     expect(consoleLogSpy).not.toHaveBeenCalled();
   });
 
-  it.only('should log if debug is enabled', () => {
+  it('should log if debug is enabled', () => {
     const consoleLogSpy = vi.spyOn(console, 'log');
     debug.setActiveLevel('debug');
     debug.log('test');
