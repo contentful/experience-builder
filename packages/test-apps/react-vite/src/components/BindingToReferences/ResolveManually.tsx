@@ -9,6 +9,7 @@ import {
   isLinkToAsset,
   isLinkToEntry,
   useInMemoryEntities,
+  inMemoryEntities,
 } from '@contentful/experiences-sdk-react';
 import { stringifyCompact } from '../../utils/debugging';
 
@@ -82,7 +83,7 @@ export default ResolveManuallyComponent;
 function resolveEntityLinksRecursively(
   roEntity: Entry | Asset | undefined,
   depth: number,
-  maybeResolveLink: (link: unknown) => Entry | Asset | undefined,
+  maybeResolveLink: (typeof inMemoryEntities)['maybeResolveLink'],
 ): Entry | Asset | undefined {
   if (depth <= 0) {
     return structuredClone(roEntity);

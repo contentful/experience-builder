@@ -10,27 +10,27 @@ describe('debugLogger', () => {
 
   it('should log if debug is enabled', () => {
     const consoleLogSpy = vi.spyOn(console, 'log');
-    debug.setEnabled(true);
+    debug.setActiveLevel('debug');
     debug.log('test');
-    expect(consoleLogSpy).toHaveBeenCalledWith('[cf-experiences-sdk]', 'test');
+    expect(consoleLogSpy).toHaveBeenCalledWith('test');
   });
 
   it('should set cf_debug in localStorage when getting enabled', () => {
     const localStorageSpy = vi.spyOn(localStorage, 'setItem');
-    debug.setEnabled(true);
+    debug.setActiveLevel('debug');
     expect(localStorageSpy).toHaveBeenCalledWith('cf_debug', 'true');
   });
 
   it('should remove cf_debug in localStorage when getting disabled', () => {
     const localStorageSpy = vi.spyOn(localStorage, 'removeItem');
-    debug.setEnabled(false);
+    debug.setActiveLevel('warn');
     expect(localStorageSpy).toHaveBeenCalledWith('cf_debug');
   });
 
   it('should get initialised to the localStorage value if localStorage present', () => {
     localStorage.setItem('cf_debug', 'true');
     const debug2 = new DebugLogger();
-    expect(debug2.getEnabled()).toBe(true);
+    expect(debug2.getActiveLevel()).toBe('debug');
   });
 
   describe('when localStorage is not available', () => {
@@ -39,8 +39,8 @@ describe('debugLogger', () => {
     });
 
     it('should still enable to logger', () => {
-      debug.setEnabled(true);
-      expect(debug.getEnabled()).toBe(true);
+      debug.setActiveLevel('debug');
+      expect(debug.getActiveLevel()).toBe('debug');
     });
   });
 });

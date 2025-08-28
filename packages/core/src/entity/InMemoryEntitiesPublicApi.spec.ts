@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { Asset, Entry } from 'contentful';
 import { inMemoryEntities, useInMemoryEntities } from './InMemoryEntitiesPublicApi';
+import { debug } from '@/utils';
 
 const _resolveEntity = vi.fn();
 const _resolveAssetById = vi.fn();
@@ -100,7 +101,7 @@ describe('inMemoryEntities.maybeResolveLink', () => {
   });
 
   it('should return undefined and log warning when passed invalid link', () => {
-    const consoleSpy = vi.spyOn(console, 'warn');
+    const consoleSpy = vi.spyOn(debug, 'warn');
     const invalidLink = { foo: 'bar' };
 
     const result = inMemoryEntities.maybeResolveLink(invalidLink);

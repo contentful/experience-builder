@@ -25,18 +25,23 @@ const checkLocalStorageAvailability = () => {
     return false;
   }
 };
+
+const DEBUG_LEVELS_HIERARCHY = ['error', 'warn', 'log', 'debug'] as const;
+type DEBUG_LEVEL = (typeof DEBUG_LEVELS_HIERARCHY)[number];
+
 export class DebugLogger {
   private static instance: DebugLogger | null = null;
-  private enabled: boolean;
+  private activeLevel: DEBUG_LEVEL = 'warn';
 
   constructor() {
     if (!checkLocalStorageAvailability()) {
-      this.enabled = false;
       return;
     }
 
     // Default to checking localStorage for the debug mode on initialization if in browser
-    this.enabled = localStorage.getItem(CF_DEBUG_KEY) === 'true';
+    if (localStorage.getItem(CF_DEBUG_KEY) === 'true') {
+      this.activeLevel = 'debug';
+    }
   }
 
   public static getInstance(): DebugLogger {
@@ -46,17 +51,17 @@ export class DebugLogger {
     return this.instance;
   }
 
-  public getEnabled() {
-    return this.enabled;
+  public getActiveLevel() {
+    return this.activeLevel;
   }
 
-  public setEnabled(enabled: boolean) {
-    this.enabled = enabled;
+  public setActiveLevel(level: DEBUG_LEVEL) {
+    this.activeLevel = level;
 
-    if (typeof localStorage === 'undefined') {
+    if (!checkLocalStorageAvailability()) {
       return;
     }
-    if (enabled) {
+    if (this.activeLevel === 'debug' || this.activeLevel === 'log') {
       localStorage.setItem(CF_DEBUG_KEY, 'true');
     } else {
       localStorage.removeItem(CF_DEBUG_KEY);
@@ -64,10 +69,13 @@ export class DebugLogger {
   }
 
   // Log method for different levels (error, warn, log)
-  private logger(level: 'error' | 'log' | 'warn' | 'debug'): typeof console.log {
-    return (...args) => {
-      if (this.enabled) {
-        console[level]('[cf-experiences-sdk]', ...args);
+  private logger(level: DEBUG_LEVEL): typeof console.log {
+    return (...args: unknown[]) => {
+      const levelPriority = DEBUG_LEVELS_HIERARCHY.indexOf(level);
+      const activeLevelPriority = DEBUG_LEVELS_HIERARCHY.indexOf(this.activeLevel);
+      const enabled = levelPriority <= activeLevelPriority;
+      if (enabled) {
+        console[level](...args);
       }
     };
   }
@@ -81,12 +89,20 @@ export class DebugLogger {
 
 export const debug = DebugLogger.getInstance();
 
+/** Set the logging level to `debug` */
 export const enableDebug = () => {
-  debug.setEnabled(true);
+  debug.setActiveLevel('debug');
   console.log('Debug mode enabled');
 };
 
+/** Set the debug level to `warn` */
 export const disableDebug = () => {
-  debug.setEnabled(false);
+  debug.setActiveLevel('warn');
   console.log('Debug mode disabled');
+};
+
+/** Set the debug level to the provided level */
+export const setDebugLevel = (level: DEBUG_LEVEL) => {
+  debug.setActiveLevel(level);
+  console.log(`Debug mode set to ${level}`);
 };

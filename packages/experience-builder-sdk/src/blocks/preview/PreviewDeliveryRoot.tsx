@@ -1,5 +1,5 @@
 import React from 'react';
-import { EntityStore } from '@contentful/experiences-core';
+import { debug, EntityStore } from '@contentful/experiences-core';
 import type { Experience } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
@@ -20,8 +20,8 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
   }
 
   if (!compatibleVersions.includes(entityStore.schemaVersion)) {
-    console.warn(
-      `[experiences-sdk-react] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
+    debug.warn(
+      `[experiences-sdk-react::PreviewDeliveryRoot] Contentful experience schema version: ${entityStore.schemaVersion} does not match the compatible schema versions: ${compatibleVersions}. Aborting.`,
     );
     return null;
   }

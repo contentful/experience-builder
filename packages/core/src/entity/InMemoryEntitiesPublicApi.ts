@@ -1,15 +1,25 @@
 import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { isLink } from '../utils/isLink';
 import { inMemoryEntitiesStore } from './InMemoryEntitiesStore';
+import { debug } from '@/utils';
 
+/**
+ * Resolves a link to its corresponding entry or asset if available.
+ *
+ * @note When using this function please ensure to explicitly handle `undefined` values in
+ * your component to protect against scenarios where the property was not yet bound to an
+ * entity inside the editor UI. The SDK will set the property to `undefined` in those cases.
+ * You can use the SDK helper functions `isLink`, `isLinkToEntry`, `isLinkToAsset`, or
+ * `isArrayOfLinks` for this purpose.
+ */
 function maybeResolveLink(maybeLink: UnresolvedLink<'Entry'>): Entry | undefined;
 function maybeResolveLink(maybeLink: UnresolvedLink<'Asset'>): Asset | undefined;
 function maybeResolveLink(maybeLink: UnresolvedLink<'Asset' | 'Entry'>): Asset | Entry | undefined;
-function maybeResolveLink(maybeLink: unknown): Entry | Asset | undefined;
-function maybeResolveLink(maybeLink: unknown): Entry | Asset | undefined {
+function maybeResolveLink(maybeLink: NonNullable<unknown>): Entry | Asset | undefined;
+function maybeResolveLink(maybeLink: NonNullable<unknown>): Entry | Asset | undefined {
   if (!isLink(maybeLink)) {
-    console.warn(
-      'maybeResolveLink function must receive Link shape. Provided argument does not match the Link shape: ',
+    debug.warn(
+      '[experiences-core::InMemoryEntitiesStore] maybeResolveLink function must receive Link shape. Provided argument does not match the Link shape: ',
       maybeLink,
     );
     return undefined;

@@ -9,7 +9,8 @@ import { CONTENTFUL_COMPONENTS } from '@contentful/experiences-core/constants';
 import { extractRenderProps } from '@/utils/extractRenderProps';
 
 export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> = (props) => {
-  const { className, editorMode, children, cfHyperlink, ...otherProps } = props;
+  // Extract hyperlink-related props to not pass them to the regular container
+  const { className, editorMode, children, cfHyperlink, cfOpenInNewTab, ...otherProps } = props;
 
   if (cfHyperlink) {
     return <ContentfulContainerAsHyperlink {...props}>{children}</ContentfulContainerAsHyperlink>;

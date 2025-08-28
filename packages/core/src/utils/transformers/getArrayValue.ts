@@ -2,6 +2,7 @@ import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../get';
 import { EntityStoreBase } from '@/entity';
 import { isArray } from 'lodash-es';
+import { debug } from '../debugLogger';
 
 const excludeUndefined = <T>(value: T | undefined): value is T => {
   return value !== undefined;
@@ -26,8 +27,8 @@ export function getArrayValue(
   );
 
   if (!isArray(arrayValue)) {
-    console.warn(
-      `A field '${fieldName}' of an entity was bound to an Array variable. Expected value of that field to be an array, but got: ${JSON.stringify(arrayValue)}`,
+    debug.warn(
+      `[experiences-core::getArrayValue] A field '${fieldName}' of an entity was bound to an Array variable. Expected value of that field to be an array, but got: ${JSON.stringify(arrayValue)}`,
       { entity: entryOrAsset },
     );
     return;
@@ -48,7 +49,9 @@ export function getArrayValue(
         }
         return resolvedEntity;
       } else {
-        console.warn(`Expected value to be a string or Link, but got: ${JSON.stringify(value)}`);
+        debug.warn(
+          `[experiences-core::getArrayValue] Expected value to be a string or Link, but got: ${JSON.stringify(value)}`,
+        );
         return undefined;
       }
     })

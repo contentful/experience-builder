@@ -9,7 +9,7 @@ import { produce } from 'immer';
 import { addChildNode, removeChildNode, replaceNode, updateNode } from '@/utils/treeHelpers';
 import { getTreeDiffs } from '@/utils/getTreeDiff';
 import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
-import { treeVisit } from '@contentful/experiences-core';
+import { debug, treeVisit } from '@contentful/experiences-core';
 import { isEqual } from 'lodash-es';
 export interface TreeStore {
   tree: ExperienceTree;
@@ -74,8 +74,8 @@ export const useTreeStore = create<TreeStore>((set, get) => ({
     // The current and updated tree are the same, no tree update required.
     // Special case: Breakpoints changed (e.g. empty experience gets reloaded or breakpoints updated)
     if (!treeDiff.length && !didBreakpointsChange) {
-      console.debug(
-        `[exp-builder.visual-editor::updateTree()]: During smart-diffing no diffs. Skipping tree update.`,
+      debug.debug(
+        `[experiences-visual-editor-react::useTreeStore]: During smart-diffing no diffs. Skipping tree update.`,
       );
       return;
     }

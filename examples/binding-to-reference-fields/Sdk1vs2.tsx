@@ -1,6 +1,6 @@
 // --- Sdk1vs2.tsx ---
 import type { Asset, UnresolvedLink } from 'contentful';
-import { inMemoryEntities } from '@contentful/experiences-sdk-react';
+import { inMemoryEntities, isLink } from '@contentful/experiences-sdk-react';
 
 type ItemWithResolvedReferences = {
   sys: {
@@ -59,7 +59,9 @@ export const ComponentUsingSdkV2: React.FC<PropsV2> = ({ item: itemWithUnresolve
 
   // Must make copy! as `item` is marked as immutable by the SDK via Object.freeze().
   const item: ItemWithManuallyResolvedReferences = structuredClone(itemWithUnresolvedReferences) as ItemWithManuallyResolvedReferences;
-  item.fields.image = inMemoryEntities.maybeResolveLink(item.fields.image) as Asset | undefined;
+  if (isLink(item.fields.image)) {
+    item.fields.image = inMemoryEntities.maybeResolveLink(item.fields.image as UnresolvedLink<'Asset'>);
+  }
 
   return (
     <div>
