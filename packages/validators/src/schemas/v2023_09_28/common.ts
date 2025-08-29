@@ -239,6 +239,7 @@ export const BreakpointSchema = z
 const BaseComponentTreeNodeSchema = z.object({
   id: ComponentTreeNodeIdSchema.optional(),
   definitionId: DefinitionPropertyKeySchema,
+  prebindingId: z.string().optional(),
   displayName: z.string().optional(),
   slotId: z.string().optional(),
   variables: z.record(propertyKeySchema, ComponentPropertyValueSchema),
