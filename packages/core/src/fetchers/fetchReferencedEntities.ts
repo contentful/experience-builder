@@ -1,7 +1,11 @@
 import { ExperienceEntry } from '@/types';
 import { ContentfulClientApi, Entry, Asset } from 'contentful';
-import { isExperienceEntry } from '@/utils';
-import { DeepReference, gatherDeepReferencesFromExperienceEntry } from '@/deep-binding';
+import { extractPrebindingDataByPatternId, isExperienceEntry } from '@/utils';
+import {
+  DeepReference,
+  gatherDeepPrebindingReferencesFromExperienceEntry,
+  gatherDeepReferencesFromExperienceEntry,
+} from '@/deep-binding';
 import { gatherAutoFetchedReferentsFromIncludes } from './gatherAutoFetchedReferentsFromIncludes';
 import { fetchAllEntries, fetchAllAssets } from './fetchAllEntities';
 
@@ -44,9 +48,6 @@ export const fetchReferencedEntities = async ({
       'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema',
     );
   }
-  const deepReferences: Array<DeepReference> = gatherDeepReferencesFromExperienceEntry(
-    experienceEntry as ExperienceEntry,
-  );
 
   const entryIds = new Set<string>();
   const assetIds = new Set<string>();
@@ -68,14 +69,37 @@ export const fetchReferencedEntities = async ({
     fetchAllAssets({ client, ids: [...assetIds], locale }),
   ]);
 
+  const usedPatterns = experienceEntry.fields.usedComponents ?? [];
+  const isRenderingExperience = Boolean(!experienceEntry.fields.componentSettings);
+
+  const deepReferences: Array<DeepReference> = gatherDeepReferencesFromExperienceEntry(
+    experienceEntry as ExperienceEntry,
+  );
+
+  const fetchedPatterns = (
+    isRenderingExperience ? usedPatterns : [...usedPatterns, experienceEntry]
+  ) as Array<ExperienceEntry>;
+  const prebindingDataByPatternId = extractPrebindingDataByPatternId(fetchedPatterns);
+
+  const deepPrebindingReferences = gatherDeepPrebindingReferencesFromExperienceEntry({
+    experienceEntry: experienceEntry as ExperienceEntry,
+    fetchedPatterns,
+    prebindingDataByPatternId,
+    fetchedLevel1Entries: entriesResponse.items,
+  });
+
+  console.log('deepPrebindingReferences', deepPrebindingReferences);
+
+  const allDeepReferences = [...deepReferences, ...deepPrebindingReferences];
+
   const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
-    gatherAutoFetchedReferentsFromIncludes(deepReferences, entriesResponse);
+    gatherAutoFetchedReferentsFromIncludes(allDeepReferences, entriesResponse);
 
   // Using client getEntries resolves all linked entry references, so we do not need to resolve entries in usedComponents
   const allResolvedEntries = [
     ...((entriesResponse?.items ?? []) as Entry[]),
     ...((entriesResponse.includes?.Entry ?? []) as Entry[]),
-    ...((experienceEntry.fields.usedComponents as ExperienceEntry[]) || []),
+    ...((usedPatterns as ExperienceEntry[]) || []),
     ...autoFetchedReferentEntries,
   ];
 
