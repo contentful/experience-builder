@@ -16,6 +16,8 @@ import {
 import { treeVisit } from '@/utils/treeTraversal';
 import { isLink } from '@/utils/isLink';
 import type { EntityFromLink, EntityStoreBase } from '@/entity';
+import { Entry } from 'contentful';
+import { getTargetPatternMappingForParameter, PrebindingData } from '@/utils';
 
 type DeepReferenceOpts = {
   path: string;
@@ -92,7 +94,7 @@ export function gatherDeepReferencesFromExperienceEntry(
     (node) => {
       if (!node.variables) return;
 
-      for (const [, variableMapping] of Object.entries(node.variables)) {
+      for (const variableMapping of Object.values(node.variables)) {
         if (variableMapping.type !== 'BoundValue') continue;
         if (!isDeepPath(variableMapping.path)) continue;
 
@@ -109,6 +111,99 @@ export function gatherDeepReferencesFromExperienceEntry(
   return deepReferences;
 }
 
+export function gatherDeepPrebindingReferencesFromExperienceEntry({
+  experienceEntry,
+  fetchedPatterns,
+  prebindingDataByPatternId,
+  fetchedLevel1Entries,
+}: {
+  experienceEntry: ExperienceEntry;
+  fetchedPatterns: Array<ExperienceEntry>;
+  prebindingDataByPatternId: Record<string, PrebindingData>;
+  fetchedLevel1Entries: Array<Entry>;
+}) {
+  // const isRenderingExperience = Boolean(!experienceEntry.fields.componentSettings);
+  const deepPrebindingReferences: Array<DeepReference> = [];
+  const dataSource = experienceEntry.fields.dataSource;
+  const { children } = experienceEntry.fields.componentTree;
+
+  treeVisit(
+    {
+      definitionId: 'root',
+      parameters: {},
+      children,
+    } as ComponentTreeNode,
+    (node) => {
+      if (!node.parameters) return;
+
+      for (const [parameterId, parameterValue] of Object.entries(node.parameters)) {
+        console.log(parameterId, parameterValue);
+
+        console.log(1);
+
+        if (isDeepPath(parameterValue.path)) {
+          console.log(2);
+          deepPrebindingReferences.push(
+            DeepReference.from({
+              path: parameterValue.path,
+              dataSource,
+            }),
+          );
+        } else {
+          console.log(3);
+          const dataSourceKey = parameterValue.path.split('/')[1];
+          const headEntryLink = dataSource[dataSourceKey];
+          if (!headEntryLink) continue;
+          if (headEntryLink.sys.linkType !== 'Entry') continue;
+          console.log(4);
+          const headEntry = fetchedLevel1Entries.find(
+            (entry) => entry.sys.id === headEntryLink.sys.id,
+          );
+          if (!headEntry) continue;
+
+          console.log(5);
+
+          const headEntryContentTypeId = headEntry.sys.contentType.sys.id;
+
+          // if experience, we don't have any hoisted data on the given experienceEntry
+          // and we have to lookup the pattern instead
+          // if (isRenderingExperience) {
+          const variableMappings = getTargetPatternMappingForParameter({
+            fetchedPatterns,
+            prebindingDataByPatternId,
+            patternNodeDefinitionId: node.definitionId,
+            parameterId,
+          });
+
+          if (!variableMappings) continue;
+          console.log(6, variableMappings);
+
+          for (const mappingData of Object.values(variableMappings)) {
+            const targetMapping = mappingData.pathsByContentType[headEntryContentTypeId];
+            if (!targetMapping || !isDeepPath(targetMapping.path)) continue;
+            console.log(7);
+
+            deepPrebindingReferences.push(
+              DeepReference.from({
+                path: targetMapping.path,
+                dataSource,
+              }),
+            );
+          }
+          // } else {
+
+          // }
+        }
+      }
+    },
+  );
+
+  return deepPrebindingReferences;
+}
+
+/**
+ * used in editor mode. for delivery mode see `gatherDeepReferencesFromExperienceEntry`
+ */
 export function gatherDeepReferencesFromTree(
   startingNode: ExperienceTreeNode,
   dataSource: ExperienceDataSource,
