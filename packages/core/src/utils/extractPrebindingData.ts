@@ -1,5 +1,6 @@
 import { ComponentTreeNode, ExperienceEntry, ParameterDefinition, VariableMapping } from '@/types';
 import { treeVisit } from './treeTraversal';
+import { isLink } from './isLink';
 
 export type PrebindingData = {
   prebindingDefinitionId: string;
@@ -16,8 +17,26 @@ export type PrebindingData = {
  */
 export const extractPrebindingDataByPatternId = (patterns: Array<ExperienceEntry>) => {
   const prebindingDataByPatternId: Record<string, PrebindingData> = {};
+  const iteratedPatternIds: Array<string> = [];
+  const queue: Array<ExperienceEntry> = [...patterns];
 
-  for (const pattern of patterns) {
+  for (const pattern of queue) {
+    if (iteratedPatternIds.includes(pattern.sys.id)) {
+      continue;
+    } else {
+      iteratedPatternIds.push(pattern.sys.id);
+    }
+
+    if (pattern.fields.usedComponents) {
+      for (const maybeFetchedNestedPattern of pattern.fields.usedComponents) {
+        if (isLink(maybeFetchedNestedPattern)) {
+          throw new Error('Nested pattern is not fully fetched');
+        } else {
+          queue.push(maybeFetchedNestedPattern);
+        }
+      }
+    }
+
     const patternId = pattern.sys.id;
     const [prebindingDefinition] = pattern.fields.componentSettings?.prebindingDefinitions ?? [];
     if (!prebindingDefinition) continue;
@@ -74,7 +93,9 @@ export function getTargetPatternMappingForParameter({
 
       console.log('f', fetchedPatterns);
 
-      const patternEntry = fetchedPatterns[patternNodeDefinitionId];
+      const patternEntry = fetchedPatterns.find(
+        (entry) => entry.sys.id === patternNodeDefinitionId,
+      );
       if (!patternEntry) return undefined;
       console.log('g');
 
