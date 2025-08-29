@@ -121,6 +121,7 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
   prebindingDataByPatternId,
   fetchedLevel1Entries,
 }: {
+  // can be an Experience or can be a Pattern
   experienceEntry: ExperienceEntry;
   fetchedPatterns: Array<ExperienceEntry>;
   prebindingDataByPatternId: Record<string, PrebindingData>;
