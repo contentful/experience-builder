@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTreeStore } from '@/store/tree';
-import styles from './RootRenderer.module.css';
 import { useBreakpoints } from '@/hooks/useBreakpoints';
 import { useEditorSubscriber } from '@/hooks/useEditorSubscriber';
 import { EditorBlock } from '@components/EditorBlock';
@@ -9,6 +8,8 @@ import { ROOT_ID } from '@/types/constants';
 import { type InMemoryEntitiesStore } from '@contentful/experiences-core';
 import type { StudioCanvasMode } from '@contentful/experiences-core/constants';
 import { useCanvasGeometryUpdates } from './useCanvasGeometryUpdates';
+
+import './RootRenderer.module.css';
 
 type RootRendererProperties = {
   inMemoryEntitiesStore: InMemoryEntitiesStore;
