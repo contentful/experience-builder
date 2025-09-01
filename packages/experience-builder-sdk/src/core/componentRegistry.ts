@@ -18,6 +18,8 @@ import {
   optionalBuiltInStyles,
   sendMessage,
   defineSdkOptions,
+  isContentfulStructureComponent,
+  debug,
 } from '@contentful/experiences-core';
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
@@ -374,6 +376,12 @@ export const defineComponents = (
   }
 
   for (const registration of componentRegistrations) {
+    if (isContentfulStructureComponent(registration.definition.id)) {
+      debug.warn(
+        `[experience-builder-sdk:defineComponents] You are registering a structure component with the reserved id '${registration.definition.id}'. This is not recommended and can lead to unexpected behaviour.`,
+      );
+    }
+
     // Fill definitions with fallbacks values
     const enrichedComponentRegistration = enrichComponentDefinition(registration);
 
