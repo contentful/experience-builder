@@ -92,10 +92,22 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   container: {
     component: Components.ContentfulContainer,
     definition: containerDefinition,
+    options: {
+      editorProperties: {
+        isEditorMode: true,
+        node: true,
+      },
+    },
   },
   section: {
     component: Components.ContentfulContainer,
     definition: sectionDefinition,
+    options: {
+      editorProperties: {
+        isEditorMode: true,
+        node: true,
+      },
+    },
   },
   columns: {
     component: Components.Columns,
@@ -104,6 +116,12 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
   singleColumn: {
     component: Components.SingleColumn,
     definition: singleColumnDefinition,
+    options: {
+      editorProperties: {
+        isEditorMode: true,
+        node: true,
+      },
+    },
   },
   button: enrichComponentDefinition({
     component: Components.Button,

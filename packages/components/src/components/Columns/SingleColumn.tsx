@@ -9,9 +9,9 @@ type SingleColumnProps = StructureComponentProps<{
 }>;
 
 export const SingleColumn: React.FC<SingleColumnProps> = (props) => {
-  const { className, editorMode } = props;
+  const { className, isEditorMode } = props;
 
-  if (!editorMode) {
+  if (!isEditorMode) {
     return <Flex className={className}>{props.children}</Flex>;
   }
 

@@ -12,8 +12,8 @@ export type ContentfulContainerAsHyperlinkProps = StructureComponentProps<{
 export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyperlinkProps> = (
   props,
 ) => {
-  const { cfHyperlink, cfOpenInNewTab, editorMode, className, children, ...otherProps } = props;
-  const eventHandlingProps = editorMode === true ? { onClick: stopEventPropagation } : {};
+  const { cfHyperlink, cfOpenInNewTab, isEditorMode, className, children, ...otherProps } = props;
+  const eventHandlingProps = isEditorMode === true ? { onClick: stopEventPropagation } : {};
   const anchorTagProps = cfOpenInNewTab
     ? {
         target: '_blank',
