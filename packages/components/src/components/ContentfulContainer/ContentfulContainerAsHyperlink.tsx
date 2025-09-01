@@ -1,7 +1,8 @@
 import React from 'react';
-import type { StructureComponentProps, StyleProps } from '@contentful/experiences-core/types';
-import { combineClasses } from '../../utils/combineClasses';
+import type { StyleProps } from '@contentful/experiences-core/types';
+import type { StructureComponentProps } from '@/types';
 import { extractRenderProps } from '@/utils/extractRenderProps';
+import { combineClasses } from '@/utils/combineClasses';
 
 export type ContentfulContainerAsHyperlinkProps = StructureComponentProps<{
   className?: string;

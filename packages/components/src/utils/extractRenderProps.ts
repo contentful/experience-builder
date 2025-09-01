@@ -1,4 +1,4 @@
-import { StructureComponentProps } from '@contentful/experiences-core/types';
+import type { StructureComponentProps } from '@/types';
 
 export function extractRenderProps<T>(props: StructureComponentProps<T>) {
   if (props.isEditorMode) {

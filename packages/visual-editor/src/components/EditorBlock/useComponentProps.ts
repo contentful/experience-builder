@@ -21,7 +21,6 @@ import type {
   ComponentRegistration,
   Link,
   DesignValue,
-  StructureComponentProps,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useEditorModeClassName } from './useEditorModeClassName';
@@ -35,10 +34,12 @@ import { useTreeStore } from '@/store/tree';
 type BaseComponentProps = Partial<StyleProps> &
   Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
-type ResolvedComponentProps = StructureComponentProps<
+type ResolvedComponentProps = React.PropsWithChildren<
   BaseComponentProps & {
     className: string;
     isInExpEditorMode?: boolean;
+    isEditorMode?: boolean;
+    node?: ExperienceTreeNode;
   }
 >;
 

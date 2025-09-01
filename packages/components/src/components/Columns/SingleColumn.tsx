@@ -1,8 +1,8 @@
-import { combineClasses } from '@/utils/combineClasses';
 import React from 'react';
 import { Flex } from '@components/Layout/Flex';
-import { StructureComponentProps } from '@contentful/experiences-core/types';
+import type { StructureComponentProps } from '@/types';
 import { extractRenderProps } from '@/utils/extractRenderProps';
+import { combineClasses } from '@/utils/combineClasses';
 
 type SingleColumnProps = StructureComponentProps<{
   className?: string;

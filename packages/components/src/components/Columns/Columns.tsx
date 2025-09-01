@@ -1,8 +1,8 @@
 import React from 'react';
-import './Columns.css';
-import { combineClasses } from '../../utils/combineClasses';
-import { StructureComponentProps } from '@contentful/experiences-core/types';
+import type { StructureComponentProps } from '@/types';
+import { combineClasses } from '@/utils/combineClasses';
 import { extractRenderProps } from '@/utils/extractRenderProps';
+import './Columns.css';
 
 type ColumnsProps = StructureComponentProps<{
   className?: string;

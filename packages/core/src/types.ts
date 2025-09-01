@@ -711,16 +711,3 @@ export type IncomingMessage = {
     payload: INCOMING_EVENT_PAYLOADS[K];
   };
 }[keyof INCOMING_EVENT_PAYLOADS];
-
-type StructuralEditorModeProps =
-  | {
-      isEditorMode: true;
-      node: ExperienceTreeNode;
-    }
-  | {
-      isEditorMode?: false;
-    };
-
-export type StructureComponentProps<OtherProps> = React.PropsWithChildren<
-  StructuralEditorModeProps & OtherProps
->;
