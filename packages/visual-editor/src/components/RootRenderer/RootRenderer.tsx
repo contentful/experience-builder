@@ -32,22 +32,20 @@ export const RootRenderer = ({ inMemoryEntitiesStore, canvasMode }: RootRenderer
 
   return (
     <>
-      <div data-ctfl-root className={styles.rootContainer}>
-        {!tree.root.children.length ? (
-          <EmptyCanvasMessage />
-        ) : (
-          tree.root.children.map((topLevelChildNode) => (
-            <EditorBlock
-              key={topLevelChildNode.data.id}
-              node={topLevelChildNode}
-              resolveDesignValue={resolveDesignValue}
-              wrappingPatternIds={wrappingPatternIds}
-              entityStore={entityStore}
-              areEntitiesFetched={areEntitiesFetched}
-            />
-          ))
-        )}
-      </div>
+      {!tree.root.children.length ? (
+        <EmptyCanvasMessage />
+      ) : (
+        tree.root.children.map((topLevelChildNode) => (
+          <EditorBlock
+            key={topLevelChildNode.data.id}
+            node={topLevelChildNode}
+            resolveDesignValue={resolveDesignValue}
+            wrappingPatternIds={wrappingPatternIds}
+            entityStore={entityStore}
+            areEntitiesFetched={areEntitiesFetched}
+          />
+        ))
+      )}
     </>
   );
 };
