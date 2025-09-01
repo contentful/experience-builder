@@ -7,6 +7,7 @@ type StructuralEditorModeProps =
     }
   | {
       isEditorMode?: false;
+      node: undefined;
     };
 
 export type StructureComponentProps<OtherProps> = React.PropsWithChildren<
