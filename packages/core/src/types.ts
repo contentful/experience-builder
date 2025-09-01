@@ -150,8 +150,22 @@ export type ComponentRegistration = {
      * If set, the specified properties are passed to the component when rendered in the editor.
      */
     editorProperties?: {
-      node?: boolean;
+      /**
+       * Enable the property `isEditorMode` which will be `true` if being rendered inside the Studio editor.
+       */
       isEditorMode?: boolean;
+      /**
+       * Enable the property `isEmpty` which will be `true` if the component has no children.
+       * This can be used to render a placeholder or label in the editor when the component is empty.
+       *
+       * @note This will be false if there are no direct children nor slot children.
+       */
+      isEmpty?: boolean;
+      /**
+       * Enable the string property `nodeBlockId` which is equal to the component ID
+       * passed during registration, i.e. `ComponentDefinition['id']`.
+       */
+      nodeBlockId?: boolean;
     };
     wrapComponent?: boolean;
     wrapContainer?: keyof JSX.IntrinsicElements;
@@ -160,6 +174,27 @@ export type ComponentRegistration = {
      * next major release v4. */
     wrapContainerWidth?: React.CSSProperties['width'];
   };
+};
+
+/**
+ * Use this for type-safe access to editor properties in your custom components
+ * @example
+ * type MyCustomProps = { myValue: string }
+ * type MyComponentProps = EditorProperties<'isEmpty'> & MyCustomProps
+ */
+export type EditorProperties<T extends EditorPropertyNames = EditorPropertyNames> = Pick<
+  BaseEditorProperties,
+  T
+>;
+
+export type EditorPropertyNames = keyof BaseEditorProperties;
+
+type BaseEditorProperties = {
+  isEditorMode?: boolean;
+  isEmpty?: boolean;
+  nodeBlockId?: string;
+  /** @deprecated will be replaced by `isEditorMode` with the next major version of the SDK */
+  isInExpEditorMode?: boolean;
 };
 
 export type ComponentRegistrationOptions = {

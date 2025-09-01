@@ -97,7 +97,8 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     options: {
       editorProperties: {
         isEditorMode: true,
-        node: true,
+        isEmpty: true,
+        nodeBlockId: true,
       },
     },
   },
@@ -107,7 +108,8 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     options: {
       editorProperties: {
         isEditorMode: true,
-        node: true,
+        isEmpty: true,
+        nodeBlockId: true,
       },
     },
   },
@@ -121,7 +123,7 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     options: {
       editorProperties: {
         isEditorMode: true,
-        node: true,
+        isEmpty: true,
       },
     },
   },

@@ -21,6 +21,7 @@ import type {
   ComponentRegistration,
   Link,
   DesignValue,
+  EditorProperties,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useEditorModeClassName } from './useEditorModeClassName';
@@ -271,6 +272,32 @@ export const useComponentProps = ({
     nodeId: node.data.id,
   });
 
+  // Allows custom components to render differently in the editor. This needs to be activated
+  // through registry options as the component has to be aware of this prop to not cause any React warnings.
+  const editorProps = useMemo(() => {
+    const editorProps: Partial<EditorProperties> = {};
+    if (options?.editorProperties?.isEditorMode) {
+      editorProps.isEditorMode = true;
+    }
+    if (options?.editorProperties?.isEmpty) {
+      editorProps.isEmpty = node.children.length === 0;
+    }
+    if (options?.editorProperties?.nodeBlockId) {
+      editorProps.nodeBlockId = node.data.blockId!;
+    }
+    if (options?.enableCustomEditorView) {
+      editorProps.isInExpEditorMode = true;
+    }
+    return editorProps;
+  }, [
+    node.children.length,
+    node.data.blockId,
+    options?.editorProperties?.isEditorMode,
+    options?.editorProperties?.isEmpty,
+    options?.editorProperties?.nodeBlockId,
+    options?.enableCustomEditorView,
+  ]);
+
   const componentProps = useMemo(() => {
     const sharedProps = {
       'data-cf-node-id': node.data.id,
@@ -281,21 +308,10 @@ export const useComponentProps = ({
 
     return {
       ...sharedProps,
-      // Allows custom components to render differently in the editor. This needs to be activated
-      // through options as the component has to be aware of this prop to not cause any React warnings.
-      ...(options?.enableCustomEditorView ? { isInExpEditorMode: true } : {}),
-      ...(options?.editorProperties?.isEditorMode ? { isEditorMode: true } : {}),
-      ...(options?.editorProperties?.node ? { node } : {}),
+      ...editorProps,
       ...sanitizeNodeProps(props),
     };
-  }, [
-    cfCsrClassName,
-    node,
-    options?.editorProperties?.isEditorMode,
-    options?.editorProperties?.node,
-    options?.enableCustomEditorView,
-    props,
-  ]);
+  }, [cfCsrClassName, editorProps, node, props]);
 
   return { componentProps };
 };

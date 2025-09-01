@@ -1,15 +1,5 @@
-import { ExperienceTreeNode } from '@contentful/experiences-core/types';
-
-type StructuralEditorModeProps =
-  | {
-      isEditorMode: true;
-      node: ExperienceTreeNode;
-    }
-  | {
-      isEditorMode?: false;
-      node: undefined;
-    };
+import { EditorProperties } from '@contentful/experiences-core/types';
 
 export type StructureComponentProps<OtherProps> = React.PropsWithChildren<
-  StructuralEditorModeProps & OtherProps
+  Partial<EditorProperties> & OtherProps
 >;

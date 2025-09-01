@@ -28,9 +28,8 @@ export const ContentfulContainer: React.FC<ContentfulContainerAsHyperlinkProps> 
   }
 
   // Extract properties that are only available in editor mode
-  const { node } = props;
-  const isEmpty = !node.children.length;
-  const isSection = node.data.blockId === CONTENTFUL_COMPONENTS.section.id;
+  const { isEmpty, nodeBlockId } = props;
+  const isSection = nodeBlockId === CONTENTFUL_COMPONENTS.section.id;
 
   return (
     <Flex
