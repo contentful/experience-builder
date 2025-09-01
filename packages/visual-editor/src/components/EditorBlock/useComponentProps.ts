@@ -3,7 +3,6 @@ import {
   buildCfStyles,
   calculateNodeDefaultHeight,
   isLinkToAsset,
-  isContentfulStructureComponent,
   transformBoundContentValue,
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
@@ -22,7 +21,6 @@ import type {
   ComponentRegistration,
   Link,
   DesignValue,
-  StructureComponentProps,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useEditorModeClassName } from './useEditorModeClassName';
@@ -36,10 +34,12 @@ import { useTreeStore } from '@/store/tree';
 type BaseComponentProps = Partial<StyleProps> &
   Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
-type ResolvedComponentProps = StructureComponentProps<
+type ResolvedComponentProps = React.PropsWithChildren<
   BaseComponentProps & {
     className: string;
     isInExpEditorMode?: boolean;
+    isEditorMode?: boolean;
+    node?: ExperienceTreeNode;
   }
 >;
 
@@ -48,7 +48,7 @@ type UseComponentProps = {
   entityStore: EntityStoreBase;
   areEntitiesFetched: boolean;
   resolveDesignValue: ResolveDesignValueType;
-  definition?: ComponentRegistration['definition'];
+  definition: ComponentRegistration['definition'];
   options?: ComponentRegistration['options'];
   slotId?: string;
 };
@@ -279,24 +279,23 @@ export const useComponentProps = ({
       className: (props.cfSsrClassName as string | undefined) ?? cfCsrClassName,
     };
 
-    // Only pass `editorMode` and `node` to structure components and assembly root nodes.
-    const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
-    if (isStructureComponent) {
-      return {
-        ...sharedProps,
-        editorMode: true as const,
-        node,
-      };
-    }
-
     return {
       ...sharedProps,
       // Allows custom components to render differently in the editor. This needs to be activated
       // through options as the component has to be aware of this prop to not cause any React warnings.
       ...(options?.enableCustomEditorView ? { isInExpEditorMode: true } : {}),
+      ...(options?.editorProperties?.isEditorMode ? { isEditorMode: true } : {}),
+      ...(options?.editorProperties?.node ? { node } : {}),
       ...sanitizeNodeProps(props),
     };
-  }, [cfCsrClassName, node, options?.enableCustomEditorView, props]);
+  }, [
+    cfCsrClassName,
+    node,
+    options?.editorProperties?.isEditorMode,
+    options?.editorProperties?.node,
+    options?.enableCustomEditorView,
+    props,
+  ]);
 
   return { componentProps };
 };

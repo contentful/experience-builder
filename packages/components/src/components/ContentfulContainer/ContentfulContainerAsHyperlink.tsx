@@ -1,7 +1,8 @@
 import React from 'react';
-import type { StructureComponentProps, StyleProps } from '@contentful/experiences-core/types';
-import { combineClasses } from '../../utils/combineClasses';
+import type { StyleProps } from '@contentful/experiences-core/types';
+import type { StructureComponentProps } from '@/types';
 import { extractRenderProps } from '@/utils/extractRenderProps';
+import { combineClasses } from '@/utils/combineClasses';
 
 export type ContentfulContainerAsHyperlinkProps = StructureComponentProps<{
   className?: string;
@@ -12,8 +13,8 @@ export type ContentfulContainerAsHyperlinkProps = StructureComponentProps<{
 export const ContentfulContainerAsHyperlink: React.FC<ContentfulContainerAsHyperlinkProps> = (
   props,
 ) => {
-  const { cfHyperlink, cfOpenInNewTab, editorMode, className, children, ...otherProps } = props;
-  const eventHandlingProps = editorMode === true ? { onClick: stopEventPropagation } : {};
+  const { cfHyperlink, cfOpenInNewTab, isEditorMode, className, children, ...otherProps } = props;
+  const eventHandlingProps = isEditorMode === true ? { onClick: stopEventPropagation } : {};
   const anchorTagProps = cfOpenInNewTab
     ? {
         target: '_blank',

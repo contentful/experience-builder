@@ -10,21 +10,17 @@ import {
   transformBoundContentValue,
   splitDirectAndSlotChildren,
 } from '@contentful/experiences-core';
-import {
-  CONTENTFUL_COMPONENTS,
-  HYPERLINK_DEFAULT_PATTERN,
-} from '@contentful/experiences-core/constants';
+import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 import type {
   ComponentTreeNode,
   DesignValue,
   Parameter,
   PrimitiveValue,
   ResolveDesignValueType,
-  StyleProps,
 } from '@contentful/experiences-core/types';
 import { createAssemblyRegistration, getComponentRegistration } from '../../core/componentRegistry';
 import { useInjectStylesheet } from '../../hooks/useInjectStylesheet';
-import { Assembly, ContentfulContainer } from '@contentful/experiences-components-react';
+import { Assembly } from '@contentful/experiences-components-react';
 import { resolvePattern } from '../../core/preview/assemblyUtils';
 import { resolveMaybePrebindingDefaultValuePath } from '../../utils/prebindingUtils';
 import { parseComponentProps } from '../../utils/parseComponentProps';
@@ -118,7 +114,7 @@ export const CompositionBlock = ({
     return registration;
   }, [isPatternNode, node.definitionId]);
 
-  const { ssrProps, contentProps, props, mediaQuery } = useMemo(() => {
+  const { ssrProps, props, mediaQuery } = useMemo(() => {
     // In SSR, we store the className under breakpoints[0] which is resolved here to the actual string
     const cfSsrClassNameValues = node.variables.cfSsrClassName as DesignValue | undefined;
     const mainBreakpoint = entityStore.breakpoints[0];
@@ -290,18 +286,6 @@ export const CompositionBlock = ({
 
   const renderedChildren = directChildNodes?.map(renderChildNode);
 
-  // TODO: we might be able to remove this special case as well by not dropping the two props in the sanitizeNodeProps function
-  if (isContainerOrSection(node.definitionId)) {
-    return (
-      <ContentfulContainer
-        cfHyperlink={(contentProps as StyleProps).cfHyperlink}
-        cfOpenInNewTab={(contentProps as StyleProps).cfOpenInNewTab}
-        className={props.className as string | undefined}>
-        {renderedChildren}
-      </ContentfulContainer>
-    );
-  }
-
   return React.createElement(
     component,
     {
@@ -311,10 +295,3 @@ export const CompositionBlock = ({
     renderedChildren,
   );
 };
-
-const isContainerOrSection = (
-  nodeDefinitionId: string,
-): nodeDefinitionId is 'contentful-container' | 'contentful-section' =>
-  [CONTENTFUL_COMPONENTS.container.id, CONTENTFUL_COMPONENTS.section.id].includes(
-    nodeDefinitionId as 'contentful-container' | 'contentful-section',
-  );
