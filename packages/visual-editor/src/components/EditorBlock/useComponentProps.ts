@@ -276,13 +276,13 @@ export const useComponentProps = ({
   // through registry options as the component has to be aware of this prop to not cause any React warnings.
   const editorProps = useMemo(() => {
     const editorProps: Partial<EditorProperties> = {};
-    if (options?.editorProperties?.isEditorMode) {
+    if (options?.enableEditorProperties?.isEditorMode) {
       editorProps.isEditorMode = true;
     }
-    if (options?.editorProperties?.isEmpty) {
+    if (options?.enableEditorProperties?.isEmpty) {
       editorProps.isEmpty = node.children.length === 0;
     }
-    if (options?.editorProperties?.nodeBlockId) {
+    if (options?.enableEditorProperties?.nodeBlockId) {
       editorProps.nodeBlockId = node.data.blockId!;
     }
     if (options?.enableCustomEditorView) {
@@ -292,9 +292,9 @@ export const useComponentProps = ({
   }, [
     node.children.length,
     node.data.blockId,
-    options?.editorProperties?.isEditorMode,
-    options?.editorProperties?.isEmpty,
-    options?.editorProperties?.nodeBlockId,
+    options?.enableEditorProperties?.isEditorMode,
+    options?.enableEditorProperties?.isEmpty,
+    options?.enableEditorProperties?.nodeBlockId,
     options?.enableCustomEditorView,
   ]);
 

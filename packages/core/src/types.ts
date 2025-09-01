@@ -143,13 +143,13 @@ export type ComponentRegistration = {
      * If true, the component receives the optional boolean property `isInExpEditorMode` to
      * render different content between editor and delivery mode.
      *
-     * @deprecated this will be replaced by editorProperties in the next major version
+     * @deprecated this will be replaced by enableEditorProperties in the next major version
      */
     enableCustomEditorView?: boolean;
     /**
      * If set, the specified properties are passed to the component when rendered in the editor.
      */
-    editorProperties?: {
+    enableEditorProperties?: {
       /**
        * Enable the property `isEditorMode` which will be `true` if being rendered inside the Studio editor.
        */
