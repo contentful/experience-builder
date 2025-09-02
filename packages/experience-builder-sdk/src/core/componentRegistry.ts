@@ -20,6 +20,7 @@ import {
   defineSdkOptions,
   isContentfulStructureComponent,
   debug,
+  isContentfulComponent,
 } from '@contentful/experiences-core';
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
@@ -378,6 +379,31 @@ export const defineComponents = (
   }
 
   for (const registration of componentRegistrations) {
+    if (isContentfulComponent(registration.definition.id)) {
+      const overwriteVersion = registration.definition.componentVersion;
+      const originalDefinition = componentRegistry.get(registration.definition.id)?.definition;
+      const originalVersion = originalDefinition?.componentVersion;
+      if (originalVersion && overwriteVersion && overwriteVersion !== originalVersion) {
+        debug.warn(
+          `[experience-builder-sdk:defineComponents] You are registering a ` +
+            `component with the reserved id '${registration.definition.id}' using a ` +
+            `component version '${overwriteVersion}' that does not match the latest ` +
+            `component version '${originalVersion}'. To avoid unexpected behavior, ` +
+            `check out the source code of the latest component version and integrate ` +
+            `any changes into your custom implementation.`,
+        );
+      } else if (originalVersion && !overwriteVersion) {
+        debug.warn(
+          `[experience-builder-sdk:defineComponents] You are registering a ` +
+            `component with the reserved id '${registration.definition.id}' without ` +
+            `providing a component version. Please define 'componentVersion' to ` +
+            `match the one of the latest definition. This is recommended to track ` +
+            `changes of the original implementation and backport those to your ` +
+            `custom implementation.`,
+        );
+      }
+    }
+
     if (isContentfulStructureComponent(registration.definition.id)) {
       debug.warn(
         `[experience-builder-sdk:defineComponents] You are registering a structure component with the reserved id '${registration.definition.id}'. This is not recommended and can lead to unexpected behaviour.`,

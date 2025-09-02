@@ -12,6 +12,7 @@ export { Columns, SingleColumn };
 export const columnsDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.columns.id,
   name: CONTENTFUL_COMPONENTS.columns.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: columnsBuiltInStyles,
@@ -24,6 +25,7 @@ export const columnsDefinition: ComponentDefinition = {
 export const singleColumnDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.singleColumn.id,
   name: CONTENTFUL_COMPONENTS.singleColumn.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: singleColumnBuiltInStyles,

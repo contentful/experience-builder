@@ -9,6 +9,7 @@ export * from './Button';
 export const ButtonComponentDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.button.id,
   name: CONTENTFUL_COMPONENTS.button.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: [
     'cfMargin',

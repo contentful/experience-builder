@@ -9,6 +9,7 @@ export * from './Heading';
 export const HeadingComponentDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.heading.id,
   name: CONTENTFUL_COMPONENTS.heading.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: [
     'cfMargin',

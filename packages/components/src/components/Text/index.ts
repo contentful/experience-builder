@@ -9,6 +9,7 @@ export * from './Text';
 export const TextComponentDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.text.id,
   name: CONTENTFUL_COMPONENTS.text.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: [
     'cfMargin',
