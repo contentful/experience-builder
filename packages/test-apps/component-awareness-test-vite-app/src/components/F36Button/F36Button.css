@@ -1,0 +1,31 @@
+.f36-button--white {
+  background: #ffffff !important; /* white */
+  color: #0C141C !important; /* black token */
+  border: 1px solid #CFD9E0 !important; /* gray300 */
+}
+
+.f36-button--white:hover:not([disabled]) {
+  background: #F7F9FA !important; /* gray100 */
+  color: #0C141C !important;
+  border-color: #CFD9E0 !important;
+}
+
+.f36-button--white:active:not([disabled]) {
+  background: #E7EBEE !important; /* gray200 */
+}
+
+.f36-button--white[disabled],
+.f36-button--white[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Circle variant */
+.f36-button--circle {
+  border-radius: 50% !important;
+  padding: 0 !important;
+  aspect-ratio: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

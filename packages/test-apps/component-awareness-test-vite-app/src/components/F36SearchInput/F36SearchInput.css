@@ -1,0 +1,39 @@
+.f36-search-input-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
+.f36-search-input-element {
+  width: 100%;
+  padding-left: 2.125rem;
+  /* space for left icon */
+}
+
+.f36-search-input-wrapper.has-right-icon .f36-search-input-element {
+  padding-right: 2.125rem;
+  /* space for right icon */
+}
+
+.f36-search-input-icon {
+  position: absolute;
+  z-index: 1;
+
+  right: 10px;
+  /* display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; */
+}
+
+/* Size adjustments aligning with F36 sizing scale */
+.f36-search-input-wrapper[data-size='small'] .f36-search-input-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.f36-search-input-wrapper[data-size='medium'] .f36-search-input-icon svg {
+  width: 16px;
+  height: 16px;
+}
