@@ -29,3 +29,11 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Remove internal spacing completely */
+.f36-button--no-padding {
+  padding: 0 !important;
+  min-height: auto !important;
+  height: auto !important;
+  line-height: 1 !important;
+}

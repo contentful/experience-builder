@@ -11,28 +11,32 @@ interface F36ButtonProps {
   href?: string;
   children?: React.ReactNode;
   isCircular?: boolean;
+  noInnerPadding?: boolean;
 }
 
 export const F36Button: React.FC<F36ButtonProps> = ({
   text,
   variant = 'primary',
-  size = 'medium',
+  size = 'small',
   isDisabled = false,
   isFullWidth = false,
   href,
   children,
   isCircular = false,
+  noInnerPadding = false,
   ...rest
 }) => {
   const isCustomWhite = variant === 'white';
   const buttonVariant = isCustomWhite ? 'secondary' : variant; // map to a supported base variant
 
-  const className = [
-    isCustomWhite ? 'f36-button--white' : null,
-    isCircular ? 'f36-button--circle' : null,
-  ]
-    .filter(Boolean)
-    .join(' ') || undefined;
+  const className =
+    [
+      isCustomWhite ? 'f36-button--white' : null,
+      isCircular ? 'f36-button--circle' : null,
+      noInnerPadding ? 'f36-button--no-padding' : null,
+    ]
+      .filter(Boolean)
+      .join(' ') || undefined;
 
   const buttonProps = {
     variant: buttonVariant as 'primary' | 'secondary' | 'positive' | 'negative' | 'transparent',
@@ -44,7 +48,10 @@ export const F36Button: React.FC<F36ButtonProps> = ({
   };
 
   const baseContent = children ?? text;
-  const content = isCircular && !children && typeof baseContent === 'string' ? baseContent.charAt(0) : baseContent;
+  const content =
+    isCircular && !children && typeof baseContent === 'string'
+      ? baseContent.charAt(0)
+      : baseContent;
 
   if (href) {
     return (

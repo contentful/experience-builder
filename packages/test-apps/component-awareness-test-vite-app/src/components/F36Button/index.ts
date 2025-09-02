@@ -37,7 +37,7 @@ export const f36ButtonDefinition: ComponentDefinition = {
     size: {
       displayName: 'Size',
       type: 'Text',
-      defaultValue: 'medium',
+      defaultValue: 'small',
       group: 'style',
       description: 'The size of the button',
       validations: {
@@ -68,6 +68,13 @@ export const f36ButtonDefinition: ComponentDefinition = {
       defaultValue: false,
       group: 'style',
       description: 'Render as a circular button (best with an icon child)',
+    },
+    noInnerPadding: {
+      displayName: 'No Inner Padding',
+      type: 'Boolean',
+      defaultValue: false,
+      group: 'style',
+      description: 'Remove the default F36 Button internal padding & min-height',
     },
     href: {
       displayName: 'Link URL',
