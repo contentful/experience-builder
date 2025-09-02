@@ -15,8 +15,7 @@ export const SingleColumn: React.FC<SingleColumnProps> = (props) => {
     return <Flex className={className}>{props.children}</Flex>;
   }
 
-  const { node, children } = props;
-  const isEmpty = !node.children.length;
+  const { isEmpty, children } = props;
   const mixedClassName = combineClasses(
     'cf-single-column-wrapper',
     className,

@@ -95,9 +95,10 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     component: Components.ContentfulContainer,
     definition: containerDefinition,
     options: {
-      editorProperties: {
+      enableEditorProperties: {
         isEditorMode: true,
-        node: true,
+        isEmpty: true,
+        nodeBlockId: true,
       },
     },
   },
@@ -105,9 +106,10 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     component: Components.ContentfulContainer,
     definition: sectionDefinition,
     options: {
-      editorProperties: {
+      enableEditorProperties: {
         isEditorMode: true,
-        node: true,
+        isEmpty: true,
+        nodeBlockId: true,
       },
     },
   },
@@ -119,9 +121,9 @@ const DEFAULT_COMPONENT_REGISTRATIONS = {
     component: Components.SingleColumn,
     definition: singleColumnDefinition,
     options: {
-      editorProperties: {
+      enableEditorProperties: {
         isEditorMode: true,
-        node: true,
+        isEmpty: true,
       },
     },
   },

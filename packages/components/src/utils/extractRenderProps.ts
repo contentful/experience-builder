@@ -1,7 +1,8 @@
 import type { StructureComponentProps } from '@/types';
+import { EditorPropertyNames } from '@contentful/experiences-core/types';
 
-export function extractRenderProps<T>(props: T): Omit<T, 'node' | 'isEditorMode' | 'children'> {
-  const { isEditorMode, node, children, ...renderProps } =
+export function extractRenderProps<T>(props: T): Omit<T, EditorPropertyNames> {
+  const { isEditorMode, isEmpty, nodeBlockId, children, ...renderProps } =
     props as StructureComponentProps<unknown>;
-  return renderProps as Omit<T, 'node' | 'isEditorMode' | 'children'>;
+  return renderProps as Omit<T, EditorPropertyNames>;
 }
