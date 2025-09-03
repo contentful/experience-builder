@@ -15,7 +15,7 @@ interface F36ButtonProps {
 }
 
 export const F36Button: React.FC<F36ButtonProps> = ({
-  text,
+  text = 'click me',
   variant = 'primary',
   size = 'small',
   isDisabled = false,
