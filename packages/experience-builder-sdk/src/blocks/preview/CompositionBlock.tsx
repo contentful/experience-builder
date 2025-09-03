@@ -9,6 +9,7 @@ import {
   sanitizeNodeProps,
   transformBoundContentValue,
   splitDirectAndSlotChildren,
+  getSdkOptions,
 } from '@contentful/experiences-core';
 import {
   CONTENTFUL_COMPONENTS,
@@ -290,8 +291,14 @@ export const CompositionBlock = ({
 
   const renderedChildren = directChildNodes?.map(renderChildNode);
 
+  const sdkOptions = getSdkOptions();
+
   // TODO: we might be able to remove this special case as well by not dropping the two props in the sanitizeNodeProps function
-  if (isContainerOrSection(node.definitionId)) {
+  // We allow custom container rendering through a new sdk option (not introducing a breaking change for existing customers).
+  if (
+    isContainerOrSection(node.definitionId) &&
+    !sdkOptions.__unsafe__enableBuiltInStructureOverwrites
+  ) {
     return (
       <ContentfulContainer
         cfHyperlink={(contentProps as StyleProps).cfHyperlink}
@@ -308,7 +315,8 @@ export const CompositionBlock = ({
       ...sanitizeNodeProps(props),
       ...renderedSlotNodesMap,
     },
-    renderedChildren,
+    // If there are no children, a custom property called `children` can be passed through to the custom component
+    ...(renderedChildren ?? []),
   );
 };
 

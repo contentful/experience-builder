@@ -217,6 +217,14 @@ export type ComponentRegistrationOptions = {
    * @deprecated This is a temporary solution and will be removed in a future major version.
    */
   __disableTextAlignmentTransform?: boolean;
+  /**
+   * If you need to adjust the built-in structural components (e.g. `container`),
+   * enable this flag. It is marked as *unsafe* since the logic of those components
+   * might evolve in future versions. By overwriting their implementation, you accept
+   * the risk of potential breaking changes and running out of sync with the original
+   * implementation.
+   */
+  __unsafe__enableBuiltInStructureOverwrites?: boolean;
 };
 
 export type Binding = {
@@ -424,6 +432,7 @@ export type DesignTokensDefinition = {
 
 export type SdkOptions = {
   __disableTextAlignmentTransform?: ComponentRegistrationOptions['__disableTextAlignmentTransform'];
+  __unsafe__enableBuiltInStructureOverwrites?: ComponentRegistrationOptions['__unsafe__enableBuiltInStructureOverwrites'];
 };
 
 /** Type of experience entry JSON data structure as returned by CPA/CDA */

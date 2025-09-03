@@ -18,8 +18,8 @@ import {
   optionalBuiltInStyles,
   sendMessage,
   defineSdkOptions,
-  isContentfulStructureComponent,
   debug,
+  isContentfulStructureComponent,
 } from '@contentful/experiences-core';
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
@@ -371,16 +371,22 @@ export const defineComponents = (
     }
   }
 
-  if (options?.__disableTextAlignmentTransform) {
-    defineSdkOptions({
-      __disableTextAlignmentTransform: true,
-    });
-  }
+  defineSdkOptions({
+    __disableTextAlignmentTransform: !!options?.__disableTextAlignmentTransform,
+    __unsafe__enableBuiltInStructureOverwrites:
+      !!options?.__unsafe__enableBuiltInStructureOverwrites,
+  });
 
   for (const registration of componentRegistrations) {
-    if (isContentfulStructureComponent(registration.definition.id)) {
+    if (
+      isContentfulStructureComponent(registration.definition.id) &&
+      !options?.__unsafe__enableBuiltInStructureOverwrites
+    ) {
       debug.warn(
-        `[experience-builder-sdk:defineComponents] You are registering a structure component with the reserved id '${registration.definition.id}'. This is not recommended and can lead to unexpected behaviour.`,
+        `[experience-builder-sdk:defineComponents] You are registering a ` +
+          `structure component with the reserved id '${registration.definition.id}'. This is not recommended ` +
+          `and can lead to unexpected behavior. If you still want to register it, please provide the registry option ` +
+          `'__unsafe__enableBuiltInStructureOverwrites' to fully enable built-in structure overwrites.`,
       );
     }
 
