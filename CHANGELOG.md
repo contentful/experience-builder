@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.0](https://github.com/contentful/experience-builder/compare/v3.4.0...v3.5.0) (2025-09-03)
+
+### Features
+
+- replace node editorProp with isEmpty and nodeBlocKId ([25110d5](https://github.com/contentful/experience-builder/commit/25110d5d330e758db481e7b8ef8ebc8c0ee374df))
+- support prebidingId in componentTree node schema ([c27a8fb](https://github.com/contentful/experience-builder/commit/c27a8fb42a1c840dce03b153fcca55bb6187702a))
+
+### Bug Fixes
+
+- add warning for overwriting built-in structures ([fad11f0](https://github.com/contentful/experience-builder/commit/fad11f06687c251d71fe024e35ee00586306e526))
+- adjust call to debugLogger with active level ([68824b9](https://github.com/contentful/experience-builder/commit/68824b9914cabe916812e4968b32dea4024fb462))
+- adjust extractRenderProps for new isEditorMode ([23beedb](https://github.com/contentful/experience-builder/commit/23beedb6f13d2047839a9c0fd710ea3bb47b3680))
+- dont enforce ContentfulContainer in preview mode ([1549968](https://github.com/contentful/experience-builder/commit/15499686191c56e6bfeef151a79290a45680b5cf))
+- dont render node on hyperlink container ([717d827](https://github.com/contentful/experience-builder/commit/717d8279849734ae4d24a59140748208f42947f6))
+- improve resolver types and streamline logging shape ([39db821](https://github.com/contentful/experience-builder/commit/39db8214423759759e7a67e1571c6c4f5ff64ab4))
+- introduce new registry options to remove special casing for structures ([08c86d0](https://github.com/contentful/experience-builder/commit/08c86d0a6697765c23b303eada3778baba0ecf25))
+- remove the wrapping root div for editor mode ([9be1c4a](https://github.com/contentful/experience-builder/commit/9be1c4a9681725befdc16b3dba165d68f8554f96))
+- rerun npm install in demo project to make it build ([a49c1bb](https://github.com/contentful/experience-builder/commit/a49c1bbcf7e72c47cb51871ea9ceaff781d7e3e1))
+- revert rendering of custom containers and sections in preview mode ([5de0677](https://github.com/contentful/experience-builder/commit/5de0677e81036b1aca5cb9b708a25e6f2bd79050))
+
 ## [3.4.0](https://github.com/contentful/experience-builder/compare/v3.3.0...v3.4.0) (2025-08-25)
 
 ### Features

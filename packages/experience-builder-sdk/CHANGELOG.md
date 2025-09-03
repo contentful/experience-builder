@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.0](https://github.com/contentful/experience-builder/compare/v3.4.0...v3.5.0) (2025-09-03)
+
+### Features
+
+- replace node editorProp with isEmpty and nodeBlocKId ([25110d5](https://github.com/contentful/experience-builder/commit/25110d5d330e758db481e7b8ef8ebc8c0ee374df))
+
+### Bug Fixes
+
+- add warning for overwriting built-in structures ([fad11f0](https://github.com/contentful/experience-builder/commit/fad11f06687c251d71fe024e35ee00586306e526))
+- adjust call to debugLogger with active level ([68824b9](https://github.com/contentful/experience-builder/commit/68824b9914cabe916812e4968b32dea4024fb462))
+- dont enforce ContentfulContainer in preview mode ([1549968](https://github.com/contentful/experience-builder/commit/15499686191c56e6bfeef151a79290a45680b5cf))
+- improve resolver types and streamline logging shape ([39db821](https://github.com/contentful/experience-builder/commit/39db8214423759759e7a67e1571c6c4f5ff64ab4))
+- introduce new registry options to remove special casing for structures ([08c86d0](https://github.com/contentful/experience-builder/commit/08c86d0a6697765c23b303eada3778baba0ecf25))
+- revert rendering of custom containers and sections in preview mode ([5de0677](https://github.com/contentful/experience-builder/commit/5de0677e81036b1aca5cb9b708a25e6f2bd79050))
+
 ## [3.4.0](https://github.com/contentful/experience-builder/compare/v3.3.0...v3.4.0) (2025-08-25)
 
 ### Features

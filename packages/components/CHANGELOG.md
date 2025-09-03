@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.0](https://github.com/contentful/experience-builder/compare/v3.4.0...v3.5.0) (2025-09-03)
+
+### Features
+
+- replace node editorProp with isEmpty and nodeBlocKId ([25110d5](https://github.com/contentful/experience-builder/commit/25110d5d330e758db481e7b8ef8ebc8c0ee374df))
+
+### Bug Fixes
+
+- adjust extractRenderProps for new isEditorMode ([23beedb](https://github.com/contentful/experience-builder/commit/23beedb6f13d2047839a9c0fd710ea3bb47b3680))
+- dont render node on hyperlink container ([717d827](https://github.com/contentful/experience-builder/commit/717d8279849734ae4d24a59140748208f42947f6))
+- introduce new registry options to remove special casing for structures ([08c86d0](https://github.com/contentful/experience-builder/commit/08c86d0a6697765c23b303eada3778baba0ecf25))
+
 ## [3.4.0](https://github.com/contentful/experience-builder/compare/v3.3.0...v3.4.0) (2025-08-25)
 
 **Note:** Version bump only for package @contentful/experiences-components-react

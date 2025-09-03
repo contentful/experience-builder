@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.0](https://github.com/contentful/experience-builder/compare/v3.4.0...v3.5.0) (2025-09-03)
+
+### Features
+
+- replace node editorProp with isEmpty and nodeBlocKId ([25110d5](https://github.com/contentful/experience-builder/commit/25110d5d330e758db481e7b8ef8ebc8c0ee374df))
+
+### Bug Fixes
+
+- improve resolver types and streamline logging shape ([39db821](https://github.com/contentful/experience-builder/commit/39db8214423759759e7a67e1571c6c4f5ff64ab4))
+- introduce new registry options to remove special casing for structures ([08c86d0](https://github.com/contentful/experience-builder/commit/08c86d0a6697765c23b303eada3778baba0ecf25))
+- remove the wrapping root div for editor mode ([9be1c4a](https://github.com/contentful/experience-builder/commit/9be1c4a9681725befdc16b3dba165d68f8554f96))
+
 ## [3.4.0](https://github.com/contentful/experience-builder/compare/v3.3.0...v3.4.0) (2025-08-25)
 
 ### Features

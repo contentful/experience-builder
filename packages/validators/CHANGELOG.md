@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.0](https://github.com/contentful/experience-builder/compare/v3.4.0...v3.5.0) (2025-09-03)
+
+### Features
+
+- support prebidingId in componentTree node schema ([c27a8fb](https://github.com/contentful/experience-builder/commit/c27a8fb42a1c840dce03b153fcca55bb6187702a))
+
 ## [3.4.0](https://github.com/contentful/experience-builder/compare/v3.3.0...v3.4.0) (2025-08-25)
 
 **Note:** Version bump only for package @contentful/experiences-validators
