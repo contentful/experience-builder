@@ -252,6 +252,7 @@ export type ExperienceTreeNode = {
     unboundValues: ExperienceUnboundValues;
     breakpoints: Breakpoint[];
     parameters?: Record<string, Parameter>;
+    prebindingId?: string;
     pattern?: {
       id: string;
       nodeId: string;
