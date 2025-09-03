@@ -1,22 +1,21 @@
-import { combineClasses } from '@/utils/combineClasses';
 import React from 'react';
 import { Flex } from '@components/Layout/Flex';
-import { StructureComponentProps } from '@contentful/experiences-core/types';
+import type { StructureComponentProps } from '@/types';
 import { extractRenderProps } from '@/utils/extractRenderProps';
+import { combineClasses } from '@/utils/combineClasses';
 
 type SingleColumnProps = StructureComponentProps<{
   className?: string;
 }>;
 
 export const SingleColumn: React.FC<SingleColumnProps> = (props) => {
-  const { className, editorMode } = props;
+  const { className, isEditorMode } = props;
 
-  if (!editorMode) {
+  if (!isEditorMode) {
     return <Flex className={className}>{props.children}</Flex>;
   }
 
-  const { node, children } = props;
-  const isEmpty = !node.children.length;
+  const { isEmpty, children } = props;
   const mixedClassName = combineClasses(
     'cf-single-column-wrapper',
     className,

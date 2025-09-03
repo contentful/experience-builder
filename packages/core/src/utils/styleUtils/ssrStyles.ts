@@ -19,6 +19,7 @@ import {
   toMediaQuery,
   transformVisibility,
   mergeDesignValuesByBreakpoint,
+  debug,
 } from '@/utils';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
@@ -506,7 +507,7 @@ const transformMedia = (boundAsset: Asset, width?: string, options?: BackgroundI
       options.format as (typeof SUPPORTED_IMAGE_FORMATS)[number],
     );
   } catch (error) {
-    console.error('Error transforming image asset', error);
+    debug.error('[experiences-core::ssrStyles] Error transforming image asset', error);
   }
   return boundAsset.fields.file?.url as string;
 };
@@ -731,8 +732,8 @@ export const indexByBreakpoint = ({
       }) as BackgroundImageOptions;
 
       if (!options) {
-        console.error(
-          `Error transforming image asset: Required variable [cfBackgroundImageOptions] missing from component definition`,
+        debug.error(
+          '[experiences-core::ssrStyles] Error transforming image asset: Required variable [cfBackgroundImageOptions] missing from component definition',
         );
         continue;
       }

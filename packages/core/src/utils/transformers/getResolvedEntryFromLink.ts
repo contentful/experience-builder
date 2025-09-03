@@ -2,6 +2,7 @@ import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../get';
 import { EntityStoreBase } from '@/entity';
 import { isAsset, isEntry } from '../typeguards';
+import { debug } from '../debugLogger';
 
 export function getResolvedEntryFromLink(
   entryOrAsset: Entry | Asset,
@@ -26,8 +27,8 @@ export function getResolvedEntryFromLink(
     // Look up the reference in the entity store
     resolvedEntity = entityStore.getEntityFromLink(value);
   } else {
-    console.warn(
-      `When attempting to follow link in field '${fieldName}' of entity, the value is expected to be a link, but got: ${JSON.stringify(value)}`,
+    debug.warn(
+      `[experiences-core::getResolvedEntryFromLink] When attempting to follow link in field '${fieldName}' of entity, the value is expected to be a link, but got: ${JSON.stringify(value)}`,
       { entity: entryOrAsset },
     );
     return;

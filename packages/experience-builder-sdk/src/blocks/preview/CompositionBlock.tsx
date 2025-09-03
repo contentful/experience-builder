@@ -261,13 +261,13 @@ export const CompositionBlock = ({
     componentRegistration.definition,
   );
 
-  const renderChildNode = (childNode: ComponentTreeNode) => (
+  const renderChildNode = (childNode: ComponentTreeNode, index: number) => (
     <CompositionBlock
       getPatternChildNodeClassName={
         isPatternNode || getPatternChildNodeClassName ? _getPatternChildNodeClassName : undefined
       }
       node={childNode}
-      key={childNode.id}
+      key={childNode.id ?? index}
       locale={locale}
       hyperlinkPattern={hyperlinkPattern}
       entityStore={entityStore}
@@ -281,14 +281,14 @@ export const CompositionBlock = ({
   const renderedSlotNodesMap = Object.entries(slotNodesMap).reduce(
     (acc, [slotId, nodes]) => {
       if (nodes?.length) {
-        acc[slotId] = <>{nodes.map((slotChildNode) => renderChildNode(slotChildNode))}</>;
+        acc[slotId] = <>{nodes.map(renderChildNode)}</>;
       }
       return acc;
     },
     {} as Record<string, React.JSX.Element>,
   );
 
-  const renderedChildren = directChildNodes?.map((childNode) => renderChildNode(childNode));
+  const renderedChildren = directChildNodes?.map(renderChildNode);
 
   // TODO: we might be able to remove this special case as well by not dropping the two props in the sanitizeNodeProps function
   if (isContainerOrSection(node.definitionId)) {

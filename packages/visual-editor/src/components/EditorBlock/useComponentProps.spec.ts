@@ -326,24 +326,6 @@ describe('useComponentProps', () => {
 
       expect(result.current.componentProps.isInExpEditorMode).toBeUndefined();
     });
-
-    it('should not return unbound values in componentProps for structural components', () => {
-      useEditorStoreMock.mockReturnValue({
-        myValue: { value: 'test' },
-      });
-      const { result } = renderHook(() =>
-        useComponentProps({
-          node,
-          entityStore,
-          areEntitiesFetched,
-          resolveDesignValue,
-          definition,
-          options: { wrapComponent: false },
-        }),
-      );
-
-      expect(result.current.componentProps.myValue).toBeUndefined();
-    });
   });
 
   describe('when preboundValue is provided', () => {

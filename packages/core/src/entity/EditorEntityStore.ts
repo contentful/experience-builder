@@ -2,6 +2,7 @@ import type { Asset, Entry } from 'contentful';
 import { EntityStoreBase } from './EntityStoreBase';
 import { PostMessageMethods } from '../constants';
 import { RequestEntitiesMessage, RequestedEntitiesMessage } from '../types';
+import { debug } from '@/utils';
 
 type SendMessage = (
   method: PostMessageMethods.REQUEST_ENTITIES,
@@ -107,8 +108,8 @@ export abstract class EditorEntityStore extends EntityStoreBase {
 
             unsubscribe();
           } else {
-            console.warn(
-              'Unexpected entities received in REQUESTED_ENTITIES. Ignoring this response.',
+            debug.warn(
+              '[experiences-core::EditorEntityStore] Unexpected entities received in REQUESTED_ENTITIES. Ignoring this response.',
             );
           }
         },
@@ -151,7 +152,7 @@ export abstract class EditorEntityStore extends EntityStoreBase {
       return (await this.fetchAssets([id], skipCache))[0];
     } catch (err) {
       // TODO: move to debug utils once it is extracted
-      console.warn(`Failed to request asset ${id}`);
+      debug.warn(`[experiences-core::EditorEntityStore] Failed to request asset ${id}`);
       return undefined;
     }
   }
@@ -165,7 +166,7 @@ export abstract class EditorEntityStore extends EntityStoreBase {
       return (await this.fetchEntries([id], skipCache))[0];
     } catch (err) {
       // TODO: move to debug utils once it is extracted
-      console.warn(`Failed to request entry ${id}`, err);
+      debug.warn(`[experiences-core::EditorEntityStore] Failed to request entry ${id}`, err);
       return undefined;
     }
   }

@@ -9,6 +9,7 @@ import {
   isLink,
   EditorModeEntityStore,
   type InMemoryEntitiesStore,
+  debug,
 } from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
@@ -143,8 +144,10 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
           await fillupL2({ deepReferences });
         }
       } catch (error) {
-        console.error('[experiences-sdk-react] Failed fetching entities');
-        console.error(error);
+        debug.error(
+          '[experiences-visual-editor-react::useEditorSubscriber] Failed fetching entities',
+          { error },
+        );
         throw error; // TODO: The original catch didn't let's rethrow; for the moment throw to see if we have any errors
       } finally {
         endFetching();
@@ -163,8 +166,8 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
         ) {
           reloadApp();
         } else {
-          console.warn(
-            `[experiences-sdk-react::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
+          debug.warn(
+            `[experiences-visual-editor-react::onMessage] Ignoring alien incoming message from origin [${event.origin}], due to: [${reason}]`,
             event,
           );
         }
@@ -172,8 +175,8 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
       }
 
       const eventData = tryParseMessage(event);
-      console.debug(
-        `[experiences-sdk-react::onMessage] Received message [${eventData.eventType}]`,
+      debug.debug(
+        `[experiences-visual-editor-react::onMessage] Received message [${eventData.eventType}]`,
         eventData,
       );
 
@@ -292,8 +295,8 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
           const knownEvents = Object.values(INCOMING_EVENTS);
           const isDeprecatedMessage = knownEvents.includes(eventData.eventType);
           if (!isDeprecatedMessage) {
-            console.error(
-              `[experiences-sdk-react::onMessage] Logic error, unsupported eventType: [${(eventData as IncomingMessage).eventType}]`,
+            debug.error(
+              `[experiences-visual-editor-react::onMessage] Logic error, unsupported eventType: [${(eventData as IncomingMessage).eventType}]`,
             );
           }
         }

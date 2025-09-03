@@ -1,11 +1,12 @@
 import { SendMessageParams, OutgoingMessage } from '@/types';
+import { debug } from '@/utils';
 
 export const sendMessage: SendMessageParams = (eventType, data) => {
   if (typeof window === 'undefined') {
     return;
   }
 
-  console.debug(`[experiences-sdk-react::sendMessage] Sending message [${eventType}]`, {
+  debug.debug(`[experiences-sdk-react::sendMessage] Sending message [${eventType}]`, {
     source: 'customer-app',
     eventType,
     payload: data,

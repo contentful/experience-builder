@@ -4,6 +4,7 @@ import { EditorEntityStore } from './EditorEntityStore';
 import { RequestedEntitiesMessage } from '../types';
 import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
+import { debug } from '@/utils';
 
 // The default of 3s in the EditorEntityStore is sometimes timing out and
 // leads to not rendering bound content and assemblies.
@@ -11,8 +12,8 @@ const REQUEST_TIMEOUT = 10000;
 
 export class EditorModeEntityStore extends EditorEntityStore {
   constructor({ entities, locale }: { entities: Array<Asset | Entry>; locale: string }) {
-    console.debug(
-      `[experiences-sdk-react] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
+    debug.debug(
+      `[experiences-core::EditorModeEntityStore] Initializing editor entity store with ${entities.length} entities for locale ${locale}.`,
       { entities },
     );
 
