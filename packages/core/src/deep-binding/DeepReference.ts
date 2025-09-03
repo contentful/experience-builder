@@ -17,7 +17,7 @@ import { treeVisit } from '@/utils/treeTraversal';
 import { isLink } from '@/utils/isLink';
 import type { EntityFromLink, EntityStoreBase } from '@/entity';
 import { Entry } from 'contentful';
-import { generateRandomId, getTargetPatternMappingForParameter, PrebindingData } from '@/utils';
+import { getTargetPatternMappingForParameter, PrebindingData } from '@/utils';
 
 type DeepReferenceOpts = {
   path: string;
@@ -35,7 +35,7 @@ export class DeepReference {
     const { key, field, referentField } = parseDataSourcePathWithL1DeepBindings(path);
 
     this.originalPath = path;
-    this.entityId = dataSource[key].sys.id;
+    this.entityId = dataSource[key]?.sys.id;
     this.entityLink = dataSource[key];
     this.field = field;
     this.referentField = referentField;
