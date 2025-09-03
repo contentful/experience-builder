@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.6.0](https://github.com/contentful/experience-builder/compare/v3.5.0...v3.6.0) (2025-09-03)
+
+### Bug Fixes
+
+- dont render cfHyperlink and cfOpenInNewTab as HTML attributes ([cdab839](https://github.com/contentful/experience-builder/commit/cdab8392c0581ee5c808a2fe10b66e815a015145))
+
 ## [3.5.0](https://github.com/contentful/experience-builder/compare/v3.4.0...v3.5.0) (2025-09-03)
 
 ### Features

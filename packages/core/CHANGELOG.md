@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.6.0](https://github.com/contentful/experience-builder/compare/v3.5.0...v3.6.0) (2025-09-03)
+
+### Features
+
+- introduce SDK option to enable full structure overwrites ([9c558e7](https://github.com/contentful/experience-builder/commit/9c558e7c9e07142b0e67545e2c1baa1841cb6d40))
+
+### Bug Fixes
+
+- add prebindingId to the ExperienceTreeNode type ([8b3377c](https://github.com/contentful/experience-builder/commit/8b3377c7fb1a2b98ceab0be52fcaefcccd3993bd))
+
 ## [3.5.0](https://github.com/contentful/experience-builder/compare/v3.4.0...v3.5.0) (2025-09-03)
 
 ### Features

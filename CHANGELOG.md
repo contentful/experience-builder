@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.6.0](https://github.com/contentful/experience-builder/compare/v3.5.0...v3.6.0) (2025-09-03)
+
+### Features
+
+- introduce SDK option to enable full structure overwrites ([9c558e7](https://github.com/contentful/experience-builder/commit/9c558e7c9e07142b0e67545e2c1baa1841cb6d40))
+
+### Bug Fixes
+
+- add prebindingId to the ExperienceTreeNode type ([8b3377c](https://github.com/contentful/experience-builder/commit/8b3377c7fb1a2b98ceab0be52fcaefcccd3993bd))
+- allow passing children property if there are no children ([c384d8d](https://github.com/contentful/experience-builder/commit/c384d8d9b2db4526b0ec100cb54b034cb1f60aac))
+- deny overwriting internal properties by custom ones ([911bec5](https://github.com/contentful/experience-builder/commit/911bec5b964932b2c641af0f5f05de4cf60219ce))
+- dont render cfHyperlink and cfOpenInNewTab as HTML attributes ([cdab839](https://github.com/contentful/experience-builder/commit/cdab8392c0581ee5c808a2fe10b66e815a015145))
+
 ## [3.5.0](https://github.com/contentful/experience-builder/compare/v3.4.0...v3.5.0) (2025-09-03)
 
 ### Features
