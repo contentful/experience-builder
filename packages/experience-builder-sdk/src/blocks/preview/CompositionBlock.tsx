@@ -315,7 +315,8 @@ export const CompositionBlock = ({
       ...sanitizeNodeProps(props),
       ...renderedSlotNodesMap,
     },
-    renderedChildren,
+    // If there are no children, a custom property called `children` can be passed through to the custom component
+    ...(renderedChildren ?? []),
   );
 };
 

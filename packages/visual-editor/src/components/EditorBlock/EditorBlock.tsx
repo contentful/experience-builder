@@ -91,14 +91,15 @@ export function EditorBlock({
   );
 }
 
-type RegistrationComponentProps = React.PropsWithChildren<{
+type RegistrationComponentProps = {
   node: ExperienceTreeNode;
   resolveDesignValue: ResolveDesignValueType;
   componentRegistration: ComponentRegistration;
   slotNodes?: Record<string, React.JSX.Element>;
   entityStore: EntityStoreBase;
   areEntitiesFetched: boolean;
-}>;
+  children?: React.JSX.Element[];
+};
 const RegistrationComponent = ({
   node,
   resolveDesignValue,
@@ -123,7 +124,8 @@ const RegistrationComponent = ({
     React.createElement(
       componentRegistration.component,
       { ...componentProps, ...slotNodes },
-      children,
+      // If there are no children, a custom property called `children` can be passed through to the custom component
+      ...(children ?? []),
     ),
   );
 };
