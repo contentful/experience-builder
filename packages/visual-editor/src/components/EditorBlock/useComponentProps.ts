@@ -307,9 +307,10 @@ export const useComponentProps = ({
     };
 
     return {
-      ...sharedProps,
-      ...editorProps,
       ...sanitizeNodeProps(props),
+      // Add those at last to not let them get overwritten by custom properties
+      ...editorProps,
+      ...sharedProps,
     };
   }, [cfCsrClassName, editorProps, node, props]);
 
