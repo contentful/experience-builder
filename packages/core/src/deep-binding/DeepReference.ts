@@ -17,7 +17,7 @@ import { treeVisit } from '@/utils/treeTraversal';
 import { isLink } from '@/utils/isLink';
 import type { EntityFromLink, EntityStoreBase } from '@/entity';
 import { Entry } from 'contentful';
-import { getTargetPatternMappingForParameter, PrebindingData } from '@/utils';
+import { generateRandomId, getTargetPatternMappingForParameter, PrebindingData } from '@/utils';
 
 type DeepReferenceOpts = {
   path: string;
@@ -180,13 +180,19 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
           console.log(6, variableMappings);
 
           for (const mappingData of Object.values(variableMappings)) {
+            console.log('headEntryContentTypeId', headEntryContentTypeId);
             const targetMapping = mappingData.pathsByContentType[headEntryContentTypeId];
-            if (!targetMapping || !isDeepPath(targetMapping.path)) continue;
+            console.log('target mapping', targetMapping);
+            if (!targetMapping) continue;
+            // mapping doesn't start with /uuid, but instead starts with /fields
+            // so we add /uuid to make it match the binding path format
+            const path = `/${dataSourceKey}${targetMapping.path}`;
+            if (!isDeepPath(path)) continue;
             console.log(7);
 
             deepPrebindingReferences.push(
               DeepReference.from({
-                path: targetMapping.path,
+                path,
                 dataSource,
               }),
             );
@@ -198,6 +204,8 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
       }
     },
   );
+
+  console.log('returning deep prebindings');
 
   return deepPrebindingReferences;
 }

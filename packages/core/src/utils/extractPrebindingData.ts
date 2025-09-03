@@ -62,6 +62,16 @@ export function getTargetPatternMappingForParameter({
       console.log('c');
       if (!patternPrebindingData.variableMappings) return undefined;
       console.log('d');
+      console.log('variableMappings', patternPrebindingData.variableMappings);
+      console.log('targetParameterId', parameterId);
+      console.log(
+        'output',
+        Object.fromEntries(
+          Object.entries(patternPrebindingData.variableMappings).filter(
+            ([, mapping]) => mapping.parameterId === parameterId,
+          ),
+        ),
+      );
       return Object.fromEntries(
         Object.entries(patternPrebindingData.variableMappings).filter(
           ([, mapping]) => mapping.parameterId === parameterId,

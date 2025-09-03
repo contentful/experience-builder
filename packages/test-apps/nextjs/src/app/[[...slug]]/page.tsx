@@ -14,7 +14,13 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
   const { isPreview, expEditorMode, mode } = searchParams;
   const preview = isPreview === 'true' || mode === 'preview';
   const editorMode = expEditorMode === 'true';
-  const { experience, error } = await getExperience(slug, locale, preview, editorMode);
+  const desconstructedSlug = Array.isArray(slug) ? slug.pop() : slug;
+  const { experience, error } = await getExperience(
+    desconstructedSlug,
+    locale,
+    preview,
+    editorMode,
+  );
 
   const client = createClientWithConfig(preview);
 
