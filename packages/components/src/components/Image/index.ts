@@ -9,6 +9,7 @@ export * from './Image';
 export const ImageComponentDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.image.id,
   name: CONTENTFUL_COMPONENTS.image.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: ['cfMargin', 'cfPadding', 'cfImageAsset', 'cfImageOptions', 'cfBorderRadius'],
   tooltip: {

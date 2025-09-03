@@ -9,6 +9,7 @@ export { Carousel } from './Carousel';
 export const carouselDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.carousel.id,
   name: CONTENTFUL_COMPONENTS.carousel.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_DEFAULT_CATEGORY,
   children: true,
   builtInStyles: [

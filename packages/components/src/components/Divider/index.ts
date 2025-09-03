@@ -10,6 +10,7 @@ export { ContentfulDivider } from './ContentfulDivider';
 export const dividerDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.divider.id,
   name: CONTENTFUL_COMPONENTS.divider.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_DEFAULT_CATEGORY,
   children: false,
   variables: dividerBuiltInStyles,

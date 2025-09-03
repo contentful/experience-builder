@@ -10,6 +10,7 @@ export { ContentfulContainer } from './ContentfulContainer';
 export const containerDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.container.id,
   name: CONTENTFUL_COMPONENTS.container.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: containerBuiltInStyles,
@@ -22,6 +23,7 @@ export const containerDefinition: ComponentDefinition = {
 export const sectionDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.section.id,
   name: CONTENTFUL_COMPONENTS.section.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_COMPONENT_CATEGORY,
   children: true,
   variables: sectionBuiltInStyles,

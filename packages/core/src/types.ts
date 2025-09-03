@@ -133,6 +133,12 @@ export type ComponentDefinition<
     imageUrl?: string;
     description: string;
   };
+  /** All built-in components provide their own version. When overwriting those with custom implementations,
+   * developers should provide the version of the definition they are overwriting to avoid potential mismatches.
+   * Any change in the definition or rendering logic of built-in components will be reflected via a new version number.
+   * @example '1.0.0'
+   */
+  componentVersion?: string;
 };
 
 export type ComponentRegistration = {

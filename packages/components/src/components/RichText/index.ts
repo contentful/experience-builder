@@ -9,6 +9,7 @@ export * from './RichText';
 export const RichTextComponentDefinition: ComponentDefinition = {
   id: CONTENTFUL_COMPONENTS.richText.id,
   name: CONTENTFUL_COMPONENTS.richText.name,
+  componentVersion: '1.0.0',
   category: CONTENTFUL_DEFAULT_CATEGORY,
   builtInStyles: [
     'cfMargin',
