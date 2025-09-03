@@ -3,7 +3,6 @@ import {
   buildCfStyles,
   calculateNodeDefaultHeight,
   isLinkToAsset,
-  isContentfulStructureComponent,
   transformBoundContentValue,
   resolveHyperlinkPattern,
   isStructureWithRelativeHeight,
@@ -22,7 +21,7 @@ import type {
   ComponentRegistration,
   Link,
   DesignValue,
-  StructureComponentProps,
+  EditorProperties,
 } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 import { useEditorModeClassName } from './useEditorModeClassName';
@@ -36,10 +35,12 @@ import { useTreeStore } from '@/store/tree';
 type BaseComponentProps = Partial<StyleProps> &
   Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
 
-type ResolvedComponentProps = StructureComponentProps<
+type ResolvedComponentProps = React.PropsWithChildren<
   BaseComponentProps & {
     className: string;
     isInExpEditorMode?: boolean;
+    isEditorMode?: boolean;
+    node?: ExperienceTreeNode;
   }
 >;
 
@@ -48,7 +49,7 @@ type UseComponentProps = {
   entityStore: EntityStoreBase;
   areEntitiesFetched: boolean;
   resolveDesignValue: ResolveDesignValueType;
-  definition?: ComponentRegistration['definition'];
+  definition: ComponentRegistration['definition'];
   options?: ComponentRegistration['options'];
   slotId?: string;
 };
@@ -271,6 +272,32 @@ export const useComponentProps = ({
     nodeId: node.data.id,
   });
 
+  // Allows custom components to render differently in the editor. This needs to be activated
+  // through registry options as the component has to be aware of this prop to not cause any React warnings.
+  const editorProps = useMemo(() => {
+    const editorProps: Partial<EditorProperties> = {};
+    if (options?.enableEditorProperties?.isEditorMode) {
+      editorProps.isEditorMode = true;
+    }
+    if (options?.enableEditorProperties?.isEmpty) {
+      editorProps.isEmpty = node.children.length === 0;
+    }
+    if (options?.enableEditorProperties?.nodeBlockId) {
+      editorProps.nodeBlockId = node.data.blockId!;
+    }
+    if (options?.enableCustomEditorView) {
+      editorProps.isInExpEditorMode = true;
+    }
+    return editorProps;
+  }, [
+    node.children.length,
+    node.data.blockId,
+    options?.enableEditorProperties?.isEditorMode,
+    options?.enableEditorProperties?.isEmpty,
+    options?.enableEditorProperties?.nodeBlockId,
+    options?.enableCustomEditorView,
+  ]);
+
   const componentProps = useMemo(() => {
     const sharedProps = {
       'data-cf-node-id': node.data.id,
@@ -279,24 +306,12 @@ export const useComponentProps = ({
       className: (props.cfSsrClassName as string | undefined) ?? cfCsrClassName,
     };
 
-    // Only pass `editorMode` and `node` to structure components and assembly root nodes.
-    const isStructureComponent = isContentfulStructureComponent(node.data.blockId);
-    if (isStructureComponent) {
-      return {
-        ...sharedProps,
-        editorMode: true as const,
-        node,
-      };
-    }
-
     return {
       ...sharedProps,
-      // Allows custom components to render differently in the editor. This needs to be activated
-      // through options as the component has to be aware of this prop to not cause any React warnings.
-      ...(options?.enableCustomEditorView ? { isInExpEditorMode: true } : {}),
+      ...editorProps,
       ...sanitizeNodeProps(props),
     };
-  }, [cfCsrClassName, node, options?.enableCustomEditorView, props]);
+  }, [cfCsrClassName, editorProps, node, props]);
 
   return { componentProps };
 };

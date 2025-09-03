@@ -1,5 +1,5 @@
-import { StructureComponentProps } from '@contentful/experiences-core/types';
 import React, { HTMLAttributes } from 'react';
+import type { StructureComponentProps } from '@/types';
 
 export type AssemblyProps = StructureComponentProps<HTMLAttributes<HTMLDivElement>>;
 

@@ -6,6 +6,7 @@ import { isLink } from '../utils/isLink';
 import { isDeepPath, parseDataSourcePathIntoFieldset } from '@/utils/pathSchema';
 import { isAsset, isEntry } from '@/utils/typeguards';
 import { deepFreeze } from '@/utils/freeze';
+import { debug } from '@/utils';
 
 export interface EntityFromLink {
   getEntityFromLink(link: UnresolvedLink<'Entry' | 'Asset'>): Asset | Entry | undefined;
@@ -51,8 +52,8 @@ export abstract class EntityStoreBase implements EntityFromLink {
           ? this.entryMap.get(linkOrEntryOrAsset.sys.id)
           : this.assetMap.get(linkOrEntryOrAsset.sys.id);
       if (!resolvedEntity || resolvedEntity.sys.type !== linkOrEntryOrAsset.sys.linkType) {
-        console.warn(
-          `Experience references unresolved entity: ${JSON.stringify(linkOrEntryOrAsset)}`,
+        debug.warn(
+          `[experiences-core::EntityStoreBase] Experience references unresolved entity: ${JSON.stringify(linkOrEntryOrAsset)}`,
         );
         return;
       }
@@ -62,7 +63,7 @@ export abstract class EntityStoreBase implements EntityFromLink {
       entity = linkOrEntryOrAsset;
     } else {
       throw new Error(
-        `Unexpected object when resolving entity: ${JSON.stringify(linkOrEntryOrAsset)}`,
+        `[experiences-core::EntityStoreBase] Unexpected object when resolving entity: ${JSON.stringify(linkOrEntryOrAsset)}`,
       );
     }
     return entity;
@@ -82,7 +83,7 @@ export abstract class EntityStoreBase implements EntityFromLink {
 
     if (!entity) {
       // TODO: move to `debug` utils once it is extracted
-      console.warn(
+      debug.warn(
         `Unresolved entity reference: ${entityLink.sys.linkType} with ID ${entityLink.sys.id}`,
       );
       return;
@@ -98,7 +99,9 @@ export abstract class EntityStoreBase implements EntityFromLink {
         : this.assetMap.get(link.sys.id);
 
     if (!resolvedEntity || resolvedEntity.sys.type !== link.sys.linkType) {
-      console.warn(`Experience references unresolved entity: ${JSON.stringify(link)}`);
+      debug.warn(
+        `[experiences-core::EntityStoreBase] Experience references unresolved entity: ${JSON.stringify(link)}`,
+      );
       return;
     }
     return resolvedEntity;
@@ -107,7 +110,9 @@ export abstract class EntityStoreBase implements EntityFromLink {
   public getAssetById(assetId: string): Asset | undefined {
     const asset = this.assetMap.get(assetId);
     if (!asset) {
-      console.warn(`Asset with ID "${assetId}" is not found in the store`);
+      debug.warn(
+        `[experiences-core::EntityStoreBase] Asset with ID "${assetId}" is not found in the store`,
+      );
       return;
     }
     return asset;
@@ -116,7 +121,9 @@ export abstract class EntityStoreBase implements EntityFromLink {
   public getEntryById(entryId: string): Entry | undefined {
     const entry = this.entryMap.get(entryId);
     if (!entry) {
-      console.warn(`Entry with ID "${entryId}" is not found in the store`);
+      debug.warn(
+        `[experiences-core::EntityStoreBase] Entry with ID "${entryId}" is not found in the store`,
+      );
       return;
     }
     return entry;
@@ -159,7 +166,7 @@ export abstract class EntityStoreBase implements EntityFromLink {
     const { resolved, missing } = this.getEntitiesFromMap('Asset', [id]);
     if (missing.length) {
       // TODO: move to `debug` utils once it is extracted
-      console.warn(`Asset "${id}" is not in the store`);
+      debug.warn(`[experiences-core::EntityStoreBase] Asset "${id}" is not in the store`);
       return;
     }
 
@@ -177,7 +184,7 @@ export abstract class EntityStoreBase implements EntityFromLink {
     const { resolved, missing } = this.getEntitiesFromMap('Entry', [id]);
     if (missing.length) {
       // TODO: move to `debug` utils once it is extracted
-      console.warn(`Entry "${id}" is not in the store`);
+      debug.warn(`[experiences-core::EntityStoreBase] Entry "${id}" is not in the store`);
       return;
     }
 
@@ -277,10 +284,11 @@ export abstract class EntityStoreBase implements EntityFromLink {
     );
 
     if (!isFullyResolved) {
-      reason &&
-        console.debug(
-          `[exp-builder.sdk::EntityStoreBased::getValueDeep()] Deep path wasn't resolved till leaf node, falling back to undefined, because: ${reason}`,
+      if (reason) {
+        debug.log(
+          `[experiences-core::EntityStoreBase] Deep path wasn't resolved till leaf node, falling back to undefined, because: ${reason}`,
         );
+      }
       return;
     }
     const [leafEntity] = resolvedFieldset[resolvedFieldset.length - 1];
