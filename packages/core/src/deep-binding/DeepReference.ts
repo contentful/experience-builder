@@ -182,6 +182,8 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
     },
   );
 
+  console.log('returning deep prebindings');
+
   return deepPrebindingReferences;
 }
 
