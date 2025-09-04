@@ -130,11 +130,23 @@ export const ComponentDefinitionSchema = z
     ),
   })
   .superRefine((val, ctx) => {
-    if (val.children === true && !!val.variables.children) {
+    if (val.children === true && (!!val.variables.children || !!val.slots?.children)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `Cannot activate 'children: true' and name a variable 'children' at the same time`,
+        message: `Cannot activate 'children: true' and name a variable or slot 'children' at the same time`,
         fatal: false,
+      });
+    }
+    // Ensure that slots and variables don't use the same names
+    if (val.variables && val.slots) {
+      Object.keys(val.variables).forEach((name) => {
+        if (val.slots![name]) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Variable and slot cannot have the same name: ${name}`,
+            fatal: false,
+          });
+        }
       });
     }
   });
