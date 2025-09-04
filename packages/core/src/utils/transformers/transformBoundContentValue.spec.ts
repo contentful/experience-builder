@@ -419,7 +419,7 @@ describe('transformBoundContentValue', () => {
   });
 
   describe('when the variable type is a "Link"', () => {
-    it('it should resolve reference to L2 and return L2 entry with unresolved references', () => {
+    it('should resolve reference to L2 and return L2 entry with unresolved references', () => {
       const variableName = 'referencedEntry';
       const resolveDesignValue = vitest.fn();
       const linkToHeadEntityL1: UnresolvedLink<'Entry'> = {
