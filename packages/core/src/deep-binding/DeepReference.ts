@@ -39,7 +39,7 @@ export class DeepReference {
     const { key, field, referentField } = parseDataSourcePathWithL1DeepBindings(path);
 
     this.originalPath = path;
-    this.entityId = dataSource[key]?.sys.id;
+    this.entityId = dataSource[key].sys.id;
     this.entityLink = dataSource[key];
     this.field = field;
     this.referentField = referentField;
@@ -121,7 +121,6 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
   prebindingDataByPatternId,
   fetchedLevel1Entries,
 }: {
-  // can be an Experience or can be a Pattern
   experienceEntry: ExperienceEntry;
   fetchedPatterns: Array<ExperienceEntry>;
   prebindingDataByPatternId: Record<string, PrebindingData>;
