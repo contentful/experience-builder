@@ -30,7 +30,6 @@ export const f36ButtonDefinition: ComponentDefinition = {
           { value: 'positive', displayName: 'Positive' },
           { value: 'negative', displayName: 'Negative' },
           { value: 'transparent', displayName: 'Transparent' },
-          { value: 'white', displayName: 'White (Custom)' },
         ],
       },
     },
@@ -61,20 +60,6 @@ export const f36ButtonDefinition: ComponentDefinition = {
       defaultValue: false,
       group: 'style',
       description: 'Whether the button should take full width',
-    },
-    isCircular: {
-      displayName: 'Circular',
-      type: 'Boolean',
-      defaultValue: false,
-      group: 'style',
-      description: 'Render as a circular button (best with an icon child)',
-    },
-    noInnerPadding: {
-      displayName: 'No Inner Padding',
-      type: 'Boolean',
-      defaultValue: false,
-      group: 'style',
-      description: 'Remove the default F36 Button internal padding & min-height',
     },
     href: {
       displayName: 'Link URL',
