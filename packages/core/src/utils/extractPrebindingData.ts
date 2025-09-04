@@ -58,7 +58,26 @@ export const flattenNestedPatterns = (fetchedPatterns: Array<ExperienceEntry>) =
 export const extractPrebindingDataByPatternId = (patterns: Array<ExperienceEntry>) => {
   const prebindingDataByPatternId: Record<string, PrebindingData> = {};
 
-  for (const pattern of patterns) {
+  const iteratedPatternIds: Array<string> = [];
+  const queue: Array<ExperienceEntry> = [...patterns];
+
+  for (const pattern of queue) {
+    if (iteratedPatternIds.includes(pattern.sys.id)) {
+      continue;
+    } else {
+      iteratedPatternIds.push(pattern.sys.id);
+    }
+
+    if (pattern.fields.usedComponents) {
+      for (const maybeFetchedNestedPattern of pattern.fields.usedComponents) {
+        if (isLink(maybeFetchedNestedPattern)) {
+          throw new Error('Nested pattern is not fully fetched');
+        } else {
+          queue.push(maybeFetchedNestedPattern);
+        }
+      }
+    }
+
     const patternId = pattern.sys.id;
     const [prebindingDefinition] = pattern.fields.componentSettings?.prebindingDefinitions ?? [];
     if (!prebindingDefinition) continue;
@@ -176,6 +195,4 @@ export function getTargetPatternMappingsForParameter({
       });
     }
   }
-
-  return undefined;
 }
