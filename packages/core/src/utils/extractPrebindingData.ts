@@ -176,4 +176,6 @@ export function getTargetPatternMappingsForParameter({
       });
     }
   }
+
+  return undefined;
 }
