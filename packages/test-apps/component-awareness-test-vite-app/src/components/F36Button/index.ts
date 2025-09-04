@@ -11,12 +11,6 @@ export const f36ButtonDefinition: ComponentDefinition = {
     'https://images.ctfassets.net/son9ld5ewssk/4BtmUE8ixnHZaL3NNI8rKN/81a5f79436c7d4b3e8a44b5e31b6be3e/button_thumbnail.png',
   builtInStyles: ['cfMargin', 'cfPadding'],
   variables: {
-    text: {
-      displayName: 'Button Text',
-      type: 'Text',
-      defaultValue: 'Click me',
-      description: 'Default text displayed when no child components are nested inside',
-    },
     variant: {
       displayName: 'Variant',
       type: 'Text',

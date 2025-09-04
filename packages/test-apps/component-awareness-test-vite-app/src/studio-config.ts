@@ -22,7 +22,6 @@ defineComponents(
       definition: f36ButtonDefinition,
       options: {
         wrapComponent: false,
-
       },
     },
     {
