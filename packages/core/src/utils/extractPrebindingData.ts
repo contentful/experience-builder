@@ -52,12 +52,10 @@ export function getTargetPatternMappingForParameter({
   patternNodeDefinitionId: string;
   parameterId: string;
 }) {
-  console.log('prebindingDataByPatternId', prebindingDataByPatternId, patternNodeDefinitionId);
   const patternPrebindingData = prebindingDataByPatternId[patternNodeDefinitionId];
-  console.log('a', patternPrebindingData);
+
   if (!patternPrebindingData) return undefined;
   if (patternPrebindingData.parameterIds.includes(parameterId)) {
-    console.log('b');
     if (patternPrebindingData.nativeParameterId === parameterId) {
       console.log('c');
       if (!patternPrebindingData.variableMappings) return undefined;
@@ -78,17 +76,13 @@ export function getTargetPatternMappingForParameter({
         ),
       );
     } else {
-      console.log('e');
       const parameterDefinition = patternPrebindingData.parameterDefinitions[parameterId];
       if (!parameterDefinition || !parameterDefinition.passToNodes) return undefined;
-
-      console.log('f', fetchedPatterns);
 
       const patternEntry = fetchedPatterns.find(
         (entry) => entry.sys.id === patternNodeDefinitionId,
       );
       if (!patternEntry) return undefined;
-      console.log('g');
 
       let nestedPatternNode: ComponentTreeNode | undefined;
 
@@ -110,7 +104,6 @@ export function getTargetPatternMappingForParameter({
       if (!nestedPatternNode) {
         return undefined;
       }
-      console.log('h');
 
       return getTargetPatternMappingForParameter({
         fetchedPatterns,
@@ -120,4 +113,6 @@ export function getTargetPatternMappingForParameter({
       });
     }
   }
+
+  return undefined;
 }

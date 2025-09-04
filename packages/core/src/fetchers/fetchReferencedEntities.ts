@@ -88,8 +88,6 @@ export const fetchReferencedEntities = async ({
     fetchedLevel1Entries: entriesResponse.items,
   });
 
-  console.log('deepPrebindingReferences', deepPrebindingReferences);
-
   const allDeepReferences = [...deepReferences, ...deepPrebindingReferences];
 
   const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
