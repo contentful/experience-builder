@@ -3,6 +3,7 @@ module.exports = {
     browser: true,
     node: true,
     es2021: true,
+    'jest/globals': true,
   },
   extends: [
     'eslint:recommended',
@@ -41,6 +42,24 @@ module.exports = {
       files: ['**/*.spec.*', 'packages/test-apps/**'],
       rules: {
         'compat/compat': 'off',
+      },
+    },
+    {
+      files: ['packages/experience-builder-sdk/**/*.spec.*'],
+      extends: ['plugin:jest/recommended'],
+      plugins: ['jest'],
+    },
+    {
+      files: [
+        'packages/components/**/*.spec.*',
+        'packages/core/**/*.spec.*',
+        'packages/validators/**/*.spec.*',
+        'packages/visual-editor/**/*.spec.*',
+      ],
+      extends: ['plugin:vitest/recommended'],
+      plugins: ['vitest'],
+      rules: {
+        'vitest/no-focused-tests': 'error',
       },
     },
   ],

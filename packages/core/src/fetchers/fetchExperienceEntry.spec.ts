@@ -10,8 +10,8 @@ const mockClient = {
 } as unknown as ContentfulClientApi<undefined>;
 
 describe('fetchExperienceEntry', () => {
-  it('should throw and error if client has not been provided', () => {
-    expect(
+  it('should throw and error if client has not been provided', async () => {
+    await expect(
       fetchExperienceEntry({
         // @ts-expect-error intentionally setting it to undefined
         client: undefined,
@@ -24,10 +24,10 @@ describe('fetchExperienceEntry', () => {
     );
   });
 
-  it('should not throw an error if locale has not been provided', () => {
+  it('should not throw an error if locale has not been provided', async () => {
     (mockClient.getEntries as Mock).mockResolvedValue({ items: [experienceEntry] });
 
-    expect(
+    await expect(
       fetchExperienceEntry({
         client: mockClient as unknown as ContentfulClientApi<'WITH_ALL_LOCALES'>,
         experienceTypeId: 'books',
@@ -36,8 +36,8 @@ describe('fetchExperienceEntry', () => {
     ).resolves.not.toThrow();
   });
 
-  it('should throw an error if experienceId has not been provided', () => {
-    expect(
+  it('should throw an error if experienceId has not been provided', async () => {
+    await expect(
       fetchExperienceEntry({
         client: mockClient,
         // @ts-expect-error intentionally setting it to undefined
@@ -50,8 +50,8 @@ describe('fetchExperienceEntry', () => {
     );
   });
 
-  it('should throw and error if neither id nor slug identifier has been provided', () => {
-    expect(
+  it('should throw and error if neither id nor slug identifier has been provided', async () => {
+    await expect(
       fetchExperienceEntry({
         client: mockClient,
         experienceTypeId: 'books',
@@ -100,12 +100,12 @@ describe('fetchExperienceEntry', () => {
     expect(expEntry).toEqual(experienceEntry);
   });
 
-  it('should throw and error if getEntries call returns more than one entry', () => {
+  it('should throw and error if getEntries call returns more than one entry', async () => {
     (mockClient.getEntries as Mock).mockResolvedValue({
       items: [experienceEntry, entries[0]],
     });
 
-    expect(
+    await expect(
       fetchExperienceEntry({
         client: mockClient,
         experienceTypeId: 'books',
