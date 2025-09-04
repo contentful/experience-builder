@@ -208,6 +208,35 @@ describe('CompositionBlock', () => {
     expect(screen.getAllByTestId('assembly')).toHaveLength(2);
   });
 
+  it('renders custom component node with content property called `children`', () => {
+    const mockExperienceTreeNode: ComponentTreeNode = {
+      definitionId: 'custom-component',
+      variables: {
+        children: { type: 'UnboundValue', key: 'value1' },
+      },
+      children: [],
+    };
+
+    render(
+      <CompositionBlock
+        node={mockExperienceTreeNode}
+        locale="en-US"
+        entityStore={
+          {
+            ...emptyEntityStore,
+            unboundValues: {
+              value1: { value: 'unboundValue1' },
+              value2: { value: 1 },
+            },
+          } as unknown as EntityStore
+        }
+        resolveDesignValue={jest.fn()}
+      />,
+    );
+
+    expect(screen.getByText('unboundValue1')).toBeInTheDocument();
+  });
+
   describe('when SSR class is defined', () => {
     it('renders the custom component node', () => {
       const ssrClassName = 'cfstyles-3da2d7a8871905d8079c313b36bcf404';
