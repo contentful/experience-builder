@@ -19,8 +19,13 @@ import {
 import { EntityStore } from '@contentful/experiences-core';
 import { assets, entries } from '../../../test/__fixtures__/entities';
 
-const TestComponent: React.FC<{ text: string }> = (props) => {
-  return <div {...props}>{props.text}</div>;
+const TestComponent: React.FC<{ text?: string; children?: string }> = (props) => {
+  return (
+    <div {...props}>
+      {props.text}
+      {props.children}
+    </div>
+  );
 };
 
 describe('CompositionBlock', () => {
@@ -43,6 +48,9 @@ describe('CompositionBlock', () => {
               displayName: 'Text',
               type: 'Text',
               defaultValue: 'Subheading',
+            },
+            children: {
+              type: 'Text',
             },
           },
         },
@@ -226,7 +234,6 @@ describe('CompositionBlock', () => {
             ...emptyEntityStore,
             unboundValues: {
               value1: { value: 'unboundValue1' },
-              value2: { value: 1 },
             },
           } as unknown as EntityStore
         }
