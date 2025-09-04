@@ -6,10 +6,11 @@ import { EditorBlock } from '@components/EditorBlock';
 import { EmptyCanvasMessage } from '@components/EmptyCanvasMessage';
 import { ROOT_ID } from '@/types/constants';
 import { type InMemoryEntitiesStore } from '@contentful/experiences-core';
-import type { StudioCanvasMode } from '@contentful/experiences-core/constants';
+import { type StudioCanvasMode } from '@contentful/experiences-core/constants';
 import { useCanvasGeometryUpdates } from './useCanvasGeometryUpdates';
 
 import './RootRenderer.module.css';
+import { checkIsNodeVisible } from '@/utils/checkIsNodeVisible';
 
 type RootRendererProperties = {
   inMemoryEntitiesStore: InMemoryEntitiesStore;
@@ -31,9 +32,11 @@ export const RootRenderer = ({ inMemoryEntitiesStore, canvasMode }: RootRenderer
   const entityStore = inMemoryEntitiesStore((state) => state.entityStore);
   const areEntitiesFetched = inMemoryEntitiesStore((state) => state.areEntitiesFetched);
 
+  const isAnyNodeVisible = checkIsNodeVisible(tree.root, resolveDesignValue);
+
   return (
     <>
-      {!tree.root.children.length ? (
+      {!isAnyNodeVisible ? (
         <EmptyCanvasMessage />
       ) : (
         tree.root.children.map((topLevelChildNode) => (
