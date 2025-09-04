@@ -31,6 +31,7 @@ import { maybeMergePatternDefaultDesignValues } from '@/utils/maybeMergePatternD
 import { Entry } from 'contentful';
 import { HYPERLINK_DEFAULT_PATTERN } from '@contentful/experiences-core/constants';
 import { useTreeStore } from '@/store/tree';
+import { checkIsNodeVisible } from '@/utils/checkIsNodeVisible';
 
 type BaseComponentProps = Partial<StyleProps> &
   Record<string, PrimitiveValue | Link<'Entry'> | Link<'Asset'>>;
@@ -246,14 +247,17 @@ export const useComponentProps = ({
   );
 
   const shouldRenderEmptySpaceWithMinSize = useMemo(() => {
-    if (node.children.length) return false;
+    const isAnyChildrenVisible = node.children.some((childNode) =>
+      checkIsNodeVisible(childNode, resolveDesignValue),
+    );
+    if (isAnyChildrenVisible) return false;
 
     // Render with minimum height and with in those two scenarios:
     if (isStructureWithRelativeHeight(node.data.blockId, cfStyles.height)) return true;
     if (definition?.children) return true;
 
     return false;
-  }, [cfStyles.height, definition?.children, node.children.length, node.data.blockId]);
+  }, [cfStyles.height, definition?.children, node.children, node.data.blockId, resolveDesignValue]);
 
   // Styles that will be applied to the component element
   const componentStyles = useMemo(
@@ -280,7 +284,10 @@ export const useComponentProps = ({
       editorProps.isEditorMode = true;
     }
     if (options?.enableEditorProperties?.isEmpty) {
-      editorProps.isEmpty = node.children.length === 0;
+      const areAllChildrenHidden = node.children.every(
+        (childNode) => !checkIsNodeVisible(childNode, resolveDesignValue),
+      );
+      editorProps.isEmpty = node.children.length === 0 || areAllChildrenHidden;
     }
     if (options?.enableEditorProperties?.nodeBlockId) {
       editorProps.nodeBlockId = node.data.blockId!;
@@ -290,12 +297,12 @@ export const useComponentProps = ({
     }
     return editorProps;
   }, [
-    node.children.length,
-    node.data.blockId,
     options?.enableEditorProperties?.isEditorMode,
     options?.enableEditorProperties?.isEmpty,
     options?.enableEditorProperties?.nodeBlockId,
     options?.enableCustomEditorView,
+    node,
+    resolveDesignValue,
   ]);
 
   const componentProps = useMemo(() => {
