@@ -17,7 +17,11 @@ import { treeVisit } from '@/utils/treeTraversal';
 import { isLink } from '@/utils/isLink';
 import type { EntityFromLink, EntityStoreBase } from '@/entity';
 import { Entry } from 'contentful';
-import { getTargetPatternMappingForParameter, PrebindingData } from '@/utils';
+import {
+  generateDefaultDataSourceForPrebindingDefinition,
+  getTargetPatternMappingForParameter,
+  PrebindingData,
+} from '@/utils';
 
 type DeepReferenceOpts = {
   path: string;
@@ -35,7 +39,7 @@ export class DeepReference {
     const { key, field, referentField } = parseDataSourcePathWithL1DeepBindings(path);
 
     this.originalPath = path;
-    this.entityId = dataSource[key]?.sys.id;
+    this.entityId = dataSource[key].sys.id;
     this.entityLink = dataSource[key];
     this.field = field;
     this.referentField = referentField;
@@ -117,13 +121,11 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
   prebindingDataByPatternId,
   fetchedLevel1Entries,
 }: {
-  // can be an Experience or can be a Pattern
   experienceEntry: ExperienceEntry;
   fetchedPatterns: Array<ExperienceEntry>;
   prebindingDataByPatternId: Record<string, PrebindingData>;
   fetchedLevel1Entries: Array<Entry>;
 }) {
-  // const isRenderingExperience = Boolean(!experienceEntry.fields.componentSettings);
   const deepPrebindingReferences: Array<DeepReference> = [];
   const dataSource = experienceEntry.fields.dataSource;
   const { children } = experienceEntry.fields.componentTree;
@@ -197,14 +199,78 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
               }),
             );
           }
-          // } else {
-
-          // }
         }
       }
     },
   );
 
+  return deepPrebindingReferences;
+}
+
+export function gatherDeepPrebindingReferencesFromPatternEntry({
+  patternEntry,
+  fetchedPatterns,
+  prebindingDataByPatternId,
+  fetchedLevel1Entries,
+}: {
+  patternEntry: ExperienceEntry;
+  fetchedPatterns: Array<ExperienceEntry>;
+  prebindingDataByPatternId: Record<string, PrebindingData>;
+  fetchedLevel1Entries: Array<Entry>;
+}) {
+  const deepPrebindingReferences: Array<DeepReference> = [];
+  // patterns can't have parameters in their CDA/CMA JSON, so we can generate random ids here
+  const { dataSource, parameters } = generateDefaultDataSourceForPrebindingDefinition(
+    patternEntry.fields.componentSettings?.prebindingDefinitions,
+  );
+
+  for (const [parameterId, parameterValue] of Object.entries(parameters)) {
+    console.log(parameterId, parameterValue);
+
+    console.log(1);
+
+    console.log(3);
+    const dataSourceKey = parameterValue.path.split('/')[1];
+    const headEntryLink = dataSource[dataSourceKey];
+    if (!headEntryLink) continue;
+    if (headEntryLink.sys.linkType !== 'Entry') continue;
+    console.log(4);
+    const headEntry = fetchedLevel1Entries.find((entry) => entry.sys.id === headEntryLink.sys.id);
+    if (!headEntry) continue;
+
+    console.log(5);
+
+    const headEntryContentTypeId = headEntry.sys.contentType.sys.id;
+
+    const variableMappings = getTargetPatternMappingForParameter({
+      fetchedPatterns,
+      prebindingDataByPatternId,
+      patternNodeDefinitionId: patternEntry.sys.id,
+      parameterId,
+    });
+
+    if (!variableMappings) continue;
+    console.log(6, variableMappings);
+
+    for (const mappingData of Object.values(variableMappings)) {
+      console.log('headEntryContentTypeId', headEntryContentTypeId);
+      const targetMapping = mappingData.pathsByContentType[headEntryContentTypeId];
+      console.log('target mapping', targetMapping);
+      if (!targetMapping) continue;
+      // mapping doesn't start with /uuid, but instead starts with /fields
+      // so we add /uuid to make it match the binding path format
+      const path = `/${dataSourceKey}${targetMapping.path}`;
+      if (!isDeepPath(path)) continue;
+      console.log(7);
+
+      deepPrebindingReferences.push(
+        DeepReference.from({
+          path,
+          dataSource,
+        }),
+      );
+    }
+  }
   return deepPrebindingReferences;
 }
 

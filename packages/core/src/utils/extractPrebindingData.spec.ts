@@ -1,6 +1,7 @@
 import { ExperienceComponentSettings } from '@/types';
 import {
   extractPrebindingDataByPatternId,
+  generateDefaultDataSourceForPrebindingDefinition,
   getTargetPatternMappingForParameter,
 } from './extractPrebindingData';
 import { createPatternEntry } from '@/test/__fixtures__/experience';
@@ -12,6 +13,29 @@ const parameterIds = {
   l1NativeParamId: 'nativeParameterId',
   l2HoistedParamId: 'hoistedParameterId',
   l2NativeParamId: 'nonHoistedParameterId',
+};
+
+const prebindingDefinitionWithoutDefaultSource: PrebindingDefinition = {
+  id: 'no-default-source-prebinding-definition',
+  parameterDefinitions: {
+    [parameterIds.l1NativeParamId]: {
+      contentTypes: ['ct1', 'ct2'],
+    },
+  },
+  variableMappings: {
+    var1: {
+      type: 'ContentTypeMapping',
+      parameterId: parameterIds.l1NativeParamId,
+      pathsByContentType: {
+        ct1: {
+          path: '/fields/title',
+        },
+        ct2: {
+          path: '/fields/description',
+        },
+      },
+    },
+  },
 };
 
 const nativeOnlyPrebindingDefinition: PrebindingDefinition = {
@@ -180,6 +204,53 @@ describe('extractPrebindingDataByPatternId', () => {
         variableMappings: nativeAndHoistedPrebindingDefinition.variableMappings,
       },
     });
+
+    expect(
+      extractPrebindingDataByPatternId([fixtures.patternWithNativeAndHoistedPrebinding]),
+    ).toEqual({
+      patternWithNativeAndHoistedPrebinding: {
+        prebindingDefinitionId: nativeAndHoistedPrebindingDefinition.id,
+        parameterIds: [parameterIds.l2NativeParamId, parameterIds.l2HoistedParamId],
+        nativeParameterId: parameterIds.l2NativeParamId,
+        parameterDefinitions: nativeAndHoistedPrebindingDefinition.parameterDefinitions,
+        variableMappings: nativeAndHoistedPrebindingDefinition.variableMappings,
+      },
+    });
+  });
+});
+
+describe('generateDefaultDataSourceForPrebindingDefinition', () => {
+  it('should return empty objects if argument is undefined', () => {
+    const { dataSource, parameters } = generateDefaultDataSourceForPrebindingDefinition(undefined);
+    expect(dataSource).toEqual({});
+    expect(parameters).toEqual({});
+  });
+
+  it('should skip parameter definitions without a defaultSource', () => {
+    const { dataSource, parameters } = generateDefaultDataSourceForPrebindingDefinition([
+      prebindingDefinitionWithoutDefaultSource,
+    ]);
+    expect(dataSource).toEqual({});
+    expect(parameters).toEqual({});
+  });
+
+  it('should generate a parameter if defaultSource is defined', () => {
+    const { dataSource, parameters } = generateDefaultDataSourceForPrebindingDefinition([
+      nativeOnlyPrebindingDefinition,
+    ]);
+    expect(parameters).toEqual({
+      [parameterIds.l1NativeParamId]: {
+        type: 'BoundValue',
+        path: expect.any(String),
+      },
+    });
+
+    const dataSourceKey = parameters[parameterIds.l1NativeParamId].path.split('/').pop();
+    expect(dataSourceKey).toBeDefined();
+    expect(dataSource[dataSourceKey!]).toEqual(
+      nativeOnlyPrebindingDefinition.parameterDefinitions[parameterIds.l1NativeParamId]
+        .defaultSource?.link,
+    );
   });
 });
 

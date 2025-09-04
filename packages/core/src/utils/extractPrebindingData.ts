@@ -1,5 +1,15 @@
-import { ComponentTreeNode, ExperienceEntry, ParameterDefinition, VariableMapping } from '@/types';
+import {
+  ComponentTreeNode,
+  ExperienceComponentSettings,
+  ExperienceDataSource,
+  ExperienceEntry,
+  Parameter,
+  ParameterDefinition,
+  VariableMapping,
+} from '@/types';
 import { treeVisit } from './treeTraversal';
+import { generateRandomId } from './utils';
+import { isLink } from './isLink';
 
 export type PrebindingData = {
   prebindingDefinitionId: string;
@@ -17,7 +27,26 @@ export type PrebindingData = {
 export const extractPrebindingDataByPatternId = (patterns: Array<ExperienceEntry>) => {
   const prebindingDataByPatternId: Record<string, PrebindingData> = {};
 
-  for (const pattern of patterns) {
+  const iteratedPatternIds: Array<string> = [];
+  const queue: Array<ExperienceEntry> = [...patterns];
+
+  for (const pattern of queue) {
+    if (iteratedPatternIds.includes(pattern.sys.id)) {
+      continue;
+    } else {
+      iteratedPatternIds.push(pattern.sys.id);
+    }
+
+    if (pattern.fields.usedComponents) {
+      for (const maybeFetchedNestedPattern of pattern.fields.usedComponents) {
+        if (isLink(maybeFetchedNestedPattern)) {
+          throw new Error('Nested pattern is not fully fetched');
+        } else {
+          queue.push(maybeFetchedNestedPattern);
+        }
+      }
+    }
+
     const patternId = pattern.sys.id;
     const [prebindingDefinition] = pattern.fields.componentSettings?.prebindingDefinitions ?? [];
     if (!prebindingDefinition) continue;
@@ -41,6 +70,40 @@ export const extractPrebindingDataByPatternId = (patterns: Array<ExperienceEntry
   return prebindingDataByPatternId;
 };
 
+export const generateDefaultDataSourceForPrebindingDefinition = (
+  prebindingDefinitions: ExperienceComponentSettings['prebindingDefinitions'] = [],
+) => {
+  if (
+    !prebindingDefinitions ||
+    !Array.isArray(prebindingDefinitions) ||
+    !prebindingDefinitions.length
+  ) {
+    return { dataSource: {}, parameters: {} };
+  }
+
+  const prebindingDefinition = prebindingDefinitions[0];
+
+  const dataSource: ExperienceDataSource = {};
+  const parameters: Record<string, Parameter> = {};
+
+  for (const [parameterId, parameterDefinition] of Object.entries(
+    prebindingDefinition.parameterDefinitions ?? {},
+  )) {
+    if (parameterDefinition.defaultSource && isLink(parameterDefinition.defaultSource.link)) {
+      const dataSourceKey = generateRandomId(7);
+      dataSource[dataSourceKey] = parameterDefinition.defaultSource.link;
+      parameters[parameterId] = {
+        type: 'BoundValue',
+        path: `/${dataSourceKey}`,
+      };
+    }
+  }
+  return {
+    dataSource,
+    parameters,
+  };
+};
+
 export function getTargetPatternMappingForParameter({
   fetchedPatterns,
   prebindingDataByPatternId,
@@ -57,19 +120,7 @@ export function getTargetPatternMappingForParameter({
   if (!patternPrebindingData) return undefined;
   if (patternPrebindingData.parameterIds.includes(parameterId)) {
     if (patternPrebindingData.nativeParameterId === parameterId) {
-      console.log('c');
       if (!patternPrebindingData.variableMappings) return undefined;
-      console.log('d');
-      console.log('variableMappings', patternPrebindingData.variableMappings);
-      console.log('targetParameterId', parameterId);
-      console.log(
-        'output',
-        Object.fromEntries(
-          Object.entries(patternPrebindingData.variableMappings).filter(
-            ([, mapping]) => mapping.parameterId === parameterId,
-          ),
-        ),
-      );
       return Object.fromEntries(
         Object.entries(patternPrebindingData.variableMappings).filter(
           ([, mapping]) => mapping.parameterId === parameterId,
@@ -113,6 +164,4 @@ export function getTargetPatternMappingForParameter({
       });
     }
   }
-
-  return undefined;
 }

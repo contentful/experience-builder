@@ -4,6 +4,7 @@ import { extractPrebindingDataByPatternId, isExperienceEntry } from '@/utils';
 import {
   DeepReference,
   gatherDeepPrebindingReferencesFromExperienceEntry,
+  gatherDeepPrebindingReferencesFromPatternEntry,
   gatherDeepReferencesFromExperienceEntry,
 } from '@/deep-binding';
 import { gatherAutoFetchedReferentsFromIncludes } from './gatherAutoFetchedReferentsFromIncludes';
@@ -72,6 +73,8 @@ export const fetchReferencedEntities = async ({
   const usedPatterns = experienceEntry.fields.usedComponents ?? [];
   const isRenderingExperience = Boolean(!experienceEntry.fields.componentSettings);
 
+  console.log('isRenderingExperience', isRenderingExperience);
+
   const deepReferences: Array<DeepReference> = gatherDeepReferencesFromExperienceEntry(
     experienceEntry as ExperienceEntry,
   );
@@ -79,14 +82,26 @@ export const fetchReferencedEntities = async ({
   const fetchedPatterns = (
     isRenderingExperience ? usedPatterns : [...usedPatterns, experienceEntry]
   ) as Array<ExperienceEntry>;
+  console.log('fetchedPatterns', fetchedPatterns);
   const prebindingDataByPatternId = extractPrebindingDataByPatternId(fetchedPatterns);
 
-  const deepPrebindingReferences = gatherDeepPrebindingReferencesFromExperienceEntry({
-    experienceEntry: experienceEntry as ExperienceEntry,
-    fetchedPatterns,
-    prebindingDataByPatternId,
-    fetchedLevel1Entries: entriesResponse.items,
-  });
+  console.log('prebindingDataByPatternId', prebindingDataByPatternId);
+
+  const deepPrebindingReferences = isRenderingExperience
+    ? gatherDeepPrebindingReferencesFromExperienceEntry({
+        experienceEntry: experienceEntry as ExperienceEntry,
+        fetchedPatterns,
+        prebindingDataByPatternId,
+        fetchedLevel1Entries: entriesResponse.items,
+      })
+    : gatherDeepPrebindingReferencesFromPatternEntry({
+        patternEntry: experienceEntry as ExperienceEntry,
+        fetchedPatterns,
+        prebindingDataByPatternId,
+        fetchedLevel1Entries: entriesResponse.items,
+      });
+
+  console.log('deepPrebindingReferences', deepPrebindingReferences);
 
   const allDeepReferences = [...deepReferences, ...deepPrebindingReferences];
 
