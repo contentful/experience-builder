@@ -140,12 +140,7 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
       if (!node.parameters) return;
 
       for (const [parameterId, parameterValue] of Object.entries(node.parameters)) {
-        console.log(parameterId, parameterValue);
-
-        console.log(1);
-
         if (isDeepPath(parameterValue.path)) {
-          console.log(2);
           deepPrebindingReferences.push(
             DeepReference.from({
               path: parameterValue.path,
@@ -153,24 +148,19 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
             }),
           );
         } else {
-          console.log(3);
           const dataSourceKey = parameterValue.path.split('/')[1];
           const headEntryLink = dataSource[dataSourceKey];
           if (!headEntryLink) continue;
           if (headEntryLink.sys.linkType !== 'Entry') continue;
-          console.log(4);
           const headEntry = fetchedLevel1Entries.find(
             (entry) => entry.sys.id === headEntryLink.sys.id,
           );
           if (!headEntry) continue;
 
-          console.log(5);
-
           const headEntryContentTypeId = headEntry.sys.contentType.sys.id;
 
           // if experience, we don't have any hoisted data on the given experienceEntry
           // and we have to lookup the pattern instead
-          // if (isRenderingExperience) {
           const variableMappings = getTargetPatternMappingForParameter({
             fetchedPatterns,
             prebindingDataByPatternId,
@@ -179,18 +169,14 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
           });
 
           if (!variableMappings) continue;
-          console.log(6, variableMappings);
 
           for (const mappingData of Object.values(variableMappings)) {
-            console.log('headEntryContentTypeId', headEntryContentTypeId);
             const targetMapping = mappingData.pathsByContentType[headEntryContentTypeId];
-            console.log('target mapping', targetMapping);
             if (!targetMapping) continue;
             // mapping doesn't start with /uuid, but instead starts with /fields
             // so we add /uuid to make it match the binding path format
             const path = `/${dataSourceKey}${targetMapping.path}`;
             if (!isDeepPath(path)) continue;
-            console.log(7);
 
             deepPrebindingReferences.push(
               DeepReference.from({
@@ -225,20 +211,13 @@ export function gatherDeepPrebindingReferencesFromPatternEntry({
   );
 
   for (const [parameterId, parameterValue] of Object.entries(parameters)) {
-    console.log(parameterId, parameterValue);
-
-    console.log(1);
-
-    console.log(3);
     const dataSourceKey = parameterValue.path.split('/')[1];
     const headEntryLink = dataSource[dataSourceKey];
     if (!headEntryLink) continue;
     if (headEntryLink.sys.linkType !== 'Entry') continue;
-    console.log(4);
+
     const headEntry = fetchedLevel1Entries.find((entry) => entry.sys.id === headEntryLink.sys.id);
     if (!headEntry) continue;
-
-    console.log(5);
 
     const headEntryContentTypeId = headEntry.sys.contentType.sys.id;
 
@@ -250,18 +229,14 @@ export function gatherDeepPrebindingReferencesFromPatternEntry({
     });
 
     if (!variableMappings) continue;
-    console.log(6, variableMappings);
 
     for (const mappingData of Object.values(variableMappings)) {
-      console.log('headEntryContentTypeId', headEntryContentTypeId);
       const targetMapping = mappingData.pathsByContentType[headEntryContentTypeId];
-      console.log('target mapping', targetMapping);
       if (!targetMapping) continue;
       // mapping doesn't start with /uuid, but instead starts with /fields
       // so we add /uuid to make it match the binding path format
       const path = `/${dataSourceKey}${targetMapping.path}`;
       if (!isDeepPath(path)) continue;
-      console.log(7);
 
       deepPrebindingReferences.push(
         DeepReference.from({

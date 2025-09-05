@@ -19,6 +19,37 @@ export type PrebindingData = {
   variableMappings?: Record<string, VariableMapping>;
 };
 
+export const flattenNestedPatterns = (fetchedPatterns: Array<ExperienceEntry>) => {
+  const patternsById: Record<string, ExperienceEntry> = {};
+
+  const queue = [...fetchedPatterns];
+
+  while (queue.length) {
+    const pattern = queue.shift();
+
+    if (!pattern) {
+      continue;
+    }
+
+    if (patternsById[pattern.sys.id]) {
+      continue;
+    }
+
+    patternsById[pattern.sys.id] = pattern;
+
+    if (!Array.isArray(pattern.fields.usedComponents) || !pattern.fields.usedComponents.length) {
+      continue;
+    }
+
+    for (const nestedPattern of pattern.fields.usedComponents) {
+      if (!isLink(nestedPattern)) {
+        queue.push(nestedPattern);
+      }
+    }
+  }
+  return Object.values(patternsById);
+};
+
 /**
  * Given a list of patterns, extract the prebinding data into a more digestable format indexed by the pattern entry id
  * @param patterns a list of pattern entries
@@ -27,26 +58,7 @@ export type PrebindingData = {
 export const extractPrebindingDataByPatternId = (patterns: Array<ExperienceEntry>) => {
   const prebindingDataByPatternId: Record<string, PrebindingData> = {};
 
-  const iteratedPatternIds: Array<string> = [];
-  const queue: Array<ExperienceEntry> = [...patterns];
-
-  for (const pattern of queue) {
-    if (iteratedPatternIds.includes(pattern.sys.id)) {
-      continue;
-    } else {
-      iteratedPatternIds.push(pattern.sys.id);
-    }
-
-    if (pattern.fields.usedComponents) {
-      for (const maybeFetchedNestedPattern of pattern.fields.usedComponents) {
-        if (isLink(maybeFetchedNestedPattern)) {
-          throw new Error('Nested pattern is not fully fetched');
-        } else {
-          queue.push(maybeFetchedNestedPattern);
-        }
-      }
-    }
-
+  for (const pattern of patterns) {
     const patternId = pattern.sys.id;
     const [prebindingDefinition] = pattern.fields.componentSettings?.prebindingDefinitions ?? [];
     if (!prebindingDefinition) continue;
