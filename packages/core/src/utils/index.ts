@@ -17,3 +17,4 @@ export * from './utils';
 export * from './validations';
 export * from './schema';
 export * from './splitDirectAndSlotChildren';
+export * from './extractPrebindingData';

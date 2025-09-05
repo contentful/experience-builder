@@ -6,6 +6,7 @@ import {
   ExperienceFields,
 } from '@/types';
 import { entityIds } from './entities';
+import { ComponentTreeNode, ExperienceComponentTree } from '@contentful/experiences-validators';
 
 const experienceFields: ExperienceEntry['fields'] = {
   title: 'Test Composition',
@@ -194,10 +195,38 @@ export const createExperienceEntry = ({
 
 export const assemblyGeneratedVariableName = 'text_uuid1Assembly';
 export const assemblyGeneratedDesignVariableName = 'cfWidth_uuid2Assembly';
-export const createAssemblyEntry = ({
+
+const defaultComponentTreeChildren: ComponentTreeNode = {
+  definitionId: CONTENTFUL_COMPONENTS.container.id,
+  variables: {
+    cfWidth: {
+      type: 'ComponentValue',
+      key: assemblyGeneratedDesignVariableName,
+    },
+  },
+  children: [
+    {
+      definitionId: 'custom-component',
+      variables: {
+        text: {
+          type: 'ComponentValue',
+          key: assemblyGeneratedVariableName,
+        },
+      },
+      children: [],
+    },
+  ],
+};
+export const createPatternEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = 'assembly-id',
-}: createExperienceEntryArgs & { id: string }): ExperienceEntry => {
+  prebindingDefinitions,
+  componentTreeChildren = [defaultComponentTreeChildren],
+}: createExperienceEntryArgs & {
+  id: string;
+  prebindingDefinitions?: ExperienceComponentSettings['prebindingDefinitions'];
+  componentTreeChildren?: ExperienceComponentTree['children'];
+}): ExperienceEntry => {
   return {
     sys: {
       id,
@@ -233,30 +262,7 @@ export const createAssemblyEntry = ({
       title: 'Test Composition',
       slug: 'test',
       componentTree: {
-        children: [
-          {
-            definitionId: CONTENTFUL_COMPONENTS.container.id,
-            variables: {
-              cfWidth: {
-                type: 'ComponentValue',
-                key: assemblyGeneratedDesignVariableName,
-              },
-            },
-            children: [
-              {
-                definitionId: 'custom-component',
-                variables: {
-                  text: {
-                    type: 'ComponentValue',
-                    key: assemblyGeneratedVariableName,
-                  },
-                },
-                children: [],
-              },
-            ],
-          },
-        ],
-
+        children: componentTreeChildren,
         breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
         schemaVersion,
       },
@@ -280,6 +286,7 @@ export const createAssemblyEntry = ({
             defaultValue: { type: 'DesignValue', valuesByBreakpoint: { desktop: '42px' } },
           },
         },
+        ...(prebindingDefinitions ? { prebindingDefinitions } : {}),
       } satisfies ExperienceComponentSettings,
     },
   };
