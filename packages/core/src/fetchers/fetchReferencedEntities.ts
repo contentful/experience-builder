@@ -78,8 +78,6 @@ export const fetchReferencedEntities = async ({
   const usedPatterns = experienceEntry.fields.usedComponents ?? [];
   const isRenderingExperience = Boolean(!experienceEntry.fields.componentSettings);
 
-  console.log('isRenderingExperience', isRenderingExperience);
-
   const deepReferences: Array<DeepReference> = gatherDeepReferencesFromExperienceEntry(
     experienceEntry as ExperienceEntry,
   );
