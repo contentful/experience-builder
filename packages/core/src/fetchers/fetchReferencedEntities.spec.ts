@@ -707,7 +707,7 @@ describe('fetchReferencedEntities', () => {
           expect(assets).toEqual([defaultAssetFixture]);
         });
 
-        it.only('should extract deep pre-binding references from a parent pattern entry nesting a simple pattern', async () => {
+        it('should extract deep pre-binding references from a parent pattern entry nesting a simple pattern', async () => {
           const parentPatternEntryClone = structuredClone(parentPatternEntry);
           parentPatternEntryClone.fields.usedComponents = [simplePatternEntry];
           parentPatternEntryClone.fields.componentTree.children = [
