@@ -54,10 +54,6 @@
   --cf-border-radius-3xl: 1.5rem; /* 24px */
   --cf-border-radius-full: 9999px; /* full */
 
-  /* font-family */
-  --cf-font-family-sans: Archivo, Helvetica, Arial, sans-serif;
-  --cf-font-family-serif: Georgia, Cambria, Times New Roman, Times, serif;
-
   /* max widths */
   --cf-max-width-full: 100%;
 
