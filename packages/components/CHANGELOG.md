@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.6.1](https://github.com/contentful/experience-builder/compare/v3.6.0...v3.6.1) (2025-09-09)
+
+### Bug Fixes
+
+- remove unused Google Font from components package ([#1312](https://github.com/contentful/experience-builder/issues/1312)) ([5256b00](https://github.com/contentful/experience-builder/commit/5256b00855a9286e8043c2a8af87414e1e60f2ad))
+
 ## [3.6.0](https://github.com/contentful/experience-builder/compare/v3.5.0...v3.6.0) (2025-09-03)
 
 ### Bug Fixes

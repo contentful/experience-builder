@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.6.1](https://github.com/contentful/experience-builder/compare/v3.6.0...v3.6.1) (2025-09-09)
+
+### Bug Fixes
+
+- render nodes and canvas as empty if all nodes are hidden [SPA-3216] ([#1311](https://github.com/contentful/experience-builder/issues/1311)) ([827ea51](https://github.com/contentful/experience-builder/commit/827ea51be6013ba5c251b4cb7739d7830caf2d98))
+
 ## [3.6.0](https://github.com/contentful/experience-builder/compare/v3.5.0...v3.6.0) (2025-09-03)
 
 ### Bug Fixes

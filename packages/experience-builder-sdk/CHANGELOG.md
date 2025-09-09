@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.6.1](https://github.com/contentful/experience-builder/compare/v3.6.0...v3.6.1) (2025-09-09)
+
+### Bug Fixes
+
+- handle validation errors gracefully and allow expanding it in the editor mode [SPA-3210] ([#1309](https://github.com/contentful/experience-builder/issues/1309)) ([0286e47](https://github.com/contentful/experience-builder/commit/0286e47f2828674526223f661086b24219162f55))
+
 ## [3.6.0](https://github.com/contentful/experience-builder/compare/v3.5.0...v3.6.0) (2025-09-03)
 
 ### Features
