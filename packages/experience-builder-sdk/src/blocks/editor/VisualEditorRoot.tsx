@@ -14,7 +14,7 @@ type VisualEditorRootProps = {
   initialLocale: string;
 };
 
-export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
+const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
   visualEditorMode,
   canvasMode,
   experience,
@@ -28,16 +28,22 @@ export const VisualEditorRoot: React.FC<VisualEditorRootProps> = ({
   });
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VisualEditorLoader
+        experience={experience}
+        visualEditorMode={visualEditorMode}
+        canvasMode={canvasMode}
+      />
+    </Suspense>
+  );
+};
+
+const VisualEditorRootWithErrorBoundary: React.FC<VisualEditorRootProps> = (props) => {
+  return (
     <ErrorBoundary>
-      <Suspense fallback={<div>Loading...</div>}>
-        <VisualEditorLoader
-          experience={experience}
-          visualEditorMode={visualEditorMode}
-          canvasMode={canvasMode}
-        />
-      </Suspense>
+      <VisualEditorRoot {...props} />
     </ErrorBoundary>
   );
 };
 
-export default VisualEditorRoot;
+export default VisualEditorRootWithErrorBoundary;

@@ -44,7 +44,7 @@ describe('resolveHyperlinkPattern function', () => {
     const result = resolveHyperlinkPattern(pattern, entry, locale);
     expect(result).toBe('http://example.com/exampleId/en-US');
   });
-  it('should build template with fallback values when value not there ', () => {
+  it('should build template with fallback values when value not there', () => {
     const pattern = '/{entry.fields.unkown}/{locale}';
     const entry: Entry = { sys: { id: 'exampleId' } } as Entry;
     const locale = 'en-US';

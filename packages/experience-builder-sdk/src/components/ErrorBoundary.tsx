@@ -6,6 +6,18 @@ import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 
 const styles = {
   errorMessage: {
+    // These variables are copied over from `global.css` as they are only defined
+    // inside the visual-editor package while we need them here already on the public
+    // SDK package. In the future, we could move those into the core package to use them
+    // in both places without shipping them in preview mode for customers applications.
+    '--exp-builder-font-size-m': '0.875rem',
+    '--exp-builder-font-size-l': '1rem',
+    '--exp-builder-font-stack-primary':
+      '-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol',
+    '--exp-builder-red200': '#ffe0e0',
+    '--exp-builder-red800': '#7f0010',
+    '--exp-builder-blue700': '#0041ab',
+
     margin: '24px',
     fontSize: 'var(--exp-builder-font-size-m)',
     fontFamily: 'var(--exp-builder-font-stack-primary)',
