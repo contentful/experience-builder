@@ -27,10 +27,13 @@ export const shouldUsePrebinding = ({
     !!allowedVariableOverrides &&
     Array.isArray(allowedVariableOverrides);
 
-  const isForDirectBindingOnly = (allowedVariableOverrides: string[]) =>
-    allowedVariableOverrides.includes(componentValueKey); // removed 'NoValue' check
+  if (!isValidForPrebinding) {
+    return false;
+  }
 
-  return isValidForPrebinding && !isForDirectBindingOnly(allowedVariableOverrides);
+  // removed 'NoValue' check
+  const isForDirectBindingOnly = allowedVariableOverrides.includes(componentValueKey);
+  return !isForDirectBindingOnly;
 };
 
 export const resolvePrebindingPath = ({
