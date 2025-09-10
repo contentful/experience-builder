@@ -82,13 +82,15 @@ export const CompositionBlock = ({
       return resolvePattern({
         node: rawNode,
         entityStore,
-        parentParameters: parentWrappingParameters,
-        patternRootNodeIdsChain,
       });
     } else {
       return rawNode;
     }
-  }, [entityStore, isPatternNode, rawNode, parentWrappingParameters, patternRootNodeIdsChain]);
+  }, [entityStore, isPatternNode, rawNode]);
+
+  if (isPatternNode) {
+    console.log('patternNode', node);
+  }
 
   const wrappingPatternIds = useMemo(() => {
     if (isPatternNode) {

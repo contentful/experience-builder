@@ -1,14 +1,13 @@
 import { EntityStore, mergeDesignValuesByBreakpoint } from '@contentful/experiences-core';
-import md5 from 'md5';
 import type {
   ComponentPropertyValue,
   ComponentTreeNode,
   DesignValue,
   ExperienceComponentSettings,
   Parameter,
+  ParameterDefinition,
 } from '@contentful/experiences-core/types';
 import { resolvePrebindingPath, shouldUsePrebinding } from '../../utils/prebindingUtils';
-import { PATTERN_PROPERTY_DIVIDER } from '@contentful/experiences-core/constants';
 
 /** While unfolding the pattern definition on the instance, this function will replace all
  * ComponentValue in the definitions tree with the actual value on the instance. */
@@ -16,16 +15,21 @@ export const deserializePatternNode = ({
   node,
   componentInstanceVariables,
   componentSettings,
-  parameters,
   entityStore,
+  rootPatternParameters,
 }: {
   node: ComponentTreeNode;
   componentInstanceVariables: ComponentTreeNode['variables'];
   componentSettings: ExperienceComponentSettings;
-  parameters: Record<string, Parameter>;
   entityStore: EntityStore;
+  rootPatternParameters: Record<string, Parameter>;
 }): ComponentTreeNode => {
   const variables: Record<string, ComponentPropertyValue> = {};
+
+  const prebindingDefinition = componentSettings.prebindingDefinitions?.[0] ?? {
+    parameterDefinitions: {},
+  };
+  const parameterDefinitions = prebindingDefinition.parameterDefinitions;
 
   for (const [variableName, variable] of Object.entries(node.variables)) {
     variables[variableName] = variable;
@@ -38,12 +42,12 @@ export const deserializePatternNode = ({
       const usePrebinding = shouldUsePrebinding({
         componentSettings,
         componentValueKey,
-        parameters: parameters,
+        parameters: rootPatternParameters,
       });
       const path = resolvePrebindingPath({
         componentSettings,
         componentValueKey,
-        parameters: parameters,
+        parameters: rootPatternParameters,
         entityStore,
       });
 
@@ -93,15 +97,49 @@ export const deserializePatternNode = ({
     }
   }
 
-  const children: ComponentTreeNode[] = node.children.map((child) =>
-    deserializePatternNode({
+  const hoistingInstructionsByNodeId: Record<
+    string,
+    Array<{
+      hoistedParameterId: string;
+      hoistingInstruction: NonNullable<ParameterDefinition['passToNodes']>[0];
+    }>
+  > = {};
+  for (const [parameterId, parameterDefinition] of Object.entries(parameterDefinitions)) {
+    if (Array.isArray(parameterDefinition.passToNodes) && parameterDefinition.passToNodes.length) {
+      const [hoistingInstruction] = parameterDefinition.passToNodes;
+      const savedHoistingInstructions =
+        hoistingInstructionsByNodeId[hoistingInstruction.nodeId] || [];
+      savedHoistingInstructions.push({ hoistedParameterId: parameterId, hoistingInstruction });
+      hoistingInstructionsByNodeId[hoistingInstruction.nodeId] = savedHoistingInstructions;
+    }
+  }
+
+  const children: ComponentTreeNode[] = node.children.map((child) => {
+    const childNodeParameters: Record<string, Parameter> = {};
+
+    const hoistedParametersFromChildNode = hoistingInstructionsByNodeId[child.id!] || [];
+
+    for (const { hoistedParameterId, hoistingInstruction } of hoistedParametersFromChildNode) {
+      if (rootPatternParameters[hoistedParameterId]) {
+        childNodeParameters[hoistingInstruction.parameterId] =
+          rootPatternParameters[hoistedParameterId];
+      }
+    }
+
+    if (Object.keys(childNodeParameters).length) {
+      Object.assign(child, {
+        parameters: childNodeParameters,
+      });
+    }
+
+    return deserializePatternNode({
       node: child,
       componentInstanceVariables,
       componentSettings,
-      parameters,
       entityStore,
-    }),
-  );
+      rootPatternParameters,
+    });
+  });
 
   return {
     definitionId: node.definitionId,
@@ -116,49 +154,21 @@ export const deserializePatternNode = ({
 
 export const resolvePattern = ({
   node,
-  parentParameters,
-  patternRootNodeIdsChain,
   entityStore,
 }: {
   node: ComponentTreeNode;
   entityStore: EntityStore;
-  parentParameters: Record<string, Parameter>;
-  patternRootNodeIdsChain: string;
 }) => {
   const componentId = node.definitionId as string;
-  const assembly = entityStore.usedComponents?.find(
+  const patternEntry = entityStore.usedComponents?.find(
     (component) => component.sys.id === componentId,
   );
 
-  if (!assembly || !('fields' in assembly)) {
+  if (!patternEntry || !('fields' in patternEntry)) {
     return node;
   }
 
-  const parameters: Record<string, Parameter> = {};
-
-  const allParameters = {
-    ...parentParameters,
-    ...(node.parameters || {}),
-  };
-
-  for (const [parameterKey, parameter] of Object.entries(allParameters)) {
-    /**
-     * Bubbled up pattern properties are a concatenation of the node id
-     * and the pattern property definition id. We need to split them so
-     * that the node only uses the pattern property definition id.
-     */
-    const [hashKey, parameterId] = parameterKey.split(PATTERN_PROPERTY_DIVIDER);
-
-    const hashedNodeChain = md5(patternRootNodeIdsChain || '');
-
-    const isMatchingNode = hashKey === hashedNodeChain;
-
-    if (!isMatchingNode) continue;
-
-    parameters[parameterId] = parameter;
-  }
-
-  const componentFields = assembly.fields;
+  const componentFields = patternEntry.fields;
 
   const deserializedNode = deserializePatternNode({
     node: {
@@ -166,12 +176,12 @@ export const resolvePattern = ({
       id: node.id,
       variables: node.variables,
       children: componentFields.componentTree.children,
-      parameters: parameters,
+      parameters: node.parameters,
     },
     componentInstanceVariables: node.variables,
     componentSettings: componentFields.componentSettings!,
-    parameters: parameters,
     entityStore,
+    rootPatternParameters: node.parameters ?? {},
   });
 
   entityStore.addAssemblyUnboundValues(componentFields.unboundValues);
