@@ -13,6 +13,7 @@ import { F36TextInput, f36TextInputDefinition } from './components/F36TextInput'
 import { F36Select, f36SelectDefinition } from './components/F36Select';
 import { F36SearchInput, f36SearchInputDefinition } from './components/F36SearchInput';
 import { F36Icon, f36IconDefinition } from './components/F36Icon';
+import { F36Collapse, f36CollapseDefinition } from './components/F36Collapse';
 
 defineComponents(
   [
@@ -62,6 +63,13 @@ defineComponents(
     {
       component: F36Icon,
       definition: f36IconDefinition,
+      options: {
+        wrapComponent: false,
+      },
+    },
+    {
+      component: F36Collapse,
+      definition: f36CollapseDefinition,
       options: {
         wrapComponent: false,
       },

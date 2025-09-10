@@ -91,7 +91,8 @@ export default function Page() {
             margin: '0',
             padding: '16px',
           }}>
-          Loading additional levels... <sup>(won't trigger on hot-reload)</sup>
+          Loading additional levels for component awareness test application...{' '}
+          <sup>(won't trigger on hot-reload)</sup>
         </h3>
       )}
 
