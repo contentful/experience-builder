@@ -8,16 +8,15 @@ interface F36ButtonProps {
   isDisabled?: boolean;
   isFullWidth?: boolean;
   href?: string;
-  children?: React.ReactNode;
 }
 
 export const F36Button: React.FC<F36ButtonProps> = ({
+  text,
   variant = 'primary',
-  size = 'small',
+  size = 'medium',
   isDisabled = false,
   isFullWidth = false,
   href,
-  children,
   ...rest
 }) => {
   const buttonProps = {
@@ -28,17 +27,15 @@ export const F36Button: React.FC<F36ButtonProps> = ({
     ...rest,
   };
 
-  const content = children;
-
   if (href) {
     return (
       <Button {...buttonProps} as="a" href={href}>
-        {content}
+        {text}
       </Button>
     );
   }
 
-  return <Button {...buttonProps}>{content}</Button>;
+  return <Button {...buttonProps}>{text}</Button>;
 };
 
 export default F36Button;

@@ -6,11 +6,16 @@ export const f36ButtonDefinition: ComponentDefinition = {
   id: 'f36-button',
   name: 'F36 Button',
   category: 'F36 Design System',
-  children: true,
   thumbnailUrl:
     'https://images.ctfassets.net/son9ld5ewssk/4BtmUE8ixnHZaL3NNI8rKN/81a5f79436c7d4b3e8a44b5e31b6be3e/button_thumbnail.png',
   builtInStyles: ['cfMargin', 'cfPadding'],
   variables: {
+    text: {
+      displayName: 'Button Text',
+      type: 'Text',
+      defaultValue: 'Click me',
+      description: 'The text displayed on the button',
+    },
     variant: {
       displayName: 'Variant',
       type: 'Text',
@@ -30,7 +35,7 @@ export const f36ButtonDefinition: ComponentDefinition = {
     size: {
       displayName: 'Size',
       type: 'Text',
-      defaultValue: 'small',
+      defaultValue: 'medium',
       group: 'style',
       description: 'The size of the button',
       validations: {
