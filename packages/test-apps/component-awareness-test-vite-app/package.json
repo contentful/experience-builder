@@ -1,5 +1,5 @@
 {
-  "name": "component-awarness-test-vite-app",
+  "name": "component-awareness-test-vite-app",
   "private": true,
   "version": "0.0.1-pre-20231216T233830.0",
   "type": "module",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
-  "@contentful/f36-icons-alpha": "npm:@contentful/f36-icons@5.0.0-alpha.44",
+    "@contentful/f36-icons-alpha": "npm:@contentful/f36-icons@5.0.0-alpha.44",
     "contentful": "^10.6.14",
     "emotion": "^10.0.27",
     "react": "^18.2.0",
