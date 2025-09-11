@@ -1,4 +1,8 @@
-import { EntityStore, mergeDesignValuesByBreakpoint } from '@contentful/experiences-core';
+import {
+  checkIsAssemblyEntry,
+  EntityStore,
+  mergeDesignValuesByBreakpoint,
+} from '@contentful/experiences-core';
 import type {
   ComponentPropertyValue,
   ComponentTreeNode,
@@ -13,13 +17,13 @@ import { resolvePrebindingPath, shouldUsePrebinding } from '../../utils/prebindi
  * ComponentValue in the definitions tree with the actual value on the instance. */
 export const deserializePatternNode = ({
   node,
-  componentInstanceVariables,
+  rootPatternVariables,
   componentSettings,
   entityStore,
   rootPatternParameters,
 }: {
   node: ComponentTreeNode;
-  componentInstanceVariables: ComponentTreeNode['variables'];
+  rootPatternVariables: ComponentTreeNode['variables'];
   componentSettings: ExperienceComponentSettings;
   entityStore: EntityStore;
   rootPatternParameters: Record<string, Parameter>;
@@ -35,7 +39,7 @@ export const deserializePatternNode = ({
     variables[variableName] = variable;
     if (variable.type === 'ComponentValue') {
       const componentValueKey = variable.key;
-      const instanceProperty = componentInstanceVariables[componentValueKey];
+      const instanceProperty = rootPatternVariables[componentValueKey];
       const variableDefinition = componentSettings.variableDefinitions?.[componentValueKey];
       const defaultValue = variableDefinition?.defaultValue;
 
@@ -50,6 +54,8 @@ export const deserializePatternNode = ({
         parameters: rootPatternParameters,
         entityStore,
       });
+
+      console.log('instanceProperty', instanceProperty, componentValueKey);
 
       if (usePrebinding && path) {
         variables[variableName] = {
@@ -85,6 +91,11 @@ export const deserializePatternNode = ({
           defaultValue as DesignValue | undefined,
           instanceProperty,
         );
+      } else if (instanceProperty?.type === 'ComponentValue') {
+        // to avoid having `ComponentValue` when rendering an experience, we replace it with the default value defined by the pattern
+        if (!entityStore.isExperienceAPatternEntry && defaultValue) {
+          variables[variableName] = defaultValue;
+        }
       } else if (!instanceProperty && defaultValue) {
         // So far, we only automatically fallback to the defaultValue for design properties
         if (variableDefinition.group === 'style') {
@@ -126,15 +137,16 @@ export const deserializePatternNode = ({
       }
     }
 
-    if (Object.keys(childNodeParameters).length) {
-      Object.assign(child, {
-        parameters: childNodeParameters,
-      });
-    }
+    const childNodeWithParameters = Object.keys(childNodeParameters).length
+      ? {
+          ...child,
+          parameters: childNodeParameters,
+        }
+      : child;
 
     return deserializePatternNode({
-      node: child,
-      componentInstanceVariables,
+      node: childNodeWithParameters,
+      rootPatternVariables,
       componentSettings,
       entityStore,
       rootPatternParameters,
@@ -169,6 +181,7 @@ export const resolvePattern = ({
   }
 
   const componentFields = patternEntry.fields;
+  const parameters = node.parameters ?? {};
 
   const deserializedNode = deserializePatternNode({
     node: {
@@ -176,12 +189,12 @@ export const resolvePattern = ({
       id: node.id,
       variables: node.variables,
       children: componentFields.componentTree.children,
-      parameters: node.parameters,
+      parameters,
     },
-    componentInstanceVariables: node.variables,
+    rootPatternVariables: node.variables,
     componentSettings: componentFields.componentSettings!,
     entityStore,
-    rootPatternParameters: node.parameters ?? {},
+    rootPatternParameters: parameters,
   });
 
   entityStore.addAssemblyUnboundValues(componentFields.unboundValues);

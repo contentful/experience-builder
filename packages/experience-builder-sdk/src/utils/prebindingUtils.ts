@@ -1,5 +1,4 @@
 import { type EntityStore, isLink } from '@contentful/experiences-core';
-import { SIDELOADED_PREFIX } from '@contentful/experiences-core/constants';
 import { ExperienceComponentSettings, Parameter } from '@contentful/experiences-validators';
 
 export const shouldUsePrebinding = ({
@@ -77,16 +76,20 @@ export const resolvePrebindingPath = ({
 
 export const resolveMaybePrebindingDefaultValuePath = ({
   componentValueKey,
+  nodeId,
   entityStore,
 }: {
   componentValueKey: string;
+  nodeId: string;
   entityStore: EntityStore;
 }): string | undefined => {
+  console.log(entityStore.hoistedVariableMappings, entityStore.hoistedParameterDefinitions);
   const variableMapping = entityStore.hoistedVariableMappings[componentValueKey];
   if (!variableMapping) return;
 
   const pdID = variableMapping.parameterId;
-  const prebindingDefinition = entityStore.hoistedParameterDefinitions[pdID];
+  const hoistedpdID = entityStore.getHoistedParameterId(pdID, nodeId);
+  const prebindingDefinition = entityStore.hoistedParameterDefinitions[hoistedpdID];
 
   if (!prebindingDefinition) {
     // probably shouldn't happen, as if ppd is not defined, then variableMapping should not be defined either
@@ -104,8 +107,11 @@ export const resolveMaybePrebindingDefaultValuePath = ({
     return;
   }
 
-  if (contentTypeId in prebindingDefinition.contentTypes) {
+  console.log('lllll', contentTypeId, prebindingDefinition);
+
+  if (prebindingDefinition.contentTypes.includes(contentTypeId)) {
     const entity = entityStore.getEntityFromLink(defaultEntryLink);
+    console.log('e', entity);
     if (!entity) {
       // looks like sideloading of the prebinding default value didn't work as expected.
       // And didn't sideload the entry into entityStore (and didn't add it's sideloaded_dsKey to the entityStore.dataSource)
@@ -118,7 +124,7 @@ export const resolveMaybePrebindingDefaultValuePath = ({
       return;
     }
 
-    const fullDefaultValuePath = `/${SIDELOADED_PREFIX}${defaultEntryLink.sys.id}${fieldPath}`;
+    const fullDefaultValuePath = `/${defaultEntryLink.sys.id}${fieldPath}`;
     return fullDefaultValuePath;
   }
 };

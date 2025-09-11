@@ -54,12 +54,12 @@ export const parseComponentProps = ({
   resolveBoundValue,
   resolveHyperlinkValue,
   resolveUnboundValue,
-  resolvePrebindingValue,
+  resolveComponentValue,
 }: {
   breakpoints: Breakpoint[];
   mainBreakpoint: Breakpoint;
   componentDefinition: ComponentDefinition;
-  patternRootNodeIdsChain?: string;
+  patternRootNodeIdsChain: Array<string>;
   node: ComponentTreeNode;
   resolveDesignValue: ResolveDesignValueType;
   resolveBoundValue: ResolveBoundValueType;
@@ -68,7 +68,7 @@ export const parseComponentProps = ({
     mappingKey: string;
     defaultValue: ComponentDefinitionVariable['defaultValue'];
   }) => PrimitiveValue;
-  resolvePrebindingValue: (data: {
+  resolveComponentValue: (data: {
     propertyName: string;
     mappingKey: string;
     dataType: ComponentDefinitionVariableType;
@@ -151,7 +151,7 @@ export const parseComponentProps = ({
         // This can either be a design (style) or a content property.
         // Where prebinding is used, we resolve like they are a BoundValue.
         const propValue =
-          resolvePrebindingValue({
+          resolveComponentValue({
             propertyName: propName,
             mappingKey: propertyValue.key,
             dataType: propDefinition.type,
