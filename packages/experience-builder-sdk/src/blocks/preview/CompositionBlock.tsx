@@ -27,7 +27,10 @@ import { createAssemblyRegistration, getComponentRegistration } from '../../core
 import { useInjectStylesheet } from '../../hooks/useInjectStylesheet';
 import { Assembly, ContentfulContainer } from '@contentful/experiences-components-react';
 import { resolvePattern } from '../../core/preview/assemblyUtils';
-import { resolveMaybePrebindingDefaultValuePath } from '../../utils/prebindingUtils';
+import {
+  resolveMaybePrebindingDefaultValuePath,
+  shouldUsePrebinding,
+} from '../../utils/prebindingUtils';
 import { parseComponentProps } from '../../utils/parseComponentProps';
 
 type CompositionBlockProps = {
@@ -43,8 +46,7 @@ type CompositionBlockProps = {
    * Chained IDs to ensure uniqueness across multiple instances of the same pattern
    * when storing & accessing cfSsrClassName.
    */
-  patternRootNodeIdsChain?: string;
-  wrappingParameters?: Record<string, Parameter>;
+  patternRootNodeIdsChain?: Array<string>;
 };
 
 export const CompositionBlock = ({
@@ -55,9 +57,9 @@ export const CompositionBlock = ({
   resolveDesignValue,
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
-  wrappingParameters: parentWrappingParameters = {},
-  patternRootNodeIdsChain: parentPatternRootNodeIdsChain = '',
+  patternRootNodeIdsChain: parentPatternRootNodeIdsChain = [],
 }: CompositionBlockProps) => {
+  console.log('rawNode', rawNode);
   const isPatternNode = useMemo(() => {
     return checkIsAssemblyNode({
       componentId: rawNode.definitionId,
@@ -65,14 +67,10 @@ export const CompositionBlock = ({
     });
   }, [entityStore.usedComponents, rawNode.definitionId]);
 
-  const isPatternEntry = useMemo(() => {
-    return checkIsAssemblyEntry({ fields: entityStore.experienceEntryFields } as unknown as Entry);
-  }, [entityStore]);
-
   const patternRootNodeIdsChain = useMemo(() => {
     if (isPatternNode) {
       // Pattern nodes are chained without a separator (following the format for prebinding/parameters)
-      return `${parentPatternRootNodeIdsChain}${rawNode.id}`;
+      return [...parentPatternRootNodeIdsChain, rawNode.id!];
     }
     return parentPatternRootNodeIdsChain;
   }, [isPatternNode, parentPatternRootNodeIdsChain, rawNode.id]);
@@ -88,9 +86,7 @@ export const CompositionBlock = ({
     }
   }, [entityStore, isPatternNode, rawNode]);
 
-  if (isPatternNode) {
-    console.log('patternNode', node);
-  }
+  console.log('patternNode', node);
 
   const wrappingPatternIds = useMemo(() => {
     if (isPatternNode) {
@@ -98,16 +94,6 @@ export const CompositionBlock = ({
     }
     return parentWrappingPatternIds;
   }, [isPatternNode, node, parentWrappingPatternIds]);
-
-  // Merge the pattern properties of the current node with the parent's pattern properties
-  // to ensure nested patterns receive relevant pattern properties that were bubbled up
-  // during assembly serialization.
-  const wrappingParameters = useMemo(() => {
-    if (isPatternNode) {
-      return { ...parentWrappingParameters, ...(rawNode.parameters || {}) };
-    }
-    return parentWrappingParameters;
-  }, [isPatternNode, rawNode, parentWrappingParameters]);
 
   const componentRegistration = useMemo(() => {
     const registration = getComponentRegistration(node.definitionId as string);
@@ -159,6 +145,7 @@ export const CompositionBlock = ({
       node,
       resolveDesignValue,
       resolveBoundValue: ({ binding, propertyName, dataType }) => {
+        console.log('binding.path', binding.path, entityStore.dataSource);
         const [, uuid] = binding.path.split('/');
         const boundEntityLink = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
         return transformBoundContentValue(
@@ -186,23 +173,26 @@ export const CompositionBlock = ({
       resolveUnboundValue: ({ mappingKey, defaultValue }) => {
         return entityStore.unboundValues[mappingKey]?.value ?? defaultValue;
       },
-      resolvePrebindingValue: ({ mappingKey, propertyName, dataType, resolveBoundValue }) => {
-        if (isPatternEntry) {
-          const path = resolveMaybePrebindingDefaultValuePath({
-            componentValueKey: mappingKey,
-            entityStore,
-          });
+      resolveComponentValue: ({ mappingKey, propertyName, dataType, resolveBoundValue }) => {
+        console.log('chain', patternRootNodeIdsChain);
 
-          if (path) {
-            return resolveBoundValue({
-              propertyName,
-              dataType,
-              binding: {
-                type: 'BoundValue',
-                path,
-              },
-            });
-          }
+        const path = resolveMaybePrebindingDefaultValuePath({
+          componentValueKey: mappingKey,
+          nodeId: patternRootNodeIdsChain[patternRootNodeIdsChain.length - 1],
+          entityStore,
+        });
+
+        console.log('oath', path, mappingKey, propertyName, node, entityStore.dataSource);
+
+        if (path) {
+          return resolveBoundValue({
+            propertyName,
+            dataType,
+            binding: {
+              type: 'BoundValue',
+              path,
+            },
+          });
         }
       },
     });
@@ -222,7 +212,7 @@ export const CompositionBlock = ({
     };
   }, [
     node,
-    isPatternEntry,
+    // isPatternEntry,
     entityStore,
     componentRegistration,
     isPatternNode,
@@ -276,7 +266,6 @@ export const CompositionBlock = ({
       entityStore={entityStore}
       resolveDesignValue={resolveDesignValue}
       wrappingPatternIds={wrappingPatternIds}
-      wrappingParameters={wrappingParameters}
       patternRootNodeIdsChain={patternRootNodeIdsChain}
     />
   );

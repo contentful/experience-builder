@@ -15,5 +15,5 @@ import { sideloadPrebindingDefaultValues } from './sideloading';
 export const prepareExperienceEntry = (experienceEntry: ExperienceEntry) => {
   removeCircularPatternReferences(experienceEntry);
   removeSelfReferencingDataSource(experienceEntry);
-  sideloadPrebindingDefaultValues(experienceEntry);
+  // sideloadPrebindingDefaultValues(experienceEntry);
 };
