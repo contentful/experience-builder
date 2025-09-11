@@ -8,7 +8,6 @@ import {
   VariableMapping,
 } from '@/types';
 import { treeVisit } from './treeTraversal';
-import { generateRandomId } from './utils';
 import { isLink } from './isLink';
 
 export type PrebindingData = {
@@ -102,7 +101,7 @@ export const generateDefaultDataSourceForPrebindingDefinition = (
     prebindingDefinition.parameterDefinitions ?? {},
   )) {
     if (parameterDefinition.defaultSource && isLink(parameterDefinition.defaultSource.link)) {
-      const dataSourceKey = generateRandomId(7);
+      const dataSourceKey = parameterDefinition.defaultSource.link.sys.id;
       dataSource[dataSourceKey] = parameterDefinition.defaultSource.link;
       parameters[parameterId] = {
         type: 'BoundValue',
