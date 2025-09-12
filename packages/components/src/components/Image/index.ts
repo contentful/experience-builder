@@ -20,7 +20,7 @@ export const ImageComponentDefinition: ComponentDefinition = {
       type: 'Text',
       description: 'Alternative text for the image',
       validations: {
-        bindingSourceType: ['entry', 'manual', 'asset'],
+        bindingSourceType: ['asset', 'entry', 'manual'],
       },
     },
   },

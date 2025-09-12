@@ -85,6 +85,8 @@ export type ComponentDefinitionVariableValidation<T extends ComponentDefinitionP
   required?: boolean;
   in?: ValidationOption<T>[];
   format?: VariableFormats;
+  /** Define the type of entity that can be bound to this variable. The provided list order defines
+   * the order of select options in the editor UI, i.e. the first item will be pre-selected by default. */
   bindingSourceType?: BindingSourceTypeEnum;
 };
 
