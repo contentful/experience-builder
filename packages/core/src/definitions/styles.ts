@@ -194,7 +194,7 @@ export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
     type: 'Media',
     description: 'Image to display',
     validations: {
-      bindingSourceType: ['entry', 'asset', 'manual'],
+      bindingSourceType: ['asset', 'entry', 'manual'],
     },
   },
   cfImageOptions: {
@@ -219,7 +219,7 @@ export const optionalBuiltInStyles: Partial<DesignVariableMap> = {
     type: 'Media',
     description: 'Background image for component',
     validations: {
-      bindingSourceType: ['entry', 'asset', 'manual'],
+      bindingSourceType: ['asset', 'entry', 'manual'],
     },
   },
   cfBackgroundImageOptions: {
