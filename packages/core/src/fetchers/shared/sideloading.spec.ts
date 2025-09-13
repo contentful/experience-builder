@@ -1,9 +1,6 @@
 import * as utils from '@/utils';
 import { sideloadPrebindingDefaultValues } from './sideloading';
-import {
-  createExperienceEntry,
-  createAssemblyEntry as createPatternEntry,
-} from '@/test/__fixtures__/experience';
+import { createExperienceEntry, createPatternEntry } from '@/test/__fixtures__/experience';
 import { ExperienceEntry } from '@/types';
 import { describe, it, expect, vi } from 'vitest';
 
