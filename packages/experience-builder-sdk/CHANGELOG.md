@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.6.2](https://github.com/contentful/experience-builder/compare/v3.6.1...v3.6.2) (2025-09-15)
+
+### Bug Fixes
+
+- bring back cfVisibility rendering in CSR preview mode ([#1318](https://github.com/contentful/experience-builder/issues/1318)) ([a44407f](https://github.com/contentful/experience-builder/commit/a44407f69cace726ae7c9a9cefefdad41538ce78))
+
 ## [3.6.1](https://github.com/contentful/experience-builder/compare/v3.6.0...v3.6.1) (2025-09-09)
 
 ### Bug Fixes
