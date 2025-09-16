@@ -108,8 +108,8 @@ export const fetchReferencedEntities = async ({
     }
   }
 
-  // normally, for experience entry, there should be no need to call this methid, as `includes=2` will have them resolved
-  // because the entires used for pre-binding are stored in both - the layout of the experience, as well as the dataSource field
+  // normally, for experience entry, there should be no need to call this method, as `includes=2` will have them resolved
+  // because the entries used for pre-binding are stored in both - the layout of the experience, as well as the dataSource field
   const deepPrebindingReferences = isRenderingExperience
     ? gatherDeepPrebindingReferencesFromExperienceEntry({
         experienceEntry: experienceEntry as ExperienceEntry,

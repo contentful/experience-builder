@@ -2,7 +2,7 @@ import { ExperienceComponentSettings } from '@/types';
 import {
   extractPrebindingDataByPatternId,
   generateDefaultDataSourceForPrebindingDefinition,
-  getTargetPatternMappingForParameter,
+  getTargetPatternMappingsForParameter,
 } from './extractPrebindingData';
 import { createPatternEntry } from '@/test/__fixtures__/experience';
 import { cloneDeep } from 'lodash-es';
@@ -254,10 +254,10 @@ describe('generateDefaultDataSourceForPrebindingDefinition', () => {
   });
 });
 
-describe('getTargetPatternMappingForParameter', () => {
+describe('getTargetPatternMappingsForParameter', () => {
   it('should return nothing for patterns without prebinding', () => {
     expect(
-      getTargetPatternMappingForParameter({
+      getTargetPatternMappingsForParameter({
         fetchedPatterns: [],
         prebindingDataByPatternId: {},
         patternNodeDefinitionId: fixtures.patternWithNativePrebinding.sys.id,
@@ -268,7 +268,7 @@ describe('getTargetPatternMappingForParameter', () => {
 
   it('should return nothing if the requested parameter id is not recognized', () => {
     expect(
-      getTargetPatternMappingForParameter({
+      getTargetPatternMappingsForParameter({
         fetchedPatterns: [],
         prebindingDataByPatternId: extractPrebindingDataByPatternId([
           fixtures.patternWithNativePrebinding,
@@ -281,7 +281,7 @@ describe('getTargetPatternMappingForParameter', () => {
 
   it('should return the variableMappings for a recognized parameter id if its from the patterns native prebinding', () => {
     expect(
-      getTargetPatternMappingForParameter({
+      getTargetPatternMappingsForParameter({
         fetchedPatterns: [],
         prebindingDataByPatternId: extractPrebindingDataByPatternId([
           fixtures.patternWithNativePrebinding,
@@ -297,7 +297,7 @@ describe('getTargetPatternMappingForParameter', () => {
 
   it('should return the variableMappings for a recognized parameter id if its from the patterns native prebinding when given a pattern that has a mix of both', () => {
     expect(
-      getTargetPatternMappingForParameter({
+      getTargetPatternMappingsForParameter({
         fetchedPatterns: [],
         prebindingDataByPatternId: extractPrebindingDataByPatternId([
           fixtures.patternWithNativeAndHoistedPrebinding,
@@ -311,7 +311,7 @@ describe('getTargetPatternMappingForParameter', () => {
     );
 
     expect(
-      getTargetPatternMappingForParameter({
+      getTargetPatternMappingsForParameter({
         fetchedPatterns: [],
         prebindingDataByPatternId: extractPrebindingDataByPatternId([
           fixtures.patternWithNativeAndHoistedPrebinding,
@@ -324,7 +324,7 @@ describe('getTargetPatternMappingForParameter', () => {
 
   it('should drill down through the hoisting chain and return the variableMappings for a recognized hoisted parameter id', () => {
     expect(
-      getTargetPatternMappingForParameter({
+      getTargetPatternMappingsForParameter({
         fetchedPatterns: [
           fixtures.patternWithNativeAndHoistedPrebinding,
           fixtures.patternWithHoistedPrebinding,
@@ -362,7 +362,7 @@ describe('getTargetPatternMappingForParameter', () => {
     );
 
     expect(
-      getTargetPatternMappingForParameter({
+      getTargetPatternMappingsForParameter({
         fetchedPatterns: [patternWithMixedPrebinding, fixtures.patternWithHoistedPrebinding],
         prebindingDataByPatternId: extractPrebindingDataByPatternId([
           patternWithMixedPrebinding,

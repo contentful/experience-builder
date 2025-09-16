@@ -116,7 +116,7 @@ export const generateDefaultDataSourceForPrebindingDefinition = (
   };
 };
 
-export function getTargetPatternMappingForParameter({
+export function getTargetPatternMappingsForParameter({
   fetchedPatterns,
   prebindingDataByPatternId,
   patternNodeDefinitionId,
@@ -168,7 +168,7 @@ export function getTargetPatternMappingForParameter({
         return undefined;
       }
 
-      return getTargetPatternMappingForParameter({
+      return getTargetPatternMappingsForParameter({
         fetchedPatterns,
         prebindingDataByPatternId,
         patternNodeDefinitionId: nestedPatternNode.definitionId,

@@ -19,7 +19,7 @@ import type { EntityFromLink, EntityStoreBase } from '@/entity';
 import { Entry } from 'contentful';
 import {
   generateDefaultDataSourceForPrebindingDefinition,
-  getTargetPatternMappingForParameter,
+  getTargetPatternMappingsForParameter,
   PrebindingData,
 } from '@/utils';
 
@@ -140,51 +140,42 @@ export function gatherDeepPrebindingReferencesFromExperienceEntry({
       if (!node.parameters) return;
 
       for (const [parameterId, parameterValue] of Object.entries(node.parameters)) {
-        if (isDeepPath(parameterValue.path)) {
+        const dataSourceKey = parameterValue.path.split('/')[1];
+        const headEntryLink = dataSource[dataSourceKey];
+        if (!headEntryLink) continue;
+        if (headEntryLink.sys.linkType !== 'Entry') continue;
+        const headEntry = fetchedLevel1Entries.find(
+          (entry) => entry.sys.id === headEntryLink.sys.id,
+        );
+        if (!headEntry) continue;
+
+        const headEntryContentTypeId = headEntry.sys.contentType.sys.id;
+
+        // if experience, we don't have any hoisted data on the given experienceEntry
+        // and we have to lookup the pattern instead
+        const variableMappings = getTargetPatternMappingsForParameter({
+          fetchedPatterns,
+          prebindingDataByPatternId,
+          patternNodeDefinitionId: node.definitionId,
+          parameterId,
+        });
+
+        if (!variableMappings) continue;
+
+        for (const mappingData of Object.values(variableMappings)) {
+          const targetMapping = mappingData.pathsByContentType[headEntryContentTypeId];
+          if (!targetMapping) continue;
+          // mapping doesn't start with /uuid, but instead starts with /fields
+          // so we add /uuid to make it match the binding path format
+          const path = `/${dataSourceKey}${targetMapping.path}`;
+          if (!isDeepPath(path)) continue;
+
           deepPrebindingReferences.push(
             DeepReference.from({
-              path: parameterValue.path,
+              path,
               dataSource,
             }),
           );
-        } else {
-          const dataSourceKey = parameterValue.path.split('/')[1];
-          const headEntryLink = dataSource[dataSourceKey];
-          if (!headEntryLink) continue;
-          if (headEntryLink.sys.linkType !== 'Entry') continue;
-          const headEntry = fetchedLevel1Entries.find(
-            (entry) => entry.sys.id === headEntryLink.sys.id,
-          );
-          if (!headEntry) continue;
-
-          const headEntryContentTypeId = headEntry.sys.contentType.sys.id;
-
-          // if experience, we don't have any hoisted data on the given experienceEntry
-          // and we have to lookup the pattern instead
-          const variableMappings = getTargetPatternMappingForParameter({
-            fetchedPatterns,
-            prebindingDataByPatternId,
-            patternNodeDefinitionId: node.definitionId,
-            parameterId,
-          });
-
-          if (!variableMappings) continue;
-
-          for (const mappingData of Object.values(variableMappings)) {
-            const targetMapping = mappingData.pathsByContentType[headEntryContentTypeId];
-            if (!targetMapping) continue;
-            // mapping doesn't start with /uuid, but instead starts with /fields
-            // so we add /uuid to make it match the binding path format
-            const path = `/${dataSourceKey}${targetMapping.path}`;
-            if (!isDeepPath(path)) continue;
-
-            deepPrebindingReferences.push(
-              DeepReference.from({
-                path,
-                dataSource,
-              }),
-            );
-          }
         }
       }
     },
@@ -221,7 +212,7 @@ export function gatherDeepPrebindingReferencesFromPatternEntry({
 
     const headEntryContentTypeId = headEntry.sys.contentType.sys.id;
 
-    const variableMappings = getTargetPatternMappingForParameter({
+    const variableMappings = getTargetPatternMappingsForParameter({
       fetchedPatterns,
       prebindingDataByPatternId,
       patternNodeDefinitionId: patternEntry.sys.id,
