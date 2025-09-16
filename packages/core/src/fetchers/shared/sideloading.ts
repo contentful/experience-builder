@@ -2,7 +2,6 @@ import type { Entry } from 'contentful';
 import type { ExperienceEntry } from '@/types';
 import type { ParameterDefinition } from '@contentful/experiences-validators';
 import { checkIsAssemblyEntry, isLink } from '@/utils';
-import { SIDELOADED_PREFIX } from '@/constants';
 
 type PatternEntry = ExperienceEntry; // alias for clarity
 type ParameterDefinitions = Record<string, ParameterDefinition>;
@@ -52,7 +51,7 @@ export const sideloadPrebindingDefaultValues = (patternEntry: ExperienceEntry): 
     // eg. { type: 'BoundValue', path: '/sideloaded_uuid/fields/title' }
     patternEntry.fields.dataSource = {
       ...patternEntry.fields.dataSource,
-      [`${SIDELOADED_PREFIX}${link.sys.id}`]: {
+      [link.sys.id]: {
         // to highlight that this is a sideloaded entry, we prefix it
         sys: {
           type: 'Link',

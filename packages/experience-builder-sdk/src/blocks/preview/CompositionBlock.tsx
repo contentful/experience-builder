@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import type { UnresolvedLink } from 'contentful';
 import { Entry } from 'contentful';
 import {
-  checkIsAssemblyEntry,
   checkIsAssemblyNode,
   EntityStore,
   resolveHyperlinkPattern,
@@ -27,10 +26,7 @@ import { createAssemblyRegistration, getComponentRegistration } from '../../core
 import { useInjectStylesheet } from '../../hooks/useInjectStylesheet';
 import { Assembly, ContentfulContainer } from '@contentful/experiences-components-react';
 import { resolvePattern } from '../../core/preview/assemblyUtils';
-import {
-  resolveMaybePrebindingDefaultValuePath,
-  shouldUsePrebinding,
-} from '../../utils/prebindingUtils';
+import { resolveMaybePrebindingDefaultValuePath } from '../../utils/prebindingUtils';
 import { parseComponentProps } from '../../utils/parseComponentProps';
 
 type CompositionBlockProps = {
@@ -42,6 +38,7 @@ type CompositionBlockProps = {
   getPatternChildNodeClassName?: (childNodeId: string) => string | undefined;
   /** Set of definition IDs of wrapping patterns to prevent circular dependencies. */
   wrappingPatternIds?: Set<string>;
+  rootPatternParameters?: Record<string, Parameter>;
   /**
    * Chained IDs to ensure uniqueness across multiple instances of the same pattern
    * when storing & accessing cfSsrClassName.
@@ -58,8 +55,8 @@ export const CompositionBlock = ({
   getPatternChildNodeClassName,
   wrappingPatternIds: parentWrappingPatternIds = new Set(),
   patternRootNodeIdsChain: parentPatternRootNodeIdsChain = [],
+  rootPatternParameters,
 }: CompositionBlockProps) => {
-  console.log('rawNode', rawNode);
   const isPatternNode = useMemo(() => {
     return checkIsAssemblyNode({
       componentId: rawNode.definitionId,
@@ -75,18 +72,35 @@ export const CompositionBlock = ({
     return parentPatternRootNodeIdsChain;
   }, [isPatternNode, parentPatternRootNodeIdsChain, rawNode.id]);
 
+  const rootParameters = useMemo(() => {
+    // covers the case when previewing a pattern
+    // all parameters are defined on the tree root node and will be provided from the start
+    if (rootPatternParameters) {
+      return rootPatternParameters;
+    }
+
+    // covers the case when previewing an experience
+    // parameters here are stored in CMA, so we retrieve them from the pattern's node and pass it down
+    if (isPatternNode && rawNode.parameters && Object.keys(rawNode.parameters).length) {
+      return rawNode.parameters;
+    }
+
+    // in case none exist - it is likely a non-pattern component, or just a pattern that has no parameters
+    return undefined;
+  }, [rawNode, rootPatternParameters, isPatternNode]);
+
   const node = useMemo(() => {
     if (isPatternNode) {
       return resolvePattern({
         node: rawNode,
         entityStore,
+        parentPatternRootNodeIdsChain: patternRootNodeIdsChain,
+        rootPatternParameters: rootParameters!,
       });
     } else {
       return rawNode;
     }
-  }, [entityStore, isPatternNode, rawNode]);
-
-  console.log('patternNode', node);
+  }, [entityStore, isPatternNode, rawNode, patternRootNodeIdsChain, rootParameters]);
 
   const wrappingPatternIds = useMemo(() => {
     if (isPatternNode) {
@@ -145,7 +159,6 @@ export const CompositionBlock = ({
       node,
       resolveDesignValue,
       resolveBoundValue: ({ binding, propertyName, dataType }) => {
-        console.log('binding.path', binding.path, entityStore.dataSource);
         const [, uuid] = binding.path.split('/');
         const boundEntityLink = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
         return transformBoundContentValue(
@@ -174,15 +187,15 @@ export const CompositionBlock = ({
         return entityStore.unboundValues[mappingKey]?.value ?? defaultValue;
       },
       resolveComponentValue: ({ mappingKey, propertyName, dataType, resolveBoundValue }) => {
-        console.log('chain', patternRootNodeIdsChain);
+        if (!entityStore.isExperienceAPatternEntry) {
+          return;
+        }
 
         const path = resolveMaybePrebindingDefaultValuePath({
           componentValueKey: mappingKey,
-          nodeId: patternRootNodeIdsChain[patternRootNodeIdsChain.length - 1],
+          patternRootNodeIdsChain,
           entityStore,
         });
-
-        console.log('oath', path, mappingKey, propertyName, node, entityStore.dataSource);
 
         if (path) {
           return resolveBoundValue({
@@ -212,7 +225,6 @@ export const CompositionBlock = ({
     };
   }, [
     node,
-    // isPatternEntry,
     entityStore,
     componentRegistration,
     isPatternNode,
@@ -240,7 +252,7 @@ export const CompositionBlock = ({
   // Retrieves the CSS class name for a given child node ID.
   const _getPatternChildNodeClassName = (childNodeId: string) => {
     if (isPatternNode) {
-      const nodeIdsChain = `${patternRootNodeIdsChain}-${childNodeId}`;
+      const nodeIdsChain = [...patternRootNodeIdsChain, childNodeId].join('-');
       // @ts-expect-error -- property cfSsrClassName is a map (id to classNames) that is added during rendering in ssrStyles
       const classesForNode: DesignValue | undefined = node.variables.cfSsrClassName?.[nodeIdsChain];
       if (!classesForNode) return undefined;
@@ -267,6 +279,7 @@ export const CompositionBlock = ({
       resolveDesignValue={resolveDesignValue}
       wrappingPatternIds={wrappingPatternIds}
       patternRootNodeIdsChain={patternRootNodeIdsChain}
+      rootPatternParameters={rootParameters}
     />
   );
 
