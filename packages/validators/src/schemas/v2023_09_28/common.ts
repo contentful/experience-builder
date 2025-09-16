@@ -229,7 +229,7 @@ export const BreakpointSchema = z
     id: propertyKeySchema,
     // Can be replace with z.templateLiteral when upgrading to zod v4
     query: z.string().refine((s): s is BreakpointQuery => BREAKPOINT_QUERY_REGEX.test(s)),
-    previewSize: z.string(),
+    previewSize: z.string().optional(),
     displayName: z.string(),
     displayIcon: z.enum(['desktop', 'tablet', 'mobile']).optional(),
   })
