@@ -47,6 +47,8 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     return;
   }
 
+  const isRenderingAPatternEntry = experience.entityStore?.isExperienceAPatternEntry;
+
   const mapOfDesignVariableKeys = flattenDesignTokenRegistry(designTokensRegistry);
 
   // getting breakpoints from the entry componentTree field
@@ -83,7 +85,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     componentVariablesOverwrites,
     patternWrapper,
     wrappingPatternIds,
-    wrappingPatternNodeIds = [],
+    wrappingPatternNodeIds = isRenderingAPatternEntry ? ['root'] : [],
   }: {
     componentTree: ExperienceComponentTree;
     dataSource: ExperienceDataSource;
@@ -204,7 +206,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
       // Chain IDs to avoid overwriting styles across multiple instances of the same pattern
       // e.g. `{outerPatternNodeId}{innerPatternNodeId}-{currentNodeId}`
       // (!) Notice that the chain of patterns (before the dash) follows the format of prebinding/ parameters
-      const currentNodeIdsChain = `${wrappingPatternNodeIds.join('')}-${currentNode.id}`;
+      const currentNodeIdsChain = [...wrappingPatternNodeIds, currentNode.id].join('-');
 
       // For each breakpoint, resolve design tokens, create the CSS and generate a unique className.
       for (const breakpointId of breakpointIds) {

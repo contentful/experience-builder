@@ -231,40 +231,6 @@ export class EntityStore extends EntityStoreBase {
     return this._usedComponentsWithDeepReferences ?? [];
   }
 
-  public getHoistedParameterId(forParameterId: string, forPatternNodeId: string): string {
-    console.log('searching hoisting chain for', forPatternNodeId, this.experienceEntryFields);
-    const hoistingChain: Array<string> = [forParameterId];
-    const hoistingPatternIds: Array<string> = [forPatternNodeId];
-
-    for (let i = 0; i < hoistingChain.length; i++) {
-      const hoistedParameterId = hoistingChain[i];
-      const hoistedPatternId = hoistingPatternIds[i];
-
-      for (const [_hoistedParameterId, hoistedParameterDefinitions] of Object.entries(
-        this._hoistedParameterDefinitions,
-      )) {
-        if (
-          !Array.isArray(hoistedParameterDefinitions.passToNodes) ||
-          !hoistedParameterDefinitions.passToNodes.length
-        )
-          continue;
-
-        const hoistingInstruction = hoistedParameterDefinitions.passToNodes[0];
-        if (
-          hoistingInstruction.nodeId === hoistedPatternId &&
-          hoistingInstruction.parameterId === hoistedParameterId
-        ) {
-          hoistingChain.push(_hoistedParameterId);
-          hoistingPatternIds.push(hoistingInstruction.nodeId);
-        }
-      }
-    }
-
-    console.log('hoistingChain', hoistingChain);
-
-    return hoistingChain.pop()!;
-  }
-
   /**
    * Extend the existing set of unbound values with the ones from the assembly definition.
    * When creating a new assembly out of a container, the unbound value keys are copied and

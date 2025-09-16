@@ -111,7 +111,7 @@ export const createStylesheetsForBuiltInStyles = ({
 
     // Create a hash ensuring stability across nodes (and breakpoints between nodes)
     const styleHash = patternRootNodeIdsChain
-      ? md5(`${patternRootNodeIdsChain.join('-')}-${node.id}-${breakpointCss}`)
+      ? md5([...patternRootNodeIdsChain, node.id, breakpointCss].join('-'))
       : md5(`${node.id}-${breakpointCss}`);
 
     // Create a CSS className with internal prefix to make sure the value can be processed

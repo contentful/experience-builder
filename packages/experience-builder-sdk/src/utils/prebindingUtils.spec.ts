@@ -54,6 +54,7 @@ describe('shouldUsePrebinding', () => {
       componentValueKey,
       componentSettings,
       parameters: parameters,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe(true);
@@ -98,6 +99,7 @@ describe('shouldUsePrebinding', () => {
       componentValueKey,
       componentSettings,
       parameters,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe(false);
@@ -121,6 +123,7 @@ describe('shouldUsePrebinding', () => {
       componentValueKey,
       componentSettings,
       parameters,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe(false);
@@ -144,6 +147,7 @@ describe('shouldUsePrebinding', () => {
       componentValueKey,
       componentSettings,
       parameters,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe(false);
@@ -168,6 +172,7 @@ describe('shouldUsePrebinding', () => {
       componentValueKey,
       componentSettings,
       parameters: parameters,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe(false);
@@ -209,6 +214,7 @@ describe('resolvePrebindingPath', () => {
       componentSettings,
       parameters: parameters,
       entityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe(`/${dataSourceKey}/fields/testField`);
@@ -226,6 +232,7 @@ describe('resolvePrebindingPath', () => {
       componentSettings,
       parameters: parameters,
       entityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe('');
@@ -247,6 +254,7 @@ describe('resolvePrebindingPath', () => {
       componentSettings,
       parameters: parameters,
       entityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe('');
@@ -270,6 +278,7 @@ describe('resolvePrebindingPath', () => {
       componentSettings,
       parameters: parameters,
       entityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe('');
@@ -294,6 +303,7 @@ describe('resolvePrebindingPath', () => {
       componentSettings,
       parameters: parameters,
       entityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe('');
@@ -321,6 +331,7 @@ describe('resolvePrebindingPath', () => {
       componentSettings,
       parameters: parameters,
       entityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe('');
@@ -399,6 +410,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     const result = resolveMaybePrebindingDefaultValuePath({
       componentValueKey: 'testKey',
       entityStore: localEntityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBe(`/${sideloadedDefaultEntryDataSourceKey}/fields/testField`);
@@ -413,6 +425,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     const result = resolveMaybePrebindingDefaultValuePath({
       componentValueKey: 'testKey',
       entityStore: localEntityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBeUndefined();
@@ -455,6 +468,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     const result = resolveMaybePrebindingDefaultValuePath({
       componentValueKey: 'testKey',
       entityStore: localEntityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBeUndefined();
@@ -497,6 +511,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     const result = resolveMaybePrebindingDefaultValuePath({
       componentValueKey: 'testKey',
       entityStore: localEntityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBeUndefined();
@@ -516,6 +531,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     const result = resolveMaybePrebindingDefaultValuePath({
       componentValueKey: 'testKey',
       entityStore: modifiedEntityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBeUndefined();
@@ -535,6 +551,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     const result = resolveMaybePrebindingDefaultValuePath({
       componentValueKey: 'testKey',
       entityStore: modifiedEntityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBeUndefined();
@@ -559,6 +576,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
     const result = resolveMaybePrebindingDefaultValuePath({
       componentValueKey: 'testKey',
       entityStore: modifiedEntityStore,
+      patternRootNodeIdsChain: [],
     });
 
     expect(result).toBeUndefined();

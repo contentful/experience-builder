@@ -68,6 +68,12 @@ export const parseComponentProps = ({
     mappingKey: string;
     defaultValue: ComponentDefinitionVariable['defaultValue'];
   }) => PrimitiveValue;
+  /**
+   * This method will be called to resolve the values for components that are native (not from nested pattern) to the previewed pattern
+   * Nested pattern's components are going to be resolved by the `resolvePattern` method from `assemblyUtils` file
+   * @param data
+   * @returns
+   */
   resolveComponentValue: (data: {
     propertyName: string;
     mappingKey: string;
