@@ -8,6 +8,7 @@ import type { Experience } from '@contentful/experiences-core/types';
 import { CompositionBlock } from './CompositionBlock';
 import { compatibleVersions } from '../../constants';
 import { useBreakpoints } from '../../hooks';
+import { PrebindingManager } from '../../core/preview/PrebindingManager';
 
 type DeliveryRootProps = {
   experience: Experience<EntityStore>;
@@ -35,55 +36,32 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
   if (isPreviewingAPattern) {
     const prebindingDefinitions =
       entityStore.experienceEntryFields.componentSettings?.prebindingDefinitions ?? [];
+    PrebindingManager.storePrebindingDefinitions(
+      'root',
+      entityStore.experienceEntryId!,
+      prebindingDefinitions,
+    );
     const { dataSource, parameters: defaultParametersFromRootPattern } =
       generateDefaultDataSourceForPrebindingDefinition(prebindingDefinitions);
-    const prebindingDefinition = prebindingDefinitions[0];
 
     if (Object.keys(dataSource).length) {
       entityStore.experienceEntryFields!.dataSource = {
         ...entityStore.dataSource,
         ...dataSource,
       };
-      console.log('dataSource', entityStore.dataSource);
     }
 
     return entityStore.experienceEntryFields.componentTree.children.map((childNode, index) => {
-      const hoistedParameters = Object.entries(
-        prebindingDefinition?.parameterDefinitions ?? {},
-      ).reduce((acc, [hoistedParamId, hoistedParamDefinition]) => {
-        if (
-          hoistedParamDefinition.passToNodes &&
-          Array.isArray(hoistedParamDefinition.passToNodes)
-        ) {
-          const hoistingInstruction = hoistedParamDefinition.passToNodes[0];
-          if (hoistingInstruction.nodeId === childNode.id) {
-            return {
-              ...acc,
-              [hoistingInstruction.parameterId]: defaultParametersFromRootPattern[hoistedParamId],
-            };
-          }
-        }
-
-        return acc;
-      }, {});
-
-      let node = childNode;
-      if (Object.keys(hoistedParameters).length) {
-        node = {
-          ...childNode,
-          parameters: hoistedParameters,
-        };
-      }
-
-      console.log('node', node);
       return (
         <CompositionBlock
           key={index}
-          node={node}
+          node={childNode}
           hyperlinkPattern={experience.hyperlinkPattern}
           locale={locale}
           entityStore={entityStore}
           resolveDesignValue={resolveDesignValue}
+          patternRootNodeIdsChain={['root']}
+          rootPatternParameters={defaultParametersFromRootPattern}
         />
       );
     });
