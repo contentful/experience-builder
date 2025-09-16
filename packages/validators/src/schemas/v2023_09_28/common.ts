@@ -276,6 +276,20 @@ export const ComponentVariableSchema = z.object({
 export const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> =
   BaseComponentTreeNodeSchema.extend({
     children: z.lazy(() => ComponentTreeNodeSchema.array()),
+  }).superRefine(({ id, prebindingId, parameters }, ctx) => {
+    if (prebindingId && !parameters) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Found "prebindingId" but no "parameters" for node with id: "${id}"`,
+      });
+    }
+
+    if (parameters && !prebindingId) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Found "parameters" but no "prebindingId" for node with id: "${id}"`,
+      });
+    }
   });
 
 export const ComponentTreeSchema = z
