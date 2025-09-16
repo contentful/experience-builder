@@ -130,7 +130,7 @@ defineComponents(
         children: true,
         name: 'Kitchen Sink',
         category: 'Custom Components',
-        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfHeight'],
         variables: {
           jsonObject: {
             displayName: 'Json',
@@ -184,6 +184,32 @@ defineComponents(
           richText: {
             displayName: 'Rich Text',
             type: 'RichText',
+          },
+          overflow: {
+            displayName: 'Overflow',
+            type: 'Text',
+            defaultValue: '',
+            group: 'style',
+            validations: {
+              in: [
+                {
+                  value: '',
+                  displayName: 'Initial',
+                },
+                {
+                  value: 'hidden',
+                  displayName: 'Hidden',
+                },
+                {
+                  value: 'visible',
+                  displayName: 'Visible',
+                },
+                {
+                  value: 'auto',
+                  displayName: 'Auto',
+                },
+              ],
+            },
           },
         },
       },

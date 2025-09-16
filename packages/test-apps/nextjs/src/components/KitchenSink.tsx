@@ -17,6 +17,7 @@ interface KitchenSinkProps {
   media?: string;
   hyperlink?: string;
   richText?: Document;
+  overflow?: '' | 'hidden' | 'visible' | 'auto';
 }
 
 const KitchenSink: React.FC<KitchenSinkProps> = ({
@@ -32,10 +33,11 @@ const KitchenSink: React.FC<KitchenSinkProps> = ({
   media,
   hyperlink,
   richText,
+  overflow,
   ...props
 }) => {
   return (
-    <div {...props}>
+    <div style={overflow ? { overflow } : {}} {...props}>
       <h1>Kitchen Sink</h1>
 
       {text && (
