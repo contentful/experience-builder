@@ -1,4 +1,5 @@
-import './studio-config';
+// import './studio-config';
+import { initStudioConfig } from './studio-config-imperative';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './styles.css';
@@ -7,12 +8,26 @@ import { useContentfulClient } from './hooks/useContentfulClient';
 import { useContentfulConfig } from './hooks/useContentfulConfig';
 import { fetchAdditionalLevels } from './utils/earlyPreload';
 import { StudioCanvasMode } from '@contentful/experiences-core/constants';
+import ColorfulBox from './components/ColorfulBox/ColorfulBox';
+
+interface Post {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+}
+
+type Posts = Post[];
 
 export default function Page() {
   const { slug = 'home-page', locale } = useParams<{ slug: string; locale?: string }>();
   const localeCode = locale ?? 'en-US';
   const { config } = useContentfulConfig();
   const { client } = useContentfulClient();
+
+  const [externalParamLoadingState, setExternalParamLoadingState] = useState<
+    'before-loading' | 'loading' | 'finished_loading'
+  >('before-loading');
 
   const [areAllAdditionalLevelsFetched, setAreAllAdditionalLevelsFetched] = useState(false);
 
@@ -70,12 +85,61 @@ export default function Page() {
     localeCode,
   ]);
 
+  useEffect(() => {
+    async function loadExternalParam() {
+      try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+        if (!response.ok) {
+          throw new Error(`Error making third party api call`);
+        }
+        const posts = (await response.json()) as Posts;
+        const titles = posts.map((post) => post.title);
+
+        // after loading external titles, I can call imperatively initialize studio
+        initStudioConfig([
+          {
+            component: ColorfulBox,
+            definition: {
+              id: 'colbox-with-dynamic-options',
+              name: 'Colorful box with dynamic options',
+              variables: {
+                myTitleOption: {
+                  type: 'Text',
+                  description: 'Select dynamically loaded names from the list',
+                  // group: 'content', // doesn't show up for content only for style
+                  group: 'style',
+                  defaultValue: 'na',
+                  validations: {
+                    in: [
+                      { value: 'na', displayName: 'N/A' },
+                      ...titles.map((t) => ({ value: t, displayName: t })),
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        ]);
+      } finally {
+        setExternalParamLoadingState('finished_loading');
+      }
+    }
+
+    if (externalParamLoadingState === 'before-loading') {
+      setExternalParamLoadingState('loading');
+      loadExternalParam();
+    }
+  }, [externalParamLoadingState]);
+
   const shouldShowBannerAboutLoadingAdditionalLevels =
     mode === StudioCanvasMode.NONE && !areAllAdditionalLevelsFetched;
 
   if (isLoading) return <div>Loading...</div>;
 
   if (experienceLoadingError) return <div>{experienceLoadingError.message}</div>;
+
+  if (externalParamLoadingState === 'before-loading' || externalParamLoadingState === 'loading')
+    return <div>Loading external parameter...</div>;
 
   return (
     <>
