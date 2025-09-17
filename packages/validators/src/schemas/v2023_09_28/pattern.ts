@@ -178,7 +178,8 @@ const validateNoOverlapBetweenMappingAndOverrides = (
   ctx: z.RefinementCtx,
 ) => {
   const variableMappingKeys = Object.keys(variableMappings || {});
-  const overlap = variableMappingKeys.filter((key) => allowedVariableOverrides?.includes(key));
+  const overridesSet = new Set(allowedVariableOverrides || []);
+  const overlap = variableMappingKeys.filter((key) => overridesSet.has(key));
   if (overlap.length > 0) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
