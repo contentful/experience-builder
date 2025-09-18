@@ -1,10 +1,7 @@
 import { componentRegistry } from '@/store/registries';
 import { Assembly } from '@contentful/experiences-components-react';
-import { debug } from '@contentful/experiences-core';
-import {
-  ASSEMBLY_DEFAULT_CATEGORY,
-  ASSEMBLY_NODE_TYPE,
-} from '@contentful/experiences-core/constants';
+import { createAssemblyDefinition, debug } from '@contentful/experiences-core';
+import { ASSEMBLY_NODE_TYPE } from '@contentful/experiences-core/constants';
 import { ExperienceTreeNode } from '@contentful/experiences-core/types';
 import { useMemo } from 'react';
 
@@ -14,13 +11,7 @@ export const useComponentRegistration = (node: ExperienceTreeNode) => {
       // The definition and component are the same for all assemblies
       return {
         component: Assembly,
-        definition: {
-          id: node.data.blockId!,
-          name: 'Component',
-          variables: {},
-          children: true,
-          category: ASSEMBLY_DEFAULT_CATEGORY,
-        },
+        definition: createAssemblyDefinition(node.data.blockId!),
       };
     }
 

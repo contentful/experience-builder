@@ -9,7 +9,6 @@ import {
   OUTGOING_EVENTS,
   INTERNAL_EVENTS,
   CONTENTFUL_COMPONENTS,
-  ASSEMBLY_DEFAULT_CATEGORY,
 } from '@contentful/experiences-core/constants';
 import {
   builtInStyles as builtInStyleDefinitions,
@@ -21,6 +20,7 @@ import {
   debug,
   isContentfulStructureComponent,
   checkIsAssemblyDefinition,
+  createAssemblyDefinition,
 } from '@contentful/experiences-core';
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
@@ -423,11 +423,9 @@ export const addComponentRegistration = (componentRegistration: ComponentRegistr
 
 export const createAssemblyRegistration = ({
   definitionId,
-  definitionName,
   component,
 }: {
   definitionId: string;
-  definitionName?: string;
   component: ComponentRegistration['component'];
 }) => {
   const componentRegistration = componentRegistry.get(definitionId);
@@ -436,13 +434,7 @@ export const createAssemblyRegistration = ({
     return componentRegistration;
   }
 
-  const definition = {
-    id: definitionId,
-    name: definitionName || 'Component',
-    variables: {},
-    children: true,
-    category: ASSEMBLY_DEFAULT_CATEGORY,
-  };
+  const definition = createAssemblyDefinition(definitionId);
 
   addComponentRegistration({ component, definition });
 
