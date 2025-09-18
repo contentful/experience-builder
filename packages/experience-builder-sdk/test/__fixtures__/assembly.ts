@@ -10,11 +10,14 @@ import type {
   ExperienceTreeNode,
   SchemaVersions,
 } from '@contentful/experiences-core/types';
+import { ExperienceComponentTree } from '@contentful/experiences-validators';
 
 type createAssemblyEntryArgs = {
   schemaVersion?: SchemaVersions;
   id?: string;
   nestedPatterns?: Array<{ entry: ExperienceEntry; node: ComponentTreeNode }>;
+  prebindingDefinitions?: ExperienceComponentSettings['prebindingDefinitions'];
+  componentTreeChildren?: ExperienceComponentTree['children'];
 };
 
 // TODO: Rename to TEST_PATTERN_ID
@@ -26,6 +29,8 @@ export const createAssemblyEntry = ({
   schemaVersion = LATEST_SCHEMA_VERSION,
   id = defaultAssemblyId,
   nestedPatterns = [],
+  prebindingDefinitions,
+  componentTreeChildren = [],
 }: createAssemblyEntryArgs = {}): ExperienceEntry => {
   return {
     sys: {
@@ -87,6 +92,7 @@ export const createAssemblyEntry = ({
               ...(nestedPatterns?.map(({ node }) => node) ?? []),
             ],
           },
+          ...componentTreeChildren,
         ],
         breakpoints: [{ id: 'desktop', query: '*', previewSize: '100vw', displayName: 'Desktop' }],
         schemaVersion,
@@ -114,6 +120,7 @@ export const createAssemblyEntry = ({
             },
           },
         },
+        prebindingDefinitions,
       } satisfies ExperienceComponentSettings,
     },
   };
