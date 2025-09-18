@@ -18,15 +18,15 @@ npm install
 
 Next, set up your environment variables. Copy the `.env.development.example` file to `.env.development` and fill in the following variables:
 
-- CTFL_SPACE: This is the Space ID of your Contentful space. This can be found in Settings>General Settings.
-- CTFL_ACCESS_TOKEN: This is the Content Delivery API access token, which is used for fetching published data from your Contentful space. This can be found in Settings>API Keys.
-- CTFL_PREVIEW_ACCESS_TOKEN: This is the Content Preview API access token, which is used for fetching draft data from your Contentful space. This can be found in Settings>API Keys.
-- CTFL_ENVIRONMENT: This is the environment of your Contentful space. This can be found in Settings>General Settings. This can be found in Settings>Environments.
-- CTFL_EXPERIENCE_TYPE= This is the content type id of the Experience content type in your Contentful space. This can be found in Content Model>Experience.
+- GATSBY_CTFL_SPACE: This is the Space ID of your Contentful space. This can be found in Settings>General Settings.
+- GATSBY_CTFL_ACCESS_TOKEN: This is the Content Delivery API access token, which is used for fetching published data from your Contentful space. This can be found in Settings>API Keys.
+- GATSBY_CTFL_PREVIEW_ACCESS_TOKEN: This is the Content Preview API access token, which is used for fetching draft data from your Contentful space. This can be found in Settings>API Keys.
+- GATSBY_CTFL_ENVIRONMENT: This is the environment of your Contentful space. This can be found in Settings>General Settings. This can be found in Settings>Environments.
+- GATSBY_CTFL_EXPERIENCE_TYPE= This is the content type id of the Experience content type in your Contentful space. This can be found in Content Model>Experience.
 
 3. Verify the setup in **gatsby-node.mjs** file
 
-The **gatsby-node.mjs** file is configured to pull down all Experience content types (based on your `CTFL_EXPERIENCE_TYPE` environment variable) and create a page for each Experience. You might need to tweak this file to match your needs.
+The **gatsby-node.mjs** file is configured to pull down all Experience content types (based on your `GATSBY_CTFL_EXPERIENCE_TYPE` environment variable) and create a page for each Experience. You might need to tweak this file to match your needs.
 
 > Note: The `gatsby-node.mjs` file is written in ESM syntax (and not TypeScript) because there is an error when importing the `@contentful/experiences-sdk-react` package in TypeScript. This is a known issue and will be fixed in a future release.
 
