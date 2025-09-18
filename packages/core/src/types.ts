@@ -251,11 +251,6 @@ export type ExperienceTreeNode = {
     id: string;
     blockId?: string; // will be undefined in case string node or if root component
     slotId?: string;
-    assembly?: {
-      id: string;
-      componentId: string;
-      nodeLocation: string | null;
-    };
     displayName?: string;
     props: Record<string, ComponentPropertyValue>;
     dataSource: ExperienceDataSource;
@@ -679,6 +674,7 @@ export type RequestReadOnlyModePayload = undefined;
 export type RequestEditorModePayload = undefined;
 export type ExperienceUpdatedPayload = {
   tree: ExperienceTree;
+  /** @deprecated this is derived from the tree and list of all available assemblies */
   assemblies?: ExperienceUsedComponents;
   locale: string;
   changedNode?: ExperienceTreeNode;

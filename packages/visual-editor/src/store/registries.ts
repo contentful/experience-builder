@@ -1,16 +1,5 @@
-import type { ComponentRegistration, Link } from '@contentful/experiences-core/types';
-
+import type { ComponentRegistration } from '@contentful/experiences-core/types';
 import { ASSEMBLY_DEFAULT_CATEGORY } from '@contentful/experiences-core/constants';
-
-// Note: During development, the hot reloading might empty this and it
-// stays empty leading to not rendering assemblies. Ideally, this is
-// integrated into the state machine to keep track of its state.
-export const assembliesRegistry = new Map<string, Link<'Entry'>>([]);
-export const setAssemblies = (assemblies: Link<'Entry'>[]) => {
-  for (const assembly of assemblies) {
-    assembliesRegistry.set(assembly.sys.id, assembly);
-  }
-};
 
 export const componentRegistry = new Map<string, ComponentRegistration>();
 
@@ -46,4 +35,10 @@ export const createAssemblyRegistration = ({
   addComponentRegistration({ component, definition });
 
   return componentRegistry.get(definitionId);
+};
+
+export const getAllAssemblyRegistrations = () => {
+  return Array.from(componentRegistry.values()).filter((registration) => {
+    return registration.definition.category === ASSEMBLY_DEFAULT_CATEGORY;
+  });
 };
