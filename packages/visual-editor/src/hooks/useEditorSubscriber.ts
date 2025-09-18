@@ -75,7 +75,7 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
       };
 
       // Prepare L1 entities and deepReferences
-      const entityLinksL1 = [...Object.values(newDataSource)];
+      const entityLinksL1 = Object.values(newDataSource);
 
       /**
        * Checks only for _missing_ L1 entities
