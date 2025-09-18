@@ -229,6 +229,7 @@ defineBreakpoints([
   {
     id: 'test-desktop',
     query: '*',
+    displayName: 'All Sizes',
     displayIcon: 'desktop',
   },
   {
@@ -240,6 +241,7 @@ defineBreakpoints([
   {
     id: 'test-mobile',
     query: '<576px',
+    displayName: 'Mobile',
     displayIcon: 'mobile',
   },
 ]);
