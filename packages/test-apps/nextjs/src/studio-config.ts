@@ -229,23 +229,23 @@ defineBreakpoints([
   {
     id: 'test-desktop',
     query: '*',
-    displayIcon: 'desktop',
     displayName: 'All Sizes',
+    displayIcon: 'desktop',
     previewSize: '100%',
   },
   {
     id: 'test-tablet',
     query: '<982px',
-    displayIcon: 'tablet',
     displayName: 'Tablet',
+    displayIcon: 'tablet',
     previewSize: '820px',
   },
   {
     id: 'test-mobile',
     query: '<576px',
-    displayIcon: 'mobile',
     displayName: 'Mobile',
-    previewSize: '350px',
+    displayIcon: 'mobile',
+    previewSize: '390px',
   },
 ]);
 
