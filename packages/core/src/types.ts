@@ -674,7 +674,7 @@ export type RequestReadOnlyModePayload = undefined;
 export type RequestEditorModePayload = undefined;
 export type ExperienceUpdatedPayload = {
   tree: ExperienceTree;
-  /** @deprecated this is derived from the tree and list of all available assemblies */
+  /** @deprecated not needed after `patternResolution` was introduced. Will be removed in the next major version. */
   assemblies?: ExperienceUsedComponents;
   locale: string;
   changedNode?: ExperienceTreeNode;

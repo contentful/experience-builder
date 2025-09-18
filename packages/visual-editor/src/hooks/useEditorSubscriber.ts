@@ -146,7 +146,7 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
         endFetching();
       }
     },
-    [setEntitiesFetched /* setFetchingEntities */],
+    [setEntitiesFetched],
   );
 
   useEffect(() => {
