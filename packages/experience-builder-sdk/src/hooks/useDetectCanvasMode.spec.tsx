@@ -3,6 +3,13 @@ import { useDetectCanvasMode } from './useDetectCanvasMode';
 import { INCOMING_EVENTS, StudioCanvasMode } from '@contentful/experiences-core/constants';
 import * as experiencesCore from '@contentful/experiences-core';
 
+jest.mock('@contentful/experiences-core', () => {
+  return {
+    __esModule: true, //    <----- this __esModule: true is necessary to spy on its methods
+    ...jest.requireActual('@contentful/experiences-core'),
+  };
+});
+
 describe('useDetectCanvasMode()', () => {
   beforeEach(() => {
     jest.spyOn(experiencesCore, 'doesMismatchMessageSchema').mockReturnValue(false);
