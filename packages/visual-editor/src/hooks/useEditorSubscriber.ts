@@ -10,7 +10,6 @@ import {
   EditorModeEntityStore,
   type InMemoryEntitiesStore,
   debug,
-  treeVisit,
 } from '@contentful/experiences-core';
 import {
   OUTGOING_EVENTS,
@@ -19,15 +18,12 @@ import {
 } from '@contentful/experiences-core/constants';
 import {
   ExperienceTree,
-  ComponentRegistration,
   ExperienceDataSource,
   ManagementEntity,
   IncomingMessage,
 } from '@contentful/experiences-core/types';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
-import { Assembly } from '@contentful/experiences-components-react';
-import { addComponentRegistration, getAllAssemblyRegistrations } from '@/store/registries';
 import { UnresolvedLink } from 'contentful';
 
 export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore) {
@@ -78,23 +74,8 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
         setEntitiesFetched(true);
       };
 
-      // Collect all used assemblies from the tree to fetch those
-      const allAssemblyIds = getAllAssemblyRegistrations().map((reg) => reg.definition.id);
-      const usedAssemblyIds = new Set<string>();
-      treeVisit(tree.root, (node) => {
-        if (allAssemblyIds.includes(node.data.blockId!)) {
-          usedAssemblyIds.add(node.data.blockId!);
-        }
-      });
-      const usedAssemblyLinks = Array.from(usedAssemblyIds).map(
-        (id) => ({ sys: { id, linkType: 'Entry', type: 'Link' } }) as const,
-      );
-
       // Prepare L1 entities and deepReferences
-      const entityLinksL1 = [
-        ...Object.values(newDataSource),
-        ...usedAssemblyLinks, // we count assemblies here as "L1 entities", for convenience. Even though they're not headEntities.
-      ];
+      const entityLinksL1 = [...Object.values(newDataSource)];
 
       /**
        * Checks only for _missing_ L1 entities
@@ -243,32 +224,11 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
           break;
         }
         case INCOMING_EVENTS.AssembliesRegistered: {
-          const { assemblies } = eventData.payload;
-
-          assemblies.forEach((definition) => {
-            addComponentRegistration({
-              component: Assembly,
-              definition,
-            });
-          });
+          // Not necessary anymore since `patternResolution` which was introduced in 2024.
           break;
         }
         case INCOMING_EVENTS.AssembliesAdded: {
-          const {
-            assembly,
-            assemblyDefinition,
-          }: {
-            assembly: ManagementEntity;
-            assemblyDefinition?: ComponentRegistration['definition'];
-          } = eventData.payload;
-          entityStore.updateEntity(assembly);
-          if (assemblyDefinition) {
-            addComponentRegistration({
-              component: Assembly,
-              definition: assemblyDefinition,
-            });
-          }
-
+          // Not necessary anymore since `patternResolution` which was introduced in 2024.
           break;
         }
         case INCOMING_EVENTS.UpdatedEntity: {

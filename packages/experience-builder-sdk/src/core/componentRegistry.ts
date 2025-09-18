@@ -20,6 +20,7 @@ import {
   defineSdkOptions,
   debug,
   isContentfulStructureComponent,
+  checkIsAssemblyDefinition,
 } from '@contentful/experiences-core';
 import { validateComponentDefinition } from '@contentful/experiences-validators';
 import { withComponentWrapper } from '../utils/withComponentWrapper';
@@ -214,7 +215,7 @@ export const sendRegisteredComponentsMessage = () => {
     .map(({ definition }) => definition)
     // Pattern definitions are empty placeholder within the SDK without variables
     // We don't send those to the editor as they would overwrite the actual correct definitions.
-    .filter((definition) => definition.category !== ASSEMBLY_DEFAULT_CATEGORY);
+    .filter((definition) => !checkIsAssemblyDefinition(definition));
 
   sendMessage(OUTGOING_EVENTS.RegisteredComponents, {
     definitions: registeredDefinitions,
