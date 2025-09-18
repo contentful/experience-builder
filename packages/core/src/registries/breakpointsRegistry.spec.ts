@@ -1,8 +1,15 @@
 import * as registry from './breakpointsRegistry';
-import { describe, afterEach, it, expect } from 'vitest';
+import { describe, beforeEach, it, expect } from 'vitest';
+
 describe('defineBreakpoints', () => {
-  afterEach(() => {
-    registry.resetBreakpointsRegistry();
+  const getBreakpointRegistration = (id: string) => {
+    return registry.breakpointsRegistry.find((breakpoint) => breakpoint.id === id);
+  };
+
+  beforeEach(() => {
+    while (registry.breakpointsRegistry.shift()) {
+      // Remove all items from the registry
+    }
   });
 
   it('should register breakpoints in breakpoint registry', () => {
@@ -27,14 +34,16 @@ describe('defineBreakpoints', () => {
       },
     ]);
 
-    const breakpointRegistration = registry.getBreakpointRegistration('test-tablet');
+    const breakpointRegistration = getBreakpointRegistration('test-tablet');
     expect(breakpointRegistration).toBeDefined();
   });
 });
 
 describe('runBreakpointsValidation', () => {
-  afterEach(() => {
-    registry.resetBreakpointsRegistry();
+  beforeEach(() => {
+    while (registry.breakpointsRegistry.shift()) {
+      // Remove all items from the registry
+    }
   });
   it('throws an error if breakpoints definition is invalid', () => {
     registry.defineBreakpoints([

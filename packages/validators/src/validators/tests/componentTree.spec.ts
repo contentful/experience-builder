@@ -59,14 +59,12 @@ describe('componentTree', () => {
       const result = validateExperienceFields(updatedExperience, schemaVersion);
 
       expect(result.success).toBe(false);
-      const expectedErrors = ['id', 'query', 'previewSize', 'displayName'].map(
-        (breakpointField) => ({
-          name: 'required',
-          value: 'undefined',
-          path: ['componentTree', 'en-US', 'breakpoints', 0, breakpointField],
-          details: `The property "${breakpointField}" is required here`,
-        }),
-      );
+      const expectedErrors = ['id', 'query', 'displayName'].map((breakpointField) => ({
+        name: 'required',
+        value: 'undefined',
+        path: ['componentTree', 'en-US', 'breakpoints', 0, breakpointField],
+        details: `The property "${breakpointField}" is required here`,
+      }));
 
       expect(result.success).toBe(false);
       expect(result.errors).toEqual(expectedErrors);

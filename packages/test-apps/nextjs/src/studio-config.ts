@@ -231,21 +231,18 @@ defineBreakpoints([
     query: '*',
     displayName: 'All Sizes',
     displayIcon: 'desktop',
-    previewSize: '100%',
   },
   {
     id: 'test-tablet',
-    query: '<982px',
+    query: '<992px',
     displayName: 'Tablet',
     displayIcon: 'tablet',
-    previewSize: '820px',
   },
   {
     id: 'test-mobile',
     query: '<576px',
     displayName: 'Mobile',
     displayIcon: 'mobile',
-    previewSize: '390px',
   },
 ]);
 
