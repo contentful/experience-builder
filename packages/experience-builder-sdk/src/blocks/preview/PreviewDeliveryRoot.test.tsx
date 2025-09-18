@@ -9,6 +9,7 @@ import type { Entry } from 'contentful';
 import { compatibleVersions } from '../../constants';
 import { defineComponents, resetComponentRegistry } from '../../core/componentRegistry';
 import { createAssemblyEntry } from '../../../test/__fixtures__';
+import { PrebindingManager } from '../../core/preview/PrebindingManager';
 
 const locale = 'en-US';
 const experienceEntry = createExperienceEntry({
@@ -88,7 +89,7 @@ describe('PreviewDeliveryRoot', () => {
     expect(getByTestId('component-1')).toBeInTheDocument();
   });
 
-  it('generates the default parameters for the pattern and passes it down', () => {
+  it('generates the default parameters for the root pattern and passes it down', () => {
     defineComponents([
       {
         component: () => <div data-test-id="parent-pattern-entry-id">Parent pattern entry</div>,
@@ -202,5 +203,10 @@ describe('PreviewDeliveryRoot', () => {
         },
       },
     });
+    expect(PrebindingManager.getAllParameterIdsByNodeId('root')).toEqual([
+      'nativeParamId',
+      'hoistedParamId1',
+      'hoistedParamId2',
+    ]);
   });
 });
