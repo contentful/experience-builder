@@ -10,6 +10,8 @@ import { compatibleVersions } from '../../constants';
 import { useBreakpoints } from '../../hooks';
 import { PrebindingManager } from '../../core/preview/PrebindingManager';
 
+const initialPatternRootNodeIdsChain = ['root'];
+
 type DeliveryRootProps = {
   experience: Experience<EntityStore>;
   locale: string;
@@ -60,7 +62,7 @@ export const PreviewDeliveryRoot = ({ locale, experience }: DeliveryRootProps) =
           locale={locale}
           entityStore={entityStore}
           resolveDesignValue={resolveDesignValue}
-          patternRootNodeIdsChain={['root']}
+          patternRootNodeIdsChain={initialPatternRootNodeIdsChain}
           rootPatternParameters={defaultParametersFromRootPattern}
         />
       );
