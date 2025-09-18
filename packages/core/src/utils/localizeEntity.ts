@@ -1,5 +1,5 @@
 import { Asset, Entry } from 'contentful';
-import { cloneDeep } from 'lodash-es';
+import cloneDeep from 'lodash.clonedeep';
 
 /**
  * Localizes the provided entry or asset to match the regular format of CDA/CPA entities.
