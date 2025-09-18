@@ -438,8 +438,8 @@ describe('CompositionBlock', () => {
           cfSsrClassName: {
             type: 'DesignValue',
             valuesByBreakpoint: { desktop: nestedSsrClassName },
-            // Format: `${outerPatternId}${nestedPatternId}-${containerId}`
-            'test-pattern-node-idtest-nested-pattern-node-id-test-container-id': {
+            // Format: `${outerPatternId}-${nestedPatternId}-${containerId}`
+            'test-pattern-node-id-test-nested-pattern-node-id-test-container-id': {
               type: 'DesignValue',
               valuesByBreakpoint: { desktop: nestedChildSsrClassName },
             },

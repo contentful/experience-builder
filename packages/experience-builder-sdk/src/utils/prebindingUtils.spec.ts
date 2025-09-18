@@ -341,10 +341,7 @@ describe('resolvePrebindingPath', () => {
 });
 
 describe('resolveMaybePrebindingDefaultValuePath', () => {
-  // const dataSourceKey = 'uuid2';
-
   const defaultEntryId = 'defaultEntry123';
-  const sideloadedDefaultEntryDataSourceKey = 'sideloaded_defaultEntry123';
 
   const createEntityStoreWithComponentSettings = (
     componentSettingsOverrides: Partial<ExperienceComponentSettings>,
@@ -368,9 +365,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
                         sys: { id: defaultEntryId, type: 'Link', linkType: 'Entry' },
                       },
                     },
-                    contentTypes: {
-                      testContentType: {},
-                    },
+                    contentTypes: ['testContentType'],
                   },
                 },
                 variableMappings: {
@@ -389,7 +384,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
           dataSource: {
             ...experienceEntry.fields.dataSource,
             // we need to simulate that the default entry is sideloaded
-            [sideloadedDefaultEntryDataSourceKey]: {
+            [defaultEntryId]: {
               sys: {
                 id: defaultEntryId,
                 type: 'Link',
@@ -415,7 +410,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
       patternRootNodeIdsChain: [],
     });
 
-    expect(result).toBe(`/${sideloadedDefaultEntryDataSourceKey}/fields/testField`);
+    expect(result).toBe(`/${defaultEntryId}/fields/testField`);
   });
 
   it('should return undefined when default value entry was not sideloaded into EntityStore', () => {
@@ -568,9 +563,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
           id: 'prebindingDefinition1',
           parameterDefinitions: {
             testParameterId: {
-              contentTypes: {
-                testContentType: {},
-              },
+              contentTypes: ['testContentType'],
             },
           },
         },
