@@ -40,7 +40,10 @@ export const deserializePatternNode = ({
 }): ComponentTreeNodeWithPatternInformation => {
   const variables: Record<string, ComponentPropertyValue> = {};
 
-  const parentPatternNodeId = parentPatternRootNodeIdsChain.slice(-1)[0];
+  let parentPatternNodeId = parentPatternRootNodeIdsChain.slice(-1)[0];
+  if (parentPatternNodeId === node.id) {
+    parentPatternNodeId = parentPatternRootNodeIdsChain.slice(-2)[0];
+  }
 
   for (const [variableName, variable] of Object.entries(node.variables)) {
     variables[variableName] = variable;
@@ -142,7 +145,8 @@ export const deserializePatternNode = ({
     });
   });
 
-  const indexedNodeId = [parentPatternRootNodeIdsChain.join('---'), node.id!].join('-');
+  const patternsChain = parentPatternRootNodeIdsChain.join('---');
+  const indexedNodeId = patternsChain ? [patternsChain, node.id!].join('-') : node.id!;
 
   return {
     definitionId: node.definitionId,
@@ -151,7 +155,7 @@ export const deserializePatternNode = ({
     children,
     pattern: {
       nodeIdOnPattern: node.id!,
-      parentPatternNodeId: parentPatternNodeId,
+      parentPatternNodeId,
       prefixedNodeId: indexedNodeId,
     },
     slotId: node.slotId,
