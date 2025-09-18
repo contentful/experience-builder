@@ -4,7 +4,7 @@ This example demonstrates how to use [Gatsby](https://www.gatsbyjs.com/) to crea
 
 
 [!IMPORTANT]
-This example is a clone of the gatsby-ssg example but without the need of writing server side code as ES modules. Note that we strongly recommend to use ESM instead of CJS. Only for legacy projects that can upgrade to ESM, we present this alternative approach. Since the official SDK doesn't provide a CJS export, it imports the requires functions directly from the internal core package which provides a CJS export starting with version `3.6.3`. However, we might remove this CJS support at a future point.
+This example is a clone of the gatsby-ssg example but without the need of writing server side code as ES modules. Note that we strongly recommend to use ESM instead of CJS. Only for legacy projects that can upgrade to ESM, we present this alternative approach. Since the official SDK doesn't provide a CJS export, it imports the requires functions directly from the internal core package which provides a CJS export starting with version `3.7.0`. However, we might drop the CJS support again at a future point.
 
 ## Getting started
 
@@ -32,6 +32,8 @@ Next, set up your environment variables. Copy the `.env.development.example` fil
 
 The **gatsby-node.ts** file is configured to pull down all Experience content types (based on your `CTFL_EXPERIENCE_TYPE` environment variable) and create a page for each Experience. You might need to tweak this file to match your needs.
 
+[!NOTE]
+We're using `.ts` files in this example but you can use `.js` files as well for this setup.
 
 3. Start the development server
 
