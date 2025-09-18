@@ -22,7 +22,7 @@ describe('parseComponentProps', () => {
   const resolveBoundValue = () => 'resolvedBoundValue';
   const resolveHyperlinkValue = () => 'resolvedHyperlinkValue';
   const resolveUnboundValue = () => 'resolvedUnboundValue';
-  const resolveComponentValue = () => 'resolvedComponentValue';
+  const resolveComponentValue = () => 'resolvedPrebindingValue';
 
   const defaultArguments: Parameters<typeof parseComponentProps>[0] = {
     mainBreakpoint,
