@@ -1,5 +1,5 @@
 import type { Asset, ChainModifiers, Entry, UnresolvedLink } from 'contentful';
-import { cloneDeep } from 'lodash-es';
+import cloneDeep from 'lodash.clonedeep';
 
 import { get } from '../utils/get';
 import { isLink } from '../utils/isLink';

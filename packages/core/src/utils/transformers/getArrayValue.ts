@@ -1,7 +1,6 @@
 import { Asset, Entry, UnresolvedLink } from 'contentful';
 import { get } from '../get';
 import { EntityStoreBase } from '@/entity';
-import { isArray } from 'lodash-es';
 import { debug } from '../debugLogger';
 
 const excludeUndefined = <T>(value: T | undefined): value is T => {
@@ -26,7 +25,7 @@ export function getArrayValue(
     fieldName,
   );
 
-  if (!isArray(arrayValue)) {
+  if (!Array.isArray(arrayValue)) {
     debug.warn(
       `[experiences-core::getArrayValue] A field '${fieldName}' of an entity was bound to an Array variable. Expected value of that field to be an array, but got: ${JSON.stringify(arrayValue)}`,
       { entity: entryOrAsset },

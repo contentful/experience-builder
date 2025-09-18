@@ -8,7 +8,7 @@ import {
 import { getBoundValue } from './getBoundValue';
 import { Asset, Entry } from 'contentful';
 import { EntityStoreBase } from '@/entity';
-import { cloneDeep } from 'lodash-es';
+import cloneDeep from 'lodash.clonedeep';
 
 export const transformRichText = (
   entryOrAsset: Entry | Asset,
