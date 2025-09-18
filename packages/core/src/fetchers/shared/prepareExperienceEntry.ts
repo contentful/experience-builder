@@ -3,7 +3,6 @@ import {
   removeCircularPatternReferences,
   removeSelfReferencingDataSource,
 } from './circularityCheckers';
-import { sideloadPrebindingDefaultValues } from './sideloading';
 
 /**
  * Run additional checks on the references used in the experience entry and
@@ -15,5 +14,4 @@ import { sideloadPrebindingDefaultValues } from './sideloading';
 export const prepareExperienceEntry = (experienceEntry: ExperienceEntry) => {
   removeCircularPatternReferences(experienceEntry);
   removeSelfReferencingDataSource(experienceEntry);
-  // sideloadPrebindingDefaultValues(experienceEntry);
 };

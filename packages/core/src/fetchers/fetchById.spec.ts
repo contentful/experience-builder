@@ -1,11 +1,8 @@
 import { ContentfulClientApi } from 'contentful';
-import type { ExperienceEntry } from '@/types';
 import { fetchById } from './fetchById';
-import { createExperienceEntry } from '../test/__fixtures__/experience';
-import { assets, entries } from '../test/__fixtures__/entities';
+import { createExperienceEntry, createPatternEntry } from '../test/__fixtures__/experience';
+import { assets, createEntry, entries } from '../test/__fixtures__/entities';
 import { describe, beforeEach, it, expect, vi } from 'vitest';
-import * as sideloadingMock from './shared/sideloading';
-import * as fetchers from './fetchReferencedEntities';
 
 let experienceEntry = createExperienceEntry({});
 
@@ -25,8 +22,66 @@ describe('fetchById', () => {
   beforeEach(() => {
     experienceEntry = createExperienceEntry({});
     vi.mock('./fetchExperienceEntry', () => {
-      const fetchExperienceEntry = async () => {
-        return experienceEntry;
+      const fetchExperienceEntry = async (options) => {
+        if (options?.identifier?.id === 'experience-entry-with-prebinding') {
+          const experienceEntryWithNestedPattern = createExperienceEntry({
+            id: options?.identifier?.id,
+          });
+          // injecting the nested pattern node
+          experienceEntryWithNestedPattern.fields.componentTree.children.push({
+            children: [],
+            definitionId: 'nested-pattern-entry-id',
+            id: 'nested-instance-id',
+            parameters: {
+              param1: {
+                type: 'BoundValue',
+                path: '/uuid1',
+              },
+            },
+            variables: {},
+          });
+
+          experienceEntryWithNestedPattern.fields.usedComponents = [
+            createPatternEntry({
+              id: 'nested-pattern-entry-id',
+              prebindingDefinitions: [
+                {
+                  id: 'prebinding-definition-id',
+                  parameterDefinitions: {
+                    param1: {
+                      contentTypes: ['a', 'b'],
+                      defaultSource: {
+                        type: 'Entry',
+                        contentTypeId: 'a',
+                        link: {
+                          sys: {
+                            type: 'Link',
+                            linkType: 'Entry',
+                            id: 'default-prebinding-entry-id',
+                          },
+                        },
+                      },
+                    },
+                  },
+                  variableMappings: {
+                    var1: {
+                      parameterId: 'param1',
+
+                      type: 'ContentTypeMapping',
+                      pathsByContentType: {
+                        a: { path: '/fields/title' },
+                        b: { path: '/fields/name' },
+                      },
+                    },
+                  },
+                },
+              ],
+            }),
+          ];
+
+          return experienceEntryWithNestedPattern;
+        }
+        return createExperienceEntry({});
       };
       return {
         fetchExperienceEntry,
@@ -34,17 +89,19 @@ describe('fetchById', () => {
     });
 
     vi.mock('./fetchReferencedEntities', () => {
-      const fetchReferencedEntities = vi.fn(async () => {
+      const fetchReferencedEntities = vi.fn(async ({ client, experienceEntry }) => {
+        if (experienceEntry.sys.id === 'experience-entry-with-prebinding') {
+          return {
+            entries: [...entries, createEntry('default-prebinding-entry-id')],
+            assets,
+          };
+        }
         return { entries, assets };
       });
       return {
         fetchReferencedEntities,
       };
     });
-
-    vi.mock('./shared/sideloading', () => ({
-      sideloadPrebindingDefaultValues: vi.fn(),
-    }));
   });
 
   describe('when in editor mode', () => {
@@ -85,68 +142,19 @@ describe('fetchById', () => {
     });
 
     it('should attach prebinding default value as a data source', async () => {
-      vi.mocked(sideloadingMock.sideloadPrebindingDefaultValues).mockImplementationOnce(
-        (entry: ExperienceEntry): false | number => {
-          entry.fields.dataSource = {
-            ...entry.fields.dataSource,
-            sideloaded_preboundDefaultEntry123: {
-              sys: {
-                id: 'preboundDefaultEntry123',
-                type: 'Link',
-                linkType: 'Entry',
-              },
-            },
-          };
-          return 1; // Indicating one sideloaded default value
-        },
-      );
-
-      await fetchById({
+      const result = await fetchById({
         client: mockClient,
         experienceTypeId,
-        id,
+        id: 'experience-entry-with-prebinding',
         localeCode,
         isEditorMode,
       });
 
-      expect(fetchers.fetchReferencedEntities).toHaveBeenCalledWith(
-        expect.objectContaining({
-          experienceEntry: expect.objectContaining({
-            fields: expect.objectContaining({
-              dataSource: expect.objectContaining({
-                ...createExperienceEntry({}).fields.dataSource,
-                sideloaded_preboundDefaultEntry123: {
-                  sys: {
-                    id: 'preboundDefaultEntry123',
-                    type: 'Link',
-                    linkType: 'Entry',
-                  },
-                },
-              }),
-            }),
-          }),
-        }),
-      );
-    });
-
-    it('should not attach prebinding default value as a data source if sideloadPrebindingDefaultValues() does not populate it', async () => {
-      await fetchById({
-        client: mockClient,
-        experienceTypeId,
-        id,
-        localeCode,
-        isEditorMode,
-      });
-
-      expect(fetchers.fetchReferencedEntities).toHaveBeenCalledWith(
-        expect.objectContaining({
-          experienceEntry: expect.objectContaining({
-            fields: expect.objectContaining({
-              dataSource: createExperienceEntry({}).fields.dataSource,
-            }),
-          }),
-        }),
-      );
+      expect(result?.entityStore?.entities).toEqual([
+        ...entries,
+        createEntry('default-prebinding-entry-id'),
+        ...assets,
+      ]);
     });
   });
 });
