@@ -30,7 +30,7 @@ The **gatsby-node.mjs** file is configured to pull down all Experience content t
 
 > Note: The `gatsby-node.mjs` file is written in ESM syntax (and not TypeScript) because there is an error when importing the `@contentful/experiences-sdk-react` package in TypeScript. This is a known issue and will be fixed in a future release.
 
-3. Start the development server
+4. Start the development server
 
 Now that you have set up your environment variables, you can start the development server:
 
@@ -42,3 +42,11 @@ The app is set up to run on `http://localhost:8000`. By default, the root URL wi
 
 [!NOTE]
 Since all the Experience pages are generated at build time, you will need to run `npm run build` or `npm run start` to see the changes in the Experience pages or when adding new ones.
+
+5. Production build
+
+When creating a production build, the environment variables will be loaded from `.env.production`.
+
+```bash
+npm run build
+```

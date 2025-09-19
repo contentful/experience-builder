@@ -4,7 +4,7 @@ This example demonstrates how to use [Gatsby](https://www.gatsbyjs.com/) to crea
 
 
 [!IMPORTANT]
-This example is a clone of the gatsby-ssg example but without the need of writing server side code as ES modules. Note that we strongly recommend to use ESM instead of CJS. Only for legacy projects that cannot upgrade to ESM, we present this alternative approach. Since the official SDK doesn't provide a CJS export, it imports the requires functions directly from the internal core package which provides a CJS export starting with version `3.7.0`. However, we might drop the CJS support again at a future point.
+This example is a clone of the gatsby-ssg example but without the need of writing server side code as ES modules. Note that we strongly recommend to use ESM instead of CJS. Only for legacy projects that cannot upgrade to ESM, we present this alternative approach. Since the official SDK at `@contentful/experiences-sdk-react` doesn't provide a CJS export, this example imports the required functions directly from the internal core package which provides a CJS export starting with version `3.7.0`. However, we might drop the CJS support again at a future point.
 
 ## Getting started
 
@@ -33,9 +33,9 @@ Next, set up your environment variables. Copy the `.env.development.example` fil
 The **gatsby-node.ts** file is configured to pull down all Experience content types (based on your `GATSBY_CTFL_EXPERIENCE_TYPE` environment variable) and create a page for each Experience. You might need to tweak this file to match your needs.
 
 [!NOTE]
-We're using `.ts` files in this example but you can use `.js` files as well for this setup.
+We're using `.js` files in this example but you can use TypeScript as instructed in the [official documentation by Gatsby](https://www.gatsbyjs.com/docs/how-to/custom-configuration/typescript).
 
-3. Start the development server
+4. Start the development server
 
 Now that you have set up your environment variables, you can start the development server:
 
@@ -47,3 +47,11 @@ The app is set up to run on `http://localhost:8000`. By default, the root URL wi
 
 [!NOTE]
 Since all the Experience pages are generated at build time, you will need to run `npm run build` or `npm run start` to see the changes in the Experience pages or when adding new ones.
+
+5. Production build
+
+When creating a production build, the environment variables will be loaded from `.env.production`.
+
+```bash
+npm run build
+```
