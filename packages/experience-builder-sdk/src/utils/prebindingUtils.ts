@@ -74,6 +74,7 @@ export const resolvePrebindingPath = ({
   if (!parameter) return '';
 
   const dataSourceKey = parameter.path.split('/')[1];
+  console.log(22222, dataSourceKey, entityStore.dataSource);
 
   const entityLink = entityStore.dataSource[dataSourceKey];
   if (!entityLink) return '';
@@ -82,6 +83,10 @@ export const resolvePrebindingPath = ({
   if (!entity || entity.sys.type === 'Asset') return '';
 
   const contentType = entity.sys.contentType.sys.id;
+
+  const hoistedParameterDefinition = entityStore.hoistedParameterDefinitions[hoistedParameterId];
+  if (!hoistedParameterDefinition || !hoistedParameterDefinition.contentTypes.includes(contentType))
+    return '';
 
   const fieldPath = variableMapping?.pathsByContentType?.[contentType]?.path;
 
@@ -132,6 +137,7 @@ export const resolveMaybePrebindingDefaultValuePath = ({
       return;
     }
 
+    console.log(111);
     const fieldPath = variableMapping.pathsByContentType[contentTypeId].path;
     if (!fieldPath) {
       // Path not found or degenerate shape (e.g. empty string '')
@@ -141,4 +147,6 @@ export const resolveMaybePrebindingDefaultValuePath = ({
     const fullDefaultValuePath = `/${defaultEntryLink.sys.id}${fieldPath}`;
     return fullDefaultValuePath;
   }
+
+  return undefined;
 };
