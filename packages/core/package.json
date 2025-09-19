@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-core",
-  "version": "3.6.2",
+  "version": "3.7.0-beta.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -20,8 +20,22 @@
     "dist/**/*.*"
   ],
   "exports": {
-    ".": "./dist/index.js",
-    "./constants": "./dist/constants.js",
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js",
+      "types": [
+        "./dist/index.d.ts"
+      ]
+    },
+    "./constants": {
+      "import": "./dist/constants.js",
+      "require": "./dist/constants.cjs",
+      "default": "./dist/constants.js",
+      "types": [
+        "./dist/constants.d.ts"
+      ]
+    },
     "./types": "./dist/types.d.ts"
   },
   "publishConfig": {
@@ -54,9 +68,8 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.5",
-    "@types/lodash-es": "^4.17.12",
+    "@types/lodash.clonedeep": "^4.5.9",
     "@vitest/coverage-v8": "^2.1.1",
     "contentful": "^10.6.4",
     "happy-dom": "^13.3.8",
@@ -69,7 +82,7 @@
   "dependencies": {
     "@contentful/experiences-validators": "file:../validators",
     "@contentful/rich-text-types": "^17.0.0",
-    "lodash-es": "^4.17.21",
+    "lodash.clonedeep": "^4.5.0",
     "zustand": "^4.4.7"
   },
   "peerDependencies": {

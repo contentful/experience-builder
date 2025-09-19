@@ -79,6 +79,7 @@ export const experiencePattern = {
         children: [
           {
             definitionId: 'contentful-container',
+            id: 'c123456',
             variables: {
               cfVerticalAlignment: {
                 type: 'DesignValue',
@@ -183,6 +184,7 @@ export const experiencePattern = {
             children: [
               {
                 definitionId: 'heading',
+                id: 'h123456',
                 variables: {
                   text: {
                     key: 'text_1_IVYl8rYJEzWW8xPfmT-',
@@ -231,6 +233,7 @@ export const experiencePattern = {
               },
               {
                 definitionId: 'button',
+                id: 'b123456',
                 variables: {
                   label: {
                     key: 'label_dQwNIIxgatsaAa5NKwH_d',

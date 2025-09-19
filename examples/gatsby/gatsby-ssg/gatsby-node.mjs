@@ -10,6 +10,7 @@ import path from 'path';
 import './src/studio-config.mjs';
 
 dotenv.config({
+  // NODE_ENV will always be "production" when running "npm run build"
   path: `.env.${process.env.NODE_ENV}`,
 });
 
@@ -58,7 +59,7 @@ export const createPages = async function ({ actions }) {
       };
       const stylesheet = detachExperienceStyles(experience);
       actions.createPage({
-        path: slug,
+        path: `${localeCode}/${slug}`,
         component: path.resolve(`./src/templates/ExperienceTemplate.tsx`),
         context: {
           experienceJson: JSON.stringify(experience),

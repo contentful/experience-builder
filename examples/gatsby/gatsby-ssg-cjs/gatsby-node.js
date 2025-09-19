@@ -1,0 +1,78 @@
+const { createClient } = require('contentful');
+const {
+  detachExperienceStyles,
+  fetchBySlug,
+} = require('@contentful/experiences-core');
+const dotenv = require('dotenv');
+const path = require('path');
+//import studio config so values are available at build time
+require('./src/studio-config');
+
+dotenv.config({
+  // NODE_ENV will always be "production" when running "npm run build"
+  path: `.env.${process.env.NODE_ENV}`,
+});
+
+const isPreview = true;
+const contentType = process.env.GATSBY_CTFL_EXPERIENCE_TYPE || '';
+
+const clientConfig = {
+    space: process.env.GATSBY_CTFL_SPACE || '',
+    environment: process.env.GATSBY_CTFL_ENVIRONMENT || '',
+    host: isPreview
+        ? `preview.${process.env.GATSBY_CTFL_DOMAIN}` || 'preview.contentful.com'
+        : `cdn.${process.env.GATSBY_CTFL_DOMAIN}` || 'cdn.contentful.com',
+    accessToken: isPreview
+        ? process.env.GATSBY_CTFL_PREVIEW_ACCESS_TOKEN || ''
+        : process.env.GATSBY_CTFL_ACCESS_TOKEN || '',
+    experienceTypeId: contentType,
+};
+const client = createClient(clientConfig);
+
+const createPages = async function ({ actions }) {
+  const localeCode = 'en-US';
+
+  const entries = await client.getEntries({
+    content_type: contentType,
+    select: ['fields.slug'],
+  });
+
+  for (const item of entries.items) {
+    try {
+      const { slug } = item.fields || {};
+      if (typeof slug !== 'string' || slug === '') {
+        console.warn(`Invalid slug found for entry ${item.sys.id}`);
+        return;
+      }
+
+      const experience = await fetchBySlug({
+        client,
+        slug,
+        experienceTypeId: contentType,
+        localeCode,
+        isEditorMode: false,
+      });
+      if (!experience) {
+        console.warn(`Experience not found for slug ${slug}`);
+        return;
+      };
+      const stylesheet = detachExperienceStyles(experience);
+      actions.createPage({
+        path: `${localeCode}/${slug}`,
+        component: path.resolve(`./src/templates/ExperienceTemplate.tsx`),
+        context: {
+          experienceJson: JSON.stringify(experience),
+          stylesheet,
+          localeCode,
+        },
+      });
+      console.log(`created page for slug ${slug}`);
+    } catch (e) {
+      console.warn('Error when fetching experience', e.message);
+    }
+  }
+};
+
+module.exports = {
+  createPages,
+};

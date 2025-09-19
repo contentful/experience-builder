@@ -59,5 +59,27 @@ describe('checkIsNodeVisible', () => {
       } as unknown as ExperienceTreeNode;
       expect(checkIsNodeVisible(node, resolveDesignValue)).toBe(false);
     });
+
+    it('returns true if node has children with cfVisibility being undefined', () => {
+      const nodeWithUndefinedVisibility = {
+        type: 'block',
+        data: {
+          props: {
+            cfVisibility: {
+              type: 'DesignValue',
+              valuesByBreakpoint: { 'invalid-breakpoint': true },
+            },
+          },
+        },
+        children: [],
+      } as unknown as ExperienceTreeNode;
+
+      const node = {
+        type: ASSEMBLY_NODE_TYPE,
+        data: {},
+        children: [nodeWithUndefinedVisibility],
+      } as unknown as ExperienceTreeNode;
+      expect(checkIsNodeVisible(node, resolveDesignValue)).toBe(true);
+    });
   });
 });

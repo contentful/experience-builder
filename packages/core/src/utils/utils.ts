@@ -103,3 +103,17 @@ export function getTargetValueInPixels(targetWidthObject: ParsedValue) {
       return targetWidthObject.value;
   }
 }
+
+/**
+ * Creates a component definition for an assembly. As all assemblies use the same definition in the SDK,
+ * all should be registered via this function.
+ */
+export const createAssemblyDefinition = (definitionId: string): ComponentDefinition => {
+  return {
+    id: definitionId,
+    name: 'Component',
+    variables: {},
+    children: true,
+    category: ASSEMBLY_DEFAULT_CATEGORY,
+  };
+};

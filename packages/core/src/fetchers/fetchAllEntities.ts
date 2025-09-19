@@ -1,6 +1,6 @@
 import { Asset, ContentfulClientApi, Entry } from 'contentful';
 import { MinimalEntryCollection } from './gatherAutoFetchedReferentsFromIncludes';
-import { uniqBy } from 'lodash-es';
+import { uniqueById } from '@/utils';
 
 const MIN_FETCH_LIMIT = 1;
 export const fetchAllEntries = async ({
@@ -76,8 +76,8 @@ export const fetchAllEntries = async ({
       });
     }
 
-    const dedupedEntries = uniqBy(responseIncludes?.Entry, (entry) => entry.sys.id);
-    const dedupedAssets = uniqBy(responseIncludes?.Asset, (asset) => asset.sys.id);
+    const dedupedEntries = uniqueById(responseIncludes?.Entry);
+    const dedupedAssets = uniqueById(responseIncludes?.Asset);
 
     return {
       items: responseItems,

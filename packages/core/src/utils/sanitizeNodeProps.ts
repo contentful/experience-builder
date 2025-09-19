@@ -1,4 +1,3 @@
-import { omit } from 'lodash-es';
 import { CF_STYLE_ATTRIBUTES } from '../constants';
 import type { PrimitiveValue } from '../types';
 
@@ -8,5 +7,9 @@ const stylesToRemove = CF_STYLE_ATTRIBUTES.filter((style) => !stylesToKeep.inclu
 const propsToRemove = ['cfSsrClassName', 'cfWrapColumns', 'cfWrapColumnsCount'];
 
 export const sanitizeNodeProps = (nodeProps: Record<PropertyKey, PrimitiveValue>) => {
-  return omit(nodeProps, stylesToRemove, propsToRemove);
+  const keysToRemove = [...stylesToRemove, ...propsToRemove];
+  const sanitizedProps = Object.fromEntries(
+    Object.entries(nodeProps).filter(([key]) => !keysToRemove.includes(key)),
+  );
+  return sanitizedProps;
 };
