@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.0](https://github.com/contentful/experience-builder/compare/v3.6.2...v3.7.0) (2025-09-19)
+
+### Features
+
+- add advanced validations for pattern prebinding config ([8825648](https://github.com/contentful/experience-builder/commit/8825648b60af1b5da91672278d7d12f209f7c083))
+- add cjs export to core package and add gatsby-ssg-cjs example [SPA-3248] ([#1332](https://github.com/contentful/experience-builder/issues/1332)) ([6da833a](https://github.com/contentful/experience-builder/commit/6da833abbfcc1677f4cd78f92cceea1992ddcf83))
+- add validations for pre-binding attributes in component tree nodes ([42f0486](https://github.com/contentful/experience-builder/commit/42f0486056296c06cd147a7700ea754850cbf4de))
+
+### Bug Fixes
+
+- allow preview size to be undefined, add TSDoc, adjust examples ([#1327](https://github.com/contentful/experience-builder/issues/1327)) ([d735f6f](https://github.com/contentful/experience-builder/commit/d735f6f7d953f745c549682ef327cf8ece54dbe8))
+- use set instead of array for overlap calculation ([6145b3f](https://github.com/contentful/experience-builder/commit/6145b3f549f394a673e5d4eaa68823f99f2f6451))
+
 ## [3.6.2](https://github.com/contentful/experience-builder/compare/v3.6.1...v3.6.2) (2025-09-15)
 
 **Note:** Version bump only for package @contentful/experiences-validators

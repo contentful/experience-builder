@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.0](https://github.com/contentful/experience-builder/compare/v3.6.2...v3.7.0) (2025-09-19)
+
+### Features
+
+- add cjs export to core package and add gatsby-ssg-cjs example [SPA-3248] ([#1332](https://github.com/contentful/experience-builder/issues/1332)) ([6da833a](https://github.com/contentful/experience-builder/commit/6da833abbfcc1677f4cd78f92cceea1992ddcf83))
+
 ## [3.6.2](https://github.com/contentful/experience-builder/compare/v3.6.1...v3.6.2) (2025-09-15)
 
 ### Bug Fixes

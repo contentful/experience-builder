@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.0](https://github.com/contentful/experience-builder/compare/v3.6.2...v3.7.0) (2025-09-19)
+
+### Bug Fixes
+
+- allow preview size to be undefined, add TSDoc, adjust examples ([#1327](https://github.com/contentful/experience-builder/issues/1327)) ([d735f6f](https://github.com/contentful/experience-builder/commit/d735f6f7d953f745c549682ef327cf8ece54dbe8))
+
 ## [3.6.2](https://github.com/contentful/experience-builder/compare/v3.6.1...v3.6.2) (2025-09-15)
 
 **Note:** Version bump only for package @contentful/create-studio-experiences
