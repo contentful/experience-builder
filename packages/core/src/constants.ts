@@ -50,7 +50,9 @@ export const INCOMING_EVENTS = {
   /** @deprecated will be removed when dropping backward compatibility for old DND */
   HoverComponent: 'hoverComponent',
   UpdatedEntity: 'updatedEntity',
+  /** @deprecated not needed after `patternResolution` was introduced. Will be removed in the next major version. */
   AssembliesAdded: 'assembliesAdded',
+  /** @deprecated not needed after `patternResolution` was introduced. Will be removed in the next major version. */
   AssembliesRegistered: 'assembliesRegistered',
   /** @deprecated will be removed when dropping backward compatibility for old DND */
   MouseMove: 'mouseMove',
