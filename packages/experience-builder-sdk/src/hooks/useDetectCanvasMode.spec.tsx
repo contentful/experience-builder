@@ -5,7 +5,8 @@ import * as experiencesCore from '@contentful/experiences-core';
 
 jest.mock('@contentful/experiences-core', () => {
   return {
-    __esModule: true, //    <----- this __esModule: true is necessary to spy on its methods
+    // Src: https://stackoverflow.com/a/72885576
+    __esModule: true, // necessary to spy on its methods
     ...jest.requireActual('@contentful/experiences-core'),
   };
 });

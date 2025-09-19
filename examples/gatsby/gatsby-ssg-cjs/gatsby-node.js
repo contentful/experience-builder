@@ -9,6 +9,7 @@ const path = require('path');
 require('./src/studio-config');
 
 dotenv.config({
+  // NODE_ENV will always be "production" when running "npm run build"
   path: `.env.${process.env.NODE_ENV}`,
 });
 
