@@ -36,14 +36,4 @@ export default [
       }),
     ],
   },
-  {
-    input: 'src/types.ts',
-    output: [{ dir: 'dist', format: 'esm' }],
-    plugins: [
-      dts({
-        tsconfig: './tsconfig.json',
-        compilerOptions: { noEmitOnError: process.env.DEV ? false : true },
-      }),
-    ],
-  },
 ];

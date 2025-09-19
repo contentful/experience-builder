@@ -1,13 +1,12 @@
-// This file is mjs and not ts because there are errors currently when using `@contentful/experiences-sdk-react` in this file when it's TypeScript.
-import { createClient } from 'contentful';
-import {
+const { createClient } = require('contentful');
+const {
   detachExperienceStyles,
   fetchBySlug,
-} from '@contentful/experiences-sdk-react';
-import dotenv from 'dotenv';
-import path from 'path';
+} = require('@contentful/experiences-core');
+const dotenv = require('dotenv');
+const path = require('path');
 //import studio config so values are available at build time
-import './src/studio-config.mjs';
+require('./src/studio-config');
 
 dotenv.config({
   // NODE_ENV will always be "production" when running "npm run build"
@@ -30,7 +29,7 @@ const clientConfig = {
 };
 const client = createClient(clientConfig);
 
-export const createPages = async function ({ actions }) {
+const createPages = async function ({ actions }) {
   const localeCode = 'en-US';
 
   const entries = await client.getEntries({
@@ -72,4 +71,8 @@ export const createPages = async function ({ actions }) {
       console.warn('Error when fetching experience', e.message);
     }
   }
+};
+
+module.exports = {
+  createPages,
 };

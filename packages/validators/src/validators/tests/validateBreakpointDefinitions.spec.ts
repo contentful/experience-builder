@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validateBreakpointsDefinition } from '../validateBreakpointDefinitions';
+import { Breakpoint } from '@/types';
 
 describe(validateBreakpointsDefinition, () => {
   it('should validate that first breakpoint has a wild card query', () => {
@@ -16,7 +17,7 @@ describe(validateBreakpointsDefinition, () => {
         displayName: 'Tablet',
         previewSize: '820px',
       },
-    ];
+    ] satisfies Breakpoint[];
     const result = validateBreakpointsDefinition(breakpoints);
 
     expect(result.success).toBe(false);
@@ -48,7 +49,7 @@ describe(validateBreakpointsDefinition, () => {
         displayName: 'Tablet',
         previewSize: '820px',
       },
-    ];
+    ] satisfies Breakpoint[];
     const result = validateBreakpointsDefinition(breakpoints);
 
     expect(result.success).toBe(false);
@@ -75,7 +76,7 @@ describe(validateBreakpointsDefinition, () => {
         displayIcon: 'tablet',
         wrongFieldAdded: 'test',
       },
-    ];
+    ] as Breakpoint[];
     const result = validateBreakpointsDefinition(breakpoints);
 
     expect(result.success).toBe(false);
@@ -99,7 +100,7 @@ describe(validateBreakpointsDefinition, () => {
         displayName: 'Tablet',
         previewSize: '820px',
       },
-    ];
+    ] satisfies Breakpoint[];
     const result = validateBreakpointsDefinition(breakpoints);
 
     expect(result.success).toBe(false);
@@ -117,24 +118,28 @@ describe(validateBreakpointsDefinition, () => {
       query: '*',
       displayName: 'Mobile',
       previewSize: '375px',
-    };
+    } as const;
 
     const tabletBreakpoint = {
       id: 'test-tablet',
       query: '>768px',
       displayName: 'Tablet',
       previewSize: '820px',
-    };
+    } as const;
 
     const desktopBreakpoint = {
       id: 'test-desktop',
       query: '>1024px',
       displayName: 'Desktop',
       previewSize: '1280px',
-    };
+    } as const;
 
     it('should accept that all breakpoints have a ">" query after the first one', () => {
-      const breakpoints = [mobileBreakpoint, tabletBreakpoint, desktopBreakpoint];
+      const breakpoints = [
+        mobileBreakpoint,
+        tabletBreakpoint,
+        desktopBreakpoint,
+      ] satisfies Breakpoint[];
       const result = validateBreakpointsDefinition(breakpoints);
 
       expect(result.success).toBe(true);
@@ -145,7 +150,7 @@ describe(validateBreakpointsDefinition, () => {
         mobileBreakpoint,
         tabletBreakpoint,
         { ...desktopBreakpoint, query: '<1024px' },
-      ];
+      ] satisfies Breakpoint[];
       const result = validateBreakpointsDefinition(breakpoints);
 
       expect(result.success).toBe(false);
@@ -162,7 +167,7 @@ describe(validateBreakpointsDefinition, () => {
         mobileBreakpoint,
         tabletBreakpoint,
         { ...desktopBreakpoint, query: '*' },
-      ];
+      ] satisfies Breakpoint[];
       const result = validateBreakpointsDefinition(breakpoints);
 
       expect(result.success).toBe(false);
@@ -194,24 +199,28 @@ describe(validateBreakpointsDefinition, () => {
       query: '*',
       displayName: 'Desktop',
       previewSize: '1280px',
-    };
+    } as const;
 
     const tabletBreakpoint = {
       id: 'test-tablet',
       query: '<1024px',
       displayName: 'Tablet',
       previewSize: '820px',
-    };
+    } as const;
 
     const mobileBreakpoint = {
       id: 'test-mobile',
       query: '<768px',
       displayName: 'Mobile',
       previewSize: '375px',
-    };
+    } as const;
 
     it('should accept that all breakpoints have a "<" query after the first one', () => {
-      const breakpoints = [desktopBreakpoint, tabletBreakpoint, mobileBreakpoint];
+      const breakpoints = [
+        desktopBreakpoint,
+        tabletBreakpoint,
+        mobileBreakpoint,
+      ] satisfies Breakpoint[];
       const result = validateBreakpointsDefinition(breakpoints);
 
       expect(result.success).toBe(true);
@@ -222,7 +231,7 @@ describe(validateBreakpointsDefinition, () => {
         desktopBreakpoint,
         tabletBreakpoint,
         { ...mobileBreakpoint, query: '>1024px' },
-      ];
+      ] satisfies Breakpoint[];
       const result = validateBreakpointsDefinition(breakpoints);
 
       expect(result.success).toBe(false);
@@ -239,7 +248,7 @@ describe(validateBreakpointsDefinition, () => {
         desktopBreakpoint,
         tabletBreakpoint,
         { ...mobileBreakpoint, query: '*' },
-      ];
+      ] satisfies Breakpoint[];
       const result = validateBreakpointsDefinition(breakpoints);
 
       expect(result.success).toBe(false);

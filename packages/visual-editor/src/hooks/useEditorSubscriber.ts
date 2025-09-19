@@ -18,16 +18,12 @@ import {
 } from '@contentful/experiences-core/constants';
 import {
   ExperienceTree,
-  ComponentRegistration,
-  Link,
   ExperienceDataSource,
   ManagementEntity,
   IncomingMessage,
 } from '@contentful/experiences-core/types';
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
-import { Assembly } from '@contentful/experiences-components-react';
-import { addComponentRegistration, assembliesRegistry, setAssemblies } from '@/store/registries';
 import { UnresolvedLink } from 'contentful';
 
 export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore) {
@@ -79,10 +75,7 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
       };
 
       // Prepare L1 entities and deepReferences
-      const entityLinksL1 = [
-        ...Object.values(newDataSource),
-        ...assembliesRegistry.values(), // we count assemblies here as "L1 entities", for convenience. Even though they're not headEntities.
-      ];
+      const entityLinksL1 = Object.values(newDataSource);
 
       /**
        * Checks only for _missing_ L1 entities
@@ -153,7 +146,7 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
         endFetching();
       }
     },
-    [setEntitiesFetched /* setFetchingEntities, assembliesRegistry */],
+    [setEntitiesFetched],
   );
 
   useEffect(() => {
@@ -187,14 +180,7 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
 
       switch (eventData.eventType) {
         case INCOMING_EVENTS.ExperienceUpdated: {
-          const { tree, locale, changedNode, changedValueType, assemblies } = eventData.payload;
-
-          // Make sure to first store the assemblies before setting the tree and thus triggering a rerender
-          if (assemblies) {
-            setAssemblies(assemblies);
-            // If the assemblyEntry is not yet fetched, this will be done below by
-            // the imperative calls to fetchMissingEntities.
-          }
+          const { tree, locale, changedNode, changedValueType } = eventData.payload;
 
           let newEntityStore = entityStore;
           if (entityStore.locale !== locale) {
@@ -238,38 +224,11 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
           break;
         }
         case INCOMING_EVENTS.AssembliesRegistered: {
-          const { assemblies } = eventData.payload;
-
-          assemblies.forEach((definition) => {
-            addComponentRegistration({
-              component: Assembly,
-              definition,
-            });
-          });
+          // Not necessary anymore since `patternResolution` which was introduced in 2024.
           break;
         }
         case INCOMING_EVENTS.AssembliesAdded: {
-          const {
-            assembly,
-            assemblyDefinition,
-          }: {
-            assembly: ManagementEntity;
-            assemblyDefinition?: ComponentRegistration['definition'];
-          } = eventData.payload;
-          entityStore.updateEntity(assembly);
-          // Using a Map here to avoid setting state and rerending all existing assemblies when a new assembly is added
-          // TODO: Figure out if we can extend this love to data source and unbound values. Maybe that'll solve the blink
-          // of all bound and unbound values when new values are added
-          assembliesRegistry.set(assembly.sys.id, {
-            sys: { id: assembly.sys.id, linkType: 'Entry', type: 'Link' },
-          } as Link<'Entry'>);
-          if (assemblyDefinition) {
-            addComponentRegistration({
-              component: Assembly,
-              definition: assemblyDefinition,
-            });
-          }
-
+          // Not necessary anymore since `patternResolution` which was introduced in 2024.
           break;
         }
         case INCOMING_EVENTS.UpdatedEntity: {

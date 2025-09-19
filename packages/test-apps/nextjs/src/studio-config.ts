@@ -130,7 +130,7 @@ defineComponents(
         children: true,
         name: 'Kitchen Sink',
         category: 'Custom Components',
-        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth'],
+        builtInStyles: ['cfMargin', 'cfPadding', 'cfWidth', 'cfMaxWidth', 'cfHeight'],
         variables: {
           jsonObject: {
             displayName: 'Json',
@@ -185,6 +185,32 @@ defineComponents(
             displayName: 'Rich Text',
             type: 'RichText',
           },
+          overflow: {
+            displayName: 'Overflow',
+            type: 'Text',
+            defaultValue: '',
+            group: 'style',
+            validations: {
+              in: [
+                {
+                  value: '',
+                  displayName: 'Initial',
+                },
+                {
+                  value: 'hidden',
+                  displayName: 'Hidden',
+                },
+                {
+                  value: 'visible',
+                  displayName: 'Visible',
+                },
+                {
+                  value: 'auto',
+                  displayName: 'Auto',
+                },
+              ],
+            },
+          },
         },
       },
       options: {
@@ -205,21 +231,18 @@ defineBreakpoints([
     query: '*',
     displayName: 'All Sizes',
     displayIcon: 'desktop',
-    previewSize: '100%',
   },
   {
     id: 'test-tablet',
-    query: '<982px',
+    query: '<992px',
     displayName: 'Tablet',
     displayIcon: 'tablet',
-    previewSize: '820px',
   },
   {
     id: 'test-mobile',
     query: '<576px',
     displayName: 'Mobile',
     displayIcon: 'mobile',
-    previewSize: '390px',
   },
 ]);
 

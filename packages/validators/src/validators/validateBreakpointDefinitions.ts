@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { BreakpointSchema, breakpointsRefinement } from '../schemas/latest';
+import { Breakpoint, BreakpointSchema, breakpointsRefinement } from '../schemas/latest';
 import { ValidatorReturnValue } from './ValidatorReturnValue';
 import { zodToContentfulError } from '@/utils/zodToContentfulError';
 
-export const validateBreakpointsDefinition = (breakpoints): ValidatorReturnValue => {
+export const validateBreakpointsDefinition = (breakpoints: Breakpoint[]): ValidatorReturnValue => {
   const result = z
     .array(BreakpointSchema)
     .superRefine(breakpointsRefinement)

@@ -1,7 +1,17 @@
 import { ExperienceEntry } from '@/types';
 import { ContentfulClientApi, Entry, Asset } from 'contentful';
-import { isExperienceEntry } from '@/utils';
-import { DeepReference, gatherDeepReferencesFromExperienceEntry } from '@/deep-binding';
+import {
+  extractPrebindingDataByPatternId,
+  flattenNestedPatterns,
+  generateDefaultDataSourceForPrebindingDefinition,
+  isExperienceEntry,
+} from '@/utils';
+import {
+  DeepReference,
+  gatherDeepPrebindingReferencesFromExperienceEntry,
+  gatherDeepPrebindingReferencesFromPatternEntry,
+  gatherDeepReferencesFromExperienceEntry,
+} from '@/deep-binding';
 import { gatherAutoFetchedReferentsFromIncludes } from './gatherAutoFetchedReferentsFromIncludes';
 import { fetchAllEntries, fetchAllAssets } from './fetchAllEntities';
 
@@ -44,9 +54,6 @@ export const fetchReferencedEntities = async ({
       'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema',
     );
   }
-  const deepReferences: Array<DeepReference> = gatherDeepReferencesFromExperienceEntry(
-    experienceEntry as ExperienceEntry,
-  );
 
   const entryIds = new Set<string>();
   const assetIds = new Set<string>();
@@ -68,14 +75,68 @@ export const fetchReferencedEntities = async ({
     fetchAllAssets({ client, ids: [...assetIds], locale }),
   ]);
 
+  const usedPatterns = experienceEntry.fields.usedComponents ?? [];
+  const isRenderingExperience = Boolean(!experienceEntry.fields.componentSettings);
+
+  const deepReferences: Array<DeepReference> = gatherDeepReferencesFromExperienceEntry(
+    experienceEntry as ExperienceEntry,
+  );
+
+  // If we are previewing a pattern, we want to include the entry itself as well
+  const fetchedPatterns = (
+    isRenderingExperience ? usedPatterns : [...usedPatterns, experienceEntry]
+  ) as Array<ExperienceEntry>;
+  const allFetchedPatterns = flattenNestedPatterns(fetchedPatterns);
+  const prebindingDataByPatternId = extractPrebindingDataByPatternId(allFetchedPatterns);
+
+  // Patterns do not have dataSource stored in their dataSource field, so head entities won't be there and we need to fetch them
+  if (!isRenderingExperience) {
+    const { dataSource } = generateDefaultDataSourceForPrebindingDefinition(
+      experienceEntry.fields.componentSettings?.prebindingDefinitions,
+    );
+
+    if (Object.keys(dataSource).length) {
+      const prebindingEntriesResponse = await fetchAllEntries({
+        client,
+        ids: Object.values(dataSource).map((link) => link.sys.id),
+        locale,
+      });
+
+      entriesResponse.items.push(...prebindingEntriesResponse.items);
+      entriesResponse.includes.Asset.push(...(prebindingEntriesResponse.includes?.Asset ?? []));
+      entriesResponse.includes.Entry.push(...(prebindingEntriesResponse.includes?.Entry ?? []));
+    }
+  }
+
+  // normally, for experience entry, there should be no need to call this method, as `includes=2` will have them resolved
+  // because the entries used for pre-binding are stored in both - the layout of the experience, as well as the dataSource field
+  const deepPrebindingReferences = isRenderingExperience
+    ? gatherDeepPrebindingReferencesFromExperienceEntry({
+        experienceEntry: experienceEntry as ExperienceEntry,
+        fetchedPatterns: allFetchedPatterns,
+        prebindingDataByPatternId,
+        fetchedLevel1Entries: entriesResponse.items,
+      })
+    : // however, for patterns, we have to do it by hand, because a pattern entry doesn't save the pre-binding data neither in the
+      // layout nor in the dataSource field.
+      // for consistency, as well as to be future safe from the change to "includes=2", I added methods for both
+      gatherDeepPrebindingReferencesFromPatternEntry({
+        patternEntry: experienceEntry as ExperienceEntry,
+        fetchedPatterns: allFetchedPatterns,
+        prebindingDataByPatternId,
+        fetchedLevel1Entries: entriesResponse.items,
+      });
+
+  const allDeepReferences = [...deepReferences, ...deepPrebindingReferences];
+
   const { autoFetchedReferentAssets, autoFetchedReferentEntries } =
-    gatherAutoFetchedReferentsFromIncludes(deepReferences, entriesResponse);
+    gatherAutoFetchedReferentsFromIncludes(allDeepReferences, entriesResponse);
 
   // Using client getEntries resolves all linked entry references, so we do not need to resolve entries in usedComponents
   const allResolvedEntries = [
     ...((entriesResponse?.items ?? []) as Entry[]),
     ...((entriesResponse.includes?.Entry ?? []) as Entry[]),
-    ...((experienceEntry.fields.usedComponents as ExperienceEntry[]) || []),
+    ...((usedPatterns as ExperienceEntry[]) || []),
     ...autoFetchedReferentEntries,
   ];
 
@@ -86,7 +147,13 @@ export const fetchReferencedEntities = async ({
   ];
 
   return {
-    entries: allResolvedEntries as Entry[],
-    assets: allResolvedAssets as Asset[],
+    // we have to drop duplicates, becasue of the merge of deepReferences and deepPrebindingReferences above
+    // If not, the same entity might appear in this array more than once
+    entries: [
+      ...new Map(allResolvedEntries.map((entry) => [entry.sys.id, entry])).values(),
+    ] as Entry[],
+    assets: [
+      ...new Map(allResolvedAssets.map((asset) => [asset.sys.id, asset])).values(),
+    ] as Asset[],
   };
 };

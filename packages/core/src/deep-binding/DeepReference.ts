@@ -16,6 +16,12 @@ import {
 import { treeVisit } from '@/utils/treeTraversal';
 import { isLink } from '@/utils/isLink';
 import type { EntityFromLink, EntityStoreBase } from '@/entity';
+import { Entry } from 'contentful';
+import {
+  generateDefaultDataSourceForPrebindingDefinition,
+  getTargetPatternMappingsForParameter,
+  PrebindingData,
+} from '@/utils';
 
 type DeepReferenceOpts = {
   path: string;
@@ -92,7 +98,7 @@ export function gatherDeepReferencesFromExperienceEntry(
     (node) => {
       if (!node.variables) return;
 
-      for (const [, variableMapping] of Object.entries(node.variables)) {
+      for (const variableMapping of Object.values(node.variables)) {
         if (variableMapping.type !== 'BoundValue') continue;
         if (!isDeepPath(variableMapping.path)) continue;
 
@@ -109,6 +115,134 @@ export function gatherDeepReferencesFromExperienceEntry(
   return deepReferences;
 }
 
+export function gatherDeepPrebindingReferencesFromExperienceEntry({
+  experienceEntry,
+  fetchedPatterns,
+  prebindingDataByPatternId,
+  fetchedLevel1Entries,
+}: {
+  experienceEntry: ExperienceEntry;
+  fetchedPatterns: Array<ExperienceEntry>;
+  prebindingDataByPatternId: Record<string, PrebindingData>;
+  fetchedLevel1Entries: Array<Entry>;
+}) {
+  const deepPrebindingReferences: Array<DeepReference> = [];
+  const dataSource = experienceEntry.fields.dataSource;
+  const { children } = experienceEntry.fields.componentTree;
+
+  treeVisit(
+    {
+      definitionId: 'root',
+      parameters: {},
+      children,
+    } as ComponentTreeNode,
+    (node) => {
+      if (!node.parameters) return;
+
+      for (const [parameterId, parameterValue] of Object.entries(node.parameters)) {
+        const dataSourceKey = parameterValue.path.split('/')[1];
+        const headEntryLink = dataSource[dataSourceKey];
+        if (!headEntryLink) continue;
+        if (headEntryLink.sys.linkType !== 'Entry') continue;
+        const headEntry = fetchedLevel1Entries.find(
+          (entry) => entry.sys.id === headEntryLink.sys.id,
+        );
+        if (!headEntry) continue;
+
+        const headEntryContentTypeId = headEntry.sys.contentType.sys.id;
+
+        // if experience, we don't have any hoisted data on the given experienceEntry
+        // and we have to lookup the pattern instead
+        const variableMappings = getTargetPatternMappingsForParameter({
+          fetchedPatterns,
+          prebindingDataByPatternId,
+          patternNodeDefinitionId: node.definitionId,
+          parameterId,
+        });
+
+        if (!variableMappings) continue;
+
+        for (const mappingData of Object.values(variableMappings)) {
+          const targetMapping = mappingData.pathsByContentType[headEntryContentTypeId];
+          if (!targetMapping) continue;
+          // mapping doesn't start with /uuid, but instead starts with /fields
+          // so we add /uuid to make it match the binding path format
+          const path = `/${dataSourceKey}${targetMapping.path}`;
+          if (!isDeepPath(path)) continue;
+
+          deepPrebindingReferences.push(
+            DeepReference.from({
+              path,
+              dataSource,
+            }),
+          );
+        }
+      }
+    },
+  );
+
+  return deepPrebindingReferences;
+}
+
+export function gatherDeepPrebindingReferencesFromPatternEntry({
+  patternEntry,
+  fetchedPatterns,
+  prebindingDataByPatternId,
+  fetchedLevel1Entries,
+}: {
+  patternEntry: ExperienceEntry;
+  fetchedPatterns: Array<ExperienceEntry>;
+  prebindingDataByPatternId: Record<string, PrebindingData>;
+  fetchedLevel1Entries: Array<Entry>;
+}) {
+  const deepPrebindingReferences: Array<DeepReference> = [];
+  // patterns can't have parameters in their CDA/CMA JSON, so we can generate random ids here
+  const { dataSource, parameters } = generateDefaultDataSourceForPrebindingDefinition(
+    patternEntry.fields.componentSettings?.prebindingDefinitions,
+  );
+
+  for (const [parameterId, parameterValue] of Object.entries(parameters)) {
+    const dataSourceKey = parameterValue.path.split('/')[1];
+    const headEntryLink = dataSource[dataSourceKey];
+    if (!headEntryLink) continue;
+    if (headEntryLink.sys.linkType !== 'Entry') continue;
+
+    const headEntry = fetchedLevel1Entries.find((entry) => entry.sys.id === headEntryLink.sys.id);
+    if (!headEntry) continue;
+
+    const headEntryContentTypeId = headEntry.sys.contentType.sys.id;
+
+    const variableMappings = getTargetPatternMappingsForParameter({
+      fetchedPatterns,
+      prebindingDataByPatternId,
+      patternNodeDefinitionId: patternEntry.sys.id,
+      parameterId,
+    });
+
+    if (!variableMappings) continue;
+
+    for (const mappingData of Object.values(variableMappings)) {
+      const targetMapping = mappingData.pathsByContentType[headEntryContentTypeId];
+      if (!targetMapping) continue;
+      // mapping doesn't start with /uuid, but instead starts with /fields
+      // so we add /uuid to make it match the binding path format
+      const path = `/${dataSourceKey}${targetMapping.path}`;
+      if (!isDeepPath(path)) continue;
+
+      deepPrebindingReferences.push(
+        DeepReference.from({
+          path,
+          dataSource,
+        }),
+      );
+    }
+  }
+  return deepPrebindingReferences;
+}
+
+/**
+ * used in editor mode. for delivery mode see `gatherDeepReferencesFromExperienceEntry`
+ */
 export function gatherDeepReferencesFromTree(
   startingNode: ExperienceTreeNode,
   dataSource: ExperienceDataSource,
