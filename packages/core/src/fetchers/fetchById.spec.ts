@@ -89,7 +89,7 @@ describe('fetchById', () => {
     });
 
     vi.mock('./fetchReferencedEntities', () => {
-      const fetchReferencedEntities = vi.fn(async ({ client, experienceEntry }) => {
+      const fetchReferencedEntities = vi.fn(async ({ experienceEntry }) => {
         if (experienceEntry.sys.id === 'experience-entry-with-prebinding') {
           return {
             entries: [...entries, createEntry('default-prebinding-entry-id')],

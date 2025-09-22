@@ -74,7 +74,6 @@ export const resolvePrebindingPath = ({
   if (!parameter) return '';
 
   const dataSourceKey = parameter.path.split('/')[1];
-  console.log(22222, dataSourceKey, entityStore.dataSource);
 
   const entityLink = entityStore.dataSource[dataSourceKey];
   if (!entityLink) return '';
@@ -137,7 +136,6 @@ export const resolveMaybePrebindingDefaultValuePath = ({
       return;
     }
 
-    console.log(111);
     const fieldPath = variableMapping.pathsByContentType[contentTypeId].path;
     if (!fieldPath) {
       // Path not found or degenerate shape (e.g. empty string '')
