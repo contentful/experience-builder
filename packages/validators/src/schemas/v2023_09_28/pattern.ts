@@ -81,8 +81,8 @@ const ParameterDefinitionSchema = z.object({
   contentTypes: z.array(z.string()).min(1),
   passToNodes: z
     .array(PassToNodeSchema)
-    .max(1, 'At most one "passToNodes" element is allowed per parameter definition.')
-    .optional(), // we might change this to be empty array for native parameter definitions, that's why we don't use .length(1)
+    .max(1, 'At most one "passToNodes" element is allowed per parameter definition.'),
+  // we might change this to be empty array for native parameter definitions, that's why we don't use .length(1)
 });
 
 export const ParameterDefinitionsSchema = z.record(propertyKeySchema, ParameterDefinitionSchema);
@@ -239,7 +239,7 @@ const validatePassToNodes = (
   }
   const { parameterDefinitions } = componentSettings.prebindingDefinitions[0];
 
-  let nodeIds: Set<string> = new Set();
+  const nodeIds: Set<string> = new Set();
   for (const paramDef of Object.values(parameterDefinitions || {})) {
     paramDef.passToNodes?.forEach((n) => nodeIds.add(n.nodeId));
   }
