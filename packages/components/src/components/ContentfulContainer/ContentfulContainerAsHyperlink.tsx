@@ -1,5 +1,5 @@
 import React from 'react';
-import type { StyleProps } from '@contentful/experiences-core/types';
+import type { StyleProps } from '@contentful/experiences-core';
 import type { StructureComponentProps } from '@/types';
 import { extractRenderProps } from '@/utils/extractRenderProps';
 import { combineClasses } from '@/utils/combineClasses';

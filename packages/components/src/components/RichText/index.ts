@@ -1,4 +1,4 @@
-import type { ComponentDefinition } from '@contentful/experiences-core/types';
+import type { ComponentDefinition } from '@contentful/experiences-core';
 import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,

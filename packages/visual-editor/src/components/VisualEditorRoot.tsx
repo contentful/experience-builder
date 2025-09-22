@@ -3,11 +3,11 @@ import {
   type InMemoryEntitiesStore,
   inMemoryEntitiesStore as defaultInMemoryEntitiesStore,
   EntityStore,
+  type Experience,
 } from '@contentful/experiences-core';
 import type { StudioCanvasMode } from '@contentful/experiences-core/constants';
 import { RootRenderer } from './RootRenderer/RootRenderer';
 import { useInitializeEditor } from '@/hooks/useInitializeEditor';
-import type { Experience } from '@contentful/experiences-core/types';
 import { useEditorStore } from '@/store/editor';
 
 export const VisualEditorRoot = ({

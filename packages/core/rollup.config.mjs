@@ -29,7 +29,7 @@ export default [
   },
   //specific exports in package.json
   {
-    input: 'src/exports.ts',
+    input: 'src/constants.ts',
     output: [
       {
         file: 'dist/constants.mjs',
