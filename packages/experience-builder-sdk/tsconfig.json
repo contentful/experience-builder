@@ -3,7 +3,8 @@
   "compilerOptions": {
     "types": ["node", "jest", "@testing-library/jest-dom", "vite-plugin-svgr/client"],
     "allowJs": true,
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "outDir": "dist"
   },

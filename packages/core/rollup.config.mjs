@@ -8,7 +8,7 @@ export default [
     input: 'src/index.ts',
     output: [
       {
-        file: 'dist/index.js',
+        file: 'dist/index.mjs',
         format: 'esm',
         sourcemap: true,
       },
@@ -16,6 +16,8 @@ export default [
         file: 'dist/index.cjs',
         format: 'cjs',
         sourcemap: true,
+        // Tells CJS consumer that this module originally had ESM semantics, e.g. this enables spying on named exports
+        esModule: true,
       },
     ],
     plugins: [
@@ -30,7 +32,7 @@ export default [
     input: 'src/exports.ts',
     output: [
       {
-        file: 'dist/constants.js',
+        file: 'dist/constants.mjs',
         format: 'esm',
         sourcemap: true,
       },
@@ -38,6 +40,8 @@ export default [
         file: 'dist/constants.cjs',
         format: 'cjs',
         sourcemap: true,
+        // Tells CJS consumer that this module originally had ESM semantics, e.g. this enables spying on named exports
+        esModule: true,
       },
     ],
     plugins: [
@@ -50,7 +54,7 @@ export default [
   //typings
   {
     input: 'src/index.ts',
-    output: [{ dir: 'dist', format: 'esm', preserveModules: true }],
+    output: [{ file: 'dist/index.d.ts', format: 'esm' }],
     plugins: [
       dts({
         tsconfig: './tsconfig.json',
@@ -60,8 +64,8 @@ export default [
     external: [/.css/],
   },
   {
-    input: 'src/exports.ts',
-    output: [{ dir: 'dist', format: 'esm', preserveModules: true }],
+    input: 'src/constants.ts',
+    output: [{ file: 'dist/constants.d.ts', format: 'esm' }],
     plugins: [
       dts({
         tsconfig: './tsconfig.json',
