@@ -30,6 +30,7 @@ const setupPrebindingPattern = (overrides: Partial<PrebindingDefinition>) => {
   const allowedVariableOverrides: string[] = overrides.allowedVariableOverrides || ['variableId2'];
   const parameterDefinitions: ParameterDefinitions = overrides.parameterDefinitions || {
     NATIVE_PARAMETER_ID: {
+      passToNodes: [],
       defaultSource: {
         type: 'Entry',
         contentTypeId: 'ct1',
@@ -333,6 +334,7 @@ describe('componentSettings', () => {
     it('errors if more than MAX_MAPPING_PATHS are used', () => {
       const contentTypes = Array.from({ length: MAX_ALLOWED_PATHS + 1 }, (_, i) => `ct${i}`);
       const parameterDefinition: ParameterDefinition = {
+        passToNodes: [],
         contentTypes: contentTypes,
       };
       const variableMappings: VariableMappings = {
@@ -362,10 +364,12 @@ describe('componentSettings', () => {
 
     it('errors if more than one native parameter definition exists', () => {
       const parameterDefinition1: ParameterDefinition = {
+        passToNodes: [],
         contentTypes: ['ct1'],
       };
 
       const parameterDefinition2: ParameterDefinition = {
+        passToNodes: [],
         contentTypes: ['ct2'],
       };
 
