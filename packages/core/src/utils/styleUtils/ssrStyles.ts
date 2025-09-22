@@ -448,17 +448,31 @@ export const maybePopulateDesignTokenValue = (
 
   const templateStringRegex = /\$\{\s*([A-Za-z_][\w-]*)\.([^}]+?)\s*}/g;
 
-  const result = variableValue.replace(templateStringRegex, (match, ns: string, rawKey: string) => {
-    const key = rawKey.trim();
-    const value = mapOfDesignVariableKeys[`${ns}.${key}`];
-    if (value === undefined) {
-      debug.warn(
-        `[experiences-core::ssrStyles] Design token "${ns}.${key}" not found in the registry.`,
-      );
-      return match;
-    }
-    return String(value);
-  });
+  const result = variableValue.replace(
+    templateStringRegex,
+    (_: string, ns: string, rawKey: string): string => {
+      const key = rawKey.trim();
+      const value = mapOfDesignVariableKeys[`${ns}.${key}`];
+
+      if (!value) {
+        if (builtInStyles[variableName]?.defaultValue) {
+          return String(builtInStyles[variableName]!.defaultValue);
+        }
+        if (optionalBuiltInStyles[variableName]?.defaultValue) {
+          return String(optionalBuiltInStyles[variableName]!.defaultValue);
+        }
+
+        return '0px';
+      }
+      if (variableName === 'cfBorder' || variableName.startsWith('cfBorder_')) {
+        if (typeof value === 'object') {
+          const { width, style, color } = value;
+          return `${width} ${style} ${color}`;
+        }
+      }
+      return String(value);
+    },
+  );
 
   return result;
 };
