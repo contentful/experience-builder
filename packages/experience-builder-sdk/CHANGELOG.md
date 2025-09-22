@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.1](https://github.com/contentful/experience-builder/compare/v3.7.0...v3.7.1) (2025-09-22)
+
+**Note:** Version bump only for package @contentful/experiences-sdk-react
+
 ## [3.7.0](https://github.com/contentful/experience-builder/compare/v3.6.2...v3.7.0) (2025-09-19)
 
 ### Features
