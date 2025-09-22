@@ -446,44 +446,21 @@ export const maybePopulateDesignTokenValue = (
     return variableValue;
   }
 
-  const resolveSimpleDesignToken = (variableName: keyof StyleProps, variableValue: string) => {
-    const nonTemplateDesignTokenValue = variableValue.replace(templateStringRegex, '$1');
-    const tokenValue = mapOfDesignVariableKeys[nonTemplateDesignTokenValue];
+  const templateStringRegex = /\$\{\s*([A-Za-z_][\w-]*)\.([^}]+?)\s*}/g;
 
-    if (!tokenValue) {
-      if (builtInStyles[variableName]) {
-        return builtInStyles[variableName]!.defaultValue;
-      }
-      if (optionalBuiltInStyles[variableName]) {
-        return optionalBuiltInStyles[variableName]!.defaultValue;
-      }
-
-      return '0px';
+  const result = variableValue.replace(templateStringRegex, (match, ns: string, rawKey: string) => {
+    const key = rawKey.trim();
+    const value = mapOfDesignVariableKeys[`${ns}.${key}`];
+    if (value === undefined) {
+      debug.warn(
+        `[experiences-core::ssrStyles] Design token "${ns}.${key}" not found in the registry.`,
+      );
+      return match;
     }
+    return String(value);
+  });
 
-    if (variableName === 'cfBorder' || variableName.startsWith('cfBorder_')) {
-      if (typeof tokenValue === 'object') {
-        const { width, style, color } = tokenValue;
-        return `${width} ${style} ${color}`;
-      }
-    }
-
-    return tokenValue;
-  };
-
-  const templateStringRegex = /\${(.+?)}/g;
-
-  const parts = variableValue.split(' ');
-
-  let resolvedValue = '';
-  for (const part of parts) {
-    const tokenValue = templateStringRegex.test(part)
-      ? resolveSimpleDesignToken(variableName, part)
-      : part;
-    resolvedValue += `${tokenValue} `;
-  }
-  // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
-  return resolvedValue.trim();
+  return result;
 };
 
 const transformMedia = (boundAsset: Asset, width?: string, options?: BackgroundImageOptions) => {

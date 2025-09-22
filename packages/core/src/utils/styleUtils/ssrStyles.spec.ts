@@ -67,6 +67,23 @@ describe('maybePopulateDesignTokenValue', () => {
     expect(res).toBe('#000000');
   });
 
+  it('should replace multiple design token variables with their values', () => {
+    const res = maybePopulateDesignTokenValue('cfMargin', '${sizing.S} ${sizing.M} 0px 10px', {
+      'sizing.S': '8px',
+      'sizing.M': '16px',
+    });
+
+    expect(res).toBe('8px 16px 0px 10px');
+  });
+
+  it('should replace design token variables that has whitespaces with their values', () => {
+    const res = maybePopulateDesignTokenValue('cfColor', '${color.Bright Blue}', {
+      'color.Bright Blue': '#0000ff',
+    });
+
+    expect(res).toBe('#0000ff');
+  });
+
   describe('cfBorder variable', () => {
     it('should return default value if no design tokens were found', () => {
       const res = maybePopulateDesignTokenValue('cfBorder', '${border.small}', {
