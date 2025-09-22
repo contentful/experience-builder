@@ -45,6 +45,7 @@ describe('sideloadPrebindingDefaultValues', () => {
               id: 'prebindingDefinition1',
               parameterDefinitions: {
                 ppdId111: {
+                  passToNodes: [],
                   defaultSource: {
                     type: 'Entry',
                     contentTypeId: 'ct111',
@@ -122,6 +123,7 @@ describe('sideloadPrebindingDefaultValues', () => {
               id: 'prebindingDefinition1',
               parameterDefinitions: {
                 ppdId111: {
+                  passToNodes: [],
                   defaultSource: {
                     type: 'Entry',
                     contentTypeId: 'ct111',
@@ -136,6 +138,7 @@ describe('sideloadPrebindingDefaultValues', () => {
                   contentTypes: ['ct111'],
                 },
                 ppdId222: {
+                  passToNodes: [],
                   defaultSource: {
                     type: 'Entry',
                     contentTypeId: 'ct222',
@@ -226,6 +229,7 @@ describe('sideloadPrebindingDefaultValues', () => {
                 id: 'prebindingDefinition1',
                 parameterDefinitions: {
                   ppdId111: {
+                    passToNodes: [],
                     contentTypes: ['ct111'],
                     defaultSource: undefined,
                   },
@@ -321,6 +325,7 @@ describe('sideloadPrebindingDefaultValues', () => {
             id: 'prebindingDefinition1',
             parameterDefinitions: {
               n1ppd111: {
+                passToNodes: [],
                 defaultSource: {
                   type: 'Entry',
                   contentTypeId: 'n1ct111',
@@ -362,6 +367,7 @@ describe('sideloadPrebindingDefaultValues', () => {
               id: 'prebindingDefinition1',
               parameterDefinitions: {
                 ppdId111: {
+                  passToNodes: [],
                   defaultSource: {
                     type: 'Entry',
                     contentTypeId: 'ct111',
