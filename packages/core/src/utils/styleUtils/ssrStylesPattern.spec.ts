@@ -1852,6 +1852,6 @@ describe('pattern component', () => {
     const styles = detachExperienceStyles(experience);
 
     // Making sure that the extracted styles contain the updated background color for the nested pattern component
-    expect(styles).toMatch('background-color:rgba(111,  111 , 111, 0)');
+    expect(styles).toMatch('background-color:rgba(111, 111 , 111, 0)');
   });
 });

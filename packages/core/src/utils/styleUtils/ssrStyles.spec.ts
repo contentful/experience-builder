@@ -26,9 +26,9 @@ describe('isCfStyleAttribute', () => {
 
 describe('maybePopulateDesignTokenValue', () => {
   it('should ignore CF_STYLE_ATTRIBUTES values of variables', () => {
-    const mapOfDesignVariableKeys = {
-      'color.black': '#000000',
-    };
+    const mapOfDesignVariableKeys = flattenDesignTokenRegistry({
+      color: { black: '#000000' },
+    });
 
     expect(maybePopulateDesignTokenValue('numberOfRows', 1, mapOfDesignVariableKeys)).toBe(1);
 
@@ -44,63 +44,104 @@ describe('maybePopulateDesignTokenValue', () => {
   });
 
   it('should not change variables which do not have a design token value', () => {
-    const res = maybePopulateDesignTokenValue('cfBackgroundColor', 'yellow', {
-      'color.black': '#000000',
-    });
+    const res = maybePopulateDesignTokenValue(
+      'cfBackgroundColor',
+      'yellow',
+      flattenDesignTokenRegistry({
+        color: { black: '#000000' },
+      }),
+    );
 
     expect(res).toBe('yellow');
   });
 
   it('should use builtInStyles.defaultValue for variables with design token pattern where no design tokens match the pattern', () => {
-    const res = maybePopulateDesignTokenValue('cfBackgroundColor', '${color.yellow}', {
-      'color.black': '#000000',
-    });
+    const res = maybePopulateDesignTokenValue(
+      'cfBackgroundColor',
+      '${color.yellow}',
+      flattenDesignTokenRegistry({
+        color: { black: '#000000' },
+      }),
+    );
 
     expect(res).toBe(`${builtInStyles.cfBackgroundColor?.defaultValue}`);
   });
 
   it('should replace design token variables with their values', () => {
-    const res = maybePopulateDesignTokenValue('cfBackgroundColor', '${color.black}', {
-      'color.black': '#000000',
-    });
+    const res = maybePopulateDesignTokenValue(
+      'cfBackgroundColor',
+      '${color.black}',
+      flattenDesignTokenRegistry({
+        color: { black: '#000000' },
+      }),
+    );
 
     expect(res).toBe('#000000');
   });
 
   it('should replace multiple design token variables with their values', () => {
-    const res = maybePopulateDesignTokenValue('cfMargin', '${sizing.S} ${sizing.M} 0px 10px', {
-      'sizing.S': '8px',
-      'sizing.M': '16px',
-    });
+    const res = maybePopulateDesignTokenValue(
+      'cfMargin',
+      '${sizing.S} ${sizing.M} 0px 10px',
+      flattenDesignTokenRegistry({
+        sizing: { S: '8px', M: '16px' },
+      }),
+    );
 
     expect(res).toBe('8px 16px 0px 10px');
   });
 
   it('should replace design token variables that has whitespaces with their values', () => {
-    const res = maybePopulateDesignTokenValue('cfColor', '${color.Bright Blue}', {
-      'color.Bright Blue': '#0000ff',
-    });
+    const res = maybePopulateDesignTokenValue(
+      'cfTextColor',
+      '${color.Bright Blue}',
+      flattenDesignTokenRegistry({
+        color: { 'Bright Blue': '#0000ff' },
+      }),
+    );
 
     expect(res).toBe('#0000ff');
   });
 
+  it('should replace multi-level design token variables that has whitespaces with their values', () => {
+    const res = maybePopulateDesignTokenValue(
+      'cfFontSize',
+      '${text.Hero Paragraph.fontSize}',
+      flattenDesignTokenRegistry({
+        text: { 'Hero Paragraph': { fontSize: '24px' } },
+      }),
+    );
+
+    expect(res).toBe('24px');
+  });
+
   describe('cfBorder variable', () => {
     it('should return default value if no design tokens were found', () => {
-      const res = maybePopulateDesignTokenValue('cfBorder', '${border.small}', {
-        'color.black': '#000000',
-      });
+      const res = maybePopulateDesignTokenValue(
+        'cfBorder',
+        '${border.small}',
+        flattenDesignTokenRegistry({
+          color: { black: '#000000' },
+        }),
+      );
 
       expect(res).toBe(builtInStyles.cfBorder?.defaultValue);
     });
 
     it('should replace values which have design tokens', () => {
-      const res = maybePopulateDesignTokenValue('cfBorder', '${border.small}', {
-        'border.small': {
-          width: '1px',
-          style: 'solid',
-          color: '#000000',
-        },
-      });
+      const res = maybePopulateDesignTokenValue(
+        'cfBorder',
+        '${border.small}',
+        flattenDesignTokenRegistry({
+          border: {
+            small: {
+              width: '1px',
+              style: 'solid',
+              color: '#000000',
+            },
+          },
+        }),
+      );
 
       expect(res).toBe('1px solid #000000');
     });
@@ -1290,6 +1331,18 @@ describe('flattenDesignTokenRegistry', () => {
         muted: 'gray',
         accent: 'blue',
       },
+      text: {
+        'Hero H1': {
+          fontSize: '4rem',
+          fontWeight: '600',
+          lineHeight: '1.5',
+        },
+        'Hero Paragraph': {
+          fontSize: '1.5rem',
+          fontWeight: '500',
+          lineHeight: '1.15',
+        },
+      },
     };
     const res = flattenDesignTokenRegistry(designTokenRegistry);
 
@@ -1329,6 +1382,12 @@ describe('flattenDesignTokenRegistry', () => {
       'textColor.default': 'black',
       'textColor.muted': 'gray',
       'textColor.accent': 'blue',
+      'text.Hero H1.fontSize': '4rem',
+      'text.Hero H1.fontWeight': '600',
+      'text.Hero H1.lineHeight': '1.5',
+      'text.Hero Paragraph.fontSize': '1.5rem',
+      'text.Hero Paragraph.fontWeight': '500',
+      'text.Hero Paragraph.lineHeight': '1.15',
     });
   });
 });

@@ -446,13 +446,13 @@ export const maybePopulateDesignTokenValue = (
     return variableValue;
   }
 
-  const templateStringRegex = /\$\{\s*([A-Za-z_][\w-]*)\.([^}]+?)\s*}/g;
+  // matches ${...} and captures the content between ${ and }
+  // ${color.Blue}, ${spacing.Sizes.Large} or ${border.Text Heading.Small}
+  const templateStringRegex = /\$\{(\w[^}]*)}/g;
 
-  const result = variableValue.replace(
-    templateStringRegex,
-    (_: string, ns: string, rawKey: string): string => {
-      const key = rawKey.trim();
-      const value = mapOfDesignVariableKeys[`${ns}.${key}`];
+  const result = variableValue
+    .replace(templateStringRegex, (_: string, rawKey: string): string => {
+      const value = mapOfDesignVariableKeys[rawKey];
 
       if (!value) {
         if (builtInStyles[variableName]?.defaultValue) {
@@ -471,9 +471,9 @@ export const maybePopulateDesignTokenValue = (
         }
       }
       return String(value);
-    },
-  );
-
+    })
+    // Replace all multiple spaces with a single space
+    .replace(/  +/g, ' ');
   return result;
 };
 
@@ -788,22 +788,33 @@ export const indexByBreakpoint = ({
 export const flattenDesignTokenRegistry = (
   designTokenRegistry: DesignTokensDefinition,
 ): FlattenedDesignTokens => {
-  return Object.entries(designTokenRegistry).reduce((acc, [categoryName, tokenCategory]) => {
-    const tokensWithCategory = Object.entries(tokenCategory).reduce(
-      (acc, [tokenName, tokenValue]) => {
+  const flattenObject = (obj: object, prefix = ''): FlattenedDesignTokens => {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+      const newKey = prefix ? `${prefix}.${key}` : key;
+
+      if (
+        value &&
+        typeof value === 'object' &&
+        !Array.isArray(value) &&
+        // handle border types
+        !(typeof value === 'object' && ('width' in value || 'style' in value || 'color' in value))
+      ) {
+        // Recursively flatten nested objects, but skip objects that look like border definitions
         return {
           ...acc,
-          [`${categoryName}.${tokenName}`]: tokenValue,
+          ...flattenObject(value, newKey),
         };
-      },
-      {},
-    );
+      } else {
+        // This is a leaf value (string, number, or border object)
+        return {
+          ...acc,
+          [newKey]: value,
+        };
+      }
+    }, {});
+  };
 
-    return {
-      ...acc,
-      ...tokensWithCategory,
-    };
-  }, {});
+  return flattenObject(designTokenRegistry);
 };
 
 function mergeDefaultAndOverwriteValues(
