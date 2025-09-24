@@ -13,7 +13,7 @@
     "@astrojs/check": "^0.9.4",
     "@astrojs/node": "^9.4.1",
     "@astrojs/react": "^4.1.1",
-    "@contentful/experiences-sdk-react": "^1.42.3",
+    "@contentful/experiences-sdk-react": "^3.7.2",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
     "astro": "^5.0.8",
