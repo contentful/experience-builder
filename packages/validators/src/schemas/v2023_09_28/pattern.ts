@@ -82,7 +82,6 @@ const ParameterDefinitionSchema = z.object({
   passToNodes: z
     .array(PassToNodeSchema)
     .max(1, 'At most one "passToNodes" element is allowed per parameter definition.'),
-  // we might change this to be empty array for native parameter definitions, that's why we don't use .length(1)
 });
 
 export const ParameterDefinitionsSchema = z.record(propertyKeySchema, ParameterDefinitionSchema);
