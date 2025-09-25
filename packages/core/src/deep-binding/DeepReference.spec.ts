@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { createPatternEntry, experienceEntry } from '../test/__fixtures__/experience';
-import { entities } from '../test/__fixtures__/entities';
+import { createPatternEntry, experienceEntry } from '@/test/__fixtures__/experience';
+import { entities } from '@/test/__fixtures__/entities';
 import {
   DeepReference,
   gatherDeepPrebindingReferencesFromExperienceEntry,
@@ -101,39 +101,39 @@ const getPrebindingSubTree = ({ withFullPath }: { withFullPath: boolean }) => {
     };
 
     if (link.sys.id === 'entry1') {
-      (result.sys.contentType = {
+      result.sys.contentType = {
         sys: {
           id: 'contentTypeId1',
           type: 'Link',
           linkType: 'ContentType',
         },
-      }),
-        (result.fields = {
-          imageRef: {
-            sys: {
-              id: 'asset1',
-              type: 'Link',
-              linkType: 'Asset',
-            },
+      };
+      result.fields = {
+        imageRef: {
+          sys: {
+            id: 'asset1',
+            type: 'Link',
+            linkType: 'Asset',
           },
-        });
+        },
+      };
     } else if (link.sys.id === 'entry2') {
-      (result.sys.contentType = {
+      result.sys.contentType = {
         sys: {
           id: 'contentTypeId3',
           type: 'Link',
           linkType: 'ContentType',
         },
-      }),
-        (result.fields = {
-          productPhoto: {
-            sys: {
-              id: 'asset2',
-              type: 'Link',
-              linkType: 'Asset',
-            },
+      };
+      result.fields = {
+        productPhoto: {
+          sys: {
+            id: 'asset2',
+            type: 'Link',
+            linkType: 'Asset',
           },
-        });
+        },
+      };
     } else if (link.sys.linkType === 'Asset') {
       result.fields = {
         file: {
@@ -391,6 +391,7 @@ describe('gatherDeepPrebindingReferencesFromExperienceEntry', () => {
         id: 'simple-pattern-prebinding-definition-id',
         parameterDefinitions: {
           nativeParamId: {
+            passToNodes: [],
             contentTypes: ['ct1', 'ct2'],
             defaultSource: {
               type: 'Entry',
@@ -430,6 +431,7 @@ describe('gatherDeepPrebindingReferencesFromExperienceEntry', () => {
         id: 'parent-pattern-entry-prebinding-definition-id',
         parameterDefinitions: {
           nativeParamId: {
+            passToNodes: [],
             contentTypes: ['ct1', 'ct2'],
             defaultSource: {
               type: 'Entry',
@@ -925,6 +927,7 @@ describe('gatherDeepPrebindingReferencesFromPatternEntry', () => {
         id: 'simple-pattern-prebinding-definition-id',
         parameterDefinitions: {
           nativeParamId: {
+            passToNodes: [],
             contentTypes: ['ct1', 'ct2'],
             defaultSource: {
               type: 'Entry',
@@ -964,6 +967,7 @@ describe('gatherDeepPrebindingReferencesFromPatternEntry', () => {
         id: 'parent-pattern-entry-prebinding-definition-id',
         parameterDefinitions: {
           nativeParamId: {
+            passToNodes: [],
             contentTypes: ['ct1', 'ct2'],
             defaultSource: {
               type: 'Entry',

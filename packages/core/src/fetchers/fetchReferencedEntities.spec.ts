@@ -1,6 +1,6 @@
 import { Asset, ContentfulClientApi, Entry } from 'contentful';
-import { createPatternEntry, experienceEntry } from '../test/__fixtures__/experience';
-import { assets, entityIds, entries } from '../test/__fixtures__/entities';
+import { createPatternEntry, experienceEntry } from '@/test/__fixtures__/experience';
+import { assets, entityIds, entries } from '@/test/__fixtures__/entities';
 import { describe, it, expect, vi, beforeEach, Mock, MockInstance } from 'vitest';
 import * as deepBindingModule from '@/deep-binding';
 import * as utilsModule from '@/utils';
@@ -184,6 +184,7 @@ describe('fetchReferencedEntities', () => {
               id: 'simple-pattern-prebinding-definition-id',
               parameterDefinitions: {
                 nativeParamId: {
+                  passToNodes: [],
                   contentTypes: ['ct1', 'ct2'],
                   defaultSource: {
                     type: 'Entry',
@@ -223,6 +224,7 @@ describe('fetchReferencedEntities', () => {
               id: 'parent-pattern-entry-prebinding-definition-id',
               parameterDefinitions: {
                 nativeParamId: {
+                  passToNodes: [],
                   contentTypes: ['ct1', 'ct2'],
                   defaultSource: {
                     type: 'Entry',
@@ -540,6 +542,7 @@ describe('fetchReferencedEntities', () => {
               id: 'simple-pattern-prebinding-definition-id',
               parameterDefinitions: {
                 nativeParamId: {
+                  passToNodes: [],
                   contentTypes: ['ct1', 'ct2'],
                   defaultSource: {
                     type: 'Entry',
@@ -579,6 +582,7 @@ describe('fetchReferencedEntities', () => {
               id: 'parent-pattern-entry-prebinding-definition-id',
               parameterDefinitions: {
                 nativeParamId: {
+                  passToNodes: [],
                   contentTypes: ['ct1', 'ct2'],
                   defaultSource: {
                     type: 'Entry',
