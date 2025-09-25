@@ -299,6 +299,7 @@ export const experiencePattern = {
             id: 'prebindingDefinition1',
             parameterDefinitions: {
               '8v3GB67qF5f': {
+                passToNodes: [],
                 defaultSource: {
                   contentTypeId: 'productFeatureTopic',
                   type: 'Entry',

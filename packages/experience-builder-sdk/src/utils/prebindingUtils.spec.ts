@@ -23,6 +23,7 @@ describe('shouldUsePrebinding', () => {
           id: 'prebindingDefinition1',
           parameterDefinitions: {
             testParameterId: {
+              passToNodes: [],
               contentTypes: ['ct111'],
             },
           },
@@ -67,6 +68,7 @@ describe('shouldUsePrebinding', () => {
           id: 'prebindingDefinition1',
           parameterDefinitions: {
             testParameterId: {
+              passToNodes: [],
               contentTypes: ['ct111'],
             },
           },
@@ -426,6 +428,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
 
           parameterDefinitions: {
             testPrebindingDefinitionId: {
+              passToNodes: [],
               defaultSource: {
                 type: 'Entry',
                 contentTypeId: 'testContentType',
@@ -467,6 +470,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
           id: 'testPrebindingDefinitionId',
           parameterDefinitions: {
             testPrebindingDefinitionId: {
+              passToNodes: [],
               defaultSource: {
                 type: 'Entry',
                 contentTypeId: 'testContentType',
@@ -491,7 +495,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
       ],
     });
 
-    // Need to sideload entry, otherwise we wont get to final logic of resolveMaybePrebindingDefaultValuePath()
+    // Need to sideload entry, otherwise we won't get to final logic of resolveMaybePrebindingDefaultValuePath()
     localEntityStore.updateEntity(createEntry(defaultEntryId));
 
     const result = resolveMaybePrebindingDefaultValuePath({
