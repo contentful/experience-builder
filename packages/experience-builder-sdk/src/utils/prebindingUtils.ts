@@ -130,13 +130,14 @@ export const resolveMaybePrebindingDefaultValuePath = ({
 
   if (prebindingDefinition.contentTypes.includes(contentTypeId)) {
     const entity = entityStore.getEntityFromLink(defaultEntryLink);
+
     if (!entity) {
       // looks like sideloading of the prebinding default value didn't work as expected.
       // And didn't sideload the entry into entityStore (and didn't add it's sideloaded_dsKey to the entityStore.dataSource)
       return;
     }
 
-    const fieldPath = variableMapping.pathsByContentType[contentTypeId].path;
+    const fieldPath = variableMapping.pathsByContentType[contentTypeId]?.path;
     if (!fieldPath) {
       // Path not found or degenerate shape (e.g. empty string '')
       return;
