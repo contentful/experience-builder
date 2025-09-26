@@ -8,4 +8,5 @@ export const sdkFeatures: Record<string, unknown> = {
   patternBreakpointDesignValues: true,
   // DND is moving to the host application enabling smoother native event handling
   dndMigration: true,
+  hasPrebinding: true,
 };
