@@ -21,22 +21,18 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.cjs",
-      "default": "./dist/index.js",
-      "types": [
-        "./dist/index.d.ts"
-      ]
+      "default": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
     },
     "./constants": {
-      "import": "./dist/constants.js",
+      "import": "./dist/constants.mjs",
       "require": "./dist/constants.cjs",
-      "default": "./dist/constants.js",
-      "types": [
-        "./dist/constants.d.ts"
-      ]
+      "default": "./dist/constants.mjs",
+      "types": "./dist/constants.d.ts"
     },
-    "./types": "./dist/types.d.ts"
+    "./types": "./dist/index.d.ts"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"

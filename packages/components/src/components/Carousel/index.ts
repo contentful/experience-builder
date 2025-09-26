@@ -2,7 +2,7 @@ import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
 } from '@contentful/experiences-core/constants';
-import { ComponentDefinition } from '@contentful/experiences-core/types';
+import { type ComponentDefinition } from '@contentful/experiences-core';
 
 export { Carousel } from './Carousel';
 

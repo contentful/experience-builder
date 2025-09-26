@@ -37,5 +37,6 @@ export default [
     input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
     plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
+    external: [/@contentful\/experiences-core/],
   },
 ];

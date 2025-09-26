@@ -1,9 +1,14 @@
-import resolve from '@rollup/plugin-node-resolve';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import alias from '@rollup/plugin-alias';
+import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import postcss from 'rollup-plugin-postcss';
 import postcssImport from 'postcss-import';
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 export default [
   {
@@ -32,7 +37,7 @@ export default [
         },
         minimize: !process.env.DEV,
       }),
-      resolve(),
+      nodeResolve(),
       commonjs(),
       typescript({ tsconfig: './tsconfig.json', noEmitOnError: process.env.DEV ? false : true }),
     ],
@@ -41,7 +46,16 @@ export default [
   {
     input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
-    plugins: [dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } })],
+    plugins: [
+      // Alias MUST come first so specifiers are rewritten before resolution
+      alias({
+        entries: [{ find: '@', replacement: path.resolve(projectRoot, 'src') }],
+      }),
+      nodeResolve({
+        extensions: ['.mjs', '.js', '.json', '.ts', '.tsx'],
+      }),
+      dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } }),
+    ],
     external: [/.css/],
   },
 ];
