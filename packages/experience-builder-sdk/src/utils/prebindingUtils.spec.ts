@@ -144,6 +144,7 @@ describe('shouldUsePrebinding', () => {
           parameterDefinitions: {
             'nested-pattern-native-parameter-id': {
               contentTypes: ['ct111'],
+              passToNodes: [],
             },
           },
           variableMappings: {
@@ -260,6 +261,7 @@ describe('shouldUsePrebinding', () => {
           parameterDefinitions: {
             'nested-pattern-native-parameter-id': {
               contentTypes: ['ct111'],
+              passToNodes: [],
             },
           },
           variableMappings: {
@@ -1130,6 +1132,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
                   sys: { id: defaultEntryId, type: 'Link', linkType: 'Entry' },
                 },
               },
+              passToNodes: [],
             },
           },
           variableMappings: {
@@ -1277,6 +1280,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
                   sys: { id: entryIdOfAllowedContentType, type: 'Link', linkType: 'Entry' },
                 },
               },
+              passToNodes: [],
             },
           },
           variableMappings: {
@@ -1467,6 +1471,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
                   },
                 },
                 contentTypes: ['testContentType'],
+                passToNodes: [],
               },
             },
             variableMappings: {
@@ -1508,6 +1513,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
                   },
                 },
                 contentTypes: ['testContentType'],
+                passToNodes: [],
               },
             },
             variableMappings: {
@@ -1587,6 +1593,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
             parameterDefinitions: {
               testParameterId: {
                 contentTypes: ['testContentType'],
+                passToNodes: [],
               },
             },
           },

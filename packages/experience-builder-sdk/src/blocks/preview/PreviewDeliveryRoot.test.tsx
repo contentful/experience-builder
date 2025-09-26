@@ -121,6 +121,7 @@ describe('PreviewDeliveryRoot', () => {
                   },
                 },
               },
+              passToNodes: [],
             },
             hoistedParamId1: {
               contentTypes: ['ct1', 'ct2'],

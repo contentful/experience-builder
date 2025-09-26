@@ -61,6 +61,7 @@ describe('fetchById', () => {
                           },
                         },
                       },
+                      passToNodes: [],
                     },
                   },
                   variableMappings: {

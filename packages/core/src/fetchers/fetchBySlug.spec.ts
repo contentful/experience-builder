@@ -79,6 +79,7 @@ describe('fetchBySlug', () => {
                           },
                         },
                       },
+                      passToNodes: [],
                     },
                   },
                   variableMappings: {
