@@ -1456,6 +1456,17 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
 
   it('should return undefined when variableMapping does not have info for contentType used with default value', () => {
     const localEntityStore = createEntityStoreWithComponentSettings({
+      entitiesOverrides: [
+        createEntry(defaultEntryId, {
+          sys: {
+            contentType: {
+              sys: {
+                id: 'testContentType',
+              },
+            },
+          },
+        }),
+      ],
       componentSettingsOverrides: {
         prebindingDefinitions: [
           {
@@ -1499,6 +1510,17 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
 
   it('should return undefined when field path is not set', () => {
     const localEntityStore = createEntityStoreWithComponentSettings({
+      entitiesOverrides: [
+        createEntry(defaultEntryId, {
+          sys: {
+            contentType: {
+              sys: {
+                id: 'testContentType',
+              },
+            },
+          },
+        }),
+      ],
       componentSettingsOverrides: {
         prebindingDefinitions: [
           {
@@ -1519,7 +1541,7 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
             variableMappings: {
               testKey: {
                 type: 'ContentTypeMapping',
-                patternPropertyDefinitionId: 'testPrebindingDefinitionId',
+                parameterId: 'testPrebindingDefinitionId',
                 pathsByContentType: {
                   // @ts-expect-error simulating missing field path
                   testContentType: { path: undefined }, // or empty string ''
@@ -1531,6 +1553,61 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
       },
     });
 
+    const result = resolveMaybePrebindingDefaultValuePath({
+      componentValueKey: 'testKey',
+      entityStore: localEntityStore,
+      patternRootNodeIdsChain: [],
+    });
+
+    expect(result).toBeUndefined();
+  });
+
+  it('should return undefined if CT is supported but no mapping exists for the given variable', () => {
+    const localEntityStore = createEntityStoreWithComponentSettings({
+      entitiesOverrides: [
+        createEntry(defaultEntryId, {
+          sys: {
+            contentType: {
+              sys: {
+                id: 'testContentType',
+              },
+            },
+          },
+        }),
+      ],
+      componentSettingsOverrides: {
+        prebindingDefinitions: [
+          {
+            id: 'testPrebindingDefinitionId',
+            parameterDefinitions: {
+              testPrebindingDefinitionId: {
+                defaultSource: {
+                  type: 'Entry',
+                  contentTypeId: 'testContentType',
+                  link: {
+                    sys: { id: defaultEntryId, type: 'Link', linkType: 'Entry' },
+                  },
+                },
+                contentTypes: ['testContentType', 'anotherContentType'],
+                passToNodes: [],
+              },
+            },
+            variableMappings: {
+              testKey: {
+                type: 'ContentTypeMapping',
+                parameterId: 'testPrebindingDefinitionId',
+                pathsByContentType: {
+                  // testContentType is missing
+                  anotherContentType: { path: '/fields/anotherField' },
+                },
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    console.log(localEntityStore.entities);
     const result = resolveMaybePrebindingDefaultValuePath({
       componentValueKey: 'testKey',
       entityStore: localEntityStore,
