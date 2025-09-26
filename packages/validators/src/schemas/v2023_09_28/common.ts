@@ -276,6 +276,16 @@ export const ComponentVariableSchema = z.object({
 export const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> =
   BaseComponentTreeNodeSchema.extend({
     children: z.lazy(() => ComponentTreeNodeSchema.array()),
+  }).superRefine(({ id, prebindingId, parameters }, ctx) => {
+    // We don't fail if parameters are present but prebindingId is not because
+    // older experiences (updated before 21-09-2025) always included parameters
+    // and they will start failing if we do.
+    if (prebindingId && !parameters) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Found "prebindingId" but no "parameters" for node with id: "${id}"`,
+      });
+    }
   });
 
 export const ComponentTreeSchema = z
