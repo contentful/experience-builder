@@ -1,15 +1,17 @@
 import { type EntityStore, isLink } from '@contentful/experiences-core';
-import { SIDELOADED_PREFIX } from '@contentful/experiences-core/constants';
 import { ExperienceComponentSettings, Parameter } from '@contentful/experiences-validators';
+import { PrebindingManager } from '../core/preview/PrebindingManager';
 
 export const shouldUsePrebinding = ({
   componentValueKey,
   componentSettings,
   parameters,
+  patternRootNodeIdsChain,
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
   parameters: Record<string, Parameter>;
+  patternRootNodeIdsChain: string[];
 }) => {
   const { prebindingDefinitions } = componentSettings;
   const { parameterDefinitions, variableMappings, allowedVariableOverrides } =
@@ -18,7 +20,13 @@ export const shouldUsePrebinding = ({
   const variableMapping = variableMappings?.[componentValueKey];
 
   const parameterDefinition = parameterDefinitions?.[variableMapping?.parameterId || ''];
-  const parameter = parameters?.[variableMapping?.parameterId || ''];
+
+  const patternRootNodeIds = patternRootNodeIdsChain.join('---');
+  const hoistedParameterId = PrebindingManager.getHoistedIdForParameterId(
+    variableMapping?.parameterId || '',
+    patternRootNodeIds,
+  );
+  const parameter = parameters?.[hoistedParameterId];
 
   const isValidForPrebinding =
     !!parameterDefinition &&
@@ -27,10 +35,13 @@ export const shouldUsePrebinding = ({
     !!allowedVariableOverrides &&
     Array.isArray(allowedVariableOverrides);
 
-  const isForDirectBindingOnly = (allowedVariableOverrides: string[]) =>
-    allowedVariableOverrides.includes(componentValueKey); // removed 'NoValue' check
+  if (!isValidForPrebinding) {
+    return false;
+  }
 
-  return isValidForPrebinding && !isForDirectBindingOnly(allowedVariableOverrides);
+  // removed 'NoValue' check
+  const isForDirectBindingOnly = allowedVariableOverrides.includes(componentValueKey);
+  return !isForDirectBindingOnly;
 };
 
 export const resolvePrebindingPath = ({
@@ -38,11 +49,13 @@ export const resolvePrebindingPath = ({
   componentSettings,
   parameters,
   entityStore,
+  patternRootNodeIdsChain,
 }: {
   componentValueKey: string;
   componentSettings: ExperienceComponentSettings;
   parameters: Record<string, Parameter>;
   entityStore: EntityStore;
+  patternRootNodeIdsChain: string[];
 }) => {
   const prebindingDefinition = componentSettings.prebindingDefinitions?.[0];
   if (!prebindingDefinition) return '';
@@ -51,7 +64,12 @@ export const resolvePrebindingPath = ({
 
   if (!variableMapping) return '';
 
-  const parameter = parameters?.[variableMapping.parameterId];
+  const patternRootNodeIds = patternRootNodeIdsChain.join('---');
+  const hoistedParameterId = PrebindingManager.getHoistedIdForParameterId(
+    variableMapping.parameterId,
+    patternRootNodeIds,
+  );
+  const parameter = parameters?.[hoistedParameterId];
 
   if (!parameter) return '';
 
@@ -65,6 +83,10 @@ export const resolvePrebindingPath = ({
 
   const contentType = entity.sys.contentType.sys.id;
 
+  const hoistedParameterDefinition = entityStore.hoistedParameterDefinitions[hoistedParameterId];
+  if (!hoistedParameterDefinition || !hoistedParameterDefinition.contentTypes.includes(contentType))
+    return '';
+
   const fieldPath = variableMapping?.pathsByContentType?.[contentType]?.path;
 
   if (!fieldPath) return '';
@@ -74,16 +96,21 @@ export const resolvePrebindingPath = ({
 
 export const resolveMaybePrebindingDefaultValuePath = ({
   componentValueKey,
+  patternRootNodeIdsChain,
   entityStore,
 }: {
   componentValueKey: string;
+  patternRootNodeIdsChain: string[];
   entityStore: EntityStore;
 }): string | undefined => {
   const variableMapping = entityStore.hoistedVariableMappings[componentValueKey];
   if (!variableMapping) return;
 
+  const patternRootNodeIds = patternRootNodeIdsChain.join('---');
+
   const pdID = variableMapping.parameterId;
-  const prebindingDefinition = entityStore.hoistedParameterDefinitions[pdID];
+  const hoistedpdID = PrebindingManager.getHoistedIdForParameterId(pdID, patternRootNodeIds);
+  const prebindingDefinition = entityStore.hoistedParameterDefinitions[hoistedpdID];
 
   if (!prebindingDefinition) {
     // probably shouldn't happen, as if ppd is not defined, then variableMapping should not be defined either
@@ -101,7 +128,7 @@ export const resolveMaybePrebindingDefaultValuePath = ({
     return;
   }
 
-  if (contentTypeId in prebindingDefinition.contentTypes) {
+  if (prebindingDefinition.contentTypes.includes(contentTypeId)) {
     const entity = entityStore.getEntityFromLink(defaultEntryLink);
     if (!entity) {
       // looks like sideloading of the prebinding default value didn't work as expected.
@@ -115,7 +142,9 @@ export const resolveMaybePrebindingDefaultValuePath = ({
       return;
     }
 
-    const fullDefaultValuePath = `/${SIDELOADED_PREFIX}${defaultEntryLink.sys.id}${fieldPath}`;
+    const fullDefaultValuePath = `/${defaultEntryLink.sys.id}${fieldPath}`;
     return fullDefaultValuePath;
   }
+
+  return undefined;
 };

@@ -115,6 +115,10 @@ export const getPrebindingPathBySourceEntry = (
   }
 
   const contentTypeId = headEntity.sys.contentType.sys.id;
+  if (!preboundValueProperty.pathsByContentType?.[contentTypeId]) {
+    return undefined;
+  }
+
   return preboundValueProperty.pathsByContentType?.[contentTypeId]?.path;
 };
 

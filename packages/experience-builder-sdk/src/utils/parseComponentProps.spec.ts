@@ -22,18 +22,19 @@ describe('parseComponentProps', () => {
   const resolveBoundValue = () => 'resolvedBoundValue';
   const resolveHyperlinkValue = () => 'resolvedHyperlinkValue';
   const resolveUnboundValue = () => 'resolvedUnboundValue';
-  const resolvePrebindingValue = () => 'resolvedPrebindingValue';
+  const resolveComponentValue = () => 'resolvedPrebindingValue';
 
   const defaultArguments: Parameters<typeof parseComponentProps>[0] = {
     mainBreakpoint,
     breakpoints,
     componentDefinition,
+    patternRootNodeIdsChain: [],
     node,
     resolveDesignValue,
     resolveBoundValue,
     resolveHyperlinkValue,
     resolveUnboundValue,
-    resolvePrebindingValue,
+    resolveComponentValue,
   };
 
   it('returns CSS code including media query', () => {
@@ -88,12 +89,13 @@ describe('parseComponentProps', () => {
           mainBreakpoint,
           breakpoints,
           componentDefinition,
+          patternRootNodeIdsChain: [],
           node: createComponentTreeNodeWithCfBackgroundImageUrl(),
           resolveDesignValue,
           resolveBoundValue,
           resolveHyperlinkValue,
           resolveUnboundValue,
-          resolvePrebindingValue,
+          resolveComponentValue,
         };
 
         // Re-import after mocking
@@ -131,12 +133,13 @@ describe('parseComponentProps', () => {
           mainBreakpoint,
           breakpoints,
           componentDefinition,
+          patternRootNodeIdsChain: [],
           node: createComponentTreeNodeWithCfBackgroundImageUrl(),
           resolveDesignValue,
           resolveBoundValue,
           resolveHyperlinkValue,
           resolveUnboundValue,
-          resolvePrebindingValue,
+          resolveComponentValue,
         };
 
         newArguments.node.variables.cfBackgroundImageUrl = {
@@ -179,12 +182,13 @@ describe('parseComponentProps', () => {
           mainBreakpoint,
           breakpoints,
           componentDefinition,
+          patternRootNodeIdsChain: [],
           node: createComponentTreeNodeWithCfBackgroundImageUrl(),
           resolveDesignValue,
           resolveBoundValue,
           resolveHyperlinkValue,
           resolveUnboundValue,
-          resolvePrebindingValue,
+          resolveComponentValue,
         };
 
         newArguments.node.variables.cfBackgroundImageUrl = {

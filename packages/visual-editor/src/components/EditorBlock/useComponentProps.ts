@@ -143,12 +143,21 @@ export const useComponentProps = ({
           // starting from here, if the prop is of type 'BoundValue', and has prebinding
           // we are going to resolve the incomplete path
           if (link && isPreboundProp(variableMapping) && variableMapping.isPrebound) {
-            const prebindingPath =
-              getPrebindingPathBySourceEntry(variableMapping, (dataSourceKey) => {
+            const prebindingPath = getPrebindingPathBySourceEntry(
+              variableMapping,
+              (dataSourceKey) => {
                 const link = dataSource[dataSourceKey];
 
                 return entityStore.getEntityFromLink(link);
-              }) ?? variableMapping.path;
+              },
+            );
+
+            if (!prebindingPath) {
+              return {
+                ...acc,
+                [variableName]: variableDefinition.defaultValue,
+              };
+            }
 
             // this allows us to resolve it regularly
             boundValue = transformBoundContentValue(

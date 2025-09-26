@@ -250,6 +250,10 @@ describe('generateDefaultDataSourceForPrebindingDefinition', () => {
 
     const dataSourceKey = parameters[parameterIds.l1NativeParamId].path.split('/').pop();
     expect(dataSourceKey).toBeDefined();
+    expect(dataSourceKey).toBe(
+      nativeOnlyPrebindingDefinition.parameterDefinitions[parameterIds.l1NativeParamId]
+        .defaultSource?.link.sys.id,
+    );
     expect(dataSource[dataSourceKey!]).toEqual(
       nativeOnlyPrebindingDefinition.parameterDefinitions[parameterIds.l1NativeParamId]
         .defaultSource?.link,
