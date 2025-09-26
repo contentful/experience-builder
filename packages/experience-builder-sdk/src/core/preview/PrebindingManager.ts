@@ -177,21 +177,6 @@ export class PrebindingManager {
     PrebindingManager.parameterDefinitionsByNodeId.set(nodeId, updatedParameterDefinitionsByNodeId);
   }
 
-  public static getPrebindingDefinitionByNodeId(
-    nodeId: string,
-  ): NonNullable<ExperienceComponentSettings['prebindingDefinitions']>[number] | undefined {
-    const definitionId = PrebindingManager.getPrebindingDefinitionIdByNodeId(nodeId);
-    if (!definitionId) {
-      return undefined;
-    }
-    return PrebindingManager.prebindingDefinitions.get(definitionId);
-  }
-
-  public static getPrebindingDefinitionIdByNodeId(nodeId: string): string | undefined {
-    const definitionIds = PrebindingManager.prebindingDefinitionIdsByNodeId.get(nodeId);
-    return definitionIds?.[0];
-  }
-
   /**
    * Resolves the top-level parameterId for a given nodeId.
    *
@@ -212,61 +197,6 @@ export class PrebindingManager {
     );
 
     return hoistedParameterId;
-  }
-
-  /**
-   * Returns the variable mapping for a given pattern ID.
-   * @param patternId - The pattern ID to resolve the variable mapping for
-   * @returns Record<string, VariableMapping> | undefined - The resolved variable mapping or undefined if not found
-   */
-  public static getVariableMappingByPatternId(patternId: string) {
-    return PrebindingManager.variableMappingByPatternId.get(patternId);
-  }
-
-  /**
-   * Resolves all parameter definitions for a node across up to three levels of passToNodes.
-   *
-   * This method first determines the top-level parameterId using `getParameterIdByNodeId`,
-   * then recursively resolves the full parameter definition chain via passToNodes:
-   * - Level 1: Top-level parameter
-   * - Level 2: Child (optional) parameter it passes to
-   * - Level 3: Grandchild (optional) if the second-level also has a passToNode
-   *
-   * Example structure:
-   *
-   * nodeId: ekDThJtj (Pattern C)
-   * │
-   * ├── paramId: ORU5OX11 (Pattern C top-level param, no passToNodes)
-   * └── paramId: ZUM5OC08
-   *     └── nodeId: ekDThJtj (Pattern B)
-   *         └── paramId: TCSgV5R4
-   *             └── nodeId: 2fY5opd9 (Pattern A)
-   *                 └── paramId: B0gOPGZNUsW
-   *
-   * e.g.
-   * getAllParameterDefinitionsByNodeId("2fY5opd9")
-   * → [
-   *     { parameterId: "ZUM5OC08", ... },   // Pattern C
-   *     { parameterId: "TCSgV5R4", ... },   // Pattern B
-   *     { parameterId: "B0gOPGZNUsW", ... } // Pattern A
-   *   ]
-   *
-   * getAllParameterDefinitionsByNodeId("ekDThJtj")
-   * → [
-   *     { parameterId: "ORU5OX11", ... },  // Pattern C (top-level)
-   *     undefined,
-   *     undefined
-   *   ]
-   * @param nodeId - The node ID to resolve all levels for
-   * @param useStoreParameters - Whether to look within the zustand parameterStore
-   * @returns [l1ParameterDefinition, l2ParameterDefinition, l3ParameterDefinition]: Array of parameter definitions for each level
-   */
-  public static getAllParameterDefinitionsByNodeId(
-    nodeId: string,
-  ): (ParameterDefinitionWithParameterId | undefined)[] | undefined {
-    const parameterId = PrebindingManager.getParameterIdByNodeId(nodeId);
-    if (!parameterId) return undefined;
-    return PrebindingManager.getParameterDefinitionsByParameterId(parameterId);
   }
 
   /* Returns the parameter definitions from a parameterId
@@ -295,25 +225,6 @@ export class PrebindingManager {
       return undefined; // No definitions found
     }
     return definitions;
-  }
-
-  /**
-   * Returns allowed content types
-   *
-   * @param parameterId - The parameter to resolve all levels for
-   * @param useStoreParameters - Whether to use the zustand store parameters or not
-   * @returns [l1ContentIds, l2ContentIds, l3ContentIds]: Array of content type IDs for each level
-   */
-  public static getContentTypesByParameterId(
-    parameterId: string,
-  ): (string[] | undefined)[] | undefined {
-    return PrebindingManager.getParameterDefinitionsByParameterId(parameterId)?.map(
-      (definition) => {
-        if (!definition) return undefined;
-        const contentTypes = definition.parameter.contentTypes || [];
-        return contentTypes.length > 0 ? contentTypes : undefined;
-      },
-    );
   }
 
   /**
@@ -373,141 +284,6 @@ export class PrebindingManager {
   }
 
   /**
-   * Returns allowed content types
-   *
-   * @param nodeId - The nodeId to resolve all levels for
-   * @param useStoreParameters - Whether to use the zustand store parameters or not
-   * @returns [l1ContentIds, l2ContentIds, l3ContentIds]: Array of content type IDs for each level
-   */
-  public static getContentTypesByNodeId(nodeId: string): (string[] | undefined)[] | undefined {
-    const parameterId = PrebindingManager.getParameterIdByNodeId(nodeId);
-    if (!parameterId) return undefined;
-    return PrebindingManager.getContentTypesByParameterId(parameterId);
-  }
-
-  /**
-   * Returns allowed sources for a given parameterId across up to three levels of passToNodes.
-   *
-   * @param parameterId - The parameter to resolve all levels for
-   * @param useStoreParameters - Whether to use the zustand store parameters or not
-   * @returns [l1DefaultSource, l2DefaultSource, l3DefaultSource]: Array of default sources for each level
-   */
-  public static getDefaultSourcesByParameterId(
-    parameterId: string,
-  ): (ParameterDefinition['defaultSource'] | undefined)[] | undefined {
-    return PrebindingManager.getParameterDefinitionsByParameterId(parameterId)?.map(
-      (definition) => {
-        if (!definition) return undefined;
-        const defaultSource = definition.parameter.defaultSource;
-        return defaultSource ? defaultSource : undefined;
-      },
-    );
-  }
-
-  /**
-   * Returns allowed sources for a given parameterId across up to three levels of passToNodes.
-   *
-   * @param nodeId - The nodeId to resolve all levels for
-   * @param useStoreParameters - Whether to use the zustand store parameters or not
-   * @returns [l1DefaultSource, l2DefaultSource, l3DefaultSource]: Array of default sources for each level
-   */
-  public static getDefaultSourcesByNodeId(
-    nodeId: string,
-  ): (ParameterDefinition['defaultSource'] | undefined)[] | undefined {
-    const parameterId = PrebindingManager.getParameterIdByNodeId(nodeId);
-    if (!parameterId) return undefined;
-    return PrebindingManager.getDefaultSourcesByParameterId(parameterId);
-  }
-
-  /**
-   * Checks if the prebinding is out of sync with the child pattern by comparing the parameter
-   * definitions of the node with its direct child.
-   * Info: This will only work for the direct child pattern, if a third level has been updated it will need to be fixed in the second.
-   *
-   * @param nodeId - The nodeId to check for out of sync with child pattern
-   * @returns True if the prebinding is out of sync, false otherwise.
-   */
-  public static isPrebindingOutOfSyncWithChildPattern(nodeId: string): boolean {
-    const nodesNativeParameterDefinition =
-      PrebindingManager.getNativeParameterDefinitionByNodeId(nodeId);
-    const overrideParameterId = PrebindingManager.getParameterIdByNodeId(nodeId);
-    const definitions =
-      PrebindingManager.getParameterDefinitionsByParameterId(overrideParameterId ?? '') ?? [];
-    if (
-      !overrideParameterId ||
-      !definitions ||
-      overrideParameterId === nodesNativeParameterDefinition?.parameterId
-    ) {
-      // we have a native parameter definition but no override, so it was added before the child pattern had bindings
-      return Boolean(nodesNativeParameterDefinition);
-    }
-
-    const [firstDefinition, childDefinition] = definitions || [];
-    // If the first definition is present but the second is not
-    // the prebinding has been removed/or change to use a new parameterId from the child
-    const parameterDefinitionRemoved =
-      firstDefinition?.parameterId && childDefinition?.parameterId === undefined;
-
-    if (parameterDefinitionRemoved) {
-      return true;
-    }
-
-    // If the default sources are different from the direct child pattern, the prebinding is out of sync
-    const defaultSourceUpdated =
-      firstDefinition?.parameter?.defaultSource?.link.sys.id !==
-      childDefinition?.parameter?.defaultSource?.link.sys.id;
-
-    if (defaultSourceUpdated) {
-      return true;
-    }
-    // If any content types are missing from the next child pattern it is out of sync
-    const contentTypesRemoved =
-      firstDefinition?.parameter?.contentTypes?.every((it) =>
-        childDefinition?.parameter?.contentTypes?.includes(it),
-      ) === false;
-
-    if (contentTypesRemoved) {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Extracts the parameter definition for a nodeId child definition and updates the store.
-   * This is used when a child becomes out of sync and the user actions it in pattern editor only.
-   * @param nodeId - The nodeId to resolve the child definition for
-   * @returns [string | undefined, ParameterDefinitionWithParameterId] | undefined
-   */
-  public static getChildParameterDefinition(
-    nodeId: string,
-  ): ParameterDefinitionWithParameterId | undefined {
-    const nodesNativeParameterDefinition =
-      PrebindingManager.getNativeParameterDefinitionByNodeId(nodeId);
-    const overrideParameterId = PrebindingManager.getParameterIdByNodeId(nodeId);
-    const definitions =
-      PrebindingManager.getParameterDefinitionsByParameterId(overrideParameterId ?? '') ?? [];
-    if (
-      !overrideParameterId ||
-      !definitions ||
-      overrideParameterId === nodesNativeParameterDefinition?.parameterId
-    ) {
-      return nodesNativeParameterDefinition;
-    }
-    const [, childDefinition] = definitions;
-    if (!childDefinition || !childDefinition.parameter) {
-      return undefined; // No child definition found, return undefined
-    }
-    return childDefinition;
-  }
-
-  public static getParameterById(
-    parameterId: string,
-  ): ParameterDefinitionWithParameterId | undefined {
-    return this.parameterDefinitionsById.get(parameterId);
-  }
-
-  /**
    * Retrieves the native parameter definition for a given nodeId. ie one without passToNodes on the node.
    * @param nodeId - The nodeId to retrieve the native parameter definition for
    * @returns The native parameter definition for the given nodeId, or undefined if not found
@@ -524,7 +300,7 @@ export class PrebindingManager {
     parameterDefinitions: ParameterDefinitionWithParameterId[] | undefined,
   ): ParameterDefinitionWithParameterId | undefined {
     const { parameterId, parameter } =
-      parameterDefinitions?.find((it) => !it.parameter.passToNodes) || {};
+      parameterDefinitions?.find((it) => !it.parameter.passToNodes?.length) || {};
     if (!parameterId || !parameter) return;
     return {
       parameterId,
