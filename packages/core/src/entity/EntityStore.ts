@@ -1,5 +1,5 @@
 import type { Asset, Entry, UnresolvedLink } from 'contentful';
-import { isExperienceEntry } from '@/utils';
+import { checkIsAssemblyEntry, isExperienceEntry } from '@/utils';
 import type {
   ExperienceFields,
   ExperienceUnboundValues,
@@ -22,6 +22,7 @@ type ParameterDefinitions = NonNullable<Record<string, ParameterDefinition>>;
 type VariableMappings = NonNullable<Record<string, VariableMapping>>;
 
 export class EntityStore extends EntityStoreBase {
+  private _isExperienceAPatternEntry: boolean;
   /* serialized */ private _experienceEntryFields: ExperienceFields | undefined;
   /* serialized */ private _experienceEntryId: string | undefined;
   /* serialized */ private _unboundValues: ExperienceUnboundValues | undefined;
@@ -63,6 +64,10 @@ export class EntityStore extends EntityStoreBase {
       this._unboundValues = experienceEntry.fields.unboundValues;
     }
 
+    this._isExperienceAPatternEntry = checkIsAssemblyEntry({
+      fields: this._experienceEntryFields,
+    } as unknown as Entry);
+
     // DERIVE ENTITY STORE INSTANCE VARIBLES
     // Register prebindings
     {
@@ -70,6 +75,7 @@ export class EntityStore extends EntityStoreBase {
       const usedComponents: ExperienceEntry[] = usedComponentLinks
         .map((component) => (isLink(component) ? this.getEntityFromLink(component) : component))
         .filter((component): component is ExperienceEntry => component !== undefined);
+
       this._hoistedParameterDefinitions = EntityStore.calculateHoistedParameterDefinitions(
         this._experienceEntryFields,
         usedComponents,
@@ -183,6 +189,10 @@ export class EntityStore extends EntityStoreBase {
 
   public getCurrentLocale() {
     return this.locale;
+  }
+
+  public get isExperienceAPatternEntry() {
+    return this._isExperienceAPatternEntry;
   }
 
   public get hoistedVariableMappings() {
