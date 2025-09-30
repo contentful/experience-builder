@@ -140,8 +140,14 @@ export const useComponentProps = ({
           const link = dataSource[uuid] as Link<'Entry' | 'Asset'>;
 
           let boundValue: ReturnType<typeof transformBoundContentValue>;
-          // starting from here, if the prop is of type 'BoundValue', and has prebinding
-          // we are going to resolve the incomplete path
+          // TODO: Temporary fix while we look into SPA-3212 it occurs where we ahve prebound props but data source link is missing
+          // this only occurs after live updates of nested patterns.
+          if (!link && isPreboundProp(variableMapping) && variableMapping.isPrebound) {
+            return {
+              ...acc,
+              [variableName]: variableDefinition.defaultValue,
+            };
+          }
           if (link && isPreboundProp(variableMapping) && variableMapping.isPrebound) {
             const prebindingPath = getPrebindingPathBySourceEntry(
               variableMapping,
