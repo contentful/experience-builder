@@ -161,6 +161,9 @@ export const CompositionBlock = ({
       resolveBoundValue: ({ binding, propertyName, dataType }) => {
         const [, uuid] = binding.path.split('/');
         const boundEntityLink = entityStore.dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
+        // TODO: Temporary fix while we look into SPA-3212 it occurs where we have prebound props but data source link is missing
+        // this only occurs after live updates of nested patterns.
+        if (!boundEntityLink) return;
         return transformBoundContentValue(
           node.variables,
           entityStore,
