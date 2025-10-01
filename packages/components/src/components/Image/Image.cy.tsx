@@ -1,7 +1,7 @@
 import { placeholderImage } from '@/utils/constants';
 import { Image } from './Image';
 import React from 'react';
-import { OptimizedImageAsset } from '@contentful/experiences-core/types';
+import type { OptimizedImageAsset } from '@contentful/experiences-core';
 
 let file: OptimizedImageAsset;
 

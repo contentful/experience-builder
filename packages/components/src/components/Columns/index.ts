@@ -1,9 +1,12 @@
-import { columnsBuiltInStyles, singleColumnBuiltInStyles } from '@contentful/experiences-core';
+import {
+  columnsBuiltInStyles,
+  singleColumnBuiltInStyles,
+  type ComponentDefinition,
+} from '@contentful/experiences-core';
 import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_COMPONENT_CATEGORY,
 } from '@contentful/experiences-core/constants';
-import { ComponentDefinition } from '@contentful/experiences-core/types';
 import { Columns } from './Columns';
 import { SingleColumn } from './SingleColumn';
 

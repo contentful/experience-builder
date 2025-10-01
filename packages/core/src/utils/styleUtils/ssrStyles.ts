@@ -9,18 +9,13 @@ import {
   ExperienceUnboundValues,
   PrimitiveValue,
 } from '@contentful/experiences-validators';
-import {
-  buildCfStyles,
-  checkIsAssemblyNode,
-  getTargetValueInPixels,
-  isValidBreakpointValue,
-  parseCSSValue,
-  stringifyCssProperties,
-  toMediaQuery,
-  transformVisibility,
-  mergeDesignValuesByBreakpoint,
-  debug,
-} from '@/utils';
+import { buildCfStyles, stringifyCssProperties } from './stylesUtils';
+// import {
+import { checkIsAssemblyNode, getTargetValueInPixels, parseCSSValue } from '@/utils/utils';
+import { isValidBreakpointValue, mergeDesignValuesByBreakpoint } from '../breakpoints';
+import { toMediaQuery } from './toMediaQuery';
+import { transformVisibility } from './styleTransformers';
+import { debug } from '@/utils/debugLogger';
 import { builtInStyles, optionalBuiltInStyles } from '@/definitions';
 import { designTokensRegistry } from '@/registries';
 import {
@@ -31,7 +26,7 @@ import {
   StyleProps,
 } from '@/types';
 import { CF_STYLE_ATTRIBUTES, SUPPORTED_IMAGE_FORMATS } from '@/constants';
-import { getOptimizedBackgroundImageAsset } from '../transformers/media/getOptimizedBackgroundImageAsset';
+import { getOptimizedBackgroundImageAsset } from '@/utils/transformers/media/getOptimizedBackgroundImageAsset';
 import { AssetDetails, AssetFile } from 'contentful';
 
 type FlattenedDesignTokens = Record<

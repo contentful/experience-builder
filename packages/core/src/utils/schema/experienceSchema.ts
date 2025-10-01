@@ -1,7 +1,10 @@
 import type { Experience, Link } from '@/types';
 import type { Entry, Asset } from 'contentful';
 import { referencesOf, uniqueById } from './references';
-import { isLinkToAsset, isLinkToEntry, isAsset, isPatternEntry, debug } from '@/utils';
+import { debug } from '@/utils/debugLogger';
+import { isLinkToAsset } from '@/utils/isLinkToAsset';
+import { isLinkToEntry } from '@/utils/isLinkToEntry';
+import { isAsset, isPatternEntry } from '@/utils/typeguards';
 
 const excludeAssets = (entity: Entry | Asset): entity is Entry => !isAsset(entity);
 const excludePatternEntries = (entry: Entry): entry is Entry => !isPatternEntry(entry);

@@ -1,9 +1,12 @@
-import { containerBuiltInStyles, sectionBuiltInStyles } from '@contentful/experiences-core';
+import {
+  containerBuiltInStyles,
+  sectionBuiltInStyles,
+  type ComponentDefinition,
+} from '@contentful/experiences-core';
 import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_COMPONENT_CATEGORY,
 } from '@contentful/experiences-core/constants';
-import { ComponentDefinition } from '@contentful/experiences-core/types';
 
 export { ContentfulContainer } from './ContentfulContainer';
 
