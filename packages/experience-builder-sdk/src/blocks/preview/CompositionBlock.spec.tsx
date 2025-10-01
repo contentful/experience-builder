@@ -18,6 +18,7 @@ import {
 } from '../../../test/__fixtures__/assembly';
 import { EntityStore } from '@contentful/experiences-core';
 import { assets, entries } from '../../../test/__fixtures__/entities';
+import * as patternUtils from '../../core/preview/assemblyUtils';
 
 const TestComponent: React.FC<{ text?: string; children?: string }> = (props) => {
   return (
@@ -438,8 +439,8 @@ describe('CompositionBlock', () => {
           cfSsrClassName: {
             type: 'DesignValue',
             valuesByBreakpoint: { desktop: nestedSsrClassName },
-            // Format: `${outerPatternId}${nestedPatternId}-${containerId}`
-            'test-pattern-node-idtest-nested-pattern-node-id-test-container-id': {
+            // Format: `${outerPatternId}-${nestedPatternId}-${containerId}`
+            'test-pattern-node-id-test-nested-pattern-node-id-test-container-id': {
               type: 'DesignValue',
               valuesByBreakpoint: { desktop: nestedChildSsrClassName },
             },
@@ -505,6 +506,182 @@ describe('CompositionBlock', () => {
       expect(screen.getAllByTestId('assembly')[1].firstChild).toHaveClass(nestedChildSsrClassName);
       expect(screen.getByText('Parent pattern value')).toBeInTheDocument();
       expect(screen.getByText('Nested pattern value')).toBeInTheDocument();
+    });
+  });
+
+  describe('with pre-binding', () => {
+    let resolvePatternSpy: jest.SpyInstance;
+    beforeEach(() => {
+      resolvePatternSpy = jest.spyOn(patternUtils, 'resolvePattern');
+    });
+
+    afterEach(() => {
+      resolvePatternSpy.mockRestore();
+    });
+
+    describe('[experience editor] when parameters are defined on the node', () => {
+      it('should resolve a pattern taking into account the parameters on the node', () => {
+        const unboundValueKey = 'some-unbound-value-key';
+        const patternEntry = createAssemblyEntry();
+        const updatedExperienceEntry = {
+          ...experienceEntry,
+          fields: {
+            ...experienceEntry.fields,
+            usedComponents: [patternEntry],
+            unboundValues: {
+              [unboundValueKey]: {
+                value: 'New year eve',
+              },
+            },
+          },
+        } as ExperienceEntry;
+
+        const entityStore = new EntityStore({
+          experienceEntry: updatedExperienceEntry,
+          entities: [...entries, ...assets],
+          locale: 'en-US',
+        });
+
+        const patternNode: ComponentTreeNode = {
+          id: 'nested-pattern-node-id',
+          definitionId: patternEntry.sys.id,
+          variables: {
+            '123abc': {
+              type: 'UnboundValue',
+              key: 'unbound-value-key',
+            },
+          },
+          parameters: {
+            param1: {
+              type: 'BoundValue',
+              path: '/prebinding-source-path',
+            },
+          },
+          children: [],
+        };
+
+        render(
+          <CompositionBlock
+            node={patternNode}
+            locale="en-US"
+            entityStore={entityStore}
+            resolveDesignValue={jest.fn()}
+          />,
+        );
+
+        expect(resolvePatternSpy).toHaveBeenCalledWith({
+          node: patternNode,
+          entityStore,
+          parentPatternRootNodeIdsChain: [patternNode.id],
+          rootPatternParameters: patternNode.parameters,
+        });
+      });
+    });
+
+    describe('[pattern editor] when paramters are inferred from the parent pattern', () => {
+      it('should resolve a pattern taking into account the parameters on the node', () => {
+        const unboundValueKey = 'some-unbound-value-key';
+        const patternEntry = createAssemblyEntry();
+        const updatedExperienceEntry = {
+          ...experienceEntry,
+          fields: {
+            ...experienceEntry.fields,
+            usedComponents: [patternEntry],
+            componentSettings: {
+              ...patternEntry.fields.componentSettings,
+              prebindingDefinitions: [
+                {
+                  id: 'prebinding-definition-id',
+                  parameterDefinitions: {
+                    param1: {
+                      contentTypes: ['a', 'b'],
+                      defaultSource: {
+                        type: 'Entry',
+                        contentTypeId: 'a',
+                        link: {
+                          sys: {
+                            type: 'Link',
+                            linkType: 'Entry',
+                            id: 'default-prebinding-entry-id',
+                          },
+                        },
+                      },
+                      passToNodes: [
+                        {
+                          nodeId: 'nested-pattern-node-id',
+                          parameterId: 'param1',
+                          prebindingId: 'prebinding-definition-id',
+                        },
+                      ],
+                    },
+                  },
+                  variableMappings: {
+                    '123abc': {
+                      parameterId: 'param1',
+                      type: 'ContentTypeMapping',
+                      pathsByContentType: {
+                        a: { path: '/fields/title' },
+                        b: { path: '/fields/name' },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+            unboundValues: {
+              [unboundValueKey]: {
+                value: 'New year eve',
+              },
+            },
+          },
+        } as ExperienceEntry;
+
+        const entityStore = new EntityStore({
+          experienceEntry: updatedExperienceEntry,
+          entities: [...entries, ...assets],
+          locale: 'en-US',
+        });
+
+        const patternNode: ComponentTreeNode = {
+          id: 'nested-pattern-node-id',
+          definitionId: patternEntry.sys.id,
+          variables: {
+            '123abc': {
+              type: 'ComponentValue',
+              key: assemblyGeneratedVariableName,
+            },
+          },
+          children: [],
+        };
+
+        render(
+          <CompositionBlock
+            node={patternNode}
+            locale="en-US"
+            entityStore={entityStore}
+            resolveDesignValue={jest.fn()}
+            rootPatternParameters={{
+              param1: {
+                type: 'BoundValue',
+                path: '/default-prebinding-entry-id',
+              },
+            }}
+            patternRootNodeIdsChain={['root']}
+          />,
+        );
+
+        expect(resolvePatternSpy).toHaveBeenCalledWith({
+          node: patternNode,
+          entityStore,
+          parentPatternRootNodeIdsChain: ['root', patternNode.id],
+          rootPatternParameters: {
+            param1: {
+              type: 'BoundValue',
+              path: '/default-prebinding-entry-id',
+            },
+          },
+        });
+      });
     });
   });
 });

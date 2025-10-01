@@ -19,6 +19,7 @@ const prebindingDefinitionWithoutDefaultSource: PrebindingDefinition = {
   id: 'no-default-source-prebinding-definition',
   parameterDefinitions: {
     [parameterIds.l1NativeParamId]: {
+      passToNodes: [],
       contentTypes: ['ct1', 'ct2'],
     },
   },
@@ -42,6 +43,7 @@ const nativeOnlyPrebindingDefinition: PrebindingDefinition = {
   id: 'native-only-prebinding-definition-id',
   parameterDefinitions: {
     [parameterIds.l1NativeParamId]: {
+      passToNodes: [],
       contentTypes: ['ct1', 'ct2'],
       defaultSource: {
         type: 'Entry',
@@ -92,6 +94,7 @@ const nativeAndHoistedPrebindingDefinition: PrebindingDefinition = {
   id: 'native-and-hoisted-prebinding-definition-id',
   parameterDefinitions: {
     [parameterIds.l2NativeParamId]: {
+      passToNodes: [],
       contentTypes: ['ct1', 'ct2'],
       defaultSource: {
         type: 'Entry',
@@ -247,6 +250,10 @@ describe('generateDefaultDataSourceForPrebindingDefinition', () => {
 
     const dataSourceKey = parameters[parameterIds.l1NativeParamId].path.split('/').pop();
     expect(dataSourceKey).toBeDefined();
+    expect(dataSourceKey).toBe(
+      nativeOnlyPrebindingDefinition.parameterDefinitions[parameterIds.l1NativeParamId]
+        .defaultSource?.link.sys.id,
+    );
     expect(dataSource[dataSourceKey!]).toEqual(
       nativeOnlyPrebindingDefinition.parameterDefinitions[parameterIds.l1NativeParamId]
         .defaultSource?.link,

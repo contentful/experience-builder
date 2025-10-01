@@ -8,7 +8,6 @@ import {
   VariableMapping,
 } from '@/types';
 import { treeVisit } from './treeTraversal';
-import { generateRandomId } from './utils';
 import { isLink } from './isLink';
 
 export type PrebindingData = {
@@ -65,7 +64,7 @@ export const extractPrebindingDataByPatternId = (patterns: Array<ExperienceEntry
 
     const [nativeParameterId] =
       Object.entries(prebindingDefinition.parameterDefinitions ?? {}).find(
-        ([, value]) => value.passToNodes === undefined,
+        ([, value]) => !value.passToNodes?.length,
       ) ?? [];
 
     const prebindingData: PrebindingData = {
@@ -102,7 +101,7 @@ export const generateDefaultDataSourceForPrebindingDefinition = (
     prebindingDefinition.parameterDefinitions ?? {},
   )) {
     if (parameterDefinition.defaultSource && isLink(parameterDefinition.defaultSource.link)) {
-      const dataSourceKey = generateRandomId(7);
+      const dataSourceKey = parameterDefinition.defaultSource.link.sys.id;
       dataSource[dataSourceKey] = parameterDefinition.defaultSource.link;
       parameters[parameterId] = {
         type: 'BoundValue',
@@ -140,7 +139,7 @@ export function getTargetPatternMappingsForParameter({
       );
     } else {
       const parameterDefinition = patternPrebindingData.parameterDefinitions[parameterId];
-      if (!parameterDefinition || !parameterDefinition.passToNodes) return undefined;
+      if (!parameterDefinition || !parameterDefinition.passToNodes?.length) return undefined;
 
       const patternEntry = fetchedPatterns.find(
         (entry) => entry.sys.id === patternNodeDefinitionId,
@@ -156,7 +155,7 @@ export function getTargetPatternMappingsForParameter({
           children: patternEntry.fields.componentTree.children,
         } as ComponentTreeNode,
         (node) => {
-          if (node.id === parameterDefinition.passToNodes?.[0].nodeId) {
+          if (node.id === parameterDefinition.passToNodes?.[0]?.nodeId) {
             nestedPatternNode = node;
           }
 
@@ -172,7 +171,7 @@ export function getTargetPatternMappingsForParameter({
         fetchedPatterns,
         prebindingDataByPatternId,
         patternNodeDefinitionId: nestedPatternNode.definitionId,
-        parameterId: parameterDefinition.passToNodes?.[0].parameterId,
+        parameterId: parameterDefinition.passToNodes?.[0]?.parameterId,
       });
     }
   }

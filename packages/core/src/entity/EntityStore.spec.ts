@@ -65,6 +65,27 @@ describe('EntityStore', () => {
     }
   });
 
+  it('should tell if the experience entry is a pattern or an experience', () => {
+    const storewithPatternEntry = new EntityStore({
+      experienceEntry: experienceEntry as unknown as Entry,
+      entities: [],
+      locale,
+    });
+
+    expect(storewithPatternEntry.isExperienceAPatternEntry).toBe(true);
+
+    const nonPatternExperienceEntry = structuredClone(experienceEntry);
+    delete nonPatternExperienceEntry.fields.componentSettings;
+
+    const storeWithExperienceEntry = new EntityStore({
+      experienceEntry: nonPatternExperienceEntry as unknown as Entry,
+      entities: [],
+      locale,
+    });
+
+    expect(storeWithExperienceEntry.isExperienceAPatternEntry).toBe(false);
+  });
+
   it('should create a new instance', () => {
     const store = new EntityStore({
       experienceEntry: experienceEntry as unknown as Entry,

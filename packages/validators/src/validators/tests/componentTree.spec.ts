@@ -624,7 +624,7 @@ describe('componentTree', () => {
         expect(result.success).toBe(false);
         expect(result.errors).toEqual([expectedError]);
       });
-      it(`fails if prebindingId is present but parameters is missing`, () => {
+      it(`does not fail if parameters is present but prebindingId is missing`, () => {
         const componentTree = experience.fields.componentTree[locale];
         const child = {
           id: 'nodeId',
@@ -644,13 +644,8 @@ describe('componentTree', () => {
         };
         const result = validateExperienceFields(updatedExperience, schemaVersion);
 
-        const expectedError = {
-          details: 'Found "parameters" but no "prebindingId" for node with id: "nodeId"',
-          name: 'custom',
-          path: ['componentTree', 'en-US', 'children', '0'],
-        };
-        expect(result.success).toBe(false);
-        expect(result.errors).toEqual([expectedError]);
+        expect(result.success).toBe(true);
+        expect(result.errors).toBeUndefined();
       });
     });
   });

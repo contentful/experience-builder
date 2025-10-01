@@ -227,7 +227,7 @@ const BREAKPOINT_QUERY_REGEX = /^\*$|^[<>][0-9]+px$/;
 export const BreakpointSchema = z
   .object({
     id: propertyKeySchema,
-    // Can be replace with z.templateLiteral when upgrading to zod v4
+    // Can be replaced with z.templateLiteral when upgrading to zod v4
     query: z.string().refine((s): s is BreakpointQuery => BREAKPOINT_QUERY_REGEX.test(s)),
     previewSize: z.string().optional(),
     displayName: z.string(),
@@ -277,17 +277,13 @@ export const ComponentTreeNodeSchema: z.ZodType<ComponentTreeNode> =
   BaseComponentTreeNodeSchema.extend({
     children: z.lazy(() => ComponentTreeNodeSchema.array()),
   }).superRefine(({ id, prebindingId, parameters }, ctx) => {
+    // We don't fail if parameters are present but prebindingId is not because
+    // older experiences (updated before 21-09-2025) always included parameters
+    // and they will start failing if we do.
     if (prebindingId && !parameters) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `Found "prebindingId" but no "parameters" for node with id: "${id}"`,
-      });
-    }
-
-    if (parameters && !prebindingId) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Found "parameters" but no "prebindingId" for node with id: "${id}"`,
       });
     }
   });
