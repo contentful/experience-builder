@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.0](https://github.com/contentful/experience-builder/compare/v3.7.1...v3.8.0) (2025-10-01)
+
+### Features
+
+- make passToNode mandatory in parameter definition ([1603d2c](https://github.com/contentful/experience-builder/commit/1603d2c0ee37d2b9ba03c6917d564f1e3afd3c13))
+
+### Bug Fixes
+
+- add experience prebiding validations ([a8b5fb7](https://github.com/contentful/experience-builder/commit/a8b5fb7dc5d9701bc549db2c916ea4c3de8c3ec8))
+- fix build error for react-vite ([e132272](https://github.com/contentful/experience-builder/commit/e13227255c4ebe45495b2dc21449ff1ec4814276))
+- remove unnecessary comment ([3539ba8](https://github.com/contentful/experience-builder/commit/3539ba8df0030b77757b897e95b357d2cf64acd1))
+- update tests ([0b1e7ed](https://github.com/contentful/experience-builder/commit/0b1e7ed0c41ec9bb631c72df0088df5823aa8105))
+
 ## [3.7.1](https://github.com/contentful/experience-builder/compare/v3.7.0...v3.7.1) (2025-09-22)
 
 **Note:** Version bump only for package @contentful/experiences-validators
