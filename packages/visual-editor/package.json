@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-visual-editor-react",
-  "version": "3.8.0",
+  "version": "3.8.1-prerelease-20251001T1110-0a9573b.0",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
