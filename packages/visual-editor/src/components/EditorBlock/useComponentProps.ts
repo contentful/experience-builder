@@ -137,7 +137,7 @@ export const useComponentProps = ({
           // maybePath, because prebound props would have the type 'BoundValue' but the path would be incomplete
           // eg: "/uuid" vs "/uuid/fields/[fileName]/~locale" as the regular BoundValue would have
           const [, uuid, maybePath] = variableMapping.path.split('/');
-          const link = dataSource[uuid] as Link<'Entry' | 'Asset'>;
+          const link = dataSource[uuid] as Link<'Entry' | 'Asset'> | undefined;
 
           // starting from here, if the prop is of type 'BoundValue', and has prebinding
           // we are going to resolve the incomplete path
