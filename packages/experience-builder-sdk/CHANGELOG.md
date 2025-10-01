@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.0](https://github.com/contentful/experience-builder/compare/v3.7.1...v3.8.0) (2025-10-01)
+
+### Features
+
+- render prebinding data in preview mode [SPA-2923] ([#1326](https://github.com/contentful/experience-builder/issues/1326)) ([e1ab24d](https://github.com/contentful/experience-builder/commit/e1ab24d115b7ae5acff739598689adb15760f2a3)), closes [#1275](https://github.com/contentful/experience-builder/issues/1275)
+
+### Bug Fixes
+
+- add hasPrebinding SDK feature ([0bad064](https://github.com/contentful/experience-builder/commit/0bad064538c4c4d6b1597f442cc9f4a7bd2675ee))
+- following the errors ([f8eed64](https://github.com/contentful/experience-builder/commit/f8eed64e7898d70b97ae9fdee57f5ca159bc3b12))
+- handle case where CT is missing from mapping for given variable ([bbf5b84](https://github.com/contentful/experience-builder/commit/bbf5b84d1435a8b07b7f9d12883aa42454dddbfa))
+
 ## [3.7.1](https://github.com/contentful/experience-builder/compare/v3.7.0...v3.7.1) (2025-09-22)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.0](https://github.com/contentful/experience-builder/compare/v3.7.1...v3.8.0) (2025-10-01)
+
+### Features
+
+- render prebinding data in preview mode [SPA-2923] ([#1326](https://github.com/contentful/experience-builder/issues/1326)) ([e1ab24d](https://github.com/contentful/experience-builder/commit/e1ab24d115b7ae5acff739598689adb15760f2a3)), closes [#1275](https://github.com/contentful/experience-builder/issues/1275)
+
 ## [3.7.1](https://github.com/contentful/experience-builder/compare/v3.7.0...v3.7.1) (2025-09-22)
 
 **Note:** Version bump only for package @contentful/experiences-visual-editor-react
