@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "npmClient": "npm",
-  "version": "3.8.0",
+  "version": "3.8.1-prerelease-20251001T1110-0a9573b.0",
   "command": {
     "version": {
       "allowBranch": ["main", "next", "development"],
