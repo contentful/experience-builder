@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.1](https://github.com/contentful/experience-builder/compare/v3.8.0...v3.8.1) (2025-10-02)
+
+### Bug Fixes
+
+- also add check on resolveBoundValue ([#1358](https://github.com/contentful/experience-builder/issues/1358)) ([021a279](https://github.com/contentful/experience-builder/commit/021a279a72eafd5db7cd6de06dfab927c816b34e))
+- remove outdated lock files on examples ([#1348](https://github.com/contentful/experience-builder/issues/1348)) ([65a9633](https://github.com/contentful/experience-builder/commit/65a963334894f109f45ab0b983adebe98b11a382))
+
 ## [3.8.0](https://github.com/contentful/experience-builder/compare/v3.7.1...v3.8.0) (2025-10-01)
 
 ### Features
