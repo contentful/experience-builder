@@ -1,9 +1,4 @@
-import {
-  sendMessage,
-  getElementCoordinates,
-  isElementHidden,
-  debug,
-} from '@contentful/experiences-core';
+import { sendMessage, getElementCoordinates, isElementHidden } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
 import {
   CanvasGeometryUpdateSourceEvent,
@@ -70,29 +65,6 @@ const collectNodeCoordinates = (
   }
   node.children.forEach((child) => collectNodeCoordinates(child, nodeToCoordinatesMap));
 };
-
-export function waitForImageToBeLoaded(imageNode: HTMLImageElement) {
-  if (imageNode.complete && (imageNode.naturalWidth > 0 || imageNode.naturalHeight > 0)) {
-    return Promise.resolve();
-  }
-  return new Promise<void>((resolve, reject) => {
-    const handleImageLoad = (event: Event | ErrorEvent) => {
-      imageNode.removeEventListener('load', handleImageLoad);
-      imageNode.removeEventListener('error', handleImageLoad);
-      if (event.type === 'error') {
-        debug.warn(
-          '[experiences-visual-editor-react::canvasGeometry] Image failed to load:',
-          imageNode,
-        );
-        reject();
-      } else {
-        resolve();
-      }
-    };
-    imageNode.addEventListener('load', handleImageLoad);
-    imageNode.addEventListener('error', handleImageLoad);
-  });
-}
 
 // calculates the content height by finding the deepest node in the first 2 levels of the body
 function measureBodyContentHeight(depth = 2, node: Element = document.body): number {
