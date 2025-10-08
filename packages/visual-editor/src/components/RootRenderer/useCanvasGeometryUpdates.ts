@@ -1,9 +1,6 @@
 import { debounce } from 'lodash-es';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  waitForImageToBeLoaded,
-  sendCanvasGeometryUpdatedMessage,
-} from './sendCanvasGeometryUpdatedMessage';
+import { sendCanvasGeometryUpdatedMessage } from './sendCanvasGeometryUpdatedMessage';
 import {
   CanvasGeometryUpdateSourceEvent,
   ExperienceTree,
@@ -50,16 +47,32 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
     [],
   );
 
-  const debouncedCollectImages = useMemo(
+  // Handling image or video resizing separately,
+  // as they can load at a different time, some might be hidden or lazy loaded
+  // resulting in a layout shift.
+  //
+  // We observe every media element for resizing using the same ResizeObserver instance.
+  // It's safe to call .observe() multiple times on the same element.
+  // Also don't need to unobserve removed elements, as they should be garbage collected.
+  const [mediaResizeObserver] = useState(() => {
+    return new ResizeObserver(() => {
+      debouncedUpdateGeometry(treeRef.current, 'mediaResize');
+    });
+  });
+  const debouncedObserveMediaResizing = useMemo(
     () =>
       debounce(
         () => {
-          setImages((prev) => ({ ...prev, allImages: findAllImages() }));
+          const allMedia = findAllMedia();
+
+          for (const media of allMedia) {
+            mediaResizeObserver.observe(media);
+          }
         },
         300,
         { trailing: true },
       ),
-    [],
+    [mediaResizeObserver],
   );
 
   // Store tree in a ref to avoid the need to deactivate & reactivate the mutation observer
@@ -73,26 +86,17 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
   useEffect(() => {
     const resizeEventListener = () => {
       debouncedUpdateGeometry(treeRef.current, 'resize');
-      // find all images on resize
-      debouncedCollectImages();
     };
     window.addEventListener('resize', resizeEventListener);
     return () => window.removeEventListener('resize', resizeEventListener);
-  }, [debouncedCollectImages, debouncedUpdateGeometry]);
-
-  const [{ allImages, loadedImages }, setImages] = useState(() => {
-    const allImages = findAllImages();
-    const loadedImages = new WeakMap<HTMLImageElement, string>();
-    return { allImages, loadedImages };
-  });
+  }, [debouncedUpdateGeometry]);
 
   // Handling DOM mutations
   useEffect(() => {
     const observer = new MutationObserver(() => {
       debouncedUpdateGeometry(treeRef.current, 'mutation');
-
-      // find all images on any DOM change
-      debouncedCollectImages();
+      // start observing all media on any DOM change, as there can be newly added elements
+      debouncedObserveMediaResizing();
     });
     // send initial geometry in case the tree is empty
     debouncedUpdateGeometry(treeRef.current, 'mutation');
@@ -102,30 +106,7 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
       attributes: true,
     });
     return () => observer.disconnect();
-  }, [debouncedCollectImages, debouncedUpdateGeometry]);
-
-  // Handling image loading separately,
-  // as each image can load at a different time, some might be hidden or lazy loaded
-  useEffect(() => {
-    let isCurrent = true;
-
-    allImages.forEach(async (imageNode) => {
-      const lastSrc = loadedImages.get(imageNode);
-      if (lastSrc === imageNode.currentSrc) {
-        return;
-      }
-      // update the geometry after each image is loaded, as it can shift the layout
-      await waitForImageToBeLoaded(imageNode);
-      if (isCurrent) {
-        loadedImages.set(imageNode, imageNode.currentSrc);
-        debouncedUpdateGeometry(treeRef.current, 'imageLoad');
-      }
-    });
-
-    return () => {
-      isCurrent = false;
-    };
-  }, [allImages, loadedImages, debouncedUpdateGeometry]);
+  }, [debouncedObserveMediaResizing, debouncedUpdateGeometry]);
 
   // Delegate scrolling to the canvas
   useEffect(() => {
@@ -147,6 +128,6 @@ export const useCanvasGeometryUpdates = ({ tree, canvasMode }: UseCanvasGeometry
   }, [canvasMode]);
 };
 
-function findAllImages() {
-  return Array.from(document.querySelectorAll('img'));
+function findAllMedia() {
+  return Array.from(document.querySelectorAll('img, video'));
 }
