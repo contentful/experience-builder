@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.2](https://github.com/contentful/experience-builder/compare/v3.8.1...v3.8.2) (2025-10-08)
+
+**Note:** Version bump only for package @contentful/create-studio-experiences
+
 ## [3.8.1](https://github.com/contentful/experience-builder/compare/v3.8.0...v3.8.1) (2025-10-02)
 
 **Note:** Version bump only for package @contentful/create-studio-experiences
