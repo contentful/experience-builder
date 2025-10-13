@@ -51,9 +51,6 @@ export default [
       alias({
         entries: [{ find: '@', replacement: path.resolve(projectRoot, 'src') }],
       }),
-      nodeResolve({
-        extensions: ['.mjs', '.js', '.json', '.ts', '.tsx'],
-      }),
       dts({ compilerOptions: { noEmitOnError: process.env.DEV ? false : true } }),
     ],
     external: [/.css/],
