@@ -2,9 +2,9 @@
   "name": "@contentful/experiences-core",
   "version": "3.7.0",
   "description": "",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
   "type": "module",
   "repository": {
     "type": "git",
@@ -40,10 +40,10 @@
   "typesVersions": {
     "*": {
       "types": [
-        "./dist/types.d.ts"
+        "./dist/types/index.d.ts"
       ],
       "constants": [
-        "./dist/constants.d.ts"
+        "./dist/types/constants.d.ts"
       ]
     }
   },
