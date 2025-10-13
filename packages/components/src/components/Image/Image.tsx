@@ -1,6 +1,6 @@
 import React from 'react';
 import { combineClasses } from '@/utils/combineClasses';
-import { OptimizedImageAsset } from '@contentful/experiences-core/types';
+import type { OptimizedImageAsset } from '@contentful/experiences-core';
 import './Image.css';
 
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
