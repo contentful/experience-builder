@@ -15,10 +15,10 @@ export const checkIsNodeVisible = (
     return node.children.some((childNode) => checkIsNodeVisible(childNode, resolveDesignValue));
   }
 
-  // Check if the current node is visible (`cfVisibility` is enforced on all nodes)
+  // Check if the current node is visible (`cfVisibility` is enforced on all nodes however leaving as optional chaining due to bug discovered [SPA-3298])
   // Check explicitly for false, as `undefined` is treated as `true`. It could become undefined when the breakpoint IDs changed.
   return (
-    resolveDesignValue((node.data.props['cfVisibility'] as DesignValue).valuesByBreakpoint) !==
+    resolveDesignValue((node.data.props['cfVisibility'] as DesignValue)?.valuesByBreakpoint) !==
     false
   );
 };
