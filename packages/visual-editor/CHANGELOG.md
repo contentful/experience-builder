@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.3](https://github.com/contentful/experience-builder/compare/v3.8.2...v3.8.3) (2025-10-20)
+
+### Bug Fixes
+
+- fix issue where cfVisibility could be undefined, update test ([#1370](https://github.com/contentful/experience-builder/issues/1370)) ([dca4ced](https://github.com/contentful/experience-builder/commit/dca4ced2716d06cf3d7fef2d3189dbb7e0dc64e0))
+
 ## [3.8.2](https://github.com/contentful/experience-builder/compare/v3.8.1...v3.8.2) (2025-10-08)
 
 ### Bug Fixes
