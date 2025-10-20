@@ -8,8 +8,8 @@ import {
 
 describe('checkIsNodeVisible', () => {
   const baseBreakpoint = 'desktop';
-  const resolveDesignValue = ((valuesByBreakpoint: ValuesByBreakpoint) =>
-    valuesByBreakpoint[baseBreakpoint]) as ResolveDesignValueType;
+  const resolveDesignValue = ((valuesByBreakpoint: ValuesByBreakpoint | undefined) =>
+    valuesByBreakpoint?.[baseBreakpoint]) as ResolveDesignValueType;
 
   const nodeVisible = {
     type: 'block',
@@ -60,7 +60,7 @@ describe('checkIsNodeVisible', () => {
       expect(checkIsNodeVisible(node, resolveDesignValue)).toBe(false);
     });
 
-    it('returns true if node has children with cfVisibility being undefined', () => {
+    it('returns true if node has children with cfVisibility with an invalid breakpoint', () => {
       const nodeWithUndefinedVisibility = {
         type: 'block',
         data: {
@@ -69,6 +69,25 @@ describe('checkIsNodeVisible', () => {
               type: 'DesignValue',
               valuesByBreakpoint: { 'invalid-breakpoint': true },
             },
+          },
+        },
+        children: [],
+      } as unknown as ExperienceTreeNode;
+
+      const node = {
+        type: ASSEMBLY_NODE_TYPE,
+        data: {},
+        children: [nodeWithUndefinedVisibility],
+      } as unknown as ExperienceTreeNode;
+      expect(checkIsNodeVisible(node, resolveDesignValue)).toBe(true);
+    });
+
+    it('returns true if node has children with cfVisibility being undefined', () => {
+      const nodeWithUndefinedVisibility = {
+        type: 'block',
+        data: {
+          props: {
+            cfVisibility: undefined,
           },
         },
         children: [],

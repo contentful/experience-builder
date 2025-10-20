@@ -209,14 +209,19 @@ export const optionalBuiltInComponents = [
   DEFAULT_COMPONENT_REGISTRATIONS.divider.definition.id,
 ];
 
-export const sendRegisteredComponentsMessage = () => {
-  // Send the definitions (without components) via the connection message to the experience builder
-  const registeredDefinitions = Array.from(componentRegistry.values())
-    .map(({ definition }) => definition)
-    // Assembly definitions are empty placeholder within the SDK without variables
-    // We don't send those to the editor as they would overwrite the actual correct definitions.
-    .filter((definition) => !checkIsAssemblyDefinition(definition));
+const getRegisteredComponentDefinitions = () => {
+  return (
+    Array.from(componentRegistry.values())
+      .map(({ definition }) => definition)
+      // Assembly definitions are empty placeholder within the SDK without variables
+      // We don't send those to the editor as they would overwrite the actual correct definitions.
+      .filter((definition) => !checkIsAssemblyDefinition(definition))
+  );
+};
 
+export const sendRegisteredComponentsMessage = () => {
+  // Send the definitions (without components) via the register message to the experience builder
+  const registeredDefinitions = getRegisteredComponentDefinitions();
   sendMessage(OUTGOING_EVENTS.RegisteredComponents, {
     definitions: registeredDefinitions,
   });
@@ -329,10 +334,7 @@ const resolveCssVariables = (designTokensDefinition: DesignTokensDefinition) => 
 
 export const sendConnectedEventWithRegisteredComponents = () => {
   // Send the definitions (without components) via the connection message to the experience builder
-  const registeredDefinitions = Array.from(componentRegistry.values()).map(
-    ({ definition }) => definition,
-  );
-
+  const registeredDefinitions = getRegisteredComponentDefinitions();
   sendMessage(OUTGOING_EVENTS.Connected, {
     sdkVersion: SDK_VERSION,
     definitions: registeredDefinitions,

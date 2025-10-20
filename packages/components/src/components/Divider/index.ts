@@ -1,9 +1,8 @@
-import { dividerBuiltInStyles } from '@contentful/experiences-core';
+import { dividerBuiltInStyles, type ComponentDefinition } from '@contentful/experiences-core';
 import {
   CONTENTFUL_COMPONENTS,
   CONTENTFUL_DEFAULT_CATEGORY,
 } from '@contentful/experiences-core/constants';
-import { ComponentDefinition } from '@contentful/experiences-core/types';
 
 export { ContentfulDivider } from './ContentfulDivider';
 

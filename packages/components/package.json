@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-components-react",
-  "version": "3.8.2",
+  "version": "3.8.3-beta.1",
   "description": "A basic set of components to use with Studio Experiences",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/components#readme",
   "repository": {
@@ -39,6 +39,7 @@
     "dist/**/*.*"
   ],
   "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@rollup/plugin-typescript": "^11.1.3",
