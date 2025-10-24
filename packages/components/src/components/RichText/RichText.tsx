@@ -1,6 +1,6 @@
 import React from 'react';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { Document, BLOCKS } from '@contentful/rich-text-types';
+import { Document, INLINES, BLOCKS } from '@contentful/rich-text-types';
 import { combineClasses } from '@/utils/combineClasses';
 import './RichText.css';
 export interface RichTextProps extends Omit<React.HTMLAttributes<HTMLElement>, 'value'> {
@@ -38,10 +38,29 @@ export const RichText: React.FC<RichTextProps> = ({ as = 'p', className, value, 
   const Tag = as;
 
   return (
-    <div className={combineClasses('cf-richtext', className)} {...props}>
+    <div
+      className={combineClasses('cf-richtext', className)}
+      style={{ background: 'red' }}
+      {...props}>
       {documentToReactComponents(value, {
         renderNode: {
           [BLOCKS.PARAGRAPH]: (_node, children) => <Tag>{children}</Tag>,
+          [INLINES.ASSET_HYPERLINK]: (node, children) => {
+            const url = node.data.target.fields.file.url;
+            return (
+              <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
+                {INLINES.ASSET_HYPERLINK} {children}
+              </a>
+            );
+          },
+          [BLOCKS.EMBEDDED_ASSET]: (node, children) => {
+            const url = node.data.target.fields.file.url;
+            return (
+              <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: 'green' }}>
+                {BLOCKS.EMBEDDED_ASSET} {children}
+              </a>
+            );
+          },
         },
       })}
     </div>
