@@ -244,6 +244,10 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         // conflicts between different breakpoint values from multiple nodes where the hash would be equal
         // - Adding wrapping pattern nodes IDs to avoid conflicts between similar nested patterns as those
         // could override each others CSS for some breakpoints just through the order of `<style>` tags in the DOM.
+        // - We're only considering the regular CSS (not the visibility-specific one) but that doesn't cause an issue
+        // since we already use the breakpointId (which is not used in CSR, see createStylesheetsForBuiltInStyles).
+        // Theoretically, we could drop `generatedCss` from the hash generation and still be safe from conflicts (unless
+        // the node IDs are similar but visibility is different?)
         const styleHash = md5(currentNodeIdsChain + breakpointId + generatedCss);
 
         // and prefix the className to make sure the value can be processed
