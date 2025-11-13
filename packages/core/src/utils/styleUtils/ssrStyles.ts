@@ -568,9 +568,14 @@ export const resolveBackgroundImageBinding = ({
   if (variableData.type === 'BoundValue') {
     // '/lUERH7tX7nJTaPX6f0udB/fields/assetReference/~locale/fields/file/~locale'
     const [, uuid] = variableData.path.split('/');
-    const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-    const boundEntity = getBoundEntityById(binding.sys.id);
+    const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'> | undefined;
+    // Safeguard against edge cases - we should not have bound style values that do not have a data source entry.
+    // However, just in case, we handle it here as empty and allow the user to replace without errors.
+    if (!binding) {
+      return;
+    }
 
+    const boundEntity = getBoundEntityById(binding?.sys.id);
     if (!boundEntity) {
       return;
     }
