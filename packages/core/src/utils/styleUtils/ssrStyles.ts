@@ -575,7 +575,7 @@ export const resolveBackgroundImageBinding = ({
       return;
     }
 
-    const boundEntity = getBoundEntityById(binding?.sys.id);
+    const boundEntity = getBoundEntityById(binding.sys.id);
     if (!boundEntity) {
       return;
     }
