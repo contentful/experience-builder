@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.4](https://github.com/contentful/experience-builder/compare/v3.8.3...v3.8.4) (2025-11-14)
+
+### Bug Fixes
+
+- added previous rules for cfborder and default style values ([a9104a8](https://github.com/contentful/experience-builder/commit/a9104a887ada694058cb8512009fff9e89c03b1a))
+- optional bound value to datasouce lookup ([33f6a40](https://github.com/contentful/experience-builder/commit/33f6a404e24ad435b0a9f4a153fd175445445966))
+- remove optional chain after if ([9e02583](https://github.com/contentful/experience-builder/commit/9e02583b3f4fe5ac23845f9d73f406ebb3a4077f))
+- update design token value replacements in ssr style extraction ([ebada56](https://github.com/contentful/experience-builder/commit/ebada5671ac4254a859c98c6d6c4dc2176402f44))
+- update registry flattening, add tests for it and multi-level property matching, update regex ([5d403ee](https://github.com/contentful/experience-builder/commit/5d403eeaf96becc2794dc2b46e81c613a21a0422))
+
 ## [3.8.3](https://github.com/contentful/experience-builder/compare/v3.8.2...v3.8.3) (2025-10-20)
 
 **Note:** Version bump only for package @contentful/experiences-core
