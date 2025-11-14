@@ -244,6 +244,10 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         // conflicts between different breakpoint values from multiple nodes where the hash would be equal
         // - Adding wrapping pattern nodes IDs to avoid conflicts between similar nested patterns as those
         // could override each others CSS for some breakpoints just through the order of `<style>` tags in the DOM.
+        // - We're only considering the regular CSS (not the visibility-specific one) but that doesn't cause an issue
+        // since we already use the breakpointId (which is not used in CSR, see createStylesheetsForBuiltInStyles).
+        // Theoretically, we could drop `generatedCss` from the hash generation and still be safe from conflicts (unless
+        // the node IDs are similar but visibility is different?)
         const styleHash = md5(currentNodeIdsChain + breakpointId + generatedCss);
 
         // and prefix the className to make sure the value can be processed
@@ -443,44 +447,35 @@ export const maybePopulateDesignTokenValue = (
     return variableValue;
   }
 
-  const resolveSimpleDesignToken = (variableName: keyof StyleProps, variableValue: string) => {
-    const nonTemplateDesignTokenValue = variableValue.replace(templateStringRegex, '$1');
-    const tokenValue = mapOfDesignVariableKeys[nonTemplateDesignTokenValue];
+  // matches ${...} and captures the content between ${ and }
+  // ${color.Blue}, ${spacing.Sizes.Large} or ${border.Text Heading.Small}
+  const templateStringRegex = /\$\{(\w[^}]*)}/g;
 
-    if (!tokenValue) {
-      if (builtInStyles[variableName]) {
-        return builtInStyles[variableName]!.defaultValue;
+  const result = variableValue
+    .replace(templateStringRegex, (_: string, rawKey: string): string => {
+      const value = mapOfDesignVariableKeys[rawKey];
+
+      if (!value) {
+        if (builtInStyles[variableName]?.defaultValue) {
+          return String(builtInStyles[variableName]!.defaultValue);
+        }
+        if (optionalBuiltInStyles[variableName]?.defaultValue) {
+          return String(optionalBuiltInStyles[variableName]!.defaultValue);
+        }
+
+        return '0px';
       }
-      if (optionalBuiltInStyles[variableName]) {
-        return optionalBuiltInStyles[variableName]!.defaultValue;
+      if (variableName === 'cfBorder' || variableName.startsWith('cfBorder_')) {
+        if (typeof value === 'object') {
+          const { width, style, color } = value;
+          return `${width} ${style} ${color}`;
+        }
       }
-
-      return '0px';
-    }
-
-    if (variableName === 'cfBorder' || variableName.startsWith('cfBorder_')) {
-      if (typeof tokenValue === 'object') {
-        const { width, style, color } = tokenValue;
-        return `${width} ${style} ${color}`;
-      }
-    }
-
-    return tokenValue;
-  };
-
-  const templateStringRegex = /\${(.+?)}/g;
-
-  const parts = variableValue.split(' ');
-
-  let resolvedValue = '';
-  for (const part of parts) {
-    const tokenValue = templateStringRegex.test(part)
-      ? resolveSimpleDesignToken(variableName, part)
-      : part;
-    resolvedValue += `${tokenValue} `;
-  }
-  // Not trimming would end up with a trailing space that breaks the check in `calculateNodeDefaultHeight`
-  return resolvedValue.trim();
+      return String(value);
+    })
+    // Replace all multiple spaces with a single space
+    .replace(/  +/g, ' ');
+  return result;
 };
 
 const transformMedia = (boundAsset: Asset, width?: string, options?: BackgroundImageOptions) => {
@@ -568,9 +563,14 @@ export const resolveBackgroundImageBinding = ({
   if (variableData.type === 'BoundValue') {
     // '/lUERH7tX7nJTaPX6f0udB/fields/assetReference/~locale/fields/file/~locale'
     const [, uuid] = variableData.path.split('/');
-    const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'>;
-    const boundEntity = getBoundEntityById(binding.sys.id);
+    const binding = dataSource[uuid] as UnresolvedLink<'Entry' | 'Asset'> | undefined;
+    // Safeguard against edge cases - we should not have bound style values that do not have a data source entry.
+    // However, just in case, we handle it here as empty and allow the user to replace without errors.
+    if (!binding) {
+      return;
+    }
 
+    const boundEntity = getBoundEntityById(binding.sys.id);
     if (!boundEntity) {
       return;
     }
@@ -794,22 +794,33 @@ export const indexByBreakpoint = ({
 export const flattenDesignTokenRegistry = (
   designTokenRegistry: DesignTokensDefinition,
 ): FlattenedDesignTokens => {
-  return Object.entries(designTokenRegistry).reduce((acc, [categoryName, tokenCategory]) => {
-    const tokensWithCategory = Object.entries(tokenCategory).reduce(
-      (acc, [tokenName, tokenValue]) => {
+  const flattenObject = (obj: object, prefix = ''): FlattenedDesignTokens => {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+      const newKey = prefix ? `${prefix}.${key}` : key;
+
+      if (
+        value &&
+        typeof value === 'object' &&
+        !Array.isArray(value) &&
+        // handle border types
+        !(typeof value === 'object' && ('width' in value || 'style' in value || 'color' in value))
+      ) {
+        // Recursively flatten nested objects, but skip objects that look like border definitions
         return {
           ...acc,
-          [`${categoryName}.${tokenName}`]: tokenValue,
+          ...flattenObject(value, newKey),
         };
-      },
-      {},
-    );
+      } else {
+        // This is a leaf value (string, number, or border object)
+        return {
+          ...acc,
+          [newKey]: value,
+        };
+      }
+    }, {});
+  };
 
-    return {
-      ...acc,
-      ...tokensWithCategory,
-    };
-  }, {});
+  return flattenObject(designTokenRegistry);
 };
 
 function mergeDefaultAndOverwriteValues(
