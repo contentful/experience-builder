@@ -26,3 +26,6 @@ updates:
     registries:
       - npm-registry-registry-npmjs-org
       - npm-github
+
+    cooldown:
+      default-days: 15
