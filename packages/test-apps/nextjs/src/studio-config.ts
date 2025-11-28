@@ -217,6 +217,167 @@ defineComponents(
         wrapComponent: false,
       },
     },
+    {
+      component: ComponentWithChildren,
+      definition: {
+        id: 'section-section-group',
+        children: true,
+        name: 'Section Section Group',
+        category: 'Exo',
+        variables: {
+          nameInternal: {
+            displayName: 'Internal Name',
+            type: 'Text',
+          },
+          items: {
+            displayName: 'Items',
+            type: 'Array',
+          },
+          title: {
+            displayName: 'Title',
+            type: 'Text',
+          },
+          titleComponent: {
+            displayName: 'Title Component',
+            type: 'Link',
+          },
+          divider: {
+            displayName: 'Divider',
+            type: 'Text',
+            validations: {
+              in: [
+                { value: 'Add bottom divider', displayName: 'Add bottom divider' },
+                { value: 'Add top divider', displayName: 'Add top divider' },
+                { value: 'Default', displayName: 'Default' },
+                { value: 'Remove bottom divider', displayName: 'Remove bottom divider' },
+              ],
+            },
+          },
+          verticalSpacing: {
+            displayName: 'Vertical Spacing',
+            type: 'Text',
+            validations: {
+              in: [
+                { value: 'Default', displayName: 'Default' },
+                { value: 'lg bottom padding', displayName: 'lg bottom padding' },
+                { value: 'lg top padding', displayName: 'lg top padding' },
+                { value: 'm bottom padding', displayName: 'm bottom padding' },
+                { value: 'm top padding', displayName: 'm top padding' },
+                { value: 'xs bottom padding', displayName: 'xs bottom padding' },
+                { value: 'xs top padding', displayName: 'xs top padding' },
+              ],
+            },
+          },
+        },
+      },
+      options: {
+        wrapComponent: false,
+      },
+    },
+    {
+      component: ComponentWithChildren,
+      definition: {
+        id: 'section-text-with-media',
+        name: 'Section Text With Media',
+        children: true,
+        category: 'Exo',
+        variables: {
+          nameInternal: {
+            displayName: 'Internal Name',
+            type: 'Text',
+          },
+          title: {
+            displayName: 'Title',
+            type: 'Link',
+          },
+          items: {
+            displayName: 'Items',
+            type: 'Array',
+          },
+        },
+      },
+      options: {
+        wrapComponent: false,
+      },
+    },
+    {
+      component: ComponentWithChildren,
+      definition: {
+        id: 'component-title',
+        name: 'Component Title',
+        children: true,
+        category: 'Exo',
+        variables: {
+          nameInternal: {
+            displayName: 'Internal Name',
+            type: 'Text',
+          },
+          title: {
+            displayName: 'Title',
+            type: 'Text',
+          },
+          subtitle: {
+            displayName: 'Subtitle',
+            type: 'Text',
+          },
+          alignment: {
+            displayName: 'Alignment',
+            type: 'Text',
+            validations: {
+              in: [
+                { value: 'center', displayName: 'center' },
+                { value: 'left', displayName: 'left' },
+              ],
+            },
+          },
+          link: {
+            displayName: 'Link',
+            type: 'Link',
+          },
+        },
+      },
+      options: {
+        wrapComponent: false,
+      },
+    },
+    {
+      component: ComponentWithChildren,
+      definition: {
+        id: 'component-text-with-media',
+        name: 'Component Text With Media',
+        children: true,
+        category: 'Exo',
+        variables: {
+          nameInternal: {
+            displayName: 'Internal Name',
+            type: 'Text',
+          },
+          title: {
+            displayName: 'Title',
+            type: 'Text',
+          },
+          richDescription: {
+            displayName: 'Rich Description',
+            type: 'RichText',
+          },
+          link: {
+            displayName: 'Link',
+            type: 'Link',
+          },
+          media: {
+            displayName: 'Media',
+            type: 'Media',
+          },
+          leftSideMedia: {
+            displayName: 'Left Side Media',
+            type: 'Boolean',
+          },
+        },
+      },
+      options: {
+        wrapComponent: false,
+      },
+    },
   ],
   {
     experimentalComponents: {
