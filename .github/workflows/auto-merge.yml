@@ -8,7 +8,11 @@ jobs:
       contents: write
       id-token: write
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    # github.event.pull_request.user.login checks the actual PR author
+    # also verify the repository to prevent workflow runs on forks
+    if: |
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.repository == 'contentful/experience-builder'
     steps:
       - name: Fetch Dependabot metadata
         id: dependabot-metadata
