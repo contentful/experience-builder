@@ -2,6 +2,9 @@ name: Clear all Github actions caches
 on:
   workflow_dispatch:
 
+permissions:
+  actions: write  # Delete cache
+
 jobs:
   my-job:
     name: Delete all caches
