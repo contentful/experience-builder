@@ -17,14 +17,28 @@ on:
         default: false
         type: boolean
 
+# Default permissions - most restrictive
+permissions:
+  contents: read
+
 jobs:
   install-build:
+    permissions:
+      contents: read # Checkout code
+      actions: write # Save cache
     uses: ./.github/workflows/build.yaml
   check:
     needs: install-build
+    permissions:
+      contents: read # Checkout code
+      actions: read # Restore cache
     uses: ./.github/workflows/check.yaml
   vercel:
     needs: [install-build, check]
+    permissions:
+      contents: write # Checkout with full history
+      id-token: write # OIDC token for authentication
+      actions: read # Restore cache
     uses: ./.github/workflows/vercel.yaml
     with:
       publish-web-apps-to-prod: ${{ !!inputs.publish-web-apps-to-prod }}
@@ -43,8 +57,9 @@ jobs:
       github.actor != 'dependabot[bot]' &&
       github.actor != 'contentful-automation[bot]'
     permissions:
-      contents: write
-      id-token: write
+      contents: write # Create releases and tags
+      id-token: write # OIDC token for Vault authentication
+      actions: read # Restore cache
     uses: ./.github/workflows/publish.yaml
     with:
       publish-prelease: ${{ !!inputs.publish-prerelease }}
@@ -54,5 +69,6 @@ jobs:
     if: ${{ always() }}
     needs: [install-build, check, publish, vercel]
     permissions:
-      actions: write
+      contents: read # Checkout code
+      actions: write # Delete and restore caches
     uses: ./.github/workflows/cleanup.yaml

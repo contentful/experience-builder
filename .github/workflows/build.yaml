@@ -3,6 +3,10 @@ name: Build and Test
 on:
   workflow_call:
 
+permissions:
+  contents: read  # Checkout code
+  actions: write  # Save caches
+
 jobs:
   install-build:
     runs-on: ubuntu-latest
