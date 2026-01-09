@@ -29,6 +29,8 @@ jobs:
           restore-keys: cypress-${{ runner.os }}-
       - name: Install dependencies
         run: npm ci
+      # cypress binary is installed via postinstall script which is blocked with ignore-scripts=true
+      # if missing from cache, so we need to run it conditionally
       - name: Install cypress dependencies
         if: steps.restore-cypress.outputs.cache-hit != 'true'
         run: npx cypress install
