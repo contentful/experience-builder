@@ -3,8 +3,8 @@ name: Publish packages
 on:
   workflow_call:
     inputs:
-      publish-prelease:
-        description: "Publish prerelease version of the current ref"
+      publish-prerelease:
+        description: 'Publish prerelease version of the current ref'
         default: false
         required: false
         type: boolean
@@ -19,18 +19,18 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - name: "Checkout"
+      - name: 'Checkout'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Checkout all branches and tags, needed for publish
-      - name: "Use NodeJS 20"
+      - name: 'Use NodeJS 20'
         uses: actions/setup-node@v4
         with:
-          node-version: "20.11"
-          cache: "npm"
+          node-version: '20.11'
+          cache: 'npm'
       # Retrieve token from Vault and use in .npmrc for installing npm packages from the GitHub registry
       # See https://contentful.atlassian.net/wiki/spaces/ENG/pages/4396155213/Migrating+to+GitHub+Packages+from+npmjs?focusedCommentId=4431282518
-      - name: "Retrieve NPM Token from Vault"
+      - name: 'Retrieve NPM Token from Vault'
         id: vault
         uses: hashicorp/vault-action@v2.4.3
         with:
@@ -72,14 +72,14 @@ jobs:
       - name: Skip Publish if no changes
         if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES == '' }}
         run: echo "No changes to packages to publish, skipping publish step"
-      - name: "Version and publish"
+      - name: 'Version and publish'
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
           # GH_TOKEN needed by lerna to create releases on github
           GH_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
           ACTOR: ${{ github.actor }}
           REF_NAME: ${{ github.ref_name }}
-          PUBLISH_PRERELEASE: ${{ inputs.publish-prelease }}
+          PUBLISH_PRERELEASE: ${{ inputs.publish-prerelease }}
         if: ${{ steps.changed_packages.outputs.CHANGED_PACKAGES != '' }}
         run: |
           git config user.name "$ACTOR"
@@ -94,8 +94,8 @@ jobs:
           else
             npx lerna publish --conventional-commits --conventional-graduate --exact --force-publish --yes --no-private --dist-tag latest --create-release github
           fi
-      - name: "Merge changes downstream"
-        if: ${{ !inputs.publish-prelease }}
+      - name: 'Merge changes downstream'
+        if: ${{ !inputs.publish-prerelease }}
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           REF_NAME: ${{ github.ref_name }}
