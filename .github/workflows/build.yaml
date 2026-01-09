@@ -29,6 +29,9 @@ jobs:
           restore-keys: cypress-${{ runner.os }}-
       - name: Install dependencies
         run: npm ci
+      - name: Install cypress dependencies
+        if: steps.restore-cypress.outputs.cache-hit != 'true'
+        run: npx cypress install
       - name: Save Cypress Binary
         if: steps.restore-cypress.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
