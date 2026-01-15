@@ -11,5 +11,5 @@ metadata:
 spec:
   type: library
   lifecycle: production
-  owner: group:team-sparks
+  owner: group:team-experience-assembly
   system: experience-builder
