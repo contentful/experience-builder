@@ -8,3 +8,4 @@ export * from './Divider';
 export * from './Columns';
 export * from './Assembly';
 export * from './Carousel';
+export * from './Video';

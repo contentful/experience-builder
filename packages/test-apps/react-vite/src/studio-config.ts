@@ -32,6 +32,10 @@ defineComponents(
       definition: ShallowComponentDefinition,
     },
     {
+      component: Video,
+      definition: VideoComponentDefinition,
+    },
+    {
       component: ColorfulBox,
       definition: {
         id: 'colorful-box',
