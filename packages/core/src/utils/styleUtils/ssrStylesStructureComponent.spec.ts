@@ -49,6 +49,7 @@ const getExperienceEntryWithNode = ({
         },
       },
       revision: 1,
+      publishedVersion: 1,
       createdAt: '2021-07-07T00:00:00Z',
       updatedAt: '2021-07-07T00:00:00Z',
     },

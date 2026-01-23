@@ -1607,7 +1607,6 @@ describe('resolveMaybePrebindingDefaultValuePath', () => {
       },
     });
 
-    console.log(localEntityStore.entities);
     const result = resolveMaybePrebindingDefaultValuePath({
       componentValueKey: 'testKey',
       entityStore: localEntityStore,

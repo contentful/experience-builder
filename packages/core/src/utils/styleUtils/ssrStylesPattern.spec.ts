@@ -24,6 +24,7 @@ const patternEntry: ExperienceEntry = {
     createdAt: '2024-02-21T16:20:49.414Z',
     updatedAt: '2024-03-05T10:52:46.832Z',
     revision: 1,
+    publishedVersion: 1,
     contentType: {
       sys: {
         id: 'contentful-component',
@@ -646,6 +647,7 @@ const editablePatternEntry: ExperienceEntry = {
     createdAt: '2024-02-21T16:20:49.414Z',
     updatedAt: '2024-03-05T10:52:46.832Z',
     revision: 1,
+    publishedVersion: 1,
     contentType: {
       sys: {
         id: 'contentful-component',
@@ -1296,6 +1298,7 @@ const getExperienceEntryWithNode = ({
         },
       },
       revision: 1,
+      publishedVersion: 1,
       createdAt: '2021-07-07T00:00:00Z',
       updatedAt: '2021-07-07T00:00:00Z',
     },

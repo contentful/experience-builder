@@ -48,10 +48,9 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-vitest": "0.4.1",
     "husky": "^9.0.10",
-    "lerna": "^8.0.2",
+    "lerna": "^8.2.4",
     "lint-staged": "^15.0.1",
-    "nx": "^18.0.4",
-    "nx-cloud": "latest",
+    "nx": "19.8.9",
     "prettier": "3.2.5"
   },
   "lint-staged": {

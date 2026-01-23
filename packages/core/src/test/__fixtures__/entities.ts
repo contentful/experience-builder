@@ -29,6 +29,7 @@ export const entries: Entry[] = [
       createdAt: '2020-01-01T00:00:00.000Z',
       updatedAt: '2020-01-01T00:00:00.000Z',
       revision: 10,
+      publishedVersion: 1,
       space: {
         sys: {
           type: 'Link',
@@ -73,6 +74,7 @@ export const entries: Entry[] = [
       createdAt: '2020-01-01T00:00:00.000Z',
       updatedAt: '2020-01-01T00:00:00.000Z',
       revision: 10,
+      publishedVersion: 1,
       space: {
         sys: {
           type: 'Link',
@@ -112,6 +114,7 @@ export const entryWithEmbeddedEntry: Entry = {
     createdAt: '2020-01-01T00:00:00.000Z',
     updatedAt: '2020-01-01T00:00:00.000Z',
     revision: 10,
+    publishedVersion: 1,
     space: {
       sys: {
         type: 'Link',
@@ -157,6 +160,7 @@ export const entryWithEmbeddedEntries: Entry = {
     createdAt: '2020-01-01T00:00:00.000Z',
     updatedAt: '2020-01-01T00:00:00.000Z',
     revision: 10,
+    publishedVersion: 1,
     space: {
       sys: {
         type: 'Link',
@@ -211,6 +215,7 @@ export const entryWithAnotherEmbeddedEntry: Entry = {
     createdAt: '2020-01-01T00:00:00.000Z',
     updatedAt: '2020-01-01T00:00:00.000Z',
     revision: 10,
+    publishedVersion: 1,
     space: {
       sys: {
         type: 'Link',
@@ -256,6 +261,7 @@ export const entryWithEmbeddedEntryInRichText: Entry = {
     createdAt: '2020-01-01T00:00:00.000Z',
     updatedAt: '2020-01-01T00:00:00.000Z',
     revision: 10,
+    publishedVersion: 1,
     space: {
       sys: {
         type: 'Link',
@@ -312,6 +318,7 @@ export const entryWithEmbeddedAssetInRichText: Entry = {
     createdAt: '2020-01-01T00:00:00.000Z',
     updatedAt: '2020-01-01T00:00:00.000Z',
     revision: 10,
+    publishedVersion: 1,
     space: {
       sys: {
         type: 'Link',
@@ -368,6 +375,7 @@ export const entryWithDeeplyEmbeddedEntitiesInRichText: Entry = {
     createdAt: '2020-01-01T00:00:00.000Z',
     updatedAt: '2020-01-01T00:00:00.000Z',
     revision: 10,
+    publishedVersion: 1,
     space: {
       sys: {
         type: 'Link',
@@ -487,6 +495,7 @@ export const assets: Asset[] = [
       createdAt: '2020-01-01T00:00:00.000Z',
       updatedAt: '2020-01-01T00:00:00.000Z',
       revision: 10,
+      publishedVersion: 1,
       space: {
         sys: {
           type: 'Link',

@@ -1,5 +1,5 @@
 import md5 from 'md5';
-import { Asset, Entry, UnresolvedLink } from 'contentful/dist/types/types';
+import type { Asset, Entry, UnresolvedLink } from 'contentful';
 import {
   ComponentPropertyValue,
   DesignValue,
