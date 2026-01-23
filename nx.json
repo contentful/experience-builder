@@ -12,5 +12,6 @@
       "outputs": ["{projectRoot}/dist"],
       "dependsOn": ["^build"]
     }
-  }
+  },
+  "useLegacyCache": true
 }
