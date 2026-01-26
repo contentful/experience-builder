@@ -139,7 +139,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           // but we pass the data source of the experience entry cause that's where the binding is stored
           dataSource,
           // unbound values of a pattern store the default values of pattern variables
-          unboundValues: patternEntry.fields.unboundValues,
+          unboundValues: { ...unboundValues, ...patternEntry.fields.unboundValues },
           // this is where we can map the pattern variable to it's default value
           componentSettings: patternEntry.fields.componentSettings,
           // and this is where the over-writes for the default values are stored

@@ -7,9 +7,9 @@ metadata:
     circleci.com/project-slug: github/contentful/experience-builder
     github.com/project-slug: contentful/experience-builder
     contentful.com/ci-alert-slack: prd-experience-builder-alerts
-    backstage.io/source-location: url:https://github.com/contentful/experience-builder/tree/development/packages/experience-builder-sdk
+    backstage.io/source-location: url:https://github.com/contentful/experience-builder/
 spec:
   type: library
   lifecycle: production
-  owner: group:team-sparks
+  owner: group:team-experience-assembly
   system: experience-builder

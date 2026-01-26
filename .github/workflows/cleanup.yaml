@@ -3,6 +3,10 @@ name: Upload artifacts and cleanup
 on:
   workflow_call:
 
+permissions:
+  contents: read  # Checkout code
+  actions: write  # Delete and restore caches
+
 jobs:
   upload-artifact-cleanup:
     runs-on: ubuntu-latest
