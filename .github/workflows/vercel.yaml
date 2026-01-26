@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       publish-web-apps-to-prod:
-        description: 'Publish web apps to prod'
+        description: "Publish web apps to prod"
         default: false
         required: false
         type: boolean
@@ -21,15 +21,15 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - name: 'Checkout'
+      - name: "Checkout"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Checkout all branches and tags, needed for publish
-      - name: 'Use NodeJS 20'
+      - name: "Use NodeJS 20"
         uses: actions/setup-node@v4
         with:
-          node-version: '20.11'
-          cache: 'npm'
+          node-version: "20.11"
+          cache: "npm"
       - name: Install dependencies
         run: |
           npm ci
@@ -51,48 +51,57 @@ jobs:
       #   with:
       #     ## limits ssh access and adds the ssh public key for the user which triggered the workflow
       #     limit-access-to-actor: true
-      - name: 'Deploy vite test-app site to Vercel'
+      - name: "Deploy vite test-app site to Vercel"
         env:
           # Domain: experience-builder-test-app.colorfuldemo.com
           VERCEL_PROJECT_ID: prj_wr3mJgz9qLeHh33UaCFquePsr1hw
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          REF_NAME: ${{ github.ref_name }}
+          PUBLISH_TO_PROD: ${{ inputs.publish-web-apps-to-prod }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          if [ ${{ github.ref_name }} = main ] || [ ${{ inputs.publish-web-apps-to-prod }} = true ]; then
-            vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-            vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-            vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+          if [ "$REF_NAME" = "main" ] || [ "$PUBLISH_TO_PROD" = "true" ]; then
+            vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+            vercel build --prod --token="$VERCEL_TOKEN"
+            vercel deploy --prod --prebuilt --token="$VERCEL_TOKEN"
           else
-            vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-            vercel build --token=${{ secrets.VERCEL_TOKEN }}
-            vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+            vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
+            vercel build --token="$VERCEL_TOKEN"
+            vercel deploy --prebuilt --token="$VERCEL_TOKEN"
           fi
-      - name: 'Deploy nextjs-marketing-demo site to Vercel'
+      - name: "Deploy nextjs-marketing-demo site to Vercel"
         env:
           # Domain: studio-nextjs-marketing-demo.colorfuldemo.com
           VERCEL_PROJECT_ID: prj_CQ1K4Pbkx5SQq2Fi9c4ZPHloOv79
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          REF_NAME: ${{ github.ref_name }}
+          PUBLISH_TO_PROD: ${{ inputs.publish-web-apps-to-prod }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          if [ ${{ github.ref_name }} = main ] || [ ${{ inputs.publish-web-apps-to-prod }} = true ]; then
-            vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-            vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-            vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+          if [ "$REF_NAME" = "main" ] || [ "$PUBLISH_TO_PROD" = "true" ]; then
+            vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+            vercel build --prod --token="$VERCEL_TOKEN"
+            vercel deploy --prod --prebuilt --token="$VERCEL_TOKEN"
           else
-            vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-            vercel build --token=${{ secrets.VERCEL_TOKEN }}
-            vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+            vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
+            vercel build --token="$VERCEL_TOKEN"
+            vercel deploy --prebuilt --token="$VERCEL_TOKEN"
           fi
-      - name: 'Deploy react vite template site to Vercel'
+      - name: "Deploy react vite template site to Vercel"
         env:
           # Domain studio-react-vite-template.colorfuldemo.com
           VERCEL_PROJECT_ID: prj_HoAvIbgvZ3gYJDLCAaNsHIpBvI0k
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          REF_NAME: ${{ github.ref_name }}
+          PUBLISH_TO_PROD: ${{ inputs.publish-web-apps-to-prod }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          if [ ${{ github.ref_name }} = main ] || [ ${{ inputs.publish-web-apps-to-prod }} = true ]; then
-            vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-            vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-            vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+          if [ "$REF_NAME" = "main" ] || [ "$PUBLISH_TO_PROD" = "true" ]; then
+            vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+            vercel build --prod --token="$VERCEL_TOKEN"
+            vercel deploy --prod --prebuilt --token="$VERCEL_TOKEN"
           else
-            vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-            vercel build --token=${{ secrets.VERCEL_TOKEN }}
-            vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+            vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
+            vercel build --token="$VERCEL_TOKEN"
+            vercel deploy --prebuilt --token="$VERCEL_TOKEN"
           fi
