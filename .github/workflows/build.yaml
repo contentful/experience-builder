@@ -31,6 +31,8 @@ jobs:
           restore-keys: cypress-${{ runner.os }}-
       - name: Install dependencies
         run: npm ci
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
       # cypress binary is installed via postinstall script which is blocked with ignore-scripts=true
       # if missing from cache, we need to run it conditionally before saving binary in cache
       - name: Install cypress dependencies
