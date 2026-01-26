@@ -126,6 +126,8 @@ jobs:
           # Update remote to use bot token
           git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@github.com/${{ github.repository }}.git"
 
+          git checkout .npmrc
+
           if [ "$REF_NAME" = "main" ]; then
             git checkout next
             git pull
