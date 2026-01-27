@@ -19,20 +19,9 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Checkout all branches and tags, needed for publish
-      - name: "Use NodeJS 20"
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.11"
-          cache: "npm"
-      # Retrieve token from Vault and use in .npmrc for installing npm packages from the GitHub registry
-      # See https://contentful.atlassian.net/wiki/spaces/ENG/pages/4396155213/Migrating+to+GitHub+Packages+from+npmjs?focusedCommentId=4431282518
-      - name: "Retrieve NPM Token from Vault"
+      - name: Retrieve Secrets from Vault
         id: vault
-        uses: hashicorp/vault-action@v2.4.3
+        uses: hashicorp/vault-action@v3.4.0
         with:
           url: ${{ secrets.VAULT_URL }}
           role: ${{ github.event.repository.name }}-github-action
@@ -41,11 +30,29 @@ jobs:
           exportEnv: false
           secrets: |
             secret/data/github/github_packages_write GITHUB_PACKAGES_WRITE_TOKEN | GITHUB_PACKAGES_WRITE_TOKEN ;
+            github/token/${{ github.event.repository.name }}-semantic-release token | GITHUB_TOKEN ;
+            secret/data/github/automation-app-user GH_USER_NAME | GIT_COMMITTER_NAME ;
+            secret/data/github/automation-app-user GH_USER_EMAIL | GIT_COMMITTER_EMAIL ;
+
+      - name: "Checkout"
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Checkout all branches and tags, needed for publish
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
+          token: ${{ steps.vault.outputs.GITHUB_TOKEN }}
+
+      - name: "Use NodeJS 20"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.11"
+          cache: "npm"
+
       - name: Install dependencies
         run: |
           npm ci
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
+
       - name: Restore the build folders
         uses: actions/cache/restore@v4
         with:
@@ -94,28 +101,16 @@ jobs:
           else
             npx lerna publish --conventional-commits --conventional-graduate --exact --force-publish --yes --no-private --dist-tag latest --create-release github
           fi
-      - name: "Retrieve GitHub Token for Bot"
-        if: ${{ !inputs.publish-prerelease }}
-        id: bot-vault
-        uses: hashicorp/vault-action@v2.4.3
-        with:
-          url: ${{ secrets.VAULT_URL }}
-          role: ${{ github.event.repository.name }}-github-action
-          method: jwt
-          path: github-actions
-          exportEnv: false
-          secrets: |
-            github/token/${{ github.event.repository.name }}-semantic-release token | BOT_GITHUB_TOKEN ;
       - name: "Get Bot User ID"
         if: ${{ !inputs.publish-prerelease }}
         id: bot-user-id
         run: echo "user-id=$(gh api "/users/contentful-automation[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
         env:
-          GITHUB_TOKEN: ${{ steps.bot-vault.outputs.BOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_TOKEN }}
       - name: "Merge changes downstream"
         if: ${{ !inputs.publish-prerelease }}
         env:
-          GITHUB_TOKEN: ${{ steps.bot-vault.outputs.BOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_TOKEN }}
           REF_NAME: ${{ github.ref_name }}
           BOT_USER_ID: ${{ steps.bot-user-id.outputs.user-id }}
         run: |
