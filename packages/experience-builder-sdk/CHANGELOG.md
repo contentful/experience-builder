@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.5](https://github.com/contentful/experience-builder/compare/v3.8.4...v3.8.5) (2026-01-27)
+
+### Bug Fixes
+
+- fix ci setup [SPA-3690] ([#1399](https://github.com/contentful/experience-builder/issues/1399)) ([41579ac](https://github.com/contentful/experience-builder/commit/41579ac0575b6f747039294a3added9044442480))
+
 ## [3.8.4](https://github.com/contentful/experience-builder/compare/v3.8.3...v3.8.4) (2025-11-14)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react

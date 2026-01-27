@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.5](https://github.com/contentful/experience-builder/compare/v3.8.4...v3.8.5) (2026-01-27)
+
+### Bug Fixes
+
+- merge unbound values when extracting styles for the next level ([#1396](https://github.com/contentful/experience-builder/issues/1396)) ([1f593c6](https://github.com/contentful/experience-builder/commit/1f593c63bf96f365fffe38679d7320315d5cb048))
+
 ## [3.8.4](https://github.com/contentful/experience-builder/compare/v3.8.3...v3.8.4) (2025-11-14)
 
 ### Bug Fixes

@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.5](https://github.com/contentful/experience-builder/compare/v3.8.4...v3.8.5) (2026-01-27)
+
+### Bug Fixes
+
+- cypress binary is installed on postinstall script which is now disabled [SPA-3604] ([#1393](https://github.com/contentful/experience-builder/issues/1393)) ([7be6b23](https://github.com/contentful/experience-builder/commit/7be6b2393d1a00bdd4fed7662f299e2e28ffb5bd))
+- fix ci setup [SPA-3690] ([#1399](https://github.com/contentful/experience-builder/issues/1399)) ([41579ac](https://github.com/contentful/experience-builder/commit/41579ac0575b6f747039294a3added9044442480))
+- merge unbound values when extracting styles for the next level ([#1396](https://github.com/contentful/experience-builder/issues/1396)) ([1f593c6](https://github.com/contentful/experience-builder/commit/1f593c63bf96f365fffe38679d7320315d5cb048))
+- pass down the gh token as env ([#1401](https://github.com/contentful/experience-builder/issues/1401)) ([dee6c91](https://github.com/contentful/experience-builder/commit/dee6c911e33e424f67ffaf2d3a8e03a72f8ddcb6))
+
 ## [3.8.4](https://github.com/contentful/experience-builder/compare/v3.8.3...v3.8.4) (2025-11-14)
 
 ### Bug Fixes
