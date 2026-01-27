@@ -2,7 +2,10 @@ name: 'Run Checks: Lint & Tests'
 
 on:
   workflow_call:
-
+    secrets:
+      VAULT_URL:
+        required: true
+    
 permissions:
   contents: read  # Checkout code
   actions: read   # Restore caches

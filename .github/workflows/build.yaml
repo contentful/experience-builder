@@ -2,6 +2,9 @@ name: Build and Test
 
 on:
   workflow_call:
+    secrets:
+      VAULT_URL:
+        required: true
 
 permissions:
   contents: read # Checkout code

@@ -13,6 +13,8 @@ on:
         required: true
       VERCEL_ORG_ID:
         required: true
+      VAULT_URL:
+        required: true
 
 jobs:
   deploy:
