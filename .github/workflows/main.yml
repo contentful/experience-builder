@@ -26,6 +26,9 @@ jobs:
     permissions:
       contents: read # Checkout code
       actions: write # Save cache
+      id-token: write # For Vault authentication
+    secrets:
+      VAULT_URL: ${{ secrets.VAULT_URL }}
     uses: ./.github/workflows/build.yaml
   check:
     needs: install-build

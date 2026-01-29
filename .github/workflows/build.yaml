@@ -2,10 +2,14 @@ name: Build and Test
 
 on:
   workflow_call:
+    secrets:
+      VAULT_URL:
+        required: true
 
 permissions:
   contents: read # Checkout code
   actions: write # Save caches
+  id-token: write # For Vault authentication
 
 jobs:
   install-build:
@@ -16,11 +20,24 @@ jobs:
           REF_NAME: ${{ github.ref_name }}
         run: echo "$REF_NAME"
 
+      - name: Retrieve Secrets from Vault
+        id: vault
+        uses: hashicorp/vault-action@v3.4.0
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          role: ${{ github.event.repository.name }}-github-action
+          method: jwt
+          path: github-actions
+          exportEnv: false
+          secrets: |
+            secret/data/github/github_packages_read GITHUB_PACKAGES_READ_TOKEN | GITHUB_PACKAGES_READ_TOKEN ;
+
       - name: "Checkout"
         uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Checkout all branches and tags, needed for publish
           ref: ${{ github.event.workflow_run.head_branch || github.ref }}
+          token: ${{ steps.vault.outputs.GITHUB_PACKAGES_READ_TOKEN }}
 
       - name: "Use NodeJS 20"
         uses: actions/setup-node@v4
@@ -37,7 +54,7 @@ jobs:
 
       - name: Setup npmrc
         run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_READ_TOKEN }}" > .npmrc
           echo "@contentful:registry=https://npm.pkg.github.com" >> .npmrc
 
       - name: Install dependencies
