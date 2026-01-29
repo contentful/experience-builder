@@ -13,8 +13,6 @@ on:
         required: true
       VERCEL_ORG_ID:
         required: true
-      # VAULT_URL:
-      #   required: true
 
 jobs:
   deploy:
@@ -22,24 +20,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      # - name: Retrieve Secrets from Vault
-      #   id: vault
-      #   uses: hashicorp/vault-action@v3.4.0
-      #   with:
-      #     url: ${{ secrets.VAULT_URL }}
-      #     role: ${{ github.event.repository.name }}-github-action
-      #     method: jwt
-      #     path: github-actions
-      #     exportEnv: false
-      #     secrets: |
-      #       secret/data/github/github_packages_read GITHUB_PACKAGES_READ_TOKEN | GITHUB_PACKAGES_READ_TOKEN ;
-      #       github/token/${{ github.event.repository.name }}-packages-read token | GITHUB_TOKEN ;
       - name: "Checkout"
         uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Checkout all branches and tags, needed for publish
           ref: ${{ github.event.workflow_run.head_branch || github.ref }}
-          # token: ${{ steps.vault.outputs.GITHUB_PACKAGES_READ_TOKEN }}
 
       - name: "Use NodeJS 20"
         uses: actions/setup-node@v4
@@ -47,10 +32,6 @@ jobs:
           node-version: "20.11"
           cache: "npm"
 
-      # - name: Setup npmrc
-      #   run: |
-      #     echo "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_READ_TOKEN }}" > .npmrc
-      #     echo "@contentful:registry=https://npm.pkg.github.com" >> .npmrc
       - name: Install dependencies
         run: npm ci
       - name: Restore the build folders
@@ -66,11 +47,7 @@ jobs:
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Install Vercel CLI
         run: npm install --global vercel@canary
-      # - name: Setup upterm session
-      #   uses: lhotari/action-upterm@v1
-      #   with:
-      #     ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-      #     limit-access-to-actor: true
+
       - name: "Deploy vite test-app site to Vercel"
         env:
           # Domain: experience-builder-test-app.colorfuldemo.com
