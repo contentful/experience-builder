@@ -41,12 +41,14 @@ jobs:
     permissions:
       contents: write # Checkout with full history
       actions: read # Restore cache
+      id-token: write # For Vault authentication
     uses: ./.github/workflows/vercel.yaml
     with:
       publish-web-apps-to-prod: ${{ !!inputs.publish-web-apps-to-prod }}
     secrets:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VAULT_URL: ${{ secrets.VAULT_URL }}
   publish:
     needs: [install-build, check]
     if: >-
