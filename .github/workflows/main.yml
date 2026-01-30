@@ -26,9 +26,6 @@ jobs:
     permissions:
       contents: read # Checkout code
       actions: write # Save cache
-      id-token: write # For Vault authentication
-    secrets:
-      VAULT_URL: ${{ secrets.VAULT_URL }}
     uses: ./.github/workflows/build.yaml
   check:
     needs: install-build
@@ -40,15 +37,14 @@ jobs:
     needs: [install-build, check]
     permissions:
       contents: write # Checkout with full history
+      id-token: write # OIDC token for authentication
       actions: read # Restore cache
-      id-token: write # For Vault authentication
     uses: ./.github/workflows/vercel.yaml
     with:
       publish-web-apps-to-prod: ${{ !!inputs.publish-web-apps-to-prod }}
     secrets:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VAULT_URL: ${{ secrets.VAULT_URL }}
   publish:
     needs: [install-build, check]
     if: >-
