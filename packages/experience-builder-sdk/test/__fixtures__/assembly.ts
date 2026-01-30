@@ -46,6 +46,7 @@ export const createAssemblyEntry = ({
       createdAt: '2023-06-27T00:00:00.000Z',
       updatedAt: '2023-06-27T00:00:00.000Z',
       revision: 1,
+      publishedVersion: 1,
       space: {
         sys: {
           type: 'Link',
