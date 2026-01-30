@@ -83,6 +83,7 @@ export const experienceEntry: ExperienceEntry = {
     createdAt: '2023-06-27T00:00:00.000Z',
     updatedAt: '2023-06-27T00:00:00.000Z',
     revision: 1,
+    publishedVersion: 1,
     space: {
       sys: {
         type: 'Link',
@@ -126,6 +127,7 @@ export const createExperienceEntry = ({
       createdAt: '2023-06-27T00:00:00.000Z',
       updatedAt: '2023-06-27T00:00:00.000Z',
       revision: 1,
+      publishedVersion: 1,
       space: {
         sys: {
           type: 'Link',
@@ -242,6 +244,7 @@ export const createPatternEntry = ({
       createdAt: '2023-06-27T00:00:00.000Z',
       updatedAt: '2023-06-27T00:00:00.000Z',
       revision: 1,
+      publishedVersion: 1,
       space: {
         sys: {
           type: 'Link',
@@ -367,6 +370,7 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
           },
         },
         revision: 1,
+        publishedVersion: 1,
         createdAt: '2023-09-28T00:00:00.000Z',
         updatedAt: '2023-09-28T00:00:00.000Z',
         environment: {
@@ -473,6 +477,7 @@ export const experienceEntryFieldsWithFilledUsedComponents: ExperienceFields = {
                 },
               },
               revision: 1,
+              publishedVersion: 1,
               environment: {
                 sys: {
                   id: 'master',
