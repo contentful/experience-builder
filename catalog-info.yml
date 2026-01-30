@@ -21,4 +21,4 @@ metadata:
 spec:
   type: url
   targets:
-    - ./packages/experience-builder-sdk/catalog-info.yaml
+    - ./packages/experience-builder-sdk/catalog-info.yml
