@@ -47,5 +47,3 @@ tmp/
 
 **/cypress/screenshots/**
 **/cypress/videos/**
-.cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
