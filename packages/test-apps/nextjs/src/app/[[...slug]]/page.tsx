@@ -5,14 +5,14 @@ import '../../studio-config';
 import { fetchAdditionalLevels } from '@/utils/earlyPreload';
 
 type Page = {
-  params: { slug?: string | string[] };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ slug?: string | string[] }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function ExperiencePage({ params, searchParams }: Page) {
-  const { slug: slugSegments } = params || {};
+  const { slug: slugSegments } = await params || {};
   const { localeCode, slug } = extractLocaleCodeAndSlug(slugSegments);
-  const { isPreview, expEditorMode, mode } = searchParams;
+  const { isPreview, expEditorMode, mode } = await searchParams;
   const preview = isPreview === 'true' || mode === 'preview';
   const editorMode = expEditorMode === 'true';
   const { experience, error } = await getExperience(slug, localeCode, preview, editorMode);
@@ -50,7 +50,7 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
  * - "/de-DE/experience-slug" => `{ localeCode: 'de-DE', slug: 'experience-slug' }`
  * - "/it-IT/some/nested/experience" => `{ localeCode: 'it-IT', slug: 'some/nested/experience' }`
  */
-const extractLocaleCodeAndSlug = (slugSegments: Page['params']['slug']) => {
+const extractLocaleCodeAndSlug = (slugSegments: Awaited<Page['params']>['slug']) => {
   if (!slugSegments || slugSegments.length === 0) {
     return { localeCode: 'en-US', slug: 'home-page' };
   }
