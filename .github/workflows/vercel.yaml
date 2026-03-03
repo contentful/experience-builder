@@ -51,16 +51,6 @@ jobs:
       #   with:
       #     ## limits ssh access and adds the ssh public key for the user which triggered the workflow
       #     limit-access-to-actor: true
-      - name: "Check VERCEL_TOKEN"
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          if [ -z "$VERCEL_TOKEN" ]; then
-            echo "::error::VERCEL_TOKEN is empty or not set"
-            exit 1
-          else
-            echo "VERCEL_TOKEN is set"
-          fi
       - name: "Deploy vite test-app site to Vercel"
         env:
           # Domain: experience-builder-test-app.colorfuldemo.com
