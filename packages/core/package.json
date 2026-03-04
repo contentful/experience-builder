@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-core",
-  "version": "3.8.7-beta.0",
+  "version": "3.8.7",
   "description": "",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",

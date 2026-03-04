@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.7](https://github.com/contentful/experience-builder/compare/v3.8.6...v3.8.7) (2026-03-04)
+
+### Bug Fixes
+
+- bump react-router to remove vulnerability ([ab7ca82](https://github.com/contentful/experience-builder/commit/ab7ca82634d4163cc722e23c6f5e828062b97ffd))
+
 ## [3.8.6](https://github.com/contentful/experience-builder/compare/v3.8.5...v3.8.6) (2026-01-30)
 
 ### Bug Fixes
