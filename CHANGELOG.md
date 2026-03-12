@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.8](https://github.com/contentful/experience-builder/compare/v3.8.7...v3.8.8) (2026-03-12)
+
+**Note:** Version bump only for package @contentful/experience
+
 ## [3.8.7](https://github.com/contentful/experience-builder/compare/v3.8.6...v3.8.7) (2026-03-04)
 
 ### Bug Fixes
