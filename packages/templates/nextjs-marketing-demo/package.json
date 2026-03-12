@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ant-design/nextjs-registry": "^1.0.1",
+    "@ant-design/nextjs-registry": "^1.0.2",
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
     "@svgr/webpack": "^8.1.0",
     "antd": "^5.22.2",
