@@ -1866,11 +1866,11 @@ describe('pattern component', () => {
     const IMAGE_NODE_ID = 'es291-image-node-id';
 
     const customBreakpoints = [
-      { id: 'bp-xl', query: '*', displayName: 'Extra Large', previewSize: '1440px' },
-      { id: 'bp-lg', query: '<1280px', displayName: 'Large', previewSize: '1024px' },
-      { id: 'bp-md', query: '<1024px', displayName: 'Medium', previewSize: '768px' },
-      { id: 'bp-sm', query: '<768px', displayName: 'Small', previewSize: '480px' },
-      { id: 'bp-xs', query: '<480px', displayName: 'Extra Small', previewSize: '320px' },
+      { id: 'bp-xl', query: '*' as const, displayName: 'Extra Large', previewSize: '1440px' },
+      { id: 'bp-lg', query: '<1280px' as const, displayName: 'Large', previewSize: '1024px' },
+      { id: 'bp-md', query: '<1024px' as const, displayName: 'Medium', previewSize: '768px' },
+      { id: 'bp-sm', query: '<768px' as const, displayName: 'Small', previewSize: '480px' },
+      { id: 'bp-xs', query: '<480px' as const, displayName: 'Extra Small', previewSize: '320px' },
     ];
 
     const sys = (id: string, type = 'Entry') => ({
