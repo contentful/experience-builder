@@ -59,11 +59,11 @@ export const createStylesheetsForBuiltInStyles = ({
   for (const breakpoint of breakpoints) {
     let visibilityCss: string | undefined;
     const designProperties = designPropertiesByBreakpoint[breakpoint.id];
-    if (!designProperties) {
+    if (!designProperties && !isAnyVisibilityValueHidden) {
       continue;
     }
 
-    const designPropertiesWithResolvedDesignTokens = Object.entries(designProperties).reduce(
+    const designPropertiesWithResolvedDesignTokens = Object.entries(designProperties ?? {}).reduce(
       (acc, [propertyName, value]) => ({
         ...acc,
         [propertyName]: maybePopulateDesignTokenValue(
@@ -109,10 +109,21 @@ export const createStylesheetsForBuiltInStyles = ({
      * breakpointCss = "margin:42px;background-color:rgba(246, 246, 246, 1);"
      */
 
-    // Create a hash ensuring stability across nodes (and breakpoints between nodes)
+    // When visibility is involved, include the breakpoint ID to prevent hash collisions between
+    // breakpoints that share the same (empty) CSS — otherwise convertResolvedDesignValuesToMediaQuery
+    // deduplicates them and the visibility media queries for narrower breakpoints are never emitted.
+    const breakpointSegment = isAnyVisibilityValueHidden ? breakpoint.id : '';
     const styleHash = patternRootNodeIdsChain
-      ? md5([...patternRootNodeIdsChain, node.id, breakpointCss, visibilityCss].join('-'))
-      : md5(`${node.id}-${breakpointCss}-${visibilityCss}`);
+      ? md5(
+          [
+            ...patternRootNodeIdsChain,
+            node.id,
+            breakpointSegment,
+            breakpointCss,
+            visibilityCss,
+          ].join('-'),
+        )
+      : md5(`${node.id}-${breakpointSegment}-${breakpointCss}-${visibilityCss}`);
 
     // Create a CSS className with internal prefix to make sure the value can be processed
     const className = `cfstyles-${styleHash}`;
