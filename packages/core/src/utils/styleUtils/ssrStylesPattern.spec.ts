@@ -1857,4 +1857,137 @@ describe('pattern component', () => {
     // Making sure that the extracted styles contain the updated background color for the nested pattern component
     expect(styles).toMatch('background-color:rgba(111, 111 , 111, 0)');
   });
+
+  // ES-291: Customer has 5 custom breakpoints. An image inside a Pattern is hidden (cfVisibility:false)
+  // on all breakpoints in Studio Preview. After publishing, it only stays hidden on Desktop and
+  // becomes visible at all other 4 breakpoints.
+  it('should emit display:none for all 5 custom breakpoints when image inside a pattern is hidden', () => {
+    const PATTERN_ID = 'es291-pattern-id';
+    const IMAGE_NODE_ID = 'es291-image-node-id';
+
+    const customBreakpoints = [
+      { id: 'bp-xl', query: '*' as const, displayName: 'Extra Large', previewSize: '1440px' },
+      { id: 'bp-lg', query: '<1280px' as const, displayName: 'Large', previewSize: '1024px' },
+      { id: 'bp-md', query: '<1024px' as const, displayName: 'Medium', previewSize: '768px' },
+      { id: 'bp-sm', query: '<768px' as const, displayName: 'Small', previewSize: '480px' },
+      { id: 'bp-xs', query: '<480px' as const, displayName: 'Extra Small', previewSize: '320px' },
+    ];
+
+    const sys = (id: string, type = 'Entry') => ({
+      id,
+      type,
+      locale: 'en-US',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
+      revision: 1,
+      publishedVersion: 1,
+      contentType: { sys: { id: 'contentful-component', type: 'Link', linkType: 'ContentType' } },
+      space: { sys: { id: 'space-id', type: 'Link', linkType: 'Space' } },
+      environment: { sys: { id: 'master', type: 'Link', linkType: 'Environment' } },
+    });
+
+    // Pattern entry: contains a single image node with cfVisibility:false on the default (bp-xl) breakpoint.
+    // Studio stores cfVisibility:false on each breakpoint when you hide for all — but even the cascade
+    // case (only set on default) must work.
+    const patternWithHiddenImage: ExperienceEntry = {
+      metadata: { tags: [] },
+      sys: sys(PATTERN_ID) as ExperienceEntry['sys'],
+      fields: {
+        title: 'Pattern with hidden image',
+        slug: 'es291-pattern',
+        componentTree: {
+          schemaVersion: '2023-09-28',
+          breakpoints: customBreakpoints,
+          children: [
+            {
+              definitionId: 'contentful-container',
+              id: 'container-node-id',
+              variables: {
+                cfWidth: { type: 'DesignValue', valuesByBreakpoint: { 'bp-xl': '100%' } },
+              },
+              children: [
+                {
+                  definitionId: 'contentful-image',
+                  id: IMAGE_NODE_ID,
+                  variables: {
+                    // cfVisibility:false set only on the default breakpoint — cascade must apply to all 5
+                    cfVisibility: {
+                      type: 'DesignValue',
+                      valuesByBreakpoint: { 'bp-xl': false },
+                    },
+                  },
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+        dataSource: {},
+        unboundValues: {},
+        componentSettings: { variableDefinitions: {} },
+      },
+    };
+
+    // Experience entry: references the pattern
+    const patternNodeId = 'es291-pattern-node-id';
+    const experienceWithCustomBreakpoints: ExperienceEntry = {
+      metadata: { tags: [] },
+      sys: sys('es291-experience-id') as ExperienceEntry['sys'],
+      fields: {
+        title: 'ES-291 Experience',
+        slug: '/es291',
+        componentTree: {
+          schemaVersion: '2023-09-28',
+          breakpoints: customBreakpoints,
+          children: [
+            {
+              definitionId: PATTERN_ID,
+              id: patternNodeId,
+              variables: {},
+              children: [],
+            },
+          ],
+        },
+        dataSource: {},
+        unboundValues: {},
+        usedComponents: [patternWithHiddenImage as unknown as ExperienceEntry],
+      },
+    };
+
+    const experience = createExperience({
+      experienceEntry: experienceWithCustomBreakpoints as unknown as Entry,
+      locale: 'en-US',
+      referencedEntries: [patternWithHiddenImage as unknown as Entry],
+      referencedAssets: [],
+    });
+
+    const styles = detachExperienceStyles(experience);
+
+    // The generated CSS must include display:none for EACH of the 5 custom breakpoints.
+    // Before the fix, only the default breakpoint (bp-xl / Desktop) would have display:none,
+    // causing the image to reappear at all narrower breakpoints after publishing.
+    expect(styles).toMatch(/display:none !important/);
+
+    // Verify disjunct media query coverage for each breakpoint:
+    // bp-xl (default): @media not (max-width:1280px)
+    expect(styles).toMatch(
+      /@media not \(max-width:1280px\)\{\.cf-[a-f0-9]+\{display:none !important;\}\}/,
+    );
+    // bp-lg: @media(max-width:1280px) and (not (max-width:1024px))
+    expect(styles).toMatch(
+      /@media\(max-width:1280px\) and \(not \(max-width:1024px\)\)\{\.cf-[a-f0-9]+\{display:none !important;\}\}/,
+    );
+    // bp-md: @media(max-width:1024px) and (not (max-width:768px))
+    expect(styles).toMatch(
+      /@media\(max-width:1024px\) and \(not \(max-width:768px\)\)\{\.cf-[a-f0-9]+\{display:none !important;\}\}/,
+    );
+    // bp-sm: @media(max-width:768px) and (not (max-width:480px))
+    expect(styles).toMatch(
+      /@media\(max-width:768px\) and \(not \(max-width:480px\)\)\{\.cf-[a-f0-9]+\{display:none !important;\}\}/,
+    );
+    // bp-xs: @media(max-width:480px)
+    expect(styles).toMatch(
+      /@media\(max-width:480px\)\{\.cf-[a-f0-9]+\{display:none !important;\}\}/,
+    );
+  });
 });
