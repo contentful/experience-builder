@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_atlassian_atlassian__getJiraIssue",
+      "Bash(npm view *)",
+      "Bash(npm ls *)",
+      "Bash(npm install *)",
+      "Bash(npm audit *)",
+      "Bash(npx tsc *)"
+    ]
+  }
+}
