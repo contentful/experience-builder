@@ -3,21 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [3.8.9-beta.0](https://github.com/contentful/experience-builder/compare/v3.8.8...v3.8.9-beta.0) (2026-06-17)
-
+## [3.8.9](https://github.com/contentful/experience-builder/compare/v3.8.8...v3.8.9) (2026-06-17)
 
 ### Bug Fixes
 
-* bump ant-design nextjs registry version to resolve a higher nextjs version [SPA-3855] ([#1422](https://github.com/contentful/experience-builder/issues/1422)) ([43427ec](https://github.com/contentful/experience-builder/commit/43427ec4ee09904f1778fee0d530575c575e5aa0))
-* **core:** add md5 dep [FE-545] ([#1425](https://github.com/contentful/experience-builder/issues/1425)) ([60371c9](https://github.com/contentful/experience-builder/commit/60371c968b1a12944ee3860bd6d158516e0130ef))
-* **deps:** [ACT-2114] bump glob to ^10.5.0 ([84e049a](https://github.com/contentful/experience-builder/commit/84e049acac2a1a4ff0e85c3ea533ee6682fa9b69))
-* override 'qs' to 6.14.1 version and regenerate lock [SPA-3828] ([#1420](https://github.com/contentful/experience-builder/issues/1420)) ([c6df304](https://github.com/contentful/experience-builder/commit/c6df304315351ef3fabceb2f84b1d04287186bac))
-* **styles:** emit display:none for all breakpoints when visibility is hidden on default only ([2a71ad6](https://github.com/contentful/experience-builder/commit/2a71ad6f2ac0b36406dabeb21bdcacd97881a33f))
-* **styles:** emit display:none for all breakpoints when visibility is hidden on default only ([027b357](https://github.com/contentful/experience-builder/commit/027b357d78e48bef4d5df86a6c2001db6a71acd7))
-* test type error ([49db1f6](https://github.com/contentful/experience-builder/commit/49db1f6871c0f855ba61aa645163216be91507f0))
-* test type error ([c0c951a](https://github.com/contentful/experience-builder/commit/c0c951a971829dd62a7d060b681ca6fb06c4f769))
+- bump ant-design nextjs registry version to resolve a higher nextjs version [SPA-3855] ([#1422](https://github.com/contentful/experience-builder/issues/1422)) ([43427ec](https://github.com/contentful/experience-builder/commit/43427ec4ee09904f1778fee0d530575c575e5aa0))
+- **core:** add md5 dep [FE-545] ([#1425](https://github.com/contentful/experience-builder/issues/1425)) ([60371c9](https://github.com/contentful/experience-builder/commit/60371c968b1a12944ee3860bd6d158516e0130ef))
+- **deps:** [ACT-2114] bump glob to ^10.5.0 ([84e049a](https://github.com/contentful/experience-builder/commit/84e049acac2a1a4ff0e85c3ea533ee6682fa9b69))
+- manually bump version to avoid version conflict ([868da4a](https://github.com/contentful/experience-builder/commit/868da4ab656c9a250e6bcbbc6d3756239a5c945a))
+- override 'qs' to 6.14.1 version and regenerate lock [SPA-3828] ([#1420](https://github.com/contentful/experience-builder/issues/1420)) ([c6df304](https://github.com/contentful/experience-builder/commit/c6df304315351ef3fabceb2f84b1d04287186bac))
+- remove vulnerable glob versions ([#1435](https://github.com/contentful/experience-builder/issues/1435)) ([7f2d693](https://github.com/contentful/experience-builder/commit/7f2d69392593fff9f9ea4c79c019c1b48231be8e))
+- **styles:** emit display:none for all breakpoints when visibility is hidden on default only ([2a71ad6](https://github.com/contentful/experience-builder/commit/2a71ad6f2ac0b36406dabeb21bdcacd97881a33f))
+- **styles:** emit display:none for all breakpoints when visibility is hidden on default only ([027b357](https://github.com/contentful/experience-builder/commit/027b357d78e48bef4d5df86a6c2001db6a71acd7))
+- test type error ([49db1f6](https://github.com/contentful/experience-builder/commit/49db1f6871c0f855ba61aa645163216be91507f0))
+- test type error ([c0c951a](https://github.com/contentful/experience-builder/commit/c0c951a971829dd62a7d060b681ca6fb06c4f769))
 
+## [3.8.9-beta.0](https://github.com/contentful/experience-builder/compare/v3.8.8...v3.8.9-beta.0) (2026-06-17)
 
+### Bug Fixes
+
+- bump ant-design nextjs registry version to resolve a higher nextjs version [SPA-3855] ([#1422](https://github.com/contentful/experience-builder/issues/1422)) ([43427ec](https://github.com/contentful/experience-builder/commit/43427ec4ee09904f1778fee0d530575c575e5aa0))
+- **core:** add md5 dep [FE-545] ([#1425](https://github.com/contentful/experience-builder/issues/1425)) ([60371c9](https://github.com/contentful/experience-builder/commit/60371c968b1a12944ee3860bd6d158516e0130ef))
+- **deps:** [ACT-2114] bump glob to ^10.5.0 ([84e049a](https://github.com/contentful/experience-builder/commit/84e049acac2a1a4ff0e85c3ea533ee6682fa9b69))
+- override 'qs' to 6.14.1 version and regenerate lock [SPA-3828] ([#1420](https://github.com/contentful/experience-builder/issues/1420)) ([c6df304](https://github.com/contentful/experience-builder/commit/c6df304315351ef3fabceb2f84b1d04287186bac))
+- **styles:** emit display:none for all breakpoints when visibility is hidden on default only ([2a71ad6](https://github.com/contentful/experience-builder/commit/2a71ad6f2ac0b36406dabeb21bdcacd97881a33f))
+- **styles:** emit display:none for all breakpoints when visibility is hidden on default only ([027b357](https://github.com/contentful/experience-builder/commit/027b357d78e48bef4d5df86a6c2001db6a71acd7))
+- test type error ([49db1f6](https://github.com/contentful/experience-builder/commit/49db1f6871c0f855ba61aa645163216be91507f0))
+- test type error ([c0c951a](https://github.com/contentful/experience-builder/commit/c0c951a971829dd62a7d060b681ca6fb06c4f769))
 
 ## [3.8.8](https://github.com/contentful/experience-builder/compare/v3.8.7...v3.8.8) (2026-03-12)
 

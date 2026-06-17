@@ -3,15 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [3.8.9-beta.0](https://github.com/contentful/experience-builder/compare/v3.8.8...v3.8.9-beta.0) (2026-06-17)
-
+## [3.8.9](https://github.com/contentful/experience-builder/compare/v3.8.8...v3.8.9) (2026-06-17)
 
 ### Bug Fixes
 
-* **deps:** [ACT-2114] bump glob to ^10.5.0 ([84e049a](https://github.com/contentful/experience-builder/commit/84e049acac2a1a4ff0e85c3ea533ee6682fa9b69))
-* **styles:** emit display:none for all breakpoints when visibility is hidden on default only ([2a71ad6](https://github.com/contentful/experience-builder/commit/2a71ad6f2ac0b36406dabeb21bdcacd97881a33f))
+- **deps:** [ACT-2114] bump glob to ^10.5.0 ([84e049a](https://github.com/contentful/experience-builder/commit/84e049acac2a1a4ff0e85c3ea533ee6682fa9b69))
+- manually bump version to avoid version conflict ([868da4a](https://github.com/contentful/experience-builder/commit/868da4ab656c9a250e6bcbbc6d3756239a5c945a))
+- remove vulnerable glob versions ([#1435](https://github.com/contentful/experience-builder/issues/1435)) ([7f2d693](https://github.com/contentful/experience-builder/commit/7f2d69392593fff9f9ea4c79c019c1b48231be8e))
+- **styles:** emit display:none for all breakpoints when visibility is hidden on default only ([2a71ad6](https://github.com/contentful/experience-builder/commit/2a71ad6f2ac0b36406dabeb21bdcacd97881a33f))
 
+## [3.8.9-beta.0](https://github.com/contentful/experience-builder/compare/v3.8.8...v3.8.9-beta.0) (2026-06-17)
 
+### Bug Fixes
+
+- **deps:** [ACT-2114] bump glob to ^10.5.0 ([84e049a](https://github.com/contentful/experience-builder/commit/84e049acac2a1a4ff0e85c3ea533ee6682fa9b69))
+- **styles:** emit display:none for all breakpoints when visibility is hidden on default only ([2a71ad6](https://github.com/contentful/experience-builder/commit/2a71ad6f2ac0b36406dabeb21bdcacd97881a33f))
 
 ## [3.8.8](https://github.com/contentful/experience-builder/compare/v3.8.7...v3.8.8) (2026-03-12)
 

@@ -3,13 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.9](https://github.com/contentful/experience-builder/compare/v3.8.8...v3.8.9) (2026-06-17)
+
+### Bug Fixes
+
+- manually bump version to avoid version conflict ([868da4a](https://github.com/contentful/experience-builder/commit/868da4ab656c9a250e6bcbbc6d3756239a5c945a))
+
 ## [3.8.9-beta.0](https://github.com/contentful/experience-builder/compare/v3.8.8...v3.8.9-beta.0) (2026-06-17)
 
 **Note:** Version bump only for package @contentful/experiences-components-react
-
-
-
-
 
 ## [3.8.8](https://github.com/contentful/experience-builder/compare/v3.8.7...v3.8.8) (2026-03-12)
 
