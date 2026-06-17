@@ -41,10 +41,10 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch || github.ref }}
           token: ${{ steps.vault.outputs.GITHUB_TOKEN }}
 
-      - name: "Use NodeJS 20"
+      - name: "Use NodeJS 22"
         uses: actions/setup-node@v4
         with:
-          node-version: "20.11"
+          node-version: "22.14"
           cache: "npm"
 
       - name: Install dependencies

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.9-beta.0](https://github.com/contentful/experience-builder/compare/v3.8.8...v3.8.9-beta.0) (2026-06-17)
+
+
+### Bug Fixes
+
+* **core:** add md5 dep [FE-545] ([#1425](https://github.com/contentful/experience-builder/issues/1425)) ([60371c9](https://github.com/contentful/experience-builder/commit/60371c968b1a12944ee3860bd6d158516e0130ef))
+* **styles:** emit display:none for all breakpoints when visibility is hidden on default only ([027b357](https://github.com/contentful/experience-builder/commit/027b357d78e48bef4d5df86a6c2001db6a71acd7))
+* test type error ([c0c951a](https://github.com/contentful/experience-builder/commit/c0c951a971829dd62a7d060b681ca6fb06c4f769))
+
+
+
 ## [3.8.8](https://github.com/contentful/experience-builder/compare/v3.8.7...v3.8.8) (2026-03-12)
 
 **Note:** Version bump only for package @contentful/experiences-core

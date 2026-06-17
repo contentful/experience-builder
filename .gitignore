@@ -47,3 +47,4 @@ tmp/
 
 **/cypress/screenshots/**
 **/cypress/videos/**
+.claude/settings.json
