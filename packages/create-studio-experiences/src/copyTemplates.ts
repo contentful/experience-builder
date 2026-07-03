@@ -14,7 +14,7 @@ async function copyFolder(src: string, dest: string) {
       },
     });
   } catch (err) {
-    console.error(`Error copying folder: ${err}`);
+    console.error(`Failed to copy the ${src} folder into ${dest} folder `);
   }
 }
 
