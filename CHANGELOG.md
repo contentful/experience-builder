@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.10](https://github.com/contentful/experience-builder/compare/v3.8.9...v3.8.10) (2026-07-03)
+
+### Bug Fixes
+
+- align image transformation recovery ([#1439](https://github.com/contentful/experience-builder/issues/1439)) ([b50ca20](https://github.com/contentful/experience-builder/commit/b50ca20a02327467ced7c9f505eb39ff4d2a20f6))
+
 ## [3.8.9](https://github.com/contentful/experience-builder/compare/v3.8.8...v3.8.9) (2026-06-17)
 
 ### Bug Fixes
