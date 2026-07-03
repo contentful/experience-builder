@@ -97,7 +97,7 @@ export const transformMedia = (
     } catch (error) {
       debug.error('[experiences-core::transformMedia] Error transforming image asset', error);
     }
-    return;
+    return asset.fields.file?.url;
   }
 
   return asset.fields.file?.url;
