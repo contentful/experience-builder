@@ -69,7 +69,7 @@
     "@types/md5": "2.3.6",
     "@vitest/coverage-v8": "^2.1.1",
     "contentful": "^11.10.2",
-    "happy-dom": "^13.10.1",
+    "happy-dom": "^20.11.1",
     "rimraf": "^5.0.5",
     "rollup-plugin-dts": "^6.1.0",
     "rollup-plugin-ts": "^3.4.5",
