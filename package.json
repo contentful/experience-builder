@@ -37,7 +37,7 @@
     "@commitlint/config-conventional": "^19.0.3",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "commitizen": "4.3.0",
+    "commitizen": "4.3.2",
     "concurrently": "^8.2.2",
     "eslint": "^8.52.0",
     "eslint-plugin-compat": "^6.0.2",
