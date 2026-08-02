@@ -43,7 +43,7 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.1.9"
+    "vitest": "^3.0.0"
   },
   "dependencies": {
     "zod": "^3.22.4"

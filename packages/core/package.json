@@ -74,7 +74,7 @@
     "rollup-plugin-dts": "^6.1.0",
     "rollup-plugin-ts": "^3.4.5",
     "vite-tsconfig-paths": "^4.2.2",
-    "vitest": "^2.1.9"
+    "vitest": "^3.0.0"
   },
   "dependencies": {
     "@contentful/experiences-validators": "file:../validators",
