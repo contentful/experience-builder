@@ -57,7 +57,7 @@
     "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rimraf": "^5.0.1",
+    "rimraf": "^5.0.10",
     "rollup": "^4.62.3",
     "rollup-plugin-dts": "^6.0.2",
     "rollup-plugin-postcss": "^4.0.2",
