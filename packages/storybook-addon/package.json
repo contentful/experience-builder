@@ -67,7 +67,7 @@
     "@storybook/addon-links": "^7.0.0",
     "@storybook/react": "^7.0.0",
     "@storybook/react-vite": "^7.0.0",
-    "@storybook/testing-library": "^0.0.14-next.1",
+    "@storybook/testing-library": "^0.2.2",
     "@svgr/plugin-jsx": "^8.1.0",
     "@svgr/rollup": "^8.1.0",
     "@types/node": "^20.11.10",
