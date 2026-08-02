@@ -125,7 +125,7 @@
     "@contentful/experiences-sdk-react": "file:../experiences-sdk-react",
     "@contentful/f36-components": "^4.52.1",
     "@contentful/f36-tokens": "^4.0.2",
-    "@contentful/f36-workbench": "^4.21.0",
+    "@contentful/f36-workbench": "^4.21.1",
     "constate": "^3.3.2",
     "emotion": "10.0.27"
   }
