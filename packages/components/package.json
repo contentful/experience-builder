@@ -75,7 +75,7 @@
   "dependencies": {
     "@contentful/experiences-core": "file:../core",
     "@contentful/rich-text-react-renderer": "^16.2.2",
-    "postcss-import": "^16.0.1",
+    "postcss-import": "^16.1.1",
     "style-inject": "^0.3.0"
   }
 }
