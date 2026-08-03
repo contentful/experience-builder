@@ -120,7 +120,7 @@
     "icon": "https://user-images.githubusercontent.com/321738/63501763-88dbf600-c4cc-11e9-96cd-94adadc2fd72.png"
   },
   "dependencies": {
-    "@contentful/app-sdk": "^4.51.0",
+    "@contentful/app-sdk": "^4.68.1",
     "@contentful/experiences-components-react": "file:../components",
     "@contentful/experiences-sdk-react": "file:../experiences-sdk-react",
     "@contentful/f36-components": "^4.52.1",
