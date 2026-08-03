@@ -17,7 +17,7 @@ jobs:
       - name: 'Use NodeJS 22'
         uses: actions/setup-node@v4
         with:
-          node-version: '22.14'
+          node-version: '22.23.2'
           cache: 'npm'
       - name: Restore Cypress Binary
         uses: actions/cache/restore@v4
