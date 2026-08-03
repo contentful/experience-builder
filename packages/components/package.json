@@ -59,7 +59,7 @@
     "react-dom": "^18.2.0",
     "rimraf": "^5.0.10",
     "rollup": "^4.62.3",
-    "rollup-plugin-dts": "^6.0.2",
+    "rollup-plugin-dts": "^6.4.1",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-ts": "^3.4.5",
     "storybook": "^7.6.24",
