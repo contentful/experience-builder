@@ -46,7 +46,7 @@
     "@contentful/experiences-validators": "file:../validators",
     "@contentful/experiences-visual-editor-react": "file:../visual-editor",
     "@contentful/rich-text-types": "^17.2.7",
-    "csstype": "^3.1.2",
+    "csstype": "^3.2.3",
     "immer": "^10.0.3",
     "md5": "^2.3.0",
     "style-inject": "^0.3.0"
