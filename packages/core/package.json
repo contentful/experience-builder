@@ -81,7 +81,7 @@
     "@contentful/rich-text-types": "^17.2.7",
     "lodash.clonedeep": "^4.5.0",
     "md5": "2.3.0",
-    "zustand": "^4.4.7"
+    "zustand": "^4.5.7"
   },
   "peerDependencies": {
     "contentful": ">=10.6.0"
