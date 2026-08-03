@@ -29,7 +29,7 @@
     "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react": "^4.7.0",
     "babel-plugin-emotion": "^10.2.2",
-    "contentful": "^11.10.2",
+    "contentful": "^11.12.7",
     "dependency-cruiser": "^16.10.4",
     "eslint": "^8.57.1",
     "eslint-plugin-react-hooks": "^4.6.2",
