@@ -42,7 +42,7 @@
     "@rollup/plugin-alias": "^6.0.0",
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "@rollup/plugin-typescript": "^11.1.6",
+    "@rollup/plugin-typescript": "^12.3.0",
     "@storybook/addon-essentials": "^7.6.24",
     "@storybook/addon-interactions": "^7.6.24",
     "@storybook/addon-links": "^7.6.24",
