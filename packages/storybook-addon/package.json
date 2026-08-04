@@ -74,7 +74,7 @@
     "@types/react": "^18.3.31",
     "@vitejs/plugin-react": "^6.0.5",
     "auto": "^10.3.0",
-    "boxen": "^7.1.1",
+    "boxen": "^8.0.1",
     "dedent": "^1.7.2",
     "esbuild": "^0.28.1",
     "esbuild-plugin-svgr": "^2.1.0",
