@@ -78,7 +78,7 @@
     "rollup-plugin-dts": "^6.4.1",
     "rollup-plugin-node-externals": "^9.0.1",
     "rollup-plugin-preserve-directives": "^0.4.0",
-    "semantic-release": "^25.0.8",
+    "semantic-release": "^25.0.9",
     "ts-jest": "^29.4.12",
     "typescript": "^7.0.2",
     "vite": "^5.4.8",
