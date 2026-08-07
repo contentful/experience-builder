@@ -47,7 +47,7 @@
     "@contentful/experiences-visual-editor-react": "file:../visual-editor",
     "@contentful/rich-text-types": "^17.2.7",
     "csstype": "^3.2.3",
-    "immer": "^10.2.0",
+    "immer": "^11.1.16",
     "md5": "^2.3.0",
     "style-inject": "^0.3.0"
   },
