@@ -37,7 +37,7 @@
   "dependencies": {
     "@contentful/experiences-components-react": "file:../components",
     "@contentful/experiences-core": "file:../core",
-    "immer": "^10.2.0",
+    "immer": "^11.1.16",
     "lodash-es": "^4.18.1",
     "md5": "^2.3.0",
     "style-inject": "^0.3.0",
