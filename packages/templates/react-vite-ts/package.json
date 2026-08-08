@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
-    "contentful": "^11.12.8",
+    "contentful": "^11.12.9",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
