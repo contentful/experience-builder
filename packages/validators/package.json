@@ -46,7 +46,7 @@
     "vitest": "^4.1.10"
   },
   "dependencies": {
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
