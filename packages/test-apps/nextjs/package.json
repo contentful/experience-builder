@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
-    "next": "15.5.22",
+    "next": "16.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
