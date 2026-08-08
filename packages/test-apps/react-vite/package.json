@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
-    "emotion": "^10.0.27",
+    "emotion": "^11.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.18.2"
@@ -28,7 +28,7 @@
     "@typescript-eslint/eslint-plugin": "^8.66.0",
     "@typescript-eslint/parser": "^8.66.0",
     "@vitejs/plugin-react": "^6.0.5",
-    "babel-plugin-emotion": "^10.2.2",
+    "babel-plugin-emotion": "^11.0.0",
     "contentful": "^11.12.7",
     "dependency-cruiser": "^18.1.1",
     "eslint": "^10.8.0",
