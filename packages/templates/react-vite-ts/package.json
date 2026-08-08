@@ -12,13 +12,13 @@
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
     "contentful": "^11.12.8",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/react": "^18.3.31",
-    "@types/react-dom": "^18.3.7",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",
     "eslint": "^10.8.0",
     "eslint-plugin-react-hooks": "^7.1.1",
