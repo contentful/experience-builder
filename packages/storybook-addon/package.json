@@ -123,7 +123,7 @@
     "@contentful/app-sdk": "^4.68.1",
     "@contentful/experiences-components-react": "file:../components",
     "@contentful/experiences-sdk-react": "file:../experiences-sdk-react",
-    "@contentful/f36-components": "^6.18.0",
+    "@contentful/f36-components": "^6.19.0",
     "@contentful/f36-tokens": "^6.2.1",
     "@contentful/f36-workbench": "^4.21.1",
     "constate": "^4.0.0",
