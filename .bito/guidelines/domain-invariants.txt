@@ -1,0 +1,31 @@
+Rules that must hold in every PR:
+
+1. postMessage source literal must remain 'customer-app'
+   The Studio editor filters on this exact string (packages/core/src/communication/sendMessage.ts).
+   Changing it silently breaks two-way communication with the editor.
+
+2. No structuredClone
+   Chrome 91 (minimum customer browser) lacks structuredClone. Use lodash/cloneDeep.
+   The compat/compat ESLint rule enforces this; a passing CI run is not enough — review call sites.
+
+3. Drag-and-drop belongs in packages/visual-editor, not in packages/experience-builder-sdk
+   As of v3.0.0 the SDK only sends node coordinates via postMessage; DnD handling is in the host app.
+   Adding DnD logic to the SDK is a breaking regression.
+
+4. All window access must be SSR-guarded
+   Guard pattern: if (typeof window === 'undefined') return;
+   Reference: packages/core/src/communication/sendMessage.ts.
+
+5. 'use client' on consumer-facing components
+   ExperienceRoot and any new hook or component at the SDK's public boundary must carry this directive
+   for Next.js RSC compatibility.
+
+6. packages/*/dist/ and packages/*/build/ are build outputs
+   A PR that edits these directories directly is wrong — they are overwritten by npm run build.
+
+7. New public exports from packages/experience-builder-sdk/src/index.ts are semver-additive
+   Removals and signature changes are breaking changes; flag in review.
+
+8. Test runner split
+   experience-builder-sdk uses Jest; core, visual-editor, components, validators use Vitest.
+   Do not mix vitest globals into experience-builder-sdk tests or jest globals into vitest packages.
