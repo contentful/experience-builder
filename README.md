@@ -70,7 +70,6 @@ npm run prettier:check # source: package.json → scripts.prettier:check
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Internal structure, data flows, integration points |
 | [AGENTS.md](./AGENTS.md) | Agent-facing routing table and guardrails |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | Specialized repo-specific procedures |
-| [Architecture Decisions](./docs/ADRs/) | Why things look the way they do |
 
 ## Local development
 
