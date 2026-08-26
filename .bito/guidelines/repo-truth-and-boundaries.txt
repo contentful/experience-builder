@@ -3,8 +3,6 @@ Use the repo's documentation as review context:
 - ARCHITECTURE.md — system structure, data flow, package roles and dependency graph
 - AGENTS.md — non-obvious invariants and sharp edges
 - CONTRIBUTING.md — procedures, file-level restrictions
-- docs/ADRs/ — documented architecture decisions
 
-When a PR changes something covered by an ADR, reference the ADR and confirm the change aligns with the recorded decision.
 When code diverges from what ARCHITECTURE.md describes (e.g., a new cross-package dependency not in the graph), flag it.
 Distinguish public API (packages/experience-builder-sdk/src/index.ts exports) from internal implementation details; changes to the former are a semver concern.
