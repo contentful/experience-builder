@@ -2,6 +2,22 @@
 
 This repository represents a set of packages, related to the [Experiences](https://www.contentful.com/developers/docs/experiences/what-are-experiences/) product.
 
+## Getting Started
+
+**Prerequisites**
+
+| Tool | Version | Notes |
+| --- | --- | --- |
+| Node.js | `v22.14.0` (see `.nvmrc`) | Use `nvm use` to activate the pinned version |
+| npm | bundled with Node.js | No separate install required |
+
+```bash
+git clone https://github.com/contentful/experience-builder.git
+cd experience-builder
+npm install      # source: package.json (npm client per lerna.json → npmClient)
+npm run build    # source: package.json → scripts.build
+```
+
 ## Documentation Links
 
 - [What are Experiences?](https://www.contentful.com/developers/docs/experiences/what-are-experiences/)
@@ -22,11 +38,39 @@ This repository represents a set of packages, related to the [Experiences](https
 
 - [Components](https://github.com/contentful/experience-builder/tree/main/packages/components)
 - [Core](https://github.com/contentful/experience-builder/tree/main/packages/core)
-- [Experiences CLI tool](https://github.com/contentful/experience-builder/tree/main/packages/create-experience-builder)
+- [Experiences CLI tool](https://github.com/contentful/experience-builder/tree/main/packages/create-studio-experiences)
 - [Experiences SDK](https://github.com/contentful/experience-builder/tree/main/packages/experience-builder-sdk)
 - [Test-apps](https://github.com/contentful/experience-builder/tree/main/packages/test-apps)
 - [Validators](https://github.com/contentful/experience-builder/tree/main/packages/validators)
 - [Visual-editor](https://github.com/contentful/experience-builder/tree/main/packages/visual-editor)
+
+## Running Tests
+
+```bash
+npm run test           # source: package.json → scripts.test
+npm run test:ci        # source: package.json → scripts.test:ci (single run, no watch)
+npm run test:coverage  # source: package.json → scripts.test:coverage
+npm run test:component # source: package.json → scripts.test:component (Cypress; requires npx cypress install)
+```
+
+Most packages use Vitest. `packages/experience-builder-sdk` uses Jest. `npm run test` from the repo root runs all suites via NX.
+
+## Lint and Type-check
+
+```bash
+npm run lint           # source: package.json → scripts.lint
+npm run tsc            # source: package.json → scripts.tsc
+npm run prettier:check # source: package.json → scripts.prettier:check
+```
+
+## Documentation Map
+
+| Document | What it covers |
+| --- | --- |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | Internal structure, data flows, integration points |
+| [AGENTS.md](./AGENTS.md) | Agent-facing routing table and guardrails |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Specialized repo-specific procedures |
+| [Architecture Decisions](./docs/ADRs/) | Why things look the way they do |
 
 ## Local development
 
@@ -91,3 +135,7 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0
 > If your `test-app` is not being displayed in the Contentful Experience UI, double check your environment variables and make sure the values are correct. Additionally, double check your `Content preview settings` and ensure that you are pointing to the correct url which should be `http://localhost:5173`.
 
 > If your `build` command is stuck and not finishing, try resetting the cache via `npx nx reset`
+
+## For AI Agents
+
+If you are an AI coding agent working in this repository, read [AGENTS.md](./AGENTS.md) first. It tells you where to find architectural context, development setup, decision records, and repo-specific rules.
