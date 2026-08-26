@@ -8,6 +8,8 @@ Owned by `@contentful/team-experience-assembly`. Source: `catalog-info.yml`.
 
 TypeScript (`strict: true`) and React are the core technology choices — they match Contentful Studio's stack and enable type-safe contracts across the SDK/Studio boundary. Lerna + NX manages lockstep versioning so all published packages ship at the same semver version. Key dependency choices are documented per-dependency in the Key Dependencies section below.
 
+Critical behavioral invariants and guardrails (browser target, postMessage contract, DnD placement, SSR guards, `'use client'` requirement) are in [AGENTS.md](./AGENTS.md).
+
 ## System Context
 
 ```mermaid
