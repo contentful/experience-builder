@@ -11,7 +11,6 @@ export const CustomContainer: React.FC<any> = (props) => {
   return <ContentfulContainer className={combinedClassName} {...otherProps} />;
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const customContainerDefinition = {
   ...containerDefinition,
   id: 'custom-container',

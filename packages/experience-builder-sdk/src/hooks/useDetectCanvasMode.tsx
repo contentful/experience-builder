@@ -101,7 +101,7 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
 function inIframe() {
   try {
     return window.self !== window.top;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

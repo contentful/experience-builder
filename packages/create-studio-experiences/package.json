@@ -37,7 +37,7 @@
     "prepack": "npm run copy-templates",
     "postpack": "npm run delete-templates",
     "build": "tsc",
-    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "depcruise": "depcruise src",
     "create-studio-experiences": "node dist/index.js"

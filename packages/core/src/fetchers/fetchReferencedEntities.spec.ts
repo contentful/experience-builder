@@ -40,32 +40,28 @@ describe('fetchReferencedEntities', () => {
   });
 
   it('should throw an error if client has not been provided', async () => {
-    try {
-      await fetchReferencedEntities({
+    await expect(
+      fetchReferencedEntities({
         // @ts-expect-error intentionally setting it to undefined
         client: undefined,
         experienceEntry: experienceEntry,
         locale: 'en-US',
-      });
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Required "client" parameter was not provided',
-      );
-    }
+      }),
+    ).rejects.toThrow(
+      'Failed to fetch experience entities. Required "client" parameter was not provided',
+    );
   });
 
   it('should throw an error if Provided entry is not an experience entry', async () => {
-    try {
-      await fetchReferencedEntities({
+    await expect(
+      fetchReferencedEntities({
         client: mockClient,
         experienceEntry: entries[0],
         locale: 'en-US',
-      });
-    } catch (e) {
-      expect((e as Error).message).toBe(
-        'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema',
-      );
-    }
+      }),
+    ).rejects.toThrow(
+      'Failed to fetch experience entities. Provided "experienceEntry" does not match experience entry schema',
+    );
   });
 
   describe('when fetching without errors', () => {
@@ -144,8 +140,9 @@ describe('fetchReferencedEntities', () => {
         locale: 'en-US',
       });
 
-      expect(gatherDeepReferencesFromExperienceEntrySpy).toHaveBeenCalledOnce();
-      expect(gatherDeepReferencesFromExperienceEntrySpy).toHaveBeenCalledWith(experienceEntry);
+      expect(gatherDeepReferencesFromExperienceEntrySpy).toHaveBeenCalledExactlyOnceWith(
+        experienceEntry,
+      );
     });
 
     describe('with pre-binding', () => {

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import './ContentfulContainer.css';
 import { Flex } from '../Layout/Flex';

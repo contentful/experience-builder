@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IncomingMessage } from '@/types';
 import { INCOMING_EVENTS, StudioCanvasMode, PostMessageMethods } from '@/constants';
 
@@ -15,7 +14,7 @@ const isValidJsonObject = (s: string) => {
       return false;
     }
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 };
