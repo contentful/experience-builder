@@ -102,6 +102,7 @@ async function init() {
       message: 'Where should we install the project?',
       initialValue: variant.defaultDir,
       validate(dir) {
+        if (!dir) return `Value is required!`;
         if (dir.length === 0) return `Value is required!`;
         if (fsClient.directoryExists(dir)) {
           return `Directory ${dir} already exists`;
@@ -143,7 +144,7 @@ async function init() {
         const authToken = await password({
           message: 'Enter your Contentful management token from the browser window:',
           validate(token) {
-            if (token.length === 0) return `Value is required!`;
+            if (!token || token.length === 0) return `Value is required!`;
           },
         });
 
@@ -163,7 +164,7 @@ async function init() {
 
       const orgs = await ctflClient.getOrgs();
 
-      const selectedOrgId = (await select<{ label: string; value: string }[], string>({
+      const selectedOrgId = (await select<string>({
         message: 'Select an organization for the space.',
         options: orgs.map((org) => {
           return {
@@ -190,7 +191,7 @@ async function init() {
         return studioExperiencesEnabledSpaceIds.includes(space.id);
       });
 
-      const selectedSpaceId = await select<{ label: string; value: string }[], string>({
+      const selectedSpaceId = (await select<string>({
         message: 'Select the space to use.',
         options: spacesWithStudioExperienceEnabled.map((space) => {
           return {
@@ -198,7 +199,7 @@ async function init() {
             value: space.id,
           };
         }),
-      });
+      })) as string;
 
       onCancel(selectedSpaceId);
 
@@ -208,7 +209,7 @@ async function init() {
       const environments = await ctflClient.getEnvironments();
       let env = environments.length === 1 ? environments[0] : undefined;
       if (environments.length > 1) {
-        const selectedEnv = await select<{ label: string; value: string }[], string>({
+        const selectedEnv = (await select<string>({
           message: 'Select the environment to use.',
           options: environments.map((env) => {
             return {
@@ -216,7 +217,7 @@ async function init() {
               value: env.id,
             };
           }),
-        });
+        })) as string;
 
         onCancel(selectedEnv);
 
@@ -238,7 +239,7 @@ async function init() {
         await ctflClient.getPreviewAccessToken(selectedApiKey.previewKeyId);
       } else {
         const createNewOption = { label: 'Create new API key', value: 'create' };
-        const selectedApiKeyId = await select<{ label: string; value: string }[], string>({
+        const selectedApiKeyId = (await select<string>({
           message: 'Select API key to use.',
           options: [
             ...apiKeys.map((apiKey) => {
@@ -249,7 +250,7 @@ async function init() {
             }),
             createNewOption,
           ],
-        });
+        })) as string;
 
         onCancel(selectedApiKeyId);
 
@@ -278,7 +279,7 @@ async function init() {
           message: 'Enter a name for the content type for Experiences',
           initialValue: CONSTANTS.contentType,
           validate(input) {
-            if (input.length === 0) return `Value is required!`;
+            if (!input || input.length === 0) return `Value is required!`;
             if (input.length > 50) return 'Value must be 50 characters or less.';
           },
         })) as string;
