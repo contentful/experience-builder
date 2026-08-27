@@ -53,7 +53,7 @@
     "@storybook/testing-library": "^0.2.2",
     "@types/react": "^19.2.18",
     "@vitejs/plugin-react": "^6.1.0",
-    "cypress": "^15.21.0",
+    "cypress": "^15.21.1",
     "prettier": "^3.9.6",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
