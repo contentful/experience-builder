@@ -42,7 +42,7 @@
     "md5": "^2.3.0",
     "style-inject": "^0.3.0",
     "use-debounce": "^10.1.1",
-    "uuid": "^14.0.1",
+    "uuid": "^14.0.2",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
