@@ -5,8 +5,8 @@ ul.menu {
   border-bottom: 1px solid transparent;
 }
 
-ul.menu :global li.ant-menu-item-selected::after,
-ul.menu :global li.ant-menu-item-active::after {
+ul.menu :global(li.ant-menu-item-selected::after),
+ul.menu :global(li.ant-menu-item-active::after) {
   border-bottom-color: var(--orange-2) !important;
 }
 

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
+    "@tailwindcss/postcss": "^4.3.3",
     "next": "16.3.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
