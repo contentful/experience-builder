@@ -11,6 +11,7 @@ type ShallowComponentProps = {
   singleItem: Item;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ShallowComponentDefinition: ComponentDefinition = {
   id: 'bind-example-shallow-component',
   name: 'Shallow Component',
