@@ -70,7 +70,7 @@
     "@storybook/testing-library": "^0.2.2",
     "@svgr/plugin-jsx": "^8.1.0",
     "@svgr/rollup": "^8.1.0",
-    "@types/node": "^20.19.43",
+    "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@vitejs/plugin-react": "^6.1.0",
     "auto": "^10.3.0",
