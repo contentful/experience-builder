@@ -156,7 +156,10 @@ export const breakpointsRefinement = (value: Breakpoint[], ctx: z.RefinementCtx)
   }
 };
 
-export const ValuesByBreakpointSchema = z.record(z.lazy(() => PrimitiveValueSchema));
+export const ValuesByBreakpointSchema = z.record(
+  z.string(),
+  z.lazy(() => PrimitiveValueSchema),
+);
 
 export const BindingSourceTypeEnumSchema = z
   .array(z.enum(['entry', 'asset', 'manual', 'experience']))
@@ -295,4 +298,5 @@ export const ComponentTreeSchema = z
     schemaVersion: SchemaVersions,
   })
   .strict();
-export const localeWrapper = (fieldSchema: ZodTypeAny) => z.record(z.string(), fieldSchema);
+export const localeWrapper = <T extends ZodTypeAny>(fieldSchema: T) =>
+  z.record(z.string(), fieldSchema);

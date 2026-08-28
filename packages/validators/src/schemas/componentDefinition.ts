@@ -30,7 +30,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue is not supported for "Array" type for ${ctx.path.join('.')}`,
+                message: `defaultValue is not supported for "Array" type`,
                 fatal: false,
               });
             }
@@ -39,7 +39,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'boolean') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be a boolean when type is "Boolean" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue must be a boolean when type is "Boolean", got ${typeof val.defaultValue} instead`,
                 fatal: false,
               });
             }
@@ -48,7 +48,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'string') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be a string when type is "Date" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue must be a string when type is "Date", got ${typeof val.defaultValue} instead`,
                 fatal: false,
               });
             }
@@ -57,7 +57,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'string') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be a string when type is "Hyperlink" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue must be a string when type is "Hyperlink", got ${typeof val.defaultValue} instead`,
                 fatal: false,
               });
             }
@@ -66,7 +66,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'object') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue is not supported for "Link" type for ${ctx.path.join('.')}`,
+                message: `defaultValue is not supported for "Link" type`,
                 fatal: false,
               });
             }
@@ -75,7 +75,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'object') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be an object when type is "Location" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue must be an object when type is "Location", got ${typeof val.defaultValue} instead`,
                 fatal: false,
               });
             }
@@ -84,7 +84,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'string') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be a string when type is "Media" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue must be a string when type is "Media", got ${typeof val.defaultValue} instead`,
                 fatal: false,
               });
             }
@@ -93,7 +93,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'number') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be a number when type is "Number" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue must be a number when type is "Number", got ${typeof val.defaultValue} instead`,
                 fatal: false,
               });
             }
@@ -102,7 +102,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'object') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be an object when type is "Object" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue must be an object when type is "Object", got ${typeof val.defaultValue} instead`,
                 fatal: false,
               });
             }
@@ -111,7 +111,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'object') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be an object when type is "RichText" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue must be an object when type is "RichText", got ${typeof val.defaultValue} instead`,
                 fatal: false,
               });
             }
@@ -120,7 +120,7 @@ export const ComponentDefinitionSchema = z
             if (typeof val.defaultValue !== 'undefined' && typeof val.defaultValue !== 'string') {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: `defaultValue must be a string when type is "Text" for ${ctx.path.join('.')}, got ${typeof val.defaultValue} instead`,
+                message: `defaultValue must be a string when type is "Text", got ${typeof val.defaultValue} instead`,
                 fatal: false,
               });
             }

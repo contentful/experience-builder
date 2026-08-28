@@ -46,11 +46,10 @@ const VariableMappingSchema = z.object({
   pathsByContentType: z
     .record(z.string(), z.object({ path: z.string() }))
     .superRefine((paths, ctx) => {
-      const variableId = ctx.path[ctx.path.length - 2];
       if (Object.keys(paths).length > MAX_ALLOWED_PATHS) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `Too many paths defined for variable mapping with id "${variableId}", maximum allowed is ${MAX_ALLOWED_PATHS}`,
+          message: `Too many paths defined for variable mapping, maximum allowed is ${MAX_ALLOWED_PATHS}`,
         });
       }
     }),
