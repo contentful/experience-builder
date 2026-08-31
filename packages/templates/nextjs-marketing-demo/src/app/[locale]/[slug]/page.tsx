@@ -1,16 +1,6 @@
-import Experience from '@/components/Experience';
-import Header from '@/components/Header/Header';
-import Footer from '@/components/Footer/Footer';
+import PageLayout from '@/components/PageLayout';
 import { getExperience } from '@/getExperience';
 import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
-import { Layout } from 'antd';
-import {
-  Footer as LayoutFooter,
-  Header as LayoutHeader,
-  Content as LayoutContent,
-} from 'antd/es/layout/layout';
-import styles from '@/app/page.module.css';
-import '../../../studio-config';
 
 type Page = {
   params: Promise<{ locale?: string; slug?: string; preview?: string }>;
@@ -33,18 +23,5 @@ export default async function ExperiencePage({ params, searchParams }: Page) {
 
   // experience currently needs to be stringified manually to be passed to the component
   const experienceJSON = experience ? JSON.stringify(experience) : null;
-  return (
-    <Layout className={styles.layout}>
-      {stylesheet && <style>{stylesheet}</style>}
-      <LayoutHeader className={styles.header}>
-        <Header />
-      </LayoutHeader>
-      <LayoutContent className={styles.content}>
-        <Experience experienceJSON={experienceJSON} locale={locale} />
-      </LayoutContent>
-      <LayoutFooter className={styles.footer}>
-        <Footer />
-      </LayoutFooter>
-    </Layout>
-  );
+  return <PageLayout stylesheet={stylesheet} experienceJSON={experienceJSON} locale={locale} />;
 }
