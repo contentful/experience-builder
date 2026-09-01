@@ -93,17 +93,39 @@
     "zx": "^8.8.5"
   },
   "peerDependencies": {
-    "@storybook/blocks": "^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0",
-    "@storybook/components": "^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0",
-    "@storybook/core-events": "^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0",
-    "@storybook/manager-api": "^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0",
-    "@storybook/preview-api": "^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0",
-    "@storybook/theming": "^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0",
-    "@storybook/types": "^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0",
+    "@storybook/blocks": "^7.0.0 || ^8.0.0",
+    "@storybook/components": "^7.0.0 || ^8.0.0",
+    "@storybook/core-events": "^7.0.0 || ^8.0.0",
+    "@storybook/manager-api": "^7.0.0 || ^8.0.0",
+    "@storybook/preview-api": "^7.0.0 || ^8.0.0",
+    "@storybook/theming": "^7.0.0 || ^8.0.0",
+    "@storybook/types": "^7.0.0 || ^8.0.0",
+    "storybook": "^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
+    "@storybook/blocks": {
+      "optional": true
+    },
+    "@storybook/components": {
+      "optional": true
+    },
+    "@storybook/core-events": {
+      "optional": true
+    },
+    "@storybook/manager-api": {
+      "optional": true
+    },
+    "@storybook/preview-api": {
+      "optional": true
+    },
+    "@storybook/theming": {
+      "optional": true
+    },
+    "@storybook/types": {
+      "optional": true
+    },
     "react": {
       "optional": true
     },
