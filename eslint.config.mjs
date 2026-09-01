@@ -66,7 +66,13 @@ export default [
   },
 
   {
-    files: ['**/*.spec.*', 'packages/test-apps/**/*'],
+    files: [
+      '**/*.spec.*',
+      'packages/test-apps/**/*',
+      'packages/templates/**/*',
+      'packages/storybook-addon/**/*',
+      'packages/create-studio-experiences/**/*',
+    ],
     rules: {
       'compat/compat': 'off',
     },
