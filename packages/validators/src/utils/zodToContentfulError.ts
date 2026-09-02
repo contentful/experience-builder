@@ -29,17 +29,20 @@ const getInputTypeName = (input: unknown): string => {
 const convertInvalidType = (
   issue: Extract<ZodIssue, { code: 'invalid_type' }>,
 ): ContentfulErrorDetails => {
-  const name = issue.input === undefined ? CodeNames.Required : CodeNames.Type;
-  const details =
-    issue.input === undefined
-      ? `The property "${issue.path.slice(-1)}" is required here`
-      : `The type of "${issue.path.slice(-1)}" is incorrect, expected type: ${issue.expected}`;
+  // Zod v4 omits 'input'/'received' from invalid_type issues; parse message instead.
+  // Message format: "Invalid input: expected X, received Y"
+  const received = issue.message?.match(/received (.+)$/)?.[1] ?? 'undefined';
+  const isMissing = received === 'undefined';
+  const name = isMissing ? CodeNames.Required : CodeNames.Type;
+  const details = isMissing
+    ? `The property "${issue.path.slice(-1)}" is required here`
+    : `The type of "${issue.path.slice(-1)}" is incorrect, expected type: ${issue.expected}`;
 
   return {
     details,
     name,
     path: issue.path as (string | number)[],
-    value: getInputTypeName(issue.input),
+    value: received,
   };
 };
 
@@ -121,6 +124,15 @@ export const zodToContentfulError = (issue: ZodIssue): ContentfulErrorDetails =>
       return convertTooSmall(issue);
     case ZodIssueCode.too_big:
       return convertTooBig(issue);
+    case ZodIssueCode.invalid_key: {
+      // Zod v4 wraps record key validation failures; forward to the inner issue
+      const innerIssues = (issue as { issues?: ZodIssue[] }).issues;
+      const innerIssue = innerIssues?.[0];
+      if (innerIssue) {
+        return zodToContentfulError({ ...innerIssue, path: issue.path } as ZodIssue);
+      }
+      return defaultConversion(issue);
+    }
     default:
       return defaultConversion(issue);
   }

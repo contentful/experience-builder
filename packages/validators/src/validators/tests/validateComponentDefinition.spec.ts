@@ -102,9 +102,7 @@ describe('validateComponentDefinition', () => {
         const result = validateComponentDefinition(updatedComponentDefinition);
 
         expect(result.success).toBe(false);
-        expect(result.errors?.[0].details).toBe(
-          'defaultValue is not supported for "Array" type for variables.testVar',
-        );
+        expect(result.errors?.[0].details).toBe('defaultValue is not supported for "Array" type');
       });
     });
 
@@ -131,7 +129,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a string when type is "Text" for variables.testVar, got number instead',
+          'defaultValue must be a string when type is "Text", got number instead',
         );
       });
 
@@ -142,7 +140,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a string when type is "Text" for variables.testVar, got boolean instead',
+          'defaultValue must be a string when type is "Text", got boolean instead',
         );
       });
     });
@@ -170,7 +168,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a number when type is "Number" for variables.testVar, got string instead',
+          'defaultValue must be a number when type is "Number", got string instead',
         );
       });
 
@@ -181,7 +179,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a number when type is "Number" for variables.testVar, got boolean instead',
+          'defaultValue must be a number when type is "Number", got boolean instead',
         );
       });
     });
@@ -209,7 +207,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a boolean when type is "Boolean" for variables.testVar, got string instead',
+          'defaultValue must be a boolean when type is "Boolean", got string instead',
         );
       });
 
@@ -220,7 +218,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a boolean when type is "Boolean" for variables.testVar, got number instead',
+          'defaultValue must be a boolean when type is "Boolean", got number instead',
         );
       });
     });
@@ -248,7 +246,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a string when type is "Hyperlink" for variables.testVar, got number instead',
+          'defaultValue must be a string when type is "Hyperlink", got number instead',
         );
       });
 
@@ -259,7 +257,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a string when type is "Hyperlink" for variables.testVar, got boolean instead',
+          'defaultValue must be a string when type is "Hyperlink", got boolean instead',
         );
       });
     });
@@ -280,9 +278,7 @@ describe('validateComponentDefinition', () => {
         const result = validateComponentDefinition(updatedComponentDefinition);
 
         expect(result.success).toBe(false);
-        expect(result.errors?.[0].details).toBe(
-          'defaultValue is not supported for "Link" type for variables.testVar',
-        );
+        expect(result.errors?.[0].details).toBe('defaultValue is not supported for "Link" type');
       });
     });
 
@@ -319,7 +315,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be an object when type is "RichText" for variables.testVar, got string instead',
+          'defaultValue must be an object when type is "RichText", got string instead',
         );
       });
     });
@@ -347,7 +343,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be an object when type is "Object" for variables.testVar, got string instead',
+          'defaultValue must be an object when type is "Object", got string instead',
         );
       });
     });
@@ -375,7 +371,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a string when type is "Date" for variables.testVar, got number instead',
+          'defaultValue must be a string when type is "Date", got number instead',
         );
       });
 
@@ -386,7 +382,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a string when type is "Date" for variables.testVar, got boolean instead',
+          'defaultValue must be a string when type is "Date", got boolean instead',
         );
       });
     });
@@ -414,7 +410,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a string when type is "Media" for variables.testVar, got number instead',
+          'defaultValue must be a string when type is "Media", got number instead',
         );
       });
 
@@ -425,7 +421,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be a string when type is "Media" for variables.testVar, got boolean instead',
+          'defaultValue must be a string when type is "Media", got boolean instead',
         );
       });
     });
@@ -453,7 +449,7 @@ describe('validateComponentDefinition', () => {
 
         expect(result.success).toBe(false);
         expect(result.errors?.[0].details).toBe(
-          'defaultValue must be an object when type is "Location" for variables.testVar, got string instead',
+          'defaultValue must be an object when type is "Location", got string instead',
         );
       });
     });

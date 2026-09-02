@@ -22,6 +22,7 @@ let gatherDeepPrebindingReferencesFromPatternEntrySpy: MockInstance;
 
 describe('fetchReferencedEntities', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     vi.restoreAllMocks();
 
     gatherDeepReferencesFromExperienceEntrySpy = vi

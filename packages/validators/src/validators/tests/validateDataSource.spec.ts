@@ -21,7 +21,7 @@ describe('dataSource', () => {
       name: 'type',
       value: 'array',
       path: ['dataSource', 'en-US'],
-      details: 'The type of "en-US" is incorrect, expected type: object',
+      details: 'The type of "en-US" is incorrect, expected type: record',
     };
     expect(result.errors).toEqual([expectedError]);
   });
@@ -102,8 +102,8 @@ describe('dataSource', () => {
       name: 'in',
       expected: ['Entry', 'Asset'],
       path: ['dataSource', 'en-US', 'uuid1', 'sys', 'linkType'],
-      details: "Invalid enum value. Expected 'Entry' | 'Asset', received 'Invalid'",
-      value: 'Invalid',
+      details: 'Invalid option: expected one of "Entry"|"Asset"',
+      value: '',
     };
     expect(result.success).toBe(false);
     expect(result.errors?.[0]).toEqual(expectedError);

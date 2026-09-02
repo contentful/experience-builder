@@ -66,6 +66,8 @@
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.3.0",
     "@types/lodash.clonedeep": "^4.5.9",
+    "@types/lodash.merge": "^4.6.9",
+    "lodash.merge": "^4.6.2",
     "@types/md5": "2.3.6",
     "@vitest/coverage-v8": "^4.1.11",
     "contentful": "^11.12.9",

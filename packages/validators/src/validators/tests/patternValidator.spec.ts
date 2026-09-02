@@ -47,7 +47,7 @@ describe(`${schemaVersion} version`, () => {
     const error = result.errors?.[0];
 
     expect(error?.name).toBe('size');
-    expect(error?.details).toBe('Array must contain at least 1 element(s)');
+    expect(error?.details).toBe('Too small: expected array to have >=1 items');
   });
 
   it('should return an error when passToNodes reference non-existing nodes', () => {
