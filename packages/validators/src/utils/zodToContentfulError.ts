@@ -31,7 +31,7 @@ const convertInvalidType = (
 ): ContentfulErrorDetails => {
   // Zod v4 omits 'input'/'received' from invalid_type issues; parse message instead.
   // Message format: "Invalid input: expected X, received Y"
-  const received = issue.message?.match(/received (.+)$/)?.[1] ?? 'undefined';
+  const received = issue.message?.match(/received (\S+)$/)?.[1] ?? 'undefined';
   const isMissing = received === 'undefined';
   const name = isMissing ? CodeNames.Required : CodeNames.Type;
   const details = isMissing
