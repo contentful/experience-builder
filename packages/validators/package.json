@@ -41,7 +41,7 @@
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.11",
     "typescript": "^7.0.2",
-    "vite": "^5.0.8",
+    "vite": "^6.4.3",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.10"
   },
