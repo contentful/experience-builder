@@ -91,7 +91,7 @@ export default function Page() {
             margin: '0',
             padding: '16px',
           }}>
-          Loading additional levels... <sup>(won't trigger on hot-reload)</sup>
+          Loading additional levels... <sup>(won&apos;t trigger on hot-reload)</sup>
         </h3>
       )}
       <ExperienceRoot experience={experience} locale={localeCode} debug />

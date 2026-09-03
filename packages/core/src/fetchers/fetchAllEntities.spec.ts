@@ -105,11 +105,7 @@ describe('fetchAllEntries', () => {
       locale: 'en-US',
       limit: 20,
     };
-    try {
-      await fetchAllEntries(params);
-    } catch (e) {
-      expect((e as Error).message).toEqual('Response size too big');
-    }
+    await expect(fetchAllEntries(params)).rejects.toThrow('Response size too big');
 
     expect(mockClient.withoutLinkResolution.getEntries).toHaveBeenNthCalledWith(5, {
       include: 2,
@@ -196,11 +192,7 @@ describe('fetchAllAssets', () => {
       limit: 20,
     };
 
-    try {
-      await fetchAllAssets(params);
-    } catch (e) {
-      expect((e as Error).message).toEqual('Response size too big');
-    }
+    await expect(fetchAllAssets(params)).rejects.toThrow('Response size too big');
 
     expect(mockClient.getAssets).toHaveBeenNthCalledWith(5, {
       'sys.id[in]': params.ids,

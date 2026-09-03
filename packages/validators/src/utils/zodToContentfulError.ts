@@ -1,4 +1,4 @@
-import { ZodIssueCode, ZodIssue, z } from 'zod';
+import { ZodIssueCode, ZodIssue } from 'zod';
 
 export enum CodeNames {
   Type = 'type',
@@ -20,22 +20,35 @@ export type ContentfulErrorDetails = {
   expected?: (string | number)[];
 };
 
-const convertInvalidType = (issue: z.ZodInvalidTypeIssue): ContentfulErrorDetails => {
-  const name = issue.received === 'undefined' ? CodeNames.Required : CodeNames.Type;
-  const details =
-    issue.received === 'undefined'
-      ? `The property "${issue.path.slice(-1)}" is required here`
-      : `The type of "${issue.path.slice(-1)}" is incorrect, expected type: ${issue.expected}`;
+const getInputTypeName = (input: unknown): string => {
+  if (input === null) return 'null';
+  if (Array.isArray(input)) return 'array';
+  return typeof input;
+};
+
+const convertInvalidType = (
+  issue: Extract<ZodIssue, { code: 'invalid_type' }>,
+): ContentfulErrorDetails => {
+  // Zod v4 omits 'input'/'received' from invalid_type issues; parse message instead.
+  // Message format: "Invalid input: expected X, received Y"
+  const received = issue.message?.match(/received (\S+)$/)?.[1] ?? 'undefined';
+  const isMissing = received === 'undefined';
+  const name = isMissing ? CodeNames.Required : CodeNames.Type;
+  const details = isMissing
+    ? `The property "${issue.path.slice(-1)}" is required here`
+    : `The type of "${issue.path.slice(-1)}" is incorrect, expected type: ${issue.expected}`;
 
   return {
-    details: details,
-    name: name,
-    path: issue.path,
-    value: issue.received.toString(),
+    details,
+    name,
+    path: issue.path as (string | number)[],
+    value: received,
   };
 };
 
-const convertUnrecognizedKeys = (issue: z.ZodUnrecognizedKeysIssue): ContentfulErrorDetails => {
+const convertUnrecognizedKeys = (
+  issue: Extract<ZodIssue, { code: 'unrecognized_keys' }>,
+): ContentfulErrorDetails => {
   const missingProperties = issue.keys.map((k) => `"${k}"`).join(', ');
   return {
     details:
@@ -43,53 +56,52 @@ const convertUnrecognizedKeys = (issue: z.ZodUnrecognizedKeysIssue): ContentfulE
         ? `The properties ${missingProperties} are not expected`
         : `The property ${missingProperties} is not expected`,
     name: CodeNames.Unexpected,
-    path: issue.path,
+    path: issue.path as (string | number)[],
   };
 };
 
-const convertInvalidString = (issue: z.ZodInvalidStringIssue): ContentfulErrorDetails => {
+const convertInvalidString = (
+  issue: Extract<ZodIssue, { code: 'invalid_format' }>,
+): ContentfulErrorDetails => {
   return {
     details: issue.message || 'Invalid string',
-    name: issue.validation === 'regex' ? CodeNames.Regex : CodeNames.Unexpected,
-    path: issue.path,
-  };
-};
-const convertInvalidEnumValue = (issue: z.ZodInvalidEnumValueIssue): ContentfulErrorDetails => {
-  return {
-    details: issue.message || 'Value must be one of expected values',
-    name: CodeNames.In,
-    path: issue.path,
-    value: issue.received.toString(),
-    expected: issue.options,
-  };
-};
-const convertInvalidLiteral = (issue: z.ZodInvalidLiteralIssue): ContentfulErrorDetails => {
-  return {
-    details: issue.message || 'Value must be one of expected values',
-    name: CodeNames.In,
-    path: issue.path,
-    value: issue.received as string,
-    expected: [issue.expected as string],
+    name: issue.format === 'regex' ? CodeNames.Regex : CodeNames.Unexpected,
+    path: issue.path as (string | number)[],
   };
 };
 
-const convertTooBig = (issue: z.ZodTooBigIssue): ContentfulErrorDetails => {
+const convertInvalidValue = (
+  issue: Extract<ZodIssue, { code: 'invalid_value' }>,
+): ContentfulErrorDetails => {
+  return {
+    details: issue.message || 'Value must be one of expected values',
+    name: CodeNames.In,
+    path: issue.path as (string | number)[],
+    value: String(issue.input ?? ''),
+    expected: issue.values as (string | number)[],
+  };
+};
+
+const convertTooBig = (issue: Extract<ZodIssue, { code: 'too_big' }>): ContentfulErrorDetails => {
   return {
     details: issue.message || `Size should be at most ${issue.maximum}`,
     name: CodeNames.Size,
-    path: issue.path,
+    path: issue.path as (string | number)[],
     max: issue.maximum,
   };
 };
 
-const convertTooSmall = (issue: z.ZodTooSmallIssue): ContentfulErrorDetails => {
+const convertTooSmall = (
+  issue: Extract<ZodIssue, { code: 'too_small' }>,
+): ContentfulErrorDetails => {
   return {
     details: issue.message || `Size should be at least ${issue.minimum}`,
     name: CodeNames.Size,
-    path: issue.path,
+    path: issue.path as (string | number)[],
     min: issue.minimum,
   };
 };
+
 const defaultConversion = (issue: ZodIssue): ContentfulErrorDetails => {
   return {
     details: issue.message || 'An unexpected error occurred',
@@ -104,16 +116,23 @@ export const zodToContentfulError = (issue: ZodIssue): ContentfulErrorDetails =>
       return convertInvalidType(issue);
     case ZodIssueCode.unrecognized_keys:
       return convertUnrecognizedKeys(issue);
-    case ZodIssueCode.invalid_enum_value:
-      return convertInvalidEnumValue(issue);
-    case ZodIssueCode.invalid_string:
+    case ZodIssueCode.invalid_value:
+      return convertInvalidValue(issue);
+    case ZodIssueCode.invalid_format:
       return convertInvalidString(issue);
     case ZodIssueCode.too_small:
       return convertTooSmall(issue);
     case ZodIssueCode.too_big:
       return convertTooBig(issue);
-    case ZodIssueCode.invalid_literal:
-      return convertInvalidLiteral(issue);
+    case ZodIssueCode.invalid_key: {
+      // Zod v4 wraps record key validation failures; forward to the inner issue
+      const innerIssues = (issue as { issues?: ZodIssue[] }).issues;
+      const innerIssue = innerIssues?.[0];
+      if (innerIssue) {
+        return zodToContentfulError({ ...innerIssue, path: issue.path } as ZodIssue);
+      }
+      return defaultConversion(issue);
+    }
     default:
       return defaultConversion(issue);
   }

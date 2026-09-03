@@ -9,9 +9,8 @@ describe('zodToContentfulError', () => {
         code: ZodIssueCode.invalid_type,
         message: 'Expected string, received number',
         path: ['fields', 'componentTree', 'schemaVersion'],
-        received: 'number' as const,
+        input: 42,
         expected: 'string' as const,
-        unionErrors: ['number'],
       };
       const result = zodToContentfulError(issue);
       expect(result).toEqual({
@@ -25,11 +24,10 @@ describe('zodToContentfulError', () => {
     it('converts to name: required when field is missing', () => {
       const issue = {
         code: ZodIssueCode.invalid_type,
-        message: 'Expected string, received number',
+        message: 'Expected string, received undefined',
         path: ['fields', 'componentTree', 'schemaVersion'],
-        received: 'undefined' as const,
+        input: undefined,
         expected: 'string' as const,
-        unionErrors: ['number'],
       };
       const result = zodToContentfulError(issue);
       expect(result).toEqual({
@@ -40,13 +38,13 @@ describe('zodToContentfulError', () => {
       });
     });
   });
-  describe('ZodIssueCode.invalid_string', () => {
+  describe('ZodIssueCode.invalid_format', () => {
     it('converts to name: unexpected', () => {
       const issue = {
-        code: ZodIssueCode.invalid_string,
+        code: ZodIssueCode.invalid_format,
         message: 'Invalid string',
         path: ['fields', 'componentTree', 'schemaVersion'],
-        validation: 'email' as const,
+        format: 'email' as const,
       };
       const result = zodToContentfulError(issue);
       expect(result).toEqual({
@@ -55,12 +53,12 @@ describe('zodToContentfulError', () => {
         details: 'Invalid string',
       });
     });
-    it("converts to name: regex if validation is 'regex'", () => {
+    it("converts to name: regex if format is 'regex'", () => {
       const issue = {
-        code: ZodIssueCode.invalid_string,
+        code: ZodIssueCode.invalid_format,
         message: 'Invalid string',
         path: ['fields', 'componentTree', 'schemaVersion'],
-        validation: 'regex' as const,
+        format: 'regex' as const,
       };
       const result = zodToContentfulError(issue);
       expect(result).toEqual({
@@ -79,7 +77,7 @@ describe('zodToContentfulError', () => {
         maximum: 32,
         exact: false,
         inclusive: true,
-        type: 'string' as const,
+        origin: 'string' as const,
       };
       const result = zodToContentfulError(issue);
       expect(result).toEqual({
@@ -99,7 +97,7 @@ describe('zodToContentfulError', () => {
         minimum: 1,
         exact: false,
         inclusive: true,
-        type: 'string' as const,
+        origin: 'string' as const,
       };
       const result = zodToContentfulError(issue);
       expect(result).toEqual({
@@ -110,14 +108,14 @@ describe('zodToContentfulError', () => {
       });
     });
   });
-  describe('ZodIssueCode.invalid_enum_value', () => {
-    it('converts to name: in', () => {
+  describe('ZodIssueCode.invalid_value', () => {
+    it('converts to name: in (enum case)', () => {
       const issue = {
-        code: ZodIssueCode.invalid_enum_value,
+        code: ZodIssueCode.invalid_value,
         message: 'Value must be one of expected values',
         path: ['fields', 'componentTree', 'schemaVersion'],
-        options: ['a', 'b', 'c'],
-        received: 'd',
+        values: ['a', 'b', 'c'],
+        input: 'd',
       };
       const result = zodToContentfulError(issue);
       expect(result).toEqual({
@@ -128,15 +126,13 @@ describe('zodToContentfulError', () => {
         value: 'd',
       });
     });
-  });
-  describe('ZodIssueCode.invalid_literal', () => {
-    it('converts to name: in', () => {
+    it('converts to name: in (literal case)', () => {
       const issue = {
-        code: ZodIssueCode.invalid_literal,
+        code: ZodIssueCode.invalid_value,
         message: 'Value must be one of expected values',
         path: ['fields', 'componentTree', 'schemaVersion'],
-        received: 'd',
-        expected: 'a',
+        values: ['a'],
+        input: 'd',
       };
       const result = zodToContentfulError(issue);
       expect(result).toEqual({

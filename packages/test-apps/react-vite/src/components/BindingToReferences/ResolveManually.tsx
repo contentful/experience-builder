@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import React from 'react';
 import type { Asset, Entry } from 'contentful';
 import {
@@ -110,8 +109,7 @@ function resolveEntityLinksRecursively(
         }
       } else if (isArrayOfLinks(value)) {
         const arrayOfRoEntities = value.map((link) => maybeResolveLink(link)).filter(Boolean) as (
-          | Entry
-          | Asset
+          Entry | Asset
         )[]; // filter out undefined values for links that are not in memory (not loaded or archived);
         const arrayOfResolvedEntities = arrayOfRoEntities.map((roEntity) => {
           return resolveEntityLinksRecursively(roEntity, depth - 1, maybeResolveLink);

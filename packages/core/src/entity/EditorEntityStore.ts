@@ -90,7 +90,6 @@ export abstract class EditorEntityStore extends EntityStoreBase {
       return openRequest;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const newPromise = new Promise((resolve, reject) => {
       const unsubscribe = this.subscribe(
         PostMessageMethods.REQUESTED_ENTITIES,
@@ -150,7 +149,7 @@ export abstract class EditorEntityStore extends EntityStoreBase {
   public async fetchAsset(id: string, skipCache: boolean = false): Promise<Asset | undefined> {
     try {
       return (await this.fetchAssets([id], skipCache))[0];
-    } catch (err) {
+    } catch {
       // TODO: move to debug utils once it is extracted
       debug.warn(`[experiences-core::EditorEntityStore] Failed to request asset ${id}`);
       return undefined;

@@ -38,15 +38,14 @@ export const getOptimizedBackgroundImageAsset = (
   return optimizedBackgroundImageAsset;
 
   function getWidths(widthStyle: string, file: AssetFileWithRequiredImage) {
-    let width1x = 0;
-    let width2x = 0;
+    let width1x: number;
     const intrinsicImageWidth = file.details.image.width;
     if (widthStyle.endsWith('px')) {
       width1x = Math.min(Number(widthStyle.replace('px', '')), intrinsicImageWidth);
     } else {
       width1x = Math.min(MAX_WIDTH_ALLOWED, intrinsicImageWidth);
     }
-    width2x = Math.min(width1x * 2, intrinsicImageWidth);
+    const width2x = Math.min(width1x * 2, intrinsicImageWidth);
     return { width1x, width2x };
   }
 };

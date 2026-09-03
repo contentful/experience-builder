@@ -83,9 +83,11 @@ export function gatherAutoFetchedReferentsFromIncludes(
       continue;
     }
 
-    linkType === 'Entry'
-      ? autoFetchedReferentEntries.push(referentEntity as Entry)
-      : autoFetchedReferentAssets.push(referentEntity as Asset);
+    if (linkType === 'Entry') {
+      autoFetchedReferentEntries.push(referentEntity as Entry);
+    } else {
+      autoFetchedReferentAssets.push(referentEntity as Asset);
+    }
   } // for (reference of deepReferences)
 
   return { autoFetchedReferentAssets, autoFetchedReferentEntries };

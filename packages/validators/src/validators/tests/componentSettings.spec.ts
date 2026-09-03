@@ -141,7 +141,7 @@ describe('componentSettings', () => {
     const result = validateExperienceFields(updatedPattern, schemaVersion);
 
     const expectedError = {
-      details: 'Invalid',
+      details: 'Invalid string: must match pattern /^[a-zA-Z0-9-_]{1,54}$/',
       name: 'regex',
       path: ['componentSettings', 'en-US', 'variableDefinitions', 'variable1'.repeat(7)],
     };
@@ -210,7 +210,7 @@ describe('componentSettings', () => {
     const result = validateExperienceFields(pattern, schemaVersion);
     expect(result.success).toBe(false);
     expect(result.errors).toBeDefined();
-    expect(result.errors?.[0].details.startsWith('Invalid enum value.')).toBe(true);
+    expect(result.errors?.[0].details.startsWith('Invalid option:')).toBe(true);
   });
 
   it('allows to have an optional category field', () => {
@@ -285,7 +285,7 @@ describe('componentSettings', () => {
       const result = validateExperienceFields(pattern, schemaVersion);
       expect(result.success).toBe(false);
       expect(result.errors).toBeDefined();
-      expect(result.errors?.[0].details).toBe('Array must contain exactly 1 element(s)');
+      expect(result.errors?.[0].details).toBe('Too small: expected array to have >=1 items');
     });
 
     it('errors if prebindingDefinitions is not an array', () => {
@@ -328,7 +328,7 @@ describe('componentSettings', () => {
       const result = validateExperienceFields(pattern, schemaVersion);
       expect(result.success).toBe(false);
       expect(result.errors).toBeDefined();
-      expect(result.errors?.[0].details).toBe('Array must contain exactly 1 element(s)');
+      expect(result.errors?.[0].details).toBe('Too big: expected array to have <=1 items');
     });
 
     it('errors if more than MAX_MAPPING_PATHS are used', () => {
@@ -358,7 +358,7 @@ describe('componentSettings', () => {
       expect(result.success).toBe(false);
       expect(result.errors).toBeDefined();
       expect(result.errors?.[0].details).toBe(
-        `Too many paths defined for variable mapping with id "variableId1", maximum allowed is ${MAX_ALLOWED_PATHS}`,
+        `Too many paths defined for variable mapping, maximum allowed is ${MAX_ALLOWED_PATHS}`,
       );
     });
 

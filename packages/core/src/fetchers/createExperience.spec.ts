@@ -28,17 +28,14 @@ const unlocalizeEntity = <T extends EntrySkeletonType = EntrySkeletonType>(
 
 describe('createExperience', () => {
   it('throws an error if given entry is not an experience entry', () => {
-    try {
+    expect(() =>
       createExperience({
         experienceEntry: entries[0],
         referencedAssets: [],
         referencedEntries: [],
         locale: 'en-US',
-      });
-      throw new Error('Should not reach this point');
-    } catch (e) {
-      expect((e as Error).message).toEqual('Provided entry is not an experience entry');
-    }
+      }),
+    ).toThrow('Provided entry is not an experience entry');
   });
 
   it('throws an error if any provided entity is not localized', () => {

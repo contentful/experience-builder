@@ -362,7 +362,7 @@ export class CtflClient {
   private async validateToken() {
     try {
       await this.apiCall(`/users/me`);
-    } catch (e) {
+    } catch {
       return false;
     }
     return true;
