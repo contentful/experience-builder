@@ -88,7 +88,7 @@
     "storybook": "^10.5.10",
     "tsup": "^8.5.1",
     "typescript": "^7.0.2",
-    "vite": "^5.4.8",
+    "vite": "^6.4.3",
     "vite-plugin-svgr": "^5.2.0",
     "zx": "^8.8.5"
   },
