@@ -69,8 +69,8 @@
     "vite-plugin-svgr": "^5.2.0"
   },
   "peerDependencies": {
-    "react": ">=17.0.0",
-    "react-dom": ">=17.0.0"
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   },
   "dependencies": {
     "@contentful/experiences-core": "file:../core",
