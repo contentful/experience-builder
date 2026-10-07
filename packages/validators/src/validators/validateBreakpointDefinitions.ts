@@ -7,7 +7,7 @@ export const validateBreakpointsDefinition = (breakpoints: Breakpoint[]): Valida
   const result = z
     .array(BreakpointSchema)
     .superRefine(breakpointsRefinement)
-    .safeParse(breakpoints);
+    .safeParse(breakpoints, { reportInput: true });
   if (!result.success) {
     return {
       success: false,
