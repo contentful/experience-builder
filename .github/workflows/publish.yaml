@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Retrieve Secrets from Vault
         id: vault
-        uses: hashicorp/vault-action@v3.4.0
+        uses: hashicorp/vault-action@892a26828f195e65540a40b4768ae4571f51ebfc # v4.0.0
         with:
           url: ${{ secrets.VAULT_URL }}
           role: ${{ github.event.repository.name }}-github-action
@@ -35,16 +35,16 @@ jobs:
             secret/data/github/automation-app-user GH_USER_EMAIL | GIT_COMMITTER_EMAIL ;
 
       - name: "Checkout"
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0 # Checkout all branches and tags, needed for publish
           ref: ${{ github.event.workflow_run.head_branch || github.ref }}
           token: ${{ steps.vault.outputs.GITHUB_TOKEN }}
 
       - name: "Use NodeJS 22"
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: "22.14"
+          node-version: "24.19.0"
           cache: "npm"
 
       - name: Install dependencies
@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
 
       - name: Restore the build folders
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: |
             packages/*/dist
@@ -65,7 +65,7 @@ jobs:
             packages/templates/react-vite-ts/dist
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Authenticate with private GH package
-        run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
+        run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com\nlegacy-peer-deps=true" > ./.npmrc
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
       # We only want to publish if there are changes to any package. Since the lerna --force-publish flag publishes even if there are no changes

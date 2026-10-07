@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-core",
-  "version": "3.8.10",
+  "version": "3.8.11-beta.0",
   "description": "",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
@@ -53,7 +53,7 @@
     "build": "rollup -c ./rollup.config.mjs",
     "predev": "npm run clean",
     "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
-    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -62,26 +62,28 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-typescript": "^11.1.5",
+    "@rollup/plugin-commonjs": "^29.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "^12.3.0",
     "@types/lodash.clonedeep": "^4.5.9",
+    "@types/lodash.merge": "^4.6.9",
     "@types/md5": "2.3.6",
-    "@vitest/coverage-v8": "^2.1.1",
-    "contentful": "^11.10.2",
-    "happy-dom": "^13.3.8",
-    "rimraf": "^5.0.5",
-    "rollup-plugin-dts": "^6.1.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "contentful": "^11.12.9",
+    "happy-dom": "^20.11.6",
+    "lodash.merge": "^4.6.2",
+    "rimraf": "^6.1.3",
+    "rollup-plugin-dts": "^6.5.1",
     "rollup-plugin-ts": "^3.4.5",
-    "vite-tsconfig-paths": "^4.2.2",
-    "vitest": "^2.1.1"
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.11"
   },
   "dependencies": {
     "@contentful/experiences-validators": "file:../validators",
-    "@contentful/rich-text-types": "^17.0.0",
+    "@contentful/rich-text-types": "^17.2.7",
     "lodash.clonedeep": "^4.5.0",
     "md5": "2.3.0",
-    "zustand": "^4.4.7"
+    "zustand": "^5.0.15"
   },
   "peerDependencies": {
     "contentful": ">=10.6.0"

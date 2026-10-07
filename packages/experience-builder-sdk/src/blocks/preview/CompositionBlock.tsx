@@ -126,8 +126,7 @@ export const CompositionBlock = ({
     const cfSsrClassNameValues = node.variables.cfSsrClassName as DesignValue | undefined;
     const mainBreakpoint = entityStore.breakpoints[0];
     const cfSsrClassName = cfSsrClassNameValues?.valuesByBreakpoint?.[mainBreakpoint.id] as
-      | string
-      | undefined;
+      string | undefined;
 
     // Don't enrich the assembly wrapper node with props
     if (!componentRegistration || isPatternNode) {

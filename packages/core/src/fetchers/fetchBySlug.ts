@@ -42,7 +42,7 @@ export async function fetchBySlug({
 }: FetchBySlugParams) {
   // Be a no-op if in editor mode
   if (isEditorMode) return;
-  let experienceEntry: Entry | ExperienceEntry | undefined = undefined;
+  let experienceEntry: Entry | ExperienceEntry | undefined;
 
   if (!localeCode) {
     throw new Error('Failed to fetch by slug. Required "localeCode" parameter was not provided');

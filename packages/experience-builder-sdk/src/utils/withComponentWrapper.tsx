@@ -20,7 +20,7 @@ interface CFProps extends React.HtmlHTMLAttributes<HTMLElement> {
 // v4.
 const DEFAULT_OPTIONS = {
   wrapComponent: true,
-  wrapContainer: 'div' as keyof JSX.IntrinsicElements,
+  wrapContainer: 'div' as keyof React.JSX.IntrinsicElements,
 };
 
 /**

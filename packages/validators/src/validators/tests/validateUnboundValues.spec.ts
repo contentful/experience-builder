@@ -21,7 +21,7 @@ describe('unboundValues', () => {
       name: 'type',
       value: 'array',
       path: ['unboundValues', 'en-US'],
-      details: 'The type of "en-US" is incorrect, expected type: object',
+      details: 'The type of "en-US" is incorrect, expected type: record',
     };
     expect(result.errors).toEqual([expectedError]);
   });

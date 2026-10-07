@@ -33,26 +33,25 @@
     "depcruise": "lerna run depcruise"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.0.3",
-    "@typescript-eslint/eslint-plugin": "^7.0.2",
-    "@typescript-eslint/parser": "^7.0.2",
-    "commitizen": "4.3.0",
-    "concurrently": "^8.2.2",
-    "eslint": "^8.52.0",
-    "eslint-plugin-compat": "^6.0.2",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-import-helpers": "^1.2.1",
-    "eslint-plugin-jest": "^28.14.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-vitest": "0.4.1",
-    "husky": "^9.0.10",
-    "lerna": "^8.2.4",
-    "lint-staged": "^15.0.1",
-    "next": "15.5.10",
-    "nx": "21.6.9",
-    "prettier": "3.2.5"
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.68.0",
+    "@typescript-eslint/parser": "^8.68.0",
+    "@vitest/eslint-plugin": "^1.6.27",
+    "commitizen": "4.3.2",
+    "concurrently": "^10.0.4",
+    "eslint": "^10.8.1",
+    "eslint-plugin-compat": "^7.0.2",
+    "eslint-plugin-jest": "^29.16.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "husky": "^9.1.7",
+    "typescript": "^5.9.3",
+    "lerna": "^10.0.0",
+    "lint-staged": "^17.3.0",
+    "next": "16.3.6",
+    "nx": "23.2.1",
+    "prettier": "3.9.6"
   },
   "lint-staged": {
     "*.{t,j}s?(x)": [
@@ -68,12 +67,18 @@
     }
   },
   "overrides": {
-    "form-data": "4.0.4",
-    "qs": "6.14.1",
+    "form-data": "4.0.6",
+    "qs": "6.16.0",
     "glob@10": "^10.5.0",
     "glob@11": "^11.1.0",
     "@next/eslint-plugin-next": {
-      "glob": "^10.5.0"
-    }
+      "glob": "^13.0.6"
+    },
+    "@typescript-eslint/eslint-plugin": "^8.68.0",
+    "@typescript-eslint/parser": "^8.68.0",
+    "typescript-eslint": "^8.68.0",
+    "typescript": "^5.9.3",
+    "zod": "^4.0.0",
+    "next": "16.3.6"
   }
 }
