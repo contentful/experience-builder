@@ -99,7 +99,7 @@ describe('parseComponentProps', () => {
         };
 
         // Re-import after mocking
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { parseComponentProps } = require('./parseComponentProps');
         const result = parseComponentProps(newArguments);
         expect(_createStylesheetsForBuiltInStyles).toHaveBeenCalledTimes(1);
@@ -148,7 +148,7 @@ describe('parseComponentProps', () => {
         };
 
         // Re-import after mocking
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { parseComponentProps } = require('./parseComponentProps');
         const result = parseComponentProps(newArguments);
         expect(_createStylesheetsForBuiltInStyles).toHaveBeenCalledTimes(1);
@@ -197,7 +197,7 @@ describe('parseComponentProps', () => {
         };
 
         // Re-import after mocking
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { parseComponentProps } = require('./parseComponentProps');
         const result = parseComponentProps(newArguments);
         expect(_createStylesheetsForBuiltInStyles).toHaveBeenCalledTimes(1);

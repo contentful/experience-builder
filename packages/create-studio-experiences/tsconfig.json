@@ -7,13 +7,11 @@
     "module": "Node16",
     "target": "ES2022",
     "sourceMap": true,
+    "rootDir": "./src",
     "outDir": "dist",
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "noEmitOnError": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "types": ["node"]
   },
   "include": ["src/**/*"]
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { useContentfulConfig } from '../hooks/useContentfulConfig';
 import SpaceForm from './SpaceForm';
 
-interface SpaceSelectorProps {}
+type SpaceSelectorProps = Record<string, never>;
 
 const SpaceSelector: React.FC<SpaceSelectorProps> = () => {
   const { config, isPreview, currentConfig, setConfig, availableConfigs, setIsPreview } =

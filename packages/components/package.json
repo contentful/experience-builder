@@ -24,7 +24,7 @@
     "dev": "rollup -c ./rollup.config.mjs --watch --environment DEV",
     "prebuild": "npm run clean",
     "build": "rollup -c ./rollup.config.mjs",
-    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0 --ignore-path ../../.eslintignore",
+    "lint": "eslint src --ext '.ts,.tsx,.js,.jsx' --max-warnings 0",
     "lint:fix": "eslint src --ext '.ts,.tsx,.js,.jsx' --fix",
     "test:component": "npx cypress run --component",
     "storybook": "storybook dev -p 6006",

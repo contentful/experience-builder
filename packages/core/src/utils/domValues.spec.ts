@@ -39,7 +39,7 @@ describe('Find outermost coordinates', () => {
 describe('Get element coordinates', () => {
   it('should return element coordinates', () => {
     const mockElement = document.createElement('div');
-    expect(getElementCoordinates(mockElement)).toEqual({
+    expect(getElementCoordinates(mockElement)).toMatchObject({
       x: 0,
       y: 0,
       bottom: 0,

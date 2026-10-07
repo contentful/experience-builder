@@ -1,8 +1,8 @@
+'use client';
+
 import React, { ErrorInfo, ReactElement } from 'react';
 import { sendMessage } from '@contentful/experiences-core';
 import { OUTGOING_EVENTS } from '@contentful/experiences-core/constants';
-
-('use client');
 
 const styles = {
   errorMessage: {

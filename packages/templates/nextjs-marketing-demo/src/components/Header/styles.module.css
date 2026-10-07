@@ -16,7 +16,7 @@ ul.mobileMenu {
   border-bottom: 1px solid transparent;
 }
 
-ul.mobileMenu :global li.ant-menu-overflow-item::after {
+ul.mobileMenu :global(li.ant-menu-overflow-item::after) {
   border-bottom-color: transparent !important;
 }
 

@@ -25,6 +25,7 @@ import {
 import { useTreeStore } from '@/store/tree';
 import { useEditorStore } from '@/store/editor';
 import { UnresolvedLink } from 'contentful';
+import { useShallow } from 'zustand/react/shallow';
 
 export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore) {
   const entityStore = inMemoryEntitiesStore((state) => state.entityStore);
@@ -32,10 +33,12 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
   const setEntitiesFetched = inMemoryEntitiesStore((state) => state.setEntitiesFetched);
   const resetEntityStore = inMemoryEntitiesStore((state) => state.resetEntityStore);
 
-  const { updateTree, updateNodesByUpdatedEntity } = useTreeStore((state) => ({
-    updateTree: state.updateTree,
-    updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
-  }));
+  const { updateTree, updateNodesByUpdatedEntity } = useTreeStore(
+    useShallow((state) => ({
+      updateTree: state.updateTree,
+      updateNodesByUpdatedEntity: state.updateNodesByUpdatedEntity,
+    })),
+  );
   const unboundValues = useEditorStore((state) => state.unboundValues);
   const dataSource = useEditorStore((state) => state.dataSource);
   const setLocale = useEditorStore((state) => state.setLocale);

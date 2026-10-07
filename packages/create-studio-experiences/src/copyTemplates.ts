@@ -13,7 +13,7 @@ async function copyFolder(src: string, dest: string) {
         return true;
       },
     });
-  } catch (err) {
+  } catch {
     console.error(`Failed to copy the ${src} folder into ${dest} folder `);
   }
 }
