@@ -102,7 +102,7 @@ export const Text: React.FC<TextProps> = ({
       event.preventDefault();
       onNavigate(url, target);
     }
-    onClick && onClick(event);
+    onClick?.(event);
   };
 
   return (

@@ -57,12 +57,9 @@ describe('EntityStore', () => {
   });
 
   it('should throw an error if provided experienceEntry is not an experience entry', () => {
-    try {
-      new EntityStore({ experienceEntry: entries[0], entities: [], locale });
-      throw new Error('Should not reach this point');
-    } catch (e) {
-      expect((e as Error).message).toEqual('Provided entry is not an experience entry');
-    }
+    expect(() => new EntityStore({ experienceEntry: entries[0], entities: [], locale })).toThrow(
+      'Provided entry is not an experience entry',
+    );
   });
 
   it('should tell if the experience entry is a pattern or an experience', () => {

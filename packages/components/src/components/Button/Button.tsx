@@ -79,7 +79,7 @@ export const Button: React.FC<ButtonProps> = ({
       event.preventDefault();
       onNavigate(url, target);
     }
-    onClick && onClick(event);
+    onClick?.(event);
   };
 
   const button = (

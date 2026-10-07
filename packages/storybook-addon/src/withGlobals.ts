@@ -1,5 +1,9 @@
-import type { Renderer, PartialStoryFn as StoryFunction, StoryContext } from '@storybook/types';
-import { useEffect, useGlobals } from '@storybook/preview-api';
+import type {
+  Renderer,
+  PartialStoryFn as StoryFunction,
+  StoryContext,
+} from 'storybook/internal/types';
+import { useEffect, useGlobals } from 'storybook/preview-api';
 import { PARAM_KEY } from './constants';
 
 export const withGlobals = (StoryFn: StoryFunction<Renderer>, context: StoryContext<Renderer>) => {

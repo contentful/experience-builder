@@ -170,7 +170,7 @@ export type ComponentRegistration = {
       nodeBlockId?: boolean;
     };
     wrapComponent?: boolean;
-    wrapContainer?: keyof JSX.IntrinsicElements;
+    wrapContainer?: keyof React.JSX.IntrinsicElements;
     /**
      * @deprecated This option is not supported anymore and will be fully removed in the
      * next major release v4. */
@@ -566,8 +566,7 @@ export type BackgroundImageOptions = {
 };
 
 export type ConnectedPayload =
-  | undefined
-  | { sdkVersion: string; definitions: ComponentDefinition[] };
+  undefined | { sdkVersion: string; definitions: ComponentDefinition[] };
 export type DesignTokensPayload = {
   designTokens: DesignTokensDefinition;
   resolvedCssVariables: Record<string, string>;

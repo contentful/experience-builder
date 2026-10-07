@@ -39,14 +39,14 @@
     }
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^2.1.1",
-    "typescript": "^5.2.2",
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "^7.0.2",
     "vite": "^5.0.8",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.1.1"
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.11"
   },
   "dependencies": {
-    "zod": "^3.22.4"
+    "zod": "^4.4.3"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"

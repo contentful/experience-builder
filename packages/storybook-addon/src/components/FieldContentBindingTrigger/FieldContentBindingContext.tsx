@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useContext, useEffect, useState } from 'react';
 
 import { ComponentDefinition } from '@contentful/experiences-sdk-react';
-import { useArgs } from '@storybook/manager-api';
+import { useArgs } from 'storybook/manager-api';
 
 export type UnboundValues = {
   value: string | boolean | number | Record<any, any> | undefined;

@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
-  vault: contentful/vault@1
+  vault: contentful/vault@1.30.4
 
 executors:
   docker-with-node:
     docker:
-      - image: cimg/node:20.11
+      - image: cimg/node:20.20.2
     working_directory: ~/build-and-test
 
 jobs:

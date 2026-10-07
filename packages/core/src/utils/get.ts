@@ -7,7 +7,7 @@ export function get<T>(obj: Record<string, any>, path: string[]): T | undefined 
   try {
     const [currentPath, ...nextPath] = path;
     return get(obj[currentPath], nextPath);
-  } catch (err) {
+  } catch {
     return undefined;
   }
 }

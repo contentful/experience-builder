@@ -15,7 +15,7 @@ import tokens from '@contentful/f36-tokens';
 import { isEqual } from 'lodash';
 import { ContentBindingPopover } from './ContentBindingPopover';
 import { useCompositionCanvasSubscriber } from '@/context/useCompositionCanvasSubscriber';
-import { useArgs } from '@storybook/manager-api';
+import { useArgs } from 'storybook/manager-api';
 
 const styles = {
   bindingMenu: css({

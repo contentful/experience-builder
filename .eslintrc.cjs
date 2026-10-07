@@ -1,4 +1,15 @@
 module.exports = {
+  ignorePatterns: [
+    'testing-library.js',
+    '.eslintrc.cjs',
+    'commitlint.config.cjs',
+    'lint-staged.config.cjs',
+    '**/dist/**',
+    '**/build/**',
+    '**/.coverage/**',
+    '**/.cache/**',
+    'examples/**',
+  ],
   env: {
     browser: true,
     node: true,
