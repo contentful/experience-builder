@@ -1,9 +1,16 @@
 import { validateComponentDefinition } from '../validateComponentDefinition';
 import { componentDefinition } from '../../test/__fixtures__/componentDefinition';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { z } from 'zod';
 import { ComponentDefinitionType } from '../../schemas/componentDefinition';
 
 describe('validateComponentDefinition', () => {
+  const originalLocaleError = z.config().localeError;
+
+  afterEach(() => {
+    z.config({ localeError: originalLocaleError });
+  });
+
   it('should validate the component definition successfully', () => {
     const result = validateComponentDefinition(componentDefinition);
 
@@ -56,6 +63,7 @@ describe('validateComponentDefinition', () => {
 
     expect(result.success).toBe(false);
     expect(result.errors?.[0].name).toBe('in');
+    expect(result.errors?.[0].value).toBe('InvalidType');
     expect(result.errors?.[0].path).toEqual(['variables', 'testVar', 'type']);
     expect(result.errors?.[0].expected).toEqual([
       'Text',
@@ -70,6 +78,21 @@ describe('validateComponentDefinition', () => {
       'Array',
       'Link',
     ]);
+  });
+
+  it.each([
+    { value: 42, received: 'number', name: 'type' },
+    { value: null, received: 'null', name: 'type' },
+    { value: [], received: 'array', name: 'type' },
+    { value: false, received: 'boolean', name: 'type' },
+    { value: undefined, received: 'undefined', name: 'required' },
+  ])('classifies $received inputs independently of the Zod locale', ({ value, received, name }) => {
+    z.config(z.locales.de());
+
+    const result = validateComponentDefinition({ ...componentDefinition, name: value });
+
+    expect(result.success).toBe(false);
+    expect(result.errors?.[0]).toMatchObject({ name, value: received, path: ['name'] });
   });
 
   describe('type of defaultValue is determined by type property', () => {
