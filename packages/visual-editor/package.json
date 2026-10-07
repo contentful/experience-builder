@@ -64,7 +64,7 @@
     "rollup-plugin-serve": "^3.0.0",
     "rollup-plugin-ts": "^3.4.5",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
