@@ -65,7 +65,7 @@ jobs:
             packages/templates/react-vite-ts/dist
           key: build-cache-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Authenticate with private GH package
-        run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com" > ./.npmrc
+        run: echo -e "//npm.pkg.github.com/:_authToken=${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}\n@contentful:registry=https://npm.pkg.github.com\nlegacy-peer-deps=true" > ./.npmrc
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.GITHUB_PACKAGES_WRITE_TOKEN }}
       # We only want to publish if there are changes to any package. Since the lerna --force-publish flag publishes even if there are no changes
