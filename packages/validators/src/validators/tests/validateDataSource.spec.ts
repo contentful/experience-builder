@@ -103,7 +103,7 @@ describe('dataSource', () => {
       expected: ['Entry', 'Asset'],
       path: ['dataSource', 'en-US', 'uuid1', 'sys', 'linkType'],
       details: 'Invalid option: expected one of "Entry"|"Asset"',
-      value: '',
+      value: 'Invalid',
     };
     expect(result.success).toBe(false);
     expect(result.errors?.[0]).toEqual(expectedError);

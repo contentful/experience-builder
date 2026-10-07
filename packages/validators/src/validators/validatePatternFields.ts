@@ -55,7 +55,7 @@ export const validatePatternFields = (
     componentSettings: pattern.fields.componentSettings,
   };
 
-  const result = schema.safeParse(fieldsToValidate);
+  const result = schema.safeParse(fieldsToValidate, { reportInput: true });
   if (!result.success) {
     return {
       success: result.success,
