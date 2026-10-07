@@ -3,7 +3,7 @@ import { ValidatorReturnValue } from './ValidatorReturnValue';
 import { zodToContentfulError } from '../utils/zodToContentfulError';
 
 export const validateComponentDefinition = (definition): ValidatorReturnValue => {
-  const result = ComponentDefinitionSchema.safeParse(definition);
+  const result = ComponentDefinitionSchema.safeParse(definition, { reportInput: true });
   if (!result.success) {
     return {
       success: false,

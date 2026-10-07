@@ -1,6 +1,7 @@
 import PageLayout from '@/components/PageLayout';
 import { getExperience } from '@/getExperience';
 import { detachExperienceStyles } from '@contentful/experiences-sdk-react';
+import '../../../design-tokens';
 
 type Page = {
   params: Promise<{ locale?: string; slug?: string; preview?: string }>;
