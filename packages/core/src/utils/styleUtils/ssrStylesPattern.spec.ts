@@ -1434,6 +1434,42 @@ const getCardPrebindingFixtures = () => {
   return { cardEntry, cardAsset, singleCardPattern };
 };
 
+// Renders an experience with the given pattern instance node and returns the detached SSR styles.
+const detachStylesForCardPrebinding = ({
+  instanceNode,
+  patterns,
+  cardEntry,
+  cardAsset,
+}: {
+  instanceNode: ComponentTreeNode;
+  patterns: ExperienceEntry[];
+  cardEntry: Entry;
+  cardAsset: Asset;
+}) => {
+  const experienceEntry = getExperienceEntryWithNode({
+    node: instanceNode,
+    dataSource: {
+      cardLink: { sys: { id: cardEntry.sys.id, type: 'Link', linkType: 'Entry' } },
+    },
+    usedComponents: patterns,
+  });
+
+  const experience = createExperience({
+    experienceEntry: experienceEntry as Entry,
+    locale: 'en-US',
+    referencedEntries: [...patterns, cardEntry] as unknown as Entry[],
+    referencedAssets: [cardAsset],
+  });
+
+  return detachExperienceStyles(experience);
+};
+
+// The background image CSS (default + 2x image-set) expected for the given asset
+const getExpectedBackgroundImageCss = (asset: Asset) => {
+  const url = asset.fields.file?.url;
+  return `background-image:url(${url}?w=600);background-image:image-set(url(${url}?w=300) 1x,url(${url}?w=600) 2x)`;
+};
+
 describe('pattern component', () => {
   it('should extract media query css', () => {
     const patternNode: ComponentTreeNode = {
@@ -1967,27 +2003,14 @@ describe('pattern component', () => {
       children: [],
     };
 
-    const experienceEntry = getExperienceEntryWithNode({
-      node: patternInstanceNode,
-      dataSource: {
-        cardLink: { sys: { id: 'card-entry-id', type: 'Link', linkType: 'Entry' } },
-      },
-      usedComponents: [singleCardPattern],
+    const styles = detachStylesForCardPrebinding({
+      instanceNode: patternInstanceNode,
+      patterns: [singleCardPattern],
+      cardEntry,
+      cardAsset,
     });
 
-    const experience = createExperience({
-      experienceEntry: experienceEntry as Entry,
-      locale: 'en-US',
-      referencedEntries: [singleCardPattern as unknown as Entry, cardEntry],
-      referencedAssets: [cardAsset],
-    });
-
-    const styles = detachExperienceStyles(experience);
-
-    const assetUrl = cardAsset.fields.file?.url;
-    expect(styles).toContain(
-      `background-image:url(${assetUrl}?w=600);background-image:image-set(url(${assetUrl}?w=300) 1x,url(${assetUrl}?w=600) 2x)`,
-    );
+    expect(styles).toContain(getExpectedBackgroundImageCss(cardAsset));
   });
 
   it('should resolve prebound background image of a nested pattern from the parameters passed through passToNodes', () => {
@@ -2048,27 +2071,14 @@ describe('pattern component', () => {
       children: [],
     };
 
-    const experienceEntry = getExperienceEntryWithNode({
-      node: cardRowInstanceNode,
-      dataSource: {
-        cardLink: { sys: { id: 'card-entry-id', type: 'Link', linkType: 'Entry' } },
-      },
-      usedComponents: [cardRowPattern, singleCardPattern],
+    const styles = detachStylesForCardPrebinding({
+      instanceNode: cardRowInstanceNode,
+      patterns: [cardRowPattern, singleCardPattern],
+      cardEntry,
+      cardAsset,
     });
 
-    const experience = createExperience({
-      experienceEntry: experienceEntry as Entry,
-      locale: 'en-US',
-      referencedEntries: [cardRowPattern, singleCardPattern, cardEntry] as unknown as Entry[],
-      referencedAssets: [cardAsset],
-    });
-
-    const styles = detachExperienceStyles(experience);
-
-    const assetUrl = cardAsset.fields.file?.url;
-    expect(styles).toContain(
-      `background-image:url(${assetUrl}?w=600);background-image:image-set(url(${assetUrl}?w=300) 1x,url(${assetUrl}?w=600) 2x)`,
-    );
+    expect(styles).toContain(getExpectedBackgroundImageCss(cardAsset));
   });
 
   it('should not resolve prebound background image when the parameter does not allow the content type of the bound entry', () => {
@@ -2095,8 +2105,8 @@ describe('pattern component', () => {
       },
     } as unknown as ExperienceEntry;
 
-    const experienceEntry = getExperienceEntryWithNode({
-      node: {
+    const styles = detachStylesForCardPrebinding({
+      instanceNode: {
         definitionId: 'single-card-pattern-id',
         id: 'pattern-instance-id',
         prebindingId: 'cardPrebinding',
@@ -2104,20 +2114,12 @@ describe('pattern component', () => {
         parameters: { cardParam: { type: 'BoundValue', path: '/cardLink' } },
         children: [],
       },
-      dataSource: {
-        cardLink: { sys: { id: 'card-entry-id', type: 'Link', linkType: 'Entry' } },
-      },
-      usedComponents: [restrictedPattern],
+      patterns: [restrictedPattern],
+      cardEntry,
+      cardAsset,
     });
 
-    const experience = createExperience({
-      experienceEntry: experienceEntry as Entry,
-      locale: 'en-US',
-      referencedEntries: [restrictedPattern as unknown as Entry, cardEntry],
-      referencedAssets: [cardAsset],
-    });
-
-    expect(detachExperienceStyles(experience)).not.toContain('background-image');
+    expect(styles).not.toContain('background-image');
   });
 
   // ES-291: Customer has 5 custom breakpoints. An image inside a Pattern is hidden (cfVisibility:false)
