@@ -6,6 +6,7 @@
 import { Asset, Entry } from 'contentful';
 import {
   ComponentTreeNode,
+  ExperienceComponentSettings,
   DesignValue,
   ExperienceDataSource,
   ExperienceEntry,
@@ -1983,7 +1984,10 @@ describe('pattern component', () => {
 
     const styles = detachExperienceStyles(experience);
 
-    expect(styles).toContain(`background-image:url(${cardAsset.fields.file?.url}`);
+    const assetUrl = cardAsset.fields.file?.url;
+    expect(styles).toContain(
+      `background-image:url(${assetUrl}?w=600);background-image:image-set(url(${assetUrl}?w=300) 1x,url(${assetUrl}?w=600) 2x)`,
+    );
   });
 
   it('should resolve prebound background image of a nested pattern from the parameters passed through passToNodes', () => {
@@ -2061,7 +2065,59 @@ describe('pattern component', () => {
 
     const styles = detachExperienceStyles(experience);
 
-    expect(styles).toContain(`background-image:url(${cardAsset.fields.file?.url}`);
+    const assetUrl = cardAsset.fields.file?.url;
+    expect(styles).toContain(
+      `background-image:url(${assetUrl}?w=600);background-image:image-set(url(${assetUrl}?w=300) 1x,url(${assetUrl}?w=600) 2x)`,
+    );
+  });
+
+  it('should not resolve prebound background image when the parameter does not allow the content type of the bound entry', () => {
+    const { cardEntry, cardAsset, singleCardPattern } = getCardPrebindingFixtures();
+
+    // Same pattern as in the passing tests, but `cardParam` only allows `hero` entries (the bound entry is a `card`)
+    const componentSettings = singleCardPattern.fields
+      .componentSettings as ExperienceComponentSettings;
+    const restrictedPattern = {
+      ...singleCardPattern,
+      fields: {
+        ...singleCardPattern.fields,
+        componentSettings: {
+          ...componentSettings,
+          prebindingDefinitions: [
+            {
+              ...componentSettings.prebindingDefinitions![0],
+              parameterDefinitions: {
+                cardParam: { passToNodes: [], contentTypes: ['hero'] },
+              },
+            },
+          ],
+        },
+      },
+    } as unknown as ExperienceEntry;
+
+    const experienceEntry = getExperienceEntryWithNode({
+      node: {
+        definitionId: 'single-card-pattern-id',
+        id: 'pattern-instance-id',
+        prebindingId: 'cardPrebinding',
+        variables: {},
+        parameters: { cardParam: { type: 'BoundValue', path: '/cardLink' } },
+        children: [],
+      },
+      dataSource: {
+        cardLink: { sys: { id: 'card-entry-id', type: 'Link', linkType: 'Entry' } },
+      },
+      usedComponents: [restrictedPattern],
+    });
+
+    const experience = createExperience({
+      experienceEntry: experienceEntry as Entry,
+      locale: 'en-US',
+      referencedEntries: [restrictedPattern as unknown as Entry, cardEntry],
+      referencedAssets: [cardAsset],
+    });
+
+    expect(detachExperienceStyles(experience)).not.toContain('background-image');
   });
 
   // ES-291: Customer has 5 custom breakpoints. An image inside a Pattern is hidden (cfVisibility:false)

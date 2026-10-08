@@ -58,7 +58,15 @@ export const resolveSsrPrebindingPath = ({
     return undefined;
   }
 
-  const fieldPath = variableMapping.pathsByContentType?.[entity.sys.contentType.sys.id]?.path;
+  // Same guard as in the SDK: the parameter only accepts entries of the allowed content types
+  const contentTypeId = entity.sys.contentType.sys.id;
+  const parameterDefinition =
+    prebindingDefinition.parameterDefinitions?.[variableMapping.parameterId];
+  if (!parameterDefinition?.contentTypes.includes(contentTypeId)) {
+    return undefined;
+  }
+
+  const fieldPath = variableMapping.pathsByContentType?.[contentTypeId]?.path;
   if (!fieldPath) {
     return undefined;
   }
