@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0](https://github.com/contentful/experience-builder/compare/v3.8.10...v4.0.0) (2026-10-08)
+
+### Bug Fixes
+
+- **deps:** update contentful-rich-text monorepo ([#1514](https://github.com/contentful/experience-builder/issues/1514)) ([8a307f6](https://github.com/contentful/experience-builder/commit/8a307f6dc941d40f47e2eac73a8910112cc3ed08))
+- **deps:** update dependency contentful to ^11.12.7 ([#1520](https://github.com/contentful/experience-builder/issues/1520)) ([525725d](https://github.com/contentful/experience-builder/commit/525725d2e58bab411bd1971f94fea84607309e03))
+- **deps:** update dependency contentful to ^11.12.8 ([#1598](https://github.com/contentful/experience-builder/issues/1598)) ([6ff1746](https://github.com/contentful/experience-builder/commit/6ff1746ca50c1f17f73bcd77ba21f333fcae9b43))
+- **deps:** update dependency contentful to ^11.12.9 ([#1602](https://github.com/contentful/experience-builder/issues/1602)) ([93bd49e](https://github.com/contentful/experience-builder/commit/93bd49e545c83d405a26f985bbd3aadb3c3323b7))
+- **deps:** update dependency zustand to ^4.5.7 ([#1527](https://github.com/contentful/experience-builder/issues/1527)) ([4ed4ac5](https://github.com/contentful/experience-builder/commit/4ed4ac51d89900c8e672bdc75b8791704b338ea6))
+- **deps:** update dependency zustand to ^5.0.15 ([#1613](https://github.com/contentful/experience-builder/issues/1613)) ([85e6c46](https://github.com/contentful/experience-builder/commit/85e6c462cb80ac50b2561a83a1a1c7bbdc493532))
+- **deps:** update dependency zustand to v5 ([#1595](https://github.com/contentful/experience-builder/issues/1595)) ([bc8a9f4](https://github.com/contentful/experience-builder/commit/bc8a9f45063e306ceb2c93902f07487bd53be59c))
+- pin conventionalcommits preset main ([#1668](https://github.com/contentful/experience-builder/issues/1668)) ([26ba9e6](https://github.com/contentful/experience-builder/commit/26ba9e67b589c3c48cb34e0e4ddbefb4d1341881))
+
 ## [3.8.10](https://github.com/contentful/experience-builder/compare/v3.8.9...v3.8.10) (2026-07-03)
 
 ### Bug Fixes
