@@ -23,7 +23,7 @@ describe('usedComponents', () => {
       expected: ['Entry'],
       path: ['usedComponents', 'en-US', 0, 'sys', 'linkType'],
       details: 'Invalid input: expected "Entry"',
-      value: '',
+      value: 'Invalid',
     };
 
     expect(result.success).toBe(false);

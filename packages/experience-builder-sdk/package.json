@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-sdk-react",
-  "version": "3.8.11-beta.0",
+  "version": "4.0.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "typings": "./dist/src/index.d.ts",
@@ -88,8 +88,8 @@
   },
   "peerDependencies": {
     "contentful": ">=10.6.0",
-    "react": ">=16.0.0",
-    "react-dom": ">=16.0.0"
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   },
   "files": [
     "dist",

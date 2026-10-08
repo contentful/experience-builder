@@ -1,6 +1,6 @@
 {
   "name": "@contentful/experiences-components-react",
-  "version": "3.8.11-beta.0",
+  "version": "4.0.0",
   "description": "A basic set of components to use with Studio Experiences",
   "homepage": "https://github.com/contentful/experience-builder/tree/next/packages/components#readme",
   "repository": {
@@ -69,8 +69,8 @@
     "vite-plugin-svgr": "^5.2.0"
   },
   "peerDependencies": {
-    "react": ">=17.0.0",
-    "react-dom": ">=17.0.0"
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   },
   "dependencies": {
     "@contentful/experiences-core": "file:../core",

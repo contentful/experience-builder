@@ -64,7 +64,7 @@ export const validateExperienceFields = (
     usedComponents: experience.fields.usedComponents,
   };
 
-  const result = schema.safeParse(fieldsToValidate);
+  const result = schema.safeParse(fieldsToValidate, { reportInput: true });
   if (!result.success) {
     return {
       success: result.success,

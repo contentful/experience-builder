@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0](https://github.com/contentful/experience-builder/compare/v3.8.10...v4.0.0) (2026-10-08)
+
+### Bug Fixes
+
+- **deps:** update dependency @clack/prompts to ^0.11.0 ([#1515](https://github.com/contentful/experience-builder/issues/1515)) ([0cbe44b](https://github.com/contentful/experience-builder/commit/0cbe44b7195cad982441c70e0964d9a80d32ea73))
+- **deps:** update dependency @clack/prompts to v1 ([#1573](https://github.com/contentful/experience-builder/issues/1573)) ([ff8e269](https://github.com/contentful/experience-builder/commit/ff8e269271bf87421ffd4285780d91d9dc07717f))
+- **deps:** update dependency cross-spawn to ^7.0.6 ([#1481](https://github.com/contentful/experience-builder/issues/1481)) ([e058160](https://github.com/contentful/experience-builder/commit/e058160ee5ba4bdffb593b21962705fed537e6cb))
+- **deps:** update dependency open to ^10.2.0 ([#1523](https://github.com/contentful/experience-builder/issues/1523)) ([1d50582](https://github.com/contentful/experience-builder/commit/1d50582eb304e8ea90d18d7c953d218107586e25))
+- **deps:** update dependency open to v11 ([#1591](https://github.com/contentful/experience-builder/issues/1591)) ([27e1edd](https://github.com/contentful/experience-builder/commit/27e1edd8dc2d8fcf5b21cdf8700d3b5d83a3ebee))
+- **deps:** update dependency yargs to ^17.7.3 ([#1484](https://github.com/contentful/experience-builder/issues/1484)) ([59b5116](https://github.com/contentful/experience-builder/commit/59b5116aa9c988918f4b2d0b7c176e85e345c3ab))
+- **deps:** update dependency yargs to v18 ([#1593](https://github.com/contentful/experience-builder/issues/1593)) ([f545298](https://github.com/contentful/experience-builder/commit/f545298301ade9471f9bdea0708dbdea3a2e1ff7))
+- pin conventionalcommits preset main ([#1668](https://github.com/contentful/experience-builder/issues/1668)) ([26ba9e6](https://github.com/contentful/experience-builder/commit/26ba9e67b589c3c48cb34e0e4ddbefb4d1341881))
+
 ## [3.8.10](https://github.com/contentful/experience-builder/compare/v3.8.9...v3.8.10) (2026-07-03)
 
 **Note:** Version bump only for package @contentful/create-studio-experiences
