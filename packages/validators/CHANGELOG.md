@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0](https://github.com/contentful/experience-builder/compare/v3.8.10...v4.0.0) (2026-10-08)
+
+### Bug Fixes
+
+- **deps:** update dependency zod to ^3.25.76 ([#1526](https://github.com/contentful/experience-builder/issues/1526)) ([fbb174e](https://github.com/contentful/experience-builder/commit/fbb174ef6d2f893fb63de0718d679771da7eebe9))
+- **deps:** update dependency zod to v4 ([#1594](https://github.com/contentful/experience-builder/issues/1594)) ([89af224](https://github.com/contentful/experience-builder/commit/89af2249dade2a13cb0db8455b55c01594b6b5a2))
+- pin conventionalcommits preset main ([#1668](https://github.com/contentful/experience-builder/issues/1668)) ([26ba9e6](https://github.com/contentful/experience-builder/commit/26ba9e67b589c3c48cb34e0e4ddbefb4d1341881))
+- repair SSR styles and Zod validation errors ([#1659](https://github.com/contentful/experience-builder/issues/1659)) ([809b00a](https://github.com/contentful/experience-builder/commit/809b00a7b2ceefce30620d4b3b36d7a0a4afe9d4))
+
 ## [3.8.10](https://github.com/contentful/experience-builder/compare/v3.8.9...v3.8.10) (2026-07-03)
 
 **Note:** Version bump only for package @contentful/experiences-validators

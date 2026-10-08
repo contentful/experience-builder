@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0](https://github.com/contentful/experience-builder/compare/v3.8.10...v4.0.0) (2026-10-08)
+
+### ⚠ BREAKING CHANGES
+
+- require React 18 peer dependencies ([#1658](https://github.com/contentful/experience-builder/issues/1658))
+
+### Bug Fixes
+
+- **deps:** update contentful-rich-text monorepo ([#1514](https://github.com/contentful/experience-builder/issues/1514)) ([8a307f6](https://github.com/contentful/experience-builder/commit/8a307f6dc941d40f47e2eac73a8910112cc3ed08))
+- **deps:** update dependency postcss-import to ^16.1.1 ([#1524](https://github.com/contentful/experience-builder/issues/1524)) ([a1374c6](https://github.com/contentful/experience-builder/commit/a1374c6aea8b42647ec51415919574dec073ab54))
+- **deps:** update dependency postcss-import to ^16.2.0 ([#1620](https://github.com/contentful/experience-builder/issues/1620)) ([e0522e1](https://github.com/contentful/experience-builder/commit/e0522e1265ac04c285e6b656f48a11ed4634c87e))
+- **deps:** update react monorepo ([#1528](https://github.com/contentful/experience-builder/issues/1528)) ([7f90e82](https://github.com/contentful/experience-builder/commit/7f90e82d83f0782d92becb1ddd98977ac3d08a30))
+- **deps:** update react monorepo to v19 ([#1597](https://github.com/contentful/experience-builder/issues/1597)) ([8df2e20](https://github.com/contentful/experience-builder/commit/8df2e20305289fd066c4d374f0a7d55a99cd83dc))
+- pin conventionalcommits preset main ([#1668](https://github.com/contentful/experience-builder/issues/1668)) ([26ba9e6](https://github.com/contentful/experience-builder/commit/26ba9e67b589c3c48cb34e0e4ddbefb4d1341881))
+- require React 18 peer dependencies ([#1658](https://github.com/contentful/experience-builder/issues/1658)) ([abd0f09](https://github.com/contentful/experience-builder/commit/abd0f09ca7bb062c955117f6ef43a2a9b4f473ec))
+
 ## [3.8.10](https://github.com/contentful/experience-builder/compare/v3.8.9...v3.8.10) (2026-07-03)
 
 **Note:** Version bump only for package @contentful/experiences-components-react

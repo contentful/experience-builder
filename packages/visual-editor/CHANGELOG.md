@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0](https://github.com/contentful/experience-builder/compare/v3.8.10...v4.0.0) (2026-10-08)
+
+### ⚠ BREAKING CHANGES
+
+- require React 18 peer dependencies ([#1658](https://github.com/contentful/experience-builder/issues/1658))
+
+### Bug Fixes
+
+- **deps:** update dependency contentful to ^11.12.7 ([#1520](https://github.com/contentful/experience-builder/issues/1520)) ([525725d](https://github.com/contentful/experience-builder/commit/525725d2e58bab411bd1971f94fea84607309e03))
+- **deps:** update dependency contentful to ^11.12.8 ([#1598](https://github.com/contentful/experience-builder/issues/1598)) ([6ff1746](https://github.com/contentful/experience-builder/commit/6ff1746ca50c1f17f73bcd77ba21f333fcae9b43))
+- **deps:** update dependency contentful to ^11.12.9 ([#1602](https://github.com/contentful/experience-builder/issues/1602)) ([93bd49e](https://github.com/contentful/experience-builder/commit/93bd49e545c83d405a26f985bbd3aadb3c3323b7))
+- **deps:** update dependency immer to ^10.2.0 ([#1522](https://github.com/contentful/experience-builder/issues/1522)) ([3628673](https://github.com/contentful/experience-builder/commit/36286737e8adec5317da2e778d106378f71717f8))
+- **deps:** update dependency immer to ^11.1.18 ([#1633](https://github.com/contentful/experience-builder/issues/1633)) ([aabe7f7](https://github.com/contentful/experience-builder/commit/aabe7f768127ab9ca5afd3a20f4ef35493cb06a2))
+- **deps:** update dependency immer to v11 ([#1589](https://github.com/contentful/experience-builder/issues/1589)) ([dc58030](https://github.com/contentful/experience-builder/commit/dc58030be15676071ab58eb99806afa68a158a49))
+- **deps:** update dependency lodash-es to ^4.18.1 [security] ([#1457](https://github.com/contentful/experience-builder/issues/1457)) ([9c8700b](https://github.com/contentful/experience-builder/commit/9c8700b390334a42060d0280c8abe18f4d3b6496))
+- **deps:** update dependency postcss-import to ^16.1.1 ([#1524](https://github.com/contentful/experience-builder/issues/1524)) ([a1374c6](https://github.com/contentful/experience-builder/commit/a1374c6aea8b42647ec51415919574dec073ab54))
+- **deps:** update dependency postcss-import to ^16.2.0 ([#1620](https://github.com/contentful/experience-builder/issues/1620)) ([e0522e1](https://github.com/contentful/experience-builder/commit/e0522e1265ac04c285e6b656f48a11ed4634c87e))
+- **deps:** update dependency use-debounce to ^10.1.1 ([#1525](https://github.com/contentful/experience-builder/issues/1525)) ([092d289](https://github.com/contentful/experience-builder/commit/092d2891023c21902b6272a57f2aa52a9153afd1))
+- **deps:** update dependency uuid to ^14.0.2 ([#1635](https://github.com/contentful/experience-builder/issues/1635)) ([e6ff771](https://github.com/contentful/experience-builder/commit/e6ff7715efee433b727a0d770d16b6a09ab1a034))
+- **deps:** update dependency uuid to v14 [security] ([#1460](https://github.com/contentful/experience-builder/issues/1460)) ([f6e8561](https://github.com/contentful/experience-builder/commit/f6e856151e61bb99f488c186dfb1ff4aab93e397))
+- **deps:** update dependency zustand to ^4.5.7 ([#1527](https://github.com/contentful/experience-builder/issues/1527)) ([4ed4ac5](https://github.com/contentful/experience-builder/commit/4ed4ac51d89900c8e672bdc75b8791704b338ea6))
+- **deps:** update dependency zustand to ^5.0.15 ([#1613](https://github.com/contentful/experience-builder/issues/1613)) ([85e6c46](https://github.com/contentful/experience-builder/commit/85e6c462cb80ac50b2561a83a1a1c7bbdc493532))
+- **deps:** update dependency zustand to v5 ([#1595](https://github.com/contentful/experience-builder/issues/1595)) ([bc8a9f4](https://github.com/contentful/experience-builder/commit/bc8a9f45063e306ceb2c93902f07487bd53be59c))
+- **deps:** update react monorepo ([#1528](https://github.com/contentful/experience-builder/issues/1528)) ([7f90e82](https://github.com/contentful/experience-builder/commit/7f90e82d83f0782d92becb1ddd98977ac3d08a30))
+- **deps:** update react monorepo to v19 ([#1597](https://github.com/contentful/experience-builder/issues/1597)) ([8df2e20](https://github.com/contentful/experience-builder/commit/8df2e20305289fd066c4d374f0a7d55a99cd83dc))
+- pin conventionalcommits preset main ([#1668](https://github.com/contentful/experience-builder/issues/1668)) ([26ba9e6](https://github.com/contentful/experience-builder/commit/26ba9e67b589c3c48cb34e0e4ddbefb4d1341881))
+- require React 18 peer dependencies ([#1658](https://github.com/contentful/experience-builder/issues/1658)) ([abd0f09](https://github.com/contentful/experience-builder/commit/abd0f09ca7bb062c955117f6ef43a2a9b4f473ec))
+
 ## [3.8.10](https://github.com/contentful/experience-builder/compare/v3.8.9...v3.8.10) (2026-07-03)
 
 **Note:** Version bump only for package @contentful/experiences-visual-editor-react

@@ -1,4 +1,9 @@
 # @contentful/experiences-sdk-react
+
+### React support
+
+React and React DOM 18 or later are required. React 16 and 17 consumers must upgrade both packages before installing this version. The SDK uses Zustand 5, which relies on React 18's `useSyncExternalStore` API.
+
 ### Purpose
 - To bundle up and expose features from other packages to be used by the end user. This is the package that users will install and import into their own React projects.
 - Note that this is a React-specific package. Therefore, unlike the core package, React specific compatibilities are implemented here and support for other frontend frameworks would result in a new package being created under a separate namespace.
