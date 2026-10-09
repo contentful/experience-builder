@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.1](https://github.com/contentful/experience-builder/compare/v4.0.0...v4.0.1) (2026-10-09)
+
+### Bug Fixes
+
+- **deps:** update dependency contentful to ^11.12.10 ([#1671](https://github.com/contentful/experience-builder/issues/1671)) ([fc9e7d3](https://github.com/contentful/experience-builder/commit/fc9e7d3e0cc4e6a922013a3a0b78a0fbb1a0a0e9))
+- **deps:** update dependency immer to ^11.1.21 ([#1672](https://github.com/contentful/experience-builder/issues/1672)) ([e4158b5](https://github.com/contentful/experience-builder/commit/e4158b50ae2466886ea30ea4ebef20319f1437d7))
+
 ## [4.0.0](https://github.com/contentful/experience-builder/compare/v3.8.10...v4.0.0) (2026-10-08)
 
 ### ⚠ BREAKING CHANGES

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.1](https://github.com/contentful/experience-builder/compare/v4.0.0...v4.0.1) (2026-10-09)
+
+### Bug Fixes
+
+- correctly assign overwrite to the pattern property [SPA-5537] ([#1670](https://github.com/contentful/experience-builder/issues/1670)) ([378cfeb](https://github.com/contentful/experience-builder/commit/378cfeb292a37db1f80a29fc5d8397acef44d45d))
+- **deps:** update dependency antd to ^6.6.5 ([#1666](https://github.com/contentful/experience-builder/issues/1666)) ([0d5219b](https://github.com/contentful/experience-builder/commit/0d5219b4ebbfb4e875378d8069ffa0fecd596df1))
+- **deps:** update dependency contentful to ^11.12.10 ([#1671](https://github.com/contentful/experience-builder/issues/1671)) ([fc9e7d3](https://github.com/contentful/experience-builder/commit/fc9e7d3e0cc4e6a922013a3a0b78a0fbb1a0a0e9))
+- **deps:** update dependency immer to ^11.1.21 ([#1672](https://github.com/contentful/experience-builder/issues/1672)) ([e4158b5](https://github.com/contentful/experience-builder/commit/e4158b50ae2466886ea30ea4ebef20319f1437d7))
+- **deps:** update dependency next to v16.3.8 [security] ([#1663](https://github.com/contentful/experience-builder/issues/1663)) ([328ca80](https://github.com/contentful/experience-builder/commit/328ca808dfef58b40456e88fd64ac8b526e63a8e))
+- **deps:** update dependency open to ^11.0.4 ([#1624](https://github.com/contentful/experience-builder/issues/1624)) ([4eb8690](https://github.com/contentful/experience-builder/commit/4eb86909b9e63412daa35f4d2934811594888b62))
+- **deps:** update dependency react-router-dom to ^7.18.4 ([#1673](https://github.com/contentful/experience-builder/issues/1673)) ([ec824f8](https://github.com/contentful/experience-builder/commit/ec824f879ec94ec53d5fc274cc9e528693b776ae))
+
 ## [4.0.0](https://github.com/contentful/experience-builder/compare/v3.8.10...v4.0.0) (2026-10-08)
 
 ### ⚠ BREAKING CHANGES
