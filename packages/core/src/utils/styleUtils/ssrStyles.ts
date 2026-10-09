@@ -7,9 +7,14 @@ import {
   ExperienceComponentTree,
   ExperienceDataSource,
   ExperienceUnboundValues,
+  Parameter,
   PrimitiveValue,
 } from '@contentful/experiences-validators';
 import { buildCfStyles, stringifyCssProperties } from './stylesUtils';
+import {
+  resolveSsrPatternNodeParameters,
+  resolveSsrPrebindingPath,
+} from './resolveSsrPrebindingPath';
 // import {
 import { checkIsAssemblyNode, getTargetValueInPixels, parseCSSValue } from '@/utils/utils';
 import { isValidBreakpointValue, mergeDesignValuesByBreakpoint } from '../breakpoints';
@@ -78,6 +83,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     unboundValues,
     componentSettings,
     componentVariablesOverwrites,
+    parameters,
     patternWrapper,
     wrappingPatternIds,
     wrappingPatternNodeIds = isRenderingAPatternEntry ? ['root'] : [],
@@ -87,6 +93,8 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
     unboundValues: ExperienceUnboundValues;
     componentSettings?: ExperienceComponentSettings;
     componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
+    // parameters of the pattern instance, used to resolve the prebinding of pattern variables
+    parameters?: Record<string, Parameter>;
     patternWrapper?: ComponentTreeNode;
     wrappingPatternIds: Set<string>;
     wrappingPatternNodeIds?: string[];
@@ -145,6 +153,11 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
           // and this is where the over-writes for the default values are stored
           // yes, I know, it's a bit confusing
           componentVariablesOverwrites: nextComponentVariablesOverwrites,
+          parameters: resolveSsrPatternNodeParameters({
+            patternNode: currentNode,
+            wrapperComponentSettings: componentSettings,
+            wrapperParameters: parameters,
+          }),
           // pass top-level pattern node to store instance-specific child styles for rendering
           patternWrapper: currentNode,
           wrappingPatternIds: new Set([...wrappingPatternIds, currentNode.definitionId]),
@@ -171,6 +184,7 @@ export const detachExperienceStyles = (experience: Experience): string | undefin
         dataSource: dataSource,
         componentSettings,
         componentVariablesOverwrites,
+        parameters,
         getBoundEntityById: (id: string) => {
           return experience.entityStore?.entities.find(
             (entity: Entry | Asset) => entity.sys.id === id,
@@ -511,6 +525,7 @@ export const resolveBackgroundImageBinding = ({
   unboundValues = {},
   componentVariablesOverwrites,
   componentSettings = { variableDefinitions: {} },
+  parameters,
   options,
   width,
 }: {
@@ -521,6 +536,8 @@ export const resolveBackgroundImageBinding = ({
   componentSettings?: ExperienceComponentSettings;
   // patternNode.variables - a place which contains bindings scoped to the pattern
   componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
+  // patternNode.parameters - a place which contains the prebinding scoped to the pattern
+  parameters?: Record<string, Parameter>;
   options?: BackgroundImageOptions;
   width?: string;
 }) => {
@@ -532,6 +549,26 @@ export const resolveBackgroundImageBinding = ({
   if (variableData.type === 'ComponentValue') {
     const variableDefinitionKey = variableData.key;
     const variableDefinition = componentSettings.variableDefinitions[variableDefinitionKey];
+
+    // A variable that is prebound takes precedence over the overwrites and defaults (same as in the SDK)
+    const prebindingPath = resolveSsrPrebindingPath({
+      componentValueKey: variableDefinitionKey,
+      componentSettings,
+      parameters,
+      dataSource,
+      getBoundEntityById,
+    });
+    if (prebindingPath) {
+      return resolveBackgroundImageBinding({
+        variableData: { type: 'BoundValue', path: prebindingPath },
+        getBoundEntityById,
+        dataSource,
+        unboundValues,
+        componentSettings,
+        options,
+        width,
+      });
+    }
 
     // @ts-expect-error TODO: Types coming from validations erroneously assume that `defaultValue` can be a primitive value (e.g. string or number)
     const defaultValueKey = variableDefinition.defaultValue?.key;
@@ -592,8 +629,7 @@ export const resolveBackgroundImageBinding = ({
       const [, fieldName] = pathToReferencedAsset.substring(1).split('/') ?? undefined;
 
       const referenceToAsset = (boundEntity as Entry).fields[fieldName] as
-        | UnresolvedLink<'Asset'>
-        | undefined;
+        UnresolvedLink<'Asset'> | undefined;
 
       if (!referenceToAsset) {
         return;
@@ -684,6 +720,7 @@ export const indexByBreakpoint = ({
   dataSource = {},
   componentVariablesOverwrites,
   componentSettings = { variableDefinitions: {} },
+  parameters,
 }: {
   variables: Record<string, ComponentPropertyValue>;
   breakpointIds: string[];
@@ -692,6 +729,7 @@ export const indexByBreakpoint = ({
   dataSource?: ExperienceDataSource;
   componentVariablesOverwrites?: Record<string, ComponentPropertyValue>;
   componentSettings?: ExperienceComponentSettings;
+  parameters?: Record<string, Parameter>;
 }) => {
   const variableValuesByBreakpoints = breakpointIds.reduce<
     Record<string, Record<string, Exclude<PrimitiveValue, undefined>>>
@@ -742,6 +780,7 @@ export const indexByBreakpoint = ({
         dataSource,
         componentSettings,
         componentVariablesOverwrites,
+        parameters,
         width,
         options,
       });
