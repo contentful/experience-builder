@@ -6,6 +6,7 @@
 import { Asset, Entry } from 'contentful';
 import {
   ComponentTreeNode,
+  ExperienceComponentSettings,
   DesignValue,
   ExperienceDataSource,
   ExperienceEntry,
@@ -1339,6 +1340,136 @@ const getExperienceEntryWithNode = ({
   };
 };
 
+// Fixtures for prebinding tests (ES-789): a `card` entry with an asset and a "Single Card" pattern
+// whose container background image is mapped to the `featuredImage` field of the card.
+const getCardPrebindingFixtures = () => {
+  const cardEntry = {
+    sys: {
+      id: 'card-entry-id',
+      type: 'Entry',
+      locale: 'en-US',
+      contentType: { sys: { id: 'card', type: 'Link', linkType: 'ContentType' } },
+    },
+    fields: {
+      featuredImage: { sys: { id: 'card-asset-id', type: 'Link', linkType: 'Asset' } },
+    },
+    metadata: { tags: [] },
+  } as unknown as Entry;
+
+  const cardAsset = {
+    sys: { id: 'card-asset-id', type: 'Asset', locale: 'en-US' },
+    fields: {
+      title: 'Card image',
+      file: {
+        url: 'https://www.contentful.com/card-image.jpg',
+        details: { image: { width: 2000 } },
+      },
+    },
+  } as unknown as Asset;
+
+  const singleCardPattern = {
+    ...patternEntry,
+    sys: { ...patternEntry.sys, id: 'single-card-pattern-id' },
+    fields: {
+      ...patternEntry.fields,
+      title: 'Single Card',
+      slug: 'single-card',
+      componentTree: {
+        ...patternEntry.fields.componentTree,
+        children: [
+          {
+            definitionId: 'contentful-container',
+            id: 'card-container-id',
+            variables: {
+              cfBackgroundImageUrl: { type: 'ComponentValue', key: 'cardImage' },
+              cfBackgroundImageOptions: { type: 'ComponentValue', key: 'cardImageOptions' },
+            },
+            children: [],
+          },
+        ],
+      },
+      dataSource: {},
+      unboundValues: { cardImageDefault: { value: '' } },
+      componentSettings: {
+        variableDefinitions: {
+          cardImage: {
+            displayName: 'Card image',
+            type: 'Media',
+            group: 'content',
+            defaultValue: { type: 'UnboundValue', key: 'cardImageDefault' },
+          },
+          cardImageOptions: {
+            displayName: 'Background Image Options',
+            type: 'Object',
+            group: 'style',
+            defaultValue: {
+              type: 'DesignValue',
+              valuesByBreakpoint: {
+                desktop: { scaling: 'fit', alignment: 'left center', targetSize: '300px' },
+              },
+            },
+          },
+        },
+        prebindingDefinitions: [
+          {
+            id: 'cardPrebinding',
+            parameterDefinitions: {
+              cardParam: { passToNodes: [], contentTypes: ['card'] },
+            },
+            variableMappings: {
+              cardImage: {
+                type: 'ContentTypeMapping',
+                parameterId: 'cardParam',
+                pathsByContentType: {
+                  card: { path: '/fields/featuredImage/~locale/fields/file/~locale' },
+                },
+              },
+            },
+            allowedVariableOverrides: [],
+          },
+        ],
+      },
+    },
+  } as unknown as ExperienceEntry;
+  return { cardEntry, cardAsset, singleCardPattern };
+};
+
+// Renders an experience with the given pattern instance node and returns the detached SSR styles.
+const detachStylesForCardPrebinding = ({
+  instanceNode,
+  patterns,
+  cardEntry,
+  cardAsset,
+}: {
+  instanceNode: ComponentTreeNode;
+  patterns: ExperienceEntry[];
+  cardEntry: Entry;
+  cardAsset: Asset;
+}) => {
+  const experienceEntry = getExperienceEntryWithNode({
+    node: instanceNode,
+    dataSource: {
+      cardLink: { sys: { id: cardEntry.sys.id, type: 'Link', linkType: 'Entry' } },
+    },
+    usedComponents: patterns,
+  });
+
+  const experience = createExperience({
+    experienceEntry: experienceEntry as Entry,
+    locale: 'en-US',
+    referencedEntries: [...patterns, cardEntry] as unknown as Entry[],
+    referencedAssets: [cardAsset],
+  });
+
+  return detachExperienceStyles(experience);
+};
+
+// The background image CSS (default + 2x image-set) expected for the given asset
+const getExpectedBackgroundImageCss = (asset: Asset) => {
+  const url = asset.fields.file?.url;
+  return `background-image:url(${url}?w=600);background-image:image-set(url(${url}?w=300) 1x,url(${url}?w=600) 2x)`;
+};
+
 describe('pattern component', () => {
   it('should extract media query css', () => {
     const patternNode: ComponentTreeNode = {
@@ -1856,6 +1987,139 @@ describe('pattern component', () => {
 
     // Making sure that the extracted styles contain the updated background color for the nested pattern component
     expect(styles).toMatch('background-color:rgba(111, 111 , 111, 0)');
+  });
+
+  // ES-789: A container's background image mapped through pattern prebinding (variableMappings +
+  // instance parameters) was missing from the detached SSR styles, while text bindings worked.
+  it('should resolve prebound background image of a pattern from the instance parameters', () => {
+    const { cardEntry, cardAsset, singleCardPattern } = getCardPrebindingFixtures();
+
+    const patternInstanceNode: ComponentTreeNode = {
+      definitionId: 'single-card-pattern-id',
+      id: 'pattern-instance-id',
+      prebindingId: 'cardPrebinding',
+      variables: {},
+      parameters: { cardParam: { type: 'BoundValue', path: '/cardLink' } },
+      children: [],
+    };
+
+    const styles = detachStylesForCardPrebinding({
+      instanceNode: patternInstanceNode,
+      patterns: [singleCardPattern],
+      cardEntry,
+      cardAsset,
+    });
+
+    expect(styles).toContain(getExpectedBackgroundImageCss(cardAsset));
+  });
+
+  it('should resolve prebound background image of a nested pattern from the parameters passed through passToNodes', () => {
+    const { cardEntry, cardAsset, singleCardPattern } = getCardPrebindingFixtures();
+
+    // "Card row" nests "Single Card" and passes its own `rowParam` down to the `cardParam` of the inner pattern
+    const cardRowPattern = {
+      ...singleCardPattern,
+      sys: { ...singleCardPattern.sys, id: 'card-row-pattern-id' },
+      fields: {
+        ...singleCardPattern.fields,
+        title: 'Card row',
+        slug: 'card-row',
+        componentTree: {
+          ...singleCardPattern.fields.componentTree,
+          children: [
+            {
+              definitionId: 'single-card-pattern-id',
+              id: 'inner-card-node-id',
+              variables: {},
+              children: [],
+            },
+          ],
+        },
+        usedComponents: [singleCardPattern],
+        unboundValues: {},
+        componentSettings: {
+          variableDefinitions: {},
+          prebindingDefinitions: [
+            {
+              id: 'cardRowPrebinding',
+              parameterDefinitions: {
+                rowParam: {
+                  contentTypes: ['card'],
+                  passToNodes: [
+                    {
+                      nodeId: 'inner-card-node-id',
+                      parameterId: 'cardParam',
+                      prebindingId: 'cardPrebinding',
+                    },
+                  ],
+                },
+              },
+              variableMappings: {},
+              allowedVariableOverrides: [],
+            },
+          ],
+        },
+      },
+    } as unknown as ExperienceEntry;
+
+    const cardRowInstanceNode: ComponentTreeNode = {
+      definitionId: 'card-row-pattern-id',
+      id: 'card-row-instance-id',
+      prebindingId: 'cardRowPrebinding',
+      variables: {},
+      parameters: { rowParam: { type: 'BoundValue', path: '/cardLink' } },
+      children: [],
+    };
+
+    const styles = detachStylesForCardPrebinding({
+      instanceNode: cardRowInstanceNode,
+      patterns: [cardRowPattern, singleCardPattern],
+      cardEntry,
+      cardAsset,
+    });
+
+    expect(styles).toContain(getExpectedBackgroundImageCss(cardAsset));
+  });
+
+  it('should not resolve prebound background image when the parameter does not allow the content type of the bound entry', () => {
+    const { cardEntry, cardAsset, singleCardPattern } = getCardPrebindingFixtures();
+
+    // Same pattern as in the passing tests, but `cardParam` only allows `hero` entries (the bound entry is a `card`)
+    const componentSettings = singleCardPattern.fields
+      .componentSettings as ExperienceComponentSettings;
+    const restrictedPattern = {
+      ...singleCardPattern,
+      fields: {
+        ...singleCardPattern.fields,
+        componentSettings: {
+          ...componentSettings,
+          prebindingDefinitions: [
+            {
+              ...componentSettings.prebindingDefinitions![0],
+              parameterDefinitions: {
+                cardParam: { passToNodes: [], contentTypes: ['hero'] },
+              },
+            },
+          ],
+        },
+      },
+    } as unknown as ExperienceEntry;
+
+    const styles = detachStylesForCardPrebinding({
+      instanceNode: {
+        definitionId: 'single-card-pattern-id',
+        id: 'pattern-instance-id',
+        prebindingId: 'cardPrebinding',
+        variables: {},
+        parameters: { cardParam: { type: 'BoundValue', path: '/cardLink' } },
+        children: [],
+      },
+      patterns: [restrictedPattern],
+      cardEntry,
+      cardAsset,
+    });
+
+    expect(styles).not.toContain('background-image');
   });
 
   // ES-291: Customer has 5 custom breakpoints. An image inside a Pattern is hidden (cfVisibility:false)

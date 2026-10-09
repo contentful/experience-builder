@@ -19,15 +19,15 @@
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router-dom": "^7.18.2"
+    "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "@typescript-eslint/eslint-plugin": "^8.68.0",
     "@typescript-eslint/parser": "^8.68.0",
-    "@vitejs/plugin-react": "^6.1.0",
-    "contentful": "^11.12.9",
+    "@vitejs/plugin-react": "^6.1.2",
+    "contentful": "^11.12.10",
     "dependency-cruiser": "^18.2.0",
     "eslint": "^10.9.1",
     "eslint-plugin-react-hooks": "^7.1.1",
