@@ -46,7 +46,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "husky": "^9.1.7",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "lerna": "^10.0.1",
     "lint-staged": "^17.6.0",
     "next": "16.4.0",
@@ -78,7 +78,7 @@
     "@typescript-eslint/eslint-plugin": "^8.71.1",
     "@typescript-eslint/parser": "^8.71.1",
     "typescript-eslint": "^8.71.1",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "zod": "^4.6.5",
     "next": "16.4.0"
   }
