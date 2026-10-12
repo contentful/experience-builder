@@ -22,6 +22,91 @@ const patternLevel1 = circularEntry.fields.usedComponents![0] as ExperienceEntry
 const patternLevel2 = patternLevel1.fields.usedComponents![0] as ExperienceEntry;
 patternLevel2.fields.usedComponents = [patternLevel1];
 
+vi.mock('./fetchExperienceEntry', () => {
+  const fetchExperienceEntry = async (options) => {
+    if (options?.identifier?.slug === 'circular-slug') {
+      return circularEntry;
+    } else if (options?.identifier?.slug === 'prebinding-slug') {
+      const experienceEntryWithNestedPattern = createExperienceEntry({
+        id: 'experience-entry-with-prebinding',
+      });
+      // injecting the nested pattern node
+      experienceEntryWithNestedPattern.fields.componentTree.children.push({
+        children: [],
+        definitionId: 'nested-pattern-entry-id',
+        id: 'nested-instance-id',
+        parameters: {
+          param1: {
+            type: 'BoundValue',
+            path: '/uuid1',
+          },
+        },
+        variables: {},
+      });
+
+      experienceEntryWithNestedPattern.fields.usedComponents = [
+        createPatternEntry({
+          id: 'nested-pattern-entry-id',
+          prebindingDefinitions: [
+            {
+              id: 'prebinding-definition-id',
+              parameterDefinitions: {
+                param1: {
+                  contentTypes: ['a', 'b'],
+                  defaultSource: {
+                    type: 'Entry',
+                    contentTypeId: 'a',
+                    link: {
+                      sys: {
+                        type: 'Link',
+                        linkType: 'Entry',
+                        id: 'default-prebinding-entry-id',
+                      },
+                    },
+                  },
+                  passToNodes: [],
+                },
+              },
+              variableMappings: {
+                var1: {
+                  parameterId: 'param1',
+
+                  type: 'ContentTypeMapping',
+                  pathsByContentType: {
+                    a: { path: '/fields/title' },
+                    b: { path: '/fields/name' },
+                  },
+                },
+              },
+            },
+          ],
+        }),
+      ];
+
+      return experienceEntryWithNestedPattern;
+    }
+    return createExperienceEntry({});
+  };
+  return {
+    fetchExperienceEntry,
+  };
+});
+
+vi.mock('./fetchReferencedEntities', () => {
+  const fetchReferencedEntities = vi.fn(async ({ experienceEntry }) => {
+    if (experienceEntry.sys.id === 'experience-entry-with-prebinding') {
+      return {
+        entries: [...entries, createEntry('default-prebinding-entry-id')],
+        assets,
+      };
+    }
+    return { entries, assets };
+  });
+  return {
+    fetchReferencedEntities,
+  };
+});
+
 describe('fetchBySlug', () => {
   const mockClient = {
     getAssets: vi.fn(),
@@ -37,90 +122,6 @@ describe('fetchBySlug', () => {
 
   beforeEach(() => {
     experienceEntry = createExperienceEntry({});
-    vi.mock('./fetchExperienceEntry', () => {
-      const fetchExperienceEntry = async (options) => {
-        if (options?.identifier?.slug === 'circular-slug') {
-          return circularEntry;
-        } else if (options?.identifier?.slug === 'prebinding-slug') {
-          const experienceEntryWithNestedPattern = createExperienceEntry({
-            id: 'experience-entry-with-prebinding',
-          });
-          // injecting the nested pattern node
-          experienceEntryWithNestedPattern.fields.componentTree.children.push({
-            children: [],
-            definitionId: 'nested-pattern-entry-id',
-            id: 'nested-instance-id',
-            parameters: {
-              param1: {
-                type: 'BoundValue',
-                path: '/uuid1',
-              },
-            },
-            variables: {},
-          });
-
-          experienceEntryWithNestedPattern.fields.usedComponents = [
-            createPatternEntry({
-              id: 'nested-pattern-entry-id',
-              prebindingDefinitions: [
-                {
-                  id: 'prebinding-definition-id',
-                  parameterDefinitions: {
-                    param1: {
-                      contentTypes: ['a', 'b'],
-                      defaultSource: {
-                        type: 'Entry',
-                        contentTypeId: 'a',
-                        link: {
-                          sys: {
-                            type: 'Link',
-                            linkType: 'Entry',
-                            id: 'default-prebinding-entry-id',
-                          },
-                        },
-                      },
-                      passToNodes: [],
-                    },
-                  },
-                  variableMappings: {
-                    var1: {
-                      parameterId: 'param1',
-
-                      type: 'ContentTypeMapping',
-                      pathsByContentType: {
-                        a: { path: '/fields/title' },
-                        b: { path: '/fields/name' },
-                      },
-                    },
-                  },
-                },
-              ],
-            }),
-          ];
-
-          return experienceEntryWithNestedPattern;
-        }
-        return createExperienceEntry({});
-      };
-      return {
-        fetchExperienceEntry,
-      };
-    });
-
-    vi.mock('./fetchReferencedEntities', () => {
-      const fetchReferencedEntities = vi.fn(async ({ experienceEntry }) => {
-        if (experienceEntry.sys.id === 'experience-entry-with-prebinding') {
-          return {
-            entries: [...entries, createEntry('default-prebinding-entry-id')],
-            assets,
-          };
-        }
-        return { entries, assets };
-      });
-      return {
-        fetchReferencedEntities,
-      };
-    });
   });
 
   describe('when in editor mode', () => {

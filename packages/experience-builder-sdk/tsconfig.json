@@ -6,7 +6,8 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
-    "outDir": "dist"
+    "outDir": "dist",
+    "rootDir": "."
   },
   "include": ["src", "test/components/Test.spec.tsx", "test/components/Test.tsx"]
 }

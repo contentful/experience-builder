@@ -1,5 +1,5 @@
 import { debug, DebugLogger } from './debugLogger';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 describe('debugLogger', () => {
   it('should not log anything if debug is not enabled', () => {
@@ -35,7 +35,11 @@ describe('debugLogger', () => {
 
   describe('when localStorage is not available', () => {
     beforeEach(() => {
-      Object.assign(window, { localStorage: undefined });
+      vi.stubGlobal('localStorage', undefined);
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
     });
 
     it('should still enable to logger', () => {
