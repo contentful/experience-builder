@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "ignoreDeprecations": "6.0",
     "incremental": false,
     "isolatedModules": true,
     "jsx": "react",

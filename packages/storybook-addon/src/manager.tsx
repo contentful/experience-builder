@@ -16,7 +16,7 @@ addons.register(ADDON_ID, () => {
     type: types.PANEL,
     title: 'Experience Builder',
     match: ({ viewMode }) => viewMode === 'story',
-    render: (props: { active: boolean }) => <Panel {...props} />,
+    render: ({ active }) => <Panel active={!!active} />,
   });
 
   // Register the tab

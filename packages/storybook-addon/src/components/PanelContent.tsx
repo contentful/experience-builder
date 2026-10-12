@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Tabs } from '@contentful/f36-components';
 import { styles } from './ExperienceBuilder.styles';
 import { useParameter } from 'storybook/manager-api';
-import { PARAM_KEY } from 'src/constants';
+import { PARAM_KEY } from '@/constants';
 import { ComponentDefinition } from '@contentful/experiences-sdk-react';
 import { StylesTab } from './StylesTab';
 import { ContentTab } from './ContentTab';

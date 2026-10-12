@@ -7,10 +7,10 @@
     "jsx": "react",
     "module": "ESNext",
     "outDir": "dist",
+    "rootDir": "./src",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "noImplicitAny": false,
     "noEmitOnError": true,
     "paths": {

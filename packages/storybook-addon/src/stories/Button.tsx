@@ -1,6 +1,6 @@
 import React from 'react';
 import './button.css';
-import { CompositionComponent } from 'src/types/composition';
+import { CompositionComponent } from '@/types/composition';
 
 interface ButtonProps {
   /**

@@ -10,7 +10,6 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "rootDir": ".",
     "noImplicitAny": false,
     "noEmitOnError": true,

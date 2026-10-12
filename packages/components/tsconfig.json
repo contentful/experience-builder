@@ -9,10 +9,10 @@
     "moduleResolution": "bundler",
     "sourceMap": true,
     "outDir": "dist",
+    "rootDir": "./src",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noEmitOnError": true,
-    "baseUrl": ".",
     "paths": {
       "@components/*": ["./src/components/*"],
       "@/*": ["./src/*"]
