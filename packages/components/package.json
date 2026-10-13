@@ -54,7 +54,7 @@
     "@types/react": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "cypress": "^15.21.1",
-    "prettier": "^3.9.9",
+    "prettier": "^3.9.10",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "rimraf": "^6.1.3",
