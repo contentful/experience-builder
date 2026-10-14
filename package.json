@@ -47,7 +47,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "husky": "^9.1.7",
     "typescript": "^5.9.3",
-    "lerna": "^10.1.0",
+    "lerna": "^10.1.1",
     "lint-staged": "^17.6.0",
     "next": "16.4.0",
     "nx": "23.3.0",
