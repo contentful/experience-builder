@@ -16,7 +16,7 @@
     "@svgr/webpack": "^8.1.0",
     "antd": "^6.6.6",
     "contentful": "^11.12.10",
-    "next": "16.4.1",
+    "next": "16.4.2",
     "next-i18n-router": "^5.5.8",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
