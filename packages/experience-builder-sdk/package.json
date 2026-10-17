@@ -79,7 +79,7 @@
     "rollup-plugin-node-externals": "^9.0.1",
     "rollup-plugin-preserve-directives": "^0.4.0",
     "semantic-release": "^25.0.9",
-    "ts-jest": "^29.4.14",
+    "ts-jest": "^29.4.15",
     "typescript": "^5.9.3",
     "vite": "^5.4.8",
     "vite-plugin-css-injected-by-js": "^5.0.2",
