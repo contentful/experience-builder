@@ -12,8 +12,8 @@
   "dependencies": {
     "@contentful/experiences-sdk-react": "file:../../experience-builder-sdk",
     "contentful": "^11.12.10",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
