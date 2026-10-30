@@ -39,11 +39,11 @@
     }
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.12",
+    "@vitest/coverage-v8": "^5.0.5",
     "typescript": "^5.9.3",
     "vite": "^5.0.8",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.12"
+    "vitest": "^5.0.5"
   },
   "dependencies": {
     "zod": "^4.6.7"
