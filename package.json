@@ -73,7 +73,7 @@
     "glob@10": "^10.5.0",
     "glob@11": "^11.1.0",
     "@next/eslint-plugin-next": {
-      "glob": "^13.0.6"
+      "glob": "^14.0.0"
     },
     "@typescript-eslint/eslint-plugin": "^8.72.1",
     "@typescript-eslint/parser": "^8.72.1",
