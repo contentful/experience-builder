@@ -62,8 +62,11 @@ export const INCOMING_EVENTS = {
 /** Exact origins trusted to send Studio postMessage events to the Experiences SDK. */
 export const STUDIO_ORIGINS = [
   'https://app.contentful.com',
+  'https://app.eu.contentful.com',
   'https://app.flinkly.com',
+  'https://app.eu.flinkly.com',
   'https://app.quirely.com',
+  'https://app.eu.quirely.com',
 ] as const;
 
 export const INTERNAL_EVENTS = {
