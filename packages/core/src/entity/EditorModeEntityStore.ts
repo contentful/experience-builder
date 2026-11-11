@@ -25,8 +25,11 @@ export class EditorModeEntityStore extends EditorEntityStore {
           if (data.eventType === method) {
             cb(data.payload as RequestedEntitiesMessage);
           }
-        } catch {
-          // Ignore messages from untrusted origins and invalid message payloads.
+        } catch (error) {
+          debug.warn('[experiences-core::EditorModeEntityStore] Ignoring invalid message.', {
+            origin: event.origin,
+            error,
+          });
         }
       };
 

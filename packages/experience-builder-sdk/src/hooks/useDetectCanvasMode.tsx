@@ -1,6 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  debug,
   doesMismatchMessageSchema,
   sendMessage,
   tryParseMessage,
@@ -33,7 +34,12 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
   });
 
   const onMessage = useCallback((event: MessageEvent) => {
-    if (doesMismatchMessageSchema(event)) {
+    const mismatchReason = doesMismatchMessageSchema(event);
+    if (mismatchReason) {
+      debug.warn('[experience-builder-sdk::useDetectCanvasMode] Ignoring invalid message.', {
+        origin: event.origin,
+        reason: mismatchReason,
+      });
       return;
     }
     const eventData = tryParseMessage(event);
