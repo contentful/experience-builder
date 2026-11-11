@@ -7,6 +7,7 @@ import {
   gatherDeepReferencesFromTree,
   DeepReference,
   isLink,
+  isLocalhostOrigin,
   EditorModeEntityStore,
   type InMemoryEntitiesStore,
   debug,
@@ -156,10 +157,7 @@ export function useEditorSubscriber(inMemoryEntitiesStore: InMemoryEntitiesStore
     const onMessage = async (event: MessageEvent) => {
       let reason;
       if ((reason = doesMismatchMessageSchema(event))) {
-        if (
-          event.origin.startsWith('http://localhost') &&
-          `${event.data}`.includes('webpackHotUpdate')
-        ) {
+        if (isLocalhostOrigin(event.origin) && `${event.data}`.includes('webpackHotUpdate')) {
           reloadApp();
         } else {
           debug.warn(

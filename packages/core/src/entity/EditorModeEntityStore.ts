@@ -5,6 +5,7 @@ import { RequestedEntitiesMessage } from '../types';
 import { get } from '@/utils/get';
 import { transformAssetFileToUrl } from './value-transformers';
 import { debug } from '@/utils';
+import { tryParseMessage } from '@/utils/validations';
 
 // The default of 3s in the EditorEntityStore is sometimes timing out and
 // leads to not rendering bound content and assemblies.
@@ -19,17 +20,13 @@ export class EditorModeEntityStore extends EditorEntityStore {
 
     const subscribe = (method: unknown, cb: (payload: RequestedEntitiesMessage) => void) => {
       const handleMessage = (event: MessageEvent) => {
-        const data: {
-          source: 'composability-app';
-          eventType: string;
-          payload: RequestedEntitiesMessage;
-        } = JSON.parse(event.data);
-
-        if (typeof data !== 'object' || !data) return;
-
-        if (data.source !== 'composability-app') return;
-        if (data.eventType === method) {
-          cb(data.payload);
+        try {
+          const data = tryParseMessage(event);
+          if (data.eventType === method) {
+            cb(data.payload as RequestedEntitiesMessage);
+          }
+        } catch {
+          // Ignore messages from untrusted origins and invalid message payloads.
         }
       };
 
