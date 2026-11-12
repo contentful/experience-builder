@@ -11,6 +11,11 @@ on:
         required: false
         default: false
         type: boolean
+      publish-v3-release:
+        description: 'Publish a stable release from the v3 branch'
+        required: false
+        default: false
+        type: boolean
       publish-web-apps-to-prod:
         description: 'Publish web apps to prod'
         required: false
@@ -51,8 +56,10 @@ jobs:
       (github.ref_name == 'main' ||
         github.ref_name == 'development' ||
         github.ref_name == 'next' ||
-        inputs.publish-prerelease 
+        inputs.publish-prerelease ||
+        (github.ref_name == 'v3' && inputs.publish-v3-release)
       ) &&
+      !(github.ref_name == 'v3' && inputs.publish-prerelease && inputs.publish-v3-release) &&
       !contains(github.event.head_commit.message, 'skip-release') &&
       github.actor != 'dependabot[bot]' &&
       github.actor != 'contentful-automation[bot]'
