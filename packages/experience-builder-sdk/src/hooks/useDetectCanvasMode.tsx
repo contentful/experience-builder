@@ -1,6 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  debug,
   doesMismatchMessageSchema,
   sendMessage,
   tryParseMessage,
@@ -21,6 +22,7 @@ type useDetectCanvasModeArgs = {
 export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasModeArgs = {}) => {
   const [mounted, setMounted] = useState(false);
   const receivedModeMessage = useRef(false);
+  const handshakeTimedOut = useRef(false);
   const [mode, setMode] = useState<StudioCanvasMode>(() => {
     // if we are client side and running in an iframe, then initialize to read only,
     // Editor mode can be requested later.
@@ -32,7 +34,12 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
   });
 
   const onMessage = useCallback((event: MessageEvent) => {
-    if (doesMismatchMessageSchema(event)) {
+    const mismatchReason = doesMismatchMessageSchema(event);
+    if (mismatchReason) {
+      debug.warn('[experience-builder-sdk::useDetectCanvasMode] Ignoring invalid message.', {
+        origin: event.origin,
+        reason: mismatchReason,
+      });
       return;
     }
     const eventData = tryParseMessage(event);
@@ -65,12 +72,14 @@ export const useDetectCanvasMode = ({ isClientSide = false }: useDetectCanvasMod
   useEffect(() => {
     const handleHandshakeTimeout = () => {
       if (!receivedModeMessage.current) {
+        handshakeTimedOut.current = true;
+        window.removeEventListener('message', onMessage);
         setMode(StudioCanvasMode.NONE);
       }
     };
 
     // Only run check after component is mounted on the client to avoid hydration ssr issues
-    if (mounted) {
+    if (mounted && !handshakeTimedOut.current) {
       // Double check if we are in editor mode by listening to postMessage events
       if (typeof window !== 'undefined') {
         window.addEventListener('message', onMessage);
