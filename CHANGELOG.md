@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.11](https://github.com/contentful/experience-builder/compare/v3.8.10...v3.8.11) (2026-11-12)
+
+### Bug Fixes
+
+- allow stable package releases from v3 ([fd6a117](https://github.com/contentful/experience-builder/commit/fd6a117b50dac869007c37b9d9abab0d73fe3edf))
+- allow stable releases from v3 ([d6ecc9f](https://github.com/contentful/experience-builder/commit/d6ecc9f3424f42b8c3df9fbb7e1e32718e4897f6))
+- backport Studio message validation to v3 ([1131449](https://github.com/contentful/experience-builder/commit/1131449b261053b967234389c558747f91c2759a))
+
 ## [3.8.10](https://github.com/contentful/experience-builder/compare/v3.8.9...v3.8.10) (2026-07-03)
 
 ### Bug Fixes

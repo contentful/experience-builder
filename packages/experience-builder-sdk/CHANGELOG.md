@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.11](https://github.com/contentful/experience-builder/compare/v3.8.10...v3.8.11) (2026-11-12)
+
+### Bug Fixes
+
+- backport Studio message validation to v3 ([1131449](https://github.com/contentful/experience-builder/commit/1131449b261053b967234389c558747f91c2759a))
+
 ## [3.8.10](https://github.com/contentful/experience-builder/compare/v3.8.9...v3.8.10) (2026-07-03)
 
 **Note:** Version bump only for package @contentful/experiences-sdk-react
