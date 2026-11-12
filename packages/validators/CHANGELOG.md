@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/contentful/experience-builder/compare/v4.0.1...v4.0.2) (2026-11-12)
+
+### Bug Fixes
+
+- **deps:** revert major dependency bumps that broke the pipeline [] ([#1709](https://github.com/contentful/experience-builder/issues/1709)) ([3ab3025](https://github.com/contentful/experience-builder/commit/3ab3025231f3cc15ee8085d2dc70ba8a8f92d4c2)), references [#1700](https://github.com/contentful/experience-builder/issues/1700) [#1702](https://github.com/contentful/experience-builder/issues/1702) [#1703](https://github.com/contentful/experience-builder/issues/1703) [#1704](https://github.com/contentful/experience-builder/issues/1704) [#1705](https://github.com/contentful/experience-builder/issues/1705)
+- **deps:** update dependency zod to ^4.6.5 ([#1698](https://github.com/contentful/experience-builder/issues/1698)) ([012cc14](https://github.com/contentful/experience-builder/commit/012cc144de329428b7c0c1c4c7d62396e886f9e4))
+- **deps:** update dependency zod to ^4.6.6 ([#1719](https://github.com/contentful/experience-builder/issues/1719)) ([2854f5b](https://github.com/contentful/experience-builder/commit/2854f5bd478646b2c10b211aa97f843361f5aca9))
+- **deps:** update dependency zod to ^4.6.7 ([#1728](https://github.com/contentful/experience-builder/issues/1728)) ([56e3b42](https://github.com/contentful/experience-builder/commit/56e3b42a7f5aaa7845b20c4597497dcf86de82ad))
+
 ## [4.0.1](https://github.com/contentful/experience-builder/compare/v4.0.0...v4.0.1) (2026-10-09)
 
 **Note:** Version bump only for package @contentful/experiences-validators

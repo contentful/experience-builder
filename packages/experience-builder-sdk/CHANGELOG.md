@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/contentful/experience-builder/compare/v4.0.1...v4.0.2) (2026-11-12)
+
+### Bug Fixes
+
+- **deps:** revert major dependency bumps that broke the pipeline [] ([#1709](https://github.com/contentful/experience-builder/issues/1709)) ([3ab3025](https://github.com/contentful/experience-builder/commit/3ab3025231f3cc15ee8085d2dc70ba8a8f92d4c2)), references [#1700](https://github.com/contentful/experience-builder/issues/1700) [#1702](https://github.com/contentful/experience-builder/issues/1702) [#1703](https://github.com/contentful/experience-builder/issues/1703) [#1704](https://github.com/contentful/experience-builder/issues/1704) [#1705](https://github.com/contentful/experience-builder/issues/1705)
+- **deps:** update dependency immer to ^11.2.7 ([#1763](https://github.com/contentful/experience-builder/issues/1763)) ([f7a7210](https://github.com/contentful/experience-builder/commit/f7a7210dc2eb5eaf3cc67f69d8d70f091d3b2929))
+- **deps:** update dependency immer to ^11.2.9 ([#1765](https://github.com/contentful/experience-builder/issues/1765)) ([dfec025](https://github.com/contentful/experience-builder/commit/dfec025010370d7fe31b402eca1b37897ddcad6c))
+- **deps:** update react monorepo to ^19.3.0 ([#1699](https://github.com/contentful/experience-builder/issues/1699)) ([4f80aa5](https://github.com/contentful/experience-builder/commit/4f80aa543c48f552b58067216dd7e780a356f35d))
+- **deps:** update react monorepo to ^19.3.1 ([#1737](https://github.com/contentful/experience-builder/issues/1737)) ([b17046b](https://github.com/contentful/experience-builder/commit/b17046b4e8edfbcaf1b07c9125ab8128255d6657))
+- validate Studio message origins and clean up listeners ([#1787](https://github.com/contentful/experience-builder/issues/1787)) ([ee64328](https://github.com/contentful/experience-builder/commit/ee64328c1c76da566684bac5b9ff6af5814954a4))
+
 ## [4.0.1](https://github.com/contentful/experience-builder/compare/v4.0.0...v4.0.1) (2026-10-09)
 
 ### Bug Fixes

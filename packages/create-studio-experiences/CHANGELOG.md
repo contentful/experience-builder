@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/contentful/experience-builder/compare/v4.0.1...v4.0.2) (2026-11-12)
+
+### Bug Fixes
+
+- **deps:** revert major dependency bumps that broke the pipeline [] ([#1709](https://github.com/contentful/experience-builder/issues/1709)) ([3ab3025](https://github.com/contentful/experience-builder/commit/3ab3025231f3cc15ee8085d2dc70ba8a8f92d4c2)), references [#1700](https://github.com/contentful/experience-builder/issues/1700) [#1702](https://github.com/contentful/experience-builder/issues/1702) [#1703](https://github.com/contentful/experience-builder/issues/1703) [#1704](https://github.com/contentful/experience-builder/issues/1704) [#1705](https://github.com/contentful/experience-builder/issues/1705)
+- **deps:** update dependency @clack/prompts to ^1.8.1 ([#1690](https://github.com/contentful/experience-builder/issues/1690)) ([48add67](https://github.com/contentful/experience-builder/commit/48add67b837900ddcd493b6ec6f49b9e3307bfe9))
+- **deps:** update dependency yargs to ^18.2.0 ([#1696](https://github.com/contentful/experience-builder/issues/1696)) ([fea587a](https://github.com/contentful/experience-builder/commit/fea587ac6768b9548e98fea305d8e5a59aa7b089))
+
 ## [4.0.1](https://github.com/contentful/experience-builder/compare/v4.0.0...v4.0.1) (2026-10-09)
 
 ### Bug Fixes

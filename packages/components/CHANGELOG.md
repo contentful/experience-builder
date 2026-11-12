@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/contentful/experience-builder/compare/v4.0.1...v4.0.2) (2026-11-12)
+
+### Bug Fixes
+
+- **deps:** revert major dependency bumps that broke the pipeline [] ([#1709](https://github.com/contentful/experience-builder/issues/1709)) ([3ab3025](https://github.com/contentful/experience-builder/commit/3ab3025231f3cc15ee8085d2dc70ba8a8f92d4c2)), references [#1700](https://github.com/contentful/experience-builder/issues/1700) [#1702](https://github.com/contentful/experience-builder/issues/1702) [#1703](https://github.com/contentful/experience-builder/issues/1703) [#1704](https://github.com/contentful/experience-builder/issues/1704) [#1705](https://github.com/contentful/experience-builder/issues/1705)
+- **deps:** update dependency postcss-import to v17 ([#1705](https://github.com/contentful/experience-builder/issues/1705)) ([9408e12](https://github.com/contentful/experience-builder/commit/9408e127d68110794dbc53f310fff15ef29bc887))
+- **deps:** update react monorepo to ^19.3.0 ([#1699](https://github.com/contentful/experience-builder/issues/1699)) ([4f80aa5](https://github.com/contentful/experience-builder/commit/4f80aa543c48f552b58067216dd7e780a356f35d))
+- **deps:** update react monorepo to ^19.3.1 ([#1737](https://github.com/contentful/experience-builder/issues/1737)) ([b17046b](https://github.com/contentful/experience-builder/commit/b17046b4e8edfbcaf1b07c9125ab8128255d6657))
+
 ## [4.0.1](https://github.com/contentful/experience-builder/compare/v4.0.0...v4.0.1) (2026-10-09)
 
 **Note:** Version bump only for package @contentful/experiences-components-react

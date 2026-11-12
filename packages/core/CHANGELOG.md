@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/contentful/experience-builder/compare/v4.0.1...v4.0.2) (2026-11-12)
+
+### Bug Fixes
+
+- **deps:** revert major dependency bumps that broke the pipeline [] ([#1709](https://github.com/contentful/experience-builder/issues/1709)) ([3ab3025](https://github.com/contentful/experience-builder/commit/3ab3025231f3cc15ee8085d2dc70ba8a8f92d4c2)), references [#1700](https://github.com/contentful/experience-builder/issues/1700) [#1702](https://github.com/contentful/experience-builder/issues/1702) [#1703](https://github.com/contentful/experience-builder/issues/1703) [#1704](https://github.com/contentful/experience-builder/issues/1704) [#1705](https://github.com/contentful/experience-builder/issues/1705)
+- **deps:** update dependency zustand to ^5.0.16 ([#1764](https://github.com/contentful/experience-builder/issues/1764)) ([62ebbcc](https://github.com/contentful/experience-builder/commit/62ebbcc0607e57d3fab70d84499959acf5f8621e))
+- validate Studio message origins and clean up listeners ([#1787](https://github.com/contentful/experience-builder/issues/1787)) ([ee64328](https://github.com/contentful/experience-builder/commit/ee64328c1c76da566684bac5b9ff6af5814954a4))
+
 ## [4.0.1](https://github.com/contentful/experience-builder/compare/v4.0.0...v4.0.1) (2026-10-09)
 
 ### Bug Fixes

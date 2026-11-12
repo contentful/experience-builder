@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/contentful/experience-builder/compare/v4.0.1...v4.0.2) (2026-11-12)
+
+### Bug Fixes
+
+- **deps:** patch Next.js AVIF vulnerability in example apps [ACT-5904] ([#1711](https://github.com/contentful/experience-builder/issues/1711)) ([9478252](https://github.com/contentful/experience-builder/commit/9478252e93ed0901e33775f31d207e0ba394aeb6))
+- **deps:** revert major dependency bumps that broke the pipeline [] ([#1709](https://github.com/contentful/experience-builder/issues/1709)) ([3ab3025](https://github.com/contentful/experience-builder/commit/3ab3025231f3cc15ee8085d2dc70ba8a8f92d4c2)), references [#1700](https://github.com/contentful/experience-builder/issues/1700) [#1702](https://github.com/contentful/experience-builder/issues/1702) [#1703](https://github.com/contentful/experience-builder/issues/1703) [#1704](https://github.com/contentful/experience-builder/issues/1704) [#1705](https://github.com/contentful/experience-builder/issues/1705)
+- **deps:** update dependency @clack/prompts to ^1.8.1 ([#1690](https://github.com/contentful/experience-builder/issues/1690)) ([48add67](https://github.com/contentful/experience-builder/commit/48add67b837900ddcd493b6ec6f49b9e3307bfe9))
+- **deps:** update dependency @contentful/app-sdk to ^4.73.0 ([#1691](https://github.com/contentful/experience-builder/issues/1691)) ([7a813f9](https://github.com/contentful/experience-builder/commit/7a813f97d6e52eeae2020a5c189b7978496096b9))
+- **deps:** update dependency @contentful/app-sdk to ^4.74.0 ([#1750](https://github.com/contentful/experience-builder/issues/1750)) ([2b40723](https://github.com/contentful/experience-builder/commit/2b40723b4524d6bbd1f35d10b5927c7823fe49f6))
+- **deps:** update dependency @contentful/app-sdk to ^4.75.0 ([#1762](https://github.com/contentful/experience-builder/issues/1762)) ([53c19b8](https://github.com/contentful/experience-builder/commit/53c19b80b1bdffc256f8c64eebb7d3d1c78bf4da))
+- **deps:** update dependency @contentful/app-sdk to ^4.76.0 ([#1771](https://github.com/contentful/experience-builder/issues/1771)) ([02b4741](https://github.com/contentful/experience-builder/commit/02b474182191c5406536fcfb29abddbf8910d3b5))
+- **deps:** update dependency @contentful/f36-components to ^6.24.0 ([#1692](https://github.com/contentful/experience-builder/issues/1692)) ([34ff17f](https://github.com/contentful/experience-builder/commit/34ff17fed0bd8fc0c36ff9fccd17863e9ed84c48))
+- **deps:** update dependency @contentful/f36-components to ^6.26.0 ([#1721](https://github.com/contentful/experience-builder/issues/1721)) ([46c8f28](https://github.com/contentful/experience-builder/commit/46c8f282c4823ff3ecf592149f3cceacc0ac57e8))
+- **deps:** update dependency @contentful/f36-components to ^6.27.0 ([#1729](https://github.com/contentful/experience-builder/issues/1729)) ([41c433e](https://github.com/contentful/experience-builder/commit/41c433e9f3a84f569be3b1fa91b1d345e9c8a161))
+- **deps:** update dependency @contentful/f36-components to ^6.27.1 ([#1735](https://github.com/contentful/experience-builder/issues/1735)) ([a93014f](https://github.com/contentful/experience-builder/commit/a93014f820d4b09177a271f6e6e5b5fdf2612bea))
+- **deps:** update dependency @contentful/f36-components to ^6.28.0 ([#1757](https://github.com/contentful/experience-builder/issues/1757)) ([d9574b0](https://github.com/contentful/experience-builder/commit/d9574b03d5fe3edb82ac6cd412934fecd83e3c2d))
+- **deps:** update dependency @contentful/f36-components to ^6.29.0 ([#1784](https://github.com/contentful/experience-builder/issues/1784)) ([3f1c651](https://github.com/contentful/experience-builder/commit/3f1c65158f2db5688c5c2c4e5cc27092fd61f7a6))
+- **deps:** update dependency antd to ^6.6.6 ([#1727](https://github.com/contentful/experience-builder/issues/1727)) ([10dd756](https://github.com/contentful/experience-builder/commit/10dd756ad32a51292bda02db34719e4afd75a037))
+- **deps:** update dependency antd to ^6.6.7 ([#1756](https://github.com/contentful/experience-builder/issues/1756)) ([578b289](https://github.com/contentful/experience-builder/commit/578b28966aa25a4ed02dd59f57e65c353e64dede))
+- **deps:** update dependency antd to ^6.6.8 ([#1773](https://github.com/contentful/experience-builder/issues/1773)) ([b575d4e](https://github.com/contentful/experience-builder/commit/b575d4ea1d5f2f60dd37720c67978d451f9a5707))
+- **deps:** update dependency immer to ^11.2.7 ([#1763](https://github.com/contentful/experience-builder/issues/1763)) ([f7a7210](https://github.com/contentful/experience-builder/commit/f7a7210dc2eb5eaf3cc67f69d8d70f091d3b2929))
+- **deps:** update dependency immer to ^11.2.9 ([#1765](https://github.com/contentful/experience-builder/issues/1765)) ([dfec025](https://github.com/contentful/experience-builder/commit/dfec025010370d7fe31b402eca1b37897ddcad6c))
+- **deps:** update dependency next to v16.4.0 ([#1694](https://github.com/contentful/experience-builder/issues/1694)) ([d897c07](https://github.com/contentful/experience-builder/commit/d897c078d9bd5303b913f0bed366467a3c56e17a))
+- **deps:** update dependency next to v16.4.1 ([#1736](https://github.com/contentful/experience-builder/issues/1736)) ([e5e4e7a](https://github.com/contentful/experience-builder/commit/e5e4e7a9dcb5d1f4a6f7619166c06b46424fbd8a))
+- **deps:** update dependency next to v16.4.2 ([#1745](https://github.com/contentful/experience-builder/issues/1745)) ([260fc27](https://github.com/contentful/experience-builder/commit/260fc274b4ad128e7ed38dd50e07fdcaf19709a1))
+- **deps:** update dependency next to v16.4.3 ([#1769](https://github.com/contentful/experience-builder/issues/1769)) ([d0ea5f7](https://github.com/contentful/experience-builder/commit/d0ea5f73d71b5b0be2f917ce27a4ebb7207bb5cf))
+- **deps:** update dependency postcss-import to v17 ([#1705](https://github.com/contentful/experience-builder/issues/1705)) ([9408e12](https://github.com/contentful/experience-builder/commit/9408e127d68110794dbc53f310fff15ef29bc887))
+- **deps:** update dependency react-colorful to ^5.8.1 ([#1695](https://github.com/contentful/experience-builder/issues/1695)) ([9c177e9](https://github.com/contentful/experience-builder/commit/9c177e90a991cf483d8d6562b8dd24c8c7bf3c24))
+- **deps:** update dependency react-router-dom to ^7.18.5 ([#1779](https://github.com/contentful/experience-builder/issues/1779)) ([1cbdf76](https://github.com/contentful/experience-builder/commit/1cbdf76e194d1bffaeb2720747575122742c40c1))
+- **deps:** update dependency uuid to ^14.0.3 ([#1707](https://github.com/contentful/experience-builder/issues/1707)) ([b81bb1f](https://github.com/contentful/experience-builder/commit/b81bb1ffe9563024ed69570bbdacee3c405b7831))
+- **deps:** update dependency yargs to ^18.2.0 ([#1696](https://github.com/contentful/experience-builder/issues/1696)) ([fea587a](https://github.com/contentful/experience-builder/commit/fea587ac6768b9548e98fea305d8e5a59aa7b089))
+- **deps:** update dependency zod to ^4.6.5 ([#1698](https://github.com/contentful/experience-builder/issues/1698)) ([012cc14](https://github.com/contentful/experience-builder/commit/012cc144de329428b7c0c1c4c7d62396e886f9e4))
+- **deps:** update dependency zod to ^4.6.6 ([#1719](https://github.com/contentful/experience-builder/issues/1719)) ([2854f5b](https://github.com/contentful/experience-builder/commit/2854f5bd478646b2c10b211aa97f843361f5aca9))
+- **deps:** update dependency zod to ^4.6.7 ([#1728](https://github.com/contentful/experience-builder/issues/1728)) ([56e3b42](https://github.com/contentful/experience-builder/commit/56e3b42a7f5aaa7845b20c4597497dcf86de82ad))
+- **deps:** update dependency zustand to ^5.0.16 ([#1764](https://github.com/contentful/experience-builder/issues/1764)) ([62ebbcc](https://github.com/contentful/experience-builder/commit/62ebbcc0607e57d3fab70d84499959acf5f8621e))
+- **deps:** update react monorepo to ^19.3.0 ([#1699](https://github.com/contentful/experience-builder/issues/1699)) ([4f80aa5](https://github.com/contentful/experience-builder/commit/4f80aa543c48f552b58067216dd7e780a356f35d))
+- **deps:** update react monorepo to ^19.3.1 ([#1737](https://github.com/contentful/experience-builder/issues/1737)) ([b17046b](https://github.com/contentful/experience-builder/commit/b17046b4e8edfbcaf1b07c9125ab8128255d6657))
+- update Next.js to patched 15.5.28 ([#1789](https://github.com/contentful/experience-builder/issues/1789)) ([b5f3a8b](https://github.com/contentful/experience-builder/commit/b5f3a8b61cc7c38c2b6b030dadf5ff374a36f5bc))
+- validate Studio message origins and clean up listeners ([#1787](https://github.com/contentful/experience-builder/issues/1787)) ([ee64328](https://github.com/contentful/experience-builder/commit/ee64328c1c76da566684bac5b9ff6af5814954a4))
+
 ## [4.0.1](https://github.com/contentful/experience-builder/compare/v4.0.0...v4.0.1) (2026-10-09)
 
 ### Bug Fixes
