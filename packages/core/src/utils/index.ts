@@ -5,6 +5,7 @@ export * from './domValues';
 export * from './isLinkToAsset';
 export * from './isLinkToEntry';
 export * from './isLink';
+export * from './isLocalhostOrigin';
 export * from './localizeEntity';
 export * from './pathSchema';
 export * from './resolveHyperlinkPattern';
