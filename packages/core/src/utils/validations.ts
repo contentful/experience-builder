@@ -1,5 +1,6 @@
 import { IncomingMessage } from '@/types';
-import { INCOMING_EVENTS, StudioCanvasMode, PostMessageMethods } from '@/constants';
+import { INCOMING_EVENTS, PostMessageMethods, STUDIO_ORIGINS, StudioCanvasMode } from '@/constants';
+import { isLocalhostOrigin } from './isLocalhostOrigin';
 
 class ParseError extends Error {
   constructor(message: string) {
@@ -32,6 +33,14 @@ export const doesMismatchMessageSchema = (event: MessageEvent): false | string =
 };
 
 export const tryParseMessage = (event: MessageEvent): IncomingMessage => {
+  const isTrustedStudioOrigin =
+    STUDIO_ORIGINS.some((origin) => origin === event.origin) ||
+    (process.env.NODE_ENV === 'development' && isLocalhostOrigin(event.origin));
+
+  if (!isTrustedStudioOrigin) {
+    throw new ParseError(`Message origin is not a trusted Studio origin: '${event.origin}'`);
+  }
+
   if (!event.data) {
     throw new ParseError('Field event.data is missing');
   }

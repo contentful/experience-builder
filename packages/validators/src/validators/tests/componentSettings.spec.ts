@@ -285,7 +285,7 @@ describe('componentSettings', () => {
       const result = validateExperienceFields(pattern, schemaVersion);
       expect(result.success).toBe(false);
       expect(result.errors).toBeDefined();
-      expect(result.errors?.[0].details).toBe('Too small: expected array to have >=1 items');
+      expect(result.errors?.[0].details).toBe('Too small: expected array to have exactly 1 items');
     });
 
     it('errors if prebindingDefinitions is not an array', () => {
@@ -328,7 +328,7 @@ describe('componentSettings', () => {
       const result = validateExperienceFields(pattern, schemaVersion);
       expect(result.success).toBe(false);
       expect(result.errors).toBeDefined();
-      expect(result.errors?.[0].details).toBe('Too big: expected array to have <=1 items');
+      expect(result.errors?.[0].details).toBe('Too big: expected array to have exactly 1 items');
     });
 
     it('errors if more than MAX_MAPPING_PATHS are used', () => {
