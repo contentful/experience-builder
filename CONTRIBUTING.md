@@ -6,6 +6,10 @@
 - **Branches** — create feature branches from `development` using `<type>/<short-description>` (e.g., `fix/image-transform-recovery`). Source: `git log --oneline`.
 - **Pull requests** — open against `development` for all normal work. Use **Squash and merge** into `development`. Use **Create a merge commit** when merging `development` → `next` → `main`. Source: `README.md` § Branching & release process.
 
+## npm version
+
+`package.json` declares `npm@11.18.0`. `min-release-age` in `.npmrc` only exists from npm 11.10.0, and older npm ignores it. Node 22 bundles npm 10, so run `npm install -g npm@11` after `nvm use` before installing or updating dependencies. The GitHub Actions workflows run Node 24, which bundles a new enough npm.
+
 ## Specialized Procedures
 
 ### Release process
