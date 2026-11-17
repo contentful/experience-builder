@@ -1,6 +1,7 @@
 {
   "name": "@contentful/experience",
   "private": true,
+  "packageManager": "npm@11.18.0",
   "author": "Contentful GmbH",
   "license": "MIT",
   "description": "Contentful Experience Framework",
